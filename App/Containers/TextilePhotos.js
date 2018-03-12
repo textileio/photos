@@ -18,6 +18,7 @@ class TextilePhotos extends React.PureComponent {
       headerTitle: 'Textile Photos',
       headerRight: (
         <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
+        <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
         <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
       </HeaderButtons>
       ),
@@ -25,7 +26,10 @@ class TextilePhotos extends React.PureComponent {
   };
 
   componentWillMount() {
-    this.props.navigation.setParams({ showPhotoPicker: this._showPhotoPicker });
+    this.props.navigation.setParams({
+      showPhotoPicker: this._showPhotoPicker,
+      showCamera: this._showCamera
+    });
   }
 
   _showPhotoPicker = () => {
@@ -33,6 +37,15 @@ class TextilePhotos extends React.PureComponent {
       multiple: true
     }).then(images => {
       console.log(images);
+    });
+  }
+
+  _showCamera = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400
+    }).then(image => {
+      console.log(image);
     });
   }
 
