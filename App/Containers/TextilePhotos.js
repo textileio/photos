@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, Text, Button, FlatList } from 'react-native'
+import { View, Text, Button, FlatList, NativeModules } from 'react-native'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker';
+import RNFS from 'react-native-fs';
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -30,6 +31,13 @@ class TextilePhotos extends React.PureComponent {
       showPhotoPicker: this._showPhotoPicker,
       showCamera: this._showCamera
     });
+  }
+
+  componentDidMount() {
+    const ipfs = NativeModules.TextileGoModule;
+    const path = RNFS.DocumentDirectoryPath
+    ipfs.createNodeWithDataDir(path);
+    ipfs.startNode();
   }
 
   _showPhotoPicker = () => {
