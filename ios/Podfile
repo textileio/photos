@@ -24,6 +24,7 @@ target 'TextilePhotos' do
     'RCTWebSocket'
   ]
   pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
 
   target 'TextilePhotosTests' do
     inherit! :search_paths
