@@ -1,0 +1,6 @@
+framework module RNImageCropPicker {
+  umbrella header "RNImageCropPicker-umbrella.h"
+
+  export *
+  module * { export * }
+}
