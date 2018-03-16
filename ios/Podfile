@@ -25,7 +25,6 @@ target 'TextilePhotos' do
   ]
   pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
-  #pod 'TextileIPFS', :path => '../node_modules/react-native-textile-ipfs'
 
   target 'TextilePhotosTests' do
     inherit! :search_paths

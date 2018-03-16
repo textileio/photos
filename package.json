@@ -39,7 +39,6 @@
     "react-native-fs": "^2.9.11",
     "react-native-i18n": "1.0.0",
     "react-native-image-crop-picker": "^0.20.0",
-    "react-native-textile-ipfs": "file:../../../../go/src/github.com/textileio/textile-go/react-native-textile-ipfs",
     "react-native-vector-icons": "4.3.0",
     "react-navigation": "1.0.0-beta.11",
     "react-navigation-header-buttons": "^0.0.4",
