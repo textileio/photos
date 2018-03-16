@@ -36,7 +36,7 @@ class TextilePhotos extends React.PureComponent {
 
   componentDidMount() {
     const path = RNFS.DocumentDirectoryPath
-    IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io/')
+    IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io')
     IPFS.startNode()
       .then(success => {
         console.log("DONE STARTING NODE", success)
@@ -47,7 +47,17 @@ class TextilePhotos extends React.PureComponent {
     ImagePicker.openPicker({
       multiple: true
     }).then(images => {
-      console.log(images);
+      // console.log(images);
+      images.forEach(image => {
+        console.log("PINNING IMAGE", image.path)
+        IPFS.pinImageAtPath(image.path)
+          .then(hash => {
+            console.log("PINNED", hash)
+          })
+          .catch(err => {
+            console.log("GOT AN ERROR PINNING", err)
+          })
+      })
     });
   }
 
