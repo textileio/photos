@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Button, FlatList, NativeModules } from 'react-native'
+import { View, Text, Button, FlatList } from 'react-native'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux'
