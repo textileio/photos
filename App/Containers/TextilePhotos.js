@@ -5,6 +5,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker';
 import RNFS from 'react-native-fs';
+import IPFS from '../../TextileIPFSNativeModule';
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -34,10 +35,12 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount() {
-    const ipfs = NativeModules.TextileGoModule;
     const path = RNFS.DocumentDirectoryPath
-    ipfs.createNodeWithDataDir(path);
-    ipfs.startNode();
+    IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io/')
+    IPFS.startNode()
+      .then(success => {
+        console.log("DONE STARTING NODE", success)
+      })
   }
 
   _showPhotoPicker = () => {
