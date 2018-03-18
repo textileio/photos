@@ -1,9 +1,11 @@
+// @flow
 import React from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker';
+import ImageResizer from 'react-native-image-resizer';
 import RNFS from 'react-native-fs';
 import IPFS from '../../TextileIPFSNativeModule';
 
@@ -29,7 +31,7 @@ class TextilePhotos extends React.PureComponent {
 
   componentWillMount() {
     this.props.navigation.setParams({
-      showPhotoPicker: this._showPhotoPicker,
+      showPhotoPicker: this._showPhotoPicker.bind(this),
       showCamera: this._showCamera
     });
   }
@@ -43,21 +45,13 @@ class TextilePhotos extends React.PureComponent {
       })
   }
 
-  _showPhotoPicker = () => {
+  _showPhotoPicker() {
     ImagePicker.openPicker({
       multiple: true
     }).then(images => {
-      // console.log(images);
-      images.forEach(image => {
-        console.log("PINNING IMAGE", image.path)
-        IPFS.pinImageAtPath(image.path)
-          .then(hash => {
-            console.log("PINNED", hash)
-          })
-          .catch(err => {
-            console.log("GOT AN ERROR PINNING", err)
-          })
-      })
+      this.processImages(images)
+    }).then(() => {
+      console.log("OK");
     });
   }
 
@@ -68,6 +62,21 @@ class TextilePhotos extends React.PureComponent {
     }).then(image => {
       console.log(image);
     });
+  }
+
+  async processImages(images) {
+    // console.log(images);
+    for (const image of images) {
+      try {
+        console.log("RESIZING IMGAGE", image.sourceURL)
+        const response = await ImageResizer.createResizedImage(image.sourceURL, 400, 400, "JPEG", 80)
+        console.log("RESIZED URI", response.path)
+        const hash = await IPFS.pinImageAtPath(image.path)
+        console.log("PINNED", hash)
+      } catch(error) {
+        console.log("GOT AN ERROR RESIZING & PINNING", error)
+      }
+    }
   }
 
   /* ***********************************************************

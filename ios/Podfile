@@ -26,6 +26,8 @@ target 'TextilePhotos' do
   pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
+  pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
+
   target 'TextilePhotosTests' do
     inherit! :search_paths
     # Pods for testing
