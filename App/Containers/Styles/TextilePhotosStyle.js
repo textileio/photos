@@ -9,13 +9,14 @@ export default StyleSheet.create({
   },
   row: {
     flex: 1,
-    backgroundColor: Colors.fire,
-    marginVertical: Metrics.smallMargin,
+    backgroundColor: Colors.white,
+    // marginVertical: Metrics.smallMargin,
     justifyContent: 'center',
-    margin: 10,
-    padding: 5,
-    paddingVertical: 10,
-    borderRadius: Metrics.smallMargin
+    alignItems: 'center',
+    // margin: 2,
+    padding: 1,
+    // paddingVertical: 10,
+    // borderRadius: Metrics.smallMargin
   },
   boldLabel: {
     fontWeight: 'bold',
