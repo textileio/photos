@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { View, Text, Button, FlatList } from 'react-native'
+import { View, Text, Button, FlatList, Image } from 'react-native'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux'
@@ -15,6 +15,15 @@ import IPFS from '../../TextileIPFSNativeModule';
 import styles from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
+    
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      page: 1,
+      seed: 1
+    };
+  }
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {};
@@ -34,7 +43,25 @@ class TextilePhotos extends React.PureComponent {
       showPhotoPicker: this._showPhotoPicker.bind(this),
       showCamera: this._showCamera
     });
+    this.makeRemoteRequest();
   }
+  
+  // Just added this simple function here @aaron, nothing fancy.
+  // I stole this from elsewhere, so there are some extra probs in here
+  makeRemoteRequest = () => {
+    const { page, seed } = this.state;
+    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=40`;
+    fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          data: page === 1 ? res.results : [...this.state.data, ...res.results]
+        });
+      })
+      .catch(error => {
+        console.log("error")
+      });
+  };
 
   componentDidMount() {
     const path = RNFS.DocumentDirectoryPath
@@ -84,17 +111,17 @@ class TextilePhotos extends React.PureComponent {
   * This is an array of objects with the properties you desire
   * Usually this should come from Redux mapStateToProps
   *************************************************************/
-  state = {
-    dataObjects: [
-      {title: 'First Title', description: 'First Description'},
-      {title: 'Second Title', description: 'Second Description'},
-      {title: 'Third Title', description: 'Third Description'},
-      {title: 'Fourth Title', description: 'Fourth Description'},
-      {title: 'Fifth Title', description: 'Fifth Description'},
-      {title: 'Sixth Title', description: 'Sixth Description'},
-      {title: 'Seventh Title', description: 'Seventh Description'}
-    ]
-  }
+  // state = {
+  //   dataObjects: [
+  //     {title: 'First Title', description: 'First Description'},
+  //     {title: 'Second Title', description: 'Second Description'},
+  //     {title: 'Third Title', description: 'Third Description'},
+  //     {title: 'Fourth Title', description: 'Fourth Description'},
+  //     {title: 'Fifth Title', description: 'Fifth Description'},
+  //     {title: 'Sixth Title', description: 'Sixth Description'},
+  //     {title: 'Seventh Title', description: 'Seventh Description'}
+  //   ]
+  // }
 
   /* ***********************************************************
   * STEP 2
@@ -107,8 +134,10 @@ class TextilePhotos extends React.PureComponent {
   renderRow ({item}) {
     return (
       <View style={styles.row}>
-        <Text style={styles.boldLabel}>{item.title}</Text>
-        <Text style={styles.label}>{item.description}</Text>
+        <Image
+          style={{width: 92, height: 92}}
+          source={{uri: item.picture.large}}
+        />
       </View>
     )
   }
@@ -160,9 +189,9 @@ class TextilePhotos extends React.PureComponent {
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={styles.listContent}
-          data={this.state.dataObjects}
+          data={this.state.data}
           renderItem={this.renderRow}
-          numColumns={2}
+          numColumns={4}
           keyExtractor={this.keyExtractor}
           initialNumToRender={this.oneScreensWorth}
           // ListHeaderComponent={this.renderHeader}
