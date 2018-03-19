@@ -20,8 +20,16 @@ export default {
     return TextileIPFS.stopNode()
   },
 
-  pinImageAtPath(path: string): Promise<string> {
-    return TextileIPFS.pinImageAtPath(path)
+  pinImageAtPath(path: string, thumbPath: string): Promise<string> {
+    return TextileIPFS.pinImageAtPath(path, thumbPath)
+  },
+
+  getPhotos(offset: string, limit: number): Promise<string> {
+    return TextileIPFS.getPhotos(offset, limit)
+  },
+
+  getPhotoData(path: string): Promise<string> {
+    return TextileIPFS.getPhotoData(path)
   },
 
   EXAMPLE_CONSTANT: TextileIPFS.EXAMPLE_CONSTANT
