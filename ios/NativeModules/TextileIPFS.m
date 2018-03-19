@@ -84,14 +84,34 @@ RCT_REMAP_METHOD(key, keyWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(
   }
 }
 
-RCT_EXPORT_METHOD(pinImageAtPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(pinImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  NSString *hash = [self _pinPhoto:path];
+  NSString *hash = [self _pinPhoto:path thumbPath:thumbPath];
   if(hash) {
     resolve(hash);
   } else {
     NSError *error = [NSError errorWithDomain:@"ipfs" code:3 userInfo:nil];
     reject(@"nil_pin_image_result", @"Pin image result is undefined", error);
+  }
+}
+
+RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(long)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit];
+  if (hashesString) {
+    resolve(hashesString);
+  } else {
+    NSError *error = [NSError errorWithDomain:@"ipfs" code:4 userInfo:nil];
+    reject(@"nil_photos_result", @"Get photos result is undefined", error);
+  }
+}
+
+RCT_EXPORT_METHOD(getPhotoData:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSString *result = [self _getPhoto:path];
+  if (result) {
+    resolve(result);
+  } else {
+    NSError *error = [NSError errorWithDomain:@"ipfs" code:5 userInfo:nil];
+    reject(@"nil_photo_result", @"Get photo path result is undefined", error);
   }
 }
 
@@ -133,10 +153,22 @@ RCT_EXPORT_METHOD(exampleMethod)
   return @"thisissomekey";
 }
 
-- (NSString*)_pinPhoto:(NSString *)path {
+- (NSString *)_pinPhoto:(NSString *)path thumbPath:(NSString *)thumbPath {
   NSError *error;
-  NSString *hash = [self.node pinPhoto:path error:&error];
+  NSString *hash = [self.node pinPhoto:path thumb:thumbPath error:&error];
   return hash;
+}
+
+- (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit {
+  NSError *error;
+  NSString *hashesString = [self.node getPhotos:offset limit:limit error:&error];
+  return hashesString;
+}
+
+- (NSString *)_getPhoto:(NSString *)hashPath {
+  NSError *error;
+  NSString *base64String = [self.node getPhotoBase64String:hashPath error:&error];
+  return base64String;
 }
 
 // Implement methods that you want to export to the native module
