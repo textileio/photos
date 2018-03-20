@@ -95,8 +95,8 @@ class TextilePhotos extends React.PureComponent {
     // console.log(images);
     for (const image of images) {
       try {
-        console.log("RESIZING IMGAGE", image.sourceURL)
-        const response = await ImageResizer.createResizedImage(image.sourceURL, 400, 400, "JPEG", 80)
+        console.log("RESIZING IMGAGE", image.path)
+        const response = await ImageResizer.createResizedImage(image.path, 400, 400, "JPEG", 80)
         console.log("RESIZED URI", response.path)
         const hash = await IPFS.pinImageAtPath(image.path, response.path)
         console.log("PINNED", hash)
