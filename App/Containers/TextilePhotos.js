@@ -5,8 +5,6 @@ import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker';
-import ImageResizer from 'react-native-image-resizer';
-import RNFS from 'react-native-fs';
 import IPFS from '../../TextileIPFSNativeModule';
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
@@ -63,15 +61,6 @@ class TextilePhotos extends React.PureComponent {
       });
   };
 
-  componentDidMount() {
-    const path = RNFS.DocumentDirectoryPath
-    IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io')
-    IPFS.startNode()
-      .then(success => {
-        console.log("DONE STARTING NODE", success)
-      })
-  }
-
   _showPhotoPicker() {
     ImagePicker.openPicker({
       multiple: true
@@ -87,7 +76,7 @@ class TextilePhotos extends React.PureComponent {
       width: 300,
       height: 400
     }).then(image => {
-      console.log(image);
+      this.processImages([image])
     });
   }
 
@@ -95,10 +84,8 @@ class TextilePhotos extends React.PureComponent {
     // console.log(images);
     for (const image of images) {
       try {
-        console.log("RESIZING IMGAGE", image.path)
-        const response = await ImageResizer.createResizedImage(image.path, 400, 400, "JPEG", 80)
-        console.log("RESIZED URI", response.path)
-        const hash = await IPFS.pinImageAtPath(image.path, response.path)
+        console.log("PINNING PHOTO:", image.path)
+        const hash = await IPFS.pinImageAtPath(image.path)
         console.log("PINNED", hash)
       } catch(error) {
         console.log("GOT AN ERROR RESIZING & PINNING", error)

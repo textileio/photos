@@ -1,5 +1,6 @@
 // @flow
 import { NativeModules } from 'react-native'
+import ImageResizer from 'react-native-image-resizer';
 
 const { TextileIPFS } = NativeModules
 
@@ -20,8 +21,14 @@ export default {
     return TextileIPFS.stopNode()
   },
 
-  pinImageAtPath(path: string, thumbPath: string): Promise<string> {
-    return TextileIPFS.pinImageAtPath(path, thumbPath)
+  pinImageAtPath(path: string): Promise<string> {
+    console.log("RESIZING IMAGE", path)
+    return ImageResizer.createResizedImage(path, 400, 400, "JPEG", 80)
+      .then(response => {
+        console.log("RESIZED URI", response.path)
+        console.log("INNER PINNING IMAGE:", path, response.path)
+        return TextileIPFS.pinImageAtPath(path, response.path)
+      })
   },
 
   getPhotos(offset: string, limit: number): Promise<string> {
