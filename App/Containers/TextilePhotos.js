@@ -1,9 +1,11 @@
+// @flow
 import React from 'react'
 import { View, Text, Button, FlatList, Image } from 'react-native'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker';
+import IPFS from '../../TextileIPFSNativeModule';
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -36,7 +38,7 @@ class TextilePhotos extends React.PureComponent {
 
   componentWillMount() {
     this.props.navigation.setParams({
-      showPhotoPicker: this._showPhotoPicker,
+      showPhotoPicker: this._showPhotoPicker.bind(this),
       showCamera: this._showCamera
     });
     this.makeRemoteRequest();
@@ -59,11 +61,13 @@ class TextilePhotos extends React.PureComponent {
       });
   };
 
-  _showPhotoPicker = () => {
+  _showPhotoPicker() {
     ImagePicker.openPicker({
       multiple: true
     }).then(images => {
-      console.log(images);
+      this.processImages(images)
+    }).then(() => {
+      console.log("OK");
     });
   }
 
@@ -72,8 +76,21 @@ class TextilePhotos extends React.PureComponent {
       width: 300,
       height: 400
     }).then(image => {
-      console.log(image);
+      this.processImages([image])
     });
+  }
+
+  async processImages(images) {
+    // console.log(images);
+    for (const image of images) {
+      try {
+        console.log("PINNING PHOTO:", image.path)
+        const hash = await IPFS.pinImageAtPath(image.path)
+        console.log("PINNED", hash)
+      } catch(error) {
+        console.log("GOT AN ERROR RESIZING & PINNING", error)
+      }
+    }
   }
 
   /* ***********************************************************

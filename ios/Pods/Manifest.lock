@@ -1,5 +1,9 @@
 PODS:
   - QBImagePickerController (3.4.0)
+  - React (0.50.4):
+    - React/Core (= 0.50.4)
+  - react-native-image-resizer (1.0.0):
+    - React
   - React/Core (0.50.4):
     - yoga (= 0.50.4.React)
   - React/fishhook (0.50.4)
@@ -28,6 +32,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - RNFS (2.9.11):
+    - React
   - RNImageCropPicker (0.20.0):
     - QBImagePickerController
     - RSKImageCropper
@@ -35,6 +41,7 @@ PODS:
   - yoga (0.50.4.React)
 
 DEPENDENCIES:
+  - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - React/Core (from `../node_modules/react-native`)
   - React/RCTActionSheet (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
@@ -46,12 +53,17 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
 EXTERNAL SOURCES:
   React:
     :path: ../node_modules/react-native
+  react-native-image-resizer:
+    :path: ../node_modules/react-native-image-resizer
+  RNFS:
+    :path: ../node_modules/react-native-fs
   RNImageCropPicker:
     :path: ../node_modules/react-native-image-crop-picker
   yoga:
@@ -60,10 +72,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   React: 541ba768b9855e10cdc76f55427a5cd0653ca806
+  react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
+  RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
   RNImageCropPicker: a637beb8f4c76bf9fe8a89d404ad65a33c4215ac
   RSKImageCropper: d9a1acbc0600bf8decc8f0d21895872c99a9e4cf
   yoga: 17521bbb0dd54a47c0b3ac43253e78cdac7488e0
 
-PODFILE CHECKSUM: bbc8ac6cc7633197a8d35b8cd1f03c98721b1f20
+PODFILE CHECKSUM: 4ef7eb5a53a458bb80736be13cc00a5f6281e3ca
 
 COCOAPODS: 1.4.0
