@@ -40,6 +40,7 @@
     "react-native-i18n": "1.0.0",
     "react-native-image-crop-picker": "^0.20.0",
     "react-native-image-resizer": "^1.0.0",
+    "react-native-scalable-image": "^0.4.0",
     "react-native-vector-icons": "4.3.0",
     "react-navigation": "1.0.0-beta.11",
     "react-navigation-header-buttons": "^0.0.4",

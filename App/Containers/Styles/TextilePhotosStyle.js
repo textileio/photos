@@ -9,7 +9,7 @@ export default StyleSheet.create({
   },
   row: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.snow,
     // marginVertical: Metrics.smallMargin,
     justifyContent: 'center',
     alignItems: 'center',
