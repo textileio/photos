@@ -1,11 +1,12 @@
 // @flow
 import React from 'react'
-import { View, Text, Button, FlatList, Image } from 'react-native'
+import { View, Text, Button, FlatList, Dimensions } from 'react-native'
+import Image from 'react-native-scalable-image'
 import HeaderButtons from 'react-navigation-header-buttons'
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
-import ImagePicker from 'react-native-image-crop-picker';
-import IPFS from '../../TextileIPFSNativeModule';
+import ImagePicker from 'react-native-image-crop-picker'
+import IPFS from '../../TextileIPFSNativeModule'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -122,7 +123,7 @@ class TextilePhotos extends React.PureComponent {
     return (
       <View style={styles.row}>
         <Image
-          style={{width: 92, height: 92}}
+          width={Dimensions.get('window').width}
           source={{uri: item.picture.large}}
         />
       </View>
@@ -178,7 +179,7 @@ class TextilePhotos extends React.PureComponent {
           contentContainerStyle={styles.listContent}
           data={this.state.data}
           renderItem={this.renderRow}
-          numColumns={4}
+          numColumns={1}
           keyExtractor={this.keyExtractor}
           initialNumToRender={this.oneScreensWorth}
           // ListHeaderComponent={this.renderHeader}
