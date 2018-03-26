@@ -7,6 +7,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker'
 import IPFS from '../../TextileIPFSNativeModule'
+import Actions from '../Redux/TextileRedux'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -14,7 +15,7 @@ import IPFS from '../../TextileIPFSNativeModule'
 import styles from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
-    
+
   constructor(props) {
     super(props);
     this.state = {
@@ -42,9 +43,9 @@ class TextilePhotos extends React.PureComponent {
       showPhotoPicker: this._showPhotoPicker.bind(this),
       showCamera: this._showCamera
     });
-    this.makeRemoteRequest();
+    // this.makeRemoteRequest();
   }
-  
+
   // Just added this simple function here @aaron, nothing fancy.
   // I stole this from elsewhere, so there are some extra probs in here
   makeRemoteRequest = () => {

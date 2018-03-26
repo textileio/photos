@@ -1,9 +1,11 @@
 import { put, select } from 'redux-saga/effects'
 import GithubActions, { GithubSelectors } from '../Redux/GithubRedux'
+import TextileActions, { TextileSelectors } from '../Redux/TextileRedux';
 import { is } from 'ramda'
 
 // exported to make available for tests
 export const selectAvatar = GithubSelectors.selectAvatar
+export const selectRandomUserData = TextileSelectors.getRandomUserData
 
 // process STARTUP actions
 export function * startup (action) {
@@ -37,4 +39,8 @@ export function * startup (action) {
   if (!is(String, avatar)) {
     yield put(GithubActions.userRequest('GantMan'))
   }
+
+  const randomUserData = yield select(selectRandomUserData)
+  // TODO: Check if we have data
+  yield put(TextileActions.randomUsersRequest(1, 1, 40))
 }
