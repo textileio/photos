@@ -31,7 +31,7 @@ class TextilePhotos extends React.PureComponent {
       headerTitle: 'Textile Photos',
       headerLeft: (
         <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-          <HeaderButtons.Item title="onboard" onPress={() => navigation.navigate('OnboardingScreen')} />
+          <HeaderButtons.Item title="onboard" onPress={() => navigation.navigate('OnboardingNavigation')} />
         </HeaderButtons>
       ),
       headerRight: (

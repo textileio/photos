@@ -1,6 +1,6 @@
 /* @flow */
 import { StackNavigator } from 'react-navigation'
-import OnboardingScreen from '../Containers/OnboardingScreen'
+import OnboardingNavigation from './OnboardingNavigation'
 import TabNavigation from './TabNavigation'
 
 // Manifest of possible screens
@@ -9,8 +9,8 @@ const PrimaryNav = StackNavigator(
     TabNavigation: {
       screen: TabNavigation
     },
-    OnboardingScreen: {
-      screen: OnboardingScreen
+    OnboardingNavigation: {
+      screen: OnboardingNavigation
     }
   },
   {

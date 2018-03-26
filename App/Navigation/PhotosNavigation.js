@@ -1,8 +1,6 @@
 /* @flow */
 import { StackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
-import NewScreen from '../Containers/NewScreen'
-import LaunchScreen from '../Containers/LaunchScreen'
 
 import styles from './Styles/NavigationStyles'
 
