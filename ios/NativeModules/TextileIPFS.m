@@ -53,12 +53,23 @@ RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiHost:(NSString *)
 
 RCT_REMAP_METHOD(startNode, startNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  BOOL success = [self _startNode];
+  NSError *error;
+  BOOL success = [self _startNode:&error];
   if(success) {
     resolve(@YES);
   } else {
-    NSError *error = [NSError errorWithDomain:@"ipfs" code:0 userInfo:nil];
-    reject(@"failed_to_start_node", @"Failed to start node", error);
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_REMAP_METHOD(stopNode, stopNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSError *error;
+  BOOL success = [self _stopNode:&error];
+  if(success) {
+    resolve(@YES);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
@@ -84,34 +95,34 @@ RCT_REMAP_METHOD(key, keyWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(
   }
 }
 
-RCT_EXPORT_METHOD(pinImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  NSString *hash = [self _pinPhoto:path thumbPath:thumbPath];
+  NSError *error;
+  NSString *hash = [self _addPhoto:path thumbPath:thumbPath error:&error];
   if(hash) {
     resolve(hash);
   } else {
-    NSError *error = [NSError errorWithDomain:@"ipfs" code:3 userInfo:nil];
-    reject(@"nil_pin_image_result", @"Pin image result is undefined", error);
+    reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
 RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(long)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit];
+  NSError *error;
+  NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit error:&error];
   if (hashesString) {
     resolve(hashesString);
   } else {
-    NSError *error = [NSError errorWithDomain:@"ipfs" code:4 userInfo:nil];
-    reject(@"nil_photos_result", @"Get photos result is undefined", error);
+    reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
 RCT_EXPORT_METHOD(getPhotoData:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSString *result = [self _getPhoto:path];
+  NSError *error;
+  NSString *result = [self _getPhoto:path error:&error];
   if (result) {
     resolve(result);
   } else {
-    NSError *error = [NSError errorWithDomain:@"ipfs" code:5 userInfo:nil];
-    reject(@"nil_photo_result", @"Get photo path result is undefined", error);
+    reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
@@ -133,15 +144,13 @@ RCT_EXPORT_METHOD(exampleMethod)
   self.node = MobileNewTextile(dataDir, apiHost);
 }
 
-- (BOOL)_startNode {
-  NSError *error;
-  BOOL success = [self.node start:&error];
+- (BOOL)_startNode:(NSError**)error {
+  BOOL success = [self.node start:error];
   return success;
 }
 
-- (BOOL)_stopNode {
-  NSError *error;
-  BOOL success = [self.node stop:&error];
+- (BOOL)_stopNode:(NSError**)error {
+  BOOL success = [self.node stop:error];
   return success;
 }
 
@@ -153,21 +162,18 @@ RCT_EXPORT_METHOD(exampleMethod)
   return @"thisissomekey";
 }
 
-- (NSString *)_pinPhoto:(NSString *)path thumbPath:(NSString *)thumbPath {
-  NSError *error;
-  NSString *hash = [self.node pinPhoto:path thumb:thumbPath error:&error];
+- (NSString *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath error:(NSError**)error {
+  NSString *hash = [self.node addPhoto:path thumb:thumbPath error:error];
   return hash;
 }
 
-- (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit {
-  NSError *error;
-  NSString *hashesString = [self.node getPhotos:offset limit:limit error:&error];
+- (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit error:(NSError**)error {
+  NSString *hashesString = [self.node getPhotos:offset limit:limit error:error];
   return hashesString;
 }
 
-- (NSString *)_getPhoto:(NSString *)hashPath {
-  NSError *error;
-  NSString *base64String = [self.node getPhotoBase64String:hashPath error:&error];
+- (NSString *)_getPhoto:(NSString *)hashPath error:(NSError**)error {
+  NSString *base64String = [self.node getPhotoBase64String:hashPath error:error];
   return base64String;
 }
 

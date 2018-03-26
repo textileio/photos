@@ -21,13 +21,13 @@ export default {
     return TextileIPFS.stopNode()
   },
 
-  pinImageAtPath(path: string): Promise<string> {
+  addImageAtPath(path: string): Promise<string> {
     console.log("RESIZING IMAGE", path)
     return ImageResizer.createResizedImage(path, 400, 400, "JPEG", 80)
       .then(response => {
         console.log("RESIZED URI", response.path)
         console.log("INNER PINNING IMAGE:", path, response.path)
-        return TextileIPFS.pinImageAtPath(path, response.path)
+        return TextileIPFS.addImageAtPath(path, response.path)
       })
   },
 

@@ -92,7 +92,7 @@ class TextilePhotos extends React.PureComponent {
     for (const image of images) {
       try {
         console.log("PINNING PHOTO:", image.path)
-        const hash = await IPFS.pinImageAtPath(image.path)
+        const hash = await IPFS.addImageAtPath(image.path)
         console.log("PINNED", hash)
       } catch(error) {
         console.log("GOT AN ERROR RESIZING & PINNING", error)
