@@ -29,11 +29,16 @@ class TextilePhotos extends React.PureComponent {
     const params = navigation.state.params || {};
     return {
       headerTitle: 'Textile Photos',
+      headerLeft: (
+        <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
+          <HeaderButtons.Item title="onboard" onPress={() => navigation.navigate('OnboardingScreen')} />
+        </HeaderButtons>
+      ),
       headerRight: (
         <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-        <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
-        <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
-      </HeaderButtons>
+          <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
+          <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
+        </HeaderButtons>
       ),
     }
   };
