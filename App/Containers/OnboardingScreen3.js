@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, ScrollView, Text, KeyboardAvoidingView } from 'react-native'
+import { ScrollView, Text, KeyboardAvoidingView } from 'react-native'
 import { connect } from 'react-redux'
 import HeaderButtons from 'react-navigation-header-buttons'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -29,7 +29,6 @@ class OnboardingScreen3 extends Component {
       <ScrollView style={styles.container}>
         <KeyboardAvoidingView behavior='position'>
           <Text>OnboardingScreen3</Text>
-          <Button onPress={() => navigation.dismiss()} title="Dismiss" />
         </KeyboardAvoidingView>
       </ScrollView>
     )
