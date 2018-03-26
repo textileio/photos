@@ -1,6 +1,6 @@
-import AppNavigation from '../Navigation/AppNavigation'
+import TabNavigation from '../Navigation/TabNavigation'
 
 export const reducer = (state, action) => {
-  const newState = AppNavigation.router.getStateForAction(action, state)
+  const newState = TabNavigation.router.getStateForAction(action, state)
   return newState || state
 }
