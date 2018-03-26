@@ -3,8 +3,6 @@ import { StackNavigator } from 'react-navigation'
 import OnboardingScreen from '../Containers/OnboardingScreen'
 import TabNavigation from './TabNavigation'
 
-import styles from './Styles/NavigationStyles'
-
 // Manifest of possible screens
 const PrimaryNav = StackNavigator(
   {
