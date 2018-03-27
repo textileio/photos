@@ -1,3 +1,4 @@
+import RNFS from 'react-native-fs'
 import { put, select } from 'redux-saga/effects'
 import GithubActions, { GithubSelectors } from '../Redux/GithubRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux';
@@ -43,4 +44,8 @@ export function * startup (action) {
   const randomUserData = yield select(selectRandomUserData)
   // TODO: Check if we have data
   yield put(TextileActions.randomUsersRequest(1, 1, 40))
+
+  const path = RNFS.DocumentDirectoryPath
+  yield put(TextileActions.createNode(path, 'https://ipfs.textile.io'))
+  yield put(TextileActions.startNodeRequest())
 }
