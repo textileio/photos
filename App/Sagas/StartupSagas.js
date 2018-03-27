@@ -41,10 +41,6 @@ export function * startup (action) {
     yield put(GithubActions.userRequest('GantMan'))
   }
 
-  const randomUserData = yield select(selectRandomUserData)
-  // TODO: Check if we have data
-  yield put(TextileActions.randomUsersRequest(1, 1, 40))
-
   const path = RNFS.DocumentDirectoryPath
   yield put(TextileActions.createNode(path, 'https://ipfs.textile.io'))
   yield put(TextileActions.startNodeRequest())
