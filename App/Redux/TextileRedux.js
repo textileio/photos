@@ -26,6 +26,8 @@ const { Types, Creators } = createActions({
   getPhotosSuccess: ['data'],
   getPhotosFailure: null,
 
+  reloadPhotos: null,
+
   getPhotoDataRequest: ['hash'],
   getPhotoDataSuccess: ['data'],
   getPhotoDataFailure: null
@@ -45,6 +47,11 @@ export const INITIAL_STATE = Immutable({
     error: false,
     path: null,
     apiHost: null
+  },
+  images: {
+    error: false,
+    loading: false,
+    items: []
   }
 })
 
@@ -104,6 +111,29 @@ export const startNodeFailure = state =>
     }
   })
 
+export const getPhotosRequest = state =>
+  state.merge({
+    images: {
+      loading: true
+    }
+  })
+
+export const getPhotosSuccess = (state, { data }) =>
+  state.merge({
+    images: {
+      loading: false,
+      items: [...state.images.data, ...data]
+    }
+  })
+
+export const getPhotosFailure = state =>
+  state.merge({
+    images: {
+      loading: false,
+      error: true
+    }
+  })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -114,5 +144,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CREATE_NODE]: createNode,
   [Types.START_NODE_REQUEST]: startNodeRequest,
   [Types.START_NODE_SUCCESS]: startNodeSuccess,
-  [Types.START_NODE_FAILURE]: startNodeFailure
+  [Types.START_NODE_FAILURE]: startNodeFailure,
+
+  [Types.GET_PHOTOS_REQUEST]: getPhotosRequest,
+  [Types.GET_PHOTOS_SUCCESS]: getPhotosSuccess,
+  [Types.GET_PHOTOS_FAILURE]: getPhotosFailure
 })
