@@ -3,6 +3,7 @@ import API from '../Services/Api'
 import RandomUserApi from '../Services/RandomUserApi'
 import FixtureAPI from '../Services/FixtureApi'
 import DebugConfig from '../Config/DebugConfig'
+import IPFS from '../../TextileIPFSNativeModule'
 
 /* ------------- Types ------------- */
 
@@ -14,7 +15,11 @@ import { TextileTypes } from '../Redux/TextileRedux'
 
 import { startup } from './StartupSagas'
 import { getUserAvatar } from './GithubSagas'
-import { getRandomUsers } from './TextileSagas'
+import {
+  getRandomUsers,
+  createNode,
+  startNode
+} from './TextileSagas'
 
 /* ------------- API ------------- */
 
@@ -33,6 +38,9 @@ export default function * root () {
     // some sagas receive extra parameters in addition to an action
     takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api),
 
-    takeLatest(TextileTypes.RANDOM_USERS_REQUEST, getRandomUsers, randomUserApi)
+    takeLatest(TextileTypes.RANDOM_USERS_REQUEST, getRandomUsers, randomUserApi),
+
+    takeLatest(TextileTypes.CREATE_NODE, createNode, IPFS),
+    takeLatest(TextileTypes.START_NODE_REQUEST, startNode, IPFS)
   ])
 }

@@ -30,3 +30,17 @@ export function * getRandomUsers (api, action) {
     yield put(TextileActions.randomUsersRequestFailure())
   }
 }
+
+export function * createNode (api, action) {
+  const { path, apiHost } = action
+  yield call(api.createNodeWithDataDir, path, apiHost)
+}
+
+export function * startNode (api) {
+  const success = yield call(api.startNode)
+  if (success) {
+    yield put(TextileActions.startNodeSuccess())
+  } else {
+    yield put(TextileActions.startNodeFailure())
+  }
+}
