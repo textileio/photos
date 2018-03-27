@@ -44,3 +44,14 @@ export function * startNode (api) {
     yield put(TextileActions.startNodeFailure())
   }
 }
+
+export function * getPhotos (api, action) {
+  const { offset, limit } = action
+  const jsonString = yield call(api.getPhotos, offset, limit)
+  const json = JSON.parse(jsonString)
+  if (json) {
+    yield put(TextileActions.getPhotosSuccess(json))
+  } else {
+    yield put(TextileActions.getPhotosFailure())
+  }
+}

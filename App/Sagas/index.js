@@ -18,7 +18,8 @@ import { getUserAvatar } from './GithubSagas'
 import {
   getRandomUsers,
   createNode,
-  startNode
+  startNode,
+  getPhotos
 } from './TextileSagas'
 
 /* ------------- API ------------- */
@@ -41,6 +42,7 @@ export default function * root () {
     takeLatest(TextileTypes.RANDOM_USERS_REQUEST, getRandomUsers, randomUserApi),
 
     takeLatest(TextileTypes.CREATE_NODE, createNode, IPFS),
-    takeLatest(TextileTypes.START_NODE_REQUEST, startNode, IPFS)
+    takeLatest(TextileTypes.START_NODE_REQUEST, startNode, IPFS),
+    takeLatest(TextileTypes.GET_PHOTOS_REQUEST, getPhotos, IPFS)
   ])
 }
