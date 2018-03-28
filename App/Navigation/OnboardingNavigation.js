@@ -1,21 +1,25 @@
 import StackNavigator from '../Components/DismissableStackNavigator'
-import OnboardingScreen1 from '../Containers/OnboardingScreen1'
-import OnboardingScreen2 from '../Containers/OnboardingScreen2'
-import OnboardingScreen3 from '../Containers/OnboardingScreen3'
+import OnboardingSecurity from '../Containers/OnboardingSecurity'
+import OnboardingAccess from '../Containers/OnboardingAccess'
+import OnboardingShare from '../Containers/OnboardingShare'
+import OnboardingBetaWelcome from '../Containers/OnboardingBetaWelcome'
+import OnboardingPermissions from '../Containers/OnboardingPermissions'
 
 import styles from './Styles/NavigationStyles'
 
 // Manifest of possible screens
 const OnboardingNav = StackNavigator(
   {
-    OnboardingScreen1: { screen: OnboardingScreen1 },
-    OnboardingScreen2: { screen: OnboardingScreen2 },
-    OnboardingScreen3: { screen: OnboardingScreen3 }
+    OnboardingSecurity: { screen: OnboardingSecurity },
+    OnboardingAccess: { screen: OnboardingAccess },
+    OnboardingShare: { screen: OnboardingShare },
+    OnboardingBetaWelcome: { screen: OnboardingBetaWelcome },
+    OnboardingPermissions: { screen: OnboardingPermissions },
   },
   {
     // Default config for all screens
     headerMode: 'float',
-    initialRouteName: 'OnboardingScreen1',
+    initialRouteName: 'OnboardingSecurity',
     navigationOptions: {
       headerStyle: styles.header,
       title: 'Welcome'
