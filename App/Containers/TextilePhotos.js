@@ -18,9 +18,9 @@ class TextilePhotos extends React.PureComponent {
     super(props)
     this.state = {
       data: [],
-      page: 1,
-      seed: 1
-    };
+      offsetId: 'hi',
+      limit: 10
+    }
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -127,7 +127,7 @@ class TextilePhotos extends React.PureComponent {
   keyExtractor = (item, index) => index
 
   // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 20
+  oneScreensWorth = 10
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -153,8 +153,14 @@ class TextilePhotos extends React.PureComponent {
           numColumns={1}
           keyExtractor={this.keyExtractor}
           initialNumToRender={this.oneScreensWorth}
-          onEndReached={() => {
-            // this.props.getHashesRequest()
+          onEndReachedThreshold={0.5}
+          onEndReached={({ distanceFromEnd }) => {
+            // This has an issue
+            // It would currently load new ones on first load too
+            // const lastItem = this.props.images.items[
+            //   this.props.images.items.length - 1
+            //   ]
+            // this.props.getHashesRequest(lastItem.hash, 10)
           }}
           // ListHeaderComponent={this.renderHeader}
           // ListFooterComponent={this.renderFooter}
@@ -177,7 +183,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getHashesRequest: () => { dispatch(Actions.getHashesRequest(0, 10)) },
+    getHashesRequest: (offsetId, limit) => { dispatch(Actions.getHashesRequest(offsetId, limit)) },
     addImagesRequest: (images) => { dispatch(Actions.addImagesRequest(images)) }
   }
 }
