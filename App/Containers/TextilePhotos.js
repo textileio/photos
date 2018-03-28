@@ -53,20 +53,6 @@ class TextilePhotos extends React.PureComponent {
 
   // Just added this simple function here @aaron, nothing fancy.
   // I stole this from elsewhere, so there are some extra probs in here
-  makeRemoteRequest = () => {
-    const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=40`;
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: page === 1 ? res.results : [...this.state.data, ...res.results]
-        });
-      })
-      .catch(error => {
-        console.log("error")
-      });
-  };
 
   _showPhotoPicker() {
     ImagePicker.openPicker({
@@ -130,7 +116,7 @@ class TextilePhotos extends React.PureComponent {
       <View style={styles.row}>
         <Image
           width={Dimensions.get('window').width}
-          source={{uri: item.picture.large}}
+          source={{uri: 'data:image/png;base64, ' + item.thumb}}
         />
       </View>
     )
@@ -189,7 +175,7 @@ class TextilePhotos extends React.PureComponent {
           keyExtractor={this.keyExtractor}
           initialNumToRender={this.oneScreensWorth}
           onEndReached={() => {
-            this.props.getPhotosRequest()
+            // this.props.getHashesRequest()
           }}
           // ListHeaderComponent={this.renderHeader}
           // ListFooterComponent={this.renderFooter}
@@ -212,7 +198,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getPhotosRequest: () => { dispatch(Actions.getPhotosRequest(0, 10)) }
+    getHashesRequest: () => { dispatch(Actions.getHashesRequest(0, 10)) }
   }
 }
 
