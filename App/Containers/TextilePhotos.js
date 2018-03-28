@@ -212,7 +212,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getPhotosRequest: () => { dispatch(Actions.getPhotosRequest(0, 10)) }
+    getPhotosRequest: () => { dispatch(Actions.getPhotosRequest('', 10)) }
   }
 }
 
