@@ -18,13 +18,16 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: null,
 
+  getHashesRequest: ['offset', 'limit'],
+  getHashesSuccess: null,
+  getHashesFailure: null,
+
+  getThumbsRequest: ['data'],
+  getThumbsSuccess: ['data'],
+
   addImageRequest: ['path'],
   addImageSuccess: ['hash'],
   addImageFailure: null,
-
-  getPhotosRequest: ['offset', 'limit'],
-  getPhotosSuccess: ['data'],
-  getPhotosFailure: null,
 
   reloadPhotos: null,
 
@@ -111,26 +114,21 @@ export const startNodeFailure = state =>
     }
   })
 
-export const getPhotosRequest = state =>
+export const getHashesRequest = state =>
   state.merge({
     images: {
       loading: true
     }
   })
 
-export const getPhotosSuccess = (state, { data }) => {
-  // Suspicious that redux-persist is clearing out our INITIAL_STATE
-  // empty array of images.
-  const existingImages = state.images.items ? state.images.items : []
-  return state.merge({
+export const getHashesSuccess = state =>
+  state.merge({
     images: {
-      loading: false,
-      items: [...existingImages, ...data.hashes]
+      loading: true
     }
   })
-}
 
-export const getPhotosFailure = state =>
+export const getHashesFailure = state =>
   state.merge({
     images: {
       loading: false,
@@ -138,6 +136,24 @@ export const getPhotosFailure = state =>
     }
   })
 
+export const getThumbsRequest = state =>
+  state.merge({
+    images: {
+      loading: true
+    }
+  })
+
+export const getThumbsSuccess = (state, { data }) => {
+  // Suspicious that redux-persist is clearing out our INITIAL_STATE
+  // empty array of images.
+  const existingImages = state.images.items ? state.images.items : []
+  return state.merge({
+    images: {
+      loading: false,
+      items: [...existingImages, ...data]
+    }
+  })
+}
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -150,7 +166,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.START_NODE_SUCCESS]: startNodeSuccess,
   [Types.START_NODE_FAILURE]: startNodeFailure,
 
-  [Types.GET_PHOTOS_REQUEST]: getPhotosRequest,
-  [Types.GET_PHOTOS_SUCCESS]: getPhotosSuccess,
-  [Types.GET_PHOTOS_FAILURE]: getPhotosFailure
+  [Types.GET_HASHES_REQUEST]: getHashesRequest,
+  [Types.GET_HASHES_SUCCESS]: getHashesSuccess,
+  [Types.GET_HASHES_FAILURE]: getHashesFailure,
+
+  [Types.GET_THUMBS_REQUEST]: getThumbsRequest,
+  [Types.GET_THUMBS_SUCCESS]: getThumbsSuccess
 })

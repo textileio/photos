@@ -10,7 +10,7 @@
 *    you'll need to define a constant in that file.
 *************************************************************/
 
-import { call, put } from 'redux-saga/effects'
+import { call, put, all} from 'redux-saga/effects'
 import TextileActions from '../Redux/TextileRedux'
 // import { TextileSelectors } from '../Redux/TextileRedux'
 
@@ -46,16 +46,27 @@ export function * startNode (api) {
 }
 
 export function * handleNodeStarted () {
-  yield put(TextileActions.getPhotosRequest('', 10))
+  yield put(TextileActions.getHashesRequest('', 10))
 }
 
-export function * getPhotos (api, action) {
+export function * getHashes (api, action) {
   const { offset, limit } = action
   const jsonString = yield call(api.getPhotos, offset, limit)
   const json = JSON.parse(jsonString)
   if (json) {
-    yield put(TextileActions.getPhotosSuccess(json))
+    yield put(TextileActions.getHashesSuccess())
+    yield put(TextileActions.getThumbsRequest(json))
   } else {
-    yield put(TextileActions.getPhotosFailure())
+    yield put(TextileActions.getHashesFailure())
   }
+}
+
+export function * getThumbs (api, data) {
+  const thumbArray = yield all(data.data.hashes.map(hash => {
+    return call(api.getPhotoData, hash + '/thumb.jpg')
+  }))
+  const thumbs = thumbArray.map((thumb, i) => {
+    return {'hash': data.data.hashes[i], 'thumb': thumb}
+  })
+  yield put(TextileActions.getThumbsSuccess(thumbs))
 }
