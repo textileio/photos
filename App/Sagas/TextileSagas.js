@@ -12,12 +12,10 @@
 
 import { call, put, all} from 'redux-saga/effects'
 import TextileActions from '../Redux/TextileRedux'
-// import { TextileSelectors } from '../Redux/TextileRedux'
 
 export function * getRandomUsers (api, action) {
   const { seed, page, results } = action
   // get current data from Store
-  // const currentData = yield select(TextileSelectors.getData)
   // make the call to the api
   const response = yield call(api.getUsers, seed, page, results)
 
@@ -61,12 +59,32 @@ export function * getHashes (api, action) {
   }
 }
 
-export function * getThumbs (api, data) {
-  const thumbArray = yield all(data.data.hashes.map(hash => {
+export function * getThumbs (api, response) {
+  const thumbArray = yield all(response.data.hashes.map(hash => {
     return call(api.getPhotoData, hash + '/thumb.jpg')
   }))
   const thumbs = thumbArray.map((thumb, i) => {
-    return {'hash': data.data.hashes[i], 'thumb': thumb}
+    return {'hash': response.data.hashes[i], 'thumb': thumb}
   })
   yield put(TextileActions.getThumbsSuccess(thumbs))
+}
+
+export function * addImages (api, response) {
+  // First, call api to add the new Image data and get back the hash
+  const hashArray = yield all(response.data.map(image => {
+    return call(api.addImageAtPath, image.path)
+  }))
+
+  // Grab the raw thumbnail data for the hash
+  // TODO, we could return thumb as part of addImageAtPath
+  const thumbArray = yield all(hashArray.map(hash => {
+    return call(api.getPhotoData, hash + '/thumb.jpg')
+  }))
+
+  // Combine our two arrays into the required format
+  const newData = thumbArray.map((thumb, i) => {
+    return {'hash': hashArray[i], 'thumb': thumb}
+  })
+
+  yield put(TextileActions.getThumbsSuccess(newData))
 }

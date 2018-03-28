@@ -25,6 +25,10 @@ const { Types, Creators } = createActions({
   getThumbsRequest: ['data'],
   getThumbsSuccess: ['data'],
 
+  addImagesRequest: ['data'],
+  addImagesSuccess: ['data'],
+
+  // TODO: eval if below methods are still needed
   addImageRequest: ['path'],
   addImageSuccess: ['hash'],
   addImageFailure: null,
@@ -114,34 +118,39 @@ export const startNodeFailure = state =>
     }
   })
 
-export const getHashesRequest = state =>
-  state.merge({
+export const getHashesRequest = state => {
+  const existingImages = state.images.items ? state.images.items : []
+  return state.merge({
     images: {
-      loading: true
+      loading: true,
+      items: existingImages
     }
   })
+}
 
-export const getHashesSuccess = state =>
-  state.merge({
-    images: {
-      loading: true
-    }
-  })
+// TODO: determine if we want any feedback here
+export const getHashesSuccess = state => state
 
-export const getHashesFailure = state =>
-  state.merge({
+export const getHashesFailure = state => {
+  const existingImages = state.images.items ? state.images.items : []
+  return state.merge({
     images: {
       loading: false,
-      error: true
+      error: true,
+      items: existingImages
     }
   })
+}
 
-export const getThumbsRequest = state =>
-  state.merge({
+export const getThumbsRequest = state => {
+  const existingImages = state.images.items ? state.images.items : []
+  return state.merge({
     images: {
-      loading: true
+      loading: true,
+      items: existingImages
     }
   })
+}
 
 export const getThumbsSuccess = (state, { data }) => {
   // Suspicious that redux-persist is clearing out our INITIAL_STATE
@@ -150,10 +159,14 @@ export const getThumbsSuccess = (state, { data }) => {
   return state.merge({
     images: {
       loading: false,
-      items: [...existingImages, ...data]
+      items: [...data, ...existingImages]
     }
   })
 }
+
+// TODO: determine if we want some loading state for addImages
+export const addImagesRequest = state => state
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -171,5 +184,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_HASHES_FAILURE]: getHashesFailure,
 
   [Types.GET_THUMBS_REQUEST]: getThumbsRequest,
-  [Types.GET_THUMBS_SUCCESS]: getThumbsSuccess
+  [Types.GET_THUMBS_SUCCESS]: getThumbsSuccess,
+
+  [Types.ADD_IMAGES_REQUEST]: addImagesRequest,
+  [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess
 })
