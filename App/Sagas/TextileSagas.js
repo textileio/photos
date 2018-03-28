@@ -45,6 +45,10 @@ export function * startNode (api) {
   }
 }
 
+export function * handleNodeStarted () {
+  yield put(TextileActions.getPhotosRequest('', 10))
+}
+
 export function * getPhotos (api, action) {
   const { offset, limit } = action
   const jsonString = yield call(api.getPhotos, offset, limit)

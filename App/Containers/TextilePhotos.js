@@ -183,11 +183,14 @@ class TextilePhotos extends React.PureComponent {
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={styles.listContent}
-          data={this.state.data}
+          data={this.props.images.items}
           renderItem={this.renderRow}
           numColumns={1}
           keyExtractor={this.keyExtractor}
           initialNumToRender={this.oneScreensWorth}
+          onEndReached={() => {
+            this.props.getPhotosRequest()
+          }}
           // ListHeaderComponent={this.renderHeader}
           // ListFooterComponent={this.renderFooter}
           // ListEmptyComponent={this.renderEmpty}
@@ -201,11 +204,15 @@ class TextilePhotos extends React.PureComponent {
 const mapStateToProps = (state) => {
   return {
     // ...redux state to props here
+    images: {
+      items: state.textile.images.items
+    }
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getPhotosRequest: () => { dispatch(Actions.getPhotosRequest(0, 10)) }
   }
 }
 
