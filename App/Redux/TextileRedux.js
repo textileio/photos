@@ -118,13 +118,17 @@ export const getPhotosRequest = state =>
     }
   })
 
-export const getPhotosSuccess = (state, { data }) =>
-  state.merge({
+export const getPhotosSuccess = (state, { data }) => {
+  // Suspicious that redux-persist is clearing out our INITIAL_STATE
+  // empty array of images.
+  const existingImages = state.images.items ? state.images.items : []
+  return state.merge({
     images: {
       loading: false,
-      items: [...state.images.data, ...data]
+      items: [...existingImages, ...data.hashes]
     }
   })
+}
 
 export const getPhotosFailure = state =>
   state.merge({
