@@ -1,12 +1,11 @@
 // @flow
 import React from 'react'
-import { View, Text, Button, FlatList, Dimensions } from 'react-native'
+import { View, Text, FlatList, Dimensions } from 'react-native'
 import Image from 'react-native-scalable-image'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker'
-import IPFS from '../../TextileIPFSNativeModule'
 import Actions from '../Redux/TextileRedux'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
@@ -15,9 +14,8 @@ import Actions from '../Redux/TextileRedux'
 import styles from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
-
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       data: [],
       page: 1,
@@ -43,7 +41,7 @@ class TextilePhotos extends React.PureComponent {
     }
   };
 
-  componentWillMount() {
+  componentWillMount () {
     this.props.navigation.setParams({
       showPhotoPicker: this._showPhotoPicker.bind(this),
       showCamera: this._showCamera
@@ -54,36 +52,17 @@ class TextilePhotos extends React.PureComponent {
   // Just added this simple function here @aaron, nothing fancy.
   // I stole this from elsewhere, so there are some extra probs in here
 
-  _showPhotoPicker() {
+  _showPhotoPicker () {
     ImagePicker.openPicker({
       multiple: true
-    }).then(images => {
-      this.processImages(images)
-    }).then(() => {
-      console.log("OK");
-    });
+    }).then(this.props.addImagesRequest)
   }
 
-  _showCamera = () => {
+  _showCamera () {
     ImagePicker.openCamera({
       width: 300,
       height: 400
-    }).then(image => {
-      this.processImages([image])
-    });
-  }
-
-  async processImages(images) {
-    // console.log(images);
-    for (const image of images) {
-      try {
-        console.log("PINNING PHOTO:", image.path)
-        const hash = await IPFS.addImageAtPath(image.path)
-        console.log("PINNED", hash)
-      } catch(error) {
-        console.log("GOT AN ERROR RESIZING & PINNING", error)
-      }
-    }
+    }).then(this.props.addImagesRequest)
   }
 
   /* ***********************************************************
@@ -198,7 +177,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getHashesRequest: () => { dispatch(Actions.getHashesRequest(0, 10)) }
+    getHashesRequest: () => { dispatch(Actions.getHashesRequest(0, 10)) },
+    addImagesRequest: (images) => { dispatch(Actions.addImagesRequest(images)) }
   }
 }
 
