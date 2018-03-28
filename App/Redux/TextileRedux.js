@@ -18,12 +18,12 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: null,
 
-  getHashesRequest: ['offset', 'limit'],
+  getHashesRequest: ['offsetId', 'limit', 'clearItems'],
   getHashesSuccess: null,
   getHashesFailure: null,
 
-  getThumbsRequest: ['data'],
-  getThumbsSuccess: ['data'],
+  getThumbsRequest: ['response', 'prepend', 'clearItems'],
+  getThumbsSuccess: ['response', 'prepend', 'clearItems'],
 
   addImagesRequest: ['data'],
   addImagesSuccess: ['data'],
@@ -152,20 +152,28 @@ export const getThumbsRequest = state => {
   })
 }
 
-export const getThumbsSuccess = (state, { data }) => {
+export const getThumbsSuccess = (state, { response, prepend, clearItems }) => {
   // Suspicious that redux-persist is clearing out our INITIAL_STATE
   // empty array of images.
-  const existingImages = state.images.items ? state.images.items : []
+  let newItems = response
+  if (!clearItems) {
+    const existingImages = state.images.items ? state.images.items : []
+    newItems = prepend ? [...newItems, ...existingImages] : [...existingImages, ...newItems]
+  }
   return state.merge({
     images: {
       loading: false,
-      items: [...data, ...existingImages]
+      items: newItems
     }
   })
 }
 
-// TODO: determine if we want some loading state for addImages
+// TODO: add a loading state for addImages
 export const addImagesRequest = state => state
+
+
+// Helper so sagas can figure out current items loaded
+// const getItems = state => state.items
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -187,5 +195,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_THUMBS_SUCCESS]: getThumbsSuccess,
 
   [Types.ADD_IMAGES_REQUEST]: addImagesRequest,
+  // TODO: Should this use its own handler? Not yet.
   [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess
 })
