@@ -10,19 +10,47 @@ import styles from './Styles/NavigationStyles'
 // Manifest of possible screens
 const OnboardingNav = StackNavigator(
   {
-    OnboardingSecurity: { screen: OnboardingSecurity },
-    OnboardingAccess: { screen: OnboardingAccess },
-    OnboardingShare: { screen: OnboardingShare },
-    OnboardingBetaWelcome: { screen: OnboardingBetaWelcome },
-    OnboardingPermissions: { screen: OnboardingPermissions },
+    OnboardingSecurity: {
+      screen: OnboardingSecurity,
+      navigationOptions: {
+        title: "Backup",
+      },
+    },
+    OnboardingAccess: {
+      screen: OnboardingAccess,
+      navigationOptions: {
+        title: "Access",
+      },
+    },
+    OnboardingShare: {
+      screen: OnboardingShare,
+      navigationOptions: {
+        title: "Share",
+      },
+    },
+    OnboardingBetaWelcome: {
+      screen: OnboardingBetaWelcome,
+      navigationOptions: {
+        title: "Welcome",
+      },
+    },
+    OnboardingPermissions: {
+      screen: OnboardingPermissions,
+      navigationOptions: {
+        title: "Geolocation",
+      },
+    },
   },
   {
     // Default config for all screens
     headerMode: 'float',
+    left: null,
     initialRouteName: 'OnboardingSecurity',
     navigationOptions: {
       headerStyle: styles.header,
-      title: 'Welcome'
+      headerLeft: null,
+      swipeEnabled: false,
+      gesturesEnabled: false,
     }
   }
 )
