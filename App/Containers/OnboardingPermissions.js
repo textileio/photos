@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, KeyboardAvoidingView, Image, Button, View } from 'react-native'
 import { connect } from 'react-redux'
-import HeaderButtons from 'react-navigation-header-buttons'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
 // Styles
@@ -15,11 +13,6 @@ class OnboardingScreen2 extends Component {
     const params = navigation.state.params || {};
     return {
       headerTitle: 'Permissions',
-      headerRight: (
-        <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-          <HeaderButtons.Item title="Done" onPress={() => navigation.dismiss()} />
-        </HeaderButtons>
-      )
     }
   };
 
