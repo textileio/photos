@@ -4,11 +4,15 @@ package com.textilephotos.textileipfs;
 
 import android.support.annotation.Nullable;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+
+import mobile.Mobile;
+import mobile.Node;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +20,7 @@ import java.util.Map;
 public class TextileIPFSModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileIPFS";
     private static ReactApplicationContext reactContext = null;
+    private static Node textile = null;
 
     public TextileIPFSModule(ReactApplicationContext context) {
         // Pass in the context to the constructor and save it so you can emit events
@@ -37,9 +42,68 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
         // Export any constants to be used in your native module
         // https://facebook.github.io/react-native/docs/native-modules-android.html#the-toast-module
         final Map<String, Object> constants = new HashMap<>();
-        constants.put("EXAMPLE_CONSTANT", "example");
-
+        constants.put("EXAMPLE_CONSTANT", TextileIPFSModule.REACT_CLASS);
         return constants;
+    }
+
+    @ReactMethod
+    public void createNodeWithDataDir (String dataDir, String apiHost) {
+        textile = Mobile.newTextile(dataDir, apiHost);
+    }
+
+    @ReactMethod
+    public void startNode (Promise promise) {
+        try {
+            textile.start();
+            promise.resolve(true);
+        }
+        catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void stopNode (Promise promise) {
+        try {
+            textile.stop();
+            promise.resolve(true);
+        }
+        catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void addImageAtPath (String path, String thumb, Promise promise) {
+        try {
+            String hash = textile.addPhoto(path, thumb);
+            promise.resolve(hash);
+        }
+        catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void getPhotos (String offset, Long limit, Promise promise) {
+        try {
+            String hashString = textile.getPhotos(offset, limit);
+            promise.resolve(hashString);
+        }
+        catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void getPhotoData (String path, Promise promise) {
+        try {
+            String result = textile.getPhotoBase64String(path);
+            promise.resolve(result);
+        }
+        catch (Exception e) {
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
