@@ -65,10 +65,7 @@ class TextilePhotos extends React.PureComponent {
       height: 400
     })
       .then(image => {
-        console.log(this.setState)
-        console.log(this.props)
-        console.log(image)
-        // this.props.addImagesRequest([image])
+        this.props.addImagesRequest([image])
       })
       .catch(e => console.log(e))
   }
