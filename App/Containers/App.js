@@ -13,6 +13,7 @@ import RNFS from 'react-native-fs'
 import IPFS from '../../TextileIPFSNativeModule'
 
 BackgroundTask.define(async () => {
+  console.log('RUNNING BACKGROUND TASK!')
   // Start IPFS
   const path = RNFS.DocumentDirectoryPath
   IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io')
