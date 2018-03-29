@@ -106,7 +106,7 @@ RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPat
   }
 }
 
-RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(long)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit error:&error];
   if (hashesString) {
