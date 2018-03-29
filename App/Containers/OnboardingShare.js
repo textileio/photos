@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, KeyboardAvoidingView, Image, Button, View } from 'react-native'
 import { connect } from 'react-redux'
-// import YourActions from '../Redux/YourRedux'
 
 // Styles
 import styles from './Styles/OnboardingScreenStyle'
 import Ionicon from "react-native-vector-icons/Ionicons";
 
-class OnboardingScreen3 extends Component {
+class OnboardingShare extends Component {
   render () {
     const { navigate } = this.props.navigation
     return (
@@ -43,4 +42,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen3)
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingShare)

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, KeyboardAvoidingView, Image, Button, View } from 'react-native'
 import { connect } from 'react-redux'
-// import YourActions from '../Redux/YourRedux'
+import Actions from '../Redux/TextileRedux'
 
 // Styles
 import styles from './Styles/OnboardingScreenStyle'
 import Ionicon from "react-native-vector-icons/Ionicons";
 
-class OnboardingScreen2 extends Component {
+class OnboardingPermissions extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {};
@@ -34,8 +34,9 @@ class OnboardingScreen2 extends Component {
         </ScrollView>
         <Button
           onPress={() => {
-            navigator.geolocation.requestAuthorization()
-            this.props.navigation.dismiss()
+            navigator.geolocation.requestAuthorization();
+            this.props.onboardedSuccess();
+            this.props.navigation.dismiss();
           }}
           title="Authorize"
           accessibilityLabel="Complete onboarding experience"
@@ -46,13 +47,11 @@ class OnboardingScreen2 extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {
-  }
+  return {}
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
+const mapDispatchToProps = (dispatch) => ({
+  onboardedSuccess: () => dispatch(Actions.onboardedSuccess())
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen2)
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingPermissions)
