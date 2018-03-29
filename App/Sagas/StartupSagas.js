@@ -41,6 +41,7 @@ export function * startup (action) {
     yield put(GithubActions.userRequest('GantMan'))
   }
 
+  console.log("hello")
   const path = RNFS.DocumentDirectoryPath
   yield put(TextileActions.createNode(path, 'https://ipfs.textile.io'))
   yield put(TextileActions.startNodeRequest())

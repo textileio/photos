@@ -17,7 +17,8 @@ import styles from './Styles/TextilePhotosStyle'
 class TextilePhotos extends React.PureComponent {
 
   constructor(props) {
-    super(props);
+    super(props)
+    console.log('create')
     this.state = {
       data: [],
       page: 1,
