@@ -138,6 +138,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-background-task')
+    compile project(':realm')
     compile project(':react-native-image-resizer')
     compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { View, Text, Button, FlatList, Dimensions } from 'react-native'
+import {View, Text, Button, FlatList, Dimensions} from 'react-native'
 import Image from 'react-native-scalable-image'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -128,10 +128,10 @@ class TextilePhotos extends React.PureComponent {
   renderRow ({item}) {
     return (
       <View style={styles.row}>
-        <Image
-          width={Dimensions.get('window').width}
-          source={{uri: item.picture.large}}
-        />
+        {/*<Image*/}
+          {/*width={Dimensions.get('window').width}*/}
+          {/*source={{uri: item.picture.large}}*/}
+        {/*/>*/}
       </View>
     )
   }
