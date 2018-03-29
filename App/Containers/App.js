@@ -2,15 +2,17 @@ import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
+import { persistStore } from 'redux-persist'
 import Photos from '../Services/Photos';
 import RNFS from 'react-native-fs';
 import IPFS from '../../TextileIPFSNativeModule';
 
 // create our store
 const store = createStore()
-
+const persistor = persistStore(store)
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
  * call this component first.
@@ -48,7 +50,9 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <RootContainer />
+        <PersistGate loading={null} persistor={persistor}>
+          <RootContainer />
+        </PersistGate>
       </Provider>
     )
   }
