@@ -142,6 +142,7 @@ dependencies {
     compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')
     compile project(':react-native-device-info')
+    compile project(':react-native-image-crop-picker')
     compile project(':react-native-fs')
     compile project(':textilego')
     compile fileTree(dir: "libs", include: ["*.jar"])

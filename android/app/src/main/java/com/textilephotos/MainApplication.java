@@ -2,6 +2,7 @@ package com.textilephotos;
 
 import android.app.Application;
 
+//import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.facebook.react.ReactApplication;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
