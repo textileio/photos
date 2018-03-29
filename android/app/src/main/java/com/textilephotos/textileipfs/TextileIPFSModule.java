@@ -58,7 +58,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject("SOME ERROR", e);
+            promise.reject("START ERROR", e);
         }
     }
 
@@ -69,7 +69,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject(e);
+            promise.reject("STOP ERROR", e);
         }
     }
 
@@ -80,7 +80,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             promise.resolve(hash);
         }
         catch (Exception e) {
-            promise.reject(e);
+            promise.reject("ADD IMAGE ERROR", e);
         }
     }
 
@@ -91,7 +91,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             promise.resolve(hashString);
         }
         catch (Exception e) {
-            promise.reject(e);
+            promise.reject("GET PHOTOS ERROR", e);
         }
     }
 
@@ -102,7 +102,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             promise.resolve(result);
         }
         catch (Exception e) {
-            promise.reject(e);
+            promise.reject("GET DATA ERROR", e);
         }
     }
 
