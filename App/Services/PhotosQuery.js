@@ -17,7 +17,7 @@ export default async () => {
     let cursor = null // Start with null to get the latest
     let hasNextPage = true
     while (cursor !== latestPhotoQueried && hasNextPage) {
-      const photo = await this.getPhoto(cursor)
+      const photo = await getPhoto(cursor)
       // If the photo we query is the same as the latestPhotoQueried, there is no new photo, break out
       if (photo.pageInfo.end_cursor === latestPhotoQueried) {
         break

@@ -30,6 +30,8 @@ target 'TextilePhotos' do
 
   pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
 
+  pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
+
   target 'TextilePhotosTests' do
     inherit! :search_paths
     # Pods for testing

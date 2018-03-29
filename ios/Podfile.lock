@@ -2,6 +2,7 @@ PODS:
   - QBImagePickerController (3.4.0)
   - React (0.50.4):
     - React/Core (= 0.50.4)
+  - react-native-background-timer (2.0.1)
   - react-native-image-resizer (1.0.0):
     - React
   - React/Core (0.50.4):
@@ -43,6 +44,7 @@ PODS:
   - yoga (0.50.4.React)
 
 DEPENDENCIES:
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - React/Core (from `../node_modules/react-native`)
   - React/RCTActionSheet (from `../node_modules/react-native`)
@@ -63,6 +65,8 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   React:
     :path: ../node_modules/react-native
+  react-native-background-timer:
+    :path: ../node_modules/react-native-background-timer
   react-native-image-resizer:
     :path: ../node_modules/react-native-image-resizer
   RNBackgroundFetch:
@@ -77,6 +81,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   React: 541ba768b9855e10cdc76f55427a5cd0653ca806
+  react-native-background-timer: 8791c4dfed51d12a103b37a9f365117bee6f298f
   react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
   RNBackgroundFetch: 8c4f77f83c398c659bce82af2f0a885079417b9e
   RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
@@ -84,6 +89,6 @@ SPEC CHECKSUMS:
   RSKImageCropper: d9a1acbc0600bf8decc8f0d21895872c99a9e4cf
   yoga: 17521bbb0dd54a47c0b3ac43253e78cdac7488e0
 
-PODFILE CHECKSUM: 84bd6c53ee3af06bfa4f23af66b0c39ff7c3da44
+PODFILE CHECKSUM: af22bbccd8ed38a305e7e806f85e67b25a42ad30
 
 COCOAPODS: 1.4.0
