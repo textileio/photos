@@ -29,11 +29,11 @@ class TextilePhotos extends React.PureComponent {
     const params = navigation.state.params || {};
     return {
       headerTitle: 'Textile Photos',
-      headerLeft: (
-        <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-          <HeaderButtons.Item title="onboard" onPress={() => navigation.navigate('OnboardingNavigation')} />
-        </HeaderButtons>
-      ),
+      headerLeft: null, //(
+      //   <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
+      //     <HeaderButtons.Item title="onboard" onPress={() => navigation.navigate('OnboardingNavigation')} />
+      //   </HeaderButtons>
+      // ),
       headerRight: (
         <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
           <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
@@ -48,6 +48,9 @@ class TextilePhotos extends React.PureComponent {
       showPhotoPicker: this._showPhotoPicker.bind(this),
       showCamera: this._showCamera
     });
+    if (!this.props.onboarded) {
+      this.props.navigation.navigate("OnboardingSecurity")
+    }
     // this.makeRemoteRequest();
   }
 
@@ -198,9 +201,9 @@ class TextilePhotos extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    // ...redux state to props here
+    onboarded: state.textile.onboarded
   }
 }
 

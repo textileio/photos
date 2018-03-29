@@ -6,7 +6,8 @@ import Immutable from 'seamless-immutable'
 const { Types, Creators } = createActions({
   randomUsersRequest: ['seed', 'page', 'results'],
   randomUsersRequestSuccess: ['data'],
-  randomUsersRequestFailure: null
+  randomUsersRequestFailure: null,
+  onboardedSuccess: null,
 })
 
 export const TextileTypes = Types
@@ -17,7 +18,8 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   randomUserData: null,
   fetching: null,
-  error: null
+  error: null,
+  onboarded: false
 })
 
 /* ------------- Selectors ------------- */
@@ -27,6 +29,10 @@ export const TextileSelectors = {
 }
 
 /* ------------- Reducers ------------- */
+
+export const onboardedSuccess = state => {
+  return state.merge({ onboarded: true })
+}
 
 // request the data from an api
 export const randomUsersRequest = state => {
@@ -48,5 +54,6 @@ export const randomUsersRequestFailure = state =>
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.RANDOM_USERS_REQUEST]: randomUsersRequest,
   [Types.RANDOM_USERS_REQUEST_SUCCESS]: randomUsersRequestSuccess,
-  [Types.RANDOM_USERS_REQUEST_FAILURE]: randomUsersRequestFailure
+  [Types.RANDOM_USERS_REQUEST_FAILURE]: randomUsersRequestFailure,
+  [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 })

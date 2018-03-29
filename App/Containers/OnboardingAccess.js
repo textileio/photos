@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import styles from './Styles/OnboardingScreenStyle'
 import Ionicon from "react-native-vector-icons/Ionicons";
 
-class OnboardingScreen2 extends Component {
+class OnboardingAccess extends Component {
   render () {
     const { navigate } = this.props.navigation
     return (
@@ -43,4 +43,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen2)
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingAccess)
