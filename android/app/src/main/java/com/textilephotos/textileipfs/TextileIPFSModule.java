@@ -52,7 +52,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public Promise startNode (Promise promise) {
+    public void startNode (Promise promise) {
         try {
             textile.start();
             promise.resolve(true);
@@ -85,7 +85,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotos (String offset, Long limit, Promise promise) {
+    public void getPhotos (String offset, Integer limit, Promise promise) {
         try {
             String hashString = textile.getPhotos(offset, limit);
             promise.resolve(hashString);
