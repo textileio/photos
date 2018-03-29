@@ -59,10 +59,17 @@ class TextilePhotos extends React.PureComponent {
   }
 
   _showCamera () {
+    const self = this
     ImagePicker.openCamera({
       width: 300,
       height: 400
-    }).then(this.props.addImagesRequest)
+    })
+      .then(image => {
+        console.log(self.props)
+        console.log(this.props)
+        console.log(image)
+        // this.props.addImagesRequest([image])
+      })
   }
 
   /* ***********************************************************
@@ -176,7 +183,7 @@ const mapStateToProps = (state) => {
   return {
     // ...redux state to props here
     images: {
-      items: state.textile.images.items
+      items: state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
     }
   }
 }
