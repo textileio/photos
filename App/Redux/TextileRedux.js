@@ -119,7 +119,7 @@ export const startNodeFailure = state =>
   })
 
 export const getHashesRequest = state => {
-  const existingImages = state.images.items ? state.images.items : []
+  const existingImages = state.image && state.images.items ? state.images.items : []
   return state.merge({
     images: {
       loading: true,

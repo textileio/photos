@@ -1,6 +1,6 @@
 import RNFS from 'react-native-fs'
 import { put, select } from 'redux-saga/effects'
-import TextileActions, { TextileSelectors } from '../Redux/TextileRedux';
+import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import { is } from 'ramda'
 
 // exported to make available for tests
@@ -8,7 +8,7 @@ import { is } from 'ramda'
 export const selectRandomUserData = TextileSelectors.getRandomUserData
 
 // process STARTUP actions
-export function * startup (action) {
+export function * startup () {
   if (__DEV__ && console.tron) {
     // straight-up string logging
     console.tron.log('Hello, I\'m an example of how to log via Reactotron.')
