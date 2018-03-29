@@ -176,7 +176,7 @@ const mapStateToProps = (state) => {
   return {
     // ...redux state to props here
     images: {
-      items: state.textile.images.items
+      items: state.textile.images && state.textile.items ? state.textile.images.items : []
     }
   }
 }

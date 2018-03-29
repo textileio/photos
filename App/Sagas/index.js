@@ -9,7 +9,7 @@ import { TextileTypes } from '../Redux/TextileRedux'
 
 /* ------------- Sagas ------------- */
 
-import { startup } from './StartupSagas'
+import {selectRandomUserData, startup} from './StartupSagas'
 import {
   getRandomUsers,
   createNode,
