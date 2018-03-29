@@ -1,12 +1,11 @@
 // @flow
 import React from 'react'
-import { View, Text, Button, FlatList, Dimensions } from 'react-native'
+import { View, Text, FlatList, Dimensions } from 'react-native'
 import Image from 'react-native-scalable-image'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-crop-picker'
-import IPFS from '../../TextileIPFSNativeModule'
 import Actions from '../Redux/TextileRedux'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
@@ -15,15 +14,13 @@ import Actions from '../Redux/TextileRedux'
 import styles from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
-
-  constructor(props) {
+  constructor (props) {
     super(props)
-    console.log('create')
     this.state = {
       data: [],
-      page: 1,
-      seed: 1
-    };
+      offsetId: 'hi',
+      limit: 10
+    }
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -44,7 +41,7 @@ class TextilePhotos extends React.PureComponent {
     }
   };
 
-  componentWillMount() {
+  componentWillMount () {
     this.props.navigation.setParams({
       showPhotoPicker: this._showPhotoPicker.bind(this),
       showCamera: this._showCamera
@@ -54,51 +51,18 @@ class TextilePhotos extends React.PureComponent {
 
   // Just added this simple function here @aaron, nothing fancy.
   // I stole this from elsewhere, so there are some extra probs in here
-  makeRemoteRequest = () => {
-    const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=40`;
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: page === 1 ? res.results : [...this.state.data, ...res.results]
-        });
-      })
-      .catch(error => {
-        console.log("error")
-      });
-  };
 
-  _showPhotoPicker() {
+  _showPhotoPicker () {
     ImagePicker.openPicker({
       multiple: true
-    }).then(images => {
-      this.processImages(images)
-    }).then(() => {
-      console.log("OK");
-    });
+    }).then(this.props.addImagesRequest)
   }
 
-  _showCamera = () => {
+  _showCamera () {
     ImagePicker.openCamera({
       width: 300,
       height: 400
-    }).then(image => {
-      this.processImages([image])
-    });
-  }
-
-  async processImages(images) {
-    // console.log(images);
-    for (const image of images) {
-      try {
-        console.log("PINNING PHOTO:", image.path)
-        const hash = await IPFS.addImageAtPath(image.path)
-        console.log("PINNED", hash)
-      } catch(error) {
-        console.log("GOT AN ERROR RESIZING & PINNING", error)
-      }
-    }
+    }).then(this.props.addImagesRequest)
   }
 
   /* ***********************************************************
@@ -131,7 +95,7 @@ class TextilePhotos extends React.PureComponent {
       <View style={styles.row}>
         <Image
           width={Dimensions.get('window').width}
-          source={{uri: item.picture.large}}
+          source={{uri: 'data:image/png;base64, ' + item.thumb}}
         />
       </View>
     )
@@ -163,7 +127,7 @@ class TextilePhotos extends React.PureComponent {
   keyExtractor = (item, index) => index
 
   // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 20
+  oneScreensWorth = 10
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -184,11 +148,20 @@ class TextilePhotos extends React.PureComponent {
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={styles.listContent}
-          data={this.state.data}
+          data={this.props.images.items}
           renderItem={this.renderRow}
           numColumns={1}
           keyExtractor={this.keyExtractor}
           initialNumToRender={this.oneScreensWorth}
+          onEndReachedThreshold={0.5}
+          onEndReached={({ distanceFromEnd }) => {
+            // This has an issue
+            // It would currently load new ones on first load too
+            // const lastItem = this.props.images.items[
+            //   this.props.images.items.length - 1
+            //   ]
+            // this.props.getHashesRequest(lastItem.hash, 10)
+          }}
           // ListHeaderComponent={this.renderHeader}
           // ListFooterComponent={this.renderFooter}
           // ListEmptyComponent={this.renderEmpty}
@@ -202,11 +175,16 @@ class TextilePhotos extends React.PureComponent {
 const mapStateToProps = (state) => {
   return {
     // ...redux state to props here
+    images: {
+      items: state.textile.images.items
+    }
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getHashesRequest: (offsetId, limit) => { dispatch(Actions.getHashesRequest(offsetId, limit)) },
+    addImagesRequest: (images) => { dispatch(Actions.addImagesRequest(images)) }
   }
 }
 
