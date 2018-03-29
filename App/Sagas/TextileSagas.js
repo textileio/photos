@@ -10,14 +10,12 @@
 *    you'll need to define a constant in that file.
 *************************************************************/
 
-import { call, put } from 'redux-saga/effects'
+import { call, put, all } from 'redux-saga/effects'
 import TextileActions from '../Redux/TextileRedux'
-// import { TextileSelectors } from '../Redux/TextileRedux'
 
 export function * getRandomUsers (api, action) {
   const { seed, page, results } = action
   // get current data from Store
-  // const currentData = yield select(TextileSelectors.getData)
   // make the call to the api
   const response = yield call(api.getUsers, seed, page, results)
 
@@ -43,4 +41,66 @@ export function * startNode (api) {
   } else {
     yield put(TextileActions.startNodeFailure())
   }
+}
+
+// function* deserialize( action ) {
+//   const items = yield select(TextileActions.getItems)
+//   // yield put({ type: 'DESERISLIZE_COMPLETE' })
+// }
+
+export function * handleNodeStarted () {
+
+  // const interface = yield select(TextileActions.getItems)
+  // if (interface.state.textile && interface.state.textile.images && interface.state.textile.images && interface.state.textile.images.items)
+  yield put(TextileActions.getHashesRequest('', 10, true))
+}
+
+/**
+ * Get the list of stored hashes to add to our photo roll
+ *
+ * @param api - textile-go api
+ * @param action - the (offset, limit)
+ * @returns {IterableIterator<*>}
+ */
+export function * getHashes (api, action) {
+  const { offsetId, limit, clearItems } = action
+  const jsonString = yield call(api.getPhotos, offsetId, limit)
+  const json = JSON.parse(jsonString)
+  if (json) {
+    yield put(TextileActions.getHashesSuccess())
+    yield put(TextileActions.getThumbsRequest(json, false, clearItems))
+  } else {
+    yield put(TextileActions.getHashesFailure())
+  }
+}
+
+export function * getThumbs (api, action) {
+  const { response, prepend, clearItems } = action
+  const thumbArray = yield all(response.hashes.map(hash => {
+    return call(api.getPhotoData, hash + '/thumb.jpg')
+  }))
+  const thumbs = thumbArray.map((thumb, i) => {
+    return {'hash': response.hashes[i], 'thumb': thumb}
+  })
+  yield put(TextileActions.getThumbsSuccess(thumbs, prepend, clearItems))
+}
+
+export function * addImages (api, response) {
+  // First, call api to add the new Image data and get back the hash
+  const hashArray = yield all(response.data.map(image => {
+    return call(api.addImageAtPath, image.path)
+  }))
+
+  // Grab the raw thumbnail data for the hash
+  // TODO, we could return thumb as part of addImageAtPath
+  const thumbArray = yield all(hashArray.map(hash => {
+    return call(api.getPhotoData, hash + '/thumb.jpg')
+  }))
+
+  // Combine our two arrays into the required format
+  const newData = thumbArray.map((thumb, i) => {
+    return {'hash': hashArray[i], 'thumb': thumb}
+  })
+
+  yield put(TextileActions.getThumbsSuccess(newData, true, false))
 }
