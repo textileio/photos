@@ -44,7 +44,7 @@ class TextilePhotos extends React.PureComponent {
   componentWillMount () {
     this.props.navigation.setParams({
       showPhotoPicker: this._showPhotoPicker.bind(this),
-      showCamera: this._showCamera
+      showCamera: this._showCamera.bind(this)
     });
     // this.makeRemoteRequest();
   }
@@ -56,13 +56,18 @@ class TextilePhotos extends React.PureComponent {
     ImagePicker.openPicker({
       multiple: true
     }).then(this.props.addImagesRequest)
+      .catch(e => console.log(e))
   }
 
   _showCamera () {
     ImagePicker.openCamera({
       width: 300,
       height: 400
-    }).then(this.props.addImagesRequest)
+    })
+      .then(image => {
+        this.props.addImagesRequest([image])
+      })
+      .catch(e => console.log(e))
   }
 
   /* ***********************************************************
@@ -176,7 +181,7 @@ const mapStateToProps = (state) => {
   return {
     // ...redux state to props here
     images: {
-      items: state.textile.images.items
+      items: state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
     }
   }
 }
