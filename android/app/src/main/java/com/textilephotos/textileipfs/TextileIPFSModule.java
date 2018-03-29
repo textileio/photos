@@ -52,13 +52,13 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startNode (Promise promise) {
+    public Promise startNode (Promise promise) {
         try {
             textile.start();
             promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject(e);
+            promise.reject("SOME ERROR", e);
         }
     }
 
