@@ -34,6 +34,9 @@ export default {
       .then(hash => {
         console.log('ADDED IMAGE:', hash)
       })
+      .catch(error => {
+        console.log('ERROR:', error)
+      })
   },
 
   getPhotos(offset: string, limit: number): Promise<string> {

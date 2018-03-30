@@ -19,13 +19,16 @@ export default async function photosTask () {
   // Register job worker
   queue.addWorker('add-image', async (id, photo) => {
     if (photo.node.image.path) {
-      console.log('PINNING IMAGE:', photo.node.image.path)
-      await IPFS.addImageAtPath(photo.node.image.path)
-      console.log('PINNED IMAGE:', photo.node.image.path)
-      PushNotificationIOS.presentLocalNotification({
-        alertBody: 'pinned image ' + photo.node.image.path,
-        userInfo: {}
-      })
+      try {
+        await IPFS.addImageAtPath(photo.node.image.path)
+        PushNotificationIOS.presentLocalNotification({
+          alertBody: 'added image ' + photo.node.image.path,
+          userInfo: {}
+        })
+      } catch (e) {
+        console.log('WORKER ERROR:', e)
+        throw e
+      }
     }
   })
 
@@ -39,7 +42,7 @@ export default async function photosTask () {
     queue.createJob(
       'add-image',
       photo,
-      { attempts: 2, timeout: 20000 },
+      { attempts: 1, timeout: 20000 },
       false
     )
   }
