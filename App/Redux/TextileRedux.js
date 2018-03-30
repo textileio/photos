@@ -18,13 +18,20 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: null,
 
+  getHashesRequest: ['offsetId', 'limit', 'clearItems'],
+  getHashesSuccess: null,
+  getHashesFailure: null,
+
+  getThumbsRequest: ['response', 'prepend', 'clearItems'],
+  getThumbsSuccess: ['response', 'prepend', 'clearItems'],
+
+  addImagesRequest: ['data'],
+  addImagesSuccess: ['data'],
+
+  // TODO: eval if below methods are still needed
   addImageRequest: ['path'],
   addImageSuccess: ['hash'],
   addImageFailure: null,
-
-  getPhotosRequest: ['offset', 'limit'],
-  getPhotosSuccess: ['data'],
-  getPhotosFailure: null,
 
   reloadPhotos: null,
 
@@ -111,32 +118,62 @@ export const startNodeFailure = state =>
     }
   })
 
-export const getPhotosRequest = state =>
-  state.merge({
-    images: {
-      loading: true
-    }
-  })
-
-export const getPhotosSuccess = (state, { data }) => {
-  // Suspicious that redux-persist is clearing out our INITIAL_STATE
-  // empty array of images.
-  const existingImages = state.images.items ? state.images.items : []
+export const getHashesRequest = state => {
+  const existingImages = state.image && state.images.items ? state.images.items : []
   return state.merge({
     images: {
-      loading: false,
-      items: [...existingImages, ...data.hashes]
+      loading: true,
+      items: existingImages
     }
   })
 }
 
-export const getPhotosFailure = state =>
-  state.merge({
+// TODO: determine if we want any feedback here
+export const getHashesSuccess = state => state
+
+export const getHashesFailure = state => {
+  const existingImages = state.images.items ? state.images.items : []
+  return state.merge({
     images: {
       loading: false,
-      error: true
+      error: true,
+      items: existingImages
     }
   })
+}
+
+export const getThumbsRequest = state => {
+  const existingImages = state.images.items ? state.images.items : []
+  return state.merge({
+    images: {
+      loading: true,
+      items: existingImages
+    }
+  })
+}
+
+export const getThumbsSuccess = (state, { response, prepend, clearItems }) => {
+  // Suspicious that redux-persist is clearing out our INITIAL_STATE
+  // empty array of images.
+  let newItems = response
+  if (!clearItems) {
+    const existingImages = state.images.items ? state.images.items : []
+    newItems = prepend ? [...newItems, ...existingImages] : [...existingImages, ...newItems]
+  }
+  return state.merge({
+    images: {
+      loading: false,
+      items: newItems
+    }
+  })
+}
+
+// TODO: add a loading state for addImages
+export const addImagesRequest = state => state
+
+
+// Helper so sagas can figure out current items loaded
+// const getItems = state => state.items
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -150,7 +187,14 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.START_NODE_SUCCESS]: startNodeSuccess,
   [Types.START_NODE_FAILURE]: startNodeFailure,
 
-  [Types.GET_PHOTOS_REQUEST]: getPhotosRequest,
-  [Types.GET_PHOTOS_SUCCESS]: getPhotosSuccess,
-  [Types.GET_PHOTOS_FAILURE]: getPhotosFailure
+  [Types.GET_HASHES_REQUEST]: getHashesRequest,
+  [Types.GET_HASHES_SUCCESS]: getHashesSuccess,
+  [Types.GET_HASHES_FAILURE]: getHashesFailure,
+
+  [Types.GET_THUMBS_REQUEST]: getThumbsRequest,
+  [Types.GET_THUMBS_SUCCESS]: getThumbsSuccess,
+
+  [Types.ADD_IMAGES_REQUEST]: addImagesRequest,
+  // TODO: Should this use its own handler? Not yet.
+  [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess
 })

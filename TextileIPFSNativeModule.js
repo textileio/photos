@@ -9,15 +9,17 @@ export default {
     return TextileIPFS.exampleMethod()
   },
 
-  createNodeWithDataDir(dataDir: string, apiHost: string) {
+  createNodeWithDataDir (dataDir: string, apiHost: string) {
+    console.log('REACT => NATIVE: CREATE NODE')
     TextileIPFS.createNodeWithDataDir(dataDir, apiHost)
   },
 
-  startNode(): Promise<boolean> {
+  startNode (): Promise<boolean> {
+    console.log('REACT => NATIVE: START NODE')
     return TextileIPFS.startNode()
   },
 
-  stopNode(): Promise<boolean> {
+  stopNode (): Promise<boolean> {
     return TextileIPFS.stopNode()
   },
 
