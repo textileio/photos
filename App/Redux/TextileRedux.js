@@ -171,7 +171,6 @@ export const getThumbsSuccess = (state, { response, prepend, clearItems }) => {
 // TODO: add a loading state for addImages
 export const addImagesRequest = state => state
 
-
 // Helper so sagas can figure out current items loaded
 // const getItems = state => state.items
 
