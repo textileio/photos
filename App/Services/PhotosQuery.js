@@ -49,7 +49,12 @@ async function getPhoto (cursor) {
     while (match = regex.exec(node.image.uri)) {
       params[match[1]] = match[2]
     }
-    const path = RNFS.DocumentDirectoryPath + '/pendingPhotos/' + params.id + '.' + params.ext
+    const dir = RNFS.DocumentDirectoryPath + '/pendingPhotos/'
+    const exists = await RNFS.exists(dir)
+    if (!exists) {
+      await RNFS.mkdir(dir)
+    }
+    const path = dir + params.id + '.' + params.ext
     await RNFS.copyAssetsFileIOS(node.image.uri, path, 0, 0)
     node.image['path'] = path
   }
