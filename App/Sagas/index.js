@@ -9,13 +9,15 @@ import { TextileTypes } from '../Redux/TextileRedux'
 
 /* ------------- Sagas ------------- */
 
-import { startup } from './StartupSagas'
+import {selectRandomUserData, startup} from './StartupSagas'
 import {
   getRandomUsers,
   createNode,
   startNode,
   handleNodeStarted,
-  getPhotos
+  getHashes,
+  getThumbs,
+  addImages
 } from './TextileSagas'
 
 /* ------------- API ------------- */
@@ -38,6 +40,8 @@ export default function * root () {
     takeLatest(TextileTypes.CREATE_NODE, createNode, IPFS),
     takeLatest(TextileTypes.START_NODE_REQUEST, startNode, IPFS),
     takeLatest(TextileTypes.START_NODE_SUCCESS, handleNodeStarted),
-    takeLatest(TextileTypes.GET_PHOTOS_REQUEST, getPhotos, IPFS)
+    takeLatest(TextileTypes.GET_HASHES_REQUEST, getHashes, IPFS),
+    takeLatest(TextileTypes.GET_THUMBS_REQUEST, getThumbs, IPFS),
+    takeLatest(TextileTypes.ADD_IMAGES_REQUEST, addImages, IPFS)
   ])
 }
