@@ -9,25 +9,27 @@ export default {
     return TextileIPFS.exampleMethod()
   },
 
-  createNodeWithDataDir(dataDir: string, apiHost: string) {
+  createNodeWithDataDir (dataDir: string, apiHost: string) {
+    console.log('REACT => NATIVE: CREATE NODE')
     TextileIPFS.createNodeWithDataDir(dataDir, apiHost)
   },
 
-  startNode(): Promise<boolean> {
+  startNode (): Promise<boolean> {
+    console.log('REACT => NATIVE: START NODE')
     return TextileIPFS.startNode()
   },
 
-  stopNode(): Promise<boolean> {
+  stopNode (): Promise<boolean> {
     return TextileIPFS.stopNode()
   },
 
-  pinImageAtPath(path: string): Promise<string> {
+  addImageAtPath(path: string): Promise<string> {
     console.log("RESIZING IMAGE", path)
     return ImageResizer.createResizedImage(path, 400, 400, "JPEG", 80)
       .then(response => {
         console.log("RESIZED URI", response.path)
         console.log("INNER PINNING IMAGE:", path, response.path)
-        return TextileIPFS.pinImageAtPath(path, response.path)
+        return TextileIPFS.addImageAtPath(path, response.path)
       })
   },
 

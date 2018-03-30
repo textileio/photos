@@ -76,6 +76,7 @@
     "jest": "22.4.2",
     "mockery": "^2.1.0",
     "react-dom": "16.0.0",
+    "react-native-cli": "^2.0.1",
     "react-native-create-bridge": "^2.0.1",
     "react-test-renderer": "16.0.0",
     "reactotron-react-native": "^1.13.2",

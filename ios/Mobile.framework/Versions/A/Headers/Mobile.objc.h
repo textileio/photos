@@ -49,12 +49,12 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
+- (NSString*)addPhoto:(NSString*)path thumb:(NSString*)thumb error:(NSError**)error;
 /**
  * pass in Qm../thumb, or Qm../photo for full image
  */
 - (NSString*)getPhotoBase64String:(NSString*)path error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit error:(NSError**)error;
-- (NSString*)pinPhoto:(NSString*)path thumb:(NSString*)thumb error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
 @end

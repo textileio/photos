@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { StackNavigator } from 'react-navigation';
+
+// https://github.com/react-navigation/react-navigation/issues/686
 export default function DismissableStackNavigator(routes, options) {
   const StackNav = StackNavigator(routes, options);
 
