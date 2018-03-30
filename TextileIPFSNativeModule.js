@@ -24,12 +24,15 @@ export default {
   },
 
   addImageAtPath(path: string): Promise<string> {
-    console.log("RESIZING IMAGE", path)
+    console.log('RESIZING IMAGE', path)
     return ImageResizer.createResizedImage(path, 400, 400, "JPEG", 80)
       .then(response => {
-        console.log("RESIZED URI", response.path)
-        console.log("INNER PINNING IMAGE:", path, response.path)
+        console.log('RESIZED PATH:', response.path)
+        console.log('ADDING IMAGE:', path, response.path)
         return TextileIPFS.addImageAtPath(path, response.path)
+      })
+      .then(hash => {
+        console.log('ADDED IMAGE:', hash)
       })
   },
 
