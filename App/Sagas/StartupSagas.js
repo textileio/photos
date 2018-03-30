@@ -1,14 +1,14 @@
+import RNFS from 'react-native-fs'
 import { put, select } from 'redux-saga/effects'
-import GithubActions, { GithubSelectors } from '../Redux/GithubRedux'
-import TextileActions, { TextileSelectors } from '../Redux/TextileRedux';
+import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import { is } from 'ramda'
 
 // exported to make available for tests
-export const selectAvatar = GithubSelectors.selectAvatar
+// export const selectAvatar = GithubSelectors.selectAvatar
 export const selectRandomUserData = TextileSelectors.getRandomUserData
 
 // process STARTUP actions
-export function * startup (action) {
+export function * startup () {
   if (__DEV__ && console.tron) {
     // straight-up string logging
     console.tron.log('Hello, I\'m an example of how to log via Reactotron.')
@@ -16,7 +16,7 @@ export function * startup (action) {
     // logging an object for better clarity
     console.tron.log({
       message: 'pass objects for better logging',
-      someGeneratorFunction: selectAvatar
+      someGeneratorFunction: selectRandomUserData
     })
 
     // fully customized!
@@ -30,17 +30,12 @@ export function * startup (action) {
         subObject,
         someInlineFunction: () => true,
         someGeneratorFunction: startup,
-        someNormalFunction: selectAvatar
+        someNormalFunction: selectRandomUserData
       }
     })
   }
-  const avatar = yield select(selectAvatar)
-  // only get if we don't have it yet
-  if (!is(String, avatar)) {
-    yield put(GithubActions.userRequest('GantMan'))
-  }
 
-  const randomUserData = yield select(selectRandomUserData)
-  // TODO: Check if we have data
-  yield put(TextileActions.randomUsersRequest(1, 1, 40))
+  const path = RNFS.DocumentDirectoryPath
+  yield put(TextileActions.createNode(path, 'https://ipfs.textile.io'))
+  yield put(TextileActions.startNodeRequest())
 }

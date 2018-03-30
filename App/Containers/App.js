@@ -32,19 +32,19 @@ class App extends Component {
   }
 
   async setup() {
-    const autoPhotos: boolean = true // TODO: Get this from some stored preferences
-    const path = RNFS.DocumentDirectoryPath
-    IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io')
-    try {
-      await IPFS.startNode()
-      if (autoPhotos) {
-        this.photos = new Photos()
-      }
-    } catch(error) {
-      console.log('ERROR IN IPFS/PHOTOS SETUP:', error)
-      return
-    }
-    console.log('IPFS/PHOTOS SETUP DONE')
+    // const autoPhotos: boolean = true // TODO: Get this from some stored preferences
+    // const path = RNFS.DocumentDirectoryPath
+    // IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io')
+    // try {
+    //   await IPFS.startNode()
+    //   if (autoPhotos) {
+    //     this.photos = new Photos()
+    //   }
+    // } catch(error) {
+    //   console.log('ERROR IN IPFS/PHOTOS SETUP:', error)
+    //   return
+    // }
+    // console.log('IPFS/PHOTOS SETUP DONE')
   }
 
   render () {
