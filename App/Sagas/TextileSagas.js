@@ -11,7 +11,7 @@
 *************************************************************/
 
 import { call, put, all } from 'redux-saga/effects'
-import TextileActions from '../Redux/TextileRedux'
+import TextileActions, { getHashesFailure } from '../Redux/TextileRedux'
 
 export function * getRandomUsers (api, action) {
   const { seed, page, results } = action
@@ -49,7 +49,6 @@ export function * startNode (api) {
 // }
 
 export function * handleNodeStarted () {
-
   // const interface = yield select(TextileActions.getItems)
   // if (interface.state.textile && interface.state.textile.images && interface.state.textile.images && interface.state.textile.images.items)
   yield put(TextileActions.getHashesRequest('', 10, true))
@@ -74,33 +73,34 @@ export function * getHashes (api, action) {
   }
 }
 
+export function * getThumb (request) {
+  const { api, hash } = request
+  try {
+    const thumb = yield call(api.getPhotoData, hash + '/thumb.jpg')
+    return {'hash': hash, 'thumb': thumb}
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 export function * getThumbs (api, action) {
   const { response, prepend, clearItems } = action
-  const thumbArray = yield all(response.hashes.map(hash => {
-    return call(api.getPhotoData, hash + '/thumb.jpg')
-  }))
-  const thumbs = thumbArray.map((thumb, i) => {
-    return {'hash': response.hashes[i], 'thumb': thumb}
-  })
+  const thumbs = yield response.hashes.map(hash => call(getThumb, {api, hash}))
   yield put(TextileActions.getThumbsSuccess(thumbs, prepend, clearItems))
 }
 
+function * uploadImage (request) {
+  const { api, image } = request
+  try {
+    const hash = yield call(api.addImageAtPath, image.path)
+    // todo: we should return the thumb at the same time as the hash above
+    const thumb = yield call(getThumb, {api, hash})
+    yield put(TextileActions.getThumbsSuccess([thumb], true, false))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 export function * addImages (api, response) {
-  // First, call api to add the new Image data and get back the hash
-  const hashArray = yield all(response.data.map(image => {
-    return call(api.addImageAtPath, image.path)
-  }))
-
-  // Grab the raw thumbnail data for the hash
-  // TODO, we could return thumb as part of addImageAtPath
-  const thumbArray = yield all(hashArray.map(hash => {
-    return call(api.getPhotoData, hash + '/thumb.jpg')
-  }))
-
-  // Combine our two arrays into the required format
-  const newData = thumbArray.map((thumb, i) => {
-    return {'hash': hashArray[i], 'thumb': thumb}
-  })
-
-  yield put(TextileActions.getThumbsSuccess(newData, true, false))
+  yield response.data.map(image => call(uploadImage, {api, image}))
 }
