@@ -75,7 +75,7 @@ export default class Photos {
             const dest = await RNFS.copyAssetsFileIOS(photo.node.image.uri, path, 0, 0)
           }
           console.log('PINNING PHOTO:', path)
-          const hash = await IPFS.addImageAtPath(path)
+          const hash = await IPFS.addImageAtPath(path, path)
           console.log('PINNED', hash)
         }
         if (photos.length > 0) {

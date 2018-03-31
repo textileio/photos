@@ -1,6 +1,5 @@
 // @flow
 import { NativeModules } from 'react-native'
-import ImageResizer from 'react-native-image-resizer';
 
 const { TextileIPFS } = NativeModules
 
@@ -23,19 +22,12 @@ export default {
     return TextileIPFS.stopNode()
   },
 
-  addImageAtPath(path: string): Promise<string> {
-    console.log('RESIZING IMAGE', path)
-    return ImageResizer.createResizedImage(path, 400, 400, "JPEG", 80)
-      .then(response => {
-        console.log('RESIZED PATH:', response.path)
-        console.log('ADDING IMAGE:', path, response.path)
-        return TextileIPFS.addImageAtPath(path, response.path)
-      })
+  addImageAtPath(path: string, thumbPath: string): Promise<string> {
+    console.log('ADDING IMAGE:', path, thumbPath)
+    return TextileIPFS.addImageAtPath(path, thumbPath)
       .then(hash => {
         console.log('ADDED IMAGE:', hash)
-      })
-      .catch(error => {
-        console.log('ERROR:', error)
+        return hash
       })
   },
 
