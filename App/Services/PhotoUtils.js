@@ -70,8 +70,8 @@ async function getPhoto (cursor) {
   return { node: node, pageInfo: photosData.page_info }
 }
 
-async function resizeImage (path: string, width: number = 400, height: number = 400): string {
+export async function resizeImage (path: string, width: number = 400, height: number = 400): string {
   console.log('RESIZING IMAGE', path)
-  const result = await ImageResizer.createResizedImage(path, 400, 400, "JPEG", 80)
+  const result = await ImageResizer.createResizedImage(path, 400, 400, 'JPEG', 80)
   return result.path
 }
