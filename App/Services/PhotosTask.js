@@ -3,9 +3,10 @@ import IPFS from '../../TextileIPFSNativeModule'
 import queueFactory from 'react-native-queue'
 import {PushNotificationIOS} from 'react-native'
 import BackgroundTimer from 'react-native-background-timer'
-import PhotosQuery from './PhotosQuery'
+import {queryPhotos} from './PhotoUtils'
 
 export default async function photosTask () {
+  console.log('running photos task')
   BackgroundTimer.start() // This requests some background time from the OS
 
   // Start IPFS
@@ -18,22 +19,28 @@ export default async function photosTask () {
 
   // Register job worker
   queue.addWorker('add-image', async (id, photo) => {
+    console.log('running add-image worker:', id)
     if (photo.node.image.path) {
       try {
-        await IPFS.addImageAtPath(photo.node.image.path)
+        const hash = await IPFS.addImageAtPath(photo.node.image.path, photo.node.image.thumbPath)
         PushNotificationIOS.presentLocalNotification({
-          alertBody: 'added image ' + photo.node.image.path,
+          alertBody: 'added image: ' + hash,
           userInfo: {}
         })
       } catch (e) {
         console.log('WORKER ERROR:', e)
+        PushNotificationIOS.presentLocalNotification({
+          alertBody: 'error adding image: ' + photo.node.image.path,
+          userInfo: {}
+        })
         throw e
       }
+      console.log('done running add-image worker:', id)
     }
   })
 
   // Query for any new photos, add jobs to queue
-  const photos = await PhotosQuery()
+  const photos = await queryPhotos()
   PushNotificationIOS.presentLocalNotification({
     alertBody: 'background fetch of ' + photos.length + ' photos',
     userInfo: {}
@@ -55,4 +62,5 @@ export default async function photosTask () {
   await queue.start(25000) // Run queue for at most 25 seconds.
 
   BackgroundTimer.stop() // This alerts the OS that we're done with our background task
+  console.log('done running photos task')
 }

@@ -3,8 +3,9 @@ import {
   AsyncStorage
 } from 'react-native'
 import RNFS from 'react-native-fs'
+import ImageResizer from 'react-native-image-resizer'
 
-export default async () => {
+export async function queryPhotos () {
   const latestPhotoQueried = await AsyncStorage.getItem('latestPhotoQueried')
   let photos = []
   if (latestPhotoQueried === null) {
@@ -44,6 +45,12 @@ async function getPhoto (cursor) {
     return
   }
   var node = photosData.edges[0].node
+
+  /*
+  TODO: Move photo copying and resizing out of here. It should only be done
+   for photos that were not previously processed, and having this code here
+   causes the latest already procecessed photo to be copied and resized again.
+  */
   if (node.image.uri.includes('assets-library://')) {
     var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
     while (match = regex.exec(node.image.uri)) {
@@ -57,6 +64,14 @@ async function getPhoto (cursor) {
     const path = dir + params.id + '.' + params.ext
     await RNFS.copyAssetsFileIOS(node.image.uri, path, 0, 0)
     node.image['path'] = path
+    const thumbPath = await resizeImage(path)
+    node.image['thumbPath'] = thumbPath
   }
   return { node: node, pageInfo: photosData.page_info }
+}
+
+async function resizeImage (path: string, width: number = 400, height: number = 400): string {
+  console.log('RESIZING IMAGE', path)
+  const result = await ImageResizer.createResizedImage(path, 400, 400, "JPEG", 80)
+  return result.path
 }

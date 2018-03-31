@@ -10,8 +10,9 @@ import Photos from '../Services/Photos'
 import PhotosTask from '../Services/PhotosTask'
 
 BackgroundTask.define(async () => {
-  console.log('RUNNING BACKGROUND TASK!')
+  console.log('running background task')
   await PhotosTask()
+  console.log('finished running background task')
   // finish() must be called before OS hits timeout.
   BackgroundTask.finish()
 })
@@ -46,14 +47,14 @@ class App extends Component {
 
     navigator.geolocation.watchPosition(
       position => {
-        console.log('Got a new position')
+        console.log('got a new position')
         PushNotificationIOS.presentLocalNotification({
           alertBody: 'GOT LOCATION UPDATE ',
           userInfo: {}
         })
         PhotosTask()
           .then(() => {
-            console.log('done running photos task')
+            console.log('finished processing new position')
           })
       },
       error => {
