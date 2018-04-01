@@ -1,13 +1,14 @@
 import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
-import { PushNotificationIOS } from 'react-native'
-import { Provider } from 'react-redux'
+import {PushNotificationIOS, AppState} from 'react-native'
+import {Provider} from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
 import Photos from '../Services/Photos'
 import PhotosTask from '../Services/PhotosTask'
+import {getPhoto} from "../Services/PhotoUtils";
 
 BackgroundTask.define(async () => {
   console.log('running background task')
@@ -35,6 +36,7 @@ class App extends Component {
 
   constructor(props) {
     super(props)
+    AppState.addEventListener('change', this.handleAppStateChange)
     this.setup()
   }
 
@@ -43,7 +45,8 @@ class App extends Component {
   }
 
   async setup() {
-    PushNotificationIOS.requestPermissions()
+    await PushNotificationIOS.requestPermissions()
+    await getPhoto()
 
     navigator.geolocation.watchPosition(
       position => {
@@ -77,6 +80,15 @@ class App extends Component {
     //   return
     // }
     // console.log('IPFS/PHOTOS SETUP DONE')
+  }
+
+  handleAppStateChange = (nextAppState) => {
+    if (nextAppState.match(/^active/)) {
+      PhotosTask(store.dispatch)
+        .then(() => {
+          console.log('finished processing foreground event')
+        })
+    }
   }
 
   render () {
