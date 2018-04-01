@@ -31,5 +31,10 @@ export default StyleSheet.create({
   },
   listContent: {
     marginTop: Metrics.baseMargin
+  },
+  statusLabel: {
+    textAlign: 'center',
+    backgroundColor: Colors.charcoal,
+    color: Colors.snow
   }
 })

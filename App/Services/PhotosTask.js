@@ -4,8 +4,9 @@ import queueFactory from 'react-native-queue'
 import {PushNotificationIOS} from 'react-native'
 import BackgroundTimer from 'react-native-background-timer'
 import {queryPhotos} from './PhotoUtils'
+import Actions from '../Redux/TextileRedux'
 
-export default async function photosTask () {
+export default async function photosTask (dispatch) {
   console.log('running photos task')
   BackgroundTimer.start() // This requests some background time from the OS
 
@@ -18,19 +19,22 @@ export default async function photosTask () {
   const queue = await queueFactory()
 
   // Register job worker
-  queue.addWorker('add-image', async (id, photo) => {
+  queue.addWorker('add-image', async (id, image) => {
     console.log('running add-image worker:', id)
-    if (photo.node.image.path) {
+    dispatch(Actions.imageProcessing(image))
+    if (image.node.image.path) {
       try {
-        const hash = await IPFS.addImageAtPath(photo.node.image.path, photo.node.image.thumbPath)
+        const hash = await IPFS.addImageAtPath(image.node.image.path, image.node.image.thumbPath)
+        dispatch(Actions.imageSuccess(image))
         PushNotificationIOS.presentLocalNotification({
           alertBody: 'added image: ' + hash,
           userInfo: {}
         })
       } catch (e) {
+        dispatch(Actions.imageError(image, e))
         console.log('WORKER ERROR:', e)
         PushNotificationIOS.presentLocalNotification({
-          alertBody: 'error adding image: ' + photo.node.image.path,
+          alertBody: 'error adding image: ' + image.node.image.path,
           userInfo: {}
         })
         throw e
@@ -46,6 +50,7 @@ export default async function photosTask () {
     userInfo: {}
   })
   for (const photo of photos) {
+    dispatch(Actions.imageAdded(photo))
     queue.createJob(
       'add-image',
       photo,
