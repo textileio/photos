@@ -25,7 +25,7 @@ export default async function photosTask (dispatch) {
     if (image.node.image.path) {
       try {
         const hash = await IPFS.addImageAtPath(image.node.image.path, image.node.image.thumbPath)
-        dispatch(Actions.imageSuccess(image))
+        dispatch(Actions.imageSuccess(image, hash))
         PushNotificationIOS.presentLocalNotification({
           alertBody: 'added image: ' + hash,
           userInfo: {}

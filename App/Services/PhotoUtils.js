@@ -35,7 +35,7 @@ export async function queryPhotos () {
   return photos
 }
 
-async function getPhoto (cursor) {
+export async function getPhoto (cursor) {
   let queryParams = { first: 1 }
   if (cursor !== null) {
     queryParams['after'] = cursor
@@ -56,22 +56,28 @@ async function getPhoto (cursor) {
     while (match = regex.exec(node.image.uri)) {
       params[match[1]] = match[2]
     }
-    const dir = RNFS.DocumentDirectoryPath + '/pendingPhotos/'
-    const exists = await RNFS.exists(dir)
-    if (!exists) {
-      await RNFS.mkdir(dir)
+    const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
+    const thumbRelativeDir = 'images/thumb/'
+    const thumbDir = RNFS.DocumentDirectoryPath + '/' + thumbRelativeDir
+    const fullExists = await RNFS.exists(fullDir)
+    if (!fullExists) {
+      await RNFS.mkdir(fullDir)
     }
-    const path = dir + params.id + '.' + params.ext
+    const thumbExists = await RNFS.exists(thumbDir)
+    if (!thumbExists) {
+      await RNFS.mkdir(thumbDir)
+    }
+    const path = fullDir + params.id + '.' + params.ext
     await RNFS.copyAssetsFileIOS(node.image.uri, path, 0, 0)
     node.image['path'] = path
-    const thumbPath = await resizeImage(path)
+    const thumbPath = await resizeImage(path, thumbRelativeDir)
     node.image['thumbPath'] = thumbPath
   }
   return { node: node, pageInfo: photosData.page_info }
 }
 
-export async function resizeImage (path: string, width: number = 400, height: number = 400): string {
+export async function resizeImage (path: string, outputPath: string, width: number = 400, height: number = 400): string {
   console.log('RESIZING IMAGE', path)
-  const result = await ImageResizer.createResizedImage(path, 400, 400, 'JPEG', 80)
+  const result = await ImageResizer.createResizedImage(path, width, height, 'JPEG', 80, 0, outputPath)
   return result.path
 }

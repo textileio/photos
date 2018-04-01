@@ -20,7 +20,7 @@ const { Types, Creators } = createActions({
 
   imageAdded: ['image'],
   imageProcessing: ['image'],
-  imageSuccess: ['image'],
+  imageSuccess: ['image', 'hash'],
   imageError: ['image', 'error'],
 
   getHashesRequest: ['offsetId', 'limit', 'clearItems'],
@@ -190,11 +190,11 @@ export const handleImageProcessing = (state, {image}) => {
   return state.merge({ images: { items } })
 }
 
-export const handleImageSuccess = (state, {image}) => {
+export const handleImageSuccess = (state, {image, hash}) => {
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
     if (item.image.node.image.uri === image.node.image.uri) {
-      return { image, state: 'complete' }
+      return { image, hash, state: 'complete' }
     }
     return item
   })
