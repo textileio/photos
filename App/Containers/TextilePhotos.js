@@ -100,8 +100,9 @@ class TextilePhotos extends React.PureComponent {
       <View style={styles.row}>
         <Image
           width={Dimensions.get('window').width}
-          source={{uri: 'data:image/png;base64, ' + item.thumb}}
+          source={{uri: item.image.node.image.thumbPath}}
         />
+        <Text style={styles.statusLabel}>{item.state}</Text>
       </View>
     )
   }

@@ -11,7 +11,7 @@ import PhotosTask from '../Services/PhotosTask'
 
 BackgroundTask.define(async () => {
   console.log('running background task')
-  await PhotosTask()
+  await PhotosTask(store.dispatch)
   console.log('finished running background task')
   // finish() must be called before OS hits timeout.
   BackgroundTask.finish()
@@ -52,7 +52,7 @@ class App extends Component {
           alertBody: 'GOT LOCATION UPDATE ',
           userInfo: {}
         })
-        PhotosTask()
+        PhotosTask(store.dispatch)
           .then(() => {
             console.log('finished processing new position')
           })
