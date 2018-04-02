@@ -100,7 +100,7 @@ class TextilePhotos extends React.PureComponent {
     if (item.state === 'complete') {
       label = item.hash
     } else if (item.state === 'error') {
-      label = item.error.message
+      label = item.error
     } else {
       label = item.state
     }
