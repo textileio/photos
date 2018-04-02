@@ -6,30 +6,34 @@ import RNFS from 'react-native-fs'
 import ImageResizer from 'react-native-image-resizer'
 
 export async function queryPhotos () {
-  const latestPhotoQueried = await AsyncStorage.getItem('latestPhotoQueried')
+  const latestTimestampString = await AsyncStorage.getItem('latestPhotoTimestamp')
+  const seed = await getPhoto() // Get the newest photo
   let photos = []
-  if (latestPhotoQueried === null) {
-    // If we've never queried a photo, just record the newest photo and we'll start from there next time
-    const latestPhoto = await getPhoto()
-    console.log('NO PREVIOUS PHOTOS QUERIED, SAVING ID:', latestPhoto.pageInfo.end_cursor)
-    await AsyncStorage.setItem('latestPhotoQueried', latestPhoto.pageInfo.end_cursor)
+  if (!latestTimestampString) {
+    // If we've never queried a photo before, just record the newest photo timestamp
+    // or the current time and we'll start from there next time
+    let timestamp = seed ? new Date(seed.node.timestamp * 1000) : new Date()
+    console.log('NO PREVIOUS PHOTOS QUERIED, SAVING TIMESTAMP:', timestamp.toISOString())
+    await AsyncStorage.setItem('latestPhotoTimestamp', timestamp.toISOString())
   } else {
-    // We have a latest photo, so start getting photos until we get to the latest
-    let cursor = null // Start with null to get the latest
-    let hasNextPage = true
-    while (cursor !== latestPhotoQueried && hasNextPage) {
-      const photo = await getPhoto(cursor)
-      // If the photo we query is the same as the latestPhotoQueried, there is no new photo, break out
-      if (photo.pageInfo.end_cursor === latestPhotoQueried) {
+    if (!seed) {
+      return photos
+    }
+    const latestTimestamp = Date.parse(latestTimestampString)
+    let currentPhoto = seed
+    let currentTimestamp = new Date(currentPhoto.node.timestamp * 1000)
+    while (currentTimestamp > latestTimestamp) {
+      photos.push(currentPhoto)
+      if (!currentPhoto.pageInfo.has_next_page) {
         break
       }
-      photos.push(photo)
-      cursor = photo.pageInfo.end_cursor
-      hasNextPage = photo.pageInfo.has_next_page
+      currentPhoto = await getPhoto(currentPhoto.pageInfo.end_cursor)
+      currentTimestamp = new Date(currentPhoto.node.timestamp * 1000)
     }
     if (photos.length > 0) {
-      const cursor = photos[0].pageInfo.end_cursor
-      await AsyncStorage.setItem('latestPhotoQueried', cursor)
+      const newestPhotoTimestampString = photos[0].node.timestamp
+      const newestPhotoTimestamp = new Date(newestPhotoTimestampString * 1000)
+      await AsyncStorage.setItem('latestPhotoTimestamp', newestPhotoTimestamp.toISOString())
     }
   }
   return photos
