@@ -34,7 +34,7 @@ export default async function photosTask (dispatch) {
         dispatch(Actions.imageError(image, e))
         console.log('WORKER ERROR:', e)
         PushNotificationIOS.presentLocalNotification({
-          alertBody: 'error adding image: ' + image.node.image.path,
+          alertBody: 'error: ' + e.message,
           userInfo: {}
         })
         throw e
@@ -46,7 +46,7 @@ export default async function photosTask (dispatch) {
   // Query for any new photos, add jobs to queue
   const photos = await queryPhotos()
   PushNotificationIOS.presentLocalNotification({
-    alertBody: 'background fetch of ' + photos.length + ' photos',
+    alertBody: 'fetch of ' + photos.length + ' photos',
     userInfo: {}
   })
   for (const photo of photos) {

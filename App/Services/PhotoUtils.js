@@ -31,6 +31,32 @@ export async function queryPhotos () {
       currentTimestamp = new Date(currentPhoto.node.timestamp * 1000)
     }
     if (photos.length > 0) {
+      const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
+      const fullExists = await RNFS.exists(fullDir)
+      if (!fullExists) {
+        await RNFS.mkdir(fullDir)
+      }
+      const thumbRelativeDir = 'images/thumb/'
+      const thumbDir = RNFS.DocumentDirectoryPath + '/' + thumbRelativeDir
+      const thumbExists = await RNFS.exists(thumbDir)
+      if (!thumbExists) {
+        await RNFS.mkdir(thumbDir)
+      }
+      for (const photo of photos) {
+        // console.log('PHOTO', photo)
+        // TODO: Figure out handling for Android here
+        if (photo.node.image.uri.includes('assets-library://')) {
+          var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
+          while (match = regex.exec(photo.node.image.uri)) {
+            params[match[1]] = match[2]
+          }
+          const path = fullDir + params.id + '.' + params.ext
+          await RNFS.copyAssetsFileIOS(photo.node.image.uri, path, 0, 0)
+          photo.node.image['path'] = path
+          const thumbPath = await resizeImage(photo.node.image.path, thumbRelativeDir)
+          photo.node.image['thumbPath'] = thumbPath
+        }
+      }
       const newestPhotoTimestampString = photos[0].node.timestamp
       const newestPhotoTimestamp = new Date(newestPhotoTimestampString * 1000)
       await AsyncStorage.setItem('latestPhotoTimestamp', newestPhotoTimestamp.toISOString())
@@ -49,34 +75,6 @@ export async function getPhoto (cursor) {
     return
   }
   var node = photosData.edges[0].node
-
-  /*
-  TODO: Move photo copying and resizing out of here. It should only be done
-   for photos that were not previously processed, and having this code here
-   causes the latest already procecessed photo to be copied and resized again.
-  */
-  if (node.image.uri.includes('assets-library://')) {
-    var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
-    while (match = regex.exec(node.image.uri)) {
-      params[match[1]] = match[2]
-    }
-    const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
-    const thumbRelativeDir = 'images/thumb/'
-    const thumbDir = RNFS.DocumentDirectoryPath + '/' + thumbRelativeDir
-    const fullExists = await RNFS.exists(fullDir)
-    if (!fullExists) {
-      await RNFS.mkdir(fullDir)
-    }
-    const thumbExists = await RNFS.exists(thumbDir)
-    if (!thumbExists) {
-      await RNFS.mkdir(thumbDir)
-    }
-    const path = fullDir + params.id + '.' + params.ext
-    await RNFS.copyAssetsFileIOS(node.image.uri, path, 0, 0)
-    node.image['path'] = path
-    const thumbPath = await resizeImage(path, thumbRelativeDir)
-    node.image['thumbPath'] = thumbPath
-  }
   return { node: node, pageInfo: photosData.page_info }
 }
 

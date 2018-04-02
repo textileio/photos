@@ -205,7 +205,7 @@ export const handleImageError = (state, {image, error}) => {
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
     if (item.image.node.image.uri === image.node.image.uri) {
-      return { image, state: 'error', error }
+      return { image, state: 'error', error: error.message }
     }
     return item
   })
