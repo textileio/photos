@@ -1,24 +1,56 @@
 import StackNavigator from '../Components/DismissableStackNavigator'
-import OnboardingScreen1 from '../Containers/OnboardingScreen1'
-import OnboardingScreen2 from '../Containers/OnboardingScreen2'
-import OnboardingScreen3 from '../Containers/OnboardingScreen3'
+import OnboardingSecurity from '../Containers/OnboardingSecurity'
+import OnboardingAccess from '../Containers/OnboardingAccess'
+import OnboardingShare from '../Containers/OnboardingShare'
+import OnboardingBetaWelcome from '../Containers/OnboardingBetaWelcome'
+import OnboardingPermissions from '../Containers/OnboardingPermissions'
 
 import styles from './Styles/NavigationStyles'
 
 // Manifest of possible screens
 const OnboardingNav = StackNavigator(
   {
-    OnboardingScreen1: { screen: OnboardingScreen1 },
-    OnboardingScreen2: { screen: OnboardingScreen2 },
-    OnboardingScreen3: { screen: OnboardingScreen3 }
+    OnboardingSecurity: {
+      screen: OnboardingSecurity,
+      navigationOptions: {
+        title: "Backup",
+      },
+    },
+    OnboardingAccess: {
+      screen: OnboardingAccess,
+      navigationOptions: {
+        title: "Access",
+      },
+    },
+    OnboardingShare: {
+      screen: OnboardingShare,
+      navigationOptions: {
+        title: "Share",
+      },
+    },
+    OnboardingBetaWelcome: {
+      screen: OnboardingBetaWelcome,
+      navigationOptions: {
+        title: "Welcome",
+      },
+    },
+    OnboardingPermissions: {
+      screen: OnboardingPermissions,
+      navigationOptions: {
+        title: "Geolocation",
+      },
+    },
   },
   {
     // Default config for all screens
     headerMode: 'float',
-    initialRouteName: 'OnboardingScreen1',
+    left: null,
+    initialRouteName: 'OnboardingSecurity',
     navigationOptions: {
       headerStyle: styles.header,
-      title: 'Welcome'
+      headerLeft: null,
+      swipeEnabled: false,
+      gesturesEnabled: false,
     }
   }
 )
