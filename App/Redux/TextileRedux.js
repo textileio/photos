@@ -7,6 +7,7 @@ const { Types, Creators } = createActions({
   randomUsersRequest: ['seed', 'page', 'results'],
   randomUsersRequestSuccess: ['data'],
   randomUsersRequestFailure: null,
+  onboardedSuccess: null,
 
   createNode: ['path', 'apiHost'],
 
@@ -54,6 +55,7 @@ export const INITIAL_STATE = Immutable({
   randomUserData: null,
   fetching: null,
   error: null,
+  onboarded: false,
   nodeState: {
     state: 'stopped',
     error: false,
@@ -75,6 +77,10 @@ export const TextileSelectors = {
 }
 
 /* ------------- Reducers ------------- */
+
+export const onboardedSuccess = state => {
+  return state.merge({ onboarded: true })
+}
 
 // request the data from an api
 export const randomUsersRequest = state => {
@@ -224,6 +230,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.RANDOM_USERS_REQUEST]: randomUsersRequest,
   [Types.RANDOM_USERS_REQUEST_SUCCESS]: randomUsersRequestSuccess,
   [Types.RANDOM_USERS_REQUEST_FAILURE]: randomUsersRequestFailure,
+
+  [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
   [Types.CREATE_NODE]: createNode,
   [Types.START_NODE_REQUEST]: startNodeRequest,
