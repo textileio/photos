@@ -3,6 +3,7 @@ import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
 import {PushNotificationIOS, AppState} from 'react-native'
 import {Provider} from 'react-redux'
+import {PersistGate} from 'redux-persist/integration/react'
 import BackgroundTask from 'react-native-background-task'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
@@ -21,7 +22,7 @@ BackgroundTask.define(async () => {
 })
 
 // create our store
-const store = createStore()
+const { store, persistor } = createStore()
 
 const getFailedImages = () => {
   const images = store.getState().textile.images.items.filter(image => {
@@ -81,7 +82,9 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <RootContainer />
+        <PersistGate loading={null} persistor={persistor}>
+          <RootContainer />
+        </PersistGate>
       </Provider>
     )
   }
