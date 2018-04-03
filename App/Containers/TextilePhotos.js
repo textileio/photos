@@ -46,10 +46,13 @@ class TextilePhotos extends React.PureComponent {
       showPhotoPicker: this._showPhotoPicker.bind(this),
       showCamera: this._showCamera.bind(this)
     });
+    // this.makeRemoteRequest();
+  }
+
+  componentDidMount() {
     if (!this.props.onboarded) {
       this.props.navigation.navigate("OnboardingSecurity")
     }
-    // this.makeRemoteRequest();
   }
 
   // Just added this simple function here @aaron, nothing fancy.
@@ -182,7 +185,7 @@ class TextilePhotos extends React.PureComponent {
 
 const mapStateToProps = state => {
   return {
-    onboarded: state.textile.onboarded
+    onboarded: state.textile.onboarded,
     images: {
       items: state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
     }
