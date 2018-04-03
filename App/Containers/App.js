@@ -12,16 +12,23 @@ import {getPhoto} from '../Services/PhotoUtils'
 BackgroundTask.define(async () => {
   console.log('running background task')
   PushNotificationIOS.presentLocalNotification({
-    alertBody: 'RUNNING BACKGROUND FETCH',
+    alertBody: 'running background fetch',
     userInfo: {}
   })
-  await PhotosTask(store.dispatch)
+  await PhotosTask(store.dispatch, getFailedImages())
   // finish() must be called before OS hits timeout.
   BackgroundTask.finish()
 })
 
 // create our store
 const store = createStore()
+
+const getFailedImages = () => {
+  const images = store.getState().textile.images.items.filter(image => {
+    return image.state === 'error'
+  })
+  return images
+}
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
@@ -55,7 +62,7 @@ class App extends Component {
           alertBody: 'GOT LOCATION UPDATE',
           userInfo: {}
         })
-        PhotosTask(store.dispatch)
+        PhotosTask(store.dispatch, getFailedImages())
       },
       error => {
         console.log('Got a location error', error)
@@ -67,7 +74,7 @@ class App extends Component {
   async handleAppStateChange(nextAppState) {
     if (nextAppState.match(/^active/)) {
       console.log('got a foreground event')
-      await PhotosTask(store.dispatch)
+      await PhotosTask(store.dispatch, getFailedImages())
     }
   }
 
