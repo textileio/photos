@@ -1,14 +1,35 @@
 import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
-import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
+import {PushNotificationIOS, AppState} from 'react-native'
+import {Provider} from 'react-redux'
+import {PersistGate} from 'redux-persist/integration/react'
+import BackgroundTask from 'react-native-background-task'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
-import Photos from '../Services/Photos';
+import PhotosTask from '../Services/PhotosTask'
+import {getPhoto} from '../Services/PhotoUtils'
+
+BackgroundTask.define(async () => {
+  console.log('running background task')
+  PushNotificationIOS.presentLocalNotification({
+    alertBody: 'running background fetch',
+    userInfo: {}
+  })
+  await PhotosTask(store.dispatch, getFailedImages())
+  // finish() must be called before OS hits timeout.
+  BackgroundTask.finish()
+})
 
 // create our store
 const { store, persistor } = createStore()
+
+const getFailedImages = () => {
+  const images = store.getState().textile.images.items.filter(image => {
+    return image.state === 'error'
+  })
+  return images
+}
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
@@ -21,27 +42,41 @@ const { store, persistor } = createStore()
  */
 class App extends Component {
 
-  photos: Photos
-
   constructor(props) {
     super(props)
+    AppState.addEventListener('change', this.handleAppStateChange)
     this.setup()
   }
 
+  componentDidMount() {
+    BackgroundTask.schedule()
+  }
+
   async setup() {
-    // const autoPhotos: boolean = true // TODO: Get this from some stored preferences
-    // const path = RNFS.DocumentDirectoryPath
-    // IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io')
-    // try {
-    //   await IPFS.startNode()
-    //   if (autoPhotos) {
-    //     this.photos = new Photos()
-    //   }
-    // } catch(error) {
-    //   console.log('ERROR IN IPFS/PHOTOS SETUP:', error)
-    //   return
-    // }
-    // console.log('IPFS/PHOTOS SETUP DONE')
+    await PushNotificationIOS.requestPermissions()
+    await getPhoto() // Trigger photos permission prompt
+
+    navigator.geolocation.watchPosition(
+      () => {
+        console.log('got a new position')
+        PushNotificationIOS.presentLocalNotification({
+          alertBody: 'GOT LOCATION UPDATE',
+          userInfo: {}
+        })
+        PhotosTask(store.dispatch, getFailedImages())
+      },
+      error => {
+        console.log('Got a location error', error)
+      },
+      { useSignificantChanges: true }
+    )
+  }
+
+  async handleAppStateChange(nextAppState) {
+    if (nextAppState.match(/^active/)) {
+      console.log('got a foreground event')
+      await PhotosTask(store.dispatch, getFailedImages())
+    }
   }
 
   render () {

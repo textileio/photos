@@ -141,7 +141,9 @@ RCT_EXPORT_METHOD(exampleMethod)
 #pragma mark - Private methods
 
 - (void)_createNodeWithDataDir:(NSString *)dataDir apiHost:(NSString *)apiHost {
-  self.node = MobileNewTextile(dataDir, apiHost);
+  if (!self.node) {
+    self.node = MobileNewTextile(dataDir, apiHost);
+  }
 }
 
 - (BOOL)_startNode:(NSError**)error {

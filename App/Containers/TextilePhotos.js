@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { View, Text, FlatList, Dimensions } from 'react-native'
+import {View, Text, FlatList, Dimensions, TouchableOpacity, Linking} from 'react-native'
 import Image from 'react-native-scalable-image'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -27,17 +27,12 @@ class TextilePhotos extends React.PureComponent {
     const params = navigation.state.params || {};
     return {
       headerTitle: 'Textile Photos',
-      headerLeft: null, //(
+      // headerRight: (
       //   <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-      //     <HeaderButtons.Item title="onboard" onPress={() => navigation.navigate('OnboardingNavigation')} />
+      //     <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
+      //     <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
       //   </HeaderButtons>
-      // ),
-      headerRight: (
-        <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-          <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
-          <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
-        </HeaderButtons>
-      ),
+      // )
     }
   };
 
@@ -50,9 +45,9 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (!this.props.onboarded) {
-      this.props.navigation.navigate("OnboardingSecurity")
-    }
+    // if (!this.props.onboarded) {
+    //   this.props.navigation.navigate("OnboardingSecurity")
+    // }
   }
 
   // Just added this simple function here @aaron, nothing fancy.
@@ -102,14 +97,35 @@ class TextilePhotos extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow ({item}) {
+    let label = ''
+    if (item.state === 'complete') {
+      label = item.hash
+    } else if (item.state === 'error') {
+      label = item.error
+    } else {
+      label = item.state
+    }
+
+    const onPress = this.onPressIt(item)
+
     return (
-      <View style={styles.row}>
-        <Image
-          width={Dimensions.get('window').width}
-          source={{uri: 'data:image/png;base64, ' + item.thumb}}
-        />
-      </View>
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.row}>
+          <Image
+            width={Dimensions.get('window').width}
+            source={{uri: item.image.node.image.thumbPath}}
+          />
+          <Text style={styles.statusLabel}>{label}</Text>
+        </View>
+      </TouchableOpacity>
     )
+  }
+
+  onPressIt = (item) => {
+    return () => {
+      const url = "https://ipfs.textile.io/ipfs/" + item.hash
+      Linking.openURL(url)
+    }
   }
 
   /* ***********************************************************
@@ -160,7 +176,7 @@ class TextilePhotos extends React.PureComponent {
         <FlatList
           contentContainerStyle={styles.listContent}
           data={this.props.images.items}
-          renderItem={this.renderRow}
+          renderItem={this.renderRow.bind(this)}
           numColumns={1}
           keyExtractor={this.keyExtractor}
           initialNumToRender={this.oneScreensWorth}

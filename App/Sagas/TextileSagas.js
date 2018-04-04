@@ -11,6 +11,7 @@
 *************************************************************/
 
 import { call, put, all } from 'redux-saga/effects'
+import {resizeImage} from '../Services/PhotoUtils'
 import TextileActions, { getHashesFailure } from '../Redux/TextileRedux'
 
 export function * getRandomUsers (api, action) {
@@ -92,7 +93,8 @@ export function * getThumbs (api, action) {
 function * uploadImage (request) {
   const { api, image } = request
   try {
-    const hash = yield call(api.addImageAtPath, image.path)
+    const thumbPath = yield call(resizeImage, image.path)
+    const hash = yield call(api.addImageAtPath, image.path, thumbPath)
     // todo: we should return the thumb at the same time as the hash above
     const thumb = yield call(getThumb, {api, hash})
     yield put(TextileActions.getThumbsSuccess([thumb], true, false))

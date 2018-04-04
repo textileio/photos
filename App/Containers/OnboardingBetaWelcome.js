@@ -23,7 +23,7 @@ class OnboardingBetaWelcome extends Component {
           </KeyboardAvoidingView>
         </ScrollView>
         <Button
-          onPress={() => navigate('OnboardingPermissions')}
+          onPress={() => navigate('OnboardingPhotosPermissions')}
           title="Ok"
           accessibilityLabel="Move on to the next screen"
         />
