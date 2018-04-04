@@ -1,44 +1,38 @@
 // @flow
 import { NativeModules } from 'react-native'
-import ImageResizer from 'react-native-image-resizer';
 
 const { TextileIPFS } = NativeModules
 
 export default {
-  exampleMethod () {
-    return TextileIPFS.exampleMethod()
-  },
-
-  createNodeWithDataDir (dataDir: string, apiHost: string) {
-    console.log('REACT => NATIVE: CREATE NODE')
+  createNodeWithDataDir: function (dataDir: string, apiHost: string) {
     TextileIPFS.createNodeWithDataDir(dataDir, apiHost)
   },
 
-  startNode (): Promise<boolean> {
-    console.log('REACT => NATIVE: START NODE')
-    return TextileIPFS.startNode()
+  startNode: async function (): boolean {
+    const success = await TextileIPFS.startNode()
+    return success
   },
 
-  stopNode (): Promise<boolean> {
-    return TextileIPFS.stopNode()
+  stopNode: async function (): boolean {
+    const success = await TextileIPFS.stopNode()
+    return success
   },
 
-  addImageAtPath(path: string): Promise<string> {
-    console.log("RESIZING IMAGE", path)
-    return ImageResizer.createResizedImage(path, 400, 400, "JPEG", 80)
-      .then(response => {
-        console.log("RESIZED URI", response.path)
-        console.log("INNER PINNING IMAGE:", path, response.path)
-        return TextileIPFS.addImageAtPath(path, response.path)
-      })
+  addImageAtPath: async function (path: string, thumbPath: string): string {
+    console.log('ADDING IMAGE:', path, thumbPath)
+    const hash = await TextileIPFS.addImageAtPath(path, thumbPath)
+    console.log('ADDED IMAGE:', hash)
+    return hash
   },
 
-  getPhotos(offset: string, limit: number): Promise<string> {
-    return TextileIPFS.getPhotos(offset, limit)
+  getPhotos: async function (offset: string, limit: number): string {
+    const result = await TextileIPFS.getPhotos(offset, limit)
+    return result
   },
 
-  getPhotoData(path: string): Promise<string> {
-    return TextileIPFS.getPhotoData(path)
+  getPhotoData: async function (path: string): string {
+    const result = await TextileIPFS.getPhotoData(path)
+    return result
   },
 
   EXAMPLE_CONSTANT: TextileIPFS.EXAMPLE_CONSTANT

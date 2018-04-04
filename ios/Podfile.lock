@@ -2,6 +2,7 @@ PODS:
   - QBImagePickerController (3.4.0)
   - React (0.50.4):
     - React/Core (= 0.50.4)
+  - react-native-background-timer (2.0.1)
   - react-native-image-resizer (1.0.0):
     - React
   - React/Core (0.50.4):
@@ -32,6 +33,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - RNBackgroundFetch (2.2.1):
+    - React
   - RNFS (2.9.11):
     - React
   - RNImageCropPicker (0.20.0):
@@ -41,6 +44,7 @@ PODS:
   - yoga (0.50.4.React)
 
 DEPENDENCIES:
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - React/Core (from `../node_modules/react-native`)
   - React/RCTActionSheet (from `../node_modules/react-native`)
@@ -53,6 +57,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
@@ -60,8 +65,12 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   React:
     :path: ../node_modules/react-native
+  react-native-background-timer:
+    :path: ../node_modules/react-native-background-timer
   react-native-image-resizer:
     :path: ../node_modules/react-native-image-resizer
+  RNBackgroundFetch:
+    :path: ../node_modules/react-native-background-fetch
   RNFS:
     :path: ../node_modules/react-native-fs
   RNImageCropPicker:
@@ -71,13 +80,15 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
-  React: 6d7efef18e0241eb832cf4c085405169a15080ed
-  react-native-image-resizer: 4516052af6ae0248caf4ccf356caecefe60072d7
-  RNFS: 422c45bbeb7efc41e9d39fbfaa8a533f94cd3e45
-  RNImageCropPicker: 9ef50df72d7e1c02cbbca043a35456a03200f887
+  React: 541ba768b9855e10cdc76f55427a5cd0653ca806
+  react-native-background-timer: 8791c4dfed51d12a103b37a9f365117bee6f298f
+  react-native-image-resizer: 04a3409e7d4ad646c4468671c69dec490def139c
+  RNBackgroundFetch: 8c4f77f83c398c659bce82af2f0a885079417b9e
+  RNFS: bbb1a64eb245763daf34aea86f97c97c4e85f74c
+  RNImageCropPicker: a637beb8f4c76bf9fe8a89d404ad65a33c4215ac
   RSKImageCropper: d9a1acbc0600bf8decc8f0d21895872c99a9e4cf
-  yoga: b9aebf996711e50fc31f5608c10aa108a5a0c29e
+  yoga: 17521bbb0dd54a47c0b3ac43253e78cdac7488e0
 
-PODFILE CHECKSUM: 4ef7eb5a53a458bb80736be13cc00a5f6281e3ca
+PODFILE CHECKSUM: af22bbccd8ed38a305e7e806f85e67b25a42ad30
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.4.0

@@ -19,6 +19,11 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: null,
 
+  imageAdded: ['image'],
+  imageProcessing: ['image'],
+  imageSuccess: ['image', 'hash'],
+  imageError: ['image', 'error'],
+
   getHashesRequest: ['offsetId', 'limit', 'clearItems'],
   getHashesSuccess: null,
   getHashesFailure: null,
@@ -92,7 +97,7 @@ export const randomUsersRequestSuccess = (state, action) => {
 export const randomUsersRequestFailure = state =>
   state.merge({ fetching: false, error: true, randomUserData: null })
 
-export const createNode = (state, { path, apiHost }) =>
+export const createNode = (state, {path, apiHost}) =>
   state.merge({
     nodeState: {
       path: path,
@@ -174,6 +179,45 @@ export const getThumbsSuccess = (state, { response, prepend, clearItems }) => {
   })
 }
 
+export const handleImageAdded = (state, {image}) => {
+  const existingItems = state.images.items ? state.images.items : []
+  const items = [{ image, state: 'pending' }, ...existingItems]
+  return state.merge({ images: { items } })
+}
+
+export const handleImageProcessing = (state, {image}) => {
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.image.node.image.uri === image.node.image.uri) {
+      return { image, state: 'processing' }
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const handleImageSuccess = (state, {image, hash}) => {
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.image.node.image.uri === image.node.image.uri) {
+      return { image, hash, state: 'complete' }
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const handleImageError = (state, {image, error}) => {
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.image.node.image.uri === image.node.image.uri) {
+      return { image, state: 'error', error: error.message }
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
 // TODO: add a loading state for addImages
 export const addImagesRequest = state => state
 
@@ -194,14 +238,19 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.START_NODE_SUCCESS]: startNodeSuccess,
   [Types.START_NODE_FAILURE]: startNodeFailure,
 
-  [Types.GET_HASHES_REQUEST]: getHashesRequest,
-  [Types.GET_HASHES_SUCCESS]: getHashesSuccess,
-  [Types.GET_HASHES_FAILURE]: getHashesFailure,
+  // [Types.GET_HASHES_REQUEST]: getHashesRequest,
+  // [Types.GET_HASHES_SUCCESS]: getHashesSuccess,
+  // [Types.GET_HASHES_FAILURE]: getHashesFailure,
+  //
+  // [Types.GET_THUMBS_REQUEST]: getThumbsRequest,
+  // [Types.GET_THUMBS_SUCCESS]: getThumbsSuccess,
+  //
+  // [Types.ADD_IMAGES_REQUEST]: addImagesRequest,
+  // // TODO: Should this use its own handler? Not yet.
+  // [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess,
 
-  [Types.GET_THUMBS_REQUEST]: getThumbsRequest,
-  [Types.GET_THUMBS_SUCCESS]: getThumbsSuccess,
-
-  [Types.ADD_IMAGES_REQUEST]: addImagesRequest,
-  // TODO: Should this use its own handler? Not yet.
-  [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess
+  [Types.IMAGE_ADDED]: handleImageAdded,
+  [Types.IMAGE_PROCESSING]: handleImageProcessing,
+  [Types.IMAGE_SUCCESS]: handleImageSuccess,
+  [Types.IMAGE_ERROR]: handleImageError
 })

@@ -1,4 +1,12 @@
 rootProject.name = 'TextilePhotos'
+include ':react-native-config'
+project(':react-native-config').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-config/android')
+include ':react-native-background-timer'
+project(':react-native-background-timer').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-timer/android')
+include ':react-native-background-task'
+project(':react-native-background-task').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-task/android')
+include ':realm'
+project(':realm').projectDir = new File(rootProject.projectDir, '../node_modules/realm/android')
 include ':react-native-image-crop-picker'
 project(':react-native-image-crop-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-crop-picker/android')
 include ':react-native-image-resizer'
@@ -9,8 +17,6 @@ include ':react-native-vector-icons'
 project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 include ':react-native-device-info'
 project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
-//include ':react-native-image-crop-picker'
-//project(':react-native-image-crop-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-crop-picker/android')
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')
 include ':textilego'

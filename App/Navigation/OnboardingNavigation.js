@@ -3,6 +3,7 @@ import OnboardingSecurity from '../Containers/OnboardingSecurity'
 import OnboardingAccess from '../Containers/OnboardingAccess'
 import OnboardingShare from '../Containers/OnboardingShare'
 import OnboardingBetaWelcome from '../Containers/OnboardingBetaWelcome'
+import OnboardingPhotosPermissions from '../Containers/OnboardingPhotosPermissions'
 import OnboardingPermissions from '../Containers/OnboardingPermissions'
 
 import styles from './Styles/NavigationStyles'
@@ -32,6 +33,12 @@ const OnboardingNav = StackNavigator(
       screen: OnboardingBetaWelcome,
       navigationOptions: {
         title: "Welcome",
+      },
+    },
+    OnboardingPhotosPermissions: {
+      screen: OnboardingPhotosPermissions,
+      navigationOptions: {
+        title: "Photos",
       },
     },
     OnboardingPermissions: {

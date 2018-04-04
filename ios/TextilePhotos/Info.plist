@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>TextilePhotos</string>
+	<string>TextileWallet</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>0.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>5</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -37,8 +37,12 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>So you can take a photo and store it in the secure Textile cloud.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We use location changes to trigger auto-uploading of your photos.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We use location changes to trigger auto-uploading of your photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>We use location changes to trigger auto-uploading of your photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>So you can pick photos to store in the secure Textile cloud.</string>
 	<key>UIAppFonts</key>
@@ -54,6 +58,13 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>fetch</string>
+	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
