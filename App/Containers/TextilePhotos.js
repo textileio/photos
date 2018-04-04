@@ -45,9 +45,9 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (!this.props.onboarded) {
-      this.props.navigation.navigate("OnboardingSecurity")
-    }
+    // if (!this.props.onboarded) {
+    //   this.props.navigation.navigate("OnboardingSecurity")
+    // }
   }
 
   // Just added this simple function here @aaron, nothing fancy.
