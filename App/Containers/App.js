@@ -60,6 +60,16 @@ class App extends Component {
   }
 
   async setup() {
+    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', event => {
+      console.log('UPLOAD PROGRESS:', event)
+      store.dispatch(Actions.imageUploadProgress(event))
+    })
+
+    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
+      console.log('UPLOAD COMPLETE:', event)
+      store.dispatch(Actions.imageUploadComplete(event))
+    })
+
     await PushNotificationIOS.requestPermissions()
     await getPhoto() // Trigger photos permission prompt
 
@@ -77,16 +87,6 @@ class App extends Component {
       },
       { useSignificantChanges: true }
     )
-
-    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', event => {
-      console.log('UPLOAD PROGRESS:', event)
-      store.dispatch(Actions.imageUploadProgress(event))
-    })
-
-    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
-      console.log('UPLOAD COMPLETE:', event)
-      store.dispatch(Actions.imageUploadComplete(event))
-    })
   }
 
   async handleAppStateChange(nextAppState) {
