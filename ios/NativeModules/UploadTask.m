@@ -49,6 +49,13 @@ RCT_EXPORT_MODULE();
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
+RCT_REMAP_METHOD(getUploadTasks, getUploadTasksWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  [self getUploadTasksWithCompletionHandler:^(NSArray<NSString *> *uploadTaskIds) {
+    resolve(uploadTaskIds);
+  }];
+}
+
 RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(NSString *)method)
 {
   NSURL *fileUrl = [NSURL fileURLWithPath:file];
@@ -60,12 +67,22 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"UploadTaskComplete"];
+  return @[@"UploadTaskProgress", @"UploadTaskComplete"];
 }
 
 #pragma mark - Private methods
 
 // Implement methods that you want to export to the native module
+
+- (void)getUploadTasksWithCompletionHandler:(void (^)(NSArray<NSString *> *uploadTaskIds))completionHandler {
+  [self.session getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> * _Nonnull tasks) {
+    NSMutableArray<NSString *> *ids = @[].mutableCopy;
+    [tasks enumerateObjectsUsingBlock:^(__kindof NSURLSessionTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      [ids addObject:obj.taskDescription];
+    }];
+    completionHandler(ids);
+  }];
+}
 
 - (void)uploadFile:(NSURL *)file toUrl:(NSURL *)url withMethod:(NSString *)method {
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -92,10 +109,19 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
   });
 }
 
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+  float fraction = @(totalBytesSent).floatValue/@(totalBytesExpectedToSend).floatValue;
+  NSDictionary *dict = @{ @"file": task.taskDescription, @"progress": @(fraction) };
+  [self emitMessageToRN:@"UploadTaskProgress" :dict];
+}
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{@"file" : task.description}];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{@"file": task.taskDescription}];
+  NSInteger responseCode = ((NSHTTPURLResponse*)task.response).statusCode;
   if (error) {
-    [dict setValue:@{ @"code":  @(error.code), @"description": error.localizedDescription } forKey:@"error"];
+    [dict setValue:@{ @"domain": error.domain, @"code": @(error.code), @"description": error.localizedDescription } forKey:@"error"];
+  } else if (responseCode < 200 || responseCode > 299) {
+    [dict setValue:@{ @"domain": @"textile", @"code": @0, @"description": [NSString stringWithFormat:@"Bad server response code: %ld", (long)responseCode] } forKey:@"error"];
   }
   [self emitMessageToRN:@"UploadTaskComplete" :dict];
 }
