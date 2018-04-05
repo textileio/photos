@@ -88,7 +88,7 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
   request.HTTPMethod = method;
   NSURLSessionUploadTask *task = [self.session uploadTaskWithRequest:request fromFile:file];
-  [task setTaskDescription:file.absoluteString];
+  [task setTaskDescription:file.path];
   [task resume];
 }
 
@@ -119,9 +119,9 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{@"file": task.taskDescription}];
   NSInteger responseCode = ((NSHTTPURLResponse*)task.response).statusCode;
   if (error) {
-    [dict setValue:@{ @"domain": error.domain, @"code": @(error.code), @"description": error.localizedDescription } forKey:@"error"];
+    [dict setValue:@{ @"domain": error.domain, @"code": @(error.code), @"message": error.localizedDescription } forKey:@"error"];
   } else if (responseCode < 200 || responseCode > 299) {
-    [dict setValue:@{ @"domain": @"textile", @"code": @0, @"description": [NSString stringWithFormat:@"Bad server response code: %ld", (long)responseCode] } forKey:@"error"];
+    [dict setValue:@{ @"domain": @"textile", @"code": @0, @"message": [NSString stringWithFormat:@"Bad server response code: %ld", (long)responseCode] } forKey:@"error"];
   }
   [self emitMessageToRN:@"UploadTaskComplete" :dict];
 }

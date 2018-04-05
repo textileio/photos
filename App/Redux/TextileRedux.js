@@ -20,7 +20,8 @@ const { Types, Creators } = createActions({
   stopNodeFailure: null,
 
   imageAdded: ['image'],
-  imageProcessing: ['image'],
+  imageUploadProgress: ['data'],
+  imageUploadComplete: ['data'],
   imageSuccess: ['image', 'hash'],
   imageError: ['image', 'error'],
 
@@ -185,11 +186,28 @@ export const handleImageAdded = (state, {image}) => {
   return state.merge({ images: { items } })
 }
 
-export const handleImageProcessing = (state, {image}) => {
+export const handleImageProgress = (state, {data}) => {
+  const {file, progress} = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
-    if (item.image.node.image.uri === image.node.image.uri) {
-      return { image, state: 'processing' }
+    if (item.image.node.image.path === file) {
+      return {...item, state: 'processing', progress}
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const handleImageUploadComplete = (state, {data}) => {
+  const {file, error} = data
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.image.node.image.path === file) {
+      if (error) {
+        return {...item, state: 'error', error}
+      } else {
+        return {...item, state: 'complete'}
+      }
     }
     return item
   })
@@ -250,7 +268,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   // [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess,
 
   [Types.IMAGE_ADDED]: handleImageAdded,
-  [Types.IMAGE_PROCESSING]: handleImageProcessing,
+  [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
+  [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
   [Types.IMAGE_SUCCESS]: handleImageSuccess,
   [Types.IMAGE_ERROR]: handleImageError
 })

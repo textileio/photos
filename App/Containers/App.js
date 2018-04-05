@@ -9,6 +9,8 @@ import RootContainer from './RootContainer'
 import createStore from '../Redux'
 import PhotosTask from '../Services/PhotosTask'
 import {getPhoto} from '../Services/PhotoUtils'
+import UploadTask from '../../UploadTaskNativeModule'
+import Actions from '../Redux/TextileRedux'
 
 BackgroundTask.define(async () => {
   console.log('running background task')
@@ -52,6 +54,11 @@ class App extends Component {
     BackgroundTask.schedule()
   }
 
+  componentWillUnmount() {
+    this.progressSubscription.remove()
+    this.completionSubscription.remove()
+  }
+
   async setup() {
     await PushNotificationIOS.requestPermissions()
     await getPhoto() // Trigger photos permission prompt
@@ -70,6 +77,16 @@ class App extends Component {
       },
       { useSignificantChanges: true }
     )
+
+    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', event => {
+      console.log('UPLOAD PROGRESS:', event)
+      store.dispatch(Actions.imageUploadProgress(event))
+    })
+
+    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
+      console.log('UPLOAD COMPLETE:', event)
+      store.dispatch(Actions.imageUploadComplete(event))
+    })
   }
 
   async handleAppStateChange(nextAppState) {
