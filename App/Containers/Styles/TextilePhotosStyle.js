@@ -5,23 +5,35 @@ export default StyleSheet.create({
   ...ApplicationStyles.screen,
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    borderTopColor: Colors.transparent,
+    borderTopWidth: 0,
+    borderBottomColor: Colors.test,
+    borderBottomWidth: 0,
+    paddingLeft: 18,
+    paddingRight: 18,
+    paddingTop: 20
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   row: {
     flex: 1,
-    backgroundColor: Colors.snow,
+    backgroundColor: Colors.transparent,
     // marginVertical: Metrics.smallMargin,
     justifyContent: 'center',
     alignItems: 'center',
     // margin: 2,
-    padding: 1,
-    // paddingVertical: 10,
-    // borderRadius: Metrics.smallMargin
+    marginTop: 18,
+    marginBottom: 12,
   },
   boldLabel: {
     fontWeight: 'bold',
     alignSelf: 'center',
-    color: Colors.snow,
+    color: Colors.ember,
     textAlign: 'center',
     marginBottom: Metrics.smallMargin
   },
@@ -30,11 +42,14 @@ export default StyleSheet.create({
     color: Colors.snow
   },
   listContent: {
-    marginTop: Metrics.baseMargin
+    marginTop: 0, ///Metrics.baseMargin
   },
   statusLabel: {
+    position: 'absolute',
     textAlign: 'center',
-    backgroundColor: Colors.charcoal,
-    color: Colors.snow
+    backgroundColor: Colors.brandPink,
+    color: Colors.background,
+    paddingVertical: 4,
+    paddingHorizontal: 6
   }
 })

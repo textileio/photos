@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {View, Text, FlatList, Dimensions, TouchableOpacity, Linking} from 'react-native'
+import {View, Text, FlatList, Dimensions, TouchableOpacity, Linking, ImageBackground} from 'react-native'
 import Image from 'react-native-scalable-image'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -18,23 +18,26 @@ class TextilePhotos extends React.PureComponent {
     super(props)
     this.state = {
       data: [],
-      offsetId: 'hi',
       limit: 10
     }
   }
 
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {};
-    return {
-      headerTitle: 'Textile Photos',
-      // headerRight: (
-      //   <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-      //     <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
-      //     <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
-      //   </HeaderButtons>
-      // )
-    }
-  };
+  // static navigationOptions = ({ navigation }) => {
+  //   const params = navigation.state.params || {};
+  //   return {
+  //     headerTitle: (
+  //       <Image
+  //         source={require('../Images/Icons/icon-home.png')}
+  //       />
+  //     ),
+  //     headerRight: (
+  //       <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
+  //         <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
+  //         <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
+  //       </HeaderButtons>
+  //     )
+  //   }
+  // };
 
   componentWillMount () {
     this.props.navigation.setParams({
@@ -123,7 +126,7 @@ class TextilePhotos extends React.PureComponent {
 
   onPressIt = (item) => {
     return () => {
-      const url = "https://ipfs.textile.io/ipfs/" + item.hash
+      const url = 'https://ipfs.textile.io/ipfs/' + item.hash
       Linking.openURL(url)
     }
   }
@@ -134,19 +137,19 @@ class TextilePhotos extends React.PureComponent {
   * to your liking!  Each with some friendly advice.
   *************************************************************/
   // Render a header?
-  renderHeader = () =>
-    <Text style={[styles.label, styles.sectionHeader]}> - Header - </Text>
+  // renderHeader = () =>
+  //   <Text style={[styles.label, styles.sectionHeader]}> - Header - </Text>
 
   // Render a footer?
-  renderFooter = () =>
-    <Text style={[styles.label, styles.sectionHeader]}> - Footer - </Text>
+  // renderFooter = () =>
+  //   <Text style={[styles.label, styles.sectionHeader]}> - Footer - </Text>
 
   // Show this when data is empty
-  renderEmpty = () =>
-    <Text style={styles.label}> - Nothing to See Here - </Text>
+  // renderEmpty = () =>
+  //   <Text style={styles.label}> - Nothing to See Here - </Text>
 
-  renderSeparator = () =>
-    <Text style={styles.label}> - ~~~~~ - </Text>
+  // renderSeparator = () =>
+  //   <Text style={styles.label}> - ~~~~~ - </Text>
 
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
@@ -172,6 +175,9 @@ class TextilePhotos extends React.PureComponent {
 
   render () {
     return (
+      <ImageBackground
+        source={require('../Images/backgrounds/photos-background.png')}
+        style={styles.backgroundImage}>
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={styles.listContent}
@@ -195,6 +201,7 @@ class TextilePhotos extends React.PureComponent {
           // ItemSeparatorComponent={this.renderSeparator}
         />
       </View>
+      </ImageBackground>
     )
   }
 }
