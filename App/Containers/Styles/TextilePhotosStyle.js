@@ -47,8 +47,8 @@ export default StyleSheet.create({
   statusLabel: {
     position: 'absolute',
     textAlign: 'center',
-    backgroundColor: Colors.brandPink,
-    color: Colors.background,
+    backgroundColor: Colors.windowTint,
+    color: Colors.brandPink,
     paddingVertical: 4,
     paddingHorizontal: 6
   }
