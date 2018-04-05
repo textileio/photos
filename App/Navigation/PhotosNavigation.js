@@ -1,6 +1,9 @@
 /* @flow */
+import React from 'react'
 import { StackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
+import Text from 'react-native'
+import Image from 'react-native-scalable-image'
 
 import styles from './Styles/NavigationStyles'
 
@@ -14,8 +17,10 @@ const PrimaryNav = StackNavigator(
     headerMode: 'float',
     initialRouteName: 'TextilePhotos',
     navigationOptions: {
+      // headerLeft: (<Image source={require('../Images/textile-icon.png')} style={styles.logo} />),
       headerStyle: styles.header,
-      title: "Photos"
+      headerTitleStyle: styles.title,
+      title: 'Latest'
     }
   }
 )
