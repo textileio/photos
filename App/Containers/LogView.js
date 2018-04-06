@@ -99,7 +99,7 @@ class LogView extends React.PureComponent {
   render () {
     return (
       <ImageBackground
-        source={require('../Images/backgrounds/photos-background.png')}
+        source={require('../Images/backgrounds/log-background.png')}
         style={styles.backgroundImage}>
         <View style={styles.container}>
           <FlatList
