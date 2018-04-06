@@ -35,6 +35,8 @@ class LogView extends React.PureComponent {
       label = item.hash
     } else if (item.state === 'error') {
       label = item.error.message
+    } else if (item.state === 'processing') {
+      label = item.progress
     } else {
       label = item.state
     }
