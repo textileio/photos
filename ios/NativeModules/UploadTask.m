@@ -21,9 +21,10 @@
 #import “React/RCTEventDispatcher.h” // Required when used as a Pod in a Swift project
 #endif
 
-@interface UploadTask() <NSURLSessionTaskDelegate>
+@interface UploadTask() <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 @property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, strong) NSMutableDictionary *responseData;
 
 @end
 
@@ -42,6 +43,7 @@ RCT_EXPORT_MODULE();
     conf.discretionary = NO; // TODO: Could be YES
     conf.sessionSendsLaunchEvents = YES;
     self.session = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue:nil];
+    self.responseData = [NSMutableDictionary new];
   }
   return self;
 }
@@ -56,11 +58,11 @@ RCT_REMAP_METHOD(getUploadTasks, getUploadTasksWithResolver:(RCTPromiseResolveBl
   }];
 }
 
-RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(NSString *)method)
+RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(NSString *)method formBoundary:(NSString *)boundary)
 {
   NSURL *fileUrl = [NSURL fileURLWithPath:file];
   NSURL *endpointUrl = [NSURL URLWithString:url];
-  [self uploadFile:fileUrl toUrl:endpointUrl withMethod:method];
+  [self uploadFile:fileUrl toUrl:endpointUrl withMethod:method formBoundary:boundary];
 }
 
 // List all your events here
@@ -84,9 +86,10 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
   }];
 }
 
-- (void)uploadFile:(NSURL *)file toUrl:(NSURL *)url withMethod:(NSString *)method {
+- (void)uploadFile:(NSURL *)file toUrl:(NSURL *)url withMethod:(NSString *)method formBoundary:(NSString *)boundary {
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
   request.HTTPMethod = method;
+  [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
   NSURLSessionUploadTask *task = [self.session uploadTaskWithRequest:request fromFile:file];
   [task setTaskDescription:file.path];
   [task resume];
@@ -115,13 +118,49 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
   [self emitMessageToRN:@"UploadTaskProgress" :dict];
 }
 
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+  NSMutableData *responseData = self.responseData[@(dataTask.taskIdentifier)];
+  if (!responseData) {
+    responseData = [NSMutableData dataWithData:data];
+    self.responseData[@(dataTask.taskIdentifier)] = responseData;
+  } else {
+    [responseData appendData:data];
+  }
+}
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{@"file": task.taskDescription}];
   NSInteger responseCode = ((NSHTTPURLResponse*)task.response).statusCode;
+  NSMutableData *responseData = self.responseData[@(task.taskIdentifier)];
   if (error) {
     [dict setValue:@{ @"domain": error.domain, @"code": @(error.code), @"message": error.localizedDescription } forKey:@"error"];
   } else if (responseCode < 200 || responseCode > 299) {
     [dict setValue:@{ @"domain": @"textile", @"code": @0, @"message": [NSString stringWithFormat:@"Bad server response code: %ld", (long)responseCode] } forKey:@"error"];
+  } else if (!responseData) {
+    [dict setValue:@{ @"domain": @"textile", @"code": @1, @"message": @"Missing server response data" } forKey:@"error"];
+  } else {
+    NSString *response = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    NSMutableArray<NSString *> *components = [response componentsSeparatedByString:@"\n"].mutableCopy;
+    [components removeLastObject];
+    NSMutableArray<NSDictionary *> *componentsJson = @[].mutableCopy;
+    [components enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      NSDictionary *json = [NSJSONSerialization JSONObjectWithData:[obj dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+      [componentsJson addObject:json];
+    }];
+    NSString __block *hash;
+    [componentsJson enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      if ([[obj objectForKey:@"Name"] isEqualToString:@""]) {
+        hash = [obj objectForKey:@"Hash"];
+        *stop = YES;
+        return;
+      }
+    }];
+    if (hash) {
+      [dict setValue:hash forKey:@"hash"];
+    } else {
+      [dict setValue:@{ @"domain": @"textile", @"code": @2, @"message": @"Unable to parse hash from server response" } forKey:@"error"];
+    }
+    [self.responseData removeObjectForKey:@(task.taskIdentifier)];
   }
   [self emitMessageToRN:@"UploadTaskComplete" :dict];
 }

@@ -19,7 +19,7 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: null,
 
-  imageAdded: ['image'],
+  imageAdded: ['image', 'remotePayloadPath'],
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
   imageSuccess: ['image', 'hash'],
@@ -180,9 +180,9 @@ export const getThumbsSuccess = (state, { response, prepend, clearItems }) => {
   })
 }
 
-export const handleImageAdded = (state, {image}) => {
+export const handleImageAdded = (state, {image, remotePayloadPath}) => {
   const existingItems = state.images.items ? state.images.items : []
-  const items = [{ image, state: 'pending' }, ...existingItems]
+  const items = [{ image, remotePayloadPath, state: 'pending' }, ...existingItems]
   return state.merge({ images: { items } })
 }
 
@@ -190,7 +190,7 @@ export const handleImageProgress = (state, {data}) => {
   const {file, progress} = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
-    if (item.image.node.image.path === file) {
+    if (item.remotePayloadPath === file) {
       return {...item, state: 'processing', progress}
     }
     return item
@@ -199,14 +199,15 @@ export const handleImageProgress = (state, {data}) => {
 }
 
 export const handleImageUploadComplete = (state, {data}) => {
-  const {file, error} = data
+  const {file, hash, error} = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
-    if (item.image.node.image.path === file) {
+    if (item.remotePayloadPath === file) {
       if (error) {
         return {...item, state: 'error', error}
       } else {
-        return {...item, state: 'complete'}
+        console.log(hash)
+        return {...item, state: 'complete', hash}
       }
     }
     return item

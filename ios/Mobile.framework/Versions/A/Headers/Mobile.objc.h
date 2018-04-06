@@ -9,6 +9,7 @@
 @import Foundation;
 #include "Universe.objc.h"
 
+#include "Net.objc.h"
 
 @class MobileMobile;
 @class MobileMobileConfig;
@@ -49,7 +50,7 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-- (NSString*)addPhoto:(NSString*)path thumb:(NSString*)thumb error:(NSError**)error;
+- (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb error:(NSError**)error;
 /**
  * pass in Qm../thumb, or Qm../photo for full image
  */

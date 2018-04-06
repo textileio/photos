@@ -98,9 +98,9 @@ RCT_REMAP_METHOD(key, keyWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(
 RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSError *error;
-  NSString *hash = [self _addPhoto:path thumbPath:thumbPath error:&error];
-  if(hash) {
-    resolve(hash);
+  NetMultipartRequest *multipart = [self _addPhoto:path thumbPath:thumbPath error:&error];
+  if(multipart) {
+    resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -164,9 +164,9 @@ RCT_EXPORT_METHOD(exampleMethod)
   return @"thisissomekey";
 }
 
-- (NSString *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath error:(NSError**)error {
-  NSString *hash = [self.node addPhoto:path thumb:thumbPath error:error];
-  return hash;
+- (NetMultipartRequest *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath error:(NSError**)error {
+  NetMultipartRequest *multipart = [self.node addPhoto:path thumb:thumbPath error:error];
+  return multipart;
 }
 
 - (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit error:(NSError**)error {

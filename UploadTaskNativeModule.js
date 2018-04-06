@@ -12,9 +12,7 @@ export default {
     return tasks
   },
 
-  uploadFile: function (file: string, toUrl: string, method: string) {
-    return UploadTask.uploadFile(file, toUrl, method)
-  },
-
-  EXAMPLE_CONSTANT: UploadTask.EXAMPLE_CONSTANT
+  uploadFile: function (file: string, toUrl: string, method: string, boundary: string) {
+    return UploadTask.uploadFile(file, toUrl, method, boundary)
+  }
 }

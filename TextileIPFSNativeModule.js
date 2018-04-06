@@ -3,6 +3,11 @@ import { NativeModules } from 'react-native'
 
 const { TextileIPFS } = NativeModules
 
+type MultipartData = {
+  payloadPath: string,
+  boundary: string
+}
+
 export default {
   createNodeWithDataDir: function (dataDir: string, apiHost: string) {
     TextileIPFS.createNodeWithDataDir(dataDir, apiHost)
@@ -18,11 +23,11 @@ export default {
     return success
   },
 
-  addImageAtPath: async function (path: string, thumbPath: string): string {
+  addImageAtPath: async function (path: string, thumbPath: string): MultipartData {
     console.log('ADDING IMAGE:', path, thumbPath)
-    const hash = await TextileIPFS.addImageAtPath(path, thumbPath)
-    console.log('ADDED IMAGE:', hash)
-    return hash
+    const multipartData = await TextileIPFS.addImageAtPath(path, thumbPath)
+    console.log('ADDED IMAGE:', multipartData)
+    return multipartData
   },
 
   getPhotos: async function (offset: string, limit: number): string {
