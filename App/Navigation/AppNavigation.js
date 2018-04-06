@@ -1,17 +1,17 @@
 /* @flow */
 import { StackNavigator } from 'react-navigation'
 import OnboardingNavigation from './OnboardingNavigation'
-import TabNavigation from './TabNavigation'
+import PhotosNavigation from './PhotosNavigation'
 
 // Manifest of possible screens
 const PrimaryNav = StackNavigator(
   {
-    TabNavigation: {
-      screen: TabNavigation
+    PhotosNavigation: {
+      screen: PhotosNavigation
     },
     OnboardingNavigation: {
       screen: OnboardingNavigation
-    }
+    },
   },
   {
     mode: 'modal',
