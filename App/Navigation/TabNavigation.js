@@ -1,6 +1,8 @@
 /* @flow */
 import React from 'react'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+
+// See options: http://evil-icons.io/
+import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import PhotosNavigation from './PhotosNavigation'
 import NewScreen from '../Containers/NewScreen'
@@ -19,19 +21,19 @@ const TabNav = TabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         if (routeName === 'PhotosNavigation') {
-          iconName = `ios-photos${focused ? '' : '-outline'}`;
+          iconName = `heart`;
         } else if (routeName === 'NewScreen') {
-          iconName = `ios-settings${focused ? '' : '-outline'}`;
+          iconName = `gear`;
         }
-
         // You can return any component that you like here! We usually use an
         // icon component from react-native-vector-icons
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
+        return <EvilIcons name={iconName} size={25} color={tintColor} />;
       },
     }),
     tabBarOptions: {
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
+      activeTintColor: '#F7F7F7',
+      inactiveTintColor: '#F7F7F7',
+      style: styles.tabStyle,
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',

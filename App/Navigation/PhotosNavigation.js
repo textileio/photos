@@ -1,6 +1,13 @@
 /* @flow */
+import React from 'react'
 import { StackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
+import LogView from '../Containers/LogView'
+// import Notifications from '../Containers/Notifications'
+// import Text from 'react-native'
+// import Image from 'react-native-scalable-image'
+
+// import SwipeNavigation from './SwipeNavigation'
 
 import styles from './Styles/NavigationStyles'
 
@@ -8,14 +15,17 @@ import styles from './Styles/NavigationStyles'
 const PrimaryNav = StackNavigator(
   {
     TextilePhotos: { screen: TextilePhotos },
+    LogView: { screen: LogView },
   },
   {
     // Default config for all screens
     headerMode: 'float',
     initialRouteName: 'TextilePhotos',
     navigationOptions: {
+      // headerLeft: (<Image source={require('../Images/textile-icon.png')} style={styles.logo} />),
       headerStyle: styles.header,
-      title: "Photos"
+      headerTitleStyle: styles.title,
+      title: 'Latest'
     }
   }
 )
