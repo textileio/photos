@@ -2,6 +2,7 @@
 
 #import "UploadTask.h"
 #import "AppDelegate.h"
+#import <UserNotifications/UserNotifications.h>
 
 // import RCTBridge
 #if __has_include(<React/RCTBridge.h>)
@@ -25,6 +26,7 @@
 
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) NSMutableDictionary *responseData;
+@property (nonatomic) BOOL hasListeners;
 
 @end
 
@@ -44,8 +46,21 @@ RCT_EXPORT_MODULE();
     conf.sessionSendsLaunchEvents = YES;
     self.session = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue:nil];
     self.responseData = [NSMutableDictionary new];
+    self.hasListeners = NO;
   }
   return self;
+}
+
+- (void)startObserving
+{
+  self.hasListeners = YES;
+  // Set up any upstream listeners or background tasks as necessary
+}
+
+- (void)stopObserving
+{
+  self.hasListeners = NO;
+  // Remove upstream listeners, stop unnecessary background tasks
 }
 
 // Export methods to a native module
@@ -105,6 +120,13 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
   dispatch_async(dispatch_get_main_queue(), ^{
+    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    content.title = @"NATIVE";
+    content.body = @"URLSession finished background events";
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"task-complete" content:content trigger:nil];
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request withCompletionHandler:nil];
+    
     AppDelegate *delegate = (AppDelegate *)UIApplication.sharedApplication.delegate;
     if (delegate.backgroundCompletionHandler) {
       delegate.backgroundCompletionHandler();
@@ -115,7 +137,9 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
   float fraction = @(totalBytesSent).floatValue/@(totalBytesExpectedToSend).floatValue;
   NSDictionary *dict = @{ @"file": task.taskDescription, @"progress": @(fraction) };
-  [self emitMessageToRN:@"UploadTaskProgress" :dict];
+  if (self.hasListeners) {
+    [self emitMessageToRN:@"UploadTaskProgress" :dict];
+  }
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
@@ -162,7 +186,17 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
     }
     [self.responseData removeObjectForKey:@(task.taskIdentifier)];
   }
-  [self emitMessageToRN:@"UploadTaskComplete" :dict];
+  UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+  content.title = @"NATIVE";
+  if (self.hasListeners) {
+    content.body = @"task complete, notifying RN listeners";
+    [self emitMessageToRN:@"UploadTaskComplete" :dict];
+  } else {
+    content.body = @"task complete, but no RN listeners";
+  }
+  UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"task-complete" content:content trigger:nil];
+  UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+  [center addNotificationRequest:request withCompletionHandler:nil];
 }
 
 @end
