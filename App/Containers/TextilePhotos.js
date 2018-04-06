@@ -4,7 +4,7 @@ import {View, Text, FlatList, TouchableOpacity, Linking, ImageBackground} from '
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
 import Actions from '../Redux/TextileRedux'
-import { Card } from 'react-native-elements'
+import { Card, Tile } from 'react-native-elements'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -119,18 +119,17 @@ class TextilePhotos extends React.PureComponent {
     const onPress = this.onPressIt(item)
 
     return (
-      <TouchableOpacity onPress={onPress}>
-        <Card
-          style={styles.cardStyle}
-          image={{uri: item.image.node.image.thumbPath}}>
-          <View style={styles.statusCell}>
-            <View style={styles.photoStatus}>
-              <View style={localStatus} />
-              <View style={remoteStatus} />
-            </View>
+      <Tile
+        contentContainerStyle={styles.tileStyle}
+        onPress={onPress}
+        imageSrc={{uri: item.image.node.image.thumbPath}}>
+        <View style={styles.statusCell}>
+          <View style={styles.photoStatus}>
+            <View style={localStatus} />
+            <View style={remoteStatus} />
           </View>
-        </Card>
-      </TouchableOpacity>
+        </View>
+      </Tile>
     )
   }
 

@@ -23,34 +23,22 @@ export default StyleSheet.create({
     backgroundColor: Colors.transparent,
   },
   container: {
-    // flex: 1,
-    // borderTopColor: Colors.transparent,
-    // borderTopWidth: 0,
-    // borderBottomColor: Colors.test,
-    // borderBottomWidth: 0,
-    // // paddingLeft: 0,
-    // // paddingRight: 0,
-    // paddingLeft: 18,
-    // paddingRight: 18,
-
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    paddingTop: 20,
+    paddingTop: 22,
     paddingLeft: 0,
     paddingRight: 0,
     backgroundColor: Colors.transparent,
   },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  cardStyle: {
+  tileStyle: {
+    padding: 0,
+    margin: 0,
+    height: 15,
   },
   statusCell: {
+    flex: 1,
+    position: 'absolute',
+    left: 0, right: 0, bottom: 0, top: -18,
+    height: 10,
   },
   photoCell: {
   },
@@ -65,6 +53,7 @@ export default StyleSheet.create({
   statusWhite: {
     width: 10,
     height: 10,
+    borderRadius: 5,
     marginRight: 6,
     borderWidth: 1.5,
     borderColor: Colors.silver,
@@ -73,18 +62,21 @@ export default StyleSheet.create({
   statusPink: {
     width: 10,
     height: 10,
+    borderRadius: 5,
     marginRight: 6,
     backgroundColor: Colors.brandPink,
   },
   statusRed: {
     width: 10,
     height: 10,
+    borderRadius: 5,
     marginRight: 6,
     backgroundColor: Colors.brandRed,
   },
   statusBlue: {
     width: 10,
     height: 10,
+    borderRadius: 5,
     marginRight: 6,
     backgroundColor: Colors.brandBlue,
   },
