@@ -1,4 +1,6 @@
 const colors = {
+  test: 'rgba(199,44,199,0.3)',
+  backgroundColor: 'rgba(0,0,0,0)',
   background: '#1F0808',
   clear: 'rgba(0,0,0,0)',
   facebook: '#3b5998',
@@ -21,7 +23,11 @@ const colors = {
   eggplant: '#251a34',
   border: '#483F53',
   banner: '#5F3E63',
-  text: '#E0D7E5'
+  text: '#E0D7E5',
+  brandBlue: '#374DFF',
+  brandYellow: '#FFD435',
+  brandRed: '#FF5C62',
+  brandPink: '#FFC0D8'
 }
 
 export default colors
