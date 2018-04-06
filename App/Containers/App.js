@@ -67,6 +67,10 @@ class App extends Component {
 
     this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
       console.log('UPLOAD COMPLETE:', event)
+      PushNotificationIOS.presentLocalNotification({
+        alertBody: 'upload complete',
+        userInfo: {}
+      })
       store.dispatch(Actions.imageUploadComplete(event))
     })
 
@@ -77,7 +81,7 @@ class App extends Component {
       () => {
         console.log('got a new position')
         PushNotificationIOS.presentLocalNotification({
-          alertBody: 'GOT LOCATION UPDATE',
+          alertBody: 'location update',
           userInfo: {}
         })
         PhotosTask(store.dispatch, getFailedImages())

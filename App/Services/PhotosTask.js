@@ -30,6 +30,11 @@ export default async function photosTask (dispatch, failedImages) {
     UploadTask.uploadFile(multipartData.payloadPath, 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true', 'POST', multipartData.boundary)
     dispatch(Actions.imageAdded(photo, multipartData.payloadPath))
 
+    PushNotificationIOS.presentLocalNotification({
+      alertBody: 'uploading photo ' + multipartData.payloadPath,
+      userInfo: {}
+    })
+
     // console.log('running add-image worker:', id)
     // dispatch(Actions.imageProcessing(image))
     // if (image.node.image.path) {
