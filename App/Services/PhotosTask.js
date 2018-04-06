@@ -26,7 +26,9 @@ export default async function photosTask (dispatch, failedImages) {
     userInfo: {}
   })
   for (const photo of photos) {
-    dispatch(Actions.imageAdded(photo))
+    const multipartData = await IPFS.addImageAtPath(photo.node.image.path, photo.node.image.thumbPath)
+    UploadTask.uploadFile(multipartData.payloadPath, 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true', 'POST', multipartData.boundary)
+    dispatch(Actions.imageAdded(photo, multipartData.payloadPath))
 
     // console.log('running add-image worker:', id)
     // dispatch(Actions.imageProcessing(image))
@@ -49,8 +51,6 @@ export default async function photosTask (dispatch, failedImages) {
     //   }
     //   console.log('done running add-image worker:', id)
     // }
-
-    UploadTask.uploadFile(photo.node.image.path, 'https://httpbin.org/post', 'POST')
   }
 
   // If our failedImages aren't already queued up for re-processing, add them to the end of the queue now
