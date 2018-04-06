@@ -12,6 +12,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <React/RCTPushNotificationManager.h>
+#import <UserNotifications/UserNotifications.h>
 
 @implementation AppDelegate
 
@@ -37,6 +38,13 @@
 
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
+  UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+  content.title = @"NATIVE";
+  content.body = @"App launched to handle background session events";
+  UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"task-complete" content:content trigger:nil];
+  UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+  [center addNotificationRequest:request withCompletionHandler:nil];
+  
   self.backgroundCompletionHandler = completionHandler;
 }
 
