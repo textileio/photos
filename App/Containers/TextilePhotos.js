@@ -1,12 +1,10 @@
 // @flow
 import React from 'react'
-import {View, Text, FlatList, Dimensions, TouchableOpacity, Linking, ImageBackground} from 'react-native'
-import Image from 'react-native-scalable-image'
-import HeaderButtons from 'react-navigation-header-buttons'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import {View, Text, FlatList, TouchableOpacity, Linking, ImageBackground} from 'react-native'
+import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
-import ImagePicker from 'react-native-image-crop-picker'
 import Actions from '../Redux/TextileRedux'
+import { Card } from 'react-native-elements'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -40,39 +38,39 @@ class TextilePhotos extends React.PureComponent {
   // };
 
   componentWillMount () {
-    this.props.navigation.setParams({
-      showPhotoPicker: this._showPhotoPicker.bind(this),
-      showCamera: this._showCamera.bind(this)
-    });
+    // this.props.navigation.setParams({
+    //   // showPhotoPicker: this._showPhotoPicker.bind(this),
+    //   // showCamera: this._showCamera.bind(this)
+    // });
     // this.makeRemoteRequest();
   }
 
   componentDidMount() {
-    // if (!this.props.onboarded) {
-    //   this.props.navigation.navigate("OnboardingSecurity")
-    // }
+    if (!this.props.onboarded) {
+      // this.props.navigation.navigate("OnboardingSecurity")
+    }
   }
 
   // Just added this simple function here @aaron, nothing fancy.
   // I stole this from elsewhere, so there are some extra probs in here
-
-  _showPhotoPicker () {
-    ImagePicker.openPicker({
-      multiple: true
-    }).then(this.props.addImagesRequest)
-      .catch(e => console.log(e))
-  }
-
-  _showCamera () {
-    ImagePicker.openCamera({
-      width: 300,
-      height: 400
-    })
-      .then(image => {
-        this.props.addImagesRequest([image])
-      })
-      .catch(e => console.log(e))
-  }
+  //
+  // _showPhotoPicker () {
+  //   ImagePicker.openPicker({
+  //     multiple: true
+  //   }).then(this.props.addImagesRequest)
+  //     .catch(e => console.log(e))
+  // }
+  //
+  // _showCamera () {
+  //   ImagePicker.openCamera({
+  //     width: 300,
+  //     height: 400
+  //   })
+  //     .then(image => {
+  //       this.props.addImagesRequest([image])
+  //     })
+  //     .catch(e => console.log(e))
+  // }
 
   /* ***********************************************************
   * STEP 1
@@ -101,11 +99,20 @@ class TextilePhotos extends React.PureComponent {
   *************************************************************/
   renderRow ({item}) {
     let label = ''
+    // Figuring we can use the 'status' blocks to inform the user
+    // about where their photo is backed up
+    let localStatus = styles.statusWhite
+    let remoteStatus = styles.statusWhite
     if (item.state === 'complete') {
       label = item.hash
+      localStatus = styles.statusPink
+      remoteStatus = styles.statusBlue
     } else if (item.state === 'error') {
       label = item.error
+      localStatus = styles.statusPink
+      remoteStatus = styles.statusRed
     } else {
+      localStatus = styles.statusPink
       label = item.state
     }
 
@@ -113,13 +120,16 @@ class TextilePhotos extends React.PureComponent {
 
     return (
       <TouchableOpacity onPress={onPress}>
-        <View style={styles.row}>
-          <Image
-            width={Dimensions.get('window').width}
-            source={{uri: item.image.node.image.thumbPath}}
-          />
-          <Text style={styles.statusLabel}>{label}</Text>
-        </View>
+        <Card
+          style={styles.cardStyle}
+          image={{uri: item.image.node.image.thumbPath}}>
+          <View style={styles.statusCell}>
+            <View style={styles.photoStatus}>
+              <View style={localStatus} />
+              <View style={remoteStatus} />
+            </View>
+          </View>
+        </Card>
       </TouchableOpacity>
     )
   }
@@ -141,7 +151,23 @@ class TextilePhotos extends React.PureComponent {
   //   <Text style={[styles.label, styles.sectionHeader]}> - Header - </Text>
 
   // Render a footer?
-  // renderFooter = () =>
+  renderFooter = () => {
+    if (this.props.images.items.length != 0) {
+      return null
+    }
+
+    return (
+      <Card
+        style={styles.cardStyle}
+        image={require('../Images/backgrounds/no-image-yet.png')}>
+        <View style={styles.statusCell}>
+          <View style={styles.noPhotos}>
+            <Text> Just waiting for you to take some photos. </Text>
+          </View>
+        </View>
+      </Card>
+    );
+  };
   //   <Text style={[styles.label, styles.sectionHeader]}> - Footer - </Text>
 
   // Show this when data is empty
@@ -159,6 +185,9 @@ class TextilePhotos extends React.PureComponent {
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 10
 
+  openLogs = () => {
+    this.props.navigation.navigate("LogView")
+  }
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
   // pass that in, so changes in favorites will cause a re-render
@@ -178,29 +207,31 @@ class TextilePhotos extends React.PureComponent {
       <ImageBackground
         source={require('../Images/backgrounds/photos-background.png')}
         style={styles.backgroundImage}>
-      <View style={styles.container}>
-        <FlatList
-          contentContainerStyle={styles.listContent}
-          data={this.props.images.items}
-          renderItem={this.renderRow.bind(this)}
-          numColumns={1}
-          keyExtractor={this.keyExtractor}
-          initialNumToRender={this.oneScreensWorth}
-          onEndReachedThreshold={0.5}
-          onEndReached={({ distanceFromEnd }) => {
-            // This has an issue
-            // It would currently load new ones on first load too
-            // const lastItem = this.props.images.items[
-            //   this.props.images.items.length - 1
-            //   ]
-            // this.props.getHashesRequest(lastItem.hash, 10)
-          }}
-          // ListHeaderComponent={this.renderHeader}
-          // ListFooterComponent={this.renderFooter}
-          // ListEmptyComponent={this.renderEmpty}
-          // ItemSeparatorComponent={this.renderSeparator}
-        />
-      </View>
+        <View style={styles.container}>
+          <FlatList
+            contentContainerStyle={styles.listContent}
+            data={this.props.images.items}
+            renderItem={this.renderRow.bind(this)}
+            numColumns={1}
+            keyExtractor={this.keyExtractor}
+            initialNumToRender={this.oneScreensWorth}
+            onEndReachedThreshold={0.5}
+            onEndReached={({ distanceFromEnd }) => {
+              // This has an issue
+              // It would currently load new ones on first load too
+              // const lastItem = this.props.images.items[
+              //   this.props.images.items.length - 1
+              //   ]
+              // this.props.getHashesRequest(lastItem.hash, 10)
+            }}
+            ListFooterComponent={this.renderFooter}
+          />
+        </View>
+        <View style={styles.navigationBar}>
+          <TouchableOpacity onPress={this.openLogs}>
+            <Evilicon name='exclamation' style={styles.navigationIcon} size={50}/>
+          </TouchableOpacity>
+        </View>
       </ImageBackground>
     )
   }
