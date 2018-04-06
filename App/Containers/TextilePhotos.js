@@ -111,7 +111,7 @@ class TextilePhotos extends React.PureComponent {
       label = item.error.message
       localStatus = styles.statusPink
       remoteStatus = styles.statusRed
-    } else if (item.state === 'processing'){
+    } else if (item.state === 'processing') {
       label = item.progress
     } else {
       localStatus = styles.statusPink
