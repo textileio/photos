@@ -6,6 +6,8 @@
 	<array>
 		<string>applinks:www.textile.io</string>
 		<string>applinks:*.textile.io</string>
+		<string>applinks:www.textile.photos</string>
+		<string>applinnks:*.textile.photos</string>
 	</array>
 </dict>
 </plist>
