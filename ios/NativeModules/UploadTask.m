@@ -22,11 +22,19 @@
 #import “React/RCTEventDispatcher.h” // Required when used as a Pod in a Swift project
 #endif
 
+@interface Event: NSObject
+@property(nonatomic, strong) NSString *name;
+@property(nonatomic, strong) NSDictionary *payload;
+@end
+@implementation Event
+@end
+
 @interface UploadTask() <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) NSMutableDictionary *responseData;
 @property (nonatomic) BOOL hasListeners;
+@property (nonatomic, strong) NSMutableArray<Event *> *queuedEvents;
 
 @end
 
@@ -47,6 +55,7 @@ RCT_EXPORT_MODULE();
     self.session = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue:nil];
     self.responseData = [NSMutableDictionary new];
     self.hasListeners = NO;
+    self.queuedEvents = @[].mutableCopy;
   }
   return self;
 }
@@ -55,6 +64,7 @@ RCT_EXPORT_MODULE();
 {
   self.hasListeners = YES;
   // Set up any upstream listeners or background tasks as necessary
+  [self processQueuedEvents];
 }
 
 - (void)stopObserving
@@ -113,7 +123,35 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
 - (void) emitMessageToRN: (NSString *)eventName :(NSDictionary *)params {
   // The bridge eventDispatcher is used to send events from native to JS env
   // No documentation yet on DeviceEventEmitter: https://github.com/facebook/react-native/issues/2819
-  [self sendEventWithName: eventName body: params];
+  Event *event = [[Event alloc] init];
+  event.name = eventName;
+  event.payload = params;
+  [self.queuedEvents addObject:event];
+  if (self.hasListeners) {
+    [self processQueuedEvents];
+  } else {
+    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    content.title = @"QUEUING NATIVE EVENT";
+    content.body = event.name;
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString] content:content trigger:nil];
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request withCompletionHandler:nil];
+  }
+}
+
+- (void)processQueuedEvents {
+  while (self.queuedEvents.count > 0) {
+    Event *event = self.queuedEvents.firstObject;
+    [self.queuedEvents removeObject:event];
+    [self sendEventWithName:event.name body:event.payload];
+
+    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    content.title = @"SENDING NATIVE EVENT";
+    content.body = event.name;
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString] content:content trigger:nil];
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request withCompletionHandler:nil];
+  }
 }
 
 # pragma mark - NSURLSessionTaskDelegate
@@ -137,9 +175,7 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
   float fraction = @(totalBytesSent).floatValue/@(totalBytesExpectedToSend).floatValue;
   NSDictionary *dict = @{ @"file": task.taskDescription, @"progress": @(fraction) };
-  if (self.hasListeners) {
-    [self emitMessageToRN:@"UploadTaskProgress" :dict];
-  }
+  [self emitMessageToRN:@"UploadTaskProgress" :dict];
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
@@ -186,17 +222,7 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
     }
     [self.responseData removeObjectForKey:@(task.taskIdentifier)];
   }
-  UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-  content.title = @"NATIVE";
-  if (self.hasListeners) {
-    content.body = @"task complete, notifying RN listeners";
-    [self emitMessageToRN:@"UploadTaskComplete" :dict];
-  } else {
-    content.body = @"task complete, but no RN listeners";
-  }
-  UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"task-complete" content:content trigger:nil];
-  UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-  [center addNotificationRequest:request withCompletionHandler:nil];
+  [self emitMessageToRN:@"UploadTaskComplete" :dict];
 }
 
 @end
