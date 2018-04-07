@@ -41,7 +41,7 @@
   UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
   content.title = @"NATIVE";
   content.body = @"App launched to handle background session events";
-  UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"task-complete" content:content trigger:nil];
+  UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"launched-into-bg" content:content trigger:nil];
   UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
   [center addNotificationRequest:request withCompletionHandler:nil];
   

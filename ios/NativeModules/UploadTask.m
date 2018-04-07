@@ -123,7 +123,7 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
     UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
     content.title = @"NATIVE";
     content.body = @"URLSession finished background events";
-    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"task-complete" content:content trigger:nil];
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"bg-events-finished" content:content trigger:nil];
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center addNotificationRequest:request withCompletionHandler:nil];
     
