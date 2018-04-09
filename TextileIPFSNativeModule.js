@@ -35,5 +35,10 @@ export default {
     return result
   },
 
+  pairNewDevice: async function (peerId: string, pubKey: string): string {
+    const result = await TextileIPFS.pairNewDevice(peerId, pubKey)
+    return result
+  },
+
   EXAMPLE_CONSTANT: TextileIPFS.EXAMPLE_CONSTANT
 }

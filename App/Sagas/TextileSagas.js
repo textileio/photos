@@ -106,3 +106,13 @@ function * uploadImage (request) {
 export function * addImages (api, response) {
   yield response.data.map(image => call(uploadImage, {api, image}))
 }
+
+export function * pairNewDevice (api, action) {
+  const { peerId, pubKey } = action
+  try {
+    yield call(api.pairNewDevice, {peerId, pubKey})
+    yield put(TextileActions.pairNewDeviceSuccess(peerId))
+  } catch (err) {
+    yield put(TextileActions.pairNewDeviceSuccess(peerId))
+  }
+}
