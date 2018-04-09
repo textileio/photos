@@ -35,8 +35,8 @@ export default {
     return result
   },
 
-  pairNewDevice: async function (peerId: string, pubKey: string): string {
-    const result = await TextileIPFS.pairNewDevice(peerId, pubKey)
+  pairNewDevice: async function (pubKey: string): string {
+    const result = await TextileIPFS.pairNewDevice(pubKey)
     return result
   },
 

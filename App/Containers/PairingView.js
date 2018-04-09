@@ -19,8 +19,8 @@ class PairingView extends React.PureComponent {
     }
   }
 
-  confirmPairing = (peerId, pubKey) => {
-    this.props.pairNewDevice(peerId, pubKey)
+  confirmPairing = (pubKey) => {
+    this.props.pairNewDevice(pubKey)
     this.props.navigation.navigate('TextilePhotos')
   }
 
@@ -51,7 +51,6 @@ class PairingView extends React.PureComponent {
   render () {
     let code = 'WARN'
     let pubKey = null
-    let peerId = null
     if (this.props.navigation.state.params.data) {
       let params = this.getParams(this.props.navigation.state.params.data)
       if ('code' in params) {
@@ -60,12 +59,9 @@ class PairingView extends React.PureComponent {
       if ('key' in params) {
         pubKey = params['key']
       }
-      if ('peerId' in params) {
-        peerId = params['peerId']
-      }
     }
 
-    const onConfirm = this.confirmPairing(peerId, pubKey)
+    const onConfirm = this.confirmPairing(pubKey)
 
     return (
       <ImageBackground
@@ -109,7 +105,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    pairNewDevice: (peerId, pubKey) => { dispatch(Actions.pairNewDevice(peerId, pubKey)) }
+    pairNewDevice: (pubKey) => { dispatch(Actions.pairNewDevice(pubKey)) }
   }
 }
 
