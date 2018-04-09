@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -13,7 +14,6 @@
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* TextilePhotosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TextilePhotosTests.m */; };
 		01087E6E60484EFEAE898CCE /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01AD301CC5D94FE89B8A6E5C /* EvilIcons.ttf */; };
-		0CDABDBBB01648EFB6B7474F /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E5D65B23A554361A63E8C7A /* libRealmReact.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -53,6 +53,7 @@
 		9339E9A2205C381700BCA4CF /* TextileIPFS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileIPFS.m */; };
 		9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
 		9339E9A8205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
+		93477EE32075763400D9E0FC /* UploadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 93477EE22075763400D9E0FC /* UploadTask.m */; };
 		937FC5412061B7A700357ED5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */; };
 		93D83F9D206C22B500522EFE /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93D83F9A206C229B00522EFE /* libRCTPushNotification.a */; };
 		949DF81DB2FF1C6529BB0016 /* libPods-TextilePhotosTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1312F3D6739A1A4AC49FE75B /* libPods-TextilePhotosTests.a */; };
@@ -322,13 +323,6 @@
 			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
 			remoteInfo = "RCTPushNotification-tvOS";
 		};
-		93D83FDE206C367900522EFE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9EF0F19CCC3940438BE4DA8D /* RealmReact.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F60690131CA2766F0003FB26;
-			remoteInfo = RealmReact;
-		};
 		93F071F52051A31A0066155B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
@@ -448,11 +442,12 @@
 		9339E99F205C381700BCA4CF /* TextileIPFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileIPFS.m; sourceTree = "<group>"; };
 		9339E9A0205C381700BCA4CF /* TextileIPFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileIPFS.h; sourceTree = "<group>"; };
 		9339E9A6205C3B8700BCA4CF /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mobile.framework; sourceTree = "<group>"; };
+		93477EB62075763400D9E0FC /* UploadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadTask.h; sourceTree = "<group>"; };
+		93477EE22075763400D9E0FC /* UploadTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadTask.m; sourceTree = "<group>"; };
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93D83F94206C229B00522EFE /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		9B66CC9E9A544F2FBFB67908 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		9E84776F9FB00A592318AC25 /* Pods-TextilePhotosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.release.xcconfig"; sourceTree = "<group>"; };
-		9EF0F19CCC3940438BE4DA8D /* RealmReact.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
 		A1BC9A42CA94445382957F34 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		A381D027F32B4EA780358435 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		A7A2525E89E54929B1E7FC4B /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -507,7 +502,6 @@
 				A848B5AF64084A698B052D4B /* libcxxreact.a in Frameworks */,
 				7163233B67854D609D72F1D5 /* libjschelpers.a in Frameworks */,
 				F697690BA3D6C0A71353DA2C /* libPods-TextilePhotos.a in Frameworks */,
-				0CDABDBBB01648EFB6B7474F /* libRealmReact.a in Frameworks */,
 				13BD2A9460D64414917858A7 /* libc++.tbd in Frameworks */,
 				CEC4D12212784B1D946A7060 /* libz.tbd in Frameworks */,
 				AF3C08411C694019838C6262 /* TSBackgroundFetch.framework in Frameworks */,
@@ -726,7 +720,6 @@
 				CCE074B0A6814BE6AA44CF52 /* RNDeviceInfo.xcodeproj */,
 				BCE1D0D0A2DC49468796E22E /* RNVectorIcons.xcodeproj */,
 				AD2FAAAE52D648E2A59DD96A /* RNI18n.xcodeproj */,
-				9EF0F19CCC3940438BE4DA8D /* RealmReact.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -773,6 +766,8 @@
 		9339E99E205C381700BCA4CF /* NativeModules */ = {
 			isa = PBXGroup;
 			children = (
+				93477EB62075763400D9E0FC /* UploadTask.h */,
+				93477EE22075763400D9E0FC /* UploadTask.m */,
 				9339E9A0205C381700BCA4CF /* TextileIPFS.h */,
 				9339E99F205C381700BCA4CF /* TextileIPFS.m */,
 			);
@@ -792,14 +787,6 @@
 			children = (
 				93D83F9A206C229B00522EFE /* libRCTPushNotification.a */,
 				93D83F9C206C229B00522EFE /* libRCTPushNotification-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		93D83FDB206C367700522EFE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				93D83FDF206C367900522EFE /* libRealmReact.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1057,10 +1044,6 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-				},
-				{
-					ProductGroup = 93D83FDB206C367700522EFE /* Products */;
-					ProjectRef = 9EF0F19CCC3940438BE4DA8D /* RealmReact.xcodeproj */;
 				},
 				{
 					ProductGroup = 93F072142051A31A0066155B /* Products */;
@@ -1322,13 +1305,6 @@
 			fileType = archive.ar;
 			path = "libRCTPushNotification-tvOS.a";
 			remoteRef = 93D83F9B206C229B00522EFE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93D83FDF206C367900522EFE /* libRealmReact.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRealmReact.a;
-			remoteRef = 93D83FDE206C367900522EFE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		93F071F62051A31A0066155B /* libRCTBlob-tvOS.a */ = {
@@ -1689,6 +1665,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93477EE32075763400D9E0FC /* UploadTask.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */,
@@ -1748,9 +1725,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1791,9 +1766,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
