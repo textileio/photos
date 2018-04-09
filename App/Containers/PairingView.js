@@ -2,13 +2,13 @@
 import React from 'react'
 import {View, Text, ImageBackground, Dimensions} from 'react-native'
 import { Overlay, Button } from 'react-native-elements'
+import { connect } from 'react-redux'
+import Actions from '../Redux/TextileRedux'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
 // Styles
 import styles from './Styles/LogViewStyle'
-import Actions from '../Redux/TextileRedux'
-import { connect } from 'react-redux'
 
 class PairingView extends React.PureComponent {
   constructor (props) {
@@ -28,7 +28,7 @@ class PairingView extends React.PureComponent {
     this.props.navigation.navigate('TextilePhotos')
   }
 
-  getParams(url) {
+  getParams (url) {
     let query = url.split('?')[1]
     let vars = query.split('&')
     let queryString = {}
@@ -101,10 +101,16 @@ class PairingView extends React.PureComponent {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = state => {
   return {
-    pairNewDevice: (peerId, pubkey) => { dispatch(Actions.pairNewDevice(peerId, pubkey)) }
+    devices: state.textile && state.textile.devices ? state.textile.devices : []
   }
 }
 
-export default connect(mapDispatchToProps)(PairingView)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    pairNewDevice: (peerId, pubKey) => { dispatch(Actions.pairNewDevice(peerId, pubKey)) }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PairingView)

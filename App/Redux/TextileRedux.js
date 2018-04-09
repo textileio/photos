@@ -45,7 +45,7 @@ const { Types, Creators } = createActions({
   getPhotoDataSuccess: ['data'],
   getPhotoDataFailure: null,
 
-  pairNewDevice: ['peerId', 'pubkey'],
+  pairNewDevice: ['peerId', 'pubKey'],
   pairNewDeviceSuccess: ['peerId'],
   pairNewDeviceError: ['peerId']
 })
@@ -71,9 +71,7 @@ export const INITIAL_STATE = Immutable({
     loading: false,
     items: []
   },
-  pairing: {
-    devices: []
-  }
+  devices: []
 })
 
 /* ------------- Selectors ------------- */
@@ -229,31 +227,31 @@ export const handleImageError = (state, {image, error}) => {
 export const addImagesRequest = state => state
 
 export const pairNewDevice = (state, {peerId, pubKey}) => {
-  const existingDevices = state.pairing.devices ? state.pairing.devices : []
+  const existingDevices = state.devices ? state.devices : []
   const devices = [{ peerId, pubKey, state: 'pending' }, ...existingDevices]
-  return state.merge({ pairing: { devices } })
+  return state.merge({ devices })
 }
 
 export const pairNewDeviceSuccess = (state, {peerId}) => {
-  const existingDevices = state.pairing.devices ? state.pairing.devices : []
+  const existingDevices = state.devices ? state.devices : []
   const devices = existingDevices.map(device => {
     if (device.peerId === peerId) {
       return { peerId: device.peerId, pubKey: device.pubKey, state: 'paired' }
     }
     return device
   })
-  return state.merge({ devices: { devices } })
+  return state.merge({ devices })
 }
 
 export const pairNewDeviceError = (state, {peerId}) => {
-  const existingDevices = state.pairing.devices ? state.pairing.devices : []
+  const existingDevices = state.devices ? state.devices : []
   const devices = existingDevices.map(device => {
     if (device.peerId === peerId) {
       return { peerId: device.peerId, pubKey: device.pubKey, state: 'error' }
     }
     return device
   })
-  return state.merge({ devices: { devices } })
+  return state.merge({ devices })
 }
 
 // Helper so sagas can figure out current items loaded
@@ -289,8 +287,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.IMAGE_SUCCESS]: handleImageSuccess,
   [Types.IMAGE_ERROR]: handleImageError,
 
-
   [Types.PAIR_NEW_DEVICE]: pairNewDevice,
   [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,
-  [Types.PAIR_NEW_DEVICE_ERROR]: pairNewDeviceError,
+  [Types.PAIR_NEW_DEVICE_ERROR]: pairNewDeviceError
 })
