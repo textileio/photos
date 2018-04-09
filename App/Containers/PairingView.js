@@ -39,12 +39,18 @@ class PairingView extends React.PureComponent {
   }
   render () {
     let code = 'WARN'
+    let pubkey = 'WARN'
     if (this.props.navigation.state.params.data) {
       let params = this.getParams(this.props.navigation.state.params.data)
       if ('code' in params) {
         code = params['code']
       }
+      if ('key' in params) {
+        pubkey = params['key']
+      }
     }
+    console.log('Initiate Pubsub message here: ', pubkey)
+    
     return (
       <ImageBackground
         source={require('../Images/backgrounds/log-background.png')}
