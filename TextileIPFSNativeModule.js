@@ -9,8 +9,9 @@ type MultipartData = {
 }
 
 export default {
-  createNodeWithDataDir: function (dataDir: string, apiHost: string) {
-    TextileIPFS.createNodeWithDataDir(dataDir, apiHost)
+  createNodeWithDataDir: async function (dataDir: string): boolean {
+    const success = await TextileIPFS.createNodeWithDataDir(dataDir)
+    return success
   },
 
   startNode: async function (): boolean {
@@ -38,7 +39,5 @@ export default {
   getPhotoData: async function (path: string): string {
     const result = await TextileIPFS.getPhotoData(path)
     return result
-  },
-
-  EXAMPLE_CONSTANT: TextileIPFS.EXAMPLE_CONSTANT
+  }
 }

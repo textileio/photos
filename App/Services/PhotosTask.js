@@ -13,7 +13,7 @@ export default async function photosTask (dispatch, failedImages) {
 
   // Start IPFS
   const path = RNFS.DocumentDirectoryPath
-  IPFS.createNodeWithDataDir(path, 'https://ipfs.textile.io')
+  await IPFS.createNodeWithDataDir(path)
   await IPFS.startNode()
 
   // Get a list of the jobs already in the queue
