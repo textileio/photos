@@ -3,6 +3,7 @@ package com.textilephotos;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
@@ -34,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AppCenterReactNativePackage(MainApplication.this),
             new ReactNativeConfigPackage(),
             new BackgroundTimerPackage(),
           new BackgroundTaskPackage(),
