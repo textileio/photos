@@ -1,5 +1,9 @@
 PODS:
+  - AppCenter/Analytics (1.5.0):
+    - AppCenter/Core
   - AppCenter/Core (1.5.0)
+  - AppCenter/Crashes (1.5.0):
+    - AppCenter/Core
   - AppCenterReactNativeShared (1.4.0):
     - AppCenter/Core (= 1.5.0)
   - QBImagePickerController (3.4.0)
@@ -47,6 +51,8 @@ PODS:
   - yoga (0.50.4.React)
 
 DEPENDENCIES:
+  - AppCenter/Analytics (~> 1.5.0)
+  - AppCenter/Crashes (~> 1.5.0)
   - AppCenterReactNativeShared (~> 1.4.0)
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
@@ -95,6 +101,6 @@ SPEC CHECKSUMS:
   RSKImageCropper: d9a1acbc0600bf8decc8f0d21895872c99a9e4cf
   yoga: b9aebf996711e50fc31f5608c10aa108a5a0c29e
 
-PODFILE CHECKSUM: 705e20bb73c41eae1ac5cb78bed108b56e4da016
+PODFILE CHECKSUM: e327e3d138a7bf637f10f66418f455cb52e25e02
 
 COCOAPODS: 1.3.1
