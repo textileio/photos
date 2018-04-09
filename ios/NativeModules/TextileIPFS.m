@@ -95,10 +95,10 @@ RCT_REMAP_METHOD(key, keyWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(
   }
 }
 
-RCT_EXPORT_METHOD(pairNewDevice:(NSString *)peerId thumbPath:(NSString *)pubKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pubKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSError *error;
-  NSString *hash = [self _pairNewDevice:peerId pubKey:pubKey error:&error];
+  NSString *hash = [self _pairNewDevice:pubKey error:&error];
   if(hash) {
     resolve(hash);
   } else {

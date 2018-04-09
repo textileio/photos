@@ -45,9 +45,9 @@ const { Types, Creators } = createActions({
   getPhotoDataSuccess: ['data'],
   getPhotoDataFailure: null,
 
-  pairNewDevice: ['peerId', 'pubKey'],
-  pairNewDeviceSuccess: ['peerId'],
-  pairNewDeviceError: ['peerId']
+  pairNewDevice: ['pubKey'],
+  pairNewDeviceSuccess: ['pubKey'],
+  pairNewDeviceError: ['pubKey']
 })
 
 export const TextileTypes = Types
@@ -226,28 +226,28 @@ export const handleImageError = (state, {image, error}) => {
 // TODO: add a loading state for addImages
 export const addImagesRequest = state => state
 
-export const pairNewDevice = (state, {peerId, pubKey}) => {
+export const pairNewDevice = (state, {pubKey}) => {
   const existingDevices = state.devices ? state.devices : []
-  const devices = [{ peerId, pubKey, state: 'pending' }, ...existingDevices]
+  const devices = [{ pubKey, state: 'pending' }, ...existingDevices]
   return state.merge({ devices })
 }
 
-export const pairNewDeviceSuccess = (state, {peerId}) => {
+export const pairNewDeviceSuccess = (state, {pubKey}) => {
   const existingDevices = state.devices ? state.devices : []
   const devices = existingDevices.map(device => {
-    if (device.peerId === peerId) {
-      return { peerId: device.peerId, pubKey: device.pubKey, state: 'paired' }
+    if (device.pubKey === pubKey) {
+      return { pubKey: device.pubKey, state: 'paired' }
     }
     return device
   })
   return state.merge({ devices })
 }
 
-export const pairNewDeviceError = (state, {peerId}) => {
+export const pairNewDeviceError = (state, {pubKey}) => {
   const existingDevices = state.devices ? state.devices : []
   const devices = existingDevices.map(device => {
-    if (device.peerId === peerId) {
-      return { peerId: device.peerId, pubKey: device.pubKey, state: 'error' }
+    if (device.pubKey === pubKey) {
+      return { pubKey: device.pubKey, pubKey: device.pubKey, state: 'error' }
     }
     return device
   })
