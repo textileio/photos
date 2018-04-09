@@ -45,7 +45,7 @@ class TextilePhotos extends React.PureComponent {
     // this.makeRemoteRequest();
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (!this.props.onboarded) {
       // this.props.navigation.navigate("OnboardingSecurity")
     }

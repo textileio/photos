@@ -72,7 +72,7 @@ class App extends Component {
     )
   }
 
-  async handleAppStateChange(nextAppState) {
+  async handleAppStateChange (nextAppState) {
     if (nextAppState.match(/^active/)) {
       console.log('got a foreground event')
       await PhotosTask(store.dispatch, getFailedImages())
