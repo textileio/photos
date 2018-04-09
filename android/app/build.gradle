@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    compile project(':appcenter')
     compile project(':react-native-config')
     compile project(':react-native-background-timer')
     compile project(':react-native-background-task')
