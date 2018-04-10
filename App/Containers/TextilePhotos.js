@@ -14,6 +14,7 @@ import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
 import Actions from '../Redux/TextileRedux'
 import { Card, Tile } from 'react-native-elements'
+import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
 import { Colors } from '../Themes'
 
@@ -23,37 +24,22 @@ import { Colors } from '../Themes'
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
-  constructor (props) {
-    super(props)
-    this.state = {
-      data: [],
-      limit: 10
+
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {}
+    return {
+      headerRight: (
+        <HeaderButtons IconComponent={Evilicon} iconSize={30} color='white'>
+          <HeaderButtons.Item title='more' iconName='gear' onPress={params.openLogs} />
+        </HeaderButtons>
+      )
     }
   }
 
-  // static navigationOptions = ({ navigation }) => {
-  //   const params = navigation.state.params || {};
-  //   return {
-  //     headerTitle: (
-  //       <Image
-  //         source={require('../Images/Icons/icon-home.png')}
-  //       />
-  //     ),
-  //     headerRight: (
-  //       <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-  //         <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
-  //         <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
-  //       </HeaderButtons>
-  //     )
-  //   }
-  // };
-
   componentWillMount () {
-    // this.props.navigation.setParams({
-    //   // showPhotoPicker: this._showPhotoPicker.bind(this),
-    //   // showCamera: this._showCamera.bind(this)
-    // });
-    // this.makeRemoteRequest();
+    this.props.navigation.setParams({
+      openLogs: this.openLogs.bind(this)
+    })
   }
 
   componentDidMount() {
@@ -61,27 +47,6 @@ class TextilePhotos extends React.PureComponent {
       // this.props.navigation.navigate("OnboardingSecurity")
     }
   }
-
-  // Just added this simple function here @aaron, nothing fancy.
-  // I stole this from elsewhere, so there are some extra probs in here
-  //
-  // _showPhotoPicker () {
-  //   ImagePicker.openPicker({
-  //     multiple: true
-  //   }).then(this.props.addImagesRequest)
-  //     .catch(e => console.log(e))
-  // }
-  //
-  // _showCamera () {
-  //   ImagePicker.openCamera({
-  //     width: 300,
-  //     height: 400
-  //   })
-  //     .then(image => {
-  //       this.props.addImagesRequest([image])
-  //     })
-  //     .catch(e => console.log(e))
-  // }
 
   /* ***********************************************************
   * STEP 1
@@ -160,28 +125,12 @@ class TextilePhotos extends React.PureComponent {
   //   <Text style={[styles.label, styles.sectionHeader]}> - Header - </Text>
 
   // Render a footer?
-  renderFooter = () => {
-    if (this.props.images.items.length != 0) {
-      return null
-    }
-
-    return (
-      <Card
-        style={styles.cardStyle}
-        image={require('../Images/backgrounds/no-image-yet.png')}>
-        <View style={styles.statusCell}>
-          <View style={styles.noPhotos}>
-            <Text> Just waiting for you to take some photos. </Text>
-          </View>
-        </View>
-      </Card>
-    );
-  };
+  // renderFooter = () =>
   //   <Text style={[styles.label, styles.sectionHeader]}> - Footer - </Text>
 
   // Show this when data is empty
-  // renderEmpty = () =>
-  //   <Text style={styles.label}> - Nothing to See Here - </Text>
+  renderEmpty = () =>
+    <Text style={styles.label}>Any new photos you take will be displayed here and synced to Textile.</Text>
 
   // renderSeparator = () =>
   //   <Text style={styles.label}> - ~~~~~ - </Text>
@@ -195,7 +144,7 @@ class TextilePhotos extends React.PureComponent {
   oneScreensWorth = 10
 
   openLogs = () => {
-    this.props.navigation.navigate("LogView")
+    this.props.navigation.navigate('LogScreen')
   }
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -215,6 +164,7 @@ class TextilePhotos extends React.PureComponent {
     return (
       <View style={styles.container}>
         <FlatList
+          ListEmptyComponent={this.renderEmpty}
           style={styles.listContainer}
           data={this.props.images.items}
           keyExtractor={this.keyExtractor}
