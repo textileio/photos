@@ -27,7 +27,7 @@ class PairingView extends React.PureComponent {
   }
 
   cancelPairing = () => {
-    this.props.navigation.navigate('TextilePhotos')
+    this.props.navigation.goBack(null)
   }
 
   getParams (url) {
