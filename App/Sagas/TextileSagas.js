@@ -31,8 +31,8 @@ export function * getRandomUsers (api, action) {
 }
 
 export function * createNode (api, action) {
-  const { path, apiHost } = action
-  yield call(api.createNodeWithDataDir, path, apiHost)
+  const { path } = action
+  yield call(api.createNodeWithDataDir, path)
 }
 
 export function * startNode (api) {

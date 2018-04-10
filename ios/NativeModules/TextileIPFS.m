@@ -23,7 +23,7 @@
 
 @interface TextileIPFS()
 
-@property (nonatomic, strong) MobileNode *node;
+@property (nonatomic, strong) MobileWrapper *node;
 
 @end
 
@@ -36,8 +36,7 @@ RCT_EXPORT_MODULE();
 
 // Export constants
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#exporting-constants
-- (NSDictionary *)constantsToExport
-{
+- (NSDictionary *)constantsToExport {
   return @{
            @"EXAMPLE": @"example"
            };
@@ -46,13 +45,17 @@ RCT_EXPORT_MODULE();
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiHost:(NSString *)apiHost)
-{
-  [self _createNodeWithDataDir:dataDir apiHost:apiHost];
+RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _createNodeWithDataDir:dataDir error:&error];
+  if (self.node) {
+    resolve(@YES);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
 }
 
-RCT_REMAP_METHOD(startNode, startNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
+RCT_REMAP_METHOD(startNode, startNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   BOOL success = [self _startNode:&error];
   if(success) {
@@ -62,8 +65,7 @@ RCT_REMAP_METHOD(startNode, startNodeWithResolver:(RCTPromiseResolveBlock)resolv
   }
 }
 
-RCT_REMAP_METHOD(stopNode, stopNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
+RCT_REMAP_METHOD(stopNode, stopNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   BOOL success = [self _stopNode:&error];
   if(success) {
@@ -73,45 +75,11 @@ RCT_REMAP_METHOD(stopNode, stopNodeWithResolver:(RCTPromiseResolveBlock)resolve 
   }
 }
 
-RCT_REMAP_METHOD(peerId, peerIdWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
-  NSString *peerId = [self _peerId];
-  if(peerId) {
-    resolve(peerId);
-  } else {
-    NSError *error = [NSError errorWithDomain:@"ipfs" code:1 userInfo:nil];
-    reject(@"nil_peer_id", @"Peer id is undefined", error);
-  }
-}
-
-RCT_REMAP_METHOD(key, keyWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
-  NSString *key = [self _key];
-  if(key) {
-    resolve(key);
-  } else {
-    NSError *error = [NSError errorWithDomain:@"ipfs" code:2 userInfo:nil];
-    reject(@"nil_key", @"Key is undefined", error);
-  }
-}
-
-RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pubKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
+RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *hash = [self _pairNewDevice:pubKey error:&error];
-  if(hash) {
-    resolve(hash);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
-  NSError *error;
-  NSString *hash = [self _addPhoto:path thumbPath:thumbPath error:&error];
-  if(hash) {
-    resolve(hash);
+  NetMultipartRequest *multipart = [self _addPhoto:path thumbPath:thumbPath error:&error];
+  if(multipart) {
+    resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -137,29 +105,33 @@ RCT_EXPORT_METHOD(getPhotoData:(NSString *)path resolver:(RCTPromiseResolveBlock
   }
 }
 
-RCT_EXPORT_METHOD(exampleMethod)
-{
-  [self emitMessageToRN:@"EXAMPLE_EVENT" :nil];
-}
-
 // List all your events here
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"SampleEvent"];
+  return @[];
 }
 
 #pragma mark - Private methods
 
-- (void)_createNodeWithDataDir:(NSString *)dataDir apiHost:(NSString *)apiHost {
+- (void)_createNodeWithDataDir:(NSString *)dataDir error:(NSError**)error {
   if (!self.node) {
-    self.node = MobileNewTextile(dataDir, apiHost);
+    self.node = [[MobileMobile new] newNode:dataDir error:error];
   }
 }
 
-- (BOOL)_startNode:(NSError**)error {
-  BOOL success = [self.node start:error];
+- (BOOL)_configureNodeWithMnemonic:(NSString *)mnemonic error:(NSError**)error {
+  BOOL success = [self.node configureDatastore:mnemonic error:error];
   return success;
+}
+
+- (BOOL)_startNode:(NSError**)error {
+  BOOL startNodeSuccess = [self.node start:error];
+  BOOL configureSuccess = YES;
+  if (startNodeSuccess && ![self.node isDatastoreConfigured]) {
+    configureSuccess = [self.node configureDatastore:@"" error:error];
+  }
+  return startNodeSuccess && configureSuccess;
 }
 
 - (BOOL)_stopNode:(NSError**)error {
@@ -167,17 +139,9 @@ RCT_EXPORT_METHOD(exampleMethod)
   return success;
 }
 
-- (NSString *)_peerId {
-  return @"somepeerid";
-}
-
-- (NSString *)_key {
-  return @"thisissomekey";
-}
-
-- (NSString *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath error:(NSError**)error {
-  NSString *hash = [self.node addPhoto:path thumb:thumbPath error:error];
-  return hash;
+- (NetMultipartRequest *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath error:(NSError**)error {
+  NetMultipartRequest *multipart = [self.node addPhoto:path thumb:thumbPath error:error];
+  return multipart;
 }
 
 - (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit error:(NSError**)error {
@@ -186,7 +150,7 @@ RCT_EXPORT_METHOD(exampleMethod)
 }
 
 - (NSString *)_getPhoto:(NSString *)hashPath error:(NSError**)error {
-  NSString *base64String = [self.node getPhotoBase64String:hashPath error:error];
+  NSString *base64String = [self.node getFileBase64:hashPath error:error];
   return base64String;
 }
 
