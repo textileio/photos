@@ -1,5 +1,18 @@
-import { StyleSheet } from 'react-native'
+import {Dimensions, StyleSheet, Platform} from 'react-native'
 import { ApplicationStyles, Metrics, Colors } from '../../Themes'
+
+const { width, height } = Dimensions.get('window');
+// orientation must fixed
+export const SCREEN_WIDTH = width < height ? width : height
+
+export const isSmallDevice = SCREEN_WIDTH <= 414
+export const numColumns = isSmallDevice ? 3 : 4
+
+export const PRODUCT_ITEM_OFFSET = 0.5
+export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET * 2
+const ITEM_WIDTH = (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
+  PRODUCT_ITEM_MARGIN
+export const PRODUCT_ITEM_HEIGHT = ITEM_WIDTH
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
@@ -24,10 +37,64 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 22,
-    paddingLeft: 0,
-    paddingRight: 0,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.snow,
+  },
+  listContainer: {
+    flex: 1,
+    padding: PRODUCT_ITEM_OFFSET
+  },
+  item: {
+    margin: PRODUCT_ITEM_OFFSET,
+    overflow: 'hidden',
+    borderRadius: 0,
+    width: ITEM_WIDTH,
+    height: PRODUCT_ITEM_HEIGHT,
+    flexDirection: 'column',
+    // flex: 1,
+    backgroundColor: Colors.snow,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'rgba(0,0,0, .2)',
+        shadowOffset: { height: 0, width: 0 },
+        shadowOpacity: 1,
+        shadowRadius: 1,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+  itemImage: {
+    width: (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
+    PRODUCT_ITEM_MARGIN,
+    height: PRODUCT_ITEM_HEIGHT,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  itemTitle: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        fontWeight: '400',
+      },
+    }),
+    margin: PRODUCT_ITEM_OFFSET * 2,
+  },
+  itemFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: PRODUCT_ITEM_OFFSET * 2,
+    borderWidth: 0,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(0,0,0,0.15)',
+    margin: PRODUCT_ITEM_OFFSET * 2,
+  },
+  itemPrice: {
+    fontWeight: 'bold',
+  },
+  itemPriceClearance: {
+    fontWeight: 'bold',
+    color: 'red',
   },
   tileStyle: {
     padding: 0,
