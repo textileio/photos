@@ -12,6 +12,9 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <React/RCTPushNotificationManager.h>
+#import <React/RCTLinkingManager.h>
+#import <UserNotifications/UserNotifications.h>
+
 
 @implementation AppDelegate
 
@@ -33,6 +36,18 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   return YES;
+}
+
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
+{
+  UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+  content.title = @"NATIVE";
+  content.body = @"App launched to handle background session events";
+  UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"launched-into-bg" content:content trigger:nil];
+  UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+  [center addNotificationRequest:request withCompletionHandler:nil];
+  
+  self.backgroundCompletionHandler = completionHandler;
 }
 
 // Required to register for notifications
@@ -60,6 +75,14 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
   [RCTPushNotificationManager didReceiveLocalNotification:notification];
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+{
+  return [RCTLinkingManager application:application
+                   continueUserActivity:userActivity
+                     restorationHandler:restorationHandler];
 }
 
 @end

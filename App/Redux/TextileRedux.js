@@ -19,8 +19,9 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: null,
 
-  imageAdded: ['image'],
-  imageProcessing: ['image'],
+  imageAdded: ['image', 'remotePayloadPath'],
+  imageUploadProgress: ['data'],
+  imageUploadComplete: ['data'],
   imageSuccess: ['image', 'hash'],
   imageError: ['image', 'error'],
 
@@ -43,7 +44,11 @@ const { Types, Creators } = createActions({
 
   getPhotoDataRequest: ['hash'],
   getPhotoDataSuccess: ['data'],
-  getPhotoDataFailure: null
+  getPhotoDataFailure: null,
+
+  pairNewDevice: ['pubKey'],
+  pairNewDeviceSuccess: ['pubKey'],
+  pairNewDeviceError: ['pubKey']
 })
 
 export const TextileTypes = Types
@@ -66,7 +71,8 @@ export const INITIAL_STATE = Immutable({
     error: false,
     loading: false,
     items: []
-  }
+  },
+  devices: []
 })
 
 /* ------------- Selectors ------------- */
@@ -179,17 +185,35 @@ export const getThumbsSuccess = (state, { response, prepend, clearItems }) => {
   })
 }
 
-export const handleImageAdded = (state, {image}) => {
+export const handleImageAdded = (state, {image, remotePayloadPath}) => {
   const existingItems = state.images.items ? state.images.items : []
-  const items = [{ image, state: 'pending' }, ...existingItems]
+  const items = [{ image, remotePayloadPath, state: 'pending' }, ...existingItems]
   return state.merge({ images: { items } })
 }
 
-export const handleImageProcessing = (state, {image}) => {
+export const handleImageProgress = (state, {data}) => {
+  const {file, progress} = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
-    if (item.image.node.image.uri === image.node.image.uri) {
-      return { image, state: 'processing' }
+    if (item.remotePayloadPath === file) {
+      return {...item, state: 'processing', progress}
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const handleImageUploadComplete = (state, {data}) => {
+  const {file, hash, error} = data
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.remotePayloadPath === file) {
+      if (error) {
+        return {...item, state: 'error', error}
+      } else {
+        console.log(hash)
+        return {...item, state: 'complete', hash}
+      }
     }
     return item
   })
@@ -221,6 +245,34 @@ export const handleImageError = (state, {image, error}) => {
 // TODO: add a loading state for addImages
 export const addImagesRequest = state => state
 
+export const pairNewDevice = (state, {pubKey}) => {
+  const existingDevices = state.devices ? state.devices : []
+  const devices = [{ pubKey, state: 'pending' }, ...existingDevices]
+  return state.merge({ devices })
+}
+
+export const pairNewDeviceSuccess = (state, {pubKey}) => {
+  const existingDevices = state.devices ? state.devices : []
+  const devices = existingDevices.map(device => {
+    if (device.pubKey === pubKey) {
+      return { pubKey: device.pubKey, state: 'paired' }
+    }
+    return device
+  })
+  return state.merge({ devices })
+}
+
+export const pairNewDeviceError = (state, {pubKey}) => {
+  const existingDevices = state.devices ? state.devices : []
+  const devices = existingDevices.map(device => {
+    if (device.pubKey === pubKey) {
+      return { pubKey: device.pubKey, state: 'error' }
+    }
+    return device
+  })
+  return state.merge({ devices })
+}
+
 // Helper so sagas can figure out current items loaded
 // const getItems = state => state.items
 
@@ -250,7 +302,12 @@ export const reducer = createReducer(INITIAL_STATE, {
   // [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess,
 
   [Types.IMAGE_ADDED]: handleImageAdded,
-  [Types.IMAGE_PROCESSING]: handleImageProcessing,
+  [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
+  [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
   [Types.IMAGE_SUCCESS]: handleImageSuccess,
-  [Types.IMAGE_ERROR]: handleImageError
+  [Types.IMAGE_ERROR]: handleImageError,
+
+  [Types.PAIR_NEW_DEVICE]: pairNewDevice,
+  [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,
+  [Types.PAIR_NEW_DEVICE_ERROR]: pairNewDeviceError
 })
