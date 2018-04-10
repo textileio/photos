@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {View, Text, FlatList, TouchableOpacity, Linking, ImageBackground} from 'react-native'
+import {View, Text, FlatList, TouchableOpacity, Linking, Platform, ImageBackground} from 'react-native'
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
 import Actions from '../Redux/TextileRedux'
@@ -45,11 +45,31 @@ class TextilePhotos extends React.PureComponent {
     // this.makeRemoteRequest();
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (!this.props.onboarded) {
       // this.props.navigation.navigate("OnboardingSecurity")
     }
+    // TODO: This logic should be moved deeper into the stack
+    if (Platform.OS === 'android') {
+      // TODO: Android deep linking isn't setup in the Java native layer
+      Linking.getInitialURL().then(url => {
+        this._handleOpenURL(url)
+      })
+    } else {
+      Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
+    }
+
   }
+  // TODO: This logic should be moved deeper into the stack
+  _handleOpenURLEvent (event) {
+    this._handleOpenURL(event.url)
+  }
+  // TODO: This logic should be moved deeper into the stack
+  _handleOpenURL (url) {
+    const data = url.replace(/.*?:\/\//g, '')
+    this.props.navigation.navigate('PairingView', {data: data})
+  }
+
 
   // Just added this simple function here @aaron, nothing fancy.
   // I stole this from elsewhere, so there are some extra probs in here
@@ -161,7 +181,7 @@ class TextilePhotos extends React.PureComponent {
       <Card
         style={styles.cardStyle}
         image={require('../Images/backgrounds/no-image-yet.png')}>
-        <View style={styles.statusCell}>
+        <View style={styles.noStatus}>
           <View style={styles.noPhotos}>
             <Text> Just waiting for you to take some photos. </Text>
           </View>
