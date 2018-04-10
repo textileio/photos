@@ -9,11 +9,10 @@
 @import Foundation;
 #include "Universe.objc.h"
 
+#include "Net.objc.h"
 
 @class MobileMobile;
-@class MobileMobileConfig;
-@class MobileNode;
-@class MobilePhotoList;
+@class MobileWrapper;
 
 @interface MobileMobile : NSObject <goSeqRefInterface> {
 }
@@ -21,54 +20,30 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-// skipped method Mobile.NewNode with unsupported parameter or return types
-
+- (MobileWrapper*)newNode:(NSString*)repoPath error:(NSError**)error;
 @end
 
-@interface MobileMobileConfig : NSObject <goSeqRefInterface> {
+@interface MobileWrapper : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-/**
- * Path for the node's data directory
- */
 - (NSString*)repoPath;
 - (void)setRepoPath:(NSString*)v;
-/**
- * API host for service pins
- */
-- (NSString*)apiHost;
-- (void)setApiHost:(NSString*)v;
-@end
+// skipped field Wrapper.Cancel with unsupported type: *types.Named
 
-@interface MobileNode : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) id _ref;
-
-- (instancetype)initWithRef:(id)ref;
-- (instancetype)init;
-- (NSString*)addPhoto:(NSString*)path thumb:(NSString*)thumb error:(NSError**)error;
-/**
- * pass in Qm../thumb, or Qm../photo for full image
- */
-- (NSString*)getPhotoBase64String:(NSString*)path error:(NSError**)error;
+- (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb error:(NSError**)error;
+- (BOOL)configureDatastore:(NSString*)mnemonic error:(NSError**)error;
+- (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit error:(NSError**)error;
+- (NSString*)getRecoveryPhrase:(NSError**)error;
+- (BOOL)isDatastoreConfigured;
+- (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
 @end
 
-@interface MobilePhotoList : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) id _ref;
-
-- (instancetype)initWithRef:(id)ref;
-- (instancetype)init;
-// skipped field PhotoList.Hashes with unsupported type: *types.Slice
-
-@end
-
-FOUNDATION_EXPORT MobileNode* MobileNewTextile(NSString* repoPath, NSString* apiHost);
+FOUNDATION_EXPORT MobileWrapper* MobileNewNode(NSString* repoPath, NSError** error);
 
 #endif

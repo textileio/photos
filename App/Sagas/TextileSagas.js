@@ -31,8 +31,8 @@ export function * getRandomUsers (api, action) {
 }
 
 export function * createNode (api, action) {
-  const { path, apiHost } = action
-  yield call(api.createNodeWithDataDir, path, apiHost)
+  const { path } = action
+  yield call(api.createNodeWithDataDir, path)
 }
 
 export function * startNode (api) {
@@ -105,4 +105,14 @@ function * uploadImage (request) {
 
 export function * addImages (api, response) {
   yield response.data.map(image => call(uploadImage, {api, image}))
+}
+
+export function * pairNewDevice (api, action) {
+  const { pubKey } = action
+  try {
+    yield call(api.pairNewDevice, pubKey)
+    yield put(TextileActions.pairNewDeviceSuccess(pubKey))
+  } catch (err) {
+    yield put(TextileActions.pairNewDeviceError(pubKey))
+  }
 }
