@@ -128,8 +128,15 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'flex-end',
   },
+  emptyListStyle: {
+    flex: 1,
+    justifyContent: 'center'
+  },
   noPhotos: {
     alignSelf: 'center',
+    color: Colors.steel,
+    backgroundColor: Colors.clear,
+    textAlign: 'center'
   },
   statusWhite: {
     width: 10,
