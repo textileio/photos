@@ -266,7 +266,7 @@ export const pairNewDeviceError = (state, {pubKey}) => {
   const existingDevices = state.devices ? state.devices : []
   const devices = existingDevices.map(device => {
     if (device.pubKey === pubKey) {
-      return { pubKey: device.pubKey, pubKey: device.pubKey, state: 'error' }
+      return { pubKey: device.pubKey, state: 'error' }
     }
     return device
   })

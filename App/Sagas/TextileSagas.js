@@ -110,7 +110,7 @@ export function * addImages (api, response) {
 export function * pairNewDevice (api, action) {
   const { pubKey } = action
   try {
-    yield call(api.pairNewDevice, {pubKey})
+    yield call(api.pairNewDevice, pubKey)
     yield put(TextileActions.pairNewDeviceSuccess(pubKey))
   } catch (err) {
     yield put(TextileActions.pairNewDeviceSuccess(pubKey))
