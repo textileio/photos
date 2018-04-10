@@ -46,30 +46,44 @@ export default StyleSheet.create({
   item: {
     margin: PRODUCT_ITEM_OFFSET,
     overflow: 'hidden',
-    borderRadius: 0,
     width: ITEM_WIDTH,
     height: PRODUCT_ITEM_HEIGHT,
-    flexDirection: 'column',
+    // flexDirection: 'column',
     // flex: 1,
+    alignItems: 'center',
     backgroundColor: Colors.snow,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0, .2)',
-        shadowOffset: { height: 0, width: 0 },
-        shadowOpacity: 1,
-        shadowRadius: 1,
-      },
-      android: {
-        elevation: 1,
-      },
-    }),
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: 'rgba(0,0,0, .2)',
+    //     shadowOffset: { height: 0, width: 0 },
+    //     shadowOpacity: 1,
+    //     shadowRadius: 1,
+    //   },
+    //   android: {
+    //     elevation: 1,
+    //   },
+    // }),
+  },
+  itemBackgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  itemOverlay: {
+    // opacity: 0.5,
+    // backgroundColor: '#000000',
+    alignSelf: 'flex-end',
+    margin: 5
   },
   itemImage: {
-    width: (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
-    PRODUCT_ITEM_MARGIN,
+    width: ITEM_WIDTH,
     height: PRODUCT_ITEM_HEIGHT,
-    justifyContent: 'center',
-    alignItems: 'center'
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    flex: 1,
+    flexDirection: 'column'
   },
   itemTitle: {
     flex: 1,

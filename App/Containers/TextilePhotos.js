@@ -14,6 +14,8 @@ import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
 import Actions from '../Redux/TextileRedux'
 import { Card, Tile } from 'react-native-elements'
+import * as Progress from 'react-native-progress'
+import { Colors } from '../Themes'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -107,48 +109,27 @@ class TextilePhotos extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow ({item}) {
-    let label = ''
-    // Figuring we can use the 'status' blocks to inform the user
-    // about where their photo is backed up
-    let localStatus = styles.statusWhite
-    let remoteStatus = styles.statusWhite
-    if (item.state === 'complete') {
-      label = item.hash
-      localStatus = styles.statusPink
-      remoteStatus = styles.statusBlue
-    } else if (item.state === 'error') {
-      label = item.error.message
-      localStatus = styles.statusPink
-      remoteStatus = styles.statusRed
-    } else if (item.state === 'processing') {
-      label = item.progress
-    } else {
-      localStatus = styles.statusPink
-      label = item.state
-    }
-
     const onPress = this.onPressIt(item)
-
+    let overlay
+    if (item.state === 'pending') {
+      overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
+    } else if (item.state === 'processing') {
+      overlay = <Progress.Pie progress={item.progress} size={20} color={Colors.brandPink} />
+    } else if (item.state === 'error') {
+      overlay = <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+    }
     return (
       <View style={styles.item}>
-        <Image
-          source={{uri: item.image.node.image.thumbPath}}
-          resizeMode={'cover'}
-          style={styles.itemImage}
-        />
-        {/*<Text numberOfLines={3} style={styles.itemTitle}>*/}
-          {/*{item.name_group_sp}*/}
-        {/*</Text>*/}
-        {/*<View style={styles.itemFooter}>*/}
-          {/*<Text>Mínimo: {item.min_sale_amount_prod}</Text>*/}
-          {/*<Text>UxB: {item.amount_prod}</Text>*/}
-          {/*<Text*/}
-            {/*style={*/}
-              {/*!item.clearance ? styles.itemPrice : styles.itemPriceClearance*/}
-            {/*}>*/}
-            {/*{item.price_prod}*/}
-          {/*</Text>*/}
-        {/*</View>*/}
+        <View style={styles.itemBackgroundContainer}>
+          <Image
+            source={{uri: item.image.node.image.thumbPath}}
+            resizeMode={'cover'}
+            style={styles.itemImage}
+          />
+        </View>
+        <View style={styles.itemOverlay}>
+          {overlay}
+        </View>
       </View>
     )
   }

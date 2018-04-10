@@ -7,7 +7,7 @@ import Actions from '../Redux/TextileRedux'
 import UploadTask from '../../UploadTaskNativeModule'
 
 export default async function photosTask (dispatch, failedImages) {
-  console.log('FAILED IMAGES:', failedImages)
+  // console.log('FAILED IMAGES:', failedImages)
   console.log('running photos task')
   BackgroundTimer.start() // This requests some background time from the OS
 
