@@ -66,8 +66,8 @@ class TextilePhotos extends React.PureComponent {
   }
   // TODO: This logic should be moved deeper into the stack
   _handleOpenURL (url) {
-    // const data = url.replace(/.*?:\/\//g, '')
-    this.props.navigation.navigate('PairingView', {data: url})
+    const data = url.replace(/.*?:\/\//g, '')
+    this.props.navigation.navigate('PairingView', {data: data})
   }
 
 

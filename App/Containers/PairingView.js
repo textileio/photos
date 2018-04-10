@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import {View, Text, ImageBackground, Dimensions} from 'react-native'
+import { View, Text, ImageBackground, Dimensions, Linking } from 'react-native'
 import { Overlay, Button } from 'react-native-elements'
 import { connect } from 'react-redux'
 import Actions from '../Redux/TextileRedux'
@@ -20,8 +20,10 @@ class PairingView extends React.PureComponent {
   }
 
   confirmPairing = (pubKey) => {
-    this.props.pairNewDevice(pubKey)
-    this.props.navigation.navigate('TextilePhotos')
+    return () => {
+      this.props.pairNewDevice(pubKey)
+      this.props.navigation.navigate('TextilePhotos')
+    }
   }
 
   cancelPairing = () => {
