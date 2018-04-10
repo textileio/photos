@@ -19,8 +19,9 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: null,
 
-  imageAdded: ['image'],
-  imageProcessing: ['image'],
+  imageAdded: ['image', 'remotePayloadPath'],
+  imageUploadProgress: ['data'],
+  imageUploadComplete: ['data'],
   imageSuccess: ['image', 'hash'],
   imageError: ['image', 'error'],
 
@@ -184,17 +185,35 @@ export const getThumbsSuccess = (state, { response, prepend, clearItems }) => {
   })
 }
 
-export const handleImageAdded = (state, {image}) => {
+export const handleImageAdded = (state, {image, remotePayloadPath}) => {
   const existingItems = state.images.items ? state.images.items : []
-  const items = [{ image, state: 'pending' }, ...existingItems]
+  const items = [{ image, remotePayloadPath, state: 'pending' }, ...existingItems]
   return state.merge({ images: { items } })
 }
 
-export const handleImageProcessing = (state, {image}) => {
+export const handleImageProgress = (state, {data}) => {
+  const {file, progress} = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
-    if (item.image.node.image.uri === image.node.image.uri) {
-      return { image, state: 'processing' }
+    if (item.remotePayloadPath === file) {
+      return {...item, state: 'processing', progress}
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const handleImageUploadComplete = (state, {data}) => {
+  const {file, hash, error} = data
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.remotePayloadPath === file) {
+      if (error) {
+        return {...item, state: 'error', error}
+      } else {
+        console.log(hash)
+        return {...item, state: 'complete', hash}
+      }
     }
     return item
   })
@@ -283,7 +302,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   // [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess,
 
   [Types.IMAGE_ADDED]: handleImageAdded,
-  [Types.IMAGE_PROCESSING]: handleImageProcessing,
+  [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
+  [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
   [Types.IMAGE_SUCCESS]: handleImageSuccess,
   [Types.IMAGE_ERROR]: handleImageError,
 
