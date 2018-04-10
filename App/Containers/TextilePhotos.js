@@ -1,6 +1,15 @@
 // @flow
 import React from 'react'
-import {View, Text, FlatList, TouchableOpacity, Linking, ImageBackground} from 'react-native'
+import {
+  View,
+  Image,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+  ImageBackground,
+  Dimensions
+} from 'react-native'
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
 import Actions from '../Redux/TextileRedux'
@@ -9,7 +18,7 @@ import { Card, Tile } from 'react-native-elements'
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
 // Styles
-import styles from './Styles/TextilePhotosStyle'
+import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
   constructor (props) {
@@ -121,17 +130,26 @@ class TextilePhotos extends React.PureComponent {
     const onPress = this.onPressIt(item)
 
     return (
-      <Tile
-        contentContainerStyle={styles.tileStyle}
-        onPress={onPress}
-        imageSrc={{uri: item.image.node.image.thumbPath}}>
-        <View style={styles.statusCell}>
-          <View style={styles.photoStatus}>
-            <View style={localStatus} />
-            <View style={remoteStatus} />
-          </View>
-        </View>
-      </Tile>
+      <View style={styles.item}>
+        <Image
+          source={{uri: item.image.node.image.thumbPath}}
+          resizeMode={'cover'}
+          style={styles.itemImage}
+        />
+        {/*<Text numberOfLines={3} style={styles.itemTitle}>*/}
+          {/*{item.name_group_sp}*/}
+        {/*</Text>*/}
+        {/*<View style={styles.itemFooter}>*/}
+          {/*<Text>Mínimo: {item.min_sale_amount_prod}</Text>*/}
+          {/*<Text>UxB: {item.amount_prod}</Text>*/}
+          {/*<Text*/}
+            {/*style={*/}
+              {/*!item.clearance ? styles.itemPrice : styles.itemPriceClearance*/}
+            {/*}>*/}
+            {/*{item.price_prod}*/}
+          {/*</Text>*/}
+        {/*</View>*/}
+      </View>
     )
   }
 
@@ -139,6 +157,15 @@ class TextilePhotos extends React.PureComponent {
     return () => {
       const url = 'https://ipfs.textile.io/ipfs/' + item.hash
       Linking.openURL(url)
+    }
+  }
+
+  _getItemLayout = (data, index) => {
+    const productHeight = PRODUCT_ITEM_HEIGHT + PRODUCT_ITEM_MARGIN
+    return {
+      length: productHeight,
+      offset: productHeight * index,
+      index
     }
   }
 
@@ -205,35 +232,26 @@ class TextilePhotos extends React.PureComponent {
 
   render () {
     return (
-      <ImageBackground
-        source={require('../Images/backgrounds/photos-background.png')}
-        style={styles.backgroundImage}>
-        <View style={styles.container}>
-          <FlatList
-            contentContainerStyle={styles.listContent}
-            data={this.props.images.items}
-            renderItem={this.renderRow.bind(this)}
-            numColumns={1}
-            keyExtractor={this.keyExtractor}
-            initialNumToRender={this.oneScreensWorth}
-            onEndReachedThreshold={0.5}
-            onEndReached={({ distanceFromEnd }) => {
-              // This has an issue
-              // It would currently load new ones on first load too
-              // const lastItem = this.props.images.items[
-              //   this.props.images.items.length - 1
-              //   ]
-              // this.props.getHashesRequest(lastItem.hash, 10)
-            }}
-            ListFooterComponent={this.renderFooter}
-          />
-        </View>
-        <View style={styles.navigationBar}>
-          <TouchableOpacity onPress={this.openLogs}>
-            <Evilicon name='exclamation' style={styles.navigationIcon} size={50}/>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
+      <View style={styles.container}>
+        <FlatList
+          style={styles.listContainer}
+          data={this.props.images.items}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderRow.bind(this)}
+          getItemLayout={this._getItemLayout}
+          numColumns={numColumns}
+          initialNumToRender={this.oneScreensWorth}
+          onEndReachedThreshold={0.5}
+          onEndReached={({ distanceFromEnd }) => {
+            // This has an issue
+            // It would currently load new ones on first load too
+            // const lastItem = this.props.images.items[
+            //   this.props.images.items.length - 1
+            //   ]
+            // this.props.getHashesRequest(lastItem.hash, 10)
+          }}
+        />
+      </View>
     )
   }
 }

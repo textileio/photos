@@ -28,7 +28,6 @@
 @end
 
 @implementation TextileIPFS
-@synthesize bridge = _bridge;
 
 // Export a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html

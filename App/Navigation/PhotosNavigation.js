@@ -4,8 +4,8 @@ import { StackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
 import LogView from '../Containers/LogView'
 // import Notifications from '../Containers/Notifications'
-// import Text from 'react-native'
-// import Image from 'react-native-scalable-image'
+// import Image from 'react-native'
+import Image from 'react-native-scalable-image'
 
 // import SwipeNavigation from './SwipeNavigation'
 
@@ -25,7 +25,10 @@ const PrimaryNav = StackNavigator(
       // headerLeft: (<Image source={require('../Images/textile-icon.png')} style={styles.logo} />),
       headerStyle: styles.header,
       headerTitleStyle: styles.title,
-      title: 'Latest'
+      // title: 'Latest',
+      headerTitle: (
+        <Image style={{ width: 90, height: 39, resizeMode: 'contain', alignSelf: 'center' }} source={require('../Images/TextileHeader.png')} />
+      )
     }
   }
 )
