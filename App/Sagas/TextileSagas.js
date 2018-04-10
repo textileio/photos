@@ -52,7 +52,7 @@ export function * startNode (api) {
 export function * handleNodeStarted () {
   // const interface = yield select(TextileActions.getItems)
   // if (interface.state.textile && interface.state.textile.images && interface.state.textile.images && interface.state.textile.images.items)
-  yield put(TextileActions.getHashesRequest('', 10, true))
+  // yield put(TextileActions.getHashesRequest('', 10, true))
 }
 
 /**
