@@ -113,6 +113,6 @@ export function * pairNewDevice (api, action) {
     yield call(api.pairNewDevice, pubKey)
     yield put(TextileActions.pairNewDeviceSuccess(pubKey))
   } catch (err) {
-    yield put(TextileActions.pairNewDeviceFailure(pubKey))
+    yield put(TextileActions.pairNewDeviceError(pubKey))
   }
 }
