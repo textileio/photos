@@ -2,7 +2,7 @@
 import React from 'react'
 import { StackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
-import LogView from '../Containers/LogView'
+import LogScreen from '../Containers/LogScreen'
 // import Notifications from '../Containers/Notifications'
 // import Image from 'react-native'
 import Image from 'react-native-scalable-image'
@@ -15,7 +15,7 @@ import styles from './Styles/NavigationStyles'
 const PrimaryNav = StackNavigator(
   {
     TextilePhotos: { screen: TextilePhotos },
-    LogView: { screen: LogView },
+    LogScreen: { screen: LogScreen }
   },
   {
     // Default config for all screens
