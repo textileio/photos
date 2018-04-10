@@ -13,7 +13,6 @@ import {
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
 import Actions from '../Redux/TextileRedux'
-import { Card, Tile } from 'react-native-elements'
 import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
 import { Colors } from '../Themes'
@@ -29,7 +28,7 @@ class TextilePhotos extends React.PureComponent {
     const params = navigation.state.params || {}
     return {
       headerRight: (
-        <HeaderButtons IconComponent={Evilicon} iconSize={30} color='white'>
+        <HeaderButtons IconComponent={Evilicon} iconSize={23} color='white'>
           <HeaderButtons.Item title='more' iconName='gear' onPress={params.openLogs} />
         </HeaderButtons>
       )
@@ -128,9 +127,6 @@ class TextilePhotos extends React.PureComponent {
   // renderFooter = () =>
   //   <Text style={[styles.label, styles.sectionHeader]}> - Footer - </Text>
 
-  // Show this when data is empty
-  renderEmpty = () =>
-    <Text style={styles.label}>Any new photos you take will be displayed here and synced to Textile.</Text>
 
   // renderSeparator = () =>
   //   <Text style={styles.label}> - ~~~~~ - </Text>
@@ -163,25 +159,51 @@ class TextilePhotos extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <FlatList
-          ListEmptyComponent={this.renderEmpty}
-          style={styles.listContainer}
-          data={this.props.images.items}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderRow.bind(this)}
-          getItemLayout={this._getItemLayout}
-          numColumns={numColumns}
-          initialNumToRender={this.oneScreensWorth}
-          onEndReachedThreshold={0.5}
-          onEndReached={({ distanceFromEnd }) => {
-            // This has an issue
-            // It would currently load new ones on first load too
-            // const lastItem = this.props.images.items[
-            //   this.props.images.items.length - 1
-            //   ]
-            // this.props.getHashesRequest(lastItem.hash, 10)
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: 0.2
           }}
-        />
+        >
+          <Image style={{
+            flex: 1,
+            resizeMode: 'center',
+            position: 'absolute',
+            bottom: 0
+          }} source={require('../Images/backgrounds/TextileBackground.png')} />
+        </View>
+        {
+          this.props.images.items.length ? (
+            <FlatList
+              style={styles.listContainer}
+              data={this.props.images.items}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderRow.bind(this)}
+              getItemLayout={this._getItemLayout}
+              numColumns={numColumns}
+              initialNumToRender={this.oneScreensWorth}
+              onEndReachedThreshold={0.5}
+              onEndReached={({ distanceFromEnd }) => {
+                // This has an issue
+                // It would currently load new ones on first load too
+                // const lastItem = this.props.images.items[
+                //   this.props.images.items.length - 1
+                //   ]
+                // this.props.getHashesRequest(lastItem.hash, 10)
+              }}
+            />
+          ) : (
+            <View style={styles.emptyListStyle}>
+              <Text style={styles.noPhotos}>Any new photos you take will be displayed here and synced to Textile.</Text>
+            </View>
+          )
+        }
       </View>
     )
   }
