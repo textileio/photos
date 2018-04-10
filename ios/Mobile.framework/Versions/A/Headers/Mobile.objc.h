@@ -20,9 +20,6 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-/**
- * Create a gomobile compatible wrapper around TextileNode
- */
 - (MobileWrapper*)newNode:(NSString*)repoPath error:(NSError**)error;
 @end
 
@@ -40,11 +37,9 @@
 - (BOOL)configureDatastore:(NSString*)mnemonic error:(NSError**)error;
 - (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit error:(NSError**)error;
-/**
- * provides the user's recovery phrase for their private key
- */
 - (NSString*)getRecoveryPhrase:(NSError**)error;
-- (BOOL)isDatastoreConfigured;
+- (BOOL)isDatastoreConfigured:(BOOL*)ret0_ error:(NSError**)error;
+- (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
 @end
