@@ -38,7 +38,7 @@
 - (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit error:(NSError**)error;
 - (NSString*)getRecoveryPhrase:(NSError**)error;
-- (BOOL)isDatastoreConfigured:(BOOL*)ret0_ error:(NSError**)error;
+- (BOOL)isDatastoreConfigured;
 - (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
