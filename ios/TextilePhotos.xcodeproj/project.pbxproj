@@ -2011,8 +2011,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet;
 				PRODUCT_NAME = TextilePhotos;
-				PROVISIONING_PROFILE = "240a70ac-004a-4dd3-b2c9-fb9f8524f783";
-				PROVISIONING_PROFILE_SPECIFIER = "Textile Wallet C";
+				PROVISIONING_PROFILE = "9d41e6a7-a1b9-4b0d-95c7-eb6c0ada9a9f";
+				PROVISIONING_PROFILE_SPECIFIER = "Textile Wallet AdHoc";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
