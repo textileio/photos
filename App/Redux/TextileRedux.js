@@ -44,7 +44,11 @@ const { Types, Creators } = createActions({
 
   getPhotoDataRequest: ['hash'],
   getPhotoDataSuccess: ['data'],
-  getPhotoDataFailure: null
+  getPhotoDataFailure: null,
+
+  pairNewDevice: ['pubKey'],
+  pairNewDeviceSuccess: ['pubKey'],
+  pairNewDeviceError: ['pubKey']
 })
 
 export const TextileTypes = Types
@@ -67,7 +71,8 @@ export const INITIAL_STATE = Immutable({
     error: false,
     loading: false,
     items: []
-  }
+  },
+  devices: []
 })
 
 /* ------------- Selectors ------------- */
@@ -240,6 +245,34 @@ export const handleImageError = (state, {image, error}) => {
 // TODO: add a loading state for addImages
 export const addImagesRequest = state => state
 
+export const pairNewDevice = (state, {pubKey}) => {
+  const existingDevices = state.devices ? state.devices : []
+  const devices = [{ pubKey, state: 'pending' }, ...existingDevices]
+  return state.merge({ devices })
+}
+
+export const pairNewDeviceSuccess = (state, {pubKey}) => {
+  const existingDevices = state.devices ? state.devices : []
+  const devices = existingDevices.map(device => {
+    if (device.pubKey === pubKey) {
+      return { pubKey: device.pubKey, state: 'paired' }
+    }
+    return device
+  })
+  return state.merge({ devices })
+}
+
+export const pairNewDeviceError = (state, {pubKey}) => {
+  const existingDevices = state.devices ? state.devices : []
+  const devices = existingDevices.map(device => {
+    if (device.pubKey === pubKey) {
+      return { pubKey: device.pubKey, state: 'error' }
+    }
+    return device
+  })
+  return state.merge({ devices })
+}
+
 // Helper so sagas can figure out current items loaded
 // const getItems = state => state.items
 
@@ -272,5 +305,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
   [Types.IMAGE_SUCCESS]: handleImageSuccess,
-  [Types.IMAGE_ERROR]: handleImageError
+  [Types.IMAGE_ERROR]: handleImageError,
+
+  [Types.PAIR_NEW_DEVICE]: pairNewDevice,
+  [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,
+  [Types.PAIR_NEW_DEVICE_ERROR]: pairNewDeviceError
 })
