@@ -104,6 +104,17 @@ RCT_EXPORT_METHOD(getPhotoData:(NSString *)path resolver:(RCTPromiseResolveBlock
   }
 }
 
+RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSError *error;
+  NSString *result = [self _pairNewDevice:pkb64 error:&error];
+  if(result) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 // List all your events here
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
 - (NSArray<NSString *> *)supportedEvents
@@ -151,6 +162,11 @@ RCT_EXPORT_METHOD(getPhotoData:(NSString *)path resolver:(RCTPromiseResolveBlock
 - (NSString *)_getPhoto:(NSString *)hashPath error:(NSError**)error {
   NSString *base64String = [self.node getFileBase64:hashPath error:error];
   return base64String;
+}
+
+- (NSString *)_pairNewDevice:(NSString *)pkb64 error:(NSError**)error {
+  NSString *resultString = [self.node pairDesktop:pkb64 error:error];
+  return resultString;
 }
 
 // Implement methods that you want to export to the native module

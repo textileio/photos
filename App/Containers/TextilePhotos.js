@@ -7,22 +7,31 @@ import {
   FlatList,
   TouchableOpacity,
   Linking,
-  ImageBackground,
-  Dimensions
+  Platform,
+  AppState,
+  PushNotificationIOS
 } from 'react-native'
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
+import BackgroundTask from 'react-native-background-task'
+import { getPhoto } from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
+import UploadTask from '../../UploadTaskNativeModule'
+import PhotosTask from '../Services/PhotosTask'
+import { getFailedImages } from './App'
 import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
 import { Colors } from '../Themes'
-
-// More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
+
+  constructor() {
+    super()
+    this.setup()
+  }
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
@@ -41,31 +50,78 @@ class TextilePhotos extends React.PureComponent {
     })
   }
 
-  componentDidMount() {
-    if (!this.props.onboarded) {
-      // this.props.navigation.navigate("OnboardingSecurity")
+  // TODO: This logic should be moved deeper into the stack
+  _handleOpenURLEvent (event) {
+    this._handleOpenURL(event.url)
+  }
+  // TODO: This logic should be moved deeper into the stack
+  _handleOpenURL (url) {
+    const data = url.replace(/.*?:\/\//g, '')
+    this.props.navigation.navigate('PairingView', {data: data})
+  }
+
+  componentDidMount () {
+    BackgroundTask.schedule()
+    // TODO: This logic should be moved deeper into the stack
+    if (Platform.OS === 'android') {
+      // TODO: Android deep linking isn't setup in the Java native layer
+      Linking.getInitialURL().then(url => {
+        this._handleOpenURL(url)
+      })
+    } else {
+      Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
+    }
+  }
+
+  componentWillUnmount () {
+    this.progressSubscription.remove()
+    this.completionSubscription.remove()
+  }
+
+  async setup () {
+    AppState.addEventListener('change', this.handleAppStateChange.bind(this))
+
+    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', event => {
+      console.log('UPLOAD PROGRESS:', event)
+      this.props.uploadProgress(event)
+    })
+
+    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
+      console.log('UPLOAD COMPLETE:', event)
+      PushNotificationIOS.presentLocalNotification({
+        alertBody: 'upload complete',
+        userInfo: {}
+      })
+      this.props.uploadComplete(event)
+    })
+
+    await PushNotificationIOS.requestPermissions()
+    await getPhoto() // Trigger photos permission prompt
+
+    navigator.geolocation.watchPosition(
+      () => {
+        console.log('got a new position')
+        PushNotificationIOS.presentLocalNotification({
+          alertBody: 'location update',
+          userInfo: {}
+        })
+        PhotosTask(this.props.dispatch, getFailedImages())
+      },
+      error => {
+        console.log('Got a location error', error)
+      },
+      { useSignificantChanges: true }
+    )
+  }
+
+  async handleAppStateChange (nextAppState) {
+    if (nextAppState.match(/^active/)) {
+      console.log('got a foreground event')
+      await PhotosTask(this.props.dispatch, getFailedImages())
     }
   }
 
   /* ***********************************************************
-  * STEP 1
-  * This is an array of objects with the properties you desire
-  * Usually this should come from Redux mapStateToProps
-  *************************************************************/
-  // state = {
-  //   dataObjects: [
-  //     {title: 'First Title', description: 'First Description'},
-  //     {title: 'Second Title', description: 'Second Description'},
-  //     {title: 'Third Title', description: 'Third Description'},
-  //     {title: 'Fourth Title', description: 'Fourth Description'},
-  //     {title: 'Fifth Title', description: 'Fifth Description'},
-  //     {title: 'Sixth Title', description: 'Sixth Description'},
-  //     {title: 'Seventh Title', description: 'Seventh Description'}
-  //   ]
-  // }
-
-  /* ***********************************************************
-  * STEP 2
   * `renderRow` function. How each cell/row should be rendered
   * It's our best practice to place a single component here:
   *
@@ -114,23 +170,6 @@ class TextilePhotos extends React.PureComponent {
     }
   }
 
-  /* ***********************************************************
-  * STEP 3
-  * Consider the configurations we've set below.  Customize them
-  * to your liking!  Each with some friendly advice.
-  *************************************************************/
-  // Render a header?
-  // renderHeader = () =>
-  //   <Text style={[styles.label, styles.sectionHeader]}> - Header - </Text>
-
-  // Render a footer?
-  // renderFooter = () =>
-  //   <Text style={[styles.label, styles.sectionHeader]}> - Footer - </Text>
-
-
-  // renderSeparator = () =>
-  //   <Text style={styles.label}> - ~~~~~ - </Text>
-
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
@@ -155,7 +194,6 @@ class TextilePhotos extends React.PureComponent {
   // e.g. itemLayout={(data, index) => (
   //   {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
   // )}
-
   render () {
     return (
       <View style={styles.container}>
@@ -211,17 +249,20 @@ class TextilePhotos extends React.PureComponent {
 
 const mapStateToProps = state => {
   return {
-    onboarded: state.textile.onboarded,
     images: {
       items: state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
-    }
+    },
+    store: state.store
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    dispatch: dispatch,
+    uploadComplete: event => { dispatch(Actions.imageUploadComplete(event)) },
+    uploadProgress: event => { dispatch(Actions.imageUploadProgress(event)) },
     getHashesRequest: (offsetId, limit) => { dispatch(Actions.getHashesRequest(offsetId, limit)) },
-    addImagesRequest: (images) => { dispatch(Actions.addImagesRequest(images)) }
+    addImagesRequest: images => { dispatch(Actions.addImagesRequest(images)) }
   }
 }
 

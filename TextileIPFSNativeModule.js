@@ -39,5 +39,10 @@ export default {
   getPhotoData: async function (path: string): string {
     const result = await TextileIPFS.getPhotoData(path)
     return result
+  },
+
+  pairNewDevice: async function (pubKey: string): string {
+    const result = await TextileIPFS.pairNewDevice(pubKey)
+    return result
   }
 }
