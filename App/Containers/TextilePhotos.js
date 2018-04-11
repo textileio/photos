@@ -1,12 +1,25 @@
 // @flow
 import React from 'react'
-import {View, Text, FlatList, TouchableOpacity, Linking, Platform, ImageBackground} from 'react-native'
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+  Platform,
+  ImageBackground,
+  AppState,
+  PushNotificationIOS
+} from 'react-native'
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
-import Actions from '../Redux/TextileRedux'
 import { Card, Tile } from 'react-native-elements'
-
-// More info here: https://facebook.github.io/react-native/docs/flatlist.html
+import BackgroundTask from 'react-native-background-task'
+import { getPhoto } from '../Services/PhotoUtils'
+import Actions from '../Redux/TextileRedux'
+import UploadTask from '../../UploadTaskNativeModule'
+import PhotosTask from '../Services/PhotosTask'
+import { getFailedImages } from './App'
 
 // Styles
 import styles from './Styles/TextilePhotosStyle'
@@ -18,48 +31,10 @@ class TextilePhotos extends React.PureComponent {
       data: [],
       limit: 10
     }
+    AppState.addEventListener('change', this.handleAppStateChange)
+    this.setup()
   }
 
-  // static navigationOptions = ({ navigation }) => {
-  //   const params = navigation.state.params || {};
-  //   return {
-  //     headerTitle: (
-  //       <Image
-  //         source={require('../Images/Icons/icon-home.png')}
-  //       />
-  //     ),
-  //     headerRight: (
-  //       <HeaderButtons IconComponent={Ionicon} iconSize={23} color="blue">
-  //         <HeaderButtons.Item title="camera" iconName="ios-camera-outline" onPress={params.showCamera} />
-  //         <HeaderButtons.Item title="add" iconName="ios-add" onPress={params.showPhotoPicker} />
-  //       </HeaderButtons>
-  //     )
-  //   }
-  // };
-
-  componentWillMount () {
-    // this.props.navigation.setParams({
-    //   // showPhotoPicker: this._showPhotoPicker.bind(this),
-    //   // showCamera: this._showCamera.bind(this)
-    // });
-    // this.makeRemoteRequest();
-  }
-
-  componentDidMount () {
-    if (!this.props.onboarded) {
-      // this.props.navigation.navigate("OnboardingSecurity")
-    }
-    // TODO: This logic should be moved deeper into the stack
-    if (Platform.OS === 'android') {
-      // TODO: Android deep linking isn't setup in the Java native layer
-      Linking.getInitialURL().then(url => {
-        this._handleOpenURL(url)
-      })
-    } else {
-      Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
-    }
-
-  }
   // TODO: This logic should be moved deeper into the stack
   _handleOpenURLEvent (event) {
     this._handleOpenURL(event.url)
@@ -70,47 +45,66 @@ class TextilePhotos extends React.PureComponent {
     this.props.navigation.navigate('PairingView', {data: data})
   }
 
+  componentDidMount () {
+    BackgroundTask.schedule()
+    // TODO: This logic should be moved deeper into the stack
+    if (Platform.OS === 'android') {
+      // TODO: Android deep linking isn't setup in the Java native layer
+      Linking.getInitialURL().then(url => {
+        this._handleOpenURL(url)
+      })
+    } else {
+      Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
+    }
+  }
 
-  // Just added this simple function here @aaron, nothing fancy.
-  // I stole this from elsewhere, so there are some extra probs in here
-  //
-  // _showPhotoPicker () {
-  //   ImagePicker.openPicker({
-  //     multiple: true
-  //   }).then(this.props.addImagesRequest)
-  //     .catch(e => console.log(e))
-  // }
-  //
-  // _showCamera () {
-  //   ImagePicker.openCamera({
-  //     width: 300,
-  //     height: 400
-  //   })
-  //     .then(image => {
-  //       this.props.addImagesRequest([image])
-  //     })
-  //     .catch(e => console.log(e))
-  // }
+  componentWillUnmount () {
+    this.progressSubscription.remove()
+    this.completionSubscription.remove()
+  }
+
+  async setup () {
+    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', event => {
+      console.log('UPLOAD PROGRESS:', event)
+      this.props.store.dispatch(Actions.imageUploadProgress(event))
+    })
+
+    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
+      console.log('UPLOAD COMPLETE:', event)
+      PushNotificationIOS.presentLocalNotification({
+        alertBody: 'upload complete',
+        userInfo: {}
+      })
+      this.props.store.dispatch(Actions.imageUploadComplete(event))
+    })
+
+    await PushNotificationIOS.requestPermissions()
+    await getPhoto() // Trigger photos permission prompt
+
+    navigator.geolocation.watchPosition(
+      () => {
+        console.log('got a new position')
+        PushNotificationIOS.presentLocalNotification({
+          alertBody: 'location update',
+          userInfo: {}
+        })
+        PhotosTask(this.props.store.dispatch, getFailedImages())
+      },
+      error => {
+        console.log('Got a location error', error)
+      },
+      { useSignificantChanges: true }
+    )
+  }
+
+  async handleAppStateChange (nextAppState) {
+    if (nextAppState.match(/^active/)) {
+      console.log('got a foreground event')
+      await PhotosTask(this.props.store.dispatch, getFailedImages())
+    }
+  }
 
   /* ***********************************************************
-  * STEP 1
-  * This is an array of objects with the properties you desire
-  * Usually this should come from Redux mapStateToProps
-  *************************************************************/
-  // state = {
-  //   dataObjects: [
-  //     {title: 'First Title', description: 'First Description'},
-  //     {title: 'Second Title', description: 'Second Description'},
-  //     {title: 'Third Title', description: 'Third Description'},
-  //     {title: 'Fourth Title', description: 'Fourth Description'},
-  //     {title: 'Fifth Title', description: 'Fifth Description'},
-  //     {title: 'Sixth Title', description: 'Sixth Description'},
-  //     {title: 'Seventh Title', description: 'Seventh Description'}
-  //   ]
-  // }
-
-  /* ***********************************************************
-  * STEP 2
   * `renderRow` function. How each cell/row should be rendered
   * It's our best practice to place a single component here:
   *
@@ -118,24 +112,24 @@ class TextilePhotos extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow ({item}) {
-    let label = ''
+    // let label = ''
     // Figuring we can use the 'status' blocks to inform the user
     // about where their photo is backed up
     let localStatus = styles.statusWhite
     let remoteStatus = styles.statusWhite
     if (item.state === 'complete') {
-      label = item.hash
+      // label = item.hash
       localStatus = styles.statusPink
       remoteStatus = styles.statusBlue
     } else if (item.state === 'error') {
-      label = item.error.message
+      // label = item.error.message
       localStatus = styles.statusPink
       remoteStatus = styles.statusRed
-    } else if (item.state === 'processing') {
-      label = item.progress
+    // } else if (item.state === 'processing') {
+      // label = item.progress
     } else {
       localStatus = styles.statusPink
-      label = item.state
+      // label = item.state
     }
 
     const onPress = this.onPressIt(item)
@@ -163,7 +157,6 @@ class TextilePhotos extends React.PureComponent {
   }
 
   /* ***********************************************************
-  * STEP 3
   * Consider the configurations we've set below.  Customize them
   * to your liking!  Each with some friendly advice.
   *************************************************************/
@@ -173,7 +166,7 @@ class TextilePhotos extends React.PureComponent {
 
   // Render a footer?
   renderFooter = () => {
-    if (this.props.images.items.length != 0) {
+    if (this.props.images.items.length !== 0) {
       return null
     }
 
@@ -187,16 +180,8 @@ class TextilePhotos extends React.PureComponent {
           </View>
         </View>
       </Card>
-    );
-  };
-  //   <Text style={[styles.label, styles.sectionHeader]}> - Footer - </Text>
-
-  // Show this when data is empty
-  // renderEmpty = () =>
-  //   <Text style={styles.label}> - Nothing to See Here - </Text>
-
-  // renderSeparator = () =>
-  //   <Text style={styles.label}> - ~~~~~ - </Text>
+    )
+  }
 
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
@@ -207,7 +192,7 @@ class TextilePhotos extends React.PureComponent {
   oneScreensWorth = 10
 
   openLogs = () => {
-    this.props.navigation.navigate("LogView")
+    this.props.navigation.navigate('LogView')
   }
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -222,7 +207,6 @@ class TextilePhotos extends React.PureComponent {
   // e.g. itemLayout={(data, index) => (
   //   {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
   // )}
-
   render () {
     return (
       <ImageBackground
@@ -250,7 +234,7 @@ class TextilePhotos extends React.PureComponent {
         </View>
         <View style={styles.navigationBar}>
           <TouchableOpacity onPress={this.openLogs}>
-            <Evilicon name='exclamation' style={styles.navigationIcon} size={50}/>
+            <Evilicon name='exclamation' style={styles.navigationIcon} size={50} />
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -260,10 +244,10 @@ class TextilePhotos extends React.PureComponent {
 
 const mapStateToProps = state => {
   return {
-    onboarded: state.textile.onboarded,
     images: {
       items: state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
-    }
+    },
+    store: state.store
   }
 }
 

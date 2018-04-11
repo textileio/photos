@@ -1,21 +1,23 @@
 /* @flow */
-import { StackNavigator } from 'react-navigation'
+import { createSwitchNavigator } from 'react-navigation'
 import OnboardingNavigation from './OnboardingNavigation'
 import PhotosNavigation from './PhotosNavigation'
+import OnboardingCheck from '../Containers/OnboardingCheck'
 
-// Manifest of possible screens
-const PrimaryNav = StackNavigator(
+const PrimaryNav = createSwitchNavigator(
   {
-    PhotosNavigation: {
-      screen: PhotosNavigation
+    OnboardingCheck: {
+      screen: OnboardingCheck
     },
     OnboardingNavigation: {
       screen: OnboardingNavigation
     },
+    PhotosNavigation: {
+      screen: PhotosNavigation
+    }
   },
   {
-    mode: 'modal',
-    headerMode: 'none'
+    initialRouteName: 'OnboardingCheck'
   }
 )
 
