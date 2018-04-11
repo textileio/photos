@@ -1,4 +1,4 @@
-import { StackNavigator } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation'
 import OnboardingWelcome from '../Containers/OnboardingWelcome'
 import Onboarding1 from '../Containers/Onboarding1'
 import Onboarding2 from '../Containers/Onboarding2'
@@ -11,7 +11,7 @@ import OnboardingThanks from '../Containers/OnboardingThanks'
 import styles from './Styles/NavigationStyles'
 
 // Manifest of possible screens
-const OnboardingNav = StackNavigator(
+const OnboardingNav = createStackNavigator(
   {
     OnboardingWelcome: {
       screen: OnboardingWelcome,
