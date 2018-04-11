@@ -1,4 +1,4 @@
-import StackNavigator from '../Components/DismissableStackNavigator'
+import { StackNavigator } from 'react-navigation'
 import OnboardingWelcome from '../Containers/OnboardingWelcome'
 import Onboarding1 from '../Containers/Onboarding1'
 import Onboarding2 from '../Containers/Onboarding2'

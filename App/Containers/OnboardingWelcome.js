@@ -11,7 +11,7 @@ class OnboardingWelcome extends Component {
         <ScrollView style={styles.container}>
           <KeyboardAvoidingView behavior='position'>
             <Text style={styles.header}>Welcome to the Textile Beta!</Text>
-            <Text style={styles.info}>
+            <Text style={styles.message}>
               Thanks very much for agreeing to test the app and provide feedback on this very early draft of our brand
               new technology. Right now, Textile is all about photos, soon it will be about how you control and own all
               your personal data.

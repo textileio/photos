@@ -7639,11 +7639,17 @@ react-native-platform-touchable@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-platform-touchable/-/react-native-platform-touchable-1.1.1.tgz#fde4acc65eea585d28b164d0c3716a42129a68e4"
 
+react-native-safe-area-view@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.7.0.tgz#38f5ab9368d6ef9e5d18ab64212938af3ec39421"
+  dependencies:
+    hoist-non-react-statics "^2.3.1"
+
 react-native-scalable-image@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/react-native-scalable-image/-/react-native-scalable-image-0.4.0.tgz#9181b3cf94d4c281638b03dbb8eb8d956c5ae212"
 
-"react-native-tab-view@github:react-navigation/react-native-tab-view":
+react-native-tab-view@react-navigation/react-native-tab-view:
   version "0.0.74"
   resolved "https://codeload.github.com/react-navigation/react-native-tab-view/tar.gz/36ebd834d78b841fc19778c966465d02fd1213bb"
   dependencies:
