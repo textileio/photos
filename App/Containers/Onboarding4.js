@@ -10,7 +10,7 @@ class Onboarding4 extends Component {
       <View style={{flex: 1}}>
         <ScrollView style={styles.container}>
           <KeyboardAvoidingView behavior='position'>
-            <Text style={styles.header}>We collect anonymous data to help us improve our product.</Text>
+            <Text style={styles.header}>You're helping us improve.</Text>
             <Text style={styles.message}>
               As valued Beta Tester, we want to know how, when, and why you are using the app. We anonymously collect
               data, including crashes, screen interactions, and feedback. If you want to provide direct feedback,

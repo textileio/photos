@@ -4,25 +4,27 @@ import { ApplicationStyles } from '../../Themes/'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   header: {
-    paddingTop: 30,
+    paddingTop: '25%',
     fontWeight: 'bold',
-    fontSize: 42,
+    fontSize: 24,
     alignSelf: 'center',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   imageView: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 70,
+    paddingTop: '50%'
   },
   imageIcon: {
     width: 200,
-    height: 200, 
+    height: 200
   },
   message: {
-    width: 300,
-    fontSize: 24,
-    textAlign: 'center',
-  },
+    paddingTop: '5%',
+    width: '80%',
+    fontSize: 22,
+    alignSelf: 'center',
+    textAlign: 'justify'
+  }
 })

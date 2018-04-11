@@ -20,7 +20,7 @@ class Onboarding2 extends Component {
           </KeyboardAvoidingView>
         </ScrollView>
         <Button
-          onPress={() => navigate('Onboarding2')}
+          onPress={() => navigate('Onboarding3')}
           title='Ok'
           accessibilityLabel='Move on to the next screen'
         />

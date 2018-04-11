@@ -5,18 +5,11 @@ import {getPhoto} from '../Services/PhotoUtils'
 import styles from './Styles/OnboardingScreenStyle'
 
 class OnboardingPhotosPermissions extends Component {
-  // static navigationOptions = ({ navigation }) => {
-  //   const params = navigation.state.params || {}
-  //   return {
-  //     headerTitle: 'Permissions',
-  //   }
-  // }
   async handlePress () {
     await getPhoto() // Trigger photos permission prompt
-    this.props.navigation.navigate('OnboardingPermissions')
+    this.props.navigation.navigate('OnboardingLocationPermissions')
   }
   render () {
-    // const { navigate } = this.props.navigation
     return (
       <View style={{flex: 1}}>
         <ScrollView style={styles.container}>
@@ -29,7 +22,7 @@ class OnboardingPhotosPermissions extends Component {
           </KeyboardAvoidingView>
         </ScrollView>
         <Button
-          onPress={this.handlePress}
+          onPress={this.handlePress.bind(this)}
           title='Authorize'
           accessibilityLabel='Photos authorization'
         />

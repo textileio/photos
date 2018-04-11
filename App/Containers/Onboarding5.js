@@ -10,7 +10,7 @@ class Onboarding5 extends Component {
       <View style={{flex: 1}}>
         <ScrollView style={styles.container}>
           <KeyboardAvoidingView behavior='position'>
-            <Text style={styles.header}>Access your photos when and where you want them.</Text>
+            <Text style={styles.header}>Access your photos, anywhere.</Text>
             <Text style={styles.message}>
               In a few days, we will send you a link to download a desktop app that allows you to 'pair' with this
               mobile app to automatically sync and save your photos to your desktop. This will allow you to take
