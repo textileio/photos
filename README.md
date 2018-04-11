@@ -1,5 +1,6 @@
 #  TextilePhotos
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
+![app-center-build](https://build.appcenter.ms/v0.1/apps/54490c09-1f3e-40c4-acbe-eb6fde878b2b/branches/master/badge)
 
 * Standard compliant React Native App Utilizing [Ignite](https://github.com/infinitered/ignite)
 
