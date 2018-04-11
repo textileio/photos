@@ -8,6 +8,9 @@ target 'TextilePhotos' do
   rn_path = '../node_modules/react-native'
 
   # Pods for TextilePhotos
+  pod 'AppCenter/Crashes', '~> 1.5.0'
+  pod 'AppCenter/Analytics', '~> 1.5.0'
+  pod 'AppCenterReactNativeShared', '~> 1.4.0'
 
   pod 'yoga', path: "#{rn_path}/ReactCommon/yoga/yoga.podspec"
   pod 'React', path: rn_path, subspecs: [
@@ -31,6 +34,9 @@ target 'TextilePhotos' do
   pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
 
   pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
+
+  platform :ios, '9.0'
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
 
   target 'TextilePhotosTests' do
     inherit! :search_paths
