@@ -1,30 +1,30 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, KeyboardAvoidingView, Button, View } from 'react-native'
 import { connect } from 'react-redux'
-import {getPhoto} from '../Services/PhotoUtils'
 import styles from './Styles/OnboardingScreenStyle'
 
-class OnboardingPhotosPermissions extends Component {
+class OnboardingLocationPermissions extends Component {
   async handlePress () {
-    await getPhoto() // Trigger photos permission prompt
-    this.props.navigation.navigate('OnboardingLocationPermissions')
+    await navigator.geolocation.requestAuthorization()
+    this.props.navigation.navigate('OnboardingThanks')
   }
   render () {
+    // const { navigate } = this.props.navigation
     return (
       <View style={{flex: 1}}>
         <ScrollView style={styles.container}>
           <KeyboardAvoidingView behavior='position'>
-            <Text style={styles.header}>We need to access your photos.. surprise!</Text>
+            <Text style={styles.header}>Location, location, location…</Text>
             <Text style={styles.message}>
-              Please take a moment to authorize photo/camera access so we can privately back them up for you. But
-              don't worry, they'll be encrypted and securely uploaded to protect your privacy.
+              Please take a moment to authorize geolocation so we can use your location changes to wake up the app,
+              making sure your photos are continuously backed up, even when you’re on the go.
             </Text>
           </KeyboardAvoidingView>
         </ScrollView>
         <Button
           onPress={this.handlePress.bind(this)}
           title='Authorize'
-          accessibilityLabel='Photos authorization'
+          accessibilityLabel='Geolocation authorization'
         />
       </View>
     )
@@ -38,4 +38,4 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingPhotosPermissions)
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingLocationPermissions)

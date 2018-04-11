@@ -1,6 +1,5 @@
 /* @flow */
-import React from 'react'
-import { StackNavigator } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
 import LogView from '../Containers/LogView'
 import PairingView from '../Containers/PairingView'
@@ -13,7 +12,7 @@ import PairingView from '../Containers/PairingView'
 import styles from './Styles/NavigationStyles'
 
 // Manifest of possible screens
-const PrimaryNav = StackNavigator(
+const PrimaryNav = createStackNavigator(
   {
     TextilePhotos: { screen: TextilePhotos },
     LogView: { screen: LogView },

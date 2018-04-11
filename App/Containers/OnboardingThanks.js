@@ -1,30 +1,30 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, KeyboardAvoidingView, Button, View } from 'react-native'
 import { connect } from 'react-redux'
-import {getPhoto} from '../Services/PhotoUtils'
 import styles from './Styles/OnboardingScreenStyle'
+import Actions from '../Redux/TextileRedux'
 
-class OnboardingPhotosPermissions extends Component {
+class OnboardingWelcome extends Component {
   async handlePress () {
-    await getPhoto() // Trigger photos permission prompt
-    this.props.navigation.navigate('OnboardingLocationPermissions')
+    await this.props.onboardedSuccess()
+    this.props.navigation.navigate('PhotosNavigation')
   }
   render () {
     return (
       <View style={{flex: 1}}>
         <ScrollView style={styles.container}>
           <KeyboardAvoidingView behavior='position'>
-            <Text style={styles.header}>We need to access your photos.. surprise!</Text>
+            <Text style={styles.header}>Thanks!</Text>
             <Text style={styles.message}>
-              Please take a moment to authorize photo/camera access so we can privately back them up for you. But
-              don't worry, they'll be encrypted and securely uploaded to protect your privacy.
+              We can’t wait for you to get started! So why not take a quick photo, and see what we’re all about. And
+              if you’d like to learn more about our Beta program, please check out our website for details.
             </Text>
           </KeyboardAvoidingView>
         </ScrollView>
         <Button
           onPress={this.handlePress.bind(this)}
-          title='Authorize'
-          accessibilityLabel='Photos authorization'
+          title='Done'
+          accessibilityLabel='Done'
         />
       </View>
     )
@@ -36,6 +36,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+  onboardedSuccess: () => dispatch(Actions.onboardedSuccess())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingPhotosPermissions)
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingWelcome)
