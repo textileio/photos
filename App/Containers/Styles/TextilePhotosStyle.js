@@ -47,6 +47,10 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'flex-end',
   },
+  noStatus: {
+    flex: 1,
+    height: 10,
+  },
   noPhotos: {
     alignSelf: 'center',
   },
