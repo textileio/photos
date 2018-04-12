@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-config')
     compile project(':react-native-background-timer')
     compile project(':react-native-background-task')
     compile project(':react-native-image-resizer')
@@ -145,7 +146,6 @@ dependencies {
     compile project(':appcenter-crashes')
     compile project(':appcenter-analytics')
     compile project(':appcenter')
-    compile project(':react-native-config')
     compile project(':realm')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-i18n')
