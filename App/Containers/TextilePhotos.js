@@ -26,7 +26,6 @@ import Analytics from 'appcenter-analytics'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
-import Analytics from 'appcenter-analytics'
 
 class TextilePhotos extends React.PureComponent {
 
