@@ -19,7 +19,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.rnfs.RNFSPackage;
 import com.textilephotos.textileipfs.TextileIPFSPackage;
 
 import java.util.Arrays;
