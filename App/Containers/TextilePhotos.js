@@ -22,9 +22,11 @@ import { getFailedImages } from './App'
 import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
 import { Colors } from '../Themes'
+import Analytics from 'appcenter-analytics'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
+import Analytics from 'appcenter-analytics'
 
 class TextilePhotos extends React.PureComponent {
 
@@ -45,6 +47,7 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentWillMount () {
+    Analytics.trackEvent('MountScreen', { Name: 'TextilePhotos' })
     this.props.navigation.setParams({
       openLogs: this.openLogs.bind(this)
     })
