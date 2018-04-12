@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { ScrollView, Text, KeyboardAvoidingView } from 'react-native'
 import { connect } from 'react-redux'
 import {LogView} from 'react-native-device-log'
-import Analytics from 'appcenter-analytics'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -18,10 +17,6 @@ class LogScreen extends Component {
       title: 'Logs',
       headerTitle: 'Logs'
     }
-  }
-
-  componentWillMount () {
-    Analytics.trackEvent('MountScreen', { Name: 'LogScreen' })
   }
 
   render () {
