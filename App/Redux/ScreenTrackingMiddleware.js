@@ -1,5 +1,5 @@
 import { NavigationActions } from 'react-navigation'
-import { getCurrentRouteName } from 'CurrentRouteName'
+import { getCurrentRouteName } from './CurrentRouteName'
 
 const screenTracking = ({ getState }) => next => (action) => {
   if (
