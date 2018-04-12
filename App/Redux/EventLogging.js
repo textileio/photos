@@ -7,6 +7,7 @@ const eventLogging = ({ getState }) => next => (action) => {
     action.type !== NavigationActions.NAVIGATE &&
     action.type !== NavigationActions.BACK
   ) {
+    Analytics.trackEvent(action.type, action)
     return next(action)
   }
 
@@ -15,7 +16,7 @@ const eventLogging = ({ getState }) => next => (action) => {
   const nextScreen = getCurrentRouteName(getState().nav)
   if (nextScreen !== currentScreen) {
     try {
-      Analytics.trackEvent('navigation', { currentScreen, nextScreen })
+      Analytics.trackEvent(action.type, { currentScreen, nextScreen })
       // Example: Analytics.trackEvent('user_navigation', {currentScreen, nextScreen})
     } catch (e) {
       Analytics.trackEvent('error', e)
