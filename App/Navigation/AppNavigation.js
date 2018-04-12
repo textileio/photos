@@ -1,20 +1,14 @@
 /* @flow */
-import { createSwitchNavigator } from 'react-navigation'
+import { SwitchNavigator } from 'react-navigation'
 import OnboardingNavigation from './OnboardingNavigation'
 import PhotosNavigation from './PhotosNavigation'
 import OnboardingCheck from '../Containers/OnboardingCheck'
 
-const PrimaryNav = createSwitchNavigator(
+const PrimaryNav = SwitchNavigator(
   {
-    OnboardingCheck: {
-      screen: OnboardingCheck
-    },
-    OnboardingNavigation: {
-      screen: OnboardingNavigation
-    },
-    PhotosNavigation: {
-      screen: PhotosNavigation
-    }
+    OnboardingCheck: OnboardingCheck,
+    OnboardingNavigation: OnboardingNavigation,
+    PhotosNavigation: PhotosNavigation
   },
   {
     initialRouteName: 'OnboardingCheck'
