@@ -40,16 +40,19 @@
 		0EABA58E14A3CD46A877CD8094801DE9 /* Pods-TextilePhotos-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotos-dummy.m"; sourceTree = "<group>"; };
 		1583B452F22674851CE4B5F0EF729E22 /* Pods-TextilePhotos-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-resources.sh"; sourceTree = "<group>"; };
 		1E89F949D4E069B101551FC929B5D9DF /* Pods-TextilePhotos-tvOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotos-tvOS-dummy.m"; sourceTree = "<group>"; };
+		1FF8CBE3D70C3B5EE02BF7F1402952A2 /* AppCenterCrashes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterCrashes.framework; path = "AppCenter-SDK-Apple/iOS/AppCenterCrashes.framework"; sourceTree = "<group>"; };
 		2090B3E79F89E51D9D01B6649EA8B80F /* Pods-TextilePhotos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos.debug.xcconfig"; sourceTree = "<group>"; };
 		23CA9B17298E5011F6C2345F3CC24FE8 /* Pods-TextilePhotos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos.release.xcconfig"; sourceTree = "<group>"; };
 		259AD2F95C9A5A2AEAFB3E5C9190060F /* Pods-TextilePhotosTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotosTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		2B63A20467495CA5DAF0E0B701FEE2F8 /* libPods-TextilePhotosTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TextilePhotosTests.a"; path = "libPods-TextilePhotosTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DD9C17399C9BF6FA51975DB430183A3 /* Pods-TextilePhotos-tvOSTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-tvOSTests-frameworks.sh"; sourceTree = "<group>"; };
+		2E280B58529AEBA76B5F11C0705D0856 /* AppCenterReactNativeShared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterReactNativeShared.framework; path = AppCenterReactNativeShared/AppCenterReactNativeShared.framework; sourceTree = "<group>"; };
 		3ADBCED1846CB153718FF44D993DC1D5 /* Pods-TextilePhotos-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		3F597BCFF1B5DBF6A29DE0E3ECF9EBE8 /* Pods-TextilePhotos-tvOS-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TextilePhotos-tvOS-acknowledgements.markdown"; sourceTree = "<group>"; };
 		514EFBB5F90E23FFD3339EF0744E18CE /* Pods-TextilePhotos-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		670BBDC7C1EF48E86E403A0C60540C9C /* Pods-TextilePhotosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotosTests.debug.xcconfig"; sourceTree = "<group>"; };
+		697057EB6F6A315777E7EA941A2AAF3B /* AppCenterAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterAnalytics.framework; path = "AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework"; sourceTree = "<group>"; };
 		6EA1415414045A206442E9ABAAF3B811 /* Pods-TextilePhotosTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotosTests-dummy.m"; sourceTree = "<group>"; };
 		80C2961EA176D9693B3102AE2B5D5DFD /* Pods-TextilePhotos-tvOS-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotos-tvOS-acknowledgements.plist"; sourceTree = "<group>"; };
 		929D508022C571F876AFD72AF350AC2C /* Pods-TextilePhotos-tvOSTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotos-tvOSTests-dummy.m"; sourceTree = "<group>"; };
@@ -66,6 +69,7 @@
 		B9CE91D01FD45695BEA379E7161659D1 /* Pods-TextilePhotos-tvOSTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TextilePhotos-tvOSTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		D0EDED2A171F772FDFC65F89C0DBF08C /* Pods-TextilePhotos-tvOS-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-tvOS-resources.sh"; sourceTree = "<group>"; };
 		D773289D9A450B7C37FDE03F317ACA60 /* Pods-TextilePhotos-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotos-acknowledgements.plist"; sourceTree = "<group>"; };
+		DC65AFFB7964130E42157D207BE3A6DE /* AppCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenter.framework; path = "AppCenter-SDK-Apple/iOS/AppCenter.framework"; sourceTree = "<group>"; };
 		DF1FDCB28455DCBE323B95866BDBC2CC /* libPods-TextilePhotos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TextilePhotos.a"; path = "libPods-TextilePhotos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F65E6492D55513DA37457E132CAE10AA /* Pods-TextilePhotos-tvOSTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-tvOSTests-resources.sh"; sourceTree = "<group>"; };
 		FFD1685462F7E1324AB405E7EC956EF7 /* Pods-TextilePhotosTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotosTests-resources.sh"; sourceTree = "<group>"; };
@@ -107,6 +111,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C0416FA3744ECAB6C76E95960896084 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DC65AFFB7964130E42157D207BE3A6DE /* AppCenter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2299AF501E253B95F2AE1FAD00A3B182 /* Crashes */ = {
+			isa = PBXGroup;
+			children = (
+				4789B2888C9F3A64D9BB98A64504484B /* Frameworks */,
+			);
+			name = Crashes;
+			sourceTree = "<group>";
+		};
+		260E672E181DB8BDAC7A2999772A7AE4 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				8E2C96EA6162ABA11EBE8E8817909062 /* Frameworks */,
+			);
+			name = Analytics;
+			sourceTree = "<group>";
+		};
+		2D20FC01AE47C04E62202F456C8DC21D /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				0C0416FA3744ECAB6C76E95960896084 /* Frameworks */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
 		33C2C93649114DDD44C1F6E90C46392B /* Pods-TextilePhotosTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -120,6 +156,14 @@
 			);
 			name = "Pods-TextilePhotosTests";
 			path = "Target Support Files/Pods-TextilePhotosTests";
+			sourceTree = "<group>";
+		};
+		4789B2888C9F3A64D9BB98A64504484B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1FF8CBE3D70C3B5EE02BF7F1402952A2 /* AppCenterCrashes.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		5262651ED0A342C34EF07872100CC7F8 /* Pods-TextilePhotos */ = {
@@ -142,6 +186,7 @@
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
+				B1C0FD4C526B54B6F7B5EA76C32A7B4C /* Pods */,
 				E38E6047E181783591CFEE88378CD675 /* Products */,
 				7EF3FFB33D71E3C1C5CC92AC2928FD37 /* Targets Support Files */,
 			);
@@ -173,6 +218,23 @@
 			path = "Target Support Files/Pods-TextilePhotos-tvOS";
 			sourceTree = "<group>";
 		};
+		8E2C96EA6162ABA11EBE8E8817909062 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				697057EB6F6A315777E7EA941A2AAF3B /* AppCenterAnalytics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B1C0FD4C526B54B6F7B5EA76C32A7B4C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D6F4E16E170AFF42D929EF8FFF92078F /* AppCenter */,
+				FDE42022E7C36FE2A980950DD051F732 /* AppCenterReactNativeShared */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,6 +251,17 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
+		D6F4E16E170AFF42D929EF8FFF92078F /* AppCenter */ = {
+			isa = PBXGroup;
+			children = (
+				260E672E181DB8BDAC7A2999772A7AE4 /* Analytics */,
+				2D20FC01AE47C04E62202F456C8DC21D /* Core */,
+				2299AF501E253B95F2AE1FAD00A3B182 /* Crashes */,
+			);
+			name = AppCenter;
+			path = AppCenter;
+			sourceTree = "<group>";
+		};
 		E38E6047E181783591CFEE88378CD675 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -198,6 +271,14 @@
 				2B63A20467495CA5DAF0E0B701FEE2F8 /* libPods-TextilePhotosTests.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F84ACEF4E4D3666C3A595115D01D3868 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E280B58529AEBA76B5F11C0705D0856 /* AppCenterReactNativeShared.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		F9DC46E6E5B81E3673D52A03226025CF /* Pods-TextilePhotos-tvOSTests */ = {
@@ -213,6 +294,15 @@
 			);
 			name = "Pods-TextilePhotos-tvOSTests";
 			path = "Target Support Files/Pods-TextilePhotos-tvOSTests";
+			sourceTree = "<group>";
+		};
+		FDE42022E7C36FE2A980950DD051F732 /* AppCenterReactNativeShared */ = {
+			isa = PBXGroup;
+			children = (
+				F84ACEF4E4D3666C3A595115D01D3868 /* Frameworks */,
+			);
+			name = AppCenterReactNativeShared;
+			path = AppCenterReactNativeShared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
