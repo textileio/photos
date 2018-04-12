@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react'
-import { createStackNavigator } from 'react-navigation'
+import { StackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
 import LogScreen from '../Containers/LogScreen'
 import PairingView from '../Containers/PairingView'
@@ -13,11 +13,11 @@ import Image from 'react-native-scalable-image'
 import styles from './Styles/NavigationStyles'
 
 // Manifest of possible screens
-const PrimaryNav = createStackNavigator(
+const PrimaryNav = StackNavigator(
   {
-    TextilePhotos: { screen: TextilePhotos },
-    LogScreen: { screen: LogScreen },
-    PairingView: { screen: PairingView }
+    TextilePhotos: TextilePhotos,
+    LogScreen: LogScreen,
+    PairingView: PairingView
   },
   {
     // Default config for all screens

@@ -52,7 +52,7 @@
     "react-native-progress": "^3.4.0",
     "react-native-scalable-image": "^0.4.0",
     "react-native-vector-icons": "^4.6.0",
-    "react-navigation": "^2.0.0-rc.2",
+    "react-navigation": "^1.5.11",
     "react-navigation-header-buttons": "^0.0.4",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
