@@ -1,5 +1,5 @@
 import { NavigationActions } from 'react-navigation'
-import { getCurrentRouteName } from 'CurrentRouteName'
+import { getCurrentRouteName } from './CurrentRouteName'
 import Analytics from 'appcenter-analytics'
 
 const eventLogging = ({ getState }) => next => (action) => {
