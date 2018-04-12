@@ -5,7 +5,8 @@ import ReduxPersist from '../Config/ReduxPersist'
 import Config from '../Config/DebugConfig'
 import createSagaMiddleware from 'redux-saga'
 import ScreenTracking from './ScreenTrackingMiddleware'
-import StartupActions from "./StartupRedux";
+import EventLogging from './EventLogging'
+import StartupActions from './StartupRedux'
 
 // creates the store
 export default (rootReducer, rootSaga) => {
@@ -16,6 +17,9 @@ export default (rootReducer, rootSaga) => {
 
   /* ------------- Analytics Middleware ------------- */
   middleware.push(ScreenTracking)
+
+  /* ------------- Beta Testing Analytics Middleware ------------- */
+  middleware.push(EventLogging)
 
   /* ------------- Saga Middleware ------------- */
 
