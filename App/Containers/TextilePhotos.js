@@ -37,20 +37,15 @@ class TextilePhotos extends React.PureComponent {
     const params = navigation.state.params || {}
     return {
       headerTitle: (
-        <Image style={{ width: 90, height: 39, resizeMode: 'contain', alignSelf: 'center' }} source={require('../Images/TextileHeader.png')} />
-      ),
-      headerRight: (
-        <HeaderButtons IconComponent={Evilicon} iconSize={23} color='white'>
-          <HeaderButtons.Item title='more' iconName='gear' onPress={params.openLogs} />
-        </HeaderButtons>
+        <Image source={require('../Images/TextileHeader.png')} />
       )
     }
   }
 
   componentWillMount () {
-    this.props.navigation.setParams({
-      openLogs: this.openLogs.bind(this)
-    })
+    // this.props.navigation.setParams({
+    //   openLogs: this.openLogs.bind(this)
+    // })
   }
 
   // TODO: This logic should be moved deeper into the stack
@@ -181,9 +176,6 @@ class TextilePhotos extends React.PureComponent {
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 10
 
-  openLogs = () => {
-    this.props.navigation.navigate('LogScreen')
-  }
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
   // pass that in, so changes in favorites will cause a re-render

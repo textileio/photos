@@ -43,7 +43,6 @@
     "react-native-config": "^0.10.0",
     "react-native-deep-link": "^0.1.5",
     "react-native-device-info": "0.11.0",
-    "react-native-device-log": "^1.0.2",
     "react-native-elements": "^1.0.0-beta4",
     "react-native-fs": "^2.9.12",
     "react-native-i18n": "1.0.0",
