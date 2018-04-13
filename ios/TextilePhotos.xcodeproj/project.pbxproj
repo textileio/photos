@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -14,6 +15,9 @@
 		00E356F31AD99517003FC87E /* TextilePhotosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TextilePhotosTests.m */; };
 		01087E6E60484EFEAE898CCE /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01AD301CC5D94FE89B8A6E5C /* EvilIcons.ttf */; };
 		022D3D9453F84956A5D9375D /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0596A7A5674544CB804D1B34 /* AppCenter-Config.plist */; };
+		087E01CBBA974E04B9090456 /* Degarism Studio - Biotif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C04507C278B4A96A58B97E9 /* Degarism Studio - Biotif-Bold.ttf */; };
+		08C4EF1CDFBC4BC195378B05 /* Degarism Studio - Biotif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF87D17328D54EC88D697B00 /* Degarism Studio - Biotif-Regular.ttf */; };
+		08FC52ECBB3E4E54B3434352 /* Degarism Studio - Biotif-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D1100577D5EC4FC6AA252B80 /* Degarism Studio - Biotif-ExtraBold.ttf */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -23,6 +27,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		1B2039BC3DEB48B897DBB77A /* Degarism Studio - Biotif-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5475ED2C823F48CBAA2A8484 /* Degarism Studio - Biotif-RegularItalic.ttf */; };
 		1B62ADC3028243B181384D08 /* libAppCenterReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93CD61C09D4349C8A67F94F9 /* libAppCenterReactNative.a */; };
 		25EE5D215192492083E83134 /* libAppCenterReactNativeCrashes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A4B73F65DE4286B0650688 /* libAppCenterReactNativeCrashes.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -42,17 +47,22 @@
 		3C52B42EBA6547ACB45C6C7F /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7A2525E89E54929B1E7FC4B /* Octicons.ttf */; };
 		4FC48647847E490FB74A85C7 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E68F90DAB045288BB8D857 /* libRNBackgroundFetch.a */; };
 		51C307265D0949099AAFDCA2 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A381D027F32B4EA780358435 /* Zocial.ttf */; };
+		531FB4FE0C8A4308B4AA7B9F /* Degarism Studio - Biotif-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FACFD2055F364FCC854CEA69 /* Degarism Studio - Biotif-SemiBoldItalic.ttf */; };
 		53EB4845FBAB4A61B829B9FD /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E49E968ABAC4F63AE94D9C4 /* Foundation.ttf */; };
+		5895A7590F324A5EA5FA4CA6 /* Degarism Studio - Biotif-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C9603A05CD3465A93EDFB75 /* Degarism Studio - Biotif-ExtraBoldItalic.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		5E9420726EE6D67DD8441575 /* libPods-TextilePhotos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 530B236E031BC153E852FD20 /* libPods-TextilePhotos.a */; };
 		68C8700C55154E1E80C3FB5B /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 118891CB6F934A1DB01509D2 /* RNBackgroundFetch+AppDelegate.m */; };
 		6BEB8C0D054D467B9927E33C /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A909B6FDD3341088B187569 /* libRNFS.a */; };
+		6C19244C66EF4FA58DA9DA8C /* Degarism Studio - Biotif-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01F4C2D61AC149D8BA8C3435 /* Degarism Studio - Biotif-BlackItalic.ttf */; };
 		6C570571BF914AD2B37BD0EC /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFE82A7DBA7845BB93C7CF3A /* libReactNativeConfig.a */; };
+		7979EACBAB40424EB28F78BC /* Degarism Studio - Biotif-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84F197F2899446A0958395C0 /* Degarism Studio - Biotif-Book.ttf */; };
 		7CC57A46FE346A987FDF926F /* libPods-TextilePhotosTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F0BBBDD468506CC2A00EEF /* libPods-TextilePhotosTests.a */; };
 		7D7F674D410FBB138059E3E3 /* libPods-TextilePhotos-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A36D60D71C7C40680CE520 /* libPods-TextilePhotos-tvOSTests.a */; };
 		7E18D611B45242668D9DF319 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2228F350674B45EDA607BC39 /* SimpleLineIcons.ttf */; };
 		7FC7F435032D438592423B7B /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE244265DFAD489F8F07A711 /* Entypo.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		90E1E854A4324C05B1828F01 /* Degarism Studio - Biotif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89CF8F1084D5408D8087D1E9 /* Degarism Studio - Biotif-Medium.ttf */; };
 		9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileIPFS.m */; };
 		9339E9A2205C381700BCA4CF /* TextileIPFS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileIPFS.m */; };
 		9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
@@ -65,27 +75,18 @@
 		94F237902F5845BC8A2BF5DF /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B81290BD6F9E43A9BCC32DFA /* MaterialCommunityIcons.ttf */; };
 		9AA5C66A81777620048BD3CC /* libPods-TextilePhotos-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BD0CBBE9487D7E219727EF7 /* libPods-TextilePhotos-tvOS.a */; };
 		AC12203F769042F7A837992B /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DCD2D3495DB4A4E9CA4BBD0 /* libRCTImageResizer.a */; };
+		ACD9AB9BB0A240F2B712DD3B /* Degarism Studio - Biotif-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C33531E56766499FAC7AB81E /* Degarism Studio - Biotif-BoldItalic.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B311B2606C50426EAB18A3F3 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6247753D29BD445BBE26673D /* libRNBackgroundTimer.a */; };
 		B5D96097B5FE453192C31D72 /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23A29B287C094135A8E25804 /* libAppCenterReactNativeAnalytics.a */; };
+		BE48B99518A04032973DFFF5 /* Degarism Studio - Biotif-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2B83ECEC9804B0EB5D52A12 /* Degarism Studio - Biotif-Black.ttf */; };
 		DA596D7795CB44608CDF3517 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47FCFF52D5004478899BBC71 /* Feather.ttf */; };
+		E77ED79C0B2C49C3B884EAA6 /* Degarism Studio - Biotif-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB6EBDBEC39F465DB1306CB6 /* Degarism Studio - Biotif-MediumItalic.ttf */; };
+		E8C4C2C7FE704735B7CE8A17 /* Degarism Studio - Biotif-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0276B1C1A55042F880FB1B6A /* Degarism Studio - Biotif-Light.ttf */; };
+		EC87B02C506E429985BBE88C /* Degarism Studio - Biotif-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE865ED0AC15499281CD6E51 /* Degarism Studio - Biotif-SemiBold.ttf */; };
 		EF3CE28E6FAE462CBF983CB1 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E91A5EF4C7A428FB9778EEA /* TSBackgroundFetch.framework */; };
-		F142D77017CF43DCBB1DA53B /* Degarism Studio - Biotif-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 944D06BB98704ED0AA74EC81 /* Degarism Studio - Biotif-Black.otf */; };
-		DC045BD7765C436CA9D26BB6 /* Degarism Studio - Biotif-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9A96A77199D7428B886DA5A5 /* Degarism Studio - Biotif-BlackItalic.otf */; };
-		F0FAEE356D7F465DAFB24EA4 /* Degarism Studio - Biotif-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 95FB0FA0D6C6498C97371A55 /* Degarism Studio - Biotif-Bold.otf */; };
-		D137AE7874A54444B0C9C4CB /* Degarism Studio - Biotif-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A19A2CC2E3EC4187972FFEC5 /* Degarism Studio - Biotif-BoldItalic.otf */; };
-		C66E4EBDC5934F519585A452 /* Degarism Studio - Biotif-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 86227809DECA4F7E8BD45AB3 /* Degarism Studio - Biotif-Book.otf */; };
-		4D85CEE33D4346A69EAFD8B6 /* Degarism Studio - Biotif-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2F4CC4330C6B42B89B54E064 /* Degarism Studio - Biotif-BookItalic.otf */; };
-		F1ABC390F6B84FC7BA154C3E /* Degarism Studio - Biotif-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9D1E702F5D4E4DA2BC28F5AA /* Degarism Studio - Biotif-ExtraBold.otf */; };
-		9FE6B13C9D7247EBA362A4C5 /* Degarism Studio - Biotif-ExtraBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BBF514B517554CAFA0D81842 /* Degarism Studio - Biotif-ExtraBoldItalic.otf */; };
-		271539AAD7F9455CA976F191 /* Degarism Studio - Biotif-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5451722332C546548AC129A0 /* Degarism Studio - Biotif-Light.otf */; };
-		99201AD1435A40689682DCE1 /* Degarism Studio - Biotif-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = D018EA1774144F45985E3BF2 /* Degarism Studio - Biotif-LightItalic.otf */; };
-		25B8F07206184E74BB4DB37B /* Degarism Studio - Biotif-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92454083F9AF4954872D26C3 /* Degarism Studio - Biotif-Medium.otf */; };
-		8B34C41D3D56483FAD8BE3A4 /* Degarism Studio - Biotif-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CDC7222631B542C6B0C678B0 /* Degarism Studio - Biotif-MediumItalic.otf */; };
-		69D5F08516C34DB593B6D7A5 /* Degarism Studio - Biotif-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9F3BF1148D14457B03D1745 /* Degarism Studio - Biotif-Regular.otf */; };
-		EEAEF2948D1A4D8592542381 /* Degarism Studio - Biotif-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C7AB2DAA1F4418C8786C8DF /* Degarism Studio - Biotif-RegularItalic.otf */; };
-		14D033EBC44E42BF9E7ADE84 /* Degarism Studio - Biotif-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = ECF6730FB6BF425FAAEE1AFE /* Degarism Studio - Biotif-SemiBold.otf */; };
-		DD444D1B26D341C7812FF769 /* Degarism Studio - Biotif-SemiBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8101C699D8FB4F1796679D4A /* Degarism Studio - Biotif-SemiBoldItalic.otf */; };
+		F195DE72697C465BA3DD4953 /* Degarism Studio - Biotif-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95D38B9042064AE3826A7C8F /* Degarism Studio - Biotif-LightItalic.ttf */; };
+		F586CCF4CB7147369AC39EFC /* Degarism Studio - Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -507,9 +508,12 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* TextilePhotosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextilePhotosTests.m; sourceTree = "<group>"; };
 		01AD301CC5D94FE89B8A6E5C /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		01F4C2D61AC149D8BA8C3435 /* Degarism Studio - Biotif-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BlackItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BlackItalic.ttf"; sourceTree = "<group>"; };
+		0276B1C1A55042F880FB1B6A /* Degarism Studio - Biotif-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Light.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Light.ttf"; sourceTree = "<group>"; };
 		0380B902F95C4039A0E53E27 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		0596A7A5674544CB804D1B34 /* AppCenter-Config.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "TextilePhotos/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		0989A7475F854D7FD77ECB9E /* Pods-TextilePhotos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos/Pods-TextilePhotos.release.xcconfig"; sourceTree = "<group>"; };
+		0C04507C278B4A96A58B97E9 /* Degarism Studio - Biotif-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Bold.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Bold.ttf"; sourceTree = "<group>"; };
 		0DCD2D3495DB4A4E9CA4BBD0 /* libRCTImageResizer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTImageResizer.a; sourceTree = "<group>"; };
 		118891CB6F934A1DB01509D2 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
@@ -528,6 +532,7 @@
 		24F0BBBDD468506CC2A00EEF /* libPods-TextilePhotosTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotosTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A36D60D71C7C40680CE520 /* libPods-TextilePhotos-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotos-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27C9FB3167181F8CCC456530 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2C9603A05CD3465A93EDFB75 /* Degarism Studio - Biotif-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-ExtraBoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* TextilePhotos-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TextilePhotos-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* TextilePhotos-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TextilePhotos-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		346FA0BD5F3A43CC871EE176 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
@@ -535,6 +540,7 @@
 		4CD86A0F8D920CA80EBC650F /* Pods-TextilePhotos-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOS/Pods-TextilePhotos-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		530B236E031BC153E852FD20 /* libPods-TextilePhotos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		545FE4D701C0477A8920E3EB /* AppCenterReactNativeCrashes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNativeCrashes.xcodeproj; path = "../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes.xcodeproj"; sourceTree = "<group>"; };
+		5475ED2C823F48CBAA2A8484 /* Degarism Studio - Biotif-RegularItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-RegularItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-RegularItalic.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5E91A5EF4C7A428FB9778EEA /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = SDKROOT; };
 		6247753D29BD445BBE26673D /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
@@ -545,6 +551,8 @@
 		8019A17A4A6F4FFB9C1C191F /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		814948F5D3BC41029F1E864A /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		84F197F2899446A0958395C0 /* Degarism Studio - Biotif-Book.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Book.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Book.ttf"; sourceTree = "<group>"; };
+		89CF8F1084D5408D8087D1E9 /* Degarism Studio - Biotif-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Medium.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Medium.ttf"; sourceTree = "<group>"; };
 		8BD0CBBE9487D7E219727EF7 /* libPods-TextilePhotos-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotos-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BEB37EF438445BC8A765A69 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		8E49E968ABAC4F63AE94D9C4 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -557,6 +565,7 @@
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93CD61C09D4349C8A67F94F9 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
 		93D83F94206C229B00522EFE /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		95D38B9042064AE3826A7C8F /* Degarism Studio - Biotif-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-LightItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-LightItalic.ttf"; sourceTree = "<group>"; };
 		98E68F90DAB045288BB8D857 /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundFetch.a; sourceTree = "<group>"; };
 		A1BC9A42CA94445382957F34 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		A2D8846E2079569C0060D762 /* TextilePhotos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TextilePhotos.entitlements; path = TextilePhotos/TextilePhotos.entitlements; sourceTree = "<group>"; };
@@ -564,34 +573,26 @@
 		A7A2525E89E54929B1E7FC4B /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		A8E3638F52DBA0D83F06643F /* Pods-TextilePhotosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.release.xcconfig"; sourceTree = "<group>"; };
 		A9A4B73F65DE4286B0650688 /* libAppCenterReactNativeCrashes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNativeCrashes.a; sourceTree = "<group>"; };
+		AB6EBDBEC39F465DB1306CB6 /* Degarism Studio - Biotif-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-MediumItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-MediumItalic.ttf"; sourceTree = "<group>"; };
 		AD2FAAAE52D648E2A59DD96A /* RNI18n.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNI18n.xcodeproj; path = "../node_modules/react-native-i18n/RNI18n.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B81290BD6F9E43A9BCC32DFA /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		BCE1D0D0A2DC49468796E22E /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		BE80E164AB92D7819530F633 /* Pods-TextilePhotos-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		C33531E56766499FAC7AB81E /* Degarism Studio - Biotif-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BoldItalic.ttf"; sourceTree = "<group>"; };
+		C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BookItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
 		CCE074B0A6814BE6AA44CF52 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		CD96638F8CC84ADAA1A88B19 /* AppCenterReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNative.xcodeproj; path = ../node_modules/appcenter/ios/AppCenterReactNative.xcodeproj; sourceTree = "<group>"; };
+		D1100577D5EC4FC6AA252B80 /* Degarism Studio - Biotif-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-ExtraBold.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-ExtraBold.ttf"; sourceTree = "<group>"; };
+		D2B83ECEC9804B0EB5D52A12 /* Degarism Studio - Biotif-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Black.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Black.ttf"; sourceTree = "<group>"; };
 		DE244265DFAD489F8F07A711 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		DFE82A7DBA7845BB93C7CF3A /* libReactNativeConfig.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeConfig.a; sourceTree = "<group>"; };
 		E538664D3C558F740A62DA22 /* Pods-TextilePhotosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.debug.xcconfig"; sourceTree = "<group>"; };
+		EE865ED0AC15499281CD6E51 /* Degarism Studio - Biotif-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-SemiBold.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-SemiBold.ttf"; sourceTree = "<group>"; };
+		EF87D17328D54EC88D697B00 /* Degarism Studio - Biotif-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Regular.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Regular.ttf"; sourceTree = "<group>"; };
 		F4E59B72C259E6438091556E /* Pods-TextilePhotos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos/Pods-TextilePhotos.debug.xcconfig"; sourceTree = "<group>"; };
 		F68F1EA526BB4128AAB18AD5 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		944D06BB98704ED0AA74EC81 /* Degarism Studio - Biotif-Black.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-Black.otf"; path = "../App/Fonts/Degarism Studio - Biotif-Black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		9A96A77199D7428B886DA5A5 /* Degarism Studio - Biotif-BlackItalic.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-BlackItalic.otf"; path = "../App/Fonts/Degarism Studio - Biotif-BlackItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		95FB0FA0D6C6498C97371A55 /* Degarism Studio - Biotif-Bold.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-Bold.otf"; path = "../App/Fonts/Degarism Studio - Biotif-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A19A2CC2E3EC4187972FFEC5 /* Degarism Studio - Biotif-BoldItalic.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-BoldItalic.otf"; path = "../App/Fonts/Degarism Studio - Biotif-BoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		86227809DECA4F7E8BD45AB3 /* Degarism Studio - Biotif-Book.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-Book.otf"; path = "../App/Fonts/Degarism Studio - Biotif-Book.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		2F4CC4330C6B42B89B54E064 /* Degarism Studio - Biotif-BookItalic.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-BookItalic.otf"; path = "../App/Fonts/Degarism Studio - Biotif-BookItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		9D1E702F5D4E4DA2BC28F5AA /* Degarism Studio - Biotif-ExtraBold.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-ExtraBold.otf"; path = "../App/Fonts/Degarism Studio - Biotif-ExtraBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		BBF514B517554CAFA0D81842 /* Degarism Studio - Biotif-ExtraBoldItalic.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-ExtraBoldItalic.otf"; path = "../App/Fonts/Degarism Studio - Biotif-ExtraBoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		5451722332C546548AC129A0 /* Degarism Studio - Biotif-Light.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-Light.otf"; path = "../App/Fonts/Degarism Studio - Biotif-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		D018EA1774144F45985E3BF2 /* Degarism Studio - Biotif-LightItalic.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-LightItalic.otf"; path = "../App/Fonts/Degarism Studio - Biotif-LightItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		92454083F9AF4954872D26C3 /* Degarism Studio - Biotif-Medium.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-Medium.otf"; path = "../App/Fonts/Degarism Studio - Biotif-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		CDC7222631B542C6B0C678B0 /* Degarism Studio - Biotif-MediumItalic.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-MediumItalic.otf"; path = "../App/Fonts/Degarism Studio - Biotif-MediumItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		B9F3BF1148D14457B03D1745 /* Degarism Studio - Biotif-Regular.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-Regular.otf"; path = "../App/Fonts/Degarism Studio - Biotif-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		4C7AB2DAA1F4418C8786C8DF /* Degarism Studio - Biotif-RegularItalic.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-RegularItalic.otf"; path = "../App/Fonts/Degarism Studio - Biotif-RegularItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		ECF6730FB6BF425FAAEE1AFE /* Degarism Studio - Biotif-SemiBold.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-SemiBold.otf"; path = "../App/Fonts/Degarism Studio - Biotif-SemiBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		8101C699D8FB4F1796679D4A /* Degarism Studio - Biotif-SemiBoldItalic.otf */ = {isa = PBXFileReference; name = "Degarism Studio - Biotif-SemiBoldItalic.otf"; path = "../App/Fonts/Degarism Studio - Biotif-SemiBoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FACFD2055F364FCC854CEA69 /* Degarism Studio - Biotif-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-SemiBoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -821,22 +822,22 @@
 				2228F350674B45EDA607BC39 /* SimpleLineIcons.ttf */,
 				A381D027F32B4EA780358435 /* Zocial.ttf */,
 				47FCFF52D5004478899BBC71 /* Feather.ttf */,
-				944D06BB98704ED0AA74EC81 /* Degarism Studio - Biotif-Black.otf */,
-				9A96A77199D7428B886DA5A5 /* Degarism Studio - Biotif-BlackItalic.otf */,
-				95FB0FA0D6C6498C97371A55 /* Degarism Studio - Biotif-Bold.otf */,
-				A19A2CC2E3EC4187972FFEC5 /* Degarism Studio - Biotif-BoldItalic.otf */,
-				86227809DECA4F7E8BD45AB3 /* Degarism Studio - Biotif-Book.otf */,
-				2F4CC4330C6B42B89B54E064 /* Degarism Studio - Biotif-BookItalic.otf */,
-				9D1E702F5D4E4DA2BC28F5AA /* Degarism Studio - Biotif-ExtraBold.otf */,
-				BBF514B517554CAFA0D81842 /* Degarism Studio - Biotif-ExtraBoldItalic.otf */,
-				5451722332C546548AC129A0 /* Degarism Studio - Biotif-Light.otf */,
-				D018EA1774144F45985E3BF2 /* Degarism Studio - Biotif-LightItalic.otf */,
-				92454083F9AF4954872D26C3 /* Degarism Studio - Biotif-Medium.otf */,
-				CDC7222631B542C6B0C678B0 /* Degarism Studio - Biotif-MediumItalic.otf */,
-				B9F3BF1148D14457B03D1745 /* Degarism Studio - Biotif-Regular.otf */,
-				4C7AB2DAA1F4418C8786C8DF /* Degarism Studio - Biotif-RegularItalic.otf */,
-				ECF6730FB6BF425FAAEE1AFE /* Degarism Studio - Biotif-SemiBold.otf */,
-				8101C699D8FB4F1796679D4A /* Degarism Studio - Biotif-SemiBoldItalic.otf */,
+				D2B83ECEC9804B0EB5D52A12 /* Degarism Studio - Biotif-Black.ttf */,
+				01F4C2D61AC149D8BA8C3435 /* Degarism Studio - Biotif-BlackItalic.ttf */,
+				0C04507C278B4A96A58B97E9 /* Degarism Studio - Biotif-Bold.ttf */,
+				C33531E56766499FAC7AB81E /* Degarism Studio - Biotif-BoldItalic.ttf */,
+				84F197F2899446A0958395C0 /* Degarism Studio - Biotif-Book.ttf */,
+				C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */,
+				D1100577D5EC4FC6AA252B80 /* Degarism Studio - Biotif-ExtraBold.ttf */,
+				2C9603A05CD3465A93EDFB75 /* Degarism Studio - Biotif-ExtraBoldItalic.ttf */,
+				0276B1C1A55042F880FB1B6A /* Degarism Studio - Biotif-Light.ttf */,
+				95D38B9042064AE3826A7C8F /* Degarism Studio - Biotif-LightItalic.ttf */,
+				89CF8F1084D5408D8087D1E9 /* Degarism Studio - Biotif-Medium.ttf */,
+				AB6EBDBEC39F465DB1306CB6 /* Degarism Studio - Biotif-MediumItalic.ttf */,
+				EF87D17328D54EC88D697B00 /* Degarism Studio - Biotif-Regular.ttf */,
+				5475ED2C823F48CBAA2A8484 /* Degarism Studio - Biotif-RegularItalic.ttf */,
+				EE865ED0AC15499281CD6E51 /* Degarism Studio - Biotif-SemiBold.ttf */,
+				FACFD2055F364FCC854CEA69 /* Degarism Studio - Biotif-SemiBoldItalic.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1739,22 +1740,22 @@
 				51C307265D0949099AAFDCA2 /* Zocial.ttf in Resources */,
 				022D3D9453F84956A5D9375D /* AppCenter-Config.plist in Resources */,
 				DA596D7795CB44608CDF3517 /* Feather.ttf in Resources */,
-				F142D77017CF43DCBB1DA53B /* Degarism Studio - Biotif-Black.otf in Resources */,
-				DC045BD7765C436CA9D26BB6 /* Degarism Studio - Biotif-BlackItalic.otf in Resources */,
-				F0FAEE356D7F465DAFB24EA4 /* Degarism Studio - Biotif-Bold.otf in Resources */,
-				D137AE7874A54444B0C9C4CB /* Degarism Studio - Biotif-BoldItalic.otf in Resources */,
-				C66E4EBDC5934F519585A452 /* Degarism Studio - Biotif-Book.otf in Resources */,
-				4D85CEE33D4346A69EAFD8B6 /* Degarism Studio - Biotif-BookItalic.otf in Resources */,
-				F1ABC390F6B84FC7BA154C3E /* Degarism Studio - Biotif-ExtraBold.otf in Resources */,
-				9FE6B13C9D7247EBA362A4C5 /* Degarism Studio - Biotif-ExtraBoldItalic.otf in Resources */,
-				271539AAD7F9455CA976F191 /* Degarism Studio - Biotif-Light.otf in Resources */,
-				99201AD1435A40689682DCE1 /* Degarism Studio - Biotif-LightItalic.otf in Resources */,
-				25B8F07206184E74BB4DB37B /* Degarism Studio - Biotif-Medium.otf in Resources */,
-				8B34C41D3D56483FAD8BE3A4 /* Degarism Studio - Biotif-MediumItalic.otf in Resources */,
-				69D5F08516C34DB593B6D7A5 /* Degarism Studio - Biotif-Regular.otf in Resources */,
-				EEAEF2948D1A4D8592542381 /* Degarism Studio - Biotif-RegularItalic.otf in Resources */,
-				14D033EBC44E42BF9E7ADE84 /* Degarism Studio - Biotif-SemiBold.otf in Resources */,
-				DD444D1B26D341C7812FF769 /* Degarism Studio - Biotif-SemiBoldItalic.otf in Resources */,
+				BE48B99518A04032973DFFF5 /* Degarism Studio - Biotif-Black.ttf in Resources */,
+				6C19244C66EF4FA58DA9DA8C /* Degarism Studio - Biotif-BlackItalic.ttf in Resources */,
+				087E01CBBA974E04B9090456 /* Degarism Studio - Biotif-Bold.ttf in Resources */,
+				ACD9AB9BB0A240F2B712DD3B /* Degarism Studio - Biotif-BoldItalic.ttf in Resources */,
+				7979EACBAB40424EB28F78BC /* Degarism Studio - Biotif-Book.ttf in Resources */,
+				F586CCF4CB7147369AC39EFC /* Degarism Studio - Biotif-BookItalic.ttf in Resources */,
+				08FC52ECBB3E4E54B3434352 /* Degarism Studio - Biotif-ExtraBold.ttf in Resources */,
+				5895A7590F324A5EA5FA4CA6 /* Degarism Studio - Biotif-ExtraBoldItalic.ttf in Resources */,
+				E8C4C2C7FE704735B7CE8A17 /* Degarism Studio - Biotif-Light.ttf in Resources */,
+				F195DE72697C465BA3DD4953 /* Degarism Studio - Biotif-LightItalic.ttf in Resources */,
+				90E1E854A4324C05B1828F01 /* Degarism Studio - Biotif-Medium.ttf in Resources */,
+				E77ED79C0B2C49C3B884EAA6 /* Degarism Studio - Biotif-MediumItalic.ttf in Resources */,
+				08C4EF1CDFBC4BC195378B05 /* Degarism Studio - Biotif-Regular.ttf in Resources */,
+				1B2039BC3DEB48B897DBB77A /* Degarism Studio - Biotif-RegularItalic.ttf in Resources */,
+				EC87B02C506E429985BBE88C /* Degarism Studio - Biotif-SemiBold.ttf in Resources */,
+				531FB4FE0C8A4308B4AA7B9F /* Degarism Studio - Biotif-SemiBoldItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

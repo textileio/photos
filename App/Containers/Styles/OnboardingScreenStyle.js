@@ -4,8 +4,9 @@ import { ApplicationStyles } from '../../Themes/'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   header: {
+    fontFamily: 'Biotif-ExtraBoldItalic',
     paddingTop: '25%',
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     fontSize: 24,
     alignSelf: 'center',
     textAlign: 'center'
