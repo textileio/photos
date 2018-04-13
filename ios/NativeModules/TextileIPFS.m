@@ -33,14 +33,6 @@
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 RCT_EXPORT_MODULE();
 
-// Export constants
-// https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#exporting-constants
-- (NSDictionary *)constantsToExport {
-  return @{
-           @"EXAMPLE": @"example"
-           };
-}
-
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
