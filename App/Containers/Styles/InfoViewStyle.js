@@ -1,25 +1,35 @@
 import { StyleSheet } from 'react-native'
 import { ApplicationStyles, Metrics, Colors } from '../../Themes'
 
+export const buttonColor1 = Colors.brandPink
+export const buttonColor2 = Colors.brandYellow
+export const buttonColor3 = Colors.brandRed
+export const buttonColor4 = Colors.brandBlue
+
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
-  navigationBar: {
+  container: {
     flex: 1,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 30,
-    paddingVertical: 10,
-    backgroundColor: Colors.transparent,
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    backgroundColor: Colors.primaryBackground,
+    padding: 20
   },
-  navigationIcon: {
+  messageContainer: {
     flex: 1,
-    // position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'stretch'
+  },
+  iconsRow: {
     flexDirection: 'row',
-    color: Colors.frost,
-    backgroundColor: Colors.transparent,
+    marginVertical: 40,
+    paddingHorizontal: 20,
+    justifyContent: 'space-around'
+  },
+  message: {
+    fontFamily: 'Biotif-Regular',
+    color: Colors.charcoal,
+    paddingTop: 20,
+    fontSize: 18,
+    alignSelf: 'center',
+    textAlign: 'justify'
   }
 })

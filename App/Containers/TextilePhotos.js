@@ -11,7 +11,7 @@ import {
   AppState,
   PushNotificationIOS
 } from 'react-native'
-import Evilicon from 'react-native-vector-icons/EvilIcons'
+import Icon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
 import { getPhoto } from '../Services/PhotoUtils'
@@ -38,14 +38,23 @@ class TextilePhotos extends React.PureComponent {
     return {
       headerTitle: (
         <Image source={require('../Images/TextileHeader.png')} />
+      ),
+      headerRight: (
+        <HeaderButtons IconComponent={Icon} iconSize={23} color='white'>
+          <HeaderButtons.Item title='more' iconName='ios-more' onPress={params.openLogs} />
+        </HeaderButtons>
       )
     }
   }
 
   componentWillMount () {
-    // this.props.navigation.setParams({
-    //   openLogs: this.openLogs.bind(this)
-    // })
+    this.props.navigation.setParams({
+      openLogs: this.openLogs.bind(this)
+    })
+  }
+
+  openLogs = () => {
+    this.props.navigation.navigate('InfoView')
   }
 
   // TODO: This logic should be moved deeper into the stack

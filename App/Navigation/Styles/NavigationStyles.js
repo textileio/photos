@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native'
 import { Colors } from '../../Themes/'
 
+export const headerTintColor = Colors.snow
+
 export default StyleSheet.create({
   header: {
     // Styles the screen header in Textile Photos feed view
