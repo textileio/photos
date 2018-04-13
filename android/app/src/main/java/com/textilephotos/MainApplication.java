@@ -3,15 +3,16 @@ package com.textilephotos;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
-import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
-import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import com.rnfs.RNFSPackage;
+import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
+import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
+import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
 import io.realm.react.RealmReactPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
-import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -19,7 +20,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.rnfs.RNFSPackage;
 import com.textilephotos.textileipfs.TextileIPFSPackage;
 
 import java.util.Arrays;
@@ -37,11 +37,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeConfigPackage(),
+            new BackgroundTimerPackage(),
+            new BackgroundTaskPackage(),
+            new ImageResizerPackage(),
+            new RNFSPackage(),
             new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
             new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
             new AppCenterReactNativePackage(MainApplication.this),
-            new ReactNativeConfigPackage(),
-            new BackgroundTimerPackage(),
           new BackgroundTaskPackage(),
           new RealmReactPackage(),
           new PickerPackage(),

@@ -2,37 +2,50 @@
 import React from 'react'
 import {
   View,
+  Image,
   Text,
   FlatList,
   TouchableOpacity,
   Linking,
   Platform,
-  ImageBackground,
   AppState,
   PushNotificationIOS
 } from 'react-native'
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
-import { Card, Tile } from 'react-native-elements'
 import BackgroundTask from 'react-native-background-task'
 import { getPhoto } from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
 import UploadTask from '../../UploadTaskNativeModule'
 import PhotosTask from '../Services/PhotosTask'
 import { getFailedImages } from './App'
+import HeaderButtons from 'react-navigation-header-buttons'
+import * as Progress from 'react-native-progress'
+import { Colors } from '../Themes'
 
 // Styles
-import styles from './Styles/TextilePhotosStyle'
+import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
-  constructor (props) {
-    super(props)
-    this.state = {
-      data: [],
-      limit: 10
-    }
-    AppState.addEventListener('change', this.handleAppStateChange)
+
+  constructor() {
+    super()
     this.setup()
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {}
+    return {
+      headerTitle: (
+        <Image source={require('../Images/TextileHeader.png')} />
+      )
+    }
+  }
+
+  componentWillMount () {
+    // this.props.navigation.setParams({
+    //   openLogs: this.openLogs.bind(this)
+    // })
   }
 
   // TODO: This logic should be moved deeper into the stack
@@ -64,9 +77,11 @@ class TextilePhotos extends React.PureComponent {
   }
 
   async setup () {
+    AppState.addEventListener('change', this.handleAppStateChange.bind(this))
+
     this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', event => {
       console.log('UPLOAD PROGRESS:', event)
-      this.props.store.dispatch(Actions.imageUploadProgress(event))
+      this.props.uploadProgress(event)
     })
 
     this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
@@ -75,7 +90,7 @@ class TextilePhotos extends React.PureComponent {
         alertBody: 'upload complete',
         userInfo: {}
       })
-      this.props.store.dispatch(Actions.imageUploadComplete(event))
+      this.props.uploadComplete(event)
     })
 
     await PushNotificationIOS.requestPermissions()
@@ -88,7 +103,7 @@ class TextilePhotos extends React.PureComponent {
           alertBody: 'location update',
           userInfo: {}
         })
-        PhotosTask(this.props.store.dispatch, getFailedImages())
+        PhotosTask(this.props.dispatch, getFailedImages())
       },
       error => {
         console.log('Got a location error', error)
@@ -100,7 +115,7 @@ class TextilePhotos extends React.PureComponent {
   async handleAppStateChange (nextAppState) {
     if (nextAppState.match(/^active/)) {
       console.log('got a foreground event')
-      await PhotosTask(this.props.store.dispatch, getFailedImages())
+      await PhotosTask(this.props.dispatch, getFailedImages())
     }
   }
 
@@ -112,40 +127,28 @@ class TextilePhotos extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow ({item}) {
-    // let label = ''
-    // Figuring we can use the 'status' blocks to inform the user
-    // about where their photo is backed up
-    let localStatus = styles.statusWhite
-    let remoteStatus = styles.statusWhite
-    if (item.state === 'complete') {
-      // label = item.hash
-      localStatus = styles.statusPink
-      remoteStatus = styles.statusBlue
-    } else if (item.state === 'error') {
-      // label = item.error.message
-      localStatus = styles.statusPink
-      remoteStatus = styles.statusRed
-    // } else if (item.state === 'processing') {
-      // label = item.progress
-    } else {
-      localStatus = styles.statusPink
-      // label = item.state
-    }
-
     const onPress = this.onPressIt(item)
-
+    let overlay
+    if (item.state === 'pending') {
+      overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
+    } else if (item.state === 'processing') {
+      overlay = <Progress.Pie progress={item.progress} size={20} color={Colors.brandPink} />
+    } else if (item.state === 'error') {
+      overlay = <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+    }
     return (
-      <Tile
-        contentContainerStyle={styles.tileStyle}
-        onPress={onPress}
-        imageSrc={{uri: item.image.node.image.thumbPath}}>
-        <View style={styles.statusCell}>
-          <View style={styles.photoStatus}>
-            <View style={localStatus} />
-            <View style={remoteStatus} />
-          </View>
+      <View style={styles.item}>
+        <View style={styles.itemBackgroundContainer}>
+          <Image
+            source={{uri: item.image.node.image.thumbPath}}
+            resizeMode={'cover'}
+            style={styles.itemImage}
+          />
         </View>
-      </Tile>
+        <View style={styles.itemOverlay}>
+          {overlay}
+        </View>
+      </View>
     )
   }
 
@@ -156,31 +159,13 @@ class TextilePhotos extends React.PureComponent {
     }
   }
 
-  /* ***********************************************************
-  * Consider the configurations we've set below.  Customize them
-  * to your liking!  Each with some friendly advice.
-  *************************************************************/
-  // Render a header?
-  // renderHeader = () =>
-  //   <Text style={[styles.label, styles.sectionHeader]}> - Header - </Text>
-
-  // Render a footer?
-  renderFooter = () => {
-    if (this.props.images.items.length !== 0) {
-      return null
+  _getItemLayout = (data, index) => {
+    const productHeight = PRODUCT_ITEM_HEIGHT + PRODUCT_ITEM_MARGIN
+    return {
+      length: productHeight,
+      offset: productHeight * index,
+      index
     }
-
-    return (
-      <Card
-        style={styles.cardStyle}
-        image={require('../Images/backgrounds/no-image-yet.png')}>
-        <View style={styles.noStatus}>
-          <View style={styles.noPhotos}>
-            <Text> Just waiting for you to take some photos. </Text>
-          </View>
-        </View>
-      </Card>
-    )
   }
 
   // The default function if no Key is provided is index
@@ -191,9 +176,6 @@ class TextilePhotos extends React.PureComponent {
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 10
 
-  openLogs = () => {
-    this.props.navigation.navigate('LogView')
-  }
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
   // pass that in, so changes in favorites will cause a re-render
@@ -209,35 +191,53 @@ class TextilePhotos extends React.PureComponent {
   // )}
   render () {
     return (
-      <ImageBackground
-        source={require('../Images/backgrounds/photos-background.png')}
-        style={styles.backgroundImage}>
-        <View style={styles.container}>
-          <FlatList
-            contentContainerStyle={styles.listContent}
-            data={this.props.images.items}
-            renderItem={this.renderRow.bind(this)}
-            numColumns={1}
-            keyExtractor={this.keyExtractor}
-            initialNumToRender={this.oneScreensWorth}
-            onEndReachedThreshold={0.5}
-            onEndReached={({ distanceFromEnd }) => {
-              // This has an issue
-              // It would currently load new ones on first load too
-              // const lastItem = this.props.images.items[
-              //   this.props.images.items.length - 1
-              //   ]
-              // this.props.getHashesRequest(lastItem.hash, 10)
-            }}
-            ListFooterComponent={this.renderFooter}
-          />
+      <View style={styles.container}>
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: 0.2
+          }}
+        >
+          <Image style={{
+            flex: 1,
+            resizeMode: 'center',
+            position: 'absolute',
+            bottom: 0
+          }} source={require('../Images/backgrounds/TextileBackground.png')} />
         </View>
-        <View style={styles.navigationBar}>
-          <TouchableOpacity onPress={this.openLogs}>
-            <Evilicon name='exclamation' style={styles.navigationIcon} size={50} />
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
+        {
+          this.props.images.items.length ? (
+            <FlatList
+              style={styles.listContainer}
+              data={this.props.images.items}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderRow.bind(this)}
+              getItemLayout={this._getItemLayout}
+              numColumns={numColumns}
+              initialNumToRender={this.oneScreensWorth}
+              onEndReachedThreshold={0.5}
+              onEndReached={({ distanceFromEnd }) => {
+                // This has an issue
+                // It would currently load new ones on first load too
+                // const lastItem = this.props.images.items[
+                //   this.props.images.items.length - 1
+                //   ]
+                // this.props.getHashesRequest(lastItem.hash, 10)
+              }}
+            />
+          ) : (
+            <View style={styles.emptyListStyle}>
+              <Text style={styles.noPhotos}>Any new photos you take will be displayed here and synced to Textile.</Text>
+            </View>
+          )
+        }
+      </View>
     )
   }
 }
@@ -253,8 +253,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    dispatch: dispatch,
+    uploadComplete: event => { dispatch(Actions.imageUploadComplete(event)) },
+    uploadProgress: event => { dispatch(Actions.imageUploadProgress(event)) },
     getHashesRequest: (offsetId, limit) => { dispatch(Actions.getHashesRequest(offsetId, limit)) },
-    addImagesRequest: (images) => { dispatch(Actions.addImagesRequest(images)) }
+    addImagesRequest: images => { dispatch(Actions.addImagesRequest(images)) }
   }
 }
 

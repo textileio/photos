@@ -39,11 +39,14 @@
 @end
 
 @implementation UploadTask
-@synthesize bridge = _bridge;
 
 // Export a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 RCT_EXPORT_MODULE();
+
++ (BOOL)requiresMainQueueSetup {
+  return YES;
+}
 
 - (instancetype)init
 {

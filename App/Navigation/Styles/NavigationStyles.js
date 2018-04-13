@@ -4,16 +4,11 @@ import { Colors } from '../../Themes/'
 export default StyleSheet.create({
   header: {
     // Styles the screen header in Textile Photos feed view
-    backgroundColor: Colors.transparent,
-    // below allows our image stream to go under our header
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0
+    backgroundColor: Colors.brandBlue
   },
-  title: {
-    // Top center bar text. Currently set in PhotosNavigation
-    color: Colors.transparent
+  headerTitle: {
+    fontFamily: 'Biotif-Medium',
+    color: Colors.snow
   },
   icon: {
     color: Colors.transparent

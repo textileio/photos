@@ -8,7 +8,7 @@ import Actions from '../Redux/TextileRedux'
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
 // Styles
-import styles from './Styles/LogViewStyle'
+import styles from './Styles/PairingViewStyle'
 
 class PairingView extends React.PureComponent {
   constructor (props) {

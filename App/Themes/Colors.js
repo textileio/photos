@@ -1,4 +1,13 @@
+const brandBlue = '#374DFF'
+const brandYellow = '#FFD435'
+const brandRed = '#FF5C62'
+const brandPink=  '#FFC0D8'
+
 const colors = {
+  primaryBackground: 'rgb(255,255,255)',
+  headerBackground: brandBlue,
+  headerText: 'rgb(255,255,255)',
+
   test: 'rgba(199,44,199,0.3)',
   backgroundColor: 'rgba(0,0,0,0)',
   background: '#1F0808',
