@@ -2,6 +2,7 @@
 import React from 'react'
 import { StackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
+import InfoView from '../Containers/InfoView'
 import PairingView from '../Containers/PairingView'
 // import Notifications from '../Containers/Notifications'
 // import Image from 'react-native'
@@ -14,6 +15,7 @@ import styles from './Styles/NavigationStyles'
 const PrimaryNav = StackNavigator(
   {
     TextilePhotos: TextilePhotos,
+    InfoView: InfoView,
     PairingView: PairingView
   },
   {
