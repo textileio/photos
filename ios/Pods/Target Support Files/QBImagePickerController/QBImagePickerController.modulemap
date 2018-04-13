@@ -1,6 +1,0 @@
-framework module QBImagePickerController {
-  umbrella header "QBImagePickerController-umbrella.h"
-
-  export *
-  module * { export * }
-}

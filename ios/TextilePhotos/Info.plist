@@ -58,6 +58,22 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Feather.ttf</string>
+		<string>Degarism Studio - Biotif-Black.ttf</string>
+		<string>Degarism Studio - Biotif-BlackItalic.ttf</string>
+		<string>Degarism Studio - Biotif-Bold.ttf</string>
+		<string>Degarism Studio - Biotif-BoldItalic.ttf</string>
+		<string>Degarism Studio - Biotif-Book.ttf</string>
+		<string>Degarism Studio - Biotif-BookItalic.ttf</string>
+		<string>Degarism Studio - Biotif-ExtraBold.ttf</string>
+		<string>Degarism Studio - Biotif-ExtraBoldItalic.ttf</string>
+		<string>Degarism Studio - Biotif-Light.ttf</string>
+		<string>Degarism Studio - Biotif-LightItalic.ttf</string>
+		<string>Degarism Studio - Biotif-Medium.ttf</string>
+		<string>Degarism Studio - Biotif-MediumItalic.ttf</string>
+		<string>Degarism Studio - Biotif-Regular.ttf</string>
+		<string>Degarism Studio - Biotif-RegularItalic.ttf</string>
+		<string>Degarism Studio - Biotif-SemiBold.ttf</string>
+		<string>Degarism Studio - Biotif-SemiBoldItalic.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
@@ -75,8 +91,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
