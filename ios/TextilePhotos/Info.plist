@@ -58,6 +58,22 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Feather.ttf</string>
+		<string>Degarism Studio - Biotif-Black.otf</string>
+		<string>Degarism Studio - Biotif-BlackItalic.otf</string>
+		<string>Degarism Studio - Biotif-Bold.otf</string>
+		<string>Degarism Studio - Biotif-BoldItalic.otf</string>
+		<string>Degarism Studio - Biotif-Book.otf</string>
+		<string>Degarism Studio - Biotif-BookItalic.otf</string>
+		<string>Degarism Studio - Biotif-ExtraBold.otf</string>
+		<string>Degarism Studio - Biotif-ExtraBoldItalic.otf</string>
+		<string>Degarism Studio - Biotif-Light.otf</string>
+		<string>Degarism Studio - Biotif-LightItalic.otf</string>
+		<string>Degarism Studio - Biotif-Medium.otf</string>
+		<string>Degarism Studio - Biotif-MediumItalic.otf</string>
+		<string>Degarism Studio - Biotif-Regular.otf</string>
+		<string>Degarism Studio - Biotif-RegularItalic.otf</string>
+		<string>Degarism Studio - Biotif-SemiBold.otf</string>
+		<string>Degarism Studio - Biotif-SemiBoldItalic.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
