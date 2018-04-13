@@ -85,7 +85,7 @@ const params8 = {
 
 const params9 = {
   header: 'Location, location, location…',
-  message: 'Please take a moment to authorize geolocation so we can use your location changes to wake up the app, making sure your photos are continuously backed up, even when you’re on the go.',
+  message: 'Please take a moment to authorize geolocation. Be sure to select, ALWAYS ALLOW, so we can use your location changes to wake up the app, making sure your photos are continuously backed up, even when you’re on the go.',
   buttonTitle: 'AUTHORIZE',
   onButtonPress: (navigate) => {
     return async () => {
@@ -97,7 +97,7 @@ const params9 = {
 
 const params10 = {
   header: 'You\'re ready!',
-  message: 'We can’t wait for you to get started! So why not take a quick photo, and see what we’re all about. And if you’d like to learn more about our Beta program, please check out our website for details.',
+  message: 'You are running on IPFS and the decentralized web, welcome to the future. Thank you for joining us for our early beta. We\'re excited to share these early steps with you and get your feedback along the way..',
   buttonTitle: 'GET STARTED',
   onButtonPress: (navigate, dispatch) => {
     return () => {
