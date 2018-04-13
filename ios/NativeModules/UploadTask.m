@@ -44,6 +44,10 @@
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 RCT_EXPORT_MODULE();
 
++ (BOOL)requiresMainQueueSetup {
+  return YES;
+}
+
 - (instancetype)init
 {
   self = [super init];
