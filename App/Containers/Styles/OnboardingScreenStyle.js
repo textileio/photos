@@ -22,6 +22,7 @@ export default StyleSheet.create({
     height: 200
   },
   message: {
+    fontFamily: 'Biotif-Regular',
     paddingTop: '5%',
     width: '80%',
     fontSize: 22,

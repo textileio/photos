@@ -6,9 +6,9 @@ export default StyleSheet.create({
     // Styles the screen header in Textile Photos feed view
     backgroundColor: Colors.brandBlue
   },
-  title: {
-    // Top center bar text. Currently set in PhotosNavigation
-    color: Colors.transparent
+  headerTitle: {
+    fontFamily: 'Biotif-Medium',
+    color: Colors.snow
   },
   icon: {
     color: Colors.transparent

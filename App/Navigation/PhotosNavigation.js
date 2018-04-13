@@ -6,7 +6,6 @@ import LogScreen from '../Containers/LogScreen'
 import PairingView from '../Containers/PairingView'
 // import Notifications from '../Containers/Notifications'
 // import Image from 'react-native'
-import Image from 'react-native-scalable-image'
 
 // import SwipeNavigation from './SwipeNavigation'
 
@@ -24,13 +23,8 @@ const PrimaryNav = StackNavigator(
     headerMode: 'float',
     initialRouteName: 'TextilePhotos',
     navigationOptions: {
-      // headerLeft: (<Image source={require('../Images/textile-icon.png')} style={styles.logo} />),
       headerStyle: styles.header,
-      headerTitleStyle: styles.title,
-      // title: 'Latest',
-      headerTitle: (
-        <Image style={{ width: 90, height: 39, resizeMode: 'contain', alignSelf: 'center' }} source={require('../Images/TextileHeader.png')} />
-      )
+      headerTitleStyle: styles.headerTitle
     }
   }
 )

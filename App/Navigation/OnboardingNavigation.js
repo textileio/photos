@@ -75,7 +75,7 @@ const OnboardingNav = StackNavigator(
     initialRouteName: 'OnboardingWelcome',
     navigationOptions: {
       headerStyle: styles.header,
-      headerLeft: null,
+      headerTitleStyle: styles.headerTitle,
       swipeEnabled: false,
       gesturesEnabled: false
     }
