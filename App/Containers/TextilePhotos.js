@@ -36,6 +36,9 @@ class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
+      headerTitle: (
+        <Image style={{ width: 90, height: 39, resizeMode: 'contain', alignSelf: 'center' }} source={require('../Images/TextileHeader.png')} />
+      ),
       headerRight: (
         <HeaderButtons IconComponent={Evilicon} iconSize={23} color='white'>
           <HeaderButtons.Item title='more' iconName='gear' onPress={params.openLogs} />
