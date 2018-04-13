@@ -1,14 +1,24 @@
 import { StyleSheet } from 'react-native'
-import { ApplicationStyles } from '../../Themes/'
+import { ApplicationStyles, Colors } from '../../Themes/'
+
+export const buttonColor = Colors.brandRed
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
+  welcomeContainer: {
+    flex: 1,
+    backgroundColor: Colors.primaryBackground,
+    padding: 20
+  },
+  messageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'stretch'
+  },
   header: {
-    fontFamily: 'Biotif-ExtraBoldItalic',
-    paddingTop: '25%',
-    // fontWeight: 'bold',
-    fontSize: 24,
-    alignSelf: 'center',
+    fontFamily: 'Biotif-BoldItalic',
+    color: Colors.brandBlue,
+    fontSize: 20,
     textAlign: 'center'
   },
   imageView: {
@@ -23,9 +33,9 @@ export default StyleSheet.create({
   },
   message: {
     fontFamily: 'Biotif-Regular',
-    paddingTop: '5%',
-    width: '80%',
-    fontSize: 22,
+    color: Colors.charcoal,
+    paddingTop: 20,
+    fontSize: 18,
     alignSelf: 'center',
     textAlign: 'justify'
   }

@@ -133,6 +133,8 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   noPhotos: {
+    fontFamily: 'Biotif-Regular',
+    padding: 20,
     alignSelf: 'center',
     color: Colors.steel,
     backgroundColor: Colors.clear,
