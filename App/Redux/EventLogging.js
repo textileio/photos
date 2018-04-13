@@ -7,7 +7,6 @@ const eventLogging = ({ getState }) => next => (action) => {
     action.type !== NavigationActions.NAVIGATE &&
     action.type !== NavigationActions.BACK
   ) {
-    const text =
     Analytics.trackEvent(action.type, {
       'action': action.text ? action.text : ''
     })
