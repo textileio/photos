@@ -76,6 +76,7 @@ const OnboardingNav = StackNavigator(
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
+      headerLeft: null,
       swipeEnabled: false,
       gesturesEnabled: false
     }
