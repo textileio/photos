@@ -20,10 +20,10 @@ export const getFailedImages = () => {
 
 BackgroundTask.define(async () => {
   console.log('running background task')
-  PushNotificationIOS.presentLocalNotification({
-    alertBody: 'running background fetch',
-    userInfo: {}
-  })
+  // PushNotificationIOS.presentLocalNotification({
+  //   alertBody: 'running background fetch',
+  //   userInfo: {}
+  // })
   await PhotosTask(store.dispatch, getFailedImages())
   // finish() must be called before OS hits timeout.
   BackgroundTask.finish()

@@ -47,12 +47,12 @@
 
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
-  UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-  content.title = @"NATIVE";
-  content.body = @"App launched to handle background session events";
-  UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"launched-into-bg" content:content trigger:nil];
-  UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-  [center addNotificationRequest:request withCompletionHandler:nil];
+//  UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+//  content.title = @"NATIVE";
+//  content.body = @"App launched to handle background session events";
+//  UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"launched-into-bg" content:content trigger:nil];
+//  UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+//  [center addNotificationRequest:request withCompletionHandler:nil];
   
   self.backgroundCompletionHandler = completionHandler;
 }
