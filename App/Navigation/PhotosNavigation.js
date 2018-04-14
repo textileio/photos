@@ -9,7 +9,7 @@ import PairingView from '../Containers/PairingView'
 
 // import SwipeNavigation from './SwipeNavigation'
 
-import styles from './Styles/NavigationStyles'
+import styles, {headerTintColor} from './Styles/NavigationStyles'
 
 // Manifest of possible screens
 const PrimaryNav = StackNavigator(
@@ -24,7 +24,8 @@ const PrimaryNav = StackNavigator(
     initialRouteName: 'TextilePhotos',
     navigationOptions: {
       headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle
+      headerTitleStyle: styles.headerTitle,
+      headerTintColor: headerTintColor
     }
   }
 )
