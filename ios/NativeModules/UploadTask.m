@@ -133,12 +133,12 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
   if (self.hasListeners) {
     [self processQueuedEvents];
   } else {
-    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"QUEUING NATIVE EVENT";
-    content.body = event.name;
-    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString] content:content trigger:nil];
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    [center addNotificationRequest:request withCompletionHandler:nil];
+//    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+//    content.title = @"QUEUING NATIVE EVENT";
+//    content.body = event.name;
+//    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString] content:content trigger:nil];
+//    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+//    [center addNotificationRequest:request withCompletionHandler:nil];
   }
 }
 
@@ -148,12 +148,12 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
     [self.queuedEvents removeObject:event];
     [self sendEventWithName:event.name body:event.payload];
 
-    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"SENDING NATIVE EVENT";
-    content.body = event.name;
-    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString] content:content trigger:nil];
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    [center addNotificationRequest:request withCompletionHandler:nil];
+//    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+//    content.title = @"SENDING NATIVE EVENT";
+//    content.body = event.name;
+//    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString] content:content trigger:nil];
+//    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+//    [center addNotificationRequest:request withCompletionHandler:nil];
   }
 }
 
@@ -161,12 +161,12 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
   dispatch_async(dispatch_get_main_queue(), ^{
-    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"NATIVE";
-    content.body = @"URLSession finished background events";
-    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"bg-events-finished" content:content trigger:nil];
-    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-    [center addNotificationRequest:request withCompletionHandler:nil];
+//    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+//    content.title = @"NATIVE";
+//    content.body = @"URLSession finished background events";
+//    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"bg-events-finished" content:content trigger:nil];
+//    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+//    [center addNotificationRequest:request withCompletionHandler:nil];
     
     AppDelegate *delegate = (AppDelegate *)UIApplication.sharedApplication.delegate;
     if (delegate.backgroundCompletionHandler) {

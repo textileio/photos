@@ -21,19 +21,19 @@ export default async function photosTask (dispatch, failedImages) {
 
   // Query for any new photos, add jobs to queue
   const photos = await queryPhotos()
-  PushNotificationIOS.presentLocalNotification({
-    alertBody: 'fetch of ' + photos.length + ' photos',
-    userInfo: {}
-  })
+  // PushNotificationIOS.presentLocalNotification({
+  //   alertBody: 'fetch of ' + photos.length + ' photos',
+  //   userInfo: {}
+  // })
   for (const photo of photos) {
     const multipartData = await IPFS.addImageAtPath(photo.node.image.path, photo.node.image.thumbPath)
     UploadTask.uploadFile(multipartData.payloadPath, 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true', 'POST', multipartData.boundary)
     dispatch(Actions.imageAdded(photo, multipartData.payloadPath))
 
-    PushNotificationIOS.presentLocalNotification({
-      alertBody: 'uploading photo ' + multipartData.payloadPath,
-      userInfo: {}
-    })
+    // PushNotificationIOS.presentLocalNotification({
+    //   alertBody: 'uploading photo ' + multipartData.payloadPath,
+    //   userInfo: {}
+    // })
 
     // console.log('running add-image worker:', id)
     // dispatch(Actions.imageProcessing(image))
@@ -75,10 +75,10 @@ export default async function photosTask (dispatch, failedImages) {
   //   }
   // }
 
-  PushNotificationIOS.presentLocalNotification({
-    alertBody: 'photos task done',
-    userInfo: {}
-  })
+  // PushNotificationIOS.presentLocalNotification({
+  //   alertBody: 'photos task done',
+  //   userInfo: {}
+  // })
   console.log('photos task done')
 
   BackgroundTimer.stop() // This alerts the OS that we're done with our background task

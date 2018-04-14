@@ -95,23 +95,23 @@ class TextilePhotos extends React.PureComponent {
 
     this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
       console.log('UPLOAD COMPLETE:', event)
-      PushNotificationIOS.presentLocalNotification({
-        alertBody: 'upload complete',
-        userInfo: {}
-      })
+      // PushNotificationIOS.presentLocalNotification({
+      //   alertBody: 'upload complete',
+      //   userInfo: {}
+      // })
       this.props.uploadComplete(event)
     })
 
-    await PushNotificationIOS.requestPermissions()
+    // await PushNotificationIOS.requestPermissions()
     await getPhoto() // Trigger photos permission prompt
 
     navigator.geolocation.watchPosition(
       () => {
         console.log('got a new position')
-        PushNotificationIOS.presentLocalNotification({
-          alertBody: 'location update',
-          userInfo: {}
-        })
+        // PushNotificationIOS.presentLocalNotification({
+        //   alertBody: 'location update',
+        //   userInfo: {}
+        // })
         PhotosTask(this.props.dispatch, getFailedImages())
       },
       error => {
