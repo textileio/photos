@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
     compile project(':react-native-config')
     compile project(':react-native-background-timer')
     compile project(':react-native-background-task')
@@ -150,7 +151,6 @@ dependencies {
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')
-    compile project(':react-native-device-info')
     compile project(':textilego')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"

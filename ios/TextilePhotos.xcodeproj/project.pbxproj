@@ -69,6 +69,7 @@
 		9339E9A8205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
 		93477EE32075763400D9E0FC /* UploadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 93477EE22075763400D9E0FC /* UploadTask.m */; };
 		935215F2207E967F00D46B81 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 935215C5207E966C00D46B81 /* libART.a */; };
+		937C35AE2081797700F06ADB /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937C35A62081794C00F06ADB /* libRNDeviceInfo.a */; };
 		937FC5412061B7A700357ED5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */; };
 		93D83F9D206C22B500522EFE /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93D83F9A206C229B00522EFE /* libRCTPushNotification.a */; };
 		94CF1FA5842247DA9BEB5C93 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8019A17A4A6F4FFB9C1C191F /* Ionicons.ttf */; };
@@ -335,6 +336,20 @@
 			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
 			remoteInfo = "privatedata-tvOS";
 		};
+		937C35A52081794C00F06ADB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
+			remoteInfo = RNDeviceInfo;
+		};
+		937C35A72081794C00F06ADB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
+			remoteInfo = "RNDeviceInfo-tvOS";
+		};
 		937FC51D2061B79100357ED5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */;
@@ -461,13 +476,6 @@
 			remoteGlobalIDString = CDD7BF831B2D5126006FDA75;
 			remoteInfo = RNI18nTests;
 		};
-		93F072172051A31A0066155B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CCE074B0A6814BE6AA44CF52 /* RNDeviceInfo.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
-			remoteInfo = RNDeviceInfo;
-		};
 		93F0721C2051A31A0066155B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BCE1D0D0A2DC49468796E22E /* RNVectorIcons.xcodeproj */;
@@ -562,6 +570,7 @@
 		93477EB62075763400D9E0FC /* UploadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadTask.h; sourceTree = "<group>"; };
 		93477EE22075763400D9E0FC /* UploadTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadTask.m; sourceTree = "<group>"; };
 		935215BC207E966B00D46B81 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
+		937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93CD61C09D4349C8A67F94F9 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
 		93D83F94206C229B00522EFE /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
@@ -581,7 +590,6 @@
 		BE80E164AB92D7819530F633 /* Pods-TextilePhotos-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		C33531E56766499FAC7AB81E /* Degarism Studio - Biotif-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BoldItalic.ttf"; sourceTree = "<group>"; };
 		C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BookItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
-		CCE074B0A6814BE6AA44CF52 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		CD96638F8CC84ADAA1A88B19 /* AppCenterReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNative.xcodeproj; path = ../node_modules/appcenter/ios/AppCenterReactNative.xcodeproj; sourceTree = "<group>"; };
 		D1100577D5EC4FC6AA252B80 /* Degarism Studio - Biotif-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-ExtraBold.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-ExtraBold.ttf"; sourceTree = "<group>"; };
 		D2B83ECEC9804B0EB5D52A12 /* Degarism Studio - Biotif-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Black.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Black.ttf"; sourceTree = "<group>"; };
@@ -609,6 +617,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				937C35AE2081797700F06ADB /* libRNDeviceInfo.a in Frameworks */,
 				935215F2207E967F00D46B81 /* libART.a in Frameworks */,
 				93D83F9D206C22B500522EFE /* libRCTPushNotification.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -854,6 +863,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */,
 				935215BC207E966B00D46B81 /* ART.xcodeproj */,
 				93D83F94206C229B00522EFE /* RCTPushNotification.xcodeproj */,
 				937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */,
@@ -869,7 +879,6 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
-				CCE074B0A6814BE6AA44CF52 /* RNDeviceInfo.xcodeproj */,
 				BCE1D0D0A2DC49468796E22E /* RNVectorIcons.xcodeproj */,
 				AD2FAAAE52D648E2A59DD96A /* RNI18n.xcodeproj */,
 				0380B902F95C4039A0E53E27 /* RNFS.xcodeproj */,
@@ -940,6 +949,15 @@
 			children = (
 				935215C5207E966C00D46B81 /* libART.a */,
 				935215C7207E966C00D46B81 /* libART-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		937C35702081794C00F06ADB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				937C35A62081794C00F06ADB /* libRNDeviceInfo.a */,
+				937C35A82081794C00F06ADB /* libRNDeviceInfo-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1043,14 +1061,6 @@
 			children = (
 				93F072112051A31A0066155B /* libRNI18n.a */,
 				93F072132051A31A0066155B /* RNI18nTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		93F072142051A31A0066155B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				93F072182051A31A0066155B /* libRNDeviceInfo.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1307,8 +1317,8 @@
 					ProjectRef = 758EEEEA4A4540F080C59E59 /* RNBackgroundTimer.xcodeproj */;
 				},
 				{
-					ProductGroup = 93F072142051A31A0066155B /* Products */;
-					ProjectRef = CCE074B0A6814BE6AA44CF52 /* RNDeviceInfo.xcodeproj */;
+					ProductGroup = 937C35702081794C00F06ADB /* Products */;
+					ProjectRef = 937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */;
 				},
 				{
 					ProductGroup = 93BE90A4208013820070C615 /* Products */;
@@ -1565,6 +1575,20 @@
 			remoteRef = 937BA77E20586B5F00E468D9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		937C35A62081794C00F06ADB /* libRNDeviceInfo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNDeviceInfo.a;
+			remoteRef = 937C35A52081794C00F06ADB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		937C35A82081794C00F06ADB /* libRNDeviceInfo-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNDeviceInfo-tvOS.a";
+			remoteRef = 937C35A72081794C00F06ADB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1689,13 +1713,6 @@
 			fileType = wrapper.cfbundle;
 			path = RNI18nTests.xctest;
 			remoteRef = 93F072122051A31A0066155B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93F072182051A31A0066155B /* libRNDeviceInfo.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNDeviceInfo.a;
-			remoteRef = 93F072172051A31A0066155B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		93F0721D2051A31A0066155B /* libRNVectorIcons.a */ = {
@@ -1981,14 +1998,7 @@
 				INFOPLIST_FILE = TextilePhotosTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2030,14 +2040,7 @@
 				INFOPLIST_FILE = TextilePhotosTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2185,14 +2188,7 @@
 				);
 				INFOPLIST_FILE = "TextilePhotos-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2244,14 +2240,7 @@
 				);
 				INFOPLIST_FILE = "TextilePhotos-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2279,14 +2268,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "TextilePhotos-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.TextilePhotos-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -2310,14 +2292,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "TextilePhotos-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.TextilePhotos-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
