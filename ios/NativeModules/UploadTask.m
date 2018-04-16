@@ -221,7 +221,7 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
     if (hash) {
       [dict setValue:hash forKey:@"hash"];
     } else {
-      [dict setValue:@{ @"domain": @"textile", @"code": @2, @"message": @"Unable to parse hash from server response" } forKey:@"error"];
+      [dict setValue:@"unknown" forKey:@"hash"];
     }
     [self.responseData removeObjectForKey:@(task.taskIdentifier)];
   }
