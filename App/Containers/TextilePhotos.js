@@ -150,7 +150,7 @@ class TextilePhotos extends React.PureComponent {
       <View style={styles.item}>
         <View style={styles.itemBackgroundContainer}>
           <Image
-            source={{uri: item.image.node.image.thumbPath}}
+            source={{uri: 'data:image/jpeg;base64,' + item.image.node.image.thumbBase64}}
             resizeMode={'cover'}
             style={styles.itemImage}
           />
