@@ -50,7 +50,7 @@ const params5 = {
 
 const params6 = {
   header: 'You\'re helping us improve.',
-  message: 'As valued Beta Tester, we want to know how, when, and why you are using the app. We anonymously collect data, including crashes, screen interactions, and feedback. If you want to provide direct feedback, please feel free to email us with you thoughts, comments, or ideas.',
+  message: 'As a valued Beta Tester, we want to know how, when, and why you are using the app. We anonymously collect data, including crashes, screen interactions, and feedback. If you want to provide direct feedback, please feel free to email us with you thoughts, comments, or ideas.',
   buttonTitle: 'GREAT',
   onButtonPress: (navigate) => {
     return () => {
