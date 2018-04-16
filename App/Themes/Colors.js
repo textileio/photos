@@ -1,7 +1,7 @@
-const brandBlue = '#374DFF'
-const brandYellow = '#FFD435'
-const brandRed = '#FF5C62'
-const brandPink=  '#FFC0D8'
+const brandBlue = '#2935FF'
+const brandYellow = '#FFCE00'
+const brandRed = '#FF1C3F'
+const brandPink = '#FFB6D5'
 
 const colors = {
   primaryBackground: 'rgb(255,255,255)',
@@ -33,10 +33,10 @@ const colors = {
   border: '#483F53',
   banner: '#5F3E63',
   text: '#E0D7E5',
-  brandBlue: '#374DFF',
-  brandYellow: '#FFD435',
-  brandRed: '#FF5C62',
-  brandPink: '#FFC0D8'
+  brandBlue: brandBlue,
+  brandYellow: brandYellow,
+  brandRed: brandRed,
+  brandPink: brandPink
 }
 
 export default colors
