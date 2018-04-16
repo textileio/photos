@@ -7559,9 +7559,9 @@ react-native-animatable@^1.2.4:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-background-fetch@2.0.x:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-2.0.8.tgz#30332cc9bc56b6bbc5e75f1b0d14ce116775d8f2"
+react-native-background-fetch@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-2.4.1.tgz#5bb3c6ecc5d646f05b9ca5a8feec724152582d1d"
   dependencies:
     fast-plist "^0.1.2"
     plist "^2.0.1"

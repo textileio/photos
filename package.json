@@ -37,7 +37,7 @@
     "react": "16.0.0",
     "react-native": "0.50.4",
     "react-native-animatable": "^1.2.4",
-    "react-native-background-fetch": "2.0.x",
+    "react-native-background-fetch": "^2.4.1",
     "react-native-background-task": "^0.2.1",
     "react-native-background-timer": "^2.0.1",
     "react-native-config": "^0.10.0",
