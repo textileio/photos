@@ -12,6 +12,7 @@ import {
   PushNotificationIOS
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
 import { getPhoto } from '../Services/PhotoUtils'
