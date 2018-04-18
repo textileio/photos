@@ -46,6 +46,16 @@ RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir resolver:(RCTPromise
   }
 }
 
+RCT_REMAP_METHOD(startGateway, startGatewayWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  BOOL success = [self _startGateway:&error];
+  if(success) {
+    resolve(@YES);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_REMAP_METHOD(startNode, startNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   BOOL success = [self _startNode:&error];
@@ -124,6 +134,11 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
 
 - (BOOL)_configureNodeWithMnemonic:(NSString *)mnemonic error:(NSError**)error {
   BOOL success = [self.node configureDatastore:mnemonic error:error];
+  return success;
+}
+
+- (BOOL)_startGateway:(NSError**)error {
+  BOOL success = [self.node startGateway:error];
   return success;
 }
 

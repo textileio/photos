@@ -29,10 +29,10 @@ export default async function photosTask (dispatch, failedImages) {
     const multipartData = await IPFS.addImageAtPath(photo.node.image.path, photo.node.image.thumbPath)
     await RNFS.unlink(photo.node.image.path)
     await RNFS.unlink(photo.node.image.thumbPath)
-    const thumbBase64 = await IPFS.getPhotoData(multipartData.boundary + '/thumb')
-    photo.node.image['thumbBase64'] = thumbBase64
-    UploadTask.uploadFile(multipartData.payloadPath, 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true', 'POST', multipartData.boundary)
+    photo.node.image['thumbUri'] = 'http://localhost:9193/ipfs/' + multipartData.boundary + '/thumb'
+    photo.node.image['fullUri'] = 'http://localhost:9193/ipfs/' + multipartData.boundary + '/full'
     dispatch(Actions.imageAdded(photo, multipartData.payloadPath))
+    UploadTask.uploadFile(multipartData.payloadPath, 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true', 'POST', multipartData.boundary)
 
     // PushNotificationIOS.presentLocalNotification({
     //   alertBody: 'uploading photo ' + multipartData.payloadPath,
