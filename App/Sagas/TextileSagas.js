@@ -12,35 +12,45 @@
 
 import { call, put, all } from 'redux-saga/effects'
 import {resizeImage} from '../Services/PhotoUtils'
-import TextileActions, { getHashesFailure } from '../Redux/TextileRedux'
+import TextileActions from '../Redux/TextileRedux'
+import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 
-export function * getRandomUsers (api, action) {
-  const { seed, page, results } = action
-  // get current data from Store
-  // make the call to the api
-  const response = yield call(api.getUsers, seed, page, results)
-
-  // success?
-  if (response.ok) {
-    // You might need to change the response here - do this with a 'transform',
-    // located in ../Transforms/. Otherwise, just pass the data back from the api.
-    yield put(TextileActions.randomUsersRequestSuccess(response.data))
-  } else {
-    yield put(TextileActions.randomUsersRequestFailure())
+export function * createNode (api, {path}) {
+  try {
+    const success = yield call(api.createNodeWithDataDir, path)
+    if (success) {
+      yield put(IpfsNodeActions.createNodeSuccess())
+    } else {
+      yield put(IpfsNodeActions.createNodeFailure(new Error('Failed creating node, but no error was thrown - Should not happen')))
+    }
+  } catch (error) {
+    yield put(IpfsNodeActions.createNodeFailure(error))
   }
 }
 
-export function * createNode (api, action) {
-  const { path } = action
-  yield call(api.createNodeWithDataDir, path)
+export function * startGateway (api) {
+  try {
+    const success = yield call(api.startGateway)
+    if (success) {
+      yield put(IpfsNodeActions.startGatewaySuccess())
+    } else {
+      yield put(IpfsNodeActions.startGatewayFailure(new Error('Failed starting gateway, but no error was thrown - Should not happen')))
+    }
+  } catch (error) {
+    yield put(IpfsNodeActions.startGatewayFailure(error))
+  }
 }
 
 export function * startNode (api) {
-  const success = yield call(api.startNode)
-  if (success) {
-    yield put(TextileActions.startNodeSuccess())
-  } else {
-    yield put(TextileActions.startNodeFailure())
+  try {
+    const success = yield call(api.startNode)
+    if (success) {
+      yield put(IpfsNodeActions.startNodeSuccess())
+    } else {
+      yield put(IpfsNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
+    }
+  } catch (error) {
+    yield put(IpfsNodeActions.startNodeFailure(error))
   }
 }
 

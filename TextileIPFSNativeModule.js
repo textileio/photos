@@ -14,6 +14,11 @@ export default {
     return success
   },
 
+  startGateway: async function (): boolean {
+    const success = await TextileIPFS.startGateway()
+    return success
+  },
+
   startNode: async function (): boolean {
     const success = await TextileIPFS.startNode()
     return success
@@ -39,6 +44,10 @@ export default {
   getPhotoData: async function (path: string): string {
     const result = await TextileIPFS.getPhotoData(path)
     return result
+  },
+
+  syncGetPhotoData: function (path: string): string {
+    return TextileIPFS.syncGetPhotoData(path)
   },
 
   pairNewDevice: async function (pubKey: string): string {
