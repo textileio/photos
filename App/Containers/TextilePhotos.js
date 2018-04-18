@@ -23,6 +23,7 @@ import { getFailedImages } from './App'
 import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
 import { Colors } from '../Themes'
+import IPFS from '../../TextileIPFSNativeModule'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
@@ -146,11 +147,12 @@ class TextilePhotos extends React.PureComponent {
     } else if (item.state === 'error') {
       overlay = <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
     }
+    const imageData = IPFS.syncGetPhotoData(item.image.node.image.hash + '/thumb')
     return (
       <View style={styles.item}>
         <View style={styles.itemBackgroundContainer}>
           <Image
-            source={{uri: 'data:image/jpeg;base64,' + item.image.node.image.thumbBase64}}
+            source={{uri: 'data:image/jpeg;base64,' + imageData}}
             resizeMode={'cover'}
             style={styles.itemImage}
           />
@@ -223,24 +225,30 @@ class TextilePhotos extends React.PureComponent {
         </View>
         {
           this.props.images.items.length ? (
-            <FlatList
-              style={styles.listContainer}
-              data={this.props.images.items}
-              keyExtractor={this.keyExtractor}
-              renderItem={this.renderRow.bind(this)}
-              getItemLayout={this._getItemLayout}
-              numColumns={numColumns}
-              initialNumToRender={this.oneScreensWorth}
-              onEndReachedThreshold={0.5}
-              onEndReached={({ distanceFromEnd }) => {
-                // This has an issue
-                // It would currently load new ones on first load too
-                // const lastItem = this.props.images.items[
-                //   this.props.images.items.length - 1
-                //   ]
-                // this.props.getHashesRequest(lastItem.hash, 10)
-              }}
-            />
+            this.props.renderImages ? (
+              <FlatList
+                style={styles.listContainer}
+                data={this.props.images.items}
+                keyExtractor={this.keyExtractor}
+                renderItem={this.renderRow.bind(this)}
+                getItemLayout={this._getItemLayout}
+                numColumns={numColumns}
+                initialNumToRender={this.oneScreensWorth}
+                onEndReachedThreshold={0.5}
+                onEndReached={({ distanceFromEnd }) => {
+                  // This has an issue
+                  // It would currently load new ones on first load too
+                  // const lastItem = this.props.images.items[
+                  //   this.props.images.items.length - 1
+                  //   ]
+                  // this.props.getHashesRequest(lastItem.hash, 10)
+                }}
+              />
+            ) : (
+              <View style={styles.emptyListStyle}>
+                <Text style={styles.noPhotos}>Loading...</Text>
+              </View>
+            )
           ) : (
             <View style={styles.emptyListStyle}>
               <Text style={styles.noPhotos}>Any new photos you take will be displayed here and synced to Textile.</Text>
@@ -257,7 +265,7 @@ const mapStateToProps = state => {
     images: {
       items: state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
     },
-    store: state.store
+    renderImages: state.ipfs.nodeState.state === 'started'
   }
 }
 
