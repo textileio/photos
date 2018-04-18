@@ -1193,7 +1193,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 5VHA5U5FY8;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = true;
@@ -2055,12 +2055,12 @@
 			baseConfigurationReference = F4E59B72C259E6438091556E /* Pods-TextilePhotos.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = TextilePhotos/TextilePhotos.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2095,8 +2095,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet;
 				PRODUCT_NAME = TextilePhotos;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "f3c9f75e-67f2-4f22-a466-0fa394853b0b";
+				PROVISIONING_PROFILE_SPECIFIER = "Textile Wallet A";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2106,11 +2106,11 @@
 			baseConfigurationReference = 0989A7475F854D7FD77ECB9E /* Pods-TextilePhotos.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = TextilePhotos/TextilePhotos.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2145,8 +2145,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet;
 				PRODUCT_NAME = TextilePhotos;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "9d41e6a7-a1b9-4b0d-95c7-eb6c0ada9a9f";
+				PROVISIONING_PROFILE_SPECIFIER = "Textile Wallet AdHoc";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
