@@ -33,6 +33,10 @@
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 RCT_EXPORT_MODULE();
 
+- (dispatch_queue_t)methodQueue {
+  return dispatch_queue_create("io.textile.TextileIPFSQueue", DISPATCH_QUEUE_SERIAL);
+}
+
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
@@ -40,6 +44,16 @@ RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir resolver:(RCTPromise
   NSError *error;
   [self _createNodeWithDataDir:dataDir error:&error];
   if (self.node) {
+    resolve(@YES);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_REMAP_METHOD(startGateway, startGatewayWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  BOOL success = [self _startGateway:&error];
+  if(success) {
     resolve(@YES);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -86,6 +100,16 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit resolver:(RCTPro
   }
 }
 
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
+  NSError *error;
+  NSString *result = [self _getPhoto:path error:&error];
+  if (!error && result) {
+    return result;
+  } else {
+    return nil;
+  }
+}
+
 RCT_EXPORT_METHOD(getPhotoData:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _getPhoto:path error:&error];
@@ -124,6 +148,11 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
 
 - (BOOL)_configureNodeWithMnemonic:(NSString *)mnemonic error:(NSError**)error {
   BOOL success = [self.node configureDatastore:mnemonic error:error];
+  return success;
+}
+
+- (BOOL)_startGateway:(NSError**)error {
+  BOOL success = [self.node startGateway:error];
   return success;
 }
 
