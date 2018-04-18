@@ -33,6 +33,10 @@
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 RCT_EXPORT_MODULE();
 
+- (dispatch_queue_t)methodQueue {
+  return dispatch_queue_create("io.textile.TextileIPFSQueue", DISPATCH_QUEUE_SERIAL);
+}
+
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
@@ -93,6 +97,16 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit resolver:(RCTPro
     resolve(hashesString);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
+  NSError *error;
+  NSString *result = [self _getPhoto:path error:&error];
+  if (!error && result) {
+    return result;
+  } else {
+    return nil;
   }
 }
 

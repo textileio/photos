@@ -134,15 +134,14 @@ export const handleImageProgress = (state, {data}) => {
 }
 
 export const handleImageUploadComplete = (state, {data}) => {
-  const {file, hash, error} = data
+  const {file, error} = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
     if (item.remotePayloadPath === file) {
       if (error) {
         return {...item, state: 'error', error}
       } else {
-        console.log(hash)
-        return {...item, state: 'complete', hash}
+        return {...item, state: 'complete'}
       }
     }
     return item
