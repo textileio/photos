@@ -1,18 +1,18 @@
 import { takeLatest, all } from 'redux-saga/effects'
-import RandomUserApi from '../Services/RandomUserApi'
 import IPFS from '../../TextileIPFSNativeModule'
 
 /* ------------- Types ------------- */
 
-import { StartupTypes } from '../Redux/StartupRedux'
-import { TextileTypes } from '../Redux/TextileRedux'
+import {StartupTypes} from '../Redux/StartupRedux'
+import {TextileTypes} from '../Redux/TextileRedux'
+import {IpfsNodeTypes} from '../Redux/IpfsNodeRedux'
 
 /* ------------- Sagas ------------- */
 
 import {selectRandomUserData, startup} from './StartupSagas'
 import {
-  getRandomUsers,
   createNode,
+  startGateway,
   startNode,
   handleNodeStarted,
   getHashes,
@@ -20,12 +20,6 @@ import {
   addImages,
   pairNewDevice
 } from './TextileSagas'
-
-/* ------------- API ------------- */
-
-// The API we use is only used from Sagas, so we create it here and pass along
-// to the sagas which need it.
-const randomUserApi = RandomUserApi.create()
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -36,11 +30,10 @@ export default function * root () {
 
     // some sagas receive extra parameters in addition to an action
 
-    takeLatest(TextileTypes.RANDOM_USERS_REQUEST, getRandomUsers, randomUserApi),
-
-    takeLatest(TextileTypes.CREATE_NODE, createNode, IPFS),
-    takeLatest(TextileTypes.START_NODE_REQUEST, startNode, IPFS),
-    takeLatest(TextileTypes.START_NODE_SUCCESS, handleNodeStarted),
+    takeLatest(IpfsNodeTypes.CREATE_NODE_REQUEST, createNode, IPFS),
+    takeLatest(IpfsNodeTypes.START_GATEWAY_REQUEST, startGateway, IPFS),
+    takeLatest(IpfsNodeTypes.START_NODE_REQUEST, startNode, IPFS),
+    takeLatest(IpfsNodeTypes.START_NODE_SUCCESS, handleNodeStarted),
     takeLatest(TextileTypes.GET_HASHES_REQUEST, getHashes, IPFS),
     takeLatest(TextileTypes.GET_THUMBS_REQUEST, getThumbs, IPFS),
     takeLatest(TextileTypes.ADD_IMAGES_REQUEST, addImages, IPFS),

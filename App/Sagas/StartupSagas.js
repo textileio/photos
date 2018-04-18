@@ -1,11 +1,10 @@
 import RNFS from 'react-native-fs'
 import { put, select } from 'redux-saga/effects'
-import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
+import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import { is } from 'ramda'
 
 // exported to make available for tests
 // export const selectAvatar = GithubSelectors.selectAvatar
-export const selectRandomUserData = TextileSelectors.getRandomUserData
 
 // process STARTUP actions
 export function * startup () {
@@ -15,8 +14,7 @@ export function * startup () {
 
     // logging an object for better clarity
     console.tron.log({
-      message: 'pass objects for better logging',
-      someGeneratorFunction: selectRandomUserData
+      message: 'pass objects for better logging'
     })
 
     // fully customized!
@@ -29,13 +27,12 @@ export function * startup () {
         '💃': 'Welcome to the future!',
         subObject,
         someInlineFunction: () => true,
-        someGeneratorFunction: startup,
-        someNormalFunction: selectRandomUserData
+        someGeneratorFunction: startup
       }
     })
   }
 
-  const path = RNFS.DocumentDirectoryPath
-  yield put(TextileActions.createNode(path, 'https://ipfs.textile.io'))
-  yield put(TextileActions.startNodeRequest())
+  yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
+  yield put(IpfsNodeActions.startGatewayRequest())
+  yield put(IpfsNodeActions.startNodeRequest())
 }

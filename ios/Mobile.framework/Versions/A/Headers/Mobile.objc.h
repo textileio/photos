@@ -48,7 +48,7 @@
 - (BOOL)isDatastoreConfigured;
 - (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
-- (void)startServices;
+- (BOOL)startGateway:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
 @end
 
