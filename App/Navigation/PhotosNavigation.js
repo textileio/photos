@@ -32,13 +32,24 @@ const PrimaryNav = StackNavigator(
   }
 )
 
-const RootStack = DismissableStackNavigator(
+const PhotoViewerStack = DismissableStackNavigator(
+  {
+    PhotoViewerScreen: {
+      screen: PhotoViewerScreen
+    }
+  },
+  {
+    headerMode: 'none'
+  }
+)
+
+const RootStack = StackNavigator(
   {
     PrimaryNav: {
       screen: PrimaryNav,
     },
     PhotoViewer: {
-      screen: PhotoViewerScreen,
+      screen: PhotoViewerStack,
     },
   },
   {
