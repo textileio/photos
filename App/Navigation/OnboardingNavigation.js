@@ -1,5 +1,6 @@
 import { StackNavigator } from 'react-navigation'
 import OnboardingScreen from '../Containers/OnboardingScreen'
+import LoginScreen from '../Containers/LoginScreen'
 import {getPhoto} from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
 import styles from './Styles/NavigationStyles'
@@ -163,13 +164,19 @@ const OnboardingNav = StackNavigator(
       navigationOptions: {
         title: 'Thanks'
       }
+    },
+    Login: {
+      screen: LoginScreen,
+      navigationOptions: {
+        title: 'Sign Up'
+      }
     }
   },
   {
     // Default config for all screens
     headerMode: 'float',
     left: null,
-    initialRouteName: 'OnboardingScreen',
+    initialRouteName: 'Login',
     initialRouteParams: params1,
     navigationOptions: {
       headerStyle: styles.header,

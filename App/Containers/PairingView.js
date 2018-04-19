@@ -66,35 +66,24 @@ class PairingView extends React.PureComponent {
     const onConfirm = this.confirmPairing(pubKey)
 
     return (
-      <ImageBackground
-        source={require('../Images/backgrounds/log-background.png')}
-        style={styles.backgroundImage}>
-        <Overlay
-          isVisible='true'
-          windowBackgroundColor='rgba(0, 0, 0, .2)'
-          width={Dimensions.get('window').width * 0.8}
-          height='auto'
-        >
-          <View style={{alignSelf: 'center'}}>
-            <Text style={{alignSelf: 'center'}}>New Device Request</Text>
-            <Text style={{fontWeight: 'bold', fontSize: 50, margin: 40}}>{code}</Text>
-            <Button buttonStyle={{
-              height: 45,
-              borderColor: 'transparent',
-              borderWidth: 0,
-              borderRadius: 5
-            }} title='Pair Device' onPress={onConfirm} />
-            <Button buttonStyle={{
-              backgroundColor: 'rgba(66, 22, 77, 1)',
-              height: 45,
-              borderColor: 'transparent',
-              borderWidth: 0,
-              borderRadius: 5,
-              marginVertical: 20
-            }} title='Not Now' onPress={this.cancelPairing} />
-          </View>
-        </Overlay>
-      </ImageBackground>
+      <View style={{alignSelf: 'center'}}>
+        <Text style={{alignSelf: 'center'}}>New Device Request</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 50, margin: 40}}>{code}</Text>
+        <Button buttonStyle={{
+          height: 45,
+          borderColor: 'transparent',
+          borderWidth: 0,
+          borderRadius: 5
+        }} title='Pair Device' onPress={onConfirm} />
+        <Button buttonStyle={{
+          backgroundColor: 'rgba(66, 22, 77, 1)',
+          height: 45,
+          borderColor: 'transparent',
+          borderWidth: 0,
+          borderRadius: 5,
+          marginVertical: 20
+        }} title='Not Now' onPress={this.cancelPairing} />
+      </View>
     )
   }
 }
