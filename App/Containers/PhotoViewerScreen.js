@@ -25,9 +25,9 @@ class PhotoViewerScreen extends React.PureComponent {
   get galleryCount () {
     // const { index, images } = this.state;
     return (
-      <View style={{ flex: 1, flexDirection: 'row', padding: 16, top: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'space-between' }}>
-        <Icon name='ios-close' type='ionicon' color='#FFFFFF' size={44} onPress={this.dismissPressed.bind(this)} />
-        <Icon name='ios-share-outline' type='ionicon' color='#FFFFFF' size={44} onPress={this.sharePressed.bind(this)} />
+      <View style={{ flex: 1, flexDirection: 'row', padding: 8, top: 0, height: 60, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'space-between' }}>
+        <Icon name='close' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.dismissPressed.bind(this)} />
+        <Icon name='share-apple' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.sharePressed.bind(this)} />
       </View>
     )
   }
