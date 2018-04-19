@@ -137,8 +137,9 @@ class TextilePhotos extends React.PureComponent {
   * e.g.
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
-  renderRow ({item}) {
-    const onPress = this.onPressIt(item)
+  renderRow (row) {
+    const {item} = row
+    const onPress = this.onPressIt(row)
     let overlay
     if (item.state === 'pending') {
       overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
@@ -149,25 +150,26 @@ class TextilePhotos extends React.PureComponent {
     }
     const imageData = IPFS.syncGetPhotoData(item.image.node.image.hash + '/thumb')
     return (
-      <View style={styles.item}>
-        <View style={styles.itemBackgroundContainer}>
-          <Image
-            source={{uri: 'data:image/jpeg;base64,' + imageData}}
-            resizeMode={'cover'}
-            style={styles.itemImage}
-          />
+      <TouchableOpacity onPress={onPress} >
+        <View style={styles.item}>
+          <View style={styles.itemBackgroundContainer}>
+            <Image
+              source={{uri: 'data:image/jpeg;base64,' + imageData}}
+              resizeMode={'cover'}
+              style={styles.itemImage}
+            />
+          </View>
+          <View style={styles.itemOverlay}>
+            {overlay}
+          </View>
         </View>
-        <View style={styles.itemOverlay}>
-          {overlay}
-        </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 
-  onPressIt = (item) => {
+  onPressIt = (row) => {
     return () => {
-      const url = 'https://ipfs.textile.io/ipfs/' + item.hash
-      Linking.openURL(url)
+      this.props.navigation.navigate('PhotoViewer', row)
     }
   }
 
