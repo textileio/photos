@@ -13,7 +13,6 @@ class OnboardingCheck extends Component {
     return (
       <View style={{flex: 1}}>
         <ActivityIndicator />
-        <StatusBar barStyle='default' />
       </View>
     )
   }
