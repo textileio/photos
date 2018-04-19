@@ -1,9 +1,11 @@
 /* @flow */
 import React from 'react'
+import DismissableStackNavigator from '../Components/DismissableStackNavigator'
 import { StackNavigator } from 'react-navigation'
 import TextilePhotos from '../Containers/TextilePhotos'
 import InfoView from '../Containers/InfoView'
 import PairingView from '../Containers/PairingView'
+import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
 // import Notifications from '../Containers/Notifications'
 // import Image from 'react-native'
 
@@ -30,4 +32,19 @@ const PrimaryNav = StackNavigator(
   }
 )
 
-export default PrimaryNav
+const RootStack = DismissableStackNavigator(
+  {
+    PrimaryNav: {
+      screen: PrimaryNav,
+    },
+    PhotoViewer: {
+      screen: PhotoViewerScreen,
+    },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none'
+  }
+)
+
+export default RootStack
