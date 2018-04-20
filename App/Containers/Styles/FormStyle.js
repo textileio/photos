@@ -9,6 +9,7 @@ var HELP_COLOR = "#999999";
 var BORDER_COLOR = "#cccccc";
 var DISABLED_COLOR = "#777777";
 var DISABLED_BACKGROUND_COLOR = "#eeeeee";
+var LABEL_FONT_SIZE = 14;
 var FONT_SIZE = 17;
 var FONT_WEIGHT = "500";
 var FONT_FAMILY = "Biotif-Regular";
@@ -27,7 +28,7 @@ export default Object.freeze({
   controlLabel: {
     normal: {
       color: LABEL_COLOR,
-      fontSize: FONT_SIZE,
+      fontSize: LABEL_FONT_SIZE,
       fontFamily: FONT_FAMILY,
       marginBottom: 7,
       fontWeight: FONT_WEIGHT
@@ -35,7 +36,7 @@ export default Object.freeze({
     // the style applied when a validation error occours
     error: {
       color: ERROR_COLOR,
-      fontSize: FONT_SIZE,
+      fontSize: LABEL_FONT_SIZE,
       fontFamily: FONT_FAMILY,
       marginBottom: 7,
       fontWeight: FONT_WEIGHT
