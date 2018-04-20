@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image, Text, KeyboardAvoidingView, TouchableHighlight } from 'react-native'
+import { View, Image, Text, KeyboardAvoidingView, TouchableHighlight, Button } from 'react-native'
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -19,7 +19,8 @@ const Person = t.struct({
 })
 
 const options = {
-  stylesheet: formStyle
+  stylesheet: formStyle,
+  auto: 'placeholders'
 }
 
 class LoginScreen extends Component {
@@ -35,7 +36,9 @@ class LoginScreen extends Component {
   render () {
     return (
       <KeyboardAvoidingView behavior='padding' style={styles.container}>
-        {/*<Image style={styles.image} source={require('../Images/Icon_100.png')} />*/}
+        <View style={{flexGrow: 0.6, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Image source={require('../Images/Icon_100.png')} />
+        </View>
         <Form
           ref='form'
           type={Person}
@@ -44,6 +47,9 @@ class LoginScreen extends Component {
         <TouchableHighlight style={styles.button} onPress={this.onPress.bind(this)} underlayColor='#99d9f4'>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableHighlight>
+        <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
+          <Button title={'Log In Instead'} />
+        </View>
       </KeyboardAvoidingView>
     )
   }

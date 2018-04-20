@@ -8,7 +8,8 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'stretch',
-    padding: 20,
+    paddingLeft: 12,
+    paddingRight: 12,
     backgroundColor: '#ffffff',
   },
   title: {
@@ -17,6 +18,7 @@ export default StyleSheet.create({
     marginBottom: 30
   },
   image: {
+    flexGrow: 1,
     alignSelf: 'center',
     margin: 20
   },
@@ -30,7 +32,7 @@ export default StyleSheet.create({
     height: 44,
     backgroundColor: Colors.brandBlue,
     borderColor: '#48BBEC',
-    marginBottom: 10,
+    // marginBottom: 10,
     alignSelf: 'stretch',
     justifyContent: 'center'
   }
