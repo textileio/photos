@@ -13,6 +13,7 @@ const Form = t.form.Form
 t.form.Form.stylesheet = formStyle
 
 const Person = t.struct({
+  referralCode: t.String,
   email: t.String,
   password: t.String
 })
@@ -34,7 +35,7 @@ class LoginScreen extends Component {
   render () {
     return (
       <KeyboardAvoidingView behavior='padding' style={styles.container}>
-        {/*<Image style={styles.image} source={require('../Images/Icon_150.png')} />*/}
+        {/*<Image style={styles.image} source={require('../Images/Icon_100.png')} />*/}
         <Form
           ref='form'
           type={Person}

@@ -18,16 +18,16 @@ export default StyleSheet.create({
   },
   image: {
     alignSelf: 'center',
-    margin: 44
+    margin: 20
   },
   buttonText: {
     fontSize: 18,
-    fontFamily: 'Biotif-Regular',
+    fontFamily: 'Biotif-Medium',
     color: 'white',
     alignSelf: 'center'
   },
   button: {
-    height: 36,
+    height: 44,
     backgroundColor: Colors.brandBlue,
     borderColor: '#48BBEC',
     marginBottom: 10,
