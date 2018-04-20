@@ -61,3 +61,6 @@ buck-out/
 # Misc
 #
 .env
+
+# Bundle artifact
+*.jsbundle
