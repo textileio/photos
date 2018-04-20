@@ -51,14 +51,11 @@
 		53EB4845FBAB4A61B829B9FD /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E49E968ABAC4F63AE94D9C4 /* Foundation.ttf */; };
 		5895A7590F324A5EA5FA4CA6 /* Degarism Studio - Biotif-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C9603A05CD3465A93EDFB75 /* Degarism Studio - Biotif-ExtraBoldItalic.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		5E9420726EE6D67DD8441575 /* libPods-TextilePhotos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 530B236E031BC153E852FD20 /* libPods-TextilePhotos.a */; };
 		68C8700C55154E1E80C3FB5B /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 118891CB6F934A1DB01509D2 /* RNBackgroundFetch+AppDelegate.m */; };
 		6BEB8C0D054D467B9927E33C /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A909B6FDD3341088B187569 /* libRNFS.a */; };
 		6C19244C66EF4FA58DA9DA8C /* Degarism Studio - Biotif-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01F4C2D61AC149D8BA8C3435 /* Degarism Studio - Biotif-BlackItalic.ttf */; };
 		6C570571BF914AD2B37BD0EC /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFE82A7DBA7845BB93C7CF3A /* libReactNativeConfig.a */; };
 		7979EACBAB40424EB28F78BC /* Degarism Studio - Biotif-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84F197F2899446A0958395C0 /* Degarism Studio - Biotif-Book.ttf */; };
-		7CC57A46FE346A987FDF926F /* libPods-TextilePhotosTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F0BBBDD468506CC2A00EEF /* libPods-TextilePhotosTests.a */; };
-		7D7F674D410FBB138059E3E3 /* libPods-TextilePhotos-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A36D60D71C7C40680CE520 /* libPods-TextilePhotos-tvOSTests.a */; };
 		7E18D611B45242668D9DF319 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2228F350674B45EDA607BC39 /* SimpleLineIcons.ttf */; };
 		7FC7F435032D438592423B7B /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE244265DFAD489F8F07A711 /* Entypo.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -74,7 +71,6 @@
 		93D83F9D206C22B500522EFE /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93D83F9A206C229B00522EFE /* libRCTPushNotification.a */; };
 		94CF1FA5842247DA9BEB5C93 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8019A17A4A6F4FFB9C1C191F /* Ionicons.ttf */; };
 		94F237902F5845BC8A2BF5DF /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B81290BD6F9E43A9BCC32DFA /* MaterialCommunityIcons.ttf */; };
-		9AA5C66A81777620048BD3CC /* libPods-TextilePhotos-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BD0CBBE9487D7E219727EF7 /* libPods-TextilePhotos-tvOS.a */; };
 		AC12203F769042F7A837992B /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DCD2D3495DB4A4E9CA4BBD0 /* libRCTImageResizer.a */; };
 		ACD9AB9BB0A240F2B712DD3B /* Degarism Studio - Biotif-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C33531E56766499FAC7AB81E /* Degarism Studio - Biotif-BoldItalic.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -520,7 +516,6 @@
 		0276B1C1A55042F880FB1B6A /* Degarism Studio - Biotif-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Light.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Light.ttf"; sourceTree = "<group>"; };
 		0380B902F95C4039A0E53E27 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		0596A7A5674544CB804D1B34 /* AppCenter-Config.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "TextilePhotos/AppCenter-Config.plist"; sourceTree = "<group>"; };
-		0989A7475F854D7FD77ECB9E /* Pods-TextilePhotos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos/Pods-TextilePhotos.release.xcconfig"; sourceTree = "<group>"; };
 		0C04507C278B4A96A58B97E9 /* Degarism Studio - Biotif-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Bold.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Bold.ttf"; sourceTree = "<group>"; };
 		0DCD2D3495DB4A4E9CA4BBD0 /* libRCTImageResizer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTImageResizer.a; sourceTree = "<group>"; };
 		118891CB6F934A1DB01509D2 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
@@ -537,22 +532,16 @@
 		1A909B6FDD3341088B187569 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		2228F350674B45EDA607BC39 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		23A29B287C094135A8E25804 /* libAppCenterReactNativeAnalytics.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNativeAnalytics.a; sourceTree = "<group>"; };
-		24F0BBBDD468506CC2A00EEF /* libPods-TextilePhotosTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotosTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		27A36D60D71C7C40680CE520 /* libPods-TextilePhotos-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotos-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		27C9FB3167181F8CCC456530 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2C9603A05CD3465A93EDFB75 /* Degarism Studio - Biotif-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-ExtraBoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* TextilePhotos-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TextilePhotos-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* TextilePhotos-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TextilePhotos-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		346FA0BD5F3A43CC871EE176 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		47FCFF52D5004478899BBC71 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
-		4CD86A0F8D920CA80EBC650F /* Pods-TextilePhotos-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOS/Pods-TextilePhotos-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		530B236E031BC153E852FD20 /* libPods-TextilePhotos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		545FE4D701C0477A8920E3EB /* AppCenterReactNativeCrashes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNativeCrashes.xcodeproj; path = "../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes.xcodeproj"; sourceTree = "<group>"; };
 		5475ED2C823F48CBAA2A8484 /* Degarism Studio - Biotif-RegularItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-RegularItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-RegularItalic.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5E91A5EF4C7A428FB9778EEA /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = SDKROOT; };
 		6247753D29BD445BBE26673D /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
-		66672D1E4CE45FBA4A47BB05 /* Pods-TextilePhotos-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOS/Pods-TextilePhotos-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		701ED67C313B488799C34078 /* AppCenterReactNativeAnalytics.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNativeAnalytics.xcodeproj; path = "../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics.xcodeproj"; sourceTree = "<group>"; };
 		758EEEEA4A4540F080C59E59 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -561,7 +550,6 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		84F197F2899446A0958395C0 /* Degarism Studio - Biotif-Book.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Book.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Book.ttf"; sourceTree = "<group>"; };
 		89CF8F1084D5408D8087D1E9 /* Degarism Studio - Biotif-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Medium.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Medium.ttf"; sourceTree = "<group>"; };
-		8BD0CBBE9487D7E219727EF7 /* libPods-TextilePhotos-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotos-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BEB37EF438445BC8A765A69 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		8E49E968ABAC4F63AE94D9C4 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		9339E99F205C381700BCA4CF /* TextileIPFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileIPFS.m; sourceTree = "<group>"; };
@@ -580,14 +568,12 @@
 		A2D8846E2079569C0060D762 /* TextilePhotos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TextilePhotos.entitlements; path = TextilePhotos/TextilePhotos.entitlements; sourceTree = "<group>"; };
 		A381D027F32B4EA780358435 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		A7A2525E89E54929B1E7FC4B /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		A8E3638F52DBA0D83F06643F /* Pods-TextilePhotosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.release.xcconfig"; sourceTree = "<group>"; };
 		A9A4B73F65DE4286B0650688 /* libAppCenterReactNativeCrashes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNativeCrashes.a; sourceTree = "<group>"; };
 		AB6EBDBEC39F465DB1306CB6 /* Degarism Studio - Biotif-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-MediumItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-MediumItalic.ttf"; sourceTree = "<group>"; };
 		AD2FAAAE52D648E2A59DD96A /* RNI18n.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNI18n.xcodeproj; path = "../node_modules/react-native-i18n/RNI18n.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B81290BD6F9E43A9BCC32DFA /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		BCE1D0D0A2DC49468796E22E /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
-		BE80E164AB92D7819530F633 /* Pods-TextilePhotos-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		C33531E56766499FAC7AB81E /* Degarism Studio - Biotif-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BoldItalic.ttf"; sourceTree = "<group>"; };
 		C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BookItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
 		CD96638F8CC84ADAA1A88B19 /* AppCenterReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNative.xcodeproj; path = ../node_modules/appcenter/ios/AppCenterReactNative.xcodeproj; sourceTree = "<group>"; };
@@ -595,10 +581,8 @@
 		D2B83ECEC9804B0EB5D52A12 /* Degarism Studio - Biotif-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Black.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Black.ttf"; sourceTree = "<group>"; };
 		DE244265DFAD489F8F07A711 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		DFE82A7DBA7845BB93C7CF3A /* libReactNativeConfig.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeConfig.a; sourceTree = "<group>"; };
-		E538664D3C558F740A62DA22 /* Pods-TextilePhotosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.debug.xcconfig"; sourceTree = "<group>"; };
 		EE865ED0AC15499281CD6E51 /* Degarism Studio - Biotif-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-SemiBold.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-SemiBold.ttf"; sourceTree = "<group>"; };
 		EF87D17328D54EC88D697B00 /* Degarism Studio - Biotif-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Regular.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Regular.ttf"; sourceTree = "<group>"; };
-		F4E59B72C259E6438091556E /* Pods-TextilePhotos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos/Pods-TextilePhotos.debug.xcconfig"; sourceTree = "<group>"; };
 		F68F1EA526BB4128AAB18AD5 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		FACFD2055F364FCC854CEA69 /* Degarism Studio - Biotif-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-SemiBoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -609,7 +593,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
-				7CC57A46FE346A987FDF926F /* libPods-TextilePhotosTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,7 +623,6 @@
 				B311B2606C50426EAB18A3F3 /* libRNBackgroundTimer.a in Frameworks */,
 				4FC48647847E490FB74A85C7 /* libRNBackgroundFetch.a in Frameworks */,
 				EF3CE28E6FAE462CBF983CB1 /* TSBackgroundFetch.framework in Frameworks */,
-				5E9420726EE6D67DD8441575 /* libPods-TextilePhotos.a in Frameworks */,
 				1B62ADC3028243B181384D08 /* libAppCenterReactNative.a in Frameworks */,
 				B5D96097B5FE453192C31D72 /* libAppCenterReactNativeAnalytics.a in Frameworks */,
 				25EE5D215192492083E83134 /* libAppCenterReactNativeCrashes.a in Frameworks */,
@@ -661,7 +643,6 @@
 				9339E9A8205C3B8700BCA4CF /* Mobile.framework in Frameworks */,
 				2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */,
 				2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */,
-				9AA5C66A81777620048BD3CC /* libPods-TextilePhotos-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,7 +650,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D7F674D410FBB138059E3E3 /* libPods-TextilePhotos-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,10 +776,6 @@
 			isa = PBXGroup;
 			children = (
 				5E91A5EF4C7A428FB9778EEA /* TSBackgroundFetch.framework */,
-				530B236E031BC153E852FD20 /* libPods-TextilePhotos.a */,
-				8BD0CBBE9487D7E219727EF7 /* libPods-TextilePhotos-tvOS.a */,
-				27A36D60D71C7C40680CE520 /* libPods-TextilePhotos-tvOSTests.a */,
-				24F0BBBDD468506CC2A00EEF /* libPods-TextilePhotosTests.a */,
 				1A909B6FDD3341088B187569 /* libRNFS.a */,
 				0DCD2D3495DB4A4E9CA4BBD0 /* libRCTImageResizer.a */,
 				6247753D29BD445BBE26673D /* libRNBackgroundTimer.a */,
@@ -914,7 +890,6 @@
 				6583B009634D42DE99FC41BF /* Resources */,
 				5480F3225F6AB7DEA9EE41D3 /* Frameworks */,
 				0596A7A5674544CB804D1B34 /* AppCenter-Config.plist */,
-				CFA3BEDB314B7200E0D9BD77 /* Pods */,
 				93BE92CB208023850070C615 /* Recovered References */,
 			);
 			indentWidth = 2;
@@ -1082,21 +1057,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		CFA3BEDB314B7200E0D9BD77 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				F4E59B72C259E6438091556E /* Pods-TextilePhotos.debug.xcconfig */,
-				0989A7475F854D7FD77ECB9E /* Pods-TextilePhotos.release.xcconfig */,
-				4CD86A0F8D920CA80EBC650F /* Pods-TextilePhotos-tvOS.debug.xcconfig */,
-				66672D1E4CE45FBA4A47BB05 /* Pods-TextilePhotos-tvOS.release.xcconfig */,
-				27C9FB3167181F8CCC456530 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */,
-				BE80E164AB92D7819530F633 /* Pods-TextilePhotos-tvOSTests.release.xcconfig */,
-				E538664D3C558F740A62DA22 /* Pods-TextilePhotosTests.debug.xcconfig */,
-				A8E3638F52DBA0D83F06643F /* Pods-TextilePhotosTests.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1104,7 +1064,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "TextilePhotosTests" */;
 			buildPhases = (
-				BADF4E3E5B6594B983A38311 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -1123,7 +1082,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "TextilePhotos" */;
 			buildPhases = (
-				DF97D07B352E3F0CBB341755 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -1143,7 +1101,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "TextilePhotos-tvOS" */;
 			buildPhases = (
-				B00573FBA19F18B97C7CF522 /* [CP] Check Pods Manifest.lock */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
 				2D02E4791E0B4A5D006451C7 /* Resources */,
@@ -1162,7 +1119,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "TextilePhotos-tvOSTests" */;
 			buildPhases = (
-				835C7BC032CF55ADF94EADDA /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -1822,78 +1778,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		835C7BC032CF55ADF94EADDA /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TextilePhotos-tvOSTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B00573FBA19F18B97C7CF522 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TextilePhotos-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BADF4E3E5B6594B983A38311 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TextilePhotosTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DF97D07B352E3F0CBB341755 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TextilePhotos-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1965,7 +1849,6 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E538664D3C558F740A62DA22 /* Pods-TextilePhotosTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
@@ -2010,7 +1893,6 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A8E3638F52DBA0D83F06643F /* Pods-TextilePhotosTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -2052,7 +1934,6 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F4E59B72C259E6438091556E /* Pods-TextilePhotos.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TextilePhotos/TextilePhotos.entitlements;
@@ -2103,7 +1984,6 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0989A7475F854D7FD77ECB9E /* Pods-TextilePhotos.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TextilePhotos/TextilePhotos.entitlements;
@@ -2153,7 +2033,6 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4CD86A0F8D920CA80EBC650F /* Pods-TextilePhotos-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2205,7 +2084,6 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66672D1E4CE45FBA4A47BB05 /* Pods-TextilePhotos-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2257,7 +2135,6 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 27C9FB3167181F8CCC456530 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -2281,7 +2158,6 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BE80E164AB92D7819530F633 /* Pods-TextilePhotos-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
