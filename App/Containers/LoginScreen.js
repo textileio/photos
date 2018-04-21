@@ -3,7 +3,7 @@ import { View, Image, Text, KeyboardAvoidingView, TouchableHighlight, Button } f
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
+import AuthActions from '../Redux/AuthRedux'
 
 // Styles
 import styles from './Styles/LoginScreenStyle'
@@ -12,10 +12,19 @@ import formStyle from './Styles/FormStyle'
 const Form = t.form.Form
 t.form.Form.stylesheet = formStyle
 
-const Person = t.struct({
+const Signup = t.struct({
   referralCode: t.String,
   email: t.String,
   password: t.String
+})
+
+const Login = t.struct({
+  email: t.String,
+  password: t.String
+})
+
+const PasswordRecovery = t.struct({
+  email: t.String
 })
 
 const options = {
@@ -41,27 +50,58 @@ class LoginScreen extends Component {
         </View>
         <Form
           ref='form'
-          type={Person}
+          type={Signup}
           options={options}
         />
         <TouchableHighlight style={styles.button} onPress={this.onPress.bind(this)} underlayColor='#99d9f4'>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableHighlight>
         <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
-          <Button title={'Log In Instead'} />
+          {this.renderButtons()}
+          {/*<Button title={'Log In Instead'} />*/}
         </View>
       </KeyboardAvoidingView>
     )
   }
-}
 
-const mapStateToProps = (state) => {
-  return {
+  renderButtons () {
+    const buttons = this.props.buttonData.map((button, i) => {
+      return <Button title={button.title} onPress={() => { console.log('pressed') }} key={i} />
+    })
+    return buttons
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = state => {
+  console.log('IN mapStateToProps', state.auth.currentState)
+  let buttonData
+  switch (state.auth.currentState) {
+    case 'signUp':
+      buttonData = [
+        { title: 'Log In Instead' }
+      ]
+      break
+    case 'logIn':
+      buttonData = [
+        { title: 'Sign Up' },
+        { title: 'Forgot Password?' }
+      ]
+      break
+    default:
+      buttonData = [
+        { title: 'Log In' }
+      ]
+  }
   return {
+    buttonData: buttonData
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    signUp: () => { dispatch(AuthActions.signUp()) },
+    logIn: () => { dispatch(AuthActions.logIn()) },
+    forgotPassword: () => { dispatch(AuthActions.forgotPassword()) }
   }
 }
 
