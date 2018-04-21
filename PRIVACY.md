@@ -39,7 +39,7 @@ We will share the information we have with entities outside of Textile if we hav
     meet any applicable law, regulation, legal process or enforceable governmental request.
     enforce applicable Terms of Service, including investigation of potential violations.
     detect, prevent, or otherwise address fraud, security, or technical issues.
-    protect against harm to the rights, property, or safety of OWS, our users, or the public as required or permitted by law.
+    protect against harm to the rights, property, or safety of Textile, our users, or the public as required or permitted by law.
 
 We will update this privacy policy as needed so that it is current, accurate, and as clear as possible.
 
