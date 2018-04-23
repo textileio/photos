@@ -22,6 +22,7 @@ import PhotosTask from '../Services/PhotosTask'
 import { getFailedImages } from './App'
 import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
+import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
 import IPFS from '../../TextileIPFSNativeModule'
 
@@ -146,7 +147,12 @@ class TextilePhotos extends React.PureComponent {
     } else if (item.state === 'processing') {
       overlay = <Progress.Pie progress={item.progress} size={20} color={Colors.brandPink} />
     } else if (item.state === 'error') {
-      overlay = <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+      const displayError = () => {
+        this.refs.toast.show(item.error, 2000)
+      }
+      overlay = <TouchableOpacity onPress={displayError}>
+        <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+      </TouchableOpacity>
     }
     const imageData = IPFS.syncGetPhotoData(item.image.node.image.hash + '/thumb')
     return (
@@ -257,6 +263,7 @@ class TextilePhotos extends React.PureComponent {
             </View>
           )
         }
+        <Toast ref='toast' position='center' />
       </View>
     )
   }
