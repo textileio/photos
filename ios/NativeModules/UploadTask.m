@@ -97,7 +97,7 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"UploadTaskProgress", @"UploadTaskComplete"];
+  return @[@"UploadTaskProgress", @"UploadTaskComplete", @"UploadTaskError"];
 }
 
 #pragma mark - Private methods
@@ -192,16 +192,21 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+  NSString *message = nil;
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{@"file": task.taskDescription}];
   NSInteger responseCode = ((NSHTTPURLResponse*)task.response).statusCode;
   NSMutableData *responseData = self.responseData[@(task.taskIdentifier)];
   if (error) {
+    message = @"UploadTaskError";
     [dict setValue:@{ @"domain": error.domain, @"code": @(error.code), @"message": error.localizedDescription } forKey:@"error"];
   } else if (responseCode < 200 || responseCode > 299) {
+    message = @"UploadTaskError";
     [dict setValue:@{ @"domain": @"textile", @"code": @0, @"message": [NSString stringWithFormat:@"Bad server response code: %ld", (long)responseCode] } forKey:@"error"];
   } else if (!responseData) {
+    message = @"UploadTaskError";
     [dict setValue:@{ @"domain": @"textile", @"code": @1, @"message": @"Missing server response data" } forKey:@"error"];
   } else {
+    message = @"UploadTaskComplete";
     NSString *response = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
     NSMutableArray<NSString *> *components = [response componentsSeparatedByString:@"\n"].mutableCopy;
     [components removeLastObject];
@@ -225,7 +230,7 @@ RCT_EXPORT_METHOD(uploadFile:(NSString *)file toURL:(NSString *)url withMethod:(
     }
     [self.responseData removeObjectForKey:@(task.taskIdentifier)];
   }
-  [self emitMessageToRN:@"UploadTaskComplete" :dict];
+  [self emitMessageToRN:message :dict];
 }
 
 @end

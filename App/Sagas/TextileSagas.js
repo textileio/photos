@@ -11,7 +11,6 @@
 *************************************************************/
 
 import { call, put, all } from 'redux-saga/effects'
-import {resizeImage} from '../Services/PhotoUtils'
 import TextileActions from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 
@@ -52,69 +51,6 @@ export function * startNode (api) {
   } catch (error) {
     yield put(IpfsNodeActions.startNodeFailure(error))
   }
-}
-
-// function* deserialize( action ) {
-//   const items = yield select(TextileActions.getItems)
-//   // yield put({ type: 'DESERISLIZE_COMPLETE' })
-// }
-
-export function * handleNodeStarted () {
-  // const interface = yield select(TextileActions.getItems)
-  // if (interface.state.textile && interface.state.textile.images && interface.state.textile.images && interface.state.textile.images.items)
-  // yield put(TextileActions.getHashesRequest('', 10, true))
-}
-
-/**
- * Get the list of stored hashes to add to our photo roll
- *
- * @param api - textile-go api
- * @param action - the (offset, limit)
- * @returns {IterableIterator<*>}
- */
-export function * getHashes (api, action) {
-  const { offsetId, limit, clearItems } = action
-  const jsonString = yield call(api.getPhotos, offsetId, limit)
-  const json = JSON.parse(jsonString)
-  if (json) {
-    yield put(TextileActions.getHashesSuccess())
-    yield put(TextileActions.getThumbsRequest(json, false, clearItems))
-  } else {
-    yield put(TextileActions.getHashesFailure())
-  }
-}
-
-export function * getThumb (request) {
-  const { api, hash } = request
-  try {
-    const thumb = yield call(api.getPhotoData, hash + '/thumb.jpg')
-    return {'hash': hash, 'thumb': thumb}
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-export function * getThumbs (api, action) {
-  const { response, prepend, clearItems } = action
-  const thumbs = yield response.hashes.map(hash => call(getThumb, {api, hash}))
-  yield put(TextileActions.getThumbsSuccess(thumbs, prepend, clearItems))
-}
-
-function * uploadImage (request) {
-  const { api, image } = request
-  try {
-    const thumbPath = yield call(resizeImage, image.path)
-    const hash = yield call(api.addImageAtPath, image.path, thumbPath)
-    // todo: we should return the thumb at the same time as the hash above
-    const thumb = yield call(getThumb, {api, hash})
-    yield put(TextileActions.getThumbsSuccess([thumb], true, false))
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-export function * addImages (api, response) {
-  yield response.data.map(image => call(uploadImage, {api, image}))
 }
 
 export function * pairNewDevice (api, action) {
