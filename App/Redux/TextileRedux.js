@@ -9,29 +9,7 @@ const { Types, Creators } = createActions({
   imageAdded: ['image', 'remotePayloadPath'],
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
-  imageSuccess: ['image', 'hash'],
-  imageError: ['image', 'error'],
-
-  getHashesRequest: ['offsetId', 'limit', 'clearItems'],
-  getHashesSuccess: null,
-  getHashesFailure: null,
-
-  getThumbsRequest: ['response', 'prepend', 'clearItems'],
-  getThumbsSuccess: ['response', 'prepend', 'clearItems'],
-
-  addImagesRequest: ['data'],
-  addImagesSuccess: ['data'],
-
-  // TODO: eval if below methods are still needed
-  addImageRequest: ['path'],
-  addImageSuccess: ['hash'],
-  addImageFailure: null,
-
-  reloadPhotos: null,
-
-  getPhotoDataRequest: ['hash'],
-  getPhotoDataSuccess: ['data'],
-  getPhotoDataFailure: null,
+  imageUploadError: ['data'],
 
   pairNewDevice: ['pubKey'],
   pairNewDeviceSuccess: ['pubKey'],
@@ -65,56 +43,6 @@ export const onboardedSuccess = state => {
   return state.merge({ onboarded: true })
 }
 
-export const getHashesRequest = state => {
-  const existingImages = state.image && state.images.items ? state.images.items : []
-  return state.merge({
-    images: {
-      loading: true,
-      items: existingImages
-    }
-  })
-}
-
-// TODO: determine if we want any feedback here
-export const getHashesSuccess = state => state
-
-export const getHashesFailure = state => {
-  const existingImages = state.images.items ? state.images.items : []
-  return state.merge({
-    images: {
-      loading: false,
-      error: true,
-      items: existingImages
-    }
-  })
-}
-
-export const getThumbsRequest = state => {
-  const existingImages = state.images.items ? state.images.items : []
-  return state.merge({
-    images: {
-      loading: true,
-      items: existingImages
-    }
-  })
-}
-
-export const getThumbsSuccess = (state, { response, prepend, clearItems }) => {
-  // Suspicious that redux-persist is clearing out our INITIAL_STATE
-  // empty array of images.
-  let newItems = response
-  if (!clearItems) {
-    const existingImages = state.images.items ? state.images.items : []
-    newItems = prepend ? [...newItems, ...existingImages] : [...existingImages, ...newItems]
-  }
-  return state.merge({
-    images: {
-      loading: false,
-      items: newItems
-    }
-  })
-}
-
 export const handleImageAdded = (state, {image, remotePayloadPath}) => {
   const existingItems = state.images.items ? state.images.items : []
   const items = [{ image, remotePayloadPath, state: 'pending' }, ...existingItems]
@@ -134,45 +62,28 @@ export const handleImageProgress = (state, {data}) => {
 }
 
 export const handleImageUploadComplete = (state, {data}) => {
+  const {file} = data
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.remotePayloadPath === file) {
+      return {...item, state: 'complete'}
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const handleImageUploadError = (state, {data}) => {
   const {file, error} = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
     if (item.remotePayloadPath === file) {
-      if (error) {
-        return {...item, state: 'error', error}
-      } else {
-        return {...item, state: 'complete'}
-      }
+      return {...item, state: 'error', error: error.message}
     }
     return item
   })
   return state.merge({ images: { items } })
 }
-
-export const handleImageSuccess = (state, {image, hash}) => {
-  const existingItems = state.images.items ? state.images.items : []
-  const items = existingItems.map(item => {
-    if (item.image.node.image.uri === image.node.image.uri) {
-      return { image, hash, state: 'complete' }
-    }
-    return item
-  })
-  return state.merge({ images: { items } })
-}
-
-export const handleImageError = (state, {image, error}) => {
-  const existingItems = state.images.items ? state.images.items : []
-  const items = existingItems.map(item => {
-    if (item.image.node.image.uri === image.node.image.uri) {
-      return { image, state: 'error', error: error.message }
-    }
-    return item
-  })
-  return state.merge({ images: { items } })
-}
-
-// TODO: add a loading state for addImages
-export const addImagesRequest = state => state
 
 export const pairNewDevice = (state, {pubKey}) => {
   const existingDevices = state.devices ? state.devices : []
@@ -210,22 +121,10 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
-  // [Types.GET_HASHES_REQUEST]: getHashesRequest,
-  // [Types.GET_HASHES_SUCCESS]: getHashesSuccess,
-  // [Types.GET_HASHES_FAILURE]: getHashesFailure,
-  //
-  // [Types.GET_THUMBS_REQUEST]: getThumbsRequest,
-  // [Types.GET_THUMBS_SUCCESS]: getThumbsSuccess,
-  //
-  // [Types.ADD_IMAGES_REQUEST]: addImagesRequest,
-  // // TODO: Should this use its own handler? Not yet.
-  // [Types.ADD_IMAGES_SUCCESS]: getThumbsSuccess,
-
   [Types.IMAGE_ADDED]: handleImageAdded,
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
-  [Types.IMAGE_SUCCESS]: handleImageSuccess,
-  [Types.IMAGE_ERROR]: handleImageError,
+  [Types.IMAGE_UPLOAD_ERROR]: handleImageUploadError,
 
   [Types.PAIR_NEW_DEVICE]: pairNewDevice,
   [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,

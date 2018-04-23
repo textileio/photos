@@ -86,6 +86,7 @@ class TextilePhotos extends React.PureComponent {
   componentWillUnmount () {
     this.progressSubscription.remove()
     this.completionSubscription.remove()
+    this.errorSubscription.remove()
   }
 
   async setup () {
@@ -103,6 +104,15 @@ class TextilePhotos extends React.PureComponent {
       //   userInfo: {}
       // })
       this.props.uploadComplete(event)
+    })
+
+    this.errorSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskError', event => {
+      console.log('UPLOAD ERROR:', event)
+      // PushNotificationIOS.presentLocalNotification({
+      //   alertBody: 'upload error',
+      //   userInfo: {}
+      // })
+      this.props.uploadError(event)
     })
 
     // await PushNotificationIOS.requestPermissions()
@@ -283,8 +293,7 @@ const mapDispatchToProps = (dispatch) => {
     dispatch: dispatch,
     uploadComplete: event => { dispatch(Actions.imageUploadComplete(event)) },
     uploadProgress: event => { dispatch(Actions.imageUploadProgress(event)) },
-    getHashesRequest: (offsetId, limit) => { dispatch(Actions.getHashesRequest(offsetId, limit)) },
-    addImagesRequest: images => { dispatch(Actions.addImagesRequest(images)) }
+    uploadError: event => { dispatch(Actions.imageUploadError(event)) }
   }
 }
 
