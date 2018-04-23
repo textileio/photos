@@ -2,7 +2,7 @@ framework module "Mobile" {
 	header "ref.h"
     header "Mobile.objc.h"
     header "Net.objc.h"
-    header "Universe.objc.h"
+    header "universe.objc.h"
     header "Mobile.h"
 
     export *
