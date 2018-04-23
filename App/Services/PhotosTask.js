@@ -37,46 +37,7 @@ export default async function photosTask (dispatch, failedImages) {
     //   alertBody: 'uploading photo ' + multipartData.payloadPath,
     //   userInfo: {}
     // })
-
-    // console.log('running add-image worker:', id)
-    // dispatch(Actions.imageProcessing(image))
-    // if (image.node.image.path) {
-    //   try {
-    //     const hash = await IPFS.addImageAtPath(image.node.image.path, image.node.image.thumbPath)
-    //     dispatch(Actions.imageSuccess(image, hash))
-    //     PushNotificationIOS.presentLocalNotification({
-    //       alertBody: 'added image: ' + hash,
-    //       userInfo: {}
-    //     })
-    //   } catch (e) {
-    //     dispatch(Actions.imageError(image, e))
-    //     console.log('WORKER ERROR:', e)
-    //     PushNotificationIOS.presentLocalNotification({
-    //       alertBody: 'error: ' + e.message,
-    //       userInfo: {}
-    //     })
-    //     throw e
-    //   }
-    //   console.log('done running add-image worker:', id)
-    // }
   }
-
-  // If our failedImages aren't already queued up for re-processing, add them to the end of the queue now
-  // const existingJobImagePaths = existingJobs.map(job => {
-  //   const item = JSON.parse(job.payload)
-  //   return item.node.image.path
-  // })
-  // for (const failedImage of failedImages) {
-  //   if (!existingJobImagePaths.includes(failedImage.image.node.image.path)) {
-  //     // Dispatch an action?
-  //     queue.createJob(
-  //       'add-image',
-  //       failedImage.image,
-  //       { attempts: 1, timeout: 20000 },
-  //       false
-  //     )
-  //   }
-  // }
 
   // PushNotificationIOS.presentLocalNotification({
   //   alertBody: 'photos task done',
