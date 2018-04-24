@@ -68,7 +68,7 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount () {
-    // BackgroundTask.schedule()
+    BackgroundTask.schedule()
     // TODO: This logic should be moved deeper into the stack
     if (Platform.OS === 'android') {
       // TODO: Android deep linking isn't setup in the Java native layer

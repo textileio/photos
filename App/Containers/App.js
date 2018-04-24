@@ -5,22 +5,15 @@ import {Provider} from 'react-redux'
 import {PersistGate} from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
-import { PushNotificationIOS } from 'react-native'
+import Actions from '../Redux/TextileRedux'
 import BackgroundTask from 'react-native-background-task'
 
 // create our store
 const { store, persistor } = createStore()
 
-// BackgroundTask.define(async () => {
-//   console.log('running background task')
-//   // PushNotificationIOS.presentLocalNotification({
-//   //   alertBody: 'running background fetch',
-//   //   userInfo: {}
-//   // })
-//   await PhotosTask(store.dispatch, getFailedImages())
-//   // finish() must be called before OS hits timeout.
-//   BackgroundTask.finish()
-// })
+BackgroundTask.define(() => {
+  store.dispatch(Actions.backgroundTask())
+})
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js

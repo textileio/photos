@@ -8,6 +8,7 @@ const { Types, Creators } = createActions({
 
   appStateChange: ['newState'],
   locationUpdate: null,
+  backgroundTask: null,
 
   imageAdded: ['image', 'remotePayloadPath'],
   imageUploadProgress: ['data'],

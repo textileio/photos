@@ -32,6 +32,7 @@ export default function * root () {
     takeLatest(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
 
     takeEvery(TextileTypes.APP_STATE_CHANGE, photosTask),
-    takeEvery(TextileTypes.LOCATION_UPDATE, photosTask)
+    takeEvery(TextileTypes.LOCATION_UPDATE, photosTask),
+    takeEvery(TextileTypes.BACKGROUND_TASK, photosTask)
   ])
 }
