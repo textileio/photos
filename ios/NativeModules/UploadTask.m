@@ -53,7 +53,7 @@ RCT_EXPORT_MODULE();
   self = [super init];
   if (self) {
     NSURLSessionConfiguration *conf = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"textile-session"];
-    conf.discretionary = YES; // TODO: Could be YES
+    conf.discretionary = NO; // TODO: Could be YES
     conf.sessionSendsLaunchEvents = YES;
     self.session = [NSURLSession sessionWithConfiguration:conf delegate:self delegateQueue:nil];
     self.responseData = [NSMutableDictionary new];
