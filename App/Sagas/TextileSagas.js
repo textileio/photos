@@ -13,6 +13,7 @@
 import { call, put, all } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
+import BackgroundTask from 'react-native-background-task'
 import IPFS from '../../TextileIPFSNativeModule'
 import UploadTask from '../../UploadTaskNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
@@ -93,6 +94,7 @@ export function * photosTask (action) {
       )
     }
     yield call(BackgroundTimer.stop)
+    yield call(BackgroundTask.finish)
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
   }
