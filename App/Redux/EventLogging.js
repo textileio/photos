@@ -15,7 +15,7 @@ const eventLogging = ({ getState }) => next => (action) => {
     if (additionalPayload) {
       payload = {...payload, ...additionalPayload}
     }
-    console.log('ACTION:', action.type, 'PAYLOAD:', payload)
+    // console.log('ACTION:', action.type, 'PAYLOAD:', payload)
     Analytics.trackEvent(action.type, payload)
     return next(action)
   }
