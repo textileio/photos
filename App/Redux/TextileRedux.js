@@ -6,10 +6,14 @@ import Immutable from 'seamless-immutable'
 const { Types, Creators } = createActions({
   onboardedSuccess: null,
 
+  appStateChange: ['newState'],
+  locationUpdate: null,
+
   imageAdded: ['image', 'remotePayloadPath'],
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
   imageUploadError: ['data'],
+  photosTaskError: ['error'],
 
   pairNewDevice: ['pubKey'],
   pairNewDeviceSuccess: ['pubKey'],
