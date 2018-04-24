@@ -65,7 +65,7 @@ class InfoView extends React.PureComponent {
           accessibilityLabel='copy device id to clipboard'
           color={buttonColor3}
         />
-        <Toast ref="toast" position='center' />
+        <Toast ref='toast' position='center' />
       </View>
     )
   }

@@ -1,5 +1,4 @@
-import { takeLatest, all } from 'redux-saga/effects'
-import IPFS from '../../TextileIPFSNativeModule'
+import { takeLatest, takeEvery, all } from 'redux-saga/effects'
 
 /* ------------- Types ------------- */
 
@@ -9,16 +8,13 @@ import {IpfsNodeTypes} from '../Redux/IpfsNodeRedux'
 
 /* ------------- Sagas ------------- */
 
-import {selectRandomUserData, startup} from './StartupSagas'
+import {startup} from './StartupSagas'
 import {
   createNode,
   startGateway,
   startNode,
-  handleNodeStarted,
-  getHashes,
-  getThumbs,
-  addImages,
-  pairNewDevice
+  pairNewDevice,
+  photosTask
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -30,13 +26,13 @@ export default function * root () {
 
     // some sagas receive extra parameters in addition to an action
 
-    takeLatest(IpfsNodeTypes.CREATE_NODE_REQUEST, createNode, IPFS),
-    takeLatest(IpfsNodeTypes.START_GATEWAY_REQUEST, startGateway, IPFS),
-    takeLatest(IpfsNodeTypes.START_NODE_REQUEST, startNode, IPFS),
-    takeLatest(IpfsNodeTypes.START_NODE_SUCCESS, handleNodeStarted),
-    takeLatest(TextileTypes.GET_HASHES_REQUEST, getHashes, IPFS),
-    takeLatest(TextileTypes.GET_THUMBS_REQUEST, getThumbs, IPFS),
-    takeLatest(TextileTypes.ADD_IMAGES_REQUEST, addImages, IPFS),
-    takeLatest(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice, IPFS)
+    takeLatest(IpfsNodeTypes.CREATE_NODE_REQUEST, createNode),
+    takeLatest(IpfsNodeTypes.START_GATEWAY_REQUEST, startGateway),
+    takeLatest(IpfsNodeTypes.START_NODE_REQUEST, startNode),
+    takeLatest(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
+
+    takeEvery(TextileTypes.APP_STATE_CHANGE, photosTask),
+    takeEvery(TextileTypes.LOCATION_UPDATE, photosTask),
+    takeEvery(TextileTypes.BACKGROUND_TASK, photosTask)
   ])
 }
