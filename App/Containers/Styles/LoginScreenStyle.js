@@ -10,7 +10,7 @@ export default StyleSheet.create({
     alignItems: 'stretch',
     paddingLeft: 12,
     paddingRight: 12,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff'
   },
   title: {
     fontSize: 30,
@@ -35,5 +35,12 @@ export default StyleSheet.create({
     // marginBottom: 10,
     alignSelf: 'stretch',
     justifyContent: 'center'
+  },
+  optionText: {
+    fontSize: 14,
+    fontFamily: 'Biotif-Regular',
+    color: '#cccccc',
+    alignSelf: 'center',
+    paddingBottom: 12
   }
 })

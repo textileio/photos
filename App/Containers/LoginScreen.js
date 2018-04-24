@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, Image, Text, KeyboardAvoidingView, TouchableHighlight, Button } from 'react-native'
+import { View, Image, Text, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -14,6 +15,7 @@ t.form.Form.stylesheet = formStyle
 
 const Signup = t.struct({
   referralCode: t.String,
+  username: t.String,
   email: t.String,
   password: t.String
 })
@@ -34,6 +36,13 @@ const options = {
 
 class LoginScreen extends Component {
 
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    return {
+      title: params.navigationTitle
+    }
+  }
+
   onPress () {
     // call getValue() to get the values of the form
     var value = this.refs.form.getValue();
@@ -42,15 +51,30 @@ class LoginScreen extends Component {
     }
   }
 
+  componentDidMount() {
+    this.props.navigation.setParams({ navigationTitle: this.props.navigationTitle })
+  }
+
+  handleButtonPress(action: string, navigationTitle: string) {
+    this.props[action]()
+    this.props.navigation.setParams({ navigationTitle })
+  }
+
   render () {
+    const currentState = this.props.currentState
+    const form = currentState === 'signUp' ? Signup : (currentState === 'logIn' ? Login : PasswordRecovery)
     return (
-      <KeyboardAvoidingView behavior='padding' style={styles.container}>
+      <KeyboardAwareScrollView
+        style={{ backgroundColor: '#ffffff' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+      >
         <View style={{flexGrow: 0.6, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Image source={require('../Images/Icon_100.png')} />
         </View>
         <Form
           ref='form'
-          type={Signup}
+          type={form}
           options={options}
         />
         <TouchableHighlight style={styles.button} onPress={this.onPress.bind(this)} underlayColor='#99d9f4'>
@@ -60,40 +84,48 @@ class LoginScreen extends Component {
           {this.renderButtons()}
           {/*<Button title={'Log In Instead'} />*/}
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     )
   }
 
   renderButtons () {
     const buttons = this.props.buttonData.map((button, i) => {
-      return <Button title={button.title} onPress={() => { console.log('pressed') }} key={i} />
+      return <TouchableOpacity key={i} onPress={() => this.handleButtonPress(button.action, button.navigationTitle)}>
+        <Text style={styles.optionText}>{button.title}</Text>
+      </TouchableOpacity>
+      // return <Button title={button.title} onPress={button.action} key={i} />
     })
     return buttons
   }
 }
 
 const mapStateToProps = state => {
-  console.log('IN mapStateToProps', state.auth.currentState)
   let buttonData
+  let navigationTitle
   switch (state.auth.currentState) {
     case 'signUp':
       buttonData = [
-        { title: 'Log In Instead' }
+        { action: 'logIn', title: 'Log In Instead', navigationTitle: 'Log In' }
       ]
+      navigationTitle = 'Sign Up'
       break
     case 'logIn':
       buttonData = [
-        { title: 'Sign Up' },
-        { title: 'Forgot Password?' }
+        { action: 'signUp', title: 'Sign Up', navigationTitle: 'Sign Up' },
+        { action: 'forgotPassword', title: 'Forgot Password?', navigationTitle: 'Recover Password' }
       ]
+      navigationTitle = 'Log In'
       break
     default:
       buttonData = [
-        { title: 'Log In' }
+        { action: 'logIn', title: 'Log In', navigationTitle: 'Log In' }
       ]
+      navigationTitle = 'Recover Password'
   }
   return {
-    buttonData: buttonData
+    currentState: state.auth.currentState,
+    buttonData,
+    navigationTitle
   }
 }
 

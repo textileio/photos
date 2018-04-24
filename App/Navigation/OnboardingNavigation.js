@@ -166,10 +166,7 @@ const OnboardingNav = StackNavigator(
       }
     },
     Login: {
-      screen: LoginScreen,
-      navigationOptions: {
-        title: 'Sign Up'
-      }
+      screen: LoginScreen
     }
   },
   {
