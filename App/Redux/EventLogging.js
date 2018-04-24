@@ -10,10 +10,13 @@ const eventLogging = ({ getState }) => next => (action) => {
     action.type !== NavigationActions.NAVIGATE &&
     action.type !== NavigationActions.BACK
   ) {
-    Analytics.trackEvent(action.type, {
-      action: action.text ? action.text : '',
-      deviceId
-    })
+    let payload = { deviceId }
+    const additionalPayload = actionToPayload(action)
+    if (additionalPayload) {
+      payload = {...payload, ...additionalPayload}
+    }
+    console.log('ACTION:', action.type, 'PAYLOAD:', payload)
+    Analytics.trackEvent(action.type, payload)
     return next(action)
   }
 
@@ -29,6 +32,33 @@ const eventLogging = ({ getState }) => next => (action) => {
     }
   }
   return result
+}
+
+const actionToPayload = (action) => {
+  switch (action.type) {
+    case 'APP_STATE_CHANGE':
+      return { description: action.newState }
+    case 'IMAGE_ADDED':
+      return { description: action.remotePayloadPath }
+    case 'IMAGE_UPLOAD_PROGRESS':
+      return { description: action.data.file }
+    case 'IMAGE_UPLOAD_COMPLETE':
+      return { description: action.data.file }
+    case 'IMAGE_UPLOAD_ERROR':
+      return { description: action.data.file, error: action.data.error.message }
+    case 'CREATE_NODE_FAILURE':
+      return { error: action.error.message }
+    case 'START_GATEWAY_FAILURE':
+      return { error: action.error.message }
+    case 'START_NODE_FAILURE':
+      return { error: action.error.message }
+    case 'STOP_NODE_FAILURE':
+      return { error: action.error.message }
+    case 'PHOTOS_TASK_ERROR':
+      return { error: action.error.message }
+    default:
+      return null
+  }
 }
 
 export default eventLogging
