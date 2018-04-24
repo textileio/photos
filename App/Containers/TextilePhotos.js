@@ -15,13 +15,11 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
-import { getPhoto } from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
 import UploadTask from '../../UploadTaskNativeModule'
-import PhotosTask from '../Services/PhotosTask'
-import { getFailedImages } from './App'
 import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
+import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
 import IPFS from '../../TextileIPFSNativeModule'
 
@@ -83,51 +81,19 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentWillUnmount () {
+    AppState.removeEventListener('change', this.props.appStateChange)
     this.progressSubscription.remove()
     this.completionSubscription.remove()
+    this.errorSubscription.remove()
   }
 
   async setup () {
-    AppState.addEventListener('change', this.handleAppStateChange.bind(this))
-
-    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', event => {
-      console.log('UPLOAD PROGRESS:', event)
-      this.props.uploadProgress(event)
-    })
-
-    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', event => {
-      console.log('UPLOAD COMPLETE:', event)
-      // PushNotificationIOS.presentLocalNotification({
-      //   alertBody: 'upload complete',
-      //   userInfo: {}
-      // })
-      this.props.uploadComplete(event)
-    })
-
     // await PushNotificationIOS.requestPermissions()
-    await getPhoto() // Trigger photos permission prompt
-
-    navigator.geolocation.watchPosition(
-      () => {
-        console.log('got a new position')
-        // PushNotificationIOS.presentLocalNotification({
-        //   alertBody: 'location update',
-        //   userInfo: {}
-        // })
-        PhotosTask(this.props.dispatch, getFailedImages())
-      },
-      error => {
-        console.log('Got a location error', error)
-      },
-      { useSignificantChanges: true }
-    )
-  }
-
-  async handleAppStateChange (nextAppState) {
-    if (nextAppState.match(/^active/)) {
-      console.log('got a foreground event')
-      await PhotosTask(this.props.dispatch, getFailedImages())
-    }
+    AppState.addEventListener('change', (event) => this.props.appStateChange(event))
+    navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
+    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', (event) => this.props.uploadProgress(event))
+    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', (event) => this.props.uploadComplete(event))
+    this.errorSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskError', (event) => this.props.uploadError(event))
   }
 
   /* ***********************************************************
@@ -146,7 +112,12 @@ class TextilePhotos extends React.PureComponent {
     } else if (item.state === 'processing') {
       overlay = <Progress.Pie progress={item.progress} size={20} color={Colors.brandPink} />
     } else if (item.state === 'error') {
-      overlay = <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+      const displayError = () => {
+        this.refs.toast.show(item.error, 2000)
+      }
+      overlay = <TouchableOpacity onPress={displayError}>
+        <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+      </TouchableOpacity>
     }
     const imageData = IPFS.syncGetPhotoData(item.image.node.image.hash + '/thumb')
     return (
@@ -257,6 +228,7 @@ class TextilePhotos extends React.PureComponent {
             </View>
           )
         }
+        <Toast ref='toast' position='center' />
       </View>
     )
   }
@@ -274,10 +246,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
   return {
     dispatch: dispatch,
+    appStateChange: event => { dispatch(Actions.appStateChange(event)) },
+    locationUpdate: () => { dispatch(Actions.locationUpdate()) },
     uploadComplete: event => { dispatch(Actions.imageUploadComplete(event)) },
     uploadProgress: event => { dispatch(Actions.imageUploadProgress(event)) },
-    getHashesRequest: (offsetId, limit) => { dispatch(Actions.getHashesRequest(offsetId, limit)) },
-    addImagesRequest: images => { dispatch(Actions.addImagesRequest(images)) }
+    uploadError: event => { dispatch(Actions.imageUploadError(event)) }
   }
 }
 
