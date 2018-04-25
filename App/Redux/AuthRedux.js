@@ -1,12 +1,12 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
+import t from 'tcomb-form-native'
 
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  signUp: null,
-  logIn: null,
-  recoverPassword: null,
+  updateFormType: ['formType'],
+  updateFormValue: ['formValue'],
   signUpRequest: ['data'],
   logInRequest: ['data'],
   recoverPasswordRequest: ['data'],
@@ -21,13 +21,30 @@ const { Types, Creators } = createActions({
 export const AuthTypes = Types
 export default Creators
 
+export const SignUp = t.struct({
+  referralCode: t.String,
+  username: t.String,
+  email: t.String,
+  password: t.String
+})
+
+export const LogIn = t.struct({
+  username: t.String,
+  password: t.String
+})
+
+export const RecoverPassword = t.struct({
+  username: t.String
+})
+
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  currentState: 'signUp',
   processing: false,
   error: null,
-  token: null
+  token: null,
+  formType: SignUp,
+  formValue: null
 })
 
 /* ------------- Selectors ------------- */
@@ -37,14 +54,11 @@ export const AuthSelectors = {
 
 /* ------------- Reducers ------------- */
 
-export const signUp = state =>
-  state.merge({...state, currentState: 'signUp'})
+export const updateFormType = (state, {formType}) =>
+  state.merge({...state, formType})
 
-export const logIn = state =>
-  state.merge({...state, currentState: 'logIn'})
-
-export const recoverPassword = state =>
-  state.merge({...state, currentState: 'recoverPassword'})
+export const updateFormValue = (state, {formValue}) =>
+  state.merge({...state, formValue})
 
 export const handleRequest = state =>
   state.merge({...state, processing: true})
@@ -52,20 +66,23 @@ export const handleRequest = state =>
 export const handleSuccess = (state, {token}) =>
   state.merge({...state, processing: false, token})
 
+export const handleRecoverPasswordSuccess = state =>
+  state.merge({...state, processing: false})
+
 export const handleFailure = (state, {error}) =>
   state.merge({...state, processing: false, error})
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.SIGN_UP]: signUp,
-  [Types.LOG_IN]: logIn,
-  [Types.RECOVER_PASSWORD]: recoverPassword,
+  [Types.UPDATE_FORM_TYPE]: updateFormType,
+  [Types.UPDATE_FORM_VALUE]: updateFormValue,
   [Types.SIGN_UP_REQUEST]: handleRequest,
   [Types.LOG_IN_REQUEST]: handleRequest,
   [Types.RECOVER_PASSWORD_REQUEST]: handleRequest,
   [Types.SIGN_UP_SUCCESS]: handleSuccess,
   [Types.LOG_IN_SUCCESS]: handleSuccess,
+  [Types.RECOVER_PASSWORD_SUCCESS]: handleRecoverPasswordSuccess,
   [Types.SIGN_UP_FAILURE]: handleFailure,
   [Types.LOG_IN_FAILURE]: handleFailure,
   [Types.RECOVER_PASSWORD_FAILURE]: handleFailure
