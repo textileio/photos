@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image, Text, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
@@ -15,7 +15,23 @@ t.form.Form.stylesheet = formStyle
 
 const options = {
   stylesheet: formStyle,
-  auto: 'placeholders'
+  auto: 'placeholders',
+  fields: {
+    referralCode: {
+      autoCapitalize: 'characters'
+    },
+    username: {
+      autoCapitalize: 'none'
+    },
+    email: {
+      autoCapitalize: 'none',
+      keyboardType: 'email-address'
+    },
+    password: {
+      autoCapitalize: 'none',
+      secureTextEntry: true
+    }
+  }
 }
 
 class LoginScreen extends Component {
@@ -28,6 +44,7 @@ class LoginScreen extends Component {
   }
 
   onPress () {
+    Keyboard.dismiss()
     var value = this.refs.form.getValue()
     if (value) { // if validation fails, value will be null
       const p = this.props
@@ -53,6 +70,7 @@ class LoginScreen extends Component {
   render () {
     return (
       <KeyboardAwareScrollView
+        keyboardShouldPersistTaps='always'
         style={{ backgroundColor: '#ffffff' }}
         resetScrollToCoords={{ x: 0, y: 0 }}
         contentContainerStyle={styles.container}
