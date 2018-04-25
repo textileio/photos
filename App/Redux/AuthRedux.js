@@ -6,16 +6,16 @@ import Immutable from 'seamless-immutable'
 const { Types, Creators } = createActions({
   signUp: null,
   logIn: null,
-  forgotPassword: null,
-  signUpRequest: ['referralCode', 'email', 'password'],
-  logInRequest: ['email', 'password'],
-  forgotPasswordRequest: ['email'],
+  recoverPassword: null,
+  signUpRequest: ['data'],
+  logInRequest: ['data'],
+  recoverPasswordRequest: ['data'],
   signUpSuccess: ['token'],
   logInSuccess: ['token'],
-  forgotPasswordSuccess: null,
+  recoverPasswordSuccess: null,
   signUpFailure: ['error'],
   logInFailure: ['error'],
-  forgotPasswordFailure: ['error']
+  recoverPasswordFailure: ['error']
 })
 
 export const AuthTypes = Types
@@ -43,8 +43,8 @@ export const signUp = state =>
 export const logIn = state =>
   state.merge({...state, currentState: 'logIn'})
 
-export const forgotPassword = state =>
-  state.merge({...state, currentState: 'forgotPassword'})
+export const recoverPassword = state =>
+  state.merge({...state, currentState: 'recoverPassword'})
 
 export const handleRequest = state =>
   state.merge({...state, processing: true})
@@ -60,13 +60,13 @@ export const handleFailure = (state, {error}) =>
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.SIGN_UP]: signUp,
   [Types.LOG_IN]: logIn,
-  [Types.FORGOT_PASSWORD]: forgotPassword,
+  [Types.RECOVER_PASSWORD]: recoverPassword,
   [Types.SIGN_UP_REQUEST]: handleRequest,
   [Types.LOG_IN_REQUEST]: handleRequest,
-  [Types.FORGOT_PASSWORD_REQUEST]: handleRequest,
+  [Types.RECOVER_PASSWORD_REQUEST]: handleRequest,
   [Types.SIGN_UP_SUCCESS]: handleSuccess,
   [Types.LOG_IN_SUCCESS]: handleSuccess,
   [Types.SIGN_UP_FAILURE]: handleFailure,
   [Types.LOG_IN_FAILURE]: handleFailure,
-  [Types.FORGOT_PASSWORD_FAILURE]: handleFailure
+  [Types.RECOVER_PASSWORD_FAILURE]: handleFailure
 })

@@ -44,10 +44,12 @@ class LoginScreen extends Component {
   }
 
   onPress () {
-    // call getValue() to get the values of the form
-    var value = this.refs.form.getValue();
+    var value = this.refs.form.getValue()
     if (value) { // if validation fails, value will be null
-      console.log(value); // value here is an instance of Person
+      const p = this.props
+      const currentState = this.props.currentState
+      const submitFunction = currentState === 'signUp' ? p.signUpRequest : (currentState === 'logIn' ? p.logInRequest : p.recoverPasswordRequest)
+      submitFunction(value)
     }
   }
 
@@ -112,7 +114,7 @@ const mapStateToProps = state => {
     case 'logIn':
       buttonData = [
         { action: 'signUp', title: 'Sign Up', navigationTitle: 'Sign Up' },
-        { action: 'forgotPassword', title: 'Forgot Password?', navigationTitle: 'Recover Password' }
+        { action: 'recoverPassword', title: 'Forgot Password?', navigationTitle: 'Recover Password' }
       ]
       navigationTitle = 'Log In'
       break
@@ -133,7 +135,10 @@ const mapDispatchToProps = dispatch => {
   return {
     signUp: () => { dispatch(AuthActions.signUp()) },
     logIn: () => { dispatch(AuthActions.logIn()) },
-    forgotPassword: () => { dispatch(AuthActions.forgotPassword()) }
+    recoverPassword: () => { dispatch(AuthActions.recoverPassword()) },
+    signUpRequest: data => { dispatch(AuthActions.signUpRequest(data)) },
+    logInRequest: data => { dispatch(AuthActions.logInRequest(data)) },
+    recoverPasswordRequest: data => { dispatch(AuthActions.recoverPasswordRequest(data)) }
   }
 }
 
