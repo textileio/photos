@@ -15,7 +15,7 @@ const eventLogging = ({ getState }) => next => (action) => {
     if (additionalPayload) {
       payload = {...payload, ...additionalPayload}
     }
-    // console.log('ACTION:', action.type, 'PAYLOAD:', payload)
+    console.log('ACTION:', action.type, 'PAYLOAD:', payload)
     Analytics.trackEvent(action.type, payload)
     return next(action)
   }
@@ -55,6 +55,18 @@ const actionToPayload = (action) => {
     case 'STOP_NODE_FAILURE':
       return { error: action.error.message }
     case 'PHOTOS_TASK_ERROR':
+      return { error: action.error.message }
+    case 'SIGN_UP_REQUEST':
+      return { description: action.data.referralCode + ', ' + action.data.username + ', ' + action.data.email}
+    case 'LOG_IN_REQUEST':
+      return { description: action.data.username }
+    case 'RECOVER_PASSWORD_REQUEST':
+      return { description: action.data.username }
+    case 'SIGN_UP_FAILURE':
+      return { error: action.error.message }
+    case 'LOG_IN_FAILURE':
+      return { error: action.error.message }
+    case 'RECOVER_PASSWORD_FAILURE':
       return { error: action.error.message }
     default:
       return null

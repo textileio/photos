@@ -50,10 +50,10 @@ export const handleRequest = state =>
   state.merge({...state, processing: true})
 
 export const handleSuccess = (state, {token}) =>
-  state.merge({...state, token})
+  state.merge({...state, processing: false, token})
 
 export const handleFailure = (state, {error}) =>
-  state.merge({...state, error})
+  state.merge({...state, processing: false, error})
 
 /* ------------- Hookup Reducers To Types ------------- */
 
