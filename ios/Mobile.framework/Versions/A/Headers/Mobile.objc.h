@@ -34,12 +34,9 @@
 // skipped field Wrapper.Cancel with unsupported type: *types.Named
 
 - (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb error:(NSError**)error;
-- (BOOL)configureDatastore:(NSString*)mnemonic error:(NSError**)error;
 - (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
 - (NSString*)getPeerID:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit error:(NSError**)error;
-- (NSString*)getRecoveryPhrase:(NSError**)error;
-- (BOOL)isDatastoreConfigured;
 - (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)startGateway:(NSError**)error;
