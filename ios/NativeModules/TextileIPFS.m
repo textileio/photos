@@ -146,11 +146,6 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
   }
 }
 
-- (BOOL)_configureNodeWithMnemonic:(NSString *)mnemonic error:(NSError**)error {
-  BOOL success = [self.node configureDatastore:mnemonic error:error];
-  return success;
-}
-
 - (BOOL)_startGateway:(NSError**)error {
   BOOL success = [self.node startGateway:error];
   return success;
@@ -158,11 +153,7 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
 
 - (BOOL)_startNode:(NSError**)error {
   BOOL startNodeSuccess = [self.node start:error];
-  BOOL configureSuccess = YES;
-  if (startNodeSuccess && ![self.node isDatastoreConfigured]) {
-    configureSuccess = [self.node configureDatastore:@"" error:error];
-  }
-  return startNodeSuccess && configureSuccess;
+  return startNodeSuccess;
 }
 
 - (BOOL)_stopNode:(NSError**)error {
