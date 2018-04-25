@@ -21,12 +21,12 @@ const Signup = t.struct({
 })
 
 const Login = t.struct({
-  email: t.String,
+  username: t.String,
   password: t.String
 })
 
 const PasswordRecovery = t.struct({
-  email: t.String
+  username: t.String
 })
 
 const options = {
@@ -84,7 +84,6 @@ class LoginScreen extends Component {
         </TouchableHighlight>
         <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
           {this.renderButtons()}
-          {/*<Button title={'Log In Instead'} />*/}
         </View>
       </KeyboardAwareScrollView>
     )

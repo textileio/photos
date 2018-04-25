@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
-import { View, StatusBar } from 'react-native'
+import { View, StatusBar, ActivityIndicator } from 'react-native'
+import { Overlay } from 'react-native-elements'
 import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
@@ -22,8 +23,24 @@ class RootContainer extends Component {
       <View style={styles.applicationView}>
         <StatusBar barStyle='light-content' />
         <AppNavigation />
+        <Overlay
+          isVisible={this.props.showOverlay}
+          windowBackgroundColor='rgba(0, 0, 0, .1)'
+          overlayBackgroundColor='rgba(0, 0, 0, .8)'
+          borderRadius={8}
+          width='auto'
+          height='auto'
+        >
+          <ActivityIndicator size="large" color="#ffffff" />
+        </Overlay>
       </View>
     )
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    showOverlay: state.auth.processing
   }
 }
 
@@ -32,4 +49,4 @@ const mapDispatchToProps = (dispatch) => ({
   startup: () => dispatch(StartupActions.startup())
 })
 
-export default connect(null, mapDispatchToProps)(RootContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(RootContainer)
