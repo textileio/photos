@@ -20,6 +20,21 @@ import {queryPhotos} from '../Services/PhotoUtils'
 import TextileActions from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 
+export function * signUp ({data}) {
+  const {referralCode, username, email, password} = data
+
+}
+
+export function * logIn ({data}) {
+  const {username, password} = data
+
+}
+
+export function * recoverPassword ({data}) {
+  const {email} = data
+
+}
+
 export function * createNode ({path}) {
   try {
     const success = yield call(IPFS.createNodeWithDataDir, path)
