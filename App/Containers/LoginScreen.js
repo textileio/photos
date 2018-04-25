@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
-import AuthActions from '../Redux/AuthRedux'
+import AuthActions, { SignUp, LogIn, RecoverPassword } from '../Redux/AuthRedux'
 
 // Styles
 import styles from './Styles/LoginScreenStyle'
@@ -12,22 +12,6 @@ import formStyle from './Styles/FormStyle'
 
 const Form = t.form.Form
 t.form.Form.stylesheet = formStyle
-
-const Signup = t.struct({
-  referralCode: t.String,
-  username: t.String,
-  email: t.String,
-  password: t.String
-})
-
-const Login = t.struct({
-  username: t.String,
-  password: t.String
-})
-
-const PasswordRecovery = t.struct({
-  username: t.String
-})
 
 const options = {
   stylesheet: formStyle,
@@ -47,8 +31,8 @@ class LoginScreen extends Component {
     var value = this.refs.form.getValue()
     if (value) { // if validation fails, value will be null
       const p = this.props
-      const currentState = this.props.currentState
-      const submitFunction = currentState === 'signUp' ? p.signUpRequest : (currentState === 'logIn' ? p.logInRequest : p.recoverPasswordRequest)
+      const f = this.props.formType
+      const submitFunction = f === SignUp ? p.signUpRequest : (f === LogIn ? p.logInRequest : p.recoverPasswordRequest)
       submitFunction(value)
     }
   }
@@ -57,14 +41,16 @@ class LoginScreen extends Component {
     this.props.navigation.setParams({ navigationTitle: this.props.navigationTitle })
   }
 
-  handleButtonPress(action: string, navigationTitle: string) {
-    this.props[action]()
+  handleButtonPress (formType, navigationTitle) {
+    this.props.updateFormType(formType)
     this.props.navigation.setParams({ navigationTitle })
   }
 
+  onChange (value) {
+    this.props.updateFormValue(value)
+  }
+
   render () {
-    const currentState = this.props.currentState
-    const form = currentState === 'signUp' ? Signup : (currentState === 'logIn' ? Login : PasswordRecovery)
     return (
       <KeyboardAwareScrollView
         style={{ backgroundColor: '#ffffff' }}
@@ -76,7 +62,9 @@ class LoginScreen extends Component {
         </View>
         <Form
           ref='form'
-          type={form}
+          type={this.props.formType}
+          value={this.props.formValue}
+          onChange={this.onChange.bind(this)}
           options={options}
         />
         <TouchableHighlight style={styles.button} onPress={this.onPress.bind(this)} underlayColor='#99d9f4'>
@@ -91,7 +79,7 @@ class LoginScreen extends Component {
 
   renderButtons () {
     const buttons = this.props.buttonData.map((button, i) => {
-      return <TouchableOpacity key={i} onPress={() => this.handleButtonPress(button.action, button.navigationTitle)}>
+      return <TouchableOpacity key={i} onPress={() => this.handleButtonPress(button.formType, button.navigationTitle)}>
         <Text style={styles.optionText}>{button.title}</Text>
       </TouchableOpacity>
       // return <Button title={button.title} onPress={button.action} key={i} />
@@ -103,38 +91,38 @@ class LoginScreen extends Component {
 const mapStateToProps = state => {
   let buttonData
   let navigationTitle
-  switch (state.auth.currentState) {
-    case 'signUp':
+  switch (state.auth.formType) {
+    case SignUp:
       buttonData = [
-        { action: 'logIn', title: 'Log In Instead', navigationTitle: 'Log In' }
+        { formType: LogIn, title: 'Log In Instead', navigationTitle: 'Log In' }
       ]
       navigationTitle = 'Sign Up'
       break
-    case 'logIn':
+    case LogIn:
       buttonData = [
-        { action: 'signUp', title: 'Sign Up', navigationTitle: 'Sign Up' },
-        { action: 'recoverPassword', title: 'Forgot Password?', navigationTitle: 'Recover Password' }
+        { formType: SignUp, title: 'Sign Up', navigationTitle: 'Sign Up' },
+        { formType: RecoverPassword, title: 'Forgot Password?', navigationTitle: 'Recover Password' }
       ]
       navigationTitle = 'Log In'
       break
     default:
       buttonData = [
-        { action: 'logIn', title: 'Log In', navigationTitle: 'Log In' }
+        { formType: LogIn, title: 'Log In', navigationTitle: 'Log In' }
       ]
       navigationTitle = 'Recover Password'
   }
   return {
-    currentState: state.auth.currentState,
     buttonData,
-    navigationTitle
+    navigationTitle,
+    formType: state.auth.formType,
+    formValue: state.auth.formValue
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    signUp: () => { dispatch(AuthActions.signUp()) },
-    logIn: () => { dispatch(AuthActions.logIn()) },
-    recoverPassword: () => { dispatch(AuthActions.recoverPassword()) },
+    updateFormType: type => { dispatch(AuthActions.updateFormType(type)) },
+    updateFormValue: value => { dispatch(AuthActions.updateFormValue(value)) },
     signUpRequest: data => { dispatch(AuthActions.signUpRequest(data)) },
     logInRequest: data => { dispatch(AuthActions.logInRequest(data)) },
     recoverPasswordRequest: data => { dispatch(AuthActions.recoverPasswordRequest(data)) }
