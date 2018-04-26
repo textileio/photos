@@ -21,10 +21,15 @@ const { Types, Creators } = createActions({
 export const AuthTypes = Types
 export default Creators
 
+const Email = t.refinement(t.String, function (n) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(n).toLowerCase())
+})
+
 export const SignUp = t.struct({
   referralCode: t.String,
   username: t.String,
-  email: t.String,
+  email: Email,
   password: t.String
 })
 
