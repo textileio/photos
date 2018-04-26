@@ -38,6 +38,8 @@ const actionToPayload = (action) => {
   switch (action.type) {
     case 'APP_STATE_CHANGE':
       return { description: action.newState }
+    case 'CREATE_NODE_REQUEST':
+      return { description: action.path }
     case 'IMAGE_ADDED':
       return { description: action.remotePayloadPath }
     case 'IMAGE_UPLOAD_PROGRESS':
