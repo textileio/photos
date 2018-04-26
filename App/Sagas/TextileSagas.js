@@ -80,7 +80,7 @@ export function * photosTask (action) {
     yield call(IPFS.startNode)
     const photos = yield call(queryPhotos)
     for (const photo of photos) {
-      const multipartData = yield call(IPFS.addImageAtPath, photo.node.image.path, photo.node.image.thumbPath)
+      const multipartData = yield call(IPFS.addImageAtPath, photo.node.image.path, photo.node.image.thumbPath, 'default')
       yield call(RNFS.unlink, photo.node.image.path)
       yield call(RNFS.unlink, photo.node.image.thumbPath)
       photo.node.image['hash'] = multipartData.boundary
