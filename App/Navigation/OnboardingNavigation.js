@@ -5,7 +5,7 @@ import {getPhoto} from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
 import styles from './Styles/NavigationStyles'
 
-const params1 = {
+export const params1 = {
   header: 'Welcome to the Textile Beta!',
   message: 'Thanks very much for agreeing to test the app and provide feedback on this very early draft of our brand new technology. Right now, Textile is all about photos, soon it will be about how you control and own all your personal data.',
   buttonTitle: 'OK',
@@ -174,7 +174,7 @@ const OnboardingNav = StackNavigator(
     headerMode: 'float',
     left: null,
     initialRouteName: 'Login',
-    initialRouteParams: params1,
+    initialRouteParams: {},
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,

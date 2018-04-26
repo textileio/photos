@@ -15,18 +15,21 @@ import { call, put, all } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
+import NavigationService from '../Services/NavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
 import UploadTask from '../../UploadTaskNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
 import TextileActions from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
+import {params1} from '../Navigation/OnboardingNavigation'
 
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
     yield delay(2000)
     yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
+    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
@@ -37,6 +40,7 @@ export function * logIn ({data}) {
   try {
     yield delay(2000)
     yield put(AuthActions.logInSuccess('tokenFormLogIn'))
+    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }
