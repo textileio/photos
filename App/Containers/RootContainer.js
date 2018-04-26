@@ -6,6 +6,7 @@ import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
 import ReduxPersist from '../Config/ReduxPersist'
+import NavigationService from '../Services/NavigationService'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
@@ -22,7 +23,7 @@ class RootContainer extends Component {
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle='light-content' />
-        <AppNavigation />
+        <AppNavigation ref={navRef => { NavigationService.setTopLevelNavigator(navRef) }} />
         <Overlay
           isVisible={this.props.showOverlay}
           windowBackgroundColor='rgba(0, 0, 0, .1)'
