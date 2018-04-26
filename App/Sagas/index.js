@@ -18,7 +18,8 @@ import {
   startGateway,
   startNode,
   pairNewDevice,
-  photosTask
+  photosTask,
+  removePayloadFile
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -41,6 +42,8 @@ export default function * root () {
 
     takeEvery(TextileTypes.APP_STATE_CHANGE, photosTask),
     takeEvery(TextileTypes.LOCATION_UPDATE, photosTask),
-    takeEvery(TextileTypes.BACKGROUND_TASK, photosTask)
+    takeEvery(TextileTypes.BACKGROUND_TASK, photosTask),
+
+    takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile)
   ])
 }
