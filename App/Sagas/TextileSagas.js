@@ -135,3 +135,8 @@ export function * photosTask (action) {
     yield put(TextileActions.photosTaskError(error))
   }
 }
+
+export function * removePayloadFile ({data}) {
+  const {file} = data
+  yield call(RNFS.unlink, file)
+}
