@@ -14,8 +14,6 @@ import com.rnfs.RNFSPackage;
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
 import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
-import io.realm.react.RealmReactPackage;
-import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
@@ -38,27 +36,20 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new UploaderReactPackage(),
-            new RNBackgroundFetchPackage(),
-            new RNDeviceInfo(),
-            new ReactNativeConfigPackage(),
-            new BackgroundTimerPackage(),
-            new BackgroundTaskPackage(),
-            new ImageResizerPackage(),
-            new RNFSPackage(),
-            new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
-            new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
-            new AppCenterReactNativePackage(MainApplication.this),
-          new BackgroundTaskPackage(),
-          new RealmReactPackage(),
-          new PickerPackage(),
-          new ImageResizerPackage(),
-          new ReactNativeI18n(),
-          new VectorIconsPackage(),
-          new RNDeviceInfo(),
-          new RNFSPackage(),
-          new TextileIPFSPackage()
+        new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
+        new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
+        new AppCenterReactNativePackage(MainApplication.this),
+        new BackgroundTimerPackage(),
+        new BackgroundTaskPackage(),
+        new ImageResizerPackage(),
+        new ReactNativeConfigPackage(),
+        new ReactNativeI18n(),
+        new RNBackgroundFetchPackage(),
+        new RNDeviceInfo(),
+        new RNFSPackage(),
+        new TextileIPFSPackage(),
+        new UploaderReactPackage(),
+        new VectorIconsPackage()
       );
     }
 

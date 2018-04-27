@@ -2,7 +2,6 @@
 
 import EventEmitter from 'EventEmitter'
 import Upload from 'react-native-background-upload'
-// const { UploadTask } = NativeModules
 
 const uploadEmitter = new EventEmitter()
 
