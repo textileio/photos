@@ -67,7 +67,6 @@
 		9339E9A2205C381700BCA4CF /* TextileIPFS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileIPFS.m */; };
 		9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
 		9339E9A8205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
-		93477EE32075763400D9E0FC /* UploadTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 93477EE22075763400D9E0FC /* UploadTask.m */; };
 		935215F2207E967F00D46B81 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 935215C5207E966C00D46B81 /* libART.a */; };
 		937C35AE2081797700F06ADB /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937C35A62081794C00F06ADB /* libRNDeviceInfo.a */; };
 		937FC5412061B7A700357ED5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */; };
@@ -591,8 +590,6 @@
 		9339E99F205C381700BCA4CF /* TextileIPFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileIPFS.m; sourceTree = "<group>"; };
 		9339E9A0205C381700BCA4CF /* TextileIPFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileIPFS.h; sourceTree = "<group>"; };
 		9339E9A6205C3B8700BCA4CF /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mobile.framework; sourceTree = "<group>"; };
-		93477EB62075763400D9E0FC /* UploadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadTask.h; sourceTree = "<group>"; };
-		93477EE22075763400D9E0FC /* UploadTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadTask.m; sourceTree = "<group>"; };
 		935215BC207E966B00D46B81 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
@@ -983,8 +980,6 @@
 		9339E99E205C381700BCA4CF /* NativeModules */ = {
 			isa = PBXGroup;
 			children = (
-				93477EB62075763400D9E0FC /* UploadTask.h */,
-				93477EE22075763400D9E0FC /* UploadTask.m */,
 				9339E9A0205C381700BCA4CF /* TextileIPFS.h */,
 				9339E99F205C381700BCA4CF /* TextileIPFS.m */,
 			);
@@ -1975,7 +1970,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93477EE32075763400D9E0FC /* UploadTask.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */,
