@@ -91,9 +91,9 @@
     "react-native-cli": "^2.0.1",
     "react-native-create-bridge": "^2.0.1",
     "react-test-renderer": "16.0.0",
-    "reactotron-react-native": "^1.13.2",
-    "reactotron-redux": "^1.13.0",
-    "reactotron-redux-saga": "^1.13.0",
+    "reactotron-react-native": "2.0.0-beta.2",
+    "reactotron-redux": "2.0.0-beta.2",
+    "reactotron-redux-saga": "2.0.0-beta.2",
     "snazzy": "^7.1.1",
     "standard": "10.0.2"
   },
