@@ -2,6 +2,7 @@
 
 import EventEmitter from 'EventEmitter'
 import Upload from 'react-native-background-upload'
+// const { UploadTask } = NativeModules
 
 const uploadEmitter = new EventEmitter()
 
@@ -28,7 +29,7 @@ export default {
         uploadEmitter.emit('UploadTaskComplete', { file: file })
       })
     }).catch((err) => {
-      console.log('Upload error!', err)
+      uploadEmitter.emit('UploadTaskError', { file: file, error: err })
     })
   }
 }
