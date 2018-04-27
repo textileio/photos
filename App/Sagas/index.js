@@ -18,6 +18,7 @@ import {
   startGateway,
   startNode,
   pairNewDevice,
+  getPhotoHashes,
   photosTask,
   removePayloadFile
 } from './TextileSagas'
@@ -39,6 +40,9 @@ export default function * root () {
     takeLatest(IpfsNodeTypes.START_GATEWAY_REQUEST, startGateway),
     takeLatest(IpfsNodeTypes.START_NODE_REQUEST, startNode),
     takeLatest(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
+
+    takeEvery(IpfsNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
+    takeEvery(TextileTypes.IMAGE_ADDED, getPhotoHashes),
 
     takeEvery(TextileTypes.APP_STATE_CHANGE, photosTask),
     takeEvery(TextileTypes.LOCATION_UPDATE, photosTask),
