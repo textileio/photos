@@ -11,8 +11,10 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import net.MultipartRequest;
+
 import mobile.Mobile;
-import mobile.Node;
+import mobile.Wrapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,7 @@ import java.util.Map;
 public class TextileIPFSModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileIPFS";
     private static ReactApplicationContext reactContext = null;
-    private static Node textile = null;
+    private static Wrapper textile = null;
 
     public TextileIPFSModule(ReactApplicationContext context) {
         // Pass in the context to the constructor and save it so you can emit events
@@ -47,8 +49,28 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createNodeWithDataDir (String dataDir, String apiHost) {
-        textile = Mobile.newTextile(dataDir, apiHost);
+    public void createNodeWithDataDir (String dataDir, Promise promise) {
+        if (textile == null) {
+            try {
+                textile = Mobile.newNode(dataDir);
+                promise.resolve(true);
+            } catch (Exception e) {
+                promise.reject("START ERROR", e);
+            }
+        } else {
+            promise.resolve(true);
+        }
+    }
+
+    @ReactMethod
+    public void startGateway (Promise promise) {
+        try {
+            textile.startGateway();
+            promise.resolve(true);
+        }
+        catch (Exception e) {
+            promise.reject("START ERROR", e);
+        }
     }
 
     @ReactMethod
@@ -74,10 +96,13 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addImageAtPath (String path, String thumb, Promise promise) {
+    public void addImageAtPath (String path, String thumbPath, String thread, Promise promise) {
         try {
-            String hash = textile.addPhoto(path, thumb);
-            promise.resolve(hash);
+            MultipartRequest multipart = textile.addPhoto(path, thumbPath, thread);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("payloadPath", multipart.getPayloadPath());
+            map.put("boundary", multipart.getBoundary());
+            promise.resolve(map);
         }
         catch (Exception e) {
             promise.reject("ADD IMAGE ERROR", e);
@@ -85,9 +110,9 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotos (String offset, Integer limit, Promise promise) {
+    public void getPhotos (String offset, Integer limit, String thread, Promise promise) {
         try {
-            String hashString = textile.getPhotos(offset, limit);
+            String hashString = textile.getPhotos(offset, limit, thread);
             promise.resolve(hashString);
         }
         catch (Exception e) {
@@ -96,9 +121,24 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public String syncGetPhotoData (String path) {
+        try {
+            String result = textile.getFileBase64(path);
+            if (result != null) {
+                return result;
+            } else {
+                return null;
+            }
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    @ReactMethod
     public void getPhotoData (String path, Promise promise) {
         try {
-            String result = textile.getPhotoBase64String(path);
+            String result = textile.getFileBase64(path);
             promise.resolve(result);
         }
         catch (Exception e) {
@@ -107,10 +147,17 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void exampleMethod () {
-        // An example native method that you will expose to React
-        // https://facebook.github.io/react-native/docs/native-modules-android.html#the-toast-module
+    public void pairNewDevice (String pkb64, Promise promise) {
+        try {
+            String result = textile.pairDesktop(pkb64);
+            promise.resolve(result);
+        }
+        catch (Exception e) {
+            promise.reject("GET DATA ERROR", e);
+        }
     }
+
+
 
     private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {
         // A method for emitting from the native side to JS

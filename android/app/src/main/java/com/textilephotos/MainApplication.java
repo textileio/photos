@@ -14,8 +14,8 @@ import com.rnfs.RNFSPackage;
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
 import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
-import io.realm.react.RealmReactPackage;
-import com.reactnative.ivpusic.imagepicker.PickerPackage;
+//import io.realm.react.RealmReactPackage;
+//import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
@@ -50,14 +50,14 @@ public class MainApplication extends Application implements ReactApplication {
             new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
             new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
             new AppCenterReactNativePackage(MainApplication.this),
-          new BackgroundTaskPackage(),
-          new RealmReactPackage(),
-          new PickerPackage(),
-          new ImageResizerPackage(),
+//          new BackgroundTaskPackage(),
+//          new RealmReactPackage(),
+//          new PickerPackage(),
+//          new ImageResizerPackage(),
           new ReactNativeI18n(),
           new VectorIconsPackage(),
-          new RNDeviceInfo(),
-          new RNFSPackage(),
+//          new RNDeviceInfo(),
+//          new RNFSPackage(),
           new TextileIPFSPackage()
       );
     }
