@@ -80,9 +80,9 @@ RCT_REMAP_METHOD(stopNode, stopNodeWithResolver:(RCTPromiseResolveBlock)resolve 
   }
 }
 
-RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath thread:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NetMultipartRequest *multipart = [self _addPhoto:path thumbPath:thumbPath error:&error];
+  NetMultipartRequest *multipart = [self _addPhoto:path thumbPath:thumbPath toThread:thread error:&error];
   if(multipart) {
     resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
   } else {
@@ -90,9 +90,9 @@ RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPat
   }
 }
 
-RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit error:&error];
+  NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit fromThread:thread error:&error];
   if (hashesString) {
     resolve(hashesString);
   } else {
@@ -161,13 +161,13 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
   return success;
 }
 
-- (NetMultipartRequest *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath error:(NSError**)error {
-  NetMultipartRequest *multipart = [self.node addPhoto:path thumb:thumbPath error:error];
+- (NetMultipartRequest *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath toThread:(NSString *)thread error:(NSError**)error {
+  NetMultipartRequest *multipart = [self.node addPhoto:path thumb:thumbPath thread:thread error:error];
   return multipart;
 }
 
-- (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit error:(NSError**)error {
-  NSString *hashesString = [self.node getPhotos:offset limit:limit error:error];
+- (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit fromThread:(NSString *)thread error:(NSError**)error {
+  NSString *hashesString = [self.node getPhotos:offset limit:limit thread:thread error:error];
   return hashesString;
 }
 
