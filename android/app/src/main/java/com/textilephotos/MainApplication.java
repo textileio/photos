@@ -36,20 +36,20 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-        new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
-        new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
-        new AppCenterReactNativePackage(MainApplication.this),
-        new BackgroundTimerPackage(),
-        new BackgroundTaskPackage(),
-        new ImageResizerPackage(),
-        new ReactNativeConfigPackage(),
-        new ReactNativeI18n(),
-        new RNBackgroundFetchPackage(),
-        new RNDeviceInfo(),
-        new RNFSPackage(),
-        new TextileIPFSPackage(),
-        new UploaderReactPackage(),
-        new VectorIconsPackage()
+            new UploaderReactPackage(),
+            new RNBackgroundFetchPackage(),
+            new RNDeviceInfo(),
+            new ReactNativeConfigPackage(),
+            new BackgroundTimerPackage(),
+            new BackgroundTaskPackage(),
+            new ImageResizerPackage(),
+            new RNFSPackage(),
+            new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
+            new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
+            new AppCenterReactNativePackage(MainApplication.this),
+          new ReactNativeI18n(),
+          new VectorIconsPackage(),
+          new TextileIPFSPackage()
       );
     }
 
