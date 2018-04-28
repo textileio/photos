@@ -73,8 +73,7 @@ class PhotoViewerScreen extends React.PureComponent {
 const mapStateToProps = (state) => {
   const items = state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
   const imageData = items.map(item => {
-    const image = item.image.node.image
-    const {width, height, hash} = image
+    const {width, height, hash} = item.image
     return {
       source: { uri: 'file:///image.jpg' },
       hash,

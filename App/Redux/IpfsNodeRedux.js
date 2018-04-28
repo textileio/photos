@@ -15,7 +15,10 @@ const { Types, Creators } = createActions({
   startNodeFailure: ['error'],
   stopNodeRequest: null,
   stopNodeSuccess: null,
-  stopNodeFailure: ['error']
+  stopNodeFailure: ['error'],
+  getPhotoHashesRequest: null,
+  getPhotoHashesSuccess: ['hashes'],
+  getPhotoHashesFailure: ['error']
 })
 
 export const IpfsNodeTypes = Types
@@ -30,6 +33,11 @@ export const INITIAL_STATE = Immutable({
   },
   gatewayState: {
     state: 'stopped', // | starting | started
+    error: null
+  },
+  photos: {
+    querying: false,
+    hashes: [],
     error: null
   }
 })
@@ -71,6 +79,15 @@ export const nodeStopped = state =>
 export const nodeError = (state, {error}) =>
   state.merge({...state, nodeState: {error: error}})
 
+export const photoHashesRequest = state =>
+  state.merge({...state, photos: {...state.photos, querying: true}})
+
+export const photoHashesSuccess = (state, {hashes}) =>
+  state.merge({...state, photos: {...state.photos, querying: false, hashes}})
+
+export const photoHashesFailure = (state, {error}) =>
+  state.merge({...state, photos: {...state.photos, querying: false, error}})
+
 // Helper so sagas can figure out current items loaded
 // const getItems = state => state.items
 
@@ -91,5 +108,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.STOP_NODE_REQUEST]: nodeStopping,
   [Types.STOP_NODE_SUCCESS]: nodeStopped,
-  [Types.STOP_NODE_FAILURE]: nodeError
+  [Types.STOP_NODE_FAILURE]: nodeError,
+
+  [Types.GET_PHOTO_HASHES_REQUEST]: photoHashesRequest,
+  [Types.GET_PHOTO_HASHES_SUCCESS]: photoHashesSuccess,
+  [Types.GET_PHOTO_HASHES_FAILURE]: photoHashesFailure
 })

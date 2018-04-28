@@ -93,8 +93,11 @@ RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPat
 RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit error:&error];
-  if (hashesString) {
-    resolve(hashesString);
+  NSData *data = [hashesString dataUsingEncoding:NSUTF8StringEncoding];
+  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  NSArray *hashes = [json objectForKey:@"hashes"];
+  if (hashes) {
+    resolve(hashes);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
