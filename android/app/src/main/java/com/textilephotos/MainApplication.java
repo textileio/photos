@@ -3,6 +3,7 @@ package com.textilephotos;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.vydia.RNUploader.UploaderReactPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
@@ -13,9 +14,7 @@ import com.rnfs.RNFSPackage;
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
 import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
-import io.realm.react.RealmReactPackage;
-import com.reactnative.ivpusic.imagepicker.PickerPackage;
-import com.i18n.reactnativei18n.ReactNativeI18n;
+import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -37,7 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new UploaderReactPackage(),
             new RNBackgroundFetchPackage(),
             new RNDeviceInfo(),
             new ReactNativeConfigPackage(),
@@ -48,14 +47,8 @@ public class MainApplication extends Application implements ReactApplication {
             new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
             new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
             new AppCenterReactNativePackage(MainApplication.this),
-          new BackgroundTaskPackage(),
-          new RealmReactPackage(),
-          new PickerPackage(),
-          new ImageResizerPackage(),
-          new ReactNativeI18n(),
+          new RNI18nPackage(),
           new VectorIconsPackage(),
-          new RNDeviceInfo(),
-          new RNFSPackage(),
           new TextileIPFSPackage()
       );
     }
