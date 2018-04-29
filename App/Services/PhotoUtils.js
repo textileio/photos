@@ -12,7 +12,7 @@ export async function queryPhotos () {
   if (!latestTimestampString) {
     // If we've never queried a photo before, just record the newest photo timestamp
     // or the current time and we'll start from there next time
-    let timestamp = seed ? new Date(seed.node.timestamp * 1000) : new Date()
+    let timestamp = seed ? new Date(seed.photo.timestamp * 1000) : new Date()
     console.log('NO PREVIOUS PHOTOS QUERIED, SAVING TIMESTAMP:', timestamp.toISOString())
     await AsyncStorage.setItem('latestPhotoTimestamp', timestamp.toISOString())
   } else {
@@ -21,14 +21,14 @@ export async function queryPhotos () {
     }
     const latestTimestamp = Date.parse(latestTimestampString)
     let currentPhoto = seed
-    let currentTimestamp = new Date(currentPhoto.node.timestamp * 1000)
+    let currentTimestamp = new Date(currentPhoto.photo.timestamp * 1000)
     while (currentTimestamp > latestTimestamp) {
-      photos.push(currentPhoto)
+      photos.push(currentPhoto.photo)
       if (!currentPhoto.pageInfo.has_next_page) {
         break
       }
       currentPhoto = await getPhoto(currentPhoto.pageInfo.end_cursor)
-      currentTimestamp = new Date(currentPhoto.node.timestamp * 1000)
+      currentTimestamp = new Date(currentPhoto.photo.timestamp * 1000)
     }
     if (photos.length > 0) {
       const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
@@ -43,21 +43,20 @@ export async function queryPhotos () {
         await RNFS.mkdir(thumbDir)
       }
       for (const photo of photos) {
-        // console.log('PHOTO', photo)
         // TODO: Figure out handling for Android here
-        if (photo.node.image.uri.includes('assets-library://')) {
+        if (photo.uri.includes('assets-library://')) {
           var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
-          while (match = regex.exec(photo.node.image.uri)) {
+          while (match = regex.exec(photo.uri)) {
             params[match[1]] = match[2]
           }
           const path = fullDir + params.id + '.' + params.ext
-          await RNFS.copyAssetsFileIOS(photo.node.image.uri, path, 0, 0)
-          photo.node.image['path'] = path
-          const thumbPath = await resizeImage(photo.node.image.path, thumbRelativeDir)
-          photo.node.image['thumbPath'] = thumbPath
+          await RNFS.copyAssetsFileIOS(photo.uri, path, 0, 0)
+          photo['path'] = path
+          const thumbPath = await resizeImage(photo.path, thumbRelativeDir)
+          photo['thumbPath'] = thumbPath
         }
       }
-      const newestPhotoTimestampString = photos[0].node.timestamp
+      const newestPhotoTimestampString = photos[0].timestamp
       const newestPhotoTimestamp = new Date(newestPhotoTimestampString * 1000)
       await AsyncStorage.setItem('latestPhotoTimestamp', newestPhotoTimestamp.toISOString())
     }
@@ -75,7 +74,15 @@ export async function getPhoto (cursor) {
     return
   }
   var node = photosData.edges[0].node
-  return { node: node, pageInfo: photosData.page_info }
+  return {
+    photo: {
+      timestamp: node.timestamp,
+      uri: node.image.uri,
+      width: node.image.width,
+      height: node.image.height
+    },
+    pageInfo: photosData.page_info
+  }
 }
 
 export async function resizeImage (path: string, outputPath: string, width: number = 400, height: number = 400): string {
