@@ -10,15 +10,51 @@
 *    you'll need to define a constant in that file.
 *************************************************************/
 
+import { delay } from 'redux-saga'
 import { call, put, all } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
+import NavigationService from '../Services/NavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
 import UploadTask from '../../UploadTaskNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
 import TextileActions from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
+import AuthActions from '../Redux/AuthRedux'
+import {params1} from '../Navigation/OnboardingNavigation'
+
+export function * signUp ({data}) {
+  const {referralCode, username, email, password} = data
+  try {
+    yield delay(2000)
+    yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
+    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+  } catch (error) {
+    yield put(AuthActions.signUpFailure(error))
+  }
+}
+
+export function * logIn ({data}) {
+  const {username, password} = data
+  try {
+    yield delay(2000)
+    yield put(AuthActions.logInSuccess('tokenFormLogIn'))
+    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+  } catch (error) {
+    yield put(AuthActions.logInFailure(error))
+  }
+}
+
+export function * recoverPassword ({data}) {
+  const {username} = data
+  try {
+    yield delay(2000)
+    yield put(AuthActions.recoverPasswordSuccess())
+  } catch (error) {
+    yield put(AuthActions.recoverPasswordFailure(error))
+  }
+}
 
 export function * createNode ({path}) {
   try {
@@ -59,6 +95,15 @@ export function * startNode () {
   }
 }
 
+export function * getPhotoHashes () {
+  try {
+    const photoData = yield call(IPFS.getPhotos, null, 100000)
+    yield put(IpfsNodeActions.getPhotoHashesSuccess(photoData))
+  } catch (error) {
+    yield put(IpfsNodeActions.getPhotoHashesFailure(error))
+  }
+}
+
 export function * pairNewDevice (action) {
   const { pubKey } = action
   try {
@@ -80,10 +125,10 @@ export function * photosTask (action) {
     yield call(IPFS.startNode)
     const photos = yield call(queryPhotos)
     for (const photo of photos) {
-      const multipartData = yield call(IPFS.addImageAtPath, photo.node.image.path, photo.node.image.thumbPath, 'default')
-      yield call(RNFS.unlink, photo.node.image.path)
-      yield call(RNFS.unlink, photo.node.image.thumbPath)
-      photo.node.image['hash'] = multipartData.boundary
+      const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
+      yield call(RNFS.unlink, photo.path)
+      yield call(RNFS.unlink, photo.thumbPath)
+      photo['hash'] = multipartData.boundary
       yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
       yield call(
         UploadTask.uploadFile,
@@ -98,4 +143,9 @@ export function * photosTask (action) {
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
   }
+}
+
+export function * removePayloadFile ({data}) {
+  const {file} = data
+  yield call(RNFS.unlink, file)
 }

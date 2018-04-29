@@ -30,13 +30,11 @@ export default {
   },
 
   addImageAtPath: async function (path: string, thumbPath: string, thread: string): MultipartData {
-    console.log('ADDING IMAGE:', path, thumbPath, thread)
     const multipartData = await TextileIPFS.addImageAtPath(path, thumbPath, thread)
-    console.log('ADDED IMAGE:', multipartData)
     return multipartData
   },
 
-  getPhotos: async function (offset: string, limit: number, thread: string): string {
+  getPhotos: async function (offset: ?string, limit: number, thread: string): string {
     const result = await TextileIPFS.getPhotos(offset, limit, thread)
     return result
   },
