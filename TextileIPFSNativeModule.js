@@ -29,13 +29,13 @@ export default {
     return success
   },
 
-  addImageAtPath: async function (path: string, thumbPath: string): MultipartData {
-    const multipartData = await TextileIPFS.addImageAtPath(path, thumbPath)
+  addImageAtPath: async function (path: string, thumbPath: string, thread: string): MultipartData {
+    const multipartData = await TextileIPFS.addImageAtPath(path, thumbPath, thread)
     return multipartData
   },
 
-  getPhotos: async function (offset: ?string, limit: number): string {
-    const result = await TextileIPFS.getPhotos(offset, limit)
+  getPhotos: async function (offset: ?string, limit: number, thread: string): string {
+    const result = await TextileIPFS.getPhotos(offset, limit, thread)
     return result
   },
 
