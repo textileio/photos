@@ -68,13 +68,8 @@ export const handleImageProgress = (state, {data}) => {
 
 export const handleImageUploadComplete = (state, {data}) => {
   const {file} = data
-  const existingItems = state.images.items ? state.images.items : []
-  const items = existingItems.map(item => {
-    if (item.remotePayloadPath === file) {
-      return {...item, state: 'complete'}
-    }
-    return item
-  })
+  // Remove the item from Redux storage
+  const items = state.images.items.filter(item => item.remotePayloadPath !== file)
   return state.merge({ images: { items } })
 }
 
