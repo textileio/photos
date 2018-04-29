@@ -5,16 +5,22 @@ import { takeLatest, takeEvery, all } from 'redux-saga/effects'
 import {StartupTypes} from '../Redux/StartupRedux'
 import {TextileTypes} from '../Redux/TextileRedux'
 import {IpfsNodeTypes} from '../Redux/IpfsNodeRedux'
+import {AuthTypes} from '../Redux/AuthRedux'
 
 /* ------------- Sagas ------------- */
 
 import {startup} from './StartupSagas'
 import {
+  signUp,
+  logIn,
+  recoverPassword,
   createNode,
   startGateway,
   startNode,
   pairNewDevice,
-  photosTask
+  getPhotoHashes,
+  photosTask,
+  removePayloadFile
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -26,13 +32,22 @@ export default function * root () {
 
     // some sagas receive extra parameters in addition to an action
 
+    takeEvery(AuthTypes.SIGN_UP_REQUEST, signUp),
+    takeEvery(AuthTypes.LOG_IN_REQUEST, logIn),
+    takeEvery(AuthTypes.RECOVER_PASSWORD_REQUEST, recoverPassword),
+
     takeLatest(IpfsNodeTypes.CREATE_NODE_REQUEST, createNode),
     takeLatest(IpfsNodeTypes.START_GATEWAY_REQUEST, startGateway),
     takeLatest(IpfsNodeTypes.START_NODE_REQUEST, startNode),
     takeLatest(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
 
+    takeEvery(IpfsNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
+    takeEvery(TextileTypes.IMAGE_ADDED, getPhotoHashes),
+
     takeEvery(TextileTypes.APP_STATE_CHANGE, photosTask),
     takeEvery(TextileTypes.LOCATION_UPDATE, photosTask),
-    takeEvery(TextileTypes.BACKGROUND_TASK, photosTask)
+    takeEvery(TextileTypes.BACKGROUND_TASK, photosTask),
+
+    takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile)
   ])
 }
