@@ -98,7 +98,7 @@ export function * startNode () {
 
 export function * getPhotoHashes () {
   try {
-    const photoData = yield call(IPFS.getPhotos, null, 100000)
+    const photoData = yield call(IPFS.getPhotos, null, 100000, 'default')
     yield put(IpfsNodeActions.getPhotoHashesSuccess(photoData))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(error))
