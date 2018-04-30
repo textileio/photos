@@ -99,7 +99,7 @@ android {
 
     defaultConfig {
         applicationId "com.textilephotos"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"

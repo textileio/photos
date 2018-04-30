@@ -4,6 +4,7 @@ import {
 } from 'react-native'
 import RNFS from 'react-native-fs'
 import ImageResizer from 'react-native-image-resizer'
+import IPFS from '../../TextileIPFSNativeModule'
 
 export async function queryPhotos () {
   const latestTimestampString = await AsyncStorage.getItem('latestPhotoTimestamp')
@@ -30,6 +31,7 @@ export async function queryPhotos () {
       currentPhoto = await getPhoto(currentPhoto.pageInfo.end_cursor)
       currentTimestamp = new Date(currentPhoto.photo.timestamp * 1000)
     }
+    console.log(photos)
     if (photos.length > 0) {
       const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
       const fullExists = await RNFS.exists(fullDir)
@@ -43,7 +45,8 @@ export async function queryPhotos () {
         await RNFS.mkdir(thumbDir)
       }
       for (const photo of photos) {
-        // TODO: Figure out handling for Android here
+        console.log(photo)
+        // iOS method
         if (photo.uri.includes('assets-library://')) {
           var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
           while (match = regex.exec(photo.uri)) {
@@ -54,6 +57,18 @@ export async function queryPhotos () {
           photo['path'] = path
           const thumbPath = await resizeImage(photo.path, thumbRelativeDir)
           photo['thumbPath'] = thumbPath
+        }
+        // Android Method
+        else if (photo.uri.includes('content://media')) {
+          let parts = photo.uri.split('/')
+          let id = parts[parts.length - 1]
+          console.log(id)
+          const path = await IPFS.getFilePath(photo.uri)
+          photo['path'] = path
+          console.log(photo)
+          const thumbPath = await resizeImage(photo.path, thumbDir)
+          photo['thumbPath'] = thumbPath
+          console.log(photo)
         }
       }
       const newestPhotoTimestampString = photos[0].timestamp
