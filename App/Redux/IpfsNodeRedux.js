@@ -82,12 +82,8 @@ export const nodeError = (state, {error}) =>
 export const photoHashesRequest = state =>
   state.merge({...state, photos: {...state.photos, querying: true}})
 
-export const photoHashesSuccess = (state, {hashes}) => {
-  if (hashes.hashes.length) {
-    return state.merge({...state, photos: {...state.photos, querying: false, hashes: hashes.hashes}})
-  }
-  return state.merge({...state, photos: {...state.photos, querying: false}})
-}
+export const photoHashesSuccess = (state, {hashes}) =>
+  state.merge({...state, photos: {...state.photos, querying: false, hashes: hashes}})
 
 export const photoHashesFailure = (state, {error}) =>
   state.merge({...state, photos: {...state.photos, querying: false, error}})

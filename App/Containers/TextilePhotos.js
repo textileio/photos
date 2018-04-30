@@ -239,7 +239,6 @@ class TextilePhotos extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  console.log(state.ipfs.photos)
   let allItemsObj = state.ipfs.photos.hashes.reduce((o, hash, index) => ({...o, [hash]: { index, image: { hash }, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
     const item = allItemsObj[processingItem.image.hash]

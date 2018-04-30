@@ -9,7 +9,7 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-
+import { Platform } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, all } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
@@ -99,9 +99,6 @@ export function * startNode () {
 export function * getPhotoHashes () {
   try {
     let photoData = yield call(IPFS.getPhotos, null, 100000, 'default')
-    // on the android device, this didn't get handled automatically like on ios
-    photoData = JSON.parse(photoData)
-    console.log(photoData)
     yield put(IpfsNodeActions.getPhotoHashesSuccess(photoData))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(error))
