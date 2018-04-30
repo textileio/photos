@@ -92,8 +92,6 @@ export async function getPhoto (cursor) {
 }
 
 export async function resizeImage (path: string, outputPath: string, width: number = 400, height: number = 400): string {
-  console.log('RESIZING IMAGE', path)
   const result = await ImageResizer.createResizedImage(path, width, height, 'JPEG', 80, 0, outputPath)
-  console.log("done", result.path)
   return result.path
 }
