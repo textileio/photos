@@ -84,10 +84,9 @@ const params8 = {
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           'So you can take a photo and store it in Textile.'
         )
-      } else {
-        // Trigger photos permission prompt in iOS
-        await getPhoto()
       }
+      // Trigger photos permission prompt in iOS
+      await getPhoto()
       navigate('OnboardingLocationPermissions', params9)
     }
   }
