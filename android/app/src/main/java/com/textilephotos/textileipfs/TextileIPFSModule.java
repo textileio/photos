@@ -9,10 +9,16 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import net.MultipartRequest;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import mobile.Mobile;
 import mobile.Wrapper;
@@ -99,11 +105,15 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void addImageAtPath (String path, String thumbPath, String thread, Promise promise) {
         try {
+            // Grab our add image response
             MultipartRequest multipart = textile.addPhoto(path, thumbPath, thread);
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("payloadPath", multipart.getPayloadPath());
-            map.put("boundary", multipart.getBoundary());
+            // Create a Native map
+            WritableMap map = new WritableNativeMap();
+            // Add the rsponse parts
+            map.putString("payloadPath", (String) multipart.getPayloadPath());
+            map.putString("boundary", (String) multipart.getBoundary());
             promise.resolve(map);
+
         }
         catch (Exception e) {
             promise.reject("ADD IMAGE ERROR", e);
@@ -114,7 +124,19 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     public void getPhotos (String offset, Integer limit, String thread, Promise promise) {
         try {
             String hashString = textile.getPhotos(offset, limit, thread);
-            promise.resolve(hashString);
+            // convert string to json
+            JSONObject obj = new JSONObject(hashString);
+            // create a Native ready array
+            WritableArray array = new WritableNativeArray();
+            // grab the hashes array out of the response
+            JSONArray jsonArray = obj.getJSONArray("hashes");
+            // for each hash, add them to our native array
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Object value = jsonArray.get(i);
+                array.pushString((String) value);
+            }
+            promise.resolve(array);
+
         }
         catch (Exception e) {
             promise.reject("GET PHOTOS ERROR", e);
@@ -163,7 +185,6 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     public void getRealPathFromURI(String uriString, Promise promise) {
         Uri uri = Uri.parse(uriString);
         try {
-//            Context context = getReactApplicationContext();
             String result = RealPathUtil.getRealPath(reactContext, uri);
             promise.resolve(result);
         } catch (Exception ex) {
