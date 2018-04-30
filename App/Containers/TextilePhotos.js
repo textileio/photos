@@ -5,19 +5,10 @@ import {
   Image,
   Text,
   FlatList,
-  TouchableOpacity,
-  Linking,
-  Platform,
-  AppState,
-  PushNotificationIOS
+  TouchableOpacity
 } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
-import BackgroundTask from 'react-native-background-task'
-import Actions from '../Redux/TextileRedux'
-import UploadTask from '../../UploadTaskNativeModule'
-import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
@@ -27,73 +18,13 @@ import IPFS from '../../TextileIPFSNativeModule'
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
-
-  constructor() {
-    super()
-    this.setup()
-  }
-
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
       headerTitle: (
         <Image source={require('../Images/TextileHeader.png')} />
-      ),
-      headerRight: (
-        <HeaderButtons IconComponent={Icon} iconSize={23} color='white'>
-          <HeaderButtons.Item title='more' iconName='ios-more' onPress={params.openLogs} />
-        </HeaderButtons>
       )
     }
-  }
-
-  componentWillMount () {
-    this.props.navigation.setParams({
-      openLogs: this.openLogs.bind(this)
-    })
-  }
-
-  openLogs = () => {
-    this.props.navigation.navigate('InfoView')
-  }
-
-  // TODO: This logic should be moved deeper into the stack
-  _handleOpenURLEvent (event) {
-    this._handleOpenURL(event.url)
-  }
-  // TODO: This logic should be moved deeper into the stack
-  _handleOpenURL (url) {
-    const data = url.replace(/.*?:\/\//g, '')
-    this.props.navigation.navigate('PairingView', {data: data})
-  }
-
-  componentDidMount () {
-    BackgroundTask.schedule()
-    // TODO: This logic should be moved deeper into the stack
-    if (Platform.OS === 'android') {
-      // TODO: Android deep linking isn't setup in the Java native layer
-      Linking.getInitialURL().then(url => {
-        this._handleOpenURL(url)
-      })
-    } else {
-      Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
-    }
-  }
-
-  componentWillUnmount () {
-    AppState.removeEventListener('change', this.props.appStateChange)
-    this.progressSubscription.remove()
-    this.completionSubscription.remove()
-    this.errorSubscription.remove()
-  }
-
-  async setup () {
-    // await PushNotificationIOS.requestPermissions()
-    AppState.addEventListener('change', (event) => this.props.appStateChange(event))
-    navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
-    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', (event) => this.props.uploadProgress(event))
-    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', (event) => this.props.uploadComplete(event))
-    this.errorSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskError', (event) => this.props.uploadError(event))
   }
 
   /* ***********************************************************
@@ -119,7 +50,7 @@ class TextilePhotos extends React.PureComponent {
         <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
       </TouchableOpacity>
     }
-    const imageData = IPFS.syncGetPhotoData(item.image.node.image.hash + '/thumb')
+    const imageData = IPFS.syncGetPhotoData(item.image.hash + '/thumb')
     return (
       <TouchableOpacity onPress={onPress} >
         <View style={styles.item}>
@@ -197,8 +128,8 @@ class TextilePhotos extends React.PureComponent {
           }} source={require('../Images/backgrounds/TextileBackground.png')} />
         </View>
         {
-          this.props.images.items.length ? (
-            this.props.renderImages ? (
+          this.props.renderImages ? (
+            this.props.images.items.length ? (
               <FlatList
                 style={styles.listContainer}
                 data={this.props.images.items}
@@ -219,12 +150,12 @@ class TextilePhotos extends React.PureComponent {
               />
             ) : (
               <View style={styles.emptyListStyle}>
-                <Text style={styles.noPhotos}>Loading...</Text>
+                <Text style={styles.noPhotos}>Any new photos you take will be displayed here and synced to Textile.</Text>
               </View>
             )
           ) : (
             <View style={styles.emptyListStyle}>
-              <Text style={styles.noPhotos}>Any new photos you take will be displayed here and synced to Textile.</Text>
+              <Text style={styles.noPhotos}>Loading...</Text>
             </View>
           )
         }
@@ -235,23 +166,25 @@ class TextilePhotos extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
+  let allItemsObj = state.ipfs.photos.hashes.reduce((o, hash, index) => ({...o, [hash]: { index, image: { hash }, state: 'complete' }}), {})
+  for (const processingItem of state.textile.images.items) {
+    const item = allItemsObj[processingItem.image.hash]
+    if (item) {
+      const updatedItem = item.merge(processingItem)
+      allItemsObj = allItemsObj.set(processingItem.image.hash, updatedItem)
+    }
+  }
+  const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
   return {
     images: {
-      items: state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
+      items: updatedItems
     },
-    renderImages: state.ipfs.nodeState.state === 'started'
+    renderImages: state.ipfs.nodeState.state === 'started' && !state.ipfs.photos.querying
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatch: dispatch,
-    appStateChange: event => { dispatch(Actions.appStateChange(event)) },
-    locationUpdate: () => { dispatch(Actions.locationUpdate()) },
-    uploadComplete: event => { dispatch(Actions.imageUploadComplete(event)) },
-    uploadProgress: event => { dispatch(Actions.imageUploadProgress(event)) },
-    uploadError: event => { dispatch(Actions.imageUploadError(event)) }
-  }
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextilePhotos)

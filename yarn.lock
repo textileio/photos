@@ -7878,9 +7878,9 @@ react-native-i18n@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-1.0.0.tgz#0c407d9ebb846aae1aa5e05de6503008553f02fd"
 
-react-native-image-gallery@^2.1.5:
+"react-native-image-gallery@git+https://git@github.com/textileio/react-native-image-gallery.git":
   version "2.1.5"
-  resolved "https://registry.yarnpkg.com/react-native-image-gallery/-/react-native-image-gallery-2.1.5.tgz#f524b92ef7284d30ffbbd63f93019e0647e23229"
+  resolved "git+https://git@github.com/textileio/react-native-image-gallery.git#103f8fc240e852aa1dbad176495dc3f24e445d37"
   dependencies:
     prop-types "^15.6.0"
     react-mixin "^3.0.5"
