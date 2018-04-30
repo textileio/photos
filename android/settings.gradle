@@ -1,4 +1,4 @@
-rootProject.name = 'TextilePhotos'
+rootProject.name = 'Textile'
 include ':react-native-background-upload'
 project(':react-native-background-upload').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-upload/android')
 include ':react-native-background-fetch'
