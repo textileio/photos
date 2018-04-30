@@ -10,45 +10,66 @@ type MultipartData = {
 
 export default {
   createNodeWithDataDir: async function (dataDir: string): boolean {
-    // TODO: should do a try/catch here
-    const success = await TextileIPFS.createNodeWithDataDir(dataDir)
-    return success
+    try {
+      const success = await TextileIPFS.createNodeWithDataDir(dataDir)
+      return success
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   startGateway: async function (): boolean {
-    // TODO: should do a try/catch here
-    const success = await TextileIPFS.startGateway()
-    return success
+    try {
+      const success = await TextileIPFS.startGateway()
+      return success
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   startNode: async function (): boolean {
-    // TODO: should do a try/catch here
-    const success = await TextileIPFS.startNode()
-    return success
+    try {
+      const success = await TextileIPFS.startNode()
+      return success
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   stopNode: async function (): boolean {
-    // TODO: should do a try/catch here
-    const success = await TextileIPFS.stopNode()
-    return success
+    try {
+      const success = await TextileIPFS.stopNode()
+      return success
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   addImageAtPath: async function (path: string, thumbPath: string, thread: string): MultipartData {
-    // TODO: should do a try/catch here
-    const multipartData = await TextileIPFS.addImageAtPath(path, thumbPath, thread)
-    return multipartData
+    try {
+      const multipartData = await TextileIPFS.addImageAtPath(path, thumbPath, thread)
+      return multipartData
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   getPhotos: async function (offset: ?string, limit: number, thread: string): string {
-    // TODO: should do a try/catch here
-    const result = await TextileIPFS.getPhotos(offset, limit, thread)
-    return result
+    try {
+      const result = await TextileIPFS.getPhotos(offset, limit, thread)
+      return result
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   getPhotoData: async function (path: string): string {
-    // TODO: should do a try/catch here
-    const result = await TextileIPFS.getPhotoData(path)
-    return result
+    try {
+      const result = await TextileIPFS.getPhotoData(path)
+      return result
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   syncGetPhotoData: function (path: string): string {
@@ -56,15 +77,17 @@ export default {
   },
 
   pairNewDevice: async function (pubKey: string): string {
-    // TODO: should do a try/catch here
-    const result = await TextileIPFS.pairNewDevice(pubKey)
-    return result
+    try {
+      const result = await TextileIPFS.pairNewDevice(pubKey)
+      return result
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   getFilePath: async function (uri: string): string {
     try {
-      const result = await TextileIPFS.getFilePath(uri)
-      console.log('h', result)
+      const result = await TextileIPFS.getRealPathFromURI(uri)
       return result
     } catch (e) {
       console.log(e)

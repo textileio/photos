@@ -84,7 +84,7 @@ export const photoHashesRequest = state =>
 
 export const photoHashesSuccess = (state, {hashes}) => {
   if (hashes.hashes.length) {
-    return state.merge({...state, photos: {...state.photos, querying: false, hashes}})
+    return state.merge({...state, photos: {...state.photos, querying: false, hashes: hashes.hashes}})
   }
   return state.merge({...state, photos: {...state.photos, querying: false}})
 }

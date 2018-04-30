@@ -101,6 +101,7 @@ export function * getPhotoHashes () {
     let photoData = yield call(IPFS.getPhotos, null, 100000, 'default')
     // on the android device, this didn't get handled automatically like on ios
     photoData = JSON.parse(photoData)
+    console.log(photoData)
     yield put(IpfsNodeActions.getPhotoHashesSuccess(photoData))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(error))

@@ -2,7 +2,6 @@
 
 package com.textilephotos.textileipfs;
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -161,10 +160,11 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
 
     // Method for turning photo URI into path + ext
     @ReactMethod
-    public void getRealPathFromURI(Uri uri, Promise promise) {
+    public void getRealPathFromURI(String uriString, Promise promise) {
+        Uri uri = Uri.parse(uriString);
         try {
-            Context context = getReactApplicationContext();
-            String result = RealPathUtil.getRealPath(context, uri);
+//            Context context = getReactApplicationContext();
+            String result = RealPathUtil.getRealPath(reactContext, uri);
             promise.resolve(result);
         } catch (Exception ex) {
             promise.reject("URI ERROR", ex);
