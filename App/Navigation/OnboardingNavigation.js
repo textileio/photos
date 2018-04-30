@@ -103,7 +103,7 @@ const params10 = {
   onButtonPress: (navigate, dispatch) => {
     return () => {
       dispatch(Actions.onboardedSuccess())
-      navigate('PhotosNavigation')
+      navigate('TextileManager')
     }
   }
 }

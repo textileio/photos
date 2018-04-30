@@ -11,18 +11,18 @@
 *************************************************************/
 
 import { delay } from 'redux-saga'
-import { call, put, all } from 'redux-saga/effects'
+import { call, put } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
-import UploadTask from '../../UploadTaskNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
-import TextileActions from '../Redux/TextileRedux'
+import { TextileActions } from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
+import Upload from 'react-native-background-upload'
 
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
@@ -129,14 +129,23 @@ export function * photosTask (action) {
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
       photo['hash'] = multipartData.boundary
+      console.log(photo)
       yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
-      yield call(
-        UploadTask.uploadFile,
-        multipartData.payloadPath,
-        'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
-        'POST',
-        multipartData.boundary
+
+      console.log(photo)
+      const uploadId = yield call(
+        Upload.startUpload,
+        {
+          path: multipartData.payloadPath,
+          url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
+          method: 'POST',
+          type: 'multipart',
+          field: multipartData.boundary
+        }
       )
+      photo['uploadId'] = uploadId
+      console.log(photo)
+      yield put(TextileActions.imageSubmittedForUpload(uploadId))
     }
     yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)
