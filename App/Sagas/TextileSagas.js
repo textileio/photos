@@ -95,6 +95,15 @@ export function * startNode () {
   }
 }
 
+export function * getPhotoHashes () {
+  try {
+    const photoData = yield call(IPFS.getPhotos, null, 100000, 'default')
+    yield put(IpfsNodeActions.getPhotoHashesSuccess(photoData))
+  } catch (error) {
+    yield put(IpfsNodeActions.getPhotoHashesFailure(error))
+  }
+}
+
 export function * pairNewDevice (action) {
   const { pubKey } = action
   try {
@@ -116,10 +125,10 @@ export function * photosTask (action) {
     yield call(IPFS.startNode)
     const photos = yield call(queryPhotos)
     for (const photo of photos) {
-      const multipartData = yield call(IPFS.addImageAtPath, photo.node.image.path, photo.node.image.thumbPath)
-      yield call(RNFS.unlink, photo.node.image.path)
-      yield call(RNFS.unlink, photo.node.image.thumbPath)
-      photo.node.image['hash'] = multipartData.boundary
+      const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
+      yield call(RNFS.unlink, photo.path)
+      yield call(RNFS.unlink, photo.thumbPath)
+      photo['hash'] = multipartData.boundary
       yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
       yield call(
         UploadTask.uploadFile,
