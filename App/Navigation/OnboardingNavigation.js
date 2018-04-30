@@ -1,3 +1,4 @@
+import { PermissionsAndroid, Platform } from 'react-native'
 import { StackNavigator } from 'react-navigation'
 import OnboardingScreen from '../Containers/OnboardingScreen'
 import LoginScreen from '../Containers/LoginScreen'
@@ -77,8 +78,16 @@ const params8 = {
   buttonTitle: 'AUTHORIZE',
   onButtonPress: (navigate) => {
     return async () => {
-      // Trigger photos permission prompt
-      await getPhoto()
+      // Handle Android Permission
+      if (Platform.OS === 'android') {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          'So you can take a photo and store it in Textile.'
+        )
+      } else {
+        // Trigger photos permission prompt in iOS
+        await getPhoto()
+      }
       navigate('OnboardingLocationPermissions', params9)
     }
   }
@@ -90,7 +99,15 @@ const params9 = {
   buttonTitle: 'AUTHORIZE',
   onButtonPress: (navigate) => {
     return async () => {
-      await navigator.geolocation.requestAuthorization()
+      // Handle Android Permission
+      if (Platform.OS === 'android') {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          'So you can take a photo and store it in Textile.'
+        )
+      } else {
+        await navigator.geolocation.requestAuthorization()
+      }
       navigate('OnboardingThanks', params10)
     }
   }
