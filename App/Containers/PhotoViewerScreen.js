@@ -41,7 +41,7 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage(image) {
-    const imageData = IPFS.syncGetPhotoData(image.image.hash + '/photo')
+    const imageData = IPFS.syncGetPhotoData(image.image.hash + '/thumb')
     return (
       <Image
         source={{uri: 'data:image/jpeg;base64,' + imageData}}
@@ -71,13 +71,12 @@ class PhotoViewerScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const items = state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
-  const imageData = items.map(item => {
-    const {width, height, hash} = item.image
+  const hashes = state.ipfs.photos.hashes
+  const imageData = hashes.map(hash => {
     return {
       source: { uri: 'file:///image.jpg' },
       hash,
-      dimensions: { width: width, height: height }
+      dimensions: { width: 100, height: 100 }
     }
   })
   return {
