@@ -2,6 +2,8 @@
 
 package com.textilephotos.textileipfs;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.Promise;
@@ -157,7 +159,17 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
         }
     }
 
-
+    // Method for turning photo URI into path + ext
+    @ReactMethod
+    public void getRealPathFromURI(Uri uri, Promise promise) {
+        try {
+            Context context = getReactApplicationContext();
+            String result = RealPathUtil.getRealPath(context, uri);
+            promise.resolve(result);
+        } catch (Exception ex) {
+            promise.reject("URI ERROR", ex);
+        }
+    }
 
     private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {
         // A method for emitting from the native side to JS
