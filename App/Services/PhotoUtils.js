@@ -31,7 +31,6 @@ export async function queryPhotos () {
       currentPhoto = await getPhoto(currentPhoto.pageInfo.end_cursor)
       currentTimestamp = new Date(currentPhoto.photo.timestamp * 1000)
     }
-    console.log(photos)
     if (photos.length > 0) {
       const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
       const fullExists = await RNFS.exists(fullDir)
@@ -45,7 +44,6 @@ export async function queryPhotos () {
         await RNFS.mkdir(thumbDir)
       }
       for (const photo of photos) {
-        console.log(photo)
         // iOS method
         if (photo.uri.includes('assets-library://')) {
           var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
@@ -60,15 +58,8 @@ export async function queryPhotos () {
         }
         // Android Method
         else if (photo.uri.includes('content://media')) {
-          let parts = photo.uri.split('/')
-          let id = parts[parts.length - 1]
-          console.log(id)
-          const path = await IPFS.getFilePath(photo.uri)
-          photo['path'] = path
-          console.log(photo)
-          const thumbPath = await resizeImage(photo.path, thumbDir)
-          photo['thumbPath'] = thumbPath
-          console.log(photo)
+          photo['path'] = await IPFS.getFilePath(photo.uri)
+          photo['thumbPath'] = await resizeImage(photo.path, thumbDir)
         }
       }
       const newestPhotoTimestampString = photos[0].timestamp
@@ -103,5 +94,6 @@ export async function getPhoto (cursor) {
 export async function resizeImage (path: string, outputPath: string, width: number = 400, height: number = 400): string {
   console.log('RESIZING IMAGE', path)
   const result = await ImageResizer.createResizedImage(path, width, height, 'JPEG', 80, 0, outputPath)
+  console.log("done", result.path)
   return result.path
 }
