@@ -64,8 +64,11 @@ class TextilePhotos extends React.PureComponent {
   }
   // TODO: This logic should be moved deeper into the stack
   _handleOpenURL (url) {
-    const data = url.replace(/.*?:\/\//g, '')
-    this.props.navigation.navigate('PairingView', {data: data})
+    // Android appears to call every load with 'null' url
+    if (url) {
+      const data = url.replace(/.*?:\/\//g, '')
+      this.props.navigation.navigate('PairingView', {data: data})
+    }
   }
 
   componentDidMount () {
@@ -236,10 +239,6 @@ class TextilePhotos extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  console.log(state)
-  console.log(state.ipfs)
-  console.log(state.ipfs.photos)
-  console.log(state.ipfs.photos.hashes)
   let allItemsObj = state.ipfs.photos.hashes.reduce((o, hash, index) => ({...o, [hash]: { index, image: { hash }, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
     const item = allItemsObj[processingItem.image.hash]
