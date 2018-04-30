@@ -98,7 +98,9 @@ export function * startNode () {
 
 export function * getPhotoHashes () {
   try {
-    const photoData = yield call(IPFS.getPhotos, null, 100000, 'default')
+    let photoData = yield call(IPFS.getPhotos, null, 100000, 'default')
+    // on the android device, this didn't get handled automatically like on ios
+    photoData = JSON.parse(photoData)
     yield put(IpfsNodeActions.getPhotoHashesSuccess(photoData))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(error))
