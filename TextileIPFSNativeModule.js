@@ -54,6 +54,11 @@ export default {
     }
   },
 
+  sharePhoto: async function (hash: string, thread: string): MultipartData {
+    const multipartData = await TextileIPFS.sharePhoto(hash, thread)
+    return multipartData
+  },
+
   getPhotos: async function (offset: ?string, limit: number, thread: string): string {
     try {
       const result = await TextileIPFS.getPhotos(offset, limit, thread)

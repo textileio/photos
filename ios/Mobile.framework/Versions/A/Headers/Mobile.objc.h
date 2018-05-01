@@ -20,6 +20,9 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
+/**
+ * Create a gomobile compatible wrapper around TextileNode
+ */
 - (MobileWrapper*)newNode:(NSString*)repoPath error:(NSError**)error;
 @end
 
@@ -38,6 +41,7 @@
 - (NSString*)getPeerID:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit thread:(NSString*)thread error:(NSError**)error;
 - (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
+- (NetMultipartRequest*)sharePhoto:(NSString*)hash thread:(NSString*)thread error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)startGateway:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
