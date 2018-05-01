@@ -128,9 +128,8 @@ export function * photosTask (action) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
-      photo['hash'] = multipartData.boundary
       yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
-      const uploadId = yield call(
+      const id = yield call(
         Upload.startUpload,
         {
           path: multipartData.payloadPath,
@@ -140,8 +139,7 @@ export function * photosTask (action) {
           field: multipartData.boundary
         }
       )
-      photo['uploadId'] = uploadId
-      yield put(TextileActions.imageSubmittedForUpload(uploadId))
+      yield put(TextileActions.imageSubmittedForUpload(multipartData.payloadPath, multipartData.boundary, id))
     }
     yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)
@@ -151,13 +149,12 @@ export function * photosTask (action) {
 }
 
 export function * removePayloadFile ({data}) {
-  const { uploadId } = data
-  const items = yield select(TextileSelectors.items)
-  const targets = items.filter(item => item.uploadId !== uploadId)
-  for (const item of targets) {
+  const { id } = data
+  const items = yield select(TextileSelectors.itemsById, id)
+  for (const item of items) {
     if (item.remotePayloadPath && item.state === 'cleanup') {
       yield call(RNFS.unlink, item.remotePayloadPath)
     }
   }
-  yield put(TextileActions.imageRemovalComplete(uploadId))
+  yield put(TextileActions.imageRemovalComplete(id))
 }
