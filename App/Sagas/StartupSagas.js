@@ -34,5 +34,6 @@ export function * startup () {
 
   yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
   yield put(IpfsNodeActions.startNodeRequest())
+  yield put(IpfsNodeActions.startGatewayRequest())
   yield put(IpfsNodeActions.getPhotoHashesRequest())
 }
