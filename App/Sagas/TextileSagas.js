@@ -114,6 +114,27 @@ export function * pairNewDevice (action) {
   }
 }
 
+export function * shareImage ({thread, hash}) {
+  try {
+    const multipartData = yield call(IPFS.sharePhoto, hash, thread)
+    yield put(TextileActions.imageAdded(thread, multipartData.boundary, multipartData.payloadPath))
+    yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
+    yield call(
+      Upload.startUpload,
+      {
+        customUploadId: multipartData.boundary,
+        path: multipartData.payloadPath,
+        url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
+        method: 'POST',
+        type: 'multipart',
+        field: multipartData.boundary
+      }
+    )
+  } catch (error) {
+    yield put(TextileActions.imageSharingError(error))
+  }
+}
+
 export function * photosTask (action) {
   const newState = action.newState
   if (newState && newState !== 'active') {
@@ -128,11 +149,12 @@ export function * photosTask (action) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
-      yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
+      yield put(TextileActions.imageAdded('default', multipartData.boundary, multipartData.payloadPath))
       yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-      const id = yield call(
+      yield call(
         Upload.startUpload,
         {
+          customUploadId: multipartData.boundary,
           path: multipartData.payloadPath,
           url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
           method: 'POST',
@@ -140,7 +162,6 @@ export function * photosTask (action) {
           field: multipartData.boundary
         }
       )
-      yield put(TextileActions.imageSubmittedForUpload(multipartData.payloadPath, multipartData.boundary, id))
     }
     yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)

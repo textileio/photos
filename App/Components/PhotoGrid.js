@@ -39,7 +39,7 @@ export default class PhotoGrid extends React.PureComponent {
         <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
       </TouchableOpacity>
     }
-    const imageData = IPFS.syncGetPhotoData(item.image.hash + '/thumb')
+    const imageData = IPFS.syncGetPhotoData(item.hash + '/thumb')
     return (
       <TouchableOpacity onPress={this.props.onSelect(row)} >
         <View style={styles.item}>
