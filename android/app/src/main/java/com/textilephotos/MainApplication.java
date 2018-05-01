@@ -3,6 +3,7 @@ package com.textilephotos;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.vydia.RNUploader.UploaderReactPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
@@ -38,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new UploaderReactPackage(),
             new RNBackgroundFetchPackage(),
             new RNDeviceInfo(),
             new ReactNativeConfigPackage(),
