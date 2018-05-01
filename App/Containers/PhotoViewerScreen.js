@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  Dimensions,
   ScrollView,
   Text,
   KeyboardAvoidingView,
@@ -14,20 +13,15 @@ import { Icon } from 'react-native-elements'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { connect } from 'react-redux'
 import IPFS from '../../TextileIPFSNativeModule'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
 import {buttonColor1} from "./Styles/InfoViewStyle";
 
-const { width, height } = Dimensions.get('window');
-// orientation must fixed
-export const SCREEN_WIDTH = width < height ? width : height
-
 class PhotoViewerScreen extends React.PureComponent {
 
   componentWillMount() {
+    // TODO: Do something with this? Do we need the metadata?
     const item = this.props.navigation.state.params.item
     fetch('https://localhost:9080/ipfs/' + item.image.hash + '/meta')
       .then((response) => response.json())
@@ -60,7 +54,7 @@ class PhotoViewerScreen extends React.PureComponent {
   get caption () {
     return (
       <View style={{ bottom: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'center' }}>
-        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{'caption'}</Text>
+        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{'Some metadata'}</Text>
       </View>
     )
   }
@@ -92,17 +86,6 @@ class PhotoViewerScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-<<<<<<< HEAD
-=======
-  const hashes = state.ipfs.photos.hashes
-  const imageData = hashes.map(hash => {
-    return {
-      source: { uri: 'file:///image.jpg' },
-      hash,
-      dimensions: { width: 100, height: 100 }
-    }
-  })
->>>>>>> master
   return {
   }
 }
