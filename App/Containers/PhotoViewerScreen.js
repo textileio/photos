@@ -23,11 +23,12 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   get galleryCount () {
-    // const { index, images } = this.state;
     return (
-      <View style={{ flex: 1, flexDirection: 'row', padding: 8, top: 0, height: 60, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'space-between' }}>
+      <View style={{ flex: 1, flexDirection: 'row-reverse', padding: 8, top: 0, height: 60, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'space-between' }}>
         <Icon name='close' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.dismissPressed.bind(this)} />
-        <Icon name='share-apple' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.sharePressed.bind(this)} />
+        {this.props.sharable &&
+          <Icon name='share-apple' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.sharePressed.bind(this)} />
+        }
       </View>
     )
   }
@@ -60,7 +61,7 @@ class PhotoViewerScreen extends React.PureComponent {
           style={{ flex: 1, backgroundColor: 'black' }}
           imageComponent={this.renderImage}
           images={this.props.imageData}
-          initialPage={this.props.navigation.state.params.index}
+          initialPage={this.props.initialIndex}
         />
         { this.galleryCount }
         { this.caption }
@@ -70,8 +71,8 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
-  const hashes = state.ipfs.photos.hashes
+const mapStateToProps = (state, ownProps) => {
+  const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
   const imageData = hashes.map(hash => {
     return {
       source: { uri: 'file:///image.jpg' },
@@ -80,7 +81,9 @@ const mapStateToProps = (state) => {
     }
   })
   return {
-    imageData
+    imageData,
+    initialIndex: ownProps.navigation.state.params.initialIndex,
+    sharable: ownProps.navigation.state.params.sharable
   }
 }
 

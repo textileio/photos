@@ -6,7 +6,12 @@ import { connect } from 'react-redux'
 class TextilePhotos extends React.PureComponent {
   onSelect = (row) => {
     return () => {
-      this.props.navigation.navigate('PhotoViewer', row)
+      this.props.navigation.navigate(
+        'PhotoViewer', {
+          initialIndex: row.index,
+          thread: this.props.thread,
+          sharable: this.props.sharable
+        })
     }
   }
 
@@ -17,8 +22,9 @@ class TextilePhotos extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => {
-  let allItemsObj = state.ipfs.threads.default.hashes.reduce((o, hash, index) => ({...o, [hash]: { index, image: { hash }, state: 'complete' }}), {})
+const mapStateToProps = (state, ownProps) => {
+  const thread = ownProps.navigation.state.params.thread
+  let allItemsObj = state.ipfs.threads[thread].hashes.reduce((o, hash, index) => ({...o, [hash]: { index, image: { hash }, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
     const item = allItemsObj[processingItem.hash]
     if (item) {
@@ -28,8 +34,10 @@ const mapStateToProps = state => {
   }
   const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
   return {
+    thread,
+    sharable: ownProps.navigation.state.params.sharable,
     items: updatedItems,
-    renderImages: state.ipfs.nodeState.state === 'started' && !state.ipfs.threads.default.querying
+    renderImages: state.ipfs.nodeState.state === 'started' && !state.ipfs.threads[thread].querying
   }
 }
 

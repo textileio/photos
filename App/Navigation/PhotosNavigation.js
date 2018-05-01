@@ -4,7 +4,6 @@ import DismissableStackNavigator from '../Components/DismissableStackNavigator'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import TextilePhotos from '../Containers/TextilePhotos'
-import SharedPhotos from '../Containers/SharedPhotos'
 import InfoView from '../Containers/InfoView'
 import PairingView from '../Containers/PairingView'
 import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
@@ -30,6 +29,7 @@ const PhotosNav = StackNavigator(
   {
     // Default config for all screens
     headerMode: 'float',
+    initialRouteParams: { thread: 'default', sharable: true },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
@@ -41,7 +41,7 @@ const PhotosNav = StackNavigator(
 const SharedPhotosNav = StackNavigator(
   {
     SharedPhotos: {
-      screen: SharedPhotos,
+      screen: TextilePhotos,
       navigationOptions: {
         headerTitle: 'Shared Photos'
       }
@@ -50,6 +50,7 @@ const SharedPhotosNav = StackNavigator(
   {
     // Default config for all screens
     headerMode: 'float',
+    initialRouteParams: { thread: 'beta', sharable: false },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
