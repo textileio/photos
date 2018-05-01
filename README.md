@@ -13,7 +13,7 @@ The [textile.photos](https://www.textile.photos/) is still in private beta. Want
 Want to join our community discussion? Join us: 
 
 * [Telegram](https://t.me/joinchat/AAAAAEfVwD37Wh0OpnlXKA)
-* [Slack](https://slack.textile.io/) channels.   
+* [Slack](https://slack.textile.io/) 
 
 ## I have a problem with the Textile app
 
@@ -21,11 +21,9 @@ First, please search the open issues and closed issues to see if your issue has 
 
 If you can't find an issue that matches what you're seeing, open a new issue and provide us with enough information to investigate further.
 
-## How can I contribute to GitHub Desktop?
+## How can I contribute to Textile?
 
 The [CONTRIBUTING.md](CONTRIBUTING.md) document will help you get setup and familiar with the source.
-
-If you're looking for something to work on, check out the [help wanted label](https://github.com/textileio/textile-mobile/issues?q=is%3Aissue+is%3Aopen+label%3A"help wanted).
 
 ## License
    
@@ -33,23 +31,6 @@ If you're looking for something to work on, check out the [help wanted label](ht
    
 The MIT license grant is not for Textile's trademarks, which include the logo designs. Textile reserves all trademark and copyright rights in and to all Textile trademarks.
    
-## :arrow_up: How to Setup
 
-**Step 1:** git clone this repo:
-
-**Step 2:** cd to the cloned repo:
-
-**Step 3:** Install the Application with `yarn` or `npm i`
-
-
-## :arrow_forward: How to Run App
-
-1. cd to the repo
-2. Run Build for either OS
-  * for iOS
-    * run `react-native run-ios`
-  * for Android
-    * Run Genymotion
-    * run `react-native run-android`
 
 

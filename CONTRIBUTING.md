@@ -29,6 +29,27 @@ Please report unacceptable behavior to [contact@textile.io](mailto:contact@texti
 
 ## How Can I Contribute?
 
+### Developing locally
+
+#### How to Setup
+
+**Step 1:** git clone this repo:
+
+**Step 2:** cd to the cloned repo:
+
+**Step 3:** Install the Application with `yarn` or `npm i`
+
+
+#### How to Run App
+
+1. cd to the repo
+2. Run Build for either OS
+  * for iOS
+    * run `react-native run-ios`
+  * for Android
+    * Run Genymotion
+    * run `react-native run-android`
+
 ### Reporting Bugs
 
 This section guides you through submitting a bug report for Textile Mobile.
