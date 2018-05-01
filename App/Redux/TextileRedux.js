@@ -104,7 +104,7 @@ export const handleImageUploadError = (state, {data}) => {
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
     if (item.id === id) {
-      return {...item, state: 'error', error: error}
+      return {...item, state: 'error', error: error.message}
     }
     return item
   })
