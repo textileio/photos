@@ -11,9 +11,11 @@ const { Types, Creators } = createActions({
   backgroundTask: null,
 
   imageAdded: ['image', 'remotePayloadPath'],
+  imageSubmittedForUpload: ['path', 'hash', 'id'],
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
   imageUploadError: ['data'],
+  imageRemovalComplete: ['id'],
   photosTaskError: ['error'],
 
   pairNewDevice: ['pubKey'],
@@ -36,10 +38,13 @@ export const INITIAL_STATE = Immutable({
   devices: []
 })
 
-/* ------------- Selectors ------------- */
 
+/* ------------- Selectors ------------- */
 export const TextileSelectors = {
   // TODO: Add more selectors here as we learn how they are used
+  itemsById: (state, id) => {
+    return state.textile.images.items.filter(item => item.id === id)
+  }
 }
 
 /* ------------- Reducers ------------- */
@@ -54,11 +59,22 @@ export const handleImageAdded = (state, {image, remotePayloadPath}) => {
   return state.merge({ images: { items } })
 }
 
-export const handleImageProgress = (state, {data}) => {
-  const {file, progress} = data
+export const handleImageSubmittedForUpload = (state, {path, hash, id}) => {
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
-    if (item.remotePayloadPath === file) {
+    if (item.remotePayloadPath === path) {
+      return {...item, state: 'processing', progress: 0, hash, id}
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const handleImageProgress = (state, {data}) => {
+  const { id, progress } = data
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.id === id) {
       return {...item, state: 'processing', progress}
     }
     return item
@@ -67,17 +83,27 @@ export const handleImageProgress = (state, {data}) => {
 }
 
 export const handleImageUploadComplete = (state, {data}) => {
-  const {file} = data
-  // Remove the item from Redux storage
-  const items = state.images.items.filter(item => item.remotePayloadPath !== file)
+  const { id } = data
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.id === id) {
+      return {...item, state: 'cleanup', id}
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const imageRemovalComplete = (state, {id}) => {
+  const items = state.images.items.filter(item => item.id !== id)
   return state.merge({ images: { items } })
 }
 
 export const handleImageUploadError = (state, {data}) => {
-  const {file, error} = data
+  const { error, id } = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
-    if (item.remotePayloadPath === file) {
+    if (item.id === id) {
       return {...item, state: 'error', error: error.message}
     }
     return item
@@ -122,9 +148,12 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
   [Types.IMAGE_ADDED]: handleImageAdded,
+  [Types.IMAGE_SUBMITTED_FOR_UPLOAD]: handleImageSubmittedForUpload,
+
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
   [Types.IMAGE_UPLOAD_ERROR]: handleImageUploadError,
+  [Types.IMAGE_REMOVAL_COMPLETE]: imageRemovalComplete,
 
   [Types.PAIR_NEW_DEVICE]: pairNewDevice,
   [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,

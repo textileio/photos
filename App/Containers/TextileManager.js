@@ -8,8 +8,8 @@ import {
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
 import TextileActions from '../Redux/TextileRedux'
-import UploadTask from '../../UploadTaskNativeModule'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
+import Upload from 'react-native-background-upload'
 
 class TextileManager extends React.PureComponent {
   constructor () {
@@ -51,9 +51,9 @@ class TextileManager extends React.PureComponent {
     // await PushNotificationIOS.requestPermissions()
     AppState.addEventListener('change', (event) => this.props.appStateChange(event))
     navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
-    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', (event) => this.props.uploadProgress(event))
-    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', (event) => this.props.uploadComplete(event))
-    this.errorSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskError', (event) => this.props.uploadError(event))
+    this.progressSubscription = Upload.addListener('progress', null, (event) => this.props.uploadProgress(event))
+    this.completionSubscription = Upload.addListener('completed', null, (event) => this.props.uploadComplete(event))
+    this.errorSubscription = Upload.addListener('error', null, (event) => this.props.uploadError(event))
   }
 
   render () {

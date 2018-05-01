@@ -11,18 +11,18 @@
 *************************************************************/
 
 import { delay } from 'redux-saga'
-import { call, put, all } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
-import UploadTask from '../../UploadTaskNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
-import TextileActions from '../Redux/TextileRedux'
+import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
+import Upload from 'react-native-background-upload'
 
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
@@ -128,15 +128,18 @@ export function * photosTask (action) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
-      photo['hash'] = multipartData.boundary
       yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
-      yield call(
-        UploadTask.uploadFile,
-        multipartData.payloadPath,
-        'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
-        'POST',
-        multipartData.boundary
+      const id = yield call(
+        Upload.startUpload,
+        {
+          path: multipartData.payloadPath,
+          url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
+          method: 'POST',
+          type: 'multipart',
+          field: multipartData.boundary
+        }
       )
+      yield put(TextileActions.imageSubmittedForUpload(multipartData.payloadPath, multipartData.boundary, id))
     }
     yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)
@@ -146,6 +149,12 @@ export function * photosTask (action) {
 }
 
 export function * removePayloadFile ({data}) {
-  const {file} = data
-  yield call(RNFS.unlink, file)
+  const { id } = data
+  const items = yield select(TextileSelectors.itemsById, id)
+  for (const item of items) {
+    if (item.remotePayloadPath && item.state === 'cleanup') {
+      yield call(RNFS.unlink, item.remotePayloadPath)
+    }
+  }
+  yield put(TextileActions.imageRemovalComplete(id))
 }
