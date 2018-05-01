@@ -22,5 +22,30 @@ allprojects {
         }
         // jitpack repo is necessary to fetch ucrop dependency
         maven { url "https://jitpack.io" }
+        maven {
+            url 'https://maven.google.com'
+        }
+        maven {
+            url "$rootDir/../node_modules/react-native-background-fetch/android/libs"
+        }
     }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '26.0.1'
+            }
+        }
+    }
+}
+
+ext {
+    compileSdkVersion   = 26
+    targetSdkVersion    = 26
+    buildToolsVersion   = "26.0.1"
+    supportLibVersion   = "26.1.0"
+    playServicesVersion = "11.8.0"
 }

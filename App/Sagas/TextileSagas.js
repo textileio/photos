@@ -9,7 +9,7 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-
+import { Platform } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
@@ -153,7 +153,7 @@ export function * removePayloadFile ({data}) {
   const { id } = data
   const items = yield select(TextileSelectors.itemsById, id)
   for (const item of items) {
-    if (item.remotePayloadPath && item.state === 'cleanup') {
+    if (item.remotePayloadPath && item.state === 'complete') {
       yield call(RNFS.unlink, item.remotePayloadPath)
     }
   }
