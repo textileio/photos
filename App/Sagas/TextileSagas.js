@@ -128,7 +128,6 @@ export function * photosTask (action) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
-      photo['hash'] = multipartData.boundary
       yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
       const uploadId = yield call(
         Upload.startUpload,
@@ -140,8 +139,7 @@ export function * photosTask (action) {
           field: multipartData.boundary
         }
       )
-      photo['uploadId'] = uploadId
-      yield put(TextileActions.imageSubmittedForUpload(uploadId))
+      yield put(TextileActions.imageSubmittedForUpload(multipartData.payloadPath, multipartData.boundary, uploadId))
     }
     yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)

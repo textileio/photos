@@ -11,7 +11,7 @@ const { Types, Creators } = createActions({
   backgroundTask: null,
 
   imageAdded: ['image', 'remotePayloadPath'],
-  imageSubmittedForUpload: ['uploadId'],
+  imageSubmittedForUpload: ['data'],
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
   imageUploadError: ['data'],
@@ -59,11 +59,12 @@ export const handleImageAdded = (state, {image, remotePayloadPath}) => {
   return state.merge({ images: { items } })
 }
 
-export const handleImageSubmittedForUpload = (state, {uploadId}) => {
+export const handleImageSubmittedForUpload = (state, {data}) => {
+  const {path, hash, uploadId} = data
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
-    if (item.uploadId === uploadId) {
-      return {...item, state: 'processing', progress: 0}
+    if (item.remotePayloadPath === path) {
+      return {...item, state: 'processing', progress: 0, hash, uploadId}
     }
     return item
   })
