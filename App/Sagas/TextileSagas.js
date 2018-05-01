@@ -11,14 +11,14 @@
 *************************************************************/
 
 import { delay } from 'redux-saga'
-import { call, put } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
-import { TextileActions } from '../Redux/TextileRedux'
+import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
@@ -129,10 +129,7 @@ export function * photosTask (action) {
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
       photo['hash'] = multipartData.boundary
-      console.log(photo)
       yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
-
-      console.log(photo)
       const uploadId = yield call(
         Upload.startUpload,
         {
@@ -144,7 +141,6 @@ export function * photosTask (action) {
         }
       )
       photo['uploadId'] = uploadId
-      console.log(photo)
       yield put(TextileActions.imageSubmittedForUpload(uploadId))
     }
     yield call(BackgroundTimer.stop)
@@ -155,6 +151,13 @@ export function * photosTask (action) {
 }
 
 export function * removePayloadFile ({data}) {
-  const {file} = data
-  yield call(RNFS.unlink, file)
+  const { uploadId } = data
+  const items = yield select(TextileSelectors.items)
+  const targets = items.filter(item => item.uploadId !== uploadId)
+  for (const item of targets) {
+    if (item.remotePayloadPath && item.state === 'cleanup') {
+      yield call(RNFS.unlink, item.remotePayloadPath)
+    }
+  }
+  yield put(TextileActions.imageRemovalComplete(uploadId))
 }

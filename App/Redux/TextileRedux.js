@@ -15,6 +15,7 @@ const { Types, Creators } = createActions({
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
   imageUploadError: ['data'],
+  imageRemovalComplete: ['uploadId'],
   photosTaskError: ['error'],
 
   pairNewDevice: ['pubKey'],
@@ -37,10 +38,13 @@ export const INITIAL_STATE = Immutable({
   devices: []
 })
 
-/* ------------- Selectors ------------- */
 
+/* ------------- Selectors ------------- */
 export const TextileSelectors = {
   // TODO: Add more selectors here as we learn how they are used
+  items: state => {
+    return state.textile.images.items
+  }
 }
 
 /* ------------- Reducers ------------- */
@@ -80,6 +84,17 @@ export const handleImageProgress = (state, {data}) => {
 
 export const handleImageUploadComplete = (state, {data}) => {
   const { uploadId } = data
+  const existingItems = state.images.items ? state.images.items : []
+  const items = existingItems.map(item => {
+    if (item.uploadId === uploadId) {
+      return {...item, state: 'cleanup'}
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
+}
+
+export const imageRemovalComplete = (state, {uploadId}) => {
   const items = state.images.items.filter(item => item.uploadId !== uploadId)
   return state.merge({ images: { items } })
 }
@@ -138,6 +153,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
   [Types.IMAGE_UPLOAD_ERROR]: handleImageUploadError,
+  [Types.IMAGE_REMOVAL_COMPLETE]: imageRemovalComplete,
 
   [Types.PAIR_NEW_DEVICE]: pairNewDevice,
   [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,
