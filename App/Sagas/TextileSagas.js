@@ -152,7 +152,7 @@ export function * removePayloadFile ({data}) {
   const { id } = data
   const items = yield select(TextileSelectors.itemsById, id)
   for (const item of items) {
-    if (item.remotePayloadPath && item.state === 'cleanup') {
+    if (item.remotePayloadPath && item.state === 'complete') {
       yield call(RNFS.unlink, item.remotePayloadPath)
     }
   }
