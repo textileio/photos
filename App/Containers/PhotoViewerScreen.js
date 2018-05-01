@@ -1,5 +1,14 @@
 import React from 'react'
-import {ScrollView, Text, KeyboardAvoidingView, View, StatusBar, Image, Linking} from 'react-native'
+import {
+  Dimensions,
+  ScrollView,
+  Text,
+  KeyboardAvoidingView,
+  View,
+  StatusBar,
+  Image,
+  Linking
+} from 'react-native'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import Toast, {DURATION} from 'react-native-easy-toast'
@@ -12,7 +21,23 @@ import IPFS from '../../TextileIPFSNativeModule'
 import styles from './Styles/PhotoViewerScreenStyle'
 import {buttonColor1} from "./Styles/InfoViewStyle";
 
+const { width, height } = Dimensions.get('window');
+// orientation must fixed
+export const SCREEN_WIDTH = width < height ? width : height
+
 class PhotoViewerScreen extends React.PureComponent {
+
+  componentWillMount() {
+    const item = this.props.navigation.state.params.item
+    fetch('https://localhost:9080/ipfs/' + item.image.hash + '/meta')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({meta: new Date(responseJson.created)});
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+  }
 
   dismissPressed () {
     this.props.screenProps.dismiss()
@@ -35,33 +60,29 @@ class PhotoViewerScreen extends React.PureComponent {
   get caption () {
     return (
       <View style={{ bottom: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'center' }}>
-        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{'Some metadata'}</Text>
+        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{'caption'}</Text>
       </View>
     )
   }
 
   renderImage(image) {
-    const imageData = IPFS.syncGetPhotoData(image.image.hash + '/photo')
     return (
-      <Image
-        source={{uri: 'data:image/jpeg;base64,' + imageData}}
-        style={image.style}
-        resizeMode={image.resizeMode}
-        capInsets={image.capInsets}
-      />
+      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 1)' }}>
+        <Image
+          source={{uri: 'https://localhost:9080/ipfs/' + image.hash + '/photo'}}
+          style={{ flex: 1, width: null, height: null }}
+          resizeMode="contain"
+        />
+      </View>
     )
   }
 
   render () {
+    const item = this.props.navigation.state.params.item
     return (
       <View style={{flex: 1}}>
         <StatusBar hidden />
-        <Gallery
-          style={{ flex: 1, backgroundColor: 'black' }}
-          imageComponent={this.renderImage}
-          images={this.props.imageData}
-          initialPage={this.props.navigation.state.params.index}
-        />
+        { this.renderImage(item.image) }
         { this.galleryCount }
         { this.caption }
         <Toast ref='toast' position='center' />
@@ -71,17 +92,18 @@ class PhotoViewerScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const items = state.textile && state.textile.images && state.textile.images.items ? state.textile.images.items : []
-  const imageData = items.map(item => {
-    const {width, height, hash} = item.image
+<<<<<<< HEAD
+=======
+  const hashes = state.ipfs.photos.hashes
+  const imageData = hashes.map(hash => {
     return {
       source: { uri: 'file:///image.jpg' },
       hash,
-      dimensions: { width: width, height: height }
+      dimensions: { width: 100, height: 100 }
     }
   })
+>>>>>>> master
   return {
-    imageData
   }
 }
 

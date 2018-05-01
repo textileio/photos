@@ -90,6 +90,16 @@ RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPat
   }
 }
 
+RCT_EXPORT_METHOD(sharePhoto:(NSString *)hash thread:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NetMultipartRequest *multipart = [self _sharePhoto:hash toThread:thread error:&error];
+  if(multipart) {
+    resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit fromThread:thread error:&error];
@@ -166,6 +176,11 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
 
 - (NetMultipartRequest *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath toThread:(NSString *)thread error:(NSError**)error {
   NetMultipartRequest *multipart = [self.node addPhoto:path thumb:thumbPath thread:thread error:error];
+  return multipart;
+}
+
+- (NetMultipartRequest *)_sharePhoto:(NSString *)hash toThread:(NSString *)thread error:(NSError**)error {
+  NetMultipartRequest *multipart = [self.node sharePhoto:hash thread:thread error:error];
   return multipart;
 }
 

@@ -5,20 +5,10 @@ import {
   Image,
   Text,
   FlatList,
-  TouchableOpacity,
-  Linking,
-  Platform,
-  AppState,
-  PushNotificationIOS
+  TouchableOpacity
 } from 'react-native'
-import Immutable from 'seamless-immutable'
-import Icon from 'react-native-vector-icons/Ionicons'
 import Evilicon from 'react-native-vector-icons/EvilIcons'
 import { connect } from 'react-redux'
-import BackgroundTask from 'react-native-background-task'
-import TextileActions from '../Redux/TextileRedux'
-import UploadTask from '../../UploadTaskNativeModule'
-import HeaderButtons from 'react-navigation-header-buttons'
 import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
@@ -28,73 +18,13 @@ import IPFS from '../../TextileIPFSNativeModule'
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/TextilePhotosStyle'
 
 class TextilePhotos extends React.PureComponent {
-
-  constructor() {
-    super()
-    this.setup()
-  }
-
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
       headerTitle: (
         <Image source={require('../Images/TextileHeader.png')} />
-      ),
-      headerRight: (
-        <HeaderButtons IconComponent={Icon} iconSize={23} color='white'>
-          <HeaderButtons.Item title='more' iconName='ios-more' onPress={params.openLogs} />
-        </HeaderButtons>
       )
     }
-  }
-
-  componentWillMount () {
-    this.props.navigation.setParams({
-      openLogs: this.openLogs.bind(this)
-    })
-  }
-
-  openLogs = () => {
-    this.props.navigation.navigate('InfoView')
-  }
-
-  // TODO: This logic should be moved deeper into the stack
-  _handleOpenURLEvent (event) {
-    this._handleOpenURL(event.url)
-  }
-  // TODO: This logic should be moved deeper into the stack
-  _handleOpenURL (url) {
-    const data = url.replace(/.*?:\/\//g, '')
-    this.props.navigation.navigate('PairingView', {data: data})
-  }
-
-  componentDidMount () {
-    BackgroundTask.schedule()
-    // TODO: This logic should be moved deeper into the stack
-    if (Platform.OS === 'android') {
-      // TODO: Android deep linking isn't setup in the Java native layer
-      Linking.getInitialURL().then(url => {
-        this._handleOpenURL(url)
-      })
-    } else {
-      Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
-    }
-  }
-
-  componentWillUnmount () {
-    AppState.removeEventListener('change', this.props.appStateChange)
-    this.progressSubscription.remove()
-    this.completionSubscription.remove()
-    this.errorSubscription.remove()
-  }
-
-  async setup () {
-    // await PushNotificationIOS.requestPermissions()
-    AppState.addEventListener('change', (event) => this.props.appStateChange(event))
-    navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
-    this.progressSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskProgress', (event) => this.props.uploadProgress(event))
-    this.completionSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskComplete', (event) => this.props.uploadComplete(event))
-    this.errorSubscription = UploadTask.uploadTaskEmitter.addListener('UploadTaskError', (event) => this.props.uploadError(event))
   }
 
   /* ***********************************************************
@@ -120,13 +50,13 @@ class TextilePhotos extends React.PureComponent {
         <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
       </TouchableOpacity>
     }
-    const imageData = IPFS.syncGetPhotoData(item.image.hash + '/thumb')
+    // TODO: Programatically determine gateway port rather than hard-coding
     return (
       <TouchableOpacity onPress={onPress} >
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <Image
-              source={{uri: 'data:image/jpeg;base64,' + imageData}}
+              source={{uri: 'https://localhost:9080/ipfs/' + item.image.hash + '/thumb'}}
               resizeMode={'cover'}
               style={styles.itemImage}
             />
@@ -254,13 +184,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    appStateChange: event => { dispatch(TextileActions.appStateChange(event)) },
-    locationUpdate: () => { dispatch(TextileActions.locationUpdate()) },
-    uploadComplete: event => { dispatch(TextileActions.imageUploadComplete(event)) },
-    uploadProgress: event => { dispatch(TextileActions.imageUploadProgress(event)) },
-    uploadError: event => { dispatch(TextileActions.imageUploadError(event)) }
-  }
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextilePhotos)
