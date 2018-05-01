@@ -95,12 +95,12 @@ export function * startNode () {
   }
 }
 
-export function * getPhotoHashes () {
+export function * getPhotoHashes ({thread}) {
   try {
-    const photoData = yield call(IPFS.getPhotos, null, 100000, 'default')
-    yield put(IpfsNodeActions.getPhotoHashesSuccess(photoData))
+    const photoData = yield call(IPFS.getPhotos, null, 100000, thread)
+    yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, photoData))
   } catch (error) {
-    yield put(IpfsNodeActions.getPhotoHashesFailure(error))
+    yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))
   }
 }
 
@@ -130,6 +130,7 @@ export function * photosTask (action) {
       yield call(RNFS.unlink, photo.thumbPath)
       photo['hash'] = multipartData.boundary
       yield put(TextileActions.imageAdded(photo, multipartData.payloadPath))
+      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
       yield call(
         UploadTask.uploadFile,
         multipartData.payloadPath,
