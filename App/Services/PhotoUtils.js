@@ -4,6 +4,7 @@ import {
 } from 'react-native'
 import RNFS from 'react-native-fs'
 import ImageResizer from 'react-native-image-resizer'
+import IPFS from '../../TextileIPFSNativeModule'
 
 export async function queryPhotos () {
   const latestTimestampString = await AsyncStorage.getItem('latestPhotoTimestamp')
@@ -43,7 +44,7 @@ export async function queryPhotos () {
         await RNFS.mkdir(thumbDir)
       }
       for (const photo of photos) {
-        // TODO: Figure out handling for Android here
+        // iOS method
         if (photo.uri.includes('assets-library://')) {
           var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
           while (match = regex.exec(photo.uri)) {
@@ -54,6 +55,11 @@ export async function queryPhotos () {
           photo['path'] = path
           const thumbPath = await resizeImage(photo.path, thumbRelativeDir)
           photo['thumbPath'] = thumbPath
+        }
+        // Android Method
+        else if (photo.uri.includes('content://media')) {
+          photo['path'] = await IPFS.getFilePath(photo.uri)
+          photo['thumbPath'] = await resizeImage(photo.path, thumbDir)
         }
       }
       const newestPhotoTimestampString = photos[0].timestamp
@@ -86,7 +92,6 @@ export async function getPhoto (cursor) {
 }
 
 export async function resizeImage (path: string, outputPath: string, width: number = 400, height: number = 400): string {
-  console.log('RESIZING IMAGE', path)
   const result = await ImageResizer.createResizedImage(path, width, height, 'JPEG', 80, 0, outputPath)
   return result.path
 }
