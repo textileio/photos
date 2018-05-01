@@ -72,10 +72,12 @@ export const handleImageSubmittedForUpload = (state, {path, hash, id}) => {
 
 export const handleImageProgress = (state, {data}) => {
   const { id, progress } = data
+  // The upload library we're using returns float 0.0 - 100.0
+  const fractionalProgress = progress / 100.0
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
     if (item.id === id) {
-      return {...item, state: 'processing', progress}
+      return {...item, state: 'processing', progress: fractionalProgress}
     }
     return item
   })
@@ -87,7 +89,7 @@ export const handleImageUploadComplete = (state, {data}) => {
   const existingItems = state.images.items ? state.images.items : []
   const items = existingItems.map(item => {
     if (item.id === id) {
-      return {...item, state: 'cleanup', id}
+      return {...item, state: 'complete', id}
     }
     return item
   })

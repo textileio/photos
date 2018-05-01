@@ -20,10 +20,10 @@ class TextilePhotos extends React.PureComponent {
 const mapStateToProps = state => {
   let allItemsObj = state.ipfs.threads.default.hashes.reduce((o, hash, index) => ({...o, [hash]: { index, image: { hash }, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
-    const item = allItemsObj[processingItem.image.hash]
+    const item = allItemsObj[processingItem.hash]
     if (item) {
       const updatedItem = item.merge(processingItem)
-      allItemsObj = allItemsObj.set(processingItem.image.hash, updatedItem)
+      allItemsObj = allItemsObj.set(processingItem.hash, updatedItem)
     }
   }
   const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
