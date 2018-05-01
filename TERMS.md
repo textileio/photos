@@ -40,15 +40,15 @@ We retain the right to block or otherwise prevent delivery of any type of file, 
 
 By registering for the Service, you understand that we may send you communications or data regarding the Services, including but not limited to: (a) notices about your use of the Services, including any notices concerning violations of use; (b) updates; and (c) promotional information and materials regarding Textile’s products and services, via electronic mail. We give you the opportunity to opt-out of receiving promotional electronic mail from us by following the opt-out instructions provided in the message.
 
-## 7. SUSPENSION AND TERMINATION OF USE OF THE SERVICE
+## 8. SUSPENSION AND TERMINATION OF USE OF THE SERVICE
 
 We reserve the right, to temporarily suspend or terminate your access to the Service at any time in our sole discretion, with or without cause, with or without notice, and without incurring liability of any kind. For example, we may suspend or terminate your access to or use of the Service for: (a) the actual or suspected violation of these Terms; (b) the use of the Services in a manner that may cause Textile to have legal liability or disrupt others’ use of the Services; (c) the suspicion or detection of any malicious code, virus or other harmful code by you or in your account; (d) scheduled downtime and recurring downtime; (e) any actual or suspected effort by you to circumvent Textile’s security or encryption; or (f) unplanned technical problems and outages. If, in Textile’s determination, the suspension might be indefinite and/or Textile has elected to terminate your access to the Service, Textile will use commercially reasonable efforts to notify you through the Service and/or by email to the email address associated with your account. **You acknowledge that if your access to the Service is suspended or terminated, you may no longer have access to Your Content that is stored with the Service.**
 
-## 8. ACCEPTABLE USE
+## 9. ACCEPTABLE USE
 
 You must not use the Service to harm others or the Service. For example, you must not use the Service to harm, threaten, or harass another person, organization, or Textile. You must not: damage, disable, overburden, or impair the Service (or any network connected to the Service); resell or redistribute the Service or any part of it; use any unauthorized means to modify, reroute, or gain access to the Service or attempt to carry out these activities; or use any data mining, robots, or similar data gathering and extraction tools; or use any automated process or Service (such as a bot, a spider, or periodic caching of information stored by Textile) to access or use the Service;. In addition, you promise that you will not and will not encourage or assist any third party to:
 
-    I. reproduce, modify, alter, tamper with, repair or create derivative works of any Software, unless that permission is granted in a license;
+    I. reproduce, modify, alter, tamper with, repair or create derivative works of any Software, unless that permission is granted in a license. Further, unless expressly prohibited under applicable law, you may not use the Service to develop, test, validate and/or improve any service that is a substitute for, or substantially similar to, the Service (including any portion thereof);
 
     II. reverse engineer, disassemble or decompile the Software used to provide or access the Service, including the Software, or attempt to discover or recreate the source code used to provide or access the Service, except and only to the extent that that permission is granted in a license or applicable law expressly permits doing so;
 
