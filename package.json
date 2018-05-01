@@ -41,6 +41,7 @@
     "react-native-background-task": "^0.2.1",
     "react-native-background-timer": "^2.0.1",
     "react-native-config": "^0.10.0",
+    "react-native-cookies": "^3.2.0",
     "react-native-deep-link": "^0.1.5",
     "react-native-device-info": "^0.21.5",
     "react-native-easy-toast": "^1.1.0",
