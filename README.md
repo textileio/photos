@@ -1,10 +1,38 @@
-#  TextilePhotos
+#  Textile Mobile
+
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 [![app-center-build](https://build.appcenter.ms/v0.1/apps/54490c09-1f3e-40c4-acbe-eb6fde878b2b/branches/master/badge)](https://appcenter.ms)
 [![Build status](https://build.appcenter.ms/v0.1/apps/9d15ed49-aba5-48b6-8264-49e48d84abf5/branches/master/badge)](https://appcenter.ms)
 
-* Standard compliant React Native App Utilizing [Ignite](https://github.com/infinitered/ignite)
+## Where can I get it?
 
+The [textile.photos](https://www.textile.photos/) is still in private beta. Want to test out new features and get fixes before everyone else? Please add your email to our [signup list](https://producthunt.com/upcoming/textile-photos) and we'll get an invite out to you shortly. 
+
+## Community Channel
+
+Want to join our community discussion? Join us: 
+
+* [Telegram](https://t.me/joinchat/AAAAAEfVwD37Wh0OpnlXKA)
+* [Slack](https://slack.textile.io/) channels.   
+
+## I have a problem with the Textile app
+
+First, please search the open issues and closed issues to see if your issue has already been documented.
+
+If you can't find an issue that matches what you're seeing, open a new issue and provide us with enough information to investigate further.
+
+## How can I contribute to GitHub Desktop?
+
+The [CONTRIBUTING.md](CONTRIBUTING.md) document will help you get setup and familiar with the source.
+
+If you're looking for something to work on, check out the [help wanted label](https://github.com/textileio/textile-mobile/issues?q=is%3Aissue+is%3Aopen+label%3A"help wanted).
+
+## License
+   
+[MIT](LICENSE.md)
+   
+The MIT license grant is not for Textile's trademarks, which include the logo designs. Textile reserves all trademark and copyright rights in and to all Textile trademarks.
+   
 ## :arrow_up: How to Setup
 
 **Step 1:** git clone this repo:
@@ -24,46 +52,4 @@
     * Run Genymotion
     * run `react-native run-android`
 
-## :no_entry_sign: Standard Compliant
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-This project adheres to Standard.  Our CI enforces this, so we suggest you enable linting to keep your project compliant during development.
-
-**To Lint on Commit**
-
-This is implemented using [husky](https://github.com/typicode/husky). There is no additional setup needed.
-
-**Bypass Lint**
-
-If you have to bypass lint for a special commit that you will come back and clean (pushing something to a branch etc.) then you can bypass git hooks with adding `--no-verify` to your commit command.
-
-**Understanding Linting Errors**
-
-The linting rules are from JS Standard and React-Standard.  [Regular JS errors can be found with descriptions here](http://eslint.org/docs/rules/), while [React errors and descriptions can be found here](https://github.com/yannickcr/eslint-plugin-react).
-
-## :closed_lock_with_key: Secrets
-
-This project uses [react-native-config](https://github.com/luggit/react-native-config) to expose config variables to your javascript code in React Native. You can store API keys
-and other sensitive information in a `.env` file:
-
-```
-API_URL=https://myapi.com
-GOOGLE_MAPS_API_KEY=abcdefgh
-```
-
-and access them from React Native like so:
-
-```
-import Secrets from 'react-native-config'
-
-Secrets.API_URL  // 'https://myapi.com'
-Secrets.GOOGLE_MAPS_API_KEY  // 'abcdefgh'
-```
-
-The `.env` file is ignored by git keeping those secrets out of your repo.
-
-### Get started:
-1. Copy .env.example to .env
-2. Add your config variables
-3. Follow instructions at [https://github.com/luggit/react-native-config#setup](https://github.com/luggit/react-native-config#setup)
-4. Done!
