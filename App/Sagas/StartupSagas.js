@@ -35,4 +35,5 @@ export function * startup () {
   yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
   yield put(IpfsNodeActions.startNodeRequest())
   yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+  yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
 }

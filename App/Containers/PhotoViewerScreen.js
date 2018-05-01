@@ -5,8 +5,7 @@ import { Icon } from 'react-native-elements'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { connect } from 'react-redux'
 import IPFS from '../../TextileIPFSNativeModule'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
+import IpfsActions from '../Redux/TextileRedux'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -19,7 +18,10 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   sharePressed () {
-    this.refs.toast.show('Sharing coming soon!', DURATION.LENGTH_SHORT)
+    const page = this.refs.gallery.currentPage
+    const hash = this.props.imageData[page].hash
+    this.props.share(hash)
+    this.refs.toast.show('Done!', DURATION.LENGTH_SHORT)
   }
 
   get galleryCount () {
@@ -58,6 +60,7 @@ class PhotoViewerScreen extends React.PureComponent {
       <View style={{flex: 1}}>
         <StatusBar hidden />
         <Gallery
+          ref='gallery'
           style={{ flex: 1, backgroundColor: 'black' }}
           imageComponent={this.renderImage}
           images={this.props.imageData}
@@ -89,6 +92,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    share: (hash) => { dispatch(IpfsActions.shareImageRequest('beta', hash)) }
   }
 }
 
