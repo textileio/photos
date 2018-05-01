@@ -47,6 +47,7 @@
 		36F172E5279B465682338DDB /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A1BC9A42CA94445382957F34 /* MaterialIcons.ttf */; };
 		3876EA8C03BD4DBB9BE04318 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F68F1EA526BB4128AAB18AD5 /* FontAwesome.ttf */; };
 		3C52B42EBA6547ACB45C6C7F /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7A2525E89E54929B1E7FC4B /* Octicons.ttf */; };
+		4306BA2EBD534B30BF90E295 /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B21096A1B7C458F944B688F /* libRNCookieManagerIOS.a */; };
 		4FC48647847E490FB74A85C7 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E68F90DAB045288BB8D857 /* libRNBackgroundFetch.a */; };
 		51C307265D0949099AAFDCA2 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A381D027F32B4EA780358435 /* Zocial.ttf */; };
 		531FB4FE0C8A4308B4AA7B9F /* Degarism Studio - Biotif-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FACFD2055F364FCC854CEA69 /* Degarism Studio - Biotif-SemiBoldItalic.ttf */; };
@@ -506,6 +507,13 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
+		FC15780F20983E1200943578 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 652D2EB22AB84B0EB6997949 /* RNCookieManagerIOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1BD725DA1CF77A8B005DBD79;
+			remoteInfo = RNCookieManagerIOS;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -560,12 +568,14 @@
 		410595D0715B69BFC058D34D /* Pods-TextilePhotos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos/Pods-TextilePhotos.debug.xcconfig"; sourceTree = "<group>"; };
 		416BFBC62D4FA16D72870490 /* libPods-TextilePhotosTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotosTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		47FCFF52D5004478899BBC71 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
+		4B21096A1B7C458F944B688F /* libRNCookieManagerIOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCookieManagerIOS.a; sourceTree = "<group>"; };
 		5254C3A68612B134C29D3674 /* libPods-TextilePhotos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		545FE4D701C0477A8920E3EB /* AppCenterReactNativeCrashes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNativeCrashes.xcodeproj; path = "../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes.xcodeproj"; sourceTree = "<group>"; };
 		5475ED2C823F48CBAA2A8484 /* Degarism Studio - Biotif-RegularItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-RegularItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-RegularItalic.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5E91A5EF4C7A428FB9778EEA /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = SDKROOT; };
 		6247753D29BD445BBE26673D /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
+		652D2EB22AB84B0EB6997949 /* RNCookieManagerIOS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCookieManagerIOS.xcodeproj; path = "../node_modules/react-native-cookies/ios/RNCookieManagerIOS.xcodeproj"; sourceTree = "<group>"; };
 		701ED67C313B488799C34078 /* AppCenterReactNativeAnalytics.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNativeAnalytics.xcodeproj; path = "../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics.xcodeproj"; sourceTree = "<group>"; };
 		70F71850CDA5C077EE018D7A /* Pods-TextilePhotos-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		758EEEEA4A4540F080C59E59 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
@@ -663,6 +673,7 @@
 				25EE5D215192492083E83134 /* libAppCenterReactNativeCrashes.a in Frameworks */,
 				6C570571BF914AD2B37BD0EC /* libReactNativeConfig.a in Frameworks */,
 				EEBAF5F8CB6763E888A5E9D8 /* libPods-TextilePhotos.a in Frameworks */,
+				4306BA2EBD534B30BF90E295 /* libRNCookieManagerIOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -926,6 +937,7 @@
 				701ED67C313B488799C34078 /* AppCenterReactNativeAnalytics.xcodeproj */,
 				545FE4D701C0477A8920E3EB /* AppCenterReactNativeCrashes.xcodeproj */,
 				346FA0BD5F3A43CC871EE176 /* ReactNativeConfig.xcodeproj */,
+				652D2EB22AB84B0EB6997949 /* RNCookieManagerIOS.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1049,6 +1061,7 @@
 				23A29B287C094135A8E25804 /* libAppCenterReactNativeAnalytics.a */,
 				A9A4B73F65DE4286B0650688 /* libAppCenterReactNativeCrashes.a */,
 				DFE82A7DBA7845BB93C7CF3A /* libReactNativeConfig.a */,
+				4B21096A1B7C458F944B688F /* libRNCookieManagerIOS.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1116,6 +1129,14 @@
 			children = (
 				ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */,
 				93F071F62051A31A0066155B /* libRCTBlob-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FC15780C20983E1100943578 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FC15781020983E1200943578 /* libRNCookieManagerIOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1338,6 +1359,10 @@
 				{
 					ProductGroup = 93BE918420801BAF0070C615 /* Products */;
 					ProjectRef = 758EEEEA4A4540F080C59E59 /* RNBackgroundTimer.xcodeproj */;
+				},
+				{
+					ProductGroup = FC15780C20983E1100943578 /* Products */;
+					ProjectRef = 652D2EB22AB84B0EB6997949 /* RNCookieManagerIOS.xcodeproj */;
 				},
 				{
 					ProductGroup = 937C35702081794C00F06ADB /* Products */;
@@ -1766,6 +1791,13 @@
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FC15781020983E1200943578 /* libRNCookieManagerIOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCookieManagerIOS.a;
+			remoteRef = FC15780F20983E1200943578 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -2032,11 +2064,15 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
 				);
 				INFOPLIST_FILE = TextilePhotosTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2074,11 +2110,15 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
 				);
 				INFOPLIST_FILE = TextilePhotosTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2124,6 +2164,7 @@
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
 					"$(SRCROOT)/../node_modules/react-native/React/Base",
+					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
@@ -2174,6 +2215,7 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
@@ -2227,10 +2269,14 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
 				);
 				INFOPLIST_FILE = "TextilePhotos-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2279,10 +2325,14 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
 				);
 				INFOPLIST_FILE = "TextilePhotos-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2308,8 +2358,16 @@
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
+				);
 				INFOPLIST_FILE = "TextilePhotos-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2335,8 +2393,16 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-cookies/ios/RNCookieManagerIOS",
+				);
 				INFOPLIST_FILE = "TextilePhotos-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
