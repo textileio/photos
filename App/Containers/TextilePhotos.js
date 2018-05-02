@@ -37,7 +37,7 @@ const mapStateToProps = (state, ownProps) => {
     thread,
     sharable: ownProps.navigation.state.params.sharable,
     items: updatedItems,
-    renderImages: state.ipfs.nodeState.state === 'started' && !state.ipfs.threads[thread].querying
+    renderImages: state.ipfs.gatewayState.state === 'started' && !state.ipfs.threads[thread].querying
   }
 }
 
