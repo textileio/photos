@@ -9,7 +9,7 @@ import PairingView from '../Containers/PairingView'
 import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
 import Colors from '../Themes/Colors'
 // import Notifications from '../Containers/Notifications'
-// import Image from 'react-native'
+import { Image } from 'react-native'
 
 // import SwipeNavigation from './SwipeNavigation'
 
@@ -19,11 +19,17 @@ import styles, {headerTintColor} from './Styles/NavigationStyles'
 
 const PhotosNav = StackNavigator(
   {
-    TextilePhotos: TextilePhotos
+    TextilePhotos: {
+      screen: TextilePhotos,
+      navigationOptions: {
+        headerTitle: <Image source={require('../Images/TextileHeader.png')} />
+      }
+    }
   },
   {
     // Default config for all screens
     headerMode: 'float',
+    initialRouteParams: { thread: 'default', sharable: true },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
@@ -34,11 +40,17 @@ const PhotosNav = StackNavigator(
 
 const SharedPhotosNav = StackNavigator(
   {
-    SharedPhotos: TextilePhotos
+    SharedPhotos: {
+      screen: TextilePhotos,
+      navigationOptions: {
+        headerTitle: 'Shared Photos'
+      }
+    }
   },
   {
     // Default config for all screens
     headerMode: 'float',
+    initialRouteParams: { thread: 'beta', sharable: false },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
@@ -65,7 +77,7 @@ const InfoNav = StackNavigator(
 const TabNav = TabNavigator(
   {
     PhotosNav: { screen: PhotosNav },
-    // SharedPhotosNav: { screen: SharedPhotosNav },
+    SharedPhotosNav: { screen: SharedPhotosNav },
     InfoNav: { screen: InfoNav }
   },
   {
@@ -89,19 +101,18 @@ const TabNav = TabNavigator(
           } else if (routeName === 'InfoNav') {
             iconName = `ios-information-circle${focused ? '' : '-outline'}`
           }
-          return <Ionicons name={iconName} size={25} color={tintColor}/>
+          return <Ionicons name={iconName} size={25} color={tintColor} />
         },
         title: title
       }
     },
     tabBarOptions: {
-      activeTintColor: Colors.brandRed,
-      inactiveTintColor: 'gray'
+      activeTintColor: Colors.brandRed
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     animationEnabled: false,
-    swipeEnabled: false,
+    swipeEnabled: false
   }
 )
 

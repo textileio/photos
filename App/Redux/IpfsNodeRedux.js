@@ -16,9 +16,9 @@ const { Types, Creators } = createActions({
   stopNodeRequest: null,
   stopNodeSuccess: null,
   stopNodeFailure: ['error'],
-  getPhotoHashesRequest: null,
-  getPhotoHashesSuccess: ['hashes'],
-  getPhotoHashesFailure: ['error']
+  getPhotoHashesRequest: ['thread'],
+  getPhotoHashesSuccess: ['thread', 'hashes'],
+  getPhotoHashesFailure: ['thread', 'error']
 })
 
 export const IpfsNodeTypes = Types
@@ -35,10 +35,17 @@ export const INITIAL_STATE = Immutable({
     state: 'stopped', // | starting | started
     error: null
   },
-  photos: {
-    querying: false,
-    hashes: [],
-    error: null
+  threads: {
+    default: {
+      querying: false,
+      hashes: [],
+      error: null
+    },
+    beta: {
+      querying: false,
+      hashes: [],
+      error: null
+    }
   }
 })
 
@@ -79,14 +86,26 @@ export const nodeStopped = state =>
 export const nodeError = (state, {error}) =>
   state.merge({...state, nodeState: {error: error}})
 
-export const photoHashesRequest = state =>
-  state.merge({...state, photos: {...state.photos, querying: true}})
+export const photoHashesRequest = (state, {thread}) => {
+  const currentThreadState = state.threads[thread]
+  const newThreadState = currentThreadState.merge({querying: true})
+  const newThreads = state.threads.set(thread, newThreadState)
+  return state.merge({...state, threads: newThreads})
+}
 
-export const photoHashesSuccess = (state, {hashes}) =>
-  state.merge({...state, photos: {...state.photos, querying: false, hashes: hashes}})
+export const photoHashesSuccess = (state, {thread, hashes}) => {
+  const currentThreadState = state.threads[thread]
+  const newThreadState = currentThreadState.merge({querying: false, hashes})
+  const newThreads = state.threads.set(thread, newThreadState)
+  return state.merge({...state, threads: newThreads})
+}
 
-export const photoHashesFailure = (state, {error}) =>
-  state.merge({...state, photos: {...state.photos, querying: false, error}})
+export const photoHashesFailure = (state, {thread, error}) => {
+  const currentThreadState = state.threads[thread]
+  const newThreadState = currentThreadState.merge({querying: false, error})
+  const newThreads = state.threads.set(thread, newThreadState)
+  return state.merge({...state, threads: newThreads})
+}
 
 // Helper so sagas can figure out current items loaded
 // const getItems = state => state.items
