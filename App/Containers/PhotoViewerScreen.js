@@ -4,9 +4,7 @@ import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { connect } from 'react-redux'
-import IPFS from '../../TextileIPFSNativeModule'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
+import IpfsActions from '../Redux/TextileRedux'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -19,15 +17,19 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   sharePressed () {
-    this.refs.toast.show('Sharing coming soon!', DURATION.LENGTH_SHORT)
+    const page = this.refs.gallery.currentPage
+    const hash = this.props.imageData[page].hash
+    this.props.share(hash)
+    this.refs.toast.show('Done!', DURATION.LENGTH_SHORT)
   }
 
   get galleryCount () {
-    // const { index, images } = this.state;
     return (
-      <View style={{ flex: 1, flexDirection: 'row', padding: 8, top: 0, height: 60, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'space-between' }}>
+      <View style={{ flex: 1, flexDirection: 'row-reverse', padding: 8, top: 0, height: 60, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'space-between' }}>
         <Icon name='close' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.dismissPressed.bind(this)} />
-        <Icon name='share-apple' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.sharePressed.bind(this)} />
+        {this.props.sharable &&
+          <Icon name='share-apple' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.sharePressed.bind(this)} />
+        }
       </View>
     )
   }
@@ -40,27 +42,15 @@ class PhotoViewerScreen extends React.PureComponent {
     )
   }
 
-  renderImage(image) {
-    const imageData = IPFS.syncGetPhotoData(image.image.hash + '/thumb')
-    return (
-      <Image
-        source={{uri: 'data:image/jpeg;base64,' + imageData}}
-        style={image.style}
-        resizeMode={image.resizeMode}
-        capInsets={image.capInsets}
-      />
-    )
-  }
-
   render () {
     return (
       <View style={{flex: 1}}>
         <StatusBar hidden />
         <Gallery
+          ref='gallery'
           style={{ flex: 1, backgroundColor: 'black' }}
-          imageComponent={this.renderImage}
           images={this.props.imageData}
-          initialPage={this.props.navigation.state.params.index}
+          initialPage={this.props.initialIndex}
         />
         { this.galleryCount }
         { this.caption }
@@ -70,22 +60,21 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
-  const hashes = state.ipfs.photos.hashes
+const mapStateToProps = (state, ownProps) => {
+  const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
   const imageData = hashes.map(hash => {
-    return {
-      source: { uri: 'file:///image.jpg' },
-      hash,
-      dimensions: { width: 100, height: 100 }
-    }
+    return { hash, source: { uri: 'https://localhost:9080/ipfs/' + hash + '/photo' } }
   })
   return {
-    imageData
+    imageData,
+    initialIndex: ownProps.navigation.state.params.initialIndex,
+    sharable: ownProps.navigation.state.params.sharable
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    share: (hash) => { dispatch(IpfsActions.shareImageRequest('beta', hash)) }
   }
 }
 

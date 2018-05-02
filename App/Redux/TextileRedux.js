@@ -10,8 +10,11 @@ const { Types, Creators } = createActions({
   locationUpdate: null,
   backgroundTask: null,
 
-  imageAdded: ['image', 'remotePayloadPath'],
-  imageSubmittedForUpload: ['path', 'hash', 'id'],
+  shareImageRequest: ['thread', 'hash'],
+  imageSharingError: ['error'],
+
+  imageAdded: ['thread', 'hash', 'remotePayloadPath'],
+
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
   imageUploadError: ['data'],
@@ -43,7 +46,7 @@ export const INITIAL_STATE = Immutable({
 export const TextileSelectors = {
   // TODO: Add more selectors here as we learn how they are used
   itemsById: (state, id) => {
-    return state.textile.images.items.filter(item => item.id === id)
+    return state.textile.images.items.filter(item => item.hash === id)
   }
 }
 
@@ -53,20 +56,8 @@ export const onboardedSuccess = state => {
   return state.merge({ onboarded: true })
 }
 
-export const handleImageAdded = (state, {image, remotePayloadPath}) => {
-  const existingItems = state.images.items ? state.images.items : []
-  const items = [{ image, remotePayloadPath, state: 'pending' }, ...existingItems]
-  return state.merge({ images: { items } })
-}
-
-export const handleImageSubmittedForUpload = (state, {path, hash, id}) => {
-  const existingItems = state.images.items ? state.images.items : []
-  const items = existingItems.map(item => {
-    if (item.remotePayloadPath === path) {
-      return {...item, state: 'processing', progress: 0, hash, id}
-    }
-    return item
-  })
+export const handleImageAdded = (state, {thread, hash, remotePayloadPath}) => {
+  const items = [{ thread, hash, remotePayloadPath, state: 'pending' }, ...state.images.items]
   return state.merge({ images: { items } })
 }
 
@@ -74,9 +65,8 @@ export const handleImageProgress = (state, {data}) => {
   const { id, progress } = data
   // The upload library we're using returns float 0.0 - 100.0
   const fractionalProgress = progress / 100.0
-  const existingItems = state.images.items ? state.images.items : []
-  const items = existingItems.map(item => {
-    if (item.id === id) {
+  const items = state.images.items.map(item => {
+    if (item.hash === id) {
       return {...item, state: 'processing', progress: fractionalProgress}
     }
     return item
@@ -86,9 +76,8 @@ export const handleImageProgress = (state, {data}) => {
 
 export const handleImageUploadComplete = (state, {data}) => {
   const { id } = data
-  const existingItems = state.images.items ? state.images.items : []
-  const items = existingItems.map(item => {
-    if (item.id === id) {
+  const items = state.images.items.map(item => {
+    if (item.hash === id) {
       return {...item, state: 'complete', id}
     }
     return item
@@ -97,15 +86,14 @@ export const handleImageUploadComplete = (state, {data}) => {
 }
 
 export const imageRemovalComplete = (state, {id}) => {
-  const items = state.images.items.filter(item => item.id !== id)
+  const items = state.images.items.filter(item => item.hash !== id)
   return state.merge({ images: { items } })
 }
 
 export const handleImageUploadError = (state, {data}) => {
   const { error, id } = data
-  const existingItems = state.images.items ? state.images.items : []
-  const items = existingItems.map(item => {
-    if (item.id === id) {
+  const items = state.images.items.map(item => {
+    if (item.hash === id) {
       return {...item, state: 'error', error: error.message}
     }
     return item
@@ -150,7 +138,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
   [Types.IMAGE_ADDED]: handleImageAdded,
-  [Types.IMAGE_SUBMITTED_FOR_UPLOAD]: handleImageSubmittedForUpload,
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
