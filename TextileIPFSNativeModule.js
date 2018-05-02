@@ -56,5 +56,10 @@ export default {
   pairNewDevice: async function (pubKey: string): string {
     const result = await TextileIPFS.pairNewDevice(pubKey)
     return result
+  },
+
+  getFilePath: async function (uri: string): string {
+    const result = await TextileIPFS.getRealPathFromURI(uri)
+    return result
   }
 }
