@@ -119,6 +119,8 @@ export default class PhotoGrid extends React.PureComponent {
                 getItemLayout={this._getItemLayout}
                 numColumns={numColumns}
                 initialNumToRender={this.oneScreensWorth}
+                onRefresh={this.props.onRefresh}
+                refreshing={this.props.refreshing}
               />
             ) : (
               <View style={styles.emptyListStyle}>
