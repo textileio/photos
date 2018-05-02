@@ -69,19 +69,6 @@ export function * createNode ({path}) {
   }
 }
 
-export function * startGateway () {
-  try {
-    const success = yield call(IPFS.startGateway)
-    if (success) {
-      yield put(IpfsNodeActions.startGatewaySuccess())
-    } else {
-      yield put(IpfsNodeActions.startGatewayFailure(new Error('Failed starting gateway, but no error was thrown - Should not happen')))
-    }
-  } catch (error) {
-    yield put(IpfsNodeActions.startGatewayFailure(error))
-  }
-}
-
 export function * startNode () {
   try {
     const success = yield call(IPFS.startNode)
