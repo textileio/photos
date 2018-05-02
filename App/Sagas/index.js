@@ -20,6 +20,7 @@ import {
   pairNewDevice,
   getPhotoHashes,
   shareImage,
+  refreshThreads,
   photosTask,
   removePayloadFile
 } from './TextileSagas'
@@ -45,6 +46,8 @@ export default function * root () {
     takeEvery(IpfsNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
 
     takeEvery(TextileTypes.SHARE_IMAGE_REQUEST, shareImage),
+
+    takeEvery(TextileTypes.APP_STATE_CHANGE, refreshThreads),
 
     takeEvery(TextileTypes.APP_STATE_CHANGE, photosTask),
     takeEvery(TextileTypes.LOCATION_UPDATE, photosTask),
