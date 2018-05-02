@@ -61,5 +61,15 @@ export default {
   getFilePath: async function (uri: string): string {
     const result = await TextileIPFS.getRealPathFromURI(uri)
     return result
+  },
+
+  signIn: async function (username: string, password: string): string {
+    const result = await TextileIPFS.signIn(username, password)
+    return result
+  },
+
+  signUp: async function (username: string, password: string, email: string, referral: string): string {
+    const result = await TextileIPFS.signUpWithEmail(username, password, email, referral)
+    return result
   }
 }
