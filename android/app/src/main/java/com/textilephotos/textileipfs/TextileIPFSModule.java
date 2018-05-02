@@ -180,6 +180,29 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
         }
     }
 
+
+    @ReactMethod
+    public void signIn (String username, String password, Promise promise) {
+        try {
+            String result = textile.signIn(username, password);
+            promise.resolve(result);
+        }
+        catch (Exception e) {
+            promise.reject("SIGNIN ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void signUpWithEmail (String username, String password, String email, String referral, Promise promise) {
+        try {
+            String result = textile.signUpWithEmail(username, password, email, referral);
+            promise.resolve(result);
+        }
+        catch (Exception e) {
+            promise.reject("SIGNUP ERROR", e);
+        }
+    }
+
     // Method for turning photo URI into path + ext
     @ReactMethod
     public void getRealPathFromURI(String uriString, Promise promise) {
