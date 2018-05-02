@@ -7,9 +7,6 @@ const { Types, Creators } = createActions({
   createNodeRequest: ['path'],
   createNodeSuccess: null,
   createNodeFailure: ['error'],
-  startGatewayRequest: null,
-  startGatewaySuccess: null,
-  startGatewayFailure: ['error'],
   startNodeRequest: null,
   startNodeSuccess: null,
   startNodeFailure: ['error'],
@@ -116,10 +113,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CREATE_NODE_REQUEST]: creatingNode,
   [Types.CREATE_NODE_SUCCESS]: nodeCreated,
   [Types.CREATE_NODE_FAILURE]: nodeError,
-
-  [Types.START_GATEWAY_REQUEST]: gatewayStarting,
-  [Types.START_GATEWAY_SUCCESS]: gatewayStarted,
-  [Types.START_GATEWAY_FAILURE]: gatewayError,
 
   [Types.START_NODE_REQUEST]: nodeStarting,
   [Types.START_NODE_SUCCESS]: nodeStarted,

@@ -15,7 +15,6 @@ import {
   logIn,
   recoverPassword,
   createNode,
-  startGateway,
   startNode,
   pairNewDevice,
   getPhotoHashes,
@@ -38,7 +37,6 @@ export default function * root () {
     takeEvery(AuthTypes.RECOVER_PASSWORD_REQUEST, recoverPassword),
 
     takeLatest(IpfsNodeTypes.CREATE_NODE_REQUEST, createNode),
-    takeLatest(IpfsNodeTypes.START_GATEWAY_REQUEST, startGateway),
     takeLatest(IpfsNodeTypes.START_NODE_REQUEST, startNode),
     takeLatest(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
 
