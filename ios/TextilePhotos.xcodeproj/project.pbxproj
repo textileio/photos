@@ -2154,6 +2154,7 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
@@ -2204,6 +2205,7 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
