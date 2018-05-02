@@ -27,9 +27,15 @@ import Upload from 'react-native-background-upload'
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
-    yield call(IPFS.signUp, username, password, email, referralCode)
-    yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    const data = yield call(IPFS.signUp, username, password, email, referralCode)
+    const response = JSON.parse(data)
+    if (response.error) {
+      yield put(AuthActions.signUpFailure(response.error))
+    } else {
+      // TODO: Put username into textile-go for addition to metadata model
+      yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
+      yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    }
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
@@ -38,9 +44,14 @@ export function * signUp ({data}) {
 export function * logIn ({data}) {
   const {username, password} = data
   try {
-    yield call(IPFS.signIn, username, password)
-    yield put(AuthActions.logInSuccess('tokenFormLogIn'))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    const data = yield call(IPFS.signIn, username, password)
+    const response = JSON.parse(data)
+    if (response.error) {
+      yield put(AuthActions.signUpFailure(response.error))
+    } else {
+      yield put(AuthActions.logInSuccess('tokenFormLogIn'))
+      yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    }
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }
@@ -162,6 +173,7 @@ export function * photosTask (action) {
           field: multipartData.boundary
         }
       )
+      console.log(multipartData.payloadPath)
     }
     yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)
