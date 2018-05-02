@@ -50,13 +50,13 @@ class TextilePhotos extends React.PureComponent {
         <Evilicon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
       </TouchableOpacity>
     }
-    const imageData = IPFS.syncGetPhotoData(item.image.hash + '/thumb')
+    // TODO: Programatically determine gateway port rather than hard-coding
     return (
       <TouchableOpacity onPress={onPress} >
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <Image
-              source={{uri: 'data:image/jpeg;base64,' + imageData}}
+              source={{uri: 'https://localhost:9080/ipfs/' + item.image.hash + '/thumb'}}
               resizeMode={'cover'}
               style={styles.itemImage}
             />
