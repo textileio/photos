@@ -144,6 +144,30 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
   }
 }
 
+RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSData *jsonData = [self _signIn:username password:password error:&error];
+  if(jsonData) {
+    NSString * response = [[NSString alloc] initWithData:jsonData
+                                                encoding:NSUTF8StringEncoding];
+    resolve(response);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)password email:(NSString*)email referral:(NSString*)referral resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSData *jsonData = [self _signUpWithEmail:username password:password email:email referral:referral error:&error];
+  if(jsonData) {
+    NSString * response = [[NSString alloc] initWithData:jsonData
+                                                encoding:NSUTF8StringEncoding];
+    resolve(response);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 // List all your events here
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
 - (NSArray<NSString *> *)supportedEvents
@@ -197,6 +221,18 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
 - (NSString *)_pairNewDevice:(NSString *)pkb64 error:(NSError**)error {
   NSString *resultString = [self.node pairDesktop:pkb64 error:error];
   return resultString;
+}
+
+- (NSData *)_signUpWithEmail:(NSString *)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error {
+  NSString *response = [self.node signUpWithEmail:username password:password email:email referral:referral error:error];
+  NSData *jsonData = [response dataUsingEncoding:NSUTF8StringEncoding];
+  return jsonData;
+}
+
+- (NSData *)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
+  NSString *response = [self.node signIn:username password:password error:error];
+  NSData *jsonData = [response dataUsingEncoding:NSUTF8StringEncoding];
+  return jsonData;
 }
 
 // Implement methods that you want to export to the native module
