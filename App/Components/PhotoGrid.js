@@ -11,7 +11,6 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
-import IPFS from '../../TextileIPFSNativeModule'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
@@ -39,13 +38,12 @@ export default class PhotoGrid extends React.PureComponent {
         <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
       </TouchableOpacity>
     }
-    const imageData = IPFS.syncGetPhotoData(item.hash + '/thumb')
     return (
       <TouchableOpacity onPress={this.props.onSelect(row)} >
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <Image
-              source={{uri: 'data:image/jpeg;base64,' + imageData}}
+              source={{uri: 'https://localhost:9080/ipfs/' + item.hash + '/thumb'}}
               resizeMode={'cover'}
               style={styles.itemImage}
             />
