@@ -89,6 +89,7 @@
 		EF3CE28E6FAE462CBF983CB1 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E91A5EF4C7A428FB9778EEA /* TSBackgroundFetch.framework */; };
 		F195DE72697C465BA3DD4953 /* Degarism Studio - Biotif-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95D38B9042064AE3826A7C8F /* Degarism Studio - Biotif-LightItalic.ttf */; };
 		F586CCF4CB7147369AC39EFC /* Degarism Studio - Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */; };
+		FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */ = {isa = PBXBuildFile; fileRef = FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -624,6 +625,7 @@
 		F68F1EA526BB4128AAB18AD5 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		F801C2587799238B8E5CC602 /* Pods-TextilePhotosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.release.xcconfig"; sourceTree = "<group>"; };
 		FACFD2055F364FCC854CEA69 /* Degarism Studio - Biotif-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-SemiBoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTHTTPRequestHandler+SelfSigned.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -949,6 +951,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */,
 				9339E9A6205C3B8700BCA4CF /* Mobile.framework */,
 				9339E99E205C381700BCA4CF /* NativeModules */,
 				13B07FAE1A68108700A75B9A /* TextilePhotos */,
@@ -1971,6 +1974,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */,
 				68C8700C55154E1E80C3FB5B /* RNBackgroundFetch+AppDelegate.m in Sources */,
