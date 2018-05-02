@@ -27,7 +27,7 @@ import Upload from 'react-native-background-upload'
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
-    yield delay(2000)
+    yield call(IPFS.signUp, username, password, email, referralCode)
     yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
@@ -38,7 +38,7 @@ export function * signUp ({data}) {
 export function * logIn ({data}) {
   const {username, password} = data
   try {
-    yield delay(2000)
+    yield call(IPFS.signIn, username, password)
     yield put(AuthActions.logInSuccess('tokenFormLogIn'))
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
