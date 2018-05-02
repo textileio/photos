@@ -4,7 +4,6 @@ import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { connect } from 'react-redux'
-import IPFS from '../../TextileIPFSNativeModule'
 import IpfsActions from '../Redux/TextileRedux'
 
 // Styles
@@ -43,18 +42,6 @@ class PhotoViewerScreen extends React.PureComponent {
     )
   }
 
-  renderImage(image) {
-    const imageData = IPFS.syncGetPhotoData(image.image.hash + '/thumb')
-    return (
-      <Image
-        source={{uri: 'data:image/jpeg;base64,' + imageData}}
-        style={image.style}
-        resizeMode={image.resizeMode}
-        capInsets={image.capInsets}
-      />
-    )
-  }
-
   render () {
     return (
       <View style={{flex: 1}}>
@@ -62,7 +49,6 @@ class PhotoViewerScreen extends React.PureComponent {
         <Gallery
           ref='gallery'
           style={{ flex: 1, backgroundColor: 'black' }}
-          imageComponent={this.renderImage}
           images={this.props.imageData}
           initialPage={this.props.initialIndex}
         />
@@ -77,11 +63,7 @@ class PhotoViewerScreen extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
   const imageData = hashes.map(hash => {
-    return {
-      source: { uri: 'file:///image.jpg' },
-      hash,
-      dimensions: { width: 100, height: 100 }
-    }
+    return { source: { uri: 'https://localhost:9080/ipfs/' + hash + '/photo' } }
   })
   return {
     imageData,
