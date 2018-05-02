@@ -2,6 +2,7 @@
 import React from 'react'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
+import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 
 class TextilePhotos extends React.PureComponent {
   onSelect = (row) => {
@@ -15,9 +16,19 @@ class TextilePhotos extends React.PureComponent {
     }
   }
 
+  onRefresh () {
+    this.props.refresh(this.props.thread)
+  }
+
   render () {
     return (
-      <PhotoGrid items={this.props.items} renderImages={this.props.renderImages} onSelect={this.onSelect} />
+      <PhotoGrid
+        items={this.props.items}
+        renderImages={this.props.renderImages}
+        onSelect={this.onSelect}
+        onRefresh={this.onRefresh.bind(this)}
+        refreshing={this.props.refreshing}
+      />
     )
   }
 }
@@ -37,12 +48,15 @@ const mapStateToProps = (state, ownProps) => {
     thread,
     sharable: ownProps.navigation.state.params.sharable,
     items: updatedItems,
-    renderImages: state.ipfs.gatewayState.state === 'started' && !state.ipfs.threads[thread].querying
+    renderImages: state.ipfs.gatewayState.state === 'started', // && !state.ipfs.threads[thread].querying,
+    refreshing: state.ipfs.threads[thread].querying
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    refresh: thread => { dispatch(IpfsNodeActions.getPhotoHashesRequest(thread)) }
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TextilePhotos)
