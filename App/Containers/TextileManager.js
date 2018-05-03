@@ -10,6 +10,7 @@ import BackgroundTask from 'react-native-background-task'
 import TextileActions from '../Redux/TextileRedux'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
+import CookieManager from 'react-native-cookies'
 
 class TextileManager extends React.PureComponent {
   constructor () {
@@ -38,6 +39,13 @@ class TextileManager extends React.PureComponent {
     } else {
       Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
     }
+
+    CookieManager.setFromResponse(
+      'https://localhost:9080',
+      'SessionId=Password; path=/ipfs; expires=Thu, 1 Jan 2030 00:00:00 -0000; secure; HttpOnly')
+        .then((res) => {
+          console.log('CookieManager.setFromResponse =>', res);
+        });
   }
 
   componentWillUnmount () {
