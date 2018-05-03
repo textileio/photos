@@ -24,6 +24,8 @@ import AuthActions from '../Redux/AuthRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 
+const API_URL = "https://api.textile.io"
+
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
@@ -58,7 +60,7 @@ export function * recoverPassword ({data}) {
 
 export function * createNode ({path}) {
   try {
-    const success = yield call(IPFS.createNodeWithDataDir, path)
+    const success = yield call(IPFS.createNodeWithDataDir, path, API_URL)
     if (success) {
       yield put(IpfsNodeActions.createNodeSuccess())
     } else {
@@ -137,7 +139,7 @@ export function * photosTask (action) {
   }
   try {
     yield call(BackgroundTimer.start)
-    yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath)
+    yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath, API_URL)
     yield call(IPFS.startNode)
     const photos = yield call(queryPhotos)
     for (const photo of photos) {

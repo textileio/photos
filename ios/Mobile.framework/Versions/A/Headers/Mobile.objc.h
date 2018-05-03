@@ -20,7 +20,7 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-- (MobileWrapper*)newNode:(NSString*)repoPath error:(NSError**)error;
+- (MobileWrapper*)newNode:(NSString*)repoPath centralApiURL:(NSString*)centralApiURL error:(NSError**)error;
 @end
 
 @interface MobileWrapper : NSObject <goSeqRefInterface> {
@@ -34,18 +34,22 @@
 // skipped field Wrapper.Cancel with unsupported type: *types.Named
 
 - (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb thread:(NSString*)thread error:(NSError**)error;
-- (NSString*)gatewayPassword;
+- (NSString*)getAccessToken:(NSError**)error;
 - (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
+- (NSString*)getGatewayPassword;
 - (NSString*)getPeerID:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit thread:(NSString*)thread error:(NSError**)error;
+- (NSString*)getUsername:(NSError**)error;
+- (BOOL)isSignedIn;
 - (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
 - (NetMultipartRequest*)sharePhoto:(NSString*)hash thread:(NSString*)thread error:(NSError**)error;
-- (NSString*)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
-- (NSString*)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
+- (BOOL)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
+- (BOOL)signOut:(NSError**)error;
+- (BOOL)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
 @end
 
-FOUNDATION_EXPORT MobileWrapper* MobileNewNode(NSString* repoPath, NSError** error);
+FOUNDATION_EXPORT MobileWrapper* MobileNewNode(NSString* repoPath, NSString* centralApiURL, NSError** error);
 
 #endif
