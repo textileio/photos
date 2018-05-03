@@ -10,6 +10,7 @@ type MultipartData = {
 
 export default {
   createNodeWithDataDir: async function (dataDir: string, apiUrl: string): boolean {
+    console.log(dataDir)
     const success = await TextileIPFS.createNodeWithDataDir(dataDir, apiUrl)
     return success
   },
@@ -25,9 +26,7 @@ export default {
   },
 
   signIn: async function (username: string, password: string): string {
-    console.log("heyo")
     const result = await TextileIPFS.signIn(username, password)
-    console.log("again", TextileIPFS.isSignedIn)
     return result
   },
 
