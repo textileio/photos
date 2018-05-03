@@ -14,11 +14,6 @@ export default {
     return success
   },
 
-  startGateway: async function (): boolean {
-    const success = await TextileIPFS.startGateway()
-    return success
-  },
-
   startNode: async function (): boolean {
     const success = await TextileIPFS.startNode()
     return success
