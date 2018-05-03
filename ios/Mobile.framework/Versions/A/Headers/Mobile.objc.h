@@ -43,7 +43,6 @@
 - (NSString*)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
 - (NSString*)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
-- (BOOL)startGateway:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
 @end
 
