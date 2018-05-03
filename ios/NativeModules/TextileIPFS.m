@@ -40,9 +40,9 @@ RCT_EXPORT_MODULE();
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _createNodeWithDataDir:dataDir error:&error];
+  [self _createNodeWithDataDir:dataDir apiUrl:apiUrl error:&error];
   if (self.node) {
     resolve(@YES);
   } else {
@@ -136,11 +136,48 @@ RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlo
 
 RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSData *jsonData = [self _signIn:username password:password error:&error];
-  if(jsonData) {
-    NSString * response = [[NSString alloc] initWithData:jsonData
-                                                encoding:NSUTF8StringEncoding];
-    resolve(response);
+  [self _signIn:username password:password error:&error];
+  if (error == NULL) {
+    resolve(@YES);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(isSignedIn) {
+  Boolean signedIn = [self _isSignedIn];
+  if (signedIn) {
+    return @YES;
+  } else {
+    return @NO;
+  }
+}
+
+RCT_EXPORT_METHOD(getUserName:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *username = [self _getUsername:&error];
+  if (username) {
+    resolve(username);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getAccessToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *token = [self _getAccessToken:&error];
+  if (token) {
+    resolve(token);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(signOut:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _signOut:&error];
+  if (error == NULL) {
+    resolve(@YES);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -148,18 +185,16 @@ RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password reso
 
 RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)password email:(NSString*)email referral:(NSString*)referral resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSData *jsonData = [self _signUpWithEmail:username password:password email:email referral:referral error:&error];
-  if(jsonData) {
-    NSString * response = [[NSString alloc] initWithData:jsonData
-                                                encoding:NSUTF8StringEncoding];
-    resolve(response);
+  [self _signUpWithEmail:username password:password email:email referral:referral error:&error];
+  if (error == NULL) {
+    resolve(@YES);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
-  NSString *result = [self.node gatewayPassword];
+  NSString *result = [self.node getGatewayPassword];
   return result;
 }
 
@@ -172,9 +207,9 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
 
 #pragma mark - Private methods
 
-- (void)_createNodeWithDataDir:(NSString *)dataDir error:(NSError**)error {
+- (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl error:(NSError**)error {
   if (!self.node) {
-    self.node = [[MobileMobile new] newNode:dataDir error:error];
+    self.node = [[MobileMobile new] newNode:dataDir centralApiURL:apiUrl error:error];
   }
 }
 
@@ -213,16 +248,28 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
   return resultString;
 }
 
-- (NSData *)_signUpWithEmail:(NSString *)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error {
-  NSString *response = [self.node signUpWithEmail:username password:password email:email referral:referral error:error];
-  NSData *jsonData = [response dataUsingEncoding:NSUTF8StringEncoding];
-  return jsonData;
+- (void)_signUpWithEmail:(NSString *)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error {
+  [self.node signUpWithEmail:username password:password email:email referral:referral error:error];
 }
 
-- (NSData *)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
-  NSString *response = [self.node signIn:username password:password error:error];
-  NSData *jsonData = [response dataUsingEncoding:NSUTF8StringEncoding];
-  return jsonData;
+- (void)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
+  [self.node signIn:username password:password error:error];
+}
+
+- (Boolean)_isSignedIn {
+  return [self.node isSignedIn];
+}
+
+- (void)_signOut:(NSError**)error {
+  [self.node signOut:error];
+}
+
+- (NSString *)_getUsername:(NSError**)error {
+  return [self.node getUsername:error];
+}
+
+- (NSString *)_getAccessToken:(NSError**)error {
+  return [self.node getAccessToken:error];
 }
 
 // Implement methods that you want to export to the native module
