@@ -62,9 +62,8 @@ class PhotoViewerScreen extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
-  const
   const imageData = hashes.map(hash => {
-    return { hash, source: { uri: 'http://localhost:9080/ipfs/' + hash + '/photo' } }
+    return { hash, source: { uri: 'https://localhost:9080/ipfs/' + hash + '/photo' } }
   })
   return {
     imageData,
