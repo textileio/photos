@@ -56,5 +56,9 @@ export default {
   getFilePath: async function (uri: string): string {
     const result = await TextileIPFS.getRealPathFromURI(uri)
     return result
+  },
+
+  getGatewayPassword: function (): string {
+    return TextileIPFS.getGatewayPassword()
   }
 }
