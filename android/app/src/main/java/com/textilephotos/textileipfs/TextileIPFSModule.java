@@ -192,6 +192,11 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public String getGatewayPassword() {
+        return textile.gatewayPassword();
+    }
+
     // Method for turning photo URI into path + ext
     @ReactMethod
     public void getRealPathFromURI(String uriString, Promise promise) {
