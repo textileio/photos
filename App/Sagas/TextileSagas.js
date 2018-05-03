@@ -122,8 +122,16 @@ export function * shareImage ({thread, hash}) {
   }
 }
 
+export function * refreshThreads ({newState}) {
+  if (newState !== 'active') {
+    return
+  }
+  yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+  yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
+}
+
 export function * photosTask (action) {
-  const newState = action.newState
+  const {newState} = action
   if (newState && newState !== 'active') {
     return
   }

@@ -28,10 +28,6 @@ export const INITIAL_STATE = Immutable({
     state: 'undefined', // | creating | stopped | starting | started | stopping
     error: null
   },
-  gatewayState: {
-    state: 'stopped', // | starting | started
-    error: null
-  },
   threads: {
     default: {
       querying: false,
@@ -58,15 +54,6 @@ export const creatingNode = state =>
 
 export const nodeCreated = state =>
   state.merge({...state, nodeState: {state: 'stopped', error: null}})
-
-export const gatewayStarting = state =>
-  state.merge({...state, gatewayState: {state: 'starting', error: null}})
-
-export const gatewayStarted = state =>
-  state.merge({...state, gatewayState: {state: 'started', error: null}})
-
-export const gatewayError = (state, {error}) =>
-  state.merge({...state, gatewayState: {error: error}})
 
 export const nodeStarting = state =>
   state.merge({...state, nodeState: {state: 'starting', error: null}})
