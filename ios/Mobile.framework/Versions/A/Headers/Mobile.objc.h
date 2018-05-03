@@ -39,8 +39,8 @@
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit thread:(NSString*)thread error:(NSError**)error;
 - (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
 - (NetMultipartRequest*)sharePhoto:(NSString*)hash thread:(NSString*)thread error:(NSError**)error;
-- (NSData*)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
-- (NSData*)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
+- (NSString*)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
+- (NSString*)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
 @end
