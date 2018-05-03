@@ -51,6 +51,7 @@
     "react-native-image-gallery": "git+https://git@github.com/textileio/react-native-image-gallery.git",
     "react-native-image-resizer": "^1.0.0",
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
+    "react-native-modal": "^6.0.0",
     "react-native-progress": "^3.4.0",
     "react-native-scalable-image": "^0.4.0",
     "react-native-vector-icons": "^4.6.0",
