@@ -24,12 +24,20 @@ import AuthActions from '../Redux/AuthRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 
+const API_URL = "https://api.textile.io"
+
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
-    yield delay(2000)
-    yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    const data = yield call(IPFS.signUp, username, password, email, referralCode)
+    const response = JSON.parse(data)
+    if (response.error) {
+      yield put(AuthActions.signUpFailure(response.error))
+    } else {
+      // TODO: Put username into textile-go for addition to metadata model
+      yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
+      yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    }
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
@@ -38,9 +46,14 @@ export function * signUp ({data}) {
 export function * logIn ({data}) {
   const {username, password} = data
   try {
-    yield delay(2000)
-    yield put(AuthActions.logInSuccess('tokenFormLogIn'))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    const data = yield call(IPFS.signIn, username, password)
+    const response = JSON.parse(data)
+    if (response.error) {
+      yield put(AuthActions.signUpFailure(response.error))
+    } else {
+      yield put(AuthActions.logInSuccess('tokenFormLogIn'))
+      yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    }
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }
@@ -58,7 +71,7 @@ export function * recoverPassword ({data}) {
 
 export function * createNode ({path}) {
   try {
-    const success = yield call(IPFS.createNodeWithDataDir, path)
+    const success = yield call(IPFS.createNodeWithDataDir, path, API_URL)
     if (success) {
       yield put(IpfsNodeActions.createNodeSuccess())
     } else {
@@ -137,7 +150,7 @@ export function * photosTask (action) {
   }
   try {
     yield call(BackgroundTimer.start)
-    yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath)
+    yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath, API_URL)
     yield call(IPFS.startNode)
     const photos = yield call(queryPhotos)
     for (const photo of photos) {
@@ -157,6 +170,7 @@ export function * photosTask (action) {
           field: multipartData.boundary
         }
       )
+      console.log(multipartData.payloadPath)
     }
     yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)

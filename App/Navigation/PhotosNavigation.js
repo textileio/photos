@@ -22,7 +22,7 @@ const PhotosNav = StackNavigator(
     TextilePhotos: {
       screen: TextilePhotos,
       navigationOptions: {
-        headerTitle: <Image source={require('../Images/TextileHeader.png')} />
+        headerTitle: <Image style={styles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
       }
     }
   },
