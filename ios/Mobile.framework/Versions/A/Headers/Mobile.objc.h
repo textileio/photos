@@ -34,6 +34,7 @@
 // skipped field Wrapper.Cancel with unsupported type: context.CancelFunc
 
 - (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb thread:(NSString*)thread error:(NSError**)error;
+- (NSString*)gatewayPassword;
 - (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
 - (NSString*)getPeerID:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit thread:(NSString*)thread error:(NSError**)error;
