@@ -40,13 +40,13 @@ const actionToPayload = (action) => {
     case 'CREATE_NODE_REQUEST':
       return { description: action.path }
     case 'IMAGE_ADDED':
-      return { description: action.remotePayloadPath }
+      return { description: action.hash }
     case 'IMAGE_UPLOAD_PROGRESS':
-      return { description: action.data.file }
+      return { description: action.data.id }
     case 'IMAGE_UPLOAD_COMPLETE':
-      return { description: action.data.file }
+      return { description: action.data.id }
     case 'IMAGE_UPLOAD_ERROR':
-      return { description: action.data.file, error: action.data.error.message }
+      return { description: action.data.id, error: action.data.error.message }
     case 'CREATE_NODE_FAILURE':
       return { error: action.error.message }
     case 'START_GATEWAY_FAILURE':
