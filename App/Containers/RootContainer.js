@@ -32,7 +32,7 @@ class RootContainer extends Component {
           width='auto'
           height='auto'
         >
-          <ActivityIndicator size="large" color="#ffffff" />
+          <ActivityIndicator size='large' color='#ffffff' />
         </Overlay>
       </View>
     )
