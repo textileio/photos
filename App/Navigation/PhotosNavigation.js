@@ -9,7 +9,7 @@ import PairingView from '../Containers/PairingView'
 import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
 import Colors from '../Themes/Colors'
 // import Notifications from '../Containers/Notifications'
-import { Image } from 'react-native'
+import { Image, Text } from 'react-native'
 
 // import SwipeNavigation from './SwipeNavigation'
 
@@ -22,7 +22,7 @@ const PhotosNav = StackNavigator(
     TextilePhotos: {
       screen: TextilePhotos,
       navigationOptions: {
-        headerTitle: <Image source={require('../Images/TextileHeader.png')} />
+        headerTitle: <Image style={styles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
       }
     }
   },
