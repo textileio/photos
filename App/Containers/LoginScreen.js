@@ -35,9 +35,8 @@ const options = {
 }
 
 class LoginScreen extends Component {
-
   static navigationOptions = ({ navigation }) => {
-    const { params } = navigation.state;
+    const { params } = navigation.state
     return {
       title: params.navigationTitle
     }
@@ -45,7 +44,7 @@ class LoginScreen extends Component {
 
   onPress () {
     Keyboard.dismiss()
-    var value = this.refs.form.getValue()
+    let value = this.refs.form.getValue()
     if (value) { // if validation fails, value will be null
       const p = this.props
       const f = this.props.formType
@@ -54,7 +53,7 @@ class LoginScreen extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.navigation.setParams({ navigationTitle: this.props.navigationTitle })
   }
 
@@ -96,13 +95,12 @@ class LoginScreen extends Component {
   }
 
   renderButtons () {
-    const buttons = this.props.buttonData.map((button, i) => {
+    return this.props.buttonData.map((button, i) => {
       return <TouchableOpacity key={i} onPress={() => this.handleButtonPress(button.formType, button.navigationTitle)}>
         <Text style={styles.optionText}>{button.title}</Text>
       </TouchableOpacity>
       // return <Button title={button.title} onPress={button.action} key={i} />
     })
-    return buttons
   }
 }
 
