@@ -43,7 +43,6 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   render () {
-    console.log("RENDER")
     return (
       <View style={{flex: 1}}>
         <StatusBar hidden />
@@ -64,9 +63,11 @@ class PhotoViewerScreen extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
   const imageData = hashes.map(hash => {
-    return { hash, source: { uri: 'http://localhost:9080/ipfs/' + hash + '/photo' } }
+    // return { hash, source: { uri: 'http://localhost:9080/ipfs/' + hash + '/photo' } }
+    return { hash, source: { uri: ' https://upload.wikimedia.org/wikipedia/en/c/cb/Cising_Mountain.jpg' } }
+
+
   })
-  console.log(imageData)
   return {
     imageData,
     initialIndex: ownProps.navigation.state.params.initialIndex,

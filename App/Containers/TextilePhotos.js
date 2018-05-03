@@ -6,9 +6,7 @@ import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 
 class TextilePhotos extends React.PureComponent {
   onSelect = (row) => {
-    console.log(row)
     return () => {
-      console.log("RUN")
       this.props.navigation.navigate(
         'PhotoViewer', {
           initialIndex: row.index,
