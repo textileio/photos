@@ -9,8 +9,9 @@ type MultipartData = {
 }
 
 export default {
-  createNodeWithDataDir: async function (dataDir: string): boolean {
-    const success = await TextileIPFS.createNodeWithDataDir(dataDir)
+  createNodeWithDataDir: async function (dataDir: string, apiUrl: string): boolean {
+    console.log(dataDir)
+    const success = await TextileIPFS.createNodeWithDataDir(dataDir, apiUrl)
     return success
   },
 
@@ -22,6 +23,30 @@ export default {
   stopNode: async function (): boolean {
     const success = await TextileIPFS.stopNode()
     return success
+  },
+
+  signIn: async function (username: string, password: string): string {
+    const result = await TextileIPFS.signIn(username, password)
+    return result
+  },
+
+  signUp: async function (username: string, password: string, email: string, referral: string): string {
+    const result = await TextileIPFS.signUpWithEmail(username, password, email, referral)
+    return result
+  },
+
+  isSignedIn: function (): boolean {
+    const result = TextileIPFS.isSignedIn()
+    return result
+  },
+
+  signOut: async function () {
+    await TextileIPFS.signOut()
+  },
+
+  getUsername: async function (): string {
+    const result = await TextileIPFS.getUsername()
+    return result
   },
 
   addImageAtPath: async function (path: string, thumbPath: string, thread: string): MultipartData {
@@ -60,5 +85,10 @@ export default {
 
   getGatewayPassword: function (): string {
     return TextileIPFS.getGatewayPassword()
+  },
+
+  getAccessToken: async function (): string {
+    const result = await TextileIPFS.getAccessToken()
+    return result
   }
 }
