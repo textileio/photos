@@ -158,6 +158,11 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   }
 }
 
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
+  NSString *result = [self.node gatewayPassword];
+  return result;
+}
+
 // List all your events here
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
 - (NSArray<NSString *> *)supportedEvents
