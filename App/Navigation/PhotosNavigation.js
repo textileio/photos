@@ -9,7 +9,7 @@ import PairingView from '../Containers/PairingView'
 import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
 import Colors from '../Themes/Colors'
 // import Notifications from '../Containers/Notifications'
-import { Image, Text } from 'react-native'
+import { Image } from 'react-native'
 
 // import SwipeNavigation from './SwipeNavigation'
 
