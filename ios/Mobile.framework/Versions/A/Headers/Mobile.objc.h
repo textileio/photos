@@ -31,7 +31,7 @@
 - (instancetype)init;
 - (NSString*)repoPath;
 - (void)setRepoPath:(NSString*)v;
-// skipped field Wrapper.Cancel with unsupported type: *types.Named
+// skipped field Wrapper.Cancel with unsupported type: context.CancelFunc
 
 - (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb thread:(NSString*)thread error:(NSError**)error;
 - (NSString*)gatewayPassword;
