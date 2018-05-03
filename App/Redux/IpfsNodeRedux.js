@@ -7,9 +7,6 @@ const { Types, Creators } = createActions({
   createNodeRequest: ['path'],
   createNodeSuccess: null,
   createNodeFailure: ['error'],
-  startGatewayRequest: null,
-  startGatewaySuccess: null,
-  startGatewayFailure: ['error'],
   startNodeRequest: null,
   startNodeSuccess: null,
   startNodeFailure: ['error'],
@@ -29,10 +26,6 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   nodeState: {
     state: 'undefined', // | creating | stopped | starting | started | stopping
-    error: null
-  },
-  gatewayState: {
-    state: 'stopped', // | starting | started
     error: null
   },
   threads: {
@@ -61,15 +54,6 @@ export const creatingNode = state =>
 
 export const nodeCreated = state =>
   state.merge({...state, nodeState: {state: 'stopped', error: null}})
-
-export const gatewayStarting = state =>
-  state.merge({...state, gatewayState: {state: 'starting', error: null}})
-
-export const gatewayStarted = state =>
-  state.merge({...state, gatewayState: {state: 'started', error: null}})
-
-export const gatewayError = (state, {error}) =>
-  state.merge({...state, gatewayState: {error: error}})
 
 export const nodeStarting = state =>
   state.merge({...state, nodeState: {state: 'starting', error: null}})
@@ -116,10 +100,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CREATE_NODE_REQUEST]: creatingNode,
   [Types.CREATE_NODE_SUCCESS]: nodeCreated,
   [Types.CREATE_NODE_FAILURE]: nodeError,
-
-  [Types.START_GATEWAY_REQUEST]: gatewayStarting,
-  [Types.START_GATEWAY_SUCCESS]: gatewayStarted,
-  [Types.START_GATEWAY_FAILURE]: gatewayError,
 
   [Types.START_NODE_REQUEST]: nodeStarting,
   [Types.START_NODE_SUCCESS]: nodeStarted,
