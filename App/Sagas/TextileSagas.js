@@ -120,14 +120,14 @@ export function * getPhotoHashes ({thread}) {
     const photoData = yield call(IPFS.getPhotos, null, 100000, thread)
 
     console.log(photoData)
-    if (photoData.length == 1) {
-      const data = yield fetch('https://127.0.0.1:9080/ipfs/' + photoData[0] + '/meta')
+    if (photoData.length <= 2) {
+      const data = yield fetch('https://localhost:9080/ipfs/' + photoData[0] + '/meta.json')
         .then((response) => response.json())
         .then((responseJson) => {
-          return responseJson;
+          return responseJson
         })
         .catch((error) => {
-          console.error(error);
+          console.error(error)
         })
       console.log(data)
     }

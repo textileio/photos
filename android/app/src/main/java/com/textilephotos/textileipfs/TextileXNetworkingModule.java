@@ -1,8 +1,11 @@
 package com.textilephotos.textileipfs;
 
+import android.util.Log;
+
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.modules.network.ReactCookieJarContainer;
 
 import java.lang.reflect.Field;
 import java.security.cert.CertificateException;
@@ -10,6 +13,7 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
@@ -59,6 +63,8 @@ public class TextileXNetworkingModule extends ReactContextBaseJavaModule {
     @Override
     public void initialize() {
         try {
+
+
             NativeModule module = getNetworkingModule();
             OkHttpClient client = getClientForModule(module);
 
@@ -81,6 +87,22 @@ public class TextileXNetworkingModule extends ReactContextBaseJavaModule {
             };
 
 
+            HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+
+//            DefaultHttpClient client = new DefaultHttpClient();
+//
+//            SchemeRegistry registry = new SchemeRegistry();
+//            SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
+//            socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+//            registry.register(new Scheme("https", socketFactory, 443));
+//            SingleClientConnManager mgr = new SingleClientConnManager(client.getParams(), registry);
+//            DefaultHttpClient httpClient = new DefaultHttpClient(mgr, client.getParams());
+
+// Set verifier
+            HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
+
+
+
             // Install the all-trusting trust manager
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
@@ -92,9 +114,11 @@ public class TextileXNetworkingModule extends ReactContextBaseJavaModule {
             builder.hostnameVerifier(new HostnameVerifier() {
                         @Override
                         public boolean verify(String hostname, SSLSession session) {
+//                            boolean result = hostname.equals("127.0.0.1");
                             return true;
                         }
                     });
+            builder.cookieJar(new ReactCookieJarContainer());
             OkHttpClient okHttpClient = builder
                     .connectTimeout(15, TimeUnit.SECONDS)
                     .writeTimeout(15, TimeUnit.SECONDS)

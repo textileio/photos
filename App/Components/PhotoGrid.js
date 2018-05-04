@@ -43,7 +43,7 @@ export default class PhotoGrid extends React.PureComponent {
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <Image
-              source={{uri: 'https://127.0.0.1:9080/ipfs/' + item.hash + '/thumb'}}
+              source={{uri: 'https://localhost:9080/ipfs/' + item.hash + '/thumb.jpg'}}
               resizeMode={'cover'}
               style={styles.itemImage}
             />
