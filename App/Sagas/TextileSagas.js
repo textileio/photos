@@ -118,6 +118,20 @@ export function * startNode () {
 export function * getPhotoHashes ({thread}) {
   try {
     const photoData = yield call(IPFS.getPhotos, null, 100000, thread)
+
+    console.log(photoData)
+    if (photoData.length == 1) {
+      const data = yield fetch('https://127.0.0.1:9080/ipfs/' + photoData[0] + '/meta')
+        .then((response) => response.json())
+        .then((responseJson) => {
+          return responseJson;
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+      console.log(data)
+    }
+
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, photoData))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))

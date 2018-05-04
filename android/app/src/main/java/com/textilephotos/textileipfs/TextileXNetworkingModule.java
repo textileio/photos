@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import java.lang.reflect.Field;
 import java.security.cert.CertificateException;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -61,22 +62,23 @@ public class TextileXNetworkingModule extends ReactContextBaseJavaModule {
             NativeModule module = getNetworkingModule();
             OkHttpClient client = getClientForModule(module);
 
-            final X509TrustManager trustCerts = new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                }
+            // Create a trust manager that does not validate certificate chains
+            final TrustManager[] trustAllCerts = new TrustManager[] {
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
 
-                @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                }
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
 
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[]{};
-                }
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
             };
-            final X509TrustManager[] trustAllCerts = new X509TrustManager[]{ trustCerts };
-
 
 
             // Install the all-trusting trust manager
@@ -85,20 +87,21 @@ public class TextileXNetworkingModule extends ReactContextBaseJavaModule {
             // Create an ssl socket factory with our all-trusting manager
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
-            OkHttpClient newClient = client
-                    .newBuilder()
-                    .sslSocketFactory(sslSocketFactory, trustCerts)
-                    .hostnameVerifier(new HostnameVerifier() {
+            OkHttpClient.Builder builder = client.newBuilder();
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+            builder.hostnameVerifier(new HostnameVerifier() {
                         @Override
                         public boolean verify(String hostname, SSLSession session) {
                             return true;
                         }
-                    })
+                    });
+            OkHttpClient okHttpClient = builder
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .writeTimeout(15, TimeUnit.SECONDS)
+                    .readTimeout(15, TimeUnit.SECONDS)
                     .build();
 
-
-
-            setClientForModule(module, newClient);
+            setClientForModule(module, okHttpClient);
         } catch (Exception ex) {
             android.util.Log.e("RG", "Error while patching networking module.", ex);
         }
