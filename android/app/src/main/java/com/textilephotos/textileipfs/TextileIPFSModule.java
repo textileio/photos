@@ -35,7 +35,6 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
         // Pass in the context to the constructor and save it so you can emit events
         // https://facebook.github.io/react-native/docs/native-modules-android.html#the-toast-module
         super(context);
-
         reactContext = context;
     }
 

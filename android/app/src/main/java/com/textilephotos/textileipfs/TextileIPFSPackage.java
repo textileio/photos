@@ -24,6 +24,7 @@ public class TextileIPFSPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new TextileIPFSModule(reactContext));
+        modules.add(new TextileXNetworkingModule(reactContext));
 
         return modules;
     }
