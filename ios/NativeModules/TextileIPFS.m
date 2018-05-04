@@ -50,16 +50,6 @@ RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir resolver:(RCTPromise
   }
 }
 
-RCT_REMAP_METHOD(startGateway, startGatewayWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  BOOL success = [self _startGateway:&error];
-  if(success) {
-    resolve(@YES);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
 RCT_REMAP_METHOD(startNode, startNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   BOOL success = [self _startNode:&error];
@@ -181,11 +171,6 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   if (!self.node) {
     self.node = [[MobileMobile new] newNode:dataDir error:error];
   }
-}
-
-- (BOOL)_startGateway:(NSError**)error {
-  BOOL success = [self.node startGateway:error];
-  return success;
 }
 
 - (BOOL)_startNode:(NSError**)error {

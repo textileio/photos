@@ -49,8 +49,6 @@ const actionToPayload = (action) => {
       return { description: action.data.id, error: action.data.error.message }
     case 'CREATE_NODE_FAILURE':
       return { error: action.error.message }
-    case 'START_GATEWAY_FAILURE':
-      return { error: action.error.message }
     case 'START_NODE_FAILURE':
       return { error: action.error.message }
     case 'STOP_NODE_FAILURE':

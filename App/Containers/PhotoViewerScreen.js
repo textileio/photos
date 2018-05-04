@@ -12,6 +12,7 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
+import SharingDialog from './SharingDialog'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -59,10 +60,11 @@ class PhotoViewerScreen extends React.PureComponent {
   )
 
   _renderModalContent = () => (
-    <View style={styles.modalContent}>
-      <Text>Hello!</Text>
-      {this._renderButton('Close', () => this.props.cancelAuthoringShare())}
-    </View>
+    <SharingDialog />
+    // <View style={styles.modalContent}>
+    //     //   <Text>Hello!</Text>
+    //     //   {this._renderButton('Close', () => this.props.cancelAuthoringShare())}
+    //     // </View>
   )
 
   render () {

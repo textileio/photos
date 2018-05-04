@@ -3,8 +3,14 @@ import { Colors, Metrics } from '../../Themes/'
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: Metrics.navBarHeight,
-    backgroundColor: Colors.background
+    // flex: 1,
+    height: '70%',
+    // justifyContent: 'space-between',
+    alignItems: 'stretch',
+    // marginTop: '20%',
+    // marginBottom: '20%',
+
+    // marginTop: Metrics.navBarHeight,
+    backgroundColor: Colors.snow
   }
 })
