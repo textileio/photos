@@ -115,9 +115,20 @@ export function * startNode () {
   }
 }
 
+export function * stopNode ({newState}) {
+  if (newState !== 'inactive') {
+    return
+  }
+  try {
+    yield call(IPFS.stopNode)
+  } catch (error) {
+    yield put(IpfsNodeActions.stopNodeFailure(error))
+  }
+}
+
 export function * getPhotoHashes ({thread}) {
   try {
-    const photoData = yield call(IPFS.getPhotos, null, 100000, thread)
+    const photoData = yield call(IPFS.getPhotos, null, -1, thread)
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, photoData))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))
@@ -155,14 +166,6 @@ export function * shareImage ({thread, hash}) {
   }
 }
 
-export function * refreshThreads ({newState}) {
-  if (newState !== 'active') {
-    return
-  }
-  yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-  yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
-}
-
 export function * photosTask (action) {
   const {newState} = action
   if (newState && newState !== 'active') {
@@ -172,6 +175,10 @@ export function * photosTask (action) {
     yield call(BackgroundTimer.start)
     yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath, API_URL)
     yield call(IPFS.startNode)
+    if (newState) {
+      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+      yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
+    }
     const photos = yield call(queryPhotos)
     for (const photo of photos) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')

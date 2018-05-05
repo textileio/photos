@@ -60,7 +60,7 @@ export default {
   },
 
   getPhotos: async function (offset: ?string, limit: number, thread: string): string {
-    const result = await TextileIPFS.getPhotos(offset, limit, thread)
+    const result = await TextileIPFS.getPhotos(offset || "", limit, thread)
     return result
   },
 
