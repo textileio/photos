@@ -20,6 +20,9 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
+/**
+ * Create a gomobile compatible wrapper around TextileNode
+ */
 - (MobileWrapper*)newNode:(NSString*)repoPath centralApiURL:(NSString*)centralApiURL error:(NSError**)error;
 @end
 
@@ -31,8 +34,6 @@
 - (instancetype)init;
 - (NSString*)repoPath;
 - (void)setRepoPath:(NSString*)v;
-// skipped field Wrapper.Cancel with unsupported type: *types.Named
-
 - (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb thread:(NSString*)thread error:(NSError**)error;
 - (NSString*)getAccessToken:(NSError**)error;
 - (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
