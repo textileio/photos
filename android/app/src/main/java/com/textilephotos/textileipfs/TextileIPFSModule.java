@@ -116,15 +116,25 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             // convert string to json
             JSONObject obj = new JSONObject(hashString);
             // create a Native ready array
-            WritableArray array = new WritableNativeArray();
+            WritableArray hashes = new WritableNativeArray();
+            // create another Native ready array
+            WritableArray paths = new WritableNativeArray();
             // grab the hashes array out of the response
-            JSONArray jsonArray = obj.getJSONArray("hashes");
+            JSONArray jsonHashes = obj.getJSONArray("hashes");
+            // grab the paths array out of the response
+            JSONArray jsonPaths = obj.getJSONArray("paths");
             // for each hash, add them to our native array
-            for (int i = 0; i < jsonArray.length(); i++) {
-                Object value = jsonArray.get(i);
-                array.pushString((String) value);
+            for (int i = 0; i < jsonHashes.length(); i++) {
+                Object hash = jsonHashes.get(i);
+                Object path = jsonPaths.get(i);
+                hahes.pushString((String) hash);
+                paths.pushString((string) path)
             }
-            promise.resolve(array);
+            // Create a Native map
+            WritableMap map = new WritableNativeMap();
+            map.putString("hashes", (String) hahes);
+            map.putString("paths", (String) paths);
+            promise.resolve(map);
 
         }
         catch (Exception e) {
