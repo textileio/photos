@@ -5,6 +5,7 @@ import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import AuthActions, { SignUp, LogIn, RecoverPassword } from '../Redux/AuthRedux'
+import DropdownAlert from 'react-native-dropdownalert'
 
 // Styles
 import styles from './Styles/LoginScreenStyle'
@@ -90,8 +91,16 @@ class LoginScreen extends Component {
         <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
           {this.renderButtons()}
         </View>
+        <DropdownAlert ref={(ref) => { this.dropdown = ref }} />
       </KeyboardAwareScrollView>
     )
+  }
+
+  componentDidUpdate () {
+    if (this.props.error !== null) {
+      this.dropdown.alertWithType('error', 'Error', this.props.error)
+      this.props.error = null // ensures the error doesn't keep rendering
+    }
   }
 
   renderButtons () {
@@ -107,7 +116,7 @@ class LoginScreen extends Component {
 const mapStateToProps = state => {
   let buttonData
   let navigationTitle
-  let errorData = state.auth.error
+  let error = state.auth.error
   switch (state.auth.formType) {
     case SignUp:
       buttonData = [
@@ -129,18 +138,8 @@ const mapStateToProps = state => {
       navigationTitle = 'Recover Password'
   }
 
-  if (errorData) {
-    Alert.alert(
-      navigationTitle + ' Error',
-      errorData,
-      [
-        {text: 'OK'}
-      ],
-      { cancelable: false }
-    )
-  }
   return {
-    errorData,
+    error,
     buttonData,
     navigationTitle,
     formType: state.auth.formType,
