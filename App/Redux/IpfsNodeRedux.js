@@ -14,7 +14,7 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: ['error'],
   getPhotoHashesRequest: ['thread'],
-  getPhotoHashesSuccess: ['thread', 'hashes'],
+  getPhotoHashesSuccess: ['thread', 'data'],
   getPhotoHashesFailure: ['thread', 'error']
 })
 
@@ -77,9 +77,12 @@ export const photoHashesRequest = (state, {thread}) => {
   return state.merge({...state, threads: newThreads})
 }
 
-export const photoHashesSuccess = (state, {thread, hashes}) => {
+export const photoHashesSuccess = (state, {thread, data}) => {
   const currentThreadState = state.threads[thread]
-  const newThreadState = currentThreadState.merge({querying: false, hashes})
+  const newThreadState = currentThreadState.merge({
+    querying: false,
+    hashes: data.paths // data actually contains {hashes, paths}
+  })
   const newThreads = state.threads.set(thread, newThreadState)
   return state.merge({...state, threads: newThreads})
 }

@@ -20,9 +20,6 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-/**
- * Create a gomobile compatible wrapper around TextileNode
- */
 - (MobileWrapper*)newNode:(NSString*)repoPath centralApiURL:(NSString*)centralApiURL error:(NSError**)error;
 @end
 
