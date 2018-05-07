@@ -58,6 +58,13 @@ class LoginScreen extends Component {
     this.props.navigation.setParams({ navigationTitle: this.props.navigationTitle })
   }
 
+  componentDidUpdate () {
+    if (this.props.error !== null) {
+      this.dropdown.alertWithType('error', 'Error', this.props.error)
+      this.props.error = null // ensures the error doesn't keep rendering
+    }
+  }
+
   handleButtonPress (formType, navigationTitle) {
     this.props.updateFormType(formType)
     this.props.navigation.setParams({ navigationTitle })
@@ -94,13 +101,6 @@ class LoginScreen extends Component {
         <DropdownAlert errorColor='#FFB6D5' closeInterval={5000} ref={(ref) => { this.dropdown = ref }} />
       </KeyboardAwareScrollView>
     )
-  }
-
-  componentDidUpdate () {
-    if (this.props.error !== null) {
-      this.dropdown.alertWithType('error', 'Error', this.props.error)
-      this.props.error = null // ensures the error doesn't keep rendering
-    }
   }
 
   renderButtons () {
