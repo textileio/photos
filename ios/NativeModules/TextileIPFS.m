@@ -95,15 +95,8 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString
   NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit fromThread:thread error:&error];
   NSData *data = [hashesString dataUsingEncoding:NSUTF8StringEncoding];
   id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-  NSArray *hashes = [json objectForKey:@"hashes"];
-  NSArray *paths = [json objectForKey:@"paths"];
-  // TODO: Could we just return the json directly?
-  if (hashes) {
-    if (paths) {
-      resolve(@{ @"hashes": hashes, @"paths": paths });
-    } else {
-      resolve(@{ @"hashes": hashes });
-    }
+  if (json) {
+    resolve(json);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
