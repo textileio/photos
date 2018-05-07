@@ -31,12 +31,18 @@ export const INITIAL_STATE = Immutable({
   threads: {
     default: {
       querying: false,
-      hashes: [],
+      hashes: {
+        hashes: [],
+        paths: []
+      },
       error: null
     },
     beta: {
       querying: false,
-      hashes: [],
+      hashes: {
+        hashes: [],
+        paths: []
+      },
       error: null
     }
   }
@@ -81,7 +87,7 @@ export const photoHashesSuccess = (state, {thread, data}) => {
   const currentThreadState = state.threads[thread]
   const newThreadState = currentThreadState.merge({
     querying: false,
-    hashes: data.paths // data actually contains {hashes, paths}
+    hashes: data // data actually contains {hashes, paths}
   })
   const newThreads = state.threads.set(thread, newThreadState)
   return state.merge({...state, threads: newThreads})

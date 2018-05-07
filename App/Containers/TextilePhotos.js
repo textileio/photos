@@ -35,7 +35,10 @@ class TextilePhotos extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const thread = ownProps.navigation.state.params.thread
-  let allItemsObj = state.ipfs.threads[thread].hashes.reduce((o, hash, index) => ({...o, [hash]: { index, hash, state: 'complete' }}), {})
+  if (!state.ipfs.threads[thread]) {
+    state.ipfs.threads[thread].hashes = []
+  }
+  let allItemsObj = state.ipfs.threads[thread].hashes.paths.reduce((o, hash, index) => ({...o, [hash]: { index, hash, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
     const item = allItemsObj[processingItem.hash]
     if (item) {
