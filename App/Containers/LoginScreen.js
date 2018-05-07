@@ -120,7 +120,7 @@ const mapStateToProps = state => {
   switch (state.auth.formType) {
     case SignUp:
       buttonData = [
-        { formType: {...LogIn}, title: 'Log In Instead', navigationTitle: 'Log In' }
+        { formType: LogIn, title: 'Log In Instead', navigationTitle: 'Log In' }
       ]
       navigationTitle = 'Sign Up'
       break
