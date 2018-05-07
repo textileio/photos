@@ -8,6 +8,9 @@ export default StyleSheet.create({
     // Styles the screen header in Textile Photos feed view
     backgroundColor: Colors.brandBlue
   },
+  headerTitleImage: {
+    marginHorizontal: 16
+  },
   headerTitle: {
     fontFamily: 'Biotif-Medium',
     color: Colors.snow
