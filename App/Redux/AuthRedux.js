@@ -75,7 +75,7 @@ export const handleRecoverPasswordSuccess = state =>
   state.merge({...state, processing: false})
 
 export const handleFailure = (state, {error}) => {
-  const { message } = error
+  const { message } = error // extracts only the error message
   return state.merge({...state, processing: false, error: message})
 }
 /* ------------- Hookup Reducers To Types ------------- */
