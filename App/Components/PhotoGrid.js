@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
+import { Buffer } from 'buffer'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
@@ -24,7 +25,7 @@ export default class PhotoGrid extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow (row) {
-    const {item} = row
+    const {item} = row.item
     let overlay
     if (item.state === 'pending') {
       overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
@@ -38,15 +39,21 @@ export default class PhotoGrid extends React.PureComponent {
         <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
       </TouchableOpacity>
     }
+
+    var encoded = Buffer.from(item.hash + ':' + item.token).toString('base64')
     return (
       <TouchableOpacity onPress={this.props.onSelect(row)} >
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <Image
-              source={{uri: 'http://' + item.hash + '/thumb'}}
+              source={{
+                uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + '/thumb',
+                headers: {
+                  Authorization: 'Basic ' + encoded
+                }
+              }}
               resizeMode={'cover'}
               style={styles.itemImage}
-              // headers={{Authorization: 'Basic ' + encoded}}
             />
           </View>
           <View style={styles.itemOverlay}>
