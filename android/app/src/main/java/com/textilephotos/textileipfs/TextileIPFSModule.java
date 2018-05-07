@@ -56,27 +56,16 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createNodeWithDataDir (String dataDir, Promise promise) {
+    public void createNodeWithDataDir (String dataDir, String apiUrl, Promise promise) {
         if (textile == null) {
             try {
-                textile = Mobile.newNode(dataDir);
+                textile = Mobile.newNode(dataDir, apiUrl);
                 promise.resolve(true);
             } catch (Exception e) {
                 promise.reject("START ERROR", e);
             }
         } else {
             promise.resolve(true);
-        }
-    }
-
-    @ReactMethod
-    public void startGateway (Promise promise) {
-        try {
-            textile.startGateway();
-            promise.resolve(true);
-        }
-        catch (Exception e) {
-            promise.reject("START ERROR", e);
         }
     }
 
@@ -172,8 +161,8 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void pairNewDevice (String pkb64, Promise promise) {
         try {
-            String result = textile.pairDesktop(pkb64);
-            promise.resolve(result);
+            textile.pairDesktop(pkb64);
+            promise.resolve(true);
         }
         catch (Exception e) {
             promise.reject("GET DATA ERROR", e);
@@ -184,23 +173,67 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void signIn (String username, String password, Promise promise) {
         try {
-            String result = textile.signIn(username, password);
-            promise.resolve(result);
+            textile.signIn(username, password);
+            promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject("SIGNIN ERROR", e);
+            promise.reject(e);
         }
     }
 
     @ReactMethod
     public void signUpWithEmail (String username, String password, String email, String referral, Promise promise) {
         try {
-            String result = textile.signUpWithEmail(username, password, email, referral);
-            promise.resolve(result);
+            textile.signUpWithEmail(username, password, email, referral);
+            promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject("SIGNUP ERROR", e);
+            promise.reject(e);
         }
+    }
+
+
+    @ReactMethod
+    public void getUsername (Promise promise) {
+        try {
+            String username = textile.getUsername();
+            promise.resolve(username);
+        }
+        catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void signOut (Promise promise) {
+        try {
+            textile.signOut();
+            promise.resolve(true);
+        }
+        catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void getAccessToken (Promise promise) {
+        try {
+            String token = textile.getAccessToken();
+            promise.resolve(token);
+        }
+        catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public String getGatewayPassword() {
+        return textile.getGatewayPassword();
+    }
+
+    @ReactMethod
+    public Boolean isSignedIn() {
+        return textile.isSignedIn();
     }
 
     // Method for turning photo URI into path + ext

@@ -23,13 +23,22 @@ import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
+import CookieManager from 'react-native-cookies'
+
+const API_URL = "https://api.textile.io"
 
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
-    yield delay(2000)
-    yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    const data = yield call(IPFS.signUp, username, password, email, referralCode)
+    const response = JSON.parse(data)
+    if (response.error) {
+      yield put(AuthActions.signUpFailure(response.error))
+    } else {
+      // TODO: Put username into textile-go for addition to metadata model
+      yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
+      yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    }
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
@@ -38,9 +47,14 @@ export function * signUp ({data}) {
 export function * logIn ({data}) {
   const {username, password} = data
   try {
-    yield delay(2000)
-    yield put(AuthActions.logInSuccess('tokenFormLogIn'))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    const data = yield call(IPFS.signIn, username, password)
+    const response = JSON.parse(data)
+    if (response.error) {
+      yield put(AuthActions.signUpFailure(response.error))
+    } else {
+      yield put(AuthActions.logInSuccess('tokenFormLogIn'))
+      yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    }
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }
@@ -58,7 +72,7 @@ export function * recoverPassword ({data}) {
 
 export function * createNode ({path}) {
   try {
-    const success = yield call(IPFS.createNodeWithDataDir, path)
+    const success = yield call(IPFS.createNodeWithDataDir, path, API_URL)
     if (success) {
       yield put(IpfsNodeActions.createNodeSuccess())
     } else {
@@ -73,6 +87,25 @@ export function * startNode () {
   try {
     const success = yield call(IPFS.startNode)
     if (success) {
+      const value = IPFS.getGatewayPassword()
+      if (Platform.OS === 'android') {
+        CookieManager.setFromResponse(
+          'https://localhost:9080',
+          'SessionId=' + value + '; path=/; expires=Thu, 1 Jan 2030 00:00:00 -0000; secure; HttpOnly')
+            .then((res) => {
+              console.log('CookieManager.setFromResponse =>', res);
+            });
+      } else {
+        CookieManager.set({
+          name: 'SessionId',
+          value: value ? value : "null",
+          origin: 'https://localhost:9080',
+          domain: '.localhost',
+          version: '1',
+          path: '/',
+          expiration: '2030-01-01T00:00:00.00-00:00'
+        })
+      }
       yield put(IpfsNodeActions.startNodeSuccess())
     } else {
       yield put(IpfsNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
@@ -82,9 +115,20 @@ export function * startNode () {
   }
 }
 
+export function * stopNode ({newState}) {
+  if (newState !== 'inactive') {
+    return
+  }
+  try {
+    yield call(IPFS.stopNode)
+  } catch (error) {
+    yield put(IpfsNodeActions.stopNodeFailure(error))
+  }
+}
+
 export function * getPhotoHashes ({thread}) {
   try {
-    const photoData = yield call(IPFS.getPhotos, null, 100000, thread)
+    const photoData = yield call(IPFS.getPhotos, null, -1, thread)
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, photoData))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))
@@ -122,14 +166,6 @@ export function * shareImage ({thread, hash}) {
   }
 }
 
-export function * refreshThreads ({newState}) {
-  if (newState !== 'active') {
-    return
-  }
-  yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-  yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
-}
-
 export function * photosTask (action) {
   const {newState} = action
   if (newState && newState !== 'active') {
@@ -137,8 +173,12 @@ export function * photosTask (action) {
   }
   try {
     yield call(BackgroundTimer.start)
-    yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath)
+    yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath, API_URL)
     yield call(IPFS.startNode)
+    if (newState) {
+      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+      yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
+    }
     const photos = yield call(queryPhotos)
     for (const photo of photos) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
@@ -157,6 +197,7 @@ export function * photosTask (action) {
           field: multipartData.boundary
         }
       )
+      console.log(multipartData.payloadPath)
     }
     yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)
