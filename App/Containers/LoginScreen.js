@@ -91,7 +91,7 @@ class LoginScreen extends Component {
         <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
           {this.renderButtons()}
         </View>
-        <DropdownAlert ref={(ref) => { this.dropdown = ref }} />
+        <DropdownAlert errorColor='#FFB6D5' closeInterval={5000} ref={(ref) => { this.dropdown = ref }} />
       </KeyboardAwareScrollView>
     )
   }
