@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard } from 'react-native'
+import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard, Alert } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
@@ -107,10 +107,11 @@ class LoginScreen extends Component {
 const mapStateToProps = state => {
   let buttonData
   let navigationTitle
+  let errorData = state.auth.error
   switch (state.auth.formType) {
     case SignUp:
       buttonData = [
-        { formType: LogIn, title: 'Log In Instead', navigationTitle: 'Log In' }
+        { formType: {...LogIn}, title: 'Log In Instead', navigationTitle: 'Log In' }
       ]
       navigationTitle = 'Sign Up'
       break
@@ -127,7 +128,19 @@ const mapStateToProps = state => {
       ]
       navigationTitle = 'Recover Password'
   }
+
+  if (errorData) {
+    Alert.alert(
+      navigationTitle + ' Error',
+      errorData,
+      [
+        {text: 'OK'}
+      ],
+      { cancelable: false }
+    )
+  }
   return {
+    errorData,
     buttonData,
     navigationTitle,
     formType: state.auth.formType,
