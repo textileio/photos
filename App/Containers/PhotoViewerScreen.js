@@ -1,10 +1,17 @@
 import React from 'react'
-import {ScrollView, Text, KeyboardAvoidingView, View, StatusBar, Image, Linking} from 'react-native'
+import {
+  Text,
+  View,
+  StatusBar,
+  TouchableOpacity
+} from 'react-native'
+import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
-import Toast, {DURATION} from 'react-native-easy-toast'
 import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
+import UIActions from '../Redux/UIRedux'
+import SharingDialog from './SharingDialog'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -19,8 +26,7 @@ class PhotoViewerScreen extends React.PureComponent {
   sharePressed () {
     const page = this.refs.gallery.currentPage
     const hash = this.props.imageData[page].hash
-    this.props.share(hash)
-    this.refs.toast.show('Done!', DURATION.LENGTH_SHORT)
+    this.props.authorShare(hash)
   }
 
   get galleryCount () {
@@ -42,10 +48,27 @@ class PhotoViewerScreen extends React.PureComponent {
     )
   }
 
+  _renderButton = (text, onPress) => (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.button}>
+        <Text>{text}</Text>
+      </View>
+    </TouchableOpacity>
+  )
+
+  _renderModalContent = () => (
+    <SharingDialog />
+  )
+
   render () {
     return (
       <View style={{flex: 1}}>
         <StatusBar hidden />
+
+        <Modal isVisible={this.props.visibleModal} animationIn={'fadeInUp'} animationOut={'fadeOutDown'}>
+          {this._renderModalContent()}
+        </Modal>
+
         <Gallery
           ref='gallery'
           style={{ flex: 1, backgroundColor: 'black' }}
@@ -54,7 +77,6 @@ class PhotoViewerScreen extends React.PureComponent {
         />
         { this.galleryCount }
         { this.caption }
-        <Toast ref='toast' position='center' />
       </View>
     )
   }
@@ -68,13 +90,16 @@ const mapStateToProps = (state, ownProps) => {
   return {
     imageData,
     initialIndex: ownProps.navigation.state.params.initialIndex,
-    sharable: ownProps.navigation.state.params.sharable
+    sharable: ownProps.navigation.state.params.sharable,
+    visibleModal: state.ui.authoringPhotoShare !== null
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (hash) => { dispatch(IpfsActions.shareImageRequest('beta', hash)) }
+    share: (hash) => { dispatch(IpfsActions.shareImageRequest('beta', hash)) },
+    authorShare: (hash) => { dispatch(UIActions.authorPhotoShare(hash)) },
+    cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
   }
 }
 
