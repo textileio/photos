@@ -69,6 +69,11 @@ export default {
     return result
   },
 
+  getHashToken: function (hash: string): string {
+    const result = TextileIPFS.getHashToken(hash)
+    return result
+  },
+
   syncGetPhotoData: function (path: string): string {
     return TextileIPFS.syncGetPhotoData(path)
   },
