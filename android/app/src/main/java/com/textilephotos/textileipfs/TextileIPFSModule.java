@@ -26,8 +26,6 @@ import mobile.Wrapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import ReactNativeJson;
-
 public class TextileIPFSModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileIPFS";
     private static ReactApplicationContext reactContext = null;
