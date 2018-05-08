@@ -74,9 +74,10 @@ export const handleSuccess = (state, {token}) =>
 export const handleRecoverPasswordSuccess = state =>
   state.merge({...state, processing: false})
 
-export const handleFailure = (state, {error}) =>
-  state.merge({...state, processing: false, error})
-
+export const handleFailure = (state, {error}) => {
+  const { message } = error // extracts only the error message
+  return state.merge({...state, processing: false, error: message})
+}
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {

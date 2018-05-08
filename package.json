@@ -45,6 +45,7 @@
     "react-native-cookies": "^3.2.0",
     "react-native-deep-link": "^0.1.5",
     "react-native-device-info": "^0.21.5",
+    "react-native-dropdownalert": "^3.4.0",
     "react-native-easy-toast": "^1.1.0",
     "react-native-elements": "^1.0.0-beta4",
     "react-native-fs": "^2.9.12",
