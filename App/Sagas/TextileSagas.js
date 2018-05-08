@@ -24,7 +24,6 @@ import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
-import CookieManager from 'react-native-cookies'
 
 const API_URL = "https://api.textile.io"
 
@@ -71,56 +70,60 @@ export function * recoverPassword ({data}) {
   }
 }
 
-export function * createNode ({path}) {
-  try {
-    const success = yield call(IPFS.createNodeWithDataDir, path, API_URL)
-    if (success) {
-      yield put(IpfsNodeActions.createNodeSuccess())
-    } else {
-      yield put(IpfsNodeActions.createNodeFailure(new Error('Failed creating node, but no error was thrown - Should not happen')))
-    }
-  } catch (error) {
-    yield put(IpfsNodeActions.createNodeFailure(error))
-  }
+export function * triggerStartNode () {
+  yield put(IpfsNodeActions.startNodeRequest(RNFS.DocumentDirectoryPath))
 }
 
-export function * startNode () {
+export function * triggerStopNode () {
+  yield put(IpfsNodeActions.stopNodeRequest())
+}
+
+export function * handleStateChange ({newState}) {
+  yield call(BackgroundTimer.start)
+  if (newState === 'active') {
+    yield * triggerStartNode()
+  } else if (newState === 'inactive') {
+    yield * triggerStopNode()
+  }
+  yield call(BackgroundTimer.stop)
+}
+
+export function * startNode ({path}) {
+  const onboarded = yield select(TextileSelectors.onboarded)
+  if (!onboarded) {
+    return
+  }
+  yield call(BackgroundTimer.start)
   try {
-    const success = yield call(IPFS.startNode)
-    if (success) {
-      const value = IPFS.getGatewayPassword()
-      if (Platform.OS === 'android') {
-        CookieManager.setFromResponse(
-          'https://localhost:9080',
-          'SessionId=' + value + '; path=/; expires=Thu, 1 Jan 2030 00:00:00 -0000; secure; HttpOnly')
-            .then((res) => {
-              console.log('CookieManager.setFromResponse =>', res);
-            });
+    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL)
+    if (createNodeSuccess) {
+      const startNodeSuccess = yield call(IPFS.startNode)
+      if (startNodeSuccess) {
+        yield put(IpfsNodeActions.startNodeSuccess())
+        yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+        yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
       } else {
-        CookieManager.set({
-          name: 'SessionId',
-          value: value ? value : "null",
-          origin: 'https://localhost:9080',
-          domain: '.localhost',
-          version: '1',
-          path: '/',
-          expiration: '2030-01-01T00:00:00.00-00:00'
-        })
+        yield put(IpfsNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
       }
-      yield put(IpfsNodeActions.startNodeSuccess())
     } else {
-      yield put(IpfsNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
+      yield put(IpfsNodeActions.startNodeFailure(new Error('Failed creating node, but no error was thrown - Should not happen')))
     }
   } catch (error) {
     yield put(IpfsNodeActions.startNodeFailure(error))
+  } finally {
+    yield call(BackgroundTimer.stop)
   }
 }
 
 export function * stopNode () {
+  yield call(BackgroundTimer.start)
   try {
     yield call(IPFS.stopNode)
+    yield put(IpfsNodeActions.stopNodeSuccess())
   } catch (error) {
     yield put(IpfsNodeActions.stopNodeFailure(error))
+  } finally {
+    yield call(BackgroundTimer.stop)
   }
 }
 
@@ -164,16 +167,9 @@ export function * shareImage ({thread, hash}) {
   }
 }
 
-export function * photosTask (action) {
-  const {newState} = action
+export function * photosTask () {
   try {
     yield call(BackgroundTimer.start)
-    yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath, API_URL)
-    yield call(IPFS.startNode)
-    if (newState) {
-      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-      yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
-    }
     const photos = yield call(queryPhotos)
     for (const photo of photos) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
@@ -194,10 +190,11 @@ export function * photosTask (action) {
       )
       console.log(multipartData.payloadPath)
     }
-    yield call(BackgroundTimer.stop)
-    yield call(BackgroundTask.finish)
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
+  } finally {
+    yield call(BackgroundTimer.stop)
+    yield call(BackgroundTask.finish)
   }
 }
 
