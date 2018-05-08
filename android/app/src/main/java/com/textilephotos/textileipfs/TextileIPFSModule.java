@@ -122,7 +122,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             // for each item, add to temp map, and then to native array
             for (int i = 0; i < jsonArray.length(); i++) {
                 Object value = jsonArray.get(i);
-                JSONObject object = new JSONObject(value);
+                JSONObject object = new JSONObject(value.toString());
                 WritableMap map = new WritableNativeMap();
                 map.putString("host", object.get("host").toString());
                 map.putString("proto", object.get("proto").toString());
