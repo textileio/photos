@@ -155,7 +155,10 @@ const RootStack = StackNavigator(
   },
   {
     mode: 'modal',
-    headerMode: 'none'
+    headerMode: 'none',
+    navigationOptions: {
+      gesturesEnabled: false
+    }
   }
 )
 
