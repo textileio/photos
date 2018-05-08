@@ -84,10 +84,12 @@ export default {
   },
 
   getHashRequest: function (hash: string, path: string): HashRequest {
-    const token = "ABCD"
+    let token = ''
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    for (let i = 0; i < 48; i++) {
+      token += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
     this.registerToken(hash, token)
-    // TextileIPFS.setHashToken(hash, token)
-    console.log('http' + '://' + 'localhost:' + '/ipfs/' + hash + path)
     const encoded = Buffer.from(':' + token).toString('base64')
     return {
       uri: 'http://localhost:39080/ipfs/' + hash + path,
