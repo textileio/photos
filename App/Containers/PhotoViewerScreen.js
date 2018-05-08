@@ -58,10 +58,6 @@ class PhotoViewerScreen extends React.PureComponent {
 
   _renderModalContent = () => (
     <SharingDialog />
-    // <View style={styles.modalContent}>
-    //     //   <Text>Hello!</Text>
-    //     //   {this._renderButton('Close', () => this.props.cancelAuthoringShare())}
-    //     // </View>
   )
 
   render () {
