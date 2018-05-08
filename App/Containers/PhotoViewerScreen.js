@@ -17,20 +17,20 @@ class PhotoViewerScreen extends React.PureComponent {
     this.props.screenProps.dismiss()
   }
 
-  // renderImage(row) {
-  //   var item = row.image.data
-  //   console.warn(item)
-  //
-  //   var encoded = Buffer.from(item.hash + ':' + item.token).toString('base64')
-  //   return (<Image
-  //     source={{
-  //       uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + '/photo',
-  //       headers: {
-  //         Authorization: 'Basic ' + encoded
-  //       }
-  //     }}
-  //   />)
-  // }
+  renderImage(props, dims) {
+    var item = props.image.data
+    var encoded = Buffer.from(item.hash + ':' + item.token).toString('base64')
+    return (<Image
+      source={{
+        uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + '/photo',
+        headers: {
+          Authorization: 'Basic ' + encoded
+        }
+      }}
+      style={{flex: 1, height: undefined, width: undefined}}
+      resizeMode="contain"
+    />)
+  }
 
   sharePressed () {
     const page = this.refs.gallery.currentPage
@@ -67,7 +67,7 @@ class PhotoViewerScreen extends React.PureComponent {
           style={{ flex: 1, backgroundColor: 'black' }}
           images={this.props.imageData}
           initialPage={this.props.initialIndex}
-          // imageComponent={this.renderImage.bind(this)}
+          imageComponent={this.renderImage.bind(this)}
         />
         { this.galleryCount }
         { this.caption }
@@ -83,6 +83,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
       hash: item.hash,
       data: item,
+      // Hacky, but for react-native-image-galary, this is required
       source: {
         uri: item.proto + '://' + item.hash + ':' + item.token + "@" + item.host + '/ipfs/' + item.hash + '/photo'
       }
