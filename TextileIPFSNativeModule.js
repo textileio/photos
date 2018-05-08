@@ -1,5 +1,6 @@
 // @flow
 import { NativeModules } from 'react-native'
+import { Buffer } from 'buffer'
 
 const { TextileIPFS } = NativeModules
 
@@ -60,7 +61,7 @@ export default {
   },
 
   getPhotos: async function (offset: ?string, limit: number, thread: string): string {
-    const result = await TextileIPFS.getPhotos(offset || "", limit, thread)
+    const result = await TextileIPFS.getPhotos(offset || '', limit, thread)
     return result
   },
 
@@ -69,9 +70,18 @@ export default {
     return result
   },
 
-  getHashToken: function (hash: string): string {
-    const result = TextileIPFS.getHashToken(hash)
-    return result
+  getHashRequest: function (hash: string, path: string): Object {
+    console.log(hash, path)
+    const request = TextileIPFS.getHashRequest(hash)
+    console.log(request)
+    console.log(request.protocol + '://' + request.host + '/ipfs/' + hash + path)
+    const encoded = Buffer.from(hash + ':' + request.token).toString('base64')
+    return {
+      uri: request.protocol + '://' + request.host + '/ipfs/' + hash + path,
+      headers: {
+        Authorization: 'Basic ' + encoded
+      }
+    }
   },
 
   syncGetPhotoData: function (path: string): string {
