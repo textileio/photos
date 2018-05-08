@@ -31,6 +31,13 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.brandBlue
   },
+  buttonDisabled: {
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.brandBlue,
+    opacity: 0.3
+  },
   buttonText: {
     fontSize: 18,
     fontFamily: 'Biotif-Medium',
