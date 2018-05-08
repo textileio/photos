@@ -6,6 +6,7 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
 import { Buffer } from 'buffer'
+import IPFS from '../../TextileIPFSNativeModule'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -19,14 +20,8 @@ class PhotoViewerScreen extends React.PureComponent {
 
   renderImage(props, dims) {
     var item = props.image.data
-    var encoded = Buffer.from(item.hash + ':' + item.token).toString('base64')
     return (<Image
-      source={{
-        uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + '/photo',
-        headers: {
-          Authorization: 'Basic ' + encoded
-        }
-      }}
+      source={getRequestFor(item, '/photo')}
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode="contain"
     />)
@@ -83,16 +78,30 @@ const mapStateToProps = (state, ownProps) => {
     return {
       hash: item.hash,
       data: item,
+      // source: getRequestFor(item, '/thumb'),
       // Hacky, but for react-native-image-galary, this is required
-      source: {
-        uri: item.proto + '://' + item.hash + ':' + item.token + "@" + item.host + '/ipfs/' + item.hash + '/photo'
-      }
+      // source: {
+      //   uri: item.proto + '://' + item.hash + ':' + item.token + "@" + item.host + '/ipfs/' + item.hash + '/thumb'
+      // }
     }
   })
   return {
     imageData,
     initialIndex: ownProps.navigation.state.params.initialIndex,
     sharable: ownProps.navigation.state.params.sharable
+  }
+}
+
+const getRequestFor = (item, path) => {
+  var token = IPFS.getHashToken(item.hash)
+  console.log(token)
+  var encoded = Buffer.from(item.hash + ':' + token).toString('base64')
+  console.log(item.proto + '://' + item.host + '/ipfs/' + item.hash + path)
+  return  {
+    uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + path,
+    headers: {
+      Authorization: 'Basic ' + encoded
+    }
   }
 }
 

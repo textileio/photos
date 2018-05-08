@@ -35,6 +35,7 @@
 - (NSString*)getAccessToken:(NSError**)error;
 - (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
 - (NSString*)getGatewayPassword;
+- (NSString*)getHashToken:(NSString*)hash error:(NSError**)error;
 - (NSString*)getPeerID:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit thread:(NSString*)thread error:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;

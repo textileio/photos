@@ -103,6 +103,16 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString
   }
 }
 
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getHashToken:(NSString *)hash) {
+  NSError *error;
+  NSString *result = [self _getHashToken:hash error:&error];
+  if (!error && result) {
+    return result;
+  } else {
+    return nil;
+  }
+}
+
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
   NSError *error;
   NSString *result = [self _getPhoto:path error:&error];
@@ -236,6 +246,11 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
 - (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit fromThread:(NSString *)thread error:(NSError**)error {
   NSString *hashesString = [self.node getPhotos:offset limit:limit thread:thread error:error];
   return hashesString;
+}
+
+- (NSString *)_getHashToken:(NSString *)hash error:(NSError**)error {
+  NSString *token = [self.node getHashToken:hash error:error];
+  return token;
 }
 
 - (NSString *)_getPhoto:(NSString *)hashPath error:(NSError**)error {

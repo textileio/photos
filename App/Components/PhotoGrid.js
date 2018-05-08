@@ -12,9 +12,23 @@ import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
 import { Buffer } from 'buffer'
+import IPFS from '../../TextileIPFSNativeModule'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
+
+const getRequestFor = (item, path) => {
+  var token = IPFS.getHashToken(item.hash)
+  console.log(token)
+  var encoded = Buffer.from(item.hash + ':' + token).toString('base64')
+  console.log(item.proto + '://' + item.host + '/ipfs/' + item.hash + path)
+  return  {
+    uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + path,
+    headers: {
+      Authorization: 'Basic ' + encoded
+    }
+  }
+}
 
 export default class PhotoGrid extends React.PureComponent {
   /* ***********************************************************
@@ -46,12 +60,7 @@ export default class PhotoGrid extends React.PureComponent {
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <Image
-              source={{
-                uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + '/thumb',
-                headers: {
-                  Authorization: 'Basic ' + encoded
-                }
-              }}
+              source={getRequestFor(item, '/thumb')}
               resizeMode={'cover'}
               style={styles.itemImage}
             />

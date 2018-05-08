@@ -129,6 +129,7 @@ export function * stopNode ({newState}) {
 export function * getPhotoHashes ({thread}) {
   try {
     const photoData = yield call(IPFS.getPhotos, null, -1, thread)
+    console.log(photoData``)
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, photoData))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))
