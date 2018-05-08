@@ -103,36 +103,8 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString
   }
 }
 
-//RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetHashRequest:(NSString *)hash token:) {
-//  NSError *error;
-//  NSString *request = [self _getHashRequest:hash error:&error];
-//  NSData *data = [request dataUsingEncoding:NSUTF8StringEncoding];
-//  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-//  NSString *token = [json objectForKey:@"token"];
-//  NSString *protocol = [json objectForKey:@"protocol"];
-//  NSString *host = [json objectForKey:@"host"];
-//  if (!error && host) {
-//    return @{ @"host": host, @"protocol": protocol, @"token": token };
-//  } else {
-//    return nil;
-//  }
-//}
-
 RCT_EXPORT_METHOD(setHashToken:(NSString *)hash token:(NSString *)token resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   [self _setHashToken:hash token:token];
-//  NSData *data = [request dataUsingEncoding:NSUTF8StringEncoding];
-//  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-//  NSString *token = [json objectForKey:@"token"];
-//  NSString *protocol = [json objectForKey:@"protocol"];
-//  NSString *host = [json objectForKey:@"host"];
-
-
-//
-//  if (!error && host) {
-//    return @{ @"host": host, @"protocol": protocol, @"token": token };
-//  } else {
-//    return nil;
-//  }
   resolve(@YES);
 }
 
