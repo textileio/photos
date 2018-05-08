@@ -77,17 +77,6 @@ const mapStateToProps = (state, ownProps) => {
     // todo, try source here again
     return { hash, source: require('../Images/TextileHeader.png')}
   })
-  // const items = state.ipfs.threads[ownProps.navigation.state.params.thread].items
-  // const imageData = items.map((item, idx) => {
-  //   return {
-  //     hash: item.hash,
-  //     data: item,
-  //     // source: getRequestFor(item, '/thumb'),
-  //     // Hacky, but for react-native-image-galary, this is required
-  //     // source: {
-  //     //   uri: item.proto + '://' + item.hash + ':' + item.token + "@" + item.host + '/ipfs/' + item.hash + '/thumb'
-  //     // }
-  //   }
 
   return {
     imageData,

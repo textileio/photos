@@ -71,11 +71,8 @@ export default {
   },
 
   getHashRequest: function (hash: string, path: string): Object {
-    console.log(hash, path)
     const request = TextileIPFS.getHashRequest(hash)
-    console.log(request)
-    console.log(request.protocol + '://' + request.host + '/ipfs/' + hash + path)
-    const encoded = Buffer.from(hash + ':' + request.token).toString('base64')
+    const encoded = Buffer.from(':' + request.token).toString('base64')
     return {
       uri: request.protocol + '://' + request.host + '/ipfs/' + hash + path,
       headers: {

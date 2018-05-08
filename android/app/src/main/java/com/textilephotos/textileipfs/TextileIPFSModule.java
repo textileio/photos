@@ -119,7 +119,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             WritableArray array = new WritableNativeArray();
             // grab the hashes array out of the response
             JSONArray jsonArray = obj.getJSONArray("hashes");
-            // for each item, add to temp map, and then to native array
+            // for each hash, add them to our native array
             for (int i = 0; i < jsonArray.length(); i++) {
                 Object value = jsonArray.get(i);
                 array.pushString((String) value);
@@ -139,12 +139,12 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             String host = obj.getString("host");
             String protocol = obj.getString("protocol");
             String token = obj.getString("token");
-            WritableMap result = new WritableNativeMap();
-            // Add the rsponse parts
-            result.putString("host", host);
-            result.putString("protocol", protocol);
-            result.putString("token", token);
-            return result;
+            WritableMap response = new WritableNativeMap();
+            // Add the response parts
+            response.putString("host", host);
+            response.putString("protocol", protocol);
+            response.putString("token", token);
+            return response;
         }
         catch (Exception e) {
             return null;
