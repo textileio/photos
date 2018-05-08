@@ -4,6 +4,7 @@ import { takeLatest, takeEvery, all } from 'redux-saga/effects'
 
 import {StartupTypes} from '../Redux/StartupRedux'
 import {TextileTypes} from '../Redux/TextileRedux'
+import {UITypes} from '../Redux/UIRedux'
 import {IpfsNodeTypes} from '../Redux/IpfsNodeRedux'
 import {AuthTypes} from '../Redux/AuthRedux'
 
@@ -46,7 +47,7 @@ export default function * root () {
 
     takeEvery(IpfsNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
 
-    takeEvery(TextileTypes.SHARE_IMAGE_REQUEST, shareImage),
+    takeEvery(UITypes.SHARE_PHOTO_REQUEST, shareImage),
 
     takeEvery(TextileTypes.APP_STATE_CHANGE, photosTask),
     takeEvery(TextileTypes.LOCATION_UPDATE, photosTask),

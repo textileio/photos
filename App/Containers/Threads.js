@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, FlatList, ScrollView, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import Toast, {DURATION} from 'react-native-easy-toast'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
+import UIActions from '../Redux/UIRedux'
 
 // Styles
 import styles from './Styles/ThreadsStyle'
@@ -18,7 +19,7 @@ class MyListItem extends React.PureComponent {
     let color
     let icon
     if (this.props.type === 'thread') {
-      icon = this.props.selected ? 'ios-checkbox' : 'ios-checkbox-outline'
+      icon = this.props.selected ? 'ios-checkbox' : 'ios-square-outline'
       color = this.props.selected ? Colors.brandRed : Colors.brandPink
     } else if (this.props.type === 'add') {
       color = Colors.brandPink
@@ -43,7 +44,11 @@ class Threads extends React.PureComponent {
   _keyExtractor = (item, index) => item.id
 
   _onPressItem = (id: string) => {
-    // updater functions are preferred for transactional updates
+    if (id === 'add') {
+      this.refs.toast.show('Coming soon!', DURATION.LENGTH_SHORT)
+      return
+    }
+    // update functions are preferred for transactional updates
     this.setState((state) => {
       // copy the map rather than modifying state.
       const selected = new Map(state.selected)
@@ -63,12 +68,14 @@ class Threads extends React.PureComponent {
   )
 
   _onSubmit = () => {
-    this.props.navigation.navigate('Comment')
+    this.props.share(this.props.hash)
+    this.props.close()
   }
 
   render () {
+    const disabled = [...this.state.selected.values()].filter(value => value).length === 0
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
         <FlatList
           ItemSeparatorComponent={() => (<View style={styles.separator} />)}
           style={styles.container}
@@ -77,13 +84,14 @@ class Threads extends React.PureComponent {
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
         />
-        <TouchableOpacity onPress={this._onSubmit}>
-          <View style={styles.button}>
+        <TouchableOpacity onPress={this._onSubmit} disabled={disabled}>
+          <View style={disabled ? styles.buttonDisabled : styles.button}>
             <Text style={styles.buttonText}>
-              {'Next'}
+              {'Share'}
             </Text>
           </View>
         </TouchableOpacity>
+        <Toast ref='toast' position='top' />
       </View>
 
     )
@@ -93,15 +101,17 @@ class Threads extends React.PureComponent {
 const mapStateToProps = (state) => {
   return {
     data: [
-      {type: 'thread', id: 'a', title: 'Beta Testers'},
-      {type: 'thread', id: 'b', title: 'Family'},
-      {type: 'add', id: 'c', title: 'New Thread'}
-    ]
+      {type: 'thread', id: 'beta', title: 'Beta Testers'},
+      {type: 'add', id: 'add', title: 'New Thread'}
+    ],
+    hash: state.ui.authoringPhotoShare
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    share: (hash) => { dispatch(UIActions.sharePhotoRequest('beta', hash)) },
+    close: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
   }
 }
 

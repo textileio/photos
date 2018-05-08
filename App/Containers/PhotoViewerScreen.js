@@ -8,7 +8,6 @@ import {
 import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
-import Toast, {DURATION} from 'react-native-easy-toast'
 import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
@@ -27,8 +26,6 @@ class PhotoViewerScreen extends React.PureComponent {
   sharePressed () {
     const page = this.refs.gallery.currentPage
     const hash = this.props.imageData[page].hash
-    // this.props.share(hash)
-    // this.refs.toast.show('Done!', DURATION.LENGTH_SHORT)
     this.props.authorShare(hash)
   }
 
@@ -84,7 +81,6 @@ class PhotoViewerScreen extends React.PureComponent {
         />
         { this.galleryCount }
         { this.caption }
-        <Toast ref='toast' position='center' />
       </View>
     )
   }
