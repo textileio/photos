@@ -26,6 +26,8 @@ import mobile.Wrapper;
 import java.util.HashMap;
 import java.util.Map;
 
+import ReactNativeJson;
+
 public class TextileIPFSModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileIPFS";
     private static ReactApplicationContext reactContext = null;
@@ -116,26 +118,21 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             // convert string to json
             JSONObject obj = new JSONObject(hashString);
             // create a Native ready array
-            WritableArray hashes = new WritableNativeArray();
-            // create another Native ready array
-            WritableArray paths = new WritableNativeArray();
+            WritableArray array = new WritableNativeArray();
             // grab the hashes array out of the response
-            JSONArray jsonHashes = obj.getJSONArray("hashes");
-            // grab the paths array out of the response
-            JSONArray jsonPaths = obj.getJSONArray("paths");
-            // for each hash, add them to our native array
-            for (int i = 0; i < jsonHashes.length(); i++) {
-                Object hash = jsonHashes.get(i);
-                Object path = jsonPaths.get(i);
-                hahes.pushString((String) hash);
-                paths.pushString((string) path)
+            JSONArray jsonArray = obj.getJSONArray("items");
+            // for each item, add to temp map, and then to native array
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Object value = jsonArray.get(i);
+                JSONObject object = new JSONObject(value);
+                WritableMap map = new WritableNativeMap();
+                map.putString("host", object.get("host"));
+                map.putString("proto", object.get("proto"));
+                map.putString("hash", object.get("hash"));
+                map.putString("token", object.get("token"));
+                array.pushMap(map);
             }
-            // Create a Native map
-            WritableMap map = new WritableNativeMap();
-            map.putString("hashes", (String) hahes);
-            map.putString("paths", (String) paths);
-            promise.resolve(map);
-
+            promise.resolve(array);
         }
         catch (Exception e) {
             promise.reject("GET PHOTOS ERROR", e);
