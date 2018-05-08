@@ -9,6 +9,15 @@ type MultipartData = {
   boundary: string
 }
 
+type LocalhostHeader = {
+  Authorization: string
+}
+
+type HashRequest = {
+  uri: string,
+  headers: LocalhostHeader
+}
+
 export default {
   createNodeWithDataDir: async function (dataDir: string, apiUrl: string): boolean {
     console.log(dataDir)
@@ -70,11 +79,18 @@ export default {
     return result
   },
 
-  getHashRequest: function (hash: string, path: string): Object {
-    const request = TextileIPFS.getHashRequest(hash)
-    const encoded = Buffer.from(':' + request.token).toString('base64')
+  registerToken: async function (hash: string, token: string) {
+    await TextileIPFS.setHashToken(hash, token)
+  },
+
+  getHashRequest: function (hash: string, path: string): HashRequest {
+    const token = "ABCD"
+    this.registerToken(hash, token)
+    // TextileIPFS.setHashToken(hash, token)
+    console.log('http' + '://' + 'localhost:' + '/ipfs/' + hash + path)
+    const encoded = Buffer.from(':' + token).toString('base64')
     return {
-      uri: request.protocol + '://' + request.host + '/ipfs/' + hash + path,
+      uri: 'http://localhost:39080/ipfs/' + hash + path,
       headers: {
         Authorization: 'Basic ' + encoded
       }

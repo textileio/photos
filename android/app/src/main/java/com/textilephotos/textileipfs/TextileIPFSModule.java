@@ -4,6 +4,7 @@ package com.textilephotos.textileipfs;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -132,22 +133,13 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public WritableMap getHashRequest (String hash) {
+    public void setHashToken (String hash, String token, Promise promise) {
         try {
-            String request = textile.getHashRequest(hash);
-            JSONObject obj = new JSONObject(request);
-            String host = obj.getString("host");
-            String protocol = obj.getString("protocol");
-            String token = obj.getString("token");
-            WritableMap response = new WritableNativeMap();
-            // Add the response parts
-            response.putString("host", host);
-            response.putString("protocol", protocol);
-            response.putString("token", token);
-            return response;
+            textile.setHashToken(hash, token);
+            promise.resolve(true);
         }
         catch (Exception e) {
-            return null;
+            promise.reject("TOKEN ERROR", e);
         }
     }
 
