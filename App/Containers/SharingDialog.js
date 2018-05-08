@@ -3,6 +3,7 @@ import { View, Text, Image, FlatList, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import SharingNavigation from '../Navigation/SharingNavigation'
+import IPFS from '../../TextileIPFSNativeModule'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import UIActions from '../Redux/UIRedux'
 
@@ -29,7 +30,7 @@ class SharingDialog extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    uri: 'https://localhost:9080/ipfs/' + state.ui.authoringPhotoShare + '/thumb'
+    uri: IPFS.getHashRequest(state.ui.authoringPhotoShare, '/thumb')
   }
 }
 
