@@ -17,20 +17,20 @@ class PhotoViewerScreen extends React.PureComponent {
     this.props.screenProps.dismiss()
   }
 
-  renderImage(item) {
-    console.warn(item.token)
-    var encoded = Buffer.from(item.hash + ':' + item.token).toString('base64')
-    return (<Image
-      source={{
-        uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + '/photo',
-        headers: {
-          Authorization: 'Basic ' + encoded
-        }
-      }}
-      resizeMode={'cover'}
-      style={styles.itemImage}
-    />)
-  }
+  // renderImage(row) {
+  //   var item = row.image.data
+  //   console.warn(item)
+  //
+  //   var encoded = Buffer.from(item.hash + ':' + item.token).toString('base64')
+  //   return (<Image
+  //     source={{
+  //       uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + '/photo',
+  //       headers: {
+  //         Authorization: 'Basic ' + encoded
+  //       }
+  //     }}
+  //   />)
+  // }
 
   sharePressed () {
     const page = this.refs.gallery.currentPage
@@ -67,7 +67,7 @@ class PhotoViewerScreen extends React.PureComponent {
           style={{ flex: 1, backgroundColor: 'black' }}
           images={this.props.imageData}
           initialPage={this.props.initialIndex}
-          imageComponent={this.renderImage.bind(this)}
+          // imageComponent={this.renderImage.bind(this)}
         />
         { this.galleryCount }
         { this.caption }
@@ -80,7 +80,13 @@ class PhotoViewerScreen extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const items = state.ipfs.threads[ownProps.navigation.state.params.thread].items
   const imageData = items.map((item, idx) => {
-    return { hash: item.hash, source: { uri: item.proto + '://' + item.hash + ':' + item.token + "@" + item.host + '/ipfs/' + item.hash + '/photo' } }
+    return {
+      hash: item.hash,
+      data: item,
+      source: {
+        uri: item.proto + '://' + item.hash + ':' + item.token + "@" + item.host + '/ipfs/' + item.hash + '/photo'
+      }
+    }
   })
   return {
     imageData,
