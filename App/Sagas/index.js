@@ -43,13 +43,13 @@ export default function * root () {
     takeLatest(IpfsNodeTypes.START_NODE_REQUEST, startNode),
     takeLatest(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
 
-    takeEvery(TextileTypes.APP_STATE_CHANGE, stopNode),
+    takeEvery(action => action.type === TextileTypes.APP_STATE_CHANGE && action.newState === 'inactive', stopNode),
 
     takeEvery(IpfsNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
 
     takeEvery(UITypes.SHARE_PHOTO_REQUEST, shareImage),
 
-    takeEvery(TextileTypes.APP_STATE_CHANGE, photosTask),
+    takeEvery(action => action.type === TextileTypes.APP_STATE_CHANGE && action.newState === 'active', photosTask),
     takeEvery(TextileTypes.LOCATION_UPDATE, photosTask),
     takeEvery(TextileTypes.BACKGROUND_TASK, photosTask),
 

@@ -116,10 +116,7 @@ export function * startNode () {
   }
 }
 
-export function * stopNode ({newState}) {
-  if (newState !== 'inactive') {
-    return
-  }
+export function * stopNode () {
   try {
     yield call(IPFS.stopNode)
   } catch (error) {
@@ -169,9 +166,6 @@ export function * shareImage ({thread, hash}) {
 
 export function * photosTask (action) {
   const {newState} = action
-  if (newState && newState !== 'active') {
-    return
-  }
   try {
     yield call(BackgroundTimer.start)
     yield call(IPFS.createNodeWithDataDir, RNFS.DocumentDirectoryPath, API_URL)
