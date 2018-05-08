@@ -118,22 +118,36 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             // create a Native ready array
             WritableArray array = new WritableNativeArray();
             // grab the hashes array out of the response
-            JSONArray jsonArray = obj.getJSONArray("items");
+            JSONArray jsonArray = obj.getJSONArray("hashes");
             // for each item, add to temp map, and then to native array
             for (int i = 0; i < jsonArray.length(); i++) {
                 Object value = jsonArray.get(i);
-                JSONObject object = new JSONObject(value.toString());
-                WritableMap map = new WritableNativeMap();
-                map.putString("host", object.get("host").toString());
-                map.putString("proto", object.get("proto").toString());
-                map.putString("hash", object.get("hash").toString());
-                map.putString("token", object.get("token").toString());
-                array.pushMap(map);
+                array.pushString((String) value);
             }
             promise.resolve(array);
         }
         catch (Exception e) {
             promise.reject("GET PHOTOS ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public WritableMap getHashRequest (String hash) {
+        try {
+            String request = textile.getHashRequest(hash);
+            JSONObject obj = new JSONObject(request);
+            String host = obj.getString("host");
+            String protocol = obj.getString("protocol");
+            String token = obj.getString("token");
+            WritableMap result = new WritableNativeMap();
+            // Add the rsponse parts
+            result.putString("host", host);
+            result.putString("protocol", protocol);
+            result.putString("token", token);
+            return result;
+        }
+        catch (Exception e) {
+            return null;
         }
     }
 

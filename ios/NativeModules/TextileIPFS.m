@@ -95,19 +95,25 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString
   NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit fromThread:thread error:&error];
   NSData *data = [hashesString dataUsingEncoding:NSUTF8StringEncoding];
   id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-  NSArray *items = [json objectForKey:@"items"];
-  if (items) {
-    resolve(items);
+  NSArray *hashes = [json objectForKey:@"hashes"];
+  if (hashes) {
+    resolve(hashes);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getHashToken:(NSString *)hash) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getHashRequest:(NSString *)hash) {
   NSError *error;
-  NSString *result = [self _getHashToken:hash error:&error];
-  if (!error && result) {
-    return result;
+  NSString *request = [self _getHashRequest:hash error:&error];
+  NSData *data = [request dataUsingEncoding:NSUTF8StringEncoding];
+  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  NSString *token = [json objectForKey:@"token"];
+  NSString *protocol = [json objectForKey:@"protocol"];
+  NSString *host = [json objectForKey:@"host"];
+
+  if (!error && host) {
+    return @{ @"host": host, @"protocol": protocol, @"token": token };
   } else {
     return nil;
   }
@@ -248,8 +254,8 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
   return hashesString;
 }
 
-- (NSString *)_getHashToken:(NSString *)hash error:(NSError**)error {
-  NSString *token = [self.node getHashToken:hash error:error];
+- (NSString *)_getHashRequest:(NSString *)hash error:(NSError**)error {
+  NSString *token = [self.node getHashRequest:hash error:error];
   return token;
 }
 

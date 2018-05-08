@@ -11,24 +11,23 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
-import { Buffer } from 'buffer'
 import IPFS from '../../TextileIPFSNativeModule'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
 
-const getRequestFor = (item, path) => {
-  var token = IPFS.getHashToken(item.hash)
-  console.log(token)
-  var encoded = Buffer.from(item.hash + ':' + token).toString('base64')
-  console.log(item.proto + '://' + item.host + '/ipfs/' + item.hash + path)
-  return  {
-    uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + path,
-    headers: {
-      Authorization: 'Basic ' + encoded
-    }
-  }
-}
+// const getRequestFor = (item, path) => {
+//   var token = IPFS.getHashToken(item.hash)
+//   console.log(token)
+//   var encoded = Buffer.from(item.hash + ':' + token).toString('base64')
+//   console.log(item.proto + '://' + item.host + '/ipfs/' + item.hash + path)
+//   return  {
+//     uri: item.proto + '://' + item.host + '/ipfs/' + item.hash + path,
+//     headers: {
+//       Authorization: 'Basic ' + encoded
+//     }
+//   }
+// }
 
 export default class PhotoGrid extends React.PureComponent {
   /* ***********************************************************
@@ -39,7 +38,7 @@ export default class PhotoGrid extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow (row) {
-    const {item} = row.item
+    const {item} = row
     let overlay
     if (item.state === 'pending') {
       overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
@@ -54,13 +53,12 @@ export default class PhotoGrid extends React.PureComponent {
       </TouchableOpacity>
     }
 
-    var encoded = Buffer.from(item.hash + ':' + item.token).toString('base64')
     return (
       <TouchableOpacity onPress={this.props.onSelect(row)} >
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <Image
-              source={getRequestFor(item, '/thumb')}
+              source={ IPFS.getHashRequest(item.hash, '/thumb')}
               resizeMode={'cover'}
               style={styles.itemImage}
             />

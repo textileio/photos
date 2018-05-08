@@ -14,7 +14,7 @@ const { Types, Creators } = createActions({
   stopNodeSuccess: null,
   stopNodeFailure: ['error'],
   getPhotoHashesRequest: ['thread'],
-  getPhotoHashesSuccess: ['thread', 'data'],
+  getPhotoHashesSuccess: ['thread', 'hashes'],
   getPhotoHashesFailure: ['thread', 'error']
 })
 
@@ -31,12 +31,12 @@ export const INITIAL_STATE = Immutable({
   threads: {
     default: {
       querying: false,
-      items: [],
+      hashes: [],
       error: null
     },
     beta: {
       querying: false,
-      items: [],
+      hashes: [],
       error: null
     }
   }
@@ -77,12 +77,9 @@ export const photoHashesRequest = (state, {thread}) => {
   return state.merge({...state, threads: newThreads})
 }
 
-export const photoHashesSuccess = (state, {thread, data}) => {
+export const photoHashesSuccess = (state, {thread, hashes}) => {
   const currentThreadState = state.threads[thread]
-  const newThreadState = currentThreadState.merge({
-    querying: false,
-    items: data // data actually contains {hashes, paths}
-  })
+  const newThreadState = currentThreadState.merge({querying: false, hashes})
   const newThreads = state.threads.set(thread, newThreadState)
   return state.merge({...state, threads: newThreads})
 }
