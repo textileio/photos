@@ -21,6 +21,7 @@ import {queryPhotos} from '../Services/PhotoUtils'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
+import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 import CookieManager from 'react-native-cookies'
@@ -162,7 +163,7 @@ export function * shareImage ({thread, hash}) {
       }
     )
   } catch (error) {
-    yield put(TextileActions.imageSharingError(error))
+    yield put(UIActions.imageSharingError(error))
   }
 }
 
