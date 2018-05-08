@@ -124,10 +124,10 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
                 Object value = jsonArray.get(i);
                 JSONObject object = new JSONObject(value);
                 WritableMap map = new WritableNativeMap();
-                map.putString("host", object.get("host"));
-                map.putString("proto", object.get("proto"));
-                map.putString("hash", object.get("hash"));
-                map.putString("token", object.get("token"));
+                map.putString("host", object.get("host").toString());
+                map.putString("proto", object.get("proto").toString());
+                map.putString("hash", object.get("hash").toString());
+                map.putString("token", object.get("token").toString());
                 array.pushMap(map);
             }
             promise.resolve(array);
