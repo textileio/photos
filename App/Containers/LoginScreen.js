@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard } from 'react-native'
+import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard, Alert } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import AuthActions, { SignUp, LogIn, RecoverPassword } from '../Redux/AuthRedux'
+import DropdownAlert from 'react-native-dropdownalert'
 
 // Styles
 import styles from './Styles/LoginScreenStyle'
@@ -57,6 +58,13 @@ class LoginScreen extends Component {
     this.props.navigation.setParams({ navigationTitle: this.props.navigationTitle })
   }
 
+  componentDidUpdate () {
+    if (this.props.error !== null) {
+      this.dropdown.alertWithType('error', 'Error', this.props.error)
+      this.props.error = null // ensures the error doesn't keep rendering
+    }
+  }
+
   handleButtonPress (formType, navigationTitle) {
     this.props.updateFormType(formType)
     this.props.navigation.setParams({ navigationTitle })
@@ -90,6 +98,7 @@ class LoginScreen extends Component {
         <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
           {this.renderButtons()}
         </View>
+        <DropdownAlert errorColor='#FFB6D5' closeInterval={5000} ref={(ref) => { this.dropdown = ref }} />
       </KeyboardAwareScrollView>
     )
   }
@@ -107,6 +116,7 @@ class LoginScreen extends Component {
 const mapStateToProps = state => {
   let buttonData
   let navigationTitle
+  let error = state.auth.error
   switch (state.auth.formType) {
     case SignUp:
       buttonData = [
@@ -127,7 +137,9 @@ const mapStateToProps = state => {
       ]
       navigationTitle = 'Recover Password'
   }
+
   return {
+    error,
     buttonData,
     navigationTitle,
     formType: state.auth.formType,
