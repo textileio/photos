@@ -34,13 +34,14 @@
 - (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb thread:(NSString*)thread error:(NSError**)error;
 - (NSString*)getAccessToken:(NSError**)error;
 - (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
+- (NSString*)getGatewayInfo:(NSError**)error;
 - (NSString*)getGatewayPassword;
-- (NSString*)getHashRequest:(NSString*)hash error:(NSError**)error;
 - (NSString*)getPeerID:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit thread:(NSString*)thread error:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
 - (BOOL)isSignedIn;
 - (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
+- (void)setHashToken:(NSString*)hash token:(NSString*)token;
 - (NetMultipartRequest*)sharePhoto:(NSString*)hash thread:(NSString*)thread error:(NSError**)error;
 - (BOOL)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
 - (BOOL)signOut:(NSError**)error;

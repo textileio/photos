@@ -103,20 +103,37 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString
   }
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getHashRequest:(NSString *)hash) {
-  NSError *error;
-  NSString *request = [self _getHashRequest:hash error:&error];
-  NSData *data = [request dataUsingEncoding:NSUTF8StringEncoding];
-  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-  NSString *token = [json objectForKey:@"token"];
-  NSString *protocol = [json objectForKey:@"protocol"];
-  NSString *host = [json objectForKey:@"host"];
+//RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetHashRequest:(NSString *)hash token:) {
+//  NSError *error;
+//  NSString *request = [self _getHashRequest:hash error:&error];
+//  NSData *data = [request dataUsingEncoding:NSUTF8StringEncoding];
+//  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+//  NSString *token = [json objectForKey:@"token"];
+//  NSString *protocol = [json objectForKey:@"protocol"];
+//  NSString *host = [json objectForKey:@"host"];
+//  if (!error && host) {
+//    return @{ @"host": host, @"protocol": protocol, @"token": token };
+//  } else {
+//    return nil;
+//  }
+//}
 
-  if (!error && host) {
-    return @{ @"host": host, @"protocol": protocol, @"token": token };
-  } else {
-    return nil;
-  }
+RCT_EXPORT_METHOD(setHashToken:(NSString *)hash token:(NSString *)token resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  [self _setHashToken:hash token:token];
+//  NSData *data = [request dataUsingEncoding:NSUTF8StringEncoding];
+//  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+//  NSString *token = [json objectForKey:@"token"];
+//  NSString *protocol = [json objectForKey:@"protocol"];
+//  NSString *host = [json objectForKey:@"host"];
+
+
+//
+//  if (!error && host) {
+//    return @{ @"host": host, @"protocol": protocol, @"token": token };
+//  } else {
+//    return nil;
+//  }
+  resolve(@YES);
 }
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
@@ -214,6 +231,16 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
   return result;
 }
 
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayInfo) {
+  NSError *error;
+  NSString *result = [self.node getGatewayInfo:&error];
+  if (error == NULL) {
+    return result;
+  } else {
+    return nil;
+  }
+}
+
 // List all your events here
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
 - (NSArray<NSString *> *)supportedEvents
@@ -254,9 +281,13 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
   return hashesString;
 }
 
-- (NSString *)_getHashRequest:(NSString *)hash error:(NSError**)error {
-  NSString *token = [self.node getHashRequest:hash error:error];
-  return token;
+- (void)_setHashToken:(NSString *)hash token:(NSString *)token {
+  [self.node setHashToken:hash token:token];
+}
+
+- (NSString *)_getGateway:(NSError**)error {
+  NSString *info = [self.node getGatewayInfo:error];
+  return info;
 }
 
 - (NSString *)_getPhoto:(NSString *)hashPath error:(NSError**)error {
