@@ -10,9 +10,6 @@ const { Types, Creators } = createActions({
   locationUpdate: null,
   backgroundTask: null,
 
-  shareImageRequest: ['thread', 'hash'],
-  imageSharingError: ['error'],
-
   imageAdded: ['thread', 'hash', 'remotePayloadPath'],
 
   imageUploadProgress: ['data'],
