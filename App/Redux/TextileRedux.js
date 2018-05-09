@@ -44,7 +44,8 @@ export const TextileSelectors = {
   // TODO: Add more selectors here as we learn how they are used
   itemsById: (state, id) => {
     return state.textile.images.items.filter(item => item.hash === id)
-  }
+  },
+  onboarded: state => state.textile.onboarded
 }
 
 /* ------------- Reducers ------------- */

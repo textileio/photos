@@ -108,6 +108,11 @@ RCT_EXPORT_METHOD(setHashToken:(NSString *)hash token:(NSString *)token resolver
   resolve(@YES);
 }
 
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(setHashTokenSync:(NSString *)hash token:(NSString *)token) {
+  [self _setHashToken:hash token:token];
+  return @YES;
+}
+
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
   NSError *error;
   NSString *result = [self _getPhoto:path error:&error];

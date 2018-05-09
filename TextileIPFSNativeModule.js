@@ -1,5 +1,5 @@
 // @flow
-import { NativeModules } from 'react-native'
+import { NativeModules, Platform } from 'react-native'
 import { Buffer } from 'buffer'
 
 const { TextileIPFS } = NativeModules
@@ -79,7 +79,20 @@ export default {
     return result
   },
 
-  registerToken: async function (hash: string, token: string) {
+
+  registerToken: function (hash: string, token: string) {
+    if (Platform.OS === 'ios') {
+      this.registerTokenSync(hash, token)
+    } else {
+      this.registerTokenAsync(hash, token)
+    }
+  },
+
+  registerTokenSync: function (hash: string, token: string) {
+    TextileIPFS.setHashTokenSync(hash, token)
+  },
+
+  registerTokenAsync: async function (hash: string, token: string) {
     await TextileIPFS.setHashToken(hash, token)
   },
 
