@@ -4,6 +4,7 @@ package com.textilephotos.textileipfs;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -110,6 +111,24 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void sharePhoto (String hash, String thread, Promise promise) {
+        try {
+            // Grab our add image response
+            MultipartRequest multipart = textile.sharePhoto(hash, thread);
+            // Create a Native map
+            WritableMap map = new WritableNativeMap();
+            // Add the rsponse parts
+            map.putString("payloadPath", (String) multipart.getPayloadPath());
+            map.putString("boundary", (String) multipart.getBoundary());
+            promise.resolve(map);
+
+        }
+        catch (Exception e) {
+            promise.reject("SHARE IMAGE ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void getPhotos (String offset, Integer limit, String thread, Promise promise) {
         try {
             String hashString = textile.getPhotos(offset, limit, thread);
@@ -125,12 +144,32 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
                 array.pushString((String) value);
             }
             promise.resolve(array);
-
         }
         catch (Exception e) {
             promise.reject("GET PHOTOS ERROR", e);
         }
     }
+
+    @ReactMethod
+    public void getHashRequest (String hash, Promise promise) {
+        try {
+            String request = textile.getHashRequest(hash);
+            JSONObject obj = new JSONObject(request);
+            String host = obj.getString("host");
+            String protocol = obj.getString("protocol");
+            String token = obj.getString("token");
+            WritableMap response = new WritableNativeMap();
+            // Add the response parts
+            response.putString("host", host);
+            response.putString("protocol", protocol);
+            response.putString("token", token);
+            promise.resolve(response);
+        }
+        catch (Exception e) {
+             promise.reject("TOKEN ERROR", e);
+        }
+    }
+
 
     @ReactMethod
     public String syncGetPhotoData (String path) {

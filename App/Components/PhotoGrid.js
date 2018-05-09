@@ -11,9 +11,19 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
+import AsyncImage from './AsyncImage'
+import IPFS from '../../TextileIPFSNativeModule'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
+
+
+
+// <Image
+// source={ IPFS.getHashRequest(item.hash, '/thumb')}
+// resizeMode={'cover'}
+// style={styles.itemImage}
+// />
 
 export default class PhotoGrid extends React.PureComponent {
   /* ***********************************************************
@@ -38,14 +48,16 @@ export default class PhotoGrid extends React.PureComponent {
         <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
       </TouchableOpacity>
     }
+
     return (
       <TouchableOpacity onPress={this.props.onSelect(row)} >
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
-            <Image
-              source={{uri: 'https://localhost:9080/ipfs/' + item.hash + '/thumb'}}
-              resizeMode={'cover'}
+            <AsyncImage
+              hash={item.hash}
+              path={'/thumb'}
               style={styles.itemImage}
+              resizeMode={'cover'}
             />
           </View>
           <View style={styles.itemOverlay}>
@@ -68,10 +80,10 @@ export default class PhotoGrid extends React.PureComponent {
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item, index) => index
+  keyExtractor = (item, index) => item.hash
 
   // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 10
+  oneScreensWorth = 20
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`

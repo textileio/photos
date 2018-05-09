@@ -1,11 +1,21 @@
 // @flow
-import { NativeModules } from 'react-native'
+import { NativeModules, Platform } from 'react-native'
+import { Buffer } from 'buffer'
 
 const { TextileIPFS } = NativeModules
 
 type MultipartData = {
   payloadPath: string,
   boundary: string
+}
+
+type LocalhostHeader = {
+  Authorization: string
+}
+
+type HashRequest = {
+  uri: string,
+  headers: LocalhostHeader
 }
 
 export default {
@@ -26,6 +36,9 @@ export default {
   },
 
   signIn: async function (username: string, password: string): string {
+    console.log(username, password)
+    console.log(TextileIPFS)
+    console.log(TextileIPFS.isSignedIn())
     const result = await TextileIPFS.signIn(username, password)
     return result
   },
@@ -60,13 +73,24 @@ export default {
   },
 
   getPhotos: async function (offset: ?string, limit: number, thread: string): string {
-    const result = await TextileIPFS.getPhotos(offset || "", limit, thread)
+    const result = await TextileIPFS.getPhotos(offset || '', limit, thread)
     return result
   },
 
   getPhotoData: async function (path: string): string {
     const result = await TextileIPFS.getPhotoData(path)
     return result
+  },
+
+  getHashRequest: async function (hash: string, path: string): HashRequest {
+    let result = await TextileIPFS.getHashRequest(hash)
+    const encoded = Buffer.from(':' + result.token).toString('base64')
+    return {
+      uri: result.protocol + '://' + result.host + '/ipfs/' + hash + path,
+      headers: {
+        Authorization: 'Basic ' + encoded
+      }
+    }
   },
 
   syncGetPhotoData: function (path: string): string {
