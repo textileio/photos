@@ -151,15 +151,25 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setHashToken (String hash, String token, Promise promise) {
+    public void getHashRequest (String hash, Promise promise) {
         try {
-            textile.setHashToken(hash, token);
-            promise.resolve(true);
+            String request = textile.getHashRequest(hash);
+            JSONObject obj = new JSONObject(request);
+            String host = obj.getString("host");
+            String protocol = obj.getString("protocol");
+            String token = obj.getString("token");
+            WritableMap response = new WritableNativeMap();
+            // Add the response parts
+            response.putString("host", host);
+            response.putString("protocol", protocol);
+            response.putString("token", token);
+            promise.resolve(response);
         }
         catch (Exception e) {
-            promise.reject("TOKEN ERROR", e);
+             promise.reject("TOKEN ERROR", e);
         }
     }
+
 
     @ReactMethod
     public String syncGetPhotoData (String path) {
