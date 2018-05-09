@@ -20,35 +20,25 @@ export default class AsyncImage extends React.PureComponent {
     this.setState(() => ({ loaded: true, source }))
   }
   render () {
-    const {
-      style,
-      resizeMode,
-      containerStyle
-    } = this.props
-
-    return (
-      <View
-        style={containerStyle || style}>
-        {this.state.loaded &&
-          < Image
-            source={this.state.source}
-            resizeMode={resizeMode}
-            style={style}
-          />
-        }
-
-        {!this.state.loaded &&
+    if (this.state.loaded) {
+      return (
+        < Image
+          source={this.state.source}
+          resizeMode={this.props.resizeMode || 'cover'}
+          style={this.props.style || {flex: 1, height: undefined, width: undefined}}
+          capInsets={this.props.capInsets}
+        />)
+    } else {
+      return (
         <View
           style={[
-            style,
+            this.props.style,
             {
               backgroundColor: 'transparent',
               position: 'absolute'
             }
-          ]} />
-        }
-
-      </View>
-    )
+          ]}
+        />)
+    }
   }
 }
