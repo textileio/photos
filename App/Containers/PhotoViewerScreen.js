@@ -98,7 +98,7 @@ const mapStateToProps = (state, ownProps) => {
   const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
   const imageData = hashes.map(hash => {
     // todo, try source here again
-    return { hash, source: require('../Images/TextileHeader.png')}
+    return { hash, source: {url: 'file://foo.png'}}
   })
 
   return {

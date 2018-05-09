@@ -37,8 +37,6 @@ const actionToPayload = (action) => {
   switch (action.type) {
     case 'APP_STATE_CHANGE':
       return { description: action.newState }
-    case 'CREATE_NODE_REQUEST':
-      return { description: action.path }
     case 'IMAGE_ADDED':
       return { description: action.hash }
     case 'IMAGE_UPLOAD_PROGRESS':
@@ -47,8 +45,8 @@ const actionToPayload = (action) => {
       return { description: action.data.id }
     case 'IMAGE_UPLOAD_ERROR':
       return { description: action.data.id, error: action.data.error.message }
-    case 'CREATE_NODE_FAILURE':
-      return { error: action.error.message }
+    case 'START_NODE_REQUEST':
+      return { description: action.path }
     case 'START_NODE_FAILURE':
       return { error: action.error.message }
     case 'STOP_NODE_FAILURE':
