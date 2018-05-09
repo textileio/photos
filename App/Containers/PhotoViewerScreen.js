@@ -14,6 +14,7 @@ import IpfsActions from '../Redux/TextileRedux'
 import IPFS from '../../TextileIPFSNativeModule'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
+import AsyncImage from '../Components/AsyncImage'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -26,11 +27,11 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage(props, dims) {
-    let source = IPFS.getHashRequest(props.image.hash, '/photo')
-    return (<Image
-      source={source}
+    return (<AsyncImage
+      hash={props.image.hash}
+      path={'/photo'}
       style={{flex: 1, height: undefined, width: undefined}}
-      resizeMode='contain'
+      resizeMode={'cover'}
     />)
   }
 

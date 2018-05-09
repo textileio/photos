@@ -36,6 +36,9 @@ export default {
   },
 
   signIn: async function (username: string, password: string): string {
+    console.log(username, password)
+    console.log(TextileIPFS)
+    console.log(TextileIPFS.isSignedIn())
     const result = await TextileIPFS.signIn(username, password)
     return result
   },
@@ -79,34 +82,11 @@ export default {
     return result
   },
 
-
-  registerToken: function (hash: string, token: string) {
-    if (Platform.OS === 'ios') {
-      this.registerTokenSync(hash, token)
-    } else {
-      this.registerTokenAsync(hash, token)
-    }
-  },
-
-  registerTokenSync: function (hash: string, token: string) {
-    TextileIPFS.setHashTokenSync(hash, token)
-  },
-
-  registerTokenAsync: async function (hash: string, token: string) {
-    await TextileIPFS.setHashToken(hash, token)
-  },
-
-  getHashRequest: function (hash: string, path: string): HashRequest {
-    let token = ''
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-    for (let i = 0; i < 48; i++) {
-      token += chars.charAt(Math.floor(Math.random() * chars.length))
-    }
-    this.registerToken(hash, token)
-    console.log('http://localhost:39080/ipfs/' + hash + path)
-    const encoded = Buffer.from(':' + token).toString('base64')
+  getHashRequest: async function (hash: string, path: string): HashRequest {
+    let result = await TextileIPFS.getHashRequest(hash)
+    const encoded = Buffer.from(':' + result.token).toString('base64')
     return {
-      uri: 'http://localhost:39080/ipfs/' + hash + path,
+      uri: result.protocol + '://' + result.host + '/ipfs/' + hash + path,
       headers: {
         Authorization: 'Basic ' + encoded
       }

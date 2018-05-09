@@ -90,10 +90,10 @@ export function * handleStateChange ({newState}) {
 }
 
 export function * startNode ({path}) {
-  const onboarded = yield select(TextileSelectors.onboarded)
-  if (!onboarded) {
-    return
-  }
+  // const onboarded = yield select(TextileSelectors.onboarded)
+  // if (!onboarded) {
+  //   return
+  // }
   yield call(BackgroundTimer.start)
   try {
     const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL)
