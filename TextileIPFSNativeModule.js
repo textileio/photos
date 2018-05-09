@@ -36,9 +36,6 @@ export default {
   },
 
   signIn: async function (username: string, password: string): string {
-    console.log(username, password)
-    console.log(TextileIPFS)
-    console.log(TextileIPFS.isSignedIn())
     const result = await TextileIPFS.signIn(username, password)
     return result
   },
