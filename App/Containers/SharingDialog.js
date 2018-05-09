@@ -14,7 +14,7 @@ class SharingDialog extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <Image source={{uri: this.props.uri}} style={{height: '33%'}} />
+        <Image source={ this.props.source } style={{height: '33%'}} />
         <TouchableHighlight
           underlayColor={'transparent'}
           style={{alignItems: 'center', position: 'absolute', top: 0, right: 0, width: 44, height: 44}}
@@ -30,7 +30,8 @@ class SharingDialog extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    uri: IPFS.getHashRequest(state.ui.authoringPhotoShare, '/thumb')
+    hash: state.ui.authoringPhotoShare,
+    source: IPFS.getHashRequest(state.ui.authoringPhotoShare, '/thumb')
   }
 }
 

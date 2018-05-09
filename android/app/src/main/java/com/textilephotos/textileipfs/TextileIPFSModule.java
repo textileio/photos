@@ -111,6 +111,24 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void sharePhoto (String hash, String thread, Promise promise) {
+        try {
+            // Grab our add image response
+            MultipartRequest multipart = textile.sharePhoto(hash, thread);
+            // Create a Native map
+            WritableMap map = new WritableNativeMap();
+            // Add the rsponse parts
+            map.putString("payloadPath", (String) multipart.getPayloadPath());
+            map.putString("boundary", (String) multipart.getBoundary());
+            promise.resolve(map);
+
+        }
+        catch (Exception e) {
+            promise.reject("SHARE IMAGE ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void getPhotos (String offset, Integer limit, String thread, Promise promise) {
         try {
             String hashString = textile.getPhotos(offset, limit, thread);
