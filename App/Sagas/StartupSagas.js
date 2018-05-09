@@ -32,5 +32,5 @@ export function * startup () {
     })
   }
 
-  yield put(IpfsNodeActions.startNodeRequest(RNFS.DocumentDirectoryPath))
+  yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
 }

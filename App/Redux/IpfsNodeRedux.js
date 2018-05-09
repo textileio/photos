@@ -4,7 +4,10 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  startNodeRequest: ['path'],
+  createNodeRequest: ['path'],
+  createNodeSuccess: null,
+  createNodeFailure: ['error'],
+  startNodeRequest: null,
   startNodeSuccess: null,
   startNodeFailure: ['error'],
   stopNodeRequest: null,
@@ -22,7 +25,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   nodeState: {
-    state: 'stopped', // | starting | started | stopping
+    state: 'undefined', // | creating | stopped | starting | started | stopping
     error: null
   },
   threads: {
@@ -45,6 +48,12 @@ export const IpfsNodeSelectors = {
 }
 
 /* ------------- Reducers ------------- */
+
+export const creatingNode = state =>
+  state.merge({...state, nodeState: {state: 'creating', error: null}})
+
+export const nodeCreated = state =>
+  state.merge({...state, nodeState: {state: 'stopped', error: null}})
 
 export const nodeStarting = state =>
   state.merge({...state, nodeState: {state: 'starting', error: null}})
@@ -88,6 +97,10 @@ export const photoHashesFailure = (state, {thread, error}) => {
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
+  [Types.CREATE_NODE_REQUEST]: creatingNode,
+  [Types.CREATE_NODE_SUCCESS]: nodeCreated,
+  [Types.CREATE_NODE_FAILURE]: nodeError,
+
   [Types.START_NODE_REQUEST]: nodeStarting,
   [Types.START_NODE_SUCCESS]: nodeStarted,
   [Types.START_NODE_FAILURE]: nodeError,
