@@ -103,6 +103,22 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString
   }
 }
 
+RCT_EXPORT_METHOD(getHashRequest:(NSString *)hash resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *request = [self _getHashRequest:hash error:&error];
+  NSData *data = [request dataUsingEncoding:NSUTF8StringEncoding];
+  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  NSString *token = [json objectForKey:@"token"];
+  NSString *protocol = [json objectForKey:@"protocol"];
+  NSString *host = [json objectForKey:@"host"];
+
+  if (!error) {
+    resolve(@{ @"host": host, @"protocol": protocol, @"token": token });
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
   NSError *error;
   NSString *result = [self _getPhoto:path error:&error];
@@ -236,6 +252,11 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
 - (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit fromThread:(NSString *)thread error:(NSError**)error {
   NSString *hashesString = [self.node getPhotos:offset limit:limit thread:thread error:error];
   return hashesString;
+}
+
+- (NSString *)_getHashRequest:(NSString *)hash error:(NSError**)error {
+  NSString *token = [self.node getHashRequest:hash error:error];
+  return token;
 }
 
 - (NSString *)_getPhoto:(NSString *)hashPath error:(NSError**)error {

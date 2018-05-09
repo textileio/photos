@@ -3,15 +3,18 @@ import {
   Text,
   View,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native'
 import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
+import IPFS from '../../TextileIPFSNativeModule'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
+import AsyncImage from '../Components/AsyncImage'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -21,6 +24,15 @@ class PhotoViewerScreen extends React.PureComponent {
 
   dismissPressed () {
     this.props.screenProps.dismiss()
+  }
+
+  renderImage(props, dims) {
+    return (<AsyncImage
+      hash={props.image.hash}
+      path={'/photo'}
+      style={{flex: 1, height: undefined, width: undefined}}
+      resizeMode={'cover'}
+    />)
   }
 
   sharePressed () {
@@ -74,6 +86,7 @@ class PhotoViewerScreen extends React.PureComponent {
           style={{ flex: 1, backgroundColor: 'black' }}
           images={this.props.imageData}
           initialPage={this.props.initialIndex}
+          imageComponent={this.renderImage.bind(this)}
         />
         { this.galleryCount }
         { this.caption }
@@ -85,8 +98,10 @@ class PhotoViewerScreen extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
   const imageData = hashes.map(hash => {
-    return { hash, source: { uri: 'https://localhost:9080/ipfs/' + hash + '/photo' } }
+    // todo, try source here again
+    return { hash, source: {url: 'file://foo.png'}}
   })
+
   return {
     imageData,
     initialIndex: ownProps.navigation.state.params.initialIndex,
