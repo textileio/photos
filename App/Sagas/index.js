@@ -15,8 +15,9 @@ import {
   signUp,
   logIn,
   recoverPassword,
-  triggerStartNode,
+  triggerCreateNode,
   handleStateChange,
+  createNode,
   startNode,
   stopNode,
   pairNewDevice,
@@ -39,21 +40,21 @@ export default function * root () {
     takeEvery(AuthTypes.LOG_IN_REQUEST, logIn),
     takeEvery(AuthTypes.RECOVER_PASSWORD_REQUEST, recoverPassword),
 
-    takeLatest(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
+    takeEvery(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
 
     takeEvery(IpfsNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
 
     takeEvery(UITypes.SHARE_PHOTO_REQUEST, shareImage),
 
-    // Actions that trigger starting/stopping the node
-    takeEvery(action => action.type === TextileTypes.APP_STATE_CHANGE && action.newState !== 'background', handleStateChange),
-    takeEvery(TextileTypes.LOCATION_UPDATE, triggerStartNode),
-    takeEvery(TextileTypes.BACKGROUND_TASK, triggerStartNode),
-    takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerStartNode),
+    takeEvery(IpfsNodeTypes.CREATE_NODE_REQUEST, createNode),
+    takeEvery(IpfsNodeTypes.START_NODE_REQUEST, startNode),
+    takeEvery(IpfsNodeTypes.STOP_NODE_REQUEST, stopNode),
 
-    // Actions triggered by the items above, start/stop the node, will emit START_NODE_SUCCESS/FAILURE
-    takeLatest(IpfsNodeTypes.START_NODE_REQUEST, startNode),
-    takeLatest(IpfsNodeTypes.STOP_NODE_REQUEST, stopNode),
+    // Actions that trigger creating (therefore starting/stopping) the node
+    takeEvery(action => action.type === TextileTypes.APP_STATE_CHANGE && action.newState !== 'background', handleStateChange),
+    takeEvery(TextileTypes.LOCATION_UPDATE, triggerCreateNode),
+    takeEvery(TextileTypes.BACKGROUND_TASK, triggerCreateNode),
+    takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
 
     // All things we want to trigger photosTask are funneled through starting the node, so handle START_NODE_SUCCESS
     // by running the photosTask saga here
