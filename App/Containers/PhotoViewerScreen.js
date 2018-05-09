@@ -28,10 +28,12 @@ class PhotoViewerScreen extends React.PureComponent {
 
   renderImage(props, dims) {
     return (<AsyncImage
+      key={props.image.hash + '/photo'}
       hash={props.image.hash}
       path={'/photo'}
       style={{flex: 1, height: undefined, width: undefined}}
-      resizeMode={'cover'}
+      resizeMode={props.resizeMode}
+      capInsets={props.capInsets}
     />)
   }
 
