@@ -24,6 +24,7 @@ import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
+import CookieManager from 'react-native-cookies'
 
 const API_URL = "https://api.textile.io"
 
@@ -99,6 +100,25 @@ export function * startNode ({path}) {
     if (createNodeSuccess) {
       const startNodeSuccess = yield call(IPFS.startNode)
       if (startNodeSuccess) {
+        const value = yield call(IPFS.getGatewayPassword)
+        if (Platform.OS === 'android') {
+          yield call(
+            CookieManager.setFromResponse,
+            'https://localhost:9080',
+            'SessionId=' + value + '; path=/; expires=Thu, 1 Jan 2030 00:00:00 -0000; secure; HttpOnly'
+          )
+        } else {
+          yield call(
+            CookieManager.set, {
+              name: 'SessionId',
+              value: value || 'null',
+              origin: 'https://localhost:9080',
+              domain: '.localhost',
+              version: '1',
+              path: '/',
+              expiration: '2030-01-01T00:00:00.00-00:00'
+            })
+        }
         yield put(IpfsNodeActions.startNodeSuccess())
         yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
         yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
