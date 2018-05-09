@@ -1,4 +1,4 @@
-import { takeLatest, takeEvery, all, select } from 'redux-saga/effects'
+import { takeLatest, takeEvery, all } from 'redux-saga/effects'
 
 /* ------------- Types ------------- */
 
