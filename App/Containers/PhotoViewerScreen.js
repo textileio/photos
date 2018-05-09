@@ -3,7 +3,8 @@ import {
   Text,
   View,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native'
 import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
@@ -25,9 +26,9 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage(props, dims) {
-    var hash = props.image.hash
+    let source = IPFS.getHashRequest(props.image.hash, '/photo')
     return (<Image
-      source={ IPFS.getHashRequest(hash, '/photo')}
+      source={source}
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode='contain'
     />)

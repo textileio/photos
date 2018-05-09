@@ -90,6 +90,7 @@ export default {
       token += chars.charAt(Math.floor(Math.random() * chars.length))
     }
     this.registerToken(hash, token)
+    console.log('http://localhost:39080/ipfs/' + hash + path)
     const encoded = Buffer.from(':' + token).toString('base64')
     return {
       uri: 'http://localhost:39080/ipfs/' + hash + path,
