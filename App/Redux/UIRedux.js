@@ -5,7 +5,7 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   authorPhotoShare: ['hash'],
-  sharePhotoRequest: ['thread', 'hash'],
+  sharePhotoRequest: ['thread', 'hash', 'caption'],
   imageSharingError: ['error'],
   cancelAuthoringPhotoShare: null
 })
