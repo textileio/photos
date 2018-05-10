@@ -1,8 +1,8 @@
-import React  from 'react'
+import React from 'react'
 import { View, Image } from 'react-native'
 import IPFS from '../../TextileIPFSNativeModule'
 
-export default class AsyncImage extends React.PureComponent {
+export default class AsyncImage extends React.Component {
 
   constructor(props) {
     super(props)
