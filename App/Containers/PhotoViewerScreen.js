@@ -114,7 +114,7 @@ const mapStateToProps = (state, ownProps) => {
     initialIndex: ownProps.navigation.state.params.initialIndex,
     sharable: ownProps.navigation.state.params.sharable,
     visibleModal: state.ui.authoringPhotoShare !== null,
-    currentIndex: state.currentIndex || ownProps.navigation.state.params.initialIndex
+    currentIndex: state.ui.currentIndex || ownProps.navigation.state.params.initialIndex
   }
 }
 
