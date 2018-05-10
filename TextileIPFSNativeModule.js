@@ -79,12 +79,8 @@ export default {
     return result
   },
 
-  syncGetHashData: function (hash: string, path: string): string {
-    return TextileIPFS.syncGetHashData(hash + path)
-  },
-
   getHashRequest: async function (hash: string, path: string): HashRequest {
-    let result = await TextileIPFS.getHashRequest(hash)
+    const result = await TextileIPFS.getHashRequest(hash)
     const encoded = Buffer.from(':' + result.token).toString('base64')
     return {
       uri: result.protocol + '://' + result.host + '/ipfs/' + hash + path,
@@ -102,10 +98,6 @@ export default {
   getFilePath: async function (uri: string): string {
     const result = await TextileIPFS.getRealPathFromURI(uri)
     return result
-  },
-
-  getGatewayPassword: function (): string {
-    return TextileIPFS.getGatewayPassword()
   },
 
   getAccessToken: async function (): string {
