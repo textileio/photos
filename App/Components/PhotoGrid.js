@@ -43,7 +43,6 @@ export default class PhotoGrid extends React.PureComponent {
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
           <AsyncImage
-            key={row.item.hash + '/thumb'}
             hash={row.item.hash}
             path={'/thumb'}
             style={styles.itemImage}

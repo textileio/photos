@@ -1,5 +1,5 @@
 // @flow
-import { NativeModules, Platform } from 'react-native'
+import { NativeModules } from 'react-native'
 import { Buffer } from 'buffer'
 
 const { TextileIPFS } = NativeModules
