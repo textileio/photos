@@ -154,7 +154,7 @@ export function * getPhotoHashes ({thread}) {
       let item = { hash }
       try {
         const captionsrc = yield call(IPFS.getHashData, hash, '/caption')
-        const caption = JSON.parse(Buffer.from(captionsrc, 'base64').toString('ascii'))
+        const caption = Buffer.from(captionsrc, 'base64').toString('ascii')
         item = {...item, caption}
       } catch (err) {
         // gracefully return an empty caption for now

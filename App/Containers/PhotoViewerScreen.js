@@ -56,7 +56,7 @@ class PhotoViewerScreen extends React.PureComponent {
 
   get caption () {
     // Never loads a second time
-    const caption = this.props.imageData[this.props.currentIndex].caption || this.props.imageData[this.props.currentIndex].hash
+    const caption = this.props.imageData[this.props.currentIndex].caption || ''
     return (
       <View style={{ bottom: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'center' }}>
         <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{caption}</Text>
