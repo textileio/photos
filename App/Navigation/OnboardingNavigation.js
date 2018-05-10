@@ -31,7 +31,7 @@ const params2 = {
       If you have any questions about this data collection process, please feel free to get in touch, or check out our terms of service.
       </Text>
       <Text
-        style={[ostyles.message, {color: Colors.brandBlue}]}
+        style={[ostyles.message, {color: Colors.brandBlue, paddingTop: 0}]}
         onPress={() => Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/TERMS.md')}>
         Terms of Service
       </Text>
