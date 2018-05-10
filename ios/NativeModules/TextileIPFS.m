@@ -80,9 +80,9 @@ RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPat
   }
 }
 
-RCT_EXPORT_METHOD(sharePhoto:(NSString *)hash thread:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(sharePhoto:(NSString *)hash thread:(NSString *)thread caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NetMultipartRequest *multipart = [self _sharePhoto:hash toThread:thread error:&error];
+  NetMultipartRequest *multipart = [self _sharePhoto:hash toThread:thread withCaption:caption error:&error];
   if(multipart) {
     resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
   } else {
@@ -225,7 +225,12 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
 
 - (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl error:(NSError**)error {
   if (!self.node) {
-    self.node = [[MobileMobile new] newNode:dataDir centralApiURL:apiUrl error:error];
+    #ifdef DEBUG
+    NSString *loggingLevel = @"DEBUG";
+    #else
+    NSString *loggingLevel = @"INFO";
+    #endif
+    self.node = [[MobileMobile new] newNode:dataDir centralApiURL:apiUrl logLevel:loggingLevel error:error];
   }
 }
 
@@ -244,8 +249,8 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
   return multipart;
 }
 
-- (NetMultipartRequest *)_sharePhoto:(NSString *)hash toThread:(NSString *)thread error:(NSError**)error {
-  NetMultipartRequest *multipart = [self.node sharePhoto:hash thread:thread error:error];
+- (NetMultipartRequest *)_sharePhoto:(NSString *)hash toThread:(NSString *)thread withCaption:(NSString *)caption error:(NSError**)error {
+  NetMultipartRequest *multipart = [self.node sharePhoto:hash thread:thread caption:caption error:error];
   return multipart;
 }
 
