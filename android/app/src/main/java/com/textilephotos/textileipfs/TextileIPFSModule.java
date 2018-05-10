@@ -57,10 +57,10 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createNodeWithDataDir (String dataDir, String apiUrl, Promise promise) {
+    public void createNodeWithDataDir (String dataDir, String apiUrl, String debugLevel, Promise promise) {
         if (textile == null) {
             try {
-                textile = Mobile.newNode(dataDir, apiUrl);
+                textile = Mobile.newNode(dataDir, apiUrl, debugLevel);
                 promise.resolve(true);
             } catch (Exception e) {
                 promise.reject("START ERROR", e);

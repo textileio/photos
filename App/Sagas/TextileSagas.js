@@ -91,7 +91,8 @@ export function * handleStateChange ({newState}) {
 export function * createNode ({path}) {
   yield call(BackgroundTimer.start)
   try {
-    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL)
+    const debugLevel = (__DEV__ ? "DEBUG" : "INFO")
+    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
     if (createNodeSuccess) {
       yield put(IpfsNodeActions.createNodeSuccess())
       yield put(IpfsNodeActions.startNodeRequest())
