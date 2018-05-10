@@ -147,12 +147,12 @@ export function * getPhotoHashes ({thread}) {
     let data = []
     for (const hash of hashes) {
       try {
-        const meta = yield call(IPFS.getHashData, hash, '/comment')
-        const comment = JSON.parse(Buffer.from(meta, 'base64').toString('ascii'))
-        data.push({hash, comment})
+        const meta = yield call(IPFS.getHashData, hash, '/caption')
+        const caption = JSON.parse(Buffer.from(meta, 'base64').toString('ascii'))
+        data.push({hash, caption})
       } catch (err) {
-        // gracefully return an empty comment for now
-        data.push({ hash, comment: '' })
+        // gracefully return an empty caption for now
+        data.push({ hash, caption: '' })
       }
     }
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
@@ -173,7 +173,6 @@ export function * pairNewDevice (action) {
 
 export function * shareImage ({thread, hash, caption}) {
   try {
-    console.log('i ran')
     const multipartData = yield call(IPFS.sharePhoto, hash, thread, caption)
     yield put(TextileActions.imageAdded(thread, multipartData.boundary, multipartData.payloadPath))
     yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
