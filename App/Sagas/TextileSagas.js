@@ -146,15 +146,14 @@ export function * getPhotoHashes ({thread}) {
     const hashes = yield call(IPFS.getPhotos, null, -1, thread)
     let data = []
     for (const hash of hashes) {
-      let comment = ''
       try {
-        const meta = yield call(IPFS.getHashData, hash, '/meta')
-        const data = JSON.parse(Buffer.from(meta, 'base64').toString('ascii'))
-        comment = data.username
+        const meta = yield call(IPFS.getHashData, hash, '/comment')
+        const comment = JSON.parse(Buffer.from(meta, 'base64').toString('ascii'))
+        data.push({hash, comment})
       } catch (err) {
-        comment = 'error'
-      } // gracefully return an empty comment for now
-      data.push({hash, comment})
+        // gracefully return an empty comment for now
+        data.push({ hash, comment: '' })
+      }
     }
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
   } catch (error) {
