@@ -27,7 +27,6 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage(props, dims) {
-    console.log(props)
     return (<AsyncImage
       key={props.image.key}
       hash={props.image.hash}
@@ -89,6 +88,7 @@ class PhotoViewerScreen extends React.PureComponent {
           style={{ flex: 1, backgroundColor: 'black' }}
           images={this.props.imageData}
           initialPage={this.props.initialIndex}
+          flatListProps={{windowSize: 1, initialNumToRender: 2}}
           imageComponent={this.renderImage.bind(this)}
         />
         { this.galleryCount }
