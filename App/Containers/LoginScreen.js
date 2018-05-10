@@ -61,7 +61,7 @@ class LoginScreen extends Component {
   componentDidUpdate () {
     if (this.props.error !== null) {
       this.dropdown.alertWithType('error', 'Error', this.props.error)
-      this.props.error = null // ensures the error doesn't keep rendering
+      this.props.dismissError()
     }
   }
 
@@ -149,6 +149,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    dismissError: () => { dispatch(AuthActions.dismissError()) },
     updateFormType: type => { dispatch(AuthActions.updateFormType(type)) },
     updateFormValue: value => { dispatch(AuthActions.updateFormValue(value)) },
     signUpRequest: data => { dispatch(AuthActions.signUpRequest(data)) },

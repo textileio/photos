@@ -15,7 +15,8 @@ const { Types, Creators } = createActions({
   recoverPasswordSuccess: null,
   signUpFailure: ['error'],
   logInFailure: ['error'],
-  recoverPasswordFailure: ['error']
+  recoverPasswordFailure: ['error'],
+  dismissError: null,
 })
 
 export const AuthTypes = Types
@@ -78,6 +79,10 @@ export const handleFailure = (state, {error}) => {
   const { message } = error // extracts only the error message
   return state.merge({...state, processing: false, error: message})
 }
+
+export const dismissError = (state) =>
+  state.merge({...state, error: null})
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -91,5 +96,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.RECOVER_PASSWORD_SUCCESS]: handleRecoverPasswordSuccess,
   [Types.SIGN_UP_FAILURE]: handleFailure,
   [Types.LOG_IN_FAILURE]: handleFailure,
-  [Types.RECOVER_PASSWORD_FAILURE]: handleFailure
+  [Types.RECOVER_PASSWORD_FAILURE]: handleFailure,
+  [Types.DISMISS_ERROR]: dismissError
 })
