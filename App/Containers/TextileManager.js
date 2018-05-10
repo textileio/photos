@@ -10,6 +10,7 @@ import BackgroundTask from 'react-native-background-task'
 import TextileActions from '../Redux/TextileRedux'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
+import PhotosNavigationService from '../Services/PhotosNavigationService'
 
 class TextileManager extends React.PureComponent {
   constructor () {
@@ -60,7 +61,7 @@ class TextileManager extends React.PureComponent {
 
   render () {
     return (
-      <PhotosNavigation />
+      <PhotosNavigation ref={navRef => { PhotosNavigationService.setTopLevelNavigator(navRef) }} />
     )
   }
 }

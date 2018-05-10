@@ -3,16 +3,12 @@ import React from 'react'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
+import UIActions from '../Redux/UIRedux'
 
 class TextilePhotos extends React.PureComponent {
   onSelect = (row) => {
     return () => {
-      this.props.navigation.navigate(
-        'PhotoViewer', {
-          initialIndex: row.index,
-          thread: this.props.thread,
-          sharable: this.props.sharable
-        })
+      this.props.viewPhoto(row.index, this.props.thread)
     }
   }
 
@@ -46,7 +42,6 @@ const mapStateToProps = (state, ownProps) => {
   const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
   return {
     thread,
-    sharable: ownProps.navigation.state.params.sharable,
     items: updatedItems,
     renderImages: state.ipfs.nodeState.state === 'started',
     refreshing: state.ipfs.threads[thread].querying
@@ -55,6 +50,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    viewPhoto: (index, thread) => { dispatch(UIActions.viewPhotoRequest(index, thread)) },
     refresh: thread => { dispatch(IpfsNodeActions.getPhotoHashesRequest(thread)) }
   }
 }

@@ -68,8 +68,7 @@ class Threads extends React.PureComponent {
   )
 
   _onSubmit = () => {
-    this.props.share(this.props.hash)
-    this.props.close()
+    this.props.navigation.navigate('Comment')
   }
 
   render () {
@@ -87,7 +86,7 @@ class Threads extends React.PureComponent {
         <TouchableOpacity onPress={this._onSubmit} disabled={disabled}>
           <View style={disabled ? styles.buttonDisabled : styles.button}>
             <Text style={styles.buttonText}>
-              {'Share'}
+              {'Next'}
             </Text>
           </View>
         </TouchableOpacity>
@@ -103,15 +102,12 @@ const mapStateToProps = (state) => {
     data: [
       {type: 'thread', id: 'beta', title: 'Beta Testers'},
       {type: 'add', id: 'add', title: 'New Thread'}
-    ],
-    hash: state.ui.authoringPhotoShare
+    ]
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (hash) => { dispatch(UIActions.sharePhotoRequest('beta', hash, 'nothing good here')) },
-    close: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
   }
 }
 

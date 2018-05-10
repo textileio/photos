@@ -15,6 +15,7 @@ import {
   signUp,
   logIn,
   recoverPassword,
+  viewPhoto,
   triggerCreateNode,
   handleStateChange,
   createNode,
@@ -35,6 +36,8 @@ export default function * root () {
     takeLatest(StartupTypes.STARTUP, startup),
 
     // some sagas receive extra parameters in addition to an action
+
+    takeEvery(UITypes.VIEW_PHOTO_REQUEST, viewPhoto),
 
     takeEvery(AuthTypes.SIGN_UP_REQUEST, signUp),
     takeEvery(AuthTypes.LOG_IN_REQUEST, logIn),
