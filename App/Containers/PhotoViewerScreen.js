@@ -72,10 +72,6 @@ class PhotoViewerScreen extends React.PureComponent {
     <SharingDialog />
   )
 
-  _selectImage = (index) => {
-    this.props.selectImage(index)
-  }
-
   render () {
     return (
       <View style={{flex: 1}}>
