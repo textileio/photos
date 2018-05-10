@@ -65,9 +65,6 @@ export default {
   },
 
   sharePhoto: async function (hash: string, thread: string, caption: string): MultipartData {
-    console.log(hash)
-    console.log(thread)
-    console.log(caption)
     const multipartData = await TextileIPFS.sharePhoto(hash, thread, caption)
     return multipartData
   },
