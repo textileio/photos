@@ -19,6 +19,7 @@ export default class AsyncImage extends React.PureComponent {
   _setSource = (source) => {
     this.setState(() => ({ loaded: true, source }))
   }
+
   render () {
     if (this.state.loaded) {
       return (
