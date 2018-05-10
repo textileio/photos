@@ -12,7 +12,12 @@ import styles from './Styles/CommentStyle'
 
 class Comment extends React.PureComponent {
   _onSubmit = () => {
-    this.props.cancelShare()
+    this.props.share(this.props.hash, this.props.comment)
+    this.props.close()
+  }
+
+  _onTextChange = text => {
+    this.props.updateComment(text)
   }
 
   render () {
@@ -22,6 +27,7 @@ class Comment extends React.PureComponent {
           style={styles.textInput}
           multiline={true}
           placeholder={'Add a comment'}
+          onChangeText={this._onTextChange}
         />
         <TouchableOpacity onPress={this._onSubmit}>
           <View style={styles.button}>
@@ -37,12 +43,16 @@ class Comment extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
+    hash: state.ui.sharingPhoto.hash,
+    comment: state.ui.sharingPhoto.comment
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    cancelShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
+    share: (hash, comment) => { dispatch(UIActions.sharePhotoRequest('beta', hash, comment)) },
+    close: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
+    updateComment: (text) => { dispatch(UIActions.updateComment(text)) }
   }
 }
 

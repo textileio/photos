@@ -37,7 +37,7 @@ class SharingDialog extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    hash: state.ui.authoringPhotoShare
+    hash: state.ui.sharingPhoto.hash
   }
 }
 
