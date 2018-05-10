@@ -19,6 +19,10 @@ import styles from './Styles/PhotoViewerScreenStyle'
 
 class PhotoViewerScreen extends React.PureComponent {
   dismissPressed () {
+    // Little hacky here for now
+    // This one dispatches an action to clear the state of the viewed photo
+    this.props.dismiss()
+    // This is actually dismissing the modal since we have no way to do that from a saga or otherwise
     this.props.screenProps.dismiss()
   }
 
@@ -52,7 +56,7 @@ class PhotoViewerScreen extends React.PureComponent {
 
   get caption () {
     // Never loads a second time
-    const caption = this.props.imageData[this.props.currentIndex].caption || this.props.imageData[this.props.currentIndex].hash
+    const caption = this.props.imageData[this.props.currentIndex].caption || ''
     return (
       <View style={{ bottom: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'center' }}>
         <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{caption}</Text>
@@ -85,7 +89,7 @@ class PhotoViewerScreen extends React.PureComponent {
           ref='gallery'
           style={{ flex: 1, backgroundColor: 'black' }}
           images={this.props.imageData}
-          initialPage={this.props.initialIndex}
+          initialPage={this.props.currentIndex}
           flatListProps={{windowSize: 1, initialNumToRender: 6}}
           imageComponent={this.renderImage.bind(this)}
           onPageSelected={this.props.selectImage}
@@ -98,8 +102,9 @@ class PhotoViewerScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const items = state.ipfs.threads[ownProps.navigation.state.params.thread].items
-  const path = ownProps.navigation.state.params.thread === 'default' ? '/photo' : '/thumb'
+  const items = state.ipfs.threads[state.ui.viewingPhoto.thread].items
+  const path = state.ui.viewingPhoto.thread === 'default' ? '/photo' : '/thumb'
+  const sharable = state.ui.viewingPhoto.thread === 'default'
   const imageData = items.map(item => {
     return {
       ...item,
@@ -111,19 +116,19 @@ const mapStateToProps = (state, ownProps) => {
   })
   return {
     imageData,
-    initialIndex: ownProps.navigation.state.params.initialIndex,
-    sharable: ownProps.navigation.state.params.sharable,
-    visibleModal: state.ui.authoringPhotoShare !== null,
-    currentIndex: state.ui.currentIndex || ownProps.navigation.state.params.initialIndex
+    currentIndex: state.ui.viewingPhoto.index,
+    sharable,
+    visibleModal: state.ui.sharingPhoto.active
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     share: (item) => { dispatch(IpfsActions.shareImageRequest('beta', item.hash)) },
-    authorShare: (item) => { dispatch(UIActions.authorPhotoShare(item.hash)) },
+    authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.hash)) },
     cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
-    selectImage: (index) => { dispatch(UIActions.selectImage(index)) }
+    selectImage: (index) => { dispatch(UIActions.selectImage(index)) },
+    dismiss: () => { dispatch(UIActions.dismissViewedPhoto()) }
   }
 }
 

@@ -16,6 +16,7 @@ import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
+import PhotosNavigationService from '../Services/PhotosNavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
@@ -69,6 +70,10 @@ export function * recoverPassword ({data}) {
   } catch (error) {
     yield put(AuthActions.recoverPasswordFailure(error))
   }
+}
+
+export function * viewPhoto () {
+  yield call(PhotosNavigationService.navigate, 'PhotoViewer')
 }
 
 export function * triggerCreateNode () {
@@ -149,7 +154,7 @@ export function * getPhotoHashes ({thread}) {
       let item = { hash }
       try {
         const captionsrc = yield call(IPFS.getHashData, hash, '/caption')
-        const caption = JSON.parse(Buffer.from(captionsrc, 'base64').toString('ascii'))
+        const caption = Buffer.from(captionsrc, 'base64').toString('ascii')
         item = {...item, caption}
       } catch (err) {
         // gracefully return an empty caption for now
