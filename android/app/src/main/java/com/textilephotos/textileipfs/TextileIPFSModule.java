@@ -172,7 +172,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public String syncGetPhotoData (String path) {
+    public String syncGetHashData (String path) {
         try {
             String result = textile.getFileBase64(path);
             if (result != null) {
@@ -187,7 +187,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoData (String path, Promise promise) {
+    public void getHashData (String path, Promise promise) {
         try {
             String result = textile.getFileBase64(path);
             promise.resolve(result);

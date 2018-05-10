@@ -119,9 +119,9 @@ RCT_EXPORT_METHOD(getHashRequest:(NSString *)hash resolver:(RCTPromiseResolveBlo
   }
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetHashData:(NSString *)path) {
   NSError *error;
-  NSString *result = [self _getPhoto:path error:&error];
+  NSString *result = [self _getHashData:path error:&error];
   if (!error && result) {
     return result;
   } else {
@@ -129,9 +129,9 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
   }
 }
 
-RCT_EXPORT_METHOD(getPhotoData:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getHashData:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _getPhoto:path error:&error];
+  NSString *result = [self _getHashData:path error:&error];
   if (result) {
     resolve(result);
   } else {
@@ -259,7 +259,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
   return token;
 }
 
-- (NSString *)_getPhoto:(NSString *)hashPath error:(NSError**)error {
+- (NSString *)_getHashData:(NSString *)hashPath error:(NSError**)error {
   NSString *base64String = [self.node getFileBase64:hashPath error:error];
   return base64String;
 }
