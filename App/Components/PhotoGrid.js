@@ -81,7 +81,7 @@ export default class PhotoGrid extends React.PureComponent {
   keyExtractor = (item, index) => item.hash
 
   // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 20
+  oneScreensWorth = 12
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -128,7 +128,9 @@ export default class PhotoGrid extends React.PureComponent {
                 renderItem={this.renderRow.bind(this)}
                 getItemLayout={this._getItemLayout}
                 numColumns={numColumns}
-                initialNumToRender={this.oneScreensWorth}
+                windowSize={this.oneScreensWorth}
+                initialNumToRender={2}
+                onEndReachedThreshold={0.55}
                 onRefresh={this.props.onRefresh}
                 refreshing={this.props.refreshing}
               />
