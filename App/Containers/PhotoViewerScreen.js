@@ -3,22 +3,19 @@ import {
   Text,
   View,
   StatusBar,
-  TouchableOpacity,
-  Image
+  TouchableOpacity
 } from 'react-native'
 import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
-import IPFS from '../../TextileIPFSNativeModule'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
 import AsyncImage from '../Components/AsyncImage'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
-import {buttonColor1} from "./Styles/InfoViewStyle";
 
 class PhotoViewerScreen extends React.PureComponent {
   dismissPressed () {
@@ -54,9 +51,11 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   get caption () {
+    // Never loads a second time
+    const caption = this.props.imageData[this.props.currentIndex].caption || this.props.imageData[this.props.currentIndex].hash
     return (
       <View style={{ bottom: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'center' }}>
-        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{'Some metadata'}</Text>
+        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{caption}</Text>
       </View>
     )
   }
@@ -87,8 +86,9 @@ class PhotoViewerScreen extends React.PureComponent {
           style={{ flex: 1, backgroundColor: 'black' }}
           images={this.props.imageData}
           initialPage={this.props.initialIndex}
-          flatListProps={{windowSize: 1, initialNumToRender: 2}}
+          flatListProps={{windowSize: 1, initialNumToRender: 6}}
           imageComponent={this.renderImage.bind(this)}
+          onPageSelected={this.props.selectImage}
         />
         { this.galleryCount }
         { this.caption }
@@ -105,7 +105,7 @@ const mapStateToProps = (state, ownProps) => {
       ...item,
       path,
       key: item.hash + path,
-      source: {url: 'file://foo.png'},
+      source: {url: 'file://' + item.hash + '.png'}, // <-- in case RN uses to know things
       dimensions: { width: 150, height: 150 }
     }
   })
@@ -113,7 +113,8 @@ const mapStateToProps = (state, ownProps) => {
     imageData,
     initialIndex: ownProps.navigation.state.params.initialIndex,
     sharable: ownProps.navigation.state.params.sharable,
-    visibleModal: state.ui.authoringPhotoShare !== null
+    visibleModal: state.ui.authoringPhotoShare !== null,
+    currentIndex: state.ui.currentIndex || ownProps.navigation.state.params.initialIndex
   }
 }
 
@@ -121,7 +122,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     share: (item) => { dispatch(IpfsActions.shareImageRequest('beta', item.hash)) },
     authorShare: (item) => { dispatch(UIActions.authorPhotoShare(item.hash)) },
-    cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
+    cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
+    selectImage: (index) => { dispatch(UIActions.selectImage(index)) }
   }
 }
 

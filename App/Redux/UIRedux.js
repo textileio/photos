@@ -6,6 +6,7 @@ import Immutable from 'seamless-immutable'
 const { Types, Creators } = createActions({
   authorPhotoShare: ['hash'],
   sharePhotoRequest: ['thread', 'hash', 'caption'],
+  selectImage: ['index'],
   imageSharingError: ['error'],
   cancelAuthoringPhotoShare: null
 })
@@ -32,9 +33,13 @@ export const authorPhotoShare = (state, {hash}) =>
 export const cancelAuthoringPhotoShare = (state) =>
   state.merge({...state, authoringPhotoShare: null})
 
+export const selectImage = (state, {index}) =>
+  state.merge({...state, currentIndex: index})
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.AUTHOR_PHOTO_SHARE]: authorPhotoShare,
-  [Types.CANCEL_AUTHORING_PHOTO_SHARE]: cancelAuthoringPhotoShare
+  [Types.CANCEL_AUTHORING_PHOTO_SHARE]: cancelAuthoringPhotoShare,
+  [Types.SELECT_IMAGE]: selectImage
 })
