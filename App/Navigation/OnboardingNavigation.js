@@ -1,12 +1,13 @@
-import { PermissionsAndroid, Platform, Linking, Text } from 'react-native'
+import { PermissionsAndroid, Platform, Linking, Text, View } from 'react-native'
 import React from "react"
 import { StackNavigator } from 'react-navigation'
 import OnboardingScreen from '../Containers/OnboardingScreen'
-import { Colors } from '../../Themes'
+import { Colors } from '../Themes'
 import LoginScreen from '../Containers/LoginScreen'
 import {getPhoto} from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
 import styles from './Styles/NavigationStyles'
+import ostyles, {buttonColor} from '../Containers/Styles/OnboardingScreenStyle'
 
 export const params1 = {
   header: 'Welcome to the Textile Beta!',
@@ -22,16 +23,19 @@ export const params1 = {
 const params2 = {
   header: 'You\'re helping us improve.',
   message: (
-    <Text>
+    <View>
+      <Text style={ostyles.message}>
       As a valued Beta Tester, we want to know how, when, and why you are using the app.
       We anonymously collect data, including crashes, screen interactions, and feedback.
       This data will help us improve our product.
-      If you have any questions about this data collection process, please feel free to
-      <Text style={{color: Colors.brandBlue}} onPress={() => Linking.openURL('mailto:contact@textile.io')}> get in touch
-      </Text>, or visit our
-      <Text style={{color: Colors.brandBlue}} onPress={() => Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/TERMS.md')}> terms of service
-      </Text> online.
-    </Text>
+      If you have any questions about this data collection process, please feel free to get in touch, or check out our terms of service.
+      </Text>
+      <Text
+        style={[ostyles.message, {color: Colors.brandBlue}]}
+        onPress={() => Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/TERMS.md')}>
+        Terms of Service
+      </Text>
+    </View>
   ),
   buttonTitle: 'GREAT',
   onButtonPress: (navigate) => {
