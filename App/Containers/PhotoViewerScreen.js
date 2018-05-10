@@ -3,20 +3,22 @@ import {
   Text,
   View,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native'
 import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
+import IPFS from '../../TextileIPFSNativeModule'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
 import AsyncImage from '../Components/AsyncImage'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
-import {buttonColor1} from "./Styles/InfoViewStyle"
+import {buttonColor1} from "./Styles/InfoViewStyle";
 
 class PhotoViewerScreen extends React.PureComponent {
   dismissPressed () {
@@ -36,8 +38,8 @@ class PhotoViewerScreen extends React.PureComponent {
 
   sharePressed () {
     const page = this.refs.gallery.currentPage
-    const hash = this.props.imageData[page].hash
-    this.props.authorShare(hash)
+    const item = this.props.imageData[page]
+    this.props.authorShare(item.hash)
   }
 
   get galleryCount () {
@@ -96,13 +98,11 @@ class PhotoViewerScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
+  const items = state.ipfs.threads[ownProps.navigation.state.params.thread].items
   const path = ownProps.navigation.state.params.thread === 'default' ? '/photo' : '/thumb'
-  const imageData = hashes.map(hash => {
-    // todo, try source here again
-    return { hash, path, key: hash + path, source: {url: 'file://foo.png'} }
+  const imageData = items.map(item => {
+    return { ...item, path, key: item.hash + path, source: {url: 'file://foo.png'} }
   })
-
   return {
     imageData,
     initialIndex: ownProps.navigation.state.params.initialIndex,
@@ -113,7 +113,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (hash) => { dispatch(IpfsActions.shareImageRequest('beta', hash)) },
+    share: (item) => { dispatch(IpfsActions.shareImageRequest('beta', item.hash)) },
     authorShare: (hash) => { dispatch(UIActions.authorPhotoShare(hash)) },
     cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
   }

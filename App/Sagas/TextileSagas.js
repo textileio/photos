@@ -24,6 +24,7 @@ import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
+import { Buffer } from 'buffer'
 
 const API_URL = "https://api.textile.io"
 
@@ -142,8 +143,20 @@ export function * stopNode () {
 
 export function * getPhotoHashes ({thread}) {
   try {
-    const photoData = yield call(IPFS.getPhotos, null, -1, thread)
-    yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, photoData))
+    const hashes = yield call(IPFS.getPhotos, null, -1, thread)
+    let data = []
+    for (const hash of hashes) {
+      let comment = ''
+      try {
+        const meta = yield call(IPFS.getHashData, hash, '/meta')
+        const data = JSON.parse(Buffer.from(meta, 'base64').toString('ascii'))
+        comment = data.username
+      } catch (err) {
+        comment = 'error'
+      } // gracefully return an empty comment for now
+      data.push({hash, comment})
+    }
+    yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))
   }
@@ -161,6 +174,7 @@ export function * pairNewDevice (action) {
 
 export function * shareImage ({thread, hash, caption}) {
   try {
+    console.log('i ran')
     const multipartData = yield call(IPFS.sharePhoto, hash, thread, caption)
     yield put(TextileActions.imageAdded(thread, multipartData.boundary, multipartData.payloadPath))
     yield put(IpfsNodeActions.getPhotoHashesRequest(thread))

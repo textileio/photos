@@ -65,6 +65,9 @@ export default {
   },
 
   sharePhoto: async function (hash: string, thread: string, caption: string): MultipartData {
+    console.log(hash)
+    console.log(thread)
+    console.log(caption)
     const multipartData = await TextileIPFS.sharePhoto(hash, thread, caption)
     return multipartData
   },
@@ -74,9 +77,13 @@ export default {
     return result
   },
 
-  getPhotoData: async function (path: string): string {
-    const result = await TextileIPFS.getPhotoData(path)
+  getHashData: async function (hash: string, path: string): string {
+    const result = await TextileIPFS.getHashData(hash + path)
     return result
+  },
+
+  syncGetHashData: function (hash: string, path: string): string {
+    return TextileIPFS.syncGetHashData(hash + path)
   },
 
   getHashRequest: async function (hash: string, path: string): HashRequest {
@@ -88,10 +95,6 @@ export default {
         Authorization: 'Basic ' + encoded
       }
     }
-  },
-
-  syncGetPhotoData: function (path: string): string {
-    return TextileIPFS.syncGetPhotoData(path)
   },
 
   pairNewDevice: async function (pubKey: string): string {
