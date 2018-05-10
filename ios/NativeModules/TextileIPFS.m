@@ -40,9 +40,9 @@ RCT_EXPORT_MODULE();
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _createNodeWithDataDir:dataDir apiUrl:apiUrl error:&error];
+  [self _createNodeWithDataDir:dataDir apiUrl:apiUrl logLevel:logLevel error:&error];
   if (self.node) {
     resolve(@YES);
   } else {
@@ -80,9 +80,9 @@ RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPat
   }
 }
 
-RCT_EXPORT_METHOD(sharePhoto:(NSString *)hash thread:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(sharePhoto:(NSString *)hash thread:(NSString *)thread caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NetMultipartRequest *multipart = [self _sharePhoto:hash toThread:thread error:&error];
+  NetMultipartRequest *multipart = [self _sharePhoto:hash toThread:thread withCaption:caption error:&error];
   if(multipart) {
     resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
   } else {
@@ -119,9 +119,9 @@ RCT_EXPORT_METHOD(getHashRequest:(NSString *)hash resolver:(RCTPromiseResolveBlo
   }
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetHashData:(NSString *)path) {
   NSError *error;
-  NSString *result = [self _getPhoto:path error:&error];
+  NSString *result = [self _getHashData:path error:&error];
   if (!error && result) {
     return result;
   } else {
@@ -129,9 +129,9 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetPhotoData:(NSString *)path) {
   }
 }
 
-RCT_EXPORT_METHOD(getPhotoData:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getHashData:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _getPhoto:path error:&error];
+  NSString *result = [self _getHashData:path error:&error];
   if (result) {
     resolve(result);
   } else {
@@ -209,11 +209,6 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   }
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
-  NSString *result = [self.node getGatewayPassword];
-  return result;
-}
-
 // List all your events here
 // https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
 - (NSArray<NSString *> *)supportedEvents
@@ -223,9 +218,9 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
 
 #pragma mark - Private methods
 
-- (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl error:(NSError**)error {
+- (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel error:(NSError**)error {
   if (!self.node) {
-    self.node = [[MobileMobile new] newNode:dataDir centralApiURL:apiUrl error:error];
+    self.node = [[MobileMobile new] newNode:dataDir centralApiURL:apiUrl logLevel:logLevel error:error];
   }
 }
 
@@ -244,8 +239,8 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
   return multipart;
 }
 
-- (NetMultipartRequest *)_sharePhoto:(NSString *)hash toThread:(NSString *)thread error:(NSError**)error {
-  NetMultipartRequest *multipart = [self.node sharePhoto:hash thread:thread error:error];
+- (NetMultipartRequest *)_sharePhoto:(NSString *)hash toThread:(NSString *)thread withCaption:(NSString *)caption error:(NSError**)error {
+  NetMultipartRequest *multipart = [self.node sharePhoto:hash thread:thread caption:caption error:error];
   return multipart;
 }
 
@@ -259,7 +254,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
   return token;
 }
 
-- (NSString *)_getPhoto:(NSString *)hashPath error:(NSError**)error {
+- (NSString *)_getHashData:(NSString *)hashPath error:(NSError**)error {
   NSString *base64String = [self.node getFileBase64:hashPath error:error];
   return base64String;
 }

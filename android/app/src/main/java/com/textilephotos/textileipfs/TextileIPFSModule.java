@@ -57,10 +57,10 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createNodeWithDataDir (String dataDir, String apiUrl, Promise promise) {
+    public void createNodeWithDataDir (String dataDir, String apiUrl, String debugLevel, Promise promise) {
         if (textile == null) {
             try {
-                textile = Mobile.newNode(dataDir, apiUrl);
+                textile = Mobile.newNode(dataDir, apiUrl, debugLevel);
                 promise.resolve(true);
             } catch (Exception e) {
                 promise.reject("START ERROR", e);
@@ -111,10 +111,10 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sharePhoto (String hash, String thread, Promise promise) {
+    public void sharePhoto (String hash, String thread, String caption, Promise promise) {
         try {
             // Grab our add image response
-            MultipartRequest multipart = textile.sharePhoto(hash, thread);
+            MultipartRequest multipart = textile.sharePhoto(hash, thread, caption);
             // Create a Native map
             WritableMap map = new WritableNativeMap();
             // Add the rsponse parts
@@ -172,7 +172,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public String syncGetPhotoData (String path) {
+    public String syncGetHashData (String path) {
         try {
             String result = textile.getFileBase64(path);
             if (result != null) {
@@ -187,7 +187,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoData (String path, Promise promise) {
+    public void getHashData (String path, Promise promise) {
         try {
             String result = textile.getFileBase64(path);
             promise.resolve(result);

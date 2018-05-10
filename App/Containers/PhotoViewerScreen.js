@@ -21,12 +21,11 @@ import styles from './Styles/PhotoViewerScreenStyle'
 import {buttonColor1} from "./Styles/InfoViewStyle";
 
 class PhotoViewerScreen extends React.PureComponent {
-
   dismissPressed () {
     this.props.screenProps.dismiss()
   }
 
-  renderImage(props, dims) {
+  renderImage (props, dims) {
     return (<AsyncImage
       key={props.image.key}
       hash={props.image.hash}
@@ -39,8 +38,8 @@ class PhotoViewerScreen extends React.PureComponent {
 
   sharePressed () {
     const page = this.refs.gallery.currentPage
-    const hash = this.props.imageData[page].hash
-    this.props.authorShare(hash)
+    const item = this.props.imageData[page]
+    this.props.authorShare(item)
   }
 
   get galleryCount () {
@@ -99,13 +98,17 @@ class PhotoViewerScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
+  const items = state.ipfs.threads[ownProps.navigation.state.params.thread].items
   const path = ownProps.navigation.state.params.thread === 'default' ? '/photo' : '/thumb'
-  const imageData = hashes.map(hash => {
-    // todo, try source here again
-    return { hash, path, key: hash + path, source: {url: 'file://foo.png'} }
+  const imageData = items.map(item => {
+    return {
+      ...item,
+      path,
+      key: item.hash + path,
+      source: {url: 'file://foo.png'},
+      dimensions: { width: 150, height: 150 }
+    }
   })
-
   return {
     imageData,
     initialIndex: ownProps.navigation.state.params.initialIndex,
@@ -116,8 +119,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (hash) => { dispatch(IpfsActions.shareImageRequest('beta', hash)) },
-    authorShare: (hash) => { dispatch(UIActions.authorPhotoShare(hash)) },
+    share: (item) => { dispatch(IpfsActions.shareImageRequest('beta', item.hash)) },
+    authorShare: (item) => { dispatch(UIActions.authorPhotoShare(item.hash)) },
     cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
   }
 }

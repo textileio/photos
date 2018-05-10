@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React  from 'react'
 import { View, Image } from 'react-native'
 import IPFS from '../../TextileIPFSNativeModule'
 
@@ -19,6 +19,7 @@ export default class AsyncImage extends React.PureComponent {
   _setSource = (source) => {
     this.setState(() => ({ loaded: true, source }))
   }
+
   render () {
     if (this.state.loaded) {
       return (
