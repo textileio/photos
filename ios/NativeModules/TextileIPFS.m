@@ -40,9 +40,9 @@ RCT_EXPORT_MODULE();
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _createNodeWithDataDir:dataDir apiUrl:apiUrl error:&error];
+  [self _createNodeWithDataDir:dataDir apiUrl:apiUrl logLevel:logLevel error:&error];
   if (self.node) {
     resolve(@YES);
   } else {
@@ -223,14 +223,9 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getGatewayPassword) {
 
 #pragma mark - Private methods
 
-- (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl error:(NSError**)error {
+- (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel error:(NSError**)error {
   if (!self.node) {
-    #ifdef DEBUG
-    NSString *loggingLevel = @"DEBUG";
-    #else
-    NSString *loggingLevel = @"INFO";
-    #endif
-    self.node = [[MobileMobile new] newNode:dataDir centralApiURL:apiUrl logLevel:loggingLevel error:error];
+    self.node = [[MobileMobile new] newNode:dataDir centralApiURL:apiUrl logLevel:logLevel error:error];
   }
 }
 
