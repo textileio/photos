@@ -3,30 +3,27 @@ import {
   Text,
   View,
   StatusBar,
-  TouchableOpacity,
-  Image
+  TouchableOpacity
 } from 'react-native'
 import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
-import IPFS from '../../TextileIPFSNativeModule'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
 import AsyncImage from '../Components/AsyncImage'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
-import {buttonColor1} from "./Styles/InfoViewStyle";
+import {buttonColor1} from "./Styles/InfoViewStyle"
 
 class PhotoViewerScreen extends React.PureComponent {
-
   dismissPressed () {
     this.props.screenProps.dismiss()
   }
 
-  renderImage(props, dims) {
+  renderImage (props, dims) {
     return (<AsyncImage
       key={props.image.key}
       hash={props.image.hash}
