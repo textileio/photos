@@ -152,7 +152,7 @@ export function * getPhotoHashes ({thread}) {
         data.push({hash, caption})
       } catch (err) {
         // gracefully return an empty caption for now
-        data.push({ hash, caption: '' })
+        data.push({ hash })
       }
     }
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
