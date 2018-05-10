@@ -39,7 +39,7 @@ class PhotoViewerScreen extends React.PureComponent {
   sharePressed () {
     const page = this.refs.gallery.currentPage
     const item = this.props.imageData[page]
-    this.props.authorShare(item.hash)
+    this.props.authorShare(item)
   }
 
   get galleryCount () {
@@ -114,7 +114,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     share: (item) => { dispatch(IpfsActions.shareImageRequest('beta', item.hash)) },
-    authorShare: (hash) => { dispatch(UIActions.authorPhotoShare(hash)) },
+    authorShare: (item) => { dispatch(UIActions.authorPhotoShare(item.hash)) },
     cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
   }
 }
