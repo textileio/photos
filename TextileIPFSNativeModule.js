@@ -1,5 +1,5 @@
 // @flow
-import { NativeModules, Platform } from 'react-native'
+import { NativeModules } from 'react-native'
 import { Buffer } from 'buffer'
 
 const { TextileIPFS } = NativeModules
@@ -19,9 +19,9 @@ type HashRequest = {
 }
 
 export default {
-  createNodeWithDataDir: async function (dataDir: string, apiUrl: string): boolean {
+  createNodeWithDataDir: async function (dataDir: string, apiUrl: string, debugLevel: string): boolean {
     console.log(dataDir)
-    const success = await TextileIPFS.createNodeWithDataDir(dataDir, apiUrl)
+    const success = await TextileIPFS.createNodeWithDataDir(dataDir, apiUrl, debugLevel)
     return success
   },
 
@@ -64,8 +64,8 @@ export default {
     return multipartData
   },
 
-  sharePhoto: async function (hash: string, thread: string): MultipartData {
-    const multipartData = await TextileIPFS.sharePhoto(hash, thread)
+  sharePhoto: async function (hash: string, thread: string, caption: string): MultipartData {
+    const multipartData = await TextileIPFS.sharePhoto(hash, thread, caption)
     return multipartData
   },
 
@@ -74,13 +74,13 @@ export default {
     return result
   },
 
-  getPhotoData: async function (path: string): string {
-    const result = await TextileIPFS.getPhotoData(path)
+  getHashData: async function (hash: string, path: string): string {
+    const result = await TextileIPFS.getHashData(hash + path)
     return result
   },
 
   getHashRequest: async function (hash: string, path: string): HashRequest {
-    let result = await TextileIPFS.getHashRequest(hash)
+    const result = await TextileIPFS.getHashRequest(hash)
     const encoded = Buffer.from(':' + result.token).toString('base64')
     return {
       uri: result.protocol + '://' + result.host + '/ipfs/' + hash + path,
@@ -88,10 +88,6 @@ export default {
         Authorization: 'Basic ' + encoded
       }
     }
-  },
-
-  syncGetPhotoData: function (path: string): string {
-    return TextileIPFS.syncGetPhotoData(path)
   },
 
   pairNewDevice: async function (pubKey: string): string {
@@ -102,10 +98,6 @@ export default {
   getFilePath: async function (uri: string): string {
     const result = await TextileIPFS.getRealPathFromURI(uri)
     return result
-  },
-
-  getGatewayPassword: function (): string {
-    return TextileIPFS.getGatewayPassword()
   },
 
   getAccessToken: async function (): string {

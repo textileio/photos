@@ -24,6 +24,7 @@ import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
+import { Buffer } from 'buffer'
 
 const API_URL = "https://api.textile.io"
 
@@ -91,7 +92,8 @@ export function * handleStateChange ({newState}) {
 export function * createNode ({path}) {
   yield call(BackgroundTimer.start)
   try {
-    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL)
+    const debugLevel = (__DEV__ ? "DEBUG" : "INFO")
+    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
     if (createNodeSuccess) {
       yield put(IpfsNodeActions.createNodeSuccess())
       yield put(IpfsNodeActions.startNodeRequest())
@@ -141,8 +143,19 @@ export function * stopNode () {
 
 export function * getPhotoHashes ({thread}) {
   try {
-    const photoData = yield call(IPFS.getPhotos, null, -1, thread)
-    yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, photoData))
+    const hashes = yield call(IPFS.getPhotos, null, -1, thread)
+    let data = []
+    for (const hash of hashes) {
+      try {
+        const meta = yield call(IPFS.getHashData, hash, '/caption')
+        const caption = JSON.parse(Buffer.from(meta, 'base64').toString('ascii'))
+        data.push({hash, caption})
+      } catch (err) {
+        // gracefully return an empty caption for now
+        data.push({ hash })
+      }
+    }
+    yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
   } catch (error) {
     yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))
   }
@@ -158,9 +171,9 @@ export function * pairNewDevice (action) {
   }
 }
 
-export function * shareImage ({thread, hash}) {
+export function * shareImage ({thread, hash, caption}) {
   try {
-    const multipartData = yield call(IPFS.sharePhoto, hash, thread)
+    const multipartData = yield call(IPFS.sharePhoto, hash, thread, caption)
     yield put(TextileActions.imageAdded(thread, multipartData.boundary, multipartData.payloadPath))
     yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
     yield call(

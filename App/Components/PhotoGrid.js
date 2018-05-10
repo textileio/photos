@@ -12,18 +12,9 @@ import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
 import AsyncImage from './AsyncImage'
-import IPFS from '../../TextileIPFSNativeModule'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
-
-
-
-// <Image
-// source={ IPFS.getHashRequest(item.hash, '/thumb')}
-// resizeMode={'cover'}
-// style={styles.itemImage}
-// />
 
 export default class PhotoGrid extends React.PureComponent {
   /* ***********************************************************
@@ -52,7 +43,6 @@ export default class PhotoGrid extends React.PureComponent {
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
           <AsyncImage
-            key={row.item.hash + '/thumb'}
             hash={row.item.hash}
             path={'/thumb'}
             style={styles.itemImage}
@@ -78,10 +68,10 @@ export default class PhotoGrid extends React.PureComponent {
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item, index) => item.hash
+  keyExtractor = (item, index) => index
 
   // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 12
+  oneScreensWorth = 20
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -129,7 +119,7 @@ export default class PhotoGrid extends React.PureComponent {
                 getItemLayout={this._getItemLayout}
                 numColumns={numColumns}
                 windowSize={this.oneScreensWorth}
-                initialNumToRender={2}
+                initialNumToRender={this.oneScreensWorth}
                 onEndReachedThreshold={0.55}
                 onRefresh={this.props.onRefresh}
                 refreshing={this.props.refreshing}
