@@ -1,6 +1,8 @@
-import { PermissionsAndroid, Platform } from 'react-native'
+import { PermissionsAndroid, Platform, Linking, Text } from 'react-native'
+import React from "react"
 import { StackNavigator } from 'react-navigation'
 import OnboardingScreen from '../Containers/OnboardingScreen'
+import { Colors } from '../../Themes'
 import LoginScreen from '../Containers/LoginScreen'
 import {getPhoto} from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
@@ -12,67 +14,34 @@ export const params1 = {
   buttonTitle: 'OK',
   onButtonPress: (navigate) => {
     return () => {
-      navigate('Onboarding1', params2)
+      navigate('OnboardingInfo', params2)
     }
   }
 }
 
 const params2 = {
-  header: 'Today we’re sharing our backup and sync tools.',
-  message: 'While we don\'t recommend you delete your photos until our full release, right now you can use our system to upload backups of your private photos to decentralized servers around the world and then retrieve those photos at any time. You can also use our desktop tool to magically sync all your photos right to your computer.',
-  buttonTitle: 'GOT IT',
+  header: 'You\'re helping us improve.',
+  message: (
+    <Text>
+      As a valued Beta Tester, we want to know how, when, and why you are using the app.
+      We anonymously collect data, including crashes, screen interactions, and feedback.
+      This data will help us improve our product.
+      If you have any questions about this data collection process, please feel free to
+      <Text style={{color: Colors.brandBlue}} onPress={() => Linking.openURL('mailto:contact@textile.io')}> get in touch
+      </Text>, or visit our
+      <Text style={{color: Colors.brandBlue}} onPress={() => Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/TERMS.md')}> terms of service
+      </Text> online.
+    </Text>
+  ),
+  buttonTitle: 'GREAT',
   onButtonPress: (navigate) => {
     return () => {
-      navigate('Onboarding2', params3)
+      navigate('OnboardingPhotosPermissions', params3)
     }
   }
 }
 
 const params3 = {
-  header: 'We’ve got big plans…',
-  message: 'We want to test out our infrastructure for moving, storing, and accessing private photos today. Next, we hope to provide you with some really exciting ways to share photos and interact with your friends and family on the same system. Beyond that, we want to give you secure tools to regain control over all your data.',
-  buttonTitle: 'COOL',
-  onButtonPress: (navigate) => {
-    return () => {
-      navigate('Onboarding3', params5)
-    }
-  }
-}
-
-const params5 = {
-  header: 'Private, secure, fast, and distributed.',
-  message: 'Right now, the Textile mobile app quietly listens for new photos you take with your camera. Next, it securely encrypts those photos in a way that only you (not even our servers) can ever open them. It then stores those files on servers using a system called, IPFS. All the while, it generates a private wallet that you can keep and eventually move to other systems where you keep control of all your data.',
-  buttonTitle: 'OK',
-  onButtonPress: (navigate) => {
-    return () => {
-      navigate('Onboarding4', params6)
-    }
-  }
-}
-
-const params6 = {
-  header: 'You\'re helping us improve.',
-  message: 'As a valued Beta Tester, we want to know how, when, and why you are using the app. We anonymously collect data, including crashes, screen interactions, and feedback. If you want to provide direct feedback, please feel free to email us with you thoughts, comments, or ideas.',
-  buttonTitle: 'GREAT',
-  onButtonPress: (navigate) => {
-    return () => {
-      navigate('Onboarding5', params7)
-    }
-  }
-}
-
-const params7 = {
-  header: 'Access your photos, anywhere.',
-  message: 'In a few days, we will send you a link to download a desktop app that allows you to \'pair\' with this mobile app to automatically sync and save your photos to your desktop. This will allow you to take advantage of photo backup and storage, with zero external dependencies (you don’t even really need us)!',
-  buttonTitle: 'SOUNDS GOOD',
-  onButtonPress: (navigate) => {
-    return () => {
-      navigate('OnboardingPhotosPermissions', params8)
-    }
-  }
-}
-
-const params8 = {
   header: 'We need to access your photos.. surprise!',
   message: 'Please take a moment to authorize photo/camera access so we can privately back them up for you. But don\'t worry, they\'ll be encrypted and securely uploaded to protect your privacy.',
   buttonTitle: 'AUTHORIZE',
@@ -87,12 +56,12 @@ const params8 = {
       }
       // Trigger photos permission prompt in iOS
       await getPhoto()
-      navigate('OnboardingLocationPermissions', params9)
+      navigate('OnboardingLocationPermissions', params4)
     }
   }
 }
 
-const params9 = {
+const params4 = {
   header: 'Location, location, location…',
   message: 'Please take a moment to authorize geolocation. Be sure to select, ALWAYS ALLOW, so we can use your location changes to wake up the app, making sure your photos are continuously backed up, even when you’re on the go.',
   buttonTitle: 'AUTHORIZE',
@@ -107,14 +76,14 @@ const params9 = {
       } else {
         await navigator.geolocation.requestAuthorization()
       }
-      navigate('OnboardingThanks', params10)
+      navigate('OnboardingThanks', params5)
     }
   }
 }
 
-const params10 = {
+const params5 = {
   header: 'You\'re ready!',
-  message: 'You are running on IPFS and the decentralized web, welcome to the future. Thank you for joining us for our early beta. We\'re excited to share these early steps with you and get your feedback along the way..',
+  message: 'You are running on IPFS and the decentralized web, welcome to the future. Thank you for joining us for our early beta. We\'re excited to share these early steps with you and get your feedback along the way...',
   buttonTitle: 'GET STARTED',
   onButtonPress: (navigate, dispatch) => {
     return () => {
@@ -133,34 +102,10 @@ const OnboardingNav = StackNavigator(
         title: 'Welcome'
       }
     },
-    Onboarding1: {
-      screen: OnboardingScreen,
-      navigationOptions: {
-        title: 'What is this?'
-      }
-    },
-    Onboarding2: {
-      screen: OnboardingScreen,
-      navigationOptions: {
-        title: 'What will it be?'
-      }
-    },
-    Onboarding3: {
-      screen: OnboardingScreen,
-      navigationOptions: {
-        title: 'How does it work?'
-      }
-    },
-    Onboarding4: {
+    OnboardingInfo: {
       screen: OnboardingScreen,
       navigationOptions: {
         title: 'Data Collection'
-      }
-    },
-    Onboarding5: {
-      screen: OnboardingScreen,
-      navigationOptions: {
-        title: 'Desktop Integration'
       }
     },
     OnboardingPhotosPermissions: {
