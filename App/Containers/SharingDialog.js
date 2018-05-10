@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, Image, FlatList, TouchableHighlight } from 'react-native'
+import { View, Text, FlatList, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import SharingNavigation from '../Navigation/SharingNavigation'
-import IPFS from '../../TextileIPFSNativeModule'
+import AsyncImage from '../Components/AsyncImage'
+
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import UIActions from '../Redux/UIRedux'
-import AsyncImage from '../Components/AsyncImage'
 
 // Styles
 import styles from './Styles/SharingDialogStyle'
