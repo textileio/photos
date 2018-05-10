@@ -101,7 +101,13 @@ const mapStateToProps = (state, ownProps) => {
   const items = state.ipfs.threads[ownProps.navigation.state.params.thread].items
   const path = ownProps.navigation.state.params.thread === 'default' ? '/photo' : '/thumb'
   const imageData = items.map(item => {
-    return { ...item, path, key: item.hash + path, source: {url: 'file://foo.png'} }
+    return {
+      ...item,
+      path,
+      key: item.hash + path,
+      source: {url: 'file://foo.png'},
+      dimensions: { width: 150, height: 150 }
+    }
   })
   return {
     imageData,
