@@ -10,7 +10,7 @@ class OnboardingScreen extends Component {
       <View style={styles.welcomeContainer}>
         <View style={styles.messageContainer}>
           <Text style={styles.header}>{this.props.navigation.state.params.header}</Text>
-          <Text style={styles.message}>{this.props.navigation.state.params.message}</Text>
+          {this.props.navigation.state.params.message}
         </View>
         <Button
           onPress={this.props.navigation.state.params.onButtonPress(navigate, this.props.dispatch)}

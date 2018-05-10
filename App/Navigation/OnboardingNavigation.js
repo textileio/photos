@@ -11,7 +11,7 @@ import ostyles, {buttonColor} from '../Containers/Styles/OnboardingScreenStyle'
 
 export const params1 = {
   header: 'Welcome to the Textile Beta!',
-  message: 'Thanks very much for agreeing to test the app and provide feedback on this very early draft of our brand new technology. Right now, Textile is all about photos, soon it will be about how you control and own all your personal data.',
+  message: <Text style={ostyles.message}>{`Thanks very much for agreeing to test the app and provide feedback on this very early draft of our brand new technology. Right now, Textile is all about photos, soon it will be about how you control and own all your personal data.`}</Text>,
   buttonTitle: 'OK',
   onButtonPress: (navigate) => {
     return () => {
@@ -31,7 +31,7 @@ const params2 = {
       If you have any questions about this data collection process, please feel free to get in touch, or check out our terms of service.
       </Text>
       <Text
-        style={[ostyles.message, {color: Colors.brandBlue, paddingTop: 0}]}
+        style={[ostyles.message, {color: Colors.brandBlue}]}
         onPress={() => Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/TERMS.md')}>
         Terms of Service
       </Text>
@@ -47,7 +47,7 @@ const params2 = {
 
 const params3 = {
   header: 'We need to access your photos.. surprise!',
-  message: 'Please take a moment to authorize photo/camera access so we can privately back them up for you. But don\'t worry, they\'ll be encrypted and securely uploaded to protect your privacy.',
+  message: <Text style={ostyles.message}>{`Please take a moment to authorize photo/camera access so we can privately back them up for you. But don't worry, they'll be encrypted and securely uploaded to protect your privacy.`}</Text>,
   buttonTitle: 'AUTHORIZE',
   onButtonPress: (navigate) => {
     return async () => {
@@ -67,7 +67,7 @@ const params3 = {
 
 const params4 = {
   header: 'Location, location, location…',
-  message: 'Please take a moment to authorize geolocation. Be sure to select, ALWAYS ALLOW, so we can use your location changes to wake up the app, making sure your photos are continuously backed up, even when you’re on the go.',
+  message: <Text style={ostyles.message}>{`Please take a moment to authorize geolocation. Be sure to select, ALWAYS ALLOW, so we can use your location changes to wake up the app, making sure your photos are continuously backed up, even when you’re on the go.`}</Text>,
   buttonTitle: 'AUTHORIZE',
   onButtonPress: (navigate) => {
     return async () => {
@@ -87,7 +87,7 @@ const params4 = {
 
 const params5 = {
   header: 'You\'re ready!',
-  message: 'You are running on IPFS and the decentralized web, welcome to the future. Thank you for joining us for our early beta. We\'re excited to share these early steps with you and get your feedback along the way...',
+  message: <Text style={ostyles.message}>{`You are running on IPFS and the decentralized web, welcome to the future. Thank you for joining us for our early beta. We're excited to share these early steps with you and get your feedback along the way...`}</Text>,
   buttonTitle: 'GET STARTED',
   onButtonPress: (navigate, dispatch) => {
     return () => {
