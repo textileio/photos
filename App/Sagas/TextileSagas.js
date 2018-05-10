@@ -159,9 +159,9 @@ export function * pairNewDevice (action) {
   }
 }
 
-export function * shareImage ({thread, hash}) {
+export function * shareImage ({thread, hash, caption}) {
   try {
-    const multipartData = yield call(IPFS.sharePhoto, hash, thread)
+    const multipartData = yield call(IPFS.sharePhoto, hash, thread, caption)
     yield put(TextileActions.imageAdded(thread, multipartData.boundary, multipartData.payloadPath))
     yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
     yield call(

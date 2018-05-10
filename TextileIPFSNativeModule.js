@@ -19,7 +19,7 @@ type HashRequest = {
 }
 
 export default {
-  createNodeWithDataDir: async function (dataDir: string, apiUrl: string debugLevel: string): boolean {
+  createNodeWithDataDir: async function (dataDir: string, apiUrl: string, debugLevel: string): boolean {
     console.log(dataDir)
     const success = await TextileIPFS.createNodeWithDataDir(dataDir, apiUrl, debugLevel)
     return success
@@ -64,8 +64,8 @@ export default {
     return multipartData
   },
 
-  sharePhoto: async function (hash: string, thread: string): MultipartData {
-    const multipartData = await TextileIPFS.sharePhoto(hash, thread)
+  sharePhoto: async function (hash: string, thread: string, caption: string): MultipartData {
+    const multipartData = await TextileIPFS.sharePhoto(hash, thread, caption)
     return multipartData
   },
 

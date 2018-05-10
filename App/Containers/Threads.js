@@ -110,7 +110,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (hash) => { dispatch(UIActions.sharePhotoRequest('beta', hash)) },
+    share: (hash) => { dispatch(UIActions.sharePhotoRequest('beta', hash, '')) },
     close: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) }
   }
 }

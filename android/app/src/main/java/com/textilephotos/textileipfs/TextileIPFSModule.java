@@ -111,10 +111,10 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sharePhoto (String hash, String thread, Promise promise) {
+    public void sharePhoto (String hash, String thread, String caption, Promise promise) {
         try {
             // Grab our add image response
-            MultipartRequest multipart = textile.sharePhoto(hash, thread);
+            MultipartRequest multipart = textile.sharePhoto(hash, thread, caption);
             // Create a Native map
             WritableMap map = new WritableNativeMap();
             // Add the rsponse parts
