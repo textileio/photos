@@ -20,7 +20,7 @@
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-- (MobileWrapper*)newNode:(NSString*)repoPath centralApiURL:(NSString*)centralApiURL error:(NSError**)error;
+- (MobileWrapper*)newNode:(NSString*)repoPath centralApiURL:(NSString*)centralApiURL logLevel:(NSString*)logLevel error:(NSError**)error;
 @end
 
 @interface MobileWrapper : NSObject <goSeqRefInterface> {
@@ -41,7 +41,7 @@
 - (NSString*)getUsername:(NSError**)error;
 - (BOOL)isSignedIn;
 - (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
-- (NetMultipartRequest*)sharePhoto:(NSString*)hash thread:(NSString*)thread error:(NSError**)error;
+- (NetMultipartRequest*)sharePhoto:(NSString*)hash thread:(NSString*)thread caption:(NSString*)caption error:(NSError**)error;
 - (BOOL)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
 - (BOOL)signOut:(NSError**)error;
 - (BOOL)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
@@ -49,6 +49,6 @@
 - (BOOL)stop:(NSError**)error;
 @end
 
-FOUNDATION_EXPORT MobileWrapper* MobileNewNode(NSString* repoPath, NSString* centralApiURL, NSError** error);
+FOUNDATION_EXPORT MobileWrapper* MobileNewNode(NSString* repoPath, NSString* centralApiURL, NSString* logLevel, NSError** error);
 
 #endif
