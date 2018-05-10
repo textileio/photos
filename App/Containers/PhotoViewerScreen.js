@@ -27,10 +27,11 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage(props, dims) {
+    console.log(props)
     return (<AsyncImage
-      key={props.image.hash + '/photo'}
+      key={props.image.key}
       hash={props.image.hash}
-      path={'/photo'}
+      path={props.image.path}
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
       capInsets={props.capInsets}
@@ -99,9 +100,10 @@ class PhotoViewerScreen extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const hashes = state.ipfs.threads[ownProps.navigation.state.params.thread].hashes
+  const path = ownProps.navigation.state.params.thread === 'default' ? '/photo' : '/thumb'
   const imageData = hashes.map(hash => {
     // todo, try source here again
-    return { hash, source: {url: 'file://foo.png'}}
+    return { hash, path, key: hash + path, source: {url: 'file://foo.png'} }
   })
 
   return {
