@@ -80,7 +80,7 @@ export default {
   },
 
   getHashRequest: async function (hash: string, path: string): HashRequest {
-    const result = await TextileIPFS.getHashRequest(hash)
+    const result = await TextileIPFS.getHashRequest(hash + path)
     const encoded = Buffer.from(':' + result.token).toString('base64')
     return {
       uri: result.protocol + '://' + result.host + '/ipfs/' + hash + path,
