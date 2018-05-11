@@ -154,14 +154,14 @@ export function * getPhotoHashes ({thread}) {
       let item = { hash }
       try {
         const captionsrc = yield call(IPFS.getHashData, hash, '/caption')
-        const caption = Buffer.from(captionsrc, 'base64').toString('ascii')
+        const caption = Buffer.from(captionsrc, 'base64').toString('utf8')
         item = {...item, caption}
       } catch (err) {
         // gracefully return an empty caption for now
       }
       try {
         const metasrc = yield call(IPFS.getHashData, hash, '/meta')
-        const meta = JSON.parse(Buffer.from(metasrc, 'base64').toString('ascii'))
+        const meta = JSON.parse(Buffer.from(metasrc, 'base64').toString('utf8'))
         item = {...item, meta}
       } catch (err) {
         // gracefully return an empty meta for now
