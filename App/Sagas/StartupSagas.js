@@ -1,6 +1,7 @@
+import {AppState} from 'react-native'
 import RNFS from 'react-native-fs'
 import { put, select } from 'redux-saga/effects'
-import IpfsNodeActions from '../Redux/IpfsNodeRedux'
+import IpfsNodeActions, {IpfsNodeSelectors} from '../Redux/IpfsNodeRedux'
 import { is } from 'ramda'
 
 // exported to make available for tests
@@ -34,4 +35,6 @@ export function * startup () {
 
   // Dispatch actions you want on STARTUP
   // yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
+  const previousState = yield select(IpfsNodeSelectors.appState)
+  yield put(IpfsNodeActions.appStateChange(previousState, AppState.currentState))
 }

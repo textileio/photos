@@ -1,3 +1,4 @@
+import {AppState} from 'react-native'
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 
@@ -5,6 +6,7 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   lock: ['value'],
+  appStateChange: ['previousState', 'newState'],
   createNodeRequest: ['path'],
   createNodeSuccess: null,
   createNodeFailure: ['error'],
@@ -26,6 +28,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   locked: false,
+  appState: 'unknown',
   nodeState: {
     state: 'undefined', // | creating | stopped | starting | started | stopping
     error: null
@@ -47,13 +50,17 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Selectors ------------- */
 
 export const IpfsNodeSelectors = {
-  locked: (state) => state.ipfs.locked
+  locked: (state) => state.ipfs.locked,
+  appState: (state) => state.ipfs.appState
 }
 
 /* ------------- Reducers ------------- */
 
 export const lock = (state, {value}) =>
   state.merge({...state, locked: value})
+
+export const newAppState = (state, {newState}) =>
+  state.merge({...state, appState: newState})
 
 export const creatingNode = state =>
   state.merge({...state, nodeState: {state: 'creating', error: null}})
@@ -104,6 +111,7 @@ export const photoHashesFailure = (state, {thread, error}) => {
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.LOCK]: lock,
+  [Types.APP_STATE_CHANGE]: newAppState,
   [Types.CREATE_NODE_REQUEST]: creatingNode,
   [Types.CREATE_NODE_SUCCESS]: nodeCreated,
   [Types.CREATE_NODE_FAILURE]: nodeError,
