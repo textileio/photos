@@ -8,6 +8,7 @@ import {
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
 import TextileActions from '../Redux/TextileRedux'
+import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
@@ -44,15 +45,19 @@ class TextileManager extends React.PureComponent {
   }
 
   componentWillUnmount () {
-    AppState.removeEventListener('change', this.props.appStateChange)
+    AppState.removeEventListener('change', this.handleNewAppState)
     this.progressSubscription.remove()
     this.completionSubscription.remove()
     this.errorSubscription.remove()
   }
 
+  handleNewAppState (newAppState) {
+    this.props.appStateChange(this.props.currentAppState, newAppState)
+  }
+
   async setup () {
     // await PushNotificationIOS.requestPermissions()
-    AppState.addEventListener('change', (event) => this.props.appStateChange(event))
+    AppState.addEventListener('change', this.handleNewAppState.bind(this))
     navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
     this.progressSubscription = Upload.addListener('progress', null, (event) => this.props.uploadProgress(event))
     this.completionSubscription = Upload.addListener('completed', null, (event) => this.props.uploadComplete(event))
@@ -66,9 +71,15 @@ class TextileManager extends React.PureComponent {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    currentAppState: state.ipfs.appState
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    appStateChange: event => { dispatch(TextileActions.appStateChange(event)) },
+    appStateChange: (previousState, newState) => { dispatch(IpfsNodeActions.appStateChange(previousState, newState)) },
     locationUpdate: () => { dispatch(TextileActions.locationUpdate()) },
     uploadComplete: event => { dispatch(TextileActions.imageUploadComplete(event)) },
     uploadProgress: event => { dispatch(TextileActions.imageUploadProgress(event)) },
@@ -76,4 +87,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(TextileManager)
+export default connect(mapStateToProps, mapDispatchToProps)(TextileManager)

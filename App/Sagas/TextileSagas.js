@@ -81,6 +81,20 @@ export function * toggleBackgroundTimer ({value}) {
     yield call(BackgroundTimer.start)
   } else {
     yield call(BackgroundTimer.stop)
+    yield call(BackgroundTask.finish)
+  }
+}
+
+export function * handleNewAppState ({previousState, newState}) {
+  if (previousState.match(/unknown|background/) && newState === 'background') {
+    console.tron.logImportant('launched into background')
+    yield * triggerCreateNode()
+  } else if (previousState.match(/unknown|inactive|background/) && newState === 'active') {
+    console.tron.logImportant('app transitioned to foreground')
+    yield * triggerCreateNode()
+  } else if (previousState.match(/inactive|active/) && newState === 'background') {
+    console.tron.logImportant('app transitioned to background')
+    yield * triggerStopNode()
   }
 }
 
@@ -137,14 +151,14 @@ export function * startNode () {
 }
 
 export function * stopNode () {
-  yield call(BackgroundTimer.start)
+  yield put(IpfsNodeActions.lock(true))
   try {
     yield call(IPFS.stopNode)
     yield put(IpfsNodeActions.stopNodeSuccess())
   } catch (error) {
     yield put(IpfsNodeActions.stopNodeFailure(error))
   } finally {
-    yield call(BackgroundTimer.stop)
+    yield put(IpfsNodeActions.lock(false))
   }
 }
 
@@ -232,11 +246,13 @@ export function * photosTask () {
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
   } finally {
-    yield call(BackgroundTask.finish)
-    yield put(IpfsNodeActions.lock(false))
+    const appState = yield select(IpfsNodeSelectors.appState)
+    if (appState.match(/background/)) {
+      yield * stopNode()
+    } else {
+      yield put(IpfsNodeActions.lock(false))
+    }
   }
-
-  // TODO: Shut down node after photosTask if we're in the background
 }
 
 export function * removePayloadFile ({data}) {
