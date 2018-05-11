@@ -126,12 +126,12 @@ export default class PhotoGrid extends React.PureComponent {
               />
             ) : (
               <View style={styles.emptyListStyle}>
-                <Text style={styles.noPhotos}>Any new photos you take will be displayed here and synced to Textile.</Text>
+                <Text style={styles.noPhotos}>Any new photos you take will be added to your Textile wallet.</Text>
               </View>
             )
           ) : (
             <View style={styles.emptyListStyle}>
-              <Text style={styles.noPhotos}>Loading...</Text>
+              <Text style={styles.noPhotos}>Connecting to IPFS...</Text>
             </View>
           )
         }
