@@ -149,7 +149,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-cookies')
     compile project(':react-native-background-upload')
     compile project(':react-native-background-fetch')
     compile project(':react-native-device-info')
