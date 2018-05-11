@@ -163,7 +163,7 @@ export function * getPhotoHashes ({thread}) {
       }
       try {
         const metasrc = yield call(IPFS.getHashData, hash, '/meta')
-        const meta = JSON.parse(Buffer.from(metasrc, 'base64').toString('ascii'))
+        const meta = JSON.parse(Buffer.from(metasrc, 'base64').toString('utf8'))
         item = {...item, meta}
       } catch (err) {
         // gracefully return an empty meta for now

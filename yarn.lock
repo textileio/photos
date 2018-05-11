@@ -4945,7 +4945,7 @@ invariant@^2.0.0, invariant@^2.2.2:
   dependencies:
     loose-envify "^1.0.0"
 
-invariant@^2.1.0, invariant@^2.2.0:
+invariant@^2.2.0:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   dependencies:
@@ -7819,12 +7819,6 @@ react-native-compat@^1.0.0:
 react-native-config@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.10.0.tgz#7ecabfcdc5f8fe34ba42b56b043626eb72d232fe"
-
-react-native-cookies@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-cookies/-/react-native-cookies-3.2.0.tgz#1079d4d368bb287d1c8a93f3b9b60a4bde659966"
-  dependencies:
-    invariant "^2.1.0"
 
 react-native-create-bridge@^2.0.1:
   version "2.0.1"
