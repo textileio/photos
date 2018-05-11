@@ -32,5 +32,6 @@ export function * startup () {
     })
   }
 
-  yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
+  // Dispatch actions you want on STARTUP
+  // yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
 }

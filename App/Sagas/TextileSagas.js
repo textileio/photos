@@ -20,7 +20,7 @@ import PhotosNavigationService from '../Services/PhotosNavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
-import IpfsNodeActions from '../Redux/IpfsNodeRedux'
+import IpfsNodeActions, { IpfsNodeSelectors } from '../Redux/IpfsNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
@@ -76,7 +76,20 @@ export function * viewPhoto () {
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
 }
 
+export function * toggleBackgroundTimer ({value}) {
+  if (value) {
+    yield call(BackgroundTimer.start)
+  } else {
+    yield call(BackgroundTimer.stop)
+  }
+}
+
 export function * triggerCreateNode () {
+  const locked = yield select(IpfsNodeSelectors.locked)
+  if (locked) {
+    return
+  }
+  yield put(IpfsNodeActions.lock(true))
   yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
 }
 
@@ -84,18 +97,7 @@ export function * triggerStopNode () {
   yield put(IpfsNodeActions.stopNodeRequest())
 }
 
-export function * handleStateChange ({newState}) {
-  yield call(BackgroundTimer.start)
-  if (newState === 'active') {
-    yield * triggerCreateNode()
-  } else if (newState === 'inactive') {
-    yield * triggerStopNode()
-  }
-  yield call(BackgroundTimer.stop)
-}
-
 export function * createNode ({path}) {
-  yield call(BackgroundTimer.start)
   try {
     const debugLevel = (__DEV__ ? "DEBUG" : "INFO")
     const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
@@ -104,20 +106,20 @@ export function * createNode ({path}) {
       yield put(IpfsNodeActions.startNodeRequest())
     } else {
       yield put(IpfsNodeActions.createNodeFailure(new Error('Failed creating node, but no error was thrown - Should not happen')))
+      yield put(IpfsNodeActions.lock(false))
     }
   } catch (error) {
     yield put(IpfsNodeActions.createNodeFailure(error))
-  } finally {
-    yield call(BackgroundTimer.stop)
+    yield put(IpfsNodeActions.lock(false))
   }
 }
 
 export function * startNode () {
   const onboarded = yield select(TextileSelectors.onboarded)
   if (!onboarded) {
+    yield put(IpfsNodeActions.lock(false))
     return
   }
-  yield call(BackgroundTimer.start)
   try {
     const startNodeSuccess = yield call(IPFS.startNode)
     if (startNodeSuccess) {
@@ -126,11 +128,11 @@ export function * startNode () {
       yield put(IpfsNodeActions.getPhotoHashesRequest('beta'))
     } else {
       yield put(IpfsNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
+      yield put(IpfsNodeActions.lock(false))
     }
   } catch (error) {
     yield put(IpfsNodeActions.startNodeFailure(error))
-  } finally {
-    yield call(BackgroundTimer.stop)
+    yield put(IpfsNodeActions.lock(false))
   }
 }
 
@@ -207,7 +209,6 @@ export function * shareImage ({thread, hash, caption}) {
 
 export function * photosTask () {
   try {
-    yield call(BackgroundTimer.start)
     const photos = yield call(queryPhotos)
     for (const photo of photos) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
@@ -231,9 +232,11 @@ export function * photosTask () {
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
   } finally {
-    yield call(BackgroundTimer.stop)
     yield call(BackgroundTask.finish)
+    yield put(IpfsNodeActions.lock(false))
   }
+
+  // TODO: Shut down node after photosTask if we're in the background
 }
 
 export function * removePayloadFile ({data}) {

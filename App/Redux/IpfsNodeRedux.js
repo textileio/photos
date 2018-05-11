@@ -4,6 +4,7 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
+  lock: ['value'],
   createNodeRequest: ['path'],
   createNodeSuccess: null,
   createNodeFailure: ['error'],
@@ -24,6 +25,7 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
+  locked: false,
   nodeState: {
     state: 'undefined', // | creating | stopped | starting | started | stopping
     error: null
@@ -45,9 +47,13 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Selectors ------------- */
 
 export const IpfsNodeSelectors = {
+  locked: (state) => state.ipfs.locked
 }
 
 /* ------------- Reducers ------------- */
+
+export const lock = (state, {value}) =>
+  state.merge({...state, locked: value})
 
 export const creatingNode = state =>
   state.merge({...state, nodeState: {state: 'creating', error: null}})
@@ -97,6 +103,7 @@ export const photoHashesFailure = (state, {thread, error}) => {
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
+  [Types.LOCK]: lock,
   [Types.CREATE_NODE_REQUEST]: creatingNode,
   [Types.CREATE_NODE_SUCCESS]: nodeCreated,
   [Types.CREATE_NODE_FAILURE]: nodeError,
