@@ -81,7 +81,7 @@ class PhotoViewerScreen extends React.PureComponent {
       <View style={{flex: 1}}>
         <StatusBar hidden />
 
-        <Modal isVisible={this.props.visibleModal} animationIn={'fadeInUp'} animationOut={'fadeOutDown'}>
+        <Modal isVisible={this.props.visibleModal} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard >
           {this._renderModalContent()}
         </Modal>
 
