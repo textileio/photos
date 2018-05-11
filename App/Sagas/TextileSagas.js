@@ -209,7 +209,7 @@ export function * photosTask () {
   try {
     yield call(BackgroundTimer.start)
     const photos = yield call(queryPhotos)
-    for (const photo of photos) {
+    for (const photo of photos.reverse()) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
