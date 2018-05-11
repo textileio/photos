@@ -43,7 +43,7 @@ const SharedPhotosNav = StackNavigator(
     SharedPhotos: {
       screen: TextilePhotos,
       navigationOptions: {
-        headerTitle: 'Shared Photos'
+        headerTitle: 'Shared Thread'
       }
     }
   },
@@ -85,9 +85,9 @@ const TabNav = TabNavigator(
       const {routeName} = navigation.state
       let title
       if (routeName === 'PhotosNav') {
-        title = 'Library'
+        title = 'Wallet'
       } else if (routeName === 'SharedPhotosNav') {
-        title = 'Shared'
+        title = 'Threads'
       } else if (routeName === 'InfoNav') {
         title = 'Support'
       }
