@@ -7,12 +7,20 @@ import RootContainer from './RootContainer'
 import createStore from '../Redux'
 import Actions from '../Redux/TextileRedux'
 import BackgroundTask from 'react-native-background-task'
+import IPFS from '../../TextileIPFSNativeModule'
 
 // create our store
 const { store, persistor } = createStore()
 
 BackgroundTask.define(() => {
   store.dispatch(Actions.backgroundTask())
+})
+
+// subscribe to thread updates
+// TODO: this probably doesn't belong here
+// NOTE: we may want to cancel listener with the returned handle at some point with subscription.remove()
+IPFS.eventEmitter.addListener('onThreadUpdate', (payload) => {
+  console.log(payload)
 })
 
 /**
