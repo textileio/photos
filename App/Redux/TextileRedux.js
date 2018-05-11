@@ -55,7 +55,7 @@ export const onboardedSuccess = state => {
 }
 
 export const handleImageAdded = (state, {thread, hash, remotePayloadPath}) => {
-  const items = [...state.images.items, { thread, hash, remotePayloadPath, state: 'pending' }]
+  const items = [{ thread, hash, remotePayloadPath, state: 'pending' }, ...state.images.items]
   return state.merge({ images: { items } })
 }
 
