@@ -182,7 +182,7 @@ export function * getPhotoHashes ({thread}) {
       } catch (err) {
         // gracefully return an empty meta for now
       }
-      data.push(item)
+      data.push({...item})
     }
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
   } catch (error) {
