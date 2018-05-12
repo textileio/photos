@@ -11,7 +11,7 @@ import ostyles, {buttonColor} from '../Containers/Styles/OnboardingScreenStyle'
 
 export const params1 = {
   header: 'Welcome to the Textile Beta!',
-  message: <Text style={ostyles.message}>{`Thanks very much for agreeing to test the app and provide feedback on this very early draft of our brand new technology. Right now, Textile is all about photos, soon it will be about how you control and own all your personal data.`}</Text>,
+  message: <Text style={ostyles.message}>{`Thanks very much for agreeing to test the app and provide feedback on this very early draft of our brand new technology. Right now, Textile is all about photos. Soon it will be about how you control and own all your personal data.`}</Text>,
   buttonTitle: 'OK',
   onButtonPress: (navigate) => {
     return () => {
