@@ -5,6 +5,7 @@ import {
   StatusBar,
   TouchableOpacity
 } from 'react-native'
+import SvgUri from 'react-native-svg-uri'
 import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
@@ -48,7 +49,7 @@ class PhotoViewerScreen extends React.PureComponent {
       <View style={{ flex: 1, flexDirection: 'row-reverse', padding: 8, top: 0, height: 60, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'space-between' }}>
         <Icon name='close' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.dismissPressed.bind(this)} />
         {this.props.sharable &&
-          <Icon name='share-apple' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.sharePressed.bind(this)} />
+        <Icon name='share-apple' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={44} onPress={this.sharePressed.bind(this)} />
         }
       </View>
     )
@@ -58,8 +59,19 @@ class PhotoViewerScreen extends React.PureComponent {
     // Never loads a second time
     const caption = this.props.imageData[this.props.currentIndex].caption || ''
     return (
-      <View style={{ bottom: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'center' }}>
-        <Text style={{ textAlign: 'center', color: 'white', fontSize: 15, fontStyle: 'italic' }}>{caption}</Text>
+      <View style={{flex: 1, flexDirection: 'row', bottom: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'center', alignItems: 'center'}}>
+        <SvgUri
+          style={{width: 50, height: 50}}
+          width={50}
+          height={50}
+          svgXmlData={ this.props.imageData[this.props.currentIndex].avatar }
+        />
+        <Text style={{ width: '75%', paddingLeft: 20, textAlign: 'left', color: 'white', fontSize: 15, fontStyle: 'italic' }}>
+          <Text style={{ fontWeight: 'bold', paddingBottom: 10 }}>
+            {this.props.imageData[this.props.currentIndex].username} {'\n'}
+          </Text>
+          <Text>{caption}</Text>
+        </Text>
       </View>
     )
   }
