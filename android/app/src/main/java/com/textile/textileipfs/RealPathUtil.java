@@ -1,8 +1,7 @@
-package com.textilephotos.textileipfs;
+package com.textile.textileipfs;
 
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;

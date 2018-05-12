@@ -126,7 +126,7 @@ export default class PhotoGrid extends React.PureComponent {
               />
             ) : (
               <View style={styles.emptyListStyle}>
-                <Text style={styles.noPhotos}>Any new photos you take will be added to your Textile wallet.</Text>
+                <Text style={styles.noPhotos}>{this.props.placeholderText}</Text>
               </View>
             )
           ) : (

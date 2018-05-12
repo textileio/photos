@@ -1,10 +1,9 @@
 //  Created by react-native-create-bridge
 
-package com.textilephotos.textileipfs;
+package com.textile.textileipfs;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;

@@ -1,4 +1,4 @@
-package com.textilephotos;
+package com.textile;
 
 import com.facebook.react.ReactActivity;
 
