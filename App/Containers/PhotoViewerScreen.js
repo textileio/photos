@@ -102,7 +102,7 @@ class PhotoViewerScreen extends React.PureComponent {
           style={{ flex: 1, backgroundColor: 'black' }}
           images={this.props.imageData}
           initialPage={this.props.currentIndex}
-          flatListProps={{windowSize: 1, initialNumToRender: 6}}
+          // flatListProps={{windowSize: 1, initialNumToRender: 6}}
           imageComponent={this.renderImage.bind(this)}
           onPageSelected={this.props.selectImage}
         />
