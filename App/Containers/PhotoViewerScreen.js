@@ -59,10 +59,13 @@ class PhotoViewerScreen extends React.PureComponent {
 
   get caption () {
     // Never loads a second time
-    const caption = this.props.imageData[this.props.currentIndex].caption || ''
+    const row = this.props.imageData[this.props.currentIndex]
+    const caption = row.caption || ''
+    const username = row.meta.username || 'anonymous'
+    let avatarHash = row.meta.username || row.meta.peer_id || 'anonymous'
     let avatar = ''
     try {
-      avatar = jdenticon.toSvg(this.props.imageData[this.props.currentIndex].avatar, 50)
+      avatar = jdenticon.toSvg(avatarHash, 50)
     } catch (err) {}
     return (
       <View style={{
@@ -85,7 +88,7 @@ class PhotoViewerScreen extends React.PureComponent {
         <Text
           style={{width: '75%', paddingLeft: 20, textAlign: 'left', color: 'white', fontSize: 15, fontStyle: 'italic'}}>
           <Text style={{fontWeight: 'bold', paddingBottom: 10}}>
-            {this.props.imageData[this.props.currentIndex].username} {'\n'}
+            {username} {'\n'}
           </Text>
           <Text>{caption}</Text>
         </Text>
