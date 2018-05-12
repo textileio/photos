@@ -18,6 +18,8 @@ import AsyncImage from '../Components/AsyncImage'
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
 
+const jdenticon = require('jdenticon')
+
 class PhotoViewerScreen extends React.PureComponent {
   dismissPressed () {
     // Little hacky here for now
@@ -58,16 +60,31 @@ class PhotoViewerScreen extends React.PureComponent {
   get caption () {
     // Never loads a second time
     const caption = this.props.imageData[this.props.currentIndex].caption || ''
+    let avatar = ''
+    try {
+      avatar = jdenticon.toSvg(this.props.imageData[this.props.currentIndex].avatar, 50)
+    } catch (err) {}
     return (
-      <View style={{flex: 1, flexDirection: 'row', bottom: 0, height: 65, backgroundColor: 'rgba(0, 0, 0, 0.7)', width: '100%', position: 'absolute', justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{
+        flex: 1,
+        flexDirection: 'row',
+        bottom: 0,
+        height: 65,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        width: '100%',
+        position: 'absolute',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
         <SvgUri
           style={{width: 50, height: 50}}
           width={50}
           height={50}
-          svgXmlData={ this.props.imageData[this.props.currentIndex].avatar }
+          svgXmlData={avatar}
         />
-        <Text style={{ width: '75%', paddingLeft: 20, textAlign: 'left', color: 'white', fontSize: 15, fontStyle: 'italic' }}>
-          <Text style={{ fontWeight: 'bold', paddingBottom: 10 }}>
+        <Text
+          style={{width: '75%', paddingLeft: 20, textAlign: 'left', color: 'white', fontSize: 15, fontStyle: 'italic'}}>
+          <Text style={{fontWeight: 'bold', paddingBottom: 10}}>
             {this.props.imageData[this.props.currentIndex].username} {'\n'}
           </Text>
           <Text>{caption}</Text>
@@ -107,7 +124,7 @@ class PhotoViewerScreen extends React.PureComponent {
           onPageSelected={this.props.selectImage}
         />
         { this.galleryCount }
-        { this.caption }
+        { !this.props.sharable && this.caption }
       </View>
     )
   }

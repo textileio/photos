@@ -27,8 +27,6 @@ import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 import { Buffer } from 'buffer'
 
-
-const jdenticon = require('jdenticon')
 const API_URL = "https://api.textile.io"
 
 export function * signUp ({data}) {
@@ -152,11 +150,10 @@ export function * getPhotoHashes ({thread}) {
   try {
     const hashes = yield call(IPFS.getPhotos, null, -1, thread)
     let data = []
-    let avatars = {} // <- simple cache
     let username = 'anonymous'
     for (const hash of hashes) {
       let item = { hash }
-      let avatarHash = hash
+      let avatar = hash
       try {
         const captionsrc = yield call(IPFS.getHashData, hash, '/caption')
         const caption = Buffer.from(captionsrc, 'base64').toString('utf8')
@@ -167,20 +164,13 @@ export function * getPhotoHashes ({thread}) {
       try {
         const metasrc = yield call(IPFS.getHashData, hash, '/meta')
         const meta = JSON.parse(Buffer.from(metasrc, 'base64').toString('utf8'))
-        avatarHash = meta.username || meta.peer_id
+        avatar = meta.username || meta.peer_id
         username = meta.username || 'anonymous'
         item = {...item, meta}
       } catch (err) {
         // gracefully return an empty meta for now
       }
-      try {
-        const avatar = avatars[avatarHash] || jdenticon.toSvg(avatarHash, 200)
-        avatars[avatarHash] = avatar
-        item = {...item, avatar}
-      } catch (err) {
-        // not sure what kind of failures jdent could send
-      }
-      data.push({...item, username})
+      data.push({...item, username, avatar})
     }
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
   } catch (error) {
