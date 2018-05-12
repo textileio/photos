@@ -110,7 +110,7 @@ android {
         versionProps.store(versionPropsFile.newWriter(), null)
 
         defaultConfig {
-            applicationId "com.textilephotos"
+            applicationId "com.textile"
             minSdkVersion 19
             targetSdkVersion rootProject.targetSdkVersion
             ndk {
