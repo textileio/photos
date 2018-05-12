@@ -6,7 +6,6 @@ import Immutable from 'seamless-immutable'
 const { Types, Creators } = createActions({
   onboardedSuccess: null,
 
-  appStateChange: ['newState'],
   locationUpdate: null,
   backgroundTask: null,
 

@@ -16,8 +16,9 @@ import {
   logIn,
   recoverPassword,
   viewPhoto,
+  handleNewAppState,
+  toggleBackgroundTimer,
   triggerCreateNode,
-  handleStateChange,
   createNode,
   startNode,
   stopNode,
@@ -37,6 +38,8 @@ export default function * root () {
 
     // some sagas receive extra parameters in addition to an action
 
+    takeEvery(IpfsNodeTypes.APP_STATE_CHANGE, handleNewAppState),
+
     takeEvery(UITypes.VIEW_PHOTO_REQUEST, viewPhoto),
 
     takeEvery(AuthTypes.SIGN_UP_REQUEST, signUp),
@@ -49,15 +52,21 @@ export default function * root () {
 
     takeEvery(UITypes.SHARE_PHOTO_REQUEST, shareImage),
 
+    takeEvery(IpfsNodeTypes.LOCK, toggleBackgroundTimer),
+
     takeEvery(IpfsNodeTypes.CREATE_NODE_REQUEST, createNode),
     takeEvery(IpfsNodeTypes.START_NODE_REQUEST, startNode),
     takeEvery(IpfsNodeTypes.STOP_NODE_REQUEST, stopNode),
 
     // Actions that trigger creating (therefore starting/stopping) the node
-    takeEvery(action => action.type === TextileTypes.APP_STATE_CHANGE && action.newState !== 'background', handleStateChange),
-    takeEvery(TextileTypes.LOCATION_UPDATE, triggerCreateNode),
-    takeEvery(TextileTypes.BACKGROUND_TASK, triggerCreateNode),
+    // takeEvery(action => action.type === IpfsNodeTypes.APP_STATE_CHANGE && action.newState === 'active', triggerCreateNode),
+    // takeEvery(StartupTypes.STARTUP, triggerCreateNode),
+    // takeEvery(TextileTypes.LOCATION_UPDATE, triggerCreateNode),
+    // takeEvery(TextileTypes.BACKGROUND_TASK, triggerCreateNode),
     takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
+
+    // Actions that trigger stopping the node
+    // takeEvery(action => action.type === IpfsNodeTypes.APP_STATE_CHANGE && action.newState === 'background', triggerStopNode),
 
     // All things we want to trigger photosTask are funneled through starting the node, so handle START_NODE_SUCCESS
     // by running the photosTask saga here
