@@ -24,10 +24,7 @@
 @implementation Messenger
 
 - (void) notify: (CoreThreadUpdate *)update {
-  [Events emitEventWithName:@"onThreadUpdate"
-                      andPayload:@{@"cid":update.cid,
-                                   @"thread":update.thread,
-                                   @"thread_id":update.threadID}];
+  [Events emitEventWithName:@"onThreadUpdate" andPayload:@{@"cid":update.cid, @"thread":update.thread, @"thread_id":update.threadID}];
 }
 
 @end
