@@ -23,8 +23,8 @@
 
 @implementation Messenger
 
-- (void) notify: (CoreThreadUpdate *)update {
-  [Events emitEventWithName:@"onThreadUpdate" andPayload:@{@"cid":update.cid, @"thread":update.thread, @"thread_id":update.threadID}];
+- (void) notify: (MobileEvent *)event {
+  [Events emitEventWithName:event.name andPayload:event.payload];
 }
 
 @end
