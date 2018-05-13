@@ -9,15 +9,37 @@ export default class AsyncImage extends React.Component {
     this.state = { loaded: false, source: {} }
   }
 
+  asyncRequest (promise) {
+    let hasCanceled_ = false
+    return {
+      promise: new Promise(
+        (resolve, reject) => promise
+          .then(r => hasCanceled_
+            ? reject({isCanceled: true})
+            : resolve(r)
+          )
+      ),
+      cancel () {
+        hasCanceled_ = true
+      }
+    }
+  }
+
   componentWillMount () {
     const {
       hash,
       path
     } = this.props
-    IPFS.getHashRequest(hash, path).then(this._setSource)
+    this.request = this.asyncRequest(IPFS.getHashRequest(hash, path).then(this._setSource))
   }
+
+  componentWillUnmount () {
+    // Reduces state update attempts of unmounted thumbs
+    this.request.cancel()
+  }
+
   _setSource = (source) => {
-    this.setState(() => ({ loaded: true, source }))
+    this.setState(() => ({loaded: true, source}))
   }
 
   render () {
