@@ -4,25 +4,9 @@ import IPFS from '../../TextileIPFSNativeModule'
 
 export default class AsyncImage extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = { loaded: false, source: {} }
-  }
-
-  asyncRequest (promise) {
-    let hasCanceled_ = false
-    return {
-      promise: new Promise(
-        (resolve, reject) => promise
-          .then(r => hasCanceled_
-            ? reject({isCanceled: true})
-            : resolve(r)
-          )
-      ),
-      cancel () {
-        hasCanceled_ = true
-      }
-    }
   }
 
   componentWillMount () {
@@ -30,18 +14,20 @@ export default class AsyncImage extends React.Component {
       hash,
       path
     } = this.props
-    this.request = this.asyncRequest(IPFS.getHashRequest(hash, path)
+    this.hasCanceled_ = false
+    IPFS.getHashRequest(hash, path)
       .then(this._setSource)
-      .catch(() => { })) // todo: handle failed image requests vs. unmount
+      .catch(() => { }) // todo: handle failed image requests vs. unmount
   }
-
+  
   componentWillUnmount () {
-    // Reduces state update attempts of unmounted thumbs
-    this.request.cancel()
+    this.hasCanceled_ = true
   }
 
   _setSource = (source) => {
-    this.setState(() => ({loaded: true, source}))
+    if (!this.hasCanceled_) {
+      this.setState(() => ({loaded: true, source}))
+    }
   }
 
   render () {
