@@ -19,6 +19,10 @@ export default class AsyncImage extends React.Component {
       .then(this._setSource)
       .catch(() => { }) // todo: handle failed image requests vs. unmount
   }
+  
+  componentWillUnmount () {
+    this.hasCanceled_ = true
+  }
 
   _setSource = (source) => {
     if (!this.hasCanceled_) {
