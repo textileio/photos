@@ -9,9 +9,9 @@
 @import Foundation;
 #include "Universe.objc.h"
 
-#include "Core.objc.h"
 #include "Net.objc.h"
 
+@class MobileEvent;
 @class MobileMobile;
 @class MobileNodeConfig;
 @class MobileWrapper;
@@ -19,7 +19,22 @@
 @class MobileMessenger;
 
 @protocol MobileMessenger <NSObject>
-- (void)notify:(CoreThreadUpdate*)update;
+- (void)notify:(MobileEvent*)event;
+@end
+
+/**
+ * Message is a generic go -> bridge message structure
+ */
+@interface MobileEvent : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+- (NSString*)name;
+- (void)setName:(NSString*)v;
+- (NSString*)payload;
+- (void)setPayload:(NSString*)v;
 @end
 
 /**
@@ -148,7 +163,7 @@ FOUNDATION_EXPORT MobileWrapper* MobileNewNode(MobileNodeConfig* config, id<Mobi
 @property(strong, readonly) id _ref;
 
 - (instancetype)initWithRef:(id)ref;
-- (void)notify:(CoreThreadUpdate*)update;
+- (void)notify:(MobileEvent*)event;
 @end
 
 #endif

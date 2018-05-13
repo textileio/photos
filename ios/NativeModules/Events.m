@@ -54,16 +54,17 @@ RCT_EXPORT_MODULE();
   NSString *eventName = [eventDetails objectAtIndex:0];
   NSDictionary *eventData = [eventDetails objectAtIndex:1];
 
-  [self sendEventWithName:eventName
-                     body:eventData];
+  [self sendEventWithName:eventName body:eventData];
 }
 
 // This is our static function that we call from our code
-+ (void)emitEventWithName:(NSString *)name andPayload:(NSDictionary *)payload
++ (void)emitEventWithName:(NSString *)name andPayload:(NSString *)payload
 {
   // userInfo requires a dictionary so we wrap out name and payload into an array and stick
   // that into the dictionary with a key of 'detail'
-  NSDictionary *eventDetail = @{@"detail":@[name,payload]};
+  NSData *data = [payload dataUsingEncoding:NSUTF8StringEncoding];
+  NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  NSDictionary *eventDetail = @{@"detail":@[name,json]};
   [[NSNotificationCenter defaultCenter] postNotificationName:@"event-emitted"
                                                       object:self
                                                     userInfo:eventDetail];

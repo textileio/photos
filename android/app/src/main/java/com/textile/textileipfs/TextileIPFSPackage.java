@@ -16,9 +16,6 @@ public class TextileIPFSPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
       // Register your native module
       // https://facebook.github.io/react-native/docs/native-modules-android.html#register-the-module
-//      return Arrays.<NativeModule>asList(
-//          new TextileIPFSModule(reactContext)
-//      );
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new TextileIPFSModule(reactContext));

@@ -20,6 +20,6 @@
 
 @interface Events : RCTEventEmitter <RCTBridgeModule>
 
-+ (void)emitEventWithName:(NSString *)name andPayload:(NSDictionary *)payload;
++ (void)emitEventWithName:(NSString *)name andPayload:(NSString *)payload;
 
 @end
