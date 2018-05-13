@@ -6,7 +6,7 @@
  * Copyright (c) 2015, YunJiang.Fang
  */
 
-package com.textilephotos.textileipfs;
+package com.textile.textileipfs;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
