@@ -131,7 +131,7 @@ export default class PhotoGrid extends React.PureComponent {
             )
           ) : (
             <View style={styles.emptyListStyle}>
-              <Text style={styles.noPhotos}>Connecting to IPFS...</Text>
+              <Text style={styles.noPhotos}>{'IPFS Node Status:\n' + this.props.loadingText}</Text>
             </View>
           )
         }
