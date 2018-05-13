@@ -30,7 +30,9 @@ export default class AsyncImage extends React.Component {
       hash,
       path
     } = this.props
-    this.request = this.asyncRequest(IPFS.getHashRequest(hash, path).then(this._setSource))
+    this.request = this.asyncRequest(IPFS.getHashRequest(hash, path)
+      .then(this._setSource)
+      .catch(() => { })) // todo: handle failed image requests vs. unmount
   }
 
   componentWillUnmount () {
