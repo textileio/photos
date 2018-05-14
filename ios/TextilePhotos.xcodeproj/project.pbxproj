@@ -81,6 +81,8 @@
 		B311B2606C50426EAB18A3F3 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6247753D29BD445BBE26673D /* libRNBackgroundTimer.a */; };
 		B5D96097B5FE453192C31D72 /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23A29B287C094135A8E25804 /* libAppCenterReactNativeAnalytics.a */; };
 		BE48B99518A04032973DFFF5 /* Degarism Studio - Biotif-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D2B83ECEC9804B0EB5D52A12 /* Degarism Studio - Biotif-Black.ttf */; };
+		C5D8444E20A669810011C926 /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D8444D20A669810011C926 /* Events.m */; };
+		C5D8444F20A669810011C926 /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D8444D20A669810011C926 /* Events.m */; };
 		D0DD452036243B3E3246A3EF /* libPods-TextilePhotos-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D2CFFF10CDCE008CB531AD /* libPods-TextilePhotos-tvOS.a */; };
 		DA596D7795CB44608CDF3517 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47FCFF52D5004478899BBC71 /* Feather.ttf */; };
 		E77ED79C0B2C49C3B884EAA6 /* Degarism Studio - Biotif-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB6EBDBEC39F465DB1306CB6 /* Degarism Studio - Biotif-MediumItalic.ttf */; };
@@ -629,6 +631,8 @@
 		BCE1D0D0A2DC49468796E22E /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		BE4F572577C47EC7F50917C6 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C33531E56766499FAC7AB81E /* Degarism Studio - Biotif-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BoldItalic.ttf"; sourceTree = "<group>"; };
+		C5D8444C20A6694B0011C926 /* Events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
+		C5D8444D20A669810011C926 /* Events.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Events.m; sourceTree = "<group>"; };
 		C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BookItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
 		CA46BC6E090824B0412D1D32 /* Pods-TextilePhotos-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOS/Pods-TextilePhotos-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CD96638F8CC84ADAA1A88B19 /* AppCenterReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNative.xcodeproj; path = ../node_modules/appcenter/ios/AppCenterReactNative.xcodeproj; sourceTree = "<group>"; };
@@ -1003,6 +1007,8 @@
 			children = (
 				9339E9A0205C381700BCA4CF /* TextileIPFS.h */,
 				9339E99F205C381700BCA4CF /* TextileIPFS.m */,
+				C5D8444C20A6694B0011C926 /* Events.h */,
+				C5D8444D20A669810011C926 /* Events.m */,
 			);
 			path = NativeModules;
 			sourceTree = "<group>";
@@ -2020,6 +2026,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */,
+				C5D8444E20A669810011C926 /* Events.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */,
 				68C8700C55154E1E80C3FB5B /* RNBackgroundFetch+AppDelegate.m in Sources */,
@@ -2031,6 +2038,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
+				C5D8444F20A669810011C926 /* Events.m in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
 				9339E9A2205C381700BCA4CF /* TextileIPFS.m in Sources */,
 			);

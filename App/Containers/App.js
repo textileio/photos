@@ -6,13 +6,21 @@ import {PersistGate} from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
 import Actions from '../Redux/TextileRedux'
+import IPFSActions from '../Redux/IpfsNodeRedux'
 import BackgroundTask from 'react-native-background-task'
+import IPFS from '../../TextileIPFSNativeModule'
 
 // create our store
 const { store, persistor } = createStore()
 
 BackgroundTask.define(() => {
   store.dispatch(Actions.backgroundTask())
+})
+
+// subscribe to thread updates
+// NOTE: we may want to cancel listener with the returned handle at some point with subscription.remove()
+IPFS.eventEmitter.addListener('onThreadUpdate', (payload) => {
+  store.dispatch(IPFSActions.getPhotoHashesRequest(payload.thread))
 })
 
 /**

@@ -20,7 +20,10 @@ import net.MultipartRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import mobile.Event;
+import mobile.Messenger;
 import mobile.Mobile;
+import mobile.NodeConfig;
 import mobile.Wrapper;
 
 import java.util.HashMap;
@@ -56,10 +59,25 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createNodeWithDataDir (String dataDir, String apiUrl, String debugLevel, Promise promise) {
+    public void createNodeWithDataDir (String dataDir, String apiUrl, String logLevel, Promise promise) {
         if (textile == null) {
             try {
-                textile = Mobile.newNode(dataDir, apiUrl, debugLevel);
+                NodeConfig config = new NodeConfig();
+                config.setRepoPath(dataDir);
+                config.setCentralApiURL(apiUrl);
+                config.setLogLevel(logLevel);
+                textile = Mobile.newNode(config, new Messenger() {
+                    @Override
+                    public void notify(Event event) {
+                        try {
+                            WritableMap payload = JsonConvert.jsonToReact(new JSONObject(event.getPayload()));
+                            TextileIPFSModule.emitDeviceEvent(event.getName(), payload);
+                        }
+                        catch (Exception e) {
+                            //
+                        }
+                    }
+                });
                 promise.resolve(true);
             } catch (Exception e) {
                 promise.reject("START ERROR", e);
@@ -98,9 +116,9 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             MultipartRequest multipart = textile.addPhoto(path, thumbPath, thread);
             // Create a Native map
             WritableMap map = new WritableNativeMap();
-            // Add the rsponse parts
-            map.putString("payloadPath", (String) multipart.getPayloadPath());
-            map.putString("boundary", (String) multipart.getBoundary());
+            // Add the response parts
+            map.putString("payloadPath", multipart.getPayloadPath());
+            map.putString("boundary", multipart.getBoundary());
             promise.resolve(map);
 
         }
@@ -116,7 +134,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
             MultipartRequest multipart = textile.sharePhoto(hash, thread, caption);
             // Create a Native map
             WritableMap map = new WritableNativeMap();
-            // Add the rsponse parts
+            // Add the response parts
             map.putString("payloadPath", (String) multipart.getPayloadPath());
             map.putString("boundary", (String) multipart.getBoundary());
             promise.resolve(map);
