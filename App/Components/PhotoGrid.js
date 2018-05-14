@@ -47,6 +47,7 @@ export default class PhotoGrid extends React.PureComponent {
             path={'/thumb'}
             style={styles.itemImage}
             resizeMode={'cover'}
+            displayImages={this.props.displayImages}
           />
         </View>
         <View style={styles.itemOverlay}>
@@ -109,29 +110,23 @@ export default class PhotoGrid extends React.PureComponent {
           }} source={require('../Images/backgrounds/TextileBackground.png')} />
         </View>
         {
-          this.props.renderImages ? (
-            this.props.items.length ? (
-              <FlatList
-                style={styles.listContainer}
-                data={this.props.items}
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderRow.bind(this)}
-                getItemLayout={this._getItemLayout}
-                numColumns={numColumns}
-                windowSize={this.oneScreensWorth}
-                initialNumToRender={this.oneScreensWorth}
-                onEndReachedThreshold={0.55}
-                onRefresh={this.props.onRefresh}
-                refreshing={this.props.refreshing}
-              />
-            ) : (
-              <View style={styles.emptyListStyle}>
-                <Text style={styles.noPhotos}>{this.props.placeholderText}</Text>
-              </View>
-            )
+          this.props.items.length ? (
+            <FlatList
+              style={styles.listContainer}
+              data={this.props.items}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderRow.bind(this)}
+              getItemLayout={this._getItemLayout}
+              numColumns={numColumns}
+              windowSize={this.oneScreensWorth}
+              initialNumToRender={this.oneScreensWorth}
+              onEndReachedThreshold={0.55}
+              onRefresh={this.props.onRefresh}
+              refreshing={this.props.refreshing}
+            />
           ) : (
             <View style={styles.emptyListStyle}>
-              <Text style={styles.noPhotos}>{'IPFS Node Status:\n' + this.props.loadingText}</Text>
+              <Text style={styles.noPhotos}>{this.props.placeholderText}</Text>
             </View>
           )
         }
