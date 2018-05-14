@@ -47,6 +47,7 @@ export default class PhotoGrid extends React.PureComponent {
             path={'/thumb'}
             style={styles.itemImage}
             resizeMode={'cover'}
+            displayImages={this.props.displayImages}
           />
         </View>
         <View style={styles.itemOverlay}>

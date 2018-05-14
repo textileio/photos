@@ -25,6 +25,7 @@ class TextilePhotos extends React.PureComponent {
         onRefresh={this.onRefresh.bind(this)}
         refreshing={this.props.refreshing}
         placeholderText={this.props.placeholderText}
+        displayImages={this.props.displayImages}
       />
     )
   }
@@ -49,6 +50,7 @@ const mapStateToProps = (state, ownProps) => {
     items: updatedItems,
     loadingText: state.ipfs.nodeState.state,
     refreshing: state.ipfs.threads[thread].querying,
+    displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText
   }
 }
