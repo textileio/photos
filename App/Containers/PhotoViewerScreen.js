@@ -37,6 +37,7 @@ class PhotoViewerScreen extends React.PureComponent {
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
       capInsets={props.capInsets}
+      displayImages={props.image.displayImages}
     />)
   }
 
@@ -143,7 +144,8 @@ const mapStateToProps = (state, ownProps) => {
       path,
       key: item.hash + path,
       source: {url: 'file://' + item.hash + '.png'}, // <-- in case RN uses to know things
-      dimensions: { width: 150, height: 150 }
+      dimensions: { width: 150, height: 150 },
+      displayImages: state.ipfs.nodeState.state === 'started'
     }
   })
   return {

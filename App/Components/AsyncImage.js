@@ -3,7 +3,7 @@ import { View, Image } from 'react-native'
 import IPFS from '../../TextileIPFSNativeModule'
 import { connect } from 'react-redux'
 
-class AsyncImage extends React.Component {
+export default class AsyncImage extends React.Component {
   constructor (props) {
     super(props)
     this.hasCanceled_ = false
@@ -12,14 +12,14 @@ class AsyncImage extends React.Component {
 
   componentWillMount () {
     // If node is already started, we should just get things going
-    if (this.props.nodeState === 'started') {
+    if (this.props.displayImages === true) {
       this._createRequest()
     }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
     // if node just transitions to started, we should make our request
-    if (nextProps.nodeState !== this.props.nodeState && nextProps.nodeState === 'started') {
+    if (nextProps.displayImages !== this.props.displayImages && nextProps.displayImages === true && !this.state.requested) {
       this._createRequest()
       return false
     }
@@ -67,16 +67,3 @@ class AsyncImage extends React.Component {
     }
   }
 }
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    nodeState: state.ipfs.nodeState.state
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AsyncImage)
