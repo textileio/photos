@@ -1,8 +1,13 @@
 // @flow
-import { NativeModules } from 'react-native'
+import {
+  NativeModules,
+  Platform,
+  NativeEventEmitter,
+  DeviceEventEmitter,
+} from 'react-native'
 import { Buffer } from 'buffer'
 
-const { TextileIPFS } = NativeModules
+const { TextileIPFS, Events } = NativeModules
 
 type MultipartData = {
   payloadPath: string,
@@ -103,5 +108,10 @@ export default {
   getAccessToken: async function (): string {
     const result = await TextileIPFS.getAccessToken()
     return result
-  }
+  },
+
+  eventEmitter: Platform.select({
+    ios: new NativeEventEmitter(Events),
+    android: DeviceEventEmitter,
+  })
 }
