@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, Image } from 'react-native'
 import IPFS from '../../TextileIPFSNativeModule'
-import { connect } from 'react-redux'
 
 export default class AsyncImage extends React.Component {
   constructor (props) {
