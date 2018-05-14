@@ -1,6 +1,7 @@
 //  Created by react-native-create-bridge
 
 #import "TextileIPFS.h"
+#import "Events.h"
 #import <Mobile/Mobile.h>
 
 // import RCTBridge
@@ -12,14 +13,21 @@
 #import “React/RCTBridge.h” // Required when used as a Pod in a Swift project
 #endif
 
-// import RCTEventDispatcher
-#if __has_include(<React/RCTEventDispatcher.h>)
-#import <React/RCTEventDispatcher.h>
-#elif __has_include(“RCTEventDispatcher.h”)
-#import “RCTEventDispatcher.h”
-#else
-#import “React/RCTEventDispatcher.h” // Required when used as a Pod in a Swift project
-#endif
+@interface Messenger : NSObject<MobileMessenger>
+// Define class properties here with @property
+@end
+
+@interface Messenger()
+
+@end
+
+@implementation Messenger
+
+- (void) notify: (MobileEvent *)event {
+  [Events emitEventWithName:event.name andPayload:event.payload];
+}
+
+@end
 
 @interface TextileIPFS()
 
@@ -161,7 +169,7 @@ RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password reso
 }
 
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(isSignedIn) {
-  Boolean signedIn = [self _isSignedIn];
+  BOOL signedIn = [self _isSignedIn];
   if (signedIn) {
     return @YES;
   } else {
@@ -209,18 +217,15 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   }
 }
 
-// List all your events here
-// https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#sending-events-to-javascript
-- (NSArray<NSString *> *)supportedEvents
-{
-  return @[];
-}
-
 #pragma mark - Private methods
 
 - (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel error:(NSError**)error {
   if (!self.node) {
-    self.node = [[MobileMobile new] newNode:dataDir centralApiURL:apiUrl logLevel:logLevel error:error];
+    MobileNodeConfig *config = [[MobileNodeConfig alloc] init];
+    [config setRepoPath:dataDir];
+    [config setCentralApiURL:apiUrl];
+    [config setLogLevel:logLevel];
+    self.node = [[MobileMobile new] newNode:config messenger:[[Messenger alloc] init] error:error];
   }
 }
 
@@ -272,7 +277,7 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   [self.node signIn:username password:password error:error];
 }
 
-- (Boolean)_isSignedIn {
+- (BOOL)_isSignedIn {
   return [self.node isSignedIn];
 }
 
@@ -286,13 +291,6 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
 
 - (NSString *)_getAccessToken:(NSError**)error {
   return [self.node getAccessToken:error];
-}
-
-// Implement methods that you want to export to the native module
-- (void) emitMessageToRN: (NSString *)eventName :(NSDictionary *)params {
-  // The bridge eventDispatcher is used to send events from native to JS env
-  // No documentation yet on DeviceEventEmitter: https://github.com/facebook/react-native/issues/2819
-  [self sendEventWithName: eventName body: params];
 }
 
 @end
