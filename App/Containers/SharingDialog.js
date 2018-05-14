@@ -21,6 +21,7 @@ class SharingDialog extends Component {
           containerStyle={{height: '33%'}}
           style={{flex: 1, height: undefined, width: undefined}}
           resizeMode={'cover'}
+          displayImages={this.props.displayImages}
         />
         <TouchableHighlight
           underlayColor={'transparent'}
@@ -37,7 +38,8 @@ class SharingDialog extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    hash: state.ui.sharingPhoto.hash
+    hash: state.ui.sharingPhoto.hash,
+    displayImages: state.ipfs.nodeState.state === 'started'
   }
 }
 
