@@ -21,7 +21,6 @@ class TextilePhotos extends React.PureComponent {
       <PhotoGrid
         items={this.props.items}
         loadingText={this.props.loadingText}
-        renderImages={this.props.renderImages}
         onSelect={this.onSelect}
         onRefresh={this.onRefresh.bind(this)}
         refreshing={this.props.refreshing}
@@ -49,7 +48,6 @@ const mapStateToProps = (state, ownProps) => {
     thread,
     items: updatedItems,
     loadingText: state.ipfs.nodeState.state,
-    renderImages: state.ipfs.nodeState.state === 'started',
     refreshing: state.ipfs.threads[thread].querying,
     placeholderText
   }

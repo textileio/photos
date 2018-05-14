@@ -1,27 +1,41 @@
 import React from 'react'
 import { View, Image } from 'react-native'
 import IPFS from '../../TextileIPFSNativeModule'
+import { connect } from 'react-redux'
 
-export default class AsyncImage extends React.Component {
-
+class AsyncImage extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { loaded: false, source: {} }
+    this.hasCanceled_ = false
+    this.state = { requested: false, loaded: false, source: {} }
   }
 
   componentWillMount () {
-    const {
-      hash,
-      path
-    } = this.props
-    this.hasCanceled_ = false
-    IPFS.getHashRequest(hash, path)
-      .then(this._setSource)
-      .catch(() => { }) // todo: handle failed image requests vs. unmount
+    // If node is already started, we should just get things going
+    if (this.props.nodeState === 'started') {
+      this._createRequest()
+    }
   }
-  
+
+  shouldComponentUpdate (nextProps, nextState) {
+    // if node just transitions to started, we should make our request
+    if (nextProps.nodeState !== this.props.nodeState && nextProps.nodeState === 'started') {
+      this._createRequest()
+      return false
+    }
+    // request has been sent, loaded has become true
+    return this.state.requested && this.state.loaded !== nextState.loaded && nextState.loaded === true
+  }
+
   componentWillUnmount () {
     this.hasCanceled_ = true
+  }
+
+  _createRequest () {
+    IPFS.getHashRequest(this.props.hash, this.props.path)
+      .then(this._setSource)
+      .catch(() => { }) // todo: handle failed image requests vs. unmount
+    this.setState(() => ({requested: true}))
   }
 
   _setSource = (source) => {
@@ -53,3 +67,16 @@ export default class AsyncImage extends React.Component {
     }
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    nodeState: state.ipfs.nodeState.state
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AsyncImage)
