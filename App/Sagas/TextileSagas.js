@@ -86,15 +86,23 @@ export function * toggleBackgroundTimer ({value}) {
 }
 
 export function * handleNewAppState ({previousState, newState}) {
-  if (previousState.match(/unknown|background/) && newState === 'background') {
-    console.tron.logImportant('launched into background')
-    yield * triggerCreateNode()
-  } else if (previousState.match(/unknown|inactive|background/) && newState === 'active') {
-    console.tron.logImportant('app transitioned to foreground')
-    yield * triggerCreateNode()
-  } else if (previousState.match(/inactive|active/) && newState === 'background') {
-    console.tron.logImportant('app transitioned to background')
-    yield * triggerStopNode()
+  // TODO: HACK alert
+  if (!previousState) {
+    if (newState.match(/unknown|active/)) {
+      console.tron.logImportant('app transitioned to foreground (cold launch)')
+      yield * triggerCreateNode()
+    }
+  } else {
+    if (previousState.match(/unknown|background/) && newState === 'background') {
+      console.tron.logImportant('launched into background')
+      yield * triggerCreateNode()
+    } else if (previousState.match(/unknown|inactive|background/) && newState === 'active') {
+      console.tron.logImportant('app transitioned to foreground')
+      yield * triggerCreateNode()
+    } else if (previousState.match(/inactive|active/) && newState === 'background') {
+      console.tron.logImportant('app transitioned to background')
+      yield * triggerStopNode()
+    }
   }
 }
 

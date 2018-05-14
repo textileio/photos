@@ -28,7 +28,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   locked: false,
-  appState: 'unknown',
+  appState: null,
   nodeState: {
     state: 'undefined', // | creating | stopped | starting | started | stopping
     error: null
