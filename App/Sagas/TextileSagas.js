@@ -102,9 +102,6 @@ export function * handleNewAppState ({previousState, newState}) {
     } else if (previousState.match(/inactive|active/) && newState === 'background') {
       console.tron.logImportant('app transitioned to background')
       yield * triggerStopNode()
-    } else if (previousState.match(/active/) && newState === 'active') {
-      console.tron.logImportant('active -> active transition')
-      yield * triggerCreateNode()
     }
   }
 }
