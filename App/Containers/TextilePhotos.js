@@ -44,7 +44,7 @@ const mapStateToProps = (state, ownProps) => {
   const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
   const placeholderText = thread === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
-    : 'Share your first photo to the Beta Testers Thread.'
+    : 'Share your first photo to the All Users Thread.'
   return {
     thread,
     items: updatedItems,
