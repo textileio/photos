@@ -100,7 +100,7 @@ class Threads extends React.PureComponent {
 const mapStateToProps = (state) => {
   return {
     data: [
-      {type: 'thread', id: 'beta', title: 'All Users'},
+      {type: 'thread', id: 'all', title: 'All Users'},
       {type: 'add', id: 'add', title: 'New Thread'}
     ]
   }
