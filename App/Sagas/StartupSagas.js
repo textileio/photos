@@ -3,14 +3,12 @@ import RNFS from 'react-native-fs'
 import { put, select } from 'redux-saga/effects'
 import IpfsNodeActions, {IpfsNodeSelectors} from '../Redux/IpfsNodeRedux'
 import { is } from 'ramda'
-import Analytics from 'appcenter-analytics'
 
 // exported to make available for tests
 // export const selectAvatar = GithubSelectors.selectAvatar
 
 // process STARTUP actions
 export function * startup () {
-  Analytics.trackEvent("STARTUP FUNCTION")
   if (__DEV__ && console.tron) {
     // straight-up string logging
     console.tron.log('Hello, I\'m an example of how to log via Reactotron.')
