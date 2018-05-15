@@ -10,24 +10,13 @@ import styles from './Styles/NavigationStyles'
 import ostyles, {buttonColor} from '../Containers/Styles/OnboardingScreenStyle'
 
 export const params1 = {
-  header: 'Welcome to the Textile Beta!',
-  message: <Text style={ostyles.message}>{`Thanks very much for agreeing to test the app and provide feedback on this very early draft of our brand new technology. Right now, Textile is all about photos. Soon it will be about how you control and own all your personal data.`}</Text>,
-  buttonTitle: 'OK',
-  onButtonPress: (navigate) => {
-    return () => {
-      navigate('OnboardingInfo', params2)
-    }
-  }
-}
-
-const params2 = {
-  header: 'You\'re helping us improve.',
+  header: 'Welcome to the Textile!',
   message: (
     <View>
       <Text style={ostyles.message}>
-      As a valued Beta Tester, we want to know how, when, and why you are using the app.
-      We anonymously collect data, including crashes, screen interactions, and feedback.
-      This data will help us improve our product.
+      Before we get started, we wanted to let you know that we are collecting data in the Textile app. Your app usage can help us learn a lot about what works well in the app and why people are using it.{'\n'}{'\n'}
+      We anonymously collect data, including crashes, screen interactions, and feedback. All data is deleted within 60 days of collection.
+      This data will help us improve our product.{'\n'}{'\n'}
       If you have any questions about this data collection process, please feel free to get in touch, or check out our terms of service.
       </Text>
       <Text
