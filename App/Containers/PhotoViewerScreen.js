@@ -15,6 +15,24 @@ import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
 import AsyncImage from '../Components/AsyncImage'
 
+import Svg,{
+  Circle,
+  Ellipse,
+  G,
+  LinearGradient,
+  RadialGradient,
+  Line,
+  Path,
+  Polygon,
+  Polyline,
+  Rect,
+  Symbol,
+  Use,
+  Defs,
+  ClipPath,
+  Stop
+} from 'react-native-svg';
+
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
 
@@ -59,40 +77,67 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   get caption () {
-    // Never loads a second time
     const row = this.props.imageData[this.props.currentIndex]
     const caption = row.caption || ''
-    const username = row.meta.username || 'anonymous'
-    let avatarHash = row.meta.username || row.meta.peer_id || 'anonymous'
+    let username = 'anonymous'
+    // this check is to temporarily fix issue#91
+    if (row.meta && row.meta.username) {
+      username = row.meta.username
+    }
     let avatar = ''
     try {
-      avatar = jdenticon.toSvg(avatarHash, 50)
+      avatar = jdenticon.toSvg(username, 50)
     } catch (err) {}
     return (
       <View style={{
-        flex: 1,
-        flexDirection: 'row',
-        bottom: 0,
-        height: 65,
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        width: '100%',
         position: 'absolute',
-        justifyContent: 'center',
-        alignItems: 'center'
+        width: '100%',
+        bottom: 0,
+        height: '20%',
+        paddingHorizontal: 30,
+        backgroundColor: 'rgba(0,0,0, 1)'
       }}>
-        <SvgUri
-          style={{width: 50, height: 50}}
-          width={50}
-          height={50}
-          svgXmlData={avatar}
-        />
-        <Text
-          style={{width: '75%', paddingLeft: 20, textAlign: 'left', color: 'white', fontSize: 15, fontStyle: 'italic'}}>
-          <Text style={{fontWeight: 'bold', paddingBottom: 10}}>
-            {username} {'\n'}
+        <View style={{
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginVertical: 10
+        }}>
+          <Svg
+            width={36}
+            height={36}
+          >
+            <Rect
+              width={36}
+              height={36}
+              rx={4} ry={4}
+              fill={'rgba(250, 250, 250, 0.1)'}
+            />
+            <SvgUri
+              style={{margin: 2, width: 32, height: 32}}
+              width={32}
+              height={32}
+              svgXmlData={avatar}
+            />
+          </Svg>
+          <Text
+            style={{paddingLeft: 10, textAlign: 'left', color: 'white', fontSize: 18}}>
+            {username}
           </Text>
-          <Text>{caption}</Text>
-        </Text>
+        </View>
+        <View style={{
+          padding: 4
+        }}>
+          <Text
+            numberOfLines={3}
+            style={{
+              textAlign: 'left',
+              color: 'white',
+              fontSize: 18
+            }}>
+            {caption}
+          </Text>
+        </View>
       </View>
     )
   }
@@ -127,8 +172,11 @@ class PhotoViewerScreen extends React.PureComponent {
           imageComponent={this.renderImage.bind(this)}
           onPageSelected={this.props.selectImage}
         />
+
         { this.galleryCount }
+
         { !this.props.sharable && this.caption }
+
       </View>
     )
   }
