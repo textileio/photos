@@ -135,9 +135,9 @@ android {
     }
     signingConfigs {
         release {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+            if (file('./my-release-key.keystore').exists()) {
                 // Local build settings -- requires a keystore file
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storeFile file('./my-release-key.keystore')
                 storePassword System.getenv("MYAPP_RELEASE_STORE_PASSWORD")
                 keyAlias System.getenv("MYAPP_RELEASE_KEY_ALIAS")
                 keyPassword System.getenv("MYAPP_RELEASE_KEY_PASSWORD")
