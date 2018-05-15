@@ -9,9 +9,16 @@ import Actions from '../Redux/TextileRedux'
 import IPFSActions from '../Redux/IpfsNodeRedux'
 import BackgroundTask from 'react-native-background-task'
 import IPFS from '../../TextileIPFSNativeModule'
+import Analytics from 'appcenter-analytics'
 
 // create our store
 const { store, persistor } = createStore()
+Analytics.trackEvent("STARTUP FUNCTION")
+
+// const API_URL = 'https://api.textile.io'
+// const debugLevel = (__DEV__ ? "DEBUG" : "INFO")
+// const path = RNFS.DocumentDirectoryPath
+// const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
 
 BackgroundTask.define(() => {
   store.dispatch(Actions.backgroundTask())
