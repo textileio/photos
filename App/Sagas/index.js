@@ -34,7 +34,7 @@ import {
 export default function * root () {
   yield all([
     // some sagas only receive an action
-    takeEvery(StartupTypes.STARTUP, startup),
+    takeLatest(StartupTypes.STARTUP, startup),
 
     // some sagas receive extra parameters in addition to an action
 
