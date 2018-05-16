@@ -14,10 +14,10 @@ export const params1 = {
   message: (
     <View>
       <Text style={ostyles.message}>
-      Before we get started, we wanted to let you know that we are collecting data in the Textile app. Your app usage can help us learn a lot about what works well in the app and why people are using it.{'\n'}{'\n'}
-      We anonymously collect data, including crashes, screen interactions, and feedback. All data is deleted within 60 days of collection.
+      Before we get started, we wanted to let you know that we are collecting data in the Textile app. Your app usage can help us learn how people use the app.{'\n'}{'\n'}
+      We collect anonymous data, including crashes, screen interactions, and feedback. All data is deleted within 60 days of collection.
       This data will help us improve our product.{'\n'}{'\n'}
-      If you have any questions about this data collection process, please feel free to get in touch, or check out our terms of service.
+      If you have any questions about this data collection process, please feel free to get in touch.
       </Text>
       <Text
         style={[ostyles.message, {color: Colors.brandBlue}]}
@@ -93,12 +93,6 @@ const OnboardingNav = StackNavigator(
       screen: OnboardingScreen,
       navigationOptions: {
         title: 'Welcome'
-      }
-    },
-    OnboardingInfo: {
-      screen: OnboardingScreen,
-      navigationOptions: {
-        title: 'Data Collection'
       }
     },
     OnboardingPhotosPermissions: {
