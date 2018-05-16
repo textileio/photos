@@ -39,7 +39,7 @@ export const INITIAL_STATE = Immutable({
       items: [],
       error: null
     },
-    beta: {
+    all: {
       querying: false,
       items: [],
       error: null

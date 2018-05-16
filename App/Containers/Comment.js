@@ -50,7 +50,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (hash, comment) => { dispatch(UIActions.sharePhotoRequest('beta', hash, comment)) },
+    share: (hash, comment) => { dispatch(UIActions.sharePhotoRequest('all', hash, comment)) },
     close: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
     updateComment: (text) => { dispatch(UIActions.updateComment(text)) }
   }

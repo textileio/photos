@@ -206,7 +206,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (item) => { dispatch(IpfsActions.shareImageRequest('beta', item.hash)) },
+    share: (item) => { dispatch(IpfsActions.shareImageRequest('all', item.hash)) },
     authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.hash)) },
     cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
     selectImage: (index) => { dispatch(UIActions.selectImage(index)) },
