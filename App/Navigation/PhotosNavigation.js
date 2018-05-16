@@ -50,7 +50,7 @@ const SharedPhotosNav = StackNavigator(
   {
     // Default config for all screens
     headerMode: 'float',
-    initialRouteParams: { thread: 'beta' },
+    initialRouteParams: { thread: 'all' },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
