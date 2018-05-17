@@ -122,12 +122,10 @@ export function * triggerStopNode () {
 
 export function * createNode ({path}) {
   try {
-    console.log(Config.ALL_THREAD_MNEMONIC)
-    console.log(Config.ALL_THREAD_NAME)
     const debugLevel = (__DEV__ ? "DEBUG" : "INFO")
     const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
     if (createNodeSuccess) {
-      yield call(IPFS.joinThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+      yield call(IPFS.updateThread, Config.ALL_THREAD_MNEMONIC, Config.ALL_THREAD_NAME)
       yield put(IpfsNodeActions.createNodeSuccess())
       yield put(IpfsNodeActions.startNodeRequest())
     } else {

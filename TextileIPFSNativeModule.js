@@ -64,8 +64,8 @@ export default {
     return result
   },
 
-  joinThread: async function (name: string, mnemonic: string): boolean {
-    const success = await TextileIPFS.joinThread(name, mnemonic)
+  updateThread: async function (mnemonic: string, name: string): boolean {
+    const success = await TextileIPFS.updateThread(mnemonic, name)
     return success
   },
 
