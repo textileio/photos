@@ -110,9 +110,9 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void joinThread (String name, String mnemonic, Promise promise) {
+    public void updateThread (String mnemonic, String name, Promise promise) {
         try {
-            textile.joinThread(name, mnemonic);
+            textile.updateThread(mnemonic, name);
             promise.resolve(true);
         }
         catch (Exception e) {
