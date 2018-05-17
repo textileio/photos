@@ -64,6 +64,11 @@ export default {
     return result
   },
 
+  joinThread: async function (name: string, mnemonic: string): boolean {
+    const success = await TextileIPFS.joinThread(name, mnemonic)
+    return success
+  },
+
   addImageAtPath: async function (path: string, thumbPath: string, thread: string): MultipartData {
     const multipartData = await TextileIPFS.addImageAtPath(path, thumbPath, thread)
     return multipartData

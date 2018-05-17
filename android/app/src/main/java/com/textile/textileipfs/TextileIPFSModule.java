@@ -110,6 +110,17 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void joinThread (String name, String mnemonic, Promise promise) {
+        try {
+            textile.joinThread(name, mnemonic);
+            promise.resolve(true);
+        }
+        catch (Exception e) {
+            promise.reject("THREAD JOIN ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void addImageAtPath (String path, String thumbPath, String thread, Promise promise) {
         try {
             // Grab our add image response

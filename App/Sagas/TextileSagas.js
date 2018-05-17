@@ -26,6 +26,7 @@ import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 import { Buffer } from 'buffer'
+import Config from 'react-native-config'
 
 const API_URL = "https://api.textile.io"
 
@@ -121,9 +122,12 @@ export function * triggerStopNode () {
 
 export function * createNode ({path}) {
   try {
+    console.log(Config.ALL_THREAD_MNEMONIC)
+    console.log(Config.ALL_THREAD_NAME)
     const debugLevel = (__DEV__ ? "DEBUG" : "INFO")
     const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
     if (createNodeSuccess) {
+      yield call(IPFS.joinThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
       yield put(IpfsNodeActions.createNodeSuccess())
       yield put(IpfsNodeActions.startNodeRequest())
     } else {
