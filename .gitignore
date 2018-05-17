@@ -68,3 +68,6 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+
+# React Native Config
+.env.production
