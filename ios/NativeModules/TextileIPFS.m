@@ -78,9 +78,9 @@ RCT_REMAP_METHOD(stopNode, stopNodeWithResolver:(RCTPromiseResolveBlock)resolve 
   }
 }
 
-RCT_EXPORT_METHOD(joinThread:(NSString *)name mnemonic:(NSString *)mnemonic resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(updateThread:(NSString *)mnemonic name:(NSString *)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  BOOL success = [self _joinThread:name mnemonic:mnemonic error:&error];
+  BOOL success = [self _updateThread:mnemonic name:name error:&error];
   if(success) {
     resolve(@YES);
   } else {
@@ -295,8 +295,8 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   [self.node signOut:error];
 }
 
-- (BOOL)_joinThread:(NSString *)name mnemonic:(NSString*)mnemonic {
-  return [self.node joinThread:name mnemonic:mnemonic];
+- (BOOL)_updateThread:(NSString *)mnemonic name:(NSString*)name error:(NSError**)error {
+  return [self.node updateThread:mnemonic name:name error:error];
 }
 
 - (NSString *)_getUsername:(NSError**)error {
