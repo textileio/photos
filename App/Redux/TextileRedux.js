@@ -13,6 +13,7 @@ const { Types, Creators } = createActions({
 
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
+  imageUploadCancelled: ['data'],
   imageUploadError: ['data'],
   imageRemovalComplete: ['id'],
   photosTaskError: ['error'],
@@ -82,8 +83,14 @@ export const handleImageUploadComplete = (state, {data}) => {
   return state.merge({ images: { items } })
 }
 
-export const imageRemovalComplete = (state, {id}) => {
-  const items = state.images.items.filter(item => item.hash !== id)
+export const handleImageUploadCancelled = (state, {data}) => {
+  const { id } = data
+  const items = state.images.items.map(item => {
+    if (item.hash === id) {
+      return {...item, state: 'error', error: 'Upload cancelled'}
+    }
+    return item
+  })
   return state.merge({ images: { items } })
 }
 
@@ -91,10 +98,15 @@ export const handleImageUploadError = (state, {data}) => {
   const { error, id } = data
   const items = state.images.items.map(item => {
     if (item.hash === id) {
-      return {...item, state: 'error', error: error.message}
+      return {...item, state: 'error', error: error}
     }
     return item
   })
+  return state.merge({ images: { items } })
+}
+
+export const imageRemovalComplete = (state, {id}) => {
+  const items = state.images.items.filter(item => item.hash !== id)
   return state.merge({ images: { items } })
 }
 
@@ -138,6 +150,7 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
+  [Types.IMAGE_UPLOAD_CANCELLED]: handleImageUploadCancelled,
   [Types.IMAGE_UPLOAD_ERROR]: handleImageUploadError,
   [Types.IMAGE_REMOVAL_COMPLETE]: imageRemovalComplete,
 
