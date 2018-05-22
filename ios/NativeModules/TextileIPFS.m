@@ -80,8 +80,8 @@ RCT_REMAP_METHOD(stopNode, stopNodeWithResolver:(RCTPromiseResolveBlock)resolve 
 
 RCT_EXPORT_METHOD(updateThread:(NSString *)mnemonic name:(NSString *)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  BOOL success = [self _updateThread:mnemonic name:name error:&error];
-  if(success) {
+  [self _updateThread:mnemonic name:name error:&error];
+  if(!error) {
     resolve(@YES);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
