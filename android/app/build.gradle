@@ -142,12 +142,12 @@ android {
                 storePassword System.getenv("MYAPP_RELEASE_STORE_PASSWORD")
                 keyAlias System.getenv("MYAPP_RELEASE_KEY_ALIAS")
                 keyPassword System.getenv("MYAPP_RELEASE_KEY_PASSWORD")
-            } else {
-                // Appcenter configuration -- uses environmental build variables
-                storeFile rootProject.file("app/testapp.jks")
-                storePassword System.getProperty("APPCENTER_KEYSTORE_PASSWORD")
-                keyAlias System.getProperty("APPCENTER_KEY_ALIAS")
-                keyPassword System.getProperty("APPCENTER_KEY_PASSWORD")
+            } else if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                // Appcenter build setting
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword System.getenv("MYAPP_RELEASE_STORE_PASSWORD")
+                keyAlias System.getenv("MYAPP_RELEASE_KEY_ALIAS")
+                keyPassword System.getenv("MYAPP_RELEASE_KEY_PASSWORD")
             }
         }
     }
