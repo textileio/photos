@@ -34,7 +34,4 @@ export function * startup () {
   }
 
   // Dispatch actions you want on STARTUP
-  // yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
-  const previousState = yield select(IpfsNodeSelectors.appState)
-  yield put(IpfsNodeActions.appStateChange(previousState, AppState.currentState))
 }
