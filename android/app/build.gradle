@@ -135,8 +135,8 @@ android {
         }
     }
     signingConfigs {
-        release {
-            storeFile file("app/my-release-key.keystore")
+        signedRelease {
+            storeFile file("./my-release-key.keystore")
             storePassword System.getenv("MYAPP_RELEASE_STORE_PASSWORD")
             keyAlias System.getenv("MYAPP_RELEASE_KEY_ALIAS")
             keyPassword System.getenv("MYAPP_RELEASE_KEY_PASSWORD")
@@ -146,7 +146,9 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
+            if (file("./my-release-key.keystore").exists()) {
+                signingConfig signingConfigs.signedRelease
+            }
         }
     }
     // applicationVariants are e.g. debug, release
