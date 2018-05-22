@@ -14,11 +14,6 @@ import Upload from 'react-native-background-upload'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 
 class TextileManager extends React.PureComponent {
-  constructor () {
-    super()
-    this.setup()
-  }
-
   // TODO: This logic should be moved deeper into the stack
   _handleOpenURLEvent (event) {
     this._handleOpenURL(event.url)
@@ -32,6 +27,7 @@ class TextileManager extends React.PureComponent {
   }
 
   componentDidMount () {
+    this.setup()
     this.props.appStateChange(this.props.currentAppState, AppState.currentState)
     BackgroundTask.schedule()
     // TODO: This logic should be moved deeper into the stack
@@ -49,6 +45,7 @@ class TextileManager extends React.PureComponent {
     AppState.removeEventListener('change', this.handleNewAppState)
     this.progressSubscription.remove()
     this.completionSubscription.remove()
+    this.cancelledSubscription.remove()
     this.errorSubscription.remove()
   }
 
@@ -60,9 +57,10 @@ class TextileManager extends React.PureComponent {
     // await PushNotificationIOS.requestPermissions()
     AppState.addEventListener('change', this.handleNewAppState.bind(this))
     navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
-    this.progressSubscription = Upload.addListener('progress', null, (event) => this.props.uploadProgress(event))
-    this.completionSubscription = Upload.addListener('completed', null, (event) => this.props.uploadComplete(event))
-    this.errorSubscription = Upload.addListener('error', null, (event) => this.props.uploadError(event))
+    this.progressSubscription = Upload.addListener('progress', null, this.props.uploadProgress)
+    this.completionSubscription = Upload.addListener('completed', null, this.props.uploadComplete)
+    this.cancelledSubscription = Upload.addListener('cancelled', null, this.props.uploadCancelled)
+    this.errorSubscription = Upload.addListener('error', null, this.props.uploadError)
   }
 
   render () {
@@ -84,6 +82,7 @@ const mapDispatchToProps = (dispatch) => {
     locationUpdate: () => { dispatch(TextileActions.locationUpdate()) },
     uploadComplete: event => { dispatch(TextileActions.imageUploadComplete(event)) },
     uploadProgress: event => { dispatch(TextileActions.imageUploadProgress(event)) },
+    uploadCancelled: event => { dispatch(TextileActions.imageUploadCancelled(event)) },
     uploadError: event => { dispatch(TextileActions.imageUploadError(event)) }
   }
 }
