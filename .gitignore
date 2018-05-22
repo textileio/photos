@@ -1,6 +1,6 @@
 # Android
 
-android/app/*.keystore
+*.keystore
 
 # OSX
 #
