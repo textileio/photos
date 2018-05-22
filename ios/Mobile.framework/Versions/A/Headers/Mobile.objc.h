@@ -81,6 +81,7 @@
 - (BOOL)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
+- (BOOL)updateThread:(NSString*)mnemonic name:(NSString*)name error:(NSError**)error;
 @end
 
 FOUNDATION_EXPORT MobileWrapper* MobileNewNode(MobileNodeConfig* config, id<MobileMessenger> messenger, NSError** error);
