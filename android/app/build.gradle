@@ -136,15 +136,15 @@ android {
     }
     signingConfigs {
         release {
-            if (file('./my-release-key.keystore').exists()) {
-                // Local build settings -- requires a keystore file
-                storeFile file('./my-release-key.keystore')
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                // Appcenter build setting
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
                 storePassword System.getenv("MYAPP_RELEASE_STORE_PASSWORD")
                 keyAlias System.getenv("MYAPP_RELEASE_KEY_ALIAS")
                 keyPassword System.getenv("MYAPP_RELEASE_KEY_PASSWORD")
-            } else if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                // Appcenter build setting
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
+            } else if (file('./my-release-key.keystore').exists()) {
+                // Local build settings -- requires a keystore file
+                storeFile file('../keystores/my-release-key.keystore')
                 storePassword System.getenv("MYAPP_RELEASE_STORE_PASSWORD")
                 keyAlias System.getenv("MYAPP_RELEASE_KEY_ALIAS")
                 keyPassword System.getenv("MYAPP_RELEASE_KEY_PASSWORD")
