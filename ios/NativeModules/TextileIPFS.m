@@ -295,8 +295,8 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   [self.node signOut:error];
 }
 
-- (BOOL)_updateThread:(NSString *)mnemonic name:(NSString*)name error:(NSError**)error {
-  return [self.node updateThread:mnemonic name:name error:error];
+- (void)_updateThread:(NSString *)mnemonic name:(NSString*)name error:(NSError**)error {
+  [self.node updateThread:mnemonic name:name error:error];
 }
 
 - (NSString *)_getUsername:(NSError**)error {
