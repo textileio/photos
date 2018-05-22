@@ -16,6 +16,7 @@ import {
   logIn,
   recoverPassword,
   viewPhoto,
+  initializeAppState,
   handleNewAppState,
   toggleBackgroundTimer,
   triggerCreateNode,
@@ -35,6 +36,8 @@ export default function * root () {
   yield all([
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
+
+    initializeAppState(),
 
     // some sagas receive extra parameters in addition to an action
 
@@ -60,10 +63,10 @@ export default function * root () {
 
     // Actions that trigger creating (therefore starting/stopping) the node
     // takeEvery(action => action.type === IpfsNodeTypes.APP_STATE_CHANGE && action.newState === 'active', triggerCreateNode),
-    takeEvery(StartupTypes.STARTUP, triggerCreateNode),
-    takeEvery(TextileTypes.LOCATION_UPDATE, triggerCreateNode),
-    takeEvery(TextileTypes.BACKGROUND_TASK, triggerCreateNode),
-    takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
+    // takeEvery(StartupTypes.STARTUP, triggerCreateNode),
+    // takeEvery(TextileTypes.LOCATION_UPDATE, triggerCreateNode),
+    // takeEvery(TextileTypes.BACKGROUND_TASK, triggerCreateNode),
+    // takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
 
     // Actions that trigger stopping the node
     // takeEvery(action => action.type === IpfsNodeTypes.APP_STATE_CHANGE && action.newState === 'background', triggerStopNode),

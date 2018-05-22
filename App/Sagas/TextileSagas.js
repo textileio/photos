@@ -9,9 +9,9 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { Platform } from 'react-native'
+import { Platform, AppState } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, take } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
@@ -19,6 +19,7 @@ import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
 import {queryPhotos} from '../Services/PhotoUtils'
+import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import IpfsNodeActions, { IpfsNodeSelectors } from '../Redux/IpfsNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
@@ -86,24 +87,27 @@ export function * toggleBackgroundTimer ({value}) {
   }
 }
 
+export function * initializeAppState () {
+  yield take(StartupTypes.STARTUP)
+  const defaultAppState = yield select(IpfsNodeSelectors.appState)
+  let queriedAppState = defaultAppState
+  while (queriedAppState.match(/default|unknown/)) {
+    queriedAppState = yield call(() => AppState.currentState)
+  }
+  yield put(IpfsNodeActions.appStateChange(defaultAppState, queriedAppState))
+}
+
 export function * handleNewAppState ({previousState, newState}) {
-  // TODO: HACK alert
-  if (!previousState) {
-    if (newState.match(/unknown|active/)) {
-      console.tron.logImportant('app transitioned to foreground (cold launch)')
-      yield * triggerCreateNode()
-    }
-  } else {
-    if (previousState.match(/unknown|background/) && newState === 'background') {
-      console.tron.logImportant('launched into background')
-      yield * triggerCreateNode()
-    } else if (previousState.match(/unknown|inactive|background/) && newState === 'active') {
-      console.tron.logImportant('app transitioned to foreground')
-      yield * triggerCreateNode()
-    } else if (previousState.match(/inactive|active/) && newState === 'background') {
-      console.tron.logImportant('app transitioned to background')
-      yield * triggerStopNode()
-    }
+  console.log('handleNewAppState', previousState, newState)
+  if (previousState.match(/default|unknown/) && newState === 'background') {
+    console.tron.logImportant('launched into background')
+    yield * triggerCreateNode()
+  } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {
+    console.tron.logImportant('app transitioned to foreground')
+    yield * triggerCreateNode()
+  } else if (previousState.match(/inactive|active/) && newState === 'background') {
+    console.tron.logImportant('app transitioned to background')
+    yield * triggerStopNode()
   }
 }
 
