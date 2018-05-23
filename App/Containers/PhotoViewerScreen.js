@@ -95,12 +95,12 @@ class PhotoViewerScreen extends React.PureComponent {
             height={32}
             width={32}
           >
-              <SvgUri
-                style={{margin: 2, width: 32, height: 32}}
-                width={32}
-                height={32}
-                svgXmlData={avatar}
-                />
+            <SvgUri
+              style={{margin: 2, width: 32, height: 32}}
+              width={32}
+              height={32}
+              svgXmlData={avatar}
+              />
           </View>
           <Text
             style={{paddingLeft: 10, textAlign: 'left', color: 'white', fontSize: 18}}>
