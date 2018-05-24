@@ -10,10 +10,8 @@
     "test:watch": "jest --watch",
     "updateSnapshot": "jest --updateSnapshot",
     "coverage": "jest --coverage && open coverage/lcov-report/index.html || xdg-open coverage/lcov-report/index.html",
-
     "ios": "react-native run-ios --scheme TextilePhotosDev",
     "ios-production": "react-native run-ios --scheme TextilePhotos",
-
     "android:clean": "cd android/ && ./gradlew clean && cd .. && react-native run-android",
     "android": "ENVFILE=.env react-native run-android",
     "android-staging": "ENVFILE=.env.staging react-native run-android",
@@ -21,7 +19,6 @@
     "android:build": "export ENVFILE=.env && cd android && ./gradlew assembleRelease && cd ..",
     "android:build-staging": "export ENVFILE=.env.staging && cd android && ./gradlew assembleRelease && cd ..",
     "android:build-prod": "export ENVFILE=.env.production && cd android && ./gradlew assembleRelease && cd ..",
-
     "android:install": "cd android && ./gradlew assembleRelease && ./gradlew installRelease",
     "android:hockeyapp": "cd android && ./gradlew assembleRelease && puck -submit=auto app/build/outputs/apk/app-release.apk",
     "android:devices": "$ANDROID_HOME/platform-tools/adb devices",

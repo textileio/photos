@@ -3,6 +3,18 @@ import Adapter from 'enzyme-adapter-react-16'
 
 configure({ adapter: new Adapter() })
 
+const EventEmitter = require('EventEmitter');
+const RCTDeviceEventEmitter = require('RCTDeviceEventEmitter');
+
+/**
+ * Mock the NativeEventEmitter as a normal JS EventEmitter.
+ */
+class mockNativeEventEmitter extends EventEmitter {
+  constructor() {
+    super(RCTDeviceEventEmitter.sharedSubscriber)
+  }
+}
+
 // Mock your external modules here if needed
 jest
 .mock('react-native-i18n', () => {
@@ -24,3 +36,14 @@ jest
     }
   }
 })
+.mock('react-native', () => ({
+  NativeModules: {
+    TextileIPFS: {
+      createNodeWithDataDir: jest.fn().mockReturnValue(true)
+    }
+  },
+  Platform: {
+    select: () => jest.fn(dict => dict.android)
+  },
+  NativeEventEmitter: mockNativeEventEmitter
+}))
