@@ -92,7 +92,9 @@ export function * initializeAppState () {
   const defaultAppState = yield select(IpfsNodeSelectors.appState)
   let queriedAppState = defaultAppState
   while (queriedAppState.match(/default|unknown/)) {
-    queriedAppState = yield call(() => AppState.currentState)
+    yield delay(10)
+    const currentAppState = yield call(() => AppState.currentState)
+    queriedAppState = currentAppState || 'unknown'
   }
   yield put(IpfsNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
