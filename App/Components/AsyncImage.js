@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, Text } from 'react-native'
+import { View, Image } from 'react-native'
 import IPFS from '../../TextileIPFSNativeModule'
 
 export default class AsyncImage extends React.Component {
@@ -74,7 +74,7 @@ export default class AsyncImage extends React.Component {
               position: 'absolute'
             }
           ]}
-        ><Text>{this.state.message}</Text></View>)
+        />)
     }
   }
 }
