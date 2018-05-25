@@ -68,34 +68,20 @@ export default class AsyncImage extends React.Component {
   }
 
   placeholder () {
+    let source = require('../Images/loading.png')
     if (this.state.error) {
-      return (
-        <Image
-          source={require('../Images/error.png')}
-          resizeMode={this.props.resizeMode || 'cover'}
-          style={this.props.style || {flex: 1, height: undefined, width: undefined}}
-          capInsets={this.props.capInsets}
-        />
-      )
+      source = require('../Images/error.png')
     } else if (!this.state.requested) {
-      return (
-        <Image
-          source={require('../Images/connecting.png')}
-          resizeMode={this.props.resizeMode || 'cover'}
-          style={this.props.style || {flex: 1, height: undefined, width: undefined}}
-          capInsets={this.props.capInsets}
-        />
-      )
-    } else {
-      return (
-        <Image
-          source={require('../Images/loading.png')}
-          resizeMode={this.props.resizeMode || 'cover'}
-          style={this.props.style || {flex: 1, height: undefined, width: undefined}}
-          capInsets={this.props.capInsets}
-        />
-      )
+      source = require('../Images/connecting.png')
     }
+    return (
+      <Image
+        source={source}
+        resizeMode={this.props.resizeMode || 'cover'}
+        style={this.props.style || {flex: 1, height: undefined, width: undefined}}
+        capInsets={this.props.capInsets}
+      />
+    )
   }
 
   render () {
