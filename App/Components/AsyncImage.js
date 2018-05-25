@@ -1,12 +1,12 @@
 import React from 'react'
-import { View, Image } from 'react-native'
+import { View, Image, Text } from 'react-native'
 import IPFS from '../../TextileIPFSNativeModule'
 
 export default class AsyncImage extends React.Component {
   constructor (props) {
     super(props)
     this.hasCanceled_ = false
-    this.state = { requested: false, loaded: false, source: {} }
+    this.state = { requested: false, loaded: false, source: {}, retry: 1 }
   }
 
   componentWillMount () {
@@ -31,10 +31,17 @@ export default class AsyncImage extends React.Component {
   }
 
   _createRequest () {
+    this.setState(() => ({requested: true}))
     IPFS.getHashRequest(this.props.hash, this.props.path)
       .then(this._setSource)
       .catch(() => { }) // todo: handle failed image requests vs. unmount
-    this.setState(() => ({requested: true}))
+  }
+
+  _retry () {
+    this.setState(() => ({retry: 0, loaded: false}))
+    IPFS.getHashRequest(this.props.hash, this.props.path)
+      .then(this._setSource)
+      .catch(() => { }) // todo: handle failed image requests vs. unmount
   }
 
   _setSource = (source) => {
@@ -51,6 +58,11 @@ export default class AsyncImage extends React.Component {
           resizeMode={this.props.resizeMode || 'cover'}
           style={this.props.style || {flex: 1, height: undefined, width: undefined}}
           capInsets={this.props.capInsets}
+          onError={() => {
+            if (this.state.retry > 0) {
+              this._retry()
+            }
+          }}
         />)
     } else {
       return (
@@ -62,7 +74,7 @@ export default class AsyncImage extends React.Component {
               position: 'absolute'
             }
           ]}
-        />)
+        ><Text>{this.state.message}</Text></View>)
     }
   }
 }
