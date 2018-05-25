@@ -92,8 +92,8 @@ class PhotoViewerScreen extends React.PureComponent {
               alignItems: 'center',
               backgroundColor: 'rgba(250, 250, 250, 0.1)'
             }}
-            height={32}
-            width={32}
+            height={36}
+            width={36}
           >
             <SvgUri
               style={{margin: 2, width: 32, height: 32}}
