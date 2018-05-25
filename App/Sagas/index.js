@@ -37,8 +37,6 @@ export default function * root () {
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
 
-    initializeAppState(),
-
     // some sagas receive extra parameters in addition to an action
 
     takeEvery(IpfsNodeTypes.APP_STATE_CHANGE, handleNewAppState),
@@ -66,7 +64,7 @@ export default function * root () {
     // takeEvery(StartupTypes.STARTUP, triggerCreateNode),
     // takeEvery(TextileTypes.LOCATION_UPDATE, triggerCreateNode),
     // takeEvery(TextileTypes.BACKGROUND_TASK, triggerCreateNode),
-    // takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
+    takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
 
     // Actions that trigger stopping the node
     // takeEvery(action => action.type === IpfsNodeTypes.APP_STATE_CHANGE && action.newState === 'background', triggerStopNode),
@@ -75,6 +73,8 @@ export default function * root () {
     // by running the photosTask saga here
     takeEvery(IpfsNodeTypes.START_NODE_SUCCESS, photosTask),
 
-    takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile)
+    takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile),
+
+    initializeAppState()
   ])
 }
