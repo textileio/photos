@@ -50,6 +50,26 @@ export default class AsyncImage extends React.Component {
     }
   }
 
+  placeholder () {
+    if (!this.state.requested) {
+      return (
+        <Image
+          source={require('../Images/connecting.png')}
+          style={this.props.style || {flex: 1, height: undefined, width: undefined}}
+          resizeMode={'cover'}
+        />
+      )
+    } else {
+      return (
+        <Image
+          source={require('../Images/gateway.png')}
+          style={this.props.style || {flex: 1, height: undefined, width: undefined}}
+          resizeMode={'cover'}
+        />
+      )
+    }
+  }
+
   render () {
     if (this.state.loaded) {
       return (
@@ -74,7 +94,9 @@ export default class AsyncImage extends React.Component {
               position: 'absolute'
             }
           ]}
-        />)
+        >
+          {this.placeholder()}
+        </View>)
     }
   }
 }
