@@ -10,10 +10,8 @@
     "test:watch": "jest --watch",
     "updateSnapshot": "jest --updateSnapshot",
     "coverage": "jest --coverage && open coverage/lcov-report/index.html || xdg-open coverage/lcov-report/index.html",
-
     "ios": "react-native run-ios --scheme TextilePhotosDev",
     "ios-production": "react-native run-ios --scheme TextilePhotos",
-
     "android:clean": "cd android/ && ./gradlew clean && cd .. && react-native run-android",
     "android": "ENVFILE=.env react-native run-android",
     "android-staging": "ENVFILE=.env.staging react-native run-android",
@@ -21,7 +19,6 @@
     "android:build": "export ENVFILE=.env && cd android && ./gradlew assembleRelease && cd ..",
     "android:build-staging": "export ENVFILE=.env.staging && cd android && ./gradlew assembleRelease && cd ..",
     "android:build-prod": "export ENVFILE=.env.production && cd android && ./gradlew assembleRelease && cd ..",
-
     "android:install": "cd android && ./gradlew assembleRelease && ./gradlew installRelease",
     "android:hockeyapp": "cd android && ./gradlew assembleRelease && puck -submit=auto app/build/outputs/apk/app-release.apk",
     "android:devices": "$ANDROID_HOME/platform-tools/adb devices",
@@ -51,7 +48,7 @@
     "react-native-background-fetch": "^2.4.1",
     "react-native-background-task": "^0.2.1",
     "react-native-background-timer": "^2.0.1",
-    "react-native-background-upload": "https://github.com/textileio/react-native-background-upload",
+    "react-native-background-upload": "https://github.com/textileio/react-native-background-upload#3d7f9a3f158cb84ec76b23d77c626abf0d06e17f",
     "react-native-config": "^0.10.0",
     "react-native-deep-link": "^0.1.5",
     "react-native-device-info": "^0.21.5",
