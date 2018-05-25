@@ -42,7 +42,7 @@ export default class AsyncImage extends React.Component {
   }
 
   _retry () {
-    if (this.state.retry > 0) {
+    if (this.state.retry > 0 && !this.hasCanceled_) {
       this.setState(() => ({retry: 0, loaded: false}))
       IPFS.getHashRequest(this.props.hash, this.props.path)
         .then(this._setSource)
@@ -112,7 +112,7 @@ export default class AsyncImage extends React.Component {
             this._success()
           }}
           onError={() => {
-              this._retry()
+            this._retry()
           }}
         />)
     } else {
