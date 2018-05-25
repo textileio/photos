@@ -110,6 +110,7 @@ export default {
     return result
   },
 
+  // TODO: Remove? We don't actually use this anymore
   getAccessToken: async function (): string {
     const result = await TextileIPFS.getAccessToken()
     return result
