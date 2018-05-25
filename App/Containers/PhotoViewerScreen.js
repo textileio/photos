@@ -15,24 +15,6 @@ import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
 import AsyncImage from '../Components/AsyncImage'
 
-import Svg,{
-  Circle,
-  Ellipse,
-  G,
-  LinearGradient,
-  RadialGradient,
-  Line,
-  Path,
-  Polygon,
-  Polyline,
-  Rect,
-  Symbol,
-  Use,
-  Defs,
-  ClipPath,
-  Stop
-} from 'react-native-svg';
-
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
 
@@ -103,23 +85,23 @@ class PhotoViewerScreen extends React.PureComponent {
           alignItems: 'center',
           marginVertical: 10
         }}>
-          <Svg
-            width={36}
-            height={36}
+          <View
+            style={{
+              width: '36',
+              height: '36',
+              alignItems: 'center',
+              backgroundColor: 'rgba(250, 250, 250, 0.1)'
+            }}
+            height={32}
+            width={32}
           >
-            <Rect
-              width={36}
-              height={36}
-              rx={4} ry={4}
-              fill={'rgba(250, 250, 250, 0.1)'}
-            />
             <SvgUri
               style={{margin: 2, width: 32, height: 32}}
               width={32}
               height={32}
               svgXmlData={avatar}
-            />
-          </Svg>
+              />
+          </View>
           <Text
             style={{paddingLeft: 10, textAlign: 'left', color: 'white', fontSize: 18}}>
             {username}
