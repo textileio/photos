@@ -22,11 +22,7 @@ export default class AsyncImage extends React.Component {
       this._createRequest()
       return false
     }
-    if (this.state.error !== nextState.error) {
-      return true
-    }
-    // request has been sent, loaded has become true
-    return this.state.requested && this.state.loaded !== nextState.loaded && nextState.loaded === true
+    return this.state.error !== nextState.error || this.state.loaded !== nextState.loaded
   }
 
   componentWillUnmount () {
@@ -43,7 +39,7 @@ export default class AsyncImage extends React.Component {
 
   _retry () {
     if (this.state.retry > 0 && !this.hasCanceled_) {
-      this.setState(() => ({retry: 0, loaded: false}))
+      this.setState(() => ({retry: this.state.retry - 1, loaded: false}))
       IPFS.getHashRequest(this.props.hash, this.props.path)
         .then(this._setSource)
         .catch(this._retry) // todo: handle failed hash requests vs. unmount
@@ -79,7 +75,7 @@ export default class AsyncImage extends React.Component {
           capInsets={this.props.capInsets}
         />
       )
-    } else if (!this.state.loaded) {
+    } else if (!this.state.requested) {
       return (
         <Image
           source={require('../Images/connecting.png')}
