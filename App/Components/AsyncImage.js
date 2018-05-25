@@ -22,7 +22,9 @@ export default class AsyncImage extends React.Component {
       this._createRequest()
       return false
     }
-    return this.state.error !== nextState.error || this.state.loaded !== nextState.loaded
+    return this.state.error !== nextState.error ||
+      this.state.loaded !== nextState.loaded ||
+      this.state.requested !== nextState.requested
   }
 
   componentWillUnmount () {
@@ -42,7 +44,7 @@ export default class AsyncImage extends React.Component {
       this.setState(() => ({retry: this.state.retry - 1, loaded: false}))
       IPFS.getHashRequest(this.props.hash, this.props.path)
         .then(this._setSource)
-        .catch(this._retry) // todo: handle failed hash requests vs. unmount
+        .catch(this._retry)
     } else {
       this._error()
     }
