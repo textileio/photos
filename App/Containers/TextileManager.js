@@ -28,7 +28,6 @@ class TextileManager extends React.PureComponent {
 
   componentDidMount () {
     this.setup()
-    this.props.appStateChange(this.props.currentAppState, AppState.currentState)
     BackgroundTask.schedule()
     // TODO: This logic should be moved deeper into the stack
     if (Platform.OS === 'android') {
