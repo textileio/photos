@@ -62,7 +62,6 @@ export default class AsyncImage extends React.Component {
   }
 
   _setSource = (source) => {
-    console.log(this.props.hash, this.state.path)
     // After async token is received, it readys the image source
     if (!this.hasCanceled_) {
       this.setState(() => ({loaded: true, source}))
