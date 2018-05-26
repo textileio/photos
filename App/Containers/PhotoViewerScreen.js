@@ -33,7 +33,7 @@ class PhotoViewerScreen extends React.PureComponent {
     return (<AsyncImage
       key={props.image.key}
       hash={props.image.hash}
-      path={props.image.path}
+      progressiveLoad={props.image.progressiveLoad}
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
       capInsets={props.capInsets}
@@ -167,11 +167,12 @@ class PhotoViewerScreen extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const items = state.ipfs.threads[state.ui.viewingPhoto.thread].items
   const path = state.ui.viewingPhoto.thread === 'default' ? '/photo' : '/thumb'
+  const progressiveLoad = state.ui.viewingPhoto.thread === 'default'
   const sharable = state.ui.viewingPhoto.thread === 'default'
   const imageData = items.map(item => {
     return {
       ...item,
-      path,
+      progressiveLoad,
       key: item.hash + path,
       source: {url: 'file://' + item.hash + '.png'}, // <-- in case RN uses to know things
       dimensions: { width: 150, height: 150 },
