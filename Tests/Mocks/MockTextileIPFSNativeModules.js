@@ -9,26 +9,39 @@ export class mockNativeEventEmitter extends EventEmitter {
 }
 
 export const mockTextileIPFS = {
+  _hasBeenCreated: false,
   _isSignedIn: false,
+  _isSignedUp: false,
   // If an api url with reject in it is used fail, else resolve true
   createNodeWithDataDir: jest.fn().mockImplementation((dataDir, apiUrl, logLevel) => {
     if (apiUrl.includes("reject")) {
       throw new Error('CREATE ERROR')
     } else {
+      this._hasBeenCreated = true
       return Promise.resolve(true)
     }
   }),
-  // Start successfully the 1st time called, and reject with error 2nd time
-  startNode: jest.fn()
-    .mockResolvedValueOnce(true)
-    .mockRejectedValueOnce(new Error('START ERROR')),
-  // Stop successfully the 1st time called, and reject with error 2nd time
-  stopNode: jest.fn()
-    .mockResolvedValueOnce(true)
-    .mockRejectedValueOnce(new Error('STOP ERROR')),
+  startNode: jest.fn().mockImplementation(() => {
+    // This can sometimes happen in the 'real world'
+    if (!this._hasBeenCreated) {
+      throw new Error('method call on null object reference')
+    }
+    return Promise.resolve(true)
+  }),
+  stopNode: jest.fn().mockImplementation(() => {
+    // This can sometimes happen in the 'real world'
+    if (!this._hasBeenCreated) {
+      throw new Error('method call on null object reference')
+    }
+    return Promise.resolve(true)
+  }),
   // If a password of 'invalid' is used, reject, else, resolve true
   signIn: jest.fn().mockImplementation((username, password) => {
-    if (username === 'invalid') {
+    // This can sometimes happen in the 'real world'
+    if (!this._hasBeenCreated) {
+      throw new Error('method call on null object reference')
+    }
+    if (!this._isSignedUp) {
       return Promise.resolve('{"status": 403, "error": "forbidden"}')
     } else if (username == 'throw'){
       throw new Error('{"status": 404, "error": "not found"}')
@@ -37,11 +50,16 @@ export const mockTextileIPFS = {
     return Promise.resolve('{"status": 200, "session": "session_token"}')
   }),
   signUpWithEmail: jest.fn().mockImplementation((username, password, email, referral) => {
+    // This can sometimes happen in the 'real world'
+    if (!this._hasBeenCreated) {
+      throw new Error('method call on null object reference')
+    }
     if (username === 'invalid') {
       return Promise.resolve('{"status": 404, "error": "something was invalid"}')
     } else if (username === 'throw') {
       throw new Error('{"status": 520, "error": "some random error"}')
     }
+    this._isSignedUp = true
     this._isSignedIn = true
     return Promise.resolve('{"status": 201, "session": "session_token"}')
   }),
