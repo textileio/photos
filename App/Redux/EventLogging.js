@@ -53,6 +53,8 @@ const actionToPayload = (action) => {
       return { error: action.error.message }
     case 'PHOTOS_TASK_ERROR':
       return { error: action.error.message }
+    case 'PHOTO_PROCESSING_ERROR':
+      return { error: action.error.message }
     case 'SIGN_UP_REQUEST':
       return { description: action.data.referralCode + ', ' + action.data.username + ', ' + action.data.email}
     case 'LOG_IN_REQUEST':
