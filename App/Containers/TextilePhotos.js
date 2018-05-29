@@ -43,15 +43,18 @@ const mapStateToProps = (state, ownProps) => {
   }
   const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
 
+  const nodeStatus = state.ipfs.nodeState.error
+    ? 'Error - ' + state.ipfs.nodeState.error.message
+    : state.ipfs.nodeState.state
+
   const placeholderText = state.ipfs.nodeState.state !== 'started'
-    ? 'IPFS Status:\n' + state.ipfs.nodeState.state
+    ? 'IPFS Status:\n' + nodeStatus
     : (thread === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
     : 'Share your first photo to the All Users thread.')
   return {
     thread,
     items: updatedItems,
-    loadingText: state.ipfs.nodeState.state,
     refreshing: state.ipfs.threads[thread].querying,
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText
