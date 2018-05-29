@@ -65,7 +65,7 @@ export function * logIn ({data}) {
 }
 
 export function * recoverPassword ({data}) {
-  const {username} = data
+  // TODO: const {username} = data
   try {
     yield delay(2000)
     yield put(AuthActions.recoverPasswordSuccess())
@@ -128,7 +128,7 @@ export function * triggerStopNode () {
 
 export function * createNode ({path}) {
   try {
-    const debugLevel = (__DEV__ ? "DEBUG" : "INFO")
+    const debugLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
     const updateThreadSuccess = yield call(IPFS.updateThread, Config.ALL_THREAD_MNEMONIC, Config.ALL_THREAD_NAME)
     if (createNodeSuccess && updateThreadSuccess) {
