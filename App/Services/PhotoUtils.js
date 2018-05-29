@@ -36,8 +36,7 @@ export async function getAllPhotos () {
   return data
 }
 
-export async function queryPhotos () {
-  const photos = await getAllPhotos()
+export async function scalePhotos (photos) {
   if (photos.length > 0) {
     const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
     const fullExists = await RNFS.exists(fullDir)
