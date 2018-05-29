@@ -50,7 +50,7 @@ export async function queryPhotos () {
           while (match = regex.exec(photo.uri)) {
             params[match[1]] = match[2]
           }
-          const path = fullDir + params.id + '.' + params.ext
+          const path = fullDir + params.id + '.' + 'JPG'
           await RNFS.copyAssetsFileIOS(photo.uri, path, 0, 0)
           photo['path'] = path
           const thumbPath = await resizeImage(photo.path, thumbRelativeDir)
