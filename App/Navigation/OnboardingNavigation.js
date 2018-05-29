@@ -4,7 +4,7 @@ import { StackNavigator } from 'react-navigation'
 import OnboardingScreen from '../Containers/OnboardingScreen'
 import { Colors } from '../Themes'
 import LoginScreen from '../Containers/LoginScreen'
-import {getPhoto} from '../Services/PhotoUtils'
+import {getPage} from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
 import styles from './Styles/NavigationStyles'
 import ostyles, {buttonColor} from '../Containers/Styles/OnboardingScreenStyle'
@@ -48,7 +48,7 @@ const params3 = {
         )
       }
       // Trigger photos permission prompt in iOS
-      await getPhoto()
+      await getPage(1)
       navigate('OnboardingLocationPermissions', params4)
     }
   }

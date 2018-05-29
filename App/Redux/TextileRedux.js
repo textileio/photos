@@ -9,14 +9,17 @@ const { Types, Creators } = createActions({
   locationUpdate: null,
   backgroundTask: null,
 
-  imageAdded: ['thread', 'hash', 'remotePayloadPath'],
+  imageIgnore: ['uri'],
+  imageAdded: ['uri', 'thread', 'hash', 'remotePayloadPath'],
 
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
   imageUploadCancelled: ['data'],
   imageUploadError: ['data'],
   imageRemovalComplete: ['id'],
+
   photosTaskError: ['error'],
+  photoProcessingError: ['id', 'error'],
 
   pairNewDevice: ['pubKey'],
   pairNewDeviceSuccess: ['pubKey'],
@@ -55,6 +58,13 @@ export const TextileSelectors = {
 
 export const onboardedSuccess = state => {
   return state.merge({ onboarded: true })
+}
+
+// Used to ignore certain URIs in the CameraRoll
+export const handleImageIgnore = (state, {uri}) => {
+  const processed = state.camera && state.camera.processed ? state.camera.processed : []
+  const camera = {processed: [uri, ...processed]}
+  return state.merge({ camera })
 }
 
 export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
@@ -151,6 +161,7 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
+  [Types.IMAGE_IGNORE]: handleImageIgnore,
   [Types.IMAGE_ADDED]: handleImageAdded,
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,

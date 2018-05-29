@@ -243,15 +243,19 @@ export function * photosTask () {
     const processed = camera && camera.processed ? camera.processed : []
 
     let allPhotos = yield call(getAllPhotos)
-    if (camera === undefined || camera.processed === undefined) {
-      for (const uri of allPhotos.map((p) => p.uri)) {
-        yield put(TextileActions.newImage(uri))
+    if (camera === undefined || camera.processed === undefined || processed.length === 0) {
+      const ignoredPhotos = allPhotos.splice(1)
+      for (const uri of ignoredPhotos.map((photo) => photo.uri)) {
+        yield put(TextileActions.imageIgnore(uri))
       }
-      allPhotos = []
     }
 
+    let allProcessed = processed.reduce((o, item, index) => ({...o, [item]: { index }}), {})
     const newPhotos = allPhotos.filter((photo) => {
-      return processed.indexOf(photo.uri) === -1
+      if (allProcessed[photo.uri]) {
+        return false
+      }
+      return true
     })
 
     const photos = yield call(scalePhotos, newPhotos)
@@ -260,7 +264,7 @@ export function * photosTask () {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
-      yield put(TextileActions.imageAdded('default', photo.uri, multipartData.boundary, multipartData.payloadPath))
+      yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
       yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
       yield call(
         Upload.startUpload,
