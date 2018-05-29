@@ -262,21 +262,25 @@ export function * photosTask () {
 
     for (const photo of photos.reverse()) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
-      yield call(RNFS.unlink, photo.path)
-      yield call(RNFS.unlink, photo.thumbPath)
-      yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
-      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-      yield call(
-        Upload.startUpload,
-        {
-          customUploadId: multipartData.boundary,
-          path: multipartData.payloadPath,
-          url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
-          method: 'POST',
-          type: 'multipart',
-          field: multipartData.boundary
-        }
-      )
+      try { // single photo try/catch
+        yield call(RNFS.unlink, photo.path)
+        yield call(RNFS.unlink, photo.thumbPath)
+        yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
+        yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+        yield call(
+          Upload.startUpload,
+          {
+            customUploadId: multipartData.boundary,
+            path: multipartData.payloadPath,
+            url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
+            method: 'POST',
+            type: 'multipart',
+            field: multipartData.boundary
+          }
+        )
+      } catch (error) {
+        yield put(TextileActions.photoProcessingError(multipartData.boundary, error))
+      }
       console.log(multipartData.payloadPath)
     }
   } catch (error) {
