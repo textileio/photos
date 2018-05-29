@@ -18,7 +18,7 @@ import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
-import {queryPhotos} from '../Services/PhotoUtils'
+import { getAllPhotos, scalePhotos } from '../Services/PhotoUtils'
 import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import IpfsNodeActions, { IpfsNodeSelectors } from '../Redux/IpfsNodeRedux'
@@ -242,7 +242,7 @@ export function * photosTask () {
     const camera = yield select(TextileSelectors.camera)
     const processed = camera && camera.processed ? camera.processed : []
 
-    let allPhotos = yield call(queryPhotos)
+    let allPhotos = yield call(getAllPhotos)
     if (camera === undefined || camera.processed === undefined) {
       for (const uri of allPhotos.map((p) => p.uri)) {
         yield put(TextileActions.newImage(uri))
@@ -250,10 +250,11 @@ export function * photosTask () {
       allPhotos = []
     }
 
-    // TODO: add all to processed and quit
-    let photos = allPhotos.filter((photo) => {
+    const newPhotos = allPhotos.filter((photo) => {
       return processed.indexOf(photo.uri) === -1
     })
+
+    const photos = yield call(scalePhotos, newPhotos)
 
     for (const photo of photos.reverse()) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
