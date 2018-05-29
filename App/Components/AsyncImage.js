@@ -6,7 +6,7 @@ export default class AsyncImage extends React.Component {
   constructor (props) {
     super(props)
     this.hasCanceled_ = false
-    this.state = { requested: false, loaded: false, source: {}, retry: 2, error: false }
+    this.state = { path: '/thumb', requested: false, loaded: false, source: {}, retry: 2, error: false }
   }
 
   componentWillMount () {
@@ -22,7 +22,8 @@ export default class AsyncImage extends React.Component {
       this._createRequest()
       return false
     }
-    return this.state.error !== nextState.error ||
+    return this.state.path !== nextState.path ||
+      this.state.error !== nextState.error ||
       this.state.loaded !== nextState.loaded ||
       this.state.requested !== nextState.requested
   }
@@ -34,7 +35,7 @@ export default class AsyncImage extends React.Component {
 
   _createRequest () {
     this.setState(() => ({requested: true}))
-    IPFS.getHashRequest(this.props.hash, this.props.path)
+    IPFS.getHashRequest(this.props.hash, this.state.path)
       .then(this._setSource)
       .catch(this._retry) // todo: handle failed hash requests vs. unmount
   }
@@ -42,7 +43,7 @@ export default class AsyncImage extends React.Component {
   _retry () {
     if (this.state.retry > 0 && !this.hasCanceled_) {
       this.setState(() => ({retry: this.state.retry - 1, loaded: false}))
-      IPFS.getHashRequest(this.props.hash, this.props.path)
+      IPFS.getHashRequest(this.props.hash, this.state.path)
         .then(this._setSource)
         .catch(this._retry)
     } else {
@@ -64,6 +65,11 @@ export default class AsyncImage extends React.Component {
     // After async token is received, it readys the image source
     if (!this.hasCanceled_) {
       this.setState(() => ({loaded: true, source}))
+      if (this.props.progressiveLoad && this.state.path === '/thumb') {
+        IPFS.getHashRequest(this.props.hash, '/photo')
+          .then(this._setSource)
+        this.setState(() => ({path: '/photo'}))
+      }
     }
   }
 
