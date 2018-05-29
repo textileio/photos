@@ -258,10 +258,9 @@ export function * photosTask () {
 
     for (const photo of photos.reverse()) {
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
-      yield put(TextileActions.newImage(photo.uri))
       yield call(RNFS.unlink, photo.path)
       yield call(RNFS.unlink, photo.thumbPath)
-      yield put(TextileActions.imageAdded('default', multipartData.boundary, multipartData.payloadPath))
+      yield put(TextileActions.imageAdded('default', photo.uri, multipartData.boundary, multipartData.payloadPath))
       yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
       yield call(
         Upload.startUpload,
