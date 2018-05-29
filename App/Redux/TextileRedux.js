@@ -145,7 +145,7 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 
 export const handleNewImage = (state, {uri}) => {
   const processed = state.camera && state.camera.processed ? state.camera.processed : []
-  const camera = {processed: [uri, ...processed]}
+  let camera = {processed: [uri, ...processed]}
   return state.merge({ camera })
 }
 
