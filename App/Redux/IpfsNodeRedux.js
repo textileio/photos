@@ -81,7 +81,7 @@ export const nodeStopped = state =>
   state.merge({...state, nodeState: {state: 'stopped', error: null}})
 
 export const nodeError = (state, {error}) =>
-  state.merge({...state, nodeState: {error: error}})
+  state.merge({...state, nodeState: {...state.nodeState, error: error}})
 
 export const photoHashesRequest = (state, {thread}) => {
   const currentThreadState = state.threads[thread]
