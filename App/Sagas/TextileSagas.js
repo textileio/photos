@@ -18,7 +18,7 @@ import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
-import {queryPhotos} from '../Services/PhotoUtils'
+import {queryPhotos, getAllPhotos} from '../Services/PhotoUtils'
 import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import IpfsNodeActions, { IpfsNodeSelectors } from '../Redux/IpfsNodeRedux'
@@ -238,6 +238,56 @@ export function * shareImage ({thread, hash, caption}) {
 }
 
 export function * photosTask () {
+  try {
+    const camera = yield select(TextileSelectors.camera)
+    const processed = camera && camera.processed ? camera.processed : []
+
+    let allPhotos = yield call(queryPhotos)
+    if (camera === undefined || camera.processed === undefined) {
+      for (const uri of allPhotos.map((p) => p.uri)) {
+        yield put(TextileActions.newImage(uri))
+      }
+      allPhotos = []
+    }
+
+    // TODO: add all to processed and quit
+    let photos = allPhotos.filter((photo) => {
+      return processed.indexOf(photo.uri) === -1
+    })
+
+    for (const photo of photos.reverse()) {
+      const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
+      yield put(TextileActions.newImage(photo.uri))
+      yield call(RNFS.unlink, photo.path)
+      yield call(RNFS.unlink, photo.thumbPath)
+      yield put(TextileActions.imageAdded('default', multipartData.boundary, multipartData.payloadPath))
+      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+      yield call(
+        Upload.startUpload,
+        {
+          customUploadId: multipartData.boundary,
+          path: multipartData.payloadPath,
+          url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
+          method: 'POST',
+          type: 'multipart',
+          field: multipartData.boundary
+        }
+      )
+      console.log(multipartData.payloadPath)
+    }
+  } catch (error) {
+    yield put(TextileActions.photosTaskError(error))
+  } finally {
+    const appState = yield select(IpfsNodeSelectors.appState)
+    if (appState.match(/background/)) {
+      yield * stopNode()
+    } else {
+      yield put(IpfsNodeActions.lock(false))
+    }
+  }
+}
+
+export function * photosTaskOrig () {
   try {
     const photos = yield call(queryPhotos)
     for (const photo of photos.reverse()) {

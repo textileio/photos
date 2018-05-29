@@ -9,6 +9,7 @@ const { Types, Creators } = createActions({
   locationUpdate: null,
   backgroundTask: null,
 
+  newImage: ['uri'],
   imageAdded: ['thread', 'hash', 'remotePayloadPath'],
 
   imageUploadProgress: ['data'],
@@ -35,6 +36,9 @@ export const INITIAL_STATE = Immutable({
     loading: false,
     items: []
   },
+  camera: {
+    processed: []
+  },
   devices: []
 })
 
@@ -45,7 +49,8 @@ export const TextileSelectors = {
   itemsById: (state, id) => {
     return state.textile.images.items.filter(item => item.hash === id)
   },
-  onboarded: state => state.textile.onboarded
+  onboarded: state => state.textile.onboarded,
+  camera: state => state.textile.camera
 }
 
 /* ------------- Reducers ------------- */
@@ -138,6 +143,16 @@ export const pairNewDeviceError = (state, {pubKey}) => {
   return state.merge({ devices })
 }
 
+export const handleNewImage = (state, {uri}) => {
+  console.log('')
+  console.log(state.camera)
+  const processed = state.camera && state.camera.processed ? state.camera.processed : []
+  const camera = {processed: [uri, ...processed]}
+  console.log(camera)
+  console.log('')
+  return state.merge({ camera })
+}
+
 // Helper so sagas can figure out current items loaded
 // const getItems = state => state.items
 
@@ -146,6 +161,7 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
+  [Types.NEW_IMAGE]: handleNewImage,
   [Types.IMAGE_ADDED]: handleImageAdded,
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
