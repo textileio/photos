@@ -6,6 +6,8 @@ import Immutable from 'seamless-immutable'
 const { Types, Creators } = createActions({
   onboardedSuccess: null,
 
+  toggleVerboseUi: null,
+
   locationUpdate: null,
   backgroundTask: null,
 
@@ -30,6 +32,9 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   onboarded: false,
+  preferences: {
+    verboseUi: false
+  },
   images: {
     error: false,
     loading: false,
@@ -53,6 +58,9 @@ export const TextileSelectors = {
 export const onboardedSuccess = state => {
   return state.merge({ onboarded: true })
 }
+
+export const toggleVerboseUi = state =>
+  state.merge({ preferences: { ...state.preferences, verboseUi: !state.preferences.verboseUi } })
 
 export const handleImageAdded = (state, {thread, hash, remotePayloadPath}) => {
   const items = [{ thread, hash, remotePayloadPath, state: 'pending' }, ...state.images.items]
@@ -145,6 +153,8 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
+
+  [Types.TOGGLE_VERBOSE_UI]: toggleVerboseUi,
 
   [Types.IMAGE_ADDED]: handleImageAdded,
 
