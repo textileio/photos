@@ -36,40 +36,37 @@ export async function getAllPhotos () {
   return data
 }
 
-export async function scalePhotos (photos) {
-  if (photos.length > 0) {
-    const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
-    const fullExists = await RNFS.exists(fullDir)
-    if (!fullExists) {
-      await RNFS.mkdir(fullDir)
-    }
-    const thumbRelativeDir = 'images/thumb/'
-    const thumbDir = RNFS.DocumentDirectoryPath + '/' + thumbRelativeDir
-    const thumbExists = await RNFS.exists(thumbDir)
-    if (!thumbExists) {
-      await RNFS.mkdir(thumbDir)
-    }
-    for (const photo of photos) {
-      // iOS method
-      if (photo.uri.includes('assets-library://')) {
-        var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
-        while (match = regex.exec(photo.uri)) {
-          params[match[1]] = match[2]
-        }
-        const path = fullDir + params.id + '.' + params.ext
-        await RNFS.copyAssetsFileIOS(photo.uri, path, 0, 0)
-        photo['path'] = path
-        const thumbPath = await resizeImage(photo.path, thumbRelativeDir)
-        photo['thumbPath'] = thumbPath
-      }
-      // Android Method
-      else if (photo.uri.includes('content://media')) {
-        photo['path'] = await IPFS.getFilePath(photo.uri)
-        photo['thumbPath'] = await resizeImage(photo.path, thumbDir)
-      }
-    }
+export async function scalePhoto (photo) {
+  const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
+  const fullExists = await RNFS.exists(fullDir)
+  if (!fullExists) {
+    await RNFS.mkdir(fullDir)
   }
-  return photos
+  const thumbRelativeDir = 'images/thumb/'
+  const thumbDir = RNFS.DocumentDirectoryPath + '/' + thumbRelativeDir
+  const thumbExists = await RNFS.exists(thumbDir)
+  if (!thumbExists) {
+    await RNFS.mkdir(thumbDir)
+  }
+
+  // iOS method
+  if (photo.uri.includes('assets-library://')) {
+    var regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
+    while (match = regex.exec(photo.uri)) {
+      params[match[1]] = match[2]
+    }
+    const path = fullDir + params.id + '.' + params.ext
+    await RNFS.copyAssetsFileIOS(photo.uri, path, 0, 0)
+    photo['path'] = path
+    const thumbPath = await resizeImage(photo.path, thumbRelativeDir)
+    photo['thumbPath'] = thumbPath
+  }
+  // Android Method
+  else if (photo.uri.includes('content://media')) {
+    photo['path'] = await IPFS.getFilePath(photo.uri)
+    photo['thumbPath'] = await resizeImage(photo.path, thumbDir)
+  }
+  return photo
 }
 
 export async function resizeImage (path: string, outputPath: string, width: number = 400, height: number = 400): string {

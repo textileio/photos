@@ -18,7 +18,7 @@ import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
-import { getAllPhotos, scalePhotos } from '../Services/PhotoUtils'
+import { getAllPhotos, scalePhoto } from '../Services/PhotoUtils'
 import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import IpfsNodeActions, { IpfsNodeSelectors } from '../Redux/IpfsNodeRedux'
@@ -251,16 +251,15 @@ export function * photosTask () {
     }
 
     let allProcessed = processed.reduce((o, item, index) => ({...o, [item]: { index }}), {})
-    const newPhotos = allPhotos.filter((photo) => {
+    const photos = allPhotos.filter((photo) => {
       if (allProcessed[photo.uri]) {
         return false
       }
       return true
     })
 
-    const photos = yield call(scalePhotos, newPhotos)
-
-    for (const photo of photos.reverse()) {
+    for (const orig of photos.reverse()) {
+      const photo = yield call(scalePhoto, orig)
       const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
       try { // single photo try/catch
         yield call(RNFS.unlink, photo.path)
@@ -279,7 +278,12 @@ export function * photosTask () {
           }
         )
       } catch (error) {
-        yield put(TextileActions.photoProcessingError(multipartData.boundary, error))
+        try { // no matter, what. try to clean up photos
+          yield call(RNFS.unlink, photo.path)
+          yield call(RNFS.unlink, photo.thumbPath)
+        } finally {
+          yield put(TextileActions.photoProcessingError(multipartData.boundary, error))
+        }
       }
       console.log(multipartData.payloadPath)
     }
