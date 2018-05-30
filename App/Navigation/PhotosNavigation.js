@@ -20,10 +20,7 @@ import styles, {headerTintColor} from './Styles/NavigationStyles'
 const PhotosNav = StackNavigator(
   {
     TextilePhotos: {
-      screen: TextilePhotos,
-      navigationOptions: {
-        headerTitle: <Image style={styles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
-      }
+      screen: TextilePhotos
     }
   },
   {
