@@ -154,6 +154,8 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
+  [Types.TOGGLE_VERBOSE_UI]: toggleVerboseUi,
+
   [Types.IMAGE_ADDED]: handleImageAdded,
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,

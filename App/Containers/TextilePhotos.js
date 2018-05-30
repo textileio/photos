@@ -1,11 +1,27 @@
 // @flow
 import React from 'react'
+import {Image, TouchableWithoutFeedback} from 'react-native'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
+import TextileActions from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import UIActions from '../Redux/UIRedux'
+import styles from '../Navigation/Styles/NavigationStyles'
 
 class TextilePhotos extends React.PureComponent {
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state
+    return {
+      headerTitle: <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
+        <Image style={styles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
+      </TouchableWithoutFeedback>
+    }
+  }
+
+  componentDidMount () {
+    this.props.navigation.setParams({ toggleVerboseUi: this.props.toggleVerboseUi })
+  }
+
   onSelect = (row) => {
     return () => {
       this.props.viewPhoto(row.index, this.props.thread)
@@ -64,7 +80,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewPhoto: (index, thread) => { dispatch(UIActions.viewPhotoRequest(index, thread)) },
-    refresh: thread => { dispatch(IpfsNodeActions.getPhotoHashesRequest(thread)) }
+    refresh: thread => { dispatch(IpfsNodeActions.getPhotoHashesRequest(thread)) },
+    toggleVerboseUi: () => { dispatch(TextileActions.toggleVerboseUi()) }
   }
 }
 
