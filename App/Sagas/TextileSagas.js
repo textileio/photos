@@ -243,8 +243,6 @@ export function * photosTask () {
     const processed = camera && camera.processed ? camera.processed : []
 
     let allPhotos = yield call(getAllPhotos)
-    console.log('allPhotos', allPhotos.length)
-    console.log('processed', processed.length)
     if (camera === undefined || camera.processed === undefined || processed.length === 0) {
       const ignoredPhotos = allPhotos.splice(1)
       for (const uri of ignoredPhotos.map((photo) => photo.uri)) {
@@ -259,8 +257,6 @@ export function * photosTask () {
       }
       return true
     })
-
-    console.log('searched finished')
 
     for (const orig of photos.reverse()) {
       const photo = yield call(scalePhoto, orig)
