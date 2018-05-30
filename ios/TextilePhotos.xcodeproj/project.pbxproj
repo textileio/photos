@@ -12,7 +12,6 @@
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
-		00E356F31AD99517003FC87E /* TextilePhotosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TextilePhotosTests.m */; };
 		01087E6E60484EFEAE898CCE /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01AD301CC5D94FE89B8A6E5C /* EvilIcons.ttf */; };
 		022D3D9453F84956A5D9375D /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0596A7A5674544CB804D1B34 /* AppCenter-Config.plist */; };
 		087E01CBBA974E04B9090456 /* Degarism Studio - Biotif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C04507C278B4A96A58B97E9 /* Degarism Studio - Biotif-Bold.ttf */; };
@@ -74,6 +73,9 @@
 		EF3CE28E6FAE462CBF983CB1 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E91A5EF4C7A428FB9778EEA /* TSBackgroundFetch.framework */; };
 		F195DE72697C465BA3DD4953 /* Degarism Studio - Biotif-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95D38B9042064AE3826A7C8F /* Degarism Studio - Biotif-LightItalic.ttf */; };
 		F586CCF4CB7147369AC39EFC /* Degarism Studio - Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */; };
+		FC05904C20BF6914001618FF /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		FC146F0420BF088D00FAB125 /* TextileBridgeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FC146F0320BF088D00FAB125 /* TextileBridgeTests.m */; };
+		FC146F2920BF300000FAB125 /* libRCTTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FC146F2620BF2FD900FAB125 /* libRCTTest.a */; };
 		FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */ = {isa = PBXBuildFile; fileRef = FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */; };
 /* End PBXBuildFile section */
 
@@ -505,6 +507,20 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
+		FC146F2520BF2FD900FAB125 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC146F2020BF2FD900FAB125 /* RCTTest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 580C376F1AB104AF0015E709;
+			remoteInfo = RCTTest;
+		};
+		FC146F2720BF2FD900FAB125 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC146F2020BF2FD900FAB125 /* RCTTest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2D2A286E1D9B047700D4039D;
+			remoteInfo = "RCTTest-tvOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -529,7 +545,6 @@
 		00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVibration.xcodeproj; path = "../node_modules/react-native/Libraries/Vibration/RCTVibration.xcodeproj"; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* TextilePhotosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TextilePhotosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* TextilePhotosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextilePhotosTests.m; sourceTree = "<group>"; };
 		01AD301CC5D94FE89B8A6E5C /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		01F4C2D61AC149D8BA8C3435 /* Degarism Studio - Biotif-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-BlackItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-BlackItalic.ttf"; sourceTree = "<group>"; };
 		0276B1C1A55042F880FB1B6A /* Degarism Studio - Biotif-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-Light.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-Light.ttf"; sourceTree = "<group>"; };
@@ -618,6 +633,8 @@
 		F68F1EA526BB4128AAB18AD5 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		F801C2587799238B8E5CC602 /* Pods-TextilePhotosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.release.xcconfig"; sourceTree = "<group>"; };
 		FACFD2055F364FCC854CEA69 /* Degarism Studio - Biotif-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Degarism Studio - Biotif-SemiBoldItalic.ttf"; path = "../App/Fonts/Degarism Studio - Biotif-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		FC146F0320BF088D00FAB125 /* TextileBridgeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextileBridgeTests.m; sourceTree = "<group>"; };
+		FC146F2020BF2FD900FAB125 /* RCTTest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTTest.xcodeproj; path = "../node_modules/react-native/Libraries/RCTTest/RCTTest.xcodeproj"; sourceTree = "<group>"; };
 		FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTHTTPRequestHandler+SelfSigned.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -627,6 +644,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
+				FC146F2920BF300000FAB125 /* libRCTTest.a in Frameworks */,
+				FC05904C20BF6914001618FF /* libRCTText.a in Frameworks */,
 				6F7905A6C52A92C18D80D27C /* libPods-TextilePhotosTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -716,7 +735,7 @@
 		00E356EF1AD99517003FC87E /* TextilePhotosTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* TextilePhotosTests.m */,
+				FC146F0320BF088D00FAB125 /* TextileBridgeTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
 			path = TextilePhotosTests;
@@ -876,6 +895,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				FC146F2020BF2FD900FAB125 /* RCTTest.xcodeproj */,
 				A234AAD620A67117002A118D /* RNSVG.xcodeproj */,
 				937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */,
 				935215BC207E966B00D46B81 /* ART.xcodeproj */,
@@ -1114,6 +1134,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		FC146F2120BF2FD900FAB125 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FC146F2620BF2FD900FAB125 /* libRCTTest.a */,
+				FC146F2820BF2FD900FAB125 /* libRCTTest-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1255,6 +1284,10 @@
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
 					ProjectRef = 139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */;
+				},
+				{
+					ProductGroup = FC146F2120BF2FD900FAB125 /* Products */;
+					ProjectRef = FC146F2020BF2FD900FAB125 /* RCTTest.xcodeproj */;
 				},
 				{
 					ProductGroup = 832341B11AAA6A8300B99B32 /* Products */;
@@ -1738,6 +1771,20 @@
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FC146F2620BF2FD900FAB125 /* libRCTTest.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTTest.a;
+			remoteRef = FC146F2520BF2FD900FAB125 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FC146F2820BF2FD900FAB125 /* libRCTTest-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTTest-tvOS.a";
+			remoteRef = FC146F2720BF2FD900FAB125 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1845,7 +1892,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* TextilePhotosTests.m in Sources */,
+				FC146F0420BF088D00FAB125 /* TextileBridgeTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1897,7 +1944,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"$(inherited)",
+					"FB_REFERENCE_IMAGE_DIR=\"\\\"$(SOURCE_ROOT)/$(TARGET_NAME)/ReferenceImages\\\"\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1916,6 +1963,8 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/**",
 				);
 				INFOPLIST_FILE = TextilePhotosTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1958,6 +2007,8 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/**",
 				);
 				INFOPLIST_FILE = TextilePhotosTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
