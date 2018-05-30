@@ -80,7 +80,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
                 });
                 promise.resolve(true);
             } catch (Exception e) {
-                promise.reject("START ERROR", e);
+                promise.reject("CREATE ERROR", e);
             }
         } else {
             promise.resolve(true);
@@ -228,14 +228,13 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void pairNewDevice (String pkb64, Promise promise) {
         try {
-            textile.pairDesktop(pkb64);
-            promise.resolve(true);
+            String result = textile.pairDesktop(pkb64);
+            promise.resolve(result);
         }
         catch (Exception e) {
-            promise.reject("GET DATA ERROR", e);
+            promise.reject("PAIR DEVICE ERROR", e);
         }
     }
-
 
     @ReactMethod
     public void signIn (String username, String password, Promise promise) {
