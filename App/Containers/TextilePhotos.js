@@ -35,7 +35,7 @@ class TextilePhotos extends React.PureComponent {
 
   render () {
     return (
-      <View style={{flex: 1}}>
+      <View style={style.container}>
         <PhotoGrid
           items={this.props.items}
           onSelect={this.onSelect}
