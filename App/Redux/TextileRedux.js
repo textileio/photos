@@ -11,14 +11,17 @@ const { Types, Creators } = createActions({
   locationUpdate: null,
   backgroundTask: null,
 
-  imageAdded: ['thread', 'hash', 'remotePayloadPath'],
+  urisToIgnore: ['uris'],
+  imageAdded: ['uri', 'thread', 'hash', 'remotePayloadPath'],
 
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
   imageUploadCancelled: ['data'],
   imageUploadError: ['data'],
   imageRemovalComplete: ['id'],
+
   photosTaskError: ['error'],
+  photoProcessingError: ['id', 'error'],
 
   pairNewDevice: ['pubKey'],
   pairNewDeviceSuccess: ['pubKey'],
@@ -40,9 +43,9 @@ export const INITIAL_STATE = Immutable({
     loading: false,
     items: []
   },
+  camera: {},
   devices: []
 })
-
 
 /* ------------- Selectors ------------- */
 export const TextileSelectors = {
@@ -50,7 +53,8 @@ export const TextileSelectors = {
   itemsById: (state, id) => {
     return state.textile.images.items.filter(item => item.hash === id)
   },
-  onboarded: state => state.textile.onboarded
+  onboarded: state => state.textile.onboarded,
+  camera: state => state.textile.camera
 }
 
 /* ------------- Reducers ------------- */
@@ -59,12 +63,21 @@ export const onboardedSuccess = state => {
   return state.merge({ onboarded: true })
 }
 
+// Used to ignore certain URIs in the CameraRoll
+export const handleUrisToIgnore = (state, {uris}) => {
+  const existing = state.camera && state.camera.processed ? state.camera.processed : []
+  const processed = [...existing, ...uris]
+  return state.merge({ camera: {processed} })
+}
+
 export const toggleVerboseUi = state =>
   state.merge({ preferences: { ...state.preferences, verboseUi: !state.preferences.verboseUi } })
 
-export const handleImageAdded = (state, {thread, hash, remotePayloadPath}) => {
+export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
+  const existing = state.camera && state.camera.processed ? state.camera.processed : []
+  const processed = [...existing, uri]
   const items = [{ thread, hash, remotePayloadPath, state: 'pending' }, ...state.images.items]
-  return state.merge({ images: { items } })
+  return state.merge({ images: { items }, camera: {processed} })
 }
 
 export const handleImageProgress = (state, {data}) => {
@@ -155,8 +168,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
   [Types.TOGGLE_VERBOSE_UI]: toggleVerboseUi,
-
   [Types.IMAGE_ADDED]: handleImageAdded,
+  [Types.URIS_TO_IGNORE]: handleUrisToIgnore,
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,

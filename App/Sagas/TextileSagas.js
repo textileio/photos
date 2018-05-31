@@ -9,7 +9,7 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { Platform, AppState } from 'react-native'
+import { AppState } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select, take } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
@@ -18,7 +18,7 @@ import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import IPFS from '../../TextileIPFSNativeModule'
-import {queryPhotos} from '../Services/PhotoUtils'
+import { getAllPhotos, scalePhoto } from '../Services/PhotoUtils'
 import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import IpfsNodeActions, { IpfsNodeSelectors } from '../Redux/IpfsNodeRedux'
@@ -29,7 +29,7 @@ import Upload from 'react-native-background-upload'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 
-const API_URL = "https://api.textile.io"
+const API_URL = 'https://api.textile.io'
 
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
@@ -65,7 +65,7 @@ export function * logIn ({data}) {
 }
 
 export function * recoverPassword ({data}) {
-  const {username} = data
+  // TODO: const {username} = data
   try {
     yield delay(2000)
     yield put(AuthActions.recoverPasswordSuccess())
@@ -128,7 +128,7 @@ export function * triggerStopNode () {
 
 export function * createNode ({path}) {
   try {
-    const debugLevel = (__DEV__ ? "DEBUG" : "INFO")
+    const debugLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
     const updateThreadSuccess = yield call(IPFS.updateThread, Config.ALL_THREAD_MNEMONIC, Config.ALL_THREAD_NAME)
     if (createNodeSuccess && updateThreadSuccess) {
@@ -239,25 +239,57 @@ export function * shareImage ({thread, hash, caption}) {
 
 export function * photosTask () {
   try {
-    const photos = yield call(queryPhotos)
-    for (const photo of photos.reverse()) {
-      const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
-      yield call(RNFS.unlink, photo.path)
-      yield call(RNFS.unlink, photo.thumbPath)
-      yield put(TextileActions.imageAdded('default', multipartData.boundary, multipartData.payloadPath))
-      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-      yield call(
-        Upload.startUpload,
-        {
-          customUploadId: multipartData.boundary,
-          path: multipartData.payloadPath,
-          url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
-          method: 'POST',
-          type: 'multipart',
-          field: multipartData.boundary
+    const camera = yield select(TextileSelectors.camera)
+    let allPhotos = yield call(getAllPhotos)
+
+    // If camera.processed didn't exist, we'll add all but 1 photo to our
+    // ignore list and then set camera.processed through urisToIgnore
+    if (camera === undefined) {
+      // case for existing users on the platform. hack-migration
+      yield put(TextileActions.urisToIgnore(allPhotos.map(photo => photo.uri)))
+      allPhotos = []
+    } else if (camera.processed === undefined) {
+      const ignoredPhotos = allPhotos.splice(1)
+      yield put(TextileActions.urisToIgnore(ignoredPhotos.map(photo => photo.uri)))
+    }
+
+    const processed = camera && camera.processed ? camera.processed : []
+    let allProcessed = processed.reduce((o, item, index) => ({...o, [item]: { index }}), {})
+    const photos = allPhotos.filter((photo) => {
+      if (allProcessed[photo.uri]) {
+        return false
+      }
+      return true
+    })
+
+    for (let photo of photos.reverse()) {
+      try { // single photo add and upload
+        photo = yield call(scalePhoto, photo)
+        const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
+        yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
+        yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+        yield call(
+          Upload.startUpload,
+          {
+            customUploadId: multipartData.boundary,
+            path: multipartData.payloadPath,
+            url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
+            method: 'POST',
+            type: 'multipart',
+            field: multipartData.boundary
+          }
+        )
+      } catch (error) {
+        yield put(TextileActions.photoProcessingError(photo.uri, error))
+      } finally {
+        // no matter what, after add/update try to unlink the file from drive
+        try {
+          yield call(RNFS.unlink, photo.path)
+          yield call(RNFS.unlink, photo.thumbPath)
+        } catch (error) {
+          yield put(TextileActions.photoProcessingError(photo.uri, error))
         }
-      )
-      console.log(multipartData.payloadPath)
+      }
     }
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
