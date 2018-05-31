@@ -240,16 +240,16 @@ export function * shareImage ({thread, hash, caption}) {
 export function * photosTask () {
   try {
     const camera = yield select(TextileSelectors.camera)
-    const processed = camera && camera.processed ? camera.processed : []
-
     let allPhotos = yield call(getAllPhotos)
-    if (processed.length === 0) {
+
+    // If camera.processed didn't exist, we'll add all but 1 photo to our
+    // ignore list and then set camera.processed through urisToIgnore
+    if (camera.processed === undefined) {
       const ignoredPhotos = allPhotos.splice(1)
-      for (const photo of ignoredPhotos) {
-        yield put(TextileActions.imageIgnore(photo.uri))
-      }
+      yield put(TextileActions.urisToIgnore(ignoredPhotos.map(photo => photo.uri)))
     }
 
+    const processed = camera && camera.processed ? camera.processed : []
     let allProcessed = processed.reduce((o, item, index) => ({...o, [item]: { index }}), {})
     const photos = allPhotos.filter((photo) => {
       if (allProcessed[photo.uri]) {
@@ -258,17 +258,9 @@ export function * photosTask () {
       return true
     })
 
-    for (const orig of photos.reverse()) {
-      let photo
-      try { // single photo try/catch
-        photo = yield call(scalePhoto, orig)
-      } catch (error) {
-        yield put(TextileActions.photoProcessingError(orig.uri, error))
-        continue // jump to next photo
-      }
-
-      // ** Only runs if photo scaling was successful **
+    for (let photo of photos.reverse()) {
       try { // single photo add and upload
+        photo = yield call(scalePhoto, photo)
         const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
         yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
         yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
@@ -284,14 +276,14 @@ export function * photosTask () {
           }
         )
       } catch (error) {
-        yield put(TextileActions.photoProcessingError(photo.path, error))
+        yield put(TextileActions.photoProcessingError(photo.uri, error))
       } finally {
         // no matter what, after add/update try to unlink the file from drive
         try {
           yield call(RNFS.unlink, photo.path)
           yield call(RNFS.unlink, photo.thumbPath)
         } catch (error) {
-          yield put(TextileActions.photoProcessingError(photo.path, error))
+          yield put(TextileActions.photoProcessingError(photo.uri, error))
         }
       }
     }
