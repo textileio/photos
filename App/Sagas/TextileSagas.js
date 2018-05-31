@@ -245,7 +245,7 @@ export function * photosTask () {
     let allPhotos = yield call(getAllPhotos)
     if (processed.length === 0) {
       const ignoredPhotos = allPhotos.splice(1)
-      for (const photo of ignoredPhotos {
+      for (const photo of ignoredPhotos) {
         yield put(TextileActions.imageIgnore(photo.uri))
       }
     }
