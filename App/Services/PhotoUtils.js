@@ -17,7 +17,7 @@ export async function getAllPhotos () {
   let data = []
   let hasNextPage = true
   let cursor = null
-  let totalPages = 10 // I wanted to limit the total size of a return array
+  let totalPages = 25 // I wanted to limit the total size of a return array
   while (hasNextPage && totalPages) {
     let photos = await getPage(25, cursor)
     hasNextPage = photos.page_info.has_next_page
