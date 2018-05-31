@@ -244,7 +244,11 @@ export function * photosTask () {
 
     // If camera.processed didn't exist, we'll add all but 1 photo to our
     // ignore list and then set camera.processed through urisToIgnore
-    if (camera.processed === undefined) {
+    if (camera === undefined) {
+      // case for existing users on the platform. hack-migration
+      yield put(TextileActions.urisToIgnore(allPhotos.map(photo => photo.uri)))
+      allPhotos = []
+    } else if (camera.processed === undefined) {
       const ignoredPhotos = allPhotos.splice(1)
       yield put(TextileActions.urisToIgnore(ignoredPhotos.map(photo => photo.uri)))
     }
