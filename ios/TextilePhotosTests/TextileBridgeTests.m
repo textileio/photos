@@ -36,6 +36,7 @@ configurationBlock:nil];
 
 #pragma mark - JS tests
 // This list should be kept in sync with IntegrationTestsApp.js
+RCT_TEST(IntegrationTests)
 RCT_TEST(Tests)
 
 @end

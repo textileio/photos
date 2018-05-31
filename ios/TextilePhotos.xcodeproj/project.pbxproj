@@ -74,6 +74,7 @@
 		F195DE72697C465BA3DD4953 /* Degarism Studio - Biotif-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95D38B9042064AE3826A7C8F /* Degarism Studio - Biotif-LightItalic.ttf */; };
 		F586CCF4CB7147369AC39EFC /* Degarism Studio - Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */; };
 		FC05904C20BF6914001618FF /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		FC05904D20BF739C001618FF /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		FC146F0420BF088D00FAB125 /* TextileBridgeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FC146F0320BF088D00FAB125 /* TextileBridgeTests.m */; };
 		FC146F2920BF300000FAB125 /* libRCTTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FC146F2620BF2FD900FAB125 /* libRCTTest.a */; };
 		FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */ = {isa = PBXBuildFile; fileRef = FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */; };
@@ -646,6 +647,7 @@
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
 				FC146F2920BF300000FAB125 /* libRCTTest.a in Frameworks */,
 				FC05904C20BF6914001618FF /* libRCTText.a in Frameworks */,
+				FC05904D20BF739C001618FF /* libRCTWebSocket.a in Frameworks */,
 				6F7905A6C52A92C18D80D27C /* libPods-TextilePhotosTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
