@@ -11,7 +11,7 @@ const { Types, Creators } = createActions({
   locationUpdate: null,
   backgroundTask: null,
 
-  imageIgnore: ['uri'],
+  urisToIgnore: ['uris'],
   imageAdded: ['uri', 'thread', 'hash', 'remotePayloadPath'],
 
   imageUploadProgress: ['data'],
@@ -43,9 +43,7 @@ export const INITIAL_STATE = Immutable({
     loading: false,
     items: []
   },
-  camera: {
-    processed: []
-  },
+  camera: {},
   devices: []
 })
 
@@ -66,20 +64,20 @@ export const onboardedSuccess = state => {
 }
 
 // Used to ignore certain URIs in the CameraRoll
-export const handleImageIgnore = (state, {uri}) => {
-  const processed = state.camera && state.camera.processed ? state.camera.processed : []
-  const camera = {...state.camera, processed: [uri, ...processed]}
-  return state.merge({ camera })
+export const handleUrisToIgnore = (state, {uris}) => {
+  const existing = state.camera && state.camera.processed ? state.camera.processed : []
+  const processed = [...existing, ...uris]
+  return state.merge({ camera: {processed} })
 }
 
 export const toggleVerboseUi = state =>
   state.merge({ preferences: { ...state.preferences, verboseUi: !state.preferences.verboseUi } })
 
 export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
-  const processed = state.camera && state.camera.processed ? state.camera.processed : []
-  const camera = {...state.camera, processed: [uri, ...processed]}
+  const existing = state.camera && state.camera.processed ? state.camera.processed : []
+  const processed = [...existing, uri]
   const items = [{ thread, hash, remotePayloadPath, state: 'pending' }, ...state.images.items]
-  return state.merge({ images: { items }, camera })
+  return state.merge({ images: { items }, camera: {processed} })
 }
 
 export const handleImageProgress = (state, {data}) => {
@@ -171,7 +169,7 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.TOGGLE_VERBOSE_UI]: toggleVerboseUi,
   [Types.IMAGE_ADDED]: handleImageAdded,
-[Types.IMAGE_IGNORE]: handleImageIgnore,
+  [Types.URIS_TO_IGNORE]: handleUrisToIgnore,
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
