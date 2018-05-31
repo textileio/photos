@@ -3,16 +3,25 @@ import PropTypes from 'prop-types'
 import ReactNative from 'react-native'
 const { Text, View } = ReactNative
 const { TestModule } = ReactNative.NativeModules
+import IPFS from '../TextileIPFSNativeModule'
+import RNFS from 'react-native-fs'
 
-const done = () => {
+const done = (success) => {
   // Without this, the test will never complete
+  if (success) {
+    throw new Error('ERROR!')
+  }
   TestModule.markTestCompleted()
 }
 
 setupTests = async () => {
   // Put any setup code you want here, which will be passed on to the first
   // test in the sequence
-  return true
+  return await IPFS.createNodeWithDataDir(
+    RNFS.DocumentDirectoryPath,
+    'http://localhost:8000',
+    'DEBUG'
+  )
 }
 
 testOne = async (prev) => {
@@ -46,7 +55,7 @@ class Tests extends React.Component {
     const oneOut = await testOne(setup)
     // const twoOut = await test(outOut)
     // const threeOut = await test(twoOut)
-    done()
+    done(oneOut)
   }
 
   render() {

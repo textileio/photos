@@ -75,6 +75,10 @@
 		F586CCF4CB7147369AC39EFC /* Degarism Studio - Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6E589D5E7DC42B5A979E0D4 /* Degarism Studio - Biotif-BookItalic.ttf */; };
 		FC05904C20BF6914001618FF /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		FC05904D20BF739C001618FF /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
+		FC05904E20BFBDAC001618FF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
+		FC05904F20BFBE09001618FF /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93BE90A9208013820070C615 /* libRNFS.a */; };
+		FC05905020BFC4A2001618FF /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D8444D20A669810011C926 /* Events.m */; };
+		FC05905120BFC4A5001618FF /* TextileIPFS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileIPFS.m */; };
 		FC146F0420BF088D00FAB125 /* TextileBridgeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FC146F0320BF088D00FAB125 /* TextileBridgeTests.m */; };
 		FC146F2920BF300000FAB125 /* libRCTTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FC146F2620BF2FD900FAB125 /* libRCTTest.a */; };
 		FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */ = {isa = PBXBuildFile; fileRef = FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */; };
@@ -648,6 +652,8 @@
 				FC146F2920BF300000FAB125 /* libRCTTest.a in Frameworks */,
 				FC05904C20BF6914001618FF /* libRCTText.a in Frameworks */,
 				FC05904D20BF739C001618FF /* libRCTWebSocket.a in Frameworks */,
+				FC05904F20BFBE09001618FF /* libRNFS.a in Frameworks */,
+				FC05904E20BFBDAC001618FF /* Mobile.framework in Frameworks */,
 				6F7905A6C52A92C18D80D27C /* libPods-TextilePhotosTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1894,6 +1900,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC05905120BFC4A5001618FF /* TextileIPFS.m in Sources */,
+				FC05905020BFC4A2001618FF /* Events.m in Sources */,
 				FC146F0420BF088D00FAB125 /* TextileBridgeTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1943,6 +1951,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1991,6 +2000,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
