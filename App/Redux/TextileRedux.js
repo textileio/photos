@@ -68,7 +68,7 @@ export const onboardedSuccess = state => {
 // Used to ignore certain URIs in the CameraRoll
 export const handleImageIgnore = (state, {uri}) => {
   const processed = state.camera && state.camera.processed ? state.camera.processed : []
-  const camera = {processed: [uri, ...processed]}
+  const camera = {...state.camera, processed: [uri, ...processed]}
   return state.merge({ camera })
 }
 
@@ -77,7 +77,7 @@ export const toggleVerboseUi = state =>
 
 export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
   const processed = state.camera && state.camera.processed ? state.camera.processed : []
-  const camera = {processed: [uri, ...processed]}
+  const camera = {...state.camera, processed: [uri, ...processed]}
   const items = [{ thread, hash, remotePayloadPath, state: 'pending' }, ...state.images.items]
   return state.merge({ images: { items }, camera })
 }
