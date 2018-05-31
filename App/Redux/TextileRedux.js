@@ -6,6 +6,8 @@ import Immutable from 'seamless-immutable'
 const { Types, Creators } = createActions({
   onboardedSuccess: null,
 
+  toggleVerboseUi: null,
+
   locationUpdate: null,
   backgroundTask: null,
 
@@ -33,6 +35,9 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   onboarded: false,
+  preferences: {
+    verboseUi: false
+  },
   images: {
     error: false,
     loading: false,
@@ -66,6 +71,9 @@ export const handleImageIgnore = (state, {uri}) => {
   const camera = {processed: [uri, ...processed]}
   return state.merge({ camera })
 }
+
+export const toggleVerboseUi = state =>
+  state.merge({ preferences: { ...state.preferences, verboseUi: !state.preferences.verboseUi } })
 
 export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
   const processed = state.camera && state.camera.processed ? state.camera.processed : []
@@ -161,8 +169,9 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
-  [Types.IMAGE_IGNORE]: handleImageIgnore,
+  [Types.TOGGLE_VERBOSE_UI]: toggleVerboseUi,
   [Types.IMAGE_ADDED]: handleImageAdded,
+[Types.IMAGE_IGNORE]: handleImageIgnore,
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
