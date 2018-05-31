@@ -1,11 +1,28 @@
 // @flow
 import React from 'react'
+import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
+import TextileActions from '../Redux/TextileRedux'
 import IpfsNodeActions from '../Redux/IpfsNodeRedux'
 import UIActions from '../Redux/UIRedux'
+import style from './Styles/TextilePhotosStyle'
+import navStyles from '../Navigation/Styles/NavigationStyles'
 
 class TextilePhotos extends React.PureComponent {
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state
+    return {
+      headerTitle: <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
+        <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
+      </TouchableWithoutFeedback>
+    }
+  }
+
+  componentDidMount () {
+    this.props.navigation.setParams({ toggleVerboseUi: this.props.toggleVerboseUi })
+  }
+
   onSelect = (row) => {
     return () => {
       this.props.viewPhoto(row.index, this.props.thread)
@@ -18,15 +35,21 @@ class TextilePhotos extends React.PureComponent {
 
   render () {
     return (
-      <PhotoGrid
-        items={this.props.items}
-        loadingText={this.props.loadingText}
-        onSelect={this.onSelect}
-        onRefresh={this.onRefresh.bind(this)}
-        refreshing={this.props.refreshing}
-        placeholderText={this.props.placeholderText}
-        displayImages={this.props.displayImages}
-      />
+      <View style={{flex: 1}}>
+        <PhotoGrid
+          items={this.props.items}
+          onSelect={this.onSelect}
+          onRefresh={this.onRefresh.bind(this)}
+          refreshing={this.props.refreshing}
+          placeholderText={this.props.placeholderText}
+          displayImages={this.props.displayImages}
+        />
+        {this.props.verboseUi &&
+          <View style={style.bottomOverlay} >
+            <Text style={style.overlayText}>{this.props.nodeStatus}</Text>
+          </View>
+        }
+      </View>
     )
   }
 }
@@ -57,14 +80,17 @@ const mapStateToProps = (state, ownProps) => {
     items: updatedItems,
     refreshing: state.ipfs.threads[thread].querying,
     displayImages: state.ipfs.nodeState.state === 'started',
-    placeholderText
+    placeholderText,
+    nodeStatus,
+    verboseUi: state.textile.preferences.verboseUi
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     viewPhoto: (index, thread) => { dispatch(UIActions.viewPhotoRequest(index, thread)) },
-    refresh: thread => { dispatch(IpfsNodeActions.getPhotoHashesRequest(thread)) }
+    refresh: thread => { dispatch(IpfsNodeActions.getPhotoHashesRequest(thread)) },
+    toggleVerboseUi: () => { dispatch(TextileActions.toggleVerboseUi()) }
   }
 }
 

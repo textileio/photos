@@ -243,7 +243,7 @@ export function * photosTask () {
     const processed = camera && camera.processed ? camera.processed : []
 
     let allPhotos = yield call(getAllPhotos)
-    if (camera === undefined || camera.processed === undefined || processed.length === 0) {
+    if (processed.length === 0) {
       const ignoredPhotos = allPhotos.splice(1)
       for (const uri of ignoredPhotos.map((photo) => photo.uri)) {
         yield put(TextileActions.imageIgnore(uri))
@@ -259,11 +259,17 @@ export function * photosTask () {
     })
 
     for (const orig of photos.reverse()) {
-      const photo = yield call(scalePhoto, orig)
-      const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
+      let photo
       try { // single photo try/catch
-        yield call(RNFS.unlink, photo.path)
-        yield call(RNFS.unlink, photo.thumbPath)
+        photo = yield call(scalePhoto, orig)
+      } catch (error) {
+        yield put(TextileActions.photoProcessingError(orig.uri, error))
+        continue // jump to next photo
+      }
+
+      // ** Only runs if photo scaling was successful **
+      try { // single photo add and upload
+        const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
         yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
         yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
         yield call(
@@ -278,14 +284,16 @@ export function * photosTask () {
           }
         )
       } catch (error) {
-        try { // no matter, what. try to clean up photos
+        yield put(TextileActions.photoProcessingError(photo.path, error))
+      } finally {
+        // no matter what, after add/update try to unlink the file from drive
+        try {
           yield call(RNFS.unlink, photo.path)
           yield call(RNFS.unlink, photo.thumbPath)
-        } finally {
-          yield put(TextileActions.photoProcessingError(multipartData.boundary, error))
+        } catch (error) {
+          yield put(TextileActions.photoProcessingError(photo.path, error))
         }
       }
-      console.log(multipartData.payloadPath)
     }
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
