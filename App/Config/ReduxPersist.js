@@ -7,12 +7,11 @@ const migrations = {
     // migration clear out device state
     return {
       ...state,
-      textile: {
-        ...state.textile,
+      textile: state.textile.merge({
         preferences: {
           verboseUi: false
         }
-      }
+      })
     }
   }
 }
