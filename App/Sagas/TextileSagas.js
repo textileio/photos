@@ -114,11 +114,6 @@ export function * handleNewAppState ({previousState, newState}) {
 }
 
 export function * triggerCreateNode () {
-  const locked = yield select(IpfsNodeSelectors.locked)
-  if (locked) {
-    return
-  }
-  yield put(IpfsNodeActions.lock(true))
   yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
 }
 
@@ -128,8 +123,9 @@ export function * triggerStopNode () {
 
 export function * createNode ({path}) {
   try {
-    const debugLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, debugLevel)
+    const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
+    const logFiles = !__DEV__
+    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, logLevel, logFiles)
     const updateThreadSuccess = yield call(IPFS.updateThread, Config.ALL_THREAD_MNEMONIC, Config.ALL_THREAD_NAME)
     if (createNodeSuccess && updateThreadSuccess) {
       yield put(IpfsNodeActions.createNodeSuccess())
