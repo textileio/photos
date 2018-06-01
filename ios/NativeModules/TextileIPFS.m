@@ -48,9 +48,9 @@ RCT_EXPORT_MODULE();
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _createNodeWithDataDir:dataDir apiUrl:apiUrl logLevel:logLevel error:&error];
+  [self _createNodeWithDataDir:dataDir apiUrl:apiUrl logLevel:logLevel logFiles:logFiles error:&error];
   if (self.node) {
     resolve(@YES);
   } else {
@@ -229,12 +229,13 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
 
 #pragma mark - Private methods
 
-- (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel error:(NSError**)error {
+- (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
   if (!self.node) {
     MobileNodeConfig *config = [[MobileNodeConfig alloc] init];
     [config setRepoPath:dataDir];
     [config setCentralApiURL:apiUrl];
     [config setLogLevel:logLevel];
+    [config setLogFiles:logFiles];
     self.node = [[MobileMobile new] newNode:config messenger:[[Messenger alloc] init] error:error];
   }
 }

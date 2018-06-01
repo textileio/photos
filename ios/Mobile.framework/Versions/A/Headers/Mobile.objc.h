@@ -67,6 +67,8 @@
 - (void)setCentralApiURL:(NSString*)v;
 - (NSString*)logLevel;
 - (void)setLogLevel:(NSString*)v;
+- (BOOL)logFiles;
+- (void)setLogFiles:(BOOL)v;
 @end
 
 /**
