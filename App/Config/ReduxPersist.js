@@ -4,7 +4,7 @@ import { createMigrate } from 'redux-persist'
 
 const migrations = {
   0: (state) => {
-    // migration clear out device state
+    // Migration to add user preferences with option for verboseUi
     return {
       ...state,
       textile: state.textile.merge({
