@@ -24,9 +24,9 @@ type HashRequest = {
 }
 
 export default {
-  createNodeWithDataDir: async function (dataDir: string, apiUrl: string, debugLevel: string): boolean {
+  createNodeWithDataDir: async function (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): boolean {
     console.log(dataDir)
-    const success = await TextileIPFS.createNodeWithDataDir(dataDir, apiUrl, debugLevel)
+    const success = await TextileIPFS.createNodeWithDataDir(dataDir, apiUrl, logLevel, logFiles)
     return success
   },
 
