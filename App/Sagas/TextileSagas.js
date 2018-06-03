@@ -106,6 +106,7 @@ export function * handleNewAppState ({previousState, newState}) {
     yield * triggerCreateNode()
   } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {
     console.tron.logImportant('app transitioned to foreground')
+    yield put(IpfsNodeActions.lock(false))
     yield * triggerCreateNode()
   } else if (previousState.match(/inactive|active/) && newState === 'background') {
     console.tron.logImportant('app transitioned to background')
@@ -114,6 +115,11 @@ export function * handleNewAppState ({previousState, newState}) {
 }
 
 export function * triggerCreateNode () {
+  const locked = yield select(IpfsNodeSelectors.locked)
+  if (locked) {
+    return
+  }
+  yield put(IpfsNodeActions.lock(true))
   yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
 }
 
