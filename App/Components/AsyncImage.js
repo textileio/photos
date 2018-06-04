@@ -25,7 +25,8 @@ export default class AsyncImage extends React.Component {
     return this.state.path !== nextState.path ||
       this.state.error !== nextState.error ||
       this.state.loaded !== nextState.loaded ||
-      this.state.requested !== nextState.requested
+      this.state.requested !== nextState.requested ||
+      this.state.source.uri !== nextState.source.uri
   }
 
   componentWillUnmount () {
@@ -64,11 +65,14 @@ export default class AsyncImage extends React.Component {
   _setSource = (source) => {
     // After async token is received, it readys the image source
     if (!this.hasCanceled_) {
-      this.setState(() => ({loaded: true, source}))
+      this.setState(() => ({loaded: true, source, retry: 2}))
       if (this.props.progressiveLoad && this.state.path === '/thumb') {
+        console.log('Thumb loaded')
         IPFS.getHashRequest(this.props.hash, '/photo')
           .then(this._setSource)
         this.setState(() => ({path: '/photo'}))
+      } else {
+        console.log('Full loaded')
       }
     }
   }
