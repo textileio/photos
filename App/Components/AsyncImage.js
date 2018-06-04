@@ -43,7 +43,7 @@ export default class AsyncImage extends React.Component {
 
   _retry () {
     if (this.state.retry > 0 && !this.hasCanceled_) {
-      this.setState(() => ({retry: this.state.retry - 1, loaded: false}))
+      this.setState(() => ({retry: this.state.retry - 1}))
       IPFS.getHashRequest(this.props.hash, this.state.path)
         .then(this._setSource)
         .catch(this._retry)
@@ -54,7 +54,10 @@ export default class AsyncImage extends React.Component {
 
   _error () {
     // Calls if the image or hash fails to load
-    this.setState(() => ({error: true, loaded: false}))
+    // but allow thumb to remain visible if error only on full res
+    if (this.state.path === '/thumb') {
+      this.setState(() => ({error: true, loaded: false}))
+    }
   }
 
   _success () {
