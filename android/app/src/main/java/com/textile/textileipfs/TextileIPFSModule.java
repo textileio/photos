@@ -59,13 +59,14 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createNodeWithDataDir (String dataDir, String apiUrl, String logLevel, Promise promise) {
+    public void createNodeWithDataDir (String dataDir, String apiUrl, String logLevel, Boolean logFiles, Promise promise) {
         if (textile == null) {
             try {
                 NodeConfig config = new NodeConfig();
                 config.setRepoPath(dataDir);
                 config.setCentralApiURL(apiUrl);
                 config.setLogLevel(logLevel);
+                config.setLogFiles(logFiles);
                 textile = Mobile.newNode(config, new Messenger() {
                     @Override
                     public void notify(Event event) {
