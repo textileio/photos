@@ -67,12 +67,9 @@ export default class AsyncImage extends React.Component {
     if (!this.hasCanceled_) {
       this.setState(() => ({loaded: true, source, retry: 2}))
       if (this.props.progressiveLoad && this.state.path === '/thumb') {
-        console.log('Thumb loaded')
         IPFS.getHashRequest(this.props.hash, '/photo')
           .then(this._setSource)
         this.setState(() => ({path: '/photo'}))
-      } else {
-        console.log('Full loaded')
       }
     }
   }
