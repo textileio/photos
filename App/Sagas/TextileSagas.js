@@ -131,7 +131,7 @@ export function * createNode ({path}) {
   try {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
-    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, 'DEBUG', false)
+    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, logLevel, logFiles)
     const updateThreadSuccess = yield call(IPFS.updateThread, Config.ALL_THREAD_MNEMONIC, Config.ALL_THREAD_NAME)
     if (createNodeSuccess && updateThreadSuccess) {
       yield put(IpfsNodeActions.createNodeSuccess())
