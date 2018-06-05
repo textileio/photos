@@ -118,7 +118,7 @@ export default class AsyncImage extends React.Component {
   }
 
   render () {
-    if (this.state.loaded || this.props.fadeIn) {
+    if (this.state.loaded) {
       return this.renderImage()
     } else {
       return this.placeholder()
