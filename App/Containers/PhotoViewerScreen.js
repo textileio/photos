@@ -33,7 +33,7 @@ class PhotoViewerScreen extends React.PureComponent {
     return (<AsyncImage
       key={props.image.key}
       hash={props.image.hash}
-      progressiveLoad='true'
+      progressiveLoad
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
       capInsets={props.capInsets}
