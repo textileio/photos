@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard, Alert } from 'react-native'
+import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard, Alert, SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
@@ -76,30 +76,31 @@ class LoginScreen extends Component {
 
   render () {
     return (
-      <KeyboardAwareScrollView
-        keyboardShouldPersistTaps='always'
-        style={{ backgroundColor: '#ffffff' }}
-        resetScrollToCoords={{ x: 0, y: 0 }}
-        contentContainerStyle={styles.container}
-      >
-        <View style={{flexGrow: 0.6, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Image source={require('../Images/Icon_100.png')} />
-        </View>
-        <Form
-          ref='form'
-          type={this.props.formType}
-          value={this.props.formValue}
-          onChange={this.onChange.bind(this)}
-          options={options}
-        />
-        <TouchableHighlight style={styles.button} onPress={this.onPress.bind(this)} underlayColor='#99d9f4'>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableHighlight>
-        <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
-          {this.renderButtons()}
-        </View>
-        <DropdownAlert errorColor='#FFB6D5' closeInterval={5000} ref={(ref) => { this.dropdown = ref }} />
-      </KeyboardAwareScrollView>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#ffffff'}}>
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps='always'
+          resetScrollToCoords={{ x: 0, y: 0 }}
+          contentContainerStyle={styles.container}
+        >
+          <View style={{flexGrow: 0.6, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Image source={require('../Images/Icon_100.png')} />
+          </View>
+          <Form
+            ref='form'
+            type={this.props.formType}
+            value={this.props.formValue}
+            onChange={this.onChange.bind(this)}
+            options={options}
+          />
+          <TouchableHighlight style={styles.button} onPress={this.onPress.bind(this)} underlayColor='#99d9f4'>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableHighlight>
+          <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
+            {this.renderButtons()}
+          </View>
+          <DropdownAlert errorColor='#FFB6D5' closeInterval={5000} ref={(ref) => { this.dropdown = ref }} />
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     )
   }
 
