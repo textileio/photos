@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
-import AsyncImage from '../Components/AsyncImage'
+import IPFSImage from '../Components/IPFSImage'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -30,7 +30,7 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage (props, dims) {
-    return (<AsyncImage
+    return (<IPFSImage
       key={props.image.key}
       hash={props.image.hash}
       progressiveLoad
