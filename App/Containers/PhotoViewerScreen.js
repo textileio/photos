@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
-import AsyncImage from '../Components/AsyncImage'
+import IPFSImage from '../Components/IPFSImage'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -30,10 +30,10 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage (props, dims) {
-    return (<AsyncImage
+    return (<IPFSImage
       key={props.image.key}
       hash={props.image.hash}
-      progressiveLoad={props.image.progressiveLoad}
+      progressiveLoad
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
       capInsets={props.capInsets}
@@ -167,12 +167,10 @@ class PhotoViewerScreen extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const items = state.ipfs.threads[state.ui.viewingPhoto.thread].items
   const path = state.ui.viewingPhoto.thread === 'default' ? '/photo' : '/thumb'
-  const progressiveLoad = state.ui.viewingPhoto.thread === 'default'
   const sharable = state.ui.viewingPhoto.thread === 'default'
   const imageData = items.map(item => {
     return {
       ...item,
-      progressiveLoad,
       key: item.hash + path,
       source: {url: 'file://' + item.hash + '.png'}, // <-- in case RN uses to know things
       dimensions: { width: 150, height: 150 },
