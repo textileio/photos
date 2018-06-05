@@ -13,10 +13,10 @@ const { Types, Creators } = createActions({
 
   urisToIgnore: ['uris'],
   imageAdded: ['uri', 'thread', 'hash', 'remotePayloadPath'],
+  imageUploadRetried: ['hash'],
 
   imageUploadProgress: ['data'],
   imageUploadComplete: ['data'],
-  imageUploadCancelled: ['data'],
   imageUploadError: ['data'],
   imageRemovalComplete: ['id'],
 
@@ -76,8 +76,18 @@ export const toggleVerboseUi = state =>
 export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
   const existing = state.camera && state.camera.processed ? state.camera.processed : []
   const processed = [...existing, uri]
-  const items = [{ thread, hash, remotePayloadPath, state: 'pending' }, ...state.images.items]
+  const items = [{ thread, hash, remotePayloadPath, state: 'pending', remainingUploadAttempts: 3 }, ...state.images.items]
   return state.merge({ images: { items }, camera: {processed} })
+}
+
+export const handleImageUploadRetried = (state, {hash}) => {
+  const items = state.images.items.map(item => {
+    if (item.hash === hash) {
+      return {...item, state: 'pending'}
+    }
+    return item
+  })
+  return state.merge({ images: { items } })
 }
 
 export const handleImageProgress = (state, {data}) => {
@@ -104,22 +114,17 @@ export const handleImageUploadComplete = (state, {data}) => {
   return state.merge({ images: { items } })
 }
 
-export const handleImageUploadCancelled = (state, {data}) => {
-  const { id } = data
-  const items = state.images.items.map(item => {
-    if (item.hash === id) {
-      return {...item, state: 'error', error: 'Upload cancelled'}
-    }
-    return item
-  })
-  return state.merge({ images: { items } })
-}
-
 export const handleImageUploadError = (state, {data}) => {
   const { error, id } = data
   const items = state.images.items.map(item => {
     if (item.hash === id) {
-      return {...item, state: 'error', error: error}
+      return {
+        ...item,
+        remainingUploadAttempts: item.remainingUploadAttempts - 1,
+        state: 'error',
+        error: error,
+        id
+      }
     }
     return item
   })
@@ -170,10 +175,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.TOGGLE_VERBOSE_UI]: toggleVerboseUi,
   [Types.IMAGE_ADDED]: handleImageAdded,
   [Types.URIS_TO_IGNORE]: handleUrisToIgnore,
+  [Types.IMAGE_UPLOAD_RETRIED]: handleImageUploadRetried,
 
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
-  [Types.IMAGE_UPLOAD_CANCELLED]: handleImageUploadCancelled,
   [Types.IMAGE_UPLOAD_ERROR]: handleImageUploadError,
   [Types.IMAGE_REMOVAL_COMPLETE]: imageRemovalComplete,
 
