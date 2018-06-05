@@ -1,4 +1,4 @@
-#import "IpfsImageManager.h"
+#import "IpfsImageViewManager.h"
 
 #import <UIKit/UIKit.h>
 
@@ -6,9 +6,9 @@
 
 #import <React/RCTImageLoader.h>
 #import "RCTImageShadowView.h"
-#import "IpfsImage.h"
+#import "IpfsImageView.h"
 
-@implementation IpfsImageManager
+@implementation IpfsImageViewManager
 
 RCT_EXPORT_MODULE()
 
@@ -19,7 +19,7 @@ RCT_EXPORT_MODULE()
 
 - (UIView *)view
 {
-  return [[IpfsImage alloc] initWithBridge:self.bridge];
+  return [[IpfsImageView alloc] initWithBridge:self.bridge];
 }
 
 RCT_EXPORT_VIEW_PROPERTY(blurRadius, CGFloat)
@@ -33,7 +33,7 @@ RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadEnd, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(resizeMode, RCTResizeMode)
 RCT_REMAP_VIEW_PROPERTY(source, imageSources, NSArray<RCTImageSource *>);
-RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, IpfsImage)
+RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, IpfsImageView)
 {
   // Default tintColor isn't nil - it's inherited from the superView - but we
   // want to treat a null json value for `tintColor` as meaning 'disable tint',
