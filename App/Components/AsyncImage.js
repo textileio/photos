@@ -89,7 +89,6 @@ export default class AsyncImage extends React.Component {
     } else if (!this.state.requested) {
       source = require('../Images/connecting.png')
     }
-    // only show placeholder if showProgress == true
     return (
       <Animated.Image
         source={source}
