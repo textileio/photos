@@ -48,7 +48,7 @@
     "react-native-background-fetch": "^2.4.1",
     "react-native-background-task": "^0.2.1",
     "react-native-background-timer": "^2.0.1",
-    "react-native-background-upload": "https://github.com/textileio/react-native-background-upload#20b6c2c83a3f91a1d3894c7a7ed4440c14761ed0",
+    "react-native-background-upload": "https://github.com/textileio/react-native-background-upload#7c80e61e76d4538326e124cf493518f27f2a685b",
     "react-native-config": "^0.10.0",
     "react-native-deep-link": "^0.1.5",
     "react-native-device-info": "^0.21.5",
