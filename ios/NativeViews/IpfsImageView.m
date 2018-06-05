@@ -1,4 +1,4 @@
-#import "IpfsImage.h"
+#import "IpfsImageView.h"
 
 #import <React/RCTBridge.h>
 #import <React/RCTConvert.h>
@@ -41,7 +41,7 @@ static NSDictionary *onLoadParamsForSource(RCTImageSource *source)
   return @{ @"source": dict };
 }
 
-@interface IpfsImage ()
+@interface IpfsImageView ()
 
 @property (nonatomic, copy) RCTDirectEventBlock onLoadStart;
 @property (nonatomic, copy) RCTDirectEventBlock onProgress;
@@ -52,7 +52,7 @@ static NSDictionary *onLoadParamsForSource(RCTImageSource *source)
 
 @end
 
-@implementation IpfsImage
+@implementation IpfsImageView
 {
   // Weak reference back to the bridge, for image loading
   __weak RCTBridge *_bridge;
@@ -289,7 +289,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       };
     }
 
-    __weak IpfsImage *weakSelf = self;
+    __weak IpfsImageView *weakSelf = self;
     RCTImageLoaderPartialLoadBlock partialLoadHandler = ^(UIImage *image) {
       [weakSelf imageLoaderLoadedImage:image error:nil forImageSource:source partial:YES];
     };

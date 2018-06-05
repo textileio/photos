@@ -5,7 +5,7 @@
 @class RCTBridge;
 @class RCTImageSource;
 
-@interface IpfsImage : UIImageView
+@interface IpfsImageView : UIImageView
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
 
