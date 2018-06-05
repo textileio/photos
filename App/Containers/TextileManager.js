@@ -52,13 +52,22 @@ class TextileManager extends React.PureComponent {
     this.props.appStateChange(this.props.currentAppState, newAppState)
   }
 
+  handleUploadComplete (event) {
+    const {responseCode} = event
+    if (responseCode >= 200 && responseCode < 300) {
+      this.props.uploadComplete(event)
+    } else {
+      this.props.uploadError({...event, error: 'Response code: ' + responseCode})
+    }
+  }
+
   async setup () {
     // await PushNotificationIOS.requestPermissions()
     AppState.addEventListener('change', this.handleNewAppState.bind(this))
     navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
     this.progressSubscription = Upload.addListener('progress', null, this.props.uploadProgress)
-    this.completionSubscription = Upload.addListener('completed', null, this.props.uploadComplete)
-    this.cancelledSubscription = Upload.addListener('cancelled', null, this.props.uploadCancelled)
+    this.completionSubscription = Upload.addListener('completed', null, this.handleUploadComplete.bind(this))
+    this.cancelledSubscription = Upload.addListener('cancelled', null, this.props.uploadError)
     this.errorSubscription = Upload.addListener('error', null, this.props.uploadError)
   }
 
@@ -81,7 +90,6 @@ const mapDispatchToProps = (dispatch) => {
     locationUpdate: () => { dispatch(TextileActions.locationUpdate()) },
     uploadComplete: event => { dispatch(TextileActions.imageUploadComplete(event)) },
     uploadProgress: event => { dispatch(TextileActions.imageUploadProgress(event)) },
-    uploadCancelled: event => { dispatch(TextileActions.imageUploadCancelled(event)) },
     uploadError: event => { dispatch(TextileActions.imageUploadError(event)) }
   }
 }

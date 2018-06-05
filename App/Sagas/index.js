@@ -27,7 +27,8 @@ import {
   getPhotoHashes,
   shareImage,
   photosTask,
-  removePayloadFile
+  removePayloadFile,
+  retryUploadAfterError
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -67,6 +68,7 @@ export default function * root () {
     takeEvery(IpfsNodeTypes.START_NODE_SUCCESS, photosTask),
 
     takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile),
+    takeEvery(TextileTypes.IMAGE_UPLOAD_ERROR, retryUploadAfterError),
 
     initializeAppState()
   ])
