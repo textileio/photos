@@ -59,6 +59,8 @@
 		9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileIPFS.m */; };
 		9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
 		935215F2207E967F00D46B81 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 935215C5207E966C00D46B81 /* libART.a */; };
+		9358951820C6EF2200722AE8 /* IpfsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9358951320C6EF2100722AE8 /* IpfsImage.m */; };
+		9358951920C6EF2200722AE8 /* IpfsImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9358951420C6EF2100722AE8 /* IpfsImageManager.m */; };
 		937C35AE2081797700F06ADB /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937C35A62081794C00F06ADB /* libRNDeviceInfo.a */; };
 		937FC5412061B7A700357ED5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */; };
 		93D83F9D206C22B500522EFE /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93D83F9A206C229B00522EFE /* libRCTPushNotification.a */; };
@@ -591,6 +593,10 @@
 		9339E9A0205C381700BCA4CF /* TextileIPFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileIPFS.h; sourceTree = "<group>"; };
 		9339E9A6205C3B8700BCA4CF /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mobile.framework; sourceTree = "<group>"; };
 		935215BC207E966B00D46B81 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
+		9358951120C6EF2100722AE8 /* IpfsImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpfsImageManager.h; sourceTree = "<group>"; };
+		9358951220C6EF2100722AE8 /* IpfsImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpfsImage.h; sourceTree = "<group>"; };
+		9358951320C6EF2100722AE8 /* IpfsImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IpfsImage.m; sourceTree = "<group>"; };
+		9358951420C6EF2100722AE8 /* IpfsImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IpfsImageManager.m; sourceTree = "<group>"; };
 		937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93CD61C09D4349C8A67F94F9 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
@@ -920,6 +926,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				9358951020C6EF2100722AE8 /* NativeViews */,
 				FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */,
 				9339E9A6205C3B8700BCA4CF /* Mobile.framework */,
 				9339E99E205C381700BCA4CF /* NativeModules */,
@@ -965,6 +972,17 @@
 				935215C7207E966C00D46B81 /* libART-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9358951020C6EF2100722AE8 /* NativeViews */ = {
+			isa = PBXGroup;
+			children = (
+				9358951220C6EF2100722AE8 /* IpfsImage.h */,
+				9358951320C6EF2100722AE8 /* IpfsImage.m */,
+				9358951120C6EF2100722AE8 /* IpfsImageManager.h */,
+				9358951420C6EF2100722AE8 /* IpfsImageManager.m */,
+			);
+			path = NativeViews;
 			sourceTree = "<group>";
 		};
 		937C35702081794C00F06ADB /* Products */ = {
@@ -1855,6 +1873,8 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */,
+				9358951920C6EF2200722AE8 /* IpfsImageManager.m in Sources */,
+				9358951820C6EF2200722AE8 /* IpfsImage.m in Sources */,
 				C5D8444E20A669810011C926 /* Events.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */,
