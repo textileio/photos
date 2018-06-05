@@ -264,12 +264,36 @@ export function * photosTask () {
       return true
     })
 
+
+    let photoUploads = []
+    // Convert all our new entries to thumbs before anything else
     for (let photo of photos.reverse()) {
-      try { // single photo add and upload
+      try {
         photo = yield call(scalePhoto, photo)
         const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
+        photoUploads.push({
+          photo: photo,
+          multipartData
+        })
+      } catch (error) {
+        // if error, delete the photo copy and thumb from disk then fire error
+        try {
+          yield call(RNFS.unlink, photo.path)
+          yield call(RNFS.unlink, photo.thumbPath)
+        } finally {
+          yield put(TextileActions.photoProcessingError(photo.uri, error))
+        }
+      }
+    }
+
+    // refresh our gallery
+    yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+
+    // initialize and complete our uploads
+    for (let photoData of photoUploads) {
+      let {photo, multipartData} = photoData
+      try {
         yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
-        yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
         yield uploadFile(multipartData.boundary, multipartData.boundary, multipartData.payloadPath)
       } catch (error) {
         yield put(TextileActions.photoProcessingError(photo.uri, error))
