@@ -1,12 +1,20 @@
 import React from 'react'
-import { Image } from 'react-native'
+import { Animated } from 'react-native'
 import IPFS from '../../TextileIPFSNativeModule'
 
 export default class AsyncImage extends React.Component {
   constructor (props) {
     super(props)
+    let initialOpacity = this.props.fadeIn ? 0.0 : 1.0
     this.hasCanceled_ = false
-    this.state = { path: '/thumb', requested: false, loaded: false, source: {}, retry: 2, error: false }
+    this.state = {
+      requested: false, // state of request
+      loaded: false, // state of image loading
+      source: {}, // image src
+      opacity: new Animated.Value(initialOpacity), // full res image opacity
+      retry: 2, // allowed retries before a success/error
+      error: false // has the image errored
+    }
   }
 
   componentWillMount () {
@@ -22,30 +30,30 @@ export default class AsyncImage extends React.Component {
       this._createRequest()
       return false
     }
-    return this.state.path !== nextState.path ||
-      this.state.error !== nextState.error ||
+    return this.state.error !== nextState.error ||
       this.state.loaded !== nextState.loaded ||
-      this.state.requested !== nextState.requested
+      this.state.requested !== nextState.requested ||
+      this.state.source.uri !== nextState.source.uri ||
+      this.state.opacity !== nextState.opacity
   }
 
   componentWillUnmount () {
+    // stop trying to update any UI associated with this asyncimage
     this.hasCanceled_ = true
   }
 
-
   _createRequest () {
     this.setState(() => ({requested: true}))
-    IPFS.getHashRequest(this.props.hash, this.state.path)
+    IPFS.getHashRequest(this.props.hash, this.props.path)
       .then(this._setSource)
       .catch(this._retry) // todo: handle failed hash requests vs. unmount
   }
 
   _retry () {
-    if (this.state.retry > 0 && !this.hasCanceled_) {
-      this.setState(() => ({retry: this.state.retry - 1, loaded: false}))
-      IPFS.getHashRequest(this.props.hash, this.state.path)
-        .then(this._setSource)
-        .catch(this._retry)
+    // perform a limited number of retries
+    if (!this.hasCanceled_ && this.state.retry > 0) {
+      this.setState(() => ({retry: this.state.retry - 1}))
+      this._createRequest()
     } else {
       this._error()
     }
@@ -59,17 +67,18 @@ export default class AsyncImage extends React.Component {
   _success () {
     // Calls after image succesfully loads. Resets available retries for later loads
     this.setState(() => ({retry: 2}))
+    if (this.props.fadeIn) {
+      Animated.timing(this.state.opacity, {
+        toValue: 1,
+        duration: 100
+      }).start()
+    }
   }
 
   _setSource = (source) => {
     // After async token is received, it readys the image source
     if (!this.hasCanceled_) {
-      this.setState(() => ({loaded: true, source}))
-      if (this.props.progressiveLoad && this.state.path === '/thumb') {
-        IPFS.getHashRequest(this.props.hash, '/photo')
-          .then(this._setSource)
-        this.setState(() => ({path: '/photo'}))
-      }
+      this.setState(() => ({loaded: true, source, retry: 2}))
     }
   }
 
@@ -81,30 +90,35 @@ export default class AsyncImage extends React.Component {
       source = require('../Images/connecting.png')
     }
     return (
-      <Image
+      <Animated.Image
         source={source}
         resizeMode={this.props.resizeMode || 'cover'}
-        style={this.props.style || {flex: 1, height: undefined, width: undefined}}
+        style={[{opacity: this.state.opacity}, this.props.style]}
         capInsets={this.props.capInsets}
+      />
+    )
+  }
+
+  renderImage () {
+    return (
+      <Animated.Image
+        source={this.state.source}
+        resizeMode={this.props.resizeMode || 'cover'}
+        style={[{opacity: this.state.opacity}, this.props.style]}
+        capInsets={this.props.capInsets}
+        onLoad={() => {
+          this._success()
+        }}
+        onError={() => {
+          this._retry()
+        }}
       />
     )
   }
 
   render () {
     if (this.state.loaded) {
-      return (
-        <Image
-          source={this.state.source}
-          resizeMode={this.props.resizeMode || 'cover'}
-          style={this.props.style || {flex: 1, height: undefined, width: undefined}}
-          capInsets={this.props.capInsets}
-          onLoad={() => {
-            this._success()
-          }}
-          onError={() => {
-            this._retry()
-          }}
-        />)
+      return this.renderImage()
     } else {
       return this.placeholder()
     }
