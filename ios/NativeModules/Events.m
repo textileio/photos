@@ -26,7 +26,7 @@ RCT_EXPORT_MODULE();
 
 // The list of available events
 - (NSArray<NSString *> *)supportedEvents {
-  return @[@"onThreadUpdate"];
+  return @[@"onOnline", @"onThreadUpdate"];
 }
 
 // This function listens for the events we want to send out and will then pass the
