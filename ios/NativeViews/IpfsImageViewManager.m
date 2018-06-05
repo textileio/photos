@@ -7,6 +7,7 @@
 #import <React/RCTImageLoader.h>
 #import "RCTImageShadowView.h"
 #import "IpfsImageView.h"
+#import "TextileIPFS.h"
 
 @implementation IpfsImageViewManager
 

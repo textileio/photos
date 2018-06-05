@@ -309,3 +309,12 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
 }
 
 @end
+
+@implementation RCTBridge (TextileIPFS)
+
+- (TextileIPFS *)ipfs
+{
+  return [self moduleForClass:[TextileIPFS class]];
+}
+
+@end
