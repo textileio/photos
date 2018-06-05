@@ -1,41 +1,78 @@
-//  Created by react-native-create-bridge
-
-#import <Foundation/Foundation.h>
-#import "IpfsImage.h"
 #import "IpfsImageManager.h"
 
-// import RCTBridge
-#if __has_include(<React/RCTBridge.h>)
-#import <React/RCTBridge.h>
-#elif __has_include(“RCTBridge.h”)
-#import “RCTBridge.h”
-#else
-#import “React/RCTBridge.h” // Required when used as a Pod in a Swift project
-#endif
+#import <UIKit/UIKit.h>
+
+#import <React/RCTConvert.h>
+
+#import <React/RCTImageLoader.h>
+#import "RCTImageShadowView.h"
+#import "IpfsImage.h"
 
 @implementation IpfsImageManager
 
-@synthesize bridge = _bridge;
+RCT_EXPORT_MODULE()
 
-// Export a native module
-// https://facebook.github.io/react-native/docs/native-modules-ios.html
-RCT_EXPORT_MODULE();
-
-// Return the native view that represents your React component
-- (UIView *)view
+- (RCTShadowView *)shadowView
 {
-  return [[IpfsImage alloc] initWithEventDispatcher:self.bridge.eventDispatcher];
+  return [RCTImageShadowView new];
 }
 
-RCT_EXPORT_VIEW_PROPERTY(exampleProp, NSString)
-
-// Export constants
-// https://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html#exporting-constants
-- (NSDictionary *)constantsToExport
+- (UIView *)view
 {
-  return @{
-           @"EXAMPLE": @"example"
-         };
+  return [[IpfsImage alloc] initWithBridge:self.bridge];
+}
+
+RCT_EXPORT_VIEW_PROPERTY(blurRadius, CGFloat)
+RCT_EXPORT_VIEW_PROPERTY(capInsets, UIEdgeInsets)
+RCT_REMAP_VIEW_PROPERTY(defaultSource, defaultImage, UIImage)
+RCT_EXPORT_VIEW_PROPERTY(onLoadStart, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onProgress, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onError, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPartialLoad, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onLoadEnd, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(resizeMode, RCTResizeMode)
+RCT_REMAP_VIEW_PROPERTY(source, imageSources, NSArray<RCTImageSource *>);
+RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, IpfsImage)
+{
+  // Default tintColor isn't nil - it's inherited from the superView - but we
+  // want to treat a null json value for `tintColor` as meaning 'disable tint',
+  // so we toggle `renderingMode` here instead of in `-[RCTImageView setTintColor:]`
+  view.tintColor = [RCTConvert UIColor:json] ?: defaultView.tintColor;
+  view.renderingMode = json ? UIImageRenderingModeAlwaysTemplate : defaultView.renderingMode;
+}
+
+RCT_EXPORT_METHOD(getSize:(NSURLRequest *)request
+                  successBlock:(RCTResponseSenderBlock)successBlock
+                  errorBlock:(RCTResponseErrorBlock)errorBlock)
+{
+  [self.bridge.imageLoader getImageSizeForURLRequest:request
+                                               block:^(NSError *error, CGSize size) {
+                                                 if (error) {
+                                                   errorBlock(error);
+                                                 } else {
+                                                   successBlock(@[@(size.width), @(size.height)]);
+                                                 }
+                                               }];
+}
+
+RCT_EXPORT_METHOD(prefetchImage:(NSURLRequest *)request
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+  if (!request) {
+    reject(@"E_INVALID_URI", @"Cannot prefetch an image for an empty URI", nil);
+    return;
+  }
+
+  [self.bridge.imageLoader loadImageWithURLRequest:request
+                                          callback:^(NSError *error, UIImage *image) {
+                                            if (error) {
+                                              reject(@"E_PREFETCH_FAILURE", nil, error);
+                                              return;
+                                            }
+                                            resolve(@YES);
+                                          }];
 }
 
 @end
