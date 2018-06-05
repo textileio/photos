@@ -12,7 +12,6 @@ export default class IPFSImage extends React.Component {
       resizeMode={this.props.resizeMode}
       capInsets={this.props.capInsets}
       displayImages={this.props.displayImages}
-      showProgress
     />)
   }
 
