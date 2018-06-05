@@ -13,6 +13,18 @@ const migrations = {
         }
       })
     }
+  },
+  1: (state) => {
+    // Migration to add remaining retry attempts to any persisted image data
+    const updatedItems = state.textile.images.items.map(item => {
+      return {...item, remainingUploadAttempts: 3}
+    })
+    return {
+      ...state,
+      textile: state.textile.merge({
+        images: state.textile.images.merge({ items: updatedItems })
+      })
+    }
   }
 }
 
@@ -22,7 +34,7 @@ const REDUX_PERSIST = {
   reducerVersion: '1.0',
   storeConfig: {
     key: 'primary',
-    version: 0,
+    version: 1,
     storage: AsyncStorage,
     migrate: createMigrate(migrations, { debug: false }),
     // Reducer keys that you do NOT want stored to persistence here.
