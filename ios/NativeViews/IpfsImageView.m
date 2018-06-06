@@ -3,13 +3,15 @@
 #import <React/RCTBridge.h>
 #import <React/RCTConvert.h>
 #import <React/RCTEventDispatcher.h>
-#import <React/RCTImageSource.h>
 #import <React/RCTUtils.h>
 #import <React/UIView+React.h>
 
 #import "RCTImageBlurUtils.h"
 #import <React/RCTImageLoader.h>
 #import "RCTImageUtils.h"
+
+#import "TextileIPFS.h"
+#import "IpfsImageSource.h"
 
 /**
  * Determines whether an image of `currentSize` should be reloaded for display
@@ -31,12 +33,12 @@ static BOOL RCTShouldReloadImageForSizeChange(CGSize currentSize, CGSize idealSi
  * See RCTConvert (ImageSource). We want to send down the source as a similar
  * JSON parameter.
  */
-static NSDictionary *onLoadParamsForSource(RCTImageSource *source)
+static NSDictionary *onLoadParamsForSource(IpfsImageSource *source)
 {
   NSDictionary *dict = @{
                          @"width": @(source.size.width),
                          @"height": @(source.size.height),
-                         @"url": source.request.URL.absoluteString,
+                         @"hashPath": source.hashPath,
                          };
   return @{ @"source": dict };
 }
@@ -58,10 +60,10 @@ static NSDictionary *onLoadParamsForSource(RCTImageSource *source)
   __weak RCTBridge *_bridge;
 
   // The image source that's currently displayed
-  RCTImageSource *_imageSource;
+  IpfsImageSource *_imageSource;
 
   // The image source that's being loaded from the network
-  RCTImageSource *_pendingImageSource;
+  IpfsImageSource *_pendingImageSource;
 
   // Size of the image loaded / being loaded, so we can determine when to issue a reload to accommodate a changing size.
   CGSize _targetSize;
@@ -163,7 +165,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 }
 
-- (void)setImageSources:(NSArray<RCTImageSource *> *)imageSources
+- (void)setImageSources:(NSArray<IpfsImageSource *> *)imageSources
 {
   if (![imageSources isEqual:_imageSources]) {
     _imageSources = [imageSources copy];
@@ -221,7 +223,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   return _imageSources.count > 1;
 }
 
-- (RCTImageSource *)imageSourceForSize:(CGSize)size
+- (IpfsImageSource *)imageSourceForSize:(CGSize)size
 {
   if (![self hasMultipleSources]) {
     return _imageSources.firstObject;
@@ -235,9 +237,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   const CGFloat scale = RCTScreenScale();
   const CGFloat targetImagePixels = size.width * size.height * scale * scale;
 
-  RCTImageSource *bestSource = nil;
+  IpfsImageSource *bestSource = nil;
   CGFloat bestFit = CGFLOAT_MAX;
-  for (RCTImageSource *source in _imageSources) {
+  for (IpfsImageSource *source in _imageSources) {
     CGSize imgSize = source.size;
     const CGFloat imagePixels =
     imgSize.width * imgSize.height * source.scale * source.scale;
@@ -261,7 +263,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   // We need to reload if the desired image source is different from the current image
   // source AND the image load that's pending
-  RCTImageSource *desiredImageSource = [self imageSourceForSize:self.frame.size];
+  IpfsImageSource *desiredImageSource = [self imageSourceForSize:self.frame.size];
   return ![desiredImageSource isEqual:_imageSource] &&
   ![desiredImageSource isEqual:_pendingImageSource];
 }
@@ -271,7 +273,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [self cancelImageLoad];
   _needsReload = NO;
 
-  RCTImageSource *source = [self imageSourceForSize:self.frame.size];
+  IpfsImageSource *source = [self imageSourceForSize:self.frame.size];
   _pendingImageSource = source;
 
   if (source && self.frame.size.width > 0 && self.frame.size.height > 0) {
@@ -306,21 +308,32 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       [weakSelf imageLoaderLoadedImage:loadedImage error:error forImageSource:source partial:NO];
     };
 
-    _reloadImageCancellationBlock =
-    [_bridge.imageLoader loadImageWithURLRequest:source.request
-                                            size:imageSize
-                                           scale:imageScale
-                                         clipped:NO
-                                      resizeMode:_resizeMode
-                                   progressBlock:progressHandler
-                                partialLoadBlock:partialLoadHandler
-                                 completionBlock:completionHandler];
+//    _reloadImageCancellationBlock =
+//    [_bridge.imageLoader loadImageWithURLRequest:source.request
+//                                            size:imageSize
+//                                           scale:imageScale
+//                                         clipped:NO
+//                                      resizeMode:_resizeMode
+//                                   progressBlock:progressHandler
+//                                partialLoadBlock:partialLoadHandler
+//                                 completionBlock:completionHandler];
+
+    NSError *error;
+    UIImage *image;
+    NSString *base64String = [_bridge.ipfs _getHashData:source.hashPath error:&error];
+    if (base64String) {
+      NSString *finalBase64String = [@"data:image/jpeg;base64," stringByAppendingString:base64String];
+      NSURL *url = [NSURL URLWithString:finalBase64String];
+      NSData *imageData = [NSData dataWithContentsOfURL:url];
+      image = [UIImage imageWithData:imageData];
+    }
+    completionHandler(error, image);
   } else {
     [self clearImage];
   }
 }
 
-- (void)imageLoaderLoadedImage:(UIImage *)loadedImage error:(NSError *)error forImageSource:(RCTImageSource *)source partial:(BOOL)isPartialLoad
+- (void)imageLoaderLoadedImage:(UIImage *)loadedImage error:(NSError *)error forImageSource:(IpfsImageSource *)source partial:(BOOL)isPartialLoad
 {
   if (![source isEqual:_pendingImageSource]) {
     // Bail out if source has changed since we started loading
@@ -356,7 +369,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       }
     } else {
       if (self->_onLoad) {
-        RCTImageSource *sourceLoaded = [source imageSourceWithSize:image.size scale:source.scale];
+        IpfsImageSource *sourceLoaded = [source imageSourceWithSize:image.size scale:source.scale];
         self->_onLoad(onLoadParamsForSource(sourceLoaded));
       }
       if (self->_onLoadEnd) {
@@ -412,7 +425,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       return;
     }
 
-    RCTLogInfo(@"Reloading image %@ as size %@", _imageSource.request.URL.absoluteString, NSStringFromCGSize(idealSize));
+    RCTLogInfo(@"Reloading image %@ as size %@", _imageSource.hashPath, NSStringFromCGSize(idealSize));
 
     // If the existing image or an image being loaded are not the right
     // size, reload the asset in case there is a better size available.

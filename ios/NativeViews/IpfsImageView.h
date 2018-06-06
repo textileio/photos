@@ -3,7 +3,7 @@
 #import <React/RCTResizeMode.h>
 
 @class RCTBridge;
-@class RCTImageSource;
+@class IpfsImageSource;
 
 @interface IpfsImageView : UIImageView
 
@@ -12,7 +12,7 @@
 @property (nonatomic, assign) UIEdgeInsets capInsets;
 @property (nonatomic, strong) UIImage *defaultImage;
 @property (nonatomic, assign) UIImageRenderingMode renderingMode;
-@property (nonatomic, copy) NSArray<RCTImageSource *> *imageSources;
+@property (nonatomic, copy) NSArray<IpfsImageSource *> *imageSources;
 @property (nonatomic, assign) CGFloat blurRadius;
 @property (nonatomic, assign) RCTResizeMode resizeMode;
 

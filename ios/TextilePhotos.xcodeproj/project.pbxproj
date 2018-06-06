@@ -64,6 +64,7 @@
 		937C35AE2081797700F06ADB /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937C35A62081794C00F06ADB /* libRNDeviceInfo.a */; };
 		937FC5412061B7A700357ED5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */; };
 		93D83F9D206C22B500522EFE /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93D83F9A206C229B00522EFE /* libRCTPushNotification.a */; };
+		93F2D6CA20C753EB005A2ABF /* IpfsImageSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F2D6C920C753EB005A2ABF /* IpfsImageSource.m */; };
 		94CF1FA5842247DA9BEB5C93 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8019A17A4A6F4FFB9C1C191F /* Ionicons.ttf */; };
 		94F237902F5845BC8A2BF5DF /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B81290BD6F9E43A9BCC32DFA /* MaterialCommunityIcons.ttf */; };
 		A234AB1920A6712B002A118D /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A234AB1420A67118002A118D /* libRNSVG.a */; };
@@ -601,6 +602,8 @@
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93CD61C09D4349C8A67F94F9 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
 		93D83F94206C229B00522EFE /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		93F2D6C820C753EB005A2ABF /* IpfsImageSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IpfsImageSource.h; sourceTree = "<group>"; };
+		93F2D6C920C753EB005A2ABF /* IpfsImageSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IpfsImageSource.m; sourceTree = "<group>"; };
 		98E68F90DAB045288BB8D857 /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundFetch.a; sourceTree = "<group>"; };
 		994A8E25DB5842424334A2CA /* Pods-TextilePhotosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9ADB3D6550E3C633D490C2B4 /* Pods-TextilePhotos-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOS/Pods-TextilePhotos-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -981,6 +984,8 @@
 				9358951320C6EF2100722AE8 /* IpfsImageView.m */,
 				9358951120C6EF2100722AE8 /* IpfsImageViewManager.h */,
 				9358951420C6EF2100722AE8 /* IpfsImageViewManager.m */,
+				93F2D6C820C753EB005A2ABF /* IpfsImageSource.h */,
+				93F2D6C920C753EB005A2ABF /* IpfsImageSource.m */,
 			);
 			path = NativeViews;
 			sourceTree = "<group>";
@@ -1871,6 +1876,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93F2D6CA20C753EB005A2ABF /* IpfsImageSource.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */,
 				9358951920C6EF2200722AE8 /* IpfsImageViewManager.m in Sources */,
