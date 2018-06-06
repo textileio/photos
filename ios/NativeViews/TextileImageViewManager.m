@@ -8,7 +8,7 @@
 #import "RCTImageShadowView.h"
 #import "TextileImageView.h"
 #import "TextileImageSource.h"
-#import "TextileIPFS.h"
+#import "TextileNode.h"
 
 @implementation TextileImageViewManager
 

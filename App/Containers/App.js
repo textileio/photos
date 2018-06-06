@@ -8,7 +8,7 @@ import createStore from '../Redux'
 import Actions from '../Redux/TextileRedux'
 import IPFSActions from '../Redux/IpfsNodeRedux'
 import BackgroundTask from 'react-native-background-task'
-import IPFS from '../../TextileIPFSNativeModule'
+import IPFS from '../../TextileNode'
 
 // create our store
 const { store, persistor } = createStore()

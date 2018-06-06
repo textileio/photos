@@ -1,6 +1,6 @@
 import React from 'react'
 import { Animated } from 'react-native'
-import IPFS from '../../TextileIPFSNativeModule'
+import IPFS from '../../TextileNode'
 
 export default class AsyncImage extends React.Component {
   constructor (props) {

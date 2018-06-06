@@ -10,7 +10,7 @@
 #import <React/RCTImageLoader.h>
 #import "RCTImageUtils.h"
 
-#import "TextileIPFS.h"
+#import "TextileNode.h"
 #import "TextileImageSource.h"
 
 /**
@@ -320,7 +320,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
     NSError *error;
     UIImage *image;
-    NSString *base64String = [_bridge.ipfs _getHashData:source.hashPath error:&error];
+    NSString *base64String = [_bridge.textileNode _getHashData:source.hashPath error:&error];
     if (base64String) {
       NSString *finalBase64String = [@"data:image/jpeg;base64," stringByAppendingString:base64String];
       NSURL *url = [NSURL URLWithString:finalBase64String];

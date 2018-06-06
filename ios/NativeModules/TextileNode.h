@@ -11,15 +11,15 @@
 
 #import <React/RCTBridge.h>
 
-@interface TextileIPFS : NSObject <RCTBridgeModule>
+@interface TextileNode : NSObject <RCTBridgeModule>
   // Define class properties here with @property
 - (NSString *)_getHashData:(NSString *)hashPath error:(NSError**)error;
 @end
 
-@interface RCTBridge (TextileIPFS)
+@interface RCTBridge (TextileNode)
 /**
- * The shared ipfs instance
+ * The shared Textile node instance
  */
-@property (nonatomic, readonly) TextileIPFS *ipfs;
+@property (nonatomic, readonly) TextileNode *textileNode;
 
 @end
