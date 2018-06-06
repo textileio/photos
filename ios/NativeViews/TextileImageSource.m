@@ -1,12 +1,12 @@
-#import "IpfsImageSource.h"
+#import "TextileImageSource.h"
 
-@interface IpfsImageSource ()
+@interface TextileImageSource ()
 
 @property (nonatomic, assign) BOOL packagerAsset;
 
 @end
 
-@implementation IpfsImageSource
+@implementation TextileImageSource
 
 - (instancetype)initWithHashPath:(NSString *)hashPath size:(CGSize)size scale:(CGFloat)scale
 {
@@ -20,16 +20,16 @@
 
 - (instancetype)imageSourceWithSize:(CGSize)size scale:(CGFloat)scale
 {
-  IpfsImageSource *imageSource = [[IpfsImageSource alloc] initWithHashPath:_hashPath
+  TextileImageSource *imageSource = [[TextileImageSource alloc] initWithHashPath:_hashPath
                                                                       size:size
                                                                      scale:scale];
   imageSource.packagerAsset = _packagerAsset;
   return imageSource;
 }
 
-- (BOOL)isEqual:(IpfsImageSource *)object
+- (BOOL)isEqual:(TextileImageSource *)object
 {
-  if (![object isKindOfClass:[IpfsImageSource class]]) {
+  if (![object isKindOfClass:[TextileImageSource class]]) {
     return NO;
   }
   return [_hashPath isEqual:object.hashPath] && _scale == object.scale &&
@@ -38,7 +38,7 @@
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"<IpfsImageSource: %p hashPath=%@, size=%@, scale=%0.f>",
+  return [NSString stringWithFormat:@"<TextileImageSource: %p hashPath=%@, size=%@, scale=%0.f>",
           self, _hashPath, NSStringFromCGSize(_size), _scale];
 }
 
@@ -46,7 +46,7 @@
 
 @implementation RCTConvert (ImageSource)
 
-+ (IpfsImageSource *)IpfsImageSource:(id)json
++ (TextileImageSource *)TextileImageSource:(id)json
 {
   if (!json) {
     return nil;
@@ -64,18 +64,18 @@
   } else if ([json isKindOfClass:[NSString class]]) {
     hashPath = [self NSString:json];
   } else {
-    RCTLogConvertError(json, @"Can't convert json to an IpfsImageSource");
+    RCTLogConvertError(json, @"Can't convert json to an TextileImageSource");
     return nil;
   }
 
-  IpfsImageSource *imageSource = [[IpfsImageSource alloc] initWithHashPath:hashPath
+  TextileImageSource *imageSource = [[TextileImageSource alloc] initWithHashPath:hashPath
                                                                       size:size
                                                                      scale:scale];
   imageSource.packagerAsset = packagerAsset;
   return imageSource;
 }
 
-RCT_ARRAY_CONVERTER(IpfsImageSource)
+RCT_ARRAY_CONVERTER(TextileImageSource)
 
 @end
 

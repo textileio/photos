@@ -1,13 +1,3 @@
-/**
- * Copyright (c) 2015-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * @providesModule Image
- * @flow
- * @format
- */
 'use strict';
 
 const EdgeInsetsPropType = require('EdgeInsetsPropType');
@@ -27,7 +17,7 @@ const flattenStyle = require('flattenStyle');
 const requireNativeComponent = require('requireNativeComponent');
 const resolveAssetSource = require('resolveAssetSource');
 
-const IpfsImageViewManager = NativeModules.IpfsImageViewManager;
+const TextileImageViewManager = NativeModules.TextileImageViewManager;
 
 /**
  * A React component for displaying different types of images,
@@ -36,8 +26,8 @@ const IpfsImageViewManager = NativeModules.IpfsImageViewManager;
  *
  * See https://facebook.github.io/react-native/docs/image.html
  */
-const IpfsImage = createReactClass({
-  displayName: 'IpfsImage',
+const TextileImage = createReactClass({
+  displayName: 'TextileImage',
   propTypes: {
     /**
      * See https://facebook.github.io/react-native/docs/image.html#style
@@ -167,7 +157,7 @@ const IpfsImage = createReactClass({
       success: (width: number, height: number) => void,
       failure?: (error: any) => void,
     ) {
-      IpfsImageViewManager.getSize(
+      TextileImageViewManager.getSize(
         uri,
         success,
         failure ||
@@ -183,7 +173,7 @@ const IpfsImage = createReactClass({
      * See https://facebook.github.io/react-native/docs/image.html#prefetch
      */
     prefetch(url: string) {
-      return IpfsImageViewManager.prefetchImage(url);
+      return TextileImageViewManager.prefetchImage(url);
     },
     /**
      * Resolves an asset reference into an object.
@@ -233,18 +223,18 @@ const IpfsImage = createReactClass({
 
     if (this.props.src) {
       console.warn(
-        'The <IpfsImage> component requires a `source` property rather than `src`.',
+        'The <TextileImage> component requires a `source` property rather than `src`.',
       );
     }
 
     if (this.props.children) {
       throw new Error(
-        'The <IpfsImage> component cannot contain children. If you want to render content on top of the image, consider using the <ImageBackground> component or absolute positioning.',
+        'The <TextileImage> component cannot contain children. If you want to render content on top of the image, consider using the <ImageBackground> component or absolute positioning.',
       );
     }
 
     return (
-      <IpfsImageView
+      <TextileImageView
         {...this.props}
         style={style}
         resizeMode={resizeMode}
@@ -261,7 +251,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const IpfsImageView = requireNativeComponent('IpfsImageView', IpfsImage);
+const TextileImageView = requireNativeComponent('TextileImageView', TextileImage);
 
-module.exports = IpfsImage;
-
+module.exports = TextileImage;
