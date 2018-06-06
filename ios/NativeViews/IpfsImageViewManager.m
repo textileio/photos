@@ -7,6 +7,7 @@
 #import <React/RCTImageLoader.h>
 #import "RCTImageShadowView.h"
 #import "IpfsImageView.h"
+#import "IpfsImageSource.h"
 #import "TextileIPFS.h"
 
 @implementation IpfsImageViewManager
@@ -33,7 +34,7 @@ RCT_EXPORT_VIEW_PROPERTY(onPartialLoad, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadEnd, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(resizeMode, RCTResizeMode)
-RCT_REMAP_VIEW_PROPERTY(source, imageSources, NSArray<RCTImageSource *>);
+RCT_REMAP_VIEW_PROPERTY(source, imageSources, NSArray<IpfsImageSource *>);
 RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, IpfsImageView)
 {
   // Default tintColor isn't nil - it's inherited from the superView - but we
