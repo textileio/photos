@@ -1,4 +1,4 @@
-#import "IpfsImageView.h"
+#import "TextileImageView.h"
 
 #import <React/RCTBridge.h>
 #import <React/RCTConvert.h>
@@ -11,7 +11,7 @@
 #import "RCTImageUtils.h"
 
 #import "TextileIPFS.h"
-#import "IpfsImageSource.h"
+#import "TextileImageSource.h"
 
 /**
  * Determines whether an image of `currentSize` should be reloaded for display
@@ -33,7 +33,7 @@ static BOOL RCTShouldReloadImageForSizeChange(CGSize currentSize, CGSize idealSi
  * See RCTConvert (ImageSource). We want to send down the source as a similar
  * JSON parameter.
  */
-static NSDictionary *onLoadParamsForSource(IpfsImageSource *source)
+static NSDictionary *onLoadParamsForSource(TextileImageSource *source)
 {
   NSDictionary *dict = @{
                          @"width": @(source.size.width),
@@ -43,7 +43,7 @@ static NSDictionary *onLoadParamsForSource(IpfsImageSource *source)
   return @{ @"source": dict };
 }
 
-@interface IpfsImageView ()
+@interface TextileImageView ()
 
 @property (nonatomic, copy) RCTDirectEventBlock onLoadStart;
 @property (nonatomic, copy) RCTDirectEventBlock onProgress;
@@ -54,16 +54,16 @@ static NSDictionary *onLoadParamsForSource(IpfsImageSource *source)
 
 @end
 
-@implementation IpfsImageView
+@implementation TextileImageView
 {
   // Weak reference back to the bridge, for image loading
   __weak RCTBridge *_bridge;
 
   // The image source that's currently displayed
-  IpfsImageSource *_imageSource;
+  TextileImageSource *_imageSource;
 
   // The image source that's being loaded from the network
-  IpfsImageSource *_pendingImageSource;
+  TextileImageSource *_pendingImageSource;
 
   // Size of the image loaded / being loaded, so we can determine when to issue a reload to accommodate a changing size.
   CGSize _targetSize;
@@ -165,7 +165,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 }
 
-- (void)setImageSources:(NSArray<IpfsImageSource *> *)imageSources
+- (void)setImageSources:(NSArray<TextileImageSource *> *)imageSources
 {
   if (![imageSources isEqual:_imageSources]) {
     _imageSources = [imageSources copy];
@@ -223,7 +223,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   return _imageSources.count > 1;
 }
 
-- (IpfsImageSource *)imageSourceForSize:(CGSize)size
+- (TextileImageSource *)imageSourceForSize:(CGSize)size
 {
   if (![self hasMultipleSources]) {
     return _imageSources.firstObject;
@@ -237,9 +237,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   const CGFloat scale = RCTScreenScale();
   const CGFloat targetImagePixels = size.width * size.height * scale * scale;
 
-  IpfsImageSource *bestSource = nil;
+  TextileImageSource *bestSource = nil;
   CGFloat bestFit = CGFLOAT_MAX;
-  for (IpfsImageSource *source in _imageSources) {
+  for (TextileImageSource *source in _imageSources) {
     CGSize imgSize = source.size;
     const CGFloat imagePixels =
     imgSize.width * imgSize.height * source.scale * source.scale;
@@ -263,7 +263,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 {
   // We need to reload if the desired image source is different from the current image
   // source AND the image load that's pending
-  IpfsImageSource *desiredImageSource = [self imageSourceForSize:self.frame.size];
+  TextileImageSource *desiredImageSource = [self imageSourceForSize:self.frame.size];
   return ![desiredImageSource isEqual:_imageSource] &&
   ![desiredImageSource isEqual:_pendingImageSource];
 }
@@ -273,7 +273,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [self cancelImageLoad];
   _needsReload = NO;
 
-  IpfsImageSource *source = [self imageSourceForSize:self.frame.size];
+  TextileImageSource *source = [self imageSourceForSize:self.frame.size];
   _pendingImageSource = source;
 
   if (source && self.frame.size.width > 0 && self.frame.size.height > 0) {
@@ -291,7 +291,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       };
     }
 
-    __weak IpfsImageView *weakSelf = self;
+    __weak TextileImageView *weakSelf = self;
     RCTImageLoaderPartialLoadBlock partialLoadHandler = ^(UIImage *image) {
       [weakSelf imageLoaderLoadedImage:image error:nil forImageSource:source partial:YES];
     };
@@ -333,7 +333,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 }
 
-- (void)imageLoaderLoadedImage:(UIImage *)loadedImage error:(NSError *)error forImageSource:(IpfsImageSource *)source partial:(BOOL)isPartialLoad
+- (void)imageLoaderLoadedImage:(UIImage *)loadedImage error:(NSError *)error forImageSource:(TextileImageSource *)source partial:(BOOL)isPartialLoad
 {
   if (![source isEqual:_pendingImageSource]) {
     // Bail out if source has changed since we started loading
@@ -369,7 +369,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       }
     } else {
       if (self->_onLoad) {
-        IpfsImageSource *sourceLoaded = [source imageSourceWithSize:image.size scale:source.scale];
+        TextileImageSource *sourceLoaded = [source imageSourceWithSize:image.size scale:source.scale];
         self->_onLoad(onLoadParamsForSource(sourceLoaded));
       }
       if (self->_onLoadEnd) {

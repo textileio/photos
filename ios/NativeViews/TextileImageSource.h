@@ -5,7 +5,7 @@
 /**
  * Object containing an image hash path and associated metadata.
  */
-@interface IpfsImageSource : NSObject
+@interface TextileImageSource : NSObject
 
 @property (nonatomic, copy, readonly) NSString *hashPath;
 @property (nonatomic, assign, readonly) CGSize size;
@@ -27,9 +27,9 @@
 
 @end
 
-@interface RCTConvert (IpfsImageSource)
+@interface RCTConvert (TextileImageSource)
 
-+ (IpfsImageSource *)IpfsImageSource:(id)json;
-+ (NSArray<IpfsImageSource *> *)IpfsImageSourceArray:(id)json;
++ (TextileImageSource *)TextileImageSource:(id)json;
++ (NSArray<TextileImageSource *> *)TextileImageSourceArray:(id)json;
 
 @end
