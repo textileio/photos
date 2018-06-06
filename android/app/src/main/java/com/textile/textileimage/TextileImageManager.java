@@ -1,6 +1,6 @@
 //  Created by react-native-create-bridge
 
-package com.textilephotos.ipfsimage;
+package com.textile.textileimage;
 
 import android.view.View;
 
@@ -9,8 +9,8 @@ import com.facebook.react.uimanager.ThemedReactContext;
 
 import com.facebook.react.uimanager.annotations.ReactProp;
 
-public class IpfsImageManager extends SimpleViewManager<View> {
-    public static final String REACT_CLASS = "IpfsImage";
+public class TextileImageManager extends SimpleViewManager<View> {
+    public static final String REACT_CLASS = "TextileImage";
 
     @Override
     public String getName() {

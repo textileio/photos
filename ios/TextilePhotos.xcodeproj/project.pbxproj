@@ -56,7 +56,7 @@
 		932E4DC520B8D7E100358ED3 /* Biotif-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB520B8D7E000358ED3 /* Biotif-SemiBoldItalic.ttf */; };
 		932E4DC620B8D7E100358ED3 /* Biotif-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */; };
 		932E4DC720B8D7E100358ED3 /* Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */; };
-		9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileIPFS.m */; };
+		9339E9A1205C381700BCA4CF /* TextileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileNode.m */; };
 		9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
 		935215F2207E967F00D46B81 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 935215C5207E966C00D46B81 /* libART.a */; };
 		9358951820C6EF2200722AE8 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9358951320C6EF2100722AE8 /* TextileImageView.m */; };
@@ -590,8 +590,8 @@
 		932E4DB520B8D7E000358ED3 /* Biotif-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-SemiBoldItalic.ttf"; path = "../App/Fonts/Biotif-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Light.ttf"; path = "../App/Fonts/Biotif-Light.ttf"; sourceTree = "<group>"; };
 		932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-BookItalic.ttf"; path = "../App/Fonts/Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
-		9339E99F205C381700BCA4CF /* TextileIPFS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileIPFS.m; sourceTree = "<group>"; };
-		9339E9A0205C381700BCA4CF /* TextileIPFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileIPFS.h; sourceTree = "<group>"; };
+		9339E99F205C381700BCA4CF /* TextileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileNode.m; sourceTree = "<group>"; };
+		9339E9A0205C381700BCA4CF /* TextileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileNode.h; sourceTree = "<group>"; };
 		9339E9A6205C3B8700BCA4CF /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mobile.framework; sourceTree = "<group>"; };
 		935215BC207E966B00D46B81 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		9358951120C6EF2100722AE8 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
@@ -960,8 +960,8 @@
 		9339E99E205C381700BCA4CF /* NativeModules */ = {
 			isa = PBXGroup;
 			children = (
-				9339E9A0205C381700BCA4CF /* TextileIPFS.h */,
-				9339E99F205C381700BCA4CF /* TextileIPFS.m */,
+				9339E9A0205C381700BCA4CF /* TextileNode.h */,
+				9339E99F205C381700BCA4CF /* TextileNode.m */,
 				C5D8444C20A6694B0011C926 /* Events.h */,
 				C5D8444D20A669810011C926 /* Events.m */,
 			);
@@ -1883,7 +1883,7 @@
 				9358951820C6EF2200722AE8 /* TextileImageView.m in Sources */,
 				C5D8444E20A669810011C926 /* Events.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				9339E9A1205C381700BCA4CF /* TextileIPFS.m in Sources */,
+				9339E9A1205C381700BCA4CF /* TextileNode.m in Sources */,
 				68C8700C55154E1E80C3FB5B /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
