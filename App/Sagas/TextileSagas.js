@@ -275,8 +275,6 @@ export function * photosTask () {
           photo: photo,
           multipartData
         })
-        // refresh our gallery
-        yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
       } catch (error) {
         // if error, delete the photo copy and thumb from disk then fire error
         try {
@@ -287,7 +285,10 @@ export function * photosTask () {
         }
       }
     }
-
+    
+    // refresh our gallery
+    yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+    
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
       let {photo, multipartData} = photoData
