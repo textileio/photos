@@ -6,20 +6,29 @@ import TextileImage from '../../TextileImage'
 export default class ProgressiveImage extends React.Component {
   constructor (props) {
     super(props)
+    this.hasCanceled_ = false
     this.state = {
       loaded: false,
       preview: false
     }
   }
 
+  componentWillUnmount () {
+    this.hasCanceled_ = true
+  }
+
   _onPreview () {
     // just drop the thumb/default from the stack
-    this.setState(() => ({preview: true}))
+    if (!this.hasCanceled_) {
+      this.setState(() => ({preview: true}))
+    }
   }
 
   _onLoaded () {
     // just drop the thumb/default from the stack
-    this.setState(() => ({loaded: true}))
+    if (!this.hasCanceled_) {
+      this.setState(() => ({loaded: true}))
+    }
   }
 
   get renderPreview () {
