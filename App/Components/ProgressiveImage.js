@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 import TextileImage from '../../TextileImage'
 
 // IPFS Image is aware of how to load higher resolution images progressively
@@ -11,44 +11,37 @@ export default class ProgressiveImage extends React.Component {
     }
   }
 
-  get renderDefault () {
+  _onLoaded () {
+    // just drop the thumb/default from the stack
+    this.setState(() => ({loaded: true}))
+  }
+
+  renderPreview () {
     return (<TextileImage
-      source={this.props.defaultSource}
+      source={this.props.previewSource}
       style={[{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}, this.props.style]}
       resizeMode={this.props.resizeMode}
       capInsets={this.props.capInsets}
-      onLoad={this._onDefault.bind(this)}
     />)
   }
 
-  get renderPhoto () {
+  renderPhoto () {
     return (<TextileImage
       source={this.props.source}
       style={[{backgroundColor: 'transparent', position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}, this.props.style]}
       resizeMode={this.props.resizeMode}
       capInsets={this.props.capInsets}
+      opacity={this.state.loaded ? 1 : 0}
+      onLoad={this._onLoaded.bind(this)}
     />)
   }
 
-  _onDefault () {
-    // just drop the thumb/default from the stack
-    this.setState(() => ({loaded: true}))
-  }
-
   render () {
-    if (this.state.loaded) {
-      return (
-        <View style={this.props.style}>
-          {this.renderDefault}
-          {this.renderPhoto}
-        </View>
-      )
-    } else {
-      return (
-        <View style={this.props.style}>
-          {this.renderDefault}
-        </View>
-      )
-    }
+    return (
+      <View style={this.props.style}>
+        {this.renderPreview()}
+        {this.renderPhoto()}
+      </View>
+    )
   }
 }
