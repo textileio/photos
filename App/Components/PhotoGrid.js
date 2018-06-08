@@ -49,7 +49,8 @@ export default class PhotoGrid extends React.PureComponent {
             {/*resizeMode={'cover'}*/}
             {/*displayImages={this.props.displayImages}*/}
           {/*/>*/}
-          <TextileImage source={{hashPath: row.item.hash + '/thumb'}} style={styles.itemImage} resizeMode={'cover'} />
+          {/*<TextileImage source={{hashPath: row.item.hash + '/thumb'}} style={styles.itemImage} resizeMode={'cover'} />*/}
+          <TextileImage hashPath={row.item.hash + '/thumb'} style={styles.itemImage} resizeMode={'cover'} />
         </View>
         <View style={styles.itemOverlay}>
           {overlay}

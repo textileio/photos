@@ -32,7 +32,7 @@ import java.util.Map;
 public class TextileNode extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileNode";
     private static ReactApplicationContext reactContext = null;
-    private static Wrapper textile = null;
+    static Wrapper textile = null;
 
     public TextileNode(ReactApplicationContext context) {
         // Pass in the context to the constructor and save it so you can emit events
