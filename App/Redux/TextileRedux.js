@@ -70,6 +70,7 @@ export const handleUrisToIgnore = (state, {uris}) => {
   for (let uri of uris) {
     processed[uri] = 'complete'
   }
+  console.log(processed)
   return state.merge({ camera: {processed} })
 }
 
