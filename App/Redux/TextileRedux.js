@@ -67,11 +67,11 @@ export const onboardedSuccess = state => {
 // Used to ignore certain URIs in the CameraRoll
 export const handleUrisToIgnore = (state, {uris}) => {
   let processed = state.camera && state.camera.processed ? state.camera.processed : {}
+  let newUri = {}
   for (let uri of uris) {
-    processed[uri] = 'complete'
+    newUri[uri] = 'complete'
   }
-  console.log(processed)
-  return state.merge({ camera: {processed} })
+  return state.merge({ camera: {processed: processed.merge(newUri)} })
 }
 
 export const toggleVerboseUi = state =>
@@ -79,23 +79,26 @@ export const toggleVerboseUi = state =>
 
 export const handlePhotosProcessing = (state, {photos}) => {
   let processed = state.camera && state.camera.processed ? state.camera.processed : {}
+  let newUri = {}
   for (let photo of photos) {
-    processed[photo.uri] = 'processing'
+    newUri[photo.uri] = 'processing'
   }
-  return state.merge({ camera: { processed } })
+  return state.merge({ camera: { processed: processed.merge(newUri) } })
 }
 
 export const handlePhotoProcessingError = (state, {uri, error}) => {
   let processed = state.camera && state.camera.processed ? state.camera.processed : {}
-  processed[uri] = 'error'
-  return state.merge({ camera: { processed } })
+  let newUri = {}
+  newUri[uri] = 'error'
+  return state.merge({ camera: { processed: processed.merge(newUri) } })
 }
 
 export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
   const processed = state.camera && state.camera.processed ? state.camera.processed : {}
-  processed[uri] = 'complete'
+  let newUri = {}
+  newUri[uri] = 'complete'
   const items = [{ thread, hash, remotePayloadPath, state: 'pending', remainingUploadAttempts: 3 }, ...state.images.items]
-  return state.merge({ images: { items }, camera: {processed} })
+  return state.merge({ images: { items }, camera: {processed: processed.merge(newUri)} })
 }
 
 export const handleImageUploadRetried = (state, {hash}) => {
