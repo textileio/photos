@@ -10,7 +10,8 @@ const migrations = {
       textile: state.textile.merge({
         preferences: {
           verboseUi: false
-        }
+        },
+        camera: {}
       })
     }
   },

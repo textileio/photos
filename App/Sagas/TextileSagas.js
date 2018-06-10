@@ -244,25 +244,20 @@ export function * photosTask () {
     const camera = yield select(TextileSelectors.camera)
     let allPhotos = yield call(getAllPhotos)
 
-    // If camera.processed didn't exist, we'll add all but 1 photo to our
-    // ignore list and then set camera.processed through urisToIgnore
-    if (camera === undefined) {
-      // case for existing users on the platform. hack-migration
-      yield put(TextileActions.urisToIgnore(allPhotos.map(photo => photo.uri)))
-      allPhotos = []
-    } else if (camera.processed === undefined) {
+    // for new users, just grab their latest photos
+    if (camera.processed === undefined) {
       const ignoredPhotos = allPhotos.splice(1)
       yield put(TextileActions.urisToIgnore(ignoredPhotos.map(photo => photo.uri)))
     }
 
     const processed = camera && camera.processed ? camera.processed : {}
-    console.log('PROCESSED')
-    console.log(processed)
     const photos = allPhotos.filter((photo) => {
-      if (processed[photo.uri] && processed[photo.uri] !== 'error') {
-        return false
+      switch (processed[photo.uri] !== undefined && processed[photo.uri] !== 'error') {
+        case (true):
+          return false
+        default:
+          return true
       }
-      return true
     })
 
     // ensure that no other jobs try to process the same photo
@@ -325,6 +320,7 @@ export function * removePayloadFile ({data}) {
   const items = yield select(TextileSelectors.itemsById, id)
   for (const item of items) {
     if (item.remotePayloadPath && item.state === 'complete') {
+      // TODO: probably should be a try/catch?
       yield call(RNFS.unlink, item.remotePayloadPath)
     }
   }
