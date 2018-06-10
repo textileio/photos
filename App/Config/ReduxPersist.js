@@ -25,6 +25,19 @@ const migrations = {
         images: state.textile.images.merge({ items: updatedItems })
       })
     }
+  },
+  2: (state) => {
+    const uris = state.textile.camera && state.textile.camera.processed ? state.textile.camera.processed : []
+    let processed = {}
+    for (let uri of uris) {
+      processed[uri] = 'complete'
+    }
+    return {
+      ...state,
+      textile: {
+        camera: {processed}
+      }
+    }
   }
 }
 
