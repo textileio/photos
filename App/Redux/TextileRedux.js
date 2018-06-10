@@ -21,7 +21,8 @@ const { Types, Creators } = createActions({
   imageRemovalComplete: ['id'],
 
   photosTaskError: ['error'],
-  photoProcessingError: ['id', 'error'],
+  photosProcessing: ['photos'],
+  photoProcessingError: ['uri', 'error'],
 
   pairNewDevice: ['pubKey'],
   pairNewDeviceSuccess: ['pubKey'],
@@ -65,17 +66,33 @@ export const onboardedSuccess = state => {
 
 // Used to ignore certain URIs in the CameraRoll
 export const handleUrisToIgnore = (state, {uris}) => {
-  const existing = state.camera && state.camera.processed ? state.camera.processed : []
-  const processed = [...existing, ...uris]
+  let processed = state.camera && state.camera.processed ? state.camera.processed : {}
+  for (let uri of uris) {
+    processed[uri] = 'complete'
+  }
   return state.merge({ camera: {processed} })
 }
 
 export const toggleVerboseUi = state =>
   state.merge({ preferences: { ...state.preferences, verboseUi: !state.preferences.verboseUi } })
 
+export const handlePhotosProcessing = (state, {photos}) => {
+  let processed = state.camera && state.camera.processed ? state.camera.processed : {}
+  for (let photo of photos) {
+    processed[photo.uri] = 'processing'
+  }
+  return state.merge({ camera: { processed } })
+}
+
+export const handlePhotoProcessingError = (state, {uri, error}) => {
+  let processed = state.camera && state.camera.processed ? state.camera.processed : {}
+  processed[uri] = 'error'
+  return state.merge({ camera: { processed } })
+}
+
 export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
-  const existing = state.camera && state.camera.processed ? state.camera.processed : []
-  const processed = [...existing, uri]
+  const processed = state.camera && state.camera.processed ? state.camera.processed : {}
+  processed[uri] = 'complete'
   const items = [{ thread, hash, remotePayloadPath, state: 'pending', remainingUploadAttempts: 3 }, ...state.images.items]
   return state.merge({ images: { items }, camera: {processed} })
 }
@@ -173,6 +190,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
 
   [Types.TOGGLE_VERBOSE_UI]: toggleVerboseUi,
+  [Types.PHOTOS_PROCESSING]: handlePhotosProcessing,
+  [Types.PHOTO_PROCESSING_ERROR]: handlePhotoProcessingError,
+
   [Types.IMAGE_ADDED]: handleImageAdded,
   [Types.URIS_TO_IGNORE]: handleUrisToIgnore,
   [Types.IMAGE_UPLOAD_RETRIED]: handleImageUploadRetried,

@@ -255,15 +255,18 @@ export function * photosTask () {
       yield put(TextileActions.urisToIgnore(ignoredPhotos.map(photo => photo.uri)))
     }
 
-    const processed = camera && camera.processed ? camera.processed : []
-    let allProcessed = processed.reduce((o, item, index) => ({...o, [item]: { index }}), {})
+    const processed = camera && camera.processed ? camera.processed : {}
+    console.log('PROCESSED')
+    console.log(processed)
     const photos = allPhotos.filter((photo) => {
-      if (allProcessed[photo.uri]) {
+      if (processed[photo.uri] && processed[photo.uri] !== 'error') {
         return false
       }
       return true
     })
 
+    // ensure that no other jobs try to process the same photo
+    yield put(TextileActions.photosProcessing(photos))
 
     let photoUploads = []
     // Convert all our new entries to thumbs before anything else
@@ -285,10 +288,8 @@ export function * photosTask () {
         }
       }
     }
-    
     // refresh our gallery
     yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-    
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
       let {photo, multipartData} = photoData
