@@ -4,49 +4,22 @@ import { ApplicationStyles, Metrics, Colors } from '../../Themes'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   container: {
-    flex: 1,
-    borderTopColor: Colors.transparent,
-    borderTopWidth: 0,
-    borderBottomColor: Colors.test,
-    borderBottomWidth: 0,
-    paddingLeft: 18,
-    paddingRight: 18,
-    paddingTop: 20
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
   },
-  cardStyle: {
-    // padding: 0,
+  title: {
+    marginBottom: 14, alignSelf: 'center', fontWeight: 'bold', fontSize: 50, fontFamily: 'Biotif-Regular'
   },
-  notification: {
-    flexDirection: 'row',
-    flex: 1,
-    maxWidth: '75%',
+  message: {
+    padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 18, textAlign: 'justify'
   },
-  avatar: {
-    // position: 'relative',
-    marginRight: 20,
-  },
-  notificationText: {
-    color: Colors.coal,
-  },
-  boldLabel: {
-    fontWeight: 'bold',
+  button: {
+    fontFamily: 'Biotif-Regular',
+    color: Colors.charcoal,
+    fontSize: 18,
     alignSelf: 'center',
-    color: Colors.ember,
-    textAlign: 'center',
-    marginBottom: Metrics.smallMargin
+    textAlign: 'justify'
   },
-  label: {
-    textAlign: 'center',
-    color: Colors.snow
-  },
-  listContent: {
-    marginTop: 0, ///Metrics.baseMargin
-  },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
+  buttonMargin: {
+    backgroundColor: 'transparent', height: 22
+  }
 })
