@@ -318,16 +318,18 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 //                                partialLoadBlock:partialLoadHandler
 //                                 completionBlock:completionHandler];
 
-    NSError *error;
-    UIImage *image;
-    NSString *base64String = [_bridge.textileNode _getHashData:source.hashPath error:&error];
-    if (base64String) {
-      NSString *finalBase64String = [@"data:image/jpeg;base64," stringByAppendingString:base64String];
-      NSURL *url = [NSURL URLWithString:finalBase64String];
-      NSData *imageData = [NSData dataWithContentsOfURL:url];
-      image = [UIImage imageWithData:imageData];
-    }
-    completionHandler(error, image);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      NSError *error;
+      UIImage *image;
+      NSString *base64String = [_bridge.textileNode _getHashData:source.hashPath error:&error];
+      if (base64String) {
+        NSString *finalBase64String = [@"data:image/jpeg;base64," stringByAppendingString:base64String];
+        NSURL *url = [NSURL URLWithString:finalBase64String];
+        NSData *imageData = [NSData dataWithContentsOfURL:url];
+        image = [UIImage imageWithData:imageData];
+      }
+      completionHandler(error, image);
+    });
   } else {
     [self clearImage];
   }
