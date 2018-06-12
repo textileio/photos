@@ -31,7 +31,7 @@ export default class ProgressiveImage extends React.Component {
     }
   }
 
-  get renderPreview () {
+  renderPreview () {
     return (<TextileImage
       source={this.props.previewSource}
       style={[{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}, this.props.style]}
@@ -64,7 +64,7 @@ export default class ProgressiveImage extends React.Component {
       // if thumb is available, start loading the full res
       return (
         <View style={this.props.style}>
-          {this.renderPreview}
+          {this.renderPreview()}
           {this.renderPhoto()}
         </View>
       )
@@ -72,7 +72,7 @@ export default class ProgressiveImage extends React.Component {
       // default, begin loading the thumb
       return (
         <View style={this.props.style}>
-          {this.renderPreview}
+          {this.renderPreview()}
         </View>
       )
     }
