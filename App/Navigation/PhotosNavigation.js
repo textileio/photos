@@ -5,11 +5,9 @@ import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import TextilePhotos from '../Containers/TextilePhotos'
 import InfoView from '../Containers/InfoView'
-import PairingView from '../Containers/PairingView'
 import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
 import Colors from '../Themes/Colors'
 // import Notifications from '../Containers/Notifications'
-import { Image } from 'react-native'
 
 // import SwipeNavigation from './SwipeNavigation'
 
@@ -124,20 +122,6 @@ const PhotoViewerStack = DismissableStackNavigator(
   }
 )
 
-const PairingStackNav = DismissableStackNavigator(
-  {
-    Pairing: PairingView
-  },
-  {
-    headerMode: 'float',
-    navigationOptions: {
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
-    }
-  }
-)
-
 const RootStack = StackNavigator(
   {
     PrimaryNav: {
@@ -145,9 +129,6 @@ const RootStack = StackNavigator(
     },
     PhotoViewer: {
       screen: PhotoViewerStack
-    },
-    PairingView: {
-      screen: PairingStackNav
     }
   },
   {
