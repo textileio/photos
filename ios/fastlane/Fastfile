@@ -22,7 +22,9 @@ platform :ios do
 
   desc "Runs all the tests"
   lane :test do
-    scan
+    scan(
+      scheme: "TextilePhotos"
+    )
   end
 
   desc "Push a new beta build to TestFlight"
