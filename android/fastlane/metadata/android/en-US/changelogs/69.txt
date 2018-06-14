@@ -1,0 +1,4 @@
+Fixes background upload bug.
+Cleans up local file copies if wallet additions fail. 
+Better peer connections for shared thread.
+New on-boarding will add 1 photo to wallet to init the app.
