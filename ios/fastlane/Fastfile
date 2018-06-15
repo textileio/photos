@@ -30,10 +30,11 @@ platform :ios do
   desc "Push a new beta build to TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
+    ensure_git_status_clean
     # Config that came from 
     # https://raw.githubusercontent.com/CircleCI-Public/circleci-demo-react-native/master/ios/fastlane/Fastfile
     # -----------------------------------------------------------------------------------------------------------
-    ## match(type: "appstore") # more information: https://codesigning.guide
+    match(type: "appstore") # more information: https://codesigning.guide
     #gym # Build your app - more options available
     #pilot
     ## sh "your_script.sh"
@@ -41,14 +42,20 @@ platform :ios do
 
     # Config that came with fastlane init
     # ----------------------------------------------------------------------------
-    increment_build_number(xcodeproj: "TextilePhotos.xcodeproj")
+    increment_build_number(
+      build_number: latest_testflight_build_number(version: get_version_number) + 1,
+      xcodeproj: "TextilePhotos.xcodeproj"
+    )
     build_app(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
-    upload_to_testflight
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+    commit_version_bump(xcodeproj: "TextilePhotos.xcodeproj")
+    add_git_tag
+    push_to_git_remote
   end
 
   desc "Deploy a new version to the App Store"
   lane :release do
-    # match(type: "appstore")
+    match(type: "appstore")
     # snapshot
     gym # Build your app - more options available
     deliver(force: true)
