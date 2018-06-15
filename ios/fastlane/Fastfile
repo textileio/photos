@@ -52,7 +52,7 @@ platform :ios do
     upload_to_testflight(skip_waiting_for_build_processing: true)
     clean_build_artifacts
     commit_version_bump(xcodeproj: "TextilePhotos.xcodeproj")
-    add_git_tag(tag: "builds/iosbeta/" + versionNumber + "(" + newBuildNumber + ")")
+    add_git_tag(tag: "builds/iosbeta/" + versionNumber.to_s + "(" + newBuildNumber.to_s + ")")
     push_to_git_remote
   end
 
