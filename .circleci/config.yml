@@ -45,6 +45,9 @@ jobs:
           path: test-results
 
   android:
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android
     docker:
       - image: circleci/android:api-27-node8-alpha
