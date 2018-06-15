@@ -81,6 +81,9 @@ jobs:
   ios:
     macos:
       xcode: "9.4.0"
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
     working_directory: ~/textile-mobile
 
     # use a --login shell so our "set Ruby version" command gets picked up for later steps
