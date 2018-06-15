@@ -42,15 +42,17 @@ platform :ios do
 
     # Config that came with fastlane init
     # ----------------------------------------------------------------------------
+    versionNumber = get_version_number
+    newBuildNumber = latest_testflight_build_number(version: versionNumber) + 1
     increment_build_number(
-      build_number: latest_testflight_build_number(version: get_version_number) + 1,
+      build_number: newBuildNumber,
       xcodeproj: "TextilePhotos.xcodeproj"
     )
     gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
     upload_to_testflight(skip_waiting_for_build_processing: true)
     clean_build_artifacts
     commit_version_bump(xcodeproj: "TextilePhotos.xcodeproj")
-    add_git_tag
+    add_git_tag(tag: "builds/iosbeta/" + versionNumber + "(" + newBuildNumber + ")")
     push_to_git_remote
   end
 
