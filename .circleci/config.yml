@@ -150,6 +150,75 @@ jobs:
       - store_artifacts:
           path: ios/test-results
 
+  ios-beta:
+    macos:
+      xcode: "9.4.0"
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    working_directory: ~/textile-mobile
+
+    # use a --login shell so our "set Ruby version" command gets picked up for later steps
+    shell: /bin/bash --login -o pipefail
+
+    steps:
+      - checkout
+
+      - run:
+          name: set Ruby version
+          command:  echo "ruby-2.4" > ~/.ruby-version
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      # not using a workspace here as Node and Yarn versions
+      # differ between our macOS executor image and the Docker containers above
+      - run: yarn install
+
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
+
+      - restore_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+
+      - run:
+          command: bundle install
+          working_directory: ios
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          command: bundle exec fastlane beta
+          working_directory: ios
+
+      - run:
+          name: set up test results
+          working_directory: ios
+          when: always
+          command: |
+            mkdir -p test-results/fastlane test-results/xcode
+            mv fastlane/report.xml test-results/fastlane
+            mv fastlane/test_output/report.junit test-results/xcode/junit.xml
+
+      - store_test_results:
+          path: ios/test-results
+
+      - store_artifacts:
+          path: ios/test-results
+
 workflows:
   version: 2
   node-android-ios:
