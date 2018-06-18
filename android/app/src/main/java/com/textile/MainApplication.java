@@ -21,7 +21,7 @@ import com.horcrux.svg.SvgPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.textile.textileipfs.TextileIPFSPackage;
+import com.textile.textilenode.TextileNodePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +52,7 @@ public class MainApplication extends Application implements ReactApplication {
         new AppCenterReactNativePackage(MainApplication.this),
         new ReactNativeI18n(),
         new VectorIconsPackage(),
-        new TextileIPFSPackage()
+        new TextileNodePackage()
       );
     }
 
