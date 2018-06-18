@@ -129,7 +129,7 @@ jobs:
       - save_cache:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
           paths:
-            - vendor/bundle
+            - vendor/bundle 
 
       - run:
           command: bundle exec fastlane test
@@ -199,6 +199,9 @@ jobs:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
+
+      - run:
+          command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
       - run:
           command: bundle exec fastlane beta
