@@ -1,7 +1,2 @@
-app_identifier("io.textile.Wallet") # The bundle identifier of your app
-
-itc_team_id("118146778") # iTunes Connect Team ID
-team_id("5VHA5U5FY8") # Developer Portal Team ID
-
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile
