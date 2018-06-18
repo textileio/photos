@@ -49,6 +49,7 @@ platform :ios do
       xcodeproj: "TextilePhotos.xcodeproj"
     )
     gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
+    changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: false)
     clean_build_artifacts
     commit_version_bump(
