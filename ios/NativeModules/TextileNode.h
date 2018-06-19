@@ -9,6 +9,17 @@
 #import "React/RCTBridgeModule.h" // Required when used as a Pod in a Swift project
 #endif
 
-@interface TextileIPFS : NSObject <RCTBridgeModule>
+#import <React/RCTBridge.h>
+
+@interface TextileNode : NSObject <RCTBridgeModule>
   // Define class properties here with @property
+- (NSString *)_getHashData:(NSString *)hashPath error:(NSError**)error;
+@end
+
+@interface RCTBridge (TextileNode)
+/**
+ * The shared Textile node instance
+ */
+@property (nonatomic, readonly) TextileNode *textileNode;
+
 @end

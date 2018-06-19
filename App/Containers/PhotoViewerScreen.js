@@ -13,7 +13,8 @@ import { connect } from 'react-redux'
 import IpfsActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
-import IPFSImage from '../Components/IPFSImage'
+import ProgressiveImage from '../Components/ProgressiveImage'
+
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -30,14 +31,12 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage (props, dims) {
-    return (<IPFSImage
-      key={props.image.key}
-      hash={props.image.hash}
-      progressiveLoad
+    return (<ProgressiveImage
+      previewSource={{hashPath: props.image.hash + '/thumb'}}
+      source={{hashPath: props.image.hash + '/photo'}}
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
       capInsets={props.capInsets}
-      displayImages={props.image.displayImages}
     />)
   }
 

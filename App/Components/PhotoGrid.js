@@ -11,7 +11,8 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
-import IPFSImage from './IPFSImage'
+// import IPFSImage from './IPFSImage'
+import TextileImage from '../../TextileImage'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
@@ -42,11 +43,17 @@ export default class PhotoGrid extends React.PureComponent {
     return (
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
-          <IPFSImage
-            hash={row.item.hash}
+          {/*<IPFSImage*/}
+            {/*hash={row.item.hash}*/}
+            {/*style={styles.itemImage}*/}
+            {/*resizeMode={'cover'}*/}
+            {/*displayImages={this.props.displayImages}*/}
+          {/*/>*/}
+          {/*<TextileImage source={{hashPath: row.item.hash + '/thumb'}} style={styles.itemImage} resizeMode={'cover'} />*/}
+          <TextileImage
+            source={{hashPath: row.item.hash + '/thumb'}}
             style={styles.itemImage}
             resizeMode={'cover'}
-            displayImages={this.props.displayImages}
           />
         </View>
         <View style={styles.itemOverlay}>
