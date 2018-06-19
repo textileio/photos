@@ -10,10 +10,10 @@ import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
-import IpfsActions from '../Redux/TextileRedux'
+import TextileActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
-import IPFSImage from '../Components/IPFSImage'
+import TexileImage from '../Components/TextileImage'
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -30,9 +30,10 @@ class PhotoViewerScreen extends React.PureComponent {
   }
 
   renderImage (props, dims) {
-    return (<IPFSImage
+    console.log(props)
+    return (<TexileImage
       key={props.image.key}
-      hash={props.image.hash}
+      hash={props.image.target}
       progressiveLoad
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
@@ -171,8 +172,8 @@ const mapStateToProps = (state, ownProps) => {
   const imageData = items.map(item => {
     return {
       ...item,
-      key: item.hash + path,
-      source: {url: 'file://' + item.hash + '.png'}, // <-- in case RN uses to know things
+      key: item.target + path,
+      source: {url: 'file://' + item.target + '.png'}, // <-- in case RN uses to know things
       dimensions: { width: 150, height: 150 },
       displayImages: state.ipfs.nodeState.state === 'started'
     }
@@ -187,8 +188,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (item) => { dispatch(IpfsActions.shareImageRequest('all', item.hash)) },
-    authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.hash)) },
+    share: (item) => { dispatch(TextileActions.shareImageRequest('all', item.target)) },
+    authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.target)) },
     cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
     selectImage: (index) => { dispatch(UIActions.selectImage(index)) },
     dismiss: () => { dispatch(UIActions.dismissViewedPhoto()) }

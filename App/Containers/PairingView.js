@@ -20,7 +20,7 @@ class PairingView extends React.PureComponent {
   confirmPairing = () => {
     let params = this.getParams(this.props.navigation.state.params.data)
     // TODO: we should actually wait for pairing success here
-    this.props.pairNewDevice(params['key'])
+    this.props.pairDevice(params['key'])
     this.setState(() => ({paired: true}))
   }
 
@@ -139,7 +139,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    pairNewDevice: (pubKey) => { dispatch(Actions.pairNewDevice(pubKey)) }
+    pairDevice: (pubKey) => { dispatch(Actions.pairDevice(pubKey)) }
   }
 }
 

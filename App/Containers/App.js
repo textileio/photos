@@ -23,7 +23,7 @@ TextileNode.eventEmitter.addListener('onOnline', () => {
   // TODO: show some UI? "p2p online"?
 })
 TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {
-  store.dispatch(TextileNodeActions.getPhotoHashesRequest(payload.thread))
+  store.dispatch(TextileNodeActions.getPhotoBlocksRequest(payload.thread))
 })
 
 /**

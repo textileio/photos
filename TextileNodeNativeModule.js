@@ -59,8 +59,8 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  addThread: async function (name: string): MultipartData {
-    return await TextileNode.addThread(name)
+  addThread: async function (name: string, mnemonic: string): MultipartData {
+    return await TextileNode.addThread(name, mnemonic)
   },
 
   addPhoto: async function (path: string, threadName: string, caption: string): MultipartData {
@@ -71,16 +71,20 @@ export default {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
 
-  getPhotos: async function (offset: ?string, limit: number, threadName: string): string {
-    return await TextileNode.getPhotos(offset || '', limit, threadName)
+  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): string {
+    return await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
   },
 
-  getFileBase64: async function (id: string, path: string, blockId: string): string {
-    return await TextileNode.getFileBase64(id + path, blockId)
+  getBlockData: async function (id: string, path: string): string {
+    return await TextileNode.getBlockData(id, path)
   },
 
-  pairDesktop: async function (pubKey: string): string {
-    return await TextileNode.pairDesktop(pubKey)
+  getFileData: async function (id: string, path: string): string {
+    return await TextileNode.getFileData(id, path)
+  },
+
+  pairDevice: async function (pubKey: string): string {
+    return await TextileNode.pairDevice(pubKey)
   },
 
   getFilePath: async function (uri: string): string {

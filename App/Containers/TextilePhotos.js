@@ -4,7 +4,7 @@ import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import TextileActions from '../Redux/TextileRedux'
-import IpfsNodeActions from '../Redux/IpfsNodeRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
@@ -56,7 +56,7 @@ class TextilePhotos extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const thread = ownProps.navigation.state.params.thread
-  let allItemsObj = state.ipfs.threads[thread].items.reduce((o, item, index) => ({...o, [item.hash]: { index, hash: item.hash, caption: item.caption, state: 'complete' }}), {})
+  let allItemsObj = state.ipfs.threads[thread].items.reduce((o, item, index) => ({...o, [item.target]: { index, hash: item.target, caption: item.caption, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
     const item = allItemsObj[processingItem.hash]
     if (item) {
@@ -71,7 +71,7 @@ const mapStateToProps = (state, ownProps) => {
     : state.ipfs.nodeState.state
 
   const placeholderText = state.ipfs.nodeState.state !== 'started'
-    ? 'IPFS Status:\n' + nodeStatus
+    ? 'Wallet Status:\n' + nodeStatus
     : (thread === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
     : 'Share your first photo to the All Users thread.')
@@ -89,7 +89,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewPhoto: (index, thread) => { dispatch(UIActions.viewPhotoRequest(index, thread)) },
-    refresh: thread => { dispatch(IpfsNodeActions.getPhotoHashesRequest(thread)) },
+    refresh: thread => { dispatch(TextileNodeActions.getPhotoBlocksRequest(thread)) },
     toggleVerboseUi: () => { dispatch(TextileActions.toggleVerboseUi()) }
   }
 }

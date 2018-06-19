@@ -1,13 +1,13 @@
 import React from 'react'
-import { View} from 'react-native'
+import { View } from 'react-native'
 import AsyncImage from './AsyncImage'
 
-// IPFS Image is aware of how to load higher resolution images progressively
-export default class IPFSImage extends React.Component {
+// TextileImage is aware of how to load higher resolution images progressively
+export default class TextileImage extends React.Component {
   renderThumb () {
     return (<AsyncImage
       hash={this.props.hash}
-      path={'/thumb'}
+      path={'thumb'}
       style={[{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}, this.props.style]}
       resizeMode={this.props.resizeMode}
       capInsets={this.props.capInsets}
@@ -18,7 +18,7 @@ export default class IPFSImage extends React.Component {
   renderPhoto () {
     return (<AsyncImage
       hash={this.props.hash}
-      path={'/photo'}
+      path={'photo'}
       style={[{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}, this.props.style]}
       resizeMode={this.props.resizeMode}
       capInsets={this.props.capInsets}

@@ -1,7 +1,7 @@
 import {AppState} from 'react-native'
 import RNFS from 'react-native-fs'
 import { put, select } from 'redux-saga/effects'
-import IpfsNodeActions, {IpfsNodeSelectors} from '../Redux/IpfsNodeRedux'
+import TextileNodeActions, {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import { is } from 'ramda'
 
 // exported to make available for tests

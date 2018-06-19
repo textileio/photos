@@ -23,9 +23,9 @@ const { Types, Creators } = createActions({
   photosTaskError: ['error'],
   photoProcessingError: ['id', 'error'],
 
-  pairNewDevice: ['pubKey'],
-  pairNewDeviceSuccess: ['pubKey'],
-  pairNewDeviceError: ['pubKey']
+  pairDevice: ['pubKey'],
+  pairDeviceSuccess: ['pubKey'],
+  pairDeviceError: ['pubKey']
 })
 
 export const TextileTypes = Types
@@ -136,13 +136,13 @@ export const imageRemovalComplete = (state, {id}) => {
   return state.merge({ images: { items } })
 }
 
-export const pairNewDevice = (state, {pubKey}) => {
+export const pairDevice = (state, {pubKey}) => {
   const existingDevices = state.devices ? state.devices : []
   const devices = [{ pubKey, state: 'pending' }, ...existingDevices]
   return state.merge({ devices })
 }
 
-export const pairNewDeviceSuccess = (state, {pubKey}) => {
+export const pairDeviceSuccess = (state, {pubKey}) => {
   const existingDevices = state.devices ? state.devices : []
   const devices = existingDevices.map(device => {
     if (device.pubKey === pubKey) {
@@ -153,7 +153,7 @@ export const pairNewDeviceSuccess = (state, {pubKey}) => {
   return state.merge({ devices })
 }
 
-export const pairNewDeviceError = (state, {pubKey}) => {
+export const pairDeviceError = (state, {pubKey}) => {
   const existingDevices = state.devices ? state.devices : []
   const devices = existingDevices.map(device => {
     if (device.pubKey === pubKey) {
@@ -182,7 +182,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.IMAGE_UPLOAD_ERROR]: handleImageUploadError,
   [Types.IMAGE_REMOVAL_COMPLETE]: imageRemovalComplete,
 
-  [Types.PAIR_NEW_DEVICE]: pairNewDevice,
-  [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,
-  [Types.PAIR_NEW_DEVICE_ERROR]: pairNewDeviceError
+  [Types.PAIR_DEVICE]: pairDevice,
+  [Types.PAIR_DEVICE_SUCCESS]: pairDeviceSuccess,
+  [Types.PAIR_DEVICE_ERROR]: pairDeviceError
 })

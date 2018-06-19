@@ -7,7 +7,7 @@ import ReduxPersist from '../Config/ReduxPersist'
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
   auth: require('./AuthRedux').reducer,
-  ipfs: require('./IpfsNodeRedux').reducer,
+  ipfs: require('./TextileNodeRedux').reducer,
   textile: require('./TextileRedux').reducer,
   ui: require('./UIRedux').reducer
 })

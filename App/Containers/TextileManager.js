@@ -8,7 +8,7 @@ import {
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
 import TextileActions from '../Redux/TextileRedux'
-import IpfsNodeActions from '../Redux/IpfsNodeRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
@@ -86,7 +86,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    appStateChange: (previousState, newState) => { dispatch(IpfsNodeActions.appStateChange(previousState, newState)) },
+    appStateChange: (previousState, newState) => { dispatch(TextileNodeActions.appStateChange(previousState, newState)) },
     locationUpdate: () => { dispatch(TextileActions.locationUpdate()) },
     uploadComplete: event => { dispatch(TextileActions.imageUploadComplete(event)) },
     uploadProgress: event => { dispatch(TextileActions.imageUploadProgress(event)) },

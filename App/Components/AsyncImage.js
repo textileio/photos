@@ -1,6 +1,6 @@
 import React from 'react'
 import { Animated } from 'react-native'
-import IPFS from '../../TextileIPFSNativeModule'
+import TextileNode from '../../TextileNodeNativeModule'
 
 export default class AsyncImage extends React.Component {
   constructor (props) {
@@ -44,7 +44,7 @@ export default class AsyncImage extends React.Component {
 
   _createRequest () {
     this.setState(() => ({requested: true}))
-    IPFS.getHashRequest(this.props.hash, this.props.path)
+    TextileNode.getFileData(this.props.hash, this.props.path)
       .then(this._setSource)
       .catch(this._retry) // todo: handle failed hash requests vs. unmount
   }
@@ -89,9 +89,12 @@ export default class AsyncImage extends React.Component {
     } else if (!this.state.requested) {
       source = require('../Images/connecting.png')
     }
+    console.log('------------------------------------')
+    console.log(source)
+    console.log('------------------------------------')
     return (
       <Animated.Image
-        source={source}
+        source={{uri: 'https://instagram.fsnc1-1.fna.fbcdn.net/vp/a51bcbe6139d45f418eb5bf2ab8da0e4/5BAAADE8/t51.2885-19/s150x150/12145595_1707571399478809_7449120_a.jpg'}}
         resizeMode={this.props.resizeMode || 'cover'}
         style={[{opacity: this.state.opacity}, this.props.style]}
         capInsets={this.props.capInsets}
@@ -100,9 +103,12 @@ export default class AsyncImage extends React.Component {
   }
 
   renderImage () {
+    console.log('------------------------------------???????????')
+    console.log(this.state.source)
+    console.log('------------------------------------???????????')
     return (
       <Animated.Image
-        source={this.state.source}
+        source={{uri: 'data:image/jpeg;base64,' + this.state.source}}
         resizeMode={this.props.resizeMode || 'cover'}
         style={[{opacity: this.state.opacity}, this.props.style]}
         capInsets={this.props.capInsets}

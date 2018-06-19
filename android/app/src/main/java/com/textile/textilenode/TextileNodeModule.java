@@ -187,9 +187,9 @@ public class TextileNodeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addThread (String name, Promise promise) {
+    public void addThread (String name, String mnemonic, Promise promise) {
         try {
-            node.addThread(name);
+            node.addThread(name, mnemonic);
             promise.resolve(null);
         }
         catch (Exception e) {
@@ -224,9 +224,9 @@ public class TextileNodeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotos (String offset, Integer limit, String threadName, Promise promise) {
+    public void getPhotoBlocks (String offset, Integer limit, String threadName, Promise promise) {
         try {
-            String jsonString = node.getPhotos(offset, limit, threadName);
+            String jsonString = node.getPhotoBlocks(offset, limit, threadName);
             // convert response to json
             JSONObject obj = new JSONObject(jsonString);
             WritableArray array = new WritableNativeArray();
@@ -238,28 +238,38 @@ public class TextileNodeModule extends ReactContextBaseJavaModule {
             promise.resolve(array);
         }
         catch (Exception e) {
-            promise.reject("GET PHOTOS ERROR", e);
+            promise.reject("GET PHOTO BLOCKS ERROR", e);
         }
     }
 
     @ReactMethod
-    public void getFileBase64 (String path, String blockId, Promise promise) {
+    public void getBlockData (String id, String path, Promise promise) {
         try {
-            promise.resolve(node.getFileBase64(path, blockId));
+            promise.resolve(node.getBlockData(id, path));
         }
         catch (Exception e) {
-            promise.reject("GET FILE BASE64 ERROR", e);
+            promise.reject("GET BLOCK DATA ERROR", e);
         }
     }
 
     @ReactMethod
-    public void pairDesktop (String pkb64, Promise promise) {
+    public void getFileData (String id, String path, Promise promise) {
         try {
-            node.pairDesktop(pkb64);
+            promise.resolve(node.getFileData(id, path));
+        }
+        catch (Exception e) {
+            promise.reject("GET FILE DATA ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void pairDevice (String pkb64, Promise promise) {
+        try {
+            node.pairDevice(pkb64);
             promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject("PAIR DESKTOP ERROR", e);
+            promise.reject("PAIR DEVICE ERROR", e);
         }
     }
 
