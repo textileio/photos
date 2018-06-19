@@ -106,6 +106,9 @@ jobs:
             - vendor/bundle
 
       - run:
+          command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
+
+      - run:
           command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
           working_directory: ~/textile-mobile
 
