@@ -24,7 +24,7 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
-    
+
     ensure_git_status_clean
 
     increment_version_code(
@@ -33,7 +33,7 @@ platform :android do
     
     gradle(task: "clean assembleRelease")
 
-    changelog_from_git_commits
+    #changelog_from_git_commits
     
     supply(
       track: "internal",
