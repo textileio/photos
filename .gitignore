@@ -60,6 +60,8 @@ buck-out/
 
 # fastlane specific
 **/fastlane/report.xml
+ios/.env.default
+android/.env.default
 
 # deliver temporary files
 **/fastlane/Preview.html
