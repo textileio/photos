@@ -24,9 +24,9 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
-
-    ensure_git_status_clean
     
+    ensure_git_status_clean
+
     increment_version_code(
         gradle_file_path: "app/build.gradle",
     )
@@ -36,7 +36,10 @@ platform :android do
     changelog_from_git_commits
     
     supply(
-      track: "internal"
+      track: "internal",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
     )
 
     clean_build_artifacts
