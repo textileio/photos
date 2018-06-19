@@ -17,7 +17,7 @@ import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
-import IPFS from '../../TextileIPFSNativeModule'
+import IPFS from '../../TextileNode'
 import { getAllPhotos, scalePhoto } from '../Services/PhotoUtils'
 import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
@@ -244,26 +244,24 @@ export function * photosTask () {
     const camera = yield select(TextileSelectors.camera)
     let allPhotos = yield call(getAllPhotos)
 
-    // If camera.processed didn't exist, we'll add all but 1 photo to our
-    // ignore list and then set camera.processed through urisToIgnore
-    if (camera === undefined) {
-      // case for existing users on the platform. hack-migration
-      yield put(TextileActions.urisToIgnore(allPhotos.map(photo => photo.uri)))
-      allPhotos = []
-    } else if (camera.processed === undefined) {
+    // for new users, just grab their latest photos
+    if (camera.processed === undefined) {
       const ignoredPhotos = allPhotos.splice(1)
       yield put(TextileActions.urisToIgnore(ignoredPhotos.map(photo => photo.uri)))
     }
 
-    const processed = camera && camera.processed ? camera.processed : []
-    let allProcessed = processed.reduce((o, item, index) => ({...o, [item]: { index }}), {})
+    const processed = camera && camera.processed ? camera.processed : {}
     const photos = allPhotos.filter((photo) => {
-      if (allProcessed[photo.uri]) {
-        return false
+      switch (processed[photo.uri] !== undefined && processed[photo.uri] !== 'error') {
+        case (true):
+          return false
+        default:
+          return true
       }
-      return true
     })
 
+    // ensure that no other jobs try to process the same photo
+    yield put(TextileActions.photosProcessing(photos))
 
     let photoUploads = []
     // Convert all our new entries to thumbs before anything else
@@ -285,10 +283,8 @@ export function * photosTask () {
         }
       }
     }
-    
     // refresh our gallery
     yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-    
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
       let {photo, multipartData} = photoData
@@ -324,6 +320,7 @@ export function * removePayloadFile ({data}) {
   const items = yield select(TextileSelectors.itemsById, id)
   for (const item of items) {
     if (item.remotePayloadPath && item.state === 'complete') {
+      // TODO: probably should be a try/catch?
       yield call(RNFS.unlink, item.remotePayloadPath)
     }
   }
