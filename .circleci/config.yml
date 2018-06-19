@@ -81,6 +81,37 @@ jobs:
       - store_artifacts:
           path: test-results
 
+  android-beta:
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    working_directory: ~/textile-mobile/android
+    docker:
+      - image: circleci/android:api-27-node8-alpha
+    steps:
+      - checkout:
+          path: ~/textile-mobile
+
+      - attach_workspace:
+          at: ~/textile-mobile
+
+      - restore_cache:
+          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+
+      - run: bundle install
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+          working_directory: ~/textile-mobile
+
+      - run:
+          command: bundle exec fastlane beta
+
   ios:
     macos:
       xcode: "9.4.0"
@@ -221,3 +252,6 @@ workflows:
       - ios-beta:
           requires:
             - ios
+      - android-beta:
+          requires:
+            - android
