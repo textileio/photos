@@ -130,7 +130,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            if (file(System.getenv("ANDROID_KEYSTORE").exists())) {
+            if (file(System.getenv("ANDROID_KEYSTORE")).exists()) {
                 signingConfig signingConfigs.signedRelease
             }
         }
