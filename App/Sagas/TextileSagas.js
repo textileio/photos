@@ -18,7 +18,7 @@ import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import TextileNode from '../../TextileNodeNativeModule'
-import { getAllPhotos, scalePhoto } from '../Services/PhotoUtils'
+import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
 import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
@@ -131,9 +131,9 @@ export function * createNode ({path}) {
   try {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
-    const createNodeSuccess = yield call(TextileNode.createNodeWithDataDir, path, API_URL, logLevel, logFiles)
-    const updateThreadSuccess = yield call(TextileNode.updateThread, Config.ALL_THREAD_MNEMONIC, Config.ALL_THREAD_NAME)
-    if (createNodeSuccess && updateThreadSuccess) {
+    const createNodeSuccess = yield call(TextileNode.create, path, API_URL, logLevel, logFiles)
+    const addThreadSuccess = yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    if (createNodeSuccess && addThreadSuccess) {
       yield put(TextileNodeActions.createNodeSuccess())
       yield put(TextileNodeActions.startNodeRequest())
     } else {
@@ -153,11 +153,11 @@ export function * startNode () {
     return
   }
   try {
-    const startNodeSuccess = yield call(TextileNode.startNode)
+    const startNodeSuccess = yield call(TextileNode.start)
     if (startNodeSuccess) {
       yield put(TextileNodeActions.startNodeSuccess())
-      yield put(TextileNodeActions.getPhotoHashesRequest('default'))
-      yield put(TextileNodeActions.getPhotoHashesRequest('all'))
+      yield put(TextileNodeActions.getPhotoBlocksRequest('default'))
+      yield put(TextileNodeActions.getPhotoBlocksRequest('all'))
     } else {
       yield put(TextileNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
       yield put(TextileNodeActions.lock(false))
@@ -171,7 +171,7 @@ export function * startNode () {
 export function * stopNode () {
   yield put(TextileNodeActions.lock(true))
   try {
-    yield call(TextileNode.stopNode)
+    yield call(TextileNode.stop)
     yield put(TextileNodeActions.stopNodeSuccess())
   } catch (error) {
     yield put(TextileNodeActions.stopNodeFailure(error))
@@ -180,21 +180,20 @@ export function * stopNode () {
   }
 }
 
-export function * getPhotoHashes ({thread}) {
+export function * getPhotoBlocks ({thread}) {
   try {
-    const hashes = yield call(TextileNode.getPhotos, null, -1, thread)
+    const items = yield call(TextileNode.getPhotos, null, -1, thread)
     let data = []
-    for (const hash of hashes) {
-      let item = { hash }
+    for (let item of items) {
       try {
-        const captionsrc = yield call(TextileNode.getHashData, hash, '/caption')
+        const captionsrc = yield call(TextileNode.getFileBase64, item.target + '/caption', item.id)
         const caption = Buffer.from(captionsrc, 'base64').toString('utf8')
         item = {...item, caption}
       } catch (err) {
         // gracefully return an empty caption for now
       }
       try {
-        const metasrc = yield call(TextileNode.getHashData, hash, '/meta')
+        const metasrc = yield call(TextileNode.getFileBase64, item.target + '/meta', item.id)
         const meta = JSON.parse(Buffer.from(metasrc, 'base64').toString('utf8'))
         item = {...item, meta}
       } catch (err) {
@@ -202,38 +201,26 @@ export function * getPhotoHashes ({thread}) {
       }
       data.push({...item})
     }
-    yield put(TextileNodeActions.getPhotoHashesSuccess(thread, data))
+    yield put(TextileNodeActions.getPhotoBlocksSuccess(thread, data))
   } catch (error) {
-    yield put(TextileNodeActions.getPhotoHashesFailure(thread, error))
+    yield put(TextileNodeActions.getPhotoBlocksFailure(thread, error))
   }
 }
 
-export function * pairNewDevice (action) {
+export function * pairDevice (action) {
   const { pubKey } = action
   try {
-    yield call(TextileNode.pairNewDevice, pubKey)
-    yield put(TextileActions.pairNewDeviceSuccess(pubKey))
+    yield call(TextileNode.pairDevice, pubKey)
+    yield put(TextileActions.pairDeviceSuccess(pubKey))
   } catch (err) {
-    yield put(TextileActions.pairNewDeviceError(pubKey))
+    yield put(TextileActions.pairDeviceError(pubKey))
   }
 }
 
 export function * shareImage ({thread, hash, caption}) {
   try {
-    const multipartData = yield call(TextileNode.sharePhoto, hash, thread, caption)
-    yield put(TextileActions.imageAdded(thread, multipartData.boundary, multipartData.payloadPath))
-    yield put(TextileNodeActions.getPhotoHashesRequest(thread))
-    yield call(
-      Upload.startUpload,
-      {
-        customUploadId: multipartData.boundary,
-        path: multipartData.payloadPath,
-        url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
-        method: 'POST',
-        type: 'raw-multipart',
-        boundary: multipartData.boundary
-      }
-    )
+    yield call(TextileNode.sharePhoto, hash, thread, caption)
+    yield put(TextileNodeActions.getPhotoBlocksRequest(thread))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
@@ -269,17 +256,16 @@ export function * photosTask () {
     // Convert all our new entries to thumbs before anything else
     for (let photo of photos.reverse()) {
       try {
-        photo = yield call(scalePhoto, photo)
-        const multipartData = yield call(TextileNode.addImageAtPath, photo.path, photo.thumbPath, 'default')
+        photo = yield call(getPhotoPath, photo)
+        const multipartData = yield call(TextileNode.addPhoto, photo.path, 'default', '')
         photoUploads.push({
           photo: photo,
           multipartData
         })
       } catch (error) {
-        // if error, delete the photo copy and thumb from disk then fire error
+        // if error, delete the photo copy from disk then fire error
         try {
           yield call(RNFS.unlink, photo.path)
-          yield call(RNFS.unlink, photo.thumbPath)
         } finally {
           yield put(TextileActions.photoProcessingError(photo.uri, error))
         }
@@ -287,7 +273,7 @@ export function * photosTask () {
     }
 
     // refresh our gallery
-    yield put(TextileNodeActions.getPhotoHashesRequest('default'))
+    yield put(TextileNodeActions.getPhotoBlocksRequest('default'))
 
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
@@ -301,7 +287,6 @@ export function * photosTask () {
         // no matter what, after add/update try to unlink the file from drive
         try {
           yield call(RNFS.unlink, photo.path)
-          yield call(RNFS.unlink, photo.thumbPath)
         } catch (error) {
           yield put(TextileActions.photoProcessingError(photo.uri, error))
         }

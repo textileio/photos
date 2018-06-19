@@ -104,15 +104,15 @@ on the mobile side
 /**
  * AddThread adds a new thread with the given name
  */
-- (BOOL)addThread:(NSString*)name error:(NSError**)error;
+- (BOOL)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
 /**
  * GetAccessToken calls core GetAccessToken
  */
 - (NSString*)getAccessToken:(NSError**)error;
 /**
- * GetFileBase64 call core GetFileBase64
+ * GetFileBase64 calls core GetFileBase64
  */
-- (NSString*)getFileBase64:(NSString*)path blockId:(NSString*)blockId error:(NSError**)error;
+- (NSString*)getFileBase64:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
 /**
  * GetIPFSPeerId returns the wallet's ipfs peer id
  */
@@ -134,10 +134,10 @@ on the mobile side
  */
 - (BOOL)isSignedIn;
 /**
- * PairDesktop publishes this nodes default thread key to a desktop node
+ * PairDevice publishes this node's secret key to another node,
 which is listening at it's own peer id
  */
-- (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
+- (NSString*)pairDevice:(NSString*)pkb64 error:(NSError**)error;
 /**
  * SharePhoto adds an existing photo to a new thread
  */

@@ -75,12 +75,12 @@ export default {
     return await TextileNode.getPhotos(offset || '', limit, threadName)
   },
 
-  getFileBase64: async function (id: string, path: string, blockId: string): string {
-    return await TextileNode.getFileBase64(id + path, blockId)
+  getFileBase64: async function (id: string, path: string): string {
+    return await TextileNode.getFileBase64(id, path)
   },
 
-  pairDesktop: async function (pubKey: string): string {
-    return await TextileNode.pairDesktop(pubKey)
+  pairDevice: async function (pubKey: string): string {
+    return await TextileNode.pairDevice(pubKey)
   },
 
   getFilePath: async function (uri: string): string {

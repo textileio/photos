@@ -23,8 +23,8 @@ import {
   createNode,
   startNode,
   stopNode,
-  pairNewDevice,
-  getPhotoHashes,
+  pairDevice,
+  getPhotoBlocks,
   shareImage,
   photosTask,
   removePayloadFile,
@@ -48,9 +48,9 @@ export default function * root () {
     takeEvery(AuthTypes.LOG_IN_REQUEST, logIn),
     takeEvery(AuthTypes.RECOVER_PASSWORD_REQUEST, recoverPassword),
 
-    takeEvery(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
+    takeEvery(TextileTypes.PAIR_DEVICE, pairDevice),
 
-    takeEvery(TextileNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
+    takeEvery(TextileNodeTypes.GET_PHOTO_BLOCKS_REQUEST, getPhotoBlocks),
 
     takeEvery(UITypes.SHARE_PHOTO_REQUEST, shareImage),
 

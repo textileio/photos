@@ -154,9 +154,9 @@ RCT_EXPORT_METHOD(getAccessToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPr
   }
 }
 
-RCT_EXPORT_METHOD(addThread:(NSString *)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _addThread:name error:&error];
+  [self _addThread:name withMnemonic:mnemonic error:&error];
   if (error == NULL) {
     resolve(@YES);
   } else {
@@ -197,9 +197,9 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit threadName:(NSSt
   }
 }
 
-RCT_EXPORT_METHOD(getFileBase64:(NSString *)path withBlockId:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getFileBase64:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _getFileBase64:path withBlockId:blockId error:&error];
+  NSString *result = [self _getFileBase64:id withPath:path error:&error];
   if (result) {
     resolve(result);
   } else {
@@ -207,10 +207,10 @@ RCT_EXPORT_METHOD(getFileBase64:(NSString *)path withBlockId:(NSString *)blockId
   }
 }
 
-RCT_EXPORT_METHOD(pairDesktop:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(pairDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSError *error;
-  NSString *result = [self _pairDesktop:pkb64 error:&error];
+  NSString *result = [self _pairDevice:pkb64 error:&error];
   if(result) {
     resolve(result);
   } else {
@@ -273,8 +273,8 @@ RCT_EXPORT_METHOD(pairDesktop:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock
   return [self.node getIPFSPeerId:error];
 }
 
-- (BOOL)_addThread:(NSString *)name error:(NSError**)error {
-  return [self.node addThread:name error:error];
+- (BOOL)_addThread:(NSString *)name withMnemonic:(NSString *)mnemonic error:(NSError**)error {
+  return [self.node addThread:name mnemonic:mnemonic error:error];
 }
 
 - (NetMultipartRequest *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
@@ -289,12 +289,12 @@ RCT_EXPORT_METHOD(pairDesktop:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock
   return [self.node getPhotos:offset limit:limit threadName:threadName error:error];
 }
 
-- (NSString *)_getFileBase64:(NSString *)id withBlockId:(NSString *)blockId error:(NSError**)error {
-  return [self.node getFileBase64:id blockId:blockId error:error];
+- (NSString *)_getFileBase64:(NSString *)id withPath:(NSString *)path error:(NSError**)error {
+  return [self.node getFileBase64:id path:path error:error];
 }
 
-- (NSString *)_pairDesktop:(NSString *)pkb64 error:(NSError**)error {
-  return [self.node pairDesktop:pkb64 error:error];
+- (NSString *)_pairDevice:(NSString *)pkb64 error:(NSError**)error {
+  return [self.node pairDevice:pkb64 error:error];
 }
 
 @end

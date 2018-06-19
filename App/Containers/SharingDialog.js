@@ -17,7 +17,7 @@ class SharingDialog extends Component {
       <View style={styles.container}>
         <AsyncImage
           hash={this.props.hash}
-          path={'/thumb'}
+          path={'thumb'}
           containerStyle={{height: '33%'}}
           style={{flex: 1, height: undefined, width: undefined}}
           resizeMode={'cover'}

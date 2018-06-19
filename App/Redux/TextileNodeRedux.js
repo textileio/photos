@@ -16,9 +16,9 @@ const { Types, Creators } = createActions({
   stopNodeRequest: null,
   stopNodeSuccess: null,
   stopNodeFailure: ['error'],
-  getPhotoHashesRequest: ['thread'],
-  getPhotoHashesSuccess: ['thread', 'items'],
-  getPhotoHashesFailure: ['thread', 'error']
+  getPhotoBlocksRequest: ['thread'],
+  getPhotoBlocksSuccess: ['thread', 'items'],
+  getPhotoBlocksFailure: ['thread', 'error']
 })
 
 export const TextileNodeTypes = Types
@@ -83,21 +83,21 @@ export const nodeStopped = state =>
 export const nodeError = (state, {error}) =>
   state.merge({...state, nodeState: {...state.nodeState, error: error}})
 
-export const photoHashesRequest = (state, {thread}) => {
+export const photoBlocksRequest = (state, {thread}) => {
   const currentThreadState = state.threads[thread]
   const newThreadState = currentThreadState.merge({querying: true})
   const newThreads = state.threads.set(thread, newThreadState)
   return state.merge({...state, threads: newThreads})
 }
 
-export const photoHashesSuccess = (state, {thread, items}) => {
+export const photoBlocksSuccess = (state, {thread, items}) => {
   const currentThreadState = state.threads[thread]
   const newThreadState = currentThreadState.merge({querying: false, items})
   const newThreads = state.threads.set(thread, newThreadState)
   return state.merge({...state, threads: newThreads})
 }
 
-export const photoHashesFailure = (state, {thread, error}) => {
+export const photoBlocksFailure = (state, {thread, error}) => {
   const currentThreadState = state.threads[thread]
   const newThreadState = currentThreadState.merge({querying: false, error})
   const newThreads = state.threads.set(thread, newThreadState)
@@ -124,7 +124,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.STOP_NODE_SUCCESS]: nodeStopped,
   [Types.STOP_NODE_FAILURE]: nodeError,
 
-  [Types.GET_PHOTO_HASHES_REQUEST]: photoHashesRequest,
-  [Types.GET_PHOTO_HASHES_SUCCESS]: photoHashesSuccess,
-  [Types.GET_PHOTO_HASHES_FAILURE]: photoHashesFailure
+  [Types.GET_PHOTO_BLOCKS_REQUEST]: photoBlocksRequest,
+  [Types.GET_PHOTO_BLOCKS_SUCCESS]: photoBlocksSuccess,
+  [Types.GET_PHOTO_BLOCKS_FAILURE]: photoBlocksFailure
 })

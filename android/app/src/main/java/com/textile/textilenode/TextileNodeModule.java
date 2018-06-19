@@ -187,9 +187,9 @@ public class TextileNodeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addThread (String name, Promise promise) {
+    public void addThread (String name, String mnemonic, Promise promise) {
         try {
-            node.addThread(name);
+            node.addThread(name, mnemonic);
             promise.resolve(null);
         }
         catch (Exception e) {
@@ -243,9 +243,9 @@ public class TextileNodeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getFileBase64 (String path, String blockId, Promise promise) {
+    public void getFileBase64 (String id, String path, Promise promise) {
         try {
-            promise.resolve(node.getFileBase64(path, blockId));
+            promise.resolve(node.getFileBase64(id, path));
         }
         catch (Exception e) {
             promise.reject("GET FILE BASE64 ERROR", e);
@@ -253,13 +253,13 @@ public class TextileNodeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void pairDesktop (String pkb64, Promise promise) {
+    public void pairDevice (String pkb64, Promise promise) {
         try {
-            node.pairDesktop(pkb64);
+            node.pairDevice(pkb64);
             promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject("PAIR DESKTOP ERROR", e);
+            promise.reject("PAIR DEVICE ERROR", e);
         }
     }
 
