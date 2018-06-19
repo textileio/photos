@@ -97,33 +97,17 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
-    def versionPropsFile = file('version.properties')
 
-    if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
-
-        versionProps.load(new FileInputStream(versionPropsFile))
-
-        def name = versionProps['VERSION_NAME']
-        def code = versionProps['VERSION_CODE'].toInteger() + 1
-
-        versionProps['VERSION_CODE']=code.toString()
-        versionProps.store(versionPropsFile.newWriter(), null)
-
-        defaultConfig {
-            applicationId "com.textile"
-            minSdkVersion 19
-            targetSdkVersion rootProject.targetSdkVersion
-            ndk {
-                abiFilters "armeabi-v7a", "x86"
-            }
-            vectorDrawables.useSupportLibrary = true
-            versionName name
-            versionCode code
+    defaultConfig {
+        applicationId "com.textile"
+        minSdkVersion 19
+        targetSdkVersion rootProject.targetSdkVersion
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
         }
-    }
-    else {
-        throw new GradleException("Could not read version.properties!")
+        vectorDrawables.useSupportLibrary = true
+        versionName "1.4"
+        versionCode 101
     }
 
     splits {
