@@ -16,6 +16,7 @@
 default_platform(:android)
 
 platform :android do
+
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
@@ -23,11 +24,39 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
+
+    increment_version_code(
+        gradle_file_path: "app/build.gradle",
+    )
+    
     gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+
+    changelog_from_git_commits
+    
+    supply(
+      track: "internal"
+    )
+
+    clean_build_artifacts
+
+    versionName = get_version_name(
+      gradle_file_path: "app/build.gradle"
+    )
+
+    versionCode = get_version_code(
+      gradle_file_path:"app/build.gradle"
+    )
+
+    commit_android_version_bump(
+      gradle_file_folder:"app",
+      message: "Build number bump to " + versionCode.to_s + " [skip ci]",
+      ignore: "/\.env\..*/"
+    )
+
+    add_git_tag(tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")")
+
+    push_to_git_remote
+    
   end
 
   desc "Deploy a new version to the Google Play"
