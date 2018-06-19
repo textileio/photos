@@ -1,6 +1,6 @@
 import React from 'react'
 import { Animated } from 'react-native'
-import IPFS from '../../TextileIPFSNativeModule'
+import TextileNode from '../../TextileNodeNativeModule'
 
 export default class AsyncImage extends React.Component {
   constructor (props) {
@@ -44,7 +44,7 @@ export default class AsyncImage extends React.Component {
 
   _createRequest () {
     this.setState(() => ({requested: true}))
-    IPFS.getHashRequest(this.props.hash, this.props.path)
+    TextileNode.getFileBase64(this.props.hash, this.props.path)
       .then(this._setSource)
       .catch(this._retry) // todo: handle failed hash requests vs. unmount
   }

@@ -17,11 +17,11 @@ import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
-import IPFS from '../../TextileIPFSNativeModule'
-import { getAllPhotos, scalePhoto } from '../Services/PhotoUtils'
+import TextileNode from '../../TextileNodeNativeModule'
+import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
 import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
-import IpfsNodeActions, { IpfsNodeSelectors } from '../Redux/IpfsNodeRedux'
+import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
@@ -34,7 +34,7 @@ const API_URL = 'https://api.textile.io'
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
-    const data = yield call(IPFS.signUp, username, password, email, referralCode)
+    const data = yield call(TextileNode.signUpWithEmail, username, password, email, referralCode)
     const response = JSON.parse(data)
     if (response.error) {
       yield put(AuthActions.signUpFailure(response.error))
@@ -51,7 +51,7 @@ export function * signUp ({data}) {
 export function * logIn ({data}) {
   const {username, password} = data
   try {
-    const data = yield call(IPFS.signIn, username, password)
+    const data = yield call(TextileNode.signIn, username, password)
     const response = JSON.parse(data)
     if (response.error) {
       yield put(AuthActions.signUpFailure(response.error))
@@ -89,14 +89,14 @@ export function * toggleBackgroundTimer ({value}) {
 
 export function * initializeAppState () {
   yield take(StartupTypes.STARTUP)
-  const defaultAppState = yield select(IpfsNodeSelectors.appState)
+  const defaultAppState = yield select(TextileNodeSelectors.appState)
   let queriedAppState = defaultAppState
   while (queriedAppState.match(/default|unknown/)) {
     yield delay(10)
     const currentAppState = yield call(() => AppState.currentState)
     queriedAppState = currentAppState || 'unknown'
   }
-  yield put(IpfsNodeActions.appStateChange(defaultAppState, queriedAppState))
+  yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
 
 export function * handleNewAppState ({previousState, newState}) {
@@ -106,7 +106,7 @@ export function * handleNewAppState ({previousState, newState}) {
     yield * triggerCreateNode()
   } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {
     console.tron.logImportant('app transitioned to foreground')
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.lock(false))
     yield * triggerCreateNode()
   } else if (previousState.match(/inactive|active/) && newState === 'background') {
     console.tron.logImportant('app transitioned to background')
@@ -115,86 +115,85 @@ export function * handleNewAppState ({previousState, newState}) {
 }
 
 export function * triggerCreateNode () {
-  const locked = yield select(IpfsNodeSelectors.locked)
+  const locked = yield select(TextileNodeSelectors.locked)
   if (locked) {
     return
   }
-  yield put(IpfsNodeActions.lock(true))
-  yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
+  yield put(TextileNodeActions.lock(true))
+  yield put(TextileNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
 }
 
 export function * triggerStopNode () {
-  yield put(IpfsNodeActions.stopNodeRequest())
+  yield put(TextileNodeActions.stopNodeRequest())
 }
 
 export function * createNode ({path}) {
   try {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
-    const createNodeSuccess = yield call(IPFS.createNodeWithDataDir, path, API_URL, logLevel, logFiles)
-    const updateThreadSuccess = yield call(IPFS.updateThread, Config.ALL_THREAD_MNEMONIC, Config.ALL_THREAD_NAME)
-    if (createNodeSuccess && updateThreadSuccess) {
-      yield put(IpfsNodeActions.createNodeSuccess())
-      yield put(IpfsNodeActions.startNodeRequest())
+    const createNodeSuccess = yield call(TextileNode.create, path, API_URL, logLevel, logFiles)
+    const addThreadSuccess = yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    if (createNodeSuccess && addThreadSuccess) {
+      yield put(TextileNodeActions.createNodeSuccess())
+      yield put(TextileNodeActions.startNodeRequest())
     } else {
-      yield put(IpfsNodeActions.createNodeFailure(new Error('Failed creating node, but no error was thrown - Should not happen')))
-      yield put(IpfsNodeActions.lock(false))
+      yield put(TextileNodeActions.createNodeFailure(new Error('Failed creating node, but no error was thrown - Should not happen')))
+      yield put(TextileNodeActions.lock(false))
     }
   } catch (error) {
-    yield put(IpfsNodeActions.createNodeFailure(error))
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.createNodeFailure(error))
+    yield put(TextileNodeActions.lock(false))
   }
 }
 
 export function * startNode () {
   const onboarded = yield select(TextileSelectors.onboarded)
   if (!onboarded) {
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.lock(false))
     return
   }
   try {
-    const startNodeSuccess = yield call(IPFS.startNode)
+    const startNodeSuccess = yield call(TextileNode.start)
     if (startNodeSuccess) {
-      yield put(IpfsNodeActions.startNodeSuccess())
-      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-      yield put(IpfsNodeActions.getPhotoHashesRequest('all'))
+      yield put(TextileNodeActions.startNodeSuccess())
+      yield put(TextileNodeActions.getPhotoBlocksRequest('default'))
+      yield put(TextileNodeActions.getPhotoBlocksRequest('all'))
     } else {
-      yield put(IpfsNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
-      yield put(IpfsNodeActions.lock(false))
+      yield put(TextileNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
+      yield put(TextileNodeActions.lock(false))
     }
   } catch (error) {
-    yield put(IpfsNodeActions.startNodeFailure(error))
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.startNodeFailure(error))
+    yield put(TextileNodeActions.lock(false))
   }
 }
 
 export function * stopNode () {
-  yield put(IpfsNodeActions.lock(true))
+  yield put(TextileNodeActions.lock(true))
   try {
-    yield call(IPFS.stopNode)
-    yield put(IpfsNodeActions.stopNodeSuccess())
+    yield call(TextileNode.stop)
+    yield put(TextileNodeActions.stopNodeSuccess())
   } catch (error) {
-    yield put(IpfsNodeActions.stopNodeFailure(error))
+    yield put(TextileNodeActions.stopNodeFailure(error))
   } finally {
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.lock(false))
   }
 }
 
-export function * getPhotoHashes ({thread}) {
+export function * getPhotoBlocks ({thread}) {
   try {
-    const hashes = yield call(IPFS.getPhotos, null, -1, thread)
+    const items = yield call(TextileNode.getPhotos, null, -1, thread)
     let data = []
-    for (const hash of hashes) {
-      let item = { hash }
+    for (let item of items) {
       try {
-        const captionsrc = yield call(IPFS.getHashData, hash, '/caption')
+        const captionsrc = yield call(TextileNode.getFileBase64, item.target + '/caption', item.id)
         const caption = Buffer.from(captionsrc, 'base64').toString('utf8')
         item = {...item, caption}
       } catch (err) {
         // gracefully return an empty caption for now
       }
       try {
-        const metasrc = yield call(IPFS.getHashData, hash, '/meta')
+        const metasrc = yield call(TextileNode.getFileBase64, item.target + '/meta', item.id)
         const meta = JSON.parse(Buffer.from(metasrc, 'base64').toString('utf8'))
         item = {...item, meta}
       } catch (err) {
@@ -202,38 +201,26 @@ export function * getPhotoHashes ({thread}) {
       }
       data.push({...item})
     }
-    yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
+    yield put(TextileNodeActions.getPhotoBlocksSuccess(thread, data))
   } catch (error) {
-    yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))
+    yield put(TextileNodeActions.getPhotoBlocksFailure(thread, error))
   }
 }
 
-export function * pairNewDevice (action) {
+export function * pairDevice (action) {
   const { pubKey } = action
   try {
-    yield call(IPFS.pairNewDevice, pubKey)
-    yield put(TextileActions.pairNewDeviceSuccess(pubKey))
+    yield call(TextileNode.pairDevice, pubKey)
+    yield put(TextileActions.pairDeviceSuccess(pubKey))
   } catch (err) {
-    yield put(TextileActions.pairNewDeviceError(pubKey))
+    yield put(TextileActions.pairDeviceError(pubKey))
   }
 }
 
 export function * shareImage ({thread, hash, caption}) {
   try {
-    const multipartData = yield call(IPFS.sharePhoto, hash, thread, caption)
-    yield put(TextileActions.imageAdded(thread, multipartData.boundary, multipartData.payloadPath))
-    yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
-    yield call(
-      Upload.startUpload,
-      {
-        customUploadId: multipartData.boundary,
-        path: multipartData.payloadPath,
-        url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
-        method: 'POST',
-        type: 'raw-multipart',
-        boundary: multipartData.boundary
-      }
-    )
+    yield call(TextileNode.sharePhoto, hash, thread, caption)
+    yield put(TextileNodeActions.getPhotoBlocksRequest(thread))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
@@ -269,26 +256,25 @@ export function * photosTask () {
     // Convert all our new entries to thumbs before anything else
     for (let photo of photos.reverse()) {
       try {
-        photo = yield call(scalePhoto, photo)
-        const multipartData = yield call(IPFS.addImageAtPath, photo.path, photo.thumbPath, 'default')
+        photo = yield call(getPhotoPath, photo)
+        const multipartData = yield call(TextileNode.addPhoto, photo.path, 'default', '')
         photoUploads.push({
           photo: photo,
           multipartData
         })
       } catch (error) {
-        // if error, delete the photo copy and thumb from disk then fire error
+        // if error, delete the photo copy from disk then fire error
         try {
           yield call(RNFS.unlink, photo.path)
-          yield call(RNFS.unlink, photo.thumbPath)
         } finally {
           yield put(TextileActions.photoProcessingError(photo.uri, error))
         }
       }
     }
-    
+
     // refresh our gallery
-    yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-    
+    yield put(TextileNodeActions.getPhotoBlocksRequest('default'))
+
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
       let {photo, multipartData} = photoData
@@ -301,7 +287,6 @@ export function * photosTask () {
         // no matter what, after add/update try to unlink the file from drive
         try {
           yield call(RNFS.unlink, photo.path)
-          yield call(RNFS.unlink, photo.thumbPath)
         } catch (error) {
           yield put(TextileActions.photoProcessingError(photo.uri, error))
         }
@@ -310,11 +295,11 @@ export function * photosTask () {
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
   } finally {
-    const appState = yield select(IpfsNodeSelectors.appState)
+    const appState = yield select(TextileNodeSelectors.appState)
     if (appState.match(/background/)) {
       yield * stopNode()
     } else {
-      yield put(IpfsNodeActions.lock(false))
+      yield put(TextileNodeActions.lock(false))
     }
   }
 }

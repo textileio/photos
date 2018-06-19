@@ -6,9 +6,9 @@ import {PersistGate} from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
 import Actions from '../Redux/TextileRedux'
-import IPFSActions from '../Redux/IpfsNodeRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
 import BackgroundTask from 'react-native-background-task'
-import IPFS from '../../TextileIPFSNativeModule'
+import TextileNode from '../../TextileNodeNativeModule'
 
 // create our store
 const { store, persistor } = createStore()
@@ -19,11 +19,11 @@ BackgroundTask.define(() => {
 
 // subscribe to native events
 // NOTE: we may want to cancel listener with the returned handle at some point with subscription.remove()
-IPFS.eventEmitter.addListener('onOnline', () => {
+TextileNode.eventEmitter.addListener('onOnline', () => {
   // TODO: show some UI? "p2p online"?
 })
-IPFS.eventEmitter.addListener('onThreadUpdate', (payload) => {
-  store.dispatch(IPFSActions.getPhotoHashesRequest(payload.thread))
+TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {
+  store.dispatch(TextileNodeActions.getPhotoHashesRequest(payload.thread))
 })
 
 /**

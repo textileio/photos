@@ -5,7 +5,7 @@ import { takeLatest, takeEvery, all } from 'redux-saga/effects'
 import {StartupTypes} from '../Redux/StartupRedux'
 import {TextileTypes} from '../Redux/TextileRedux'
 import {UITypes} from '../Redux/UIRedux'
-import {IpfsNodeTypes} from '../Redux/IpfsNodeRedux'
+import {TextileNodeTypes} from '../Redux/TextileNodeRedux'
 import {AuthTypes} from '../Redux/AuthRedux'
 
 /* ------------- Sagas ------------- */
@@ -23,8 +23,8 @@ import {
   createNode,
   startNode,
   stopNode,
-  pairNewDevice,
-  getPhotoHashes,
+  pairDevice,
+  getPhotoBlocks,
   shareImage,
   photosTask,
   removePayloadFile,
@@ -40,7 +40,7 @@ export default function * root () {
 
     // some sagas receive extra parameters in addition to an action
 
-    takeEvery(IpfsNodeTypes.APP_STATE_CHANGE, handleNewAppState),
+    takeEvery(TextileNodeTypes.APP_STATE_CHANGE, handleNewAppState),
 
     takeEvery(UITypes.VIEW_PHOTO_REQUEST, viewPhoto),
 
@@ -48,24 +48,24 @@ export default function * root () {
     takeEvery(AuthTypes.LOG_IN_REQUEST, logIn),
     takeEvery(AuthTypes.RECOVER_PASSWORD_REQUEST, recoverPassword),
 
-    takeEvery(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
+    takeEvery(TextileTypes.PAIR_DEVICE, pairDevice),
 
-    takeEvery(IpfsNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
+    takeEvery(TextileNodeTypes.GET_PHOTO_BLOCKS_REQUEST, getPhotoBlocks),
 
     takeEvery(UITypes.SHARE_PHOTO_REQUEST, shareImage),
 
-    takeEvery(IpfsNodeTypes.LOCK, toggleBackgroundTimer),
+    takeEvery(TextileNodeTypes.LOCK, toggleBackgroundTimer),
 
-    takeEvery(IpfsNodeTypes.CREATE_NODE_REQUEST, createNode),
-    takeEvery(IpfsNodeTypes.START_NODE_REQUEST, startNode),
-    takeEvery(IpfsNodeTypes.STOP_NODE_REQUEST, stopNode),
+    takeEvery(TextileNodeTypes.CREATE_NODE_REQUEST, createNode),
+    takeEvery(TextileNodeTypes.START_NODE_REQUEST, startNode),
+    takeEvery(TextileNodeTypes.STOP_NODE_REQUEST, stopNode),
 
     // Actions that trigger creating (therefore starting/stopping) the node
     takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
 
     // All things we want to trigger photosTask are funneled through starting the node, so handle START_NODE_SUCCESS
     // by running the photosTask saga here
-    takeEvery(IpfsNodeTypes.START_NODE_SUCCESS, photosTask),
+    takeEvery(TextileNodeTypes.START_NODE_SUCCESS, photosTask),
 
     takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile),
     takeEvery(TextileTypes.IMAGE_UPLOAD_ERROR, retryUploadAfterError),
