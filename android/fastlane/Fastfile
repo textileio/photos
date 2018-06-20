@@ -50,8 +50,8 @@ platform :android do
       gradle_file_path:"app/build.gradle"
     )
 
-    commit_android_version_bump(
-      gradle_file_folder:"android/app",
+    git_commit(
+      path: "./app/build.gradle",
       message: "Build number bump to " + versionCode.to_s + " [skip ci]"
     )
 
