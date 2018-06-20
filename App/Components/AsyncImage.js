@@ -44,7 +44,7 @@ export default class AsyncImage extends React.Component {
 
   _createRequest () {
     this.setState(() => ({requested: true}))
-    IPFS.getHashRequest(this.props.hash, this.props.path)
+    IPFS.getFileData(this.props.hash, this.props.path)
       .then(this._setSource)
       .catch(this._retry) // todo: handle failed hash requests vs. unmount
   }
@@ -82,27 +82,10 @@ export default class AsyncImage extends React.Component {
     }
   }
 
-  placeholder () {
-    let source = require('../Images/loading.png')
-    if (this.state.error) {
-      source = require('../Images/error.png')
-    } else if (!this.state.requested) {
-      source = require('../Images/connecting.png')
-    }
-    return (
-      <Animated.Image
-        source={source}
-        resizeMode={this.props.resizeMode || 'cover'}
-        style={[{opacity: this.state.opacity}, this.props.style]}
-        capInsets={this.props.capInsets}
-      />
-    )
-  }
-
   renderImage () {
     return (
       <Animated.Image
-        source={this.state.source}
+        source={{uri: 'data:image/jpeg;base64,' + this.state.source}}
         resizeMode={this.props.resizeMode || 'cover'}
         style={[{opacity: this.state.opacity}, this.props.style]}
         capInsets={this.props.capInsets}
@@ -120,7 +103,7 @@ export default class AsyncImage extends React.Component {
     if (this.state.loaded) {
       return this.renderImage()
     } else {
-      return this.placeholder()
+      return ''
     }
   }
 }

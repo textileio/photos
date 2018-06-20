@@ -71,7 +71,7 @@ const mapStateToProps = (state, ownProps) => {
     : state.ipfs.nodeState.state
 
   const placeholderText = state.ipfs.nodeState.state !== 'started'
-    ? 'IPFS Status:\n' + nodeStatus
+    ? 'Wallet Status:\n' + nodeStatus
     : (thread === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
     : 'Share your first photo to the All Users thread.')
