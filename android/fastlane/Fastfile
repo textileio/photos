@@ -33,6 +33,9 @@ platform :android do
     supply(
       track: "internal"
     )
+    sh("git", "stash")
+    git_pull
+    sh("git", "stash", "pop")
     versionName = get_version_name(
       gradle_file_path: "app/build.gradle"
     )
@@ -46,7 +49,6 @@ platform :android do
     add_git_tag(
       tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")"
     )
-    git_pull
     push_to_git_remote
   end
 
