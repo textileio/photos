@@ -14,6 +14,7 @@ import IpfsActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
 import ProgressiveImage from '../Components/ProgressiveImage'
+import Config from "react-native-config"
 
 
 // Styles
@@ -186,7 +187,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (item) => { dispatch(IpfsActions.shareImageRequest('all', item.hash)) },
+    share: (item) => { dispatch(IpfsActions.shareImageRequest(Config.ALL_THREAD_NAME, item.hash)) },
     authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.hash)) },
     cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
     selectImage: (index) => { dispatch(UIActions.selectImage(index)) },
