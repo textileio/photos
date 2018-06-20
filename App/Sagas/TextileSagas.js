@@ -156,7 +156,7 @@ export function * startNode () {
     if (startNodeSuccess) {
       yield put(IpfsNodeActions.startNodeSuccess())
       yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-      yield put(IpfsNodeActions.getPhotoHashesRequest('all'))
+      yield put(IpfsNodeActions.getPhotoHashesRequest(Config.ALL_THREAD_NAME))
     } else {
       yield put(IpfsNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
       yield put(IpfsNodeActions.lock(false))

@@ -70,6 +70,9 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B311B2606C50426EAB18A3F3 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6247753D29BD445BBE26673D /* libRNBackgroundTimer.a */; };
 		B5D96097B5FE453192C31D72 /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23A29B287C094135A8E25804 /* libAppCenterReactNativeAnalytics.a */; };
+		C54837B420DAFE3200DAE9D7 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C54837AE20DAFE3100DAE9D7 /* TextileImageViewManager.m */; };
+		C54837B520DAFE3200DAE9D7 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C54837AF20DAFE3100DAE9D7 /* TextileImageView.m */; };
+		C54837B620DAFE3200DAE9D7 /* TextileImageSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C54837B220DAFE3100DAE9D7 /* TextileImageSource.m */; };
 		C5D8444E20A669810011C926 /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D8444D20A669810011C926 /* Events.m */; };
 		DA596D7795CB44608CDF3517 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47FCFF52D5004478899BBC71 /* Feather.ttf */; };
 		EEBAF5F8CB6763E888A5E9D8 /* libPods-TextilePhotos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5254C3A68612B134C29D3674 /* libPods-TextilePhotos.a */; };
@@ -610,6 +613,12 @@
 		B81290BD6F9E43A9BCC32DFA /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		BCE1D0D0A2DC49468796E22E /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		BE4F572577C47EC7F50917C6 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C54837AE20DAFE3100DAE9D7 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
+		C54837AF20DAFE3100DAE9D7 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
+		C54837B020DAFE3100DAE9D7 /* TextileImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageSource.h; sourceTree = "<group>"; };
+		C54837B120DAFE3100DAE9D7 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
+		C54837B220DAFE3100DAE9D7 /* TextileImageSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageSource.m; sourceTree = "<group>"; };
+		C54837B320DAFE3100DAE9D7 /* TextileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageView.h; sourceTree = "<group>"; };
 		C5D8444C20A6694B0011C926 /* Events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
 		C5D8444D20A669810011C926 /* Events.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Events.m; sourceTree = "<group>"; };
 		CA46BC6E090824B0412D1D32 /* Pods-TextilePhotos-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOS/Pods-TextilePhotos-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -920,6 +929,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				C54837AD20DAFE3100DAE9D7 /* NativeViews */,
 				FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */,
 				9339E9A6205C3B8700BCA4CF /* Mobile.framework */,
 				9339E99E205C381700BCA4CF /* NativeModules */,
@@ -1112,6 +1122,19 @@
 				93F071F62051A31A0066155B /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C54837AD20DAFE3100DAE9D7 /* NativeViews */ = {
+			isa = PBXGroup;
+			children = (
+				C54837AE20DAFE3100DAE9D7 /* TextileImageViewManager.m */,
+				C54837AF20DAFE3100DAE9D7 /* TextileImageView.m */,
+				C54837B020DAFE3100DAE9D7 /* TextileImageSource.h */,
+				C54837B120DAFE3100DAE9D7 /* TextileImageViewManager.h */,
+				C54837B220DAFE3100DAE9D7 /* TextileImageSource.m */,
+				C54837B320DAFE3100DAE9D7 /* TextileImageView.h */,
+			);
+			path = NativeViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1856,7 +1879,10 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */,
+				C54837B520DAFE3200DAE9D7 /* TextileImageView.m in Sources */,
 				9382834320DAE2E1002C2FE2 /* TextileNode.m in Sources */,
+				C54837B620DAFE3200DAE9D7 /* TextileImageSource.m in Sources */,
+				C54837B420DAFE3200DAE9D7 /* TextileImageViewManager.m in Sources */,
 				C5D8444E20A669810011C926 /* Events.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				68C8700C55154E1E80C3FB5B /* RNBackgroundFetch+AppDelegate.m in Sources */,
@@ -2013,6 +2039,7 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/Image/**",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
@@ -2067,6 +2094,7 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/Image/**",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
