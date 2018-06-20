@@ -169,6 +169,11 @@ which is listening at it's own peer id
 @end
 
 /**
+ * tmp while central does not proxy the remote ipfs cluster
+ */
+FOUNDATION_EXPORT NSString* const MobileRemoteIPFSApi;
+
+/**
  * NewNode is the mobile entry point for creating a node
 NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
  */
