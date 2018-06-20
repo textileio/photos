@@ -14,7 +14,8 @@ import com.facebook.react.uimanager.ThemedReactContext;
 class TextileImageView extends AppCompatImageView {
 
     private ThemedReactContext context;
-    private String hashPath;
+    private String hash;
+    private String path;
     private ScaleType xscaleType;
 
     public TextileImageView(ThemedReactContext context) {
@@ -22,8 +23,12 @@ class TextileImageView extends AppCompatImageView {
         this.context = context;
     }
 
-    public void setHashPath(String hashPath) {
-        this.hashPath = hashPath;
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public void xsetScaleType(ScaleType scaleType) {
@@ -32,13 +37,13 @@ class TextileImageView extends AppCompatImageView {
 
     public void render() {
         try {
-            String base64String = TextileNode.textile.getFileBase64(hashPath);
+            String base64String = TextileNode.node.getFileData(hash, path);
             byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             setImageBitmap(bitmap);
             setScaleType(xscaleType);
         } catch (Exception e) {
-
+            //
         }
     }
 }

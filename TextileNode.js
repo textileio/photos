@@ -5,7 +5,6 @@ import {
   NativeEventEmitter,
   DeviceEventEmitter,
 } from 'react-native'
-import { Buffer } from 'buffer'
 
 const { TextileNode, Events } = NativeModules
 
@@ -14,105 +13,82 @@ type MultipartData = {
   boundary: string
 }
 
-type LocalhostHeader = {
-  Authorization: string
-}
-
-type HashRequest = {
-  uri: string,
-  headers: LocalhostHeader
-}
-
 export default {
-  createNodeWithDataDir: async function (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): boolean {
+  create: async function (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): boolean {
     console.log(dataDir)
-    const success = await TextileNode.createNodeWithDataDir(dataDir, apiUrl, logLevel, logFiles)
-    return success
+    return await TextileNode.create(dataDir, apiUrl, logLevel, logFiles)
   },
 
-  startNode: async function (): boolean {
-    const success = await TextileNode.startNode()
-    return success
+  start: async function (): boolean {
+    return await TextileNode.start()
   },
 
-  stopNode: async function (): boolean {
-    const success = await TextileNode.stopNode()
-    return success
+  stop: async function (): boolean {
+    return await TextileNode.stop()
+  },
+
+  signUpWithEmail: async function (username: string, password: string, email: string, referral: string): string {
+    return await TextileNode.signUpWithEmail(username, password, email, referral)
   },
 
   signIn: async function (username: string, password: string): string {
-    const result = await TextileNode.signIn(username, password)
-    return result
+    return await TextileNode.signIn(username, password)
   },
 
-  signUp: async function (username: string, password: string, email: string, referral: string): string {
-    const result = await TextileNode.signUpWithEmail(username, password, email, referral)
-    return result
+  signOut: async function (): string {
+    return await TextileNode.signOut()
   },
 
   isSignedIn: function (): boolean {
-    const result = TextileNode.isSignedIn()
-    return result
+    return TextileNode.isSignedIn()
   },
 
-  signOut: async function () {
-    await TextileNode.signOut()
+  getId: async function (): string {
+    return await TextileNode.getId()
+  },
+
+  getIPFSPeerId: async function (): string {
+    return await TextileNode.getIPFSPeerId()
   },
 
   getUsername: async function (): string {
-    const result = await TextileNode.getUsername()
-    return result
-  },
-
-  updateThread: async function (mnemonic: string, name: string): boolean {
-    const success = await TextileNode.updateThread(mnemonic, name)
-    return success
-  },
-
-  addImageAtPath: async function (path: string, thumbPath: string, thread: string): MultipartData {
-    const multipartData = await TextileNode.addImageAtPath(path, thumbPath, thread)
-    return multipartData
-  },
-
-  sharePhoto: async function (hash: string, thread: string, caption: string): MultipartData {
-    const multipartData = await TextileNode.sharePhoto(hash, thread, caption)
-    return multipartData
-  },
-
-  getPhotos: async function (offset: ?string, limit: number, thread: string): string {
-    const result = await TextileNode.getPhotos(offset || '', limit, thread)
-    return result
-  },
-
-  getHashData: async function (hash: string, path: string): string {
-    const result = await TextileNode.getHashData(hash + path)
-    return result
-  },
-
-  getHashRequest: async function (hash: string, path: string): HashRequest {
-    const result = await TextileNode.getHashRequest(hash + path)
-    const encoded = Buffer.from(':' + result.token).toString('base64')
-    return {
-      uri: result.protocol + '://' + result.host + '/ipfs/' + hash + path,
-      headers: {
-        Authorization: 'Basic ' + encoded
-      }
-    }
-  },
-
-  pairNewDevice: async function (pubKey: string): string {
-    const result = await TextileNode.pairNewDevice(pubKey)
-    return result
-  },
-
-  getFilePath: async function (uri: string): string {
-    const result = await TextileNode.getRealPathFromURI(uri)
-    return result
+    return await TextileNode.getUsername()
   },
 
   getAccessToken: async function (): string {
-    const result = await TextileNode.getAccessToken()
-    return result
+    return await TextileNode.getAccessToken()
+  },
+
+  addThread: async function (name: string, mnemonic: string): MultipartData {
+    return await TextileNode.addThread(name, mnemonic)
+  },
+
+  addPhoto: async function (path: string, threadName: string, caption: string): MultipartData {
+    return await TextileNode.addPhoto(path, threadName, caption)
+  },
+
+  sharePhoto: async function (id: string, threadName: string, caption: string): string {
+    return await TextileNode.sharePhoto(id, threadName, caption)
+  },
+
+  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): string {
+    return await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
+  },
+
+  getBlockData: async function (id: string, path: string): string {
+    return await TextileNode.getBlockData(id, path)
+  },
+
+  getFileData: async function (id: string, path: string): string {
+    return await TextileNode.getFileData(id, path)
+  },
+
+  pairDevice: async function (pubKey: string): string {
+    return await TextileNode.pairDevice(pubKey)
+  },
+
+  getFilePath: async function (uri: string): string {
+    return await TextileNode.getFilePath(uri)
   },
 
   eventEmitter: Platform.select({

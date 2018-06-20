@@ -51,7 +51,7 @@ export default class PhotoGrid extends React.PureComponent {
           {/*/>*/}
           {/*<TextileImage source={{hashPath: row.item.hash + '/thumb'}} style={styles.itemImage} resizeMode={'cover'} />*/}
           <TextileImage
-            source={{hashPath: row.item.hash + '/thumb'}}
+            source={{hash: row.item.hash, path: 'thumb'}}
             style={styles.itemImage}
             resizeMode={'cover'}
           />
