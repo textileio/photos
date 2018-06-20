@@ -32,7 +32,7 @@ import java.util.Map;
 public class TextileNode extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileNode";
     private static ReactApplicationContext reactContext = null;
-    static Wrapper textile = null;
+    static Wrapper node = null;
 
     public TextileNode(ReactApplicationContext context) {
         // Pass in the context to the constructor and save it so you can emit events
@@ -59,15 +59,15 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createNodeWithDataDir (String dataDir, String apiUrl, String logLevel, Boolean logFiles, Promise promise) {
-        if (textile == null) {
+    public void create (String dataDir, String apiUrl, String logLevel, Boolean logFiles, Promise promise) {
+        if (node == null) {
             try {
                 NodeConfig config = new NodeConfig();
                 config.setRepoPath(dataDir);
                 config.setCentralApiURL(apiUrl);
                 config.setLogLevel(logLevel);
                 config.setLogFiles(logFiles);
-                textile = Mobile.newNode(config, new Messenger() {
+                node = Mobile.newNode(config, new Messenger() {
                     @Override
                     public void notify(Event event) {
                         try {
@@ -81,7 +81,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
                 });
                 promise.resolve(true);
             } catch (Exception e) {
-                promise.reject("START ERROR", e);
+                promise.reject("CREATE NODE ERROR", e);
             }
         } else {
             promise.resolve(true);
@@ -89,9 +89,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startNode (Promise promise) {
+    public void start (Promise promise) {
         try {
-            textile.start();
+            node.start();
             promise.resolve(true);
         }
         catch (Exception e) {
@@ -100,9 +100,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void stopNode (Promise promise) {
+    public void stop (Promise promise) {
         try {
-            textile.stop();
+            node.stop();
             promise.resolve(true);
         }
         catch (Exception e) {
@@ -111,63 +111,128 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void updateThread (String mnemonic, String name, Promise promise) {
+    public void signUpWithEmail (String username, String password, String email, String referral, Promise promise) {
         try {
-            textile.updateThread(mnemonic, name);
+            node.signUpWithEmail(username, password, email, referral);
             promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject("THREAD JOIN ERROR", e);
+            promise.reject("SIGNUP WITH EMAIL ERROR", e);
         }
     }
 
     @ReactMethod
-    public void addImageAtPath (String path, String thumbPath, String thread, Promise promise) {
+    public void signIn (String username, String password, Promise promise) {
         try {
-            // Grab our add image response
-            MultipartRequest multipart = textile.addPhoto(path, thumbPath, thread);
-            // Create a Native map
+            node.signIn(username, password);
+            promise.resolve(true);
+        }
+        catch (Exception e) {
+            promise.reject("SIGNIN ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void signOut (Promise promise) {
+        try {
+            node.signOut();
+            promise.resolve(true);
+        }
+        catch (Exception e) {
+            promise.reject("SIGNOUT ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public Boolean isSignedIn() {
+        return node.isSignedIn();
+    }
+
+    @ReactMethod
+    public void getId (Promise promise) {
+        try {
+            promise.resolve(node.getId());
+        }
+        catch (Exception e) {
+            promise.reject("GET ID ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getIPFSPeerId (Promise promise) {
+        try {
+            promise.resolve(node.getIPFSPeerId());
+        }
+        catch (Exception e) {
+            promise.reject("GET IPFS PEER ID ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getUsername (Promise promise) {
+        try {
+            promise.resolve(node.getUsername());
+        }
+        catch (Exception e) {
+            promise.reject("GET USERNAME ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getAccessToken (Promise promise) {
+        try {
+            promise.resolve(node.getAccessToken());
+        }
+        catch (Exception e) {
+            promise.reject("GET ACCESS TOKEN ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addThread (String name, String mnemonic, Promise promise) {
+        try {
+            node.addThread(name, mnemonic);
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("ADD THREAD ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addPhoto (String path, String threadName, String caption, Promise promise) {
+        try {
+            MultipartRequest multipart = node.addPhoto(path, threadName, caption);
             WritableMap map = new WritableNativeMap();
-            // Add the response parts
             map.putString("payloadPath", multipart.getPayloadPath());
             map.putString("boundary", multipart.getBoundary());
             promise.resolve(map);
 
         }
         catch (Exception e) {
-            promise.reject("ADD IMAGE ERROR", e);
+            promise.reject("ADD PHOTO ERROR", e);
         }
     }
 
     @ReactMethod
-    public void sharePhoto (String hash, String thread, String caption, Promise promise) {
+    public void sharePhoto (String id, String threadName, String caption, Promise promise) {
         try {
-            // Grab our add image response
-            MultipartRequest multipart = textile.sharePhoto(hash, thread, caption);
-            // Create a Native map
-            WritableMap map = new WritableNativeMap();
-            // Add the response parts
-            map.putString("payloadPath", (String) multipart.getPayloadPath());
-            map.putString("boundary", (String) multipart.getBoundary());
-            promise.resolve(map);
+            promise.resolve(node.sharePhoto(id, threadName, caption));
 
         }
         catch (Exception e) {
-            promise.reject("SHARE IMAGE ERROR", e);
+            promise.reject("SHARE PHOTO ERROR", e);
         }
     }
 
     @ReactMethod
-    public void getPhotos (String offset, Integer limit, String thread, Promise promise) {
+    public void getPhotoBlocks (String offset, Integer limit, String threadName, Promise promise) {
         try {
-            String hashString = textile.getPhotos(offset, limit, thread);
-            // convert string to json
-            JSONObject obj = new JSONObject(hashString);
-            // create a Native ready array
+            String jsonString = node.getPhotoBlocks(offset, limit, threadName);
+            // convert response to json
+            JSONObject obj = new JSONObject(jsonString);
             WritableArray array = new WritableNativeArray();
-            // grab the hashes array out of the response
-            JSONArray jsonArray = obj.getJSONArray("hashes");
-            // for each hash, add them to our native array
+            JSONArray jsonArray = obj.getJSONArray("items");
             for (int i = 0; i < jsonArray.length(); i++) {
                 Object value = jsonArray.get(i);
                 array.pushString((String) value);
@@ -175,144 +240,49 @@ public class TextileNode extends ReactContextBaseJavaModule {
             promise.resolve(array);
         }
         catch (Exception e) {
-            promise.reject("GET PHOTOS ERROR", e);
+            promise.reject("GET PHOTO BLOCKS ERROR", e);
         }
     }
 
     @ReactMethod
-    public void getHashRequest (String hash, Promise promise) {
+    public void getBlockData (String id, String path, Promise promise) {
         try {
-            String request = textile.getHashRequest(hash);
-            JSONObject obj = new JSONObject(request);
-            String host = obj.getString("host");
-            String protocol = obj.getString("protocol");
-            String token = obj.getString("token");
-            WritableMap response = new WritableNativeMap();
-            // Add the response parts
-            response.putString("host", host);
-            response.putString("protocol", protocol);
-            response.putString("token", token);
-            promise.resolve(response);
+            promise.resolve(node.getBlockData(id, path));
         }
         catch (Exception e) {
-             promise.reject("TOKEN ERROR", e);
+            promise.reject("GET BLOCK DATA ERROR", e);
         }
     }
 
-
     @ReactMethod
-    public String syncGetHashData (String path) {
+    public void getFileData (String id, String path, Promise promise) {
         try {
-            String result = textile.getFileBase64(path);
-            if (result != null) {
-                return result;
-            } else {
-                return null;
-            }
+            promise.resolve(node.getFileData(id, path));
         }
         catch (Exception e) {
-            return null;
+            promise.reject("GET FILE DATA ERROR", e);
         }
     }
 
     @ReactMethod
-    public void getHashData (String path, Promise promise) {
+    public void pairDevice (String pkb64, Promise promise) {
         try {
-            String result = textile.getFileBase64(path);
-            promise.resolve(result);
-        }
-        catch (Exception e) {
-            promise.reject("GET DATA ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void pairNewDevice (String pkb64, Promise promise) {
-        try {
-            textile.pairDesktop(pkb64);
+            node.pairDevice(pkb64);
             promise.resolve(true);
         }
         catch (Exception e) {
-            promise.reject("GET DATA ERROR", e);
+            promise.reject("PAIR DEVICE ERROR", e);
         }
-    }
-
-
-    @ReactMethod
-    public void signIn (String username, String password, Promise promise) {
-        try {
-            textile.signIn(username, password);
-            promise.resolve(true);
-        }
-        catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
-    @ReactMethod
-    public void signUpWithEmail (String username, String password, String email, String referral, Promise promise) {
-        try {
-            textile.signUpWithEmail(username, password, email, referral);
-            promise.resolve(true);
-        }
-        catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
-
-    @ReactMethod
-    public void getUsername (Promise promise) {
-        try {
-            String username = textile.getUsername();
-            promise.resolve(username);
-        }
-        catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
-    @ReactMethod
-    public void signOut (Promise promise) {
-        try {
-            textile.signOut();
-            promise.resolve(true);
-        }
-        catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
-    @ReactMethod
-    public void getAccessToken (Promise promise) {
-        try {
-            String token = textile.getAccessToken();
-            promise.resolve(token);
-        }
-        catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
-    @ReactMethod
-    public String getGatewayPassword() {
-        return textile.getGatewayPassword();
-    }
-
-    @ReactMethod
-    public Boolean isSignedIn() {
-        return textile.isSignedIn();
     }
 
     // Method for turning photo URI into path + ext
     @ReactMethod
-    public void getRealPathFromURI(String uriString, Promise promise) {
+    public void getFilePath(String uriString, Promise promise) {
         Uri uri = Uri.parse(uriString);
         try {
-            String result = RealPathUtil.getRealPath(reactContext, uri);
-            promise.resolve(result);
+            promise.resolve(RealPathUtil.getRealPath(reactContext, uri));
         } catch (Exception ex) {
-            promise.reject("URI ERROR", ex);
+            promise.reject("GET FILE PATH ERROR", ex);
         }
     }
 

@@ -28,9 +28,14 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
         return new TextileImageView(context);
     }
 
-    @ReactProp(name = "hashPath")
-    public void setHashPath(TextileImageView textileImageView, String hashPath) {
-        textileImageView.setHashPath(hashPath);
+    @ReactProp(name = "hash")
+    public void setHash(TextileImageView textileImageView, String hash) {
+        textileImageView.setHash(hash);
+    }
+
+    @ReactProp(name = "path")
+    public void setPath(TextileImageView textileImageView, String path) {
+        textileImageView.setPath(path);
     }
 
     @ReactProp(name = "resizeMode")

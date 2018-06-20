@@ -11,6 +11,7 @@
 
 #include "Net.objc.h"
 
+@class MobileBlocks;
 @class MobileEvent;
 @class MobileMobile;
 @class MobileNodeConfig;
@@ -20,6 +21,20 @@
 
 @protocol MobileMessenger <NSObject>
 - (void)notify:(MobileEvent*)event;
+@end
+
+/**
+ * Blocks is a wrapper around a list of Blocks, which makes decoding json from a little cleaner
+on the mobile side
+ */
+@interface MobileBlocks : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field Blocks.Items with unsupported type: *types.Slice
+
 @end
 
 /**
@@ -83,33 +98,37 @@
 - (NSString*)repoPath;
 - (void)setRepoPath:(NSString*)v;
 /**
- * AddPhoto calls core AddPhoto
+ * AddPhoto adds a photo by path and shares it to the default thread
  */
-- (NetMultipartRequest*)addPhoto:(NSString*)path thumb:(NSString*)thumb thread:(NSString*)thread error:(NSError**)error;
+- (NetMultipartRequest*)addPhoto:(NSString*)path threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
+/**
+ * AddThread adds a new thread with the given name
+ */
+- (BOOL)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
 /**
  * GetAccessToken calls core GetAccessToken
  */
 - (NSString*)getAccessToken:(NSError**)error;
 /**
- * GetFileBase64 call core GetFileBase64
+ * GetBlockData calls GetBlockDataBase64 on a thread
  */
-- (NSString*)getFileBase64:(NSString*)path error:(NSError**)error;
+- (NSString*)getBlockData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
 /**
- * GetGatewayPassword returns the current cookie value expected by the gateway
+ * GetFileData calls GetFileDataBase64 on a thread
  */
-- (NSString*)getGatewayPassword;
+- (NSString*)getFileData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
 /**
- * GetHashRequest calls core GetHashRequest
+ * GetIPFSPeerId returns the wallet's ipfs peer id
  */
-- (NSString*)getHashRequest:(NSString*)hash error:(NSError**)error;
+- (NSString*)getIPFSPeerId:(NSError**)error;
 /**
- * GetPeerID returns our peer id
+ * GetId calls core GetId
  */
-- (NSString*)getPeerID:(NSError**)error;
+- (NSString*)getId:(NSError**)error;
 /**
- * Get Photos returns core GetPhotos with json encoding
+ * GetPhotoBlocks returns thread photo blocks with json encoding
  */
-- (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit thread:(NSString*)thread error:(NSError**)error;
+- (NSString*)getPhotoBlocks:(NSString*)offsetId limit:(long)limit threadName:(NSString*)threadName error:(NSError**)error;
 /**
  * GetUsername calls core GetUsername
  */
@@ -119,14 +138,14 @@
  */
 - (BOOL)isSignedIn;
 /**
- * PairDesktop publishes this nodes default album keys to a desktop node
+ * PairDevice publishes this node's secret key to another node,
 which is listening at it's own peer id
  */
-- (NSString*)pairDesktop:(NSString*)pkb64 error:(NSError**)error;
+- (NSString*)pairDevice:(NSString*)pkb64 error:(NSError**)error;
 /**
- * SharePhoto calls core SharePhoto
+ * SharePhoto adds an existing photo to a new thread
  */
-- (NetMultipartRequest*)sharePhoto:(NSString*)hash thread:(NSString*)thread caption:(NSString*)caption error:(NSError**)error;
+- (NSString*)sharePhoto:(NSString*)id_ threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
 /**
  * SignIn build credentials and calls core SignIn
  */
@@ -147,10 +166,6 @@ which is listening at it's own peer id
  * Stop the mobile node
  */
 - (BOOL)stop:(NSError**)error;
-/**
- * Update thread allows the mobile client to choose the 'all' thread to subscribe
- */
-- (BOOL)updateThread:(NSString*)mnemonic name:(NSString*)name error:(NSError**)error;
 @end
 
 /**
