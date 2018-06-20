@@ -1987,7 +1987,7 @@
 				CODE_SIGN_ENTITLEMENTS = TextilePhotos/TextilePhotos.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				ENABLE_BITCODE = NO;
@@ -2042,7 +2042,7 @@
 				CODE_SIGN_ENTITLEMENTS = TextilePhotos/TextilePhotos.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
