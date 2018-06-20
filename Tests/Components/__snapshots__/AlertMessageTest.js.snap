@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AlertMessage component does not render if show is false 1`] = `null`;
+
+exports[`AlertMessage component renders correctly if backgroundColor prop is set 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "justifyContent": "center",
+        "marginVertical": 25,
+      },
+      Object {
+        "backgroundColor": "red",
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "alignSelf": "center",
+      }
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={false}
+      ellipsizeMode="tail"
+      style={
+        Object {
+          "color": "#CCCCCC",
+          "fontFamily": "Avenir-Book",
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "marginHorizontal": 10,
+          "marginTop": 10,
+          "textAlign": "center",
+        }
+      }
+    >
+      HOWDY
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`AlertMessage component renders correctly if show is true 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "justifyContent": "center",
+        "marginVertical": 25,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "alignSelf": "center",
+      }
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={false}
+      ellipsizeMode="tail"
+      style={
+        Object {
+          "color": "#CCCCCC",
+          "fontFamily": "Avenir-Book",
+          "fontSize": 17,
+          "fontWeight": "bold",
+          "marginHorizontal": 10,
+          "marginTop": 10,
+          "textAlign": "center",
+        }
+      }
+    >
+      HOWDY
+    </Text>
+  </View>
+</View>
+`;

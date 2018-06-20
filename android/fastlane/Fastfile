@@ -1,0 +1,74 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    ensure_git_status_clean
+    increment_version_code(
+        gradle_file_path: "app/build.gradle",
+    )
+    gradle(task: "clean assembleRelease")
+    changelog_from_git_commits
+    supply(
+      track: "internal"
+    )
+    versionName = get_version_name(
+      gradle_file_path: "app/build.gradle"
+    )
+    versionCode = get_version_code(
+      gradle_file_path:"app/build.gradle"
+    )
+    git_commit(
+      path: "./app/build.gradle",
+      message: "Build number bump to " + versionCode.to_s + " [skip ci]"
+    )
+    add_git_tag(
+      tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")"
+    )
+    git_pull
+    push_to_git_remote
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    gradle(task: "clean assembleRelease")
+    upload_to_play_store
+    #supply # from https://github.com/CircleCI-Public/circleci-demo-react-native/blob/master/android/fastlane/Fastfile
+  end
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end

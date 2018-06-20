@@ -1,0 +1,5 @@
+We believe in a future where we can control our own data. Let's start with photos.
+
+Textile let's users sync, share, and secure all their personal photos on a decentralized network of computers called, IPFS. Your photos remain privately encrypted only for you.
+
+When you share your photos, Textile uses peer-to-peer technology, meaning your photos are private to you and your friends.
