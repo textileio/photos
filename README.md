@@ -5,7 +5,7 @@
 
 ## Where can I get it?
 
-The [textile.photos](https://www.textile.photos/) is still in private beta. Want to test out new features and get fixes before everyone else? Please add your email to our [signup list](https://producthunt.com/upcoming/textile-photos) and we'll get an invite out to you shortly. 
+The [textile.photos](https://www.textile.photos/) is still in private beta. Want to test out new features and get fixes before everyone else? Please add your email to our [signup list](https://producthunt.com/upcoming/textile-photos) and we'll get an invite out to you shortly. If you're interested in running your own Textile node, check out the core [textile-go](https://github.com/textileio/textile-go) library.
 
 ## Community Channel
 
