@@ -24,40 +24,30 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
-
     ensure_git_status_clean
-
     increment_version_code(
         gradle_file_path: "app/build.gradle",
     )
-    
     gradle(task: "clean assembleRelease")
-
     changelog_from_git_commits
-    
     supply(
       track: "internal"
     )
-
     versionName = get_version_name(
       gradle_file_path: "app/build.gradle"
     )
-
     versionCode = get_version_code(
       gradle_file_path:"app/build.gradle"
     )
-
     git_commit(
       path: "./app/build.gradle",
       message: "Build number bump to " + versionCode.to_s + " [skip ci]"
     )
-
-    add_git_tag(tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")")
-
+    add_git_tag(
+      tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")"
+    )
     git_pull
-
     push_to_git_remote
-
   end
 
   desc "Deploy a new version to the Google Play"

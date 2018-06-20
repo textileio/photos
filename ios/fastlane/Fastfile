@@ -54,8 +54,7 @@ platform :ios do
     clean_build_artifacts
     commit_version_bump(
       message: "Build number bump to " + newBuildNumber.to_s + " [skip ci]",
-      xcodeproj: "TextilePhotos.xcodeproj",
-      ignore: "/\.env\..*/"
+      xcodeproj: "TextilePhotos.xcodeproj"
     )
     add_git_tag(tag: "builds/iosbeta/" + versionNumber.to_s + "(" + newBuildNumber.to_s + ")")
     git_pull
