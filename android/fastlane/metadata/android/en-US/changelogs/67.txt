@@ -1,0 +1,1 @@
+Fixes a bug where background, foreground, background would cause crashes. Also removes location data from any shared photos.

@@ -56,15 +56,12 @@
 		932E4DC520B8D7E100358ED3 /* Biotif-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB520B8D7E000358ED3 /* Biotif-SemiBoldItalic.ttf */; };
 		932E4DC620B8D7E100358ED3 /* Biotif-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */; };
 		932E4DC720B8D7E100358ED3 /* Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */; };
-		9339E9A1205C381700BCA4CF /* TextileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9339E99F205C381700BCA4CF /* TextileNode.m */; };
 		9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
 		935215F2207E967F00D46B81 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 935215C5207E966C00D46B81 /* libART.a */; };
-		9358951820C6EF2200722AE8 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9358951320C6EF2100722AE8 /* TextileImageView.m */; };
-		9358951920C6EF2200722AE8 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9358951420C6EF2100722AE8 /* TextileImageViewManager.m */; };
 		937C35AE2081797700F06ADB /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937C35A62081794C00F06ADB /* libRNDeviceInfo.a */; };
 		937FC5412061B7A700357ED5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */; };
+		9382834320DAE2E1002C2FE2 /* TextileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9382830520DAE2E1002C2FE2 /* TextileNode.m */; };
 		93D83F9D206C22B500522EFE /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93D83F9A206C229B00522EFE /* libRCTPushNotification.a */; };
-		93F2D6CA20C753EB005A2ABF /* TextileImageSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F2D6C920C753EB005A2ABF /* TextileImageSource.m */; };
 		94CF1FA5842247DA9BEB5C93 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8019A17A4A6F4FFB9C1C191F /* Ionicons.ttf */; };
 		94F237902F5845BC8A2BF5DF /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B81290BD6F9E43A9BCC32DFA /* MaterialCommunityIcons.ttf */; };
 		A234AB1920A6712B002A118D /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A234AB1420A67118002A118D /* libRNSVG.a */; };
@@ -590,20 +587,14 @@
 		932E4DB520B8D7E000358ED3 /* Biotif-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-SemiBoldItalic.ttf"; path = "../App/Fonts/Biotif-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Light.ttf"; path = "../App/Fonts/Biotif-Light.ttf"; sourceTree = "<group>"; };
 		932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-BookItalic.ttf"; path = "../App/Fonts/Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
-		9339E99F205C381700BCA4CF /* TextileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileNode.m; sourceTree = "<group>"; };
-		9339E9A0205C381700BCA4CF /* TextileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileNode.h; sourceTree = "<group>"; };
 		9339E9A6205C3B8700BCA4CF /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mobile.framework; sourceTree = "<group>"; };
 		935215BC207E966B00D46B81 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
-		9358951120C6EF2100722AE8 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
-		9358951220C6EF2100722AE8 /* TextileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageView.h; sourceTree = "<group>"; };
-		9358951320C6EF2100722AE8 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
-		9358951420C6EF2100722AE8 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
 		937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
+		9382830520DAE2E1002C2FE2 /* TextileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileNode.m; sourceTree = "<group>"; };
+		9382834220DAE2E1002C2FE2 /* TextileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileNode.h; sourceTree = "<group>"; };
 		93CD61C09D4349C8A67F94F9 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
 		93D83F94206C229B00522EFE /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
-		93F2D6C820C753EB005A2ABF /* TextileImageSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextileImageSource.h; sourceTree = "<group>"; };
-		93F2D6C920C753EB005A2ABF /* TextileImageSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextileImageSource.m; sourceTree = "<group>"; };
 		98E68F90DAB045288BB8D857 /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundFetch.a; sourceTree = "<group>"; };
 		994A8E25DB5842424334A2CA /* Pods-TextilePhotosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotosTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotosTests/Pods-TextilePhotosTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9ADB3D6550E3C633D490C2B4 /* Pods-TextilePhotos-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOS/Pods-TextilePhotos-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -929,7 +920,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				9358951020C6EF2100722AE8 /* NativeViews */,
 				FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */,
 				9339E9A6205C3B8700BCA4CF /* Mobile.framework */,
 				9339E99E205C381700BCA4CF /* NativeModules */,
@@ -960,8 +950,8 @@
 		9339E99E205C381700BCA4CF /* NativeModules */ = {
 			isa = PBXGroup;
 			children = (
-				9339E9A0205C381700BCA4CF /* TextileNode.h */,
-				9339E99F205C381700BCA4CF /* TextileNode.m */,
+				9382834220DAE2E1002C2FE2 /* TextileNode.h */,
+				9382830520DAE2E1002C2FE2 /* TextileNode.m */,
 				C5D8444C20A6694B0011C926 /* Events.h */,
 				C5D8444D20A669810011C926 /* Events.m */,
 			);
@@ -975,19 +965,6 @@
 				935215C7207E966C00D46B81 /* libART-tvOS.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		9358951020C6EF2100722AE8 /* NativeViews */ = {
-			isa = PBXGroup;
-			children = (
-				9358951220C6EF2100722AE8 /* TextileImageView.h */,
-				9358951320C6EF2100722AE8 /* TextileImageView.m */,
-				9358951120C6EF2100722AE8 /* TextileImageViewManager.h */,
-				9358951420C6EF2100722AE8 /* TextileImageViewManager.m */,
-				93F2D6C820C753EB005A2ABF /* TextileImageSource.h */,
-				93F2D6C920C753EB005A2ABF /* TextileImageSource.m */,
-			);
-			path = NativeViews;
 			sourceTree = "<group>";
 		};
 		937C35702081794C00F06ADB /* Products */ = {
@@ -1191,11 +1168,12 @@
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
 						DevelopmentTeam = 5VHA5U5FY8;
+						ProvisioningStyle = Manual;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 5VHA5U5FY8;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = true;
@@ -1876,14 +1854,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93F2D6CA20C753EB005A2ABF /* TextileImageSource.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */,
-				9358951920C6EF2200722AE8 /* TextileImageViewManager.m in Sources */,
-				9358951820C6EF2200722AE8 /* TextileImageView.m in Sources */,
+				9382834320DAE2E1002C2FE2 /* TextileNode.m in Sources */,
 				C5D8444E20A669810011C926 /* Events.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				9339E9A1205C381700BCA4CF /* TextileNode.m in Sources */,
 				68C8700C55154E1E80C3FB5B /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1916,6 +1891,8 @@
 			baseConfigurationReference = 994A8E25DB5842424334A2CA /* Pods-TextilePhotosTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
@@ -1952,6 +1929,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TextilePhotos.app/TextilePhotos";
 			};
 			name = Debug;
@@ -1961,6 +1939,8 @@
 			baseConfigurationReference = F801C2587799238B8E5CC602 /* Pods-TextilePhotosTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1994,6 +1974,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TextilePhotos.app/TextilePhotos";
 			};
 			name = Release;
@@ -2004,12 +1985,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TextilePhotos/TextilePhotos.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 24;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2034,13 +2014,12 @@
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
-					"$(SRCROOT)/../node_modules/react-native/Libraries/Image/**",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2049,8 +2028,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet;
 				PRODUCT_NAME = TextilePhotos;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "d07cc383-3159-46c4-b556-9bfa7a504d01";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development io.textile.Wallet";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2061,11 +2040,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = TextilePhotos/TextilePhotos.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 24;
+				DEVELOPMENT_TEAM = 5VHA5U5FY8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2090,13 +2068,12 @@
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
-					"$(SRCROOT)/../node_modules/react-native/Libraries/Image/**",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2105,8 +2082,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet;
 				PRODUCT_NAME = TextilePhotos;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "b24a13b9-0987-4516-b3ff-d5ac31c234b2";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore io.textile.Wallet";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
