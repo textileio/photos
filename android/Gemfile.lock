@@ -62,7 +62,6 @@ GEM
       xcodeproj (>= 1.5.7, < 2.0.0)
       xcpretty (~> 0.2.8)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-commit_android_version_bump (0.2.0)
     fastlane-plugin-get_version_code (0.2.0)
     fastlane-plugin-get_version_name (0.2.2)
     fastlane-plugin-increment_version_code (0.4.3)
@@ -152,7 +151,6 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   fastlane
-  fastlane-plugin-commit_android_version_bump
   fastlane-plugin-get_version_code
   fastlane-plugin-get_version_name
   fastlane-plugin-increment_version_code
