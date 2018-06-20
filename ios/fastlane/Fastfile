@@ -58,6 +58,7 @@ platform :ios do
       ignore: "/\.env\..*/"
     )
     add_git_tag(tag: "builds/iosbeta/" + versionNumber.to_s + "(" + newBuildNumber.to_s + ")")
+    git_pull
     push_to_git_remote
   end
 

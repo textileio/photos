@@ -57,6 +57,8 @@ platform :android do
 
     add_git_tag(tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")")
 
+    git_pull
+
     push_to_git_remote
 
   end
