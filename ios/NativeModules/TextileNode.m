@@ -1,6 +1,6 @@
 //  Created by react-native-create-bridge
 
-#import "TextileIPFS.h"
+#import "TextileNode.h"
 #import "Events.h"
 #import <Mobile/Mobile.h>
 
@@ -29,20 +29,20 @@
 
 @end
 
-@interface TextileIPFS()
+@interface TextileNode()
 
 @property (nonatomic, strong) MobileWrapper *node;
 
 @end
 
-@implementation TextileIPFS
+@implementation TextileNode
 
 // Export a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 RCT_EXPORT_MODULE();
 
 - (dispatch_queue_t)methodQueue {
-  return dispatch_queue_create("io.textile.TextileIPFSQueue", DISPATCH_QUEUE_SERIAL);
+  return dispatch_queue_create("io.textile.TextileNodeQueue", DISPATCH_QUEUE_SERIAL);
 }
 
 // Export methods to a native module
@@ -306,6 +306,15 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
 
 - (NSString *)_getAccessToken:(NSError**)error {
   return [self.node getAccessToken:error];
+}
+
+@end
+
+@implementation RCTBridge (TextileNode)
+
+- (TextileNode *)textileNode
+{
+  return [self moduleForClass:[TextileNode class]];
 }
 
 @end
