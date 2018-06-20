@@ -33,13 +33,10 @@ platform :android do
     
     gradle(task: "clean assembleRelease")
 
-    # changelog_from_git_commits
+    changelog_from_git_commits
     
     supply(
-      track: "internal",
-      skip_upload_metadata: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: true
+      track: "internal"
     )
 
     versionName = get_version_name(
