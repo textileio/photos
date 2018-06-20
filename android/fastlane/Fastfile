@@ -51,7 +51,7 @@ platform :android do
     )
 
     commit_android_version_bump(
-      gradle_file_folder:"app",
+      gradle_file_folder:"android/app",
       message: "Build number bump to " + versionCode.to_s + " [skip ci]"
     )
 
