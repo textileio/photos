@@ -263,6 +263,12 @@ workflows:
       - ios-beta:
           requires:
             - ios
+          filters:
+            branches:
+              only: master
       - android-beta:
           requires:
             - android
+          filters:
+            branches:
+              only: master
