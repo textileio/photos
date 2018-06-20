@@ -1,4 +1,4 @@
-package com.textile.textileipfs;
+package com.textile.textilenode;
 
 import android.content.ContentUris;
 import android.content.Context;

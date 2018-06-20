@@ -10,7 +10,8 @@ const migrations = {
       textile: state.textile.merge({
         preferences: {
           verboseUi: false
-        }
+        },
+        camera: {}
       })
     }
   },
@@ -25,6 +26,19 @@ const migrations = {
         images: state.textile.images.merge({ items: updatedItems })
       })
     }
+  },
+  2: (state) => {
+    const uris = state.textile.camera && state.textile.camera.processed ? state.textile.camera.processed : []
+    let processed = {}
+    for (let uri of uris) {
+      processed[uri] = 'complete'
+    }
+    return {
+      ...state,
+      textile: state.textile.merge({
+        camera: {processed}
+      })
+    }
   }
 }
 
@@ -34,7 +48,7 @@ const REDUX_PERSIST = {
   reducerVersion: '1.0',
   storeConfig: {
     key: 'primary',
-    version: 1,
+    version: 2,
     storage: AsyncStorage,
     migrate: createMigrate(migrations, { debug: false }),
     // Reducer keys that you do NOT want stored to persistence here.
