@@ -69,7 +69,7 @@ RCT_REMAP_METHOD(start, startWithResolver:(RCTPromiseResolveBlock)resolve reject
 
 RCT_REMAP_METHOD(stop, stopWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  if([self _start:&error]) {
+  if([self _stop:&error]) {
     resolve(@YES);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);

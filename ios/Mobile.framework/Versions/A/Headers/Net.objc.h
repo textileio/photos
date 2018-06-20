@@ -25,7 +25,7 @@
 - (BOOL)addFile:(NSData*)b fname:(NSString*)fname error:(NSError**)error;
 - (BOOL)finish:(NSError**)error;
 - (void)init_:(NSString*)dir boundary:(NSString*)boundary;
-- (BOOL)send:(NSString*)url error:(NSError**)error;
+- (NSString*)send:(NSString*)url error:(NSError**)error;
 @end
 
 #endif
