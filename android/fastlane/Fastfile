@@ -42,8 +42,6 @@ platform :android do
       skip_upload_screenshots: true
     )
 
-    clean_build_artifacts
-
     versionName = get_version_name(
       gradle_file_path: "app/build.gradle"
     )
@@ -54,8 +52,7 @@ platform :android do
 
     commit_android_version_bump(
       gradle_file_folder:"app",
-      message: "Build number bump to " + versionCode.to_s + " [skip ci]",
-      ignore: "/\.env\..*/"
+      message: "Build number bump to " + versionCode.to_s + " [skip ci]"
     )
 
     add_git_tag(tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")")
