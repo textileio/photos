@@ -1,6 +1,6 @@
 //  Created by react-native-create-bridge
 
-package com.textile.textileipfs;
+package com.textile.textilenode;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -29,12 +29,12 @@ import mobile.Wrapper;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextileIPFSModule extends ReactContextBaseJavaModule {
-    public static final String REACT_CLASS = "TextileIPFS";
+public class TextileNode extends ReactContextBaseJavaModule {
+    public static final String REACT_CLASS = "TextileNode";
     private static ReactApplicationContext reactContext = null;
-    private static Wrapper textile = null;
+    static Wrapper textile = null;
 
-    public TextileIPFSModule(ReactApplicationContext context) {
+    public TextileNode(ReactApplicationContext context) {
         // Pass in the context to the constructor and save it so you can emit events
         // https://facebook.github.io/react-native/docs/native-modules-android.html#the-toast-module
         super(context);
@@ -54,7 +54,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
         // Export any constants to be used in your native module
         // https://facebook.github.io/react-native/docs/native-modules-android.html#the-toast-module
         final Map<String, Object> constants = new HashMap<>();
-        constants.put("EXAMPLE_CONSTANT", TextileIPFSModule.REACT_CLASS);
+        constants.put("EXAMPLE_CONSTANT", TextileNode.REACT_CLASS);
         return constants;
     }
 
@@ -72,7 +72,7 @@ public class TextileIPFSModule extends ReactContextBaseJavaModule {
                     public void notify(Event event) {
                         try {
                             WritableMap payload = JsonConvert.jsonToReact(new JSONObject(event.getPayload()));
-                            TextileIPFSModule.emitDeviceEvent(event.getName(), payload);
+                            TextileNode.emitDeviceEvent(event.getName(), payload);
                         }
                         catch (Exception e) {
                             //
