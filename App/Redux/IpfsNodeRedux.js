@@ -1,6 +1,7 @@
 import {AppState} from 'react-native'
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
+import Config from 'react-native-config'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -39,7 +40,7 @@ export const INITIAL_STATE = Immutable({
       items: [],
       error: null
     },
-    all: {
+    [Config.ALL_THREAD_NAME]: {
       querying: false,
       items: [],
       error: null

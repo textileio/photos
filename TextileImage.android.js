@@ -3,7 +3,8 @@ import React from 'react'
 import { requireNativeComponent, ViewPropTypes } from 'react-native'
 
 type Props = {
-  hashPath: string,
+  hash: string,
+  path: string,
   resizeMode: string
 }
 

@@ -10,11 +10,9 @@ import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
-import IpfsActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
 import ProgressiveImage from '../Components/ProgressiveImage'
-
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -32,8 +30,8 @@ class PhotoViewerScreen extends React.PureComponent {
 
   renderImage (props, dims) {
     return (<ProgressiveImage
-      previewSource={{hashPath: props.image.hash + '/thumb'}}
-      source={{hashPath: props.image.hash + '/photo'}}
+      previewSource={{hash: props.image.hash, path: 'thumb'}}
+      source={{hash: props.image.hash, path: 'photo'}}
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
       capInsets={props.capInsets}
@@ -186,9 +184,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (item) => { dispatch(IpfsActions.shareImageRequest('all', item.hash)) },
     authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.hash)) },
-    cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
     selectImage: (index) => { dispatch(UIActions.selectImage(index)) },
     dismiss: () => { dispatch(UIActions.dismissViewedPhoto()) }
   }

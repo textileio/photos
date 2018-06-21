@@ -12,6 +12,7 @@ import Colors from '../Themes/Colors'
 // import SwipeNavigation from './SwipeNavigation'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
+import Config from "react-native-config"
 
 // Manifest of possible screens
 
@@ -45,7 +46,7 @@ const SharedPhotosNav = StackNavigator(
   {
     // Default config for all screens
     headerMode: 'float',
-    initialRouteParams: { thread: 'all' },
+    initialRouteParams: { thread: Config.ALL_THREAD_NAME },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,

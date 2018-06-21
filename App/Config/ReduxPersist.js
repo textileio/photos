@@ -39,6 +39,14 @@ const migrations = {
         camera: {processed}
       })
     }
+  },
+  3: (state) => {
+    return {
+      ...state,
+      textile: state.textile.merge({
+        onboarded: false
+      })
+    }
   }
 }
 
@@ -48,7 +56,7 @@ const REDUX_PERSIST = {
   reducerVersion: '1.0',
   storeConfig: {
     key: 'primary',
-    version: 2,
+    version: 3,
     storage: AsyncStorage,
     migrate: createMigrate(migrations, { debug: false }),
     // Reducer keys that you do NOT want stored to persistence here.

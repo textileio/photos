@@ -48,9 +48,9 @@ RCT_EXPORT_MODULE();
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _createNodeWithDataDir:dataDir apiUrl:apiUrl logLevel:logLevel logFiles:logFiles error:&error];
+  [self _create:dataDir apiUrl:apiUrl logLevel:logLevel logFiles:logFiles error:&error];
   if (self.node) {
     resolve(@YES);
   } else {
@@ -58,111 +58,29 @@ RCT_EXPORT_METHOD(createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)a
   }
 }
 
-RCT_REMAP_METHOD(startNode, startNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_REMAP_METHOD(start, startWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  BOOL success = [self _startNode:&error];
-  if(success) {
+  if([self _start:&error]) {
     resolve(@YES);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
-RCT_REMAP_METHOD(stopNode, stopNodeWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_REMAP_METHOD(stop, stopWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  BOOL success = [self _stopNode:&error];
-  if(success) {
+  if([self _stop:&error]) {
     resolve(@YES);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
-RCT_EXPORT_METHOD(updateThread:(NSString *)mnemonic name:(NSString *)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)password email:(NSString*)email referral:(NSString*)referral resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _updateThread:mnemonic name:name error:&error];
-  if(!error) {
+  [self _signUpWithEmail:username password:password email:email referral:referral error:&error];
+  if (error == NULL) {
     resolve(@YES);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(addImageAtPath:(NSString *)path thumbPath:(NSString *)thumbPath thread:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NetMultipartRequest *multipart = [self _addPhoto:path thumbPath:thumbPath toThread:thread error:&error];
-  if(multipart) {
-    resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(sharePhoto:(NSString *)hash thread:(NSString *)thread caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NetMultipartRequest *multipart = [self _sharePhoto:hash toThread:thread withCaption:caption error:&error];
-  if(multipart) {
-    resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit thread:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *hashesString = [self _getPhotosFromOffset:offset withLimit:limit fromThread:thread error:&error];
-  NSData *data = [hashesString dataUsingEncoding:NSUTF8StringEncoding];
-  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-  NSArray *hashes = [json objectForKey:@"hashes"];
-  if (hashes) {
-    resolve(hashes);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getHashRequest:(NSString *)hash resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *request = [self _getHashRequest:hash error:&error];
-  NSData *data = [request dataUsingEncoding:NSUTF8StringEncoding];
-  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-  NSString *token = [json objectForKey:@"token"];
-  NSString *protocol = [json objectForKey:@"protocol"];
-  NSString *host = [json objectForKey:@"host"];
-
-  if (!error) {
-    resolve(@{ @"host": host, @"protocol": protocol, @"token": token });
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(syncGetHashData:(NSString *)path) {
-  NSError *error;
-  NSString *result = [self _getHashData:path error:&error];
-  if (!error && result) {
-    return result;
-  } else {
-    return nil;
-  }
-}
-
-RCT_EXPORT_METHOD(getHashData:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getHashData:path error:&error];
-  if (result) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(pairNewDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
-  NSError *error;
-  NSString *result = [self _pairNewDevice:pkb64 error:&error];
-  if(result) {
-    resolve(result);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -178,12 +96,41 @@ RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password reso
   }
 }
 
+RCT_EXPORT_METHOD(signOut:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _signOut:&error];
+  if (error == NULL) {
+    resolve(@YES);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(isSignedIn) {
-  BOOL signedIn = [self _isSignedIn];
-  if (signedIn) {
+  if ([self _isSignedIn]) {
     return @YES;
   } else {
     return @NO;
+  }
+}
+
+RCT_EXPORT_METHOD(getId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *nid = [self _getId:&error];
+  if (nid) {
+    resolve(nid);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getIPFSPeerId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *pid = [self _getIPFSPeerId:&error];
+  if (pid) {
+    resolve(pid);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
@@ -207,9 +154,9 @@ RCT_EXPORT_METHOD(getAccessToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPr
   }
 }
 
-RCT_EXPORT_METHOD(signOut:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _signOut:&error];
+  [self _addThread:name withMnemonic:mnemonic error:&error];
   if (error == NULL) {
     resolve(@YES);
   } else {
@@ -217,11 +164,65 @@ RCT_EXPORT_METHOD(signOut:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRe
   }
 }
 
-RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)password email:(NSString*)email referral:(NSString*)referral resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _signUpWithEmail:username password:password email:email referral:referral error:&error];
-  if (error == NULL) {
-    resolve(@YES);
+  NetMultipartRequest *multipart = [self _addPhoto:path toThreadNamed:threadName withCaption:caption error:&error];
+  if(multipart) {
+    resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *sid = [self _sharePhoto:id toThreadNamed:threadName withCaption:caption error:&error];
+  if(sid) {
+    resolve(sid);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getPhotoBlocks:(NSString *)offset limit:(int)limit threadName:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *jsonString = [self _getPhotoBlocks:offset withLimit:limit fromThreadNamed:thread error:&error];
+  NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  NSArray *items = [json objectForKey:@"items"];
+  if (items) {
+    resolve(items);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getBlockData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getBlockData:id withPath:path error:&error];
+  if (result) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getFileData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getFileData:id withPath:path error:&error];
+  if (result) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(pairDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSError *error;
+  NSString *result = [self _pairDevice:pkb64 error:&error];
+  if(result) {
+    resolve(result);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -229,7 +230,7 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
 
 #pragma mark - Private methods
 
-- (void)_createNodeWithDataDir:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
+- (void)_create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
   if (!self.node) {
     MobileNodeConfig *config = [[MobileNodeConfig alloc] init];
     [config setRepoPath:dataDir];
@@ -240,64 +241,30 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   }
 }
 
-- (BOOL)_startNode:(NSError**)error {
+- (BOOL)_start:(NSError**)error {
   BOOL startNodeSuccess = [self.node start:error];
   return startNodeSuccess;
 }
 
-- (BOOL)_stopNode:(NSError**)error {
+- (BOOL)_stop:(NSError**)error {
   BOOL success = [self.node stop:error];
   return success;
 }
 
-- (NetMultipartRequest *)_addPhoto:(NSString *)path thumbPath:(NSString *)thumbPath toThread:(NSString *)thread error:(NSError**)error {
-  NetMultipartRequest *multipart = [self.node addPhoto:path thumb:thumbPath thread:thread error:error];
-  return multipart;
+- (BOOL)_signUpWithEmail:(NSString *)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error {
+  return [self.node signUpWithEmail:username password:password email:email referral:referral error:error];
 }
 
-- (NetMultipartRequest *)_sharePhoto:(NSString *)hash toThread:(NSString *)thread withCaption:(NSString *)caption error:(NSError**)error {
-  NetMultipartRequest *multipart = [self.node sharePhoto:hash thread:thread caption:caption error:error];
-  return multipart;
+- (BOOL)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
+  return [self.node signIn:username password:password error:error];
 }
 
-- (NSString *)_getPhotosFromOffset:(NSString *)offset withLimit:(long)limit fromThread:(NSString *)thread error:(NSError**)error {
-  NSString *hashesString = [self.node getPhotos:offset limit:limit thread:thread error:error];
-  return hashesString;
-}
-
-- (NSString *)_getHashRequest:(NSString *)hash error:(NSError**)error {
-  NSString *token = [self.node getHashRequest:hash error:error];
-  return token;
-}
-
-- (NSString *)_getHashData:(NSString *)hashPath error:(NSError**)error {
-  NSString *base64String = [self.node getFileBase64:hashPath error:error];
-  return base64String;
-}
-
-- (NSString *)_pairNewDevice:(NSString *)pkb64 error:(NSError**)error {
-  NSString *resultString = [self.node pairDesktop:pkb64 error:error];
-  return resultString;
-}
-
-- (void)_signUpWithEmail:(NSString *)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error {
-  [self.node signUpWithEmail:username password:password email:email referral:referral error:error];
-}
-
-- (void)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
-  [self.node signIn:username password:password error:error];
+- (BOOL)_signOut:(NSError**)error {
+  return [self.node signOut:error];
 }
 
 - (BOOL)_isSignedIn {
   return [self.node isSignedIn];
-}
-
-- (void)_signOut:(NSError**)error {
-  [self.node signOut:error];
-}
-
-- (void)_updateThread:(NSString *)mnemonic name:(NSString*)name error:(NSError**)error {
-  [self.node updateThread:mnemonic name:name error:error];
 }
 
 - (NSString *)_getUsername:(NSError**)error {
@@ -306,6 +273,48 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
 
 - (NSString *)_getAccessToken:(NSError**)error {
   return [self.node getAccessToken:error];
+}
+
+- (NSString *)_getId:(NSError**)error {
+  return [self.node getId:error];
+}
+
+- (NSString *)_getIPFSPeerId:(NSError**)error {
+  return [self.node getIPFSPeerId:error];
+}
+
+- (BOOL)_addThread:(NSString *)name withMnemonic:(NSString *)mnemonic error:(NSError**)error {
+  return [self.node addThread:name mnemonic:mnemonic error:error];
+}
+
+- (NetMultipartRequest *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
+  if (caption == NULL) {
+    caption = @"";
+  }
+  return [self.node addPhoto:path threadName:threadName caption:caption error:error];
+}
+
+- (NSString *)_sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
+  if (caption == NULL) {
+    caption = @"";
+  }
+  return [self.node sharePhoto:id threadName:threadName caption:caption error:error];
+}
+
+- (NSString *)_getPhotoBlocks:(NSString *)offset withLimit:(long)limit fromThreadNamed:(NSString *)threadName error:(NSError**)error {
+  return [self.node getPhotoBlocks:offset limit:limit threadName:threadName error:error];
+}
+
+- (NSString *)_getBlockData:(NSString *)id withPath:(NSString *)path error:(NSError**)error {
+  return [self.node getBlockData:id path:path error:error];
+}
+
+- (NSString *)_getFileData:(NSString *)id withPath:(NSString *)path error:(NSError**)error {
+  return [self.node getFileData:id path:path error:error];
+}
+
+- (NSString *)_pairDevice:(NSString *)pkb64 error:(NSError**)error {
+  return [self.node pairDevice:pkb64 error:error];
 }
 
 @end
