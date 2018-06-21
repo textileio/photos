@@ -288,10 +288,16 @@ RCT_EXPORT_METHOD(pairDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)
 }
 
 - (NetMultipartRequest *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
+  if (caption == NULL) {
+    caption = @"";
+  }
   return [self.node addPhoto:path threadName:threadName caption:caption error:error];
 }
 
 - (NSString *)_sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
+  if (caption == NULL) {
+    caption = @"";
+  }
   return [self.node sharePhoto:id threadName:threadName caption:caption error:error];
 }
 
