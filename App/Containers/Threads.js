@@ -6,6 +6,7 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import UIActions from '../Redux/UIRedux'
+import Config from "react-native-config"
 
 // Styles
 import styles from './Styles/ThreadsStyle'
@@ -100,7 +101,7 @@ class Threads extends React.PureComponent {
 const mapStateToProps = (state) => {
   return {
     data: [
-      {type: 'thread', id: 'all', title: 'All Users'},
+      {type: 'thread', id: Config.ALL_THREAD_NAME, title: 'All Users'},
       {type: 'add', id: 'add', title: 'New Thread'}
     ]
   }

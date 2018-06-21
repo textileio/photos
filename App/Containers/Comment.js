@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
+import Config from "react-native-config"
 
 // Styles
 import styles from './Styles/CommentStyle'
@@ -50,7 +51,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (hash, comment) => { dispatch(UIActions.sharePhotoRequest('all', hash, comment)) },
+    share: (hash, comment) => { dispatch(UIActions.sharePhotoRequest(Config.ALL_THREAD_NAME, hash, comment)) },
     close: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
     updateComment: (text) => { dispatch(UIActions.updateComment(text)) }
   }
