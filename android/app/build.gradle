@@ -120,7 +120,7 @@ android {
     }
     signingConfigs {
         signedRelease {
-            storeFile file(System.getenv("ANDROID_KEYSTORE"))
+            storeFile file(System.getenv("ANDROID_KEYSTORE") ?: "keystore.jks")
             storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
             keyAlias System.getenv("ANDROID_KEYSTORE_KEY_ALIAS")
             keyPassword System.getenv("ANDROID_KEYSTORE_KEY_PASSWORD")
@@ -130,7 +130,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            if (file(System.getenv("ANDROID_KEYSTORE")).exists()) {
+            if (file(System.getenv("ANDROID_KEYSTORE") ?: "keystore.jks").exists()) {
                 signingConfig signingConfigs.signedRelease
             }
         }
