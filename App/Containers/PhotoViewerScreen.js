@@ -10,12 +10,9 @@ import Modal from 'react-native-modal'
 import Gallery from 'react-native-image-gallery'
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
-import IpfsActions from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import SharingDialog from './SharingDialog'
 import ProgressiveImage from '../Components/ProgressiveImage'
-import Config from "react-native-config"
-
 
 // Styles
 import styles from './Styles/PhotoViewerScreenStyle'
@@ -187,9 +184,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (item) => { dispatch(IpfsActions.shareImageRequest(Config.ALL_THREAD_NAME, item.hash)) },
     authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.hash)) },
-    cancelAuthoringShare: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
     selectImage: (index) => { dispatch(UIActions.selectImage(index)) },
     dismiss: () => { dispatch(UIActions.dismissViewedPhoto()) }
   }

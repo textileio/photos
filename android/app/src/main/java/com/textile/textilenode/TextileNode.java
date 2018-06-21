@@ -202,6 +202,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     @ReactMethod
     public void addPhoto (String path, String threadName, String caption, Promise promise) {
         try {
+            if (caption == null) {
+                caption = "";
+            }
             MultipartRequest multipart = node.addPhoto(path, threadName, caption);
             WritableMap map = new WritableNativeMap();
             map.putString("payloadPath", multipart.getPayloadPath());
@@ -217,8 +220,10 @@ public class TextileNode extends ReactContextBaseJavaModule {
     @ReactMethod
     public void sharePhoto (String id, String threadName, String caption, Promise promise) {
         try {
+            if (caption == null) {
+                caption = "";
+            }
             promise.resolve(node.sharePhoto(id, threadName, caption));
-
         }
         catch (Exception e) {
             promise.reject("SHARE PHOTO ERROR", e);

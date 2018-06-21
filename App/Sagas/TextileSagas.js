@@ -256,7 +256,7 @@ export function * photosTask () {
     for (let photo of photos.reverse()) {
       try {
         photo = yield call(getPhotoPath, photo)
-        const multipartData = yield call(IPFS.addPhoto, photo.path, 'default', '')
+        const multipartData = yield call(IPFS.addPhoto, photo.path, 'default')
         photoUploads.push({
           photo: photo,
           multipartData
