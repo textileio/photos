@@ -14,32 +14,32 @@ type MultipartData = {
 }
 
 export default {
-  create: async function (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): boolean {
+  create: async function (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): void {
     console.log(dataDir)
     return await TextileNode.create(dataDir, apiUrl, logLevel, logFiles)
   },
 
-  start: async function (): boolean {
+  start: async function (): void {
     return await TextileNode.start()
   },
 
-  stop: async function (): boolean {
+  stop: async function (): void {
     return await TextileNode.stop()
   },
 
-  signUpWithEmail: async function (username: string, password: string, email: string, referral: string): string {
+  signUpWithEmail: async function (username: string, password: string, email: string, referral: string): void {
     return await TextileNode.signUpWithEmail(username, password, email, referral)
   },
 
-  signIn: async function (username: string, password: string): string {
+  signIn: async function (username: string, password: string): void {
     return await TextileNode.signIn(username, password)
   },
 
-  signOut: async function (): string {
+  signOut: async function (): void {
     return await TextileNode.signOut()
   },
 
-  isSignedIn: function (): boolean {
+  isSignedIn: async function (): boolean {
     return TextileNode.isSignedIn()
   },
 
@@ -59,7 +59,7 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  addThread: async function (name: string, mnemonic: string): MultipartData {
+  addThread: async function (name: string, mnemonic: string): void {
     return await TextileNode.addThread(name, mnemonic)
   },
 
@@ -71,7 +71,7 @@ export default {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
 
-  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): string {
+  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): [string] {
     return await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
   },
 
