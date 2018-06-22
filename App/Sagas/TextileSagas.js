@@ -32,7 +32,7 @@ import Config from 'react-native-config'
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
-    const data = yield call(IPFS.signUpWithEmail, username, password, email, referralCode)
+    yield call(IPFS.signUpWithEmail, username, password, email, referralCode)
     const token = yield call(IPFS.getAccessToken)
     // TODO: Put username into textile-go for addition to metadata model
     yield put(AuthActions.signUpSuccess(token))
