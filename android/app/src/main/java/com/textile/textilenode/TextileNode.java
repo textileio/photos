@@ -192,7 +192,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     public void addThread (String name, String mnemonic, Promise promise) {
         try {
             node.addThread(name, mnemonic);
-            promise.resolve(null);
+            promise.resolve(true);
         }
         catch (Exception e) {
             promise.reject("ADD THREAD ERROR", e);
