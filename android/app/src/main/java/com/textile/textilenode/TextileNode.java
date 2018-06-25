@@ -79,12 +79,12 @@ public class TextileNode extends ReactContextBaseJavaModule {
                         }
                     }
                 });
-                promise.resolve(true);
+                promise.resolve(null);
             } catch (Exception e) {
                 promise.reject("CREATE NODE ERROR", e);
             }
         } else {
-            promise.resolve(true);
+            promise.resolve(null);
         }
     }
 
@@ -92,7 +92,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     public void start (Promise promise) {
         try {
             node.start();
-            promise.resolve(true);
+            promise.resolve(null);
         }
         catch (Exception e) {
             promise.reject("START ERROR", e);
@@ -103,7 +103,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     public void stop (Promise promise) {
         try {
             node.stop();
-            promise.resolve(true);
+            promise.resolve(null);
         }
         catch (Exception e) {
             promise.reject("STOP ERROR", e);
@@ -114,7 +114,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     public void signUpWithEmail (String username, String password, String email, String referral, Promise promise) {
         try {
             node.signUpWithEmail(username, password, email, referral);
-            promise.resolve(true);
+            promise.resolve(null);
         }
         catch (Exception e) {
             promise.reject("SIGNUP WITH EMAIL ERROR", e);
@@ -125,7 +125,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     public void signIn (String username, String password, Promise promise) {
         try {
             node.signIn(username, password);
-            promise.resolve(true);
+            promise.resolve(null);
         }
         catch (Exception e) {
             promise.reject("SIGNIN ERROR", e);
@@ -136,7 +136,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     public void signOut (Promise promise) {
         try {
             node.signOut();
-            promise.resolve(true);
+            promise.resolve(null);
         }
         catch (Exception e) {
             promise.reject("SIGNOUT ERROR", e);
@@ -144,8 +144,13 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public Boolean isSignedIn() {
-        return node.isSignedIn();
+    public void isSignedIn (Promise promise) {
+        try {
+            promise.resolve(node.isSignedIn());
+        }
+        catch (Exception e) {
+            promise.reject("IS SIGNED IN ERROR", e);
+        }
     }
 
     @ReactMethod
@@ -192,7 +197,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     public void addThread (String name, String mnemonic, Promise promise) {
         try {
             node.addThread(name, mnemonic);
-            promise.resolve(true);
+            promise.resolve(null);
         }
         catch (Exception e) {
             promise.reject("ADD THREAD ERROR", e);
@@ -272,8 +277,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     @ReactMethod
     public void pairDevice (String pkb64, Promise promise) {
         try {
-            node.pairDevice(pkb64);
-            promise.resolve(true);
+            promise.resolve(node.pairDevice(pkb64));
         }
         catch (Exception e) {
             promise.reject("PAIR DEVICE ERROR", e);

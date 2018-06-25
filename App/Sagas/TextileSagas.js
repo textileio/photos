@@ -32,15 +32,11 @@ import Config from 'react-native-config'
 export function * signUp ({data}) {
   const {referralCode, username, email, password} = data
   try {
-    const data = yield call(IPFS.signUpWithEmail, username, password, email, referralCode)
-    const response = JSON.parse(data)
-    if (response.error) {
-      yield put(AuthActions.signUpFailure(response.error))
-    } else {
-      // TODO: Put username into textile-go for addition to metadata model
-      yield put(AuthActions.signUpSuccess('tokenFromSignUp'))
-      yield call(NavigationService.navigate, 'OnboardingScreen', params1)
-    }
+    yield call(IPFS.signUpWithEmail, username, password, email, referralCode)
+    const token = yield call(IPFS.getAccessToken)
+    // TODO: Put username into textile-go for addition to metadata model
+    yield put(AuthActions.signUpSuccess(token))
+    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
@@ -49,14 +45,10 @@ export function * signUp ({data}) {
 export function * logIn ({data}) {
   const {username, password} = data
   try {
-    const data = yield call(IPFS.signIn, username, password)
-    const response = JSON.parse(data)
-    if (response.error) {
-      yield put(AuthActions.signUpFailure(response.error))
-    } else {
-      yield put(AuthActions.logInSuccess('tokenFormLogIn'))
-      yield call(NavigationService.navigate, 'OnboardingScreen', params1)
-    }
+    yield call(IPFS.signIn, username, password)
+    const token = yield call(IPFS.getAccessToken)
+    yield put(AuthActions.logInSuccess(token))
+    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }
@@ -129,16 +121,11 @@ export function * createNode ({path}) {
   try {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
-    const createNodeSuccess = yield call(IPFS.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
-    const addDefaultThreadSuccess = yield call(IPFS.addThread, "default")
-    const addAllThreadSuccess = yield call(IPFS.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
-    if (createNodeSuccess && addDefaultThreadSuccess && addAllThreadSuccess) {
-      yield put(IpfsNodeActions.createNodeSuccess())
-      yield put(IpfsNodeActions.startNodeRequest())
-    } else {
-      yield put(IpfsNodeActions.createNodeFailure(new Error('Failed creating node, but no error was thrown - Should not happen')))
-      yield put(IpfsNodeActions.lock(false))
-    }
+    yield call(IPFS.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
+    yield call(IPFS.addThread, "default")
+    yield call(IPFS.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    yield put(IpfsNodeActions.createNodeSuccess())
+    yield put(IpfsNodeActions.startNodeRequest())
   } catch (error) {
     yield put(IpfsNodeActions.createNodeFailure(error))
     yield put(IpfsNodeActions.lock(false))
@@ -152,15 +139,10 @@ export function * startNode () {
     return
   }
   try {
-    const startNodeSuccess = yield call(IPFS.start)
-    if (startNodeSuccess) {
-      yield put(IpfsNodeActions.startNodeSuccess())
-      yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-      yield put(IpfsNodeActions.getPhotoHashesRequest(Config.ALL_THREAD_NAME))
-    } else {
-      yield put(IpfsNodeActions.startNodeFailure(new Error('Failed starting node, but no error was thrown - Should not happen')))
-      yield put(IpfsNodeActions.lock(false))
-    }
+    yield call(IPFS.start)
+    yield put(IpfsNodeActions.startNodeSuccess())
+    yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+    yield put(IpfsNodeActions.getPhotoHashesRequest(Config.ALL_THREAD_NAME))
   } catch (error) {
     yield put(IpfsNodeActions.startNodeFailure(error))
     yield put(IpfsNodeActions.lock(false))
@@ -211,6 +193,7 @@ export function * getPhotoHashes ({thread}) {
 export function * pairNewDevice (action) {
   const { pubKey } = action
   try {
+    // TODO: pairDevice returns a String. Should we be using it?
     yield call(IPFS.pairDevice, pubKey)
     yield put(TextileActions.pairNewDeviceSuccess(pubKey))
   } catch (err) {
@@ -220,6 +203,7 @@ export function * pairNewDevice (action) {
 
 export function * shareImage ({thread, hash, caption}) {
   try {
+    // TODO: sharePhoto returns a String. Should we be using it?
     yield call(IPFS.sharePhoto, hash, thread, caption)
     yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
   } catch (error) {
