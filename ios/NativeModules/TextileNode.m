@@ -52,7 +52,7 @@ RCT_EXPORT_METHOD(create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:
   NSError *error;
   [self _create:dataDir apiUrl:apiUrl logLevel:logLevel logFiles:logFiles error:&error];
   if (self.node) {
-    resolve(@YES);
+    resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -61,7 +61,7 @@ RCT_EXPORT_METHOD(create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:
 RCT_REMAP_METHOD(start, startWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   if([self _start:&error]) {
-    resolve(@YES);
+    resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -70,7 +70,7 @@ RCT_REMAP_METHOD(start, startWithResolver:(RCTPromiseResolveBlock)resolve reject
 RCT_REMAP_METHOD(stop, stopWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   if([self _stop:&error]) {
-    resolve(@YES);
+    resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -80,7 +80,7 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
   NSError *error;
   [self _signUpWithEmail:username password:password email:email referral:referral error:&error];
   if (error == NULL) {
-    resolve(@YES);
+    resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -90,7 +90,7 @@ RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password reso
   NSError *error;
   [self _signIn:username password:password error:&error];
   if (error == NULL) {
-    resolve(@YES);
+    resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -100,17 +100,17 @@ RCT_EXPORT_METHOD(signOut:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRe
   NSError *error;
   [self _signOut:&error];
   if (error == NULL) {
-    resolve(@YES);
+    resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
-RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(isSignedIn) {
+RCT_EXPORT_METHOD(isSignedIn:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   if ([self _isSignedIn]) {
-    return @YES;
+    resolve(@YES);
   } else {
-    return @NO;
+    resolve(@NO);
   }
 }
 
@@ -158,7 +158,7 @@ RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic r
   NSError *error;
   [self _addThread:name withMnemonic:mnemonic error:&error];
   if (error == NULL) {
-    resolve(@YES);
+    resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
