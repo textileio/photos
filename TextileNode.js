@@ -14,80 +14,80 @@ type MultipartData = {
 }
 
 export default {
-  create: async function (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): void {
+  create: async function (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): Promise<void> {
     console.log(dataDir)
     return await TextileNode.create(dataDir, apiUrl, logLevel, logFiles)
   },
 
-  start: async function (): void {
+  start: async function (): Promise<void> {
     return await TextileNode.start()
   },
 
-  stop: async function (): void {
+  stop: async function (): Promise<void> {
     return await TextileNode.stop()
   },
 
-  signUpWithEmail: async function (username: string, password: string, email: string, referral: string): void {
+  signUpWithEmail: async function (username: string, password: string, email: string, referral: string): Promise<void> {
     return await TextileNode.signUpWithEmail(username, password, email, referral)
   },
 
-  signIn: async function (username: string, password: string): void {
+  signIn: async function (username: string, password: string): Promise<void> {
     return await TextileNode.signIn(username, password)
   },
 
-  signOut: async function (): void {
+  signOut: async function (): Promise<void> {
     return await TextileNode.signOut()
   },
 
-  isSignedIn: async function (): boolean {
-    return TextileNode.isSignedIn()
+  isSignedIn: async function (): Promise<boolean> {
+    return await TextileNode.isSignedIn()
   },
 
-  getId: async function (): string {
+  getId: async function (): Promise<string> {
     return await TextileNode.getId()
   },
 
-  getIPFSPeerId: async function (): string {
+  getIPFSPeerId: async function (): Promise<string> {
     return await TextileNode.getIPFSPeerId()
   },
 
-  getUsername: async function (): string {
+  getUsername: async function (): Promise<string> {
     return await TextileNode.getUsername()
   },
 
-  getAccessToken: async function (): string {
+  getAccessToken: async function (): Promise<string> {
     return await TextileNode.getAccessToken()
   },
 
-  addThread: async function (name: string, mnemonic: string): void {
+  addThread: async function (name: string, mnemonic: string): Promise<void> {
     return await TextileNode.addThread(name, mnemonic)
   },
 
-  addPhoto: async function (path: string, threadName: string, caption: string): MultipartData {
+  addPhoto: async function (path: string, threadName: string, caption: string): Promise<MultipartData> {
     return await TextileNode.addPhoto(path, threadName, caption)
   },
 
-  sharePhoto: async function (id: string, threadName: string, caption: string): string {
+  sharePhoto: async function (id: string, threadName: string, caption: string): Promise<string> {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
 
-  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): [string] {
+  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): Promise<[string]> {
     return await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
   },
 
-  getBlockData: async function (id: string, path: string): string {
+  getBlockData: async function (id: string, path: string): Promise<string> {
     return await TextileNode.getBlockData(id, path)
   },
 
-  getFileData: async function (id: string, path: string): string {
+  getFileData: async function (id: string, path: string): Promise<string> {
     return await TextileNode.getFileData(id, path)
   },
 
-  pairDevice: async function (pubKey: string): string {
+  pairDevice: async function (pubKey: string): Promise<string> {
     return await TextileNode.pairDevice(pubKey)
   },
 
-  getFilePath: async function (uri: string): string {
+  getFilePath: async function (uri: string): Promise<string> {
     return await TextileNode.getFilePath(uri)
   },
 
