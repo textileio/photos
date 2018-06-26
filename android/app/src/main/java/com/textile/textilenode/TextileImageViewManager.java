@@ -44,12 +44,16 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
         switch (resizeMode) {
             case "cover":
                 scaleType = ImageView.ScaleType.CENTER_CROP;
+                break;
             case "contain":
                 scaleType = ImageView.ScaleType.CENTER_INSIDE;
+                break;
             case "stretch":
                 scaleType = ImageView.ScaleType.FIT_XY;
+                break;
             case "center":
                 scaleType = ImageView.ScaleType.CENTER;
+                break;
             default:
                 scaleType = ImageView.ScaleType.CENTER;
         }
