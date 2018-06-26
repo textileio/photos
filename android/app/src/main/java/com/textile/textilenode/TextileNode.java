@@ -242,10 +242,13 @@ public class TextileNode extends ReactContextBaseJavaModule {
             // convert response to json
             JSONObject obj = new JSONObject(jsonString);
             WritableArray array = new WritableNativeArray();
-            JSONArray jsonArray = obj.getJSONArray("items");
+            JSONArray jsonArray = obj.optJSONArray("items");
+            if (jsonArray == null) {
+                jsonArray = new JSONArray();
+            }
             for (int i = 0; i < jsonArray.length(); i++) {
                 Object value = jsonArray.get(i);
-                array.pushString((String) value);
+                array.pushString(value.toString());
             }
             promise.resolve(array);
         }
