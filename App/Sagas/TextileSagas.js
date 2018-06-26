@@ -165,8 +165,7 @@ export function * getPhotoHashes ({thread}) {
   try {
     const items = yield call(IPFS.getPhotoBlocks, null, -1, thread)
     let data = []
-    for (const itemString of items) {
-      let item = JSON.parse(itemString)
+    for (let item of items) {
       try {
         const captionsrc = yield call(IPFS.getBlockData, item.id, 'caption')
         const caption = Buffer.from(captionsrc, 'base64').toString('utf8')
@@ -183,7 +182,7 @@ export function * getPhotoHashes ({thread}) {
         // gracefully return an empty meta for now
       }
       item.hash = item.target // FIXME
-      data.push(item)
+      data.push({...item})
     }
     yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
   } catch (error) {
