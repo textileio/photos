@@ -28,9 +28,9 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
         return new TextileImageView(context);
     }
 
-    @ReactProp(name = "hash")
-    public void setHash(TextileImageView textileImageView, String hash) {
-        textileImageView.setHash(hash);
+    @ReactProp(name = "imageId")
+    public void setImageId(TextileImageView textileImageView, String imageId) {
+        textileImageView.setImageId(imageId);
     }
 
     @ReactProp(name = "path")
@@ -57,7 +57,7 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
             default:
                 scaleType = ImageView.ScaleType.CENTER;
         }
-        textileImageView.xsetScaleType(scaleType);
+        textileImageView.setScaleType(scaleType);
     }
 
     @Override

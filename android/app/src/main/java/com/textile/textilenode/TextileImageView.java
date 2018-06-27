@@ -1,9 +1,6 @@
 package com.textile.textilenode;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.Base64;
 
 import com.facebook.react.uimanager.ThemedReactContext;
 
@@ -14,34 +11,31 @@ import com.facebook.react.uimanager.ThemedReactContext;
 class TextileImageView extends AppCompatImageView {
 
     private ThemedReactContext context;
-    private String hash;
+    private String imageId;
     private String path;
-    private ScaleType xscaleType;
+    private ScaleType scaleType;
 
     public TextileImageView(ThemedReactContext context) {
         super(context);
         this.context = context;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     public void setPath(String path) {
         this.path = path;
     }
 
-    public void xsetScaleType(ScaleType scaleType) {
-        this.xscaleType = scaleType;
+    public void setScaleType(ScaleType scaleType) {
+        this.scaleType = scaleType;
     }
 
     public void render() {
         try {
-            String base64String = TextileNode.node.getFileData(hash, path);
-            byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            setImageBitmap(bitmap);
-            setScaleType(xscaleType);
+            super.setScaleType(this.scaleType);
+            new TextileImageTask(this.imageId, this.path, this).execute();
         } catch (Exception e) {
             //
         }
