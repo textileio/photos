@@ -1,6 +1,14 @@
 #import "TextileImageView.h"
 #import <React/RCTBridge.h>
+#import <React/UIView+React.h>
 #import "TextileNode.h"
+
+@interface TextileImageView ()
+
+@property (nonatomic, copy) RCTDirectEventBlock onLoad;
+@property (nonatomic, copy) RCTDirectEventBlock onError;
+
+@end
 
 @implementation TextileImageView {
   // Weak reference back to the bridge, for image loading
@@ -35,7 +43,16 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       image = [UIImage imageWithData:imageData];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-      super.image = image;
+      if (error) {
+        if (self.onError) {
+          self.onError(@{ @"message" : error.localizedDescription });
+        }
+      } else {
+        super.image = image;
+        if (self.onLoad) {
+          self.onLoad(@{});
+        }
+      }
     });
   });
 }
