@@ -1,5 +1,4 @@
 #import <UIKit/UIKit.h>
-
 #import <React/RCTResizeMode.h>
 
 @class RCTBridge;
@@ -9,11 +8,8 @@
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, assign) UIEdgeInsets capInsets;
-@property (nonatomic, strong) UIImage *defaultImage;
-@property (nonatomic, assign) UIImageRenderingMode renderingMode;
-@property (nonatomic, copy) NSArray<TextileImageSource *> *imageSources;
-@property (nonatomic, assign) CGFloat blurRadius;
+@property (nonatomic, strong) NSString *imageId;
+@property (nonatomic, strong) NSString *path;
 @property (nonatomic, assign) RCTResizeMode resizeMode;
 
 @end
