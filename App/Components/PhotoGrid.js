@@ -43,15 +43,9 @@ export default class PhotoGrid extends React.PureComponent {
     return (
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
-          {/*<IPFSImage*/}
-            {/*hash={row.item.hash}*/}
-            {/*style={styles.itemImage}*/}
-            {/*resizeMode={'cover'}*/}
-            {/*displayImages={this.props.displayImages}*/}
-          {/*/>*/}
-          {/*<TextileImage source={{hashPath: row.item.hash + '/thumb'}} style={styles.itemImage} resizeMode={'cover'} />*/}
           <TextileImage
-            source={{hash: row.item.hash, path: 'thumb'}}
+            imageId={row.item.hash}
+            path={'thumb'}
             style={styles.itemImage}
             resizeMode={'cover'}
           />
