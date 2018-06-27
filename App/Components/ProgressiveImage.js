@@ -33,7 +33,8 @@ export default class ProgressiveImage extends React.Component {
 
   renderPreview () {
     return (<TextileImage
-      source={this.props.previewSource}
+      imageId={this.props.imageId}
+      path={this.props.previewPath}
       style={[{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}, this.props.style]}
       resizeMode={this.props.resizeMode}
       capInsets={this.props.capInsets}
@@ -43,7 +44,8 @@ export default class ProgressiveImage extends React.Component {
 
   renderPhoto () {
     return (<TextileImage
-      source={this.props.source}
+      imageId={this.props.imageId}
+      path={this.props.path}
       style={[{backgroundColor: 'transparent', position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}, this.props.style]}
       resizeMode={this.props.resizeMode}
       capInsets={this.props.capInsets}
