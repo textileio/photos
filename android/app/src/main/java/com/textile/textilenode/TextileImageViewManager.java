@@ -2,11 +2,15 @@ package com.textile.textilenode;
 
 import android.content.Context;
 import android.widget.ImageView;
+import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
+
+import java.util.Map;
 
 public final class TextileImageViewManager extends SimpleViewManager<TextileImageView> {
 
@@ -58,6 +62,16 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
                 scaleType = ImageView.ScaleType.CENTER;
         }
         textileImageView.setScaleType(scaleType);
+    }
+
+    @Override
+    public @Nullable Map getExportedCustomDirectEventTypeConstants() {
+        return MapBuilder.of(
+                "imageLoaded",
+                MapBuilder.of("registrationName", "imageLoaded"),
+                "imageError",
+                MapBuilder.of("registrationName", "imageError")
+        );
     }
 
     @Override

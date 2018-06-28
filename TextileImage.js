@@ -7,7 +7,7 @@ type Props = {
   path: string,
   resizeMode: string,
   onLoad?: () => void,
-  onError?: (any) => void
+  onError?: (string) => void
 }
 
 export default class TextileImage extends React.Component<Props, *> {
@@ -17,9 +17,27 @@ export default class TextileImage extends React.Component<Props, *> {
     super(props)
   }
 
+  _imageLoaeded (event: Event) {
+    console.log('Image loaded')
+    if (!this.props.onLoad) {
+      return
+    }
+    this.props.onLoad()
+  }
+
+  _imageError (event: Event) {
+    console.log('Image error')
+    if (!this.props.onError) {
+      return
+    }
+    this.props.onError(event.nativeEvent.message)
+  }
+
   render () {
-    return <TextileImageView {...this.props} />
+    return <TextileImageView {...this.props} imageLoaded={this._imageLoaeded.bind(this)} imageError={this._imageError.bind(this)} />
   }
 }
 
-const TextileImageView = requireNativeComponent('TextileImageView', TextileImage)
+const TextileImageView = requireNativeComponent('TextileImageView', TextileImage, {
+  nativeOnly: {imageLoaded: true, imageError: true}
+})
