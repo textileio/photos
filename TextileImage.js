@@ -17,7 +17,7 @@ export default class TextileImage extends React.Component<Props, *> {
     super(props)
   }
 
-  _imageLoaeded (event: Event) {
+  _imageLoaded (event: Event) {
     console.log('Image loaded')
     if (!this.props.onLoad) {
       return
@@ -34,7 +34,12 @@ export default class TextileImage extends React.Component<Props, *> {
   }
 
   render () {
-    return <TextileImageView {...this.props} imageLoaded={this._imageLoaeded.bind(this)} imageError={this._imageError.bind(this)} />
+    const nativeProps = {
+      ...this.props,
+      imageLoaded: this._imageLoaded,
+      imageError: this._imageError
+    }
+    return <TextileImageView {...nativeProps} />
   }
 }
 

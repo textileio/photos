@@ -1,12 +1,11 @@
 #import "TextileImageView.h"
 #import <React/RCTBridge.h>
-#import <React/UIView+React.h>
 #import "TextileNode.h"
 
 @interface TextileImageView ()
 
-@property (nonatomic, copy) RCTDirectEventBlock onLoad;
-@property (nonatomic, copy) RCTDirectEventBlock onError;
+@property (nonatomic, assign) Boolean needsRenderResizeMode;
+@property (nonatomic, assign) Boolean needsRenderImage;
 
 @end
 
@@ -24,37 +23,65 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   return self;
 }
 
-- (void)render {
-  if (self.resizeMode == RCTResizeModeRepeat) {
-    // Repeat resize mode is handled by the UIImage. Use scale to fill
-    // so the repeated image fills the UIImageView.
-    self.contentMode = UIViewContentModeScaleToFill;
-  } else {
-    self.contentMode = (UIViewContentMode)(self.resizeMode);
+- (void)setImageId:(NSString *)imageId {
+  if (_imageId != imageId) {
+    _imageId = imageId;
+    self.needsRenderImage = true;
   }
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    NSError *error;
-    UIImage *image;
-    NSString *base64String = [_bridge.textileNode _getFileData:self.imageId withPath:self.path error:&error];
-    if (base64String) {
-      NSString *finalBase64String = [@"data:image/jpeg;base64," stringByAppendingString:base64String];
-      NSURL *url = [NSURL URLWithString:finalBase64String];
-      NSData *imageData = [NSData dataWithContentsOfURL:url];
-      image = [UIImage imageWithData:imageData];
+}
+
+- (void)setPath:(NSString *)path {
+  if (_path != path) {
+    _path = path;
+    self.needsRenderImage = true;
+  }
+}
+
+- (void)setResizeMode:(RCTResizeMode)resizeMode {
+  if (_resizeMode != resizeMode) {
+    _resizeMode = resizeMode;
+    self.needsRenderResizeMode = true;
+  }
+}
+
+- (void)render {
+  if (self.needsRenderResizeMode) {
+    if (self.resizeMode == RCTResizeModeRepeat) {
+      // Repeat resize mode is handled by the UIImage. Use scale to fill
+      // so the repeated image fills the UIImageView.
+      self.contentMode = UIViewContentModeScaleToFill;
+    } else {
+      self.contentMode = (UIViewContentMode)(self.resizeMode);
     }
-    dispatch_async(dispatch_get_main_queue(), ^{
-      if (error) {
-        if (self.onError) {
-          self.onError(@{ @"message" : error.localizedDescription });
-        }
-      } else {
-        super.image = image;
-        if (self.onLoad) {
-          self.onLoad(@{});
-        }
+    self.needsRenderResizeMode = false;
+  }
+
+  if (self.needsRenderImage) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      NSError *error;
+      UIImage *image;
+      NSString *base64String = [_bridge.textileNode _getFileData:self.imageId withPath:self.path error:&error];
+      if (base64String) {
+        NSString *finalBase64String = [@"data:image/jpeg;base64," stringByAppendingString:base64String];
+        NSURL *url = [NSURL URLWithString:finalBase64String];
+        NSData *imageData = [NSData dataWithContentsOfURL:url];
+        image = [UIImage imageWithData:imageData];
       }
+      dispatch_async(dispatch_get_main_queue(), ^{
+        if (error) {
+          if (self.imageError) {
+            self.imageError(@{ @"message" : error.localizedDescription });
+          }
+        } else {
+          super.image = image;
+          if (self.imageLoaded) {
+            self.imageLoaded(@{});
+          }
+        }
+      });
     });
-  });
+    self.needsRenderImage = false;
+  }
 }
 
 - (void)didSetProps:(NSArray<NSString *> *)changedProps {
