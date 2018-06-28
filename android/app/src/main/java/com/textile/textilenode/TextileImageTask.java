@@ -6,13 +6,22 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.widget.ImageView;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
+
 public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
-    String imageId;
-    String path;
-    ImageView imageView;
+    private int viewId;
+    private RCTEventEmitter eventEmitter;
+    private String imageId;
+    private String path;
+    private ImageView imageView;
+    private Exception e;
 
-    public TextileImageTask(String imageId, String path, ImageView imageView) {
+    public TextileImageTask(int viewId, RCTEventEmitter eventEmitter, String imageId, String path, ImageView imageView) {
+        this.viewId = viewId;
+        this.eventEmitter = eventEmitter;
         this.imageId = imageId;
         this.path = path;
         this.imageView = imageView;
@@ -25,11 +34,19 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             return bitmap;
         } catch (Exception e) {
+            this.e = e;
             return Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888);
         }
     }
 
     protected void onPostExecute(Bitmap result) {
         this.imageView.setImageBitmap(result);
+        WritableMap event = Arguments.createMap();
+        if (this.e == null) {
+            this.eventEmitter.receiveEvent(this.viewId, "imageLoaded", event);
+        } else {
+            event.putString("message", this.e.getLocalizedMessage());
+            this.eventEmitter.receiveEvent(this.viewId, "imageError", event);
+        }
     }
 }
