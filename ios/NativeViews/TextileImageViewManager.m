@@ -5,7 +5,6 @@
 #import <React/RCTConvert.h>
 
 #import "TextileImageView.h"
-#import "TextileImageSource.h"
 #import "TextileNode.h"
 
 @implementation TextileImageViewManager
@@ -20,7 +19,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_VIEW_PROPERTY(imageId, NSString)
 RCT_EXPORT_VIEW_PROPERTY(path, NSString)
 RCT_EXPORT_VIEW_PROPERTY(resizeMode, RCTResizeMode)
-RCT_EXPORT_VIEW_PROPERTY(onLoad, RCTDirectEventBlock)
-RCT_EXPORT_VIEW_PROPERTY(onError, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(imageLoaded, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(imageError, RCTDirectEventBlock)
 
 @end

@@ -18,6 +18,7 @@ export default class ProgressiveImage extends React.Component {
   }
 
   _onPreview () {
+    console.tron.log('PREVIEW LOADED!')
     // just drop the thumb/default from the stack
     if (!this.hasCanceled_) {
       this.setState(() => ({preview: true}))
@@ -25,6 +26,7 @@ export default class ProgressiveImage extends React.Component {
   }
 
   _onLoaded () {
+    console.tron.log('FULL LOADED!')
     // just drop the thumb/default from the stack
     if (!this.hasCanceled_) {
       this.setState(() => ({loaded: true}))

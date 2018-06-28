@@ -72,7 +72,6 @@
 		B5D96097B5FE453192C31D72 /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23A29B287C094135A8E25804 /* libAppCenterReactNativeAnalytics.a */; };
 		C54837B420DAFE3200DAE9D7 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C54837AE20DAFE3100DAE9D7 /* TextileImageViewManager.m */; };
 		C54837B520DAFE3200DAE9D7 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C54837AF20DAFE3100DAE9D7 /* TextileImageView.m */; };
-		C54837B620DAFE3200DAE9D7 /* TextileImageSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C54837B220DAFE3100DAE9D7 /* TextileImageSource.m */; };
 		C5D8444E20A669810011C926 /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D8444D20A669810011C926 /* Events.m */; };
 		DA596D7795CB44608CDF3517 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47FCFF52D5004478899BBC71 /* Feather.ttf */; };
 		EEBAF5F8CB6763E888A5E9D8 /* libPods-TextilePhotos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5254C3A68612B134C29D3674 /* libPods-TextilePhotos.a */; };
@@ -615,9 +614,7 @@
 		BE4F572577C47EC7F50917C6 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextilePhotos-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TextilePhotos-tvOSTests/Pods-TextilePhotos-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C54837AE20DAFE3100DAE9D7 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
 		C54837AF20DAFE3100DAE9D7 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
-		C54837B020DAFE3100DAE9D7 /* TextileImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageSource.h; sourceTree = "<group>"; };
 		C54837B120DAFE3100DAE9D7 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
-		C54837B220DAFE3100DAE9D7 /* TextileImageSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageSource.m; sourceTree = "<group>"; };
 		C54837B320DAFE3100DAE9D7 /* TextileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageView.h; sourceTree = "<group>"; };
 		C5D8444C20A6694B0011C926 /* Events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
 		C5D8444D20A669810011C926 /* Events.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Events.m; sourceTree = "<group>"; };
@@ -1127,12 +1124,10 @@
 		C54837AD20DAFE3100DAE9D7 /* NativeViews */ = {
 			isa = PBXGroup;
 			children = (
-				C54837AE20DAFE3100DAE9D7 /* TextileImageViewManager.m */,
-				C54837AF20DAFE3100DAE9D7 /* TextileImageView.m */,
-				C54837B020DAFE3100DAE9D7 /* TextileImageSource.h */,
 				C54837B120DAFE3100DAE9D7 /* TextileImageViewManager.h */,
-				C54837B220DAFE3100DAE9D7 /* TextileImageSource.m */,
+				C54837AE20DAFE3100DAE9D7 /* TextileImageViewManager.m */,
 				C54837B320DAFE3100DAE9D7 /* TextileImageView.h */,
+				C54837AF20DAFE3100DAE9D7 /* TextileImageView.m */,
 			);
 			path = NativeViews;
 			sourceTree = "<group>";
@@ -1881,7 +1876,6 @@
 				FC34453F20993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m in Sources */,
 				C54837B520DAFE3200DAE9D7 /* TextileImageView.m in Sources */,
 				9382834320DAE2E1002C2FE2 /* TextileNode.m in Sources */,
-				C54837B620DAFE3200DAE9D7 /* TextileImageSource.m in Sources */,
 				C54837B420DAFE3200DAE9D7 /* TextileImageViewManager.m in Sources */,
 				C5D8444E20A669810011C926 /* Events.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
