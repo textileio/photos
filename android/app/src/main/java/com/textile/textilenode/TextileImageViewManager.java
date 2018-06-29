@@ -67,10 +67,10 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
     @Override
     public @Nullable Map getExportedCustomDirectEventTypeConstants() {
         return MapBuilder.of(
-                "imageLoaded",
-                MapBuilder.of("registrationName", "imageLoaded"),
-                "imageError",
-                MapBuilder.of("registrationName", "imageError")
+                "onLoad",
+                MapBuilder.of("registrationName", "onLoad"),
+                "onError",
+                MapBuilder.of("registrationName", "onError")
         );
     }
 
