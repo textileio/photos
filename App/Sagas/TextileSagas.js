@@ -321,3 +321,20 @@ function * uploadFile (id: string, boundary: string, payloadPath: string) {
     }
   )
 }
+
+// TODO: These would actually call TextileNode APIs
+
+export function * createThread (name: string) {
+  yield put(TextileActions.newThreadSuccess(name))
+  yield put(TextileActions.refreshThreadsRequest())
+}
+
+export function * leaveThread (name: string) {
+  yield put(TextileActions.leaveThreadSuccess(name))
+  yield put(TextileActions.refreshThreadsRequest())
+}
+
+export function * refreshThreads () {
+  const threads = yield select(TextileSelectors.threads)
+  yield put(TextileActions.refreshThreadsSuccess(threads))
+}

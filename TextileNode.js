@@ -8,6 +8,23 @@ import {
 
 const { TextileNode, Events } = NativeModules
 
+type UserData = {
+  id: String,
+  userName: String
+}
+
+type ThreadData = {
+  id: String,
+  name: String,
+  updated: Date,
+  members: [UserData]
+}
+
+type ThreadsData = {
+  updated: Date,
+  threads: [ThreadData]
+}
+
 type MultipartData = {
   payloadPath: string,
   boundary: string
@@ -59,7 +76,19 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  addThread: async function (name: string, mnemonic: string): Promise<void> {
+  getThreads: async function (): Promise<ThreadsData> {
+
+  },
+
+  leaveThread: async function (name: string): Promise<void> {
+    
+  },
+
+  newThread: async function (name: string): Promise<void> {
+
+  },
+
+  addThread: async function (name: string, mnemonic: ?string): Promise<void> {
     return await TextileNode.addThread(name, mnemonic)
   },
 
