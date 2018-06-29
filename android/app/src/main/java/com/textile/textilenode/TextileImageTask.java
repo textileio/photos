@@ -43,10 +43,10 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
         this.imageView.setImageBitmap(result);
         WritableMap event = Arguments.createMap();
         if (this.e == null) {
-            this.eventEmitter.receiveEvent(this.viewId, "imageLoaded", event);
+            this.eventEmitter.receiveEvent(this.viewId, "onLoad", event);
         } else {
             event.putString("message", this.e.getLocalizedMessage());
-            this.eventEmitter.receiveEvent(this.viewId, "imageError", event);
+            this.eventEmitter.receiveEvent(this.viewId, "onError", event);
         }
     }
 }
