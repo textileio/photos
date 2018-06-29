@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 import TextileImage from '../../TextileImage'
 
 // IPFS Image is aware of how to load higher resolution images progressively
@@ -55,7 +55,7 @@ export default class ProgressiveImage extends React.Component {
   }
 
   render () {
-    if (this.state.loaded) {
+    if (this.state.loaded || this.props.previewPath === undefined) {
       // if full res is available, don't bother showing thumb in stack
       return (
         <View style={this.props.style}>
