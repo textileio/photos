@@ -17,14 +17,14 @@ export default class TextileImage extends React.Component<Props, *> {
     super(props)
   }
 
-  _onLoaded (event: Event) {
+  _onLoaded (event) {
     if (!this.props.onLoad) {
       return
     }
     this.props.onLoad()
   }
 
-  _onError (event: Event) {
+  _onError (event) {
     if (!this.props.onError) {
       return
     }
