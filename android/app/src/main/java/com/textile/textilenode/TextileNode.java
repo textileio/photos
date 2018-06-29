@@ -11,7 +11,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
@@ -20,14 +19,14 @@ import net.MultipartRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import mobile.Event;
 import mobile.Messenger;
 import mobile.Mobile;
 import mobile.NodeConfig;
 import mobile.Wrapper;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TextileNode extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileNode";
@@ -241,12 +240,11 @@ public class TextileNode extends ReactContextBaseJavaModule {
             String jsonString = node.getPhotoBlocks(offset, limit, threadName);
             // convert response to json
             JSONObject obj = new JSONObject(jsonString);
-            WritableArray array = new WritableNativeArray();
-            JSONArray jsonArray = obj.getJSONArray("items");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                Object value = jsonArray.get(i);
-                array.pushString((String) value);
+            JSONArray jsonArray = obj.optJSONArray("items");
+            if (jsonArray == null) {
+                jsonArray = new JSONArray();
             }
+            WritableArray array = JsonConvert.jsonToReact(jsonArray);
             promise.resolve(array);
         }
         catch (Exception e) {
@@ -289,7 +287,8 @@ public class TextileNode extends ReactContextBaseJavaModule {
     public void getFilePath(String uriString, Promise promise) {
         Uri uri = Uri.parse(uriString);
         try {
-            promise.resolve(RealPathUtil.getRealPath(reactContext, uri));
+            String path = RealPathUtil.getRealPath(reactContext, uri);
+            promise.resolve(path);
         } catch (Exception ex) {
             promise.reject("GET FILE PATH ERROR", ex);
         }

@@ -1,11 +1,10 @@
 package com.textile.textilenode;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.Base64;
 
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 /**
  * TextileImageView is a top-level node for TextileImage. It can display images
@@ -14,36 +13,48 @@ import com.facebook.react.uimanager.ThemedReactContext;
 class TextileImageView extends AppCompatImageView {
 
     private ThemedReactContext context;
-    private String hash;
+    private String imageId;
     private String path;
-    private ScaleType xscaleType;
+    private ScaleType scaleType;
+    private boolean needsRenderScaleType = false;
+    private boolean needsRenderImage = false;
 
     public TextileImageView(ThemedReactContext context) {
         super(context);
         this.context = context;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setImageId(String imageId) {
+        if (this.imageId != imageId) {
+            this.imageId = imageId;
+            this.needsRenderImage = true;
+        }
     }
 
     public void setPath(String path) {
-        this.path = path;
+        if (this.path != path) {
+            this.path = path;
+            this.needsRenderImage = true;
+        }
     }
 
-    public void xsetScaleType(ScaleType scaleType) {
-        this.xscaleType = scaleType;
+    public void setScaleType(ScaleType scaleType) {
+        if (this.scaleType != scaleType) {
+            this.scaleType = scaleType;
+            this.needsRenderScaleType = true;
+        }
     }
 
     public void render() {
-        try {
-            String base64String = TextileNode.node.getFileData(hash, path);
-            byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            setImageBitmap(bitmap);
-            setScaleType(xscaleType);
-        } catch (Exception e) {
-            //
+        if (this.needsRenderScaleType) {
+            super.setScaleType(this.scaleType);
+            this.needsRenderScaleType = false;
+        }
+        if (this.needsRenderImage) {
+            ReactContext reactContext = (ReactContext)getContext();
+            RCTEventEmitter eventEmitter = reactContext.getJSModule(RCTEventEmitter.class);
+            new TextileImageTask(getId(), eventEmitter, this.imageId, this.path, this).execute();
+            this.needsRenderImage = false;
         }
     }
 }
