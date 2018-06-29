@@ -71,7 +71,7 @@ export default {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
 
-  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): Promise<[string]> {
+  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): Promise<[any]> {
     return await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
   },
 
