@@ -28,7 +28,10 @@ import {
   shareImage,
   photosTask,
   removePayloadFile,
-  retryUploadAfterError
+  retryUploadAfterError,
+  createThread,
+  leaveThread,
+  refreshThreads
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -69,6 +72,10 @@ export default function * root () {
 
     takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile),
     takeEvery(TextileTypes.IMAGE_UPLOAD_ERROR, retryUploadAfterError),
+
+    takeEvery(TextileTypes.NEW_TREAD_REQUEST, createThread),
+    takeEvery(TextileTypes.LEAVE_THREAD_REQUEST, leaveThread),
+    takeEvery(TextileTypes.REFRESH_THREADS_REQUEST, refreshThreads),
 
     initializeAppState()
   ])

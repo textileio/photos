@@ -26,7 +26,19 @@ const { Types, Creators } = createActions({
 
   pairNewDevice: ['pubKey'],
   pairNewDeviceSuccess: ['pubKey'],
-  pairNewDeviceError: ['pubKey']
+  pairNewDeviceError: ['pubKey'],
+
+  newThreadRequest: ['name'],
+  newThreadSuccess: ['name'],
+  newThreadError: ['error'],
+
+  leaveThreadRequest: ['name'],
+  leaveThreadSuccess: ['name'],
+  leaveThreadError: ['error'],
+
+  refreshThreadsRequest: null,
+  refreshThreadsSuccess: ['threads'],
+  refreshThreadsError: ['error']
 })
 
 export const TextileTypes = Types
@@ -45,7 +57,14 @@ export const INITIAL_STATE = Immutable({
     items: []
   },
   camera: {},
-  devices: []
+  devices: [],
+  threads: [
+    {
+      name: 'default',
+      members: null,
+      inviteLink: null
+    }
+  ]
 })
 
 /* ------------- Selectors ------------- */
@@ -55,7 +74,8 @@ export const TextileSelectors = {
     return state.textile.images.items.filter(item => item.hash === id)
   },
   onboarded: state => state.textile.onboarded,
-  camera: state => state.textile.camera
+  camera: state => state.textile.camera,
+  threads: state => state.textile.threads
 }
 
 /* ------------- Reducers ------------- */
@@ -185,6 +205,27 @@ export const pairNewDeviceError = (state, {pubKey}) => {
   return state.merge({ devices })
 }
 
+// FIXME: Not needed after we use TextileNode API
+export const handleNewThreadsSucccess = (state, {name}) => {
+  const newThread = {
+    name,
+    members: [],
+    inviteLink: 'https://textile.photos'
+  }
+  const threads = [...state.threads, newThread]
+  return state.merge({threads})
+}
+
+// FIXME: Not needed after we use TextileNode API
+export const handleLeaveThreadsSucccess = (state, {name}) => {
+  const threads = state.threads.filter(thread => thread.name !== name)
+  return state.merge({threads})
+}
+
+export const handleRefreshThreadsSucccess = (state, {threads}) => {
+  return state.merge({threads})
+}
+
 // Helper so sagas can figure out current items loaded
 // const getItems = state => state.items
 
@@ -208,5 +249,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.PAIR_NEW_DEVICE]: pairNewDevice,
   [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,
-  [Types.PAIR_NEW_DEVICE_ERROR]: pairNewDeviceError
+  [Types.PAIR_NEW_DEVICE_ERROR]: pairNewDeviceError,
+
+  [Types.NEW_THREAD_SUCCESS]: handleNewThreadsSucccess,
+  [Types.LEAVE_THREAD_SUCCESS]: handleLeaveThreadsSucccess,
+  [Types.REFRESH_THREAD_SUCCESS]: handleRefreshThreadsSucccess
 })
