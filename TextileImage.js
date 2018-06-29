@@ -18,7 +18,6 @@ export default class TextileImage extends React.Component<Props, *> {
   }
 
   _onLoaded (event: Event) {
-    console.log('Image loaded')
     if (!this.props.onLoad) {
       return
     }
@@ -26,7 +25,6 @@ export default class TextileImage extends React.Component<Props, *> {
   }
 
   _onError (event: Event) {
-    console.log('Image error')
     if (!this.props.onError) {
       return
     }
