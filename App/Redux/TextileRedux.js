@@ -253,5 +253,5 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.NEW_THREAD_SUCCESS]: handleNewThreadsSucccess,
   [Types.LEAVE_THREAD_SUCCESS]: handleLeaveThreadsSucccess,
-  [Types.REFRESH_THREAD_SUCCESS]: handleRefreshThreadsSucccess
+  [Types.REFRESH_THREADS_SUCCESS]: handleRefreshThreadsSucccess
 })
