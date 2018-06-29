@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { View, Text, FlatList, TouchableHighlight } from 'react-native'
+import { View, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import SharingNavigation from '../Navigation/SharingNavigation'
-import AsyncImage from '../Components/AsyncImage'
+import ProgressiveImage from '../Components/ProgressiveImage'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import UIActions from '../Redux/UIRedux'
@@ -15,13 +15,11 @@ class SharingDialog extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <AsyncImage
-          hash={this.props.hash}
+        <ProgressiveImage
+          imageId={this.props.hash}
           path={'thumb'}
-          containerStyle={{height: '33%'}}
           style={{flex: 1, height: undefined, width: undefined}}
           resizeMode={'cover'}
-          displayImages={this.props.displayImages}
         />
         <TouchableHighlight
           underlayColor={'transparent'}
