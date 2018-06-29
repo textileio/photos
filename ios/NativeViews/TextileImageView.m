@@ -69,13 +69,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       }
       dispatch_async(dispatch_get_main_queue(), ^{
         if (error) {
-          if (self.imageError) {
-            self.imageError(@{ @"message" : error.localizedDescription });
+          if (self.onError) {
+            self.onError(@{ @"message" : error.localizedDescription });
           }
         } else {
           super.image = image;
-          if (self.imageLoaded) {
-            self.imageLoaded(@{});
+          if (self.onLoad) {
+            self.onLoad(@{});
           }
         }
       });
