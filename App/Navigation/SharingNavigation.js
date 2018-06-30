@@ -1,17 +1,17 @@
 import {StackNavigator} from 'react-navigation'
-import Threads from '../Containers/Threads'
+import ThreadSelection from '../Containers/ThreadSelection'
 import Comment from '../Containers/Comment'
 
 const SharingNavigation = StackNavigator(
   {
-    Threads: {
-      screen: Threads
+    ThreadSelection: {
+      screen: ThreadSelection
     },
     Comment: {
       screen: Comment
     },
     NewThread: {
-      screen: Threads
+      screen: ThreadSelection
     }
   },
   {

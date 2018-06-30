@@ -4,6 +4,7 @@ import DismissableStackNavigator from '../Components/DismissableStackNavigator'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import TextilePhotos from '../Containers/TextilePhotos'
+import Theads from '../Containers/Threads'
 import InfoView from '../Containers/InfoView'
 import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
 import Colors from '../Themes/Colors'
@@ -13,6 +14,7 @@ import Colors from '../Themes/Colors'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
 import Config from "react-native-config"
+import Threads from '../Containers/Threads';
 
 // Manifest of possible screens
 
@@ -37,9 +39,9 @@ const PhotosNav = StackNavigator(
 const SharedPhotosNav = StackNavigator(
   {
     SharedPhotos: {
-      screen: TextilePhotos,
+      screen: Threads,
       navigationOptions: {
-        headerTitle: 'Shared Thread'
+        headerTitle: 'Threads'
       }
     }
   },

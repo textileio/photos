@@ -17,20 +17,29 @@ class MyListItem extends React.PureComponent {
   }
 
   render () {
+    let color
+    let icon
+    if (this.props.type === 'thread') {
+      icon = this.props.selected ? 'ios-checkbox' : 'ios-square-outline'
+      color = this.props.selected ? Colors.brandRed : Colors.brandPink
+    } else if (this.props.type === 'add') {
+      color = Colors.brandPink
+      icon = 'ios-add'
+    }
     return (
       <TouchableOpacity onPress={this._onPress}>
         <View style={styles.listItem}>
           <Text style={styles.listItemText}>
             {this.props.title}
           </Text>
-          <Icon name={'ios-arrow-forward'} size={30} color={Colors.steel} />
+          <Icon name={icon} size={30} color={color} />
         </View>
       </TouchableOpacity>
     )
   }
 }
 
-class Threads extends React.PureComponent {
+class ThreadSelection extends React.PureComponent {
   state = {selected: (new Map(): Map<string, boolean>)}
 
   _keyExtractor = (item, index) => item.id
@@ -75,6 +84,14 @@ class Threads extends React.PureComponent {
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
         />
+        <TouchableOpacity onPress={this._onSubmit} disabled={disabled}>
+          <View style={disabled ? styles.buttonDisabled : styles.button}>
+            <Text style={styles.buttonText}>
+              {'Next'}
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <Toast ref='toast' position='top' />
       </View>
 
     )
@@ -95,4 +112,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Threads)
+export default connect(mapStateToProps, mapDispatchToProps)(ThreadSelection)
