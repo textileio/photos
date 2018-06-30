@@ -60,6 +60,7 @@ export const INITIAL_STATE = Immutable({
   devices: [],
   threads: [
     {
+      id: 'default',
       name: 'default',
       members: null,
       inviteLink: null
@@ -208,6 +209,7 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 // FIXME: Not needed after we use TextileNode API
 export const handleNewThreadsSucccess = (state, {name}) => {
   const newThread = {
+    id: name,
     name,
     members: [],
     inviteLink: 'https://textile.photos'
