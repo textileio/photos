@@ -1,4 +1,3 @@
-/* @flow */
 import React from 'react'
 import DismissableStackNavigator from '../Components/DismissableStackNavigator'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
