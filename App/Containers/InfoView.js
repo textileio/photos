@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 import { View, Text, Button, Linking, Clipboard } from 'react-native'
 import { Overlay, Icon } from 'react-native-elements'
