@@ -1,4 +1,3 @@
-/* @flow */
 import { SwitchNavigator } from 'react-navigation'
 import OnboardingNavigation from './OnboardingNavigation'
 import TextileManager from '../Containers/TextileManager'

@@ -1,6 +1,7 @@
 import '../Config'
 import DebugConfig from '../Config/DebugConfig'
-import React, { Component } from 'react'
+import React from 'react'
+import { Component } from 'react'
 import {Provider} from 'react-redux'
 import {PersistGate} from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'

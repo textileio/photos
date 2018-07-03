@@ -1,10 +1,11 @@
 import { takeLatest, takeEvery, all } from 'redux-saga/effects'
+import { getType } from 'typesafe-actions'
 
 /* ------------- Types ------------- */
 
 import {StartupTypes} from '../Redux/StartupRedux'
 import {TextileTypes} from '../Redux/TextileRedux'
-import {UITypes} from '../Redux/UIRedux'
+import UIActions from '../Redux/UIRedux'
 import {IpfsNodeTypes} from '../Redux/IpfsNodeRedux'
 import {AuthTypes} from '../Redux/AuthRedux'
 
@@ -45,7 +46,7 @@ export default function * root () {
 
     takeEvery(IpfsNodeTypes.APP_STATE_CHANGE, handleNewAppState),
 
-    takeEvery(UITypes.VIEW_PHOTO_REQUEST, viewPhoto),
+    takeEvery(getType(UIActions.viewPhotoRequest), viewPhoto),
 
     takeEvery(AuthTypes.SIGN_UP_REQUEST, signUp),
     takeEvery(AuthTypes.LOG_IN_REQUEST, logIn),
@@ -55,7 +56,7 @@ export default function * root () {
 
     takeEvery(IpfsNodeTypes.GET_PHOTO_HASHES_REQUEST, getPhotoHashes),
 
-    takeEvery(UITypes.SHARE_PHOTO_REQUEST, shareImage),
+    takeEvery(getType(UIActions.sharePhotoRequest), shareImage),
 
     takeEvery(IpfsNodeTypes.LOCK, toggleBackgroundTimer),
 

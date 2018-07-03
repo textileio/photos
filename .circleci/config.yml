@@ -145,7 +145,7 @@ jobs:
 
       # not using a workspace here as Node and Yarn versions
       # differ between our macOS executor image and the Docker containers above
-      - run: yarn install
+      - run: yarn install --ignore-engines
 
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -218,7 +218,7 @@ jobs:
 
       # not using a workspace here as Node and Yarn versions
       # differ between our macOS executor image and the Docker containers above
-      - run: yarn install
+      - run: yarn install --ignore-engines
 
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
