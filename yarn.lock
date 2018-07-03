@@ -9885,6 +9885,10 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
+typesafe-actions@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/typesafe-actions/-/typesafe-actions-2.0.4.tgz#31c8f8df3566d549eb52edb64a75997e970c17d0"
+
 typescript@^2.9.2:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
@@ -10094,6 +10098,10 @@ utile@0.2.x:
     mkdirp "0.x.x"
     ncp "0.4.x"
     rimraf "2.x.x"
+
+utility-types@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-2.0.0.tgz#3c9fe26914a1c7b8aff690e8f941e76b091d3149"
 
 utils-merge@1.0.1:
   version "1.0.1"

@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
-import UIActions from '../Redux/UIRedux'
 import Config from "react-native-config"
 
 // Styles
