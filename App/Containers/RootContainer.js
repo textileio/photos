@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react'
 import { View, StatusBar, ActivityIndicator } from 'react-native'
 import { Overlay } from 'react-native-elements'
