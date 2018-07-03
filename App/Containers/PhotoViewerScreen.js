@@ -186,7 +186,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.hash)) },
-    selectImage: (index) => { dispatch(UIActions.selectImage(index)) },
+    selectImage: (index) => { dispatch(UIActions.switchViewdPhoto(index)) },
     dismiss: () => { dispatch(UIActions.dismissViewedPhoto()) }
   }
 }
