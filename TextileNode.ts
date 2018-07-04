@@ -75,19 +75,19 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  getThreads: async function (): Promise<ThreadsData> {
+  // getThreads: async function (): Promise<ThreadsData> {
 
-  },
+  // },
 
-  leaveThread: async function (name: string): Promise<void> {
+  // leaveThread: async function (name: string): Promise<void> {
     
-  },
+  // },
 
-  newThread: async function (name: string): Promise<void> {
+  // newThread: async function (name: string): Promise<void> {
 
-  },
+  // },
 
-  addThread: async function (name: string, mnemonic: ?string): Promise<void> {
+  addThread: async function (name: string, mnemonic?: string): Promise<void> {
     return await TextileNode.addThread(name, mnemonic)
   },
 
@@ -95,12 +95,12 @@ export default {
     return await TextileNode.addPhoto(path, threadName, caption)
   },
 
-  sharePhoto: async function (id: string, threadName: string, caption: string): Promise<string> {
+  sharePhoto: async function (id: string, threadName: string, caption?: string): Promise<string> {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
 
-  getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): Promise<[any]> {
-    return await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
+  getPhotoBlocks: async function (limit: number, threadName: string, offset: string = ''): Promise<any[]> {
+    return await TextileNode.getPhotoBlocks(offset, limit, threadName)
   },
 
   getBlockData: async function (id: string, path: string): Promise<string> {

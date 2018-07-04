@@ -59,7 +59,7 @@ class LoginScreen extends Component {
   }
 
   componentDidUpdate () {
-    if (this.props.error !== null) {
+    if (this.props.error) {
       this.dropdown.alertWithType('error', 'Error', this.props.error)
       this.props.dismissError()
     }

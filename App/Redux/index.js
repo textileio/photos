@@ -7,7 +7,7 @@ import ReduxPersist from '../Config/ReduxPersist'
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
   auth: require('./AuthRedux').reducer,
-  ipfs: require('./IpfsNodeRedux').reducer,
+  ipfs: require('./TextileNodeRedux').reducer,
   textile: require('./TextileRedux').reducer,
   ui: require('./UIRedux').reducer
 })
@@ -22,18 +22,18 @@ export default () => {
 
   let { store, persistor, sagasManager, sagaMiddleware } = configureStore(finalReducers, rootSaga)
 
-  if (module.hot) {
-    module.hot.accept(() => {
-      const nextRootReducer = require('./').reducers
-      store.replaceReducer(nextRootReducer)
+  // if (module.hot) {
+  //   module.hot.accept(() => {
+  //     const nextRootReducer = require('./').reducers
+  //     store.replaceReducer(nextRootReducer)
 
-      const newYieldedSagas = require('../Sagas').default
-      sagasManager.cancel()
-      sagasManager.done.then(() => {
-        sagasManager = sagaMiddleware.run(newYieldedSagas)
-      })
-    })
-  }
+  //     const newYieldedSagas = require('../Sagas').default
+  //     sagasManager.cancel()
+  //     sagasManager.done.then(() => {
+  //       sagasManager = sagaMiddleware.run(newYieldedSagas)
+  //     })
+  //   })
+  // }
 
   return { store, persistor }
 }
