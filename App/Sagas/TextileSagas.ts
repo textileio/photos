@@ -19,7 +19,7 @@ import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import TextileNode from '../../TextileNode'
 import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
-import {StartupTypes} from '../Redux/StartupRedux'
+import StartupActions from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
@@ -28,7 +28,7 @@ import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
-import { ActionType } from 'typesafe-actions'
+import { ActionType, getType } from 'typesafe-actions'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload.data
@@ -79,7 +79,7 @@ export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeAc
 }
 
 export function * initializeAppState () {
-  yield take(StartupTypes.STARTUP)
+  yield take(getType(StartupActions.startup))
   const defaultAppState = yield select(TextileNodeSelectors.appState)
   let queriedAppState = defaultAppState
   while (queriedAppState.match(/default|unknown/)) {

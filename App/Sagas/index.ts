@@ -3,7 +3,7 @@ import { getType } from 'typesafe-actions'
 
 /* ------------- Types ------------- */
 
-import {StartupTypes} from '../Redux/StartupRedux'
+import StartupActions from '../Redux/StartupRedux'
 import {TextileTypes} from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
@@ -40,7 +40,7 @@ import {
 export default function * root () {
   yield all([
     // some sagas only receive an action
-    takeLatest(StartupTypes.STARTUP, startup),
+    takeLatest(getType(StartupActions.startup), startup),
 
     // some sagas receive extra parameters in addition to an action
 
