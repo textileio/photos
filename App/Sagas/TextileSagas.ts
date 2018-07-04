@@ -17,23 +17,24 @@ import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
-import IPFS from '../../TextileNode'
+import TextileNode from '../../TextileNode'
 import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
 import {StartupTypes} from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
-import IpfsNodeActions, { IpfsNodeSelectors } from '../Redux/IpfsNodeRedux'
+import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
+import { ActionType } from 'typesafe-actions'
 
-export function * signUp ({data}) {
-  const {referralCode, username, email, password} = data
+export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
+  const {referralCode, username, email, password} = action.payload.data
   try {
-    yield call(IPFS.signUpWithEmail, username, password, email, referralCode)
-    const token = yield call(IPFS.getAccessToken)
+    yield call(TextileNode.signUpWithEmail, username, password, email, referralCode)
+    const token = yield call(TextileNode.getAccessToken)
     // TODO: Put username into textile-go for addition to metadata model
     yield put(AuthActions.signUpSuccess(token))
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
@@ -42,11 +43,11 @@ export function * signUp ({data}) {
   }
 }
 
-export function * logIn ({data}) {
-  const {username, password} = data
+export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
+  const {username, password} = action.payload.data
   try {
-    yield call(IPFS.signIn, username, password)
-    const token = yield call(IPFS.getAccessToken)
+    yield call(TextileNode.signIn, username, password)
+    const token = yield call(TextileNode.getAccessToken)
     yield put(AuthActions.logInSuccess(token))
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
@@ -54,8 +55,8 @@ export function * logIn ({data}) {
   }
 }
 
-export function * recoverPassword ({data}) {
-  // TODO: const {username} = data
+export function * recoverPassword (action: ActionType<typeof AuthActions.recoverPasswordRequest>) {
+  // TODO: const {username} = action.payload.data
   try {
     yield delay(2000)
     yield put(AuthActions.recoverPasswordSuccess())
@@ -68,8 +69,8 @@ export function * viewPhoto () {
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
 }
 
-export function * toggleBackgroundTimer ({value}) {
-  if (value) {
+export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeActions.lock>) {
+  if (action.payload.value) {
     yield call(BackgroundTimer.start)
   } else {
     yield call(BackgroundTimer.stop)
@@ -79,24 +80,25 @@ export function * toggleBackgroundTimer ({value}) {
 
 export function * initializeAppState () {
   yield take(StartupTypes.STARTUP)
-  const defaultAppState = yield select(IpfsNodeSelectors.appState)
+  const defaultAppState = yield select(TextileNodeSelectors.appState)
   let queriedAppState = defaultAppState
   while (queriedAppState.match(/default|unknown/)) {
     yield delay(10)
     const currentAppState = yield call(() => AppState.currentState)
     queriedAppState = currentAppState || 'unknown'
   }
-  yield put(IpfsNodeActions.appStateChange(defaultAppState, queriedAppState))
+  yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
 
-export function * handleNewAppState ({previousState, newState}) {
+export function * handleNewAppState (action: ActionType<typeof TextileNodeActions.appStateChange>) {
+  const { previousState, newState } = action.payload
   console.log('handleNewAppState', previousState, newState)
   if (previousState.match(/default|unknown/) && newState === 'background') {
     console.tron.logImportant('launched into background')
     yield * triggerCreateNode()
   } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {
     console.tron.logImportant('app transitioned to foreground')
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.lock(false))
     yield * triggerCreateNode()
   } else if (previousState.match(/inactive|active/) && newState === 'background') {
     console.tron.logImportant('app transitioned to background')
@@ -105,76 +107,78 @@ export function * handleNewAppState ({previousState, newState}) {
 }
 
 export function * triggerCreateNode () {
-  const locked = yield select(IpfsNodeSelectors.locked)
+  const locked = yield select(TextileNodeSelectors.locked)
   if (locked) {
     return
   }
-  yield put(IpfsNodeActions.lock(true))
-  yield put(IpfsNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
+  yield put(TextileNodeActions.lock(true))
+  yield put(TextileNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
 }
 
 export function * triggerStopNode () {
-  yield put(IpfsNodeActions.stopNodeRequest())
+  yield put(TextileNodeActions.stopNodeRequest())
 }
 
-export function * createNode ({path}) {
+export function * createNode (action: ActionType<typeof TextileNodeActions.createNodeRequest>) {
+  const { path } = action.payload
   try {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
-    yield call(IPFS.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
-    yield call(IPFS.addThread, "default")
-    yield call(IPFS.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
-    yield put(IpfsNodeActions.createNodeSuccess())
-    yield put(IpfsNodeActions.startNodeRequest())
+    yield call(TextileNode.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
+    yield call(TextileNode.addThread, "default")
+    yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    yield put(TextileNodeActions.createNodeSuccess())
+    yield put(TextileNodeActions.startNodeRequest())
   } catch (error) {
-    yield put(IpfsNodeActions.createNodeFailure(error))
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.createNodeFailure(error))
+    yield put(TextileNodeActions.lock(false))
   }
 }
 
 export function * startNode () {
   const onboarded = yield select(TextileSelectors.onboarded)
   if (!onboarded) {
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.lock(false))
     return
   }
   try {
-    yield call(IPFS.start)
-    yield put(IpfsNodeActions.startNodeSuccess())
-    yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
-    yield put(IpfsNodeActions.getPhotoHashesRequest(Config.ALL_THREAD_NAME))
+    yield call(TextileNode.start)
+    yield put(TextileNodeActions.startNodeSuccess())
+    yield put(TextileNodeActions.getPhotoHashesRequest('default'))
+    yield put(TextileNodeActions.getPhotoHashesRequest(Config.ALL_THREAD_NAME))
   } catch (error) {
-    yield put(IpfsNodeActions.startNodeFailure(error))
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.startNodeFailure(error))
+    yield put(TextileNodeActions.lock(false))
   }
 }
 
 export function * stopNode () {
-  yield put(IpfsNodeActions.lock(true))
+  yield put(TextileNodeActions.lock(true))
   try {
-    yield call(IPFS.stop)
-    yield put(IpfsNodeActions.stopNodeSuccess())
+    yield call(TextileNode.stop)
+    yield put(TextileNodeActions.stopNodeSuccess())
   } catch (error) {
-    yield put(IpfsNodeActions.stopNodeFailure(error))
+    yield put(TextileNodeActions.stopNodeFailure(error))
   } finally {
-    yield put(IpfsNodeActions.lock(false))
+    yield put(TextileNodeActions.lock(false))
   }
 }
 
-export function * getPhotoHashes ({thread}) {
+export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.getPhotoHashesRequest>) {
+  const { thread } = action.payload
   try {
-    const items = yield call(IPFS.getPhotoBlocks, null, -1, thread)
+    const items = yield call(TextileNode.getPhotoBlocks, -1, thread, undefined)
     let data = []
     for (let item of items) {
       try {
-        const captionsrc = yield call(IPFS.getBlockData, item.id, 'caption')
+        const captionsrc = yield call(TextileNode.getBlockData, item.id, 'caption')
         const caption = Buffer.from(captionsrc, 'base64').toString('utf8')
         item = {...item, caption}
       } catch (err) {
         // gracefully return an empty caption for now
       }
       try {
-        const metasrc = yield call(IPFS.getFileData, item.target, 'meta')
+        const metasrc = yield call(TextileNode.getFileData, item.target, 'meta')
         const meta = JSON.parse(Buffer.from(metasrc, 'base64').toString('utf8'))
         meta.username = meta.un // FIXME
         item = {...item, meta}
@@ -184,9 +188,9 @@ export function * getPhotoHashes ({thread}) {
       item.hash = item.target // FIXME
       data.push({...item})
     }
-    yield put(IpfsNodeActions.getPhotoHashesSuccess(thread, data))
+    yield put(TextileNodeActions.getPhotoHashesSuccess(thread, data))
   } catch (error) {
-    yield put(IpfsNodeActions.getPhotoHashesFailure(thread, error))
+    yield put(TextileNodeActions.getPhotoHashesFailure(thread, error))
   }
 }
 
@@ -194,18 +198,19 @@ export function * pairNewDevice (action) {
   const { pubKey } = action
   try {
     // TODO: pairDevice returns a String. Should we be using it?
-    yield call(IPFS.pairDevice, pubKey)
+    yield call(TextileNode.pairDevice, pubKey)
     yield put(TextileActions.pairNewDeviceSuccess(pubKey))
   } catch (err) {
     yield put(TextileActions.pairNewDeviceError(pubKey))
   }
 }
 
-export function * shareImage ({thread, hash, caption}) {
+export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequest>) {
+  const {thread, hash, caption} = action.payload
   try {
     // TODO: sharePhoto returns a String. Should we be using it?
-    yield call(IPFS.sharePhoto, hash, thread, caption)
-    yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
+    yield call(TextileNode.sharePhoto, hash, thread, caption)
+    yield put(TextileNodeActions.getPhotoHashesRequest(thread))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
@@ -240,7 +245,7 @@ export function * photosTask () {
     for (let photo of photos.reverse()) {
       try {
         photo = yield call(getPhotoPath, photo)
-        const multipartData = yield call(IPFS.addPhoto, photo.path, 'default')
+        const multipartData = yield call(TextileNode.addPhoto, photo.path, 'default')
         photoUploads.push({
           photo: photo,
           multipartData
@@ -255,7 +260,7 @@ export function * photosTask () {
       }
     }
     // refresh our gallery
-    yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
+    yield put(TextileNodeActions.getPhotoHashesRequest('default'))
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
       let {photo, multipartData} = photoData
@@ -276,11 +281,11 @@ export function * photosTask () {
   } catch (error) {
     yield put(TextileActions.photosTaskError(error))
   } finally {
-    const appState = yield select(IpfsNodeSelectors.appState)
+    const appState = yield select(TextileNodeSelectors.appState)
     if (appState.match(/background/)) {
       yield * stopNode()
     } else {
-      yield put(IpfsNodeActions.lock(false))
+      yield put(TextileNodeActions.lock(false))
     }
   }
 }

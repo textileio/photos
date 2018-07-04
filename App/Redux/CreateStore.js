@@ -19,7 +19,7 @@ export default (rootReducer, rootSaga) => {
   middleware.push(ScreenTracking)
 
   /* ------------- Beta Testing Analytics Middleware ------------- */
-  middleware.push(EventLogging)
+  // middleware.push(EventLogging)
 
   /* ------------- Saga Middleware ------------- */
 

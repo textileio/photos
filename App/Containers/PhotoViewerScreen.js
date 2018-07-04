@@ -163,7 +163,7 @@ class PhotoViewerScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const items = state.ipfs.threads[state.ui.viewingPhoto.thread].items
+  const items = state.ipfs.threads.get(state.ui.viewingPhoto.thread).items
   const path = state.ui.viewingPhoto.thread === 'default' ? '/photo' : '/thumb'
   const sharable = state.ui.viewingPhoto.thread === 'default'
   const imageData = items.map(item => {

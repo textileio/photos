@@ -3,7 +3,7 @@ import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import TextileActions from '../Redux/TextileRedux'
-import IpfsNodeActions from '../Redux/IpfsNodeRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
@@ -54,13 +54,14 @@ class TextilePhotos extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  // TODO: Can this be a selector?
   const thread = ownProps.navigation.state.params.thread
-  let allItemsObj = state.ipfs.threads[thread].items.reduce((o, item, index) => ({...o, [item.hash]: { index, hash: item.hash, caption: item.caption, state: 'complete' }}), {})
+  let allItemsObj = state.ipfs.threads.get(thread).items.reduce((o, item, index) => ({...o, [item.hash]: { index, hash: item.hash, caption: item.caption, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
     const item = allItemsObj[processingItem.hash]
     if (item) {
-      const updatedItem = item.merge(processingItem)
-      allItemsObj = allItemsObj.set(processingItem.hash, updatedItem)
+      const updatedItem = { ...item, ...processingItem }
+      allItemsObj = allItemsObj[processingItem.hash] = updatedItem
     }
   }
   const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
@@ -77,7 +78,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     thread,
     items: updatedItems,
-    refreshing: state.ipfs.threads[thread].querying,
+    refreshing: state.ipfs.threads.get(thread).querying,
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
@@ -88,7 +89,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewPhoto: (index, thread) => { dispatch(UIActions.viewPhotoRequest(index, thread)) },
-    refresh: thread => { dispatch(IpfsNodeActions.getPhotoHashesRequest(thread)) },
+    refresh: (thread: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(thread)) },
     toggleVerboseUi: () => { dispatch(TextileActions.toggleVerboseUi()) }
   }
 }

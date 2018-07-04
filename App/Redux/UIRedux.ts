@@ -20,7 +20,7 @@ const actions = {
     return (comment: string) => resolve(comment)
   }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
-    return (thread: string, hash: string, caption: string) => resolve({ thread, hash, caption })
+    return (thread: string, hash: string, caption?: string) => resolve({ thread, hash, caption })
   }),
   imageSharingError: createAction('IMAGE_SHARING_ERROR', resolve => {
     return (error: Error) => resolve(error)
