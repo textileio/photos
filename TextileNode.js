@@ -65,10 +65,11 @@ export default {
   sharePhoto: async function (id: string, threadName: string, caption: string): Promise<string> {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
-  
+
   getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): Promise<[any]> {
-    // TODO: JSON string coming back here... parse it
-    return await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
+    const jsonString = await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
+    const jsonObject = JSON.parse(jsonString)
+    return jsonObject.items
   },
 
   getBlockData: async function (id: string, path: string): Promise<string> {
