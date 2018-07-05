@@ -148,9 +148,9 @@ RCT_EXPORT_METHOD(getAccessToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPr
 
 RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _addThread:name withMnemonic:mnemonic error:&error];
+  NSString *threadId = [self _addThread:name withMnemonic:mnemonic error:&error];
   if (!error) {
-    resolve(nil);
+    resolve(threadId);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -307,8 +307,8 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node getId:error];
 }
 
-- (void)_addThread:(NSString *)name withMnemonic:(NSString *)mnemonic error:(NSError**)error {
-  [self.node addThread:name mnemonic:mnemonic error:error];
+- (NSString *)_addThread:(NSString *)name withMnemonic:(NSString *)mnemonic error:(NSError**)error {
+  return [self.node addThread:name mnemonic:mnemonic error:error];
 }
 
 - (void)_removeThread:(NSString *)threadId error:(NSError**)error {
