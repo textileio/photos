@@ -46,10 +46,6 @@ export default {
     return await TextileNode.getId()
   },
 
-  getIPFSPeerId: async function (): Promise<string> {
-    return await TextileNode.getIPFSPeerId()
-  },
-
   getUsername: async function (): Promise<string> {
     return await TextileNode.getUsername()
   },
@@ -69,8 +65,9 @@ export default {
   sharePhoto: async function (id: string, threadName: string, caption: string): Promise<string> {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
-
+  
   getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): Promise<[any]> {
+    // TODO: JSON string coming back here... parse it
     return await TextileNode.getPhotoBlocks(offset || '', limit, threadName)
   },
 
@@ -82,8 +79,8 @@ export default {
     return await TextileNode.getFileData(id, path)
   },
 
-  pairDevice: async function (pubKey: string): Promise<string> {
-    return await TextileNode.pairDevice(pubKey)
+  addDevice: async function (deviceId: string, pubKey: string): Promise<string> {
+    return await TextileNode.addDevice(deviceId, pubKey)
   },
 
   getFilePath: async function (uri: string): Promise<string> {

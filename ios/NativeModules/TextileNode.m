@@ -31,7 +31,7 @@
 
 @interface TextileNode()
 
-@property (nonatomic, strong) MobileWrapper *node;
+@property (nonatomic, strong) MobileMobile *node;
 
 @end
 
@@ -51,7 +51,7 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_METHOD(create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self _create:dataDir apiUrl:apiUrl logLevel:logLevel logFiles:logFiles error:&error];
-  if (self.node) {
+  if (!error) {
     resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -60,7 +60,8 @@ RCT_EXPORT_METHOD(create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:
 
 RCT_REMAP_METHOD(start, startWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  if([self _start:&error]) {
+  [self _start:&error];
+  if (!error) {
     resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -69,7 +70,8 @@ RCT_REMAP_METHOD(start, startWithResolver:(RCTPromiseResolveBlock)resolve reject
 
 RCT_REMAP_METHOD(stop, stopWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  if([self _stop:&error]) {
+  [self _stop:&error];
+  if (!error) {
     resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -79,7 +81,7 @@ RCT_REMAP_METHOD(stop, stopWithResolver:(RCTPromiseResolveBlock)resolve rejecter
 RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)password email:(NSString*)email referral:(NSString*)referral resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self _signUpWithEmail:username password:password email:email referral:referral error:&error];
-  if (error == NULL) {
+  if (!error) {
     resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -89,7 +91,7 @@ RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)pass
 RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self _signIn:username password:password error:&error];
-  if (error == NULL) {
+  if (!error) {
     resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -99,7 +101,7 @@ RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password reso
 RCT_EXPORT_METHOD(signOut:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self _signOut:&error];
-  if (error == NULL) {
+  if (!error) {
     resolve(nil);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -117,18 +119,8 @@ RCT_EXPORT_METHOD(isSignedIn:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromis
 RCT_EXPORT_METHOD(getId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *nid = [self _getId:&error];
-  if (nid) {
+  if (!error) {
     resolve(nid);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getIPFSPeerId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *pid = [self _getIPFSPeerId:&error];
-  if (pid) {
-    resolve(pid);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -137,7 +129,7 @@ RCT_EXPORT_METHOD(getIPFSPeerId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPro
 RCT_EXPORT_METHOD(getUserName:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *username = [self _getUsername:&error];
-  if (username) {
+  if (!error) {
     resolve(username);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -147,7 +139,7 @@ RCT_EXPORT_METHOD(getUserName:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
 RCT_EXPORT_METHOD(getAccessToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *token = [self _getAccessToken:&error];
-  if (token) {
+  if (!error) {
     resolve(token);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -157,8 +149,28 @@ RCT_EXPORT_METHOD(getAccessToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPr
 RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self _addThread:name withMnemonic:mnemonic error:&error];
-  if (error == NULL) {
+  if (!error) {
     resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(removeThread:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _removeThread:threadId error:&error];
+  if (!error) {
+    resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(threads:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *jsonString = [self _threads:&error];
+  if (!error) {
+    resolve(jsonString);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -167,7 +179,7 @@ RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic r
 RCT_EXPORT_METHOD(addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NetMultipartRequest *multipart = [self _addPhoto:path toThreadNamed:threadName withCaption:caption error:&error];
-  if(multipart) {
+  if(!error) {
     resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -177,7 +189,7 @@ RCT_EXPORT_METHOD(addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName
 RCT_EXPORT_METHOD(sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *sid = [self _sharePhoto:id toThreadNamed:threadName withCaption:caption error:&error];
-  if(sid) {
+  if(!error) {
     resolve(sid);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -187,11 +199,8 @@ RCT_EXPORT_METHOD(sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName
 RCT_EXPORT_METHOD(getPhotoBlocks:(NSString *)offset limit:(int)limit threadName:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *jsonString = [self _getPhotoBlocks:offset withLimit:limit fromThreadNamed:thread error:&error];
-  NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-  NSArray *items = [json objectForKey:@"items"];
-  if (items) {
-    resolve(items);
+  if (!error) {
+    resolve(jsonString);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -200,7 +209,7 @@ RCT_EXPORT_METHOD(getPhotoBlocks:(NSString *)offset limit:(int)limit threadName:
 RCT_EXPORT_METHOD(getBlockData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _getBlockData:id withPath:path error:&error];
-  if (result) {
+  if (!error) {
     resolve(result);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -210,19 +219,40 @@ RCT_EXPORT_METHOD(getBlockData:(NSString *)id withPath:(NSString *)path resolver
 RCT_EXPORT_METHOD(getFileData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _getFileData:id withPath:path error:&error];
-  if (result) {
+  if (!error) {
     resolve(result);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
-RCT_EXPORT_METHOD(pairDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(addDevice:(NSString *)deviceId pubKey:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSError *error;
-  NSString *result = [self _pairDevice:pkb64 error:&error];
-  if(result) {
-    resolve(result);
+  [self _addDevice:deviceId pubKey:pkb64 error:&error];
+  if(!error) {
+    resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(removeDevice:(NSString *)deviceId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSError *error;
+  [self _removeDevice:deviceId error:&error];
+  if(!error) {
+    resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *jsonString = [self _devices:&error];
+  if (!error) {
+    resolve(jsonString);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -237,30 +267,28 @@ RCT_EXPORT_METHOD(pairDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)
     [config setCentralApiURL:apiUrl];
     [config setLogLevel:logLevel];
     [config setLogFiles:logFiles];
-    self.node = [[MobileMobile new] newNode:config messenger:[[Messenger alloc] init] error:error];
+    self.node = MobileNewNode(config, [[Messenger alloc] init], error);
   }
 }
 
-- (BOOL)_start:(NSError**)error {
-  BOOL startNodeSuccess = [self.node start:error];
-  return startNodeSuccess;
+- (void)_start:(NSError**)error {
+  [self.node start:error];
 }
 
-- (BOOL)_stop:(NSError**)error {
-  BOOL success = [self.node stop:error];
-  return success;
+- (void)_stop:(NSError**)error {
+  [self.node stop:error];
 }
 
-- (BOOL)_signUpWithEmail:(NSString *)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error {
-  return [self.node signUpWithEmail:username password:password email:email referral:referral error:error];
+- (void)_signUpWithEmail:(NSString *)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error {
+  [self.node signUpWithEmail:username password:password email:email referral:referral error:error];
 }
 
-- (BOOL)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
-  return [self.node signIn:username password:password error:error];
+- (void)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
+  [self.node signIn:username password:password error:error];
 }
 
-- (BOOL)_signOut:(NSError**)error {
-  return [self.node signOut:error];
+- (void)_signOut:(NSError**)error {
+  [self.node signOut:error];
 }
 
 - (BOOL)_isSignedIn {
@@ -279,16 +307,20 @@ RCT_EXPORT_METHOD(pairDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)
   return [self.node getId:error];
 }
 
-- (NSString *)_getIPFSPeerId:(NSError**)error {
-  return [self.node getIPFSPeerId:error];
+- (void)_addThread:(NSString *)name withMnemonic:(NSString *)mnemonic error:(NSError**)error {
+  [self.node addThread:name mnemonic:mnemonic error:error];
 }
 
-- (BOOL)_addThread:(NSString *)name withMnemonic:(NSString *)mnemonic error:(NSError**)error {
-  return [self.node addThread:name mnemonic:mnemonic error:error];
+- (void)_removeThread:(NSString *)threadId error:(NSError**)error {
+  [self.node removeThread:threadId error:error];
+}
+
+- (NSString *)_threads:(NSError**)error {
+  return [self.node threads:error];
 }
 
 - (NetMultipartRequest *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
-  if (caption == NULL) {
+  if (!caption) {
     caption = @"";
   }
   return [self.node addPhoto:path threadName:threadName caption:caption error:error];
@@ -302,7 +334,7 @@ RCT_EXPORT_METHOD(pairDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)
 }
 
 - (NSString *)_getPhotoBlocks:(NSString *)offset withLimit:(long)limit fromThreadNamed:(NSString *)threadName error:(NSError**)error {
-  return [self.node getPhotoBlocks:offset limit:limit threadName:threadName error:error];
+  return [self.node photoBlocks:offset limit:limit threadName:threadName error:error];
 }
 
 - (NSString *)_getBlockData:(NSString *)id withPath:(NSString *)path error:(NSError**)error {
@@ -313,8 +345,16 @@ RCT_EXPORT_METHOD(pairDevice:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)
   return [self.node getFileData:id path:path error:error];
 }
 
-- (NSString *)_pairDevice:(NSString *)pkb64 error:(NSError**)error {
-  return [self.node pairDevice:pkb64 error:error];
+- (void)_addDevice:(NSString *)deviceId pubKey:(NSString *)pkb64 error:(NSError**)error {
+  [self.node addDevice:deviceId pubKey:pkb64 error:error];
+}
+
+- (void)_removeDevice:(NSString *)deviceId error:(NSError**)error {
+  [self.node removeDevice:deviceId error:error];
+}
+
+- (NSString *)_devices:(NSError**)error {
+  return [self.node devices:error];
 }
 
 @end
