@@ -108,7 +108,7 @@
 /**
  * AddThread adds a new thread with the given name
  */
-- (BOOL)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
+- (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
 /**
  * Devices lists all devices
  */

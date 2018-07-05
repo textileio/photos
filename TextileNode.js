@@ -54,7 +54,7 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  addThread: async function (name: string, mnemonic: string): Promise<void> {
+  addThread: async function (name: string, mnemonic: string): Promise<string> {
     return await TextileNode.addThread(name, mnemonic)
   },
 
