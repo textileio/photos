@@ -46,5 +46,13 @@ describe('ui stories', () => {
       const state1 = reducer(state, actions.cancelAuthoringPhotoShare())
       expect(state1.sharingPhoto.active).toEqual(false)
     })
+    it('sharePhotoRequest should not update state', () => {
+      const state = reducer(initialState, actions.sharePhotoRequest('myThread', 'someHash'))
+      expect(state).toEqual(initialState)
+    })
+    it('imageSharingError should not update state', () => {
+      const state = reducer(initialState, actions.imageSharingError(new Error()))
+      expect(state).toEqual(initialState)
+    })
   })
 })
