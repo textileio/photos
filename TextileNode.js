@@ -80,7 +80,7 @@ export default {
     return await TextileNode.getFileData(id, path)
   },
 
-  addDevice: async function (deviceId: string, pubKey: string): Promise<string> {
+  addDevice: async function (deviceId: string, pubKey: string): Promise<void> {
     return await TextileNode.addDevice(deviceId, pubKey)
   },
 
