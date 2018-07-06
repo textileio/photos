@@ -226,10 +226,10 @@ RCT_EXPORT_METHOD(getFileData:(NSString *)id withPath:(NSString *)path resolver:
   }
 }
 
-RCT_EXPORT_METHOD(addDevice:(NSString *)deviceId pubKey:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(addDevice:(NSString *)name pubKey:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSError *error;
-  [self _addDevice:deviceId pubKey:pkb64 error:&error];
+  [self _addDevice:name pubKey:pkb64 error:&error];
   if(!error) {
     resolve(nil);
   } else {
@@ -345,8 +345,8 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node getFileData:id path:path error:error];
 }
 
-- (void)_addDevice:(NSString *)deviceId pubKey:(NSString *)pkb64 error:(NSError**)error {
-  [self.node addDevice:deviceId pubKey:pkb64 error:error];
+- (void)_addDevice:(NSString *)name pubKey:(NSString *)pkb64 error:(NSError**)error {
+  [self.node addDevice:name pubKey:pkb64 error:error];
 }
 
 - (void)_removeDevice:(NSString *)deviceId error:(NSError**)error {

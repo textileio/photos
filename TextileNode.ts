@@ -96,8 +96,8 @@ export default {
     return await TextileNode.getFileData(id, path)
   },
 
-  addDevice: async function (id: string, pubKey: string): Promise<void> {
-    return await TextileNode.addDevice(id, pubKey)
+  addDevice: async function (name: string, pubKey: string): Promise<void> {
+    return await TextileNode.addDevice(name, pubKey)
   },
 
   removeDevice: async function (id: string): Promise<void> {

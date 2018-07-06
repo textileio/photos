@@ -42,7 +42,7 @@ export type ThreadItem = {
 }
 
 export type Threads = {
-  readonly items: ThreadItem[]
+  readonly items: ReadonlyArray<ThreadItem>
 }
 
 export type ThreadsState = {
@@ -59,8 +59,8 @@ export const initialState: ThreadsState = {
 export function reducer (state: ThreadsState = initialState, action: ThreadsAction): ThreadsState {
   switch (action.type) {
     case getType(actions.addThreadRequest): {
-      const threads = Array.from(state.threads)
-      threads.push({ tmpId: action.payload.tmpId, name: action.payload.name, state: 'adding' })
+      const { tmpId, name } = action.payload
+      const threads = state.threads.concat([{ tmpId, name, state: 'adding' }])
       return { ...state, threads }
     }
     case getType(actions.addThreadSuccess): {
