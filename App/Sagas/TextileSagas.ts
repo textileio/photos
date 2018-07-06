@@ -24,6 +24,7 @@ import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
+import ThreadsActions, { Threads } from '../Redux/ThreadsRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 import { Buffer } from 'buffer'
@@ -146,6 +147,7 @@ export function * startNode () {
     yield put(TextileNodeActions.startNodeSuccess())
     yield put(TextileNodeActions.getPhotoHashesRequest('default'))
     yield put(TextileNodeActions.getPhotoHashesRequest(Config.ALL_THREAD_NAME))
+    yield put(ThreadsActions.refreshThreadsRequest())
   } catch (error) {
     yield put(TextileNodeActions.startNodeFailure(error))
     yield put(TextileNodeActions.lock(false))
@@ -327,19 +329,29 @@ function * uploadFile (id: string, boundary: string, payloadPath: string) {
   )
 }
 
-// TODO: These would actually call TextileNode APIs
-
-export function * createThread (name: string) {
-  yield put(TextileActions.newThreadSuccess(name))
-  yield put(TextileActions.refreshThreadsRequest())
+export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
+  try {
+    const threadId: string = yield call(TextileNode.addThread, action.payload.name, action.payload.mnemonic)
+    yield put(ThreadsActions.addThreadSuccess(action.payload.tmpId, threadId))
+  } catch (error) {
+    yield put(ThreadsActions.addThreadError(action.payload.tmpId, error))
+  }
 }
 
-export function * leaveThread (name: string) {
-  yield put(TextileActions.leaveThreadSuccess(name))
-  yield put(TextileActions.refreshThreadsRequest())
+export function * removeThread (action: ActionType<typeof ThreadsActions.removeThreadRequest>) {
+  try {
+    yield call(TextileNode.removeThread, action.payload.id)
+    yield put(ThreadsActions.removeThreadSuccess(action.payload.id))
+  } catch (error) {
+    yield put(ThreadsActions.removeThreadError(action.payload.id, error))
+  }
 }
 
 export function * refreshThreads () {
-  const threads = yield select(TextileSelectors.threads)
-  yield put(TextileActions.refreshThreadsSuccess(threads))
+  try {
+    const threads: Threads = yield call(TextileNode.threads)
+    yield put(ThreadsActions.refreshThreadsSuccess(threads))
+  } catch (error) {
+    yield put(ThreadsActions.refreshThreadsError(error))
+  }
 }

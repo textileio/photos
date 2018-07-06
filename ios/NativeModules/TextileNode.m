@@ -166,7 +166,7 @@ RCT_EXPORT_METHOD(removeThread:(NSString *)threadId resolver:(RCTPromiseResolveB
   }
 }
 
-RCT_EXPORT_METHOD(threads:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_REMAP_METHOD(threads, threadsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *jsonString = [self _threads:&error];
   if (!error) {

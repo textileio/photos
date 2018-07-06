@@ -4,24 +4,13 @@ import {
   NativeEventEmitter,
   DeviceEventEmitter,
 } from 'react-native'
+import { Threads } from './App/Redux/ThreadsRedux'
 
 const { TextileNode, Events } = NativeModules
 
 type UserData = {
   id: String,
   userName: String
-}
-
-type ThreadData = {
-  id: String,
-  name: String,
-  updated: Date,
-  members: [UserData]
-}
-
-type ThreadsData = {
-  updated: Date,
-  threads: [ThreadData]
 }
 
 type MultipartData = {
@@ -71,20 +60,18 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  // getThreads: async function (): Promise<ThreadsData> {
-
-  // },
-
-  // leaveThread: async function (name: string): Promise<void> {
-    
-  // },
-
-  // newThread: async function (name: string): Promise<void> {
-
-  // },
-
   addThread: async function (name: string, mnemonic?: string): Promise<string> {
     return await TextileNode.addThread(name, mnemonic)
+  },
+
+  removeThread: async function (id: string): Promise<void> {
+    return await TextileNode.removeThread(id)
+  },
+
+  threads: async function (): Promise<Threads> {
+    const jsonString = await TextileNode.threads()
+    const threads = JSON.parse(jsonString) as Threads
+    return threads
   },
 
   addPhoto: async function (path: string, threadName: string, caption: string): Promise<MultipartData> {
@@ -94,7 +81,7 @@ export default {
   sharePhoto: async function (id: string, threadName: string, caption?: string): Promise<string> {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
-  
+
   getPhotoBlocks: async function (limit: number, threadName: string, offset: string = ''): Promise<any[]> {
     const jsonString = await TextileNode.getPhotoBlocks(offset, limit, threadName)
     const jsonObject = JSON.parse(jsonString)
@@ -109,8 +96,16 @@ export default {
     return await TextileNode.getFileData(id, path)
   },
 
-  addDevice: async function (deviceId: string, pubKey: string): Promise<void> {
-    return await TextileNode.addDevice(deviceId, pubKey)
+  addDevice: async function (id: string, pubKey: string): Promise<void> {
+    return await TextileNode.addDevice(id, pubKey)
+  },
+
+  removeDevice: async function (id: string): Promise<void> {
+    return await TextileNode.removeDevice(id)
+  },
+
+  devices: async function (): Promise<string> {
+    return await TextileNode.devices()
   },
 
   getFilePath: async function (uri: string): Promise<string> {
