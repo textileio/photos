@@ -12,10 +12,13 @@
 #include "Net.objc.h"
 
 @class MobileBlocks;
+@class MobileDeviceItem;
+@class MobileDevices;
 @class MobileEvent;
 @class MobileMobile;
 @class MobileNodeConfig;
-@class MobileWrapper;
+@class MobileThreadItem;
+@class MobileThreads;
 @protocol MobileMessenger;
 @class MobileMessenger;
 
@@ -24,8 +27,7 @@
 @end
 
 /**
- * Blocks is a wrapper around a list of Blocks, which makes decoding json from a little cleaner
-on the mobile side
+ * Blocks is a wrapper around a list of Blocks
  */
 @interface MobileBlocks : NSObject <goSeqRefInterface> {
 }
@@ -34,6 +36,34 @@ on the mobile side
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
 // skipped field Blocks.Items with unsupported type: *types.Slice
+
+@end
+
+/**
+ * DeviceItem is a simple meta data wrapper around a Device
+ */
+@interface MobileDeviceItem : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+- (NSString*)id_;
+- (void)setId:(NSString*)v;
+- (NSString*)name;
+- (void)setName:(NSString*)v;
+@end
+
+/**
+ * Devices is a wrapper around a list of Devices
+ */
+@interface MobileDevices : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field Devices.Items with unsupported type: *types.Slice
 
 @end
 
@@ -61,42 +91,16 @@ on the mobile side
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-/**
- * Create a gomobile compatible wrapper around TextileNode
- */
-- (MobileWrapper*)newNode:(MobileNodeConfig*)config messenger:(id<MobileMessenger>)messenger error:(NSError**)error;
-@end
-
-/**
- * NodeConfig is used to configure the mobile node
- */
-@interface MobileNodeConfig : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) id _ref;
-
-- (instancetype)initWithRef:(id)ref;
-- (instancetype)init;
 - (NSString*)repoPath;
 - (void)setRepoPath:(NSString*)v;
-- (NSString*)centralApiURL;
-- (void)setCentralApiURL:(NSString*)v;
-- (NSString*)logLevel;
-- (void)setLogLevel:(NSString*)v;
-- (BOOL)logFiles;
-- (void)setLogFiles:(BOOL)v;
-@end
+- (NSString*)mnemonic;
+- (void)setMnemonic:(NSString*)v;
+// skipped field Mobile.Online with unsupported type: *types.Chan
 
 /**
- * Wrapper is the object exposed in the frameworks
+ * AddDevice calls core AddDevice
  */
-@interface MobileWrapper : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) id _ref;
-
-- (instancetype)initWithRef:(id)ref;
-- (instancetype)init;
-- (NSString*)repoPath;
-- (void)setRepoPath:(NSString*)v;
+- (BOOL)addDevice:(NSString*)name pubKey:(NSString*)pubKey error:(NSError**)error;
 /**
  * AddPhoto adds a photo by path and shares it to the default thread
  */
@@ -104,7 +108,11 @@ on the mobile side
 /**
  * AddThread adds a new thread with the given name
  */
-- (BOOL)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
+- (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
+/**
+ * Devices lists all devices
+ */
+- (NSString*)devices:(NSError**)error;
 /**
  * GetAccessToken calls core GetAccessToken
  */
@@ -118,17 +126,9 @@ on the mobile side
  */
 - (NSString*)getFileData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
 /**
- * GetIPFSPeerId returns the wallet's ipfs peer id
- */
-- (NSString*)getIPFSPeerId:(NSError**)error;
-/**
  * GetId calls core GetId
  */
 - (NSString*)getId:(NSError**)error;
-/**
- * GetPhotoBlocks returns thread photo blocks with json encoding
- */
-- (NSString*)getPhotoBlocks:(NSString*)offsetId limit:(long)limit threadName:(NSString*)threadName error:(NSError**)error;
 /**
  * GetUsername calls core GetUsername
  */
@@ -138,10 +138,17 @@ on the mobile side
  */
 - (BOOL)isSignedIn;
 /**
- * PairDevice publishes this node's secret key to another node,
-which is listening at it's own peer id
+ * PhotoBlocks returns thread photo blocks with json encoding
  */
-- (NSString*)pairDevice:(NSString*)pkb64 error:(NSError**)error;
+- (NSString*)photoBlocks:(NSString*)offsetId limit:(long)limit threadName:(NSString*)threadName error:(NSError**)error;
+/**
+ * RemoveDevice call core RemoveDevice
+ */
+- (BOOL)removeDevice:(NSString*)name error:(NSError**)error;
+/**
+ * RemoveThread call core RemoveDevice
+ */
+- (BOOL)removeThread:(NSString*)name error:(NSError**)error;
 /**
  * SharePhoto adds an existing photo to a new thread
  */
@@ -166,6 +173,60 @@ which is listening at it's own peer id
  * Stop the mobile node
  */
 - (BOOL)stop:(NSError**)error;
+/**
+ * Threads lists all threads
+ */
+- (NSString*)threads:(NSError**)error;
+@end
+
+/**
+ * NodeConfig is used to configure the mobile node
+NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
+ */
+@interface MobileNodeConfig : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+- (NSString*)repoPath;
+- (void)setRepoPath:(NSString*)v;
+- (NSString*)centralApiURL;
+- (void)setCentralApiURL:(NSString*)v;
+- (NSString*)logLevel;
+- (void)setLogLevel:(NSString*)v;
+- (BOOL)logFiles;
+- (void)setLogFiles:(BOOL)v;
+@end
+
+/**
+ * ThreadItem is a simple meta data wrapper around a Thread
+ */
+@interface MobileThreadItem : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+- (NSString*)id_;
+- (void)setId:(NSString*)v;
+- (NSString*)name;
+- (void)setName:(NSString*)v;
+- (long)peers;
+- (void)setPeers:(long)v;
+@end
+
+/**
+ * Threads is a wrapper around a list of Threads
+ */
+@interface MobileThreads : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field Threads.Items with unsupported type: *types.Slice
+
 @end
 
 /**
@@ -174,10 +235,9 @@ which is listening at it's own peer id
 FOUNDATION_EXPORT NSString* const MobileRemoteIPFSApi;
 
 /**
- * NewNode is the mobile entry point for creating a node
-NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
+ * Create a gomobile compatible wrapper around TextileNode
  */
-FOUNDATION_EXPORT MobileWrapper* MobileNewNode(MobileNodeConfig* config, id<MobileMessenger> messenger, NSError** error);
+FOUNDATION_EXPORT MobileMobile* MobileNewNode(MobileNodeConfig* config, id<MobileMessenger> messenger, NSError** error);
 
 @class MobileMessenger;
 

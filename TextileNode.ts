@@ -63,10 +63,6 @@ export default {
     return await TextileNode.getId()
   },
 
-  getIPFSPeerId: async function (): Promise<string> {
-    return await TextileNode.getIPFSPeerId()
-  },
-
   getUsername: async function (): Promise<string> {
     return await TextileNode.getUsername()
   },
@@ -87,7 +83,7 @@ export default {
 
   // },
 
-  addThread: async function (name: string, mnemonic?: string): Promise<void> {
+  addThread: async function (name: string, mnemonic?: string): Promise<string> {
     return await TextileNode.addThread(name, mnemonic)
   },
 
@@ -98,9 +94,11 @@ export default {
   sharePhoto: async function (id: string, threadName: string, caption?: string): Promise<string> {
     return await TextileNode.sharePhoto(id, threadName, caption)
   },
-
+  
   getPhotoBlocks: async function (limit: number, threadName: string, offset: string = ''): Promise<any[]> {
-    return await TextileNode.getPhotoBlocks(offset, limit, threadName)
+    const jsonString = await TextileNode.getPhotoBlocks(offset, limit, threadName)
+    const jsonObject = JSON.parse(jsonString)
+    return jsonObject.items
   },
 
   getBlockData: async function (id: string, path: string): Promise<string> {
@@ -111,8 +109,8 @@ export default {
     return await TextileNode.getFileData(id, path)
   },
 
-  pairDevice: async function (pubKey: string): Promise<string> {
-    return await TextileNode.pairDevice(pubKey)
+  addDevice: async function (deviceId: string, pubKey: string): Promise<void> {
+    return await TextileNode.addDevice(deviceId, pubKey)
   },
 
   getFilePath: async function (uri: string): Promise<string> {
