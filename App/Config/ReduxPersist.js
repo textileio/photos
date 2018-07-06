@@ -47,6 +47,15 @@ const migrations = {
         onboarded: false
       })
     }
+  },
+  4: (state) => {
+    return {
+      ...state,
+      preferences: {
+        onboarded: state.textile.onboarded,
+        verboseUi: state.textile.preferences.verboseUi
+      }
+    }
   }
 }
 
@@ -56,14 +65,14 @@ const REDUX_PERSIST = {
   reducerVersion: '1.0',
   storeConfig: {
     key: 'primary',
-    version: 3,
+    version: 4,
     storage: AsyncStorage,
     migrate: createMigrate(migrations, { debug: false }),
     // Reducer keys that you do NOT want stored to persistence here.
     // blacklist: ['nav', 'ipfs', 'auth', 'ui'],
     // Optionally, just specify the keys you DO want stored to persistence.
     // An empty array means 'don't store any reducers' -> infinitered/ignite#409
-    whitelist: ['textile'],
+    whitelist: ['textile', 'preferences'],
     transforms: [immutablePersistenceTransform]
   }
 }

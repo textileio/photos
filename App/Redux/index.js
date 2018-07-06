@@ -9,6 +9,7 @@ export const reducers = combineReducers({
   auth: require('./AuthRedux').reducer,
   ipfs: require('./TextileNodeRedux').reducer,
   textile: require('./TextileRedux').reducer,
+  preferences: require('./PreferencesRedux').reducer,
   threads: require('./ThreadsRedux').reducer,
   ui: require('./UIRedux').reducer
 })

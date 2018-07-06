@@ -22,6 +22,7 @@ import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
 import StartupActions from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
+import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions, { Threads } from '../Redux/ThreadsRedux'
@@ -137,7 +138,7 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
 }
 
 export function * startNode () {
-  const onboarded = yield select(TextileSelectors.onboarded)
+  const onboarded = yield select(PreferencesSelectors.onboarded)
   if (!onboarded) {
     yield put(TextileNodeActions.lock(false))
     return
