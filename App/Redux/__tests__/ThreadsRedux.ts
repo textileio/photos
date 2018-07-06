@@ -1,4 +1,4 @@
-import actions, { reducer, Thread } from '../ThreadsRedux'
+import actions, { reducer, ThreadItem } from '../ThreadsRedux'
 
 const tmpId = 'tmpId'
 const id = 'id'
@@ -16,18 +16,18 @@ describe('ui stories', () => {
   describe('adding threads', () => {
     it('should succeed at adding a thread', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(tmpId, name))
-      const match0: Thread = { tmpId, name, state: 'adding' }
+      const match0: ThreadItem = { tmpId, name, state: 'adding' }
       expect(state0.threads[0]).toEqual(match0)
       const state1 = reducer(state0, actions.addThreadSuccess(tmpId, id))
-      const match1: Thread = { id, name, state: 'joined' }
+      const match1: ThreadItem = { id, name, state: 'joined' }
       expect(state1.threads[0]).toMatchObject(match1)
     })
     it('should fail at adding a thread', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(tmpId, name))
-      const match0: Thread = { tmpId, name, state: 'adding' }
+      const match0: ThreadItem = { tmpId, name, state: 'adding' }
       expect(state0.threads[0]).toEqual(match0)
       const state1 = reducer(state0, actions.addThreadError(tmpId, error))
-      const match1: Thread = { tmpId, name, error, state: 'adding' }
+      const match1: ThreadItem = { tmpId, name, error, state: 'adding' }
       expect(state1.threads[0]).toMatchObject(match1)
     })
   })
@@ -35,20 +35,20 @@ describe('ui stories', () => {
     it('should leave a thread successfully', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(tmpId, name))
       const state1 = reducer(state0, actions.addThreadSuccess(tmpId, id))
-      const state2 = reducer(state1, actions.leaveThreadRequest(id))
-      const match2: Thread = { id, name, state: 'leaving' }
+      const state2 = reducer(state1, actions.removeThreadRequest(id))
+      const match2: ThreadItem = { id, name, state: 'leaving' }
       expect(state2.threads[0]).toMatchObject(match2)
-      const state3 = reducer(state2, actions.leaveThreadSuccess(id))
+      const state3 = reducer(state2, actions.removeThreadSuccess(id))
       expect(state3.threads).toHaveLength(0)
     })
     it('should fail at leaving a thread', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(tmpId, name))
       const state1 = reducer(state0, actions.addThreadSuccess(tmpId, id))
-      const state2 = reducer(state1, actions.leaveThreadRequest(id))
-      const match2: Thread = { id, name, state: 'leaving' }
+      const state2 = reducer(state1, actions.removeThreadRequest(id))
+      const match2: ThreadItem = { id, name, state: 'leaving' }
       expect(state2.threads[0]).toMatchObject(match2)
-      const state3 = reducer(state2, actions.leaveThreadError(id, error))
-      const match3: Thread = { id, name, state: 'leaving', error }
+      const state3 = reducer(state2, actions.removeThreadError(id, error))
+      const match3: ThreadItem = { id, name, state: 'leaving', error }
       expect(state3.threads[0]).toMatchObject(match3)
     })
   })
@@ -57,11 +57,13 @@ describe('ui stories', () => {
       expect(initialState.threads).toHaveLength(0)
       const state0 = reducer(initialState, actions.refreshThreadsRequest())
       expect(state0.refreshing).toEqual(true)
-      const state1 = reducer(state0, actions.refreshThreadsSuccess([
-        { id, name, state: 'joined' },
-        { id, name, state: 'joined' },
-        { id, name, state: 'joined' }
-      ]))
+      const state1 = reducer(state0, actions.refreshThreadsSuccess({ 
+        items: [
+          { id, name, state: 'joined' },
+          { id, name, state: 'joined' },
+          { id, name, state: 'joined' }
+        ]
+    }))
       expect(state1.refreshing).toEqual(false)
       expect(state1.threads).toHaveLength(3)
     })

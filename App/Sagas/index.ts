@@ -8,6 +8,7 @@ import {TextileTypes} from '../Redux/TextileRedux'
 import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
+import ThreadsActions from '../Redux/ThreadsRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -30,8 +31,8 @@ import {
   photosTask,
   removePayloadFile,
   retryUploadAfterError,
-  createThread,
-  leaveThread,
+  addThread,
+  removeThread,
   refreshThreads
 } from './TextileSagas'
 
@@ -74,9 +75,9 @@ export default function * root () {
     takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile),
     takeEvery(TextileTypes.IMAGE_UPLOAD_ERROR, retryUploadAfterError),
 
-    takeEvery(TextileTypes.NEW_THREAD_REQUEST, createThread),
-    takeEvery(TextileTypes.LEAVE_THREAD_REQUEST, leaveThread),
-    takeEvery(TextileTypes.REFRESH_THREADS_REQUEST, refreshThreads),
+    takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
+    takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),
+    takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
 
     initializeAppState()
   ])

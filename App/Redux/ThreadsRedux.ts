@@ -2,7 +2,7 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 
 const actions = {
   addThreadRequest: createAction('ADD_THREAD_REQUEST', resolve => {
-    return (tmpId: string, name: string) => resolve({ tmpId, name })
+    return (tmpId: string, name: string, mnemonic?: string) => resolve({ tmpId, name, mnemonic })
   }),
   addThreadSuccess: createAction('ADD_THREAD_SUCCESS', resolve => {
     return (tmpId: string, id: string) => resolve({ tmpId, id })
@@ -10,20 +10,20 @@ const actions = {
   addThreadError: createAction('ADD_THREAD_ERROR', resolve => {
     return (tmpId: string, error: Error) => resolve({ tmpId, error })
   }),
-  leaveThreadRequest: createAction('LEAVE_THREAD_REQUEST', resolve => {
+  removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', resolve => {
     return (id: string) => resolve({ id })
   }),
-  leaveThreadSuccess: createAction('LEAVE_THREAD_SUCCESS', resolve => {
+  removeThreadSuccess: createAction('REMOVE_THREAD_SUCCESS', resolve => {
     return (id: string) => resolve({ id })
   }),
-  leaveThreadError: createAction('LEAVE_THREAD_ERROR', resolve => {
+  removeThreadError: createAction('REMOVE_THREAD_ERROR', resolve => {
     return (id: string, error: Error) => resolve({ id, error })
   }),
   refreshThreadsRequest: createAction('REFRESH_THREADS_REQUEST', resolve => {
     return () => resolve()
   }),
   refreshThreadsSuccess: createAction('REFRESH_THREADS_SUCCESS', resolve => {
-    return (threads: Thread[]) => resolve({ threads })
+    return (threads: Threads) => resolve({ threads })
   }),
   refreshThreadsError: createAction('REFRESH_THREADS_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -32,18 +32,23 @@ const actions = {
 
 export type ThreadsAction = ActionType<typeof actions>
 
-export type Thread = {
-  readonly tmpId?: string
+export type ThreadItem = {
   readonly id?: string
   readonly name: string
+  readonly peers?: number
+  readonly tmpId?: string
   readonly state: 'adding' | 'joined' | 'leaving'
   readonly error?: Error
+}
+
+export type Threads = {
+  readonly items: ThreadItem[]
 }
 
 export type ThreadsState = {
   readonly refreshing: boolean
   readonly refreshError?: Error
-  readonly threads: ReadonlyArray<Thread>
+  readonly threads: ReadonlyArray<ThreadItem>
 }
 
 export const initialState: ThreadsState = {
@@ -61,7 +66,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.addThreadSuccess): {
       const threads = state.threads.map(thread => {
         if (thread.tmpId === action.payload.tmpId) {
-          const updatedThread: Thread = { ...thread, tmpId: undefined, id: action.payload.id, state: 'joined' }
+          const updatedThread: ThreadItem = { ...thread, tmpId: undefined, id: action.payload.id, state: 'joined' }
           return updatedThread
         } else {
           return thread
@@ -72,7 +77,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.addThreadError): {
       const threads = state.threads.map(thread => {
         if (thread.tmpId === action.payload.tmpId) {
-          const updatedThread: Thread = { ...thread, error: action.payload.error }
+          const updatedThread: ThreadItem = { ...thread, error: action.payload.error }
           return updatedThread
         } else {
           return thread
@@ -80,10 +85,10 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       })
       return { ...state, threads }
     }
-    case getType(actions.leaveThreadRequest): {
+    case getType(actions.removeThreadRequest): {
       const threads = state.threads.map(thread => {
         if (thread.id === action.payload.id) {
-          const updatedThread: Thread = { ...thread, state: 'leaving' }
+          const updatedThread: ThreadItem = { ...thread, state: 'leaving' }
           return updatedThread
         } else {
           return thread
@@ -91,14 +96,14 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       })
       return { ...state, threads }
     }
-    case getType(actions.leaveThreadSuccess): {
+    case getType(actions.removeThreadSuccess): {
       const threads = state.threads.filter(thread => thread.id !== action.payload.id)
       return { ...state, threads }
     }
-    case getType(actions.leaveThreadError): {
+    case getType(actions.removeThreadError): {
       const threads = state.threads.map(thread => {
         if (thread.id === action.payload.id) {
-          const updatedThread: Thread = { ...thread, error: action.payload.error }
+          const updatedThread: ThreadItem = { ...thread, error: action.payload.error }
           return updatedThread
         } else {
           return thread
@@ -109,7 +114,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.refreshThreadsRequest):
       return { ...state, refreshing: true, refreshError: undefined }
     case getType(actions.refreshThreadsSuccess):
-      return { ...state, refreshing: false, refreshError: undefined, threads: action.payload.threads }
+      return { ...state, refreshing: false, refreshError: undefined, threads: action.payload.threads.items }
     case getType(actions.refreshThreadsError):
       return { ...state, refreshing: false, refreshError: action.payload.error }
     default:
