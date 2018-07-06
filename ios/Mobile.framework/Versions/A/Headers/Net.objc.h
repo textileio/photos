@@ -11,6 +11,21 @@
 
 
 @class NetMultipartRequest;
+@protocol NetNetworkService;
+@class NetNetworkService;
+
+@protocol NetNetworkService <NSObject>
+// skipped method NetworkService.DisconnectFromPeer with unsupported parameter or return types
+
+// skipped method NetworkService.HandleNewStream with unsupported parameter or return types
+
+// skipped method NetworkService.HandlerForMsgType with unsupported parameter or return types
+
+// skipped method NetworkService.SendMessage with unsupported parameter or return types
+
+// skipped method NetworkService.SendRequest with unsupported parameter or return types
+
+@end
 
 @interface NetMultipartRequest : NSObject <goSeqRefInterface> {
 }
@@ -26,6 +41,31 @@
 - (BOOL)finish:(NSError**)error;
 - (void)init_:(NSString*)dir boundary:(NSString*)boundary;
 - (NSString*)send:(NSString*)url error:(NSError**)error;
+@end
+
+@interface Net : NSObject
++ (NSError*) duplicateMessage;
++ (void) setDuplicateMessage:(NSError*)v;
+
+@end
+
+@class NetNetworkService;
+
+@interface NetNetworkService : NSObject <goSeqRefInterface, NetNetworkService> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+// skipped method NetworkService.DisconnectFromPeer with unsupported parameter or return types
+
+// skipped method NetworkService.HandleNewStream with unsupported parameter or return types
+
+// skipped method NetworkService.HandlerForMsgType with unsupported parameter or return types
+
+// skipped method NetworkService.SendMessage with unsupported parameter or return types
+
+// skipped method NetworkService.SendRequest with unsupported parameter or return types
+
 @end
 
 #endif
