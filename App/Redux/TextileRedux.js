@@ -4,10 +4,6 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  onboardedSuccess: null,
-
-  toggleVerboseUi: null,
-
   locationUpdate: null,
   backgroundTask: null,
 
@@ -35,10 +31,6 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  onboarded: false,
-  preferences: {
-    verboseUi: false
-  },
   images: {
     error: false,
     loading: false,
@@ -54,15 +46,10 @@ export const TextileSelectors = {
   itemsById: (state, id) => {
     return state.textile.images.items.filter(item => item.hash === id)
   },
-  onboarded: state => state.textile.onboarded,
   camera: state => state.textile.camera
 }
 
 /* ------------- Reducers ------------- */
-
-export const onboardedSuccess = state => {
-  return state.merge({ onboarded: true })
-}
 
 // Used to ignore certain URIs in the CameraRoll
 export const handleUrisToIgnore = (state, {uris}) => {
@@ -73,9 +60,6 @@ export const handleUrisToIgnore = (state, {uris}) => {
   let processed = state.camera && state.camera.processed ? state.camera.processed.merge(newUri) : newUri
   return state.merge({ camera: { processed } })
 }
-
-export const toggleVerboseUi = state =>
-  state.merge({ preferences: { ...state.preferences, verboseUi: !state.preferences.verboseUi } })
 
 export const handlePhotosProcessing = (state, {photos}) => {
   let newUri = {}
@@ -191,9 +175,6 @@ export const pairNewDeviceError = (state, {pubKey}) => {
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.ONBOARDED_SUCCESS]: onboardedSuccess,
-
-  [Types.TOGGLE_VERBOSE_UI]: toggleVerboseUi,
   [Types.PHOTOS_PROCESSING]: handlePhotosProcessing,
   [Types.PHOTO_PROCESSING_ERROR]: handlePhotoProcessingError,
 

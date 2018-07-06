@@ -3,6 +3,7 @@ import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import TextileActions from '../Redux/TextileRedux'
+import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
@@ -82,7 +83,7 @@ const mapStateToProps = (state, ownProps) => {
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
-    verboseUi: state.textile.preferences.verboseUi
+    verboseUi: state.preferences.verboseUi
   }
 }
 
@@ -90,7 +91,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     viewPhoto: (index, thread) => { dispatch(UIActions.viewPhotoRequest(index, thread)) },
     refresh: (thread: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(thread)) },
-    toggleVerboseUi: () => { dispatch(TextileActions.toggleVerboseUi()) }
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }
 

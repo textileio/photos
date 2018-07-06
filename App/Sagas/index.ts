@@ -5,6 +5,7 @@ import { getType } from 'typesafe-actions'
 
 import StartupActions from '../Redux/StartupRedux'
 import {TextileTypes} from '../Redux/TextileRedux'
+import PreferencesActions from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
@@ -66,7 +67,7 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.stopNodeRequest), stopNode),
 
     // Actions that trigger creating (therefore starting/stopping) the node
-    takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
+    takeEvery(getType(PreferencesActions.onboardedSuccess), triggerCreateNode),
 
     // All things we want to trigger photosTask are funneled through starting the node, so handle START_NODE_SUCCESS
     // by running the photosTask saga here
