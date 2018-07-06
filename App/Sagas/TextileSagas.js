@@ -193,8 +193,8 @@ export function * getPhotoHashes ({thread}) {
 export function * pairNewDevice (action) {
   const { pubKey } = action
   try {
-    // TODO: pairDevice returns a String. Should we be using it?
-    yield call(IPFS.pairDevice, pubKey)
+    // TODO: Get/make a device id
+    yield call(TextileNode.addDevice, 'someId', pubKey)
     yield put(TextileActions.pairNewDeviceSuccess(pubKey))
   } catch (err) {
     yield put(TextileActions.pairNewDeviceError(pubKey))

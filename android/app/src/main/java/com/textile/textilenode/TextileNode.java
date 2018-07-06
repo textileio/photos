@@ -9,14 +9,12 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import net.MultipartRequest;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -25,13 +23,13 @@ import java.util.Map;
 import mobile.Event;
 import mobile.Messenger;
 import mobile.Mobile;
+import mobile.Mobile_;
 import mobile.NodeConfig;
-import mobile.Wrapper;
 
 public class TextileNode extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileNode";
     private static ReactApplicationContext reactContext = null;
-    static Wrapper node = null;
+    static Mobile_ node = null;
 
     public TextileNode(ReactApplicationContext context) {
         // Pass in the context to the constructor and save it so you can emit events
@@ -163,16 +161,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getIPFSPeerId (Promise promise) {
-        try {
-            promise.resolve(node.getIPFSPeerId());
-        }
-        catch (Exception e) {
-            promise.reject("GET IPFS PEER ID ERROR", e);
-        }
-    }
-
-    @ReactMethod
     public void getUsername (Promise promise) {
         try {
             promise.resolve(node.getUsername());
@@ -193,13 +181,65 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void threads (Promise promise) {
+        try {
+            promise.resolve(node.threads());
+        }
+        catch (Exception e) {
+            promise.reject("GET THREADS ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void addThread (String name, String mnemonic, Promise promise) {
         try {
-            node.addThread(name, mnemonic);
-            promise.resolve(null);
+            promise.resolve(node.addThread(name, mnemonic));
         }
         catch (Exception e) {
             promise.reject("ADD THREAD ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void removeThread (String name, Promise promise) {
+        try {
+            node.removeThread(name);
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("REMOVE THREAD ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void devices (Promise promise) {
+        try {
+            promise.resolve(node.devices());
+        }
+        catch (Exception e) {
+            promise.reject("GET DEVICES ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addDevice (String name, String pubKey, Promise promise) {
+        try {
+            node.addDevice(name, pubKey);
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("ADD DEVICE ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void removeDevice (String name, Promise promise) {
+        try {
+            node.removeDevice(name);
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("REMOVE DEVICE ERROR", e);
         }
     }
 
@@ -214,7 +254,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
             map.putString("payloadPath", multipart.getPayloadPath());
             map.putString("boundary", multipart.getBoundary());
             promise.resolve(map);
-
         }
         catch (Exception e) {
             promise.reject("ADD PHOTO ERROR", e);
@@ -235,17 +274,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoBlocks (String offset, Integer limit, String threadName, Promise promise) {
+    public void photoBlocks (String offset, Integer limit, String threadName, Promise promise) {
         try {
-            String jsonString = node.getPhotoBlocks(offset, limit, threadName);
-            // convert response to json
-            JSONObject obj = new JSONObject(jsonString);
-            JSONArray jsonArray = obj.optJSONArray("items");
-            if (jsonArray == null) {
-                jsonArray = new JSONArray();
-            }
-            WritableArray array = JsonConvert.jsonToReact(jsonArray);
-            promise.resolve(array);
+            promise.resolve(node.photoBlocks(offset, limit, threadName));
         }
         catch (Exception e) {
             promise.reject("GET PHOTO BLOCKS ERROR", e);
@@ -269,16 +300,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
         }
         catch (Exception e) {
             promise.reject("GET FILE DATA ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void pairDevice (String pkb64, Promise promise) {
-        try {
-            promise.resolve(node.pairDevice(pkb64));
-        }
-        catch (Exception e) {
-            promise.reject("PAIR DEVICE ERROR", e);
         }
     }
 
