@@ -17,7 +17,7 @@ describe('ui stories', () => {
     it('should succeed at adding a thread', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(tmpId, name))
       const match0: ThreadItem = { tmpId, name, state: 'adding' }
-      expect(state0.threads[0]).toEqual(match0)
+      expect(state0.threads[0]).toMatchObject(match0)
       const state1 = reducer(state0, actions.addThreadSuccess(tmpId, id))
       const match1: ThreadItem = { id, name, state: 'joined' }
       expect(state1.threads[0]).toMatchObject(match1)
@@ -25,7 +25,7 @@ describe('ui stories', () => {
     it('should fail at adding a thread', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(tmpId, name))
       const match0: ThreadItem = { tmpId, name, state: 'adding' }
-      expect(state0.threads[0]).toEqual(match0)
+      expect(state0.threads[0]).toMatchObject(match0)
       const state1 = reducer(state0, actions.addThreadError(tmpId, error))
       const match1: ThreadItem = { tmpId, name, error, state: 'adding' }
       expect(state1.threads[0]).toMatchObject(match1)
