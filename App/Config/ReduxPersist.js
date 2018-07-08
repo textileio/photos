@@ -49,6 +49,7 @@ const migrations = {
     }
   },
   4: (state) => {
+    // Not migrating devices because we didn't previously have meaningful device data
     return {
       ...state,
       preferences: {

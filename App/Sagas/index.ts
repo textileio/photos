@@ -10,6 +10,7 @@ import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
+import DevicesActions from '../Redux/DevicesRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -26,7 +27,7 @@ import {
   createNode,
   startNode,
   stopNode,
-  pairNewDevice,
+  addDevice,
   getPhotoHashes,
   shareImage,
   photosTask,
@@ -54,7 +55,7 @@ export default function * root () {
     takeEvery(getType(AuthActions.logInRequest), logIn),
     takeEvery(getType(AuthActions.recoverPasswordRequest), recoverPassword),
 
-    takeEvery(TextileTypes.PAIR_NEW_DEVICE, pairNewDevice),
+    takeEvery(getType(DevicesActions.addDeviceRequest), addDevice),
 
     takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
 
