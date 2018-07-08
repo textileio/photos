@@ -202,8 +202,8 @@ export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceR
   const { requestId, name, pubKey } = action.payload
   try {
     yield call(TextileNode.addDevice, name, pubKey)
-    // TODO: we need a device id from the API
-    yield put(DevicesActions.addDeviceSuccess(requestId, 'someId'))
+    // We use the pubKey as the device id
+    yield put(DevicesActions.addDeviceSuccess(requestId, pubKey))
   } catch (error) {
     yield put(DevicesActions.addDeviceError(requestId, error))
   }
