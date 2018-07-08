@@ -11,6 +11,7 @@ export const reducers = combineReducers({
   textile: require('./TextileRedux').reducer,
   preferences: require('./PreferencesRedux').reducer,
   threads: require('./ThreadsRedux').reducer,
+  devices: require('./DevicesRedux').reducer,
   ui: require('./UIRedux').reducer
 })
 
