@@ -18,11 +18,7 @@ const { Types, Creators } = createActions({
 
   photosTaskError: ['error'],
   photosProcessing: ['photos'],
-  photoProcessingError: ['uri', 'error'],
-
-  pairNewDevice: ['pubKey'],
-  pairNewDeviceSuccess: ['pubKey'],
-  pairNewDeviceError: ['pubKey']
+  photoProcessingError: ['uri', 'error']
 })
 
 export const TextileTypes = Types
@@ -36,8 +32,7 @@ export const INITIAL_STATE = Immutable({
     loading: false,
     items: []
   },
-  camera: {},
-  devices: []
+  camera: {}
 })
 
 /* ------------- Selectors ------------- */
@@ -141,34 +136,6 @@ export const imageRemovalComplete = (state, {id}) => {
   return state.merge({ images: { items } })
 }
 
-export const pairNewDevice = (state, {pubKey}) => {
-  const existingDevices = state.devices ? state.devices : []
-  const devices = [{ pubKey, state: 'pending' }, ...existingDevices]
-  return state.merge({ devices })
-}
-
-export const pairNewDeviceSuccess = (state, {pubKey}) => {
-  const existingDevices = state.devices ? state.devices : []
-  const devices = existingDevices.map(device => {
-    if (device.pubKey === pubKey) {
-      return { pubKey: device.pubKey, state: 'paired' }
-    }
-    return device
-  })
-  return state.merge({ devices })
-}
-
-export const pairNewDeviceError = (state, {pubKey}) => {
-  const existingDevices = state.devices ? state.devices : []
-  const devices = existingDevices.map(device => {
-    if (device.pubKey === pubKey) {
-      return { pubKey: device.pubKey, state: 'error' }
-    }
-    return device
-  })
-  return state.merge({ devices })
-}
-
 // Helper so sagas can figure out current items loaded
 // const getItems = state => state.items
 
@@ -185,9 +152,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.IMAGE_UPLOAD_PROGRESS]: handleImageProgress,
   [Types.IMAGE_UPLOAD_COMPLETE]: handleImageUploadComplete,
   [Types.IMAGE_UPLOAD_ERROR]: handleImageUploadError,
-  [Types.IMAGE_REMOVAL_COMPLETE]: imageRemovalComplete,
-
-  [Types.PAIR_NEW_DEVICE]: pairNewDevice,
-  [Types.PAIR_NEW_DEVICE_SUCCESS]: pairNewDeviceSuccess,
-  [Types.PAIR_NEW_DEVICE_ERROR]: pairNewDeviceError
+  [Types.IMAGE_REMOVAL_COMPLETE]: imageRemovalComplete
 })

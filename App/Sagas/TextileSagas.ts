@@ -26,6 +26,7 @@ import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions, { Threads } from '../Redux/ThreadsRedux'
+import DevicesActions from '../Redux/DevicesRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 import { Buffer } from 'buffer'
@@ -197,14 +198,14 @@ export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.g
   }
 }
 
-export function * pairNewDevice (action) {
-  const { pubKey } = action
+export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceRequest>) {
+  const { requestId, name, pubKey } = action.payload
   try {
-    // TODO: Get/make a device id
-    yield call(TextileNode.addDevice, 'someId', pubKey)
-    yield put(TextileActions.pairNewDeviceSuccess(pubKey))
-  } catch (err) {
-    yield put(TextileActions.pairNewDeviceError(pubKey))
+    yield call(TextileNode.addDevice, name, pubKey)
+    // TODO: we need a device id from the API
+    yield put(DevicesActions.addDeviceSuccess(requestId, 'someId'))
+  } catch (error) {
+    yield put(DevicesActions.addDeviceError(requestId, error))
   }
 }
 
