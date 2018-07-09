@@ -148,9 +148,9 @@ RCT_EXPORT_METHOD(getAccessToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPr
 
 RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *threadId = [self _addThread:name withMnemonic:mnemonic error:&error];
+  NSString *result = [self _addThread:name withMnemonic:mnemonic error:&error];
   if (!error) {
-    resolve(threadId);
+    resolve(result);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -166,7 +166,7 @@ RCT_EXPORT_METHOD(removeThread:(NSString *)threadId resolver:(RCTPromiseResolveB
   }
 }
 
-RCT_EXPORT_METHOD(threads:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_REMAP_METHOD(threads, threadsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *jsonString = [self _threads:&error];
   if (!error) {
@@ -178,9 +178,9 @@ RCT_EXPORT_METHOD(threads:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRe
 
 RCT_EXPORT_METHOD(addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NetMultipartRequest *multipart = [self _addPhoto:path toThreadNamed:threadName withCaption:caption error:&error];
+  NSString *result = [self _addPhoto:path toThreadNamed:threadName withCaption:caption error:&error];
   if(!error) {
-    resolve(@{ @"payloadPath": multipart.payloadPath, @"boundary": multipart.boundary });
+    resolve(result);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -188,9 +188,9 @@ RCT_EXPORT_METHOD(addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName
 
 RCT_EXPORT_METHOD(sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *sid = [self _sharePhoto:id toThreadNamed:threadName withCaption:caption error:&error];
+  NSString *result = [self _sharePhoto:id toThreadNamed:threadName withCaption:caption error:&error];
   if(!error) {
-    resolve(sid);
+    resolve(result);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -319,7 +319,7 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node threads:error];
 }
 
-- (NetMultipartRequest *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
+- (NSString *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
   if (!caption) {
     caption = @"";
   }

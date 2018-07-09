@@ -7,9 +7,15 @@ import {
 
 const { TextileNode, Events } = NativeModules
 
-type MultipartData = {
+type PinRequest = {
+  boundary: string,
   payloadPath: string,
-  boundary: string
+}
+
+type ThreadItem = {
+  id: string,
+  name: string,
+  peers: number
 }
 
 export default {
@@ -54,16 +60,28 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  addThread: async function (name: string, mnemonic: string): Promise<string> {
-    return await TextileNode.addThread(name, mnemonic)
+  addThread: async function (name: string, mnemonic: string): Promise<ThreadItem> {
+    const jsonString = await TextileNode.addThread(name, mnemonic)
+    const jsonObject = JSON.parse(jsonString)
+    return jsonObject
   },
 
-  addPhoto: async function (path: string, threadName: string, caption: string): Promise<MultipartData> {
-    return await TextileNode.addPhoto(path, threadName, caption)
+  threads: async function (): Promise<ThreadItem[]> {
+    const jsonString = await TextileNode.threads()
+    const jsonObject = JSON.parse(jsonString)
+    return jsonObject.items
   },
 
-  sharePhoto: async function (id: string, threadName: string, caption: string): Promise<string> {
-    return await TextileNode.sharePhoto(id, threadName, caption)
+  addPhoto: async function (path: string, threadName: string, caption: string): Promise<PinRequest[]> {
+    const jsonString = await TextileNode.addPhoto(path, threadName, caption)
+    const jsonObject = JSON.parse(jsonString)
+    return jsonObject.items
+  },
+
+  sharePhoto: async function (id: string, threadName: string, caption: string): Promise<PinRequest[]> {
+    const jsonString = TextileNode.sharePhoto(id, threadName, caption)
+    const jsonObject = JSON.parse(jsonString)
+    return jsonObject.items
   },
 
   getPhotoBlocks: async function (offset: ?string, limit: number, threadName: string): Promise<[any]> {

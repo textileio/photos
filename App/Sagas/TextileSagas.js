@@ -122,8 +122,16 @@ export function * createNode ({path}) {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
     yield call(IPFS.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
-    yield call(IPFS.addThread, "default")
-    yield call(IPFS.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    const possibleThreads = yield call(IPFS.threads)
+    const threads = possibleThreads || []
+    const defaultThread = threads.find(thread => thread.name === 'default')
+    const allThread = threads.find(thread => thread.name === Config.ALL_THREAD_NAME)
+    if (!defaultThread) {
+      yield call(IPFS.addThread, "default")
+    }
+    if (!allThread) {
+      yield call(IPFS.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    }
     yield put(IpfsNodeActions.createNodeSuccess())
     yield put(IpfsNodeActions.startNodeRequest())
   } catch (error) {
