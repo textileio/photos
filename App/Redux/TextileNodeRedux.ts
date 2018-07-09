@@ -36,6 +36,7 @@ const actions = {
   stopNodeFailure: createAction('STOP_NODE_FAILURE', resolve => {
     return (error: Error) => resolve({ error })
   }),
+  // TODO: switch this all over to thread id
   getPhotoHashesRequest: createAction('GET_PHOTO_HASHES_REQUEST', resolve => {
     return (thread: string) => resolve({ thread })
   }),
@@ -59,6 +60,10 @@ type ThreadData = {
   readonly error?: Error
 }
 
+type ThreadMap = {
+  [key: string]: ThreadData
+}
+
 type TextileNodeState = {
   readonly locked: boolean
   readonly appState: AppStateStatus | 'unknown'
@@ -66,12 +71,16 @@ type TextileNodeState = {
     readonly state?: 'creating' | 'stopped' | 'starting' | 'started' | 'stopping'
     readonly error?: Error
   }
-  readonly threads: ReadonlyMap<string, ThreadData>
+  readonly threads: ThreadMap
 }
 
 const defaultThreadData = createEmptyThreadData()
 const allThreadData = createEmptyThreadData()
-const initialThreads = new Map([['default', defaultThreadData], [Config.ALL_THREAD_NAME, allThreadData]])
+const allThreadName = Config.ALL_THREAD_NAME as string
+const initialThreads: ThreadMap = { 
+  'default': defaultThreadData, 
+  [allThreadName]: allThreadData
+}
 
 export const initialState: TextileNodeState = {
   locked: false,
@@ -103,21 +112,22 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.stopNodeFailure):
       return { ...state, nodeState: { ...state.nodeState, error: action.payload.error } }
     case getType(actions.getPhotoHashesRequest): {
-      const threads = new Map(state.threads)
-      const threadData = threads.get(action.payload.thread) || createEmptyThreadData()
-      threads.set(action.payload.thread, { ...threadData, querying: true })
+      const { thread } = action.payload
+      const threadData = state.threads[thread] || createEmptyThreadData()
+      const threads = { ...state.threads, [thread]: { ...threadData, querying: true } }
       return { ...state, threads }
     }
     case getType(actions.getPhotoHashesSuccess): {
-      const threads = new Map(state.threads)
-      const threadData = threads.get(action.payload.thread) || createEmptyThreadData()
-      threads.set(action.payload.thread, { ...threadData, querying: false, items: action.payload.items })
+      // TODO: This isn't working?
+      const { thread, items } = action.payload
+      const threadData = state.threads[thread] || createEmptyThreadData()
+      const threads = { ...state.threads, [thread]: { ...threadData, querying: false, items: items } }
       return { ...state, threads }
     }
     case getType(actions.getPhotoHashesFailure): {
-      const threads = new Map(state.threads)
-      const threadData = threads.get(action.payload.thread) || createEmptyThreadData()
-      threads.set(action.payload.thread, { ...threadData, querying: false, error: action.payload.error })
+      const { thread, error } = action.payload
+      const threadData = state.threads[thread] || createEmptyThreadData()
+      const threads = { ...state.threads, [thread]: { ...threadData, querying: false, error } }
       return { ...state, threads }
     }
     default:
