@@ -21,7 +21,7 @@ BackgroundTask.define(() => {
 // subscribe to native events
 // NOTE: we may want to cancel listener with the returned handle at some point with subscription.remove()
 IPFS.eventEmitter.addListener('onOnline', () => {
-  // TODO: show some UI? "p2p online"?
+  store.dispatch(IPFSActions.nodeOnline())
 })
 IPFS.eventEmitter.addListener('onThreadUpdate', (payload) => {
   store.dispatch(IPFSActions.getPhotoHashesRequest(payload.thread))
