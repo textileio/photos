@@ -122,16 +122,6 @@ export function * createNode ({path}) {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
     yield call(IPFS.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
-    const possibleThreads = yield call(IPFS.threads)
-    const threads = possibleThreads || []
-    const defaultThread = threads.find(thread => thread.name === 'default')
-    const allThread = threads.find(thread => thread.name === Config.ALL_THREAD_NAME)
-    if (!defaultThread) {
-      yield call(IPFS.addThread, "default")
-    }
-    if (!allThread) {
-      yield call(IPFS.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
-    }
     yield put(IpfsNodeActions.createNodeSuccess())
     yield put(IpfsNodeActions.startNodeRequest())
   } catch (error) {
@@ -209,10 +199,17 @@ export function * pairNewDevice (action) {
   }
 }
 
-export function * shareImage ({thread, hash, caption}) {
+export function * shareImage ({payload}) {
   try {
-    // TODO: sharePhoto returns a String. Should we be using it?
-    yield call(IPFS.sharePhoto, hash, thread, caption)
+    // Make sure we have a shared thread
+    const possibleThreads = yield call(IPFS.threads)
+    const threads = possibleThreads || []
+    const allThread = threads.find(thread => thread.name === Config.ALL_THREAD_NAME)
+    if (!allThread) {
+      yield call(IPFS.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    }
+    const {thread, hash, caption} = payload
+    const pinRequests = yield call(IPFS.sharePhoto, hash, thread, caption)
     yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
@@ -221,6 +218,14 @@ export function * shareImage ({thread, hash, caption}) {
 
 export function * photosTask () {
   try {
+    // Make sure we have a default thread
+    const possibleThreads = yield call(IPFS.threads)
+    const threads = possibleThreads || []
+    const defaultThread = threads.find(thread => thread.name === 'default')
+    const allThread = threads.find(thread => thread.name === Config.ALL_THREAD_NAME)
+    if (!defaultThread) {
+      yield call(IPFS.addThread, "default")
+    }
     const camera = yield select(TextileSelectors.camera)
     let allPhotos = yield call(getAllPhotos)
 
