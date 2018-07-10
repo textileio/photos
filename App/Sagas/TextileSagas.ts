@@ -32,6 +32,7 @@ import Upload from 'react-native-background-upload'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
+import * as TextileTypes from '../Models/TextileTypes'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload.data
@@ -128,16 +129,16 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
     yield call(TextileNode.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
-    const possibleThreads = yield call(TextileNode.threads)
-    const threads = possibleThreads || []
-    const defaultThread = threads.find(thread => thread.name === 'default')
-    const allThread = threads.find(thread => thread.name === Config.ALL_THREAD_NAME)
-    if (!defaultThread) {
-      yield call(TextileNode.addThread, "default")
-    }
-    if (!allThread) {
-      yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
-    }
+    // const possibleThreads: TextileTypes.Threads = yield call(TextileNode.threads)
+    // const threads = possibleThreads.items || []
+    // const defaultThread = threads.find(thread => thread.name === 'default')
+    // const allThread = threads.find(thread => thread.name === Config.ALL_THREAD_NAME)
+    // if (!defaultThread) {
+    //   yield call(TextileNode.addThread, "default")
+    // }
+    // if (!allThread) {
+    //   yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    // }
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startNodeRequest())
   } catch (error) {
@@ -179,9 +180,9 @@ export function * stopNode () {
 export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.getPhotoHashesRequest>) {
   const { thread } = action.payload
   try {
-    const items = yield call(TextileNode.getPhotoBlocks, -1, thread, undefined)
+    const blocks: TextileTypes.Blocks = yield call(TextileNode.getPhotoBlocks, -1, thread, undefined)
     let data = []
-    for (let item of items) {
+    for (let item of blocks.items) {
       try {
         const captionsrc = yield call(TextileNode.getBlockData, item.id, 'caption')
         const caption = Buffer.from(captionsrc, 'base64').toString('utf8')
