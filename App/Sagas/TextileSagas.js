@@ -210,6 +210,10 @@ export function * shareImage ({payload}) {
     }
     const {thread, hash, caption} = payload
     const pinRequests = yield call(IPFS.sharePhoto, hash, thread, caption)
+    for (const pinRequest of pinRequests) {
+      // FIXME: Just setting these off for now, need to track some state probably
+      yield uploadFile(pinRequest.Boundary, pinRequest.Boundary, pinRequest.PayloadPath)
+    }
     yield put(IpfsNodeActions.getPhotoHashesRequest(thread))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
@@ -253,10 +257,10 @@ export function * photosTask () {
     for (let photo of photos.reverse()) {
       try {
         photo = yield call(getPhotoPath, photo)
-        const multipartData = yield call(IPFS.addPhoto, photo.path, 'default')
+        const pinRequests = yield call(IPFS.addPhoto, photo.path, 'default')
         photoUploads.push({
           photo: photo,
-          multipartData
+          pinRequests
         })
       } catch (error) {
         // if error, delete the photo copy and thumb from disk then fire error
@@ -271,10 +275,12 @@ export function * photosTask () {
     yield put(IpfsNodeActions.getPhotoHashesRequest('default'))
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
-      let {photo, multipartData} = photoData
+      let {photo, pinRequests} = photoData
       try {
-        yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
-        yield uploadFile(multipartData.boundary, multipartData.boundary, multipartData.payloadPath)
+        yield put(TextileActions.imageAdded(photo.uri, 'default', pinRequests))
+        for (const pinRequest of pinRequests) {
+          yield uploadFile(pinRequest.Boundary, pinRequest.Boundary, pinRequest.PayloadPath)
+        }
       } catch (error) {
         yield put(TextileActions.photoProcessingError(photo.uri, error))
       } finally {
@@ -302,9 +308,9 @@ export function * removePayloadFile ({data}) {
   const { id } = data
   const items = yield select(TextileSelectors.itemsById, id)
   for (const item of items) {
-    if (item.remotePayloadPath && item.state === 'complete') {
+    if (item.payloadPath && item.state === 'complete') {
       // TODO: probably should be a try/catch?
-      yield call(RNFS.unlink, item.remotePayloadPath)
+      yield call(RNFS.unlink, item.payloadPath)
     }
   }
   yield put(TextileActions.imageRemovalComplete(id))
@@ -316,7 +322,7 @@ export function * retryUploadAfterError ({data}) {
   for (const item of items) {
     if (item.remainingUploadAttempts > 0) {
       yield put(TextileActions.imageUploadRetried(item.hash))
-      yield uploadFile(item.hash, item.hash, item.remotePayloadPath)
+      yield uploadFile(item.hash, item.hash, item.payloadPath)
     }
   }
 }
