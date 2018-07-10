@@ -17,6 +17,7 @@ const { Types, Creators } = createActions({
   stopNodeRequest: null,
   stopNodeSuccess: null,
   stopNodeFailure: ['error'],
+  nodeOnline: null,
   getPhotoHashesRequest: ['thread'],
   getPhotoHashesSuccess: ['thread', 'items'],
   getPhotoHashesFailure: ['thread', 'error']
@@ -32,6 +33,7 @@ export const INITIAL_STATE = Immutable({
   appState: 'default',
   nodeState: {
     state: 'undefined', // | creating | stopped | starting | started | stopping
+    online: false,
     error: null
   },
   threads: {
@@ -84,6 +86,9 @@ export const nodeStopped = state =>
 export const nodeError = (state, {error}) =>
   state.merge({...state, nodeState: {...state.nodeState, error: error}})
 
+export const nodeOnline = state =>
+  state.merge({...state, nodeState: {...state.nodeState, online: true}})
+
 export const photoHashesRequest = (state, {thread}) => {
   const currentThreadState = state.threads[thread]
   const newThreadState = currentThreadState.merge({querying: true})
@@ -124,6 +129,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.STOP_NODE_REQUEST]: nodeStopping,
   [Types.STOP_NODE_SUCCESS]: nodeStopped,
   [Types.STOP_NODE_FAILURE]: nodeError,
+
+  [Types.NODE_ONLINE]: nodeOnline,
 
   [Types.GET_PHOTO_HASHES_REQUEST]: photoHashesRequest,
   [Types.GET_PHOTO_HASHES_SUCCESS]: photoHashesSuccess,
