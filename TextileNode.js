@@ -8,8 +8,8 @@ import {
 const { TextileNode, Events } = NativeModules
 
 type PinRequest = {
-  boundary: string,
-  payloadPath: string,
+  Boundary: string,
+  PayloadPath: string,
 }
 
 type ThreadItem = {
@@ -79,7 +79,7 @@ export default {
   },
 
   sharePhoto: async function (id: string, threadName: string, caption: string): Promise<PinRequest[]> {
-    const jsonString = TextileNode.sharePhoto(id, threadName, caption)
+    const jsonString = await TextileNode.sharePhoto(id, threadName, caption)
     const jsonObject = JSON.parse(jsonString)
     return jsonObject.items
   },
