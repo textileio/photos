@@ -128,8 +128,16 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
     yield call(TextileNode.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
-    yield call(TextileNode.addThread, "default")
-    yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    const possibleThreads = yield call(TextileNode.threads)
+    const threads = possibleThreads || []
+    const defaultThread = threads.find(thread => thread.name === 'default')
+    const allThread = threads.find(thread => thread.name === Config.ALL_THREAD_NAME)
+    if (!defaultThread) {
+      yield call(TextileNode.addThread, "default")
+    }
+    if (!allThread) {
+      yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    }
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startNodeRequest())
   } catch (error) {
