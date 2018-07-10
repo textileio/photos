@@ -9,14 +9,15 @@
 @import Foundation;
 #include "Universe.objc.h"
 
-#include "Net.objc.h"
 
+@class MobileBlockItem;
 @class MobileBlocks;
 @class MobileDeviceItem;
 @class MobileDevices;
 @class MobileEvent;
 @class MobileMobile;
 @class MobileNodeConfig;
+@class MobilePinRequests;
 @class MobileThreadItem;
 @class MobileThreads;
 @protocol MobileMessenger;
@@ -24,6 +25,27 @@
 
 @protocol MobileMessenger <NSObject>
 - (void)notify:(MobileEvent*)event;
+@end
+
+/**
+ * BlockItem is a simple meta data wrapper around a Device
+ */
+@interface MobileBlockItem : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+- (NSString*)id_;
+- (void)setId:(NSString*)v;
+- (NSString*)target;
+- (void)setTarget:(NSString*)v;
+// skipped field BlockItem.Parents with unsupported type: *types.Slice
+
+// skipped field BlockItem.Type with unsupported type: *types.Named
+
+// skipped field BlockItem.Date with unsupported type: *types.Named
+
 @end
 
 /**
@@ -102,9 +124,9 @@
  */
 - (BOOL)addDevice:(NSString*)name pubKey:(NSString*)pubKey error:(NSError**)error;
 /**
- * AddPhoto adds a photo by path and shares it to the default thread
+ * AddPhoto adds a photo by path and shares it to a thread
  */
-- (NetMultipartRequest*)addPhoto:(NSString*)path threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
+- (NSString*)addPhoto:(NSString*)path threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
 /**
  * AddThread adds a new thread with the given name
  */
@@ -200,6 +222,19 @@ NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
 @end
 
 /**
+ * PinRequests is a wrapper around multiple PinRequests
+ */
+@interface MobilePinRequests : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field PinRequests.Items with unsupported type: *types.Slice
+
+@end
+
+/**
  * ThreadItem is a simple meta data wrapper around a Thread
  */
 @interface MobileThreadItem : NSObject <goSeqRefInterface> {
@@ -228,11 +263,6 @@ NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
 // skipped field Threads.Items with unsupported type: *types.Slice
 
 @end
-
-/**
- * tmp while central does not proxy the remote ipfs cluster
- */
-FOUNDATION_EXPORT NSString* const MobileRemoteIPFSApi;
 
 /**
  * Create a gomobile compatible wrapper around TextileNode
