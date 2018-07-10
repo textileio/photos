@@ -70,7 +70,7 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  addThread: async function (name: string, mnemonic: string): Promise<ThreadItem> {
+  addThread: async function (name: string, mnemonic?: string): Promise<ThreadItem> {
     const jsonString = await TextileNode.addThread(name, mnemonic)
     const jsonObject = JSON.parse(jsonString)
     return jsonObject
