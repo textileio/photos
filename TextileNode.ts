@@ -73,7 +73,7 @@ export default {
   },
 
   sharePhoto: async function (id: string, threadName: string, caption?: string): Promise<TextileTypes.PinRequests> {
-    const jsonString = TextileNode.sharePhoto(id, threadName, caption)
+    const jsonString = await TextileNode.sharePhoto(id, threadName, caption)
     const pinRequests = JSON.parse(jsonString) as TextileTypes.PinRequests
     return pinRequests
   },
