@@ -63,7 +63,7 @@ const mapStateToProps = (state, ownProps) => {
       const item = allItemsObj[pinRequest.hash]
       if (item) {
         const updatedItem = { ...item, ...processingItem }
-        allItemsObj = allItemsObj[pinRequest.hash] = updatedItem
+        allItemsObj[pinRequest.hash] = updatedItem
         break
       }
     }

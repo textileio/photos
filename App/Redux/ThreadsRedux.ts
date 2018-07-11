@@ -114,7 +114,8 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.refreshThreadsRequest):
       return { ...state, refreshing: true, refreshError: undefined }
     case getType(actions.refreshThreadsSuccess):
-      const threads = action.payload.threads.items.map(threadItem => {
+      const threadItems = action.payload.threads.items || []
+      const threads = threadItems.map(threadItem => {
         const thread: Thread = { state: 'joined', threadItem }
         return thread
       })

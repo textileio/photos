@@ -80,7 +80,7 @@ export const handleImageAdded = (state, {uri, thread, pinRequests}) => {
   let newUri = {}
   newUri[uri] = 'complete'
   const processed = state.camera && state.camera.processed ? state.camera.processed.merge(newUri) : newUri
-  const pinRequestsData = pinRequests.map(pinRequest => {
+  const pinRequestsData = pinRequests.items.map(pinRequest => {
     return { 
       hash: pinRequest.Boundary, 
       payloadPath: pinRequest.PayloadPath,
