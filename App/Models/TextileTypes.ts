@@ -42,8 +42,8 @@ export interface Blocks {
 }
 
 export interface PinRequest {
-  boundary: string
-  payloadPath: string
+  Boundary: string
+  PayloadPath: string
 }
 
 export interface PinRequests {

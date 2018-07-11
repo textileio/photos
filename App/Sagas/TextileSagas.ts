@@ -25,7 +25,7 @@ import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRe
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
-import ThreadsActions, { Threads } from '../Redux/ThreadsRedux'
+import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
@@ -129,16 +129,6 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
     yield call(TextileNode.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
-    // const possibleThreads: TextileTypes.Threads = yield call(TextileNode.threads)
-    // const threads = possibleThreads.items || []
-    // const defaultThread = threads.find(thread => thread.name === 'default')
-    // const allThread = threads.find(thread => thread.name === Config.ALL_THREAD_NAME)
-    // if (!defaultThread) {
-    //   yield call(TextileNode.addThread, "default")
-    // }
-    // if (!allThread) {
-    //   yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
-    // }
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startNodeRequest())
   } catch (error) {
@@ -208,21 +198,31 @@ export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.g
 }
 
 export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceRequest>) {
-  const { requestId, name, pubKey } = action.payload
+  const { deviceItem } = action.payload
   try {
-    yield call(TextileNode.addDevice, name, pubKey)
+    yield call(TextileNode.addDevice, deviceItem.id, deviceItem.id)
     // We use the pubKey as the device id
-    yield put(DevicesActions.addDeviceSuccess(requestId, pubKey))
+    yield put(DevicesActions.addDeviceSuccess(deviceItem.id))
   } catch (error) {
-    yield put(DevicesActions.addDeviceError(requestId, error))
+    yield put(DevicesActions.addDeviceError(deviceItem.id, error))
   }
 }
 
 export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequest>) {
-  const {thread, hash, caption} = action.payload
   try {
-    // TODO: sharePhoto returns a String. Should we be using it?
-    yield call(TextileNode.sharePhoto, hash, thread, caption)
+    // Make sure we have a shared thread
+    const threads: TextileTypes.Threads = yield call(TextileNode.threads)
+    const threadItems = threads.items || []
+    const allThread = threadItems.find(thread => thread.name === Config.ALL_THREAD_NAME)
+    if (!allThread) {
+      yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    }
+    const {thread, hash, caption} = action.payload
+    const pinRequests: TextileTypes.PinRequests = yield call(TextileNode.sharePhoto, hash, thread, caption)
+    for (const pinRequest of pinRequests.items) {
+      // FIXME: Just setting these off for now, need to track some state probably
+      yield uploadFile(pinRequest.Boundary, pinRequest.Boundary, pinRequest.PayloadPath)
+    }    
     yield put(TextileNodeActions.getPhotoHashesRequest(thread))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
@@ -231,6 +231,13 @@ export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequ
 
 export function * photosTask () {
   try {
+    // Make sure we have a default thread
+    const threads: TextileTypes.Threads = yield call(TextileNode.threads)
+    const threadItems = threads.items || []
+    const defaultThread = threadItems.find(thread => thread.name === 'default')
+    if (!defaultThread) {
+      yield call(TextileNode.addThread, "default")
+    }
     const camera = yield select(TextileSelectors.camera)
     let allPhotos = yield call(getAllPhotos)
 
@@ -258,10 +265,10 @@ export function * photosTask () {
     for (let photo of photos.reverse()) {
       try {
         photo = yield call(getPhotoPath, photo)
-        const multipartData = yield call(TextileNode.addPhoto, photo.path, 'default')
+        const pinRequests: TextileTypes.PinRequests = yield call(TextileNode.addPhoto, photo.path, 'default')
         photoUploads.push({
           photo: photo,
-          multipartData
+          pinRequests
         })
       } catch (error) {
         // if error, delete the photo copy and thumb from disk then fire error
@@ -276,10 +283,12 @@ export function * photosTask () {
     yield put(TextileNodeActions.getPhotoHashesRequest('default'))
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
-      let {photo, multipartData} = photoData
+      let {photo, pinRequests} = photoData
       try {
-        yield put(TextileActions.imageAdded(photo.uri, 'default', multipartData.boundary, multipartData.payloadPath))
-        yield uploadFile(multipartData.boundary, multipartData.boundary, multipartData.payloadPath)
+        yield put(TextileActions.imageAdded(photo.uri, 'default', pinRequests))
+        for (const pinRequest of pinRequests.items) {
+          yield uploadFile(pinRequest.Boundary, pinRequest.Boundary, pinRequest.PayloadPath)
+        }
       } catch (error) {
         yield put(TextileActions.photoProcessingError(photo.uri, error))
       } finally {
@@ -307,9 +316,9 @@ export function * removePayloadFile ({data}) {
   const { id } = data
   const items = yield select(TextileSelectors.itemsById, id)
   for (const item of items) {
-    if (item.remotePayloadPath && item.state === 'complete') {
+    if (item.payloadPath && item.state === 'complete') {
       // TODO: probably should be a try/catch?
-      yield call(RNFS.unlink, item.remotePayloadPath)
+      yield call(RNFS.unlink, item.payloadPath)
     }
   }
   yield put(TextileActions.imageRemovalComplete(id))
@@ -321,7 +330,7 @@ export function * retryUploadAfterError ({data}) {
   for (const item of items) {
     if (item.remainingUploadAttempts > 0) {
       yield put(TextileActions.imageUploadRetried(item.hash))
-      yield uploadFile(item.hash, item.hash, item.remotePayloadPath)
+      yield uploadFile(item.hash, item.hash, item.payloadPath)
     }
   }
 }
@@ -341,26 +350,28 @@ function * uploadFile (id: string, boundary: string, payloadPath: string) {
 }
 
 export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
+  const { addId, name, mnemonic } = action.payload
   try {
-    const threadId: string = yield call(TextileNode.addThread, action.payload.name, action.payload.mnemonic)
-    yield put(ThreadsActions.addThreadSuccess(action.payload.tmpId, threadId))
+    const threadItem: TextileTypes.ThreadItem = yield call(TextileNode.addThread, name, mnemonic)
+    yield put(ThreadsActions.addThreadSuccess(addId, threadItem))
   } catch (error) {
-    yield put(ThreadsActions.addThreadError(action.payload.tmpId, error))
+    yield put(ThreadsActions.addThreadError(addId, error))
   }
 }
 
 export function * removeThread (action: ActionType<typeof ThreadsActions.removeThreadRequest>) {
+  const { threadId } = action.payload
   try {
-    yield call(TextileNode.removeThread, action.payload.id)
-    yield put(ThreadsActions.removeThreadSuccess(action.payload.id))
+    yield call(TextileNode.removeThread, threadId)
+    yield put(ThreadsActions.removeThreadSuccess(threadId))
   } catch (error) {
-    yield put(ThreadsActions.removeThreadError(action.payload.id, error))
+    yield put(ThreadsActions.removeThreadError(threadId, error))
   }
 }
 
 export function * refreshThreads () {
   try {
-    const threads: Threads = yield call(TextileNode.threads)
+    const threads: TextileTypes.Threads = yield call(TextileNode.threads)
     yield put(ThreadsActions.refreshThreadsSuccess(threads))
   } catch (error) {
     yield put(ThreadsActions.refreshThreadsError(error))

@@ -21,7 +21,7 @@ BackgroundTask.define(() => {
 // subscribe to native events
 // NOTE: we may want to cancel listener with the returned handle at some point with subscription.remove()
 TextileNode.eventEmitter.addListener('onOnline', () => {
-  // TODO: show some UI? "p2p online"?
+  store.dispatch(TextileNodeActions.nodeOnline())
 })
 // TODO: add types to event emitter if possible
 TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {

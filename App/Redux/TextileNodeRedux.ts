@@ -36,6 +36,9 @@ const actions = {
   stopNodeFailure: createAction('STOP_NODE_FAILURE', resolve => {
     return (error: Error) => resolve({ error })
   }),
+  nodeOnline: createAction('NODE_ONLINE', resolve => {
+    return () => resolve()
+  }),
   // TODO: switch this all over to thread id
   getPhotoHashesRequest: createAction('GET_PHOTO_HASHES_REQUEST', resolve => {
     return (thread: string) => resolve({ thread })
@@ -67,6 +70,7 @@ type ThreadMap = {
 type TextileNodeState = {
   readonly locked: boolean
   readonly appState: AppStateStatus | 'unknown'
+  readonly online: boolean
   readonly nodeState: {
     readonly state?: 'creating' | 'stopped' | 'starting' | 'started' | 'stopping'
     readonly error?: Error
@@ -85,6 +89,7 @@ const initialThreads: ThreadMap = {
 export const initialState: TextileNodeState = {
   locked: false,
   appState: 'unknown',
+  online: false,
   nodeState: {},
   threads: initialThreads
 }
@@ -111,6 +116,8 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.startNodeFailure):
     case getType(actions.stopNodeFailure):
       return { ...state, nodeState: { ...state.nodeState, error: action.payload.error } }
+    case getType(actions.nodeOnline):
+      return { ...state, online: true }
     case getType(actions.getPhotoHashesRequest): {
       const { thread } = action.payload
       const threadData = state.threads[thread] || createEmptyThreadData()

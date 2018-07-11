@@ -66,13 +66,13 @@ export default {
     return threads
   },
 
-  addPhoto: async function (path: string, threadName: string, caption: string): Promise<TextileTypes.PinRequests> {
+  addPhoto: async function (path: string, threadName: string, caption?: string): Promise<TextileTypes.PinRequests> {
     const jsonString = await TextileNode.addPhoto(path, threadName, caption)
     const pinRequests = JSON.parse(jsonString) as TextileTypes.PinRequests
     return pinRequests
   },
 
-  sharePhoto: async function (id: string, threadName: string, caption: string): Promise<TextileTypes.PinRequests> {
+  sharePhoto: async function (id: string, threadName: string, caption?: string): Promise<TextileTypes.PinRequests> {
     const jsonString = TextileNode.sharePhoto(id, threadName, caption)
     const pinRequests = JSON.parse(jsonString) as TextileTypes.PinRequests
     return pinRequests
