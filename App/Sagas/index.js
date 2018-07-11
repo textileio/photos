@@ -64,9 +64,9 @@ export default function * root () {
     // Actions that trigger creating (therefore starting/stopping) the node
     takeEvery(TextileTypes.ONBOARDED_SUCCESS, triggerCreateNode),
 
-    // All things we want to trigger photosTask are funneled through starting the node,
-    // and it going online, so handle NODE_ONLINE by running the photosTask saga here
-    takeEvery(IpfsNodeTypes.NODE_ONLINE, photosTask),
+    // All things we want to trigger photosTask are funneled through starting the node, so handle START_NODE_SUCCESS
+    // by running the photosTask saga here
+    takeEvery(IpfsNodeTypes.START_NODE_SUCCESS, photosTask),
 
     takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile),
     takeEvery(TextileTypes.IMAGE_UPLOAD_ERROR, retryUploadAfterError),
