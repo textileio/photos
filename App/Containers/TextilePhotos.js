@@ -59,10 +59,13 @@ const mapStateToProps = (state, ownProps) => {
   const thread = ownProps.navigation.state.params.thread
   let allItemsObj = state.ipfs.threads[thread].items.reduce((o, item, index) => ({...o, [item.hash]: { index, hash: item.hash, caption: item.caption, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
-    const item = allItemsObj[processingItem.hash]
-    if (item) {
-      const updatedItem = { ...item, ...processingItem }
-      allItemsObj = allItemsObj[processingItem.hash] = updatedItem
+    for (const pinRequest of processingItem.pinRequests) {
+      const item = allItemsObj[pinRequest.hash]
+      if (item) {
+        const updatedItem = { ...item, ...processingItem }
+        allItemsObj = allItemsObj[pinRequest.hash] = updatedItem
+        break
+      }
     }
   }
   const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
