@@ -13,13 +13,14 @@ export async function getPage (pageSize, cursor) {
   return CameraRoll.getPhotos(queryParams)
 }
 
-export async function getAllPhotos () {
+export async function getAllPhotos (limit) {
   let data = []
   let hasNextPage = true
   let cursor = null
-  let totalPages = 25 // I wanted to limit the total size of a return array
-  while (hasNextPage && totalPages) {
-    let photos = await getPage(25, cursor)
+  let page = 0 // I wanted to limit the total size of a return array
+  let pageSize = 25
+  while (hasNextPage && (limit === -1 || page < limit / pageSize)) {
+    let photos = await getPage(pageSize, cursor)
     hasNextPage = photos.page_info.has_next_page
     cursor = photos.page_info.end_cursor
     data = data.concat(photos.edges.map((photo) => {
@@ -31,7 +32,7 @@ export async function getAllPhotos () {
         height: photo.node.image.height
       }
     }))
-    totalPages -= 1
+    page += 1
   }
   return data
 }
