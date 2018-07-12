@@ -4,6 +4,7 @@ exports[`ui stories initial state should match snapshot 1`] = `
 Object {
   "sharingPhoto": Object {
     "active": false,
+    "selectedThreads": Map {},
   },
   "viewingPhoto": Object {
     "active": false,

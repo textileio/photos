@@ -50,19 +50,16 @@ class ThreadSelection extends React.PureComponent {
       return
     }
     // update functions are preferred for transactional updates
-    this.setState((state) => {
-      // copy the map rather than modifying state.
-      const selected = new Map(state.selected)
-      selected.set(id, !selected.get(id)) // toggle
-      return {selected}
-    })
+    const selected = new Map(this.props.selectedThreads)
+    selected.set(id, !selected.get(id))
+    this.props.updateSelectedThreads(selected)
   }
 
   _renderItem = ({item}) => (
     <MyListItem
       id={item.id}
       onPressItem={this._onPressItem}
-      selected={!!this.state.selected.get(item.id)}
+      selected={!!this.props.selectedThreads.get(item.id)}
       title={item.title}
       type={item.type}
     />
@@ -73,7 +70,7 @@ class ThreadSelection extends React.PureComponent {
   }
 
   render () {
-    const disabled = [...this.state.selected.values()].filter(value => value).length === 0
+    const disabled = [...this.props.selectedThreads.values()].filter(value => value).length === 0
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <FlatList
@@ -99,16 +96,27 @@ class ThreadSelection extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
+  const threads = state.threads.threadItems
+    .filter(threadItem => threadItem.name !== 'default')
+    .map(threadItem => {
+      return {
+        type: 'thread',
+        id: threadItem.name,
+        title: threadItem.name
+      }
+    })
   return {
     data: [
-      {type: 'thread', id: Config.ALL_THREAD_NAME, title: 'All Users'},
-      {type: 'add', id: 'add', title: 'New Thread'}
-    ]
+      ...threads,
+      // {type: 'add', id: 'add', title: 'New Thread'}
+    ],
+    selectedThreads: state.ui.sharingPhoto.selectedThreads
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    updateSelectedThreads: (selectedThreads: Map<string, boolean>) => { dispatch(UIActions.updateSelectedThreads(selectedThreads)) }
   }
 }
 

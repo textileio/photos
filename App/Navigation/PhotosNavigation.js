@@ -3,7 +3,6 @@ import DismissableStackNavigator from '../Components/DismissableStackNavigator'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import TextilePhotos from '../Containers/TextilePhotos'
-import Theads from '../Containers/Threads'
 import InfoView from '../Containers/InfoView'
 import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
 import Colors from '../Themes/Colors'
@@ -13,7 +12,8 @@ import Colors from '../Themes/Colors'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
 import Config from "react-native-config"
-import Threads from '../Containers/Threads';
+import Threads from '../Containers/Threads'
+import AddThreadScreen from '../Containers/AddThreadScreen'
 
 // Manifest of possible screens
 
@@ -38,20 +38,23 @@ const PhotosNav = StackNavigator(
 const SharedPhotosNav = StackNavigator(
   {
     SharedPhotos: {
-      screen: Threads,
-      navigationOptions: {
-        headerTitle: 'Threads'
-      }
+      screen: Threads
+    },
+    AddThread: {
+      screen: AddThreadScreen
+    },
+    ViewThread: {
+      screen: TextilePhotos
     }
   },
   {
     // Default config for all screens
     headerMode: 'float',
-    initialRouteParams: { thread: Config.ALL_THREAD_NAME },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
+      headerTintColor: headerTintColor,
+      headerBackTitleStyle: styles.headerButton
     }
   }
 )

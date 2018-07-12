@@ -12,15 +12,21 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state
-    return {
-      headerTitle: <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
+    const headerTitle = params.thread === 'default' ? (
+      <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
         <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
       </TouchableWithoutFeedback>
+    ) : params.thread
+    return {
+      headerTitle
     }
   }
 
   componentDidMount () {
-    this.props.navigation.setParams({ toggleVerboseUi: this.props.toggleVerboseUi })
+    this.props.navigation.setParams({ 
+      toggleVerboseUi: this.props.toggleVerboseUi,
+      thread: this.props.thread
+    })
   }
 
   onSelect = (row) => {
@@ -78,7 +84,7 @@ const mapStateToProps = (state, ownProps) => {
     ? 'Wallet Status:\n' + nodeStatus
     : (thread === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
-    : 'Share your first photo to the All Users thread.')
+    : 'Share your first photo to the ' + thread + ' thread.')
   return {
     thread,
     items: updatedItems,
