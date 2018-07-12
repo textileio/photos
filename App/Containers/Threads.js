@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, FlatList, ScrollView, Text, TouchableOpacity } from 'react-native'
+import HeaderButtons from 'react-navigation-header-buttons'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
-import Config from "react-native-config"
+import UIActions from '../Redux/UIRedux'
 
 // Styles
 import styles from './Styles/ThreadsStyle'
@@ -30,22 +31,25 @@ class MyListItem extends React.PureComponent {
 }
 
 class Threads extends React.PureComponent {
+
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {}
+    return {
+      headerTitle: 'Threads',
+      headerRight: (
+        <HeaderButtons IconComponent={Icon} OverflowIcon={<Icon name="ios-more" size={23} color="white" />} iconSize={33} color="white">
+          <HeaderButtons.Item title="add" iconName="ios-add" onPress={() => { navigation.navigate('AddThread') }} />
+        </HeaderButtons>
+      ),
+    }
+  }
+
   state = {selected: (new Map(): Map<string, boolean>)}
 
   _keyExtractor = (item, index) => item.id
 
   _onPressItem = (id: string) => {
-    if (id === 'add') {
-      this.refs.toast.show('Coming soon!', DURATION.LENGTH_SHORT)
-      return
-    }
-    // update functions are preferred for transactional updates
-    this.setState((state) => {
-      // copy the map rather than modifying state.
-      const selected = new Map(state.selected)
-      selected.set(id, !selected.get(id)) // toggle
-      return {selected}
-    })
+    this.props.navigation.navigate('ViewThread', { thread: id })
   }
 
   _renderItem = ({item}) => (
@@ -81,17 +85,20 @@ class Threads extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
+  const threads = state.threads.threadItems.map(threadItem => {
+    return {
+      type: 'thread',
+      id: threadItem.name,
+      title: threadItem.name
+    }
+  })
   return {
-    data: [
-      {type: 'thread', id: Config.ALL_THREAD_NAME, title: 'All Users'},
-      {type: 'add', id: 'add', title: 'New Thread'}
-    ]
+    data: threads
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-  }
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Threads)

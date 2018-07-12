@@ -31,6 +31,7 @@
     "git-hook": "npm run lint -s && npm run test -s"
   },
   "dependencies": {
+    "@types/react-navigation": "1.5.11",
     "apisauce": "^0.14.2",
     "appcenter": "^1.4.0",
     "appcenter-analytics": "^1.4.0",

@@ -210,20 +210,15 @@ export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceR
 
 export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   try {
-    // Make sure we have a shared thread
-    const threads: TextileTypes.Threads = yield call(TextileNode.threads)
-    const threadItems = threads.items || []
-    const allThread = threadItems.find(thread => thread.name === Config.ALL_THREAD_NAME)
-    if (!allThread) {
-      yield call(TextileNode.addThread, Config.ALL_THREAD_NAME, Config.ALL_THREAD_MNEMONIC)
+    const {threads, hash, caption} = action.payload
+    for (const thread of threads) {
+      const pinRequests: TextileTypes.PinRequests = yield call(TextileNode.sharePhoto, hash, thread, caption)
+      for (const pinRequest of pinRequests.items) {
+        // FIXME: Just setting these off for now, need to track some state probably
+        yield uploadFile(pinRequest.Boundary, pinRequest.Boundary, pinRequest.PayloadPath)
+      }    
+      yield put(TextileNodeActions.getPhotoHashesRequest(thread))
     }
-    const {thread, hash, caption} = action.payload
-    const pinRequests: TextileTypes.PinRequests = yield call(TextileNode.sharePhoto, hash, thread, caption)
-    for (const pinRequest of pinRequests.items) {
-      // FIXME: Just setting these off for now, need to track some state probably
-      yield uploadFile(pinRequest.Boundary, pinRequest.Boundary, pinRequest.PayloadPath)
-    }    
-    yield put(TextileNodeActions.getPhotoHashesRequest(thread))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
@@ -350,12 +345,14 @@ function * uploadFile (id: string, boundary: string, payloadPath: string) {
 }
 
 export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
-  const { addId, name, mnemonic } = action.payload
+  const { name, mnemonic } = action.payload
   try {
     const threadItem: TextileTypes.ThreadItem = yield call(TextileNode.addThread, name, mnemonic)
-    yield put(ThreadsActions.addThreadSuccess(addId, threadItem))
+    yield put(ThreadsActions.addThreadSuccess(threadItem))
+    yield put(TextileNodeActions.getPhotoHashesRequest(threadItem.name))
+    yield call(PhotosNavigationService.goBack)
   } catch (error) {
-    yield put(ThreadsActions.addThreadError(addId, error))
+    yield put(ThreadsActions.addThreadError(error))
   }
 }
 
@@ -365,13 +362,16 @@ export function * removeThread (action: ActionType<typeof ThreadsActions.removeT
     yield call(TextileNode.removeThread, threadId)
     yield put(ThreadsActions.removeThreadSuccess(threadId))
   } catch (error) {
-    yield put(ThreadsActions.removeThreadError(threadId, error))
+    yield put(ThreadsActions.removeThreadError(error))
   }
 }
 
 export function * refreshThreads () {
   try {
     const threads: TextileTypes.Threads = yield call(TextileNode.threads)
+    for (const threadItem of threads.items) {
+      yield put(TextileNodeActions.getPhotoHashesRequest(threadItem.name))
+    }
     yield put(ThreadsActions.refreshThreadsSuccess(threads))
   } catch (error) {
     yield put(ThreadsActions.refreshThreadsError(error))

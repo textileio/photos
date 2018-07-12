@@ -15,6 +15,11 @@ export default StyleSheet.create({
     fontFamily: 'Biotif-Medium',
     color: Colors.snow
   },
+  headerButton: {
+    fontFamily: 'Biotif-Regular',
+    color: Colors.snow,
+    fontSize: 17
+  },
   icon: {
     color: Colors.transparent
   },
