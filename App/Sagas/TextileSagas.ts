@@ -234,7 +234,8 @@ export function * photosTask () {
       yield call(TextileNode.addThread, "default")
     }
     const camera = yield select(TextileSelectors.camera)
-    let allPhotos = yield call(getAllPhotos)
+    let limit = camera.processed === undefined ? -1 : 250
+    let allPhotos = yield call(getAllPhotos, limit)
 
     // for new users, just grab their latest photos
     if (camera.processed === undefined) {
