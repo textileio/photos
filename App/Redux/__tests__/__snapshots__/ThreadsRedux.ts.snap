@@ -3,6 +3,6 @@
 exports[`ui stories initial state should match snapshot 1`] = `
 Object {
   "refreshing": false,
-  "threads": Array [],
+  "threadItems": Array [],
 }
 `;
