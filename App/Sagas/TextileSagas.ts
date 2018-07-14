@@ -200,7 +200,7 @@ export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.g
 export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceRequest>) {
   const { deviceItem } = action.payload
   try {
-    yield call(TextileNode.addDevice, deviceItem.id, deviceItem.id)
+    yield call(TextileNode.addDevice, deviceItem.name, deviceItem.id)
     // We use the pubKey as the device id
     yield put(DevicesActions.addDeviceSuccess(deviceItem.id))
   } catch (error) {
@@ -216,7 +216,7 @@ export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequ
       for (const pinRequest of pinRequests.items) {
         // FIXME: Just setting these off for now, need to track some state probably
         yield uploadFile(pinRequest.Boundary, pinRequest.Boundary, pinRequest.PayloadPath)
-      }    
+      }
       yield put(TextileNodeActions.getPhotoHashesRequest(thread))
     }
   } catch (error) {
