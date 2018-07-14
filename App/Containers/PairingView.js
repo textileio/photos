@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Button } from 'react-native'
 import { connect } from 'react-redux'
-import Actions from '../Redux/TextileRedux'
+import DevicesActions from '../Redux/DevicesRedux'
 
 // Styles
 import style from './Styles/PairingViewStyle'
@@ -138,7 +138,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    pairNewDevice: (pubKey) => { dispatch(Actions.pairNewDevice(pubKey)) }
+    pairNewDevice: (name, pubKey) => { dispatch(DevicesActions.addDevice(name, pubKey)) }
   }
 }
 
