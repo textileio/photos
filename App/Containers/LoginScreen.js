@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard, Alert, SafeAreaView } from 'react-native'
+import {
+  View,
+  Image,
+  Linking,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  Keyboard,
+  SafeAreaView,
+  Platform
+} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
@@ -56,12 +66,41 @@ class LoginScreen extends Component {
 
   componentDidMount () {
     this.props.navigation.setParams({ navigationTitle: this.props.navigationTitle })
+    // Possibly could be combined with the PairingView deeplink logic
+    if (Platform.OS === 'android') {
+      Linking.getInitialURL().then(url => {
+        this._handleOpenURL(url)
+      })
+    } else {
+      Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
+    }
   }
 
   componentDidUpdate () {
     if (this.props.error !== null) {
       this.dropdown.alertWithType('error', 'Error', this.props.error)
       this.props.dismissError()
+    }
+  }
+
+  _handleOpenURLEvent (event) {
+    this._handleOpenURL(event.url)
+  }
+
+  _handleOpenURL (url) {
+    let path = url.split('://')[1]
+    if (!path) { path = url }
+    path = path.split('/')[1]
+    if (url && path === 'invites') {
+      let regex = /[?&]([^=#]+)=([^&#]*)/g
+      let params = {}
+      let match
+      while (match = regex.exec(url)) {
+        params[match[1]] = match[2]
+      }
+      if (params.referral) {
+        this.props.updateFormValue({'referralCode': params.referral})
+      }
     }
   }
 
