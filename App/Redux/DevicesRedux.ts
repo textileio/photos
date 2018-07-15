@@ -71,9 +71,6 @@ export function reducer (state: DevicesState = initialState, action: DevicesActi
     }
     case getType(actions.addDeviceError): {
       const { deviceId, error } = action.payload
-      console.log('ERROR')
-      console.log(deviceId)
-      console.log(error)
       const devices = state.devices.map(device => {
         if (device.deviceItem.id === deviceId) {
           const updatedDevice: Device = { ...device, error }
