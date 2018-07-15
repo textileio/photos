@@ -198,16 +198,17 @@ export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.g
 }
 
 export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceRequest>) {
-  const { name, id } = action.payload
-  console.log('ADDD DEVICE')
-  console.log(action.payload)
+  const { deviceItem } = action.payload
+  console.log('ADDING NOW')
   console.log(action)
+  console.log(deviceItem.name, deviceItem.id)
   try {
-    yield call(TextileNode.addDevice, name, id)
+    yield call(TextileNode.addDevice, deviceItem.name, deviceItem.id)
     // We use the pubKey as the device id
-    yield put(DevicesActions.addDeviceSuccess(id))
+    yield put(DevicesActions.addDeviceSuccess(deviceItem.id))
   } catch (error) {
-    yield put(DevicesActions.addDeviceError(id, error))
+    console.log('ADDING FAIL')
+    yield put(DevicesActions.addDeviceError(deviceItem.id, error))
   }
 }
 
