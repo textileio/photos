@@ -26,7 +26,6 @@ class PairingView extends React.PureComponent {
       return deviceKey && d.deviceItem.id === deviceKey
     })
     if (device) {
-      console.log(device)
       this.setState(() => ({status: device.state}))
     }
   }
@@ -151,7 +150,6 @@ class PairingView extends React.PureComponent {
 const mapStateToProps = state => {
   const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
   const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
-  console.log(nodeState, online)
   return {
     devices: state.devices && state.devices.devices ? state.devices.devices : [],
     online: nodeState && online
