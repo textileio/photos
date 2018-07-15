@@ -71,6 +71,9 @@ export function reducer (state: DevicesState = initialState, action: DevicesActi
     }
     case getType(actions.addDeviceError): {
       const { deviceId, error } = action.payload
+      console.log('ERROR')
+      console.log(deviceId)
+      console.log(error)
       const devices = state.devices.map(device => {
         if (device.deviceItem.id === deviceId) {
           const updatedDevice: Device = { ...device, error }
@@ -113,7 +116,7 @@ export function reducer (state: DevicesState = initialState, action: DevicesActi
     case getType(actions.refreshDevicesRequest):
       return { ...state, refreshing: true, refreshError: undefined }
     case getType(actions.refreshDevicesSuccess):
-      const devices = action.payload.devices.items.map(deviceItem => { 
+      const devices = action.payload.devices.items.map(deviceItem => {
         const device: Device = { state: 'added', deviceItem }
         return device
       })
