@@ -1,5 +1,6 @@
 import React from 'react'
-import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
+import {View, Text, Image, Share, TouchableWithoutFeedback} from 'react-native'
+import HeaderButtons from 'react-navigation-header-buttons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import TextileActions from '../Redux/TextileRedux'
@@ -8,6 +9,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -17,13 +19,28 @@ class TextilePhotos extends React.PureComponent {
         <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
       </TouchableWithoutFeedback>
     ) : params.thread
+
+    const headerRight = params.thread === 'default' ? '' : (
+      <HeaderButtons IconComponent={Icon} OverflowIcon={<Icon name='ios-more' size={23} color='white' />} iconSize={33} color='white'>
+        <HeaderButtons.Item title='add' iconName='ios-add' onPress={() => {
+          Share.share({
+            title: 'New photos to share',
+            message: 'Come share photos with me on Textile Photos - a new decentralized photo sharing app',
+            url: 'https://google.com' // <- throw the link in here
+          })
+          .then((a) => console.warn('', a)
+          .catch((e) => console.warn('error', e)))
+        }} />
+      </HeaderButtons>
+    )
     return {
-      headerTitle
+      headerTitle,
+      headerRight
     }
   }
 
   componentDidMount () {
-    this.props.navigation.setParams({ 
+    this.props.navigation.setParams({
       toggleVerboseUi: this.props.toggleVerboseUi,
       thread: this.props.thread
     })
