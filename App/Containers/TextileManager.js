@@ -12,6 +12,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
+import DeepLink from '../Services/DeepLink'
 
 class TextileManager extends React.PureComponent {
   // TODO: This logic should be moved deeper into the stack
@@ -21,8 +22,10 @@ class TextileManager extends React.PureComponent {
   // TODO: This logic should be moved deeper into the stack
   _handleOpenURL (url) {
     if (url) {
-      const data = url.replace(/.*?:\/\//g, '')
-      this.props.navigation.navigate('PairingView', {data: data})
+      const data = DeepLink.getData(url)
+      if (data.path === '/invites/device' && data.hash !== '') {
+        this.props.navigation.navigate('PairingView', {request: DeepLink.getParams(data.hash)})
+      }
     }
   }
 
