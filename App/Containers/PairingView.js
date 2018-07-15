@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text, Button, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import DevicesActions from '../Redux/DevicesRedux'
-import DeepLink from '../Services/DeepLink'
 
 // Styles
 import style from './Styles/PairingViewStyle'
@@ -11,9 +10,8 @@ import photosStyle from './Styles/TextilePhotosStyle'
 class PairingView extends React.PureComponent {
   constructor (props) {
     super(props)
-    const params = DeepLink.paramsFromURL(this.props.navigation.state.params.data)
     this.state = {
-      key: params.key,
+      key: this.props.navigation.state.params.request.key,
       status: 'init'
     }
   }
@@ -117,7 +115,7 @@ class PairingView extends React.PureComponent {
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
-          <Text style={style.title}>ERROR</Text>
+          <Text style={style.status}>ERROR</Text>
           <Text style={style.message}>
             There was an issue pairing with your new device. This may be caused by network connectivity or other issues. Please try again. If it continues, please report the issue with Textile.
           </Text>
