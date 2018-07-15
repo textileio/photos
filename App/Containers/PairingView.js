@@ -7,7 +7,6 @@ import DeepLink from '../Services/DeepLink'
 // Styles
 import style from './Styles/PairingViewStyle'
 import photosStyle from './Styles/TextilePhotosStyle'
-import { Colors } from '../Themes'
 
 class PairingView extends React.PureComponent {
   constructor (props) {
@@ -38,6 +37,7 @@ class PairingView extends React.PureComponent {
   }
 
   cancel = () => {
+    this.props.removeDeviceRequest(this.state.key)
     this.props.navigation.navigate('OnboardingCheck')
   }
 
@@ -160,7 +160,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addDeviceRequest: (name, id) => { dispatch(DevicesActions.addDeviceRequest({name, id})) }
+    addDeviceRequest: (name, id) => { dispatch(DevicesActions.addDeviceRequest({name, id})) },
+    removeDeviceRequest: (id) => { dispatch(DevicesActions.removeDeviceRequest(id)) }
   }
 }
 
