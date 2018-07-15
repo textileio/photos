@@ -1,40 +1,30 @@
 import React from 'react'
 import { View, Text, Button, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
-import DevicesActions from '../Redux/DevicesRedux'
+import ThreadsAction from '../Redux/ThreadsRedux'
 
 // Styles
 import style from './Styles/PairingViewStyle'
 import photosStyle from './Styles/TextilePhotosStyle'
 
-class PairingView extends React.PureComponent {
+class ThreadInvite extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
+      from: this.props.navigation.state.params.request.from,
       key: this.props.navigation.state.params.request.key,
+      name: this.props.navigation.state.params.request.name,
       status: 'init'
     }
   }
 
-  componentDidUpdate () {
-    // once the view is rendered and the node is online, submit the request
-    // mirror the device state changes => status
-    const deviceKey = this.state.key
-    const device = this.props.devices.find((d) => {
-      return deviceKey && d.deviceItem.id === deviceKey
-    })
-    if (device) {
-      this.setState(() => ({status: device.state}))
-    }
-  }
-
   confirmRequest = () => {
-    this.setState(() => ({status: 'confirmed'}))
-    this.props.addDeviceRequest('desktop', this.state.key)
+    this.props.addThreadRequest(this.state.name, this.state.key)
+    this.setState(() => ({status: 'added'}))
   }
 
   cancel = () => {
-    this.props.removeDeviceRequest(this.state.key)
+    this.props.removeThreadRequest(this.state.key)
     this.props.navigation.navigate('OnboardingCheck')
   }
 
@@ -43,18 +33,16 @@ class PairingView extends React.PureComponent {
   }
 
   renderConfirm () {
-    // TODO... allow user to name thread
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
-          <Text style={style.key}>Address: {this.state.key}</Text>
           <Text style={style.message}>
-            A new device is requesting to pair with your Textile Wallet. The Textile app running on the new device will have access to your private encryption keys and all privately stored data. Be sure that this is your device and that the address above matches the one displayed on the new device.
+            You have been invited by {this.state.from} to share photos in a shared thread called, {this.state.name}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
           </Text>
           <Button
             style={style.button}
-            title={this.props.online === true ? 'Pair Device' : 'Waiting for Connection'}
-            accessibilityLabel='pair device'
+            title={this.props.online === true ? 'Join now' : 'Waiting for Connection'}
+            accessibilityLabel='join now'
             onPress={this.confirmRequest.bind(this)}
             disabled={!this.props.online === true}
           />
@@ -95,6 +83,7 @@ class PairingView extends React.PureComponent {
   }
 
   renderSuccess () {
+    // TODO: redirect the user to the newly joined thread
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
@@ -111,13 +100,13 @@ class PairingView extends React.PureComponent {
     )
   }
 
-  renderError () {
+  renderError (message) {
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
           <Text style={style.status}>ERROR</Text>
           <Text style={style.message}>
-            There was an issue pairing with your new device. This may be caused by network connectivity or other issues. Please try again. If it continues, please report the issue with Textile.
+            {message}
           </Text>
           <Button
             style={style.button}
@@ -132,12 +121,13 @@ class PairingView extends React.PureComponent {
 
   render () {
     if (!this.state.key) {
-      return this.renderError('ERROR')
-    } else if (this.state.status === 'confirmed' && this.state.status === 'submitted') {
+      return this.renderError('There was an issue pairing with your new device. This may be caused by network connectivity or other issues. Please try again. If it continues, please report the issue with Textile.')
+    } else if (this.props.threads.some((t) => t.id === this.state.key)) {
+      // the thread already exists
+      return this.renderError('You are already a member of the thread you are trying to join.')
+    } else if (this.state.status === 'confirmed') {
       // TODO: should render that we are waiting to start or connect to the network
-      return this.renderPairing('CONNECTING')
-    } else if (this.state.status === 'adding') {
-      return this.renderPairing('PAIRING')
+      return this.renderPairing('JOINING')
     } else if (this.state.status === 'added') {
       return this.renderSuccess()
     }
@@ -149,16 +139,16 @@ const mapStateToProps = state => {
   const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
   const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
   return {
-    devices: state.devices && state.devices.devices ? state.devices.devices : [],
+    threads: state.threads && state.threads.threadItems ? state.threads.threadItems : [],
     online: nodeState && online
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addDeviceRequest: (name, id) => { dispatch(DevicesActions.addDeviceRequest({name, id})) },
-    removeDeviceRequest: (id) => { dispatch(DevicesActions.removeDeviceRequest(id)) }
+    addThreadRequest: (name, id) => { dispatch(ThreadsAction.addThreadRequest(name, id)) },
+    removeThreadRequest: (id) => { dispatch(ThreadsAction.removeThreadRequest(id)) }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PairingView)
+export default connect(mapStateToProps, mapDispatchToProps)(ThreadInvite)
