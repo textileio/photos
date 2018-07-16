@@ -204,7 +204,6 @@ export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceR
     // We use the pubKey as the device id
     yield put(DevicesActions.addDeviceSuccess(deviceItem.id))
   } catch (error) {
-    console.log('ADDING FAIL')
     yield put(DevicesActions.addDeviceError(deviceItem.id, error))
   }
 }
