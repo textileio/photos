@@ -6,11 +6,14 @@ export default StyleSheet.create({
   container: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
   },
-  title: {
-    marginBottom: 14, alignSelf: 'center', fontWeight: 'bold', fontSize: 50, fontFamily: 'Biotif-Regular'
+  key: {
+    marginBottom: 14, alignSelf: 'center', fontSize: 8, fontFamily: 'Biotif-Regular'
+  },
+  status: {
+    padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 28, textAlign: 'justify'
   },
   message: {
-    padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 18, textAlign: 'justify'
+    padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 12, textAlign: 'justify'
   },
   button: {
     fontFamily: 'Biotif-Regular',

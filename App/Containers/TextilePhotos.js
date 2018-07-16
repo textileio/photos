@@ -5,7 +5,6 @@ import HeaderButtons from 'react-navigation-header-buttons'
 import ActionSheet from 'react-native-actionsheet'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
-import TextileActions from '../Redux/TextileRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
@@ -33,7 +32,7 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount () {
-    this.props.navigation.setParams({ 
+    this.props.navigation.setParams({
       toggleVerboseUi: this.props.toggleVerboseUi,
       thread: this.props.thread,
       showActionSheet: this.showActionSheet.bind(this)

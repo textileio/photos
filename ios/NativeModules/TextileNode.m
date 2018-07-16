@@ -176,6 +176,26 @@ RCT_REMAP_METHOD(threads, threadsWithResolver:(RCTPromiseResolveBlock)resolve re
   }
 }
 
+RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString *)threadName threadId:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _addExternalThreadInvite:threadName threadId:threadId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString *)link resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _acceptExternalThreadInvite:link error:&error];
+  if (!error) {
+    resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_METHOD(addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _addPhoto:path toThreadNamed:threadName withCaption:caption error:&error];
@@ -317,6 +337,14 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
 
 - (NSString *)_threads:(NSError**)error {
   return [self.node threads:error];
+}
+
+- (NSString *)_addExternalThreadInvite:(NSString *)threadName threadId:(NSString *)threadId error:(NSError**)error {
+  return [self.node addExternalThreadInvite:threadName pubKey:threadId error:error];
+}
+
+- (void)_acceptExternalThreadInvite:(NSString *)link error:(NSError**)error {
+  [self.node acceptExternalThreadInvite:link error:error];
 }
 
 - (NSString *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {

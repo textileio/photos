@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image, Text, TouchableHighlight, TouchableOpacity, Keyboard, Alert, SafeAreaView } from 'react-native'
+import { Image, Keyboard, Linking, Platform, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
@@ -10,6 +10,7 @@ import DropdownAlert from 'react-native-dropdownalert'
 // Styles
 import styles from './Styles/LoginScreenStyle'
 import formStyle from './Styles/FormStyle'
+import DeepLink from '../Services/DeepLink'
 
 const Form = t.form.Form
 t.form.Form.stylesheet = formStyle
@@ -56,6 +57,29 @@ class LoginScreen extends Component {
 
   componentDidMount () {
     this.props.navigation.setParams({ navigationTitle: this.props.navigationTitle })
+    // DeepLinking for Invites
+    if (Platform.OS === 'android') {
+      Linking.getInitialURL().then(url => {
+        this._handleOpenURL(url)
+      })
+    } else {
+      Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
+    }
+  }
+
+  _handleOpenURLEvent (event) {
+    this._handleOpenURL(event.url)
+  }
+
+  _handleOpenURL (url) {
+    if (url) {
+      const data = DeepLink.getData(url)
+      const request = DeepLink.getParams(data.hash)
+      if (data.path === '/invites/new' && data.hash !== '' && request.referral) {
+        // TODO: need to store off the invite information until after the user signs up now
+        this.props.updateFormValue({'referralCode': request.referral})
+      }
+    }
   }
 
   componentDidUpdate () {
