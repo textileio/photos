@@ -10,7 +10,6 @@ import photosStyle from './Styles/TextilePhotosStyle'
 class ThreadInvite extends React.PureComponent {
   constructor (props) {
     super(props)
-    console.log(this.props.navigation.state.params.request)
     this.state = {
       from: this.props.navigation.state.params.request.from,
       key: this.props.navigation.state.params.request.key,

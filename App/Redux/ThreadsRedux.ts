@@ -128,8 +128,6 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.addExternalInviteSuccess): {
       // Mark the link request with the newly created Link string
       const { pubKey, link } = action.payload
-      console.log(pubKey)
-      console.log(link)
       return { ...state, links: { pubKey, link } }
     }
     case getType(actions.addExternalInviteError): {
@@ -143,9 +141,6 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.acceptExternalInvite): {
       // Store the external invite link in memory
       const { link } = action.payload
-      console.log('ACTION', link)
-      console.log('ACTION', action)
-      console.log('ACTION', action.payload)
       return { ...state, invites: { link } }
     }
     case getType(actions.acceptExternalInviteSuccess): {
