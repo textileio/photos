@@ -1,11 +1,15 @@
 import React from 'react'
-import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
+import {View, Text, Image, TouchableWithoutFeedback, Share} from 'react-native'
+import Icon from 'react-native-vector-icons/Ionicons'
+import HeaderButtons from 'react-navigation-header-buttons'
+import ActionSheet from 'react-native-actionsheet'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import TextileActions from '../Redux/TextileRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
+import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 
@@ -17,15 +21,22 @@ class TextilePhotos extends React.PureComponent {
         <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
       </TouchableWithoutFeedback>
     ) : params.thread
+    const headerRight = params.thread === 'default' ? null : (
+      <HeaderButtons IconComponent={Icon} iconSize={33} color="white">
+        <HeaderButtons.Item title="options" iconName="ios-more" onPress={params.showActionSheet} />
+      </HeaderButtons>
+    )
     return {
-      headerTitle
+      headerTitle,
+      headerRight
     }
   }
 
   componentDidMount () {
     this.props.navigation.setParams({ 
       toggleVerboseUi: this.props.toggleVerboseUi,
-      thread: this.props.thread
+      thread: this.props.thread,
+      showActionSheet: this.showActionSheet.bind(this)
     })
   }
 
@@ -39,6 +50,18 @@ class TextilePhotos extends React.PureComponent {
     this.props.refresh(this.props.thread)
   }
 
+  showActionSheet() {
+    this.actionSheet.show()
+  }
+
+  handleActionSheetResponse (index: number) {
+    if (index === 0) {
+      this.props.invite()
+    } else if (index === 1) {
+      this.props.leaveThread()
+    }
+  }
+
   render () {
     return (
       <View style={style.container}>
@@ -49,6 +72,13 @@ class TextilePhotos extends React.PureComponent {
           refreshing={this.props.refreshing}
           placeholderText={this.props.placeholderText}
           displayImages={this.props.displayImages}
+        />
+        <ActionSheet
+          ref={o => this.actionSheet = o}
+          title={this.props.thread + ' Thread Actions'}
+          options={['Invite Others', 'Leave Thread', 'Cancel']}
+          cancelButtonIndex={2}
+          onPress={this.handleActionSheetResponse.bind(this)}
         />
         {this.props.verboseUi &&
           <View style={style.bottomOverlay} >
@@ -100,7 +130,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     viewPhoto: (index, thread) => { dispatch(UIActions.viewPhotoRequest(index, thread)) },
     refresh: (thread: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(thread)) },
-    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
+    invite: () => { Share.share({ message: 'cooool', title: 'hi'}) },
+    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) }
   }
 }
 
