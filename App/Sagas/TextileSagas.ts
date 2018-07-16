@@ -393,6 +393,7 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   const { link } = action.payload
   try {
     yield call(TextileNode.acceptExternalThreadInvite, link)
+    yield put(ThreadsActions.refreshThreadsRequest())
     yield put(ThreadsActions.acceptExternalInviteSuccess())
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(error))
