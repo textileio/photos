@@ -6,6 +6,7 @@ import { Colors } from '../Themes'
 import LoginScreen from '../Containers/LoginScreen'
 import {getPage} from '../Services/PhotoUtils'
 import Actions from '../Redux/TextileRedux'
+import PreferencesActions from '../Redux/PreferencesRedux'
 import styles from './Styles/NavigationStyles'
 import ostyles, {buttonColor} from '../Containers/Styles/OnboardingScreenStyle'
 
@@ -80,7 +81,7 @@ const params5 = {
   buttonTitle: 'GET STARTED',
   onButtonPress: (navigate, dispatch) => {
     return () => {
-      dispatch(Actions.onboardedSuccess())
+      dispatch(PreferencesActions.onboardedSuccess())
       navigate('TextileManager')
     }
   }

@@ -16,11 +16,14 @@ const actions = {
   cancelAuthoringPhotoShare: createAction('CANCEL_AUTHORING_PHOTO_SHARE', resolve => {
     return () => resolve()
   }),
+  updateSelectedThreads: createAction('UPDATE_SELECTED_THREADS', resolve => {
+    return (threads: ReadonlyMap<string, boolean>) => resolve({ threads })
+  }),
   updateComment: createAction('UPDATE_COMMENT', resolve => {
     return (comment: string) => resolve(comment)
   }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
-    return (thread: string, hash: string, caption: string) => resolve({ thread, hash, caption })
+    return (threads: [string], hash: string, caption?: string) => resolve({ threads, hash, caption })
   }),
   imageSharingError: createAction('IMAGE_SHARING_ERROR', resolve => {
     return (error: Error) => resolve(error)
@@ -38,6 +41,7 @@ export type UIState = {
   readonly sharingPhoto: {
     readonly active: boolean,
     readonly hash?: string,
+    readonly selectedThreads: ReadonlyMap<string, boolean>,
     readonly comment?: string
   }
 }
@@ -47,7 +51,8 @@ export const initialState: UIState = {
     active: false
   },
   sharingPhoto: {
-    active: false
+    active: false,
+    selectedThreads: new Map<string, boolean>()
   }
 }
 
@@ -60,9 +65,11 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.dismissViewedPhoto):
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: false } }
     case getType(actions.authorPhotoShareRequest):
-      return { ...state, sharingPhoto: { ...state.sharingPhoto, active: true, hash: action.payload } }
+      return { ...state, sharingPhoto: { ...state.sharingPhoto, active: true, hash: action.payload, selectedThreads: new Map<string, boolean>() } }
     case getType(actions.cancelAuthoringPhotoShare):
       return { ...state, sharingPhoto: { ...state.sharingPhoto, active: false } }
+    case getType(actions.updateSelectedThreads):
+      return { ...state, sharingPhoto: { ...state.sharingPhoto, selectedThreads: action.payload.threads } }
     case getType(actions.updateComment):
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment: action.payload } }
     default:

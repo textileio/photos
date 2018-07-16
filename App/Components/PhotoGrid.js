@@ -25,20 +25,23 @@ export default class PhotoGrid extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow (row) {
-    let overlay
-    if (row.item.state === 'pending') {
-      overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
-    } else if (row.item.state === 'processing') {
-      overlay = <Progress.Pie progress={row.item.progress} size={20} color={Colors.brandPink} />
-    } else if (row.item.state === 'error') {
-      const displayError = () => {
-        this.refs.toast.show(row.item.error, 2000)
+    const pinRequests = row.item.pinRequests || []
+    const overlays = pinRequests.map((pinRequest, index) => {
+      let overlay
+      if (pinRequest.state === 'pending') {
+        overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} key={index} style={styles.itemOverlayItem} />
+      } else if (pinRequest.state === 'processing') {
+        overlay = <Progress.Pie progress={pinRequest.progress} size={20} color={Colors.brandPink} key={index} style={styles.itemOverlayItem} />
+      } else if (pinRequest.state === 'error') {
+        const displayError = () => {
+          this.refs.toast.show(pinRequest.error, 2000)
+        }
+        overlay = <TouchableOpacity onPress={displayError} key={index} style={styles.itemOverlayItem} >
+          <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+        </TouchableOpacity>
       }
-      overlay = <TouchableOpacity onPress={displayError}>
-        <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
-      </TouchableOpacity>
-    }
-
+      return overlay
+    })
     return (
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
@@ -50,7 +53,7 @@ export default class PhotoGrid extends React.PureComponent {
           />
         </View>
         <View style={styles.itemOverlay}>
-          {overlay}
+          {overlays}
         </View>
       </TouchableOpacity>
     )

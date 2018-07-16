@@ -2,12 +2,13 @@ import React from 'react'
 import {
   Linking,
   Platform,
-  AppState
+  AppState,
+  AppStateStatus
 } from 'react-native'
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
 import TextileActions from '../Redux/TextileRedux'
-import IpfsNodeActions from '../Redux/IpfsNodeRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
@@ -47,7 +48,7 @@ class TextileManager extends React.PureComponent {
     this.errorSubscription.remove()
   }
 
-  handleNewAppState (newAppState) {
+  handleNewAppState (newAppState: AppStateStatus) {
     this.props.appStateChange(this.props.currentAppState, newAppState)
   }
 
@@ -85,7 +86,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    appStateChange: (previousState, newState) => { dispatch(IpfsNodeActions.appStateChange(previousState, newState)) },
+    appStateChange: (previousState: AppStateStatus, newState: AppStateStatus) => { dispatch(TextileNodeActions.appStateChange(previousState, newState)) },
     locationUpdate: () => { dispatch(TextileActions.locationUpdate()) },
     uploadComplete: event => { dispatch(TextileActions.imageUploadComplete(event)) },
     uploadProgress: event => { dispatch(TextileActions.imageUploadProgress(event)) },
