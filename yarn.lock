@@ -616,11 +616,30 @@
   version "9.4.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.6.tgz#d8176d864ee48753d053783e4e463aec86b8d82e"
 
+"@types/react-native-fs@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@types/react-native-fs/-/react-native-fs-2.8.1.tgz#cbe5d5b733490fd75b96b9733dbbc37479b91c23"
+  dependencies:
+    "@types/react-native" "*"
+
+"@types/react-native@*":
+  version "0.55.27"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.55.27.tgz#f291d3f781dcd76888a103fdccb992c9dddd2d2b"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@^0.55.26":
   version "0.55.26"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.55.26.tgz#a7150ca15e0de7e435cc66a1ca44f6b506c99e40"
   dependencies:
     "@types/react" "*"
+
+"@types/react-navigation@1.5.11":
+  version "1.5.11"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.5.11.tgz#317eb81ff8a4dfbad8f374cadab30e07e0effa31"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
 
 "@types/react-redux@^6.0.3":
   version "6.0.3"
@@ -8827,6 +8846,10 @@ require-uncached@^1.0.2:
 requires-port@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+
+reselect@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/reselect/-/reselect-3.0.1.tgz#efdaa98ea7451324d092b2b2163a6a1d7a9a2147"
 
 resolve-cwd@^2.0.0:
   version "2.0.0"

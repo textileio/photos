@@ -10,10 +10,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-
-import net.MultipartRequest;
 
 import org.json.JSONObject;
 
@@ -249,11 +246,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
             if (caption == null) {
                 caption = "";
             }
-            MultipartRequest multipart = node.addPhoto(path, threadName, caption);
-            WritableMap map = new WritableNativeMap();
-            map.putString("payloadPath", multipart.getPayloadPath());
-            map.putString("boundary", multipart.getBoundary());
-            promise.resolve(map);
+            promise.resolve(node.addPhoto(path, threadName, caption));
         }
         catch (Exception e) {
             promise.reject("ADD PHOTO ERROR", e);

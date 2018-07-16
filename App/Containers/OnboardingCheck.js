@@ -19,7 +19,7 @@ class OnboardingCheck extends Component {
 }
 
 const mapStateToProps = state => {
-  return {onboarded: state.textile.onboarded}
+  return {onboarded: state.preferences.onboarded}
 }
 
 const mapDispatchToProps = (dispatch) => {

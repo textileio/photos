@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`devices stories initial state should match snapshot 1`] = `
+Object {
+  "devices": Array [],
+  "refreshing": false,
+}
+`;

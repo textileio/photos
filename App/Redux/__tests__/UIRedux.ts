@@ -34,6 +34,13 @@ describe('ui stories', () => {
       expect(state.sharingPhoto.active).toEqual(true)
       expect(state.sharingPhoto.hash).toEqual('someHash')
     })
+    it('should update selected threads', () => {
+      const state = reducer(initialState, actions.authorPhotoShareRequest('someHash'))
+      expect(state.sharingPhoto.selectedThreads.size).toEqual(0)
+      const state1 = reducer(state, actions.updateSelectedThreads(new Map([['thread', true]])))
+      expect(state1.sharingPhoto.selectedThreads.size).toEqual(1)
+      expect(state1.sharingPhoto.selectedThreads.get('thread')).toEqual(true)
+    })
     it('should update comment', () => {
       const state = reducer(initialState, actions.authorPhotoShareRequest('someHash'))
       expect(state.sharingPhoto.comment).toBeUndefined
@@ -45,6 +52,14 @@ describe('ui stories', () => {
       expect(state.sharingPhoto.active).toEqual(true)
       const state1 = reducer(state, actions.cancelAuthoringPhotoShare())
       expect(state1.sharingPhoto.active).toEqual(false)
+    })
+    it('sharePhotoRequest should not update state', () => {
+      const state = reducer(initialState, actions.sharePhotoRequest(['myThread'], 'someHash'))
+      expect(state).toEqual(initialState)
+    })
+    it('imageSharingError should not update state', () => {
+      const state = reducer(initialState, actions.imageSharingError(new Error()))
+      expect(state).toEqual(initialState)
     })
   })
 })

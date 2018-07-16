@@ -12,6 +12,8 @@ import Colors from '../Themes/Colors'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
 import Config from "react-native-config"
+import Threads from '../Containers/Threads'
+import AddThreadScreen from '../Containers/AddThreadScreen'
 
 // Manifest of possible screens
 
@@ -36,20 +38,23 @@ const PhotosNav = StackNavigator(
 const SharedPhotosNav = StackNavigator(
   {
     SharedPhotos: {
-      screen: TextilePhotos,
-      navigationOptions: {
-        headerTitle: 'Shared Thread'
-      }
+      screen: Threads
+    },
+    AddThread: {
+      screen: AddThreadScreen
+    },
+    ViewThread: {
+      screen: TextilePhotos
     }
   },
   {
     // Default config for all screens
     headerMode: 'float',
-    initialRouteParams: { thread: Config.ALL_THREAD_NAME },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
+      headerTintColor: headerTintColor,
+      headerBackTitleStyle: styles.headerButton
     }
   }
 )
