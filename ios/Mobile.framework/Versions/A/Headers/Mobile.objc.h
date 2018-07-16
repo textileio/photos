@@ -101,9 +101,12 @@
 - (void)setMnemonic:(NSString*)v;
 // skipped field Mobile.Online with unsupported type: *types.Chan
 
+- (BOOL)acceptExternalThreadInvite:(NSString*)link error:(NSError**)error;
 - (BOOL)addDevice:(NSString*)name pubKey:(NSString*)pubKey error:(NSError**)error;
+- (NSString*)addExternalThreadInvite:(NSString*)threadName pubKey:(NSString*)pubKey error:(NSError**)error;
 - (NSString*)addPhoto:(NSString*)path threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
 - (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
+- (BOOL)addThreadInvite:(NSString*)threadName pubKey:(NSString*)pubKey error:(NSError**)error;
 - (NSString*)devices:(NSError**)error;
 - (NSString*)getAccessToken:(NSError**)error;
 - (NSString*)getBlockData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;

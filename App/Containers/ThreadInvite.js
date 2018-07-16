@@ -14,12 +14,13 @@ class ThreadInvite extends React.PureComponent {
       from: this.props.navigation.state.params.request.from,
       key: this.props.navigation.state.params.request.key,
       name: this.props.navigation.state.params.request.name,
+      hash: this.props.navigation.state.params.request.hash,
       status: 'init'
     }
   }
 
   confirmRequest = () => {
-    this.props.addThreadRequest(this.state.name, this.state.key)
+    this.props.acceptExternalInvite(this.state.hash)
     this.setState(() => ({status: 'added'}))
   }
 
@@ -146,7 +147,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addThreadRequest: (name, id) => { dispatch(ThreadsAction.addThreadRequest(name, id)) },
+    acceptExternalInvite: (link) => { dispatch(ThreadsAction.acceptExternalInvite(link)) },
     removeThreadRequest: (id) => { dispatch(ThreadsAction.removeThreadRequest(id)) }
   }
 }

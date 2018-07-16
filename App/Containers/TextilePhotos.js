@@ -20,22 +20,8 @@ class TextilePhotos extends React.PureComponent {
       </TouchableWithoutFeedback>
     ) : params.thread
 
-    const headerRight = params.thread === 'default' ? '' : (
-      <HeaderButtons IconComponent={Icon} OverflowIcon={<Icon name='ios-more' size={23} color='white' />} iconSize={33} color='white'>
-        <HeaderButtons.Item title='add' iconName='ios-add' onPress={() => {
-          Share.share({
-            title: 'New photos to share',
-            message: 'Come share photos with me on Textile Photos - a new decentralized photo sharing app',
-            url: 'https://google.com' // <- throw the link in here
-          })
-          .then((a) => console.warn('', a)
-          .catch((e) => console.warn('error', e)))
-        }} />
-      </HeaderButtons>
-    )
     return {
-      headerTitle,
-      headerRight
+      headerTitle
     }
   }
 
