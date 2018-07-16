@@ -35,7 +35,9 @@ import {
   retryUploadAfterError,
   addThread,
   removeThread,
-  refreshThreads
+  refreshThreads,
+  addExternalInvite,
+  acceptExternalInvite
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -79,6 +81,10 @@ export default function * root () {
 
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
     takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),
+
+    takeEvery(getType(ThreadsActions.addExternalInvite), addExternalInvite),
+    takeEvery(getType(ThreadsActions.acceptExternalInvite), acceptExternalInvite),
+
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
 
     initializeAppState()
