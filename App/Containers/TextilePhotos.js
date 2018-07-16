@@ -1,6 +1,5 @@
 import React from 'react'
 import {View, Text, Image, Share, TouchableWithoutFeedback} from 'react-native'
-import HeaderButtons from 'react-navigation-header-buttons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import TextileActions from '../Redux/TextileRedux'
@@ -9,7 +8,6 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import Icon from 'react-native-vector-icons/Ionicons'
 
 class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -19,7 +17,6 @@ class TextilePhotos extends React.PureComponent {
         <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
       </TouchableWithoutFeedback>
     ) : params.thread
-
     return {
       headerTitle
     }
