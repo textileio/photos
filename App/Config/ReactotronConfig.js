@@ -1,7 +1,7 @@
 import Config from '../Config/DebugConfig'
 import { NativeModules } from 'react-native';
 import Immutable from 'seamless-immutable'
-import Reactotron from 'reactotron-react-native'
+import Reactotron, { trackGlobalErrors, openInEditor, asyncStorage } from 'reactotron-react-native'
 import { reactotronRedux as reduxPlugin } from 'reactotron-redux'
 import sagaPlugin from 'reactotron-redux-saga'
 
@@ -11,7 +11,10 @@ if (Config.useReactotron) {
   const scriptHostname = scriptURL.split('://')[1].split(':')[0];
   Reactotron
     .configure({ host: scriptHostname, name: 'Ignite App' })
+    .use(trackGlobalErrors())
+    .use(openInEditor())
     .useReactNative()
+    .use(asyncStorage())
     .use(reduxPlugin({ onRestore: Immutable }))
     .use(sagaPlugin())
     .connect()
