@@ -378,3 +378,23 @@ export function * refreshThreads () {
     yield put(ThreadsActions.refreshThreadsError(error))
   }
 }
+
+export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
+  const { name, pubKey } = action.payload
+  try {
+    const link = yield call(TextileNode.addExternalThreadInvite, name, pubKey)
+    yield put(ThreadsActions.addExternalInviteSuccess(pubKey, link))
+  } catch (error) {
+    yield put(ThreadsActions.addExternalInviteError(error))
+  }
+}
+
+export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
+  const { link } = action.payload
+  try {
+    yield call(TextileNode.acceptExternalThreadInvite, link)
+    yield put(ThreadsActions.acceptExternalInviteSuccess())
+  } catch (error) {
+    yield put(ThreadsActions.acceptExternalInviteError(error))
+  }
+}
