@@ -81,8 +81,8 @@ type TextileNodeState = {
 const defaultThreadData = createEmptyThreadData()
 const allThreadData = createEmptyThreadData()
 const allThreadName = Config.ALL_THREAD_NAME as string
-const initialThreads: ThreadMap = { 
-  'default': defaultThreadData, 
+const initialThreads: ThreadMap = {
+  'default': defaultThreadData,
   [allThreadName]: allThreadData
 }
 
