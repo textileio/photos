@@ -10,17 +10,19 @@ import photosStyle from './Styles/TextilePhotosStyle'
 class ThreadInvite extends React.PureComponent {
   constructor (props) {
     super(props)
+    console.log(this.props.navigation.state.params.request)
     this.state = {
       from: this.props.navigation.state.params.request.from,
       key: this.props.navigation.state.params.request.key,
+      invite: this.props.navigation.state.params.request.invite,
       name: this.props.navigation.state.params.request.name,
-      hash: this.props.navigation.state.params.request.hash,
+      link: this.props.navigation.state.params.link,
       status: 'init'
     }
   }
 
   confirmRequest = () => {
-    this.props.acceptExternalInvite(this.state.hash)
+    this.props.acceptExternalInvite(this.state.link)
     this.setState(() => ({status: 'added'}))
   }
 
@@ -38,7 +40,7 @@ class ThreadInvite extends React.PureComponent {
       <View style={[photosStyle.container, style.container]}>
         <View>
           <Text style={style.message}>
-            You have been invited by {this.state.from} to share photos in a shared thread called, {this.state.name}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
+            You have been invited by {this.state.from ? this.state.from : 'warning'} to share photos in a shared thread called, {this.state.name ? this.state.name : 'warning'}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
           </Text>
           <Button
             style={style.button}
@@ -127,7 +129,6 @@ class ThreadInvite extends React.PureComponent {
       // the thread already exists
       return this.renderError('You are already a member of the thread you are trying to join.')
     } else if (this.state.status === 'confirmed') {
-      // TODO: should render that we are waiting to start or connect to the network
       return this.renderPairing('JOINING')
     } else if (this.state.status === 'added') {
       return this.renderSuccess()
