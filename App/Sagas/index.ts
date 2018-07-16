@@ -82,8 +82,8 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
     takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),
 
-    takeEvery(getType(ThreadsActions.addExternalInvite), addExternalInvite),
-    takeEvery(getType(ThreadsActions.acceptExternalInvite), acceptExternalInvite),
+    takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
+    takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
 
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
 

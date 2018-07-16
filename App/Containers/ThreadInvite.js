@@ -147,7 +147,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    acceptExternalInvite: (link) => { dispatch(ThreadsAction.acceptExternalInvite(link)) },
+    acceptExternalInvite: (link) => { dispatch(ThreadsAction.acceptExternalInviteRequest(link)) },
     removeThreadRequest: (id) => { dispatch(ThreadsAction.removeThreadRequest(id)) }
   }
 }

@@ -29,7 +29,7 @@ const actions = {
   refreshThreadsError: createAction('REFRESH_THREADS_ERROR', resolve => {
     return (error: Error) => resolve({ error })
   }),
-  addExternalInvite: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
+  addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
     return (name: string, pubKey: string) => resolve({ name, pubKey })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
@@ -38,7 +38,7 @@ const actions = {
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (error: Error) => resolve({ error })
   }),
-  acceptExternalInvite: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', resolve => {
+  acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', resolve => {
     return (link: string) => resolve({ link })
   }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
@@ -62,12 +62,12 @@ export type ThreadsState = {
     readonly threadId: string
     readonly error?: Error
   }
-  readonly links?: {
+  readonly link?: {
     readonly pubKey: string
     readonly link?: string
     readonly error?: Error
   }
-  readonly invites?: {
+  readonly invite?: {
     readonly link: string
     readonly error?: Error
   }
@@ -120,40 +120,40 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, refreshing: false, refreshError: undefined, threadItems }
     case getType(actions.refreshThreadsError):
       return { ...state, refreshing: false, refreshError: action.payload.error }
-    case getType(actions.addExternalInvite): {
+    case getType(actions.addExternalInviteRequest): {
       // Store the link request pubKey in memory (name will be deprecated)
       const { name, pubKey } = action.payload
-      return { ...state, links: { pubKey } }
+      return { ...state, link: { pubKey } }
     }
     case getType(actions.addExternalInviteSuccess): {
       // Mark the link request with the newly created Link string
       const { pubKey, link } = action.payload
-      return { ...state, links: { pubKey, link } }
+      return { ...state, link: { pubKey, link } }
     }
     case getType(actions.addExternalInviteError): {
       // Remove any pending link requests from memory
-      if (!state.links) {
+      if (!state.link) {
         return state
       }
       const { error } = action.payload
-      return { ...state, links: { ...state.links, error } }
+      return { ...state, link: { ...state.link, error } }
     }
-    case getType(actions.acceptExternalInvite): {
+    case getType(actions.acceptExternalInviteRequest): {
       // Store the external invite link in memory
       const { link } = action.payload
-      return { ...state, invites: { link } }
+      return { ...state, invite: { link } }
     }
     case getType(actions.acceptExternalInviteSuccess): {
       // Clear the pending invites (we may want to turn this into a list long term)
-      return { ...state, invites: undefined }
+      return { ...state, invite: undefined }
     }
     case getType(actions.acceptExternalInviteError): {
       // Remove any pending invites from memory
-      if (!state.invites) {
+      if (!state.invite) {
         return state
       }
       const { error } = action.payload
-      return { ...state, invites: { ...state.invites, error } }
+      return { ...state, invite: { ...state.invite, error } }
     }
     default:
       return state

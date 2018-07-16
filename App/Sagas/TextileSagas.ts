@@ -380,7 +380,7 @@ export function * refreshThreads () {
   }
 }
 
-export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInvite>) {
+export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { name, pubKey } = action.payload
   try {
     const link = yield call(TextileNode.addExternalThreadInvite, name, pubKey)
@@ -390,7 +390,7 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
   }
 }
 
-export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInvite>) {
+export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { link } = action.payload
   try {
     yield call(TextileNode.acceptExternalThreadInvite, link)
