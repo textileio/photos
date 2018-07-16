@@ -40,7 +40,7 @@ class TextileManager extends React.PureComponent {
         this.props.navigation.navigate('PairingView', {request: DeepLink.getParams(data.hash)})
       } else if (data.path === '/invites/new' && data.hash !== '') {
         // invite the user to the thread
-        this.props.navigation.navigate('ThreadInvite', {request: DeepLink.getParams(data.hash)})
+        this.props.navigation.navigate('ThreadInvite', {link: url, request: DeepLink.getParams(data.hash)})
       }
     }
   }

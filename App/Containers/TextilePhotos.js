@@ -2,7 +2,6 @@ import React from 'react'
 import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
-import TextileActions from '../Redux/TextileRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
@@ -23,7 +22,7 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount () {
-    this.props.navigation.setParams({ 
+    this.props.navigation.setParams({
       toggleVerboseUi: this.props.toggleVerboseUi,
       thread: this.props.thread
     })
