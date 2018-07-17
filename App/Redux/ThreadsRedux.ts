@@ -30,7 +30,7 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
-    return (id: string) => resolve({ id })
+    return (name: string, id: string) => resolve({ name, id })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
     return (id: string, key: string) => resolve({ id, key })
@@ -64,6 +64,7 @@ export type ThreadsState = {
   }
   readonly outboundInvite?: {
     readonly id: string
+    readonly name?: string
     readonly key?: string
     readonly error?: Error
   }
@@ -129,8 +130,8 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, refreshing: false, refreshError: action.payload.error }
     case getType(actions.addExternalInviteRequest): {
       // Store the link request pubKey in memory (name will be deprecated)
-      const { id } = action.payload
-      return { ...state, outboundInvite: { id } }
+      const { name, id } = action.payload
+      return { ...state, outboundInvite: { name, id } }
     }
     case getType(actions.addExternalInviteSuccess): {
       if (!state.outboundInvite) {
