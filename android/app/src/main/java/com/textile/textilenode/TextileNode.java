@@ -198,9 +198,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void removeThread (String name, Promise promise) {
+    public void removeThread (String threadId, Promise promise) {
         try {
-            node.removeThread(name);
+            node.removeThread(threadId);
             promise.resolve(null);
         }
         catch (Exception e) {
@@ -219,9 +219,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void acceptExternalThreadInvite (String link, Promise promise) {
+    public void acceptExternalThreadInvite (String threadId, String key, Promise promise) {
         try {
-            node.acceptExternalThreadInvite(link)
+            node.acceptExternalThreadInvite(threadId, key)
             promise.resolve(null);
         }
         catch (Exception e) {

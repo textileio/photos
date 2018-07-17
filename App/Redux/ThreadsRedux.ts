@@ -12,10 +12,10 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', resolve => {
-    return (threadName: string) => resolve({ threadName })
+    return (threadId: string) => resolve({ threadId })
   }),
   removeThreadSuccess: createAction('REMOVE_THREAD_SUCCESS', resolve => {
-    return (threadName: string) => resolve({ threadName })
+    return (threadId: string) => resolve({ threadId })
   }),
   removeThreadError: createAction('REMOVE_THREAD_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -59,7 +59,7 @@ export type ThreadsState = {
     readonly error?: Error
   }
   readonly removing?: {
-    readonly threadName: string
+    readonly threadId: string
     readonly error?: Error
   }
   readonly link?: {
@@ -101,15 +101,15 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, adding: { ...state.adding, error } }
     }
     case getType(actions.removeThreadRequest): {
-      const { threadName } = action.payload
-      return { ...state, removing: { threadName } }
+      const { threadId } = action.payload
+      return { ...state, removing: { threadId } }
     }
     case getType(actions.removeThreadSuccess): {
       if (!state.removing) {
         return state
       }
-      const { threadName } = action.payload
-      const threadItems = state.threadItems.filter(thread => thread.name !== threadName)
+      const { threadId } = action.payload
+      const threadItems = state.threadItems.filter(thread => thread.id !== threadId)
       return { ...state, removing: undefined, threadItems }
     }
     case getType(actions.removeThreadError): {

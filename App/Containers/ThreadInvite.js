@@ -13,6 +13,7 @@ class ThreadInvite extends React.PureComponent {
     this.state = {
       from: this.props.navigation.state.params.request.from,
       key: this.props.navigation.state.params.request.key,
+      id: this.props.navigation.state.params.request.id,
       invite: this.props.navigation.state.params.request.invite,
       name: this.props.navigation.state.params.request.name,
       link: this.props.navigation.state.params.link,
@@ -21,13 +22,13 @@ class ThreadInvite extends React.PureComponent {
   }
 
   confirmRequest = () => {
-    this.props.acceptExternalInvite(this.state.link)
+    this.props.acceptExternalInvite(this.state.id, this.state.key)
     this.setState(() => ({status: 'added'}))
   }
 
   cancel = () => {
     // TODO: remove thread takes thread name... what is key?
-    this.props.removeThreadRequest(this.state.key)
+    this.props.removeThreadRequest(this.state.id)
     this.props.navigation.navigate('OnboardingCheck')
   }
 

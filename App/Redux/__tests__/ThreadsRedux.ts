@@ -89,21 +89,21 @@ describe('ui stories', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(name))
       const state1 = reducer(state0, actions.addThreadSuccess({ id, name, peers }))
       expect(state1.threadItems).toHaveLength(1)
-      const state2 = reducer(state1, actions.removeThreadRequest(name))
-      const match2 = { threadName: name }
+      const state2 = reducer(state1, actions.removeThreadRequest(id))
+      const match2 = { threadId: id }
       expect(state2.removing).toMatchObject(match2)
-      const state3 = reducer(state2, actions.removeThreadSuccess(name))
+      const state3 = reducer(state2, actions.removeThreadSuccess(id))
       expect(state3.threadItems).toHaveLength(0)
       expect(state3.removing).toBeUndefined()
     })
     it('should fail at leaving a thread', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(name))
       const state1 = reducer(state0, actions.addThreadSuccess({ id, name, peers }))
-      const state2 = reducer(state1, actions.removeThreadRequest(name))
-      const match2 = { threadName: name }
+      const state2 = reducer(state1, actions.removeThreadRequest(id))
+      const match2 = { threadId: id }
       expect(state2.removing).toMatchObject(match2)
       const state3 = reducer(state2, actions.removeThreadError(error))
-      const match3 = { threadName: name, error }
+      const match3 = { threadId: id, error }
       expect(state3.removing).toMatchObject(match3)
       expect(state3.threadItems).toHaveLength(1)
     })
