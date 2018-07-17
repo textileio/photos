@@ -56,8 +56,8 @@ export default {
     return threadItem
   },
 
-  removeThread: async function (threadName: string): Promise<void> {
-    return await TextileNode.removeThread(threadName)
+  removeThread: async function (threadId: string): Promise<void> {
+    return await TextileNode.removeThread(threadId)
   },
 
   threads: async function (): Promise<TextileTypes.Threads> {
@@ -66,12 +66,12 @@ export default {
     return threads
   },
 
-  addExternalThreadInvite: async function (name: string, pubKey: string): Promise<string> {
-    return await TextileNode.addExternalThreadInvite(name, pubKey)
+  addExternalThreadInvite: async function (name: string, id: string): Promise<string> {
+    return await TextileNode.addExternalThreadInvite(name, id)
   },
 
-  acceptExternalThreadInvite: async function (link: string): Promise<void> {
-    return await TextileNode.acceptExternalThreadInvite(link)
+  acceptExternalThreadInvite: async function (threadId: string, key:string): Promise<void> {
+    return await TextileNode.acceptExternalThreadInvite(threadId, key)
   },
 
   addPhoto: async function (path: string, threadName: string, caption?: string): Promise<TextileTypes.PinRequests> {

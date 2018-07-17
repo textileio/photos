@@ -156,9 +156,9 @@ RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic r
   }
 }
 
-RCT_EXPORT_METHOD(removeThread:(NSString *)threadName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(removeThread:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _removeThread:threadName error:&error];
+  [self _removeThread:threadId error:&error];
   if (!error) {
     resolve(nil);
   } else {
@@ -186,9 +186,9 @@ RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString *)threadName threadId:(NSStr
   }
 }
 
-RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString *)link resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _acceptExternalThreadInvite:link error:&error];
+  [self _acceptExternalThreadInvite:threadId key:key error:&error];
   if (!error) {
     resolve(nil);
   } else {
@@ -331,8 +331,8 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node addThread:name mnemonic:mnemonic error:error];
 }
 
-- (void)_removeThread:(NSString *)threadName error:(NSError**)error {
-  [self.node removeThread:threadName error:error];
+- (void)_removeThread:(NSString *)threadId error:(NSError**)error {
+  [self.node removeThread:threadId error:error];
 }
 
 - (NSString *)_threads:(NSError**)error {
@@ -343,8 +343,8 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node addExternalThreadInvite:threadName pubKey:threadId error:error];
 }
 
-- (void)_acceptExternalThreadInvite:(NSString *)link error:(NSError**)error {
-  [self.node acceptExternalThreadInvite:link error:error];
+- (void)_acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key error:(NSError**)error {
+  [self.node acceptExternalThreadInvite:threadId key:key error:error];
 }
 
 - (NSString *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
