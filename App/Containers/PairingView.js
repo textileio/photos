@@ -1,29 +1,40 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
-import Actions from '../Redux/TextileRedux'
+import DevicesActions from '../Redux/DevicesRedux'
 
 // Styles
 import style from './Styles/PairingViewStyle'
 import photosStyle from './Styles/TextilePhotosStyle'
-import { Colors } from '../Themes'
 
 class PairingView extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      paired: false
+      key: this.props.navigation.state.params.request.key,
+      status: 'init'
     }
   }
 
-  confirmPairing = () => {
-    let params = this.getParams(this.props.navigation.state.params.data)
-    // TODO: we should actually wait for pairing success here
-    this.props.pairNewDevice(params['key'])
-    this.setState(() => ({paired: true}))
+  componentDidUpdate () {
+    // once the view is rendered and the node is online, submit the request
+    // mirror the device state changes => status
+    const deviceKey = this.state.key
+    const device = this.props.devices.find((d) => {
+      return deviceKey && d.deviceItem.id === deviceKey
+    })
+    if (device) {
+      this.setState(() => ({status: device.state}))
+    }
   }
 
-  cancelPairing = () => {
+  confirmRequest = () => {
+    this.setState(() => ({status: 'confirmed'}))
+    this.props.addDeviceRequest('desktop', this.state.key)
+  }
+
+  cancel = () => {
+    this.props.removeDeviceRequest(this.state.key)
     this.props.navigation.navigate('OnboardingCheck')
   }
 
@@ -31,47 +42,52 @@ class PairingView extends React.PureComponent {
     this.props.navigation.navigate('OnboardingCheck')
   }
 
-  getParams (url) {
-    let query = url.split('?')[1]
-    let vars = query.split('&')
-    let queryString = {}
-    for (let i = 0; i < vars.length; i++) {
-      let pair = vars[i].split('=')
-      // If first entry with this name
-      if (typeof queryString[pair[0]] === 'undefined') {
-        queryString[pair[0]] = decodeURIComponent(pair[1])
-        // If second entry with this name
-      } else if (typeof queryString[pair[0]] === 'string') {
-        let arr = [queryString[pair[0]], decodeURIComponent(pair[1])]
-        queryString[pair[0]] = arr
-        // If third or later entry with this name
-      } else {
-        queryString[pair[0]].push(decodeURIComponent(pair[1]))
-      }
-    }
-    return queryString
-  }
-
-  renderPairing (code) {
+  renderConfirm () {
+    // TODO... allow user to name thread
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
-          <Text style={style.title}>{code}</Text>
+          <Text style={style.key}>Address: {this.state.key}</Text>
           <Text style={style.message}>
-            A new device is requesting to pair with your Textile Wallet. The Textile app running on the new device will have access to your private encryption keys and all privately stored data. Be sure that this is your device and that you see the above code displayed on the new device.
+            A new device is requesting to pair with your Textile Wallet. The Textile app running on the new device will have access to your private encryption keys and all privately stored data. Be sure that this is your device and that the address above matches the one displayed on the new device.
           </Text>
           <Button
             style={style.button}
-            title='Pair Device'
+            title={this.props.online === true ? 'Pair Device' : 'Waiting for Connection'}
             accessibilityLabel='pair device'
-            onPress={this.confirmPairing.bind(this)}
+            onPress={this.confirmRequest.bind(this)}
+            disabled={!this.props.online === true}
           />
           <View style={style.buttonMargin} />
           <Button
             style={style.button}
-            title='Not Now'
-            accessibilityLabel='do not pair'
-            onPress={this.cancelPairing}
+            title='Cancel'
+            accessibilityLabel='cancel'
+            onPress={this.cancel}
+          />
+        </View>
+      </View>
+    )
+  }
+
+  renderPairing (title) {
+    return (
+      <View style={[photosStyle.container, style.container]}>
+        <View>
+          <Text style={style.status}>{title}</Text>
+          <ActivityIndicator size='large' color='#000000' animating={this.state.status !== 'success'} />
+          <View style={style.buttonMargin} />
+          <Button
+            style={style.button}
+            title='Continue'
+            accessibilityLabel='continue'
+            onPress={this.continue.bind(this)}
+          />
+          <Button
+            style={style.button}
+            title='Cancel'
+            accessibilityLabel='cancel'
+            onPress={this.cancel.bind(this)}
           />
         </View>
       </View>
@@ -82,7 +98,7 @@ class PairingView extends React.PureComponent {
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
-          <Text style={style.title}>SUCCESS!</Text>
+          <Text style={style.status}>Success!</Text>
           <View style={style.buttonMargin} />
           <Button
             style={style.button}
@@ -99,17 +115,12 @@ class PairingView extends React.PureComponent {
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
-          <Text style={style.title}>ERROR</Text>
+          <Text style={style.status}>ERROR</Text>
           <Text style={style.message}>
             There was an issue pairing with your new device. This may be caused by network connectivity or other issues. Please try again. If it continues, please report the issue with Textile.
           </Text>
           <Button
-            style={{
-              fontFamily: 'Biotif-Regular',
-              color: Colors.charcoal,
-              fontSize: 18,
-              textAlign: 'justify'
-            }}
+            style={style.button}
             title='Continue'
             accessibilityLabel='continue'
             onPress={this.continue.bind(this)}
@@ -120,25 +131,33 @@ class PairingView extends React.PureComponent {
   }
 
   render () {
-    let params = this.getParams(this.props.navigation.state.params.data)
-    if (!params.key || !params.code) {
-      return this.renderError()
-    } else if (this.state.paired) {
+    if (!this.state.key) {
+      return this.renderError('ERROR')
+    } else if (this.state.status === 'confirmed' && this.state.status === 'submitted') {
+      // TODO: should render that we are waiting to start or connect to the network
+      return this.renderPairing('CONNECTING')
+    } else if (this.state.status === 'adding') {
+      return this.renderPairing('PAIRING')
+    } else if (this.state.status === 'added') {
       return this.renderSuccess()
     }
-    return this.renderPairing(params.code)
+    return this.renderConfirm()
   }
 }
 
 const mapStateToProps = state => {
+  const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
+  const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
   return {
-    devices: state.textile && state.textile.devices ? state.textile.devices : []
+    devices: state.devices && state.devices.devices ? state.devices.devices : [],
+    online: nodeState && online
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    pairNewDevice: (pubKey) => { dispatch(Actions.pairNewDevice(pubKey)) }
+    addDeviceRequest: (name, id) => { dispatch(DevicesActions.addDeviceRequest({name, id})) },
+    removeDeviceRequest: (id) => { dispatch(DevicesActions.removeDeviceRequest(id)) }
   }
 }
 
