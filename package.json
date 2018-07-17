@@ -146,6 +146,12 @@
     },
     "setupFiles": [
       "<rootDir>/Tests/Setup"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
     ]
   },
   "config": {},

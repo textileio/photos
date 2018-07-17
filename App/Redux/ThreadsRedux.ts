@@ -12,10 +12,10 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', resolve => {
-    return (threadId: string) => resolve({ threadId })
+    return (threadName: string) => resolve({ threadName })
   }),
   removeThreadSuccess: createAction('REMOVE_THREAD_SUCCESS', resolve => {
-    return (threadId: string) => resolve({ threadId })
+    return (threadName: string) => resolve({ threadName })
   }),
   removeThreadError: createAction('REMOVE_THREAD_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -59,7 +59,7 @@ export type ThreadsState = {
     readonly error?: Error
   }
   readonly removing?: {
-    readonly threadId: string
+    readonly threadName: string
     readonly error?: Error
   }
   readonly link?: {
@@ -86,6 +86,9 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, adding: { name } }
     }
     case getType(actions.addThreadSuccess): {
+      if (!state.adding) {
+        return state
+      }
       const { threadItem } = action.payload
       const threadItems = state.threadItems.concat([threadItem])
       return { ...state, adding: undefined, threadItems }
@@ -98,12 +101,15 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, adding: { ...state.adding, error } }
     }
     case getType(actions.removeThreadRequest): {
-      const { threadId } = action.payload
-      return { ...state, removing: { threadId } }
+      const { threadName } = action.payload
+      return { ...state, removing: { threadName } }
     }
     case getType(actions.removeThreadSuccess): {
-      const { threadId } = action.payload
-      const threadItems = state.threadItems.filter(thread => thread.id !== threadId)
+      if (!state.removing) {
+        return state
+      }
+      const { threadName } = action.payload
+      const threadItems = state.threadItems.filter(thread => thread.name !== threadName)
       return { ...state, removing: undefined, threadItems }
     }
     case getType(actions.removeThreadError): {
@@ -126,6 +132,9 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, link: { pubKey } }
     }
     case getType(actions.addExternalInviteSuccess): {
+      if (!state.link) {
+        return state
+      }
       // Mark the link request with the newly created Link string
       const { pubKey, link } = action.payload
       return { ...state, link: { pubKey, link } }
@@ -144,6 +153,9 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, invite: { link } }
     }
     case getType(actions.acceptExternalInviteSuccess): {
+      if (!state.invite) {
+        return state
+      }
       // Clear the pending invites (we may want to turn this into a list long term)
       return { ...state, invite: undefined }
     }

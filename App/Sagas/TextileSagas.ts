@@ -357,10 +357,11 @@ export function * addThread (action: ActionType<typeof ThreadsActions.addThreadR
 }
 
 export function * removeThread (action: ActionType<typeof ThreadsActions.removeThreadRequest>) {
-  const { threadId } = action.payload
+  const { threadName } = action.payload
   try {
-    yield call(TextileNode.removeThread, threadId)
-    yield put(ThreadsActions.removeThreadSuccess(threadId))
+    yield call(TextileNode.removeThread, threadName)
+    yield put(ThreadsActions.removeThreadSuccess(threadName))
+    yield call(PhotosNavigationService.goBack)
   } catch (error) {
     yield put(ThreadsActions.removeThreadError(error))
   }
@@ -390,7 +391,7 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
 
 export function * presentShareInterface(action: ActionType<typeof ThreadsActions.addExternalInviteSuccess>) {
   const { link } = action.payload
-  yield call(Share.share, { title: 'Join my thread on Textile!', message: link, url: link })
+  yield call(Share.share, { title: 'Join my thread on Textile!', message: link })
 }
 
 export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {

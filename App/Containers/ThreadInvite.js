@@ -26,6 +26,7 @@ class ThreadInvite extends React.PureComponent {
   }
 
   cancel = () => {
+    // TODO: remove thread takes thread name... what is key?
     this.props.removeThreadRequest(this.state.key)
     this.props.navigation.navigate('OnboardingCheck')
   }
