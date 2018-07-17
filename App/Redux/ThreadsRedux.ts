@@ -30,16 +30,16 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
-    return (name: string, pubKey: string) => resolve({ name, pubKey })
+    return (id: string) => resolve({ id })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
-    return (pubKey: string, link: string) => resolve({ pubKey, link })
+    return (id: string, key: string) => resolve({ id, key })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (error: Error) => resolve({ error })
   }),
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', resolve => {
-    return (link: string) => resolve({ link })
+    return (id: string, key: string) => resolve({ id, key })
   }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
     return () => resolve()
@@ -62,13 +62,14 @@ export type ThreadsState = {
     readonly threadId: string
     readonly error?: Error
   }
-  readonly link?: {
-    readonly pubKey: string
-    readonly link?: string
+  readonly outboundInvite?: {
+    readonly id: string
+    readonly key?: string
     readonly error?: Error
   }
-  readonly invite?: {
-    readonly link: string
+  readonly inboundInvite?: {
+    readonly id: string
+    readonly key: string
     readonly error?: Error
   }
   readonly threadItems: ReadonlyArray<TextileTypes.ThreadItem>
@@ -128,44 +129,44 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, refreshing: false, refreshError: action.payload.error }
     case getType(actions.addExternalInviteRequest): {
       // Store the link request pubKey in memory (name will be deprecated)
-      const { name, pubKey } = action.payload
-      return { ...state, link: { pubKey } }
+      const { id } = action.payload
+      return { ...state, outboundInvite: { id } }
     }
     case getType(actions.addExternalInviteSuccess): {
-      if (!state.link) {
+      if (!state.outboundInvite) {
         return state
       }
       // Mark the link request with the newly created Link string
-      const { pubKey, link } = action.payload
-      return { ...state, link: { pubKey, link } }
+      const { id, key } = action.payload
+      return { ...state, outboundInvite: { id, key } }
     }
     case getType(actions.addExternalInviteError): {
       // Remove any pending link requests from memory
-      if (!state.link) {
+      if (!state.outboundInvite) {
         return state
       }
       const { error } = action.payload
-      return { ...state, link: { ...state.link, error } }
+      return { ...state, outboundInvite: { ...state.outboundInvite, error } }
     }
     case getType(actions.acceptExternalInviteRequest): {
       // Store the external invite link in memory
-      const { link } = action.payload
-      return { ...state, invite: { link } }
+      const { id, key } = action.payload
+      return { ...state, inboundInvite: { id, key } }
     }
     case getType(actions.acceptExternalInviteSuccess): {
-      if (!state.invite) {
+      if (!state.inboundInvite) {
         return state
       }
       // Clear the pending invites (we may want to turn this into a list long term)
-      return { ...state, invite: undefined }
+      return { ...state, inboundInvite: undefined }
     }
     case getType(actions.acceptExternalInviteError): {
       // Remove any pending invites from memory
-      if (!state.invite) {
+      if (!state.inboundInvite) {
         return state
       }
       const { error } = action.payload
-      return { ...state, invite: { ...state.invite, error } }
+      return { ...state, inboundInvite: { ...state.inboundInvite, error } }
     }
     default:
       return state
