@@ -107,7 +107,7 @@ android {
         }
         vectorDrawables.useSupportLibrary = true
         versionName "1.4"
-        versionCode 124
+        versionCode 125
     }
 
     splits {
