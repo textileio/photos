@@ -66,6 +66,14 @@ export default {
     return threads
   },
 
+  addExternalThreadInvite: async function (name: string, pubKey: string): Promise<string> {
+    return await TextileNode.addExternalThreadInvite(name, pubKey)
+  },
+
+  acceptExternalThreadInvite: async function (link: string): Promise<void> {
+    return await TextileNode.acceptExternalThreadInvite(link)
+  },
+
   addPhoto: async function (path: string, threadName: string, caption?: string): Promise<TextileTypes.PinRequests> {
     const jsonString = await TextileNode.addPhoto(path, threadName, caption)
     const pinRequests = JSON.parse(jsonString) as TextileTypes.PinRequests

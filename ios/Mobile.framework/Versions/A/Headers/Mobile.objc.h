@@ -27,9 +27,6 @@
 - (void)notify:(MobileEvent*)event;
 @end
 
-/**
- * BlockItem is a simple meta data wrapper around a Device
- */
 @interface MobileBlockItem : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -48,9 +45,6 @@
 
 @end
 
-/**
- * Blocks is a wrapper around a list of Blocks
- */
 @interface MobileBlocks : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -61,9 +55,6 @@
 
 @end
 
-/**
- * DeviceItem is a simple meta data wrapper around a Device
- */
 @interface MobileDeviceItem : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -76,9 +67,6 @@
 - (void)setName:(NSString*)v;
 @end
 
-/**
- * Devices is a wrapper around a list of Devices
- */
 @interface MobileDevices : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -89,9 +77,6 @@
 
 @end
 
-/**
- * Message is a generic go -> bridge message structure
- */
 @interface MobileEvent : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -104,9 +89,6 @@
 - (void)setPayload:(NSString*)v;
 @end
 
-/**
- * Mobile is the name of the framework (must match package name)
- */
 @interface MobileMobile : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -119,92 +101,31 @@
 - (void)setMnemonic:(NSString*)v;
 // skipped field Mobile.Online with unsupported type: *types.Chan
 
-/**
- * AddDevice calls core AddDevice
- */
+- (BOOL)acceptExternalThreadInvite:(NSString*)link error:(NSError**)error;
 - (BOOL)addDevice:(NSString*)name pubKey:(NSString*)pubKey error:(NSError**)error;
-/**
- * AddPhoto adds a photo by path and shares it to a thread
- */
+- (NSString*)addExternalThreadInvite:(NSString*)threadName pubKey:(NSString*)pubKey error:(NSError**)error;
 - (NSString*)addPhoto:(NSString*)path threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
-/**
- * AddThread adds a new thread with the given name
- */
 - (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
-/**
- * Devices lists all devices
- */
+- (BOOL)addThreadInvite:(NSString*)threadName pubKey:(NSString*)pubKey error:(NSError**)error;
 - (NSString*)devices:(NSError**)error;
-/**
- * GetAccessToken calls core GetAccessToken
- */
 - (NSString*)getAccessToken:(NSError**)error;
-/**
- * GetBlockData calls GetBlockDataBase64 on a thread
- */
 - (NSString*)getBlockData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
-/**
- * GetFileData calls GetFileDataBase64 on a thread
- */
 - (NSString*)getFileData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
-/**
- * GetId calls core GetId
- */
 - (NSString*)getId:(NSError**)error;
-/**
- * GetUsername calls core GetUsername
- */
 - (NSString*)getUsername:(NSError**)error;
-/**
- * IsSignedIn calls core IsSignedIn
- */
 - (BOOL)isSignedIn;
-/**
- * PhotoBlocks returns thread photo blocks with json encoding
- */
 - (NSString*)photoBlocks:(NSString*)offsetId limit:(long)limit threadName:(NSString*)threadName error:(NSError**)error;
-/**
- * RemoveDevice call core RemoveDevice
- */
 - (BOOL)removeDevice:(NSString*)name error:(NSError**)error;
-/**
- * RemoveThread call core RemoveDevice
- */
 - (BOOL)removeThread:(NSString*)name error:(NSError**)error;
-/**
- * SharePhoto adds an existing photo to a new thread
- */
 - (NSString*)sharePhoto:(NSString*)id_ threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
-/**
- * SignIn build credentials and calls core SignIn
- */
 - (BOOL)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
-/**
- * SignOut calls core SignOut
- */
 - (BOOL)signOut:(NSError**)error;
-/**
- * SignUpWithEmail creates an email based registration and calls core signup
- */
 - (BOOL)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
-/**
- * Start the mobile node
- */
 - (BOOL)start:(NSError**)error;
-/**
- * Stop the mobile node
- */
 - (BOOL)stop:(NSError**)error;
-/**
- * Threads lists all threads
- */
 - (NSString*)threads:(NSError**)error;
 @end
 
-/**
- * NodeConfig is used to configure the mobile node
-NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
- */
 @interface MobileNodeConfig : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -221,9 +142,6 @@ NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
 - (void)setLogFiles:(BOOL)v;
 @end
 
-/**
- * PinRequests is a wrapper around multiple PinRequests
- */
 @interface MobilePinRequests : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -234,9 +152,6 @@ NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
 
 @end
 
-/**
- * ThreadItem is a simple meta data wrapper around a Thread
- */
 @interface MobileThreadItem : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -251,9 +166,6 @@ NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
 - (void)setPeers:(long)v;
 @end
 
-/**
- * Threads is a wrapper around a list of Threads
- */
 @interface MobileThreads : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -264,16 +176,10 @@ NOTE: logLevel is one of: CRITICAL ERROR WARNING NOTICE INFO DEBUG
 
 @end
 
-/**
- * Create a gomobile compatible wrapper around TextileNode
- */
 FOUNDATION_EXPORT MobileMobile* MobileNewNode(MobileNodeConfig* config, id<MobileMessenger> messenger, NSError** error);
 
 @class MobileMessenger;
 
-/**
- * Messenger is used to inform the bridge layer of new data waiting to be queried
- */
 @interface MobileMessenger : NSObject <goSeqRefInterface, MobileMessenger> {
 }
 @property(strong, readonly) id _ref;

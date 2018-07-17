@@ -4,6 +4,7 @@ import { ThreadItem } from '../../Models/TextileTypes'
 const id = 'id'
 const name = 'myThread'
 const peers = 3
+const invite = 'https://link'
 const error = new Error('an error')
 
 const initialState = reducer(undefined, {} as any)
@@ -12,6 +13,25 @@ describe('ui stories', () => {
   describe('initial state', () => {
     it('should match snapshot', () => {
       expect(initialState).toMatchSnapshot()
+    })
+  })
+  describe('handling invites', () => {
+    it('should succeed at creating an invite', () => {
+      const state0 = reducer(initialState, actions.addExternalInviteRequest(name, id))
+      const match0 = { 'pubKey': id }
+      expect(state0.link).toMatchObject(match0)
+
+      const state1 = reducer(state0, actions.addExternalInviteSuccess(id, invite))
+      const match1 = { 'pubKey': id, 'link': invite }
+      expect(state1.link).toMatchObject(match1)
+    })
+    it('should succeed at accepting an invite', () => {
+      const state0 = reducer(initialState, actions.acceptExternalInviteRequest(invite))
+      const match0 = { 'link': invite }
+      expect(state0.invite).toMatchObject(match0)
+
+      const state1 = reducer(state0, actions.acceptExternalInviteSuccess())
+      expect(state1.invite).toBeUndefined()
     })
   })
   describe('adding threads', () => {
@@ -63,7 +83,7 @@ describe('ui stories', () => {
       expect(initialState.threadItems).toHaveLength(0)
       const state0 = reducer(initialState, actions.refreshThreadsRequest())
       expect(state0.refreshing).toEqual(true)
-      const state1 = reducer(state0, actions.refreshThreadsSuccess({ 
+      const state1 = reducer(state0, actions.refreshThreadsSuccess({
         items: [
           { id, name, peers },
           { id, name, peers },

@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  Linking,
-  Platform,
   AppState,
-  AppStateStatus
+  AppStateStatus,
+  Linking,
+  Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
@@ -12,31 +12,36 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
+import DeepLink from '../Services/DeepLink'
 
 class TextileManager extends React.PureComponent {
-  // TODO: This logic should be moved deeper into the stack
-  _handleOpenURLEvent (event) {
-    this._handleOpenURL(event.url)
-  }
-  // TODO: This logic should be moved deeper into the stack
-  _handleOpenURL (url) {
-    if (url) {
-      const data = url.replace(/.*?:\/\//g, '')
-      this.props.navigation.navigate('PairingView', {data: data})
-    }
-  }
-
   componentDidMount () {
     this.setup()
     BackgroundTask.schedule()
-    // TODO: This logic should be moved deeper into the stack
+    // DeepLinking for Device Pairing
     if (Platform.OS === 'android') {
-      // TODO: Android deep linking isn't setup in the Java native layer
       Linking.getInitialURL().then(url => {
         this._handleOpenURL(url)
       })
     } else {
       Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
+    }
+  }
+
+  _handleOpenURLEvent (event) {
+    this._handleOpenURL(event.url)
+  }
+
+  _handleOpenURL (url) {
+    if (url) {
+      const data = DeepLink.getData(url)
+      if (data.path === '/invites/device' && data.hash !== '') {
+        // start pairing the new device
+        this.props.navigation.navigate('PairingView', {request: DeepLink.getParams(data.hash)})
+      } else if (data.path === '/invites/new' && data.hash !== '') {
+        // invite the user to the thread
+        this.props.navigation.navigate('ThreadInvite', {link: url, request: DeepLink.getParams(data.hash)})
+      }
     }
   }
 
