@@ -56,8 +56,8 @@ export default {
     return threadItem
   },
 
-  removeThread: async function (id: string): Promise<void> {
-    return await TextileNode.removeThread(id)
+  removeThread: async function (threadName: string): Promise<void> {
+    return await TextileNode.removeThread(threadName)
   },
 
   threads: async function (): Promise<TextileTypes.Threads> {

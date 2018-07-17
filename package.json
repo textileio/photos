@@ -45,6 +45,7 @@
     "ramda": "^0.25.0",
     "react": "16.3.1",
     "react-native": "0.55.3",
+    "react-native-actionsheet": "^2.4.2",
     "react-native-animatable": "^1.2.4",
     "react-native-background-fetch": "^2.4.1",
     "react-native-background-task": "^0.2.1",
@@ -145,6 +146,12 @@
     },
     "setupFiles": [
       "<rootDir>/Tests/Setup"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
     ]
   },
   "config": {},
