@@ -9,7 +9,7 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { AppState } from 'react-native'
+import { AppState, Share } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select, take } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
@@ -146,8 +146,6 @@ export function * startNode () {
   try {
     yield call(TextileNode.start)
     yield put(TextileNodeActions.startNodeSuccess())
-    yield put(TextileNodeActions.getPhotoHashesRequest('default'))
-    yield put(TextileNodeActions.getPhotoHashesRequest(Config.ALL_THREAD_NAME))
     yield put(ThreadsActions.refreshThreadsRequest())
   } catch (error) {
     yield put(TextileNodeActions.startNodeFailure(error))
@@ -170,9 +168,10 @@ export function * stopNode () {
 export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.getPhotoHashesRequest>) {
   const { thread } = action.payload
   try {
-    const blocks: TextileTypes.Blocks = yield call(TextileNode.getPhotoBlocks, -1, thread, undefined)
+    const possibleBlocks: TextileTypes.Blocks = yield call(TextileNode.getPhotoBlocks, -1, thread, undefined)
+    const blocks = possibleBlocks.items || []
     let data = []
-    for (let item of blocks.items) {
+    for (let item of blocks) {
       try {
         const captionsrc = yield call(TextileNode.getBlockData, item.id, 'caption')
         const caption = Buffer.from(captionsrc, 'base64').toString('utf8')
@@ -358,10 +357,11 @@ export function * addThread (action: ActionType<typeof ThreadsActions.addThreadR
 }
 
 export function * removeThread (action: ActionType<typeof ThreadsActions.removeThreadRequest>) {
-  const { threadId } = action.payload
+  const { threadName } = action.payload
   try {
-    yield call(TextileNode.removeThread, threadId)
-    yield put(ThreadsActions.removeThreadSuccess(threadId))
+    yield call(TextileNode.removeThread, threadName)
+    yield put(ThreadsActions.removeThreadSuccess(threadName))
+    yield call(PhotosNavigationService.goBack)
   } catch (error) {
     yield put(ThreadsActions.removeThreadError(error))
   }
@@ -387,6 +387,11 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
   } catch (error) {
     yield put(ThreadsActions.addExternalInviteError(error))
   }
+}
+
+export function * presentShareInterface(action: ActionType<typeof ThreadsActions.addExternalInviteSuccess>) {
+  const { link } = action.payload
+  yield call(Share.share, { title: 'Join my thread on Textile!', message: link })
 }
 
 export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {

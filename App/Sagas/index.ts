@@ -37,6 +37,7 @@ import {
   removeThread,
   refreshThreads,
   addExternalInvite,
+  presentShareInterface,
   acceptExternalInvite
 } from './TextileSagas'
 
@@ -83,6 +84,7 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),
 
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
+    takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
 
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
