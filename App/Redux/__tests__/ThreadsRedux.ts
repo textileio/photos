@@ -1,7 +1,5 @@
 import actions, { reducer } from '../ThreadsRedux'
 import { ThreadItem } from '../../Models/TextileTypes'
-import { action } from '../../../node_modules/typesafe-actions';
-import { link } from 'fs';
 
 const id = 'id'
 const name = 'myThread'
