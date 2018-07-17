@@ -13,7 +13,7 @@ import styles from './Styles/ThreadsStyle'
 
 class MyListItem extends React.PureComponent {
   _onPress = () => {
-    this.props.onPressItem(this.props.id)
+    this.props.onPressItem(this.props.item)
   }
 
   render () {
@@ -21,7 +21,7 @@ class MyListItem extends React.PureComponent {
       <TouchableOpacity onPress={this._onPress}>
         <View style={styles.listItem}>
           <Text style={styles.listItemText}>
-            {this.props.title}
+            {this.props.item.name}
           </Text>
           <Icon name={'ios-arrow-forward'} size={30} color={Colors.steel} />
         </View>
@@ -48,17 +48,16 @@ class Threads extends React.PureComponent {
 
   _keyExtractor = (item, index) => item.id
 
-  _onPressItem = (id: string) => {
-    this.props.navigation.navigate('ViewThread', { thread: id })
+  _onPressItem = (item) => {
+    const { id, name } = item
+    this.props.navigation.navigate('ViewThread', { threadId: id, threadName: name })
   }
 
   _renderItem = ({item}) => (
     <MyListItem
-      id={item.id}
+      item={item}
       onPressItem={this._onPressItem}
       selected={!!this.state.selected.get(item.id)}
-      title={item.title}
-      type={item.type}
     />
   )
 
@@ -85,15 +84,8 @@ class Threads extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const threads = state.threads.threadItems.map(threadItem => {
-    return {
-      type: 'thread',
-      id: threadItem.name,
-      title: threadItem.name
-    }
-  })
   return {
-    data: threads
+    data: state.threads.threadItems
   }
 }
 
