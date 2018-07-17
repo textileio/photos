@@ -15,12 +15,12 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state
-    const headerTitle = params.thread === 'default' ? (
+    const headerTitle = params.threadName === 'default' ? (
       <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
         <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
       </TouchableWithoutFeedback>
-    ) : params.thread
-    const headerRight = params.thread === 'default' ? null : (
+    ) : params.threadName
+    const headerRight = params.threadName === 'default' ? null : (
       <HeaderButtons IconComponent={Icon} iconSize={33} color="white">
         <HeaderButtons.Item title="options" iconName="ios-more" onPress={params.showActionSheet} />
       </HeaderButtons>
@@ -34,19 +34,19 @@ class TextilePhotos extends React.PureComponent {
   componentDidMount () {
     this.props.navigation.setParams({
       toggleVerboseUi: this.props.toggleVerboseUi,
-      thread: this.props.thread,
+      threadName: this.props.threadName,
       showActionSheet: this.showActionSheet.bind(this)
     })
   }
 
   onSelect = (row) => {
     return () => {
-      this.props.viewPhoto(row.index, this.props.thread)
+      this.props.viewPhoto(row.index, this.props.threadName)
     }
   }
 
   onRefresh () {
-    this.props.refresh(this.props.thread)
+    this.props.refresh(this.props.threadName)
   }
 
   showActionSheet() {
@@ -55,9 +55,9 @@ class TextilePhotos extends React.PureComponent {
 
   handleActionSheetResponse (index: number) {
     if (index === 0) {
-      this.props.invite()
+      this.props.invite(this.props.threadName, this.props.threadId)
     } else if (index === 1) {
-      this.props.leaveThread()
+      this.props.leaveThread(this.props.threadId)
     }
   }
 
@@ -74,7 +74,7 @@ class TextilePhotos extends React.PureComponent {
         />
         <ActionSheet
           ref={o => this.actionSheet = o}
-          title={this.props.thread + ' Thread Actions'}
+          title={this.props.threadName + ' Thread Actions'}
           options={['Invite Others', 'Leave Thread', 'Cancel']}
           cancelButtonIndex={2}
           onPress={this.handleActionSheetResponse.bind(this)}
@@ -91,8 +91,9 @@ class TextilePhotos extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
-  const thread = ownProps.navigation.state.params.thread
-  let allItemsObj = state.ipfs.threads[thread].items.reduce((o, item, index) => ({...o, [item.hash]: { index, hash: item.hash, caption: item.caption, state: 'complete' }}), {})
+  const threadName = ownProps.navigation.state.params.threadName
+  const threadId = ownProps.navigation.state.params.threadId
+  let allItemsObj = state.ipfs.threads[threadName].items.reduce((o, item, index) => ({...o, [item.hash]: { index, hash: item.hash, caption: item.caption, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
     for (const pinRequest of processingItem.pinRequests) {
       const item = allItemsObj[pinRequest.hash]
@@ -111,13 +112,14 @@ const mapStateToProps = (state, ownProps) => {
 
   const placeholderText = state.ipfs.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
-    : (thread === 'default'
+    : (threadName === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
-    : 'Share your first photo to the ' + thread + ' thread.')
+    : 'Share your first photo to the ' + threadName + ' thread.')
   return {
-    thread,
+    threadId,
+    threadName,
     items: updatedItems,
-    refreshing: state.ipfs.threads[thread].querying,
+    refreshing: state.ipfs.threads[threadName].querying,
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
@@ -127,10 +129,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    viewPhoto: (index, thread) => { dispatch(UIActions.viewPhotoRequest(index, thread)) },
-    refresh: (thread: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(thread)) },
+    viewPhoto: (index, threadName) => { dispatch(UIActions.viewPhotoRequest(index, threadName)) },
+    refresh: (threadName: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadName)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    invite: () => { Share.share({ message: 'cooool', title: 'hi'}) },
+    invite: (name: string, pubKey: string) => { dispatch(ThreadsActions.addExternalInviteRequest(name, pubKey)) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) }
   }
 }
