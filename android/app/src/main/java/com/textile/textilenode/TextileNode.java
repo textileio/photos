@@ -198,17 +198,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void removeThread (String threadId, Promise promise) {
-        try {
-            node.removeThread(threadId);
-            promise.resolve(null);
-        }
-        catch (Exception e) {
-            promise.reject("REMOVE THREAD ERROR", e);
-        }
-    }
-
-    @ReactMethod
     public void addThreadInvite (String threadId, String inviteeKey, Promise promise) {
         try {
             promise.resolve(node.addThreadInvite(threadId, inviteeKey));
@@ -236,6 +225,17 @@ public class TextileNode extends ReactContextBaseJavaModule {
         }
         catch (Exception e) {
             promise.reject("ACCEPT EXTERNAL INVITE ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void removeThread (String threadId, Promise promise) {
+        try {
+            node.removeThread(threadId);
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("REMOVE THREAD ERROR", e);
         }
     }
 
@@ -318,9 +318,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoData (String id, String path, Promise promise) {
+    public void getPhotoData (String photoId, String path, Promise promise) {
         try {
-            promise.resolve(node.getPhotoData(id, path));
+            promise.resolve(node.getPhotoData(photoId, path));
         }
         catch (Exception e) {
             promise.reject("GET BLOCK DATA ERROR", e);
