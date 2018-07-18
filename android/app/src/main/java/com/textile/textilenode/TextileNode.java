@@ -285,6 +285,19 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void sharePhotoToThread (String photoId, String threadId, String caption, Promise promise) {
+        try {
+            if (caption == null) {
+                caption = "";
+            }
+            promise.resolve(node.sharePhotoToThread(photoId, threadId, caption));
+        }
+        catch (Exception e) {
+            promise.reject("SHARE PHOTO ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void getPhotos (String offset, Integer limit, String threadId, Promise promise) {
         try {
             promise.resolve(node.photoBlocks(offset, limit, threadId));
@@ -304,7 +317,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
         }
     }
 
-    // Method for turning photo URI into path + ext
+    // Android specific method for turning photo URI into path + ext
     @ReactMethod
     public void getFilePath(String uriString, Promise promise) {
         Uri uri = Uri.parse(uriString);
