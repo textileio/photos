@@ -13,6 +13,7 @@ import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import DeepLink from '../Services/DeepLink'
+import { foo } from '../Services/CameraRoll'
 
 class TextileManager extends React.PureComponent {
   componentDidMount () {
@@ -26,6 +27,8 @@ class TextileManager extends React.PureComponent {
     } else {
       Linking.addEventListener('url', this._handleOpenURLEvent.bind(this))
     }
+
+    foo()
   }
 
   _handleOpenURLEvent (event) {
