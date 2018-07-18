@@ -94,16 +94,22 @@ export default {
     return photos
   },
 
-  getPhotoData: async function (id: string): Promise<string> {
-    return await TextileNode.getPhotoData(id)
+  getPhotoData: async function (id: string): Promise<TextileTypes.ImageData> {
+    const jsonString = await TextileNode.getPhotoData(id)
+    const imageData = JSON.parse(jsonString) as TextileTypes.ImageData
+    return imageData
   },
 
-  getThumbData: async function (id: string): Promise<string> {
-    return await TextileNode.getThumbData(id)
+  getThumbData: async function (id: string): Promise<TextileTypes.ImageData> {
+    const jsonString = await TextileNode.getThumbData(id)
+    const imageData = JSON.parse(jsonString) as TextileTypes.ImageData
+    return imageData
   },
 
-  getPhotoMetadata: async function (id: string): Promise<string> {
-    return await TextileNode.getPhotoMetadata(id)
+  getPhotoMetadata: async function (id: string): Promise<TextileTypes.PhotoMetadata> {
+    const jsonString = await TextileNode.getPhotoMetadata(id)
+    const photoMetadata = JSON.parse(jsonString) as TextileTypes.PhotoMetadata
+    return photoMetadata
   },
 
   addDevice: async function (name: string, pubKey: string): Promise<void> {

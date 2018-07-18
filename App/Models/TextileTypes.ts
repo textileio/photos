@@ -49,3 +49,28 @@ export interface PinRequest {
   Boundary: string
   PayloadPath: string
 }
+
+export interface Metadata {
+  username?: string
+  created?: string
+  added?: string
+}
+
+export interface FileMetadata extends Metadata {
+  name?: string
+  extension?: string
+}
+
+export interface PhotoMetadata extends FileMetadata {
+  format: string
+  format_thumb: string
+  width: number
+  height: number
+  latitude?: number
+  longitude?: number
+}
+
+export interface ImageData {
+  url: string
+  metadata: PhotoMetadata
+}
