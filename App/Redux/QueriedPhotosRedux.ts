@@ -1,6 +1,9 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
 const actions = {
+  initialzePhotos: createAction('INITIALIZE_PHOTOS', resolve => {
+    return (ids: string[]) => resolve({ ids })
+  }),
   trackPhoto: createAction('TRACK_PHOTO', resolve => {
     return (id: string) => resolve({ id })
   }),
@@ -22,15 +25,27 @@ export type QueriedPhotosMap = {
 }
 
 export type QueriedPhotosState = {
+  readonly initialized: boolean
   readonly queriedPhotos: QueriedPhotosMap
 }
 
 export const initialState: QueriedPhotosState = {
+  initialized: false,
   queriedPhotos: {}
 }
 
 export function reducer (state: QueriedPhotosState = initialState, action: QueriedPhotosAction): QueriedPhotosState {
   switch (action.type) {
+    case getType(actions.initialzePhotos): {
+      const queriedPhotos = action.payload.ids.reduce(
+        (previous, current) => {
+          const queriedPhotos: QueriedPhotosMap = { ...previous, [current]: true }
+          return queriedPhotos
+        },
+        state.queriedPhotos
+      )
+      return { ...state, initialized: true, queriedPhotos }
+    }
     case getType(actions.trackPhoto):
       return { ...state, queriedPhotos: { ...state.queriedPhotos, [action.payload.id]: true } }
     case getType(actions.trackPhotos): {

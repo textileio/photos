@@ -11,6 +11,13 @@ describe('queried photos stories', () => {
     })
   })
   describe('tracking photos', () => {
+    it('should initialize photos', () => {
+      expect(initialState.initialized).toBeFalsy()
+      const state0 = reducer(initialState, actions.initialzePhotos(ids))
+      expect(state0.initialized).toBeTruthy()
+      expect(state0.queriedPhotos[ids[0]]).toBeTruthy()
+      expect(state0.queriedPhotos[ids[1]]).toBeTruthy()
+    })
     it('should track a photo', () => {
       const state0 = reducer(initialState, actions.trackPhoto(ids[0]))
       expect(state0.queriedPhotos[ids[0]]).toBeTruthy()
