@@ -247,9 +247,29 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit threadId:(NSStri
   }
 }
 
-RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _getPhotoData:photoId withPath:path error:&error];
+  NSString *result = [self _getPhotoData:photoId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getThumbData:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getThumbData:photoId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getPhotoMetadata:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getPhotoMetadata:photoId error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -384,8 +404,16 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node getPhotos:offset limit:limit threadId:threadId error:error];
 }
 
-- (NSString *)_getPhotoData:(NSString *)id withPath:(NSString *)path error:(NSError**)error {
-  return [self.node getPhotoData:id path:path error:error];
+- (NSString *)_getPhotoData:(NSString *)photoId error:(NSError**)error {
+  return [self.node getPhotoData:photoId error:error];
+}
+
+- (NSString *)_getThumbData:(NSString *)photoId error:(NSError**)error {
+  return [self.node getThumbData:photoId error:error];
+}
+
+- (NSString *)_getPhotoMetadata:(NSString *)photoId error:(NSError**)error {
+  return [self.node getPhotoMetadata:photoId error:error];
 }
 
 - (void)_addDevice:(NSString *)name pubKey:(NSString *)pkb64 error:(NSError**)error {
