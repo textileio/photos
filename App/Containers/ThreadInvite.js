@@ -12,16 +12,23 @@ class ThreadInvite extends React.PureComponent {
     super(props)
     this.state = {
       from: this.props.navigation.state.params.request.from,
+      id: this.props.navigation.state.params.request.id,
       key: this.props.navigation.state.params.request.key,
-      invite: this.props.navigation.state.params.request.invite,
       name: this.props.navigation.state.params.request.name,
-      link: this.props.navigation.state.params.link,
+      valid: this._isValid(this.props.navigation.state.params.request),
       status: 'init'
     }
   }
 
+  _isValid = (request) => {
+    return request.from && request.from !== '' &&
+      request.key && request.key !== '' &&
+      request.id && request.id !== '' &&
+      request.name && request.name !== ''
+  }
+
   confirmRequest = () => {
-    this.props.acceptExternalInvite(this.state.link)
+    this.props.acceptExternalInvite(this.state.id, this.state.key)
     this.setState(() => ({status: 'added'}))
   }
 
@@ -123,9 +130,9 @@ class ThreadInvite extends React.PureComponent {
   }
 
   render () {
-    if (!this.state.key) {
-      return this.renderError('There was an issue pairing with your new device. This may be caused by network connectivity or other issues. Please try again. If it continues, please report the issue with Textile.')
-    } else if (this.props.threads.some((t) => t.id === this.state.key)) {
+    if (!this.state.isValid) {
+      return this.renderError('There was an issue with the Thread invite. Be sure you got this invite from a trusted Textile user using the latest Textile app.')
+    } else if (this.props.threads.some((t) => t.id === this.state.id)) {
       // the thread already exists
       return this.renderError('You are already a member of the thread you are trying to join.')
     } else if (this.state.status === 'confirmed') {
@@ -148,7 +155,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    acceptExternalInvite: (link) => { dispatch(ThreadsAction.acceptExternalInviteRequest(link)) },
+    acceptExternalInvite: (id, key) => { dispatch(ThreadsAction.acceptExternalInviteRequest(id, key)) },
     removeThreadRequest: (id) => { dispatch(ThreadsAction.removeThreadRequest(id)) }
   }
 }
