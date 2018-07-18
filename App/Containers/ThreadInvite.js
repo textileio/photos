@@ -33,7 +33,8 @@ class ThreadInvite extends React.PureComponent {
   }
 
   cancel = () => {
-    this.props.removeThreadRequest(this.state.id)
+  // TODO: Figure out the right way to cancel a request. id here is the inviteId not a threadId
+  //   this.props.removeThreadRequest(this.state.id)
     this.props.navigation.navigate('OnboardingCheck')
   }
 
@@ -82,8 +83,8 @@ class ThreadInvite extends React.PureComponent {
           />
           <Button
             style={style.button}
-            title='Cancel'
-            accessibilityLabel='cancel'
+            title='Exit'
+            accessibilityLabel='exit'
             onPress={this.cancel.bind(this)}
           />
         </View>
