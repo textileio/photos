@@ -6,7 +6,7 @@ const actions = {
     return (name: string, mnemonic?: string) => resolve({ name, mnemonic })
   }),
   addThreadSuccess: createAction('ADD_THREAD_SUCCESS', resolve => {
-    return (threadItem: TextileTypes.ThreadItem) => resolve({ threadItem })
+    return (threadItem: TextileTypes.Thread) => resolve({ threadItem })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -74,9 +74,7 @@ export type ThreadsState = {
   readonly outboundInvite?: {
     readonly threadId: string
     readonly name: string
-    readonly key?: string // invite key
-    readonly id?: string // invite id
-    readonly inviter?: string
+    readonly invite?: TextileTypes.ExternalInvite
     readonly error?: Error
   }
   readonly inboundInvite?: {
@@ -85,7 +83,7 @@ export type ThreadsState = {
     readonly threadId?: string
     readonly error?: Error
   }
-  readonly threadItems: ReadonlyArray<TextileTypes.ThreadItem>
+  readonly threadItems: ReadonlyArray<TextileTypes.Thread>[]
 }
 
 export const initialState: ThreadsState = {
@@ -150,7 +148,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
         return state
       }
       const { invite } = action.payload
-      return { ...state, outboundInvite: { ...state.outboundInvite, id: invite.Id, key: invite.Key, inviter: invite.Inviter } }
+      return { ...state, outboundInvite: { ...state.outboundInvite, invite } }
     }
     case getType(actions.addExternalInviteError): {
       // Remove any pending link requests from memory
