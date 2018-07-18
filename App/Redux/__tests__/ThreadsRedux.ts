@@ -1,5 +1,5 @@
 import actions, { reducer } from '../ThreadsRedux'
-import { ThreadItem } from '../../Models/TextileTypes'
+import { Thread } from '../../Models/TextileTypes'
 
 const id = 'id'
 const name = 'myThread'
@@ -17,7 +17,7 @@ describe('ui stories', () => {
   })
   describe('handling invites', () => {
     it('should succeed at creating an invite', () => {
-      const state0 = reducer(initialState, actions.addExternalInviteRequest(id, key, name))
+      const state0 = reducer(initialState, actions.addExternalInviteRequest(id, name))
       const match0 = { id }
       // TODO
       expect(state0.outboundInvite).toMatchObject(match0)

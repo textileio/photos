@@ -383,7 +383,7 @@ export function * refreshThreads () {
 }
 
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
-  const { name, id } = action.payload
+  const { id, name } = action.payload
   try {
     const invite: TextileTypes.ExternalInvite = yield call(TextileNode.addExternalThreadInvite, name, id)
     yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
