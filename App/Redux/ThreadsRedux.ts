@@ -170,11 +170,9 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
         return state
       }
       const { threadId } = action.payload
-      // Clear the pending invites (we may want to turn this into a list long term)
       return { ...state, inboundInvite: {...state.inboundInvite, threadId} }
     }
     case getType(actions.acceptExternalInviteError): {
-      // Remove any pending invites from memory
       if (!state.inboundInvite) {
         return state
       }
