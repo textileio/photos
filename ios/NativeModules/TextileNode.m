@@ -206,11 +206,19 @@ RCT_EXPORT_METHOD(addPhoto:(NSString *)path resolver:(RCTPromiseResolveBlock)res
   }
 }
 
-
-// Replaces sharePhoto
 RCT_EXPORT_METHOD(addPhotoToThread:(NSString *)photoId key:(NSString *)key threadId:(NSString *)threadId caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _addPhotoToThread:photoId key:key threadId:threadId caption:caption error:&error];
+  if(!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(sharePhotoToThread:(NSString *)photoId threadId:(NSString *)threadId caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _sharePhotoToThread:photoId threadId:threadId caption:caption error:&error];
   if(!error) {
     resolve(result);
   } else {
@@ -343,12 +351,18 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node addPhoto:path error:error];
 }
 
-
 - (NSString *)_addPhotoToThread:(NSString *)photoId key:key threadId:(NSString *)threadId caption:(NSString *)caption error:(NSError**)error {
   if (!caption) {
     caption = @"";
   }
   return [self.node addPhotoToThread:photoId key:key threadId:threadId caption:caption error:error];
+}
+
+- (NSString *)_sharePhotoToThread:(NSString *)photoId threadId:(NSString *)threadId caption:(NSString *)caption error:(NSError**)error {
+  if (!caption) {
+    caption = @"";
+  }
+  return [self.node sharePhotoToThread:photoId threadId:threadId caption:caption error:error];
 }
 
 - (NSString *)_getPhotos:(NSString *)offset limit:(long)limit threadId:(NSString *)threadId error:(NSError**)error {
