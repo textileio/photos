@@ -66,8 +66,8 @@ export default {
     return threads
   },
 
-  addExternalThreadInvite: async function (name: string, pubKey: string): Promise<string> {
-    return await TextileNode.addExternalThreadInvite(name, pubKey)
+  addExternalThreadInvite: async function (id: string): Promise<string> {
+    return await TextileNode.addExternalThreadInvite(id)
   },
 
   acceptExternalThreadInvite: async function (threadId: string, key: string): Promise<string> {

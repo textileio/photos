@@ -17,19 +17,20 @@ describe('ui stories', () => {
   })
   describe('handling invites', () => {
     it('should succeed at creating an invite', () => {
-      const state0 = reducer(initialState, actions.addExternalInviteRequest(name, id))
-      const match0 = { pubKey: id }
-      expect(state0.link).toMatchObject(match0)
-      const state1 = reducer(state0, actions.addExternalInviteSuccess(id, invite))
-      const match1 = { pubKey: id, link: invite }
-      expect(state1.link).toMatchObject(match1)
+      const state0 = reducer(initialState, actions.addExternalInviteRequest(id, key, name))
+      const match0 = { id }
+      // TODO
+      expect(state0.outboundInvite).toMatchObject(match0)
+      const state1 = reducer(state0, actions.addExternalInviteSuccess(id))
+      const match1 = { id, link: invite }
+      expect(state1.outboundInvite).toMatchObject(match1)
     })
     it('should fail at creating an invite', () => {
-      const state0 = reducer(initialState, actions.addExternalInviteRequest(name, id))
-      const match0 = { pubKey: id }
-      expect(state0.link).toMatchObject(match0)
+      const state0 = reducer(initialState, actions.addExternalInviteRequest(id))
+      const match0 = { id }
+      expect(state0.outboundInvite).toMatchObject(match0)
       const state1 = reducer(state0, actions.addExternalInviteError(error))
-      const match1 = { pubKey: id, error }
+      const match1 = { id, error }
       expect(state1.link).toMatchObject(match1)
     })
     it('should succeed at accepting an invite', () => {
