@@ -1,11 +1,13 @@
 import actions, { reducer } from '../ThreadsRedux'
-import { Thread } from '../../Models/TextileTypes'
+import { Thread, ExternalInvite } from '../../Models/TextileTypes'
 
 const id = 'id'
 const name = 'myThread'
 const peers = 3
-const invite = 'https://link'
 const error = new Error('an error')
+const inviteId = 'invite_id'
+const inviteKey = 'a_key'
+const invite: ExternalInvite = {id: inviteId, inviter: 'tests', key: inviteKey}
 
 const initialState = reducer(undefined, {} as any)
 
@@ -18,42 +20,42 @@ describe('ui stories', () => {
   describe('handling invites', () => {
     it('should succeed at creating an invite', () => {
       const state0 = reducer(initialState, actions.addExternalInviteRequest(id, name))
-      const match0 = { id }
-      // TODO
+      const match0 = { id, name }
       expect(state0.outboundInvite).toMatchObject(match0)
-      const state1 = reducer(state0, actions.addExternalInviteSuccess(id))
-      const match1 = { id, link: invite }
+      const state1 = reducer(state0, actions.addExternalInviteSuccess(id, name, invite))
+      const match1 = { id, name, invite }
       expect(state1.outboundInvite).toMatchObject(match1)
     })
     it('should fail at creating an invite', () => {
-      const state0 = reducer(initialState, actions.addExternalInviteRequest(id))
-      const match0 = { id }
+      const state0 = reducer(initialState, actions.addExternalInviteRequest(id, name))
+      const match0 = { id, name }
       expect(state0.outboundInvite).toMatchObject(match0)
       const state1 = reducer(state0, actions.addExternalInviteError(error))
-      const match1 = { id, error }
-      expect(state1.link).toMatchObject(match1)
+      const match1 = { id, name, error }
+      expect(state1.outboundInvite).toMatchObject(match1)
     })
     it('should succeed at accepting an invite', () => {
-      const state0 = reducer(initialState, actions.acceptExternalInviteRequest(invite))
-      const match0 = { link: invite }
-      expect(state0.invite).toMatchObject(match0)
-      const state1 = reducer(state0, actions.acceptExternalInviteSuccess())
-      expect(state1.invite).toBeUndefined()
+      const state0 = reducer(initialState, actions.acceptExternalInviteRequest(inviteId, inviteKey))
+      const match0 = { inviteId: inviteId, key:inviteKey }
+      expect(state0.inboundInvite).toMatchObject(match0)
+      const state1 = reducer(state0, actions.acceptExternalInviteSuccess(id))
+      const match1 = { id, inviteId: inviteId, key:inviteKey }
+      expect(state1.inboundInvite).toMatchObject(match1)
     })
     it('should fail at accepting an invite', () => {
-      const state0 = reducer(initialState, actions.acceptExternalInviteRequest(invite))
-      const match0 = { link: invite }
-      expect(state0.invite).toMatchObject(match0)
+      const state0 = reducer(initialState, actions.acceptExternalInviteRequest(inviteId, inviteKey))
+      const match0 = { inviteId: inviteId, key:inviteKey }
+      expect(state0.inboundInvite).toMatchObject(match0)
       const state1 = reducer(state0, actions.acceptExternalInviteError(error))
-      const match1 = { link: invite, error }
-      expect(state1.invite).toMatchObject(match1)
+      const match1 = { inviteId: inviteId, key:inviteKey, error }
+      expect(state1.inboundInvite).toMatchObject(match1)
     })
     it('should ignore out of order events', () => {
-      const state0 = reducer(initialState, actions.addExternalInviteSuccess(id, invite))
+      const state0 = reducer(initialState, actions.addExternalInviteSuccess(id, name, invite))
       expect(state0).toMatchObject(initialState)
       const state1 = reducer(initialState, actions.addExternalInviteError(error))
       expect(state1).toMatchObject(initialState)
-      const state2 = reducer(initialState, actions.acceptExternalInviteSuccess())
+      const state2 = reducer(initialState, actions.acceptExternalInviteSuccess(id))
       expect(state2).toMatchObject(initialState)
       const state3 = reducer(initialState, actions.acceptExternalInviteError(error))
       expect(state3).toMatchObject(initialState)
@@ -64,7 +66,7 @@ describe('ui stories', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(name))
       const match0 = { name }
       expect(state0.adding).toMatchObject(match0)
-      const match1: ThreadItem = { id, name, peers }
+      const match1: Thread = { id, name, peers }
       const state1 = reducer(state0, actions.addThreadSuccess(match1))
       expect(state1.threadItems[0]).toMatchObject(match1)
       expect(state1.adding).toBeUndefined()
@@ -87,24 +89,24 @@ describe('ui stories', () => {
   })
   describe('leaving threads', () => {
     it('should leave a thread successfully', () => {
-      const state0 = reducer(initialState, actions.addThreadRequest(name))
+      const state0 = reducer(initialState, actions.addThreadRequest(id))
       const state1 = reducer(state0, actions.addThreadSuccess({ id, name, peers }))
       expect(state1.threadItems).toHaveLength(1)
-      const state2 = reducer(state1, actions.removeThreadRequest(name))
-      const match2 = { threadName: name }
+      const state2 = reducer(state1, actions.removeThreadRequest(id))
+      const match2 = { id }
       expect(state2.removing).toMatchObject(match2)
-      const state3 = reducer(state2, actions.removeThreadSuccess(name))
+      const state3 = reducer(state2, actions.removeThreadSuccess(id))
       expect(state3.threadItems).toHaveLength(0)
       expect(state3.removing).toBeUndefined()
     })
     it('should fail at leaving a thread', () => {
-      const state0 = reducer(initialState, actions.addThreadRequest(name))
+      const state0 = reducer(initialState, actions.addThreadRequest(id))
       const state1 = reducer(state0, actions.addThreadSuccess({ id, name, peers }))
-      const state2 = reducer(state1, actions.removeThreadRequest(name))
-      const match2 = { threadName: name }
+      const state2 = reducer(state1, actions.removeThreadRequest(id))
+      const match2 = { id }
       expect(state2.removing).toMatchObject(match2)
       const state3 = reducer(state2, actions.removeThreadError(error))
-      const match3 = { threadName: name, error }
+      const match3 = { id, error }
       expect(state3.removing).toMatchObject(match3)
       expect(state3.threadItems).toHaveLength(1)
     })
