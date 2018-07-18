@@ -10,15 +10,15 @@
 #include "Universe.objc.h"
 
 
-@class MobileBlockItem;
-@class MobileBlocks;
-@class MobileDeviceItem;
+@class MobileDevice;
 @class MobileDevices;
 @class MobileEvent;
+@class MobileExternalInvite;
 @class MobileMobile;
 @class MobileNodeConfig;
-@class MobilePinRequests;
-@class MobileThreadItem;
+@class MobilePhoto;
+@class MobilePhotos;
+@class MobileThread;
 @class MobileThreads;
 @protocol MobileMessenger;
 @class MobileMessenger;
@@ -27,35 +27,7 @@
 - (void)notify:(MobileEvent*)event;
 @end
 
-@interface MobileBlockItem : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) id _ref;
-
-- (instancetype)initWithRef:(id)ref;
-- (instancetype)init;
-- (NSString*)id_;
-- (void)setId:(NSString*)v;
-- (NSString*)target;
-- (void)setTarget:(NSString*)v;
-// skipped field BlockItem.Parents with unsupported type: *types.Slice
-
-// skipped field BlockItem.Type with unsupported type: *types.Named
-
-// skipped field BlockItem.Date with unsupported type: *types.Named
-
-@end
-
-@interface MobileBlocks : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) id _ref;
-
-- (instancetype)initWithRef:(id)ref;
-- (instancetype)init;
-// skipped field Blocks.Items with unsupported type: *types.Slice
-
-@end
-
-@interface MobileDeviceItem : NSObject <goSeqRefInterface> {
+@interface MobileDevice : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
 
@@ -89,6 +61,20 @@
 - (void)setPayload:(NSString*)v;
 @end
 
+@interface MobileExternalInvite : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+- (NSString*)id_;
+- (void)setId:(NSString*)v;
+- (NSString*)key;
+- (void)setKey:(NSString*)v;
+- (NSString*)inviter;
+- (void)setInviter:(NSString*)v;
+@end
+
 @interface MobileMobile : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -101,23 +87,23 @@
 - (void)setMnemonic:(NSString*)v;
 // skipped field Mobile.Online with unsupported type: *types.Chan
 
-- (BOOL)acceptExternalThreadInvite:(NSString*)link error:(NSError**)error;
+- (NSString*)acceptExternalThreadInvite:(NSString*)id_ key:(NSString*)key error:(NSError**)error;
 - (BOOL)addDevice:(NSString*)name pubKey:(NSString*)pubKey error:(NSError**)error;
-- (NSString*)addExternalThreadInvite:(NSString*)threadName pubKey:(NSString*)pubKey error:(NSError**)error;
-- (NSString*)addPhoto:(NSString*)path threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
+- (NSString*)addExternalThreadInvite:(NSString*)threadId error:(NSError**)error;
+- (NSString*)addPhoto:(NSString*)path error:(NSError**)error;
+- (NSString*)addPhotoToThread:(NSString*)dataId key:(NSString*)key threadId:(NSString*)threadId caption:(NSString*)caption error:(NSError**)error;
 - (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
-- (BOOL)addThreadInvite:(NSString*)threadName pubKey:(NSString*)pubKey error:(NSError**)error;
+- (NSString*)addThreadInvite:(NSString*)threadId inviteePk:(NSString*)inviteePk error:(NSError**)error;
 - (NSString*)devices:(NSError**)error;
 - (NSString*)getAccessToken:(NSError**)error;
-- (NSString*)getBlockData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
-- (NSString*)getFileData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
 - (NSString*)getId:(NSError**)error;
+- (NSString*)getPhotoData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
+- (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit threadId:(NSString*)threadId error:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
 - (BOOL)isSignedIn;
-- (NSString*)photoBlocks:(NSString*)offsetId limit:(long)limit threadName:(NSString*)threadName error:(NSError**)error;
-- (BOOL)removeDevice:(NSString*)name error:(NSError**)error;
-- (BOOL)removeThread:(NSString*)name error:(NSError**)error;
-- (NSString*)sharePhoto:(NSString*)id_ threadName:(NSString*)threadName caption:(NSString*)caption error:(NSError**)error;
+- (BOOL)removeDevice:(NSString*)id_ error:(NSError**)error;
+- (NSString*)removeThread:(NSString*)id_ error:(NSError**)error;
+- (NSString*)sharePhotoToThread:(NSString*)dataId threadId:(NSString*)threadId caption:(NSString*)caption error:(NSError**)error;
 - (BOOL)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
 - (BOOL)signOut:(NSError**)error;
 - (BOOL)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
@@ -142,17 +128,33 @@
 - (void)setLogFiles:(BOOL)v;
 @end
 
-@interface MobilePinRequests : NSObject <goSeqRefInterface> {
+@interface MobilePhoto : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
 
 - (instancetype)initWithRef:(id)ref;
 - (instancetype)init;
-// skipped field PinRequests.Items with unsupported type: *types.Slice
+- (NSString*)id_;
+- (void)setId:(NSString*)v;
+// skipped field Photo.Date with unsupported type: *types.Named
+
+- (NSString*)authorId;
+- (void)setAuthorId:(NSString*)v;
+- (NSString*)caption;
+- (void)setCaption:(NSString*)v;
+@end
+
+@interface MobilePhotos : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field Photos.Items with unsupported type: *types.Slice
 
 @end
 
-@interface MobileThreadItem : NSObject <goSeqRefInterface> {
+@interface MobileThread : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
 
