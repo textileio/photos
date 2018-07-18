@@ -30,25 +30,19 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
-    return (id: string, name: string) => resolve({ threadId: id, name })
+    return (id: string, name: string) => resolve({ id, name })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
-    // TODO this is the return from Go, we need a ThreadExternalInvite type
-    // ExternalInvite{
-    //   Id:     string,
-    //     Key:     string,
-    //     Inviter: string,
-    // }
-    return (invite: TextileTypes.ExternalInvite) => resolve({ invite })
+    return (id: string, name: string, invite: TextileTypes.ExternalInvite) => resolve({ id, name, invite })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (error: Error) => resolve({ error })
   }),
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', resolve => {
-    return (id: string, key: string) => resolve({ id, key })
+    return (inviteId: string, key: string) => resolve({ inviteId, key })
   }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
-    return (threadId: string) => resolve({threadId})
+    return (id: string) => resolve({id})
   }),
   acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -72,15 +66,15 @@ export type ThreadsState = {
   // e.g. if a user accepts two invites quickly without the first one resolving fully...
   // at the Go layer everything should be fine, but just if we want to build feedback off of this.
   readonly outboundInvite?: {
-    readonly threadId: string
+    readonly id: string
     readonly name: string
     readonly invite?: TextileTypes.ExternalInvite
     readonly error?: Error
   }
   readonly inboundInvite?: {
-    readonly id: string
+    readonly inviteId: string
     readonly key: string
-    readonly threadId?: string
+    readonly id?: string
     readonly error?: Error
   }
   readonly threadItems: ReadonlyArray<TextileTypes.Thread>
@@ -140,14 +134,17 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, refreshing: false, refreshError: action.payload.error }
     case getType(actions.addExternalInviteRequest): {
       // Store the link request pubKey in memory (name will be deprecated)
-      const { threadId, name } = action.payload
-      return { ...state, outboundInvite: { threadId, name } }
+      const { id, name } = action.payload
+      return { ...state, outboundInvite: { id, name } }
     }
     case getType(actions.addExternalInviteSuccess): {
       if (!state.outboundInvite) {
         return state
       }
-      const { invite } = action.payload
+      const { id, invite } = action.payload
+      if (state.outboundInvite.id !== id) {
+        return state
+      }
       return { ...state, outboundInvite: { ...state.outboundInvite, invite } }
     }
     case getType(actions.addExternalInviteError): {
@@ -160,15 +157,15 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     }
     case getType(actions.acceptExternalInviteRequest): {
       // Store the external invite link in memory
-      const { id, key } = action.payload
-      return { ...state, inboundInvite: { id, key } }
+      const { inviteId, key } = action.payload
+      return { ...state, inboundInvite: { inviteId, key } }
     }
     case getType(actions.acceptExternalInviteSuccess): {
       if (!state.inboundInvite) {
         return state
       }
-      const { threadId } = action.payload
-      return { ...state, inboundInvite: {...state.inboundInvite, threadId} }
+      const { id } = action.payload
+      return { ...state, inboundInvite: {...state.inboundInvite, id} }
     }
     case getType(actions.acceptExternalInviteError): {
       if (!state.inboundInvite) {
