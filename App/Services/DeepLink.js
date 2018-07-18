@@ -46,7 +46,7 @@ function createInviteLink (invite, threadName) {
   hash.push('key=' + encodeURIComponent(invite.key))
   hash.push('inviter=' + encodeURIComponent(invite.inviter))
   hash.push('name=' + encodeURIComponent(threadName))
-  return "https://www.textile.photos/invites/new#" + ret.join('&')
+  return 'https://www.textile.photos/invites/new#' + hash.join('&')
 }
 
 export default {
