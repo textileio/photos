@@ -19,7 +19,7 @@ function getParams (hash) {
   return queryString
 }
 
-function getData(href) {
+function getData (href) {
   var regex = new RegExp([
     '^(https?:)//',
     '(([^:/?#]*)(?::([0-9]+))?)',
@@ -38,6 +38,15 @@ function getData(href) {
     search: match[6],
     hash: match[7]
   }
+}
+
+function createInviteLink (invite, threadName) {
+  let hash = []
+  hash.push('id=' + encodeURIComponent(invite.id))
+  hash.push('key=' + encodeURIComponent(invite.key))
+  hash.push('inviter=' + encodeURIComponent(invite.inviter))
+  hash.push('name=' + encodeURIComponent(threadName))
+  return "https://www.textile.photos/invites/new#" + ret.join('&')
 }
 
 export default {
