@@ -11,7 +11,7 @@ class ThreadInvite extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      from: this.props.navigation.state.params.request.from,
+      inviter: this.props.navigation.state.params.request.inviter,
       id: this.props.navigation.state.params.request.id,
       key: this.props.navigation.state.params.request.key,
       name: this.props.navigation.state.params.request.name,
@@ -21,7 +21,7 @@ class ThreadInvite extends React.PureComponent {
   }
 
   _isValid = (request) => {
-    return request.from && request.from !== '' &&
+    return request.inviter && request.inviter !== '' &&
       request.key && request.key !== '' &&
       request.id && request.id !== '' &&
       request.name && request.name !== ''
@@ -46,7 +46,7 @@ class ThreadInvite extends React.PureComponent {
       <View style={[photosStyle.container, style.container]}>
         <View>
           <Text style={style.message}>
-            You have been invited by {this.state.from ? this.state.from : 'warning'} to share photos in a shared thread called, {this.state.name ? this.state.name : 'warning'}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
+            You have been invited by {this.state.inviter ? this.state.inviter : 'warning'} to share photos in a shared thread called, {this.state.name ? this.state.name : 'warning'}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
           </Text>
           <Button
             style={style.button}
