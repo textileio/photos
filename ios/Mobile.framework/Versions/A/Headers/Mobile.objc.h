@@ -14,6 +14,7 @@
 @class MobileDevices;
 @class MobileEvent;
 @class MobileExternalInvite;
+@class MobileImageData;
 @class MobileMobile;
 @class MobileNodeConfig;
 @class MobilePhoto;
@@ -85,6 +86,21 @@
 - (void)setKey:(NSString*)v;
 - (NSString*)inviter;
 - (void)setInviter:(NSString*)v;
+@end
+
+/**
+ * ImageData is a wrapper around an image data url and meta data
+ */
+@interface MobileImageData : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+- (NSString*)url;
+- (void)setUrl:(NSString*)v;
+// skipped field ImageData.Metadata with unsupported type: *types.Pointer
+
 @end
 
 /**
