@@ -6,7 +6,7 @@ const actions = {
     return (name: string, mnemonic?: string) => resolve({ name, mnemonic })
   }),
   addThreadSuccess: createAction('ADD_THREAD_SUCCESS', resolve => {
-    return (threadItem: TextileTypes.ThreadItem) => resolve({ threadItem })
+    return (threadItem: TextileTypes.Thread) => resolve({ threadItem })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -30,7 +30,7 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
-    return (id: string, key: string, name: string) => resolve({ id, key, name })
+    return (id: string, name: string) => resolve({ threadId: id, name })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
     // TODO this is the return from Go, we need a ThreadExternalInvite type
@@ -39,7 +39,7 @@ const actions = {
     //     Key:     string,
     //     Inviter: string,
     // }
-    return (invite: TextileTypes.ThreadExternalInvite) => resolve({ invite })
+    return (invite: TextileTypes.ExternalInvite) => resolve({ invite })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -48,7 +48,7 @@ const actions = {
     return (id: string, key: string) => resolve({ id, key })
   }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
-    return () => resolve()
+    return (threadId: string) => resolve({threadId})
   }),
   acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -68,19 +68,22 @@ export type ThreadsState = {
     readonly id: string
     readonly error?: Error
   }
+  // TODO: This single outbound/inboundInvite objects are bad setup and could get wires crossed.
+  // e.g. if a user accepts two invites quickly without the first one resolving fully...
+  // at the Go layer everything should be fine, but just if we want to build feedback off of this.
   readonly outboundInvite?: {
-    readonly id: string
+    readonly threadId: string
     readonly name: string
-    readonly key?: string
-    readonly inviter?: string
+    readonly invite?: TextileTypes.ExternalInvite
     readonly error?: Error
   }
   readonly inboundInvite?: {
     readonly id: string
     readonly key: string
+    readonly threadId?: string
     readonly error?: Error
   }
-  readonly threadItems: ReadonlyArray<TextileTypes.ThreadItem>
+  readonly threadItems: ReadonlyArray<TextileTypes.Thread>[]
 }
 
 export const initialState: ThreadsState = {
@@ -137,18 +140,15 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, refreshing: false, refreshError: action.payload.error }
     case getType(actions.addExternalInviteRequest): {
       // Store the link request pubKey in memory (name will be deprecated)
-      const { id, name } = action.payload
-      return { ...state, outboundInvite: { id, name } }
+      const { threadId, name } = action.payload
+      return { ...state, outboundInvite: { threadId, name } }
     }
     case getType(actions.addExternalInviteSuccess): {
       if (!state.outboundInvite) {
         return state
       }
       const { invite } = action.payload
-      if (!state.outboundInvite.id != invite.Id) {
-        return state
-      }
-      return { ...state, outboundInvite: { ...state.outboundInvite, key: invite.Key, inviter: invite.Inviter } }
+      return { ...state, outboundInvite: { ...state.outboundInvite, invite } }
     }
     case getType(actions.addExternalInviteError): {
       // Remove any pending link requests from memory
@@ -167,11 +167,10 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       if (!state.inboundInvite) {
         return state
       }
-      // Clear the pending invites (we may want to turn this into a list long term)
-      return { ...state, inboundInvite: undefined }
+      const { threadId } = action.payload
+      return { ...state, inboundInvite: {...state.inboundInvite, threadId} }
     }
     case getType(actions.acceptExternalInviteError): {
-      // Remove any pending invites from memory
       if (!state.inboundInvite) {
         return state
       }
