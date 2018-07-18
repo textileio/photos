@@ -11,7 +11,7 @@ class ThreadInvite extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      from: this.props.navigation.state.params.request.from,
+      inviter: this.props.navigation.state.params.request.inviter,
       id: this.props.navigation.state.params.request.id,
       key: this.props.navigation.state.params.request.key,
       name: this.props.navigation.state.params.request.name,
@@ -21,7 +21,7 @@ class ThreadInvite extends React.PureComponent {
   }
 
   _isValid = (request) => {
-    return request.from && request.from !== '' &&
+    return request.inviter && request.inviter !== '' &&
       request.key && request.key !== '' &&
       request.id && request.id !== '' &&
       request.name && request.name !== ''
@@ -33,8 +33,8 @@ class ThreadInvite extends React.PureComponent {
   }
 
   cancel = () => {
-    // TODO: remove thread takes thread name... what is key?
-    this.props.removeThreadRequest(this.state.key)
+  // TODO: Figure out the right way to cancel a request. id here is the inviteId not a threadId
+  //   this.props.removeThreadRequest(this.state.id)
     this.props.navigation.navigate('OnboardingCheck')
   }
 
@@ -47,7 +47,7 @@ class ThreadInvite extends React.PureComponent {
       <View style={[photosStyle.container, style.container]}>
         <View>
           <Text style={style.message}>
-            You have been invited by {this.state.from ? this.state.from : 'warning'} to share photos in a shared thread called, {this.state.name ? this.state.name : 'warning'}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
+            You have been invited by {this.state.inviter ? this.state.inviter : 'warning'} to share photos in a shared thread called, {this.state.name ? this.state.name : 'warning'}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
           </Text>
           <Button
             style={style.button}
@@ -83,8 +83,8 @@ class ThreadInvite extends React.PureComponent {
           />
           <Button
             style={style.button}
-            title='Cancel'
-            accessibilityLabel='cancel'
+            title='Exit'
+            accessibilityLabel='exit'
             onPress={this.cancel.bind(this)}
           />
         </View>

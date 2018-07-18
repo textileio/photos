@@ -33,6 +33,7 @@ import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
+import DeepLinks from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload.data
@@ -347,8 +348,9 @@ function * uploadFile (id: string, boundary: string, payloadPath: string) {
 export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
   const { name, mnemonic } = action.payload
   try {
-    const threadItem: TextileTypes.ThreadItem = yield call(TextileNode.addThread, name, mnemonic)
+    const threadItem: TextileTypes.Thread = yield call(TextileNode.addThread, name, mnemonic)
     yield put(ThreadsActions.addThreadSuccess(threadItem))
+    // TODO: new method below
     yield put(TextileNodeActions.getPhotoHashesRequest(threadItem.name))
     yield call(PhotosNavigationService.goBack)
   } catch (error) {
@@ -357,10 +359,10 @@ export function * addThread (action: ActionType<typeof ThreadsActions.addThreadR
 }
 
 export function * removeThread (action: ActionType<typeof ThreadsActions.removeThreadRequest>) {
-  const { threadName } = action.payload
+  const { id } = action.payload
   try {
-    yield call(TextileNode.removeThread, threadName)
-    yield put(ThreadsActions.removeThreadSuccess(threadName))
+    yield call(TextileNode.removeThread, id)
+    yield put(ThreadsActions.removeThreadSuccess(id))
     yield call(PhotosNavigationService.goBack)
   } catch (error) {
     yield put(ThreadsActions.removeThreadError(error))
@@ -371,6 +373,7 @@ export function * refreshThreads () {
   try {
     const threads: TextileTypes.Threads = yield call(TextileNode.threads)
     for (const threadItem of threads.items) {
+      // TODO: update this method
       yield put(TextileNodeActions.getPhotoHashesRequest(threadItem.name))
     }
     yield put(ThreadsActions.refreshThreadsSuccess(threads))
@@ -380,26 +383,27 @@ export function * refreshThreads () {
 }
 
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
-  const { name, pubKey } = action.payload
+  const { id, name } = action.payload
   try {
-    const link = yield call(TextileNode.addExternalThreadInvite, name, pubKey)
-    yield put(ThreadsActions.addExternalInviteSuccess(pubKey, link))
+    const invite: TextileTypes.ExternalInvite = yield call(TextileNode.addExternalThreadInvite, id, name)
+    yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
   } catch (error) {
     yield put(ThreadsActions.addExternalInviteError(error))
   }
 }
 
 export function * presentShareInterface(action: ActionType<typeof ThreadsActions.addExternalInviteSuccess>) {
-  const { link } = action.payload
+  const { invite, name } = action.payload
+  const link = DeepLinks.createInviteLink(invite, name)
   yield call(Share.share, { title: 'Join my thread on Textile!', message: link })
 }
 
 export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
-  const { link } = action.payload
+  const { inviteId, key } = action.payload
   try {
-    yield call(TextileNode.acceptExternalThreadInvite, link)
+    const id = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
     yield put(ThreadsActions.refreshThreadsRequest())
-    yield put(ThreadsActions.acceptExternalInviteSuccess())
+    yield put(ThreadsActions.acceptExternalInviteSuccess(id))
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(error))
   }
