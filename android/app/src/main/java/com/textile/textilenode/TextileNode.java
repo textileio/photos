@@ -209,9 +209,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addExternalThreadInvite (String threadName, String threadId, Promise promise) {
+    public void addExternalThreadInvite (String threadId, Promise promise) {
         try {
-            promise.resolve(node.addExternalThreadInvite(threadName, threadId));
+            promise.resolve(node.addExternalThreadInvite(threadId));
         }
         catch (Exception e) {
             promise.reject("ADD EXTERNAL INVITE ERROR", e);
@@ -262,12 +262,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addPhoto (String path, String threadName, String caption, Promise promise) {
+    public void addPhoto (String path, Promise promise) {
         try {
-            if (caption == null) {
-                caption = "";
-            }
-            promise.resolve(node.addPhoto(path, threadName, caption));
+            promise.resolve(node.addPhoto(path));
         }
         catch (Exception e) {
             promise.reject("ADD PHOTO ERROR", e);
@@ -275,12 +272,12 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sharePhoto (String id, String threadName, String caption, Promise promise) {
+    public void addPhotoToThread (String photoId, String key, String threadId, String caption, Promise promise) {
         try {
             if (caption == null) {
                 caption = "";
             }
-            promise.resolve(node.sharePhoto(id, threadName, caption));
+            promise.resolve(node.addPhotoToThread(photoId, key, threadId, caption));
         }
         catch (Exception e) {
             promise.reject("SHARE PHOTO ERROR", e);
@@ -288,22 +285,12 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void photoBlocks (String offset, Integer limit, String threadName, Promise promise) {
+    public void getPhotos (String offset, Integer limit, String threadId, Promise promise) {
         try {
-            promise.resolve(node.photoBlocks(offset, limit, threadName));
+            promise.resolve(node.photoBlocks(offset, limit, threadId));
         }
         catch (Exception e) {
             promise.reject("GET PHOTO BLOCKS ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void getBlockData (String id, String path, Promise promise) {
-        try {
-            promise.resolve(node.getBlockData(id, path));
-        }
-        catch (Exception e) {
-            promise.reject("GET BLOCK DATA ERROR", e);
         }
     }
 
@@ -313,7 +300,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
             promise.resolve(node.getPhotoData(id, path));
         }
         catch (Exception e) {
-            promise.reject("GET PHOTO DATA ERROR", e);
+            promise.reject("GET BLOCK DATA ERROR", e);
         }
     }
 

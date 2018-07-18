@@ -228,16 +228,6 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit threadId:(NSStri
   }
 }
 
-RCT_EXPORT_METHOD(getBlockData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getBlockData:id withPath:path error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
 RCT_EXPORT_METHOD(getPhotoData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _getPhotoData:id withPath:path error:&error];
@@ -349,8 +339,8 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   [self.node acceptExternalThreadInvite:threadId key:key error:error];
 }
 
-- (NSString *)_addPhoto:(NSString *)photoId error:(NSError**)error {
-  return [self.node addPhoto:photoId error:error];
+- (NSString *)_addPhoto:(NSString *)path error:(NSError**)error {
+  return [self.node addPhoto:path error:error];
 }
 
 
