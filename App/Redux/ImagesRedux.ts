@@ -1,6 +1,4 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { create } from '../../node_modules/@types/react-test-renderer';
-import { resolve } from 'path';
 
 const actions = {
   someAction: createAction('AN_ACTION', resolve => {
@@ -15,7 +13,7 @@ type Image = {
 }
 
 type ImageMap = {
-  [key: string]: Image
+  readonly [key: string]: Image
 }
 
 export type ImagesState = {
