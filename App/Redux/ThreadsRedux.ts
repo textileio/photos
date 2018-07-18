@@ -39,7 +39,7 @@ const actions = {
     //     Key:     string,
     //     Inviter: string,
     // }
-    return (invite: TextileTypes.ThreadExternalInvite) => resolve({ invite })
+    return (invite: TextileTypes.ExternalInvite) => resolve({ invite })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (error: Error) => resolve({ error })
