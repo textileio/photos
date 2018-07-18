@@ -158,9 +158,9 @@ RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic r
 
 RCT_EXPORT_METHOD(removeThread:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _removeThread:threadId error:&error];
+  NSString *blockId = [self _removeThread:threadId error:&error];
   if (!error) {
-    resolve(nil);
+    resolve(blockId);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -198,9 +198,9 @@ RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString *)threadId resolver:(RCTProm
 
 RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _acceptExternalThreadInvite:threadId key:key error:&error];
+  NSString *blockId = [self _acceptExternalThreadInvite:threadId key:key error:&error];
   if (!error) {
-    resolve(nil);
+    resolve(blockId);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -354,12 +354,12 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node addExternalThreadInvite:threadId error:error];
 }
 
-- (void)_acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key error:(NSError**)error {
-  [self.node acceptExternalThreadInvite:threadId key:key error:error];
+- (NSString *)_acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key error:(NSError**)error {
+  return [self.node acceptExternalThreadInvite:threadId key:key error:error];
 }
 
-- (void)_removeThread:(NSString *)threadId error:(NSError**)error {
-  [self.node removeThread:threadId error:error];
+- (NSString *)_removeThread:(NSString *)threadId error:(NSError**)error {
+  return [self.node removeThread:threadId error:error];
 }
 
 - (NSString *)_addPhoto:(NSString *)path error:(NSError**)error {
