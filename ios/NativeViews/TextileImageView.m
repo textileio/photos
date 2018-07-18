@@ -60,7 +60,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       NSError *error;
       UIImage *image;
-      NSString *base64String = [_bridge.textileNode _getPhotoData:self.imageId withPath:self.path error:&error];
+      NSString *base64String = [ _bridge.textileNode _getPhotoData:self.imageId withPath:self.path error:&error];
       if (base64String) {
         NSString *finalBase64String = [@"data:image/jpeg;base64," stringByAppendingString:base64String];
         NSURL *url = [NSURL URLWithString:finalBase64String];
