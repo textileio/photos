@@ -83,7 +83,7 @@ export type ThreadsState = {
     readonly threadId?: string
     readonly error?: Error
   }
-  readonly threadItems: ReadonlyArray<TextileTypes.Thread>[]
+  readonly threadItems: ReadonlyArray<TextileTypes.Thread>
 }
 
 export const initialState: ThreadsState = {
