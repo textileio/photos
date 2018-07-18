@@ -206,6 +206,7 @@ RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString *)threadId key:(NSString 
   }
 }
 
+// Adds a photo to ipfs
 RCT_EXPORT_METHOD(addPhoto:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _addPhoto:path error:&error];
@@ -246,9 +247,9 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit threadId:(NSStri
   }
 }
 
-RCT_EXPORT_METHOD(getPhotoData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _getPhotoData:id withPath:path error:&error];
+  NSString *result = [self _getPhotoData:photoId withPath:path error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -341,10 +342,6 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node addThread:name mnemonic:mnemonic error:error];
 }
 
-- (void)_removeThread:(NSString *)threadId error:(NSError**)error {
-  [self.node removeThread:threadId error:error];
-}
-
 - (NSString *)_threads:(NSError**)error {
   return [self.node threads:error];
 }
@@ -359,6 +356,10 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
 
 - (void)_acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key error:(NSError**)error {
   [self.node acceptExternalThreadInvite:threadId key:key error:error];
+}
+
+- (void)_removeThread:(NSString *)threadId error:(NSError**)error {
+  [self.node removeThread:threadId error:error];
 }
 
 - (NSString *)_addPhoto:(NSString *)path error:(NSError**)error {
