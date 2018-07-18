@@ -178,22 +178,32 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void threads (Promise promise) {
-        try {
-            promise.resolve(node.threads());
-        }
-        catch (Exception e) {
-            promise.reject("GET THREADS ERROR", e);
-        }
-    }
-
-    @ReactMethod
     public void addThread (String name, String mnemonic, Promise promise) {
         try {
             promise.resolve(node.addThread(name, mnemonic));
         }
         catch (Exception e) {
             promise.reject("ADD THREAD ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void removeThread (String threadId, Promise promise) {
+        try {
+            promise.resolve(node.removeThread(threadId));
+        }
+        catch (Exception e) {
+            promise.reject("REMOVE THREAD ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void threads (Promise promise) {
+        try {
+            promise.resolve(node.threads());
+        }
+        catch (Exception e) {
+            promise.reject("GET THREADS ERROR", e);
         }
     }
 
@@ -220,54 +230,10 @@ public class TextileNode extends ReactContextBaseJavaModule {
     @ReactMethod
     public void acceptExternalThreadInvite (String threadId, String key, Promise promise) {
         try {
-            node.acceptExternalThreadInvite(threadId, key)
-            promise.resolve(null);
+            promise.resolve(node.acceptExternalThreadInvite(threadId, key));
         }
         catch (Exception e) {
             promise.reject("ACCEPT EXTERNAL INVITE ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void removeThread (String threadId, Promise promise) {
-        try {
-            node.removeThread(threadId);
-            promise.resolve(null);
-        }
-        catch (Exception e) {
-            promise.reject("REMOVE THREAD ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void devices (Promise promise) {
-        try {
-            promise.resolve(node.devices());
-        }
-        catch (Exception e) {
-            promise.reject("GET DEVICES ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void addDevice (String name, String pubKey, Promise promise) {
-        try {
-            node.addDevice(name, pubKey);
-            promise.resolve(null);
-        }
-        catch (Exception e) {
-            promise.reject("ADD DEVICE ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void removeDevice (String name, Promise promise) {
-        try {
-            node.removeDevice(name);
-            promise.resolve(null);
-        }
-        catch (Exception e) {
-            promise.reject("REMOVE DEVICE ERROR", e);
         }
     }
 
@@ -310,7 +276,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getPhotos (String offset, Integer limit, String threadId, Promise promise) {
         try {
-            promise.resolve(node.photoBlocks(offset, limit, threadId));
+            promise.resolve(node.getPhotos(offset, limit, threadId));
         }
         catch (Exception e) {
             promise.reject("GET PHOTO BLOCKS ERROR", e);
@@ -318,12 +284,65 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoData (String photoId, String path, Promise promise) {
+    public void getPhotoData (String photoId, Promise promise) {
         try {
-            promise.resolve(node.getPhotoData(photoId, path));
+            promise.resolve(node.getPhotoData(photoId));
         }
         catch (Exception e) {
             promise.reject("GET BLOCK DATA ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getThumbData (String photoId, Promise promise) {
+        try {
+            promise.resolve(node.getThumbData(photoId));
+        }
+        catch (Exception e) {
+            promise.reject("GET BLOCK DATA ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getPhotoMetadata (String photoId, Promise promise) {
+        try {
+            promise.resolve(node.getPhotoMetadata(photoId));
+        }
+        catch (Exception e) {
+            promise.reject("GET BLOCK DATA ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addDevice (String name, String pubKey, Promise promise) {
+        try {
+            node.addDevice(name, pubKey);
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("ADD DEVICE ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void removeDevice (String deviceId, Promise promise) {
+        try {
+            node.removeDevice(deviceId);
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("REMOVE DEVICE ERROR", e);
+        }
+    }
+
+
+    @ReactMethod
+    public void devices (Promise promise) {
+        try {
+            promise.resolve(node.devices());
+        }
+        catch (Exception e) {
+            promise.reject("GET DEVICES ERROR", e);
         }
     }
 
