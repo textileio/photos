@@ -52,8 +52,8 @@ export default {
 
   addThread: async function (name: string, mnemonic?: string): Promise<TextileTypes.Thread> {
     const jsonString = await TextileNode.addThread(name, mnemonic)
-    const threadItem = JSON.parse(jsonString) as TextileTypes.Thread
-    return threadItem
+    const thread = JSON.parse(jsonString) as TextileTypes.Thread
+    return thread
   },
 
   removeThread: async function (threadId: string): Promise<string> {
