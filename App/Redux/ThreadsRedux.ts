@@ -30,13 +30,13 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
-    return (threadId: string, threadName: string) => resolve({ threadId, threadName })
+    return (id: string, name: string) => resolve({ id, name })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
-    return (threadId: string, threadName: string, invite: TextileTypes.ExternalInvite) => resolve({ threadId, threadName, invite })
+    return (id: string, name: string, invite: TextileTypes.ExternalInvite) => resolve({ id, name, invite })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
-    return (threadId: string, error: Error) => resolve({ threadId, error })
+    return (id: string, error: Error) => resolve({ id, error })
   }),
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', resolve => {
     return (inviteId: string, key: string) => resolve({ inviteId, key })
@@ -53,8 +53,8 @@ export type ThreadsAction = ActionType<typeof actions>
 
 
 export type OutboundInvite = {
-  readonly threadId: string
-  readonly threadName: string
+  readonly id: string
+  readonly name: string
   readonly invite?: TextileTypes.ExternalInvite
   readonly error?: Error
 }
@@ -140,29 +140,29 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.refreshThreadsError):
       return { ...state, refreshing: false, refreshError: action.payload.error }
     case getType(actions.addExternalInviteRequest): {
-      const { threadId, threadName } = action.payload
-      const existing = state.outboundInvites.find(invite => invite.threadId === threadId )
+      const { id, name } = action.payload
+      const existing = state.outboundInvites.find(invite => invite.id === id )
       if (existing && !existing.error) {
         // if the invite already exists and hasn't error'd, return
         return state
       }
-      const outboundInvite = { threadId, threadName }
+      const outboundInvite = { id, name }
       const outboundInvites = state.outboundInvites.concat([outboundInvite])
       return { ...state, outboundInvites }
     }
     case getType(actions.addExternalInviteSuccess): {
-      const { threadId, threadName, invite } = action.payload
+      const { id, name, invite } = action.payload
       // update the outbound invite with the new Invite object
       const outboundInvites = state.outboundInvites.map(outbound => {
-        return outbound.threadId === threadId ? { ...outbound, invite } : outbound
+        return outbound.id === id ? { ...outbound, invite } : outbound
       })
       return { ...state, outboundInvites }
     }
     case getType(actions.addExternalInviteError): {
-      const { threadId, error } = action.payload
+      const { id, error } = action.payload
       // update the outbound invite with the new error
-      const outboundInvites = state.outboundInvites.map(outbound => { 
-        return outbound.threadId === threadId ? { ...outbound, error } : outbound
+      const outboundInvites = state.outboundInvites.map(outbound => {
+        return outbound.id === id ? { ...outbound, error } : outbound
       })
       return { ...state, outboundInvites }
     }

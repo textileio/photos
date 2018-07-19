@@ -15,12 +15,12 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const headerTitle = params.threadName === 'default' ? (
+    const headerTitle = params.name === 'default' ? (
       <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
         <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
       </TouchableWithoutFeedback>
-    ) : params.threadName
-    const headerRight = params.threadName === 'default' ? null : (
+    ) : params.name
+    const headerRight = params.name === 'default' ? null : (
       <HeaderButtons IconComponent={Icon} iconSize={33} color="white">
         <HeaderButtons.Item title="options" iconName="ios-more" onPress={params.showActionSheet} />
       </HeaderButtons>
@@ -32,10 +32,10 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.toggleVerboseUi !== prevProps.toggleVerboseUi || this.props.threadName !== prevProps.threadName) {
+    if (this.props.toggleVerboseUi !== prevProps.toggleVerboseUi || this.props.name !== prevProps.name) {
       this.props.navigation.setParams({
         toggleVerboseUi: this.props.toggleVerboseUi,
-        threadName: this.props.threadName,
+        threadName: this.props.name,
         showActionSheet: this.showActionSheet.bind(this)
       })
     }
@@ -44,19 +44,19 @@ class TextilePhotos extends React.PureComponent {
   componentDidMount () {
     this.props.navigation.setParams({
       toggleVerboseUi: this.props.toggleVerboseUi,
-      threadName: this.props.threadName,
+      threadName: this.props.name,
       showActionSheet: this.showActionSheet.bind(this)
     })
   }
 
   onSelect = (row) => {
     return () => {
-      this.props.viewPhoto(row.index, this.props.threadId)
+      this.props.viewPhoto(row.index, this.props.id)
     }
   }
 
   onRefresh () {
-    this.props.refresh(this.props.threadId)
+    this.props.refresh(this.props.id)
   }
 
   showActionSheet() {
@@ -65,9 +65,9 @@ class TextilePhotos extends React.PureComponent {
 
   handleActionSheetResponse (index: number) {
     if (index === 0) {
-      this.props.invite(this.props.threadId, this.props.threadName)
+      this.props.invite(this.props.id, this.props.name)
     } else if (index === 1) {
-      this.props.leaveThread(this.props.threadId)
+      this.props.leaveThread(this.props.id)
     }
   }
 
@@ -84,7 +84,7 @@ class TextilePhotos extends React.PureComponent {
         />
         <ActionSheet
           ref={o => this.actionSheet = o}
-          title={this.props.threadName + ' Thread Actions'}
+          title={this.props.name + ' Thread Actions'}
           options={['Invite Others', 'Leave Thread', 'Cancel']}
           cancelButtonIndex={2}
           onPress={this.handleActionSheetResponse.bind(this)}
@@ -104,7 +104,7 @@ const mapStateToProps = (state, ownProps) => {
   const navParams = ownProps.navigation.state.params || {}
   const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
   const defaultThreadId = defaultThread ? defaultThread.id : undefined
-  const threadId = navParams.threadId || defaultThreadId
+  const threadId = navParams.id || defaultThreadId
 
   var items = []
   var refreshing = false
