@@ -12,7 +12,7 @@ class ThreadInvite extends React.PureComponent {
     super(props)
     this.state = {
       inviter: this.props.navigation.state.params.request.inviter,
-      id: this.props.navigation.state.params.request.id,
+      inviteId: this.props.navigation.state.params.request.id,
       key: this.props.navigation.state.params.request.key,
       name: this.props.navigation.state.params.request.name,
       valid: this._isValid(this.props.navigation.state.params.request),
@@ -23,12 +23,12 @@ class ThreadInvite extends React.PureComponent {
   _isValid = (request) => {
     return request.inviter && request.inviter !== '' &&
       request.key && request.key !== '' &&
-      request.id && request.id !== '' &&
+      request.inviteId && request.inviteId !== '' &&
       request.name && request.name !== ''
   }
 
   confirmRequest = () => {
-    this.props.acceptExternalInvite(this.state.id, this.state.key)
+    this.props.acceptExternalInvite(this.state.inviteId, this.state.key)
     this.setState(() => ({status: 'added'}))
   }
 
@@ -155,8 +155,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    acceptExternalInvite: (id, key) => { dispatch(ThreadsAction.acceptExternalInviteRequest(id, key)) },
-    removeThreadRequest: (id) => { dispatch(ThreadsAction.removeThreadRequest(id)) }
+    acceptExternalInvite: (inviteId, key) => { dispatch(ThreadsAction.acceptExternalInviteRequest(inviteId, key)) },
+    removeThreadRequest: (threadId) => { dispatch(ThreadsAction.removeThreadRequest(threadId)) }
   }
 }
 
