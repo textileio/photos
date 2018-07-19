@@ -33,7 +33,7 @@ class ThreadInvite extends React.PureComponent {
   }
 
   cancel = () => {
-  // TODO: Figure out the right way to cancel a request. id here is the inviteId not a threadId
+  // TODO: Figure out the right way to cancel a request. id here is the inviteId not a id
   //   this.props.removeThreadRequest(this.state.id)
     this.props.navigation.navigate('OnboardingCheck')
   }
@@ -92,12 +92,12 @@ class ThreadInvite extends React.PureComponent {
     )
   }
 
-  renderSuccess () {
+  renderSuccess (status) {
     // TODO: redirect the user to the newly joined thread
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
-          <Text style={style.status}>Success!</Text>
+          <Text style={style.status}>{status}</Text>
           <View style={style.buttonMargin} />
           <Button
             style={style.button}
@@ -132,23 +132,32 @@ class ThreadInvite extends React.PureComponent {
   render () {
     if (!this.state.valid) {
       return this.renderError('There was an issue with the Thread invite. Be sure you got this invite from a trusted Textile user using the latest Textile app.')
-    } else if (this.state.inviteId in this.props.invites) {
+    } else if (this.state.status === 'init' && this.props.invite && this.props.invite.id) {
       // the thread already exists
       return this.renderError('You have already accepted this invite.')
     } else if (this.state.status === 'confirmed') {
       return this.renderPairing('JOINING')
     } else if (this.state.status === 'added') {
-      return this.renderSuccess()
+      if (this.props.invite && this.props.invite.id) {
+        return this.renderSuccess('SUCCESS!')
+      } else if (this.props.invite && this.props.invite.error) {
+        return this.renderError('There was an error joining the invite, please try again.')
+      }
+      return this.renderSuccess('PROCESSING...')
     }
     return this.renderConfirm()
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
   const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
+
+  const navParams = ownProps.navigation.state.params || {}
+  const inviteId = navParams.request.id || undefined
+
   return {
-    invites: state.threads.inboundInvites.filter((inv) => inv.id && !inv.error).map((inv) => inv.inviteId),
+    invite: state.threads.inboundInvites.find(invite => invite.inviteId === inviteId),
     online: nodeState && online
   }
 }
