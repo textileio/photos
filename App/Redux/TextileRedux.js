@@ -1,6 +1,5 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
-import { arrayify } from '../../node_modules/tslint/lib/utils';
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -9,7 +8,7 @@ const { Types, Creators } = createActions({
   backgroundTask: null,
 
   urisToIgnore: ['uris'],
-  imageAdded: ['uri', 'thread', 'pinRequests'],
+  imageAdded: ['uri', 'thread', 'hash', 'remotePayloadPath'],
   imageUploadRetried: ['hash'],
 
   imageUploadProgress: ['data'],
@@ -40,10 +39,7 @@ export const INITIAL_STATE = Immutable({
 export const TextileSelectors = {
   // TODO: Add more selectors here as we learn how they are used
   itemsById: (state, id) => {
-    return state.textile.images.items
-      .map(item => item.pinRequests)
-      .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
-      .filter(pinRequest => pinRequest.hash === id)
+    return state.textile.images.items.filter(item => item.hash === id)
   },
   camera: state => state.textile.camera
 }
@@ -76,31 +72,20 @@ export const handlePhotoProcessingError = (state, {uri, error}) => {
   return state.merge({ camera: { processed } })
 }
 
-export const handleImageAdded = (state, {uri, thread, pinRequests}) => {
+export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
   let newUri = {}
   newUri[uri] = 'complete'
   const processed = state.camera && state.camera.processed ? state.camera.processed.merge(newUri) : newUri
-  const pinRequestsData = pinRequests.items.map(pinRequest => {
-    return { 
-      hash: pinRequest.Boundary, 
-      payloadPath: pinRequest.PayloadPath,
-      state: 'pending',
-      remainingUploadAttempts: 3
-    }
-  })
-  const items = [{ thread, pinRequests: pinRequestsData }, ...state.images.items]
+  const items = [{ thread, hash, remotePayloadPath, state: 'pending', remainingUploadAttempts: 3 }, ...state.images.items]
   return state.merge({ images: { items }, camera: { processed } })
 }
 
 export const handleImageUploadRetried = (state, {hash}) => {
   const items = state.images.items.map(item => {
-    const pinRequests = item.pinRequests.map(pinRequest => {
-      if (pinRequest.hash === hash) {
-        return {...pinRequest, state: 'pending'}
-      }
-      return pinRequest
-    })
-    return {...item, pinRequests}
+    if (item.hash === hash) {
+      return {...item, state: 'pending'}
+    }
+    return item
   })
   return state.merge({ images: { items } })
 }
@@ -110,13 +95,10 @@ export const handleImageProgress = (state, {data}) => {
   // The upload library we're using returns float 0.0 - 100.0
   const fractionalProgress = progress / 100.0
   const items = state.images.items.map(item => {
-    const pinRequests = item.pinRequests.map(pinRequest => {
-      if (pinRequest.hash === id) {
-        return {...pinRequest, state: 'processing', progress: fractionalProgress}
-      }
-      return pinRequest
-    })
-    return {...item, pinRequests}
+    if (item.hash === id) {
+      return {...item, state: 'processing', progress: fractionalProgress}
+    }
+    return item
   })
   return state.merge({ images: { items } })
 }
@@ -124,13 +106,10 @@ export const handleImageProgress = (state, {data}) => {
 export const handleImageUploadComplete = (state, {data}) => {
   const { id } = data
   const items = state.images.items.map(item => {
-    const pinRequests = item.pinRequests.map(pinRequest => {
-      if (pinRequest.hash === id) {
-        return {...pinRequest, state: 'complete', id}
-      }
-      return pinRequest
-    })
-    return {...item, pinRequests}
+    if (item.hash === id) {
+      return {...item, state: 'complete', id}
+    }
+    return item
   })
   return state.merge({ images: { items } })
 }
@@ -138,30 +117,22 @@ export const handleImageUploadComplete = (state, {data}) => {
 export const handleImageUploadError = (state, {data}) => {
   const { error, id } = data
   const items = state.images.items.map(item => {
-    const pinRequests = item.pinRequests.map(pinRequest => {
-      if (pinRequest.hash === id) {
-        return {
-          ...pinRequest,
-          remainingUploadAttempts: pinRequest.remainingUploadAttempts - 1,
-          state: 'error',
-          error: error,
-          id
-        }
+    if (item.hash === id) {
+      return {
+        ...item,
+        remainingUploadAttempts: item.remainingUploadAttempts - 1,
+        state: 'error',
+        error: error,
+        id
       }
-      return pinRequest
-    })
-    return {...item, pinRequests}
+    }
+    return item
   })
   return state.merge({ images: { items } })
 }
 
 export const imageRemovalComplete = (state, {id}) => {
-  const items = state.images.items
-    .map(item => {
-      const pinRequests = item.pinRequests.filter(pinRequest => pinRequest.hash !== id)
-      return {...item, pinRequests}
-    })
-    .filter(item => item.pinRequests.length > 0)
+  const items = state.images.items.filter(item => item.hash !== id)
   return state.merge({ images: { items } })
 }
 

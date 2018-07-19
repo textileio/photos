@@ -14,7 +14,7 @@ describe('devices stories', () => {
   })
   describe('adding devices', () => {
     it('should add a device', () => {
-      const state0 = reducer(initialState, actions.addDeviceRequest({ id: pubKey, name }))
+      const state0 = reducer(initialState, actions.addDeviceRequest(name, pubKey))
       const match0: Device = { state: 'adding', deviceItem: { id: pubKey, name } }
       expect(state0.devices[0]).toMatchObject(match0)
       const state1 = reducer(state0, actions.addDeviceSuccess(pubKey))
@@ -22,7 +22,7 @@ describe('devices stories', () => {
       expect(state1.devices[0]).toMatchObject(match1)
     })
     it('should fail at adding a device', () => {
-      const state0 = reducer(initialState, actions.addDeviceRequest({ id: pubKey, name }))
+      const state0 = reducer(initialState, actions.addDeviceRequest(name, pubKey))
       const match0: Device = { state: 'adding', deviceItem: { id: pubKey, name } }
       expect(state0.devices[0]).toMatchObject(match0)
       const state1 = reducer(state0, actions.addDeviceError(pubKey, error))
@@ -32,7 +32,7 @@ describe('devices stories', () => {
   })
   describe('removing devices', () => {
     it('should remove a device', () => {
-      const state0 = reducer(initialState, actions.addDeviceRequest({ id: pubKey, name }))
+      const state0 = reducer(initialState, actions.addDeviceRequest(name, pubKey))
       const state1 = reducer(state0, actions.addDeviceSuccess(pubKey))
       const state2 = reducer(state1, actions.removeDeviceRequest(pubKey))
       const match2: Device = { state: 'removing', deviceItem: { id: pubKey, name} }
@@ -41,7 +41,7 @@ describe('devices stories', () => {
       expect(state3.devices).toHaveLength(0)
     })
     it('should fail at removing a device', () => {
-      const state0 = reducer(initialState, actions.addDeviceRequest({ id: pubKey, name }))
+      const state0 = reducer(initialState, actions.addDeviceRequest(name, pubKey))
       const state1 = reducer(state0, actions.addDeviceSuccess(pubKey))
       const state2 = reducer(state1, actions.removeDeviceRequest(pubKey))
       const match2: Device = { state: 'removing', deviceItem: { id: pubKey, name} }
@@ -56,7 +56,7 @@ describe('devices stories', () => {
       expect(initialState.devices).toHaveLength(0)
       const state0 = reducer(initialState, actions.refreshDevicesRequest())
       expect(state0.refreshing).toEqual(true)
-      const state1 = reducer(state0, actions.refreshDevicesSuccess({ 
+      const state1 = reducer(state0, actions.refreshDevicesSuccess({
         items: [
           { id: pubKey, name },
           { id: pubKey, name },

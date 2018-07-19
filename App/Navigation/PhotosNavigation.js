@@ -26,7 +26,6 @@ const PhotosNav = StackNavigator(
   {
     // Default config for all screens
     headerMode: 'float',
-    initialRouteParams: { threadName: 'default' },
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,

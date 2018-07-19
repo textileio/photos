@@ -10,6 +10,8 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
+import org.json.JSONObject;
+
 public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
     private int viewId;
@@ -29,8 +31,16 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
     protected Bitmap doInBackground(Void... params) {
         try {
-            String base64String = TextileNode.node.getFileData(this.imageId, this.path);
-            byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
+            JSONObject imageJson;
+            if(this.path.equals("thumb")) {
+                imageJson = new JSONObject(TextileNode.node.getThumbData(this.imageId));
+            } else {
+                imageJson = new JSONObject(TextileNode.node.getPhotoData(this.imageId));
+            }
+            String dataUrl = imageJson.getString("url");
+            String encodingPrefix = "base64,";
+            int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
+            byte[] decodedString = Base64.decode(dataUrl.substring(contentStartIndex), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             return bitmap;
         } catch (Exception e) {
