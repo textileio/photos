@@ -30,7 +30,7 @@ class PhotoViewerScreen extends React.PureComponent {
 
   renderImage (props, dims) {
     return (<ProgressiveImage
-      imageId={props.image.hash}
+      imageId={props.image.photo.id}
       previewPath={'thumb'}
       path={'photo'}
       style={{flex: 1, height: undefined, width: undefined}}
@@ -42,7 +42,7 @@ class PhotoViewerScreen extends React.PureComponent {
   sharePressed () {
     const page = this.refs.gallery.currentPage
     const item = this.props.imageData[page]
-    this.props.authorShare(item)
+    this.props.authorShare(item.photo.id)
   }
 
   get galleryCount () {
@@ -163,14 +163,15 @@ class PhotoViewerScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const items = state.ipfs.threads[state.ui.viewingPhoto.thread].items
-  const path = state.ui.viewingPhoto.thread === 'default' ? '/photo' : '/thumb'
-  const sharable = state.ui.viewingPhoto.thread === 'default'
+  const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
+  const items = state.ipfs.threads[state.ui.viewingPhoto.threadId].items
+  const path = thread.name === 'default' ? '/photo' : '/thumb'
+  const sharable = thread.name === 'default'
   const imageData = items.map(item => {
     return {
       ...item,
-      key: item.hash + path,
-      source: {url: 'file://' + item.hash + '.png'}, // <-- in case RN uses to know things
+      key: item.photo.id + path,
+      source: {url: 'file://' + item.photo.id + '.png'}, // <-- in case RN uses to know things
       dimensions: { width: 150, height: 150 },
       displayImages: state.ipfs.nodeState.state === 'started'
     }
@@ -185,7 +186,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    authorShare: (item) => { dispatch(UIActions.authorPhotoShareRequest(item.hash)) },
+    authorShare: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
     selectImage: (index) => { dispatch(UIActions.switchViewdPhoto(index)) },
     dismiss: () => { dispatch(UIActions.dismissViewedPhoto()) }
   }
