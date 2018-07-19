@@ -260,7 +260,7 @@ export function * photosTask () {
       }
     }
     // refresh our gallery
-    yield put(TextileNodeActions.getPhotoHashesRequest('default'))
+    yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
     // initialize and complete our uploads
     for (let photoData of photoUploads) {
       let {photo, addResult} = photoData
@@ -332,7 +332,7 @@ export function * addThread (action: ActionType<typeof ThreadsActions.addThreadR
   try {
     const thread: TextileTypes.Thread = yield call(TextileNode.addThread, name, mnemonic)
     yield put(ThreadsActions.addThreadSuccess(thread))
-    yield put(TextileNodeActions.getPhotoHashesRequest(thread.name))
+    yield put(TextileNodeActions.getPhotoHashesRequest(thread.id))
     yield call(PhotosNavigationService.goBack)
   } catch (error) {
     yield put(ThreadsActions.addThreadError(error))

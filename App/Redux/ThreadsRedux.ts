@@ -6,7 +6,7 @@ const actions = {
     return (name: string, mnemonic?: string) => resolve({ name, mnemonic })
   }),
   addThreadSuccess: createAction('ADD_THREAD_SUCCESS', resolve => {
-    return (threadItem: TextileTypes.Thread) => resolve({ threadItem })
+    return (thread: TextileTypes.Thread) => resolve({ thread })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -77,12 +77,12 @@ export type ThreadsState = {
     readonly id?: string
     readonly error?: Error
   }
-  readonly threadItems: ReadonlyArray<TextileTypes.Thread>
+  readonly threads: ReadonlyArray<TextileTypes.Thread>
 }
 
 export const initialState: ThreadsState = {
   refreshing: false,
-  threadItems: []
+  threads: []
 }
 
 export function reducer (state: ThreadsState = initialState, action: ThreadsAction): ThreadsState {
@@ -95,9 +95,9 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       if (!state.adding) {
         return state
       }
-      const { threadItem } = action.payload
-      const threadItems = state.threadItems.concat([threadItem])
-      return { ...state, adding: undefined, threadItems }
+      const { thread } = action.payload
+      const threads = state.threads.concat([thread])
+      return { ...state, adding: undefined, threads }
     }
     case getType(actions.addThreadError): {
       if (!state.adding) {
@@ -115,8 +115,8 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
         return state
       }
       const { id } = action.payload
-      const threadItems = state.threadItems.filter(thread => thread.id !== id)
-      return { ...state, removing: undefined, threadItems }
+      const threads = state.threads.filter(thread => thread.id !== id)
+      return { ...state, removing: undefined, threads }
     }
     case getType(actions.removeThreadError): {
       if (!state.removing) {
@@ -128,8 +128,8 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.refreshThreadsRequest):
       return { ...state, refreshing: true, refreshError: undefined }
     case getType(actions.refreshThreadsSuccess):
-      const threadItems = action.payload.threads.items || []
-      return { ...state, refreshing: false, refreshError: undefined, threadItems }
+      const threads = action.payload.threads.items || []
+      return { ...state, refreshing: false, refreshError: undefined, threads }
     case getType(actions.refreshThreadsError):
       return { ...state, refreshing: false, refreshError: action.payload.error }
     case getType(actions.addExternalInviteRequest): {

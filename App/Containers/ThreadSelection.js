@@ -96,13 +96,13 @@ class ThreadSelection extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const threads = state.threads.threadItems
-    .filter(threadItem => threadItem.name !== 'default')
-    .map(threadItem => {
+  const threads = state.threads.threads
+    .filter(thread => thread.name !== 'default')
+    .map(thread => {
       return {
         type: 'thread',
-        id: threadItem.name,
-        title: threadItem.name
+        id: thread.name,
+        title: thread.name
       }
     })
   return {

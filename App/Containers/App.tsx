@@ -25,7 +25,7 @@ TextileNode.eventEmitter.addListener('onOnline', () => {
 })
 // TODO: add types to event emitter if possible
 TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {
-  store.dispatch(TextileNodeActions.getPhotoHashesRequest(payload.thread))
+  store.dispatch(TextileNodeActions.getPhotoHashesRequest(payload.thread_id))
 })
 
 /**

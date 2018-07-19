@@ -85,7 +85,7 @@ class Threads extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.threads.threadItems
+    data: state.threads.threads
   }
 }
 

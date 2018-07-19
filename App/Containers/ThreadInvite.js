@@ -148,7 +148,7 @@ const mapStateToProps = state => {
   const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
   const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
   return {
-    threads: state.threads && state.threads.threadItems ? state.threads.threadItems : [],
+    threads: state.threads && state.threads.threads ? state.threads.threads : [],
     online: nodeState && online
   }
 }

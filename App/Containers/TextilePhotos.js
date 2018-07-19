@@ -14,7 +14,7 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 
 class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
-    const { params } = navigation.state
+    const params = navigation.state.params || {}
     const headerTitle = params.threadName === 'default' ? (
       <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
         <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
@@ -28,6 +28,16 @@ class TextilePhotos extends React.PureComponent {
     return {
       headerTitle,
       headerRight
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.toggleVerboseUi !== prevProps.toggleVerboseUi || this.props.threadName !== prevProps.threadName) {
+      this.props.navigation.setParams({
+        toggleVerboseUi: this.props.toggleVerboseUi,
+        threadName: this.props.threadName,
+        showActionSheet: this.showActionSheet.bind(this)
+      })
     }
   }
 
@@ -46,7 +56,7 @@ class TextilePhotos extends React.PureComponent {
   }
 
   onRefresh () {
-    this.props.refresh(this.props.threadName)
+    this.props.refresh(this.props.threadId)
   }
 
   showActionSheet() {
@@ -91,17 +101,29 @@ class TextilePhotos extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
-  const threadName = ownProps.navigation.state.params.threadName
-  const threadId = ownProps.navigation.state.params.threadId
-  let allItemsObj = state.ipfs.threads[threadName].items.reduce((o, item, index) => ({...o, [item.photo.id]: { index, hash: item.photo.id, caption: item.photo.caption, state: 'complete' }}), {})
-  for (const processingItem of state.textile.images.items) {
-    const item = allItemsObj[processingItem.hash]
-    if (item) {
-      const updatedItem = { ...item, ...processingItem }
-      allItemsObj[processingItem.hash] = updatedItem
+  const navParams = ownProps.navigation.state.params || {}
+  const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
+  const defaultThreadId = defaultThread ? defaultThread.id : undefined
+  const threadId = navParams.threadId || defaultThreadId
+
+  var items = []
+  var refreshing = false
+  var thread = undefined
+  if (threadId) {
+    let allItemsObj = state.ipfs.threads[threadId].items.reduce((o, item, index) => ({...o, [item.photo.id]: { index, hash: item.photo.id, caption: item.photo.caption, state: 'complete' }}), {})
+    for (const processingItem of state.textile.images.items) {
+      const item = allItemsObj[processingItem.hash]
+      if (item) {
+        const updatedItem = { ...item, ...processingItem }
+        allItemsObj[processingItem.hash] = updatedItem
+      }
     }
+    items = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
+    refreshing = state.ipfs.threads[threadId].querying
+    thread = state.threads.threads.find(thread => thread.id === threadId)
   }
-  const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
+
+  const threadName = thread ? thread.name : undefined
 
   const nodeStatus = state.ipfs.nodeState.error
     ? 'Error - ' + state.ipfs.nodeState.error.message
@@ -115,8 +137,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     threadId,
     threadName,
-    items: updatedItems,
-    refreshing: state.ipfs.threads[threadName].querying,
+    items,
+    refreshing,
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
@@ -127,7 +149,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewPhoto: (index, threadName) => { dispatch(UIActions.viewPhotoRequest(index, threadName)) },
-    refresh: (threadName: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadName)) },
+    refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (name: string, pubKey: string) => { dispatch(ThreadsActions.addExternalInviteRequest(name, pubKey)) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) }
