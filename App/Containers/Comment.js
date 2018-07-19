@@ -13,7 +13,7 @@ import styles from './Styles/CommentStyle'
 
 class Comment extends React.PureComponent {
   _onSubmit = () => {
-    this.props.share(this.props.threads, this.props.hash, this.props.comment)
+    this.props.share(this.props.hash, this.props.threads, this.props.comment)
     this.props.close()
   }
 
@@ -54,7 +54,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    share: (threads, hash, comment) => { dispatch(UIActions.sharePhotoRequest(threads, hash, comment)) },
+    share: (hash, threads, comment) => { dispatch(UIActions.sharePhotoRequest(hash, threads, comment)) },
     close: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
     updateComment: (text) => { dispatch(UIActions.updateComment(text)) }
   }

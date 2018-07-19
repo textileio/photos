@@ -58,11 +58,11 @@ class PhotoViewerScreen extends React.PureComponent {
 
   get caption () {
     const row = this.props.imageData[this.props.currentIndex]
-    const caption = row.caption || ''
+    const caption = row.photo.caption || ''
     let username = 'anonymous'
     // this check is to temporarily fix issue#91
-    if (row.meta && row.meta.username) {
-      username = row.meta.username
+    if (row.metadata && row.metadata.username) {
+      username = row.metadata.username
     }
     let avatar = ''
     try {
