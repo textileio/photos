@@ -50,14 +50,14 @@ export default {
     return await TextileNode.getAccessToken()
   },
 
-  addThread: async function (name: string, mnemonic?: string): Promise<TextileTypes.ThreadItem> {
+  addThread: async function (name: string, mnemonic?: string): Promise<TextileTypes.Thread> {
     const jsonString = await TextileNode.addThread(name, mnemonic)
-    const threadItem = JSON.parse(jsonString) as TextileTypes.ThreadItem
-    return threadItem
+    const thread = JSON.parse(jsonString) as TextileTypes.Thread
+    return thread
   },
 
-  removeThread: async function (threadName: string): Promise<void> {
-    return await TextileNode.removeThread(threadName)
+  removeThread: async function (threadId: string): Promise<string> {
+    return await TextileNode.removeThread(threadId)
   },
 
   threads: async function (): Promise<TextileTypes.Threads> {
@@ -66,38 +66,52 @@ export default {
     return threads
   },
 
-  addExternalThreadInvite: async function (name: string, pubKey: string): Promise<string> {
-    return await TextileNode.addExternalThreadInvite(name, pubKey)
+  addExternalThreadInvite: async function (id: string): Promise<TextileTypes.ExternalInvite> {
+    const jsonString = await TextileNode.addExternalThreadInvite(id)
+    const externalInvite = JSON.parse(jsonString) as TextileTypes.ExternalInvite
+    return externalInvite
   },
 
-  acceptExternalThreadInvite: async function (link: string): Promise<void> {
-    return await TextileNode.acceptExternalThreadInvite(link)
+  acceptExternalThreadInvite: async function (inviteId: string, key: string): Promise<string> {
+    return await TextileNode.acceptExternalThreadInvite(inviteId, key)
   },
 
-  addPhoto: async function (path: string, threadName: string, caption?: string): Promise<TextileTypes.PinRequests> {
-    const jsonString = await TextileNode.addPhoto(path, threadName, caption)
-    const pinRequests = JSON.parse(jsonString) as TextileTypes.PinRequests
-    return pinRequests
+  addPhoto: async function (path: string): Promise<TextileTypes.AddResult> {
+    const jsonString = await TextileNode.addPhoto(path)
+    const addResult = JSON.parse(jsonString) as TextileTypes.AddResult
+    return addResult
   },
 
-  sharePhoto: async function (id: string, threadName: string, caption?: string): Promise<TextileTypes.PinRequests> {
-    const jsonString = await TextileNode.sharePhoto(id, threadName, caption)
-    const pinRequests = JSON.parse(jsonString) as TextileTypes.PinRequests
-    return pinRequests
+  addPhotoToThread: async function (dataId: string, key: string, threadId: string, caption?: string): Promise<string> {
+    return await TextileNode.addPhotoToThread(dataId, key, threadId, caption)
   },
 
-  getPhotoBlocks: async function (limit: number, threadName: string, offset: string = ''): Promise<TextileTypes.Blocks> {
-    const jsonString = await TextileNode.getPhotoBlocks(offset, limit, threadName)
-    const blocks = JSON.parse(jsonString) as TextileTypes.Blocks
-    return blocks
+  sharePhotoToThread: async function (dataId: string, threadId: string, caption?: string): Promise<string> {
+    return await TextileNode.sharePhotoToThread(dataId, threadId, caption)
   },
 
-  getBlockData: async function (id: string, path: string): Promise<string> {
-    return await TextileNode.getBlockData(id, path)
+  getPhotos: async function (limit: number, threadId: string, offset: string = ''): Promise<TextileTypes.Photos> {
+    const jsonString = await TextileNode.getPhotos(offset, limit, threadId)
+    const photos = JSON.parse(jsonString) as TextileTypes.Photos
+    return photos
   },
 
-  getFileData: async function (id: string, path: string): Promise<string> {
-    return await TextileNode.getFileData(id, path)
+  getPhotoData: async function (id: string): Promise<TextileTypes.ImageData> {
+    const jsonString = await TextileNode.getPhotoData(id)
+    const imageData = JSON.parse(jsonString) as TextileTypes.ImageData
+    return imageData
+  },
+
+  getThumbData: async function (id: string): Promise<TextileTypes.ImageData> {
+    const jsonString = await TextileNode.getThumbData(id)
+    const imageData = JSON.parse(jsonString) as TextileTypes.ImageData
+    return imageData
+  },
+
+  getPhotoMetadata: async function (id: string): Promise<TextileTypes.PhotoMetadata> {
+    const jsonString = await TextileNode.getPhotoMetadata(id)
+    const photoMetadata = JSON.parse(jsonString) as TextileTypes.PhotoMetadata
+    return photoMetadata
   },
 
   addDevice: async function (name: string, pubKey: string): Promise<void> {
@@ -108,8 +122,10 @@ export default {
     return await TextileNode.removeDevice(id)
   },
 
-  devices: async function (): Promise<string> {
-    return await TextileNode.devices()
+  devices: async function (): Promise<TextileTypes.Devices> {
+    const jsonString = await TextileNode.devices()
+    const devices = JSON.parse(jsonString) as TextileTypes.Devices
+    return devices
   },
 
   getFilePath: async function (uri: string): Promise<string> {

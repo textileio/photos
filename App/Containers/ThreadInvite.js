@@ -11,23 +11,30 @@ class ThreadInvite extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      from: this.props.navigation.state.params.request.from,
-      key: this.props.navigation.state.params.request.key,
-      invite: this.props.navigation.state.params.request.invite,
+      inviter: this.props.navigation.state.params.request.inviter,
+      inviteId: this.props.navigation.state.params.request.id,
+      inviteKey: this.props.navigation.state.params.request.key,
       name: this.props.navigation.state.params.request.name,
-      link: this.props.navigation.state.params.link,
+      valid: this._isValid(this.props.navigation.state.params.request),
       status: 'init'
     }
   }
 
+  _isValid = (request) => {
+    return request.inviter && request.inviter !== '' &&
+      request.key && request.key !== '' &&
+      request.id && request.id !== '' &&
+      request.name && request.name !== ''
+  }
+
   confirmRequest = () => {
-    this.props.acceptExternalInvite(this.state.link)
+    this.props.acceptExternalInvite(this.state.inviteId, this.state.inviteKey)
     this.setState(() => ({status: 'added'}))
   }
 
   cancel = () => {
-    // TODO: remove thread takes thread name... what is key?
-    this.props.removeThreadRequest(this.state.key)
+  // TODO: Figure out the right way to cancel a request. id here is the inviteId not a id
+  //   this.props.removeThreadRequest(this.state.id)
     this.props.navigation.navigate('OnboardingCheck')
   }
 
@@ -40,7 +47,7 @@ class ThreadInvite extends React.PureComponent {
       <View style={[photosStyle.container, style.container]}>
         <View>
           <Text style={style.message}>
-            You have been invited by {this.state.from ? this.state.from : 'warning'} to share photos in a shared thread called, {this.state.name ? this.state.name : 'warning'}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
+            You have been invited by {this.state.inviter ? this.state.inviter : 'warning'} to share photos in a shared thread called, {this.state.name ? this.state.name : 'warning'}. By joining, any members of the thread will be able to send you photos and will be able to see photos that you share to the group.
           </Text>
           <Button
             style={style.button}
@@ -76,8 +83,8 @@ class ThreadInvite extends React.PureComponent {
           />
           <Button
             style={style.button}
-            title='Cancel'
-            accessibilityLabel='cancel'
+            title='Exit'
+            accessibilityLabel='exit'
             onPress={this.cancel.bind(this)}
           />
         </View>
@@ -85,12 +92,12 @@ class ThreadInvite extends React.PureComponent {
     )
   }
 
-  renderSuccess () {
+  renderSuccess (status) {
     // TODO: redirect the user to the newly joined thread
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
-          <Text style={style.status}>Success!</Text>
+          <Text style={style.status}>{status}</Text>
           <View style={style.buttonMargin} />
           <Button
             style={style.button}
@@ -123,33 +130,42 @@ class ThreadInvite extends React.PureComponent {
   }
 
   render () {
-    if (!this.state.key) {
-      return this.renderError('There was an issue pairing with your new device. This may be caused by network connectivity or other issues. Please try again. If it continues, please report the issue with Textile.')
-    } else if (this.props.threads.some((t) => t.id === this.state.key)) {
+    if (!this.state.valid) {
+      return this.renderError('There was an issue with the Thread invite. Be sure you got this invite from a trusted Textile user using the latest Textile app.')
+    } else if (this.state.status === 'init' && this.props.invite && this.props.invite.id) {
       // the thread already exists
-      return this.renderError('You are already a member of the thread you are trying to join.')
+      return this.renderError('You have already accepted this invite.')
     } else if (this.state.status === 'confirmed') {
       return this.renderPairing('JOINING')
     } else if (this.state.status === 'added') {
-      return this.renderSuccess()
+      if (this.props.invite && this.props.invite.id) {
+        return this.renderSuccess('SUCCESS!')
+      } else if (this.props.invite && this.props.invite.error) {
+        return this.renderError('There was an error joining the invite, please try again.')
+      }
+      return this.renderSuccess('PROCESSING...')
     }
     return this.renderConfirm()
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
   const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
+
+  const navParams = ownProps.navigation.state.params || {}
+  const inviteId = navParams.request.id || undefined
+
   return {
-    threads: state.threads && state.threads.threadItems ? state.threads.threadItems : [],
+    invite: state.threads.inboundInvites.find(invite => invite.inviteId === inviteId),
     online: nodeState && online
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    acceptExternalInvite: (link) => { dispatch(ThreadsAction.acceptExternalInviteRequest(link)) },
-    removeThreadRequest: (id) => { dispatch(ThreadsAction.removeThreadRequest(id)) }
+    acceptExternalInvite: (inviteId, inviteKey) => { dispatch(ThreadsAction.acceptExternalInviteRequest(inviteId, inviteKey)) },
+    removeThreadRequest: (threadId) => { dispatch(ThreadsAction.removeThreadRequest(threadId)) }
   }
 }
 

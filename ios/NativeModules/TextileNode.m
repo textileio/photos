@@ -156,11 +156,11 @@ RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic r
   }
 }
 
-RCT_EXPORT_METHOD(removeThread:(NSString *)threadName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(removeThread:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _removeThread:threadName error:&error];
+  NSString *blockId = [self _removeThread:threadId error:&error];
   if (!error) {
-    resolve(nil);
+    resolve(blockId);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -176,9 +176,9 @@ RCT_REMAP_METHOD(threads, threadsWithResolver:(RCTPromiseResolveBlock)resolve re
   }
 }
 
-RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString *)threadName threadId:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addThreadInvite:(NSString *)threadId inviteeKey:(NSString *)inviteeKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _addExternalThreadInvite:threadName threadId:threadId error:&error];
+  NSString *result = [self _addThreadInvite:threadId inviteeKey:inviteeKey error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -186,19 +186,30 @@ RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString *)threadName threadId:(NSStr
   }
 }
 
-RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString *)link resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _acceptExternalThreadInvite:link error:&error];
+  NSString *result = [self _addExternalThreadInvite:threadId error:&error];
   if (!error) {
-    resolve(nil);
+    resolve(result);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
 }
 
-RCT_EXPORT_METHOD(addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _addPhoto:path toThreadNamed:threadName withCaption:caption error:&error];
+  NSString *blockId = [self _acceptExternalThreadInvite:threadId key:key error:&error];
+  if (!error) {
+    resolve(blockId);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+// Adds a photo to ipfs
+RCT_EXPORT_METHOD(addPhoto:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _addPhoto:path error:&error];
   if(!error) {
     resolve(result);
   } else {
@@ -206,9 +217,9 @@ RCT_EXPORT_METHOD(addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName
   }
 }
 
-RCT_EXPORT_METHOD(sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addPhotoToThread:(NSString *)photoId key:(NSString *)key threadId:(NSString *)threadId caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _sharePhoto:id toThreadNamed:threadName withCaption:caption error:&error];
+  NSString *result = [self _addPhotoToThread:photoId key:key threadId:threadId caption:caption error:&error];
   if(!error) {
     resolve(result);
   } else {
@@ -216,9 +227,19 @@ RCT_EXPORT_METHOD(sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName
   }
 }
 
-RCT_EXPORT_METHOD(getPhotoBlocks:(NSString *)offset limit:(int)limit threadName:(NSString *)thread resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(sharePhotoToThread:(NSString *)photoId threadId:(NSString *)threadId caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *jsonString = [self _getPhotoBlocks:offset withLimit:limit fromThreadNamed:thread error:&error];
+  NSString *result = [self _sharePhotoToThread:photoId threadId:threadId caption:caption error:&error];
+  if(!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit threadId:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *jsonString = [self _getPhotos:offset limit:limit threadId:threadId error:&error];
   if (!error) {
     resolve(jsonString);
   } else {
@@ -226,9 +247,9 @@ RCT_EXPORT_METHOD(getPhotoBlocks:(NSString *)offset limit:(int)limit threadName:
   }
 }
 
-RCT_EXPORT_METHOD(getBlockData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _getBlockData:id withPath:path error:&error];
+  NSString *result = [self _getPhotoData:photoId error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -236,9 +257,19 @@ RCT_EXPORT_METHOD(getBlockData:(NSString *)id withPath:(NSString *)path resolver
   }
 }
 
-RCT_EXPORT_METHOD(getFileData:(NSString *)id withPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getThumbData:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _getFileData:id withPath:path error:&error];
+  NSString *result = [self _getThumbData:photoId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getPhotoMetadata:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getPhotoMetadata:photoId error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -331,46 +362,58 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   return [self.node addThread:name mnemonic:mnemonic error:error];
 }
 
-- (void)_removeThread:(NSString *)threadName error:(NSError**)error {
-  [self.node removeThread:threadName error:error];
-}
-
 - (NSString *)_threads:(NSError**)error {
   return [self.node threads:error];
 }
 
-- (NSString *)_addExternalThreadInvite:(NSString *)threadName threadId:(NSString *)threadId error:(NSError**)error {
-  return [self.node addExternalThreadInvite:threadName pubKey:threadId error:error];
+- (NSString *)_addThreadInvite:(NSString *)threadId inviteeKey:(NSString *)inviteeKey error:(NSError**)error {
+  return [self.node addThreadInvite:threadId inviteePk:inviteeKey error:error];
 }
 
-- (void)_acceptExternalThreadInvite:(NSString *)link error:(NSError**)error {
-  [self.node acceptExternalThreadInvite:link error:error];
+- (NSString *)_addExternalThreadInvite:(NSString *)threadId error:(NSError**)error {
+  return [self.node addExternalThreadInvite:threadId error:error];
 }
 
-- (NSString *)_addPhoto:(NSString *)path toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
+- (NSString *)_acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key error:(NSError**)error {
+  return [self.node acceptExternalThreadInvite:threadId key:key error:error];
+}
+
+- (NSString *)_removeThread:(NSString *)threadId error:(NSError**)error {
+  return [self.node removeThread:threadId error:error];
+}
+
+- (NSString *)_addPhoto:(NSString *)path error:(NSError**)error {
+  return [self.node addPhoto:path error:error];
+}
+
+- (NSString *)_addPhotoToThread:(NSString *)photoId key:key threadId:(NSString *)threadId caption:(NSString *)caption error:(NSError**)error {
   if (!caption) {
     caption = @"";
   }
-  return [self.node addPhoto:path threadName:threadName caption:caption error:error];
+  return [self.node addPhotoToThread:photoId key:key threadId:threadId caption:caption error:error];
 }
 
-- (NSString *)_sharePhoto:(NSString *)id toThreadNamed:(NSString *)threadName withCaption:(NSString *)caption error:(NSError**)error {
-  if (caption == NULL) {
+- (NSString *)_sharePhotoToThread:(NSString *)photoId threadId:(NSString *)threadId caption:(NSString *)caption error:(NSError**)error {
+  if (!caption) {
     caption = @"";
   }
-  return [self.node sharePhoto:id threadName:threadName caption:caption error:error];
+  return [self.node sharePhotoToThread:photoId threadId:threadId caption:caption error:error];
 }
 
-- (NSString *)_getPhotoBlocks:(NSString *)offset withLimit:(long)limit fromThreadNamed:(NSString *)threadName error:(NSError**)error {
-  return [self.node photoBlocks:offset limit:limit threadName:threadName error:error];
+- (NSString *)_getPhotos:(NSString *)offset limit:(long)limit threadId:(NSString *)threadId error:(NSError**)error {
+  return [self.node getPhotos:offset limit:limit threadId:threadId error:error];
 }
 
-- (NSString *)_getBlockData:(NSString *)id withPath:(NSString *)path error:(NSError**)error {
-  return [self.node getBlockData:id path:path error:error];
+- (NSString *)_getPhotoData:(NSString *)photoId error:(NSError**)error {
+  return [self.node getPhotoData:photoId error:error];
 }
 
-- (NSString *)_getFileData:(NSString *)id withPath:(NSString *)path error:(NSError**)error {
-  return [self.node getFileData:id path:path error:error];
+- (NSString *)_getThumbData:(NSString *)photoId error:(NSError**)error {
+  return [self.node getThumbData:photoId error:error];
+}
+
+- (NSString *)_getPhotoMetadata:(NSString *)photoId error:(NSError**)error {
+  return [self.node getPhotoMetadata:photoId error:error];
 }
 
 - (void)_addDevice:(NSString *)name pubKey:(NSString *)pkb64 error:(NSError**)error {

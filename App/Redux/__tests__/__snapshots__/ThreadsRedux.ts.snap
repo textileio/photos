@@ -2,7 +2,9 @@
 
 exports[`ui stories initial state should match snapshot 1`] = `
 Object {
+  "inboundInvites": Array [],
+  "outboundInvites": Array [],
   "refreshing": false,
-  "threadItems": Array [],
+  "threads": Array [],
 }
 `;
