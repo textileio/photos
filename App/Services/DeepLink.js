@@ -51,5 +51,6 @@ function createInviteLink (invite, threadName) {
 
 export default {
   getData,
-  getParams
+  getParams,
+  createInviteLink
 }

@@ -65,7 +65,7 @@ class TextilePhotos extends React.PureComponent {
 
   handleActionSheetResponse (index: number) {
     if (index === 0) {
-      this.props.invite(this.props.threadName, this.props.threadId)
+      this.props.invite(this.props.threadId, this.props.threadName)
     } else if (index === 1) {
       this.props.leaveThread(this.props.threadId)
     }
@@ -151,7 +151,7 @@ const mapDispatchToProps = (dispatch) => {
     viewPhoto: (index, threadId) => { dispatch(UIActions.viewPhotoRequest(index, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    invite: (name: string, pubKey: string) => { dispatch(ThreadsActions.addExternalInviteRequest(name, pubKey)) },
+    invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) }
   }
 }

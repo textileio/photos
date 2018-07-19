@@ -30,10 +30,10 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
-    return (id: string, name: string) => resolve({ id, name })
+    return (threadId: string, threadName: string) => resolve({ threadId, threadName })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
-    return (id: string, name: string, invite: TextileTypes.ExternalInvite) => resolve({ id, name, invite })
+    return (threadId: string, threadName: string, invite: TextileTypes.ExternalInvite) => resolve({ threadId, threadName, invite })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -66,8 +66,8 @@ export type ThreadsState = {
   // e.g. if a user accepts two invites quickly without the first one resolving fully...
   // at the Go layer everything should be fine, but just if we want to build feedback off of this.
   readonly outboundInvite?: {
-    readonly id: string
-    readonly name: string
+    readonly threadId: string
+    readonly threadName: string
     readonly invite?: TextileTypes.ExternalInvite
     readonly error?: Error
   }
@@ -134,15 +134,15 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, refreshing: false, refreshError: action.payload.error }
     case getType(actions.addExternalInviteRequest): {
       // Store the link request pubKey in memory (name will be deprecated)
-      const { id, name } = action.payload
-      return { ...state, outboundInvite: { id, name } }
+      const { threadId, threadName } = action.payload
+      return { ...state, outboundInvite: { threadId, threadName } }
     }
     case getType(actions.addExternalInviteSuccess): {
       if (!state.outboundInvite) {
         return state
       }
-      const { id, invite } = action.payload
-      if (state.outboundInvite.id !== id) {
+      const { threadId, invite } = action.payload
+      if (state.outboundInvite.threadId !== threadId) {
         return state
       }
       return { ...state, outboundInvite: { ...state.outboundInvite, invite } }

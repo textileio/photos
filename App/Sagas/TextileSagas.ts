@@ -33,7 +33,7 @@ import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
-import DeepLinks from '../Services/DeepLink'
+import DeepLink from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload.data
@@ -364,18 +364,18 @@ export function * refreshThreads () {
 }
 
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
-  const { id, name } = action.payload
+  const { threadId, threadName } = action.payload
   try {
-    const invite: TextileTypes.ExternalInvite = yield call(TextileNode.addExternalThreadInvite, id)
-    yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
+    const invite: TextileTypes.ExternalInvite = yield call(TextileNode.addExternalThreadInvite, threadId)
+    yield put(ThreadsActions.addExternalInviteSuccess(threadId, threadName, invite))
   } catch (error) {
     yield put(ThreadsActions.addExternalInviteError(error))
   }
 }
 
 export function * presentShareInterface(action: ActionType<typeof ThreadsActions.addExternalInviteSuccess>) {
-  const { invite, name } = action.payload
-  const link = DeepLinks.createInviteLink(invite, name)
+  const { invite, threadName } = action.payload
+  const link = DeepLink.createInviteLink(invite, threadName)
   yield call(Share.share, { title: 'Join my thread on Textile!', message: link })
 }
 
