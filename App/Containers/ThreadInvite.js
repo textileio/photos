@@ -21,9 +21,10 @@ class ThreadInvite extends React.PureComponent {
   }
 
   _isValid = (request) => {
+    console.log(request)
     return request.inviter && request.inviter !== '' &&
-      request.inviteKey && request.inviteKey !== '' &&
-      request.inviteId && request.inviteId !== '' &&
+      request.key && request.key !== '' &&
+      request.id && request.id !== '' &&
       request.name && request.name !== ''
   }
 
