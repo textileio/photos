@@ -132,9 +132,9 @@ class ThreadInvite extends React.PureComponent {
   render () {
     if (!this.state.isValid) {
       return this.renderError('There was an issue with the Thread invite. Be sure you got this invite from a trusted Textile user using the latest Textile app.')
-    } else if (this.props.threads.some((t) => t.id === this.state.id)) {
+    } else if (this.props.threads.some((t) => t.id in this.state.invites)) {
       // the thread already exists
-      return this.renderError('You are already a member of the thread you are trying to join.')
+      return this.renderError('You have already accepted this invite.')
     } else if (this.state.status === 'confirmed') {
       return this.renderPairing('JOINING')
     } else if (this.state.status === 'added') {
@@ -148,7 +148,7 @@ const mapStateToProps = state => {
   const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
   const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
   return {
-    threads: state.threads && state.threads.threads ? state.threads.threads : [],
+    invites: state.threads.inboundInvites.filter((inv) => inv.id && !inv.error).map((inv) => inv.inviteId),
     online: nodeState && online
   }
 }
