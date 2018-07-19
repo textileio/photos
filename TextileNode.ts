@@ -66,12 +66,14 @@ export default {
     return threads
   },
 
-  addExternalThreadInvite: async function (id: string): Promise<string> {
-    return await TextileNode.addExternalThreadInvite(id)
+  addExternalThreadInvite: async function (id: string): Promise<TextileTypes.ExternalInvite> {
+    const jsonString = await TextileNode.addExternalThreadInvite(id)
+    const externalInvite = JSON.parse(jsonString) as TextileTypes.ExternalInvite
+    return externalInvite
   },
 
-  acceptExternalThreadInvite: async function (threadId: string, key: string): Promise<string> {
-    return await TextileNode.acceptExternalThreadInvite(threadId, key)
+  acceptExternalThreadInvite: async function (inviteId: string, key: string): Promise<string> {
+    return await TextileNode.acceptExternalThreadInvite(inviteId, key)
   },
 
   addPhoto: async function (path: string): Promise<TextileTypes.AddResult> {
