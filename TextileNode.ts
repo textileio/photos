@@ -87,7 +87,7 @@ export default {
   },
 
   sharePhotoToThread: async function (dataId: string, threadId: string, caption?: string): Promise<string> {
-    return await TextileNode.sharePhoto(dataId, threadId, caption)
+    return await TextileNode.sharePhotoToThread(dataId, threadId, caption)
   },
 
   getPhotos: async function (limit: number, threadId: string, offset: string = ''): Promise<TextileTypes.Photos> {

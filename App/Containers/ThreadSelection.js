@@ -101,7 +101,7 @@ const mapStateToProps = (state) => {
     .map(thread => {
       return {
         type: 'thread',
-        id: thread.name,
+        id: thread.id,
         title: thread.name
       }
     })
