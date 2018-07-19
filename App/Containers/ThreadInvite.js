@@ -21,7 +21,6 @@ class ThreadInvite extends React.PureComponent {
   }
 
   _isValid = (request) => {
-    console.log(request)
     return request.inviter && request.inviter !== '' &&
       request.key && request.key !== '' &&
       request.id && request.id !== '' &&
@@ -131,9 +130,9 @@ class ThreadInvite extends React.PureComponent {
   }
 
   render () {
-    if (!this.state.isValid) {
+    if (!this.state.valid) {
       return this.renderError('There was an issue with the Thread invite. Be sure you got this invite from a trusted Textile user using the latest Textile app.')
-    } else if (this.props.threads.some((t) => t.id in this.state.invites)) {
+    } else if (this.state.inviteId in this.props.invites) {
       // the thread already exists
       return this.renderError('You have already accepted this invite.')
     } else if (this.state.status === 'confirmed') {
