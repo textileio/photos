@@ -20,44 +20,44 @@ describe('ui stories', () => {
   describe('handling invites', () => {
     it('should succeed at creating an invite', () => {
       const state0 = reducer(initialState, actions.addExternalInviteRequest(id, name))
-      const match0 = { id, name }
-      expect(state0.outboundInvite).toMatchObject(match0)
+      const match0 = [{ id, name }]
+      expect(state0.outboundInvites).toMatchObject(match0)
       const state1 = reducer(state0, actions.addExternalInviteSuccess(id, name, invite))
-      const match1 = { id, name, invite }
-      expect(state1.outboundInvite).toMatchObject(match1)
+      const match1 = [{ id, name, invite }]
+      expect(state1.outboundInvites).toMatchObject(match1)
     })
     it('should fail at creating an invite', () => {
       const state0 = reducer(initialState, actions.addExternalInviteRequest(id, name))
-      const match0 = { id, name }
-      expect(state0.outboundInvite).toMatchObject(match0)
-      const state1 = reducer(state0, actions.addExternalInviteError(error))
-      const match1 = { id, name, error }
-      expect(state1.outboundInvite).toMatchObject(match1)
+      const match0 = [{ id, name }]
+      expect(state0.outboundInvites).toMatchObject(match0)
+      const state1 = reducer(state0, actions.addExternalInviteError(id, error))
+      const match1 = [{ id, name, error }]
+      expect(state1.outboundInvites).toMatchObject(match1)
     })
     it('should succeed at accepting an invite', () => {
       const state0 = reducer(initialState, actions.acceptExternalInviteRequest(inviteId, inviteKey))
-      const match0 = { inviteId: inviteId, key:inviteKey }
-      expect(state0.inboundInvite).toMatchObject(match0)
-      const state1 = reducer(state0, actions.acceptExternalInviteSuccess(id))
-      const match1 = { id, inviteId: inviteId, key:inviteKey }
-      expect(state1.inboundInvite).toMatchObject(match1)
+      const match0 = [{ inviteId: inviteId, key:inviteKey }]
+      expect(state0.inboundInvites).toMatchObject(match0)
+      const state1 = reducer(state0, actions.acceptExternalInviteSuccess(inviteId, id))
+      const match1 = [{ id, inviteId: inviteId, key:inviteKey }]
+      expect(state1.inboundInvites).toMatchObject(match1)
     })
     it('should fail at accepting an invite', () => {
       const state0 = reducer(initialState, actions.acceptExternalInviteRequest(inviteId, inviteKey))
-      const match0 = { inviteId: inviteId, key:inviteKey }
-      expect(state0.inboundInvite).toMatchObject(match0)
-      const state1 = reducer(state0, actions.acceptExternalInviteError(error))
-      const match1 = { inviteId: inviteId, key:inviteKey, error }
-      expect(state1.inboundInvite).toMatchObject(match1)
+      const match0 = [{ inviteId: inviteId, key:inviteKey }]
+      expect(state0.inboundInvites).toMatchObject(match0)
+      const state1 = reducer(state0, actions.acceptExternalInviteError(inviteId, error))
+      const match1 = [{ inviteId: inviteId, key:inviteKey, error }]
+      expect(state1.inboundInvites).toMatchObject(match1)
     })
     it('should ignore out of order events', () => {
       const state0 = reducer(initialState, actions.addExternalInviteSuccess(id, name, invite))
       expect(state0).toMatchObject(initialState)
-      const state1 = reducer(initialState, actions.addExternalInviteError(error))
+      const state1 = reducer(initialState, actions.addExternalInviteError(id, error))
       expect(state1).toMatchObject(initialState)
-      const state2 = reducer(initialState, actions.acceptExternalInviteSuccess(id))
+      const state2 = reducer(initialState, actions.acceptExternalInviteSuccess(inviteId, id))
       expect(state2).toMatchObject(initialState)
-      const state3 = reducer(initialState, actions.acceptExternalInviteError(error))
+      const state3 = reducer(initialState, actions.acceptExternalInviteError(inviteId, error))
       expect(state3).toMatchObject(initialState)
     })
   })
