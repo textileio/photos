@@ -265,8 +265,8 @@ export function * photosTask () {
     for (let photoData of photoUploads) {
       let {photo, addResult} = photoData
       try {
-        yield put(TextileActions.imageAdded(photo.uri, 'default', addResult.id, addResult.pin_request.PayloadPath))
-        yield uploadFile(addResult.id, addResult.pin_request.Boundary, addResult.pin_request.PayloadPath)
+        yield put(TextileActions.imageAdded(photo.uri, 'default', addResult.id, addResult.pin_request.payload_path))
+        yield uploadFile(addResult.id, addResult.pin_request.boundary, addResult.pin_request.payload_path)
       } catch (error) {
         yield put(TextileActions.photoProcessingError(photo.uri, error))
       } finally {
