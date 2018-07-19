@@ -369,7 +369,7 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
     const invite: TextileTypes.ExternalInvite = yield call(TextileNode.addExternalThreadInvite, id)
     yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
   } catch (error) {
-    yield put(ThreadsActions.addExternalInviteError(error))
+    yield put(ThreadsActions.addExternalInviteError(id, error))
   }
 }
 
@@ -384,8 +384,8 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   try {
     const id: string = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
     yield put(ThreadsActions.refreshThreadsRequest())
-    yield put(ThreadsActions.acceptExternalInviteSuccess(id))
+    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, id))
   } catch (error) {
-    yield put(ThreadsActions.acceptExternalInviteError(error))
+    yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
   }
 }
