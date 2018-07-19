@@ -14,7 +14,7 @@ describe('devices stories', () => {
   })
   describe('adding devices', () => {
     it('should add a device', () => {
-      const state0 = reducer(initialState, actions.addDeviceRequest({ id: pubKey, name }))
+      const state0 = reducer(initialState, actions.addDeviceRequest(name, pubKey))
       const match0: Device = { state: 'adding', deviceItem: { id: pubKey, name } }
       expect(state0.devices[0]).toMatchObject(match0)
       const state1 = reducer(state0, actions.addDeviceSuccess(pubKey))
