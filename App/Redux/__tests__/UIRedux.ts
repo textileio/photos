@@ -2,6 +2,8 @@ import actions, { reducer } from '../UIRedux'
 
 const initialState = reducer(undefined, {} as any)
 
+const threadId = 'threadId'
+
 describe('ui stories', () => {
   describe('initial state', () => {
     it('should match snapshot', () => {
@@ -10,19 +12,19 @@ describe('ui stories', () => {
   })
   describe('viewing photos', () => {
     it('should have an active thread', () => {
-      const state = reducer(initialState, actions.viewPhotoRequest(0, 'myThread'))
+      const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
       expect(state.viewingPhoto.active).toEqual(true)
       expect(state.viewingPhoto.index).toEqual(0)
-      expect(state.viewingPhoto.thread).toEqual('myThread')
+      expect(state.viewingPhoto.threadId).toEqual(threadId)
     })
     it('should switch photos', () => {
-      const state = reducer(initialState, actions.viewPhotoRequest(0, 'myThread'))
+      const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
       expect(state.viewingPhoto.index).toEqual(0)
       const state1 = reducer(state, actions.switchViewdPhoto(1))
       expect(state1.viewingPhoto.index).toEqual(1)
     })
     it('should dismiss viewed photo', () => {
-      const state = reducer(initialState, actions.viewPhotoRequest(0, 'myThread'))
+      const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
       expect(state.viewingPhoto.active).toEqual(true)
       const state1 = reducer(state, actions.dismissViewedPhoto())
       expect(state1.viewingPhoto.active).toEqual(false)
@@ -54,7 +56,7 @@ describe('ui stories', () => {
       expect(state1.sharingPhoto.active).toEqual(false)
     })
     it('sharePhotoRequest should not update state', () => {
-      const state = reducer(initialState, actions.sharePhotoRequest(['myThread'], 'someHash'))
+      const state = reducer(initialState, actions.sharePhotoRequest(threadId, ['anotherThread'], 'caption'))
       expect(state).toEqual(initialState)
     })
     it('imageSharingError should not update state', () => {
