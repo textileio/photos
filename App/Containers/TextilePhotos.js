@@ -93,15 +93,12 @@ const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
   const threadName = ownProps.navigation.state.params.threadName
   const threadId = ownProps.navigation.state.params.threadId
-  let allItemsObj = state.ipfs.threads[threadName].items.reduce((o, item, index) => ({...o, [item.hash]: { index, hash: item.hash, caption: item.caption, state: 'complete' }}), {})
+  let allItemsObj = state.ipfs.threads[threadName].items.reduce((o, item, index) => ({...o, [item.photo.id]: { index, hash: item.photo.id, caption: item.photo.caption, state: 'complete' }}), {})
   for (const processingItem of state.textile.images.items) {
-    for (const pinRequest of processingItem.pinRequests) {
-      const item = allItemsObj[pinRequest.hash]
-      if (item) {
-        const updatedItem = { ...item, ...processingItem }
-        allItemsObj[pinRequest.hash] = updatedItem
-        break
-      }
+    const item = allItemsObj[processingItem.hash]
+    if (item) {
+      const updatedItem = { ...item, ...processingItem }
+      allItemsObj[processingItem.hash] = updatedItem
     }
   }
   const updatedItems = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
