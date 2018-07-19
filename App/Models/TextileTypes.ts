@@ -46,8 +46,8 @@ export interface AddResult {
 }
 
 export interface PinRequest {
-  Boundary: string
-  PayloadPath: string
+  boundary: string
+  payload_path: string
 }
 
 export interface Metadata {
