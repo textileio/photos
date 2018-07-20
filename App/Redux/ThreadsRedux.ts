@@ -47,8 +47,11 @@ const actions = {
   acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (inviteId: string, error: Error) => resolve({ inviteId, error })
   }),
-  storeExternalInvite: createAction('STORE_EXTERNAL_INVITE', resolve => {
+  storeExternalInviteLink: createAction('STORE_EXTERNAL_INVITE_LINK', resolve => {
     return (link: string) => resolve({ link })
+  }),
+  removeExternalInviteLink: createAction('REMOVE_EXTERNAL_INVITE_LINK', resolve => {
+    return () => resolve()
   })
 }
 
@@ -198,11 +201,17 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, inboundInvites }
 
     }
-    case getType(actions.storeExternalInvite):
+    case getType(actions.storeExternalInviteLink):
       return { ...state, pendingInviteLink: action.payload.link }
+    case getType(actions.removeExternalInviteLink):
+      return { ...state, pendingInviteLink: undefined }
     default:
       return state
   }
+}
+
+export const ThreadSelectors = {
+  threads: (state: ThreadsState) => state.threads
 }
 
 export default actions
