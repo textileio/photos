@@ -354,10 +354,10 @@ public class TextileNode extends ReactContextBaseJavaModule {
             promise.resolve(null);
         }
         catch (Exception e) {
-            promise.reject("STOP ERROR", e);
+            promise.reject("REFRESH MESSAGES ERROR", e);
         }
     }
-    
+
     // Android specific method for turning photo URI into path + ext
     @ReactMethod
     public void getFilePath(String uriString, Promise promise) {
