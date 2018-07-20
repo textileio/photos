@@ -132,6 +132,10 @@ export default {
     return await TextileNode.getFilePath(uri)
   },
 
+  refreshMessages: async function (): Promise<void> {
+    return await TextileNode.refreshMessages()
+  },
+
   eventEmitter: Platform.select({
     ios: new NativeEventEmitter(Events),
     android: DeviceEventEmitter,
