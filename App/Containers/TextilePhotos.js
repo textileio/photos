@@ -67,7 +67,7 @@ class TextilePhotos extends React.PureComponent {
     if (index === 0) {
       this.props.invite(this.props.threadId, this.props.threadName)
     } else if (index === 1) {
-      this.props.leaveThread(this.props.id)
+      this.props.leaveThread(this.props.threadId)
     }
   }
 
