@@ -5,6 +5,8 @@ import t from 'tcomb-form-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import AuthActions, { SignUp, LogIn, RecoverPassword } from '../Redux/AuthRedux'
+import ThreadActions from '../Redux/ThreadsRedux'
+
 import DropdownAlert from 'react-native-dropdownalert'
 
 // Styles
@@ -71,13 +73,18 @@ class LoginScreen extends Component {
     this._handleOpenURL(event.url)
   }
 
-  _handleOpenURL (url) {
-    if (url) {
-      const data = DeepLink.getData(url)
+  _handleOpenURL (link) {
+    // Make sure we take the user to the signup screen, not login
+    if (this.props.formType !== SignUp) {
+      this.props.updateFormType(SignUp)
+    }
+    if (link) {
+      const data = DeepLink.getData(link)
       const request = DeepLink.getParams(data.hash)
       if (data.path === '/invites/new' && data.hash !== '' && request.referral) {
         // TODO: need to store off the invite information until after the user signs up now
         this.props.updateFormValue({'referralCode': request.referral})
+        this.props.storeExternalInvite(link)
       }
     }
   }
@@ -179,7 +186,8 @@ const mapDispatchToProps = dispatch => {
     updateFormValue: value => { dispatch(AuthActions.updateFormValue(value)) },
     signUpRequest: data => { dispatch(AuthActions.signUpRequest(data)) },
     logInRequest: data => { dispatch(AuthActions.logInRequest(data)) },
-    recoverPasswordRequest: data => { dispatch(AuthActions.recoverPasswordRequest(data)) }
+    recoverPasswordRequest: data => { dispatch(AuthActions.recoverPasswordRequest(data)) },
+    storeExternalInvite: link => { dispatch(ThreadActions.storeExternalInvite(link)) }
   }
 }
 

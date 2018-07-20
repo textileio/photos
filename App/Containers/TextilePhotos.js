@@ -143,7 +143,8 @@ const mapStateToProps = (state, ownProps) => {
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
-    verboseUi: state.preferences.verboseUi
+    verboseUi: state.preferences.verboseUi,
+    pendingInviteLink: state.threads.pendingInviteLink
   }
 }
 
