@@ -50,7 +50,7 @@ class Threads extends React.PureComponent {
 
   _onPressItem = (item) => {
     const { id, name } = item
-    this.props.navigation.navigate('ViewThread', { threadId: id, threadName: name })
+    this.props.navigation.navigate('ViewThread', { id: id, name: name })
   }
 
   _renderItem = ({item}) => (
