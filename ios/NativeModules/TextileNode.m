@@ -309,6 +309,16 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
   }
 }
 
+RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _refreshMessages:&error];
+  if (!error) {
+    resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 #pragma mark - Private methods
 
 - (void)_create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
@@ -426,6 +436,10 @@ RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve re
 
 - (NSString *)_devices:(NSError**)error {
   return [self.node devices:error];
+}
+
+- (void)_refreshMessages:(NSError**)error {
+  [self.node refreshMessages:error];
 }
 
 @end
