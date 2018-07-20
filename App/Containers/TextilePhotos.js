@@ -65,6 +65,10 @@ class TextilePhotos extends React.PureComponent {
 
   handleActionSheetResponse (index: number) {
     if (index === 0) {
+      console.log('invite')
+      console.log(this.props.id, this.props.name)
+      console.log(this.props)
+      console.log('')
       this.props.invite(this.props.id, this.props.name)
     } else if (index === 1) {
       this.props.leaveThread(this.props.id)
