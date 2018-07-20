@@ -85,7 +85,7 @@ class Threads extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.threads.threads
+    data: state.threads.threads.filter(thread => thread.name !== 'default')
   }
 }
 
