@@ -85,7 +85,7 @@ class LoginScreen extends Component {
       if (data.path === '/invites/new' && data.hash !== '' && request.referral) {
         // TODO: need to store off the invite information until after the user signs up now
         this.props.updateFormValue({'referralCode': request.referral})
-        this.props.storeExternalInvite(link)
+        this.props.storeExternalInviteLink(link)
       }
     }
   }
@@ -188,7 +188,7 @@ const mapDispatchToProps = dispatch => {
     signUpRequest: data => { dispatch(AuthActions.signUpRequest(data)) },
     logInRequest: data => { dispatch(AuthActions.logInRequest(data)) },
     recoverPasswordRequest: data => { dispatch(AuthActions.recoverPasswordRequest(data)) },
-    storeExternalInvite: link => { dispatch(ThreadActions.storeExternalInvite(link)) }
+    storeExternalInviteLink: link => { dispatch(ThreadActions.storeExternalInviteLink(link)) }
   }
 }
 

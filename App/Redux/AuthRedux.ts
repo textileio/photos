@@ -47,7 +47,6 @@ const Email = t.refinement(t.String, function (n) {
   return re.test(String(n).toLowerCase())
 })
 
-
 export const SignUp = t.struct({
   referralCode: t.String,
   username: t.String,
