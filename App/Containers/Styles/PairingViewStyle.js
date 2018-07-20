@@ -15,6 +15,9 @@ export default StyleSheet.create({
   message: {
     padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 12, textAlign: 'justify'
   },
+  error: {
+    padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 12, textAlign: 'left'
+  },
   button: {
     fontFamily: 'Biotif-Regular',
     color: Colors.charcoal,

@@ -92,8 +92,9 @@ class ThreadInvite extends React.PureComponent {
     )
   }
 
-  renderSuccess (status) {
+  renderSuccess (status, buttonText) {
     // TODO: redirect the user to the newly joined thread
+    const button = buttonText || 'Continue'
     return (
       <View style={[photosStyle.container, style.container]}>
         <View>
@@ -101,8 +102,8 @@ class ThreadInvite extends React.PureComponent {
           <View style={style.buttonMargin} />
           <Button
             style={style.button}
-            title='Continue'
-            accessibilityLabel='continue'
+            title={button}
+            accessibilityLabel={button}
             onPress={this.continue.bind(this)}
           />
         </View>
@@ -115,8 +116,8 @@ class ThreadInvite extends React.PureComponent {
       <View style={[photosStyle.container, style.container]}>
         <View>
           <Text style={style.status}>ERROR</Text>
-          <Text style={style.message}>
-            {message}
+          <Text style={style.error}>
+            Error message: {message}
           </Text>
           <Button
             style={style.button}
@@ -136,14 +137,14 @@ class ThreadInvite extends React.PureComponent {
       // the thread already exists
       return this.renderError('You have already accepted this invite.')
     } else if (this.state.status === 'confirmed') {
-      return this.renderPairing('JOINING')
+      return this.renderPairing('Locating...', 'Continue in background')
     } else if (this.state.status === 'added') {
       if (this.props.invite && this.props.invite.id) {
         return this.renderSuccess('SUCCESS!')
       } else if (this.props.invite && this.props.invite.error) {
-        return this.renderError('There was an error joining the invite, please try again.')
+        return this.renderError(this.props.invite.error.message)
       }
-      return this.renderSuccess('PROCESSING...')
+      return this.renderSuccess('Joining...', 'Continue in background')
     }
     return this.renderConfirm()
   }

@@ -46,6 +46,12 @@ const actions = {
   }),
   acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
     return (inviteId: string, error: Error) => resolve({ inviteId, error })
+  }),
+  storeExternalInviteLink: createAction('STORE_EXTERNAL_INVITE_LINK', resolve => {
+    return (link: string) => resolve({ link })
+  }),
+  removeExternalInviteLink: createAction('REMOVE_EXTERNAL_INVITE_LINK', resolve => {
+    return () => resolve()
   })
 }
 
@@ -77,12 +83,10 @@ export type ThreadsState = {
     readonly id: string
     readonly error?: Error
   }
-  // TODO: This single outbound/inboundInvite objects are bad setup and could get wires crossed.
-  // e.g. if a user accepts two invites quickly without the first one resolving fully...
-  // at the Go layer everything should be fine, but just if we want to build feedback off of this.
   readonly outboundInvites: ReadonlyArray<OutboundInvite>
   readonly inboundInvites: ReadonlyArray<InboundInvite>
   readonly threads: ReadonlyArray<TextileTypes.Thread>
+  readonly pendingInviteLink?: string // used to hold an invite if triggered before login
 }
 
 export const initialState: ThreadsState = {
@@ -197,9 +201,17 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, inboundInvites }
 
     }
+    case getType(actions.storeExternalInviteLink):
+      return { ...state, pendingInviteLink: action.payload.link }
+    case getType(actions.removeExternalInviteLink):
+      return { ...state, pendingInviteLink: undefined }
     default:
       return state
   }
+}
+
+export const ThreadsSelectors = {
+  threads: (state: any) => state.threads
 }
 
 export default actions
