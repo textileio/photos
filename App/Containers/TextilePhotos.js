@@ -6,7 +6,7 @@ import ActionSheet from 'react-native-actionsheet'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
@@ -110,7 +110,8 @@ const mapStateToProps = (state, ownProps) => {
   var refreshing = false
   var thread = undefined
   if (threadId) {
-    let allItemsObj = state.ipfs.threads[threadId].items.reduce((o, item, index) => ({...o, [item.photo.id]: { index, hash: item.photo.id, caption: item.photo.caption, state: 'complete' }}), {})
+    const threadData: ThreadData = state.ipfs.threads[threadId] || { querying: false, items: [] }
+    let allItemsObj = threadData.items.reduce((o, item, index) => ({...o, [item.photo.id]: { index, hash: item.photo.id, caption: item.photo.caption, state: 'complete' }}), {})
     for (const processingItem of state.textile.images.items) {
       const item = allItemsObj[processingItem.hash]
       if (item) {
@@ -119,7 +120,7 @@ const mapStateToProps = (state, ownProps) => {
       }
     }
     items = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
-    refreshing = state.ipfs.threads[threadId].querying
+    refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
