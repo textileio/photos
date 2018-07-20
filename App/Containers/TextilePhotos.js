@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Text, Image, TouchableWithoutFeedback, Share} from 'react-native'
+import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import HeaderButtons from 'react-navigation-header-buttons'
 import ActionSheet from 'react-native-actionsheet'
@@ -11,6 +11,7 @@ import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
+import DeepLink from '../Services/DeepLink'
 
 class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -123,6 +124,8 @@ const mapStateToProps = (state, ownProps) => {
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
+
+  console.log(state.threads)
 
   const threadName = thread ? thread.name : undefined
 

@@ -49,8 +49,24 @@ function createInviteLink (invite, threadName) {
   return 'https://www.textile.photos/invites/new#' + hash.join('&')
 }
 
+function route (link, navigation) {
+  if (link) {
+    console.log('NAVIGATING')
+    const data = getData(link)
+    console.log(link)
+    if (data.path === '/invites/device' && data.hash !== '') {
+      // start pairing the new device
+      navigation.navigate('PairingView', {request: getParams(data.hash)})
+    } else if (data.path === '/invites/new' && data.hash !== '') {
+      // invite the user to the thread
+      navigation.navigate('ThreadInvite', {link, request: getParams(data.hash)})
+    }
+  }
+}
+
 export default {
   getData,
   getParams,
-  createInviteLink
+  createInviteLink,
+  route
 }
