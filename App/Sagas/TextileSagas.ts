@@ -23,6 +23,7 @@ import StartupActions from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -217,7 +218,16 @@ async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
   return defaultThread
 }
 
-export function * photosTask () {
+  export function * pendingInvitesTask () {
+    // Process any pending external invites created while user wasn't logged in
+    const threads = yield select(ThreadsSelectors.threads)
+    if (threads.pendingInviteLink) {
+      yield call(DeepLink.route, threads.pendingInviteLink, NavigationService)
+      yield put(ThreadsActions.removeExternalInviteLink())
+    }
+  }
+
+  export function * photosTask () {
   try {
     var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {

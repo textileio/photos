@@ -38,7 +38,8 @@ import {
   refreshThreads,
   addExternalInvite,
   presentShareInterface,
-  acceptExternalInvite
+  acceptExternalInvite,
+  pendingInvitesTask
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -76,6 +77,9 @@ export default function * root () {
     // All things we want to trigger photosTask are funneled through starting the node, so handle START_NODE_SUCCESS
     // by running the photosTask saga here
     takeEvery(getType(TextileNodeActions.startNodeSuccess), photosTask),
+
+    // If the user clicked any invites before creating an account, this will now flush them...
+    takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
 
     takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile),
     takeEvery(TextileTypes.IMAGE_UPLOAD_ERROR, retryUploadAfterError),
