@@ -51,7 +51,7 @@ class TextilePhotos extends React.PureComponent {
 
   onSelect = (row) => {
     return () => {
-      this.props.viewPhoto(row.index, this.props.id)
+      this.props.viewPhoto(row.index, this.props.threadId)
     }
   }
 
