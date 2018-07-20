@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Text, Image, TouchableWithoutFeedback, Share} from 'react-native'
+import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import HeaderButtons from 'react-navigation-header-buttons'
 import ActionSheet from 'react-native-actionsheet'
@@ -143,8 +143,7 @@ const mapStateToProps = (state, ownProps) => {
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
-    verboseUi: state.preferences.verboseUi,
-    pendingInviteLink: state.threads.pendingInviteLink
+    verboseUi: state.preferences.verboseUi
   }
 }
 
