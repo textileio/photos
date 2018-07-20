@@ -11,7 +11,6 @@ import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import DeepLink from '../Services/DeepLink'
 
 class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -125,8 +124,6 @@ const mapStateToProps = (state, ownProps) => {
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
-  console.log(state.threads)
-
   const threadName = thread ? thread.name : undefined
 
   const nodeStatus = state.ipfs.nodeState.error
@@ -146,8 +143,7 @@ const mapStateToProps = (state, ownProps) => {
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
-    verboseUi: state.preferences.verboseUi,
-    pendingInviteLink: state.threads.pendingInviteLink
+    verboseUi: state.preferences.verboseUi
   }
 }
 
