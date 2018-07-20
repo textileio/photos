@@ -216,6 +216,7 @@ export function * photosTask () {
     if (!defaultThread) {
       yield put(ThreadsActions.addThreadRequest('default'))
       yield take(getType(TextileActions.addThreadSuccess))
+      yield put(ThreadsActions.refreshThreadsRequest())
     }
     defaultThread = yield call(getDefaultThread)
     if (!defaultThread) {
