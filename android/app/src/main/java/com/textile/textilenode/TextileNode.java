@@ -83,6 +83,21 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void mnemonic (Promise promise) {
+        try {
+            String mnemonic = node.getMnemonic();
+            if (mnemonic.length() > 0) {
+                promise.resolve(mnemonic);
+            } else {
+                promise.reject("MNEMONIC ERROR", "Mnemonic unavailable.");
+            }
+        }
+        catch (Exception e) {
+            promise.reject("START ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void start (Promise promise) {
         try {
             node.start();
