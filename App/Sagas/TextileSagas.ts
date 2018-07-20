@@ -204,14 +204,21 @@ export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequ
   }
 }
 
+async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
+  const threads = await TextileNode.threads()
+  var defaultThread = threads.items.find(thread => thread.name === 'default')
+  return defaultThread
+}
+
 export function * photosTask () {
   try {
-    // Make sure we have a default thread
-    const threads: TextileTypes.Threads = yield call(TextileNode.threads)
-    var defaultThread = threads.items.find(thread => thread.name === 'default')
+    var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {
-      defaultThread = yield call(TextileNode.addThread, "default")
+      yield put(ThreadsActions.addThreadRequest('default'))
+      yield take(getType(TextileActions.addThreadSuccess))
+      yield put(ThreadsActions.refreshThreadsRequest())
     }
+    defaultThread = yield call(getDefaultThread)
     if (!defaultThread) {
       return
     }

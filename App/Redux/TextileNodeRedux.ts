@@ -58,7 +58,7 @@ export type PhotosQueryResult = {
   metadata: TextileTypes.PhotoMetadata
 }
 
-type ThreadData = {
+export type ThreadData = {
   readonly querying: boolean
   readonly items: ReadonlyArray<PhotosQueryResult>
   readonly error?: Error
