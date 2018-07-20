@@ -58,6 +58,21 @@ RCT_EXPORT_METHOD(create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:
   }
 }
 
+RCT_REMAP_METHOD(mnemonic, mnemonicWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSString *mnemonic = [self _mnemonic];
+  if (mnemonic.length > 0) {
+    resolve(mnemonic);
+  } else {
+    NSDictionary *userInfo = @{
+                               NSLocalizedDescriptionKey: @"Mnemonic unavailable.",
+                               NSLocalizedFailureReasonErrorKey: @"The mnemonic is only availble immediately after starting the node.",
+                               NSLocalizedRecoverySuggestionErrorKey: @"Only query for mnemonic immediately after starting the node."
+                               };
+    NSError *error = [NSError errorWithDomain:@"Textile" code:0 userInfo:userInfo];
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_REMAP_METHOD(start, startWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self _start:&error];
@@ -330,6 +345,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
     [config setLogFiles:logFiles];
     self.node = MobileNewNode(config, [[Messenger alloc] init], error);
   }
+}
+
+- (NSString *)_mnemonic {
+  return self.node.mnemonic;
 }
 
 - (void)_start:(NSError**)error {

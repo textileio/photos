@@ -1,6 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
-import Config from 'react-native-config'
 import * as TextileTypes from '../Models/TextileTypes'
 
 const actions = {
