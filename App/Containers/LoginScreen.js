@@ -22,10 +22,10 @@ const options = {
   auto: 'placeholders',
   fields: {
     referralCode: {
-      autoCapitalize: 'characters',
+      autoCapitalize: 'characters'
     },
     username: {
-      autoCapitalize: 'none',
+      autoCapitalize: 'none'
     },
     email: {
       autoCapitalize: 'none',
@@ -130,7 +130,7 @@ class LoginScreen extends Component {
           <View style={{flexGrow: 0.4, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'flex-end'}}>
             {this.renderButtons()}
           </View>
-          <DropdownAlert errorColor='#FFB6D5' closeInterval={5000} ref={(refTarget) => { this.dropdown = refTarget }} />
+          <DropdownAlert errorColor='#FFB6D5' closeInterval={5000} ref={(ref) => { this.dropdown = ref }} />
         </KeyboardAwareScrollView>
       </SafeAreaView>
     )
