@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>46</string>
+	<string>48</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -76,6 +76,9 @@
 		<string>Biotif-RegularItalic.ttf</string>
 		<string>Biotif-SemiBold.ttf</string>
 		<string>Biotif-SemiBoldItalic.ttf</string>
+		<string>BentonSans-Bold.otf</string>
+		<string>BentonSans-Light.otf</string>
+		<string>BentonSans.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

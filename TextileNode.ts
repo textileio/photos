@@ -14,6 +14,10 @@ export default {
     return await TextileNode.create(dataDir, apiUrl, logLevel, logFiles)
   },
 
+  mnemonic: async function (): Promise<string> {
+    return await TextileNode.mnemonic()
+  },
+
   start: async function (): Promise<void> {
     return await TextileNode.start()
   },

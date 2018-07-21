@@ -22,8 +22,8 @@ import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
 import StartupActions from '../Redux/StartupRedux'
 import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../Redux/TextileNodeRedux'
-import { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import { ThreadSelectors } from '../Redux/ThreadsRedux'
+import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -132,6 +132,13 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
     const logFiles = !__DEV__
     yield call(TextileNode.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
     yield put(TextileNodeActions.createNodeSuccess())
+    try {
+      const mnemonic: string = yield call(TextileNode.mnemonic)
+      yield put(PreferencesActions.updatecMnemonic(mnemonic))
+    } catch(error) {
+      // This only succeeds when the node is first created so this error is expected
+    }
+    
     yield put(TextileNodeActions.startNodeRequest())
   } catch (error) {
     yield put(TextileNodeActions.createNodeFailure(error))
@@ -213,7 +220,7 @@ async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
 
   export function * pendingInvitesTask () {
     // Process any pending external invites created while user wasn't logged in
-    const threads = yield select(ThreadSelectors.threads)
+    const threads = yield select(ThreadsSelectors.threads)
     if (threads.pendingInviteLink) {
       yield call(DeepLink.route, threads.pendingInviteLink, NavigationService)
       yield put(ThreadsActions.removeExternalInviteLink())
