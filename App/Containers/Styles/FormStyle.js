@@ -12,7 +12,7 @@ var DISABLED_BACKGROUND_COLOR = "#eeeeee";
 var LABEL_FONT_SIZE = 14;
 var FONT_SIZE = 17;
 var FONT_WEIGHT = "500";
-var FONT_FAMILY = "Biotif-Regular";
+var FONT_FAMILY = "BentonSans";
 
 export default Object.freeze({
   fieldset: {},
