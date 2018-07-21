@@ -57,6 +57,9 @@
 		932E4DC620B8D7E100358ED3 /* Biotif-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */; };
 		932E4DC720B8D7E100358ED3 /* Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */; };
 		9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
+		9345CEA92102B24E0061EFD6 /* BentonSans.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEA62102B24D0061EFD6 /* BentonSans.otf */; };
+		9345CEAD2102B68A0061EFD6 /* BentonSans-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEAB2102B68A0061EFD6 /* BentonSans-Light.otf */; };
+		9345CEAE2102B68A0061EFD6 /* BentonSans-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEAC2102B68A0061EFD6 /* BentonSans-Bold.otf */; };
 		935215F2207E967F00D46B81 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 935215C5207E966C00D46B81 /* libART.a */; };
 		937C35AE2081797700F06ADB /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937C35A62081794C00F06ADB /* libRNDeviceInfo.a */; };
 		937FC5412061B7A700357ED5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */; };
@@ -590,6 +593,9 @@
 		932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Light.ttf"; path = "../App/Fonts/Biotif-Light.ttf"; sourceTree = "<group>"; };
 		932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-BookItalic.ttf"; path = "../App/Fonts/Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
 		9339E9A6205C3B8700BCA4CF /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mobile.framework; sourceTree = "<group>"; };
+		9345CEA62102B24D0061EFD6 /* BentonSans.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = BentonSans.otf; path = ../App/Fonts/BentonSans.otf; sourceTree = "<group>"; };
+		9345CEAB2102B68A0061EFD6 /* BentonSans-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BentonSans-Light.otf"; path = "../App/Fonts/BentonSans-Light.otf"; sourceTree = "<group>"; };
+		9345CEAC2102B68A0061EFD6 /* BentonSans-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BentonSans-Bold.otf"; path = "../App/Fonts/BentonSans-Bold.otf"; sourceTree = "<group>"; };
 		935215BC207E966B00D46B81 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		937C356F2081794C00F06ADB /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
@@ -839,6 +845,9 @@
 		6583B009634D42DE99FC41BF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9345CEAC2102B68A0061EFD6 /* BentonSans-Bold.otf */,
+				9345CEAB2102B68A0061EFD6 /* BentonSans-Light.otf */,
+				9345CEA62102B24D0061EFD6 /* BentonSans.otf */,
 				932E4DB320B8D7E000358ED3 /* Biotif-Black.ttf */,
 				932E4DAC20B8D7E000358ED3 /* Biotif-BlackItalic.ttf */,
 				932E4DAB20B8D7E000358ED3 /* Biotif-Bold.ttf */,
@@ -1771,6 +1780,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9345CEA92102B24E0061EFD6 /* BentonSans.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				7FC7F435032D438592423B7B /* Entypo.ttf in Resources */,
@@ -1781,10 +1791,12 @@
 				932E4DBF20B8D7E100358ED3 /* Biotif-ExtraBold.ttf in Resources */,
 				932E4DC520B8D7E100358ED3 /* Biotif-SemiBoldItalic.ttf in Resources */,
 				932E4DBE20B8D7E100358ED3 /* Biotif-BoldItalic.ttf in Resources */,
+				9345CEAD2102B68A0061EFD6 /* BentonSans-Light.otf in Resources */,
 				53EB4845FBAB4A61B829B9FD /* Foundation.ttf in Resources */,
 				932E4DC420B8D7E100358ED3 /* Biotif-RegularItalic.ttf in Resources */,
 				932E4DC620B8D7E100358ED3 /* Biotif-Light.ttf in Resources */,
 				94CF1FA5842247DA9BEB5C93 /* Ionicons.ttf in Resources */,
+				9345CEAE2102B68A0061EFD6 /* BentonSans-Bold.otf in Resources */,
 				932E4DC020B8D7E100358ED3 /* Biotif-ExtraBoldItalic.ttf in Resources */,
 				94F237902F5845BC8A2BF5DF /* MaterialCommunityIcons.ttf in Resources */,
 				36F172E5279B465682338DDB /* MaterialIcons.ttf in Resources */,

@@ -24,7 +24,7 @@ export default StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    fontFamily: 'Biotif-Medium',
+    fontFamily: 'BentonSans-Bold',
     color: 'white',
     alignSelf: 'center'
   },
@@ -38,7 +38,7 @@ export default StyleSheet.create({
   },
   optionText: {
     fontSize: 14,
-    fontFamily: 'Biotif-Regular',
+    fontFamily: 'BentonSans',
     color: '#cccccc',
     alignSelf: 'center',
     paddingBottom: 12
