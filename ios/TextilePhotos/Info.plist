@@ -76,6 +76,9 @@
 		<string>Biotif-RegularItalic.ttf</string>
 		<string>Biotif-SemiBold.ttf</string>
 		<string>Biotif-SemiBoldItalic.ttf</string>
+		<string>BentonSans Bold.otf</string>
+		<string>BentonSans Light.otf</string>
+		<string>BentonSans.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
