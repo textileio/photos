@@ -210,7 +210,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
   }
 }
 
-export const ThreadSelectors = {
+export const ThreadsSelectors = {
   threads: (state: any) => state.threads
 }
 
