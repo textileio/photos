@@ -16,7 +16,7 @@ export default StyleSheet.create({
     alignItems: 'stretch'
   },
   header: {
-    fontFamily: 'Biotif-BoldItalic',
+    fontFamily: 'BentonSans-Bold',
     color: Colors.brandBlue,
     fontSize: 20,
     textAlign: 'center'
@@ -32,7 +32,7 @@ export default StyleSheet.create({
     height: 200
   },
   message: {
-    fontFamily: 'Biotif-Regular',
+    fontFamily: 'BentonSans',
     color: Colors.charcoal,
     paddingTop: 20,
     fontSize: 18,

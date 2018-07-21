@@ -18,6 +18,6 @@ export default StyleSheet.create({
   },
   overlayText: {
     color: 'white',
-    fontFamily: 'Biotif-Regular'
+    fontFamily: 'BentonSans'
   }
 })

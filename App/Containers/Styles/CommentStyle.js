@@ -9,7 +9,7 @@ export default StyleSheet.create({
     flex: 1,
     padding: 8,
     fontSize: 14,
-    fontFamily: 'Biotif-Regular',
+    fontFamily: 'BentonSans',
     color: Colors.charcoal
   },
   button: {
@@ -20,7 +20,7 @@ export default StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    fontFamily: 'Biotif-Medium',
+    fontFamily: 'BentonSans-Bold',
     color: 'white',
     alignSelf: 'center'
   }

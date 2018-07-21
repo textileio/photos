@@ -2,6 +2,8 @@ import actions, { reducer } from '../PreferencesRedux'
 
 const initialState = reducer(undefined, {} as any)
 
+const mnemonic = 'mnemonic'
+
 describe('preferences stories', () => {
   describe('initial state', () => {
     it('should match snapshot', () => {
@@ -22,6 +24,12 @@ describe('preferences stories', () => {
       expect(state0.verboseUi).toBe(true)
       const state1 = reducer(state0, actions.toggleVerboseUi())
       expect(state1.verboseUi).toBe(false)
+    })
+  })
+  describe('mnemonic', () => {
+    it('should update mnemonic', () => {
+      const state = reducer(initialState, actions.updatecMnemonic(mnemonic))
+      expect(state.mnemonic).toEqual(mnemonic)
     })
   })
 })

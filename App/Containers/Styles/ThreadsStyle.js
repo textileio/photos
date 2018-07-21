@@ -21,7 +21,7 @@ export default StyleSheet.create({
   listItemText: {
     flex: 1,
     fontSize: 14,
-    fontFamily: 'Biotif-Regular',
+    fontFamily: 'BentonSans',
     color: Colors.charcoal,
     alignSelf: 'center'
   },
@@ -40,7 +40,7 @@ export default StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    fontFamily: 'Biotif-Medium',
+    fontFamily: 'BentonSans-Bold',
     color: 'white',
     alignSelf: 'center'
   }

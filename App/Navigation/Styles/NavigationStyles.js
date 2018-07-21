@@ -12,11 +12,11 @@ export default StyleSheet.create({
     marginHorizontal: 16
   },
   headerTitle: {
-    fontFamily: 'Biotif-Medium',
+    fontFamily: 'BentonSans-Bold',
     color: Colors.snow
   },
   headerButton: {
-    fontFamily: 'Biotif-Regular',
+    fontFamily: 'BentonSans',
     color: Colors.snow,
     fontSize: 17
   },
