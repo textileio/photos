@@ -28,7 +28,7 @@ class ThreadInvite extends React.PureComponent {
   }
 
   confirmRequest = () => {
-    this.props.acceptExternalInvite(this.state.inviteId, this.state.inviteKey)
+    this.props.acceptExternalInvite(this.state.inviteId, this.state.inviteKey, this.state.name, this.state.inviter)
     this.setState(() => ({status: 'added'}))
   }
 
@@ -121,6 +121,12 @@ class ThreadInvite extends React.PureComponent {
           </Text>
           <Button
             style={style.button}
+            title='Retry'
+            accessibilityLabel='retry'
+            onPress={this.confirmRequest.bind(this)}
+          />
+          <Button
+            style={style.button}
             title='Continue'
             accessibilityLabel='continue'
             onPress={this.continue.bind(this)}
@@ -165,7 +171,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    acceptExternalInvite: (inviteId, inviteKey) => { dispatch(ThreadsAction.acceptExternalInviteRequest(inviteId, inviteKey)) },
+    acceptExternalInvite: (inviteId, inviteKey, name, inviter) => { dispatch(ThreadsAction.acceptExternalInviteRequest(inviteId, inviteKey, name, inviter)) },
     removeThreadRequest: (threadId) => { dispatch(ThreadsAction.removeThreadRequest(threadId)) }
   }
 }

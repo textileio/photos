@@ -39,7 +39,7 @@ const actions = {
     return (id: string, error: Error) => resolve({ id, error })
   }),
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', resolve => {
-    return (inviteId: string, key: string) => resolve({ inviteId, key })
+    return (inviteId: string, key: string, name?: string, inviter?: string) => resolve({ inviteId, key, name, inviter })
   }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
     return (inviteId: string, id: string) => resolve({inviteId, id})
@@ -69,6 +69,8 @@ export type InboundInvite = {
   readonly inviteId: string
   readonly key: string
   readonly id?: string
+  readonly name?: string
+  readonly inviter?: string
   readonly error?: Error
 }
 
@@ -172,13 +174,13 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     }
     case getType(actions.acceptExternalInviteRequest): {
       // Store the external invite link in memory
-      const { inviteId, key } = action.payload
+      const { inviteId, key, name, inviter } = action.payload
       const existing = state.inboundInvites.find(function (obj) { return obj.inviteId === inviteId })
       if (existing && !existing.error) {
         // if the invite already exists and hasn't error'd, return
         return state
       }
-      const inboundInvite = {inviteId, key}
+      const inboundInvite = {inviteId, key, name, inviter}
       const inboundInvites = state.inboundInvites.filter(inv => inv.inviteId != inviteId).concat([inboundInvite])
       return { ...state, inboundInvites }
     }
