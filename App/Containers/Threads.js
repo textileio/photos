@@ -66,7 +66,6 @@ class Threads extends React.PureComponent {
   }
 
   render () {
-    const disabled = [...this.state.selected.values()].filter(value => value).length === 0
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <FlatList
@@ -78,7 +77,6 @@ class Threads extends React.PureComponent {
           renderItem={this._renderItem}
         />
       </View>
-
     )
   }
 }
