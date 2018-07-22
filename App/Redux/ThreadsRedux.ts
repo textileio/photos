@@ -151,7 +151,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
         return state
       }
       const outboundInvite = { id, name }
-      const outboundInvites = state.outboundInvites.concat([outboundInvite])
+      const outboundInvites = state.outboundInvites.filter(inv => inv.id != id).concat([outboundInvite])
       return { ...state, outboundInvites }
     }
     case getType(actions.addExternalInviteSuccess): {
@@ -179,7 +179,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
         return state
       }
       const inboundInvite = {inviteId, key}
-      const inboundInvites = state.inboundInvites.concat([inboundInvite])
+      const inboundInvites = state.inboundInvites.filter(inv => inv.inviteId != inviteId).concat([inboundInvite])
       return { ...state, inboundInvites }
     }
     case getType(actions.acceptExternalInviteSuccess): {
