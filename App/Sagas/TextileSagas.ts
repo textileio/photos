@@ -37,7 +37,7 @@ import * as TextileTypes from '../Models/TextileTypes'
 import DeepLink from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
-  const {referralCode, username, email, password} = action.payload.data
+  const {referralCode, username, email, password} = action.payload
   try {
     yield call(TextileNode.signUpWithEmail, username, password, email, referralCode)
     const token = yield call(TextileNode.getAccessToken)
@@ -50,7 +50,7 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
 }
 
 export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
-  const {username, password} = action.payload.data
+  const {username, password} = action.payload
   try {
     yield call(TextileNode.signIn, username, password)
     const token = yield call(TextileNode.getAccessToken)
