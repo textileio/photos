@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react'
-import {Text, Image, View} from 'react-native'
+import {Text, Image, View, StatusBar} from 'react-native'
 
 import Footer from './Footer'
 import styles from './statics/styles'
@@ -27,6 +27,7 @@ export default class OnBoarding extends Component {
 
       return (
         <Fragment>
+          <StatusBar barStyle={'dark-content'} />
           <View style={styles.onBoardingContainer}>
             {pages.map(page => (
               <Fragment key={page.image}>
