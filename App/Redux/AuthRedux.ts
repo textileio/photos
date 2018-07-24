@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import t from 'tcomb-form-native'
+import { CafeTokens } from '../Models/TextileTypes'
 
 const actions = {
   updateFormType: createAction('UPDATE_FORM_TYPE', resolve => {
@@ -62,11 +63,6 @@ export const LogIn = t.struct({
 export const RecoverPassword = t.struct({
   username: t.String
 })
-
-export type CafeTokens = {
-  readonly access: string
-  readonly refresh: string
-}
 
 export type AuthState = {
   readonly processing: boolean
