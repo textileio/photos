@@ -50,7 +50,7 @@ class Threads extends React.PureComponent {
 
   _onPressItem = (item) => {
     const { id, name } = item
-    this.props.navigation.navigate('ViewThread', { threadId: id, threadName: name })
+    this.props.navigation.navigate('ViewThread', { id: id, name: name })
   }
 
   _renderItem = ({item}) => (
@@ -66,7 +66,6 @@ class Threads extends React.PureComponent {
   }
 
   render () {
-    const disabled = [...this.state.selected.values()].filter(value => value).length === 0
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <FlatList
@@ -78,14 +77,13 @@ class Threads extends React.PureComponent {
           renderItem={this._renderItem}
         />
       </View>
-
     )
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    data: state.threads.threadItems
+    data: state.threads.threads.filter(thread => thread.name !== 'default')
   }
 }
 

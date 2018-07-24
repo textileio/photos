@@ -156,7 +156,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addDeviceRequest: (name, id) => { dispatch(DevicesActions.addDeviceRequest({name, id})) },
+    addDeviceRequest: (name, id) => { dispatch(DevicesActions.addDeviceRequest(name, id)) },
     removeDeviceRequest: (id) => { dispatch(DevicesActions.removeDeviceRequest(id)) }
   }
 }

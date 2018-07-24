@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
-import Config from 'react-native-config'
+import * as TextileTypes from '../Models/TextileTypes'
 
 const actions = {
   lock: createAction('LOCK', resolve => {
@@ -39,27 +39,27 @@ const actions = {
   nodeOnline: createAction('NODE_ONLINE', resolve => {
     return () => resolve()
   }),
-  // TODO: switch this all over to thread id
   getPhotoHashesRequest: createAction('GET_PHOTO_HASHES_REQUEST', resolve => {
-    return (thread: string) => resolve({ thread })
+    return (threadId: string) => resolve({ threadId })
   }),
   getPhotoHashesSuccess: createAction('GET_PHOTO_HASHES_SUCCESS', resolve => {
-    return (thread: string, items: TheadItem[]) => resolve({ thread, items })  // TODO: type items
+    return (threadId: string, items: PhotosQueryResult[]) => resolve({ threadId, items })
   }),
   getPhotoHashesFailure: createAction('GET_PHOTO_HASHES_FAILURE', resolve => {
-    return (thread: string, error: Error) => resolve({ thread, error })
+    return (threadId: string, error: Error) => resolve({ threadId, error })
   })
 }
 
 export type TextileNodeAction = ActionType<typeof actions>
 
-type TheadItem = {
-
+export type PhotosQueryResult = {
+  photo: TextileTypes.Photo,
+  metadata: TextileTypes.PhotoMetadata
 }
 
-type ThreadData = {
+export type ThreadData = {
   readonly querying: boolean
-  readonly items: ReadonlyArray<TheadItem>
+  readonly items: ReadonlyArray<PhotosQueryResult>
   readonly error?: Error
 }
 
@@ -78,20 +78,12 @@ type TextileNodeState = {
   readonly threads: ThreadMap
 }
 
-const defaultThreadData = createEmptyThreadData()
-const allThreadData = createEmptyThreadData()
-const allThreadName = Config.ALL_THREAD_NAME as string
-const initialThreads: ThreadMap = {
-  'default': defaultThreadData,
-  [allThreadName]: allThreadData
-}
-
 export const initialState: TextileNodeState = {
   locked: false,
   appState: 'unknown',
   online: false,
   nodeState: {},
-  threads: initialThreads
+  threads: {}
 }
 
 export function reducer (state: TextileNodeState = initialState, action: TextileNodeAction): TextileNodeState {
@@ -119,22 +111,22 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.nodeOnline):
       return { ...state, online: true }
     case getType(actions.getPhotoHashesRequest): {
-      const { thread } = action.payload
-      const threadData = state.threads[thread] || createEmptyThreadData()
-      const threads = { ...state.threads, [thread]: { ...threadData, querying: true } }
+      const { threadId } = action.payload
+      const threadData = state.threads[threadId] || createEmptyThreadData()
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: true } }
       return { ...state, threads }
     }
     case getType(actions.getPhotoHashesSuccess): {
       // TODO: This isn't working?
-      const { thread, items } = action.payload
-      const threadData = state.threads[thread] || createEmptyThreadData()
-      const threads = { ...state.threads, [thread]: { ...threadData, querying: false, items: items } }
+      const { threadId, items } = action.payload
+      const threadData = state.threads[threadId] || createEmptyThreadData()
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, items: items } }
       return { ...state, threads }
     }
     case getType(actions.getPhotoHashesFailure): {
-      const { thread, error } = action.payload
-      const threadData = state.threads[thread] || createEmptyThreadData()
-      const threads = { ...state.threads, [thread]: { ...threadData, querying: false, error } }
+      const { threadId, error } = action.payload
+      const threadData = state.threads[threadId] || createEmptyThreadData()
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, error } }
       return { ...state, threads }
     }
     default:
@@ -145,7 +137,7 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
 function createEmptyThreadData (): ThreadData {
   return {
     querying: false,
-    items: Array<TheadItem>()
+    items: Array<PhotosQueryResult>()
   }
 }
 
