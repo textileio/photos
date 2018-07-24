@@ -34,7 +34,7 @@ import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
-import QueriedPhotosActions, { quieriedPhotosSelectors, QueriedPhotosMap } from '../Redux/QueriedPhotosRedux'
+import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import DeepLink from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
@@ -229,23 +229,23 @@ export function * pendingInvitesTask () {
 }
 
 export function * photosTask() {
-  const queriredPhotosInitialized: boolean = yield select(quieriedPhotosSelectors.initialized)
+  const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
   if (!queriredPhotosInitialized) {
-    yield put(QueriedPhotosActions.updateQuerying(true))
+    yield put(CameraRollActions.updateQuerying(true))
     const uris: string[] = yield call(CameraRoll.getPhotos)
-    yield put(QueriedPhotosActions.updateQuerying(false))
-    yield put(QueriedPhotosActions.initialzePhotos(uris))
+    yield put(CameraRollActions.updateQuerying(false))
+    yield put(CameraRollActions.initialzePhotos(uris))
     return
   }
 
-  yield put(QueriedPhotosActions.updateQuerying(true))
+  yield put(CameraRollActions.updateQuerying(true))
   const uris: string[] = yield call(CameraRoll.getPhotos, 250)
-  yield put(QueriedPhotosActions.updateQuerying(false))
+  yield put(CameraRollActions.updateQuerying(false))
 
-  const previouslyQueriedPhotos: QueriedPhotosMap = yield select(quieriedPhotosSelectors.queriedPhotos)
+  const previouslyQueriedPhotos: QueriedPhotosMap = yield select(cameraRollSelectors.queriedPhotos)
 
   const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
-  put(QueriedPhotosActions.trackPhotos(urisToProcess))
+  put(CameraRollActions.trackPhotos(urisToProcess))
 
   var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
   if (!defaultThread) {
@@ -269,7 +269,7 @@ export function * photosTask() {
       // TODO: dispatch photo added action
       addedPhotosData.push({ uri, addResult, blockId })
     } catch (error) {
-      yield put(QueriedPhotosActions.untrackPhoto(uri))
+      yield put(CameraRollActions.untrackPhoto(uri))
       const exists: boolean = yield call(RNFS.exists, photoPath)
       if (exists) {
         yield call(RNFS.unlink, photoPath)
