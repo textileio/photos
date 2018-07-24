@@ -48,9 +48,9 @@ RCT_EXPORT_MODULE();
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-RCT_EXPORT_METHOD(create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(create:(NSString *)dataDir cafeUrl:(NSString *)cafeUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _create:dataDir apiUrl:apiUrl logLevel:logLevel logFiles:logFiles error:&error];
+  [self _create:dataDir cafeUrl:cafeUrl logLevel:logLevel logFiles:logFiles error:&error];
   if (!error) {
     resolve(nil);
   } else {
@@ -93,9 +93,9 @@ RCT_REMAP_METHOD(stop, stopWithResolver:(RCTPromiseResolveBlock)resolve rejecter
   }
 }
 
-RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)username password:(NSString *)password email:(NSString*)email referral:(NSString*)referral resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)email username:(NSString*)username password:(NSString *)password referral:(NSString*)referral resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _signUpWithEmail:username password:password email:email referral:referral error:&error];
+  [self _signUpWithEmail:email username:username password:password referral:referral error:&error];
   if (!error) {
     resolve(nil);
   } else {
@@ -151,9 +151,9 @@ RCT_EXPORT_METHOD(getUserName:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
   }
 }
 
-RCT_EXPORT_METHOD(getAccessToken:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getTokens:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *token = [self _getAccessToken:&error];
+  NSString *token = [self _getTokens:&error];
   if (!error) {
     resolve(token);
   } else {
@@ -336,11 +336,11 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 #pragma mark - Private methods
 
-- (void)_create:(NSString *)dataDir apiUrl:(NSString *)apiUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
+- (void)_create:(NSString *)dataDir cafeUrl:(NSString *)cafeUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
   if (!self.node) {
     MobileNodeConfig *config = [[MobileNodeConfig alloc] init];
     [config setRepoPath:dataDir];
-    [config setCentralApiURL:apiUrl];
+    [config setCafeAddr:cafeUrl];
     [config setLogLevel:logLevel];
     [config setLogFiles:logFiles];
     self.node = MobileNewNode(config, [[Messenger alloc] init], error);
@@ -359,8 +359,8 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   [self.node stop:error];
 }
 
-- (void)_signUpWithEmail:(NSString *)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error {
-  [self.node signUpWithEmail:username password:password email:email referral:referral error:error];
+- (void)_signUpWithEmail:(NSString *)email username:(NSString*)username password:(NSString*)password referral:(NSString*)referral error:(NSError**)error {
+  [self.node signUpWithEmail:email username:username password:password referral:referral error:error];
 }
 
 - (void)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
@@ -379,8 +379,8 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   return [self.node getUsername:error];
 }
 
-- (NSString *)_getAccessToken:(NSError**)error {
-  return [self.node getAccessToken:error];
+- (NSString *)_getTokens:(NSError**)error {
+  return [self.node getTokens:error];
 }
 
 - (NSString *)_getId:(NSError**)error {
