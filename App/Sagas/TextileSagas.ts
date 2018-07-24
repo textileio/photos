@@ -34,7 +34,7 @@ import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
-import QueriedPhotosActions, { quieriedPhotosSelectors } from '../Redux/QueriedPhotosRedux'
+import QueriedPhotosActions, { quieriedPhotosSelectors, QueriedPhotosMap } from '../Redux/QueriedPhotosRedux'
 import DeepLink from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
@@ -228,18 +228,74 @@ export function * pendingInvitesTask () {
   }
 }
 
-export function * newPhotosTask() {
+export function * photosTask() {
   const queriredPhotosInitialized: boolean = yield select(quieriedPhotosSelectors.initialized)
   if (!queriredPhotosInitialized) {
+    yield put(QueriedPhotosActions.updateQuerying(true))
     const uris: string[] = yield call(CameraRoll.getPhotos)
+    yield put(QueriedPhotosActions.updateQuerying(false))
     yield put(QueriedPhotosActions.initialzePhotos(uris))
     return
   }
 
-  
+  yield put(QueriedPhotosActions.updateQuerying(true))
+  const uris: string[] = yield call(CameraRoll.getPhotos, 250)
+  yield put(QueriedPhotosActions.updateQuerying(false))
+
+  const previouslyQueriedPhotos: QueriedPhotosMap = yield select(quieriedPhotosSelectors.queriedPhotos)
+
+  const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
+  put(QueriedPhotosActions.trackPhotos(urisToProcess))
+
+  var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
+  if (!defaultThread) {
+    yield put(ThreadsActions.addThreadRequest('default'))
+    yield take(getType(TextileActions.addThreadSuccess))
+    yield put(ThreadsActions.refreshThreadsRequest())
+  }
+  defaultThread = yield call(getDefaultThread)
+  if (!defaultThread) {
+    return
+  }
+
+  let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string}[] = []
+
+  for (const uri of urisToProcess) {
+    let photoPath = ''
+    try {
+      photoPath = yield call(CameraRoll.getPhotoPath, uri)
+      const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+      const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+      // TODO: dispatch photo added action
+      addedPhotosData.push({ uri, addResult, blockId })
+    } catch (error) {
+      yield put(QueriedPhotosActions.untrackPhoto(uri))
+      const exists: boolean = yield call(RNFS.exists, photoPath)
+      if (exists) {
+        yield call(RNFS.unlink, photoPath)
+      }
+    }
+  }
+
+  for (const addedPhotoData of addedPhotosData) {
+    try {
+      yield uploadFile(
+        addedPhotoData.addResult.id,
+        addedPhotoData.addResult.pin_request.boundary,
+        addedPhotoData.addResult.pin_request.payload_path
+      )
+    } catch (error) {
+      // TODO: dispatch image processing error
+    }
+  }
+
+  const appState = yield select(TextileNodeSelectors.appState)
+  if (appState.match(/background/)) {
+    yield * stopNode()
+  }
 }
 
-export function * photosTask () {
+export function * oldPhotosTask () {
   try {
     var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {
