@@ -1,4 +1,4 @@
-import actions, { reducer } from '../ImagesRedux'
+import actions, { reducer } from '../ProcessingImagesRedux'
 
 const initialState = reducer(undefined, {} as any)
 
