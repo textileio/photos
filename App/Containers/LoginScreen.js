@@ -33,7 +33,8 @@ const options = {
     },
     password: {
       autoCapitalize: 'none',
-      secureTextEntry: true
+      secureTextEntry: true,
+      defaultValue: ''
     }
   }
 }

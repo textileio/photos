@@ -81,7 +81,11 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
     case getType(actions.updateFormType):
       return { ...state, formType: action.payload.formType }
     case getType(actions.updateFormValue):
-      return { ...state, formValue: action.payload.formValue }
+      const values = action.payload.formValue
+      const error = values.password && values.password.length > 27 ? 'React Native bug limits passwords to less than 28 characters' : undefined
+      const password = error ? '' : values.password
+      const formValue = {...values, password}
+      return { ...state, formValue, error }
     case getType(actions.signUpRequest):
     case getType(actions.logInRequest):
     case getType(actions.recoverPasswordRequest):
