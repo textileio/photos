@@ -10,16 +10,6 @@ import styles from './styles'
 import AuthActions from '../../../Redux/AuthRedux'
 
 class SignUp extends Component {
-    constructor (props) {
-      super(props)
-      this.state = {
-        email: '',
-        name: '',
-        username: '',
-        password: ''
-      }
-    }
-
     goToSignIn = () => {
       this.props.navigation.navigate('SignIn')
     }
@@ -72,7 +62,7 @@ class SignUp extends Component {
             </View>
           </View>
           <Footer>
-            <Text style={styles.footerText}>Already have an account? </Text>
+            <Text style={styles.footerText}>Already have an account?</Text>
             <TouchableOpacity onPress={this.goToSignIn}>
               <LinkText style={[styles.footerLink, styles.linkColor]}>Sign In</LinkText>
             </TouchableOpacity>

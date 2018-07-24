@@ -10,11 +10,6 @@ import commonStyles from '../commonStyles'
 import AuthActions from '../../../Redux/AuthRedux'
 
 class SignIn extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {username: '', password: ''}
-  }
-
   backToSignUp = () => {
     this.props.navigation.goBack()
   }
