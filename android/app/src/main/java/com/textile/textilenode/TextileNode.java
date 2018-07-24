@@ -53,12 +53,12 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void create (String dataDir, String apiUrl, String logLevel, Boolean logFiles, Promise promise) {
+    public void create (String dataDir, String cafeUrl, String logLevel, Boolean logFiles, Promise promise) {
         if (node == null) {
             try {
                 NodeConfig config = new NodeConfig();
                 config.setRepoPath(dataDir);
-                config.setCentralApiURL(apiUrl);
+                config.setCafeAddr(cafeUrl);
                 config.setLogLevel(logLevel);
                 config.setLogFiles(logFiles);
                 node = Mobile.newNode(config, new Messenger() {
@@ -120,9 +120,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void signUpWithEmail (String username, String password, String email, String referral, Promise promise) {
+    public void signUpWithEmail (String email, String username, String password, String referral, Promise promise) {
         try {
-            node.signUpWithEmail(username, password, email, referral);
+            node.signUpWithEmail(email, username, password, referral);
             promise.resolve(null);
         }
         catch (Exception e) {
@@ -183,12 +183,12 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getAccessToken (Promise promise) {
+    public void getTokens (Promise promise) {
         try {
-            promise.resolve(node.getAccessToken());
+            promise.resolve(node.getTokens());
         }
         catch (Exception e) {
-            promise.reject("GET ACCESS TOKEN ERROR", e);
+            promise.reject("GET TOKENS ERROR", e);
         }
     }
 
