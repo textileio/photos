@@ -5,7 +5,6 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import * as TextileTypes from './App/Models/TextileTypes'
-import { CafeTokens } from './App/Redux/AuthRedux'
 
 const { TextileNode, Events } = NativeModules
 
