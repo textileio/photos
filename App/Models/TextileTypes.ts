@@ -74,8 +74,3 @@ export interface ImageData {
   url: string
   metadata: PhotoMetadata
 }
-
-export type CafeTokens = {
-  readonly access: string
-  readonly refresh: string
-}
