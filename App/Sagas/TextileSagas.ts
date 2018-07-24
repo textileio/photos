@@ -28,34 +28,33 @@ import AuthActions from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
-import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
-import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
 import DeepLink from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
-  const {referralCode, username, email, password} = action.payload.data
+  const {referralCode, username, email, password} = action.payload
   try {
     yield call(TextileNode.signUpWithEmail, username, password, email, referralCode)
     const token = yield call(TextileNode.getAccessToken)
-    // TODO: Put username into textile-go for addition to metadata model
     yield put(AuthActions.signUpSuccess(token))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    yield put(PreferencesActions.onboardedSuccess())
+    yield call(NavigationService.navigate, 'TextileManager')
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
 }
 
 export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
-  const {username, password} = action.payload.data
+  const {username, password} = action.payload
   try {
     yield call(TextileNode.signIn, username, password)
     const token = yield call(TextileNode.getAccessToken)
     yield put(AuthActions.logInSuccess(token))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    yield put(PreferencesActions.onboardedSuccess())
+    yield call(NavigationService.navigate, 'TextileManager')
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }

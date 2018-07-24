@@ -8166,9 +8166,9 @@ react-native-easy-toast@^1.1.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-elements@^1.0.0-beta4:
-  version "1.0.0-beta4"
-  resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.0.0-beta4.tgz#53329ac450cbb6ac2dade45257ffa9debe26e1ad"
+react-native-elements@1.0.0-beta5:
+  version "1.0.0-beta5"
+  resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.0.0-beta5.tgz#5445976c22bf5bc0a92b91ccb38dafacac966d2a"
   dependencies:
     lodash.isempty "^4.4.0"
     lodash.times "^4.3.2"
