@@ -5,6 +5,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import * as TextileTypes from './App/Models/TextileTypes'
+import { CafeTokens } from './App/Redux/AuthRedux'
 
 const { TextileNode, Events } = NativeModules
 
@@ -50,9 +51,9 @@ export default {
     return await TextileNode.getUsername()
   },
 
-  getTokens: async function (): Promise<TextileTypes.CafeTokens> {
+  getTokens: async function (): Promise<CafeTokens> {
     const jsonString = await TextileNode.getTokens()
-    const tokens = JSON.parse(jsonString) as TextileTypes.CafeTokens
+    const tokens = JSON.parse(jsonString) as CafeTokens
     return tokens
   },
 
