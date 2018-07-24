@@ -4,6 +4,9 @@ const actions = {
   initialzePhotos: createAction('INITIALIZE_PHOTOS', resolve => {
     return (ids: string[]) => resolve({ ids })
   }),
+  updateQuerying:  createAction('UPDATE_QUERYING', resolve => {
+    return (querying: boolean) => resolve({ querying })
+  }),
   trackPhoto: createAction('TRACK_PHOTO', resolve => {
     return (id: string) => resolve({ id })
   }),
@@ -26,16 +29,19 @@ export type QueriedPhotosMap = {
 
 export type QueriedPhotosState = {
   readonly initialized: boolean
+  readonly querying: boolean
   readonly queriedPhotos: QueriedPhotosMap
 }
 
 export const initialState: QueriedPhotosState = {
   initialized: false,
+  querying: false,
   queriedPhotos: {}
 }
 
 export const quieriedPhotosSelectors = {
-  initialized: state => state.queriedPhotos.initialized
+  initialized: state => state.queriedPhotos.initialized as boolean,
+  queriedPhotos: state => state.queriedPhotos.queriedPhotos as QueriedPhotosMap
 }
 
 export function reducer (state: QueriedPhotosState = initialState, action: QueriedPhotosAction): QueriedPhotosState {
@@ -50,6 +56,9 @@ export function reducer (state: QueriedPhotosState = initialState, action: Queri
       )
       return { ...state, initialized: true, queriedPhotos }
     }
+    case getType(actions.updateQuerying):
+      const { querying } = action.payload
+      return { ...state, querying }
     case getType(actions.trackPhoto):
       return { ...state, queriedPhotos: { ...state.queriedPhotos, [action.payload.id]: true } }
     case getType(actions.trackPhotos): {

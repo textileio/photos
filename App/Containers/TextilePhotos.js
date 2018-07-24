@@ -91,7 +91,7 @@ class TextilePhotos extends React.PureComponent {
         />
         {this.props.verboseUi &&
           <View style={style.bottomOverlay} >
-            <Text style={style.overlayText}>{this.props.nodeStatus}</Text>
+            <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingPhotosStatus}</Text>
           </View>
         }
       </View>
@@ -130,6 +130,8 @@ const mapStateToProps = (state, ownProps) => {
     ? 'Error - ' + state.ipfs.nodeState.error.message
     : state.ipfs.nodeState.state
 
+  const queryingPhotosStatus = state.queriedPhotos.querying ? 'querying' : 'idle'
+
   const placeholderText = state.ipfs.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
     : (threadName === 'default'
@@ -143,6 +145,7 @@ const mapStateToProps = (state, ownProps) => {
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
+    queryingPhotosStatus,
     verboseUi: state.preferences.verboseUi
   }
 }
