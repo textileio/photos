@@ -39,10 +39,10 @@ import DeepLink from '../Services/DeepLink'
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload.data
   try {
-    yield call(TextileNode.signUpWithEmail, username, password, email, referralCode)
-    const token = yield call(TextileNode.getAccessToken)
+    yield call(TextileNode.signUpWithEmail, email, username, password, referralCode)
+    const tokens = yield call(TextileNode.getTokens)
     // TODO: Put username into textile-go for addition to metadata model
-    yield put(AuthActions.signUpSuccess(token))
+    yield put(AuthActions.signUpSuccess(tokens))
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
@@ -53,8 +53,8 @@ export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
   const {username, password} = action.payload.data
   try {
     yield call(TextileNode.signIn, username, password)
-    const token = yield call(TextileNode.getAccessToken)
-    yield put(AuthActions.logInSuccess(token))
+    const tokens = yield call(TextileNode.getTokens)
+    yield put(AuthActions.logInSuccess(tokens))
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
@@ -130,7 +130,7 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
   try {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
-    yield call(TextileNode.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
+    yield call(TextileNode.create, path, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
     yield put(TextileNodeActions.createNodeSuccess())
     try {
       const mnemonic: string = yield call(TextileNode.mnemonic)
@@ -138,7 +138,7 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
     } catch(error) {
       // This only succeeds when the node is first created so this error is expected
     }
-    
+
     yield put(TextileNodeActions.startNodeRequest())
   } catch (error) {
     yield put(TextileNodeActions.createNodeFailure(error))
