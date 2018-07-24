@@ -13,7 +13,7 @@ export const reducers = combineReducers({
   threads: require('./ThreadsRedux').reducer,
   devices: require('./DevicesRedux').reducer,
   cameraRoll: require('./CameraRollRedux').reducer,
-  images: require('./ImagesRedux').reducer,
+  uploadingImages: require('./UploadingImagesRedux').reducer,
   ui: require('./UIRedux').reducer
 })
 
