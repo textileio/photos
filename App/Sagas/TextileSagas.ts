@@ -24,7 +24,7 @@ import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
-import AuthActions from '../Redux/AuthRedux'
+import {AuthActions, AuthSelectors, CafeTokens} from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
@@ -290,7 +290,7 @@ async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
       let {photo, addResult} = photoData
       try {
         yield put(TextileActions.imageAdded(photo.uri, 'default', addResult.id, addResult.pin_request.payload_path))
-        yield uploadFile(addResult.id, addResult.pin_request.boundary, addResult.pin_request.payload_path)
+        yield uploadFile(addResult.id, addResult.pin_request.payload_path)
       } catch (error) {
         yield put(TextileActions.photoProcessingError(photo.uri, error))
       } finally {
@@ -332,21 +332,25 @@ export function * retryUploadAfterError ({data}) {
   for (const item of items) {
     if (item.remainingUploadAttempts > 0) {
       yield put(TextileActions.imageUploadRetried(item.hash))
-      yield uploadFile(item.hash, item.hash, item.payloadPath)
+      yield uploadFile(item.hash, item.payloadPath)
     }
   }
 }
 
-function * uploadFile (id: string, boundary: string, payloadPath: string) {
+function * uploadFile (id: string, payloadPath: string) {
+  const tokens = yield select(AuthSelectors.tokens)
   yield call(
     Upload.startUpload,
     {
       customUploadId: id,
       path: payloadPath,
-      url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
+      url: Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
       method: 'POST',
-      type: 'raw-multipart',
-      boundary: boundary
+      type: 'raw',
+      headers: {
+        'Authorization': 'Bearer ' + tokens.access,
+        'Content-Type': 'application/gzip'
+      },
     }
   )
 }
