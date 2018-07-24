@@ -108,12 +108,12 @@
 - (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
 - (NSString*)addThreadInvite:(NSString*)threadId inviteePk:(NSString*)inviteePk error:(NSError**)error;
 - (NSString*)devices:(NSError**)error;
-- (NSString*)getAccessToken:(NSError**)error;
 - (NSString*)getId:(NSError**)error;
 - (NSString*)getPhotoData:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotoMetadata:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit threadId:(NSString*)threadId error:(NSError**)error;
 - (NSString*)getThumbData:(NSString*)id_ error:(NSError**)error;
+- (NSString*)getTokens:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
 - (BOOL)isSignedIn;
 - (BOOL)refreshMessages:(NSError**)error;
@@ -122,7 +122,7 @@
 - (NSString*)sharePhotoToThread:(NSString*)dataId threadId:(NSString*)threadId caption:(NSString*)caption error:(NSError**)error;
 - (BOOL)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
 - (BOOL)signOut:(NSError**)error;
-- (BOOL)signUpWithEmail:(NSString*)username password:(NSString*)password email:(NSString*)email referral:(NSString*)referral error:(NSError**)error;
+- (BOOL)signUpWithEmail:(NSString*)email username:(NSString*)username password:(NSString*)password referral:(NSString*)referral error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
 - (NSString*)threads:(NSError**)error;
@@ -136,8 +136,8 @@
 - (instancetype)init;
 - (NSString*)repoPath;
 - (void)setRepoPath:(NSString*)v;
-- (NSString*)centralApiURL;
-- (void)setCentralApiURL:(NSString*)v;
+- (NSString*)cafeAddr;
+- (void)setCafeAddr:(NSString*)v;
 - (NSString*)logLevel;
 - (void)setLogLevel:(NSString*)v;
 - (BOOL)logFiles;

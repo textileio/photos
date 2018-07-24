@@ -24,13 +24,12 @@ import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
 import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
-import AuthActions from '../Redux/AuthRedux'
+import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
-import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
@@ -39,10 +38,10 @@ import DeepLink from '../Services/DeepLink'
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload.data
   try {
-    yield call(TextileNode.signUpWithEmail, username, password, email, referralCode)
-    const token = yield call(TextileNode.getAccessToken)
+    yield call(TextileNode.signUpWithEmail, email, username, password, referralCode)
+    const tokens = yield call(TextileNode.getTokens)
     // TODO: Put username into textile-go for addition to metadata model
-    yield put(AuthActions.signUpSuccess(token))
+    yield put(AuthActions.signUpSuccess(tokens))
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
@@ -53,8 +52,8 @@ export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
   const {username, password} = action.payload.data
   try {
     yield call(TextileNode.signIn, username, password)
-    const token = yield call(TextileNode.getAccessToken)
-    yield put(AuthActions.logInSuccess(token))
+    const tokens = yield call(TextileNode.getTokens)
+    yield put(AuthActions.logInSuccess(tokens))
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
@@ -130,7 +129,7 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
   try {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
-    yield call(TextileNode.create, path, Config.TEXTILE_API_URI, logLevel, logFiles)
+    yield call(TextileNode.create, path, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
     yield put(TextileNodeActions.createNodeSuccess())
     try {
       const mnemonic: string = yield call(TextileNode.mnemonic)
@@ -138,7 +137,7 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
     } catch(error) {
       // This only succeeds when the node is first created so this error is expected
     }
-    
+
     yield put(TextileNodeActions.startNodeRequest())
   } catch (error) {
     yield put(TextileNodeActions.createNodeFailure(error))
@@ -290,7 +289,7 @@ async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
       let {photo, addResult} = photoData
       try {
         yield put(TextileActions.imageAdded(photo.uri, 'default', addResult.id, addResult.pin_request.payload_path))
-        yield uploadFile(addResult.id, addResult.pin_request.boundary, addResult.pin_request.payload_path)
+        yield uploadFile(addResult.id, addResult.pin_request.payload_path)
       } catch (error) {
         yield put(TextileActions.photoProcessingError(photo.uri, error))
       } finally {
@@ -332,21 +331,25 @@ export function * retryUploadAfterError ({data}) {
   for (const item of items) {
     if (item.remainingUploadAttempts > 0) {
       yield put(TextileActions.imageUploadRetried(item.hash))
-      yield uploadFile(item.hash, item.hash, item.payloadPath)
+      yield uploadFile(item.hash, item.payloadPath)
     }
   }
 }
 
-function * uploadFile (id: string, boundary: string, payloadPath: string) {
+function * uploadFile (id: string, payloadPath: string) {
+  const tokens = yield select(AuthSelectors.tokens)
   yield call(
     Upload.startUpload,
     {
       customUploadId: id,
       path: payloadPath,
-      url: 'https://ipfs.textile.io/api/v0/add?wrap-with-directory=true',
+      url: Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
       method: 'POST',
-      type: 'raw-multipart',
-      boundary: boundary
+      type: 'raw',
+      headers: {
+        'Authorization': 'Bearer ' + tokens.access,
+        'Content-Type': 'application/gzip'
+      },
     }
   )
 }
