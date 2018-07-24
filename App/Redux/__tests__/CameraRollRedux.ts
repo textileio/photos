@@ -1,4 +1,4 @@
-import actions, { reducer } from '../QueriedPhotosRedux'
+import actions, { reducer } from '../CameraRollRedux'
 
 const initialState = reducer(undefined, {} as any)
 const ids = ['id1', 'id2']

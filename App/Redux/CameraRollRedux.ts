@@ -21,30 +21,30 @@ const actions = {
   })
 }
 
-export type QueriedPhotosAction = ActionType<typeof actions>
+export type CameraRollAction = ActionType<typeof actions>
 
 export type QueriedPhotosMap = {
   readonly [key: string]: true
 }
 
-export type QueriedPhotosState = {
+export type CameraRollState = {
   readonly initialized: boolean
   readonly querying: boolean
   readonly queriedPhotos: QueriedPhotosMap
 }
 
-export const initialState: QueriedPhotosState = {
+export const initialState: CameraRollState = {
   initialized: false,
   querying: false,
   queriedPhotos: {}
 }
 
-export const quieriedPhotosSelectors = {
-  initialized: state => state.queriedPhotos.initialized as boolean,
-  queriedPhotos: state => state.queriedPhotos.queriedPhotos as QueriedPhotosMap
+export const cameraRollSelectors = {
+  initialized: state => state.cameraRoll.initialized as boolean,
+  queriedPhotos: state => state.cameraRoll.queriedPhotos as QueriedPhotosMap
 }
 
-export function reducer (state: QueriedPhotosState = initialState, action: QueriedPhotosAction): QueriedPhotosState {
+export function reducer (state: CameraRollState = initialState, action: CameraRollAction): CameraRollState {
   switch (action.type) {
     case getType(actions.initialzePhotos): {
       const queriedPhotos = action.payload.ids.reduce(
