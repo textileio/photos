@@ -33,6 +33,8 @@ import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
+import * as CameraRoll from '../Services/CameraRoll'
+import QueriedPhotosActions, { quieriedPhotosSelectors } from '../Redux/QueriedPhotosRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload.data
@@ -221,6 +223,17 @@ export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequ
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
+}
+
+export function * newPhotosTask() {
+  const queriredPhotosInitialized: boolean = yield select(quieriedPhotosSelectors.initialized)
+  if (!queriredPhotosInitialized) {
+    const uris: string[] = yield call(CameraRoll.getPhotos)
+    yield put(QueriedPhotosActions.initialzePhotos(uris))
+    return
+  }
+
+  
 }
 
 export function * photosTask () {
