@@ -26,8 +26,8 @@ export default {
     return await TextileNode.stop()
   },
 
-  signUpWithEmail: async function (username: string, password: string, email: string, referral: string): Promise<void> {
-    return await TextileNode.signUpWithEmail(username, password, email, referral)
+  signUpWithEmail: async function (email: string, username: string, password: string, referral: string): Promise<void> {
+    return await TextileNode.signUpWithEmail(email, username, password, referral)
   },
 
   signIn: async function (username: string, password: string): Promise<void> {
@@ -50,8 +50,10 @@ export default {
     return await TextileNode.getUsername()
   },
 
-  getAccessToken: async function (): Promise<string> {
-    return await TextileNode.getAccessToken()
+  getTokens: async function (): Promise<CafeTokens> {
+    const jsonString = await TextileNode.getTokens()
+    const tokens = JSON.parse(jsonString) as CafeTokens
+    return tokens
   },
 
   addThread: async function (name: string, mnemonic?: string): Promise<TextileTypes.Thread> {

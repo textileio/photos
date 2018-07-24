@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import t from 'tcomb-form-native'
+import { CafeTokens } from '../Models/TextileTypes'
 
 const actions = {
   updateFormType: createAction('UPDATE_FORM_TYPE', resolve => {
@@ -18,10 +19,10 @@ const actions = {
     return (data: any) => resolve({ data })
   }),
   signUpSuccess: createAction('SIGN_UP_SUCCESS', resolve => {
-    return (token: string) => resolve({ token })
+    return (tokens: CafeTokens) => resolve({ tokens })
   }),
   logInSuccess: createAction('LOG_IN_SUCCESS', resolve => {
-    return (token: string) => resolve({ token })
+    return (tokens: CafeTokens) => resolve({ tokens })
   }),
   recoverPasswordSuccess: createAction('RECOVER_PASSWORD_SUCCESS', resolve => {
     return () => resolve()
@@ -66,7 +67,7 @@ export const RecoverPassword = t.struct({
 export type AuthState = {
   readonly processing: boolean
   readonly error?: string
-  readonly token?: string
+  readonly tokens?: CafeTokens
   readonly formType: any
   readonly formValue?: any
 }
@@ -88,7 +89,7 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
       return { ...state, processing: true }
     case getType(actions.signUpSuccess):
     case getType(actions.logInSuccess):
-      return { ...state, processing: false, token: action.payload.token }
+      return { ...state, processing: false, tokens: action.payload.tokens }
     case getType(actions.recoverPasswordSuccess):
       return { ...state, processing: false }
     case getType(actions.signUpFailure):
@@ -100,6 +101,10 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
     default:
       return state
   }
+}
+
+export const AuthSelectors = {
+  tokens: (state: any) => state.auth.tokens
 }
 
 export default actions
