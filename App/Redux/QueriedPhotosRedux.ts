@@ -34,6 +34,10 @@ export const initialState: QueriedPhotosState = {
   queriedPhotos: {}
 }
 
+export const quieriedPhotosSelectors = {
+  initialized: state => state.queriedPhotos.initialized
+}
+
 export function reducer (state: QueriedPhotosState = initialState, action: QueriedPhotosAction): QueriedPhotosState {
   switch (action.type) {
     case getType(actions.initialzePhotos): {
