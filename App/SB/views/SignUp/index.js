@@ -62,7 +62,7 @@ class SignUp extends Component {
             </View>
           </View>
           <Footer>
-            <Text style={styles.footerText}>Already have an account?</Text>
+            <Text style={styles.footerText}>Already have an account? </Text>
             <TouchableOpacity onPress={this.goToSignIn}>
               <LinkText style={[styles.footerLink, styles.linkColor]}>Sign In</LinkText>
             </TouchableOpacity>
