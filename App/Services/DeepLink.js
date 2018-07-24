@@ -19,7 +19,7 @@ function getParams (hash) {
   return queryString
 }
 
-function getData(href) {
+function getData (href) {
   var regex = new RegExp([
     '^(https?:)//',
     '(([^:/?#]*)(?::([0-9]+))?)',
@@ -40,7 +40,31 @@ function getData(href) {
   }
 }
 
+function createInviteLink (invite, threadName) {
+  let hash = []
+  hash.push('id=' + encodeURIComponent(invite.id))
+  hash.push('key=' + encodeURIComponent(invite.key))
+  hash.push('inviter=' + encodeURIComponent(invite.inviter))
+  hash.push('name=' + encodeURIComponent(threadName))
+  return 'https://www.textile.photos/invites/new#' + hash.join('&')
+}
+
+function route (link, navigation) {
+  if (link) {
+    const data = getData(link)
+    if (data.path === '/invites/device' && data.hash !== '') {
+      // start pairing the new device
+      navigation.navigate('PairingView', {request: getParams(data.hash)})
+    } else if (data.path === '/invites/new' && data.hash !== '') {
+      // invite the user to the thread
+      navigation.navigate('ThreadInvite', {link, request: getParams(data.hash)})
+    }
+  }
+}
+
 export default {
   getData,
-  getParams
+  getParams,
+  createInviteLink,
+  route
 }

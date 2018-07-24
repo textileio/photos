@@ -32,17 +32,8 @@ class TextileManager extends React.PureComponent {
     this._handleOpenURL(event.url)
   }
 
-  _handleOpenURL (url) {
-    if (url) {
-      const data = DeepLink.getData(url)
-      if (data.path === '/invites/device' && data.hash !== '') {
-        // start pairing the new device
-        this.props.navigation.navigate('PairingView', {request: DeepLink.getParams(data.hash)})
-      } else if (data.path === '/invites/new' && data.hash !== '') {
-        // invite the user to the thread
-        this.props.navigation.navigate('ThreadInvite', {link: url, request: DeepLink.getParams(data.hash)})
-      }
-    }
+  _handleOpenURL (link) {
+    DeepLink.route(link, this.props.navigation)
   }
 
   componentWillUnmount () {

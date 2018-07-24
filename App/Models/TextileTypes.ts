@@ -3,49 +3,74 @@ export interface Event {
   payload: string
 }
 
-export interface ThreadItem {
+export interface Thread {
   id: string
   name: string
   peers: number
 }
 
 export interface Threads  {
-  items: ThreadItem[]
+  items: Thread[]
 }
 
-export interface DeviceItem {
+export interface Device {
   id: string
   name: string
 }
 
 export interface Devices {
-  items: DeviceItem[]
+  items: Device[]
 }
 
-export enum BlockType {
-  InviteBlock = 1,
-	PhotoBlock,
-	CommentBlock,
-	LikeBlock
+export interface Photo {
+  id: string
+  date: string
+  author_id: string
+  catption: string
 }
 
-export interface BlockItem {
-	id: string
-	target: string
-	parents: string[]
-	type: BlockType
-	date: Date
+export interface Photos {
+  items: Photo[]
 }
 
-export interface Blocks {
-  items: BlockItem[]
+export interface ExternalInvite {
+  id: string,
+  key: string,
+  inviter: string
+}
+
+export interface AddResult {
+  id: string
+  key: string
+  pin_request: PinRequest
 }
 
 export interface PinRequest {
-  Boundary: string
-  PayloadPath: string
+  boundary: string
+  payload_path: string
 }
 
-export interface PinRequests {
-  items: PinRequest[]
+export interface Metadata {
+  username?: string
+  created?: string
+  added?: string
+}
+
+export interface FileMetadata extends Metadata {
+  name?: string
+  extension?: string
+}
+
+export interface PhotoMetadata extends FileMetadata {
+  format: string
+  format_thumb: string
+  width: number
+  height: number
+  latitude?: number
+  longitude?: number
+}
+
+export interface ImageData {
+  url: string
+  metadata: PhotoMetadata
 }

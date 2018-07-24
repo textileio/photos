@@ -3,7 +3,7 @@ import * as TextileTypes from '../Models/TextileTypes'
 
 const actions = {
   addDeviceRequest: createAction('ADD_DEVICE_REQUEST', resolve => {
-    return (deviceItem: TextileTypes.DeviceItem) => resolve({ deviceItem })
+    return (name: string, pubKey: string) => resolve({ name, pubKey })
   }),
   addDeviceSuccess: createAction('ADD_DEVICE_SUCCESS', resolve => {
     return (deviceId: string) => resolve({ deviceId })
@@ -36,7 +36,7 @@ export type DevicesAction = ActionType<typeof actions>
 export type Device = {
   readonly state: 'adding' | 'added' | 'removing'
   readonly error?: Error
-  readonly deviceItem: TextileTypes.DeviceItem
+  readonly deviceItem: TextileTypes.Device
 }
 
 export type DevicesState = {
@@ -53,7 +53,8 @@ export const initialState: DevicesState = {
 export function reducer (state: DevicesState = initialState, action: DevicesAction): DevicesState {
   switch (action.type) {
     case getType(actions.addDeviceRequest): {
-      const { deviceItem } = action.payload
+      const { name, pubKey } = action.payload
+      const deviceItem: TextileTypes.Device = {name, id: pubKey}
       const devices = state.devices.concat([{ state: 'adding', deviceItem }])
       return { ...state, devices }
     }

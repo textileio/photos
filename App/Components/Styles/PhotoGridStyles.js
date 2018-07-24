@@ -74,12 +74,8 @@ export default StyleSheet.create({
   itemOverlay: {
     // opacity: 0.5,
     // backgroundColor: '#000000',
-    flexDirection: 'row',
     alignSelf: 'flex-end',
     margin: 5
-  },
-  itemOverlayItem: {
-    margin: 2
   },
   itemImage: {
     width: ITEM_WIDTH,
@@ -137,7 +133,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   noPhotos: {
-    fontFamily: 'Biotif-Regular',
+    fontFamily: 'BentonSans',
     padding: 20,
     alignSelf: 'center',
     color: Colors.steel,

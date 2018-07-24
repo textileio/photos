@@ -60,10 +60,19 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       NSError *error;
       UIImage *image;
-      NSString *base64String = [_bridge.textileNode _getFileData:self.imageId withPath:self.path error:&error];
-      if (base64String) {
-        NSString *finalBase64String = [@"data:image/jpeg;base64," stringByAppendingString:base64String];
-        NSURL *url = [NSURL URLWithString:finalBase64String];
+      NSString *jsonString;
+      if ([self.path isEqualToString:@"thumb"]) {
+        jsonString = [_bridge.textileNode _getThumbData:self.imageId error:&error];
+      } else {
+        jsonString = [_bridge.textileNode _getPhotoData:self.imageId error:&error];
+      }
+      if (jsonString) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error;
+        id json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+        NSDictionary *dict = (NSDictionary *)json;
+        NSString *urlString = [dict objectForKey:@"url"];
+        NSURL *url = [NSURL URLWithString:urlString];
         NSData *imageData = [NSData dataWithContentsOfURL:url];
         image = [UIImage imageWithData:imageData];
       }

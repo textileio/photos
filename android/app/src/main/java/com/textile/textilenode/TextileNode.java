@@ -83,6 +83,21 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void mnemonic (Promise promise) {
+        try {
+            String mnemonic = node.getMnemonic();
+            if (mnemonic.length() > 0) {
+                promise.resolve(mnemonic);
+            } else {
+                promise.reject("MNEMONIC ERROR", "Mnemonic unavailable.");
+            }
+        }
+        catch (Exception e) {
+            promise.reject("START ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void start (Promise promise) {
         try {
             node.start();
@@ -178,16 +193,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void threads (Promise promise) {
-        try {
-            promise.resolve(node.threads());
-        }
-        catch (Exception e) {
-            promise.reject("GET THREADS ERROR", e);
-        }
-    }
-
-    @ReactMethod
     public void addThread (String name, String mnemonic, Promise promise) {
         try {
             promise.resolve(node.addThread(name, mnemonic));
@@ -198,10 +203,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void removeThread (String name, Promise promise) {
+    public void removeThread (String threadId, Promise promise) {
         try {
-            node.removeThread(name);
-            promise.resolve(null);
+            promise.resolve(node.removeThread(threadId));
         }
         catch (Exception e) {
             promise.reject("REMOVE THREAD ERROR", e);
@@ -209,12 +213,118 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void devices (Promise promise) {
+    public void threads (Promise promise) {
         try {
-            promise.resolve(node.devices());
+            promise.resolve(node.threads());
         }
         catch (Exception e) {
-            promise.reject("GET DEVICES ERROR", e);
+            promise.reject("GET THREADS ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addThreadInvite (String threadId, String inviteeKey, Promise promise) {
+        try {
+            promise.resolve(node.addThreadInvite(threadId, inviteeKey));
+        }
+        catch (Exception e) {
+            promise.reject("ADD EXTERNAL INVITE ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addExternalThreadInvite (String threadId, Promise promise) {
+        try {
+            promise.resolve(node.addExternalThreadInvite(threadId));
+        }
+        catch (Exception e) {
+            promise.reject("ADD EXTERNAL INVITE ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void acceptExternalThreadInvite (String threadId, String key, Promise promise) {
+        try {
+            promise.resolve(node.acceptExternalThreadInvite(threadId, key));
+        }
+        catch (Exception e) {
+            promise.reject("ACCEPT EXTERNAL INVITE ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addPhoto (String path, Promise promise) {
+        try {
+            promise.resolve(node.addPhoto(path));
+        }
+        catch (Exception e) {
+            promise.reject("ADD PHOTO ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addPhotoToThread (String photoId, String key, String threadId, String caption, Promise promise) {
+        try {
+            if (caption == null) {
+                caption = "";
+            }
+            promise.resolve(node.addPhotoToThread(photoId, key, threadId, caption));
+        }
+        catch (Exception e) {
+            promise.reject("SHARE PHOTO ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void sharePhotoToThread (String photoId, String threadId, String caption, Promise promise) {
+        try {
+            if (caption == null) {
+                caption = "";
+            }
+            promise.resolve(node.sharePhotoToThread(photoId, threadId, caption));
+        }
+        catch (Exception e) {
+            promise.reject("SHARE PHOTO ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getPhotos (String offset, Integer limit, String threadId, Promise promise) {
+        try {
+            promise.resolve(node.getPhotos(offset, limit, threadId));
+        }
+        catch (Exception e) {
+            promise.reject("GET PHOTO BLOCKS ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getPhotoData (String photoId, Promise promise) {
+        try {
+            promise.resolve(node.getPhotoData(photoId));
+        }
+        catch (Exception e) {
+            promise.reject("GET BLOCK DATA ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getThumbData (String photoId, Promise promise) {
+        try {
+            promise.resolve(node.getThumbData(photoId));
+        }
+        catch (Exception e) {
+            promise.reject("GET BLOCK DATA ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getPhotoMetadata (String photoId, Promise promise) {
+        try {
+            promise.resolve(node.getPhotoMetadata(photoId));
+        }
+        catch (Exception e) {
+            promise.reject("GET BLOCK DATA ERROR", e);
         }
     }
 
@@ -230,9 +340,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void removeDevice (String name, Promise promise) {
+    public void removeDevice (String deviceId, Promise promise) {
         try {
-            node.removeDevice(name);
+            node.removeDevice(deviceId);
             promise.resolve(null);
         }
         catch (Exception e) {
@@ -240,63 +350,30 @@ public class TextileNode extends ReactContextBaseJavaModule {
         }
     }
 
+
     @ReactMethod
-    public void addPhoto (String path, String threadName, String caption, Promise promise) {
+    public void devices (Promise promise) {
         try {
-            if (caption == null) {
-                caption = "";
-            }
-            promise.resolve(node.addPhoto(path, threadName, caption));
+            promise.resolve(node.devices());
         }
         catch (Exception e) {
-            promise.reject("ADD PHOTO ERROR", e);
+            promise.reject("GET DEVICES ERROR", e);
         }
     }
 
+
     @ReactMethod
-    public void sharePhoto (String id, String threadName, String caption, Promise promise) {
+    public void refreshMessages (Promise promise) {
         try {
-            if (caption == null) {
-                caption = "";
-            }
-            promise.resolve(node.sharePhoto(id, threadName, caption));
+            node.refreshMessages();
+            promise.resolve(null);
         }
         catch (Exception e) {
-            promise.reject("SHARE PHOTO ERROR", e);
+            promise.reject("REFRESH MESSAGES ERROR", e);
         }
     }
 
-    @ReactMethod
-    public void photoBlocks (String offset, Integer limit, String threadName, Promise promise) {
-        try {
-            promise.resolve(node.photoBlocks(offset, limit, threadName));
-        }
-        catch (Exception e) {
-            promise.reject("GET PHOTO BLOCKS ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void getBlockData (String id, String path, Promise promise) {
-        try {
-            promise.resolve(node.getBlockData(id, path));
-        }
-        catch (Exception e) {
-            promise.reject("GET BLOCK DATA ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void getFileData (String id, String path, Promise promise) {
-        try {
-            promise.resolve(node.getFileData(id, path));
-        }
-        catch (Exception e) {
-            promise.reject("GET FILE DATA ERROR", e);
-        }
-    }
-
-    // Method for turning photo URI into path + ext
+    // Android specific method for turning photo URI into path + ext
     @ReactMethod
     public void getFilePath(String uriString, Promise promise) {
         Uri uri = Uri.parse(uriString);

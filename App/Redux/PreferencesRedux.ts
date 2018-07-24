@@ -6,6 +6,9 @@ const actions = {
   }),
   toggleVerboseUi: createAction('TOGGLE_VERBOSE_UI', resolve => {
     return () => resolve()
+  }),
+  updatecMnemonic: createAction('UPDATE_MNEMONIC', resolve => {
+    return (mnemonic: string) => resolve({ mnemonic })
   })
 }
 
@@ -14,6 +17,7 @@ export type PreferencesAction = ActionType<typeof actions>
 export type PreferencesState = {
   onboarded: boolean
   verboseUi: boolean
+  mnemonic?: string
 }
 
 export const initialState: PreferencesState = {
@@ -27,6 +31,8 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, onboarded: true }
     case getType(actions.toggleVerboseUi):
       return { ...state, verboseUi: !state.verboseUi }
+    case getType(actions.updatecMnemonic):
+      return { ...state, mnemonic: action.payload.mnemonic }
     default:
       return state
   }
