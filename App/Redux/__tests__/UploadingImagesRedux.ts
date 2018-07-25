@@ -5,8 +5,10 @@ const initialState = reducer(undefined, {} as any)
 const path = 'path'
 const dataId = 'dataId'
 const attempts = 3
-const uploadProgress = 0.5
-const error = new Error('oops')
+const uploadProgress = 50
+const responseCode = 'responseCode'
+const responseBody = 'responseBody'
+const errorMessage = 'oops'
 
 const addedImage: UploadingImage = {
   dataId,
@@ -18,13 +20,20 @@ const addedImage: UploadingImage = {
 
 const progressImage: UploadingImage = {
   ...addedImage,
-  uploadProgress,
+  uploadProgress: uploadProgress/100,
   state: 'uploading'
+}
+
+const completeImage: UploadingImage = {
+  ...progressImage,
+  state: 'complete',
+  responseCode,
+  responseBody
 }
 
 const errorImage: UploadingImage = {
   ...progressImage,
-  errorMessage: error.message,
+  errorMessage: errorMessage,
   remainingUploadAttempts: progressImage.remainingUploadAttempts - 1
 }
 
@@ -51,22 +60,29 @@ describe('images stories', () => {
       const state1 = reducer(state0, actions.imageUploadProgress(dataId, uploadProgress))
       expect(state1.images[dataId]).toMatchObject(progressImage)
     })
-    it('should remove record on complete', () => {
+    it('should track upload complete', () => {
       const state0 = reducer(initialState, actions.addImage(path, dataId, attempts))
       const state1 = reducer(state0, actions.imageUploadProgress(dataId, uploadProgress))
-      const state2 = reducer(state1, actions.imageUploadComplete(dataId))
-      expect(state2.images[dataId]).toBeUndefined()
+      const state3 = reducer(state1, actions.imageUploadComplete(dataId, responseCode, responseBody))
+      expect(state3.images[dataId]).toMatchObject(completeImage)
+    })
+    it('should remove record on image deleted', () => {
+      const state0 = reducer(initialState, actions.addImage(path, dataId, attempts))
+      const state1 = reducer(state0, actions.imageUploadProgress(dataId, uploadProgress))
+      const state2 = reducer(state1, actions.imageUploadComplete(dataId, responseCode, responseBody))
+      const state3 = reducer(state2, actions.imageRemovalComplete(dataId))
+      expect(state3.images[dataId]).toBeUndefined()
     })
     it('should track an upload error', () => {
       const state0 = reducer(initialState, actions.addImage(path, dataId, attempts))
       const state1 = reducer(state0, actions.imageUploadProgress(dataId, uploadProgress))
-      const state2 = reducer(state1, actions.imageUploadError(dataId, error))
+      const state2 = reducer(state1, actions.imageUploadError(dataId, errorMessage))
       expect(state2.images[dataId]).toMatchObject(errorImage)
     })
     it('should track retrying an image upload', () => {
       const state0 = reducer(initialState, actions.addImage(path, dataId, attempts))
       const state1 = reducer(state0, actions.imageUploadProgress(dataId, uploadProgress))
-      const state2 = reducer(state1, actions.imageUploadError(dataId, error))
+      const state2 = reducer(state1, actions.imageUploadError(dataId, errorMessage))
       const state3 = reducer(state2, actions.imageUploadRetried(dataId))
       expect(state3.images[dataId]).toMatchObject(retriedImage)
     })
