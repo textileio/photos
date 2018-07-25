@@ -1,4 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
+import { read } from 'fs';
 
 const actions = {
   addImage: createAction('ADD_IMAGE', resolve => {
@@ -8,12 +9,15 @@ const actions = {
     return (dataId: string, progress: number) => resolve({ dataId, progress })
   }),
   imageUploadComplete: createAction('IMAGE_UPLOAD_COMPLETE', resolve => {
-    return (dataId: string) => resolve({ dataId })
+    return (dataId: string, responseCode: string, responseBody: string) => resolve({ dataId, responseCode, responseBody })
   }),
   imageUploadError: createAction('IMAGE_UPLOAD_ERROR', resolve => {
-    return (dataId: string, error: Error) => resolve({ dataId, error })
+    return (dataId: string, errorMessage: string) => resolve({ dataId, errorMessage })
   }),
   imageUploadRetried: createAction('IMAGE_UPLOAD_RETRIED', resolve => {
+    return (dataId: string) => resolve({ dataId })
+  }),
+  imageRemovalComplete: createAction('IMAGE_REMOVAL_COMPLETE', resolve => {
     return (dataId: string) => resolve({ dataId })
   })
 }
@@ -23,9 +27,11 @@ export type UploadingImagesAction = ActionType<typeof actions>
 export type UploadingImage = {
   readonly path: string
   readonly dataId: string
-  readonly state: 'pending' | 'uploading'
+  readonly state: 'pending' | 'uploading' | 'complete'
   readonly uploadProgress: number
   readonly remainingUploadAttempts: number
+  readonly responseCode?: string
+  readonly responseBody?: string
   readonly errorMessage?: string
 }
 
@@ -39,6 +45,10 @@ export type UploadingImagesState = {
 
 export const initialState: UploadingImagesState = {
   images: {}
+}
+
+export const UploadingImagesSelectors = {
+  uploadingImageById: (state, id) => state.uploadingImages.images[id] as UploadingImage
 }
 
 export function reducer (state: UploadingImagesState = initialState, action: UploadingImagesAction): UploadingImagesState {
@@ -62,20 +72,21 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
     case getType(actions.imageUploadProgress): {
       const { dataId, progress } = action.payload
       const image = state.images[dataId]
-      const updated: UploadingImage = { ...image, state: 'uploading', uploadProgress: progress }
+      const updated: UploadingImage = { ...image, state: 'uploading', uploadProgress: progress/100 }
       return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageUploadComplete): {
-      const { dataId } = action.payload
-      const { [dataId]: removed, ...images } = state.images
-      return { ...state, images }
+      const { dataId, responseCode, responseBody } = action.payload
+      const image = state.images[dataId]
+      const updated: UploadingImage = { ...image, state: 'complete', responseCode, responseBody }
+      return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageUploadError): {
-      const { dataId, error } = action.payload
+      const { dataId, errorMessage } = action.payload
       const image = state.images[dataId]
       const updated: UploadingImage = {
         ...image,
-        errorMessage: error.message,
+        errorMessage,
         remainingUploadAttempts: image.remainingUploadAttempts - 1
       }
       return { ...state, images: { ...state.images, [dataId]: updated } }
@@ -90,6 +101,11 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
         errorMessage: undefined
       }
       return { ...state, images: { ...state.images, [dataId]: updated } }
+    }
+    case getType(actions.imageRemovalComplete): {
+      const { dataId } = action.payload
+      const { [dataId]: removed, ...images } = state.images
+      return { ...state, images }
     }
     default:
      return state
