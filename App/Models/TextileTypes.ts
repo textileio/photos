@@ -42,12 +42,12 @@ export interface ExternalInvite {
 export interface AddResult {
   id: string
   key: string
-  pin_request: PinRequest
+  archive?: FileArchive
 }
 
-export interface PinRequest {
-  boundary: string
-  payload_path: string
+export interface FileArchive {
+  id: string
+  path: string
 }
 
 export interface Metadata {

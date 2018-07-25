@@ -40,8 +40,9 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
   try {
     yield call(TextileNode.signUpWithEmail, email, username, password, referralCode)
     const tokens = yield call(TextileNode.getTokens)
+    yield put(AuthActions.getTokensSuccess(tokens))
     // TODO: Put username into textile-go for addition to metadata model
-    yield put(AuthActions.signUpSuccess(tokens))
+    yield put(AuthActions.signUpSuccess())
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
@@ -53,7 +54,8 @@ export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
   try {
     yield call(TextileNode.signIn, username, password)
     const tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.logInSuccess(tokens))
+    yield put(AuthActions.getTokensSuccess(tokens))
+    yield put(AuthActions.logInSuccess())
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
@@ -250,11 +252,12 @@ async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
 
     const processed = camera && camera.processed ? camera.processed : {}
     const photos = allPhotos.filter((photo) => {
-      switch (processed[photo.uri] !== undefined && processed[photo.uri] !== 'error') {
+      // THis used to also allow,  || processed[photo.uri] === 'error' to lead to an upload attemp. However, this was leading to the duplicate thumbs because the UI didn't know the retry was the same as the error'd thumb.
+      switch (processed[photo.uri] === undefined) {
         case (true):
-          return false
-        default:
           return true
+        default:
+          return false
       }
     })
 
@@ -288,8 +291,8 @@ async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
     for (let photoData of photoUploads) {
       let {photo, addResult} = photoData
       try {
-        yield put(TextileActions.imageAdded(photo.uri, 'default', addResult.id, addResult.pin_request.payload_path))
-        yield uploadFile(addResult.id, addResult.pin_request.payload_path)
+        yield put(TextileActions.imageAdded(photo.uri, 'default', addResult.id, addResult.archive.path))
+        yield uploadFile(addResult.id, addResult.archive.path)
       } catch (error) {
         yield put(TextileActions.photoProcessingError(photo.uri, error))
       } finally {
@@ -337,19 +340,35 @@ export function * retryUploadAfterError ({data}) {
 }
 
 function * uploadFile (id: string, payloadPath: string) {
-  const tokens = yield select(AuthSelectors.tokens)
+  let tokens = yield select(AuthSelectors.tokens)
+  if (!tokens) {
+    tokens = yield call(TextileNode.getTokens)
+    yield put(AuthActions.getTokensSuccess(tokens))
+  }
+  console.log('HERE WE GO')
+  console.log({
+    customUploadId: id,
+    path: payloadPath,
+    url: 'cafe.us-east-1.textile.io/api/v0/pin', //Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
+    method: 'POST',
+    type: 'raw',
+    headers: {
+      'Authorization': 'Bearer ' + tokens.access,
+      'Content-Type': 'application/gzip'
+    },
+  })
   yield call(
     Upload.startUpload,
     {
       customUploadId: id,
       path: payloadPath,
-      url: Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
+      url: 'cafe.us-east-1.textile.io/api/v0/pin', //Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
       method: 'POST',
       type: 'raw',
-      headers: {
-        'Authorization': 'Bearer ' + tokens.access,
-        'Content-Type': 'application/gzip'
-      },
+      // headers: {
+      //   'Authorization': 'Bearer ' + tokens.access,
+      //   'Content-Type': 'application/gzip'
+      // }
     }
   )
 }

@@ -49,6 +49,8 @@ class TextileManager extends React.PureComponent {
   }
 
   handleUploadComplete (event) {
+    console.log('complete')
+    console.log(event)
     const {responseCode} = event
     if (responseCode >= 200 && responseCode < 300) {
       this.props.uploadComplete(event)
