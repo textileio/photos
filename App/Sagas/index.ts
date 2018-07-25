@@ -4,7 +4,7 @@ import { getType } from 'typesafe-actions'
 /* ------------- Types ------------- */
 
 import StartupActions from '../Redux/StartupRedux'
-import {TextileTypes} from '../Redux/TextileRedux'
+import UploadingImagesActions from '../Redux/UploadingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
@@ -81,8 +81,8 @@ export default function * root () {
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
 
-    takeEvery(TextileTypes.IMAGE_UPLOAD_COMPLETE, removePayloadFile),
-    takeEvery(TextileTypes.IMAGE_UPLOAD_ERROR, retryUploadAfterError),
+    takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
+    takeEvery(getType(UploadingImagesActions.imageUploadError), retryUploadAfterError),
 
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
     takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),

@@ -8,7 +8,6 @@ import ReduxPersist from '../Config/ReduxPersist'
 export const reducers = combineReducers({
   auth: require('./AuthRedux').reducer,
   ipfs: require('./TextileNodeRedux').reducer,
-  textile: require('./TextileRedux').reducer,
   preferences: require('./PreferencesRedux').reducer,
   threads: require('./ThreadsRedux').reducer,
   devices: require('./DevicesRedux').reducer,

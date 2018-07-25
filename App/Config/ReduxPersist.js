@@ -73,7 +73,7 @@ const REDUX_PERSIST = {
     // blacklist: ['nav', 'ipfs', 'auth', 'ui'],
     // Optionally, just specify the keys you DO want stored to persistence.
     // An empty array means 'don't store any reducers' -> infinitered/ignite#409
-    whitelist: ['textile', 'preferences', 'uploadingImages', 'cameraRoll'],
+    whitelist: ['preferences', 'uploadingImages', 'cameraRoll'],
     transforms: [immutablePersistenceTransform]
   }
 }

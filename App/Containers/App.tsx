@@ -6,7 +6,7 @@ import {Provider} from 'react-redux'
 import {PersistGate} from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
-import Actions from '../Redux/TextileRedux'
+import TriggersActions from '../Redux/TriggersRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import BackgroundTask from 'react-native-background-task'
 import TextileNode from '../../TextileNode'
@@ -15,7 +15,7 @@ import TextileNode from '../../TextileNode'
 const { store, persistor } = createStore()
 
 BackgroundTask.define(() => {
-  store.dispatch(Actions.backgroundTask())
+  store.dispatch(TriggersActions.backgroundTask())
 })
 
 // subscribe to native events

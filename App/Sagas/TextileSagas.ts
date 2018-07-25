@@ -20,7 +20,7 @@ import PhotosNavigationService from '../Services/PhotosNavigationService'
 import TextileNode from '../../TextileNode'
 import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
 import StartupActions from '../Redux/StartupRedux'
-import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
+import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
@@ -250,7 +250,7 @@ export function * photosTask() {
   var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
   if (!defaultThread) {
     yield put(ThreadsActions.addThreadRequest('default'))
-    yield take(getType(TextileActions.addThreadSuccess))
+    yield take(getType(ThreadsActions.addThreadSuccess))
     yield put(ThreadsActions.refreshThreadsRequest())
   }
   defaultThread = yield call(getDefaultThread)
@@ -266,7 +266,8 @@ export function * photosTask() {
       photoPath = yield call(CameraRoll.getPhotoPath, uri)
       const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
       const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-      // TODO: dispatch photo added action
+      yield put(UploadingImagesActions.addImage(addResult.pin_request.payload_path, addResult.id, 3))
+      yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
       addedPhotosData.push({ uri, addResult, blockId })
     } catch (error) {
       yield put(CameraRollActions.untrackPhoto(uri))
@@ -281,11 +282,11 @@ export function * photosTask() {
     try {
       yield uploadFile(
         addedPhotoData.addResult.id,
-        addedPhotoData.addResult.pin_request.boundary,
         addedPhotoData.addResult.pin_request.payload_path
       )
     } catch (error) {
-      // TODO: dispatch image processing error
+      // Leave all the data in place so we can rerty upload
+      yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, error))
     }
   }
 
@@ -295,114 +296,18 @@ export function * photosTask() {
   }
 }
 
-export function * oldPhotosTask () {
-  try {
-    var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
-    if (!defaultThread) {
-      yield put(ThreadsActions.addThreadRequest('default'))
-      yield take(getType(TextileActions.addThreadSuccess))
-      yield put(ThreadsActions.refreshThreadsRequest())
-    }
-    defaultThread = yield call(getDefaultThread)
-    if (!defaultThread) {
-      return
-    }
-    const camera = yield select(TextileSelectors.camera)
-    let limit = camera.processed === undefined ? -1 : 250
-    let allPhotos = yield call(getAllPhotos, limit)
-
-    // for new users, just grab their latest photos
-    if (camera.processed === undefined) {
-      const ignoredPhotos = allPhotos.splice(1)
-      yield put(TextileActions.urisToIgnore(ignoredPhotos.map(photo => photo.uri)))
-    }
-
-    const processed = camera && camera.processed ? camera.processed : {}
-    const photos = allPhotos.filter((photo) => {
-      switch (processed[photo.uri] !== undefined && processed[photo.uri] !== 'error') {
-        case (true):
-          return false
-        default:
-          return true
-      }
-    })
-
-    // ensure that no other jobs try to process the same photo
-    yield put(TextileActions.photosProcessing(photos))
-
-    let photoUploads = []
-    // Convert all our new entries to thumbs before anything else
-    for (let photo of photos.reverse()) {
-      try {
-        photo = yield call(getPhotoPath, photo)
-        const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photo.path)
-        // TODO: something with this block id?
-        const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-        photoUploads.push({
-          photo,
-          addResult
-        })
-      } catch (error) {
-        // if error, delete the photo copy and thumb from disk then fire error
-        try {
-          yield call(RNFS.unlink, photo.path)
-        } finally {
-          yield put(TextileActions.photoProcessingError(photo.uri, error))
-        }
-      }
-    }
-    // refresh our gallery
-    yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
-    // initialize and complete our uploads
-    for (let photoData of photoUploads) {
-      let {photo, addResult} = photoData
-      try {
-        yield put(TextileActions.imageAdded(photo.uri, 'default', addResult.id, addResult.pin_request.payload_path))
-        yield uploadFile(addResult.id, addResult.pin_request.payload_path)
-      } catch (error) {
-        yield put(TextileActions.photoProcessingError(photo.uri, error))
-      } finally {
-        // no matter what, after add/update try to unlink the file from drive
-        try {
-          yield call(RNFS.unlink, photo.path)
-        } catch (error) {
-          yield put(TextileActions.photoProcessingError(photo.uri, error))
-        }
-      }
-    }
-  } catch (error) {
-    yield put(TextileActions.photosTaskError(error))
-  } finally {
-    const appState = yield select(TextileNodeSelectors.appState)
-    if (appState.match(/background/)) {
-      yield * stopNode()
-    } else {
-      yield put(TextileNodeActions.lock(false))
-    }
-  }
+export function * removePayloadFile (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
+  const { dataId } = action.payload
+  const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
+  yield call(RNFS.unlink, uploadingImage.path)
+  yield put(UploadingImagesActions.imageRemovalComplete(dataId))
 }
 
-export function * removePayloadFile ({data}) {
-  const { id } = data
-  const items = yield select(TextileSelectors.itemsById, id)
-  for (const item of items) {
-    if (item.payloadPath && item.state === 'complete') {
-      // TODO: probably should be a try/catch?
-      yield call(RNFS.unlink, item.payloadPath)
-    }
-  }
-  yield put(TextileActions.imageRemovalComplete(id))
-}
-
-export function * retryUploadAfterError ({data}) {
-  const { id } = data
-  const items = yield select(TextileSelectors.itemsById, id)
-  for (const item of items) {
-    if (item.remainingUploadAttempts > 0) {
-      yield put(TextileActions.imageUploadRetried(item.hash))
-      yield uploadFile(item.hash, item.payloadPath)
-    }
-  }
+export function * retryUploadAfterError (action: ActionType<typeof UploadingImagesActions.imageUploadError>) {
+  const { dataId } = action.payload
+  const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
+  yield put(UploadingImagesActions.imageUploadRetried(dataId))
+  yield uploadFile(uploadingImage.dataId, uploadingImage.path)
 }
 
 function * uploadFile (id: string, payloadPath: string) {
