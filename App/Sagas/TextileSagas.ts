@@ -345,30 +345,18 @@ function * uploadFile (id: string, payloadPath: string) {
     tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
   }
-  console.log('HERE WE GO')
-  console.log({
-    customUploadId: id,
-    path: payloadPath,
-    url: 'cafe.us-east-1.textile.io/api/v0/pin', //Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
-    method: 'POST',
-    type: 'raw',
-    headers: {
-      'Authorization': 'Bearer ' + tokens.access,
-      'Content-Type': 'application/gzip'
-    },
-  })
   yield call(
     Upload.startUpload,
     {
       customUploadId: id,
       path: payloadPath,
-      url: 'cafe.us-east-1.textile.io/api/v0/pin', //Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
+      url: Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
       method: 'POST',
       type: 'raw',
-      // headers: {
-      //   'Authorization': 'Bearer ' + tokens.access,
-      //   'Content-Type': 'application/gzip'
-      // }
+      headers: {
+        'Authorization': 'Bearer ' + tokens.access,
+        'Content-Type': 'application/gzip'
+      }
     }
   )
 }

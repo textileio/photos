@@ -75,10 +75,7 @@ export const handlePhotoProcessingError = (state, {uri, error}) => {
 export const handleImageAdded = (state, {uri, thread, hash, remotePayloadPath}) => {
   let newUri = {}
   newUri[uri] = 'complete'
-  console.log('IGNORE NEW', uri)
   const processed = state.camera && state.camera.processed ? state.camera.processed.merge(newUri) : newUri
-  console.log('processed')
-  console.log(processed)
   const items = [{ thread, hash, remotePayloadPath, state: 'pending', remainingUploadAttempts: 3 }, ...state.images.items]
   return state.merge({ images: { items }, camera: { processed } })
 }
@@ -95,8 +92,6 @@ export const handleImageUploadRetried = (state, {hash}) => {
 
 export const handleImageProgress = (state, {data}) => {
   const { id, progress } = data
-  console.log('progress')
-  console.log(data)
   // The upload library we're using returns float 0.0 - 100.0
   const fractionalProgress = progress / 100.0
   const items = state.images.items.map(item => {
@@ -110,8 +105,6 @@ export const handleImageProgress = (state, {data}) => {
 
 export const handleImageUploadComplete = (state, {data}) => {
   const { id } = data
-  console.log('complete2')
-  console.log(data)
   const items = state.images.items.map(item => {
     if (item.hash === id) {
       return {...item, state: 'complete', id}
@@ -123,8 +116,6 @@ export const handleImageUploadComplete = (state, {data}) => {
 
 export const handleImageUploadError = (state, {data}) => {
   const { error, id } = data
-  console.log('error')
-  console.log(data)
   const items = state.images.items.map(item => {
     if (item.hash === id) {
       return {
