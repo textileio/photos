@@ -3,11 +3,11 @@ import { View, Text, Image } from 'react-native'
 import styles from './statics/styles'
 
 const SmallIconTag = props => {
-  const { text, image } = props
+  const { text, image, textStyle, imageStyle, style } = props
   return (
-    <View style={styles.detail}>
-      <Image style={styles.detailImage} source={image} />
-      <Text style={styles.detailText}>{text}</Text>
+    <View style={[styles.detail, style]}>
+      <Image style={[styles.detailImage, imageStyle]} source={image} />
+      <Text style={[styles.detailText, textStyle]}>{text}</Text>
     </View>
   )
 }
