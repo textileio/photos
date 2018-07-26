@@ -7,9 +7,21 @@ export default StyleSheet.create({
     backgroundColor: '#FAFCFE',
     flex: 1,
   },
+  bodyContainer: {
+    marginTop: 0, // <- changed because headers will be outside of Containers now...
+    backgroundColor: '#FAFCFE',
+    flex: 1,
+  },
   contentContainer: {
     paddingHorizontal: 19,
     paddingTop: 24
+  },
+  toolBar: { // <-- took this style from SB/components/Toolbar
+    paddingVertical: 13,
+    paddingHorizontal: 16,
+    borderBottomColor: '#ECEDEE',
+    borderBottomWidth: 1,
+    backgroundColor: 'white'
   },
   toolbarLeft: {
     height: 16,
