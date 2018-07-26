@@ -17,9 +17,6 @@ import AddThreadScreen from '../Containers/AddThreadScreen'
 // BEGIN: SB Screens
 import PhotoDetail from '../SB/views/PhotoDetail'
 import ThreadPhotoDetail from '../SB/views/ThreadPhotoDetail'
-// Exact copy of Textile Photos but mod'd to use ThreadPhotoDetail on click
-import TextilePhotosThreads from '../Containers/TextilePhotosThreads'
-
 
 // Manifest of possible screens
 
@@ -43,20 +40,6 @@ const PhotosNav = StackNavigator(
   }
 )
 
-const ThreadPhotoDetailViewer = StackNavigator(
-  {
-    ViewPhoto: {
-      screen: ThreadPhotoDetail
-    }
-  },
-  {
-
-    // Default config for all screens
-    headerMode: 'none',
-    navigationOptions: {}
-  }
-)
-
 const SharedPhotosNav = StackNavigator(
   {
     SharedPhotos: {
@@ -66,7 +49,10 @@ const SharedPhotosNav = StackNavigator(
       screen: AddThreadScreen
     },
     ViewThread: {
-      screen: TextilePhotosThreads
+      screen: TextilePhotos
+    },
+    PhotoViewer: {
+      screen: ThreadPhotoDetail
     }
   },
   {
@@ -142,9 +128,6 @@ const RootStack = StackNavigator(
   {
     PrimaryNav: {
       screen: TabNav
-    },
-    ThreadPhotoViewer: {
-      screen: ThreadPhotoDetailViewer
     }
   },
   {
