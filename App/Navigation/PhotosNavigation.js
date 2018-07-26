@@ -11,9 +11,15 @@ import Colors from '../Themes/Colors'
 // import SwipeNavigation from './SwipeNavigation'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
-import Config from "react-native-config"
 import Threads from '../Containers/Threads'
 import AddThreadScreen from '../Containers/AddThreadScreen'
+
+// BEGIN: SB Screens
+import PhotoDetail from '../SB/views/PhotoDetail'
+import ThreadPhotoDetail from '../SB/views/ThreadPhotoDetail'
+// Exact copy of Textile Photos but mod'd to use ThreadPhotoDetail on click
+import TextilePhotosThreads from '../Containers/TextilePhotosThreads'
+
 
 // Manifest of possible screens
 
@@ -34,6 +40,20 @@ const PhotosNav = StackNavigator(
   }
 )
 
+const ThreadPhotoDetailViewer = StackNavigator(
+  {
+    ViewPhoto: {
+      screen: ThreadPhotoDetail
+    }
+  },
+  {
+
+    // Default config for all screens
+    headerMode: 'none',
+    navigationOptions: {}
+  }
+)
+
 const SharedPhotosNav = StackNavigator(
   {
     SharedPhotos: {
@@ -43,7 +63,7 @@ const SharedPhotosNav = StackNavigator(
       screen: AddThreadScreen
     },
     ViewThread: {
-      screen: TextilePhotos
+      screen: TextilePhotosThreads
     }
   },
   {
@@ -115,10 +135,10 @@ const TabNav = TabNavigator(
   }
 )
 
-const PhotoViewerStack = DismissableStackNavigator(
+const PhotoDetailViewer = DismissableStackNavigator(
   {
-    PhotoViewerScreen: {
-      screen: PhotoViewerScreen
+    ViewPhoto: {
+      screen: PhotoDetail
     }
   },
   {
@@ -132,7 +152,10 @@ const RootStack = StackNavigator(
       screen: TabNav
     },
     PhotoViewer: {
-      screen: PhotoViewerStack
+      screen: PhotoDetailViewer
+    },
+    ThreadPhotoViewer: {
+      screen: ThreadPhotoDetailViewer
     }
   },
   {
