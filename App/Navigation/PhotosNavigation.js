@@ -27,6 +27,9 @@ const PhotosNav = StackNavigator(
   {
     TextilePhotos: {
       screen: TextilePhotos
+    },
+    PhotoViewer: {
+      screen: PhotoDetail
     }
   },
   {
@@ -135,25 +138,10 @@ const TabNav = TabNavigator(
   }
 )
 
-const PhotoDetailViewer = DismissableStackNavigator(
-  {
-    ViewPhoto: {
-      screen: PhotoDetail
-    }
-  },
-  {
-    headerMode: 'none',
-    mode: 'modal'
-  }
-)
-
 const RootStack = StackNavigator(
   {
     PrimaryNav: {
       screen: TabNav
-    },
-    PhotoViewer: {
-      screen: PhotoDetailViewer
     },
     ThreadPhotoViewer: {
       screen: ThreadPhotoDetailViewer

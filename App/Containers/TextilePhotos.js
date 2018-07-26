@@ -42,6 +42,9 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount () {
+    // Unload any full screen photo
+    this.props.dismissPhoto()
+    // Set params
     this.props.navigation.setParams({
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName,
@@ -149,6 +152,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (index, threadId) => { dispatch(UIActions.viewPhotoRequest(index, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
