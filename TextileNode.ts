@@ -50,9 +50,9 @@ export default {
     return await TextileNode.getUsername()
   },
 
-  getTokens: async function (): Promise<CafeTokens> {
+  getTokens: async function (): Promise<TextileTypes.CafeTokens> {
     const jsonString = await TextileNode.getTokens()
-    const tokens = JSON.parse(jsonString) as CafeTokens
+    const tokens = JSON.parse(jsonString) as TextileTypes.CafeTokens
     return tokens
   },
 
