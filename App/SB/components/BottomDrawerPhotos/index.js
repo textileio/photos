@@ -11,15 +11,12 @@ import UIActions from '../../../Redux/UIRedux'
 
 class BottomDrawerPhotos extends Component {
   constructor (props) {
-    console.log(props)
     super(props)
   }
-// const BottomDrawerPhotos = props => {
-//   const { list } = props
 
   render () {
     return (
-      <Drawer overlay={true} style={styles.container}>
+      <Drawer overlay style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Share this photo in:</Text>
           <TouchableOpacity onPress={ () => { this.props.onClose() }}>

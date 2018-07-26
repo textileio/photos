@@ -72,10 +72,14 @@ class PhotoDetail extends Component {
     this.setState({drawer: false})
   }
 
-  selectThread (i) {
+  shareIntoThread (i) {
     this.setState({drawer: false})
-    console.log('TODO: NAVIGATE TO THE CREATE CAPTION VIEW')
+    console.log('TODO: NAVIGATE TO THE CREATE CAPTION VIEW: ', i)
     // TODO navigate to the Comment view
+  }
+
+  viewThread (thread) {
+    console.log('TODO: NAVIGATE TO THE VIEW THREAD: ', thread.id)
   }
 
   renderImage () {
@@ -109,11 +113,13 @@ class PhotoDetail extends Component {
             {this.props.threadsIn.length > 0 && 'This photo appears in the following threads:'}
           </Text>
           {this.props.threadsIn.map((thread, i) => (
-            <PhotoWithTextBox key={i} text={thread.name} item={this.props.thumbs[thread.id]}/>
+            <TouchableOpacity  key={i} onPress={() => { this.viewThread(thread) }}>
+              <PhotoWithTextBox key={i} text={thread.name} item={this.props.thumbs[thread.id]}/>
+            </TouchableOpacity>
           ))}
           <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}}/>
         </ScrollView>
-        {this.state.drawer && <BottomDrawerPhotos selector={this.selectThread.bind(this)} threads={this.props.threadsNotIn} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
+        {this.state.drawer && <BottomDrawerPhotos selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
       </View>
     )
   }
@@ -144,10 +150,6 @@ const mapStateToProps = (state, ownProps) => {
       containingThreads.push(t)
     }
   }
-  console.log('thb')
-  console.log(thumbs)
-  console.log('in')
-  console.log(state.threads.threads.filter(t => containingThreads.indexOf(t.id) > -1 && t.name !== 'default'))
 
   const path = thread.name === 'default' ? '/photo' : '/thumb'
   return {

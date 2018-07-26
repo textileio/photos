@@ -1,14 +1,12 @@
 import React from 'react'
 import propTypes from 'prop-types'
 import { View, Image, Text } from 'react-native'
-import ProgressiveImage from '../../../Components/ProgressiveImage'
 import TextileImage from '../../../../TextileImage'
 
 import styles from './statics/styles'
 
 const PhotoWithTextBox = props => {
   const { item, text, style } = props
-  console.log('item', item)
 
   return (
     <View style={[styles.itemContainer, style]}>
