@@ -42,8 +42,9 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
   try {
     yield call(TextileNode.signUpWithEmail, email, username, password, referralCode)
     const tokens = yield call(TextileNode.getTokens)
+    yield put(AuthActions.getTokensSuccess(tokens))
     // TODO: Put username into textile-go for addition to metadata model
-    yield put(AuthActions.signUpSuccess(tokens))
+    yield put(AuthActions.signUpSuccess())
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
@@ -55,7 +56,8 @@ export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
   try {
     yield call(TextileNode.signIn, username, password)
     const tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.logInSuccess(tokens))
+    yield put(AuthActions.getTokensSuccess(tokens))
+    yield put(AuthActions.logInSuccess())
     yield call(NavigationService.navigate, 'OnboardingScreen', params1)
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
@@ -258,7 +260,7 @@ export function * photosTask() {
     return
   }
 
-  let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string}[] = []
+  let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string }[] = []
 
   for (const uri of urisToProcess) {
     let photoPath = ''
@@ -266,7 +268,10 @@ export function * photosTask() {
       photoPath = yield call(CameraRoll.getPhotoPath, uri)
       const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
       const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-      yield put(UploadingImagesActions.addImage(addResult.pin_request.payload_path, addResult.id, 3))
+      if (!addResult.archive) {
+        throw new Error('no archive returned')
+      }
+      yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
       yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
       addedPhotosData.push({ uri, addResult, blockId })
     } catch (error) {
@@ -280,9 +285,12 @@ export function * photosTask() {
 
   for (const addedPhotoData of addedPhotosData) {
     try {
+      if (!addedPhotoData.addResult.archive) {
+        throw new Error('no archive to upload')
+      }
       yield uploadFile(
         addedPhotoData.addResult.id,
-        addedPhotoData.addResult.pin_request.payload_path
+        addedPhotoData.addResult.archive.path
       )
     } catch (error) {
       // Leave all the data in place so we can rerty upload
@@ -311,7 +319,11 @@ export function * retryUploadAfterError (action: ActionType<typeof UploadingImag
 }
 
 function * uploadFile (id: string, payloadPath: string) {
-  const tokens = yield select(AuthSelectors.tokens)
+  let tokens = yield select(AuthSelectors.tokens)
+  if (!tokens) {
+    tokens = yield call(TextileNode.getTokens)
+    yield put(AuthActions.getTokensSuccess(tokens))
+  }
   yield call(
     Upload.startUpload,
     {
@@ -323,7 +335,7 @@ function * uploadFile (id: string, payloadPath: string) {
       headers: {
         'Authorization': 'Bearer ' + tokens.access,
         'Content-Type': 'application/gzip'
-      },
+      }
     }
   )
 }

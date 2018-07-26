@@ -19,9 +19,12 @@ const actions = {
     return (data: any) => resolve({ data })
   }),
   signUpSuccess: createAction('SIGN_UP_SUCCESS', resolve => {
-    return (tokens: CafeTokens) => resolve({ tokens })
+    return () => resolve()
   }),
   logInSuccess: createAction('LOG_IN_SUCCESS', resolve => {
+    return () => resolve()
+  }),
+  getTokensSuccess: createAction('GET_TOKENS_SUCCESS', resolve => {
     return (tokens: CafeTokens) => resolve({ tokens })
   }),
   recoverPasswordSuccess: createAction('RECOVER_PASSWORD_SUCCESS', resolve => {
@@ -87,8 +90,7 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
     case getType(actions.logInRequest):
     case getType(actions.recoverPasswordRequest):
       return { ...state, processing: true }
-    case getType(actions.signUpSuccess):
-    case getType(actions.logInSuccess):
+    case getType(actions.getTokensSuccess):
       return { ...state, processing: false, tokens: action.payload.tokens }
     case getType(actions.recoverPasswordSuccess):
       return { ...state, processing: false }
