@@ -234,7 +234,7 @@ export function * photosTask() {
   const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
   if (!queriredPhotosInitialized) {
     yield put(CameraRollActions.updateQuerying(true))
-    const uris: string[] = yield call(CameraRoll.getPhotos)
+    const uris: string[] = yield call(CameraRoll.getPhotos, 1000)
     yield put(CameraRollActions.updateQuerying(false))
     yield put(CameraRollActions.initialzePhotos(uris))
     return
@@ -247,7 +247,7 @@ export function * photosTask() {
   const previouslyQueriedPhotos: QueriedPhotosMap = yield select(cameraRollSelectors.queriedPhotos)
 
   const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
-  put(CameraRollActions.trackPhotos(urisToProcess))
+  yield put(CameraRollActions.trackPhotos(urisToProcess))
 
   var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
   if (!defaultThread) {

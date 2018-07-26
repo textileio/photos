@@ -27,7 +27,7 @@ export type UploadingImagesAction = ActionType<typeof actions>
 export type UploadingImage = {
   readonly path: string
   readonly dataId: string
-  readonly state: 'pending' | 'uploading' | 'complete'
+  readonly state: 'pending' | 'uploading' | 'complete' | 'error'
   readonly uploadProgress: number
   readonly remainingUploadAttempts: number
   readonly responseCode?: string
@@ -86,6 +86,7 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
       const image = state.images[dataId]
       const updated: UploadingImage = {
         ...image,
+        state: 'error',
         errorMessage,
         remainingUploadAttempts: image.remainingUploadAttempts - 1
       }
