@@ -43,6 +43,7 @@ class TextilePhotos extends React.PureComponent {
 
   componentDidMount () {
     // Unload any full screen photo
+    // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
     this.props.dismissPhoto()
     // Set params
     this.props.navigation.setParams({
