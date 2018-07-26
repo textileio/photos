@@ -33,6 +33,7 @@ const completeImage: UploadingImage = {
 
 const errorImage: UploadingImage = {
   ...progressImage,
+  state: 'error',
   errorMessage: errorMessage,
   remainingUploadAttempts: progressImage.remainingUploadAttempts - 1
 }

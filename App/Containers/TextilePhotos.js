@@ -6,7 +6,7 @@ import ActionSheet from 'react-native-actionsheet'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
+import TextileNodeActions, { ThreadData, PhotosQueryResult } from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
@@ -108,12 +108,12 @@ const mapStateToProps = (state, ownProps) => {
   const defaultThreadId = defaultThread ? defaultThread.id : undefined
   const threadId = navParams.id || defaultThreadId
 
-  var items = []
+  var items: PhotosQueryResult[] = []
   var refreshing = false
   var thread = undefined
   if (threadId) {
     const threadData: ThreadData = state.ipfs.threads[threadId] || { querying: false, items: [] }
-    const items = threadData.items
+    items = threadData.items
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }

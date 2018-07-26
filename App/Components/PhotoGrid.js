@@ -12,6 +12,7 @@ import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
 // import IPFSImage from './IPFSImage'
 import TextileImage from '../../TextileImage'
+import { UploadingImage } from '../Redux/UploadingImagesRedux'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
@@ -25,32 +26,35 @@ export default class PhotoGrid extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow (row) {
-    // let overlay
-    // if (row.item.state === 'pending') {
-    //   overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
-    // } else if (row.item.state === 'processing') {
-    //   overlay = <Progress.Pie progress={row.item.progress} size={20} color={Colors.brandPink} />
-    // } else if (row.item.state === 'error') {
-    //   const displayError = () => {
-    //     this.refs.toast.show(row.item.error, 2000)
-    //   }
-    //   overlay = <TouchableOpacity onPress={displayError}>
-    //     <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
-    //   </TouchableOpacity>
-    // }
+    const uploadingImage: UploadingImage | undefined = this.props.progressData[row.item.photo.id]
+    let overlay
+    if (uploadingImage && this.props.verboseUi) {
+      if (uploadingImage.state === 'pending') {
+        overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
+      } else if (uploadingImage.state === 'uploading') {
+        overlay = <Progress.Pie progress={uploadingImage.uploadProgress} size={20} color={Colors.brandPink} />
+      } else if (uploadingImage.state === 'error') {
+        const displayError = () => {
+          this.refs.toast.show(uploadingImage.errorMessage, 2000)
+        }
+        overlay = <TouchableOpacity onPress={displayError}>
+          <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+        </TouchableOpacity>
+      }
+    }
     return (
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
-            imageId={row.photo.id}
+            imageId={row.item.photo.id}
             path={'thumb'}
             style={styles.itemImage}
             resizeMode={'cover'}
           />
         </View>
-        {/* <View style={styles.itemOverlay}>
+        <View style={styles.itemOverlay}>
           {overlay}
-        </View> */}
+        </View>
       </TouchableOpacity>
     )
   }
