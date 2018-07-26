@@ -142,7 +142,8 @@ const PhotoDetailViewer = DismissableStackNavigator(
     }
   },
   {
-    headerMode: 'none'
+    headerMode: 'none',
+    mode: 'modal'
   }
 )
 
