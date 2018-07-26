@@ -25,32 +25,32 @@ export default class PhotoGrid extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow (row) {
-    let overlay
-    if (row.item.state === 'pending') {
-      overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
-    } else if (row.item.state === 'processing') {
-      overlay = <Progress.Pie progress={row.item.progress} size={20} color={Colors.brandPink} />
-    } else if (row.item.state === 'error') {
-      const displayError = () => {
-        this.refs.toast.show(row.item.error, 2000)
-      }
-      overlay = <TouchableOpacity onPress={displayError}>
-        <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
-      </TouchableOpacity>
-    }
+    // let overlay
+    // if (row.item.state === 'pending') {
+    //   overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
+    // } else if (row.item.state === 'processing') {
+    //   overlay = <Progress.Pie progress={row.item.progress} size={20} color={Colors.brandPink} />
+    // } else if (row.item.state === 'error') {
+    //   const displayError = () => {
+    //     this.refs.toast.show(row.item.error, 2000)
+    //   }
+    //   overlay = <TouchableOpacity onPress={displayError}>
+    //     <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+    //   </TouchableOpacity>
+    // }
     return (
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
-            imageId={row.item.hash}
+            imageId={row.photo.id}
             path={'thumb'}
             style={styles.itemImage}
             resizeMode={'cover'}
           />
         </View>
-        <View style={styles.itemOverlay}>
+        {/* <View style={styles.itemOverlay}>
           {overlay}
-        </View>
+        </View> */}
       </TouchableOpacity>
     )
   }
@@ -67,7 +67,7 @@ export default class PhotoGrid extends React.PureComponent {
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item, index) => item.hash
+  keyExtractor = (item, index) => item.photo.id
 
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 20

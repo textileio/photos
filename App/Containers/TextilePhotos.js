@@ -76,11 +76,13 @@ class TextilePhotos extends React.PureComponent {
       <View style={style.container}>
         <PhotoGrid
           items={this.props.items}
+          progressData={this.props.progressData}
           onSelect={this.onSelect}
           onRefresh={this.onRefresh.bind(this)}
           refreshing={this.props.refreshing}
           placeholderText={this.props.placeholderText}
           displayImages={this.props.displayImages}
+          verboseUi={this.props.verboseUi}
         />
         <ActionSheet
           ref={o => this.actionSheet = o}
@@ -91,7 +93,7 @@ class TextilePhotos extends React.PureComponent {
         />
         {this.props.verboseUi &&
           <View style={style.bottomOverlay} >
-            <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingPhotosStatus}</Text>
+            <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
           </View>
         }
       </View>
@@ -111,15 +113,7 @@ const mapStateToProps = (state, ownProps) => {
   var thread = undefined
   if (threadId) {
     const threadData: ThreadData = state.ipfs.threads[threadId] || { querying: false, items: [] }
-    let allItemsObj = threadData.items.reduce((o, item, index) => ({...o, [item.photo.id]: { index, hash: item.photo.id, caption: item.photo.caption, state: 'complete' }}), {})
-    for (const processingItem of state.textile.images.items) {
-      const item = allItemsObj[processingItem.hash]
-      if (item) {
-        const updatedItem = { ...item, ...processingItem }
-        allItemsObj[processingItem.hash] = updatedItem
-      }
-    }
-    items = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
+    const items = threadData.items
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
@@ -130,7 +124,7 @@ const mapStateToProps = (state, ownProps) => {
     ? 'Error - ' + state.ipfs.nodeState.error.message
     : state.ipfs.nodeState.state
 
-  const queryingPhotosStatus = state.queriedPhotos.querying ? 'querying' : 'idle'
+  const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
 
   const placeholderText = state.ipfs.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
@@ -141,11 +135,12 @@ const mapStateToProps = (state, ownProps) => {
     threadId,
     threadName,
     items,
+    progressData: state.uploadingImages.images,
     refreshing,
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
-    queryingPhotosStatus,
+    queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi
   }
 }
