@@ -1,35 +1,54 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
+import { NavigationActions } from 'react-navigation';
 import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
-import ImageSc from 'react-native-scalable-image'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
-import Toolbar from '../../components/Toolbar'
 import BottomDrawerPhotos from '../../components/BottomDrawerPhotos'
 import PhotoWithTextBox from '../../components/PhotoWithTextBox'
 import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 
 import styles from './statics/styles'
+import toolbarStyle from '../../components/Toolbar/statics/styles'
+
 import { photoList } from './constants'
-import UIActions from '../../../Redux/UIRedux'
+
 const { width } = Dimensions.get('window')
 
 class PhotoDetail extends Component {
   constructor (props) {
     super(props)
-    console.log(props)
     this.state = {
       drawer: false
     }
   }
 
-  dismissPressed () {
-    // TODO
-    // This one dispatches an action to clear the state of the viewed photo
-    this.props.dismiss()
-    // This is actually dismissing the modal since we have no way to do that from a saga or otherwise
-    this.props.screenProps.dismiss()
+  static navigationOptions = ({ navigation }) => {
+    const headerLeft = (
+      <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
+        <Image
+          style={styles.toolbarLeft}
+          source={require('./statics/icon-arrow-left.png')}
+        />
+      </TouchableOpacity>
+    )
+    const headerRight = (
+        <View style={styles.toolbarIconsList}>
+          <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
+          <Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>
+          <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
+          <Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>
+        </View>
+    )
+
+    return {
+      headerStyle: styles.toolBar,
+      headerTintColor: styles.container.backgroundColor,
+      headerRight,
+      headerLeft,
+      tabBarVisible: false
+    }
   }
 
   renderImage () {
@@ -37,38 +56,15 @@ class PhotoDetail extends Component {
       imageId={this.props.photo.id}
       previewPath={'thumb'}
       path={'photo'}
-      style={{flex: 1, flexDirection: 'row', height: undefined, width: undefined}}
-      resizeMode={'cover'}
+      style={{flex: 1, flexDirection: 'row', height: undefined, width: width, marginBottom: 10}}
+      resizeMode={'contain'}
     />)
   }
 
-  get backButton () {
-    return (
-      <TouchableOpacity onPress={this.dismissPressed.bind(this)}>
-        <Image
-          style={styles.toolbarLeft}
-          source={require('./statics/icon-arrow-left.png')}
-        />
-      </TouchableOpacity>
-    )
-  }
   render () {
     return (
-      <View style={styles.container}>
-        <Toolbar
-          style={styles.toolbar}
-          left={this.backButton}
-          right={
-            <View style={styles.toolbarIconsList}>
-              <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
-              <Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>
-              <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
-              <Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>
-            </View>
-          }
-        />
+      <View style={styles.bodyContainer}>
         {this.renderImage()}
-        {/*<ImageSc width={width} source={require('./statics/photo3.png')}/>*/}
         <View style={styles.photoDetails}>
           <View style={styles.detailItem}>
             <Image style={styles.iconLocation} source={require('./statics/icon-location.png')}/>
@@ -95,12 +91,10 @@ class PhotoDetail extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dismiss: () => { dispatch(UIActions.dismissViewedPhoto()) }
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state.ui.viewingPhoto)
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
   const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items[state.ui.viewingPhoto.index]
   const path = thread.name === 'default' ? '/photo' : '/thumb'
