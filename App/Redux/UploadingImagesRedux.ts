@@ -48,7 +48,12 @@ export const initialState: UploadingImagesState = {
 }
 
 export const UploadingImagesSelectors = {
-  uploadingImageById: (state, id) => state.uploadingImages.images[id] as UploadingImage
+  uploadingImageById: (state, id) => state.uploadingImages.images[id] as UploadingImage,
+  imagesForRetry: (state) => {
+    return Object.keys(state.uploadingImages.images)
+      .map(key => state.uploadingImages.images[key])
+      .filter(image => image.state === 'error' && image.remainingUploadAttempts > 0) as UploadingImage[]
+  }
 }
 
 export function reducer (state: UploadingImagesState = initialState, action: UploadingImagesAction): UploadingImagesState {

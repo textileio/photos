@@ -32,7 +32,7 @@ import {
   shareImage,
   photosTask,
   removePayloadFile,
-  retryUploadAfterError,
+  handleUploadError,
   addThread,
   removeThread,
   refreshThreads,
@@ -87,7 +87,7 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
 
     takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
-    takeEvery(getType(UploadingImagesActions.imageUploadError), retryUploadAfterError),
+    takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
     takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),

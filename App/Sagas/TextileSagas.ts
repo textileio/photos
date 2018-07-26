@@ -249,15 +249,12 @@ export function * photosTask() {
   const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
   yield put(CameraRollActions.trackPhotos(urisToProcess))
 
-  var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
+  let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
   if (!defaultThread) {
     yield put(ThreadsActions.addThreadRequest('default'))
-    yield take(getType(ThreadsActions.addThreadSuccess))
+    const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
+    defaultThread = action.payload.thread
     yield put(ThreadsActions.refreshThreadsRequest())
-  }
-  defaultThread = yield call(getDefaultThread)
-  if (!defaultThread) {
-    return
   }
 
   let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string }[] = []
@@ -267,10 +264,10 @@ export function * photosTask() {
     try {
       photoPath = yield call(CameraRoll.getPhotoPath, uri)
       const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
-      const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
       if (!addResult.archive) {
         throw new Error('no archive returned')
       }
+      const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
       yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
       yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
       addedPhotosData.push({ uri, addResult, blockId })
@@ -298,6 +295,16 @@ export function * photosTask() {
     }
   }
 
+  // Process images for upload retry
+  const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
+  for (const imageToRetry of imagesToRetry) {
+    try {
+      yield uploadFile(imageToRetry.dataId, imageToRetry.path)
+    } catch (error) {
+      yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, error))
+    }
+  }
+
   const appState = yield select(TextileNodeSelectors.appState)
   if (appState.match(/background/)) {
     yield * stopNode()
@@ -311,11 +318,16 @@ export function * removePayloadFile (action: ActionType<typeof UploadingImagesAc
   yield put(UploadingImagesActions.imageRemovalComplete(dataId))
 }
 
-export function * retryUploadAfterError (action: ActionType<typeof UploadingImagesActions.imageUploadError>) {
+export function * handleUploadError (action: ActionType<typeof UploadingImagesActions.imageUploadError>) {
   const { dataId } = action.payload
   const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
-  yield put(UploadingImagesActions.imageUploadRetried(dataId))
-  yield uploadFile(uploadingImage.dataId, uploadingImage.path)
+  // If there are no more upload attempts, delete the payload file to free up disk space
+  if (uploadingImage.remainingUploadAttempts === 0) {
+    yield call(RNFS.unlink, uploadingImage.path)
+    // Commenting this out for now so we can always see the last error that happend,
+    // even though we're not going to retry the upload again.
+    // yield put(UploadingImagesActions.imageRemovalComplete(dataId))
+  }
 }
 
 function * uploadFile (id: string, payloadPath: string) {
