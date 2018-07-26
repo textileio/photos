@@ -1,0 +1,73 @@
+import { StyleSheet } from 'react-native'
+import { BentonSansBold } from '../../../util/fonts'
+
+export default StyleSheet.create({
+  container: {
+    marginTop: 20,
+    backgroundColor: '#FAFCFE',
+    flex: 1,
+  },
+  contentContainer: {
+    paddingHorizontal: 19,
+    paddingTop: 24
+  },
+  toolbarLeft: {
+    height: 16,
+    width: 40
+  },
+  toolbarIconsList: {
+    flexDirection: 'row',
+  },
+  toolbarAddIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 35
+  },
+  toolbarDownloadIcon: {
+    width: 22,
+    height: 21,
+     marginLeft: 35
+  },
+  toolbarShareIcon: {
+    width: 18,
+    height: 19,
+     marginLeft: 35
+  },
+  toolbarRemoveIcon: {
+    width: 14,
+    height: 18,
+     marginLeft: 35
+  },
+  photoDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    height: 50,
+    borderBottomWidth: 1,
+    borderColor: '#ECEDEE',
+  },
+  detailItem: {
+    flexDirection: 'row'
+  },
+  detailText: {
+    marginLeft: 9
+  },
+  iconLocation: {
+    width: 13,
+    height: 17,
+  },
+  iconInfo: {
+    width: 18,
+    height: 18
+  },
+  iconCalendar: {
+    width: 16,
+    height: 16,
+  },
+  threadsTitle: {
+    fontFamily: "BentonSans",
+    fontSize: 14,
+    color: "#9b9b9b",
+    paddingBottom: 16
+  }
+})
