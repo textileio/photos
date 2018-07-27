@@ -98,8 +98,6 @@
 - (void)setRepoPath:(NSString*)v;
 - (NSString*)mnemonic;
 - (void)setMnemonic:(NSString*)v;
-// skipped field Mobile.Online with unsupported type: *types.Chan
-
 - (NSString*)acceptExternalThreadInvite:(NSString*)id_ key:(NSString*)key error:(NSError**)error;
 - (BOOL)addDevice:(NSString*)name pubKey:(NSString*)pubKey error:(NSError**)error;
 - (NSString*)addExternalThreadInvite:(NSString*)threadId error:(NSError**)error;
@@ -119,6 +117,7 @@
 - (BOOL)refreshMessages:(NSError**)error;
 - (BOOL)removeDevice:(NSString*)id_ error:(NSError**)error;
 - (NSString*)removeThread:(NSString*)id_ error:(NSError**)error;
+- (NSString*)resolveProfileInfo:(NSString*)peerId key:(NSString*)key error:(NSError**)error;
 - (NSString*)sharePhotoToThread:(NSString*)dataId threadId:(NSString*)threadId caption:(NSString*)caption error:(NSError**)error;
 - (BOOL)signIn:(NSString*)username password:(NSString*)password error:(NSError**)error;
 - (BOOL)signOut:(NSError**)error;
