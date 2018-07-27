@@ -3,8 +3,7 @@ const { height, width } = Dimensions.get('window')
 
 export default StyleSheet.create({
   mainContainer: {
-    position: 'absolute',
-    top: 5
+    position: 'absolute'
   },
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
@@ -16,6 +15,7 @@ export default StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'white',
     zIndex: 100,
-    width
+    width,
+    bottom: 0
   }
 })

@@ -1,6 +1,7 @@
 import React from 'react'
 import DismissableStackNavigator from '../Components/DismissableStackNavigator'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
+import { Image } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import TextilePhotos from '../Containers/TextilePhotos'
 import InfoView from '../Containers/InfoView'
@@ -17,6 +18,8 @@ import AddThreadScreen from '../Containers/AddThreadScreen'
 // BEGIN: SB Screens
 import PhotoDetail from '../SB/views/PhotoDetail'
 import ThreadPhotoDetail from '../SB/views/ThreadPhotoDetail'
+import AddCaptionScreen from '../Containers/AddCaptionScreen'
+
 
 // Manifest of possible screens
 
@@ -27,6 +30,9 @@ const PhotosNav = StackNavigator(
     },
     PhotoViewer: {
       screen: PhotoDetail
+    },
+    SharePhoto: {
+      screen: AddCaptionScreen
     }
   },
   {
@@ -34,7 +40,7 @@ const PhotosNav = StackNavigator(
     headerMode: 'float',
     navigationOptions: {
       headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle,
+      headerTitleContainerStyle: styles.headerTitle,
       headerTintColor: headerTintColor
     }
   }
@@ -59,10 +65,13 @@ const SharedPhotosNav = StackNavigator(
     // Default config for all screens
     headerMode: 'float',
     navigationOptions: {
+      // headerStyle: styles.header,
+      // headerTitleStyle: styles.headerTitle,
+      // headerTintColor: headerTintColor,
+      // headerBackTitleStyle: styles.headerButton
       headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor,
-      headerBackTitleStyle: styles.headerButton
+      headerTitleContainerStyle: styles.headerTitle,
+      headerTintColor: headerTintColor
     }
   }
 )
@@ -91,36 +100,28 @@ const TabNav = TabNavigator(
   {
     navigationOptions: ({ navigation }) => {
       const {routeName} = navigation.state
-      let title
-      if (routeName === 'PhotosNav') {
-        title = 'Wallet'
-      } else if (routeName === 'SharedPhotosNav') {
-        title = 'Threads'
-      } else if (routeName === 'InfoNav') {
-        title = 'Support'
-      }
       return {
         tabBarIcon: ({focused, tintColor}) => {
-          let iconName
+          let icon
           if (routeName === 'PhotosNav') {
-            iconName = `ios-photos${focused ? '' : '-outline'}`
+            icon = focused ? require('../SB/components/BottomBar/statics/icon-wallet.png') : require('../SB/components/BottomBar/statics/icon-wallet.png')
           } else if (routeName === 'SharedPhotosNav') {
-            iconName = `ios-globe${focused ? '' : '-outline'}`
+            icon = focused ? require('../SB/components/BottomBar/statics/icon-threads-active.png') : require('../SB/components/BottomBar/statics/icon-threads.png')
           } else if (routeName === 'InfoNav') {
-            iconName = `ios-information-circle${focused ? '' : '-outline'}`
+            icon = focused ? require('../SB/components/BottomBar/statics/icon-feed.png') : require('../SB/components/BottomBar/statics/icon-feed.png')
           }
-          return <Ionicons name={iconName} size={25} color={tintColor} />
-        },
-        title: title
+          return <Image style={styles.bottomBarIcon} source={icon} />
+        }
       }
     },
     tabBarOptions: {
-      activeTintColor: Colors.brandRed
+      showLabel: false,
+      style: styles.bottomBar
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     animationEnabled: false,
-    swipeEnabled: false
+    swipeEnabled: false,
   }
 )
 
