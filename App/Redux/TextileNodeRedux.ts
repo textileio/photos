@@ -64,7 +64,7 @@ export type ThreadData = {
 }
 
 type ThreadMap = {
-  [key: string]: ThreadData
+  readonly [key: string]: ThreadData
 }
 
 type TextileNodeState = {
