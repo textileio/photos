@@ -11,7 +11,9 @@ import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 
 import styles from './statics/styles'
 
-import { photoList } from './constants'
+// Originally intended structure of the photo list
+// import { photoList } from './constants'
+
 import { Icon } from 'react-native-elements'
 import UIActions from '../../../Redux/UIRedux'
 
