@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { View, Text, ScrollView, Dimensions, StatusBar } from 'react-native'
+import { View, Text, Image, ScrollView, Dimensions, StatusBar, TouchableOpacity } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
+import { NavigationActions } from 'react-navigation';
 
 import Toolbar from '../../components/Toolbar'
 import BottomDrawerList from '../../components/BottomDrawerList'
@@ -19,20 +20,42 @@ const { width } = Dimensions.get('window')
 class ThreadPhotoDetail extends Component {
   constructor (props) {
     super(props)
-    console.log(props)
     this.state = {
       drawer: false
     }
   }
   static navigationOptions = ({ navigation }) => {
+
+    {/*<Toolbar*/}
+      {/*left={<Image style={styles.toolbarLeft} source={require('./statics/icon-arrow-left.png')} />}*/}
+      {/*right={*/}
+        {/*<View style={styles.toolBarRight}>*/}
+          {/*<Image style={styles.toolbarIconMore} source={require('./statics/icon-more.png')} />*/}
+        {/*</View>*/}
+      {/*}>*/}
+      {/*<Text style={styles.toolbarTitle}>Summer cheers!!! </Text>*/}
+    {/*</Toolbar>*/}
+
+
+    const headerLeft = (
+      <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
+        <Image style={styles.toolbarLeft} source={require('./statics/icon-arrow-left.png')} />
+      </TouchableOpacity>
+    )
+    const headerRight = (
+        <TouchableOpacity style={styles.toolBarRight}>
+          <Image style={styles.toolbarIconMore} source={require('./statics/icon-more.png')} />
+        </TouchableOpacity>
+    )
+
     return {
-      // headerRight,
+      headerLeft,
+      headerRight,
       tabBarVisible: false
     }
   }
 
   renderImage () {
-    console.log(this.props)
     return (<ProgressiveImage
       imageId={this.props.photo.id}
       previewPath={'thumb'}

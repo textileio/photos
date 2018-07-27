@@ -29,7 +29,9 @@ class BottomDrawerPhotos extends Component {
               <PhotoWithTextBox style={styles.photoElement} item={this.props.thumbs[thread.id]} text={thread.name} />
             </TouchableOpacity>
           ))}
-          <PhotoBoxEmpty />
+          <TouchableOpacity onPress={() => { this.props.seeMore() }}>
+            <PhotoBoxEmpty text={'See more threads'} />
+          </TouchableOpacity>
         </View>
       </Drawer>
     )

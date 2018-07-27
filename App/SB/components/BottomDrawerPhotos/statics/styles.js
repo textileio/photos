@@ -3,7 +3,8 @@ import { StyleSheet } from 'react-native'
 export default StyleSheet.create({
   container: {
     paddingHorizontal: 10,
-    paddingTop: 3
+    paddingTop: 3,
+    paddingBottom: 30 // <- quick hack to make sure the full menu shows on screen
   },
   header: {
     flexDirection: 'row',

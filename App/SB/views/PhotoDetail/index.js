@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions } from 'react-navigation'
 import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity, StatusBar } from 'react-native'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
@@ -28,7 +28,7 @@ class PhotoDetail extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    const {params = {}} = navigation.state;
+    const {params = {}} = navigation.state
     const headerLeft = (
       <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
         <Image
@@ -37,31 +37,28 @@ class PhotoDetail extends Component {
         />
       </TouchableOpacity>
     )
-    // const headerRight = (
-    //     <View style={styles.toolbarIconsList}>
-    //       <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
-    //       <Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>
-    //       <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
-    //       <Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>
-    //     </View>
-    // )
     const headerRight = (
-      <Icon name='share-apple' type='evilicon' color='#FFFFFF' underlayColor='rgba(0, 0, 0, 0)' size={38} onPress={() => { params.sharePressed() }} />
+        <View style={styles.toolbarIconsList}>
+          <TouchableOpacity onPress={params.sharePressed}>
+            <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
+          </TouchableOpacity>
+          <Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>
+          <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
+          <Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>
+        </View>
     )
 
     return {
-      // headerStyle: styles.toolBar,
-      // headerTintColor: styles.container.backgroundColor,
       headerRight,
-      // headerLeft,
+      headerLeft,
       tabBarVisible: false
     }
   }
 
-
   componentDidMount() {
     this.props.navigation.setParams({
-      sharePressed: this.sharePressed.bind(this)
+      sharePressed: this.sharePressed.bind(this),
+      shareIntoAny: this.shareIntoAny.bind(this)
     })
   }
 
@@ -74,14 +71,31 @@ class PhotoDetail extends Component {
     this.setState({drawer: false})
   }
 
-  shareIntoThread (i) {
+  // For when the user wants to share it into a thread we don't know yet
+  shareIntoAny () {
     this.setState({drawer: false})
-    console.log('TODO: NAVIGATE TO THE CREATE CAPTION VIEW: ', i)
-    // TODO navigate to the Comment view
+    console.log('TODO: NAVIGATE TO ANY THREAD: ')
   }
 
+  // For when the user wants to share it into a selected thread
+  shareIntoThread (i) {
+    this.setState({drawer: false})
+    const thread = this.props.threadsNotIn[i]
+    this.props.authorShare(this.props.photo.id)
+    console.log('TODO: NAVIGATE TO THE CREATE CAPTION VIEW: ', i)
+    this.props.navigation.navigate('SharePhoto', {thread, photo: this.props.photo})
+  }
+
+  // If a user wants to see a photo in a thread, this will navigate to the thread
   viewThread (thread) {
     console.log('TODO: NAVIGATE TO THE VIEW THREAD: ', thread.id)
+    console.log(this.props)
+    this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
+  }
+
+  createThread () {
+    console.log('TODO: NAVIGATE TO CREATE NEW THREAD')
+    this.props.navigation.navigate('AddThread')
   }
 
   renderImage () {
@@ -112,16 +126,18 @@ class PhotoDetail extends Component {
         </View>
         <ScrollView style={styles.contentContainer}>
           <Text style={styles.threadsTitle}>
-            {this.props.threadsIn.length > 0 && 'This photo appears in the following threads:'}
+            {this.props.threadsIn.length > 0 ? 'This photo appears in the following threads:' : 'You haven\'t shared this photo anywhere yet'}
           </Text>
           {this.props.threadsIn.map((thread, i) => (
             <TouchableOpacity  key={i} onPress={() => { this.viewThread(thread) }}>
               <PhotoWithTextBox key={i} text={thread.name} item={this.props.thumbs[thread.id]}/>
             </TouchableOpacity>
           ))}
-          <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}}/>
+          { this.props.threadsIn.length > 0 && <TouchableOpacity onPress={() => { this.createThread() }}>
+            <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}} text={'Create new thread'}/>
+          </TouchableOpacity> }
         </ScrollView>
-        {this.state.drawer && <BottomDrawerPhotos selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
+        {this.state.drawer && <BottomDrawerPhotos selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} seeMore={() => this.shareIntoAny()} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
       </View>
     )
   }
@@ -130,6 +146,7 @@ class PhotoDetail extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    authorShare: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
     shareImage: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) }
   }
 }
@@ -152,17 +169,24 @@ const mapStateToProps = (state, ownProps) => {
     }
   }
 
+  let threadsNotIn = state.threads.threads.filter(t => containingThreads.indexOf(t.id) < 0 && t.name !== 'default')
+  // TODO: This limits the display to the Top 3 threads by activity... this list should be scrollable instead and not have a limit.
+  if (threadsNotIn.length > 3) {
+    threadsNotIn = threadsNotIn.map(t => { return {...t, size: state.ipfs.threads[t.id].items.length} }).sort((a, b) => b - a).slice(0, 3)
+  }
+
   const path = thread.name === 'default' ? '/photo' : '/thumb'
   return {
     ...item,
     date: item.metadata.added.split('T')[0],
     key: item.photo.id + path,
     source: {url: 'file://' + item.photo.id + '.png'}, // <-- in case RN uses to know things
+    // TODO: real dimensions are in the metadata alread now
     dimensions: { width: 150, height: 150 },
     displayImages: state.ipfs.nodeState.state === 'started',
     currentIndex: state.ui.viewingPhoto.index,
     threadsIn: state.threads.threads.filter(t => containingThreads.indexOf(t.id) > -1 && t.name !== 'default'),
-    threadsNotIn: state.threads.threads.filter(t => containingThreads.indexOf(t.id) < 0 && t.name !== 'default'),
+    threadsNotIn,
     thumbs
   }
 }

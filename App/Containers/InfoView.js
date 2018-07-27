@@ -9,11 +9,13 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 // Styles
 import styles, {buttonColor1, buttonColor2, buttonColor3, buttonColor4} from './Styles/InfoViewStyle'
 import {buttonColor} from "./Styles/OnboardingScreenStyle";
+import navStyles from '../Navigation/Styles/NavigationStyles'
 
 class InfoView extends React.PureComponent {
 
   static navigationOptions = {
-    title: 'Support/Feedback'
+    headerTitle: (<Text style={navStyles.headerTitle}>Support/Feedback</Text>)
+
   }
 
   constructor (props) {
