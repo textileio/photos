@@ -46,6 +46,7 @@ import {
 
 export default function * root () {
   yield all([
+    photosTask(),
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
 
@@ -73,15 +74,6 @@ export default function * root () {
 
     // Actions that trigger creating (therefore starting/stopping) the node
     takeEvery(getType(PreferencesActions.onboardedSuccess), triggerCreateNode),
-
-    // All things we want to trigger photosTask are funneled through starting the node, so handle START_NODE_SUCCESS
-    // by running the photosTask saga here
-    takeEvery(getType(TextileNodeActions.startNodeSuccess), photosTask),
-
-    // The next two lines ensure that a single first photo is added to the interface
-    // upon a first install and sigin in. the above will fail because the default thread
-    // hasn't been created yet.
-    takeEvery(getType(PreferencesActions.onboardedSuccess), photosTask),
 
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
