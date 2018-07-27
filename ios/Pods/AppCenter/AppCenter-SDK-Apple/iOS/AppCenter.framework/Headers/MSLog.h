@@ -2,7 +2,7 @@
 
 @class MSDevice;
 
-@protocol MSLog
+@protocol MSLog <NSObject>
 
 /**
  * Log type.
@@ -36,5 +36,19 @@
  * @return YES, if the object is valid.
  */
 - (BOOL)isValid;
+
+/**
+ * Adds a transmission target token that this log should be sent to.
+ *
+ * @param token The transmission target token.
+ */
+- (void)addTransmissionTargetToken:(NSString *)token;
+
+/**
+ * Gets all transmission target tokens that this log should be sent to.
+ *
+ * @returns Collection of transmission target tokens that this log should be sent to.
+ */
+- (NSSet *)transmissionTargetTokens;
 
 @end
