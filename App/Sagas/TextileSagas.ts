@@ -235,13 +235,22 @@ export function * photosTask() {
     // This take effect inside a while loop ensures that the entire photoTask
     // will run before the next startNodeSuccess is received and photoTask run again
     yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])
+
+    let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
+    if (!defaultThread) {
+      yield put(ThreadsActions.addThreadRequest('default'))
+      const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
+      defaultThread = action.payload.thread
+      yield put(ThreadsActions.refreshThreadsRequest())
+    }
+
     const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
     if (!queriredPhotosInitialized) {
       yield put(CameraRollActions.updateQuerying(true))
       const uris: string[] = yield call(CameraRoll.getPhotos, 1000)
       yield put(CameraRollActions.updateQuerying(false))
       yield put(CameraRollActions.initialzePhotos(uris))
-      return
+      continue
     }
 
     yield put(CameraRollActions.updateQuerying(true))
@@ -252,14 +261,6 @@ export function * photosTask() {
 
     const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
     yield put(CameraRollActions.trackPhotos(urisToProcess))
-
-    let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
-    if (!defaultThread) {
-      yield put(ThreadsActions.addThreadRequest('default'))
-      const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
-      defaultThread = action.payload.thread
-      yield put(ThreadsActions.refreshThreadsRequest())
-    }
 
     let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string }[] = []
 
