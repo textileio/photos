@@ -231,83 +231,88 @@ export function * pendingInvitesTask () {
 }
 
 export function * photosTask() {
-  const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
-  if (!queriredPhotosInitialized) {
+  while (true) {
+    // This take effect inside a while loop ensures that the entire photoTask
+    // will run before the next startNodeSuccess is received and photoTask run again
+    yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])
+    const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
+    if (!queriredPhotosInitialized) {
+      yield put(CameraRollActions.updateQuerying(true))
+      const uris: string[] = yield call(CameraRoll.getPhotos, 1000)
+      yield put(CameraRollActions.updateQuerying(false))
+      yield put(CameraRollActions.initialzePhotos(uris))
+      return
+    }
+
     yield put(CameraRollActions.updateQuerying(true))
-    const uris: string[] = yield call(CameraRoll.getPhotos, 1000)
+    const uris: string[] = yield call(CameraRoll.getPhotos, 250)
     yield put(CameraRollActions.updateQuerying(false))
-    yield put(CameraRollActions.initialzePhotos(uris))
-    return
-  }
 
-  yield put(CameraRollActions.updateQuerying(true))
-  const uris: string[] = yield call(CameraRoll.getPhotos, 250)
-  yield put(CameraRollActions.updateQuerying(false))
+    const previouslyQueriedPhotos: QueriedPhotosMap = yield select(cameraRollSelectors.queriedPhotos)
 
-  const previouslyQueriedPhotos: QueriedPhotosMap = yield select(cameraRollSelectors.queriedPhotos)
+    const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
+    yield put(CameraRollActions.trackPhotos(urisToProcess))
 
-  const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
-  yield put(CameraRollActions.trackPhotos(urisToProcess))
+    let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
+    if (!defaultThread) {
+      yield put(ThreadsActions.addThreadRequest('default'))
+      const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
+      defaultThread = action.payload.thread
+      yield put(ThreadsActions.refreshThreadsRequest())
+    }
 
-  let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
-  if (!defaultThread) {
-    yield put(ThreadsActions.addThreadRequest('default'))
-    const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
-    defaultThread = action.payload.thread
-    yield put(ThreadsActions.refreshThreadsRequest())
-  }
+    let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string }[] = []
 
-  let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string }[] = []
-
-  for (const uri of urisToProcess) {
-    let photoPath = ''
-    try {
-      photoPath = yield call(CameraRoll.getPhotoPath, uri)
-      const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
-      if (!addResult.archive) {
-        throw new Error('no archive returned')
-      }
-      const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-      yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-      yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
-      addedPhotosData.push({ uri, addResult, blockId })
-    } catch (error) {
-      yield put(CameraRollActions.untrackPhoto(uri))
-      const exists: boolean = yield call(RNFS.exists, photoPath)
-      if (exists) {
-        yield call(RNFS.unlink, photoPath)
+    for (const uri of urisToProcess) {
+      let photoPath = ''
+      try {
+        photoPath = yield call(CameraRoll.getPhotoPath, uri)
+        const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+        if (!addResult.archive) {
+          throw new Error('no archive returned')
+        }
+        const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+        yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+        yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
+        addedPhotosData.push({ uri, addResult, blockId })
+      } catch (error) {
+        yield put(CameraRollActions.untrackPhoto(uri))
+        const exists: boolean = yield call(RNFS.exists, photoPath)
+        if (exists) {
+          yield call(RNFS.unlink, photoPath)
+        }
       }
     }
-  }
 
-  for (const addedPhotoData of addedPhotosData) {
-    try {
-      if (!addedPhotoData.addResult.archive) {
-        throw new Error('no archive to upload')
+    for (const addedPhotoData of addedPhotosData) {
+      try {
+        if (!addedPhotoData.addResult.archive) {
+          throw new Error('no archive to upload')
+        }
+        yield uploadFile(
+          addedPhotoData.addResult.id,
+          addedPhotoData.addResult.archive.path
+        )
+      } catch (error) {
+        // Leave all the data in place so we can rerty upload
+        yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, error))
       }
-      yield uploadFile(
-        addedPhotoData.addResult.id,
-        addedPhotoData.addResult.archive.path
-      )
-    } catch (error) {
-      // Leave all the data in place so we can rerty upload
-      yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, error))
     }
-  }
 
-  // Process images for upload retry
-  const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
-  for (const imageToRetry of imagesToRetry) {
-    try {
-      yield uploadFile(imageToRetry.dataId, imageToRetry.path)
-    } catch (error) {
-      yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, error))
+    // Process images for upload retry
+    const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
+    for (const imageToRetry of imagesToRetry) {
+      try {
+        yield uploadFile(imageToRetry.dataId, imageToRetry.path)
+      } catch (error) {
+        yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, error))
+      }
     }
-  }
 
-  const appState = yield select(TextileNodeSelectors.appState)
-  if (appState.match(/background/)) {
-    yield * stopNode()
+    const appState = yield select(TextileNodeSelectors.appState)
+    if (appState.match(/background/)) {
+      yield * stopNode()
+    }
   }
 }
 
