@@ -6,7 +6,7 @@ import ActionSheet from 'react-native-actionsheet'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
+import TextileNodeActions, { ThreadData, PhotosQueryResult } from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
@@ -76,11 +76,13 @@ class TextilePhotos extends React.PureComponent {
       <View style={style.container}>
         <PhotoGrid
           items={this.props.items}
+          progressData={this.props.progressData}
           onSelect={this.onSelect}
           onRefresh={this.onRefresh.bind(this)}
           refreshing={this.props.refreshing}
           placeholderText={this.props.placeholderText}
           displayImages={this.props.displayImages}
+          verboseUi={this.props.verboseUi}
         />
         <ActionSheet
           ref={o => this.actionSheet = o}
@@ -91,7 +93,7 @@ class TextilePhotos extends React.PureComponent {
         />
         {this.props.verboseUi &&
           <View style={style.bottomOverlay} >
-            <Text style={style.overlayText}>{this.props.nodeStatus}</Text>
+            <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
           </View>
         }
       </View>
@@ -106,20 +108,12 @@ const mapStateToProps = (state, ownProps) => {
   const defaultThreadId = defaultThread ? defaultThread.id : undefined
   const threadId = navParams.id || defaultThreadId
 
-  var items = []
+  var items: PhotosQueryResult[] = []
   var refreshing = false
   var thread = undefined
   if (threadId) {
     const threadData: ThreadData = state.ipfs.threads[threadId] || { querying: false, items: [] }
-    let allItemsObj = threadData.items.reduce((o, item, index) => ({...o, [item.photo.id]: { index, hash: item.photo.id, caption: item.photo.caption, state: 'complete' }}), {})
-    for (const processingItem of state.textile.images.items) {
-      const item = allItemsObj[processingItem.hash]
-      if (item) {
-        const updatedItem = { ...item, ...processingItem }
-        allItemsObj[processingItem.hash] = updatedItem
-      }
-    }
-    items = Object.values(allItemsObj).sort((a, b) => a.index > b.index)
+    items = threadData.items
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
@@ -130,6 +124,8 @@ const mapStateToProps = (state, ownProps) => {
     ? 'Error - ' + state.ipfs.nodeState.error.message
     : state.ipfs.nodeState.state
 
+  const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
+
   const placeholderText = state.ipfs.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
     : (threadName === 'default'
@@ -139,10 +135,12 @@ const mapStateToProps = (state, ownProps) => {
     threadId,
     threadName,
     items,
+    progressData: state.uploadingImages.images,
     refreshing,
     displayImages: state.ipfs.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
+    queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi
   }
 }

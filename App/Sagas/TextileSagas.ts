@@ -20,7 +20,7 @@ import PhotosNavigationService from '../Services/PhotosNavigationService'
 import TextileNode from '../../TextileNode'
 import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
 import StartupActions from '../Redux/StartupRedux'
-import TextileActions, { TextileSelectors } from '../Redux/TextileRedux'
+import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
@@ -33,6 +33,8 @@ import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
+import * as CameraRoll from '../Services/CameraRoll'
+import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import DeepLink from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
@@ -219,123 +221,118 @@ async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
   return defaultThread
 }
 
-  export function * pendingInvitesTask () {
-    // Process any pending external invites created while user wasn't logged in
-    const threads = yield select(ThreadsSelectors.threads)
-    if (threads.pendingInviteLink) {
-      yield call(DeepLink.route, threads.pendingInviteLink, NavigationService)
-      yield put(ThreadsActions.removeExternalInviteLink())
-    }
+export function * pendingInvitesTask () {
+  // Process any pending external invites created while user wasn't logged in
+  const threads = yield select(ThreadsSelectors.threads)
+  if (threads.pendingInviteLink) {
+    yield call(DeepLink.route, threads.pendingInviteLink, NavigationService)
+    yield put(ThreadsActions.removeExternalInviteLink())
   }
+}
 
-  export function * photosTask () {
-  try {
-    var defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
+export function * photosTask() {
+  while (true) {
+    // This take effect inside a while loop ensures that the entire photoTask
+    // will run before the next startNodeSuccess is received and photoTask run again
+    yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])
+
+    let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {
       yield put(ThreadsActions.addThreadRequest('default'))
-      yield take(getType(TextileActions.addThreadSuccess))
+      const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
+      defaultThread = action.payload.thread
       yield put(ThreadsActions.refreshThreadsRequest())
     }
-    defaultThread = yield call(getDefaultThread)
-    if (!defaultThread) {
-      return
-    }
-    const camera = yield select(TextileSelectors.camera)
-    let limit = camera.processed === undefined ? -1 : 250
-    let allPhotos = yield call(getAllPhotos, limit)
 
-    // for new users, just grab their latest photos
-    if (camera.processed === undefined) {
-      const ignoredPhotos = allPhotos.splice(1)
-      yield put(TextileActions.urisToIgnore(ignoredPhotos.map(photo => photo.uri)))
+    const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
+    if (!queriredPhotosInitialized) {
+      yield put(CameraRollActions.updateQuerying(true))
+      const uris: string[] = yield call(CameraRoll.getPhotos, 1000)
+      yield put(CameraRollActions.updateQuerying(false))
+      yield put(CameraRollActions.initialzePhotos(uris))
+      continue
     }
 
-    const processed = camera && camera.processed ? camera.processed : {}
-    const photos = allPhotos.filter((photo) => {
-      // THis used to also allow,  || processed[photo.uri] === 'error' to lead to an upload attemp. However, this was leading to the duplicate thumbs because the UI didn't know the retry was the same as the error'd thumb.
-      switch (processed[photo.uri] === undefined) {
-        case (true):
-          return true
-        default:
-          return false
-      }
-    })
+    yield put(CameraRollActions.updateQuerying(true))
+    const uris: string[] = yield call(CameraRoll.getPhotos, 250)
+    yield put(CameraRollActions.updateQuerying(false))
 
-    // ensure that no other jobs try to process the same photo
-    yield put(TextileActions.photosProcessing(photos))
+    const previouslyQueriedPhotos: QueriedPhotosMap = yield select(cameraRollSelectors.queriedPhotos)
 
-    let photoUploads = []
-    // Convert all our new entries to thumbs before anything else
-    for (let photo of photos.reverse()) {
+    const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
+    yield put(CameraRollActions.trackPhotos(urisToProcess))
+
+    let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string }[] = []
+
+    for (const uri of urisToProcess) {
+      let photoPath = ''
       try {
-        photo = yield call(getPhotoPath, photo)
-        const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photo.path)
-        // TODO: something with this block id?
+        photoPath = yield call(CameraRoll.getPhotoPath, uri)
+        const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+        if (!addResult.archive) {
+          throw new Error('no archive returned')
+        }
         const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-        photoUploads.push({
-          photo,
-          addResult
-        })
+        yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+        yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
+        addedPhotosData.push({ uri, addResult, blockId })
       } catch (error) {
-        // if error, delete the photo copy and thumb from disk then fire error
-        try {
-          yield call(RNFS.unlink, photo.path)
-        } finally {
-          yield put(TextileActions.photoProcessingError(photo.uri, error))
+        yield put(CameraRollActions.untrackPhoto(uri))
+        const exists: boolean = yield call(RNFS.exists, photoPath)
+        if (exists) {
+          yield call(RNFS.unlink, photoPath)
         }
       }
     }
-    // refresh our gallery
-    yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
-    // initialize and complete our uploads
-    for (let photoData of photoUploads) {
-      let {photo, addResult} = photoData
+
+    for (const addedPhotoData of addedPhotosData) {
       try {
-        yield put(TextileActions.imageAdded(photo.uri, 'default', addResult.id, addResult.archive.path))
-        yield uploadFile(addResult.id, addResult.archive.path)
-      } catch (error) {
-        yield put(TextileActions.photoProcessingError(photo.uri, error))
-      } finally {
-        // no matter what, after add/update try to unlink the file from drive
-        try {
-          yield call(RNFS.unlink, photo.path)
-        } catch (error) {
-          yield put(TextileActions.photoProcessingError(photo.uri, error))
+        if (!addedPhotoData.addResult.archive) {
+          throw new Error('no archive to upload')
         }
+        yield uploadFile(
+          addedPhotoData.addResult.id,
+          addedPhotoData.addResult.archive.path
+        )
+      } catch (error) {
+        // Leave all the data in place so we can rerty upload
+        yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, error))
       }
     }
-  } catch (error) {
-    yield put(TextileActions.photosTaskError(error))
-  } finally {
+
+    // Process images for upload retry
+    const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
+    for (const imageToRetry of imagesToRetry) {
+      try {
+        yield uploadFile(imageToRetry.dataId, imageToRetry.path)
+      } catch (error) {
+        yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, error))
+      }
+    }
+
     const appState = yield select(TextileNodeSelectors.appState)
     if (appState.match(/background/)) {
       yield * stopNode()
-    } else {
-      yield put(TextileNodeActions.lock(false))
     }
   }
 }
 
-export function * removePayloadFile ({data}) {
-  const { id } = data
-  const items = yield select(TextileSelectors.itemsById, id)
-  for (const item of items) {
-    if (item.payloadPath && item.state === 'complete') {
-      // TODO: probably should be a try/catch?
-      yield call(RNFS.unlink, item.payloadPath)
-    }
-  }
-  yield put(TextileActions.imageRemovalComplete(id))
+export function * removePayloadFile (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
+  const { dataId } = action.payload
+  const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
+  yield call(RNFS.unlink, uploadingImage.path)
+  yield put(UploadingImagesActions.imageRemovalComplete(dataId))
 }
 
-export function * retryUploadAfterError ({data}) {
-  const { id } = data
-  const items = yield select(TextileSelectors.itemsById, id)
-  for (const item of items) {
-    if (item.remainingUploadAttempts > 0) {
-      yield put(TextileActions.imageUploadRetried(item.hash))
-      yield uploadFile(item.hash, item.payloadPath)
-    }
+export function * handleUploadError (action: ActionType<typeof UploadingImagesActions.imageUploadError>) {
+  const { dataId } = action.payload
+  const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
+  // If there are no more upload attempts, delete the payload file to free up disk space
+  if (uploadingImage.remainingUploadAttempts === 0) {
+    yield call(RNFS.unlink, uploadingImage.path)
+    // Commenting this out for now so we can always see the last error that happend,
+    // even though we're not going to retry the upload again.
+    // yield put(UploadingImagesActions.imageRemovalComplete(dataId))
   }
 }
 

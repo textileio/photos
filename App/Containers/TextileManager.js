@@ -7,7 +7,8 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import BackgroundTask from 'react-native-background-task'
-import TextileActions from '../Redux/TextileRedux'
+import TriggersActions from '../Redux/TriggersRedux'
+import UploadingImagesActions from '../Redux/UploadingImagesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
@@ -83,10 +84,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     appStateChange: (previousState: AppStateStatus, newState: AppStateStatus) => { dispatch(TextileNodeActions.appStateChange(previousState, newState)) },
-    locationUpdate: () => { dispatch(TextileActions.locationUpdate()) },
-    uploadComplete: event => { dispatch(TextileActions.imageUploadComplete(event)) },
-    uploadProgress: event => { dispatch(TextileActions.imageUploadProgress(event)) },
-    uploadError: event => { dispatch(TextileActions.imageUploadError(event)) }
+    locationUpdate: () => { dispatch(TriggersActions.locationUpdate()) },
+    uploadComplete: e => { dispatch(UploadingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody)) },
+    uploadProgress: e => { dispatch(UploadingImagesActions.imageUploadProgress(e.id, e.progress)) },
+    uploadError: e => { dispatch(UploadingImagesActions.imageUploadError(e.id, e.error)) }
   }
 }
 

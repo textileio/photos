@@ -12,6 +12,7 @@ import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
 // import IPFSImage from './IPFSImage'
 import TextileImage from '../../TextileImage'
+import { UploadingImage } from '../Redux/UploadingImagesRedux'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
@@ -25,24 +26,27 @@ export default class PhotoGrid extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow (row) {
+    const uploadingImage: UploadingImage | undefined = this.props.progressData[row.item.photo.id]
     let overlay
-    if (row.item.state === 'pending') {
-      overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
-    } else if (row.item.state === 'processing') {
-      overlay = <Progress.Pie progress={row.item.progress} size={20} color={Colors.brandPink} />
-    } else if (row.item.state === 'error') {
-      const displayError = () => {
-        this.refs.toast.show(row.item.error, 2000)
+    if (uploadingImage && this.props.verboseUi) {
+      if (uploadingImage.state === 'pending') {
+        overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
+      } else if (uploadingImage.state === 'uploading') {
+        overlay = <Progress.Pie progress={uploadingImage.uploadProgress} size={20} color={Colors.brandPink} />
+      } else if (uploadingImage.state === 'error') {
+        const displayError = () => {
+          this.refs.toast.show(uploadingImage.errorMessage, 2000)
+        }
+        overlay = <TouchableOpacity onPress={displayError}>
+          <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+        </TouchableOpacity>
       }
-      overlay = <TouchableOpacity onPress={displayError}>
-        <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
-      </TouchableOpacity>
     }
     return (
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
-            imageId={row.item.hash}
+            imageId={row.item.photo.id}
             path={'thumb'}
             style={styles.itemImage}
             resizeMode={'cover'}
@@ -67,7 +71,7 @@ export default class PhotoGrid extends React.PureComponent {
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item, index) => item.hash
+  keyExtractor = (item, index) => item.photo.id
 
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 20
