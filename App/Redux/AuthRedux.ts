@@ -95,7 +95,6 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
     case getType(actions.recoverPasswordRequest):
       return { ...state, processing: true }
     case getType(actions.getUsernameSuccess):
-      console.log('USERNAME', action.payload)
       return { ...state, username: action.payload.username }
     case getType(actions.getTokensSuccess):
       return { ...state, processing: false, tokens: action.payload.tokens }
