@@ -249,17 +249,17 @@ jobs:
           command: bundle exec fastlane beta
           working_directory: ios
 
-      - run:
-          command: react-native bundle --entry-file index.js --platform ios --dev false --reset-cache --bundle-output unused.jsbundle --sourcemap-output index.ios.map
+      #- run:
+      #    command: react-native bundle --entry-file index.js --platform ios --dev false --reset-cache --bundle-output unused.jsbundle --sourcemap-output index.ios.map
 
-      - run:
-          command: zip ./AppCenterArtifacts.zip ./index.ios.map ./ios/TextilePhotos.app.dSYM.zip
+      #- run:
+      #    command: zip ./AppCenterArtifacts.zip ./index.ios.map ./ios/TextilePhotos.app.dSYM.zip
       
-      - store_artifacts:
-          path: ./AppCenterArtifacts.zip
+      #- store_artifacts:
+      #    path: ./AppCenterArtifacts.zip
       
-      - store_artifacts:
-          path: ./index.ios.map
+      #- store_artifacts:
+      #    path: ./index.ios.map
       
       - store_artifacts:
           path: ./ios/TextilePhotos.app.dSYM.zip
