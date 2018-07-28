@@ -249,17 +249,14 @@ jobs:
           command: bundle exec fastlane beta
           working_directory: ios
 
-      #- run:
-      #    command: react-native bundle --entry-file index.js --platform ios --dev false --reset-cache --bundle-output unused.jsbundle --sourcemap-output index.ios.map
+      - run:
+          command: npm install -g react-native-cli appcenter-cli 
 
-      #- run:
-      #    command: zip ./AppCenterArtifacts.zip ./index.ios.map ./ios/TextilePhotos.app.dSYM.zip
+      - run:
+          command: react-native bundle --entry-file index.js --platform ios --dev false --reset-cache --bundle-output unused.jsbundle --sourcemap-output index.ios.map
       
-      #- store_artifacts:
-      #    path: ./AppCenterArtifacts.zip
-      
-      #- store_artifacts:
-      #    path: ./index.ios.map
+      - store_artifacts:
+          path: ./index.ios.map
       
       - store_artifacts:
           path: ./ios/TextilePhotos.app.dSYM.zip
@@ -268,16 +265,16 @@ jobs:
           path: ./ios/TextilePhotos.ipa
 
       - run:
-          command: yarn exec appcenter crashes upload-symbols -s ./AppCenterArtifacts.zip --app $APP_CENTER_APP --token $APP_CENTER_API_TOKEN    
+          command: appcenter crashes upload-symbols -m ./index.ios.map -s ./ios/TextilePhotos.app.dSYM.zip  --app $APP_CENTER_APP --token $APP_CENTER_API_TOKEN --disable-telemetry
 
 workflows:
   version: 2
   node-android-ios:
     jobs:
       - node
-      - android:
-          requires:
-            - node
+    #   - android:
+    #       requires:
+    #         - node
       - ios:
           requires:
             - node
@@ -287,9 +284,9 @@ workflows:
           filters:
             branches:
               only: master
-      - android-beta:
-          requires:
-            - android
-          filters:
-            branches:
-              only: master
+    #   - android-beta:
+    #       requires:
+    #         - android
+    #       filters:
+    #         branches:
+    #           only: master
