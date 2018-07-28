@@ -285,8 +285,8 @@ workflows:
             branches:
               only: master
       - android-beta:
-        #   requires:
-        #     - android
+          requires:
+            - node
           filters:
             branches:
               only: master
