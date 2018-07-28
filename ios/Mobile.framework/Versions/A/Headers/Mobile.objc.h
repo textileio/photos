@@ -110,6 +110,7 @@
 - (NSString*)getPhotoData:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotoMetadata:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit threadId:(NSString*)threadId error:(NSError**)error;
+- (NSString*)getPubKey:(NSError**)error;
 - (NSString*)getThumbData:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getTokens:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
