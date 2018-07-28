@@ -21,28 +21,37 @@ const HEIGHT = IOS
 class BottomDrawerPhotos extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      isVisible: true
+    }
   }
 
   render () {
     return (
-      <Modal isVisible animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} height={HEIGHT} width={WIDTH}>
+      <Modal isVisible animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{width: WIDTH, height: HEIGHT, margin: 0, padding: 0}}>
         <View style={styles.container} >
-        <View style={styles.header}>
-          <Text style={styles.title}>Share this photo in:</Text>
-          <TouchableOpacity onPress={ () => { this.props.onClose() }}>
-            <Image style={styles.closeIcon} source={require('./statics/icon-cancel.png')}/>
-          </TouchableOpacity>
-        </View>
-        <ScrollView style={styles.listContainer}>
-          {this.props.threads.map((thread, i) => (
-            <TouchableOpacity  key={i} onPress={() => { this.props.selector(i) }}>
-              <PhotoWithTextBox style={styles.photoElement} item={this.props.thumbs[thread.id]} text={thread.name} />
+          <View style={styles.header}>
+            <Text style={styles.title}>Share this photo in:</Text>
+            <TouchableOpacity onPress={ () => {
+              this.props.onClose()
+            }}>
+              <Image style={styles.closeIcon} source={require('./statics/icon-cancel.png')}/>
             </TouchableOpacity>
-          ))}
-          <TouchableOpacity onPress={() => { this.props.seeMore() }}>
-            <PhotoBoxEmpty text={'See more threads'} />
-          </TouchableOpacity>
-        </ScrollView>
+          </View>
+          <ScrollView style={styles.listContainer}>
+            {this.props.threads.map((thread, i) => (
+              <TouchableOpacity  key={i} onPress={() => {
+                this.props.selector(i)
+              }}>
+                <PhotoWithTextBox style={styles.photoElement} item={this.props.thumbs[thread.id]} text={thread.name} />
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity onPress={() => {
+              this.props.createThread()
+            }}>
+              <PhotoBoxEmpty />
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       </Modal>
     )

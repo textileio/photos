@@ -6,10 +6,11 @@ export default StyleSheet.create({
     paddingTop: 3,
     // marginTop: 100, // <- changed because headers will be outside of Containers now...
     backgroundColor: '#FAFCFE',
-    flex: 1,
-    height: 200,
+    height: 400,
     position: 'absolute',
-    bottom: 0
+    bottom: 0,
+    left: 0,
+    right: 0
   },
   header: {
     flexDirection: 'row',
