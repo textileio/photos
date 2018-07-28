@@ -267,8 +267,8 @@ jobs:
       - store_artifacts:
           path: ./ios/TextilePhotos.ipa
 
-      - run:
-          command: yarn exec appcenter crashes upload-symbols -s ./AppCenterArtifacts.zip --app $APP_CENTER_APP --token $APP_CENTER_API_TOKEN    
+      #- run:
+      #    command: yarn exec appcenter crashes upload-symbols -s ./AppCenterArtifacts.zip --app $APP_CENTER_APP --token $APP_CENTER_API_TOKEN    
 
 workflows:
   version: 2
