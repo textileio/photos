@@ -34,7 +34,7 @@ class InfoView extends React.PureComponent {
       <View style={styles.container}>
         <View style={styles.messageContainer}>
           <Text style={styles.message}>
-            Thanks for taking part in the Textile Beta. We'd love to hear any thoughts or feedback you can offer. Use one of the links below to reach us on Telegram, Twitter, or via Email.
+            Thanks trying Textile Photos. We'd love to hear any thoughts or feedback you can offer. Use one of the links below to reach us on Telegram, Twitter, or via Email.
           </Text>
           <View style={styles.iconsRow} >
             <Icon
@@ -62,8 +62,8 @@ class InfoView extends React.PureComponent {
         </View>
         <Button
           onPress={this.handlePress.bind(this)}
-          title='COPY DEVICE ID TO CLIPBOARD'
-          accessibilityLabel='copy device id to clipboard'
+          title='COPY PUBLIC KEY TO CLIPBOARD'
+          accessibilityLabel='copy public key to clipboard'
           color={buttonColor3}
         />
         <Toast ref='toast' position='center' />

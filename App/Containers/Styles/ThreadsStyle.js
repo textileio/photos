@@ -22,7 +22,7 @@ export default StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontFamily: 'BentonSans',
-    color: Colors.charcoal,
+    color: "#9b9b9b",
     alignSelf: 'center'
   },
   button: {
