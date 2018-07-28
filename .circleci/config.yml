@@ -265,7 +265,7 @@ jobs:
           path: ./ios/TextilePhotos.ipa
 
       - run:
-          command: appcenter crashes upload-symbols -m index.ios.map -s TextilePhotos.app.dSYM.zip  --app $APP_CENTER_APP --token $APP_CENTER_API_TOKEN    
+          command: appcenter crashes upload-symbols -m ./index.ios.map -s ./ios/TextilePhotos.app.dSYM.zip  --app $APP_CENTER_APP --token $APP_CENTER_API_TOKEN --disable-telemetry
 
 workflows:
   version: 2
