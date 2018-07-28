@@ -2,16 +2,20 @@ import { SwitchNavigator } from 'react-navigation'
 import OnboardingNavigation from './OnboardingNavigation'
 import TextileManager from '../Containers/TextileManager'
 import OnboardingCheck from '../Containers/OnboardingCheck'
-import PairingView from '../Containers/PairingView'
-import ThreadInvite from '../Containers/ThreadInvite'
+import AndrewPairingInvite from '../SB/views/AndrewDeviceInvite'
+import AndrewThreadInvite from '../SB/views/AndrewThreadInvite'
 
 const PrimaryNav = SwitchNavigator(
   {
     OnboardingCheck: OnboardingCheck,
     OnboardingNavigation: OnboardingNavigation,
     TextileManager: TextileManager,
-    PairingView: PairingView,
-    ThreadInvite: ThreadInvite
+    PairingView: {
+      screen: AndrewPairingInvite
+    },
+    ThreadInvite: {
+      screen: AndrewThreadInvite
+    }
   },
   {
     initialRouteName: 'OnboardingCheck'
