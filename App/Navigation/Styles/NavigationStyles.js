@@ -1,23 +1,91 @@
 import { StyleSheet } from 'react-native'
 import { Colors } from '../../Themes/'
 
-export const headerTintColor = Colors.snow
+export const headerTintColor = Colors.charcoal
 
 export default StyleSheet.create({
+
   header: {
     // Styles the screen header in Textile Photos feed view
-    backgroundColor: Colors.brandBlue
+    // backgroundColor: Colors.brandBlue
+    paddingHorizontal: 10,
+    backgroundColor: 'white',
+    borderBottomColor: '#ECEDEE',
   },
+  headerIconList: {
+    width: 23,
+    height: 20
+  },
+  // headerTitle: {
+  //   fontFamily: "BentonSans",
+  //   fontSize: 30,
+  //   paddingTop: 23,
+  //   color: Colors.charcoal
+  // },
+  headerIconUser: {
+    width: 24,
+    height: 24,
+  },
+
+  headerLogo: {
+    width: 82.5,
+    height: 23
+  },
+  headerIcon: {
+    width: 24,
+    height: 24
+  },
+  headerLeft: {
+    height: 16,
+    width: 40
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerIconPhoto: {
+    height: 24,
+    width: 27,
+    marginRight: 16
+  },
+  headerIconMore: {
+    height: 4,
+    marginVertical: 6, // <- makes it more easily clickable
+    width: 16
+  },
+  bottomBar: {
+    width: '100%',
+    borderTopColor: '#ECEDEE',
+    borderTopWidth: 1,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  bottomBarIcon: {
+    height: 24,
+    width: 24,
+    marginHorizontal: 50,
+    marginVertical: 14
+  },
+  bottomBarIconActive: {
+    borderBottomColor: '#2625FF',
+    borderBottomWidth: 2
+  },
+
+  // END SB Styles
+
   headerTitleImage: {
     marginHorizontal: 16
   },
   headerTitle: {
-    fontFamily: 'BentonSans-Bold',
-    color: Colors.snow
+    fontFamily: "BentonSans",
+    paddingTop: 8, // <- needed because BentonSans has that weird bottom gap
+    color: Colors.charcoal
   },
   headerButton: {
     fontFamily: 'BentonSans',
-    color: Colors.snow,
+    color: Colors.charcoal,
     fontSize: 17
   },
   icon: {
@@ -26,7 +94,7 @@ export default StyleSheet.create({
   tabStyle: {
     backgroundColor: Colors.transparent,
     borderTopWidth: 0,
-    borderTopColor: 'white',
+    borderTopColor: Colors.charcoal,
     position: 'absolute',
     paddingBottom: 8,
     bottom: 0,

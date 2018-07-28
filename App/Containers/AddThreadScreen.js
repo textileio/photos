@@ -1,46 +1,44 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, TextInput } from 'react-native'
+import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native'
+import Input from '../SB/components/Input'
 import { Button } from 'react-native-elements'
+import { NavigationActions } from 'react-navigation'
 import HeaderButtons from 'react-navigation-header-buttons'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import styles from './Styles/AddThreadStyle'
+// import styles from './Styles/AddThreadStyle'
 import ThreadsActions from '../Redux/ThreadsRedux'
-
-// export interface Props {
-//   headerTitle: string
-//   submitText: string
-//   submit: (value: string) => void
-//   placeholder: string
-// }
-
-// export interface State {
-//   value: string
-// }
+import styles from '../SB/views/ThreadCreate/statics/styles'
 
 class AddThreadScreen extends React.Component {
 
   state = {
-    value: ''
+    value: '',
+    submitted: false
   }
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
-      headerTitle: 'New Thread',
-      headerRight: (
-        <Button
-          buttonStyle={{backgroundColor: 'rgba(0,0,0,0)'}}
-          titleStyle={navStyles.headerButton}
-          disabledTitleStyle={{color: 'rgba(255,255,255,0.5)'}}
-          onPress={() => params.submit()}
-          title={'Create'}
-          color="#fff"
-          disabled={params.submitDisabled}
-        />
-        // <HeaderButtons color="white">
-        //   <HeaderButtons.Item title="Create" buttonStyle={navStyles.headerButton} onPress={() => console.warn('edit')} />
-        // </HeaderButtons>
+      headerTitle: undefined,
+      headerLeft: (
+        <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
+          <Image
+            style={navStyles.headerLeft}
+            source={require('../SB/views/ThreadsDetail/statics/icon-arrow-left.png')}
+          />
+        </TouchableOpacity>
+      ),
+      headerRight: params.submitEnabled && (
+        <View style={styles.toolBarRight}>
+          <Button
+            buttonStyle={{backgroundColor: 'rgba(0,0,0,0)'}}
+            titleStyle={styles.link}
+            onPress={() => params.submit()}
+            title={'Next'}
+            color='#fff'
+          />
+        </View>
       ),
     }
   }
@@ -48,34 +46,35 @@ class AddThreadScreen extends React.Component {
   handleNewText = (text: string) => {
     this.setState({ value: text})
     this.props.navigation.setParams({
-      submit: () => { this.props.submit(this.state.value) },
-      submitDisabled: (text.length === 0)
+      submit: () => { this._submit() },
+      submitEnabled: (text.length > 0)
     })
   }
 
   componentWillMount () {
     this.props.navigation.setParams({
       submit: () => { this.props.submit(this.state.value) },
-      submitDisabled: true
+      submitEnabled: false
     })
+  }
+
+  _submit () {
+    this.props.submit(this.state.value)
   }
 
   render () {
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        <TextInput
-          style={styles.textInput}
-          multiline={false}
-          placeholder={'Thread Name...'}
-          onChangeText={this.handleNewText}
-        />
-      </View>
+        <ScrollView style={styles.contentContainer}>
+          <Text style={styles.title}>New thread</Text>
+          <Input labelStyle={styles.labelStyle} label={this.state.value === '' ? 'Add a title...' : ''} onChangeText={this.handleNewText}/>
+        </ScrollView>
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {

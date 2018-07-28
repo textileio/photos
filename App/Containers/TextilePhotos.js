@@ -1,7 +1,8 @@
 import React from 'react'
-import {View, Text, Image, TouchableWithoutFeedback} from 'react-native'
+import {View, Text, Image, TouchableWithoutFeedback, TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import HeaderButtons from 'react-navigation-header-buttons'
+import { NavigationActions } from 'react-navigation'
 import ActionSheet from 'react-native-actionsheet'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
@@ -12,22 +13,70 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 
+import BottomDrawerList from '../SB/components/BottomDrawerList'
+
 class TextilePhotos extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.state = {
+      showDrawer: false
+    }
+  }
+
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const headerTitle = params.threadName === 'default' ? (
+
+    const headerLeft = params.threadName === 'default' ? (
       <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
-        <Image style={navStyles.headerTitleImage} source={require('../Images/TextileHeader.png')} />
+        <Image style={navStyles.headerIconUser} source={require('../SB/views/WalletList/statics/icon-photo1.png')} />
       </TouchableWithoutFeedback>
-    ) : params.threadName
-    const headerRight = params.threadName === 'default' ? null : (
-      <HeaderButtons IconComponent={Icon} iconSize={33} color="white">
-        <HeaderButtons.Item title="options" iconName="ios-more" onPress={params.showActionSheet} />
-      </HeaderButtons>
+    ) : (
+      <TouchableOpacity onPress={ () => {
+        navigation.goBack(null)
+      }}>
+        <Image
+          style={navStyles.headerLeft}
+          source={require('../SB/views/ThreadsDetail/statics/icon-arrow-left.png')}
+        />
+      </TouchableOpacity>
     )
+    const headerRight = params.threadName === 'default' ? (
+      <TouchableOpacity onPress={ () => {
+        console.log('TODO: HANDLE MENU CLICK FROM WALLET')
+      }}>
+        <Image style={navStyles.headerIconList} source={require('../SB/views/WalletList/statics/icon-list.png')} />
+      </TouchableOpacity>
+    ) : (
+      <View style={navStyles.headerRight}>
+        <TouchableOpacity onPress={ () => {
+          console.log('TODO: HANDLE CLICKED PHOTO ADD FROM SHARED THREAD')
+        }}>
+          <Image
+            style={navStyles.headerIconPhoto}
+            source={require('../SB/views/ThreadsDetail/statics/icon-photo.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={params.showActionSheet}>
+          <Image
+            style={navStyles.headerIconMore}
+            source={require('../SB/views/ThreadsDetail/statics/icon-more.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+
+    const headerText = params.threadName === 'default' ? 'Hello, Michael' : params.threadName
+    const headerTitle = (
+        <Text style={navStyles.headerTitle}>{headerText}</Text>
+    )
+
     return {
+      // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerTitle,
-      headerRight
+      // TODO: no current menu needed for Wallet view
+      headerRight,
+      headerLeft,
+      tabBarVisible: params.threadName === 'default'
     }
   }
 
@@ -42,6 +91,10 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount () {
+    // Unload any full screen photo
+    // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
+    this.props.dismissPhoto()
+    // Set params
     this.props.navigation.setParams({
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName,
@@ -59,7 +112,7 @@ class TextilePhotos extends React.PureComponent {
     this.props.refresh(this.props.threadId)
   }
 
-  showActionSheet() {
+  showActionSheet () {
     this.actionSheet.show()
   }
 
@@ -86,11 +139,14 @@ class TextilePhotos extends React.PureComponent {
         />
         <ActionSheet
           ref={o => this.actionSheet = o}
-          title={this.props.threadName + ' Thread Actions'}
+          title={this.props.threadName + ' options'}
           options={['Invite Others', 'Leave Thread', 'Cancel']}
           cancelButtonIndex={2}
           onPress={this.handleActionSheetResponse.bind(this)}
         />
+
+        { this.state.showDrawer && <BottomDrawerList /> }
+
         {this.props.verboseUi &&
           <View style={style.bottomOverlay} >
             <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
@@ -147,6 +203,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (index, threadId) => { dispatch(UIActions.viewPhotoRequest(index, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, FlatList, ScrollView, Text, TouchableOpacity } from 'react-native'
+import { View, FlatList, ScrollView, Image, Text, TouchableOpacity } from 'react-native'
 import HeaderButtons from 'react-navigation-header-buttons'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Toast, {DURATION} from 'react-native-easy-toast'
@@ -10,6 +10,7 @@ import UIActions from '../Redux/UIRedux'
 
 // Styles
 import styles from './Styles/ThreadsStyle'
+import navStyles from '../Navigation/Styles/NavigationStyles'
 
 class MyListItem extends React.PureComponent {
   _onPress = () => {
@@ -31,16 +32,35 @@ class MyListItem extends React.PureComponent {
 }
 
 class Threads extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    // allows us to pass through the list
+    if (this.props.navigation.state.params && this.props.navigation.state.params.thread) {
+      this._onPressItem(this.props.navigation.state.params.thread)
+    }
+  }
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
+
+    const headerLeft = (
+      <TouchableOpacity >
+        <Image style={navStyles.headerIcon} source={require('../SB/views/ThreadsList/statics/photo.png')} />
+      </TouchableOpacity>
+    )
+    const headerRight = (
+      <TouchableOpacity onPress={() => { navigation.navigate('AddThread') }}>
+        <Image style={navStyles.headerIcon} source={require('../SB/views/ThreadsList/statics/plus.png')} />
+      </TouchableOpacity>
+    )
+    const headerTitle = (
+      <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
+    )
+
     return {
-      headerTitle: 'Threads',
-      headerRight: (
-        <HeaderButtons IconComponent={Icon} OverflowIcon={<Icon name="ios-more" size={23} color="white" />} iconSize={33} color="white">
-          <HeaderButtons.Item title="add" iconName="ios-add" onPress={() => { navigation.navigate('AddThread') }} />
-        </HeaderButtons>
-      ),
+      headerLeft,
+      headerTitle,
+      headerRight
     }
   }
 
@@ -83,7 +103,7 @@ class Threads extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.threads.threads.filter(thread => thread.name !== 'default')
+    data: state.threads.threads.filter(thread => thread.name !== 'default').map(t => { return {...t, size: state.ipfs.threads[t.id].items.length} }).sort((a, b) => b - a)
   }
 }
 
