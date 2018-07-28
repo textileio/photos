@@ -1,4 +1,5 @@
 import React from 'react'
+import propTypes from 'prop-types'
 import { View, Image } from 'react-native'
 
 import styles from './statics/styles'
@@ -34,6 +35,10 @@ const BottomBar = props => {
       </View>
     </View>
   )
+}
+
+BottomBar.propTypes = {
+  active: propTypes.oneOf(['threads', 'wallet', 'feed'])
 }
 
 export default BottomBar

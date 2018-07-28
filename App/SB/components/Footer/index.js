@@ -12,11 +12,4 @@ const Footer = props => {
   )
 }
 
-Footer.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.func
-  ])
-}
-
 export default Footer
