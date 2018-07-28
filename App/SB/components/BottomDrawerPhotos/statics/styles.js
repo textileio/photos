@@ -4,7 +4,12 @@ export default StyleSheet.create({
   container: {
     paddingHorizontal: 10,
     paddingTop: 3,
-    paddingBottom: 30 // <- quick hack to make sure the full menu shows on screen
+    // marginTop: 100, // <- changed because headers will be outside of Containers now...
+    backgroundColor: '#FAFCFE',
+    flex: 1,
+    height: 200,
+    position: 'absolute',
+    bottom: 0
   },
   header: {
     flexDirection: 'row',
