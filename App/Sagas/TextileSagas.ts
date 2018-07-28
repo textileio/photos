@@ -278,6 +278,7 @@ export function * photosTask() {
         addedPhotosData.push({ uri, addResult, blockId })
       } catch (error) {
         yield put(CameraRollActions.untrackPhoto(uri))
+      } finally {
         const exists: boolean = yield call(RNFS.exists, photoPath)
         if (exists) {
           yield call(RNFS.unlink, photoPath)
