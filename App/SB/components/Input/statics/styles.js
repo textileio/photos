@@ -1,6 +1,12 @@
 import {StyleSheet} from 'react-native'
 
 export default StyleSheet.create({
+  errorMsg: {
+    fontFamily: 'BentonSans',
+    fontSize: 12,
+    color: '#D0021B',
+    paddingTop: 6,
+  },
   labelText: {
     position: 'absolute',
     left: 0,

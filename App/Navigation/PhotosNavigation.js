@@ -104,11 +104,11 @@ const TabNav = TabNavigator(
         tabBarIcon: ({focused, tintColor}) => {
           let icon
           if (routeName === 'PhotosNav') {
-            icon = focused ? require('../SB/components/BottomBar/statics/icon-wallet.png') : require('../SB/components/BottomBar/statics/icon-wallet.png')
+            icon = focused ? require('../SB/components/BottomBar/statics/icon-wallet-active.png') : require('../SB/components/BottomBar/statics/icon-wallet.png')
           } else if (routeName === 'SharedPhotosNav') {
             icon = focused ? require('../SB/components/BottomBar/statics/icon-threads-active.png') : require('../SB/components/BottomBar/statics/icon-threads.png')
           } else if (routeName === 'InfoNav') {
-            icon = focused ? require('../SB/components/BottomBar/statics/icon-feed.png') : require('../SB/components/BottomBar/statics/icon-feed.png')
+            icon = focused ? require('../SB/components/BottomBar/statics/icon-feed-active.png') : require('../SB/components/BottomBar/statics/icon-feed.png')
           }
           return <Image style={styles.bottomBarIcon} source={icon} />
         }

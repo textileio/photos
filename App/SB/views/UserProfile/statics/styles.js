@@ -7,10 +7,6 @@ export default StyleSheet.create({
     backgroundColor: '#FAFCFE',
     flex: 1
   },
-  contentContainer: {
-    paddingTop: 16,
-    paddingHorizontal: 16
-  },
   toolbarLeft: {
     height: 16,
     width: 40
@@ -26,7 +22,6 @@ export default StyleSheet.create({
     marginTop: 11,
     marginBottom: 10
   },
-  toolbarTitle: {},
   toolbarImage: {
     height: 59,
     width: 59
@@ -49,18 +44,39 @@ export default StyleSheet.create({
     color: '#9b9b9b',
     marginBottom: 17
   },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 9
+  contentContainer: {
+    paddingLeft: 16
   },
-  itemPhoto: {
-    height: 50,
-    width: 70,
-    marginRight: 14
+  listItem: {
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderColor: '#ECEDEE'
   },
-  itemText: {
+  listText: {
     fontFamily: 'BentonSans',
     fontSize: 14
+  },
+  warning: {
+    color: '#D0021B'
+  },
+  servers: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 25,
+  },
+  serversText: {
+    color: '#4A4A4A'
+  },
+  activeIcon: {
+    height: 10,
+    width: 10,
+    backgroundColor: '#6FC110',
+    borderRadius: 20,
+    marginRight: 4
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 90
   }
 })

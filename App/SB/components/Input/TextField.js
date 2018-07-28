@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { View, TextInput } from 'react-native'
+import { View, TextInput, Text } from 'react-native'
 import PropTypes from 'prop-types'
 
 import Underline from './Underline'
@@ -22,6 +22,7 @@ class TextField extends Component {
     onChangeText: PropTypes.func,
     value: PropTypes.string,
     dense: PropTypes.bool,
+    error: PropTypes.bool,
     inputStyle: PropTypes.object,
     wrapperStyle: PropTypes.object,
     labelStyle: PropTypes.object,
@@ -32,6 +33,7 @@ class TextField extends Component {
     duration: 200,
     labelColor: '#9E9E9E',
     borderColor: '#E0E0E0',
+    errorBorderColor: '#D0021B',
     textColor: '#000',
     value: '',
     dense: false,
@@ -87,6 +89,9 @@ class TextField extends Component {
       wrapperStyle,
       labelStyle,
       disabled,
+      error,
+      errorMsg,
+      errorBorderColor,
       ...props
     } = this.props
     return (
@@ -124,8 +129,9 @@ class TextField extends Component {
           ref="underline"
           highlightColor={highlightColor}
           duration={duration}
-          borderColor={borderColor}
+          borderColor={error ? errorBorderColor : borderColor}
         />
+        { error && <Text style={styles.errorMsg}>{errorMsg}</Text> }
         <FloatingLabel
           isFocused={this.state.isFocused}
           ref="floatingLabel"
