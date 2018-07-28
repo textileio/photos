@@ -75,20 +75,17 @@ class PhotoDetail extends Component {
     this.setState({drawer: false})
     const thread = this.props.threadsNotIn[i]
     this.props.authorShare(this.props.photo.id)
-    console.log('TODO: NAVIGATE TO THE CREATE CAPTION VIEW: ', i)
     this.props.navigation.navigate('SharePhoto', {thread, photo: this.props.photo})
   }
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
   viewThread (thread) {
-    console.log('TODO: NAVIGATE TO THE VIEW THREAD: ', thread.id)
     console.log(this.props)
     this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
   }
 
   createThread () {
     this.setState({drawer: false})
-    console.log('TODO: NAVIGATE TO CREATE NEW THREAD')
     this.props.navigation.navigate('AddThread')
   }
 
