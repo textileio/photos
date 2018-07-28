@@ -24,6 +24,9 @@ const actions = {
   logInSuccess: createAction('LOG_IN_SUCCESS', resolve => {
     return () => resolve()
   }),
+  getUsernameSuccess: createAction('GET_USERNAME_SUCCESS', resolve => {
+    return (username: string) => resolve({ username })
+  }),
   getTokensSuccess: createAction('GET_TOKENS_SUCCESS', resolve => {
     return (tokens: CafeTokens) => resolve({ tokens })
   }),
@@ -69,6 +72,7 @@ export const RecoverPassword = t.struct({
 
 export type AuthState = {
   readonly processing: boolean
+  readonly username?: string
   readonly error?: string
   readonly tokens?: CafeTokens
   readonly formType: any
@@ -90,6 +94,9 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
     case getType(actions.logInRequest):
     case getType(actions.recoverPasswordRequest):
       return { ...state, processing: true }
+    case getType(actions.getUsernameSuccess):
+      console.log('USERNAME', action.payload)
+      return { ...state, username: action.payload.username }
     case getType(actions.getTokensSuccess):
       return { ...state, processing: false, tokens: action.payload.tokens }
     case getType(actions.recoverPasswordSuccess):
