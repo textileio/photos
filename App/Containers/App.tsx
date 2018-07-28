@@ -8,6 +8,7 @@ import RootContainer from './RootContainer'
 import createStore from '../Redux'
 import TriggersActions from '../Redux/TriggersRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
+import ThreadActions from '../Redux/ThreadsRedux'
 import BackgroundTask from 'react-native-background-task'
 import TextileNode from '../../TextileNode'
 
@@ -26,6 +27,18 @@ TextileNode.eventEmitter.addListener('onOnline', () => {
 // TODO: add types to event emitter if possible
 TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {
   store.dispatch(TextileNodeActions.getPhotoHashesRequest(payload.thread_id))
+})
+TextileNode.eventEmitter.addListener('onThreadAdded', () => {
+  store.dispatch(ThreadActions.refreshThreadsRequest())
+})
+TextileNode.eventEmitter.addListener('onThreadRemoved', () => {
+  store.dispatch(ThreadActions.refreshThreadsRequest())
+})
+TextileNode.eventEmitter.addListener('onDeviceAdded', () => {
+  //
+})
+TextileNode.eventEmitter.addListener('onDeviceRemoved', () => {
+  //
 })
 
 /**
