@@ -92,6 +92,7 @@
     "@types/react-native-fs": "^2.8.1",
     "@types/react-redux": "^6.0.3",
     "@types/react-test-renderer": "^16.0.1",
+    "appcenter-cli": "^1.1.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.1.1",
     "babel-jest": "22.4.1",
@@ -147,7 +148,8 @@
     "setupFiles": [
       "<rootDir>/Tests/Setup",
       "<rootDir>/node_modules/appcenter-analytics/test/AppCenterAnalyticsMock.js",
-      "<rootDir>/node_modules/appcenter/test/AppCenterMock.js"
+      "<rootDir>/node_modules/appcenter/test/AppCenterMock.js",
+      "<rootDir>/node_modules/appcenter-crashes/test/AppCenterCrashesMock.js"
     ],
     "collectCoverage": true,
     "collectCoverageFrom": [
