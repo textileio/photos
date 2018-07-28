@@ -65,7 +65,8 @@ class TextilePhotos extends React.PureComponent {
       </View>
     )
 
-    const headerText = params.threadName === 'default' ? 'Hello, Michael' : params.threadName
+    const greeting = params.username !== '' ? 'Hello, ' + params.username : 'Hi there!'
+    const headerText = params.threadName === 'default' ? greeting : params.threadName
     const headerTitle = (
         <Text style={navStyles.headerTitle}>{headerText}</Text>
     )
@@ -83,6 +84,7 @@ class TextilePhotos extends React.PureComponent {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.toggleVerboseUi !== prevProps.toggleVerboseUi || this.props.threadName !== prevProps.threadName) {
       this.props.navigation.setParams({
+        username: this.props.username,
         toggleVerboseUi: this.props.toggleVerboseUi,
         threadName: this.props.threadName,
         showActionSheet: this.showActionSheet.bind(this)
@@ -96,6 +98,7 @@ class TextilePhotos extends React.PureComponent {
     this.props.dismissPhoto()
     // Set params
     this.props.navigation.setParams({
+      username: this.props.username,
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName,
       showActionSheet: this.showActionSheet.bind(this)
@@ -197,7 +200,8 @@ const mapStateToProps = (state, ownProps) => {
     placeholderText,
     nodeStatus,
     queryingCameraRollStatus,
-    verboseUi: state.preferences.verboseUi
+    verboseUi: state.preferences.verboseUi,
+    username: state.auth.username ? state.auth.username : ''
   }
 }
 
