@@ -102,7 +102,6 @@ class Threads extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.ipfs.threads)
   return {
     data: state.threads.threads.filter(thread => thread.name !== 'default').map(t => { return {...t, size: state.ipfs.threads[t.id].items.length} }).sort((a, b) => b - a)
   }
