@@ -58,7 +58,6 @@ class PhotoDetail extends Component {
   componentDidMount() {
     this.props.navigation.setParams({
       sharePressed: this.sharePressed.bind(this),
-      shareIntoAny: this.shareIntoAny.bind(this)
     })
   }
 
@@ -69,12 +68,6 @@ class PhotoDetail extends Component {
 
   shareClosed () {
     this.setState({drawer: false})
-  }
-
-  // For when the user wants to share it into a thread we don't know yet
-  shareIntoAny () {
-    this.setState({drawer: false})
-    console.log('TODO: NAVIGATE TO ANY THREAD: ')
   }
 
   // For when the user wants to share it into a selected thread
@@ -94,6 +87,7 @@ class PhotoDetail extends Component {
   }
 
   createThread () {
+    this.setState({drawer: false})
     console.log('TODO: NAVIGATE TO CREATE NEW THREAD')
     this.props.navigation.navigate('AddThread')
   }
@@ -134,10 +128,10 @@ class PhotoDetail extends Component {
             </TouchableOpacity>
           ))}
           { this.props.threadsIn.length > 0 && <TouchableOpacity onPress={() => { this.createThread() }}>
-            <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}} text={'Create new thread'}/>
+            <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}}/>
           </TouchableOpacity> }
         </ScrollView>
-        {this.state.drawer && <BottomDrawerPhotos selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} seeMore={() => this.shareIntoAny()} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
+        {this.state.drawer && <BottomDrawerPhotos isVisible selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} createThread={() => this.createThread()} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
       </View>
     )
   }
@@ -169,11 +163,8 @@ const mapStateToProps = (state, ownProps) => {
     }
   }
 
-  let threadsNotIn = state.threads.threads.filter(t => containingThreads.indexOf(t.id) < 0 && t.name !== 'default')
-  // TODO: This limits the display to the Top 3 threads by activity... this list should be scrollable instead and not have a limit.
-  if (threadsNotIn.length > 3) {
-    threadsNotIn = threadsNotIn.map(t => { return {...t, size: state.ipfs.threads[t.id].items.length} }).sort((a, b) => b - a).slice(0, 3)
-  }
+  let threadsNotIn = state.threads.threads.filter(t => containingThreads.indexOf(t.id) < 0 && t.name !== 'default').map(t => { return {...t, size: state.ipfs.threads[t.id].items.length} }).sort((a, b) => b - a)
+
 
   const path = thread.name === 'default' ? '/photo' : '/thumb'
   return {
