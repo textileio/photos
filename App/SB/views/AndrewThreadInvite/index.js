@@ -9,6 +9,7 @@ import Toolbar from '../../components/Toolbar'
 
 import styles from './statics/styles'
 import ThreadsAction from '../../../Redux/ThreadsRedux'
+import style from '../../../Containers/Styles/PairingViewStyle'
 // import style from '../../../Containers/Styles/PairingViewStyle'
 
 // const DevicePairing = () => {
@@ -87,6 +88,12 @@ class ThreadInvite extends React.PureComponent {
           title='Exit'
           accessibilityLabel='exit'
           onPress={this.cancel}
+        />
+        <Button
+          style={style.button}
+          title='Retry'
+          accessibilityLabel='retry'
+          onPress={this.confirmRequest.bind(this)}
         />
       </View>
     )
