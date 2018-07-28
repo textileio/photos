@@ -7,104 +7,56 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		243FFA83AE5D7720195832FC8097E29B /* Pods-TextilePhotos-tvOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E89F949D4E069B101551FC929B5D9DF /* Pods-TextilePhotos-tvOS-dummy.m */; };
-		4E9982F6616941815FD379CCA870BC59 /* Pods-TextilePhotosTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA1415414045A206442E9ABAAF3B811 /* Pods-TextilePhotosTests-dummy.m */; };
-		55BAC44FD99AB3C06967F9A8857C69D7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		721DD41BA5119CD789A5D28617C1496B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		93814B1CD79777ABB07B621C28024A41 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		C9162F05944A249482CE1557A9D5EFD9 /* Pods-TextilePhotos-tvOSTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 929D508022C571F876AFD72AF350AC2C /* Pods-TextilePhotos-tvOSTests-dummy.m */; };
-		D113ECED943B3560EE47F894F7969ABE /* Pods-TextilePhotos-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EABA58E14A3CD46A877CD8094801DE9 /* Pods-TextilePhotos-dummy.m */; };
-		EECF69A3FA64A8F7F2D564F5F6F67D8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		4A6411C79632658D87D92BF542AD9901 /* Pods-TextilePhotosTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DBB000564C616F5039D07A24470F89 /* Pods-TextilePhotosTests-dummy.m */; };
+		AEB825D5046C1E43A255036885DAF195 /* Pods-TextilePhotos-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 99B2C6F78FA1E3426F66CA7B9BB50F41 /* Pods-TextilePhotos-dummy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		587DB226479ADEF05249D106C252A3FA /* PBXContainerItemProxy */ = {
+		74D64B1B9B22306CF81F82E9C6BE1AEA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 28B02B67A7857631A0ABD6745B217BC3;
-			remoteInfo = "Pods-TextilePhotos-tvOS";
-		};
-		B5D2EDC198A40795627614E83FDAFC1F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6E73BAE1FCCAC7AEE2F31D10F79E69F8;
+			remoteGlobalIDString = E5E5B2D5B743BA9AE7BBE616EDADD92F;
 			remoteInfo = "Pods-TextilePhotos";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0C6EE3E3602F95A394852AE9C2E5033F /* Pods-TextilePhotos-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TextilePhotos-acknowledgements.markdown"; sourceTree = "<group>"; };
-		0E6F6251690F712CEB8FE446610A543A /* Pods-TextilePhotos-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-frameworks.sh"; sourceTree = "<group>"; };
-		0EABA58E14A3CD46A877CD8094801DE9 /* Pods-TextilePhotos-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotos-dummy.m"; sourceTree = "<group>"; };
-		1583B452F22674851CE4B5F0EF729E22 /* Pods-TextilePhotos-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-resources.sh"; sourceTree = "<group>"; };
-		1E89F949D4E069B101551FC929B5D9DF /* Pods-TextilePhotos-tvOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotos-tvOS-dummy.m"; sourceTree = "<group>"; };
+		07C3150DF78AD7BA2BF69F24F312ACEB /* Pods-TextilePhotosTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotosTests-acknowledgements.plist"; sourceTree = "<group>"; };
+		0B84E0A443918C9C79410AFEB6B7B6EE /* Pods-TextilePhotos-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-frameworks.sh"; sourceTree = "<group>"; };
+		11A555B2D09326CF4E72A1D5E0167166 /* Pods-TextilePhotos-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TextilePhotos-acknowledgements.markdown"; sourceTree = "<group>"; };
 		1FF8CBE3D70C3B5EE02BF7F1402952A2 /* AppCenterCrashes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterCrashes.framework; path = "AppCenter-SDK-Apple/iOS/AppCenterCrashes.framework"; sourceTree = "<group>"; };
-		2090B3E79F89E51D9D01B6649EA8B80F /* Pods-TextilePhotos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos.debug.xcconfig"; sourceTree = "<group>"; };
-		23CA9B17298E5011F6C2345F3CC24FE8 /* Pods-TextilePhotos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos.release.xcconfig"; sourceTree = "<group>"; };
-		259AD2F95C9A5A2AEAFB3E5C9190060F /* Pods-TextilePhotosTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotosTests-acknowledgements.plist"; sourceTree = "<group>"; };
-		2B63A20467495CA5DAF0E0B701FEE2F8 /* libPods-TextilePhotosTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TextilePhotosTests.a"; path = "libPods-TextilePhotosTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2DD9C17399C9BF6FA51975DB430183A3 /* Pods-TextilePhotos-tvOSTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-tvOSTests-frameworks.sh"; sourceTree = "<group>"; };
 		2E280B58529AEBA76B5F11C0705D0856 /* AppCenterReactNativeShared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterReactNativeShared.framework; path = AppCenterReactNativeShared/AppCenterReactNativeShared.framework; sourceTree = "<group>"; };
-		3ADBCED1846CB153718FF44D993DC1D5 /* Pods-TextilePhotos-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		3F597BCFF1B5DBF6A29DE0E3ECF9EBE8 /* Pods-TextilePhotos-tvOS-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TextilePhotos-tvOS-acknowledgements.markdown"; sourceTree = "<group>"; };
-		514EFBB5F90E23FFD3339EF0744E18CE /* Pods-TextilePhotos-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		670BBDC7C1EF48E86E403A0C60540C9C /* Pods-TextilePhotosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotosTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5AA47A85D233D73B85C86C26139AEE3F /* Pods-TextilePhotos-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotos-acknowledgements.plist"; sourceTree = "<group>"; };
+		6639BA6A50D4FEC0BC090B101D6E2A15 /* Pods-TextilePhotos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos.debug.xcconfig"; sourceTree = "<group>"; };
 		697057EB6F6A315777E7EA941A2AAF3B /* AppCenterAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenterAnalytics.framework; path = "AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework"; sourceTree = "<group>"; };
-		6EA1415414045A206442E9ABAAF3B811 /* Pods-TextilePhotosTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotosTests-dummy.m"; sourceTree = "<group>"; };
-		80C2961EA176D9693B3102AE2B5D5DFD /* Pods-TextilePhotos-tvOS-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotos-tvOS-acknowledgements.plist"; sourceTree = "<group>"; };
-		929D508022C571F876AFD72AF350AC2C /* Pods-TextilePhotos-tvOSTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotos-tvOSTests-dummy.m"; sourceTree = "<group>"; };
+		83DBB000564C616F5039D07A24470F89 /* Pods-TextilePhotosTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotosTests-dummy.m"; sourceTree = "<group>"; };
+		8A1908288B199B9C64E26BAC9A465225 /* libPods-TextilePhotosTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TextilePhotosTests.a"; path = "libPods-TextilePhotosTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9A186B72F3C543997DEF896F5CFA7845 /* Pods-TextilePhotos-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		A050DAE398FC6F55B00B8380F91FEC6A /* libPods-TextilePhotos-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TextilePhotos-tvOS.a"; path = "libPods-TextilePhotos-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A21F31269ED8A5F4BD44451534C224FC /* Pods-TextilePhotos-tvOS-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-tvOS-frameworks.sh"; sourceTree = "<group>"; };
-		AAF691A7A7D6835AB5991B0E76DCB7E5 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		AD527F25CB876E52C3FE8EF69CE760C8 /* Pods-TextilePhotosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotosTests.release.xcconfig"; sourceTree = "<group>"; };
-		B1AF9ADBE8EBE8C390695E212D14C8D6 /* Pods-TextilePhotosTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TextilePhotosTests-acknowledgements.markdown"; sourceTree = "<group>"; };
-		B229D7B027EA1F3E2EDF7A3F524251A1 /* libPods-TextilePhotos-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TextilePhotos-tvOSTests.a"; path = "libPods-TextilePhotos-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B321EA0E8E77FA2D34645B27E2BA81E3 /* Pods-TextilePhotosTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotosTests-frameworks.sh"; sourceTree = "<group>"; };
-		B6BDF22406434BE23FE0D9130580C410 /* Pods-TextilePhotos-tvOSTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotos-tvOSTests-acknowledgements.plist"; sourceTree = "<group>"; };
-		B9CE91D01FD45695BEA379E7161659D1 /* Pods-TextilePhotos-tvOSTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TextilePhotos-tvOSTests-acknowledgements.markdown"; sourceTree = "<group>"; };
-		D0EDED2A171F772FDFC65F89C0DBF08C /* Pods-TextilePhotos-tvOS-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-tvOS-resources.sh"; sourceTree = "<group>"; };
-		D773289D9A450B7C37FDE03F317ACA60 /* Pods-TextilePhotos-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TextilePhotos-acknowledgements.plist"; sourceTree = "<group>"; };
+		99B2C6F78FA1E3426F66CA7B9BB50F41 /* Pods-TextilePhotos-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TextilePhotos-dummy.m"; sourceTree = "<group>"; };
+		CC94AD321CCECB727947AD9A750DB60F /* Pods-TextilePhotosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotosTests.debug.xcconfig"; sourceTree = "<group>"; };
+		CEB8981BB2CCBF2D2E10CAD9ED4468EB /* Pods-TextilePhotos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotos.release.xcconfig"; sourceTree = "<group>"; };
 		DC65AFFB7964130E42157D207BE3A6DE /* AppCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppCenter.framework; path = "AppCenter-SDK-Apple/iOS/AppCenter.framework"; sourceTree = "<group>"; };
-		DF1FDCB28455DCBE323B95866BDBC2CC /* libPods-TextilePhotos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TextilePhotos.a"; path = "libPods-TextilePhotos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F65E6492D55513DA37457E132CAE10AA /* Pods-TextilePhotos-tvOSTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-tvOSTests-resources.sh"; sourceTree = "<group>"; };
-		FFD1685462F7E1324AB405E7EC956EF7 /* Pods-TextilePhotosTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotosTests-resources.sh"; sourceTree = "<group>"; };
+		E4D624A7506E36048BFEEC95C20180D5 /* Pods-TextilePhotosTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotosTests-frameworks.sh"; sourceTree = "<group>"; };
+		E81994783EB0F06614DF6D7907BB0859 /* Pods-TextilePhotosTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TextilePhotosTests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		F10F3035F7626F1D95C150F92338EB79 /* Pods-TextilePhotosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TextilePhotosTests.release.xcconfig"; sourceTree = "<group>"; };
+		F16EB967B3DE3F53F469FC261F27A288 /* libPods-TextilePhotos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-TextilePhotos.a"; path = "libPods-TextilePhotos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB613A610B507B4E8AA56C787384B445 /* Pods-TextilePhotos-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotos-resources.sh"; sourceTree = "<group>"; };
+		FF61E0A12A4942DBE3CB73B7D4B59861 /* Pods-TextilePhotosTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TextilePhotosTests-resources.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1A54FB8CDB7290C43CA89CBA9B00B64B /* Frameworks */ = {
+		03C9CFDEE9506DDEE6EA49AF7FE0C252 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				55BAC44FD99AB3C06967F9A8857C69D7 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AE15A79727257A80488B0B6A6AA638CE /* Frameworks */ = {
+		0EDD75EAAEFF3BEDBDE07D76BC115C41 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EECF69A3FA64A8F7F2D564F5F6F67D8B /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D05CCA1A01E348C5E7DA2CE9BA31BB0D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				721DD41BA5119CD789A5D28617C1496B /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FC674D289BAF60EA3660885470FA2CFE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				93814B1CD79777ABB07B621C28024A41 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +67,13 @@
 			isa = PBXGroup;
 			children = (
 				DC65AFFB7964130E42157D207BE3A6DE /* AppCenter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0F8D2E47FE03D3B91B51069F7C273AF4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -143,21 +102,6 @@
 			name = Core;
 			sourceTree = "<group>";
 		};
-		33C2C93649114DDD44C1F6E90C46392B /* Pods-TextilePhotosTests */ = {
-			isa = PBXGroup;
-			children = (
-				B1AF9ADBE8EBE8C390695E212D14C8D6 /* Pods-TextilePhotosTests-acknowledgements.markdown */,
-				259AD2F95C9A5A2AEAFB3E5C9190060F /* Pods-TextilePhotosTests-acknowledgements.plist */,
-				6EA1415414045A206442E9ABAAF3B811 /* Pods-TextilePhotosTests-dummy.m */,
-				B321EA0E8E77FA2D34645B27E2BA81E3 /* Pods-TextilePhotosTests-frameworks.sh */,
-				FFD1685462F7E1324AB405E7EC956EF7 /* Pods-TextilePhotosTests-resources.sh */,
-				670BBDC7C1EF48E86E403A0C60540C9C /* Pods-TextilePhotosTests.debug.xcconfig */,
-				AD527F25CB876E52C3FE8EF69CE760C8 /* Pods-TextilePhotosTests.release.xcconfig */,
-			);
-			name = "Pods-TextilePhotosTests";
-			path = "Target Support Files/Pods-TextilePhotosTests";
-			sourceTree = "<group>";
-		};
 		4789B2888C9F3A64D9BB98A64504484B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,56 +110,30 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5262651ED0A342C34EF07872100CC7F8 /* Pods-TextilePhotos */ = {
+		5021AB598D030097E723196581A579BC /* Pods-TextilePhotosTests */ = {
 			isa = PBXGroup;
 			children = (
-				0C6EE3E3602F95A394852AE9C2E5033F /* Pods-TextilePhotos-acknowledgements.markdown */,
-				D773289D9A450B7C37FDE03F317ACA60 /* Pods-TextilePhotos-acknowledgements.plist */,
-				0EABA58E14A3CD46A877CD8094801DE9 /* Pods-TextilePhotos-dummy.m */,
-				0E6F6251690F712CEB8FE446610A543A /* Pods-TextilePhotos-frameworks.sh */,
-				1583B452F22674851CE4B5F0EF729E22 /* Pods-TextilePhotos-resources.sh */,
-				2090B3E79F89E51D9D01B6649EA8B80F /* Pods-TextilePhotos.debug.xcconfig */,
-				23CA9B17298E5011F6C2345F3CC24FE8 /* Pods-TextilePhotos.release.xcconfig */,
+				E81994783EB0F06614DF6D7907BB0859 /* Pods-TextilePhotosTests-acknowledgements.markdown */,
+				07C3150DF78AD7BA2BF69F24F312ACEB /* Pods-TextilePhotosTests-acknowledgements.plist */,
+				83DBB000564C616F5039D07A24470F89 /* Pods-TextilePhotosTests-dummy.m */,
+				E4D624A7506E36048BFEEC95C20180D5 /* Pods-TextilePhotosTests-frameworks.sh */,
+				FF61E0A12A4942DBE3CB73B7D4B59861 /* Pods-TextilePhotosTests-resources.sh */,
+				CC94AD321CCECB727947AD9A750DB60F /* Pods-TextilePhotosTests.debug.xcconfig */,
+				F10F3035F7626F1D95C150F92338EB79 /* Pods-TextilePhotosTests.release.xcconfig */,
 			);
-			name = "Pods-TextilePhotos";
-			path = "Target Support Files/Pods-TextilePhotos";
+			name = "Pods-TextilePhotosTests";
+			path = "Target Support Files/Pods-TextilePhotosTests";
 			sourceTree = "<group>";
 		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
+				0F8D2E47FE03D3B91B51069F7C273AF4 /* Frameworks */,
 				B1C0FD4C526B54B6F7B5EA76C32A7B4C /* Pods */,
-				E38E6047E181783591CFEE88378CD675 /* Products */,
-				7EF3FFB33D71E3C1C5CC92AC2928FD37 /* Targets Support Files */,
+				FEE2D195510E4EEC4042504864AD0F03 /* Products */,
+				9FF83884561F6970C52F831502DA5CA9 /* Targets Support Files */,
 			);
-			sourceTree = "<group>";
-		};
-		7EF3FFB33D71E3C1C5CC92AC2928FD37 /* Targets Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				5262651ED0A342C34EF07872100CC7F8 /* Pods-TextilePhotos */,
-				8B0F7EB34357608FBA59EE526D0B3383 /* Pods-TextilePhotos-tvOS */,
-				F9DC46E6E5B81E3673D52A03226025CF /* Pods-TextilePhotos-tvOSTests */,
-				33C2C93649114DDD44C1F6E90C46392B /* Pods-TextilePhotosTests */,
-			);
-			name = "Targets Support Files";
-			sourceTree = "<group>";
-		};
-		8B0F7EB34357608FBA59EE526D0B3383 /* Pods-TextilePhotos-tvOS */ = {
-			isa = PBXGroup;
-			children = (
-				3F597BCFF1B5DBF6A29DE0E3ECF9EBE8 /* Pods-TextilePhotos-tvOS-acknowledgements.markdown */,
-				80C2961EA176D9693B3102AE2B5D5DFD /* Pods-TextilePhotos-tvOS-acknowledgements.plist */,
-				1E89F949D4E069B101551FC929B5D9DF /* Pods-TextilePhotos-tvOS-dummy.m */,
-				A21F31269ED8A5F4BD44451534C224FC /* Pods-TextilePhotos-tvOS-frameworks.sh */,
-				D0EDED2A171F772FDFC65F89C0DBF08C /* Pods-TextilePhotos-tvOS-resources.sh */,
-				3ADBCED1846CB153718FF44D993DC1D5 /* Pods-TextilePhotos-tvOS.debug.xcconfig */,
-				9A186B72F3C543997DEF896F5CFA7845 /* Pods-TextilePhotos-tvOS.release.xcconfig */,
-			);
-			name = "Pods-TextilePhotos-tvOS";
-			path = "Target Support Files/Pods-TextilePhotos-tvOS";
 			sourceTree = "<group>";
 		};
 		8E2C96EA6162ABA11EBE8E8817909062 /* Frameworks */ = {
@@ -226,6 +144,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9FF83884561F6970C52F831502DA5CA9 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				DEF3D36696BF03F75B94D179EE52E2D8 /* Pods-TextilePhotos */,
+				5021AB598D030097E723196581A579BC /* Pods-TextilePhotosTests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
 		B1C0FD4C526B54B6F7B5EA76C32A7B4C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,22 +160,6 @@
 				FDE42022E7C36FE2A980950DD051F732 /* AppCenterReactNativeShared */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				D35AF013A5F0BAD4F32504907A52519E /* iOS */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		D35AF013A5F0BAD4F32504907A52519E /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */,
-			);
-			name = iOS;
 			sourceTree = "<group>";
 		};
 		D6F4E16E170AFF42D929EF8FFF92078F /* AppCenter */ = {
@@ -262,15 +173,19 @@
 			path = AppCenter;
 			sourceTree = "<group>";
 		};
-		E38E6047E181783591CFEE88378CD675 /* Products */ = {
+		DEF3D36696BF03F75B94D179EE52E2D8 /* Pods-TextilePhotos */ = {
 			isa = PBXGroup;
 			children = (
-				DF1FDCB28455DCBE323B95866BDBC2CC /* libPods-TextilePhotos.a */,
-				A050DAE398FC6F55B00B8380F91FEC6A /* libPods-TextilePhotos-tvOS.a */,
-				B229D7B027EA1F3E2EDF7A3F524251A1 /* libPods-TextilePhotos-tvOSTests.a */,
-				2B63A20467495CA5DAF0E0B701FEE2F8 /* libPods-TextilePhotosTests.a */,
+				11A555B2D09326CF4E72A1D5E0167166 /* Pods-TextilePhotos-acknowledgements.markdown */,
+				5AA47A85D233D73B85C86C26139AEE3F /* Pods-TextilePhotos-acknowledgements.plist */,
+				99B2C6F78FA1E3426F66CA7B9BB50F41 /* Pods-TextilePhotos-dummy.m */,
+				0B84E0A443918C9C79410AFEB6B7B6EE /* Pods-TextilePhotos-frameworks.sh */,
+				FB613A610B507B4E8AA56C787384B445 /* Pods-TextilePhotos-resources.sh */,
+				6639BA6A50D4FEC0BC090B101D6E2A15 /* Pods-TextilePhotos.debug.xcconfig */,
+				CEB8981BB2CCBF2D2E10CAD9ED4468EB /* Pods-TextilePhotos.release.xcconfig */,
 			);
-			name = Products;
+			name = "Pods-TextilePhotos";
+			path = "Target Support Files/Pods-TextilePhotos";
 			sourceTree = "<group>";
 		};
 		F84ACEF4E4D3666C3A595115D01D3868 /* Frameworks */ = {
@@ -279,21 +194,6 @@
 				2E280B58529AEBA76B5F11C0705D0856 /* AppCenterReactNativeShared.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F9DC46E6E5B81E3673D52A03226025CF /* Pods-TextilePhotos-tvOSTests */ = {
-			isa = PBXGroup;
-			children = (
-				B9CE91D01FD45695BEA379E7161659D1 /* Pods-TextilePhotos-tvOSTests-acknowledgements.markdown */,
-				B6BDF22406434BE23FE0D9130580C410 /* Pods-TextilePhotos-tvOSTests-acknowledgements.plist */,
-				929D508022C571F876AFD72AF350AC2C /* Pods-TextilePhotos-tvOSTests-dummy.m */,
-				2DD9C17399C9BF6FA51975DB430183A3 /* Pods-TextilePhotos-tvOSTests-frameworks.sh */,
-				F65E6492D55513DA37457E132CAE10AA /* Pods-TextilePhotos-tvOSTests-resources.sh */,
-				AAF691A7A7D6835AB5991B0E76DCB7E5 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */,
-				514EFBB5F90E23FFD3339EF0744E18CE /* Pods-TextilePhotos-tvOSTests.release.xcconfig */,
-			);
-			name = "Pods-TextilePhotos-tvOSTests";
-			path = "Target Support Files/Pods-TextilePhotos-tvOSTests";
 			sourceTree = "<group>";
 		};
 		FDE42022E7C36FE2A980950DD051F732 /* AppCenterReactNativeShared */ = {
@@ -305,65 +205,41 @@
 			path = AppCenterReactNativeShared;
 			sourceTree = "<group>";
 		};
+		FEE2D195510E4EEC4042504864AD0F03 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F16EB967B3DE3F53F469FC261F27A288 /* libPods-TextilePhotos.a */,
+				8A1908288B199B9C64E26BAC9A465225 /* libPods-TextilePhotosTests.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		28B02B67A7857631A0ABD6745B217BC3 /* Pods-TextilePhotos-tvOS */ = {
+		5EC7C01CEFCFF1F720E1D340757D3152 /* Pods-TextilePhotosTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E0686F0ABAD8FEAFF4D354C7E5271BE5 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotos-tvOS" */;
+			buildConfigurationList = 8204136DD862E81022D9FA3F21957601 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotosTests" */;
 			buildPhases = (
-				9CD5E6EAAC14ECB64A3E89E8A26BBD8C /* Sources */,
-				AE15A79727257A80488B0B6A6AA638CE /* Frameworks */,
+				11C526E14952F2DDDA0FD2C35421BFEB /* Sources */,
+				0EDD75EAAEFF3BEDBDE07D76BC115C41 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-			);
-			name = "Pods-TextilePhotos-tvOS";
-			productName = "Pods-TextilePhotos-tvOS";
-			productReference = A050DAE398FC6F55B00B8380F91FEC6A /* libPods-TextilePhotos-tvOS.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		365A31A20EEC805A0AF7F4E0F6CF18C8 /* Pods-TextilePhotos-tvOSTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 519D24F3861D5A82D87E0607ABB4A1B3 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotos-tvOSTests" */;
-			buildPhases = (
-				A1410029346C32CC070A5FBBA80F6AA6 /* Sources */,
-				FC674D289BAF60EA3660885470FA2CFE /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D4578AE622DD6618051F27C1AE116E9B /* PBXTargetDependency */,
-			);
-			name = "Pods-TextilePhotos-tvOSTests";
-			productName = "Pods-TextilePhotos-tvOSTests";
-			productReference = B229D7B027EA1F3E2EDF7A3F524251A1 /* libPods-TextilePhotos-tvOSTests.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		4BBAA672A40D16D404D8DCEBFD86A9FB /* Pods-TextilePhotosTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DAAC64A2A9CE1D3948CF9C3BD59177EB /* Build configuration list for PBXNativeTarget "Pods-TextilePhotosTests" */;
-			buildPhases = (
-				E86CADDE7C60CDEA9DBB01BB3014C3CE /* Sources */,
-				1A54FB8CDB7290C43CA89CBA9B00B64B /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2E6EF62CD5DE8FB4AF280B06DB85D979 /* PBXTargetDependency */,
+				4575E4C2766294E90CC9A1198D84F224 /* PBXTargetDependency */,
 			);
 			name = "Pods-TextilePhotosTests";
 			productName = "Pods-TextilePhotosTests";
-			productReference = 2B63A20467495CA5DAF0E0B701FEE2F8 /* libPods-TextilePhotosTests.a */;
+			productReference = 8A1908288B199B9C64E26BAC9A465225 /* libPods-TextilePhotosTests.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		6E73BAE1FCCAC7AEE2F31D10F79E69F8 /* Pods-TextilePhotos */ = {
+		E5E5B2D5B743BA9AE7BBE616EDADD92F /* Pods-TextilePhotos */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0201315E126E093A845E09523E6FE7D5 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotos" */;
+			buildConfigurationList = 94AD958F38E6E805A7E845A7742D7547 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotos" */;
 			buildPhases = (
-				6EAEF94C2687816905D7184FE789A765 /* Sources */,
-				D05CCA1A01E348C5E7DA2CE9BA31BB0D /* Frameworks */,
+				34FBF2018788BBCBAD6A249E7E800177 /* Sources */,
+				03C9CFDEE9506DDEE6EA49AF7FE0C252 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -371,7 +247,7 @@
 			);
 			name = "Pods-TextilePhotos";
 			productName = "Pods-TextilePhotos";
-			productReference = DF1FDCB28455DCBE323B95866BDBC2CC /* libPods-TextilePhotos.a */;
+			productReference = F16EB967B3DE3F53F469FC261F27A288 /* libPods-TextilePhotos.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -391,93 +267,48 @@
 				en,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
-			productRefGroup = E38E6047E181783591CFEE88378CD675 /* Products */;
+			productRefGroup = FEE2D195510E4EEC4042504864AD0F03 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6E73BAE1FCCAC7AEE2F31D10F79E69F8 /* Pods-TextilePhotos */,
-				28B02B67A7857631A0ABD6745B217BC3 /* Pods-TextilePhotos-tvOS */,
-				365A31A20EEC805A0AF7F4E0F6CF18C8 /* Pods-TextilePhotos-tvOSTests */,
-				4BBAA672A40D16D404D8DCEBFD86A9FB /* Pods-TextilePhotosTests */,
+				E5E5B2D5B743BA9AE7BBE616EDADD92F /* Pods-TextilePhotos */,
+				5EC7C01CEFCFF1F720E1D340757D3152 /* Pods-TextilePhotosTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6EAEF94C2687816905D7184FE789A765 /* Sources */ = {
+		11C526E14952F2DDDA0FD2C35421BFEB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D113ECED943B3560EE47F894F7969ABE /* Pods-TextilePhotos-dummy.m in Sources */,
+				4A6411C79632658D87D92BF542AD9901 /* Pods-TextilePhotosTests-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9CD5E6EAAC14ECB64A3E89E8A26BBD8C /* Sources */ = {
+		34FBF2018788BBCBAD6A249E7E800177 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				243FFA83AE5D7720195832FC8097E29B /* Pods-TextilePhotos-tvOS-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A1410029346C32CC070A5FBBA80F6AA6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C9162F05944A249482CE1557A9D5EFD9 /* Pods-TextilePhotos-tvOSTests-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E86CADDE7C60CDEA9DBB01BB3014C3CE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4E9982F6616941815FD379CCA870BC59 /* Pods-TextilePhotosTests-dummy.m in Sources */,
+				AEB825D5046C1E43A255036885DAF195 /* Pods-TextilePhotos-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2E6EF62CD5DE8FB4AF280B06DB85D979 /* PBXTargetDependency */ = {
+		4575E4C2766294E90CC9A1198D84F224 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Pods-TextilePhotos";
-			target = 6E73BAE1FCCAC7AEE2F31D10F79E69F8 /* Pods-TextilePhotos */;
-			targetProxy = B5D2EDC198A40795627614E83FDAFC1F /* PBXContainerItemProxy */;
-		};
-		D4578AE622DD6618051F27C1AE116E9B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Pods-TextilePhotos-tvOS";
-			target = 28B02B67A7857631A0ABD6745B217BC3 /* Pods-TextilePhotos-tvOS */;
-			targetProxy = 587DB226479ADEF05249D106C252A3FA /* PBXContainerItemProxy */;
+			target = E5E5B2D5B743BA9AE7BBE616EDADD92F /* Pods-TextilePhotos */;
+			targetProxy = 74D64B1B9B22306CF81F82E9C6BE1AEA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0C4F06364697DC3C8B7F91C53AD9A16E /* Debug */ = {
+		178E72298AB429CF88C49BB91A765CFD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AAF691A7A7D6835AB5991B0E76DCB7E5 /* Pods-TextilePhotos-tvOSTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		191E8E274B0017F93C5914185E6C02F7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2090B3E79F89E51D9D01B6649EA8B80F /* Pods-TextilePhotos.debug.xcconfig */;
+			baseConfigurationReference = CC94AD321CCECB727947AD9A750DB60F /* Pods-TextilePhotosTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -559,9 +390,9 @@
 			};
 			name = Debug;
 		};
-		28AE1785111EF0D3835CCF5E5E7867F6 /* Debug */ = {
+		269AC7838B8B172CE14EFB6C73AEDCE0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3ADBCED1846CB153718FF44D993DC1D5 /* Pods-TextilePhotos-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 6639BA6A50D4FEC0BC090B101D6E2A15 /* Pods-TextilePhotos.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -580,30 +411,9 @@
 			};
 			name = Debug;
 		};
-		56E20ABAA3DB0EEC1C61C56FDC616E1C /* Debug */ = {
+		34DFD042CC4100A3B933203DC7C67C2F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 670BBDC7C1EF48E86E403A0C60540C9C /* Pods-TextilePhotosTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		6D6A50148773C8F877C8A368A08B3AF8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 23CA9B17298E5011F6C2345F3CC24FE8 /* Pods-TextilePhotos.release.xcconfig */;
+			baseConfigurationReference = F10F3035F7626F1D95C150F92338EB79 /* Pods-TextilePhotosTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -623,53 +433,9 @@
 			};
 			name = Release;
 		};
-		9C2416F9DCBB38A99185285DCD1C0508 /* Release */ = {
+		5527D3CE99DFA6F135F5DF977069E087 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 514EFBB5F90E23FFD3339EF0744E18CE /* Pods-TextilePhotos-tvOSTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		BFAB167A31DECCF9759147E316A5E62B /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = AD527F25CB876E52C3FE8EF69CE760C8 /* Pods-TextilePhotosTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		FCB79BB4E029C322051B70A1B8C5052C /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A186B72F3C543997DEF896F5CFA7845 /* Pods-TextilePhotos-tvOS.release.xcconfig */;
+			baseConfigurationReference = CEB8981BB2CCBF2D2E10CAD9ED4468EB /* Pods-TextilePhotos.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -750,15 +516,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0201315E126E093A845E09523E6FE7D5 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotos" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				191E8E274B0017F93C5914185E6C02F7 /* Debug */,
-				6D6A50148773C8F877C8A368A08B3AF8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -768,29 +525,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		519D24F3861D5A82D87E0607ABB4A1B3 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotos-tvOSTests" */ = {
+		8204136DD862E81022D9FA3F21957601 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotosTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0C4F06364697DC3C8B7F91C53AD9A16E /* Debug */,
-				9C2416F9DCBB38A99185285DCD1C0508 /* Release */,
+				178E72298AB429CF88C49BB91A765CFD /* Debug */,
+				34DFD042CC4100A3B933203DC7C67C2F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DAAC64A2A9CE1D3948CF9C3BD59177EB /* Build configuration list for PBXNativeTarget "Pods-TextilePhotosTests" */ = {
+		94AD958F38E6E805A7E845A7742D7547 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				56E20ABAA3DB0EEC1C61C56FDC616E1C /* Debug */,
-				BFAB167A31DECCF9759147E316A5E62B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E0686F0ABAD8FEAFF4D354C7E5271BE5 /* Build configuration list for PBXNativeTarget "Pods-TextilePhotos-tvOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				28AE1785111EF0D3835CCF5E5E7867F6 /* Debug */,
-				FCB79BB4E029C322051B70A1B8C5052C /* Release */,
+				269AC7838B8B172CE14EFB6C73AEDCE0 /* Debug */,
+				5527D3CE99DFA6F135F5DF977069E087 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

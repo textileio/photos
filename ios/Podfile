@@ -6,24 +6,11 @@ target 'TextilePhotos' do
   # use_frameworks!
 
   # Pods for TextilePhotos
-  pod 'AppCenter/Crashes', '~> 1.5.0'
-  pod 'AppCenter/Analytics', '~> 1.5.0'
-  pod 'AppCenterReactNativeShared', '~> 1.4.0'
+  pod 'AppCenter/Crashes', '~> 1.8.0'
+  pod 'AppCenter/Analytics', '~> 1.8.0'
+  pod 'AppCenterReactNativeShared', '~> 1.7.1'
 
   target 'TextilePhotosTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-end
-
-target 'TextilePhotos-tvOS' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for TextilePhotos-tvOS
-
-  target 'TextilePhotos-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
