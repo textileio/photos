@@ -33,9 +33,9 @@
   "dependencies": {
     "@types/react-navigation": "1.5.11",
     "apisauce": "^0.14.2",
-    "appcenter": "^1.4.0",
-    "appcenter-analytics": "^1.4.0",
-    "appcenter-crashes": "^1.4.0",
+    "appcenter": "^1.7.1",
+    "appcenter-analytics": "^1.7.1",
+    "appcenter-crashes": "^1.7.1",
     "format-json": "^1.0.3",
     "identity-obj-proxy": "^3.0.0",
     "jdenticon": "dmester/jdenticon",
@@ -147,7 +147,9 @@
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
     },
     "setupFiles": [
-      "<rootDir>/Tests/Setup"
+      "<rootDir>/Tests/Setup",
+      "<rootDir>/node_modules/appcenter-analytics/test/AppCenterAnalyticsMock.js",
+      "<rootDir>/node_modules/appcenter/test/AppCenterMock.js"
     ],
     "collectCoverage": true,
     "collectCoverageFrom": [
