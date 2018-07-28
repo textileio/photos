@@ -11,7 +11,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.primaryBackground,
-    padding: 20
+    padding: 20,
   },
   messageContainer: {
     flex: 1,
@@ -20,15 +20,17 @@ export default StyleSheet.create({
   },
   iconsRow: {
     flexDirection: 'row',
-    marginVertical: 40,
+    marginTop: 40,
     paddingHorizontal: 20,
     justifyContent: 'space-around'
   },
   message: {
     fontFamily: 'BentonSans',
-    color: Colors.charcoal,
+    color: '#9b9b9b',
     paddingTop: 20,
-    fontSize: 18,
+    fontSize: 14,
+    lineHeight: 22,
+    paddingHorizontal: 20,
     alignSelf: 'center',
     textAlign: 'justify'
   }
