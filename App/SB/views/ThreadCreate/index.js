@@ -19,7 +19,10 @@ const ThreadsEdit = () => {
         } />
       <ScrollView style={styles.contentContainer}>
         <Text style={styles.title}>New thread</Text>
-        <Input labelStyle={styles.labelStyle} label='Add a title' />
+        <Input labelStyle={{
+          color: '#9b9b9b',
+          fontSize: 16
+        }} label='Add a title' />
       </ScrollView>
       <BottomBar active='threads' />
     </View>
