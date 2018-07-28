@@ -47,7 +47,9 @@ export default {
   },
 
   getUsername: async function (): Promise<string> {
-    return await TextileNode.getUsername()
+    const un = await TextileNode.getUsername()
+    console.log('GOT', un)
+    return un
   },
 
   getTokens: async function (): Promise<TextileTypes.CafeTokens> {
