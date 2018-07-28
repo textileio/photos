@@ -49,7 +49,7 @@ class InfoView extends React.PureComponent {
               name='sc-twitter'
               type='evilicon'
               color={buttonColor2}
-              onPress={() => Linking.openURL('https://t.me/joinchat/AAAAAEfVwD37Wh0OpnlXKA')}
+              onPress={() => Linking.openURL('https://twitter.com/messages/compose?recipient_id=773578637320880128')}
             />
             <Icon
               reverse
