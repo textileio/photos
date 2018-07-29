@@ -19,7 +19,10 @@ const actions = {
   }),
   imageRemovalComplete: createAction('IMAGE_REMOVAL_COMPLETE', resolve => {
     return (dataId: string) => resolve({ dataId })
-  })
+  }),
+  synchronizeNativeUploadsError: createAction('SYNCHRONIZE_NATIVE_UPLOADS_ERROR', resolve => {
+    return (error: Error) => resolve(error)
+  }),
 }
 
 export type UploadingImagesAction = ActionType<typeof actions>
@@ -53,6 +56,15 @@ export const UploadingImagesSelectors = {
     return Object.keys(state.uploadingImages.images)
       .map(key => state.uploadingImages.images[key])
       .filter(image => image.state === 'error' && image.remainingUploadAttempts > 0) as UploadingImage[]
+  },
+  uploadingImageIds: (state) => {
+    let keys: string[] = []
+    for (let key in state.uploadingImages.images) {
+      if (state.uploadingImages.images.hasOwnProperty(key) && state.uploadingImages.images[key].state === 'uploading') {
+        keys.push(key)
+      }
+    }
+    return keys
   }
 }
 
@@ -60,15 +72,15 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
   switch (action.type) {
     case getType(actions.addImage): {
       const { path, dataId, attempts } = action.payload
-      return { 
+      return {
         ...state,
         images: {
-          ...state.images, 
+          ...state.images,
           [dataId]: {
-            path, 
-            dataId, 
-            state: 'pending', 
-            uploadProgress: 0, 
+            path,
+            dataId,
+            state: 'pending',
+            uploadProgress: 0,
             remainingUploadAttempts: attempts
           }
         }
