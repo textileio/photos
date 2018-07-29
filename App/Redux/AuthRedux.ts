@@ -1,20 +1,25 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import t from 'tcomb-form-native'
 import { CafeTokens } from '../Models/TextileTypes'
 
 const actions = {
-  updateFormType: createAction('UPDATE_FORM_TYPE', resolve => {
-    return (formType: any) => resolve({ formType })
+  updateReferralCode: createAction('UPDATE_REFERRAL_CODE', resolve => {
+    return (referralCode: string) => resolve({ referralCode })
   }),
-  updateFormValue: createAction('UPDATE_FORM_VALUE', resolve => {
-    return (formValue: any) => resolve({ formValue })
+  updateEmail: createAction('UPDATE_EMAIL', resolve => {
+    return (email: string) => resolve({ email })
+  }),
+  updateUsername: createAction('UPDATE_USERNAME', resolve => {
+    return (username: string) => resolve({ username })
+  }),
+  updatePassword: createAction('UPDATE_PASSWORD', resolve => {
+    return (password: string) => resolve({ password })
   }),
   signUpRequest: createAction('SIGN_UP_REQUEST', resolve => {
-    return (data: any) => resolve({ data })
+    return (referralCode: string, email: string, username: string, password: string) => resolve({ referralCode, email, username, password })
   }),
   logInRequest: createAction('LOG_IN_REQUEST', resolve => {
-    return (data: any) => resolve({ data })
-  }),
+    return (username: string, password: string) => resolve({ username, password })
+}),
   recoverPasswordRequest: createAction('RECOVER_PASSWORD_REQUEST', resolve => {
     return (data: any) => resolve({ data })
   }),
@@ -49,47 +54,41 @@ const actions = {
 
 export type AuthAction = ActionType<typeof actions>
 
-const Email = t.refinement(t.String, function (n) {
-  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return re.test(String(n).toLowerCase())
-})
-
-export const SignUp = t.struct({
-  referralCode: t.String,
-  username: t.String,
-  email: Email,
-  password: t.String
-})
-
-export const LogIn = t.struct({
-  username: t.String,
-  password: t.String
-})
-
-export const RecoverPassword = t.struct({
-  username: t.String
-})
+// An email verification regexp when we need it
+// const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 export type AuthState = {
   readonly processing: boolean
   readonly username?: string
   readonly error?: string
   readonly tokens?: CafeTokens
-  readonly formType: any
-  readonly formValue?: any
+  readonly formData: {
+    readonly referralCode?: string
+    readonly email?: string
+    readonly username?: string
+    readonly password?: string
+  }
 }
 
 export const initialState: AuthState = {
   processing: false,
-  formType: SignUp
+  formData: {}
 }
 
 export function reducer (state: AuthState = initialState, action: AuthAction): AuthState {
   switch (action.type) {
-    case getType(actions.updateFormType):
-      return { ...state, formType: action.payload.formType }
-    case getType(actions.updateFormValue):
-      return { ...state, formValue: action.payload.formValue }
+    case getType(actions.updateReferralCode):
+      const { referralCode } = action.payload
+      return { ...state, error: undefined, formData: { ...state.formData, referralCode } }
+    case getType(actions.updateEmail):
+      const { email } = action.payload
+      return { ...state, error: undefined, formData: { ...state.formData, email } }
+    case getType(actions.updateUsername):
+      const { username } = action.payload
+      return { ...state, error: undefined, formData: { ...state.formData, username } }
+    case getType(actions.updatePassword):
+      const { password } = action.payload
+      return { ...state, error: undefined, formData: { ...state.formData, password } }
     case getType(actions.signUpRequest):
     case getType(actions.logInRequest):
     case getType(actions.recoverPasswordRequest):
