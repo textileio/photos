@@ -21,9 +21,12 @@ export default class OnBoarding extends Component {
       })
     }
 
+    onSubmit = () => {
+      this.props.navigation.navigate('SignUp')
+    }
+
     render () {
       const { step } = this.state
-      const { onSubmit } = this.props
 
       return (
         <Fragment>
@@ -47,8 +50,8 @@ export default class OnBoarding extends Component {
             currentPageIndex={step}
             pages={pages}
             onNext={this.onNext}
-            onSkip={onSubmit}
-            onSubmit={onSubmit}
+            onSkip={this.onSubmit}
+            onSubmit={this.onSubmit}
           />
         </Fragment>
       )
