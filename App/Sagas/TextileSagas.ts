@@ -9,7 +9,7 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { AppState, Share } from 'react-native'
+import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select, take } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
@@ -18,7 +18,8 @@ import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import TextileNode from '../../TextileNode'
-import { getAllPhotos, getPhotoPath } from '../Services/PhotoUtils'
+import { getPhotos } from '../Services/CameraRoll'
+import { getAllPhotos, getPhotoPath, getPage } from '../Services/PhotoUtils'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../Redux/TextileNodeRedux'
@@ -477,5 +478,23 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, id))
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
+  }
+}
+
+export function * cameraPermissionsTrigger () {
+  // Will trigger a camera permission request
+  getPhotos(1)
+}
+
+export function * backgroundLocationPermissionsTrigger () {
+  // Will trigger a camera permission request
+  if (Platform.OS === 'android') {
+    // await PermissionsAndroid.request(
+    //   PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    //   'So you can take a photo and store it in Textile.'
+    // )
+    yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.')
+  } else {
+    yield call(navigator.geolocation.requestAuthorization)
   }
 }
