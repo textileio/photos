@@ -31,6 +31,7 @@ import {
   getPhotoHashes,
   shareImage,
   photosTask,
+  synchronizeNativeUploads,
   removePayloadFile,
   handleUploadError,
   addThread,

@@ -87,7 +87,7 @@ const mapDispatchToProps = (dispatch) => {
     locationUpdate: () => { dispatch(TriggersActions.locationUpdate()) },
     uploadComplete: e => { dispatch(UploadingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody)) },
     uploadProgress: e => { dispatch(UploadingImagesActions.imageUploadProgress(e.id, e.progress)) },
-    uploadError: e => { dispatch(UploadingImagesActions.imageUploadError(e.id, e.error)) }
+    uploadError: e => { dispatch(UploadingImagesActions.imageUploadError(e.id, e.error || 'Cancelled')) }
   }
 }
 
