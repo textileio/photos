@@ -59,6 +59,7 @@ class TextileManager extends React.PureComponent {
   }
 
   async setup () {
+    console.log('SETUP')
     // await PushNotificationIOS.requestPermissions()
     AppState.addEventListener('change', this.handleNewAppState.bind(this))
     navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
