@@ -331,7 +331,15 @@ export function * photosTask() {
         )
       } catch (error) {
         // Leave all the data in place so we can rerty upload
-        yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, error.message))
+        let message = ''
+        if (!error) {
+          message = ''
+        } else if (typeof error === 'string') {
+          message = error
+        } else if (error.message) {
+          message = error.message
+        }
+        yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, message))
       }
     }
 
@@ -341,7 +349,15 @@ export function * photosTask() {
       try {
         yield uploadFile(imageToRetry.dataId, imageToRetry.path)
       } catch (error) {
-        yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, error.message))
+        let message = ''
+        if (!error) {
+          message = ''
+        } else if (typeof error === 'string') {
+          message = error
+        } else if (error.message) {
+          message = error.message
+        }
+        yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, message))
       }
     }
 
