@@ -483,7 +483,14 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
 
 export function * cameraPermissionsTrigger () {
   // Will trigger a camera permission request
-  getPhotos(1)
+  if (Platform.OS === 'android') {
+    const permission = yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE, {
+        'title': 'Textile Photos Photos Permission',
+        'message': 'Textile accesses your photo storage to import any new photos you take after you install the app.'
+      })
+  } else {
+    getPhotos(1)
+  }
 }
 
 export function * backgroundLocationPermissionsTrigger () {
