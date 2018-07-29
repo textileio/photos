@@ -268,7 +268,7 @@ jobs:
           command: appcenter crashes upload-symbols -m ./index.ios.map -s ./ios/TextilePhotos.app.dSYM.zip  --app $APP_CENTER_APP --token $APP_CENTER_API_TOKEN --disable-telemetry
 
 workflows:
-  version: 3
+  version: 2
   node-android-ios:
     jobs:
       - node

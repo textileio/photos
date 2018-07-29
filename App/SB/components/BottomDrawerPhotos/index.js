@@ -1,22 +1,19 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions, Platform } from 'react-native'
+import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 
-import Drawer from '../../components/BottomDrawer'
 import PhotoWithTextBox from '../../components/PhotoWithTextBox'
 import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 import Modal from 'react-native-modal'
 
 import styles from './statics/styles'
-import UIActions from '../../../Redux/UIRedux'
 
 
 // via https://github.com/react-native-community/react-native-modal/issues/147
-const IOS = Platform.OS === 'ios'
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = IOS
-  ? Dimensions.get('window').height
-  : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT');
+const WIDTH = Dimensions.get('window').width
+
+// May be slightly off on some bigger Android devices...
+const HEIGHT = Dimensions.get('window').height
 
 class BottomDrawerPhotos extends Component {
   constructor (props) {
