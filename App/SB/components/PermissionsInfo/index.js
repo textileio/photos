@@ -1,17 +1,15 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions, Platform } from 'react-native'
+import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 
 import Modal from 'react-native-modal'
 
 import styles from './statics/styles'
 
-const IOS = Platform.OS === 'ios'
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = IOS
-  ? Dimensions.get('window').height
-  : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT');
+const WIDTH = Dimensions.get('window').width
 
+// may be off on some Android devices
+const HEIGHT = Dimensions.get('window').height
 
 // Placeholder made by AXH without any SB stuff
 class PermissionsInfo extends Component {
