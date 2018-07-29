@@ -42,7 +42,7 @@ export default StyleSheet.create({
   },
   itemDescription: {
     fontFamily: "BentonSans",
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 27,
     color: "#4a4a4a",
     marginRight: 6
@@ -50,6 +50,11 @@ export default StyleSheet.create({
   itemTexts: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  permissionsButtonStyle: {
+    height: 38,
+    width: 40,
+    backgroundColor: '#2625FF'
   },
   footer: {
     position: 'absolute',
