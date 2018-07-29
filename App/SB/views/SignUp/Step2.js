@@ -5,13 +5,14 @@ import Input from '../../components/Input'
 import Footer from '../../components/Footer'
 import Logo from '../../components/Logo'
 import Button from '../../components/Button'
+import Alert from '../../components/Alert'
 import PasswordValidator from '../../components/PasswordValidator/PasswordValidatorContainer'
 
 import commonStyles from '../commonStyles'
 import styles from './statics/styles'
 
 const Step1 = props => {
-  const { username, password, onChange, onPreviousStep, history } = props
+  const { referralCode, email, username, password, updateUsername, updatePassword, onPreviousStep, submit, displayError, errorMessage } = props
 
   const hasError = false // TODO: toggle this to display error msg on input
 
@@ -27,29 +28,35 @@ const Step1 = props => {
             label="Username"
             error={hasError}
             errorMsg='This username is already taken'
-            onChangeText={value => onChange({ name: 'username', value })}
+            onChangeText={updateUsername}
+            keyboardType='default'
+            autoCapitalize='none'
           />
           <View style={{ position: 'relative' }}>
             <Input
               value={password}
               label="Password"
               secureTextEntry
-              onChangeText={value => onChange({ name: 'password', value })}
+              onChangeText={updatePassword}
+              keyboardType='default'
+              autoCapitalize='none'
             />
-            <View style={{ position: 'absolute', right: 0, bottom: 20 }}>
+            {/* TODO: somthing with pw strength */}
+            {/* <View style={{ position: 'absolute', right: 0, bottom: 20 }}>
               <PasswordValidator display={password} password={password} />
-            </View>
+            </View> */}
           </View>
           <View style={styles.bottomLine}>
             <Text style={styles.bottomLineLink}>By signing up you agree to our <Text style={styles.link}>Terms and Conditions</Text></Text>
             <Button
               text="Create account"
               disabled={!username || !password}
-              onPress={() => history.push('/welcome')}
+              onPress={() => submit(referralCode, email, username, password)}
             />
           </View>
         </View>
       </ScrollView>
+      <Alert display={displayError} bottom msg={'Sign up error: ' +  errorMessage}/>
       <Footer>
         <TouchableOpacity onPress={onPreviousStep}>
           <Text style={[styles.footerLink, styles.link, styles.strong]}>Go back</Text>

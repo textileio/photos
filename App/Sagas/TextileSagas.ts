@@ -28,7 +28,6 @@ import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
-import {params1} from '../Navigation/OnboardingNavigation'
 import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
@@ -38,7 +37,7 @@ import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Red
 import DeepLink from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
-  const {referralCode, username, email, password} = action.payload.data
+  const {referralCode, username, email, password} = action.payload
   try {
     yield call(TextileNode.signUpWithEmail, email, username, password, referralCode)
     const tokens = yield call(TextileNode.getTokens)
@@ -46,21 +45,21 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
     // TODO: Put username into textile-go for addition to metadata model
     yield put(AuthActions.signUpSuccess())
     yield put(AuthActions.getUsernameSuccess(username))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    yield call(NavigationService.navigate, 'Permissions')
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
 }
 
 export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
-  const {username, password} = action.payload.data
+  const {username, password} = action.payload
   try {
     yield call(TextileNode.signIn, username, password)
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
     yield put(AuthActions.logInSuccess())
     yield put(AuthActions.getUsernameSuccess(username))
-    yield call(NavigationService.navigate, 'OnboardingScreen', params1)
+    yield call(NavigationService.navigate, 'Permissions')
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }
