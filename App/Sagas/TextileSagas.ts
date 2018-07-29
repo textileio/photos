@@ -388,7 +388,7 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
   if (uploadingImage.remainingUploadAttempts === 0) {
     try {
       yield call(RNFS.unlink, uploadingImage.path)
-    } catch () { }
+    } catch (error) { }
     // Commenting this out for now so we can always see the last error that happend,
     // even though we're not going to retry the upload again.
     // yield put(UploadingImagesActions.imageRemovalComplete(dataId))
