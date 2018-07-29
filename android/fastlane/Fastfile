@@ -24,7 +24,6 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
-    ensure_git_status_clean
     increment_version_code(
         gradle_file_path: "app/build.gradle",
     )
