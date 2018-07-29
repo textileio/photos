@@ -1,21 +1,14 @@
-import { PermissionsAndroid, Platform, Linking, Text, View } from 'react-native'
-import React from "react"
 import { StackNavigator } from 'react-navigation'
 import OnboardingScreen from '../SB/views/OnBoarding'
-import { Colors } from '../Themes'
-import LoginScreen from '../Containers/LoginScreen'
-import {getPage} from '../Services/PhotoUtils'
-import PreferencesActions from '../Redux/PreferencesRedux'
-import styles from './Styles/NavigationStyles'
-import ostyles, {buttonColor} from '../Containers/Styles/OnboardingScreenStyle'
+import SignUpScreen from '../SB/views/SignUp/SignUpContainer'
+import SignInScreen from '../SB/views/SignIn/SignInContainer'
 
 // Manifest of possible screens
 const OnboardingNav = StackNavigator(
   {
-    OnboardingScreen: OnboardingScreen,
-    Login: {
-      screen: LoginScreen
-    }
+    Onboarding: OnboardingScreen,
+    SignUp: SignUpScreen,
+    SignIn: SignInScreen
   },
   {
     // Default config for all screens

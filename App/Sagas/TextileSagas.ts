@@ -38,7 +38,7 @@ import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Red
 import DeepLink from '../Services/DeepLink'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
-  const {referralCode, username, email, password} = action.payload.data
+  const {referralCode, username, email, password} = action.payload
   try {
     yield call(TextileNode.signUpWithEmail, email, username, password, referralCode)
     const tokens = yield call(TextileNode.getTokens)
@@ -53,7 +53,7 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
 }
 
 export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
-  const {username, password} = action.payload.data
+  const {username, password} = action.payload
   try {
     yield call(TextileNode.signIn, username, password)
     const tokens = yield call(TextileNode.getTokens)

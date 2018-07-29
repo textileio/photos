@@ -1,17 +1,17 @@
 import React, { Fragment } from 'react'
-import {Text, View, ScrollView} from 'react-native'
-import { Link } from 'react-router-native'
+import {Text, View, ScrollView, TouchableOpacity} from 'react-native'
 
 import Input from '../../components/Input'
 import Footer from '../../components/Footer'
 import Logo from '../../components/Logo'
 import Button from '../../components/Button'
+import Alert from '../../components/Alert'
 
 import commonStyles from '../commonStyles'
 import styles from './statics/styles'
 
 const Step1 = props => {
-  const { name, email, onChange, onNextStep } = props
+  const { referralCode, email, updateReferralCode, updateEmail, onNextStep, switchToSignIn, displayError, errorMessage } = props
 
   return (
     <Fragment>
@@ -21,30 +21,34 @@ const Step1 = props => {
         </Logo>
         <View style={styles.formContainer}>
           <Input
-            value={name}
-            label="Name"
-            onChangeText={value => onChange({ name: 'name', value })}
+            value={referralCode}
+            label="Referral Code"
+            onChangeText={updateReferralCode}
+            keyboardType='default'
+            autoCapitalize='characters'
           />
           <Input
             value={email}
             label="Email"
-            secureTextEntry
-            onChangeText={value => onChange({ name: 'email', value })}
+            onChangeText={updateEmail}
+            keyboardType='email-address'
+            autoCapitalize='none'
           />
           <View style={styles.bottomLine}>
             <Button
-              text="Continue  "
-              disabled={!name || !email}
+              text="Continue"
+              disabled={!referralCode || !email}
               onPress={onNextStep}
             />
           </View>
         </View>
       </ScrollView>
+      <Alert display={displayError} bottom msg={'Sign up error: ' +  errorMessage}/>
       <Footer>
         <Text style={styles.footerText}>Already have an account? </Text>
-        <Link to={{pathname: '/signIn'}}>
+        <TouchableOpacity onPress={switchToSignIn}>
           <Text style={[styles.footerLink, styles.link, styles.strong]}>Sign In</Text>
-        </Link>g
+        </TouchableOpacity>
       </Footer>
     </Fragment>
   )
