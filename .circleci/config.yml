@@ -285,10 +285,10 @@ workflows:
             branches:
               only:
                 - master
-       - android-beta:
-           requires:
-             - android
-           filters:
-             branches:
-               only:
-                 - master
+      - android-beta:
+          requires:
+            - android
+          filters:
+            branches:
+              only:
+                - master
