@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
-import { Text, View, ScrollView } from 'react-native'
-import { Link } from 'react-router-native'
+import { Text, View, ScrollView, TouchableOpacity } from 'react-native'
 
 import Input from '../../components/Input'
 import Footer from '../../components/Footer'
@@ -10,45 +9,51 @@ import Alert from '../../components/Alert'
 
 import commonStyles from '../commonStyles'
 import styles from './statics/styles'
+import { throws } from 'assert';
 
 const SignIn = props => {
-  const { username, password, onChange, history } = props
-  const displayAlert = false
+  const { username, password, updateUsername, updatePassword, submit, switchToSignUp, displayError, errorMessage } = props
+  const displayAlert = true
 
   return (
     <Fragment>
       <ScrollView style={commonStyles.container}>
         <Logo>
-          <Text style={styles.headerText}>Please Login In to continue</Text>
+          <Text style={styles.headerText}>Please sign in to continue</Text>
         </Logo>
         <View style={styles.formContainer}>
           <Input
             value={username}
             label="Username"
-            onChangeText={value => onChange({ name: 'username', value })}
+            onChangeText={updateUsername}
+            keyboardType='default'
+            autoCapitalize='none'
           />
           <Input
             value={password}
             label="Password"
             secureTextEntry
-            onChangeText={value => onChange({ name: 'password', value })}
+            onChangeText={updatePassword}
+            keyboardType='default'
+            autoCapitalize='none'
           />
-          <Text style={styles.forgotText}>Forgot password</Text>
+          {/* TODO: Forgot pw support */}
+          {/* <Text style={styles.forgotText}>Forgot password</Text> */}
           <View style={styles.bottomLine}>
             <Button
-              text="Sign in"
+              text="Sign In"
               disabled={!username || !password}
-              onPress={() => history.push('/welcome')}
+              onPress={() => submit(username, password)}
             />
           </View>
         </View>
       </ScrollView>
-        <Alert display={displayAlert} bottom msg='A link to reset your password has been sent to your email.' />
+      <Alert display={displayError} bottom msg={'Sign in error: ' +  errorMessage}/>
       <Footer>
         <Text style={styles.footerText}>Don't have an account? </Text>
-        <Link to={{pathname: '/signUp'}}>
+        <TouchableOpacity onPress={switchToSignUp}>
           <Text style={[styles.footerLink, styles.link]}>Sign Up</Text>
-        </Link>
+        </TouchableOpacity>
       </Footer>
     </Fragment>
   )
