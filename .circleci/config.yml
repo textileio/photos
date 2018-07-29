@@ -167,7 +167,7 @@ jobs:
       - save_cache:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
           paths:
-            - vendor/bundle 
+            - vendor/bundle
 
       - run:
           command: bundle exec fastlane test
@@ -250,14 +250,14 @@ jobs:
           working_directory: ios
 
       - run:
-          command: npm install -g react-native-cli appcenter-cli 
+          command: npm install -g react-native-cli appcenter-cli
 
       - run:
           command: react-native bundle --entry-file index.js --platform ios --dev false --reset-cache --bundle-output unused.jsbundle --sourcemap-output index.ios.map
-      
+
       - store_artifacts:
           path: ./index.ios.map
-      
+
       - store_artifacts:
           path: ./ios/TextilePhotos.app.dSYM.zip
 
@@ -272,9 +272,9 @@ workflows:
   node-android-ios:
     jobs:
       - node
-    #   - android:
-    #       requires:
-    #         - node
+      - android:
+          requires:
+            - node
       - ios:
           requires:
             - node
@@ -284,9 +284,9 @@ workflows:
           filters:
             branches:
               only: master
-    #   - android-beta:
-    #       requires:
-    #         - android
-    #       filters:
-    #         branches:
-    #           only: master
+       - android-beta:
+           requires:
+             - android
+           filters:
+             branches:
+               only: master
