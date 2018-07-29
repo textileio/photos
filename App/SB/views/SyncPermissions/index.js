@@ -45,7 +45,7 @@ class SyncPermissions extends React.Component {
     switch (infoFocus) {
       case 'alwaysAllow':
         info = {
-          title: 'Please, Always Allow',
+          title: 'Choose, Always Allow',
           details: 'In the location permission, please select, "Always Allow". It is needed by the app to periodically wake up and ensure you are getting updates to and from your peer network. Without it, the app will provide a lonely experience. We never collect, store, or share your location data.'
         }
         break
