@@ -252,8 +252,6 @@ export function * synchronizeNativeUploads() {
     // If not, register an image upload error so a retry can happen if necessary
     for (let uploadId of reactUploads) {
       if (!nativeUploads.includes(uploadId)) {
-        // Ensure that react-native-background-upload is aware... maybe not necessary
-        yield call(Upload.cancelUpload, uploadId)
         // Register the error with a normal image action upload error
         yield put(UploadingImagesActions.imageUploadError(uploadId, "Upload not found in native upload queue."))
       }
@@ -343,6 +341,8 @@ export function * photosTask() {
       }
     }
 
+    // Ensure we don't have any images thought to be uploading that aren't in the native layer
+    yield synchronizeNativeUploads()
     // Process images for upload retry
     const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
     for (const imageToRetry of imagesToRetry) {
