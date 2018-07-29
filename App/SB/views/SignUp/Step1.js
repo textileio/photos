@@ -23,14 +23,14 @@ const Step1 = props => {
           <View style={styles.formContainer}>
             <Input
               value={referralCode}
-              label="Referral Code"
+              label='Referral Code'
               onChangeText={updateReferralCode}
               keyboardType='default'
               autoCapitalize='characters'
             />
             <Input
               value={email}
-              label="Email"
+              label='Email'
               onChangeText={updateEmail}
               keyboardType='email-address'
               autoCapitalize='none'
