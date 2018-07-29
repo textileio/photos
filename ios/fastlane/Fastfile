@@ -30,7 +30,6 @@ platform :ios do
   desc "Push a new beta build to TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
-    ensure_git_status_clean
     # Config that came from 
     # https://raw.githubusercontent.com/CircleCI-Public/circleci-demo-react-native/master/ios/fastlane/Fastfile
     # -----------------------------------------------------------------------------------------------------------
