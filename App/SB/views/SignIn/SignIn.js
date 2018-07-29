@@ -25,14 +25,14 @@ const SignIn = props => {
           <View style={styles.formContainer}>
             <Input
               value={username}
-              label="Username"
+              label='Username'
               onChangeText={updateUsername}
               keyboardType='default'
               autoCapitalize='none'
             />
             <Input
               value={password}
-              label="Password"
+              label='Password'
               secureTextEntry
               onChangeText={updatePassword}
               keyboardType='default'
