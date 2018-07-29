@@ -65,6 +65,11 @@ class SyncPermissions extends React.Component {
     this.setState({infoVisible: true, info})
   }
 
+  onboard () {
+    // TODO move these to aarons profile stuff
+    this.props.onboard()
+    this.props.navigation.navigate('TextilePhotos')
+  }
   render () {
     return (
       <View style={styles.container}>
@@ -101,7 +106,7 @@ class SyncPermissions extends React.Component {
           </View>
         </ScrollView>
         <View style={styles.footer}>
-          <SB_Button disabled={!this.state.complete} style={styles.button} text='Continue' onPress={() => { this.props.navigation.navigate('ProfilePic') }} />
+          <SB_Button disabled={!this.state.complete} style={styles.button} text='Continue' onPress={this.onboard} />
         </View>
         {this.state.infoVisible && <PermissionsInfo isVisible info={this.state.info} close={this.hideInfo.bind(this)} />}
       </View>
@@ -116,7 +121,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     triggerCameraPermissions: () => { dispatch(AuthAction.requestCameraPermissions()) },
-    triggerBackgroundLocationPermissions: () => { dispatch(AuthAction.requestBackgroundLocationPermissions()) }
+    triggerBackgroundLocationPermissions: () => { dispatch(AuthAction.requestBackgroundLocationPermissions()) },
+    onboard: () => { dispatch(PreferencesActions.onboardedSuccess()) },
   }
 }
 
