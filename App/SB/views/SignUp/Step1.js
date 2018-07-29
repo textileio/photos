@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import {Text, View, ScrollView, TouchableOpacity} from 'react-native'
+import {Text, View, ScrollView, TouchableOpacity, Keyboard, TouchableWithoutFeedback} from 'react-native'
 
 import Input from '../../components/Input'
 import Footer from '../../components/Footer'
@@ -15,34 +15,36 @@ const Step1 = props => {
 
   return (
     <Fragment>
-      <ScrollView style={commonStyles.container}>
-        <Logo>
-          <Text style={styles.headerText}>Welcome! Who is there?</Text>
-        </Logo>
-        <View style={styles.formContainer}>
-          <Input
-            value={referralCode}
-            label="Referral Code"
-            onChangeText={updateReferralCode}
-            keyboardType='default'
-            autoCapitalize='characters'
-          />
-          <Input
-            value={email}
-            label="Email"
-            onChangeText={updateEmail}
-            keyboardType='email-address'
-            autoCapitalize='none'
-          />
-          <View style={styles.bottomLine}>
-            <Button
-              text="Continue"
-              disabled={!referralCode || !email}
-              onPress={onNextStep}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <ScrollView style={commonStyles.container}>
+          <Logo>
+            <Text style={styles.headerText}>Welcome! Who is there?</Text>
+          </Logo>
+          <View style={styles.formContainer}>
+            <Input
+              value={referralCode}
+              label="Referral Code"
+              onChangeText={updateReferralCode}
+              keyboardType='default'
+              autoCapitalize='characters'
             />
+            <Input
+              value={email}
+              label="Email"
+              onChangeText={updateEmail}
+              keyboardType='email-address'
+              autoCapitalize='none'
+            />
+            <View style={styles.bottomLine}>
+              <Button
+                text="Continue"
+                disabled={!referralCode || !email}
+                onPress={onNextStep}
+              />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </TouchableWithoutFeedback>
       <Alert display={displayError} bottom msg={'Sign up error: ' +  errorMessage}/>
       <Footer>
         <Text style={styles.footerText}>Already have an account? </Text>

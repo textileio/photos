@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import { Text, View, ScrollView, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 import Input from '../../components/Input'
 import Footer from '../../components/Footer'
@@ -17,37 +17,39 @@ const SignIn = props => {
 
   return (
     <Fragment>
-      <ScrollView style={commonStyles.container}>
-        <Logo>
-          <Text style={styles.headerText}>Please sign in to continue</Text>
-        </Logo>
-        <View style={styles.formContainer}>
-          <Input
-            value={username}
-            label="Username"
-            onChangeText={updateUsername}
-            keyboardType='default'
-            autoCapitalize='none'
-          />
-          <Input
-            value={password}
-            label="Password"
-            secureTextEntry
-            onChangeText={updatePassword}
-            keyboardType='default'
-            autoCapitalize='none'
-          />
-          {/* TODO: Forgot pw support */}
-          {/* <Text style={styles.forgotText}>Forgot password</Text> */}
-          <View style={styles.bottomLine}>
-            <Button
-              text="Sign In"
-              disabled={!username || !password}
-              onPress={() => submit(username, password)}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <ScrollView style={commonStyles.container}>
+          <Logo>
+            <Text style={styles.headerText}>Please sign in to continue</Text>
+          </Logo>
+          <View style={styles.formContainer}>
+            <Input
+              value={username}
+              label="Username"
+              onChangeText={updateUsername}
+              keyboardType='default'
+              autoCapitalize='none'
             />
+            <Input
+              value={password}
+              label="Password"
+              secureTextEntry
+              onChangeText={updatePassword}
+              keyboardType='default'
+              autoCapitalize='none'
+            />
+            {/* TODO: Forgot pw support */}
+            {/* <Text style={styles.forgotText}>Forgot password</Text> */}
+            <View style={styles.bottomLine}>
+              <Button
+                text="Sign In"
+                disabled={!username || !password}
+                onPress={() => submit(username, password)}
+              />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </TouchableWithoutFeedback>
       <Alert display={displayError} bottom msg={'Sign in error: ' +  errorMessage}/>
       <Footer>
         <Text style={styles.footerText}>Don't have an account? </Text>
