@@ -17,7 +17,7 @@ const OnboardingNav = StackNavigator(
   {
     // Default config for all screens
     headerMode: 'none',
-    initialRouteName: 'Onboarding',
+    initialRouteName: 'Permissions',
     navigationOptions: {
       swipeEnabled: false,
       gesturesEnabled: false
