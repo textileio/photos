@@ -31,6 +31,7 @@ import {
   getPhotoHashes,
   shareImage,
   photosTask,
+  synchronizeNativeUploads,
   removePayloadFile,
   handleUploadError,
   addThread,
@@ -77,6 +78,7 @@ export default function * root () {
 
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
+    takeEvery(getType(TextileNodeActions.startNodeSuccess), synchronizeNativeUploads),
 
     takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),

@@ -157,6 +157,8 @@ export function * startNode () {
     yield put(TextileNodeActions.lock(false))
     return
   }
+
+
   try {
     yield call(TextileNode.start)
     yield put(TextileNodeActions.startNodeSuccess())
@@ -239,6 +241,31 @@ export function * pendingInvitesTask () {
   }
 }
 
+export function * synchronizeNativeUploads() {
+  try {
+    // THIS COULD potentiall lead to some edge cases where we receive two Error messages
+    // back to back... one from here and one later from the Native layer. We should check
+    // what is up if that occurs.
+    // Grab all the upload Ids from the native layer
+    const nativeUploads = yield call(Upload.activeUploads)
+    // Grab all the upload Ids from the react native layer
+    const reactUploads: string[] = yield select(UploadingImagesSelectors.uploadingImageIds)
+    // Check that each upload ID from the react layer exists in the array from the native layer
+    // If not, register an image upload error so a retry can happen if necessary
+    for (let uploadId of reactUploads) {
+      if (!nativeUploads.includes(uploadId)) {
+        // Ensure that react-native-background-upload is aware... maybe not necessary
+        yield call(Upload.cancelUpload, uploadId)
+        // Register the error with a normal image action upload error
+        yield put(UploadingImagesActions.imageUploadError(uploadId, "Upload not found in native upload queue."))
+      }
+    }
+  } catch (error) {
+    yield put(UploadingImagesActions.synchronizeNativeUploadsError(error))
+  }
+}
+
+
 export function * photosTask() {
   while (true) {
     // This take effect inside a while loop ensures that the entire photoTask
@@ -306,7 +333,7 @@ export function * photosTask() {
         )
       } catch (error) {
         // Leave all the data in place so we can rerty upload
-        yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, error))
+        yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, error.message))
       }
     }
 
@@ -316,7 +343,7 @@ export function * photosTask() {
       try {
         yield uploadFile(imageToRetry.dataId, imageToRetry.path)
       } catch (error) {
-        yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, error))
+        yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, error.message))
       }
     }
 
@@ -328,10 +355,16 @@ export function * photosTask() {
 }
 
 export function * removePayloadFile (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
+  // TODO: Seeing an error here where the file is sometimes not found on disk...
   const { dataId } = action.payload
   const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
-  yield call(RNFS.unlink, uploadingImage.path)
-  yield put(UploadingImagesActions.imageRemovalComplete(dataId))
+  try {
+    // Putting this into a try, because although it might be nice to have the
+    // error bubble up, we want to be sure we mark the image as uploaded
+    yield call(RNFS.unlink, uploadingImage.path)
+  } finally {
+    yield put(UploadingImagesActions.imageRemovalComplete(dataId))
+  }
 }
 
 export function * handleUploadError (action: ActionType<typeof UploadingImagesActions.imageUploadError>) {

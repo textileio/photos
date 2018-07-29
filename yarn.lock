@@ -8587,9 +8587,9 @@ react-native-background-timer@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-native-background-timer/-/react-native-background-timer-2.0.1.tgz#ef714a4bfd28fc47cbbd335631b581cf915604a2"
 
-"react-native-background-upload@https://github.com/textileio/react-native-background-upload#6de3a578ee8e58c092ae5ab937c05740e81cf66b":
+"react-native-background-upload@https://github.com/textileio/react-native-background-upload#f867efee9c3e072316c8c53c5155bed783c3c0e9":
   version "4.4.0"
-  resolved "https://github.com/textileio/react-native-background-upload#6de3a578ee8e58c092ae5ab937c05740e81cf66b"
+  resolved "https://github.com/textileio/react-native-background-upload#f867efee9c3e072316c8c53c5155bed783c3c0e9"
 
 react-native-cli@^2.0.1:
   version "2.0.1"
