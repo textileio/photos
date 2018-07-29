@@ -116,7 +116,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     triggerCameraPermissions: () => { dispatch(AuthAction.requestCameraPermissions()) },
-    // triggerLocationPermissions: () => { dispatch(AuthAction.requestLocationPermissions()) },
     triggerBackgroundLocationPermissions: () => { dispatch(AuthAction.requestBackgroundLocationPermissions()) }
   }
 }
