@@ -1,4 +1,6 @@
 import React from 'react'
+import { connect } from 'react-redux'
+
 import UserOnBoarding from './UserOnBoarding'
 
 class UserOnBoardingContainer extends React.Component {
@@ -40,4 +42,14 @@ class UserOnBoardingContainer extends React.Component {
   }
 }
 
-export default UserOnBoardingContainer
+const mapStateToProps = state => {
+  return {
+    username: state.auth.username || 'Mysterious User'
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserOnBoardingContainer)
