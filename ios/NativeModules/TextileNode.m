@@ -292,6 +292,16 @@ RCT_EXPORT_METHOD(getPhotoMetadata:(NSString *)photoId resolver:(RCTPromiseResol
   }
 }
 
+RCT_EXPORT_METHOD(resolveProfileInfo:(NSString *)peerId key:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _resolveProfileInfo:peerId key:key error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_METHOD(addDevice:(NSString *)name pubKey:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSError *error;
@@ -443,6 +453,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (NSString *)_getPhotoMetadata:(NSString *)photoId error:(NSError**)error {
   return [self.node getPhotoMetadata:photoId error:error];
+}
+
+- (NSString *)_resolveProfileInfo:(NSString *)peerId key:(NSString *)key error:(NSError**)error {
+  return [self.node resolveProfileInfo:peerId key:key error:error];
 }
 
 - (void)_addDevice:(NSString *)name pubKey:(NSString *)pkb64 error:(NSError**)error {

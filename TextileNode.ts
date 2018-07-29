@@ -120,6 +120,11 @@ export default {
     return photoMetadata
   },
 
+  resolveProfileInfo: async function (peerId: string, key: string): Promise<string> {
+    const info = await TextileNode.resolveProfileInfo(peerId, key)
+    return info
+  },
+
   addDevice: async function (name: string, pubKey: string): Promise<void> {
     return await TextileNode.addDevice(name, pubKey)
   },
