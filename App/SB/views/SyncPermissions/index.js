@@ -22,7 +22,7 @@ class SyncPermissions extends React.Component {
               <View>
                 <Text style={styles.itemTitle}>Camera Roll</Text>
                 <View style={styles.itemTexts}>
-                  <Text style={styles.itemDescription}>Updates your photos</Text>
+                  <Text style={styles.itemDescription}>Imports new camera photos</Text>
                   <ImageSc width={15} source={require('./statics/icon-info.png')} />
                 </View>
               </View>
