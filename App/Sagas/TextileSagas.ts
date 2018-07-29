@@ -489,10 +489,6 @@ export function * cameraPermissionsTrigger () {
 export function * backgroundLocationPermissionsTrigger () {
   // Will trigger a camera permission request
   if (Platform.OS === 'android') {
-    // await PermissionsAndroid.request(
-    //   PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    //   'So you can take a photo and store it in Textile.'
-    // )
     yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.')
   } else {
     yield call(navigator.geolocation.requestAuthorization)
