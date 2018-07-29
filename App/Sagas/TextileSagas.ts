@@ -158,7 +158,6 @@ export function * startNode () {
     return
   }
 
-
   try {
     yield call(TextileNode.start)
     yield put(TextileNodeActions.startNodeSuccess())
@@ -372,7 +371,13 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
   const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
   // If there are no more upload attempts, delete the payload file to free up disk space
   if (uploadingImage.remainingUploadAttempts === 0) {
-    yield call(RNFS.unlink, uploadingImage.path)
+    try {
+      yield call(RNFS.unlink, uploadingImage.path)
+    } catch (error) {
+      // TODO: proper way to deal with these unlink errors?
+      // For me this will ock up my interface
+      console.log(error)
+    }
     // Commenting this out for now so we can always see the last error that happend,
     // even though we're not going to retry the upload again.
     // yield put(UploadingImagesActions.imageRemovalComplete(dataId))
