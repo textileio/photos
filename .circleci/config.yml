@@ -278,13 +278,13 @@ workflows:
       - ios:
           requires:
             - node
-      - ios-beta:
+      - iosbeta:
           requires:
             - ios
           filters:
             branches:
               only: master
-       - android-beta:
+       - androidbeta:
            requires:
              - android
            filters:
