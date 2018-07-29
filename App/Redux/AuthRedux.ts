@@ -19,7 +19,7 @@ const actions = {
   }),
   logInRequest: createAction('LOG_IN_REQUEST', resolve => {
     return (username: string, password: string) => resolve({ username, password })
-}),
+  }),
   recoverPasswordRequest: createAction('RECOVER_PASSWORD_REQUEST', resolve => {
     return (data: any) => resolve({ data })
   }),

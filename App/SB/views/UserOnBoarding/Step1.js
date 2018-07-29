@@ -7,14 +7,14 @@ import Logo from '../../components/Logo'
 import styles from './statics/styles'
 
 const Step1 = props => {
-  const { onNextStep } = props
+  const { onNextStep, username } = props
 
   return (
     <Fragment>
       <ScrollView>
         <Logo style={styles.headerContainer} logoStyle={styles.logo}>
           <Text style={styles.title}>Welcome aboard</Text>
-          <Text style={[styles.title, styles.strong]}>Michael</Text>
+          <Text style={[styles.title, styles.strong]}>{username}</Text>
         </Logo>
         <View style={styles.contentContainer}>
           <Text style={styles.subtitle}>Before starting using Textile, we need you to upload your profile picture</Text>
