@@ -43,7 +43,8 @@ import {
   pendingInvitesTask,
   cameraPermissionsTrigger,
   backgroundLocationPermissionsTrigger,
-  chooseProfilePhoto
+  chooseProfilePhoto,
+  handleProfilePhotoSelected
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -56,6 +57,7 @@ export default function * root () {
 
     // profile photo
     takeEvery(getType(UIActions.chooseProfilePhotoRequest), chooseProfilePhoto),
+    takeEvery(getType(UIActions.selectProfilePicture), handleProfilePhotoSelected),
 
     // permissions request events
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
