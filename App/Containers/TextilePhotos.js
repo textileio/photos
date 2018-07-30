@@ -92,7 +92,11 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.toggleVerboseUi !== prevProps.toggleVerboseUi || this.props.threadName !== prevProps.threadName) {
+    if (
+      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi || 
+      this.props.threadName !== prevProps.threadName ||
+      this.props.profile !== prevProps.profile
+    ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
         toggleVerboseUi: this.props.toggleVerboseUi,
