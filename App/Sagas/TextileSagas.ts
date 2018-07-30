@@ -429,8 +429,20 @@ export function * photosTask () {
 
     // Ensure we don't have any images thought to be uploading that aren't in the native layer
     yield synchronizeNativeUploads()
+
+    // Find any endless spinners and process them to retry
+    const newlyAddedIds = addedPhotosData.map(a => a.addResult.id)
+    const pendingImages: string[] = yield select(UploadingImagesSelectors.pendingImages)
+    const lostPendingImages = pendingImages.filter((imageId) => newlyAddedIds.indexOf(imageId) < 0)
+
+    let imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
+    // We're going to add any lost pending images to our retry list
+    for (let pendingId of lostPendingImages) {
+      const imageToRetry: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, pendingId)
+      imagesToRetry.push(imageToRetry)
+    }
+
     // Process images for upload retry
-    const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
     for (const imageToRetry of imagesToRetry) {
       try {
         yield uploadFile(imageToRetry.dataId, imageToRetry.path)
@@ -456,12 +468,14 @@ export function * photosTask () {
 
 export function * removePayloadFile (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
   // TODO: Seeing an error here where the file is sometimes not found on disk...
-  const { dataId } = action.payload
-  const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
   try {
     // Putting this into a try, because although it might be nice to have the
     // error bubble up, we want to be sure we mark the image as uploaded
+    const { dataId } = action.payload
+    const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
     yield call(RNFS.unlink, uploadingImage.path)
+  } catch (error) {
+    // nothing to do here
   } finally {
     yield put(UploadingImagesActions.imageRemovalComplete(dataId))
   }
