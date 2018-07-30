@@ -8,6 +8,9 @@ const actions = {
   chooseProfilePhotoError: createAction('CHOOSE_PROFILE_PHOTO_ERROR', resolve => {
     return (error: Error) => resolve({ error })
   }),
+  selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', resolve => {
+    return (uri: string) => resolve({ uri })
+  }),
   viewPhotoRequest: createAction('VIEW_PHOTO_REQUEST', resolve => {
     return (index: number, threadId: string) => resolve({ index, threadId })
   }),
