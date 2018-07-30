@@ -100,11 +100,6 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 
     yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
 
-    // set it as our profile picture
-    yield call(TextileNode.setAvatarId, addResult.id)
-    const profile = yield call(TextileNode.getProfile)
-    yield put(PreferencesActions.getProfileSuccess(profile))
-
     try {
       yield uploadFile(
         addResult.id,
@@ -122,6 +117,13 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
       }
       yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
     }
+
+    yield take(getType(TextileNodeActions.nodeOnline))
+    // set it as our profile picture
+    yield call(TextileNode.setAvatarId, addResult.id)
+    const profile = yield call(TextileNode.getProfile)
+    yield put(PreferencesActions.getProfileSuccess(profile))
+
   } catch (error) {
     // TODO: What do to if adding profile photo fails?
   } finally {
@@ -226,16 +228,16 @@ export function * startNode () {
 
     // isolate
     try {
-      const profile = yield call(TextileNode.getProfile)
-      yield put(PreferencesActions.getProfileSuccess(profile))
-    } catch (error) {}
-
-    // isolate
-    try {
       const publicKey = yield call(TextileNode.getPublicKey)
       yield put(PreferencesActions.getPublicKeySuccess(publicKey))
     } catch (error) {}
 
+    // isolate
+    try {
+      yield take(getType(TextileNodeActions.nodeOnline))
+      const profile = yield call(TextileNode.getProfile)
+      yield put(PreferencesActions.getProfileSuccess(profile))
+    } catch (error) {}
 
   } catch (error) {
     yield put(TextileNodeActions.startNodeFailure(error))
@@ -280,6 +282,7 @@ export function * updateContacts (action: ActionType<typeof TextileNodeActions.g
         const isKnown: boolean = yield select(ContactsSelectors.isKnown, contactId)
         if (!isKnown) {
           yield put(ContactsActions.newContactRequest(contactId))
+          yield take(getType(TextileNodeActions.nodeOnline))
           const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
           yield put(ContactsActions.newContactSuccess(contact))
         }
