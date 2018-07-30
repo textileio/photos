@@ -46,6 +46,10 @@ export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}
   return new Promise<{ uri: string, data: string}>((resolve, reject) => {
     const options = {
       title: 'Choose a Profile Picture',
+      maxWidth: 1200,
+      maxHeight: 1200,
+      quality: 0.75,
+      cameraType: 'front' as 'front' | 'back' | undefined,
       storageOptions: {
         skipBackup: true,
         path: 'images'
