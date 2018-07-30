@@ -20,23 +20,13 @@ const { width } = Dimensions.get('window')
 class ThreadPhotoDetail extends Component {
   constructor (props) {
     super(props)
+    const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * width
     this.state = {
-      drawer: false
+      drawer: false,
+      heightByWidth
     }
   }
   static navigationOptions = ({ navigation }) => {
-
-    {/*<Toolbar*/}
-      {/*left={<Image style={styles.toolbarLeft} source={require('./statics/icon-arrow-left.png')} />}*/}
-      {/*right={*/}
-        {/*<View style={styles.toolBarRight}>*/}
-          {/*<Image style={styles.toolbarIconMore} source={require('./statics/icon-more.png')} />*/}
-        {/*</View>*/}
-      {/*}>*/}
-      {/*<Text style={styles.toolbarTitle}>Summer cheers!!! </Text>*/}
-    {/*</Toolbar>*/}
-
-
     const headerLeft = (
       <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
         <Image style={styles.toolbarLeft} source={require('./statics/icon-arrow-left.png')} />
@@ -60,8 +50,8 @@ class ThreadPhotoDetail extends Component {
       imageId={this.props.photo.id}
       previewPath={'thumb'}
       path={'photo'}
-      style={[styles.mainPhoto, {height: width}]}
-      resizeMode={'contain'}
+      style={[styles.mainPhoto, {height: this.state.heightByWidth, width: width}]}
+      resizeMode={'cover'}
     />)
   }
 

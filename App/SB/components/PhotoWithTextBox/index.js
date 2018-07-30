@@ -11,13 +11,19 @@ const PhotoWithTextBox = props => {
   return (
     <View style={[styles.itemContainer, style]}>
       {item &&
-        <TextileImage
-          imageId={item.photo.id}
-          path={'thumb'}
-          style={styles.itemPhoto}
-          resizeMode={'contain'}
-          capInsets={'true'}
-        />
+      <View style={styles.item}>
+        <View style={styles.itemBackgroundContainer}>
+          <TextileImage
+            imageId={item.photo.id}
+            path={'thumb'}
+            style={styles.itemPhoto}
+            width={70}
+            height={50}
+            resizeMode={'cover'}
+            capInsets={'true'}
+          />
+        </View>
+      </View>
       }
       {(!item || !item.photo) &&
         <View style={styles.itemBox}>
