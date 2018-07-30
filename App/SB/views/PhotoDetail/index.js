@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity, StatusBar } from 'react-native'
+import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
@@ -103,7 +103,6 @@ class PhotoDetail extends Component {
   render () {
     return (
       <ScrollView style={styles.bodyContainer}>
-        <StatusBar hidden />
         {this.renderImage()}
         <View style={styles.photoDetails}>
           <View style={styles.detailItem}>
