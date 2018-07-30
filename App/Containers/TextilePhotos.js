@@ -50,22 +50,16 @@ class TextilePhotos extends React.PureComponent {
         />
       </TouchableOpacity>
     )
-    const headerRight = params.threadName === 'default' ? (
-      <TouchableOpacity onPress={ () => {
-        console.log('TODO: HANDLE MENU CLICK FROM WALLET')
-      }}>
-        <Image style={navStyles.headerIconList} source={require('../SB/views/WalletList/statics/icon-list.png')} />
-      </TouchableOpacity>
-    ) : (
+    const headerRight = params.threadName !== 'default' ? (
       <View style={navStyles.headerRight}>
-        <TouchableOpacity onPress={ () => {
-          console.log('TODO: HANDLE CLICKED PHOTO ADD FROM SHARED THREAD')
-        }}>
-          <Image
-            style={navStyles.headerIconPhoto}
-            source={require('../SB/views/ThreadsDetail/statics/icon-photo.png')}
-          />
-        </TouchableOpacity>
+        {/*<TouchableOpacity onPress={ () => {*/}
+          {/*console.log('TODO: HANDLE CLICKED PHOTO ADD FROM SHARED THREAD')*/}
+        {/*}}>*/}
+          {/*<Image*/}
+            {/*style={navStyles.headerIconPhoto}*/}
+            {/*source={require('../SB/views/ThreadsDetail/statics/icon-photo.png')}*/}
+          {/*/>*/}
+        {/*</TouchableOpacity>*/}
         <TouchableOpacity onPress={params.showActionSheet}>
           <Image
             style={navStyles.headerIconMore}
@@ -73,7 +67,15 @@ class TextilePhotos extends React.PureComponent {
           />
         </TouchableOpacity>
       </View>
-    )
+    ) : undefined
+      // Wallet menu not available yet
+    //   : (
+    //     <TouchableOpacity onPress={ () => {
+    // console.log('TODO: HANDLE MENU CLICK FROM WALLET')
+    // }}>
+    // <Image style={navStyles.headerIconList} source={require('../SB/views/WalletList/statics/icon-list.png')} />
+    // </TouchableOpacity>
+    //   )
 
     const greeting = params.profile && params.profile.username ? 'Hello, ' + params.profile.username : 'Hi there!'
     const headerText = params.threadName === 'default' ? greeting : params.threadName

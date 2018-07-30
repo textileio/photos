@@ -52,7 +52,7 @@ const CommentCard = props => {
       <View style={styles.commentTexts}>
         <Text style={styles.commentUser}>{userName}</Text>
         <Text style={styles.commentText}>{comment}</Text>
-        <SmallIconTag textStyle={styles.commentIconLabel} image={require('./statics/icon-comment.png')} text='Reply comment' />
+        {/*<SmallIconTag textStyle={styles.commentIconLabel} image={require('./statics/icon-comment.png')} text='Reply comment' />*/}
         { subComments && subComments.map((subComment, i) => (
           <CommentCard key={i} isSubComment={true} {...subComment} />
         ))}
