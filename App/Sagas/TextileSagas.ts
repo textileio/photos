@@ -76,6 +76,58 @@ export function * recoverPassword (action: ActionType<typeof AuthActions.recover
   }
 }
 
+export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
+  yield put(PreferencesActions.onboardedSuccess())
+  yield call(NavigationService.navigate, 'TextileManager')
+  yield take(getType(TextileNodeActions.startNodeSuccess))
+
+  let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
+    if (!defaultThread) {
+      yield put(ThreadsActions.addThreadRequest('default'))
+      const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
+      defaultThread = action.payload.thread
+      yield put(ThreadsActions.refreshThreadsRequest())
+    }
+
+  const photoPath = action.payload.uri.replace('file://', '')
+  try {
+    const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+    if (!addResult.archive) {
+      throw new Error('no archive returned')
+    }
+    const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+    yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+    yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
+
+    //TODO: Call some TextileNode method to add profile picture
+
+    try {
+      yield uploadFile(
+        addResult.id,
+        addResult.archive.path
+      )
+    } catch (error) {
+      // Leave all the data in place so we can rerty upload
+      let message = ''
+      if (!error) {
+        message = ''
+      } else if (typeof error === 'string') {
+        message = error
+      } else if (error.message) {
+        message = error.message
+      }
+      yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
+    }
+  } catch (error) {
+    // TODO: What do to if adding profile photo fails?
+  } finally {
+    const exists: boolean = yield call(RNFS.exists, photoPath)
+    if (exists) {
+      yield call(RNFS.unlink, photoPath)
+    }
+  }
+}
+
 export function * viewPhoto () {
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
 }
@@ -262,12 +314,20 @@ export function * synchronizeNativeUploads() {
   }
 }
 
+export function * chooseProfilePhoto () {
+  try {
+    const result: { uri: string, data: string } = yield call(CameraRoll.chooseProfilePhoto)
+    yield put(UIActions.chooseProfilePhotoSuccess(result.uri, result.data))
+  } catch (error) {
+    yield put(UIActions.chooseProfilePhotoError(error))
+  }
+}
 
-export function * photosTask() {
+export function * photosTask () {
   while (true) {
     // This take effect inside a while loop ensures that the entire photoTask
     // will run before the next startNodeSuccess is received and photoTask run again
-    yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])
+    yield take(getType(TextileNodeActions.startNodeSuccess))
 
     let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {

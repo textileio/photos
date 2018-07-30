@@ -47,6 +47,8 @@
 	<string>We use location changes to trigger auto-uploading of your photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>So you can pick photos to store in the secure Textile cloud.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+  <string>We would like to save photos to your photo gallery</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

@@ -1,6 +1,16 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
 const actions = {
+  chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
+  chooseProfilePhotoSuccess: createAction('CHOOSE_PROFILE_PHOTO_SUCCESS', resolve => {
+    return (uri: string, data: string) => resolve({ uri, data })
+  }),
+  chooseProfilePhotoError: createAction('CHOOSE_PROFILE_PHOTO_ERROR', resolve => {
+    return (error: Error) => resolve({ error })
+  }),
+  selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', resolve => {
+    return (uri: string) => resolve({ uri })
+  }),
   viewPhotoRequest: createAction('VIEW_PHOTO_REQUEST', resolve => {
     return (index: number, threadId: string) => resolve({ index, threadId })
   }),
@@ -33,6 +43,11 @@ const actions = {
 export type UIAction = ActionType<typeof actions>
 
 export type UIState = {
+  readonly chosenProfilePhoto: {
+    readonly uri?: string,
+    readonly data?: string
+    readonly error?: Error
+  }
   readonly viewingPhoto: {
     readonly active: boolean
     readonly index?: number
@@ -47,6 +62,7 @@ export type UIState = {
 }
 
 export const initialState: UIState = {
+  chosenProfilePhoto: {},
   viewingPhoto: {
     active: false
   },
@@ -58,6 +74,9 @@ export const initialState: UIState = {
 
 export function reducer (state: UIState = initialState, action: UIAction): UIState {
   switch (action.type) {
+    case getType(actions.chooseProfilePhotoSuccess):
+    case getType(actions.chooseProfilePhotoError):
+      return { ...state, chosenProfilePhoto: { ...state.chosenProfilePhoto, ...action.payload } }
     case getType(actions.viewPhotoRequest):
       const { index, threadId } = action.payload
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, index, threadId } }
