@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import Toast from 'react-native-easy-toast'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
@@ -11,10 +12,6 @@ import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 
 import styles from './statics/styles'
 
-// Originally intended structure of the photo list
-// import { photoList } from './constants'
-
-import { Icon } from 'react-native-elements'
 import UIActions from '../../../Redux/UIRedux'
 
 const { width } = Dimensions.get('window')
@@ -45,7 +42,9 @@ class PhotoDetail extends Component {
             <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
           </TouchableOpacity>
           <Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>
-          <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
+          <TouchableOpacity onPress={params.getPublicLink}>
+            <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
+          </TouchableOpacity>
           <Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>
         </View>
     )
@@ -57,15 +56,21 @@ class PhotoDetail extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.navigation.setParams({
       sharePressed: this.sharePressed.bind(this),
+      getPublicLink: this.getPublicLink.bind(this)
     })
   }
 
   sharePressed () {
     this.setState({drawer: true})
     this.props.shareImage(this.props.photo.id)
+  }
+
+  getPublicLink () {
+    this.refs.toast.show('You are creating a public link for this photo!', 1000)
+    this.props.getPublicLink(this.props.photo.id)
   }
 
   shareClosed () {
@@ -129,6 +134,11 @@ class PhotoDetail extends Component {
           </TouchableOpacity> }
         </ScrollView>
         {this.state.drawer && <BottomDrawerPhotos isVisible selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} createThread={() => this.createThread()} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
+        <Toast
+          ref='toast'
+          position='top'
+          positionValue={20}
+        />
       </ScrollView>
     )
   }
@@ -138,7 +148,8 @@ class PhotoDetail extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     authorShare: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
-    shareImage: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) }
+    shareImage: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
+    getPublicLink: (imageId) => { dispatch(UIActions.getPublicLink(imageId)) }
   }
 }
 

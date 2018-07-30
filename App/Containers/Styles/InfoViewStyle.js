@@ -16,7 +16,7 @@ export default StyleSheet.create({
   messageContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'stretch'
+    alignItems: 'stretch',
   },
   iconsRow: {
     flexDirection: 'row',

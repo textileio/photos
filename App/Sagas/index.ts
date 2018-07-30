@@ -44,7 +44,8 @@ import {
   backgroundLocationPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
-  updateContacts
+  updateContacts,
+  presentPublicLinkInterface
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -103,6 +104,8 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
 
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
+
+    takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
 
     // Update contacts
     takeEvery(getType(TextileNodeActions.getPhotoHashesSuccess), updateContacts),

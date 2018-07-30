@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { View, Text, Button, Linking, Clipboard } from 'react-native'
 import { Overlay, Icon } from 'react-native-elements'
 import {getUniqueID} from 'react-native-device-info'
@@ -8,7 +9,6 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 
 // Styles
 import styles, {buttonColor1, buttonColor2, buttonColor3, buttonColor4} from './Styles/InfoViewStyle'
-import {buttonColor} from "./Styles/OnboardingScreenStyle";
 import navStyles from '../Navigation/Styles/NavigationStyles'
 
 class InfoView extends React.PureComponent {
@@ -23,10 +23,13 @@ class InfoView extends React.PureComponent {
     this.state = { }
   }
 
-  handlePress() {
-    const deviceId = getUniqueID()
-    Clipboard.setString(deviceId)
-    this.refs.toast.show('Device ID copied!', DURATION.LENGTH_SHORT)
+  handlePress () {
+    Clipboard.setString(this.props.publicKey)
+    this.refs.toast.show('Copied Public Key!', DURATION.LENGTH_SHORT)
+  }
+  handleMnemonic () {
+    Clipboard.setString(this.props.publicKey)
+    this.refs.toast.show('Careful! Keep this 100% private!', 2500)
   }
 
   render () {
@@ -60,16 +63,38 @@ class InfoView extends React.PureComponent {
             />
           </View>
         </View>
-        <Button
-          onPress={this.handlePress.bind(this)}
-          title='COPY PUBLIC KEY TO CLIPBOARD'
-          accessibilityLabel='copy public key to clipboard'
-          color={buttonColor3}
-        />
+        <View style={{fontSize: 8}}>
+          <Button
+            onPress={this.handlePress.bind(this)}
+            title='COPY PUBLIC KEY TO CLIPBOARD'
+            accessibilityLabel='copy public key to clipboard'
+            color={'#2625FF'}
+          />
+          <Button
+            onPress={this.handleMnemonic.bind(this)}
+            title='PRIVATE MNEMONIC TO CLIPBOARD'
+            accessibilityLabel='copy public key to clipboard'
+            color={'#FF1c3F'}
+          />
+        </View>
         <Toast ref='toast' position='center' />
       </View>
     )
   }
 }
 
-export default InfoView
+
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
+    publicKey: state.preferences.publicKey || 'sorry, there was an error'
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InfoView)
+
