@@ -5,19 +5,11 @@ import Step1 from './Step1'
 import Step2 from './Step2'
 
 const UserOnBoarding = props => {
-  const { step } = props
-
-  switch (step) {
-    case 0: {
-      return <Step1 {...props} />
-    }
-
-    case 1: {
-      return <Step2 {...props} />
-    }
-
-    default:
-      return <View />
+  const { profilePictureData } = props
+  if (profilePictureData) {
+    return <Step2 {...props} />
+  } else {
+    return <Step1 {...props} />
   }
 }
 

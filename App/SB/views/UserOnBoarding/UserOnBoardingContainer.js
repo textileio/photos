@@ -6,39 +6,11 @@ import UserOnBoarding from './UserOnBoarding'
 import UIActions from '../../../Redux/UIRedux'
 
 class UserOnBoardingContainer extends React.Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      step: 0
-    }
-  }
-
-  onNextStep = () => {
-    const { step } = this.state
-
-    this.setState({
-      step: step + 1
-    })
-  }
-
-  onPreviousStep = () => {
-    const { step } = this.state
-
-    this.setState({
-      step: step - 1
-    })
-  }
-
   render () {
-    const { step } = this.state
-
     return (
       <UserOnBoarding
         {...this.props}
-        step={step}
-        onNextStep={this.props.chooseProfilePicture}
-        onPreviousStep={this.onPreviousStep}
+        chooseProfilePicture={this.props.chooseProfilePicture}
       />
     )
   }

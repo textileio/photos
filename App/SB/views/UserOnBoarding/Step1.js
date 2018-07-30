@@ -7,7 +7,7 @@ import Logo from '../../components/Logo'
 import styles from './statics/styles'
 
 const Step1 = props => {
-  const { onNextStep, username } = props
+  const { chooseProfilePicture, username } = props
 
   return (
     <Fragment>
@@ -17,10 +17,10 @@ const Step1 = props => {
           <Text style={[styles.title, styles.strong]}>{username}</Text>
         </Logo>
         <View style={styles.contentContainer}>
-          <Text style={styles.subtitle}>Before starting using Textile, we need you to upload your profile picture</Text>
-          <TouchableOpacity onPress={onNextStep} style={styles.uploadContainer}>
+          <Text style={styles.subtitle}>Before starting to use Textile, we need you to upload your profile picture</Text>
+          <TouchableOpacity onPress={chooseProfilePicture} style={styles.uploadContainer}>
             <ImageSc style={styles.uploadIcon} width={79} source={require('./statics/user-add.png')} />
-            <Text style={styles.link}>Select Profile Picture </Text>
+            <Text style={styles.link}>Select Profile Picture</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

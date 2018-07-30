@@ -73,7 +73,7 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
   switch (action.type) {
     case getType(actions.chooseProfilePhotoSuccess):
     case getType(actions.chooseProfilePhotoError):
-      return { ...state, chosenProfilePhoto: action.payload }
+      return { ...state, chosenProfilePhoto: { ...state.chosenProfilePhoto, ...action.payload } }
     case getType(actions.viewPhotoRequest):
       const { index, threadId } = action.payload
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, index, threadId } }
