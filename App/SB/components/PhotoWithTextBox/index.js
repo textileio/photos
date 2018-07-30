@@ -19,8 +19,10 @@ const PhotoWithTextBox = props => {
           capInsets={'true'}
         />
       }
-      {!item &&
-        <Image style={styles.itemPhoto} />
+      {(!item || !item.photo) &&
+        <View style={styles.itemBox}>
+          <Image style={styles.itemBoxPlus} source={require('../PhotoBoxEmpty/statics/icon-big-plus.png')} />
+        </View>
       }
       <Text style={styles.itemText}>{text}</Text>
     </View>

@@ -24,13 +24,10 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#2625ff'
   },
-  labelStyle: {
-    color: '#9b9b9b',
-    fontSize: 16
-  },
   title: {
     fontFamily: 'BentonSans',
     fontSize: 34,
-    lineHeight: 34
+    lineHeight: 34,
+    marginBottom: 10
   }
 })
