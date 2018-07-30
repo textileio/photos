@@ -1,4 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
+import TextileTypes from '../Models/TextileTypes'
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', resolve => {
@@ -9,7 +10,10 @@ const actions = {
   }),
   updatecMnemonic: createAction('UPDATE_MNEMONIC', resolve => {
     return (mnemonic: string) => resolve({ mnemonic })
-  })
+  }),
+  getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
+    return (profile: TextileTypes.Profile) => resolve({ profile })
+  }),
 }
 
 export type PreferencesAction = ActionType<typeof actions>
@@ -18,6 +22,7 @@ export type PreferencesState = {
   onboarded: boolean
   verboseUi: boolean
   mnemonic?: string
+  profile?: TextileTypes.Profile
 }
 
 export const initialState: PreferencesState = {
@@ -33,6 +38,8 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, verboseUi: !state.verboseUi }
     case getType(actions.updatecMnemonic):
       return { ...state, mnemonic: action.payload.mnemonic }
+    case getType(actions.getProfileSuccess):
+      return { ...state, profile: action.payload.profile }
     default:
       return state
   }

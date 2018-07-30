@@ -16,10 +16,24 @@ export default StyleSheet.create({
   subComment: {
     maxWidth: '70%'
   },
+  commentProfileImage: {
+    width: 38,
+    height: 37,
+    marginRight: 11,
+    overflow: 'hidden',
+    alignItems: 'center',
+    borderRadius: 9,
+  },
+  profileContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
   commentImage: {
     width: 38,
     height: 37,
-    marginRight: 11
   },
   commentTexts: {
     flexGrow: 1

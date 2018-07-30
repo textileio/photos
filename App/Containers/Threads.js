@@ -7,6 +7,7 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import UIActions from '../Redux/UIRedux'
+import TextileImage from '../../TextileImage'
 
 // Styles
 import styles from './Styles/ThreadsStyle'
@@ -45,7 +46,19 @@ class Threads extends React.PureComponent {
 
     const headerLeft = (
       <TouchableOpacity >
-        <Image style={navStyles.headerIcon} source={require('../SB/views/ThreadsList/statics/photo.png')} />
+
+        <View style={navStyles.headerIconUser}>
+          <View style={navStyles.iconContainer}>
+            {(params.profile && params.profile.avatar_id) && <TextileImage
+              imageId={params.profile.avatar_id}
+              path={'thumb'}
+              resizeMode={'cover'}
+              height={24}
+              width={24}
+            />}
+          </View>
+        </View>
+        {/*<Image style={navStyles.headerIcon} source={require('../SB/views/ThreadsList/statics/photo.png')} />*/}
       </TouchableOpacity>
     )
     const headerRight = (
@@ -65,6 +78,13 @@ class Threads extends React.PureComponent {
   }
 
   state = {selected: (new Map(): Map<string, boolean>)}
+
+
+  componentDidMount () {
+    this.props.navigation.setParams({
+      profile: this.props.profile
+    })
+  }
 
   _keyExtractor = (item, index) => item.id
 
@@ -103,6 +123,7 @@ class Threads extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
+    profile: state.preferences.profile,
     data: state.threads.threads.filter(thread => thread.name !== 'default').map(t => {
       return {
         ...t,

@@ -26,6 +26,7 @@ import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
+import ContactsActions, { ContactsSelectors } from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
@@ -45,7 +46,6 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
     yield put(AuthActions.getTokensSuccess(tokens))
     // TODO: Put username into textile-go for addition to metadata model
     yield put(AuthActions.signUpSuccess())
-    yield put(AuthActions.getUsernameSuccess(username))
     yield call(NavigationService.navigate, 'Permissions')
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
@@ -59,7 +59,6 @@ export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
     yield put(AuthActions.logInSuccess())
-    yield put(AuthActions.getUsernameSuccess(username))
     yield call(NavigationService.navigate, 'Permissions')
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
@@ -97,9 +96,14 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
     }
     const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+
+
     yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
 
-    //TODO: Call some TextileNode method to add profile picture
+    // set it as our profile picture
+    yield call(TextileNode.setAvatarId, addResult.id)
+    const profile = yield call(TextileNode.getProfile)
+    yield put(PreferencesActions.getProfileSuccess(profile))
 
     try {
       yield uploadFile(
@@ -217,8 +221,9 @@ export function * startNode () {
     // Restore our tokens and username
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
-    const username = yield call(TextileNode.getUsername)
-    yield put(AuthActions.getUsernameSuccess(username))
+
+    const profile = yield call(TextileNode.getProfile)
+    yield put(PreferencesActions.getProfileSuccess(profile))
 
     yield put(ThreadsActions.refreshThreadsRequest())
   } catch (error) {
@@ -251,6 +256,26 @@ export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.g
     yield put(TextileNodeActions.getPhotoHashesSuccess(threadId, data))
   } catch (error) {
     yield put(TextileNodeActions.getPhotoHashesFailure(threadId, error))
+  }
+}
+
+// Will look at a set of hash updates and see if we have the author in our contact list
+export function * updateContacts (action: ActionType<typeof TextileNodeActions.getPhotoHashesSuccess>) {
+  const { threadId, items } = action.payload
+  for (let item of items) {
+    if(item.photo && item.photo.author_id) {
+      const contactId = item.photo.author_id
+      try {
+        const isKnown: boolean = yield select(ContactsSelectors.isKnown, contactId)
+        if (!isKnown) {
+          yield put(ContactsActions.newContactRequest(contactId))
+          const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
+          yield put(ContactsActions.newContactSuccess(contact))
+        }
+      } catch (error) {
+        yield put(ContactsActions.newContactFailure(error))
+      }
+    }
   }
 }
 

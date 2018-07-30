@@ -6,8 +6,10 @@ import SmallIconTag from '../SmallIconTag'
 import moment from 'moment'
 import SvgUri from 'react-native-svg-uri'
 const jdenticon = require('jdenticon')
+import TextileImage from '../../../../TextileImage'
 
 import styles from './statics/styles'
+import navStyles from '../../../Navigation/Styles/NavigationStyles'
 
 const CommentCard = props => {
   // const { userName, comment, date, subComments, isSubComment, photo } = props
@@ -17,20 +19,35 @@ const CommentCard = props => {
   const subComments = undefined
   const isSubComment = false
 
+  const profile = props.profiles.find((p) => p.id === props.photo.author_id)
+
   let avatar = ''
-  try {
-    avatar = jdenticon.toSvg(userName, 38)
-  } catch (err) {}
+  if (!profile) {
+    try {
+      avatar = jdenticon.toSvg(userName, 38)
+    } catch (err) {}
+  }
 
   return (
     <View style={[styles.comment, isSubComment ? styles.subComment : styles.withDivider ]}>
-      {/*<Image style={styles.commentImage} source={photo} />*/}
-      <View style={styles.commentImage}>
-        <SvgUri
-          width={styles.commentImage.width}
-          height={styles.commentImage.height}
-          svgXmlData={avatar}
-        />
+      <View style={styles.commentProfileImage}>
+        {(profile && profile.avatar_id) &&
+          <View style={styles.profileContainer}>
+            <TextileImage
+              imageId={profile.avatar_id}
+              path={'thumb'}
+              resizeMode={'cover'}
+              style={styles.commentImage}
+            />
+          </View>}
+        {(!profile || !profile.avatar_id) &&
+          <View style={styles.profileContainer}>
+            <SvgUri
+              width={styles.commentImage.width}
+              height={styles.commentImage.height}
+              svgXmlData={avatar}
+            />
+          </View>}
       </View>
       <View style={styles.commentTexts}>
         <Text style={styles.commentUser}>{userName}</Text>
