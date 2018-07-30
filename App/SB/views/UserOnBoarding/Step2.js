@@ -8,7 +8,7 @@ import UserProfilePhoto from '../../components/UserProfilePhoto'
 import styles from './statics/styles'
 
 const Step2 = props => {
-  const { chooseProfilePicture, profilePictureData } = props
+  const { chooseProfilePicture, profilePictureData, profilePictureUri, selectProfilePicture } = props
   const source = { uri: 'data:image/jpeg;base64,' + profilePictureData }
   return (
     <Fragment>
@@ -19,7 +19,7 @@ const Step2 = props => {
         <View style={styles.contentContainer}>
           <View style={styles.uploadContainer}>
             <UserProfilePhoto style={styles.photoUploaded} width={183} source={source} />
-            <Button style={styles.uploadButton} text='Confirm Picture' onPress={() => {}} />
+            <Button style={styles.uploadButton} text='Confirm Picture' onPress={() => { selectProfilePicture(profilePictureUri) }} />
             <TouchableOpacity onPress={chooseProfilePicture}>
               <Text style={styles.link}>Select Profile Picture</Text>
             </TouchableOpacity>

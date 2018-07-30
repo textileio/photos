@@ -19,13 +19,15 @@ class UserOnBoardingContainer extends React.Component {
 const mapStateToProps = state => {
   return {
     username: state.auth.username || 'Mysterious User',
-    profilePictureData: state.ui.chosenProfilePhoto.data
+    profilePictureData: state.ui.chosenProfilePhoto.data,
+    profilePictureUri: state.ui.chosenProfilePhoto.uri
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    chooseProfilePicture: () => dispatch(UIActions.chooseProfilePhotoRequest())
+    chooseProfilePicture: () => dispatch(UIActions.chooseProfilePhotoRequest()),
+    selectProfilePicture: (uri: string) => dispatch(UIActions.selectProfilePicture(uri))
   }
 }
 
