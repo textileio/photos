@@ -363,6 +363,7 @@ export function * chooseProfilePhoto () {
 }
 
 export function * photosTask () {
+  console.log('photosTask')
   while (true) {
     // This take effect inside a while loop ensures that the entire photoTask
     // will run before the next startNodeSuccess is received and photoTask run again

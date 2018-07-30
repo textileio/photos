@@ -121,7 +121,8 @@ class TextilePhotos extends React.PureComponent {
 
   onSelect = (row) => {
     return () => {
-      this.props.viewPhoto(row.index, this.props.threadId)
+      console.log(row)
+      this.props.viewPhoto(row.item.photo.id, this.props.threadId)
     }
   }
 
@@ -227,7 +228,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
-    viewPhoto: (index, threadId) => { dispatch(UIActions.viewPhotoRequest(index, threadId)) },
+    viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
