@@ -12,12 +12,7 @@ import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 
 import styles from './statics/styles'
 
-// Originally intended structure of the photo list
-// import { photoList } from './constants'
-
-import { Icon } from 'react-native-elements'
 import UIActions from '../../../Redux/UIRedux'
-import { DURATION } from 'react-native-easy-toast'
 
 const { width } = Dimensions.get('window')
 
