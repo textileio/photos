@@ -18,46 +18,48 @@ const Step1 = props => {
 
   return (
     <Fragment>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ScrollView style={commonStyles.container}>
+      <ScrollView style={commonStyles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Logo>
             <Text style={styles.headerText}>Now create your account to finish.</Text>
           </Logo>
-          <View style={styles.formContainer}>
+        </TouchableWithoutFeedback>
+        <View style={styles.formContainer}>
+          <Input
+            value={username}
+            label='Username'
+            error={hasError}
+            errorMsg='This username is already taken'
+            onChangeText={updateUsername}
+            keyboardType='default'
+            autoCapitalize='none'
+            style={{height: 40}}
+          />
+          <View style={{ position: 'relative' }}>
             <Input
-              value={username}
-              label='Username'
-              error={hasError}
-              errorMsg='This username is already taken'
-              onChangeText={updateUsername}
+              value={password}
+              label='Password'
+              secureTextEntry
+              onChangeText={updatePassword}
               keyboardType='default'
               autoCapitalize='none'
+              style={{height: 40}}
             />
-            <View style={{ position: 'relative' }}>
-              <Input
-                value={password}
-                label='Password'
-                secureTextEntry
-                onChangeText={updatePassword}
-                keyboardType='default'
-                autoCapitalize='none'
-              />
-              {/* TODO: somthing with pw strength */}
-              {/* <View style={{ position: 'absolute', right: 0, bottom: 20 }}>
-                <PasswordValidator display={password} password={password} />
-              </View> */}
-            </View>
-            <View style={styles.bottomLine}>
-              <Text style={styles.bottomLineLink}>By signing up you agree to our <Text style={styles.link}>Terms and Conditions</Text></Text>
-              <Button
-                text="Create account"
-                disabled={!username || !password}
-                onPress={() => submit(referralCode, email, username, password)}
-              />
-            </View>
+            {/* TODO: somthing with pw strength */}
+            {/* <View style={{ position: 'absolute', right: 0, bottom: 20 }}>
+              <PasswordValidator display={password} password={password} />
+            </View> */}
           </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
+          <View style={styles.bottomLine}>
+            <Text style={styles.bottomLineLink}>By signing up you agree to our <Text style={styles.link}>Terms and Conditions</Text></Text>
+            <Button
+              text="Create account"
+              disabled={!username || !password}
+              onPress={() => submit(referralCode, email, username, password)}
+            />
+          </View>
+        </View>
+      </ScrollView>
       <Alert display={displayError} bottom msg={'Sign up error: ' +  errorMessage}/>
       <Footer>
         <TouchableOpacity onPress={onPreviousStep}>

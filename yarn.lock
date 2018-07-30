@@ -8741,9 +8741,9 @@ react-native-svg-uri@^1.2.3:
   dependencies:
     xmldom "^0.1.22"
 
-react-native-svg@^6.4.1:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-6.5.0.tgz#a4ebdd16a3395ef8db7aaa38fc9938814b2a728f"
+react-native-svg@6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-6.3.1.tgz#06a573f17c59ce953a56fd62e776fd79d632d765"
   dependencies:
     color "^2.0.1"
     lodash "^4.16.6"
