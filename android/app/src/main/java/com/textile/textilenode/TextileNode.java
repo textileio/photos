@@ -163,6 +163,36 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void setAvatarId (String photoId, Promise promise) {
+        try {
+            promise.resolve(node.setAvatarId(photoId));
+        }
+        catch (Exception e) {
+            promise.reject("SET AVATAR ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getProfile (Promise promise) {
+        try {
+            promise.resolve(node.getProfile());
+        }
+        catch (Exception e) {
+            promise.reject("GET PROFILE ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getPeerProfile (String peerId, Promise promise) {
+        try {
+            promise.resolve(node.getPeerProfile(peerId));
+        }
+        catch (Exception e) {
+            promise.reject("GET PEER PROFILE ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void getId (Promise promise) {
         try {
             promise.resolve(node.getId());
@@ -328,14 +358,23 @@ public class TextileNode extends ReactContextBaseJavaModule {
         }
     }
 
-
     @ReactMethod
-    public void resolveProfileInfo (String peerId, String key, Promise promise) {
+    public void getPhotoThreads (String photoId, Promise promise) {
         try {
-            promise.resolve(node.resolveProfileInfo(peerId, key));
+            promise.resolve(node.getPhotoThreads(photoId));
         }
         catch (Exception e) {
-            promise.reject("RESOLVE PROFILE INFO ERROR", e);
+            promise.reject("GET PHOTO THREADS ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void getPhotoKey (String photoId, Promise promise) {
+        try {
+            promise.resolve(node.getPhotoKey(photoId));
+        }
+        catch (Exception e) {
+            promise.reject("GET PHOTO KEY ERROR", e);
         }
     }
 

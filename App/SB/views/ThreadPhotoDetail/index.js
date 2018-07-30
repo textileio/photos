@@ -21,7 +21,6 @@ class ThreadPhotoDetail extends Component {
   constructor (props) {
     super(props)
     const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * width
-    console.log(this.props.comments)
     this.state = {
       drawer: false,
       heightByWidth
@@ -86,7 +85,6 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state, ownProps) => {
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
   const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items[state.ui.viewingPhoto.index]
-  console.log(state.contacts.profiles)
   return {
     ...item,
     comments: [item],

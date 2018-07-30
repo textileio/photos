@@ -333,7 +333,7 @@ RCT_EXPORT_METHOD(getPhotoThreads:(NSString *)photoId resolver:(RCTPromiseResolv
   }
 }
 
-RCT_EXPORT_METHOD(getPhotKey:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getPhotoKey:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _getPhotoKey:photoId error:&error];
   if (!error) {
