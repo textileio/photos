@@ -36,7 +36,7 @@ class AddCaptionScreen extends React.Component {
       headerRight: params.submitEnabled && (
         <View style={styles.toolBarRight}>
           <Button
-            buttonStyle={{backgroundColor: 'rgba(0,0,0,0)'}}
+            buttonStyle={{backgroundColor: 'rgba(0,0,0,0)', elevation: 0}}
             titleStyle={styles.link}
             onPress={() => params.submit()}
             title={'Next'}
@@ -74,10 +74,13 @@ class AddCaptionScreen extends React.Component {
     return (
         <View style={styles.contentContainer}>
           <Text style={styles.title}>Photo caption</Text>
-          <Input labelStyle={{
-            color: '#9b9b9b',
-            fontSize: 16
-          }} label={this.state.value === '' ? 'Add a caption...' : ''} onChangeText={this.handleNewText}/>
+          <View>
+            <Input
+              style={{height: 40}}
+              value={this.state.value}
+              label={this.state.value === '' ? 'Add a caption...' : ''}
+              onChangeText={this.handleNewText.bind(this)}/>
+          </View>
         </View>
     )
   }
