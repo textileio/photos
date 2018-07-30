@@ -66,7 +66,7 @@ const REDUX_PERSIST = {
   reducerVersion: '1.0',
   storeConfig: {
     key: 'primary',
-    version: 5,
+    version: 4,
     storage: AsyncStorage,
     migrate: createMigrate(migrations, { debug: false }),
     // Reducer keys that you do NOT want stored to persistence here.
