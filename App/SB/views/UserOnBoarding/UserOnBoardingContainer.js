@@ -28,6 +28,10 @@ class UserOnBoardingContainer extends React.Component {
     })
   }
 
+  showPicker = () => {
+    
+  }
+
   render () {
     const { step } = this.state
 
@@ -35,7 +39,7 @@ class UserOnBoardingContainer extends React.Component {
       <UserOnBoarding
         {...this.props}
         step={step}
-        onNextStep={this.onNextStep}
+        onNextStep={this.showPicker}
         onPreviousStep={this.onPreviousStep}
       />
     )

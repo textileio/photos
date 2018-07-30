@@ -1,5 +1,6 @@
 import { CameraRoll } from 'react-native'
 import RNFS from 'react-native-fs'
+import ImagePicker from 'react-native-image-picker'
 import TextileNode from '../../TextileNode'
 
 export async function getPhotos (first: number = -1): Promise<string[]> {
@@ -39,4 +40,30 @@ export async function getPhotoPath (uri: string): Promise<string> {
   else {
     throw new Error('unable to determine photo path.')
   }
+}
+
+export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}> {
+  return new Promise<{ uri: string, data: string}>((resolve, reject) => {
+    const options = {
+      title: 'Choose a Profile Picture',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    }
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        reject(new Error('user canceled'))
+      }
+      else if (response.error) {
+        reject(new Error(response.error))
+      }
+      else {
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        const { uri, data } = response
+        resolve({ uri, data })
+      }
+    })
+  })
 }
