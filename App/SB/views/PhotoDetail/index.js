@@ -160,7 +160,11 @@ const mapStateToProps = (state, ownProps) => {
     }
   }
 
-  let threadsNotIn = state.threads.threads.filter(t => containingThreads.indexOf(t.id) < 0 && t.name !== 'default').map(t => { return {...t, size: state.ipfs.threads[t.id].items.length} }).sort((a, b) => b - a)
+  let threadsNotIn = state.threads.threads.filter(t => containingThreads.indexOf(t.id) < 0 && t.name !== 'default').map(t => {
+    return {
+      ...t,
+      size: !state.ipfs.threads[t.id] ? 0 : state.ipfs.threads[t.id].items.length
+    } }).sort((a, b) => b - a)
 
 
   const path = thread.name === 'default' ? '/photo' : '/thumb'

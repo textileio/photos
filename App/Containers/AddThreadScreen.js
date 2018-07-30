@@ -32,7 +32,7 @@ class AddThreadScreen extends React.Component {
       headerRight: params.submitEnabled && (
         <View style={styles.toolBarRight}>
           <Button
-            buttonStyle={{backgroundColor: 'rgba(0,0,0,0)'}}
+            buttonStyle={{backgroundColor: 'rgba(0,0,0,0)', elevation: 0}}
             titleStyle={styles.link}
             onPress={() => params.submit()}
             title={'Next'}
@@ -66,7 +66,13 @@ class AddThreadScreen extends React.Component {
     return (
         <ScrollView style={styles.contentContainer}>
           <Text style={styles.title}>New thread</Text>
-          <Input labelStyle={styles.labelStyle} label={this.state.value === '' ? 'Add a title...' : ''} onChangeText={this.handleNewText}/>
+          <View>
+            <Input
+              style={{height: 40}}
+              value={this.state.value}
+              label={this.state.value === '' ? 'Add a title...' : ''}
+              onChangeText={this.handleNewText.bind(this)}/>
+          </View>
         </ScrollView>
     )
   }
