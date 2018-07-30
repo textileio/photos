@@ -131,6 +131,36 @@ RCT_EXPORT_METHOD(isSignedIn:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromis
   }
 }
 
+RCT_EXPORT_METHOD(setAvatarId:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _setAvatarId:photoId error:&error];
+  if (!error) {
+    resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getProfile:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getProfile:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getPeerProfile:(NSString *)peerId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getPeerProfile:peerId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_METHOD(getId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *nid = [self _getId:&error];
@@ -292,9 +322,20 @@ RCT_EXPORT_METHOD(getPhotoMetadata:(NSString *)photoId resolver:(RCTPromiseResol
   }
 }
 
-RCT_EXPORT_METHOD(resolveProfileInfo:(NSString *)peerId key:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+
+RCT_EXPORT_METHOD(getPhotoThreads:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _resolveProfileInfo:peerId key:key error:&error];
+  NSString *result = [self _getPhotoThreads:photoId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(getPhotKey:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getPhotoKey:photoId error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -397,6 +438,18 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   return [self.node getId:error];
 }
 
+- (void)_setAvatarId:(NSString *)id error:(NSError**)error {
+  [self.node setAvatarId:id error:error];
+}
+
+- (NSString *)_getProfile:(NSError**)error {
+  return [self.node getProfile:error];
+}
+
+- (NSString *)_getPeerProfile:(NSString *)peerId error:(NSError**)error {
+  return [self.node getPeerProfile:peerId error:error];
+}
+
 - (NSString *)_addThread:(NSString *)name withMnemonic:(NSString *)mnemonic error:(NSError**)error {
   return [self.node addThread:name mnemonic:mnemonic error:error];
 }
@@ -455,8 +508,12 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   return [self.node getPhotoMetadata:photoId error:error];
 }
 
-- (NSString *)_resolveProfileInfo:(NSString *)peerId key:(NSString *)key error:(NSError**)error {
-  return [self.node resolveProfileInfo:peerId key:key error:error];
+- (NSString *)_getPhotoThreads:(NSString *)photoId error:(NSError**)error {
+  return [self.node photoThreads:photoId error:error];
+}
+
+- (NSString *)_getPhotoKey:(NSString *)photoId error:(NSError**)error {
+  return [self.node getPhotoKey:photoId error:error];
 }
 
 - (void)_addDevice:(NSString *)name pubKey:(NSString *)pkb64 error:(NSError**)error {
