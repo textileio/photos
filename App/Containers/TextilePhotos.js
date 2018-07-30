@@ -93,7 +93,7 @@ class TextilePhotos extends React.PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi || 
+      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
       this.props.threadName !== prevProps.threadName ||
       this.props.profile !== prevProps.profile
     ) {
@@ -196,7 +196,7 @@ const mapStateToProps = (state, ownProps) => {
   // seems like we should show a loading state if that ever happens.
   // at the very least i put the user on the default screen instead of a
   // blank Thread screen
-  const threadName = thread ? thread.name : 'default'
+  const threadName = thread ? thread.name : undefined
 
   const nodeStatus = state.ipfs.nodeState.error
     ? 'Error - ' + state.ipfs.nodeState.error.message
