@@ -328,6 +328,17 @@ public class TextileNode extends ReactContextBaseJavaModule {
         }
     }
 
+
+    @ReactMethod
+    public void resolveProfileInfo (String peerId, String key, Promise promise) {
+        try {
+            promise.resolve(node.resolveProfileInfo(peerId, key));
+        }
+        catch (Exception e) {
+            promise.reject("RESOLVE PROFILE INFO ERROR", e);
+        }
+    }
+
     @ReactMethod
     public void addDevice (String name, String pubKey, Promise promise) {
         try {

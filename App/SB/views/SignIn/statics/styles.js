@@ -24,6 +24,7 @@ export default StyleSheet.create({
     color: '#2625ff'
   },
   bottomLine: {
+    marginTop: 32,
     alignItems: 'center'
   },
   footerText: {

@@ -9,14 +9,15 @@ export default StyleSheet.create({
   header: {
     alignItems: 'center',
     paddingTop: 28,
-    paddingBottom: 51
+    paddingBottom: 21
   },
   title: {
     fontFamily: "BentonSans",
-    fontSize: 20,
-    lineHeight: 30,
+    fontSize: 16,
+    lineHeight: 24,
     textAlign: 'center',
-    paddingHorizontal: 60
+    paddingHorizontal: 40,
+    paddingTop: 10
   },
   contentContainer: {
     paddingHorizontal: 18
@@ -41,7 +42,7 @@ export default StyleSheet.create({
   },
   itemDescription: {
     fontFamily: "BentonSans",
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 27,
     color: "#4a4a4a",
     marginRight: 6
@@ -50,10 +51,16 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  permissionsButtonStyle: {
+    height: 38,
+    width: 40,
+    backgroundColor: '#2625FF'
+  },
   footer: {
     position: 'absolute',
     width: '100%',
     bottom: 30,
-    paddingHorizontal: 28
+    paddingHorizontal: 28,
+    alignItems: 'center'
   }
 })
