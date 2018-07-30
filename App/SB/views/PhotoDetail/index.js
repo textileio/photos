@@ -111,17 +111,17 @@ class PhotoDetail extends Component {
             <Text style={styles.detailText}>Earth</Text>
           </View>
           <View style={[styles.detailItem, {marginLeft: 24, flexGrow: 1}]}>
-            <Image style={styles.iconCalendar} source={require('./statics/icon-calendar.png')}/>
+            <Image style={styles.iconCalendar} source={require('./statics/icon-calendar.png')} />
             <Text style={styles.detailText}>{this.props.date}</Text>
           </View>
-          <Image style={styles.iconInfo} source={require('./statics/icon-info.png')}/>
+          <Image style={styles.iconInfo} source={require('./statics/icon-info.png')} />
         </View>
         <ScrollView style={styles.contentContainer}>
           <Text style={styles.threadsTitle}>
             {this.props.threadsIn.length > 0 ? 'This photo appears in the following threads:' : 'You haven\'t shared this photo anywhere yet'}
           </Text>
           {this.props.threadsIn.map((thread, i) => (
-            <TouchableOpacity  key={i} onPress={() => { this.viewThread(thread) }}>
+            <TouchableOpacity key={i} onPress={() => { this.viewThread(thread) }}>
               <PhotoWithTextBox key={i} text={thread.name} item={this.props.thumbs[thread.id]}/>
             </TouchableOpacity>
           ))}
