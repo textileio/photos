@@ -31,7 +31,7 @@ const Step1 = props => {
             error={hasError}
             errorMsg='This username is already taken'
             onChangeText={updateUsername}
-            keyboardType='default'
+            keyboardType='email-address'
             autoCapitalize='none'
             style={{height: 40}}
           />
