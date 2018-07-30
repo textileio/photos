@@ -165,7 +165,8 @@ public class TextileNode extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setAvatarId (String photoId, Promise promise) {
         try {
-            promise.resolve(node.setAvatarId(photoId));
+            node.setAvatarId(photoId);
+            promise.resolve(null);
         }
         catch (Exception e) {
             promise.reject("SET AVATAR ERROR", e);
@@ -361,7 +362,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getPhotoThreads (String photoId, Promise promise) {
         try {
-            promise.resolve(node.getPhotoThreads(photoId));
+            promise.resolve(node.photoThreads(photoId));
         }
         catch (Exception e) {
             promise.reject("GET PHOTO THREADS ERROR", e);
