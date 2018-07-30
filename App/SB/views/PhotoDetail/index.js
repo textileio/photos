@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity, StatusBar } from 'react-native'
+import Toast from 'react-native-easy-toast'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
@@ -16,6 +17,7 @@ import styles from './statics/styles'
 
 import { Icon } from 'react-native-elements'
 import UIActions from '../../../Redux/UIRedux'
+import { DURATION } from 'react-native-easy-toast'
 
 const { width } = Dimensions.get('window')
 
@@ -72,6 +74,7 @@ class PhotoDetail extends Component {
   }
 
   getPublicLink () {
+    this.refs.toast.show('You are creating a public link for this photo!', 1000)
     this.props.getPublicLink(this.props.photo.id)
   }
 
@@ -137,6 +140,11 @@ class PhotoDetail extends Component {
           </TouchableOpacity> }
         </ScrollView>
         {this.state.drawer && <BottomDrawerPhotos isVisible selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} createThread={() => this.createThread()} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
+        <Toast
+          ref='toast'
+          position='top'
+          positionValue={20}
+        />
       </ScrollView>
     )
   }

@@ -23,10 +23,13 @@ class InfoView extends React.PureComponent {
     this.state = { }
   }
 
-  handlePress() {
-    const deviceId = getUniqueID()
-    Clipboard.setString(deviceId)
-    this.refs.toast.show('Device ID copied!', DURATION.LENGTH_SHORT)
+  handlePress () {
+    Clipboard.setString(this.props.publicKey)
+    this.refs.toast.show('Copied Public Key!', DURATION.LENGTH_SHORT)
+  }
+  handleMnemonic () {
+    Clipboard.setString(this.props.publicKey)
+    this.refs.toast.show('Careful! Keep this 100% private!', 2500)
   }
 
   render () {
@@ -60,12 +63,20 @@ class InfoView extends React.PureComponent {
             />
           </View>
         </View>
-        <Button
-          onPress={this.handlePress.bind(this)}
-          title='COPY PUBLIC KEY TO CLIPBOARD'
-          accessibilityLabel='copy public key to clipboard'
-          color={buttonColor3}
-        />
+        <View style={{fontSize: 8}}>
+          <Button
+            onPress={this.handlePress.bind(this)}
+            title='COPY PUBLIC KEY TO CLIPBOARD'
+            accessibilityLabel='copy public key to clipboard'
+            color={'#2625FF'}
+          />
+          <Button
+            onPress={this.handleMnemonic.bind(this)}
+            title='PRIVATE MNEMONIC TO CLIPBOARD'
+            accessibilityLabel='copy public key to clipboard'
+            color={'#FF1c3F'}
+          />
+        </View>
         <Toast ref='toast' position='center' />
       </View>
     )
@@ -76,8 +87,8 @@ class InfoView extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    mnemonic: state.preferences.mnemonic,
-    publicKey: state.preferences.publicKey
+    mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
+    publicKey: state.preferences.publicKey || 'sorry, there was an error'
   }
 }
 

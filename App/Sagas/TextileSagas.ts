@@ -222,13 +222,21 @@ export function * startNode () {
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
 
-    const profile = yield call(TextileNode.getProfile)
-    yield put(PreferencesActions.getProfileSuccess(profile))
-
-    const publicKey = yield call(TextileNode.getPublicKey)
-    yield put(PreferencesActions.getPublicKeySuccess(publicKey))
-
     yield put(ThreadsActions.refreshThreadsRequest())
+
+    // isolate
+    try {
+      const profile = yield call(TextileNode.getProfile)
+      yield put(PreferencesActions.getProfileSuccess(profile))
+    } catch (error) {}
+
+    // isolate
+    try {
+      const publicKey = yield call(TextileNode.getPublicKey)
+      yield put(PreferencesActions.getPublicKeySuccess(publicKey))
+    } catch (error) {}
+
+
   } catch (error) {
     yield put(TextileNodeActions.startNodeFailure(error))
     yield put(TextileNodeActions.lock(false))
