@@ -429,8 +429,20 @@ export function * photosTask () {
 
     // Ensure we don't have any images thought to be uploading that aren't in the native layer
     yield synchronizeNativeUploads()
+
+    // Find any endless spinners and process them to retry
+    const newlyAddedIds = addedPhotosData.map(a => a.addResult.id)
+    const pendingImages: string[] = yield select(UploadingImagesSelectors.pendingImages)
+    const lostPendingImages = pendingImages.filter((imageId) => newlyAddedIds.indexOf(imageId) < 0)
+
+    let imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
+    // We're going to add any lost pending images to our retry list
+    for (let pendingId of lostPendingImages) {
+      const imageToRetry: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, pendingId)
+      imagesToRetry.push(imageToRetry)
+    }
+
     // Process images for upload retry
-    const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
     for (const imageToRetry of imagesToRetry) {
       try {
         yield uploadFile(imageToRetry.dataId, imageToRetry.path)

@@ -57,6 +57,15 @@ export const UploadingImagesSelectors = {
       .map(key => state.uploadingImages.images[key])
       .filter(image => image.state === 'error' && image.remainingUploadAttempts > 0) as UploadingImage[]
   },
+  pendingImages: (state) => {
+    let keys: string[] = []
+    for (let key in state.uploadingImages.images) {
+      if (state.uploadingImages.images.hasOwnProperty(key) && state.uploadingImages.images[key].state === 'pending') {
+        keys.push(key)
+      }
+    }
+    return keys
+  },
   uploadingImageIds: (state) => {
     let keys: string[] = []
     for (let key in state.uploadingImages.images) {
