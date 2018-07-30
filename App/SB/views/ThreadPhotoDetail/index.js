@@ -40,7 +40,7 @@ class ThreadPhotoDetail extends Component {
 
     return {
       headerLeft,
-      headerRight,
+      // headerRight,
       tabBarVisible: false
     }
   }
@@ -50,8 +50,8 @@ class ThreadPhotoDetail extends Component {
       imageId={this.props.photo.id}
       previewPath={'thumb'}
       path={'photo'}
-      style={[styles.mainPhoto, {height: this.state.heightByWidth, width: width}]}
-      resizeMode={'cover'}
+      style={[styles.mainPhoto, {height: width}]}
+      resizeMode={'contain'}
     />)
   }
 
@@ -68,7 +68,7 @@ class ThreadPhotoDetail extends Component {
             ))}
           </View>
         </ScrollView>
-        <CommentBox/>
+        {/*<CommentBox/>*/}
         {this.state.drawer && <BottomDrawerList/>}
       </View>
     )
