@@ -194,6 +194,16 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void getPubKey (Promise promise) {
+        try {
+            promise.resolve(node.getPubKey());
+        }
+        catch (Exception e) {
+            promise.reject("GET PUBLIC KEY ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void getId (Promise promise) {
         try {
             promise.resolve(node.getId());

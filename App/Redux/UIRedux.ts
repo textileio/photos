@@ -35,6 +35,9 @@ const actions = {
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
     return (id: string, threadIds: [string], caption?: string) => resolve({ id, threadIds, caption })
   }),
+  getPublicLink: createAction('GET_PUBLIC_LINK', resolve => {
+    return (photoId: string) => resolve({ photoId })
+  }),
   imageSharingError: createAction('IMAGE_SHARING_ERROR', resolve => {
     return (error: Error) => resolve(error)
   })

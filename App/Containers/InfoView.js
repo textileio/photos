@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { View, Text, Button, Linking, Clipboard } from 'react-native'
 import { Overlay, Icon } from 'react-native-elements'
 import {getUniqueID} from 'react-native-device-info'
@@ -8,7 +9,6 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 
 // Styles
 import styles, {buttonColor1, buttonColor2, buttonColor3, buttonColor4} from './Styles/InfoViewStyle'
-import {buttonColor} from "./Styles/OnboardingScreenStyle";
 import navStyles from '../Navigation/Styles/NavigationStyles'
 
 class InfoView extends React.PureComponent {
@@ -72,4 +72,18 @@ class InfoView extends React.PureComponent {
   }
 }
 
-export default InfoView
+
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    mnemonic: state.preferences.mnemonic,
+    publicKey: state.preferences.publicKey
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(InfoView)
+
