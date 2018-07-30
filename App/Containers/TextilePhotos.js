@@ -188,7 +188,7 @@ const mapStateToProps = (state, ownProps) => {
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
-  const threadName = thread ? thread.name : undefined
+  const threadName = thread ? thread.name : 'default'
 
   const nodeStatus = state.ipfs.nodeState.error
     ? 'Error - ' + state.ipfs.nodeState.error.message
