@@ -22,8 +22,10 @@ const { width } = Dimensions.get('window')
 class PhotoDetail extends Component {
   constructor (props) {
     super(props)
+    const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * width
     this.state = {
-      drawer: false
+      drawer: false,
+      heightByWidth
     }
   }
 
@@ -80,7 +82,6 @@ class PhotoDetail extends Component {
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
   viewThread (thread) {
-    console.log(this.props)
     this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
   }
 
@@ -94,14 +95,14 @@ class PhotoDetail extends Component {
       imageId={this.props.photo.id}
       previewPath={'thumb'}
       path={'photo'}
-      style={{flex: 1, flexDirection: 'row', height: undefined, width: width, marginBottom: 10}}
-      resizeMode={'contain'}
+      style={{height: this.state.heightByWidth, width: width, marginBottom: 10}}
+      resizeMode={'cover'}
     />)
   }
 
   render () {
     return (
-      <View style={styles.bodyContainer}>
+      <ScrollView style={styles.bodyContainer}>
         <StatusBar hidden />
         {this.renderImage()}
         <View style={styles.photoDetails}>
@@ -110,17 +111,17 @@ class PhotoDetail extends Component {
             <Text style={styles.detailText}>Earth</Text>
           </View>
           <View style={[styles.detailItem, {marginLeft: 24, flexGrow: 1}]}>
-            <Image style={styles.iconCalendar} source={require('./statics/icon-calendar.png')}/>
+            <Image style={styles.iconCalendar} source={require('./statics/icon-calendar.png')} />
             <Text style={styles.detailText}>{this.props.date}</Text>
           </View>
-          <Image style={styles.iconInfo} source={require('./statics/icon-info.png')}/>
+          <Image style={styles.iconInfo} source={require('./statics/icon-info.png')} />
         </View>
         <ScrollView style={styles.contentContainer}>
           <Text style={styles.threadsTitle}>
             {this.props.threadsIn.length > 0 ? 'This photo appears in the following threads:' : 'You haven\'t shared this photo anywhere yet'}
           </Text>
           {this.props.threadsIn.map((thread, i) => (
-            <TouchableOpacity  key={i} onPress={() => { this.viewThread(thread) }}>
+            <TouchableOpacity key={i} onPress={() => { this.viewThread(thread) }}>
               <PhotoWithTextBox key={i} text={thread.name} item={this.props.thumbs[thread.id]}/>
             </TouchableOpacity>
           ))}
@@ -129,7 +130,7 @@ class PhotoDetail extends Component {
           </TouchableOpacity> }
         </ScrollView>
         {this.state.drawer && <BottomDrawerPhotos isVisible selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} createThread={() => this.createThread()} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
-      </View>
+      </ScrollView>
     )
   }
 }
