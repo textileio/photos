@@ -43,7 +43,6 @@ class TextField extends Component {
 
   constructor (props, context) {
     super(props, context)
-    console.log(this.props)
     this.state = {
       isFocused: false,
       text: props.value
