@@ -14,6 +14,9 @@ const actions = {
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
     return (profile: TextileTypes.Profile) => resolve({ profile })
   }),
+  getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
+    return (publicKey: string) => resolve({ publicKey })
+  }),
 }
 
 export type PreferencesAction = ActionType<typeof actions>
@@ -22,6 +25,7 @@ export type PreferencesState = {
   onboarded: boolean
   verboseUi: boolean
   mnemonic?: string
+  publicKey?: string
   profile?: TextileTypes.Profile
 }
 
@@ -40,6 +44,8 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, mnemonic: action.payload.mnemonic }
     case getType(actions.getProfileSuccess):
       return { ...state, profile: action.payload.profile }
+    case getType(actions.getPublicKeySuccess):
+      return { ...state, publicKey: action.payload.publicKey }
     default:
       return state
   }

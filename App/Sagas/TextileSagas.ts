@@ -222,10 +222,21 @@ export function * startNode () {
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
 
-    const profile = yield call(TextileNode.getProfile)
-    yield put(PreferencesActions.getProfileSuccess(profile))
-
     yield put(ThreadsActions.refreshThreadsRequest())
+
+    // isolate
+    try {
+      const profile = yield call(TextileNode.getProfile)
+      yield put(PreferencesActions.getProfileSuccess(profile))
+    } catch (error) {}
+
+    // isolate
+    try {
+      const publicKey = yield call(TextileNode.getPublicKey)
+      yield put(PreferencesActions.getPublicKeySuccess(publicKey))
+    } catch (error) {}
+
+
   } catch (error) {
     yield put(TextileNodeActions.startNodeFailure(error))
     yield put(TextileNodeActions.lock(false))
@@ -428,7 +439,11 @@ export function * photosTask () {
     }
 
     // Ensure we don't have any images thought to be uploading that aren't in the native layer
-    yield synchronizeNativeUploads()
+    try {
+      yield synchronizeNativeUploads()
+    } catch (error) {
+      // double certain sync can't interfere with anything
+    }
     // Process images for upload retry
     const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
     for (const imageToRetry of imagesToRetry) {
@@ -537,6 +552,15 @@ export function * refreshThreads () {
   } catch (error) {
     yield put(ThreadsActions.refreshThreadsError(error))
   }
+}
+
+export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
+  const { photoId } = action.payload
+  try {
+    const key = yield call(TextileNode.getPhotoKey, photoId)
+    const link = Config.TEXTILE_CAFE_URI + "/ipfs/" + photoId + "/photo?key=" + key
+    yield call(Share.share, {title: '', message: link})
+  } catch (error) {}
 }
 
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {

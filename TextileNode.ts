@@ -59,6 +59,10 @@ export default {
     return profile
   },
 
+  getPublicKey: async function (): Promise<string> {
+    return await TextileNode.getPubKey()
+  },
+
   getId: async function (): Promise<string> {
     return await TextileNode.getId()
   },

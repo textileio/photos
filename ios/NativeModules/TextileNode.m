@@ -171,6 +171,16 @@ RCT_EXPORT_METHOD(getId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseReje
   }
 }
 
+RCT_EXPORT_METHOD(getPubKey:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *pk = [self _getPubKey:&error];
+  if (!error) {
+    resolve(pk);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_METHOD(getUsername:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *username = [self _getUsername:&error];
@@ -436,6 +446,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (NSString *)_getId:(NSError**)error {
   return [self.node getId:error];
+}
+
+- (NSString *)_getPubKey:(NSError**)error {
+  return [self.node getPubKey:error];
 }
 
 - (void)_setAvatarId:(NSString *)id error:(NSError**)error {
