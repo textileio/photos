@@ -66,14 +66,14 @@ const REDUX_PERSIST = {
   reducerVersion: '1.0',
   storeConfig: {
     key: 'primary',
-    version: 4,
+    version: 5,
     storage: AsyncStorage,
     migrate: createMigrate(migrations, { debug: false }),
     // Reducer keys that you do NOT want stored to persistence here.
     // blacklist: ['nav', 'ipfs', 'auth', 'ui'],
     // Optionally, just specify the keys you DO want stored to persistence.
     // An empty array means 'don't store any reducers' -> infinitered/ignite#409
-    whitelist: ['preferences', 'uploadingImages', 'cameraRoll'],
+    whitelist: ['preferences', 'uploadingImages', 'cameraRoll', 'contacts'],
     transforms: [immutablePersistenceTransform]
   }
 }
