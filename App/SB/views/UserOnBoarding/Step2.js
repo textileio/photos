@@ -8,8 +8,8 @@ import UserProfilePhoto from '../../components/UserProfilePhoto'
 import styles from './statics/styles'
 
 const Step2 = props => {
-  const { onPreviousStep } = props
-
+  const { chooseProfilePicture, profilePictureData } = props
+  const source = { uri: 'data:image/jpeg;base64,' + profilePictureData }
   return (
     <Fragment>
       <ScrollView>
@@ -18,10 +18,10 @@ const Step2 = props => {
         </Logo>
         <View style={styles.contentContainer}>
           <View style={styles.uploadContainer}>
-            <UserProfilePhoto style={styles.photoUploaded} width={183} photo={require('./statics/photo.png')} />
+            <UserProfilePhoto style={styles.photoUploaded} width={183} source={source} />
             <Button style={styles.uploadButton} text='Confirm Picture' onPress={() => {}} />
-            <TouchableOpacity onPress={onPreviousStep}>
-              <Text style={styles.link}>Select Profile Picture </Text>
+            <TouchableOpacity onPress={chooseProfilePicture}>
+              <Text style={styles.link}>Select Profile Picture</Text>
             </TouchableOpacity>
           </View>
         </View>

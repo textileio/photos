@@ -7,18 +7,18 @@ import ImageSc from 'react-native-scalable-image'
 import styles from './statics/styles'
 
 const UserProfilePhoto = props => {
-  const { width, photo, style } = props
+  const { width, source, style } = props
 
   return (
     <View style={[styles.container, style]}>
-      <ImageSc style={styles.filter} width={width} source={require('./statics/user-profile-filter.png')} />
-      <ImageSc style={styles.image} height={width} width={width} source={photo} />
+      {/* <ImageSc style={styles.filter} width={width} source={require('./statics/user-profile-filter.png')} /> */}
+      <ImageSc style={{ ...styles.image, borderRadius: width/2 }} height={width} width={width} source={source} />
     </View>
   )
 }
 
 UserProfilePhoto.propTypes = {
-  photo: propTypes.number.isRequired,
+  // source: propTypes.number.isRequired,
   width: propTypes.number.isRequired
 }
 
