@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
 import AuthAction from '../../../Redux/AuthRedux'
+import PreferencesActions from '../../../Redux/PreferencesRedux'
 
 import { Button } from 'react-native-elements'
 import SB_Button from '../../components/Button'
