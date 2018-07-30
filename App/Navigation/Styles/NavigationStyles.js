@@ -25,6 +25,16 @@ export default StyleSheet.create({
   headerIconUser: {
     width: 24,
     height: 24,
+    overflow: 'hidden',
+    alignItems: 'center',
+    borderRadius: 9
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 
   headerLogo: {

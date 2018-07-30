@@ -5,6 +5,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import * as TextileTypes from './App/Models/TextileTypes'
+import {Profile} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
@@ -46,15 +47,15 @@ export default {
     return await TextileNode.setAvatarId(id)
   },
 
-  getProfile: async function (): Promise<TextileTypes.UserProfile> {
+  getProfile: async function (): Promise<TextileTypes.Profile> {
     const jsonString = await TextileNode.getProfile()
-    const profile = JSON.parse(jsonString) as TextileTypes.UserProfile
+    const profile = JSON.parse(jsonString) as TextileTypes.Profile
     return profile
   },
 
-  getPeerProfile: async function (id: string): Promise<TextileTypes.UserProfile> {
+  getPeerProfile: async function (id: string): Promise<TextileTypes.Profile> {
     const jsonString = await TextileNode.getPeerProfile(id)
-    const profile = JSON.parse(jsonString) as TextileTypes.UserProfile
+    const profile = JSON.parse(jsonString) as TextileTypes.Profile
     return profile
   },
 

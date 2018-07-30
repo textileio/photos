@@ -12,6 +12,7 @@ import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
+import TextileImage from '../../TextileImage'
 
 import BottomDrawerList from '../SB/components/BottomDrawerList'
 
@@ -28,7 +29,16 @@ class TextilePhotos extends React.PureComponent {
 
     const headerLeft = params.threadName === 'default' ? (
       <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
-        <Image style={navStyles.headerIconUser} source={require('../SB/views/WalletList/statics/icon-photo1.png')} />
+        {/*<Image style={navStyles.headerIconUser} source={require('../SB/views/WalletList/statics/icon-photo1.png')} />*/}
+        <View style={navStyles.headerIconUser}>
+        {(params.profile && params.profile.avatar_id) && <View style={navStyles.iconContainer}><TextileImage
+          imageId={params.profile.avatar_id}
+          path={'thumb'}
+          resizeMode={'cover'}
+          height={24}
+          width={24}
+        /></View>}
+        </View>
       </TouchableWithoutFeedback>
     ) : (
       <TouchableOpacity onPress={ () => {
@@ -65,10 +75,10 @@ class TextilePhotos extends React.PureComponent {
       </View>
     )
 
-    const greeting = params.username !== '' ? 'Hello, ' + params.username : 'Hi there!'
+    const greeting = params.profile && params.profile.username ? 'Hello, ' + params.profile.username : 'Hi there!'
     const headerText = params.threadName === 'default' ? greeting : params.threadName
     const headerTitle = (
-        <Text style={navStyles.headerTitle}>{headerText}</Text>
+      <Text style={navStyles.headerTitle}>{headerText}</Text>
     )
 
     return {
@@ -84,7 +94,7 @@ class TextilePhotos extends React.PureComponent {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.toggleVerboseUi !== prevProps.toggleVerboseUi || this.props.threadName !== prevProps.threadName) {
       this.props.navigation.setParams({
-        username: this.props.username,
+        profile: this.props.profile,
         toggleVerboseUi: this.props.toggleVerboseUi,
         threadName: this.props.threadName,
         showActionSheet: this.showActionSheet.bind(this)
@@ -98,7 +108,7 @@ class TextilePhotos extends React.PureComponent {
     this.props.dismissPhoto()
     // Set params
     this.props.navigation.setParams({
-      username: this.props.username,
+      profile: this.props.profile,
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName,
       showActionSheet: this.showActionSheet.bind(this)
@@ -185,6 +195,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
 
+  console.log(state)
   const placeholderText = state.ipfs.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
     : (threadName === 'default'
@@ -201,7 +212,7 @@ const mapStateToProps = (state, ownProps) => {
     nodeStatus,
     queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
-    username: state.auth.username ? state.auth.username : ''
+    profile: state.preferences.profile
   }
 }
 

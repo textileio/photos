@@ -45,7 +45,6 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
     yield put(AuthActions.getTokensSuccess(tokens))
     // TODO: Put username into textile-go for addition to metadata model
     yield put(AuthActions.signUpSuccess())
-    yield put(AuthActions.getUsernameSuccess(username))
     yield call(NavigationService.navigate, 'Permissions')
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
@@ -59,7 +58,6 @@ export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
     yield put(AuthActions.logInSuccess())
-    yield put(AuthActions.getUsernameSuccess(username))
     yield call(NavigationService.navigate, 'Permissions')
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
@@ -97,9 +95,14 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
     }
     const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+
+
     yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
 
-    //TODO: Call some TextileNode method to add profile picture
+    // set it as our profile picture
+    yield call(TextileNode.setAvatarId, addResult.id)
+    const profile = yield call(TextileNode.getProfile)
+    yield put(PreferencesActions.getProfileSuccess(profile))
 
     try {
       yield uploadFile(
@@ -217,8 +220,9 @@ export function * startNode () {
     // Restore our tokens and username
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
-    const username = yield call(TextileNode.getUsername)
-    yield put(AuthActions.getUsernameSuccess(username))
+
+    const profile = yield call(TextileNode.getProfile)
+    yield put(PreferencesActions.getProfileSuccess(profile))
 
     yield put(ThreadsActions.refreshThreadsRequest())
   } catch (error) {
