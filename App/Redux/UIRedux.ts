@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
 const actions = {
-  chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO'),
+  chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
   chooseProfilePhotoSuccess: createAction('CHOOSE_PROFILE_PHOTO_SUCCESS', resolve => {
     return (uri: string, data: string) => resolve({ uri, data })
   }),
@@ -40,7 +40,7 @@ const actions = {
 export type UIAction = ActionType<typeof actions>
 
 export type UIState = {
-  readonly chosenProfilePhoto?: {
+  readonly chosenProfilePhoto: {
     readonly uri?: string,
     readonly data?: string
     readonly error?: Error
@@ -59,6 +59,7 @@ export type UIState = {
 }
 
 export const initialState: UIState = {
+  chosenProfilePhoto: {},
   viewingPhoto: {
     active: false
   },

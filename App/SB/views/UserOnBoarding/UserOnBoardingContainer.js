@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import UserOnBoarding from './UserOnBoarding'
 
+import UIActions from '../../../Redux/UIRedux'
+
 class UserOnBoardingContainer extends React.Component {
   constructor (props) {
     super(props)
@@ -28,10 +30,6 @@ class UserOnBoardingContainer extends React.Component {
     })
   }
 
-  showPicker = () => {
-    
-  }
-
   render () {
     const { step } = this.state
 
@@ -39,7 +37,7 @@ class UserOnBoardingContainer extends React.Component {
       <UserOnBoarding
         {...this.props}
         step={step}
-        onNextStep={this.showPicker}
+        onNextStep={this.props.chooseProfilePicture}
         onPreviousStep={this.onPreviousStep}
       />
     )
@@ -48,12 +46,15 @@ class UserOnBoardingContainer extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    username: state.auth.username || 'Mysterious User'
+    username: state.auth.username || 'Mysterious User',
+    profilePictureData: state.ui.chosenProfilePhoto.data
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return {}
+  return {
+    chooseProfilePicture: () => dispatch(UIActions.chooseProfilePhotoRequest())
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserOnBoardingContainer)

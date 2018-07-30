@@ -262,8 +262,17 @@ export function * synchronizeNativeUploads() {
   }
 }
 
+export function * chooseProfilePhoto () {
+  try {
+    const result: { uri: string, data: string } = yield call(CameraRoll.chooseProfilePhoto)
+    yield put(UIActions.chooseProfilePhotoSuccess(result.uri, result.data))
+  } catch (error) {
+    yield put(UIActions.chooseProfilePhotoError(error))
+  }
+}
 
-export function * photosTask() {
+
+export function * photosTask () {
   while (true) {
     // This take effect inside a while loop ensures that the entire photoTask
     // will run before the next startNodeSuccess is received and photoTask run again
