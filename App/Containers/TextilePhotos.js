@@ -26,18 +26,18 @@ class TextilePhotos extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-
     const headerLeft = params.threadName === 'default' ? (
       <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
-        {/*<Image style={navStyles.headerIconUser} source={require('../SB/views/WalletList/statics/icon-photo1.png')} />*/}
         <View style={navStyles.headerIconUser}>
-        {(params.profile && params.profile.avatar_id) && <View style={navStyles.iconContainer}><TextileImage
-          imageId={params.profile.avatar_id}
-          path={'thumb'}
-          resizeMode={'cover'}
-          height={24}
-          width={24}
-        /></View>}
+          <View style={navStyles.iconContainer}>
+            {(params.profile && params.profile.avatar_id) && <TextileImage
+              imageId={params.profile.avatar_id}
+              path={'thumb'}
+              resizeMode={'cover'}
+              height={24}
+              width={24}
+            />}
+          </View>
         </View>
       </TouchableWithoutFeedback>
     ) : (
