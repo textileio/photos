@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, Dimensions, StatusBar, TouchableOpacity } from 'react-native'
+import { View, Text, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
 import { NavigationActions } from 'react-navigation';
 
@@ -58,7 +58,6 @@ class ThreadPhotoDetail extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <StatusBar hidden />
         <ScrollView style={styles.contentContainer}>
 
           {this.renderImage()}
