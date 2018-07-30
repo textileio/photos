@@ -45,7 +45,9 @@ class PhotoDetail extends Component {
             <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
           </TouchableOpacity>
           <Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>
-          <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
+          <TouchableOpacity onPress={params.getPublicLink}>
+            <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
+          </TouchableOpacity>
           <Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>
         </View>
     )
@@ -57,15 +59,20 @@ class PhotoDetail extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.navigation.setParams({
       sharePressed: this.sharePressed.bind(this),
+      getPublicLink: this.getPublicLink.bind(this)
     })
   }
 
   sharePressed () {
     this.setState({drawer: true})
     this.props.shareImage(this.props.photo.id)
+  }
+
+  getPublicLink () {
+    this.props.getPublicLink(this.props.photo.id)
   }
 
   shareClosed () {
@@ -139,7 +146,8 @@ class PhotoDetail extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     authorShare: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
-    shareImage: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) }
+    shareImage: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
+    getPublicLink: (imageId) => { dispatch(UIActions.getPublicLink(imageId)) }
   }
 }
 
