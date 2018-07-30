@@ -468,12 +468,14 @@ export function * photosTask () {
 
 export function * removePayloadFile (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
   // TODO: Seeing an error here where the file is sometimes not found on disk...
-  const { dataId } = action.payload
-  const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
   try {
     // Putting this into a try, because although it might be nice to have the
     // error bubble up, we want to be sure we mark the image as uploaded
+    const { dataId } = action.payload
+    const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
     yield call(RNFS.unlink, uploadingImage.path)
+  } catch (error) {
+    // nothing to do here
   } finally {
     yield put(UploadingImagesActions.imageRemovalComplete(dataId))
   }
