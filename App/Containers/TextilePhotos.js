@@ -175,6 +175,7 @@ const mapStateToProps = (state, ownProps) => {
   const navParams = ownProps.navigation.state.params || {}
   const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
   const defaultThreadId = defaultThread ? defaultThread.id : undefined
+
   const threadId = navParams.id || defaultThreadId
 
   var items: PhotosQueryResult[] = []

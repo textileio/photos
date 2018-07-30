@@ -60,7 +60,7 @@ export default {
   },
 
   getPublicKey: async function (): Promise<string> {
-    return await TextileNode.getPublicKey()
+    return await TextileNode.getPubKey()
   },
 
   getId: async function (): Promise<string> {
