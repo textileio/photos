@@ -272,9 +272,9 @@ workflows:
   node-android-ios:
     jobs:
       - node
-      - android:
-          requires:
-            - node
+      #- android:
+      #    requires:
+      #      - node
       - ios:
           requires:
             - node
@@ -285,10 +285,10 @@ workflows:
             branches:
               only:
                 - master
-      - android-beta:
-          requires:
-            - android
-          filters:
-            branches:
-              only:
-                - master
+      #- android-beta:
+      #    requires:
+      #      - android
+      #    filters:
+      #      branches:
+      #        only:
+      #          - master
