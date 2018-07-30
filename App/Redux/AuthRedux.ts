@@ -49,6 +49,12 @@ const actions = {
   }),
   dismissError: createAction('DISMISS_ERROR', resolve => {
     return () => resolve()
+  }),
+  requestCameraPermissions: createAction('REQUEST_CAMERA_PERMISSIONS', resolve => {
+    return () => resolve()
+  }),
+  requestBackgroundLocationPermissions: createAction('REQUEST_BACKGROUND_LOCATION_PERMISSIONS', resolve => {
+    return () => resolve()
   })
 }
 

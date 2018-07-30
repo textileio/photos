@@ -40,7 +40,9 @@ import {
   addExternalInvite,
   presentShareInterface,
   acceptExternalInvite,
-  pendingInvitesTask
+  pendingInvitesTask,
+  cameraPermissionsTrigger,
+  backgroundLocationPermissionsTrigger
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -50,6 +52,10 @@ export default function * root () {
     photosTask(),
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
+
+    // permissions request events
+    takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
+    takeLatest(getType(AuthActions.requestBackgroundLocationPermissions), backgroundLocationPermissionsTrigger),
 
     // some sagas receive extra parameters in addition to an action
 
