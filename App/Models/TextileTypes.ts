@@ -22,6 +22,12 @@ export interface Devices {
   items: Device[]
 }
 
+export interface Profile {
+  id: string
+  username?: string
+  avatar_id?: string
+}
+
 export interface Photo {
   id: string
   date: string

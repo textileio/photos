@@ -65,7 +65,7 @@ class ThreadPhotoDetail extends Component {
           {/*<ImageSc style={styles.mainPhoto} width={width} source={require('./statics/photo2.png')}/>*/}
           <View style={styles.commentsContainer}>
             {this.props.comments.map((comment, i) => (
-              <CommentCard key={i} {...comment} />
+              <CommentCard key={i} profiles={this.props.profiles} {...comment} />
             ))}
           </View>
         </ScrollView>
@@ -87,7 +87,8 @@ const mapStateToProps = (state, ownProps) => {
   const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items[state.ui.viewingPhoto.index]
   return {
     ...item,
-    comments: [item]
+    comments: [item],
+    profiles: state.contacts.profiles
   }
 }
 

@@ -5,6 +5,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import * as TextileTypes from './App/Models/TextileTypes'
+import {Profile} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
@@ -40,6 +41,22 @@ export default {
 
   isSignedIn: async function (): Promise<boolean> {
     return await TextileNode.isSignedIn()
+  },
+
+  setAvatarId: async function (id: string): Promise<void> {
+    return await TextileNode.setAvatarId(id)
+  },
+
+  getProfile: async function (): Promise<TextileTypes.Profile> {
+    const jsonString = await TextileNode.getProfile()
+    const profile = JSON.parse(jsonString) as TextileTypes.Profile
+    return profile
+  },
+
+  getPeerProfile: async function (id: string): Promise<TextileTypes.Profile> {
+    const jsonString = await TextileNode.getPeerProfile(id)
+    const profile = JSON.parse(jsonString) as TextileTypes.Profile
+    return profile
   },
 
   getId: async function (): Promise<string> {
@@ -120,9 +137,15 @@ export default {
     return photoMetadata
   },
 
-  resolveProfileInfo: async function (peerId: string, key: string): Promise<string> {
-    const info = await TextileNode.resolveProfileInfo(peerId, key)
-    return info
+  getPhotoThreads: async function (id: string): Promise<Array<string>> {
+    const jsonString = await TextileNode.getPhotoThreads(id)
+    const threads = JSON.parse(jsonString) as Array<string>
+    return threads
+  },
+
+  getPhotoKey: async function (id: string): Promise<string> {
+    const key = await TextileNode.getPhotoKey(id)
+    return key
   },
 
   addDevice: async function (name: string, pubKey: string): Promise<void> {
