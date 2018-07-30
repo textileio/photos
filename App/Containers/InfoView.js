@@ -28,7 +28,7 @@ class InfoView extends React.PureComponent {
     this.refs.toast.show('Copied Public Key!', DURATION.LENGTH_SHORT)
   }
   handleMnemonic () {
-    Clipboard.setString(this.props.publicKey)
+    Clipboard.setString(this.props.mnemonic)
     this.refs.toast.show('Careful! Keep this 100% private!', 2500)
   }
 
