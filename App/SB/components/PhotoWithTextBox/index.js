@@ -20,7 +20,9 @@ const PhotoWithTextBox = props => {
         />
       }
       {!item &&
-        <Image style={styles.itemPhoto} />
+        <View style={styles.itemBox}>
+          <Image style={styles.itemBoxPlus} source={require('../PhotoBoxEmpty/statics/icon-big-plus.png')} />
+        </View>
       }
       <Text style={styles.itemText}>{text}</Text>
     </View>
