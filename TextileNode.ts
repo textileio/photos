@@ -42,6 +42,22 @@ export default {
     return await TextileNode.isSignedIn()
   },
 
+  setAvatarId: async function (id: string): Promise<void> {
+    return await TextileNode.setAvatarId(id)
+  },
+
+  getProfile: async function (): Promise<TextileTypes.UserProfile> {
+    const jsonString = await TextileNode.getProfile()
+    const profile = JSON.parse(jsonString) as TextileTypes.UserProfile
+    return profile
+  },
+
+  getPeerProfile: async function (id: string): Promise<TextileTypes.UserProfile> {
+    const jsonString = await TextileNode.getPeerProfile(id)
+    const profile = JSON.parse(jsonString) as TextileTypes.UserProfile
+    return profile
+  },
+
   getId: async function (): Promise<string> {
     return await TextileNode.getId()
   },
@@ -120,9 +136,15 @@ export default {
     return photoMetadata
   },
 
-  resolveProfileInfo: async function (peerId: string, key: string): Promise<string> {
-    const info = await TextileNode.resolveProfileInfo(peerId, key)
-    return info
+  getPhotoThreads: async function (id: string): Promise<Array<string>> {
+    const jsonString = await TextileNode.getPhotoThreads(id)
+    const threads = JSON.parse(jsonString) as Array<string>
+    return threads
+  },
+
+  getPhotoKey: async function (id: string): Promise<string> {
+    const key = await TextileNode.getPhotoKey(id)
+    return key
   },
 
   addDevice: async function (name: string, pubKey: string): Promise<void> {
