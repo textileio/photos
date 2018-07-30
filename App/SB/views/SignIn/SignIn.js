@@ -17,39 +17,41 @@ const SignIn = props => {
 
   return (
     <Fragment>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ScrollView style={commonStyles.container}>
+      <ScrollView style={commonStyles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <Logo>
             <Text style={styles.headerText}>Please sign in to continue</Text>
           </Logo>
-          <View style={styles.formContainer}>
-            <Input
-              value={username}
-              label='Username'
-              onChangeText={updateUsername}
-              keyboardType='default'
-              autoCapitalize='none'
+        </TouchableWithoutFeedback>
+        <View style={styles.formContainer}>
+          <Input
+            value={username}
+            label='Username'
+            onChangeText={updateUsername}
+            keyboardType='default'
+            autoCapitalize='none'
+            style={{height: 40}}
+          />
+          <Input
+            value={password}
+            label='Password'
+            secureTextEntry
+            onChangeText={updatePassword}
+            keyboardType='default'
+            autoCapitalize='none'
+            style={{height: 40}}
+          />
+          {/* TODO: Forgot pw support */}
+          {/* <Text style={styles.forgotText}>Forgot password</Text> */}
+          <View style={styles.bottomLine}>
+            <Button
+              text="Sign In"
+              disabled={!username || !password}
+              onPress={() => submit(username, password)}
             />
-            <Input
-              value={password}
-              label='Password'
-              secureTextEntry
-              onChangeText={updatePassword}
-              keyboardType='default'
-              autoCapitalize='none'
-            />
-            {/* TODO: Forgot pw support */}
-            {/* <Text style={styles.forgotText}>Forgot password</Text> */}
-            <View style={styles.bottomLine}>
-              <Button
-                text="Sign In"
-                disabled={!username || !password}
-                onPress={() => submit(username, password)}
-              />
-            </View>
           </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
+        </View>
+      </ScrollView>
       <Alert display={displayError} bottom msg={'Sign in error: ' +  errorMessage}/>
       <Footer>
         <Text style={styles.footerText}>Don't have an account? </Text>
