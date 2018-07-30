@@ -89,7 +89,8 @@ export default StyleSheet.create({
     marginHorizontal: 16
   },
   headerTitle: {
-    fontFamily: "BentonSans",
+    fontFamily: "BentonSans-Bold",
+    fontSize: 17,
     paddingTop: 8, // <- needed because BentonSans has that weird bottom gap
     color: Colors.charcoal
   },
