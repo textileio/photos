@@ -22,8 +22,10 @@ const { width } = Dimensions.get('window')
 class PhotoDetail extends Component {
   constructor (props) {
     super(props)
+    const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * width
     this.state = {
-      drawer: false
+      drawer: false,
+      heightByWidth
     }
   }
 
@@ -80,7 +82,6 @@ class PhotoDetail extends Component {
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
   viewThread (thread) {
-    console.log(this.props)
     this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
   }
 
@@ -94,14 +95,14 @@ class PhotoDetail extends Component {
       imageId={this.props.photo.id}
       previewPath={'thumb'}
       path={'photo'}
-      style={{flex: 1, flexDirection: 'row', height: undefined, width: width, marginBottom: 10}}
-      resizeMode={'contain'}
+      style={{height: this.state.heightByWidth, width: width, marginBottom: 10}}
+      resizeMode={'cover'}
     />)
   }
 
   render () {
     return (
-      <View style={styles.bodyContainer}>
+      <ScrollView style={styles.bodyContainer}>
         <StatusBar hidden />
         {this.renderImage()}
         <View style={styles.photoDetails}>
@@ -129,7 +130,7 @@ class PhotoDetail extends Component {
           </TouchableOpacity> }
         </ScrollView>
         {this.state.drawer && <BottomDrawerPhotos isVisible selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} createThread={() => this.createThread()} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
-      </View>
+      </ScrollView>
     )
   }
 }
