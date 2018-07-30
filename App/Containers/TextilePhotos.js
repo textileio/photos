@@ -188,6 +188,10 @@ const mapStateToProps = (state, ownProps) => {
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
+  // I saw a really weird state where thread was all undefined....
+  // seems like we should show a loading state if that ever happens.
+  // at the very least i put the user on the default screen instead of a
+  // blank Thread screen
   const threadName = thread ? thread.name : 'default'
 
   const nodeStatus = state.ipfs.nodeState.error
