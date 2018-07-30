@@ -76,6 +76,13 @@ export function * recoverPassword (action: ActionType<typeof AuthActions.recover
   }
 }
 
+export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
+  yield put(PreferencesActions.onboardedSuccess())
+  yield call(NavigationService.navigate, 'TextileManager')
+  yield take(getType(TextileNodeActions.startNodeSuccess))
+  
+}
+
 export function * viewPhoto () {
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
 }
@@ -276,7 +283,7 @@ export function * photosTask () {
   while (true) {
     // This take effect inside a while loop ensures that the entire photoTask
     // will run before the next startNodeSuccess is received and photoTask run again
-    yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])
+    yield take(getType(TextileNodeActions.startNodeSuccess))
 
     let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {
