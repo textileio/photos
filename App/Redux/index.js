@@ -11,6 +11,7 @@ export const reducers = combineReducers({
   preferences: require('./PreferencesRedux').reducer,
   threads: require('./ThreadsRedux').reducer,
   devices: require('./DevicesRedux').reducer,
+  contacts: require('./ContactsRedux').reducer,
   cameraRoll: require('./CameraRollRedux').reducer,
   uploadingImages: require('./UploadingImagesRedux').reducer,
   ui: require('./UIRedux').reducer

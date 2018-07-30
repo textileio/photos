@@ -31,7 +31,6 @@ import {
   getPhotoHashes,
   shareImage,
   photosTask,
-  synchronizeNativeUploads,
   removePayloadFile,
   handleUploadError,
   addThread,
@@ -44,7 +43,8 @@ import {
   cameraPermissionsTrigger,
   backgroundLocationPermissionsTrigger,
   chooseProfilePhoto,
-  handleProfilePhotoSelected
+  handleProfilePhotoSelected,
+  updateContacts
 } from './TextileSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
@@ -94,6 +94,7 @@ export default function * root () {
     takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
+
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
     takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),
 
@@ -102,6 +103,9 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
 
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
+
+    // Update contacts
+    takeEvery(getType(TextileNodeActions.getPhotoHashesSuccess), updateContacts),
 
     initializeAppState()
   ])

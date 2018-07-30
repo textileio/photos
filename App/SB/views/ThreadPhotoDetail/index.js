@@ -21,6 +21,7 @@ class ThreadPhotoDetail extends Component {
   constructor (props) {
     super(props)
     const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * width
+    console.log(this.props.comments)
     this.state = {
       drawer: false,
       heightByWidth
@@ -65,7 +66,7 @@ class ThreadPhotoDetail extends Component {
           {/*<ImageSc style={styles.mainPhoto} width={width} source={require('./statics/photo2.png')}/>*/}
           <View style={styles.commentsContainer}>
             {this.props.comments.map((comment, i) => (
-              <CommentCard key={i} {...comment} />
+              <CommentCard key={i} profiles={this.props.profiles} {...comment} />
             ))}
           </View>
         </ScrollView>
@@ -85,9 +86,11 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state, ownProps) => {
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
   const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items[state.ui.viewingPhoto.index]
+  console.log(state.contacts.profiles)
   return {
     ...item,
-    comments: [item]
+    comments: [item],
+    profiles: state.contacts.profiles
   }
 }
 

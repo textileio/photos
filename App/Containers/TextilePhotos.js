@@ -195,7 +195,6 @@ const mapStateToProps = (state, ownProps) => {
 
   const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
 
-  console.log(state)
   const placeholderText = state.ipfs.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
     : (threadName === 'default'
