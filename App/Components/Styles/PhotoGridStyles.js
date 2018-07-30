@@ -48,21 +48,8 @@ export default StyleSheet.create({
     overflow: 'hidden',
     width: ITEM_WIDTH,
     height: PRODUCT_ITEM_HEIGHT,
-    // flexDirection: 'column',
-    // flex: 1,
     alignItems: 'center',
     backgroundColor: Colors.snow,
-    // ...Platform.select({
-    //   ios: {
-    //     shadowColor: 'rgba(0,0,0, .2)',
-    //     shadowOffset: { height: 0, width: 0 },
-    //     shadowOpacity: 1,
-    //     shadowRadius: 1,
-    //   },
-    //   android: {
-    //     elevation: 1,
-    //   },
-    // }),
   },
   itemBackgroundContainer: {
     position: 'absolute',

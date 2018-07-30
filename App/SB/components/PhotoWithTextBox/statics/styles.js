@@ -6,10 +6,19 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginBottom: 9
   },
-  itemPhoto: {
+  item: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    marginRight: 14,
     height: 50,
-    width: 70,
-    marginRight: 14
+    width: 71
+  },
+  itemBackgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   itemText: {
     fontFamily: "BentonSans",
