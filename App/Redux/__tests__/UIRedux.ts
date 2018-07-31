@@ -10,26 +10,26 @@ describe('ui stories', () => {
       expect(initialState).toMatchSnapshot()
     })
   })
-  describe('viewing photos', () => {
-    it('should have an active thread', () => {
-      const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
-      expect(state.viewingPhoto.active).toEqual(true)
-      expect(state.viewingPhoto.index).toEqual(0)
-      expect(state.viewingPhoto.threadId).toEqual(threadId)
-    })
-    it('should switch photos', () => {
-      const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
-      expect(state.viewingPhoto.index).toEqual(0)
-      const state1 = reducer(state, actions.switchViewdPhoto(1))
-      expect(state1.viewingPhoto.index).toEqual(1)
-    })
-    it('should dismiss viewed photo', () => {
-      const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
-      expect(state.viewingPhoto.active).toEqual(true)
-      const state1 = reducer(state, actions.dismissViewedPhoto())
-      expect(state1.viewingPhoto.active).toEqual(false)
-    })
-  })
+  // describe('viewing photos', () => {
+  //   it('should have an active thread', () => {
+  //     const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
+  //     expect(state.viewingPhoto.active).toEqual(true)
+  //     expect(state.viewingPhoto.index).toEqual(0)
+  //     expect(state.viewingPhoto.threadId).toEqual(threadId)
+  //   })
+  //   it('should switch photos', () => {
+  //     const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
+  //     expect(state.viewingPhoto.index).toEqual(0)
+  //     const state1 = reducer(state, actions.switchViewdPhoto(1))
+  //     expect(state1.viewingPhoto.index).toEqual(1)
+  //   })
+  //   it('should dismiss viewed photo', () => {
+  //     const state = reducer(initialState, actions.viewPhotoRequest(0, threadId))
+  //     expect(state.viewingPhoto.active).toEqual(true)
+  //     const state1 = reducer(state, actions.dismissViewedPhoto())
+  //     expect(state1.viewingPhoto.active).toEqual(false)
+  //   })
+  // })
   describe('sharing a photo', () => {
     it('should be have an active hash', () => {
       const state = reducer(initialState, actions.authorPhotoShareRequest('someHash'))
