@@ -231,7 +231,6 @@ export function * startNode () {
 
     // isolate
     try {
-      yield take(getType(TextileNodeActions.nodeOnline))
       const profile = yield call(TextileNode.getProfile)
       yield put(PreferencesActions.getProfileSuccess(profile))
     } catch (error) {}
