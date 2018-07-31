@@ -121,7 +121,7 @@ class TextilePhotos extends React.PureComponent {
 
   onSelect = (row) => {
     return () => {
-      this.props.viewPhoto(row.index, this.props.threadId)
+      this.props.viewPhoto(row.item.photo.id, this.props.threadId)
     }
   }
 
@@ -209,6 +209,7 @@ const mapStateToProps = (state, ownProps) => {
     : (threadName === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
     : 'Share your first photo to the ' + threadName + ' thread.')
+
   return {
     threadId,
     threadName,
@@ -227,7 +228,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
-    viewPhoto: (index, threadId) => { dispatch(UIActions.viewPhotoRequest(index, threadId)) },
+    viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },

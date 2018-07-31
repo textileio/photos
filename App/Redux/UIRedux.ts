@@ -12,10 +12,10 @@ const actions = {
     return (uri: string) => resolve({ uri })
   }),
   viewPhotoRequest: createAction('VIEW_PHOTO_REQUEST', resolve => {
-    return (index: number, threadId: string) => resolve({ index, threadId })
+    return (photoId: string, threadId: string) => resolve({ photoId, threadId })
   }),
   switchViewdPhoto: createAction('SWITCH_VIEWED_PHOTO', resolve => {
-    return (index: number) => resolve(index)
+    return (photoId: string) => resolve(photoId)
   }),
   dismissViewedPhoto: createAction('DISMISS_VIEWED_PHOTO', resolve => {
     return () => resolve()
@@ -53,7 +53,7 @@ export type UIState = {
   }
   readonly viewingPhoto: {
     readonly active: boolean
-    readonly index?: number
+    readonly photoId?: string
     readonly threadId?: string
   },
   readonly sharingPhoto: {
@@ -81,10 +81,10 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.chooseProfilePhotoError):
       return { ...state, chosenProfilePhoto: { ...state.chosenProfilePhoto, ...action.payload } }
     case getType(actions.viewPhotoRequest):
-      const { index, threadId } = action.payload
-      return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, index, threadId } }
+      const { photoId, threadId } = action.payload
+      return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, photoId, threadId } }
     case getType(actions.switchViewdPhoto):
-      return { ...state, viewingPhoto: { ...state.viewingPhoto, index: action.payload } }
+      return { ...state, viewingPhoto: { ...state.viewingPhoto, photoId: action.payload } }
     case getType(actions.dismissViewedPhoto):
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: false } }
     case getType(actions.authorPhotoShareRequest):
