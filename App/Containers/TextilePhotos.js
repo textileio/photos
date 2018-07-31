@@ -121,7 +121,6 @@ class TextilePhotos extends React.PureComponent {
 
   onSelect = (row) => {
     return () => {
-      console.log(row)
       this.props.viewPhoto(row.item.photo.id, this.props.threadId)
     }
   }
@@ -210,6 +209,7 @@ const mapStateToProps = (state, ownProps) => {
     : (threadName === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
     : 'Share your first photo to the ' + threadName + ' thread.')
+
   return {
     threadId,
     threadName,

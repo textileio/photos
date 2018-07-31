@@ -11,6 +11,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
+import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -45,8 +46,10 @@ import {
   chooseProfilePhoto,
   handleProfilePhotoSelected,
   updateContacts,
-  presentPublicLinkInterface
+  presentPublicLinkInterface,
+  nodeOnlineSaga
 } from './TextileSagas'
+import {ContactsAction} from '../Redux/ContactsRedux'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -109,6 +112,9 @@ export default function * root () {
 
     // Update contacts
     takeEvery(getType(TextileNodeActions.getPhotoHashesSuccess), updateContacts),
+    takeEvery(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
+    takeEvery(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),
+    takeEvery(getType(ContactsActions.updateContactsComplete), nodeOnlineSaga),
 
     initializeAppState()
   ])
