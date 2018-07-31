@@ -118,11 +118,8 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
       yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
     }
 
-    yield take(getType(TextileNodeActions.nodeOnline))
     // set it as our profile picture
-    yield call(TextileNode.setAvatarId, addResult.id)
-    const profile = yield call(TextileNode.getProfile)
-    yield put(PreferencesActions.getProfileSuccess(profile))
+    yield put(PreferencesActions.pendingAvatar(addResult.id))
 
   } catch (error) {
     // TODO: What do to if adding profile photo fails?
@@ -282,13 +279,36 @@ export function * updateContacts (action: ActionType<typeof TextileNodeActions.g
         const isKnown: boolean = yield select(ContactsSelectors.isKnown, contactId)
         if (!isKnown) {
           yield put(ContactsActions.newContactRequest(contactId))
-          yield take(getType(TextileNodeActions.nodeOnline))
-          const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
-          yield put(ContactsActions.newContactSuccess(contact))
         }
       } catch (error) {
         yield put(ContactsActions.newContactFailure(error))
       }
+    }
+  }
+  yield put(ContactsActions.updateContactsComplete())
+}
+
+export function * nodeOnlineSaga () {
+  const online = yield select(TextileNodeSelectors.online)
+  if (online) {
+    try {
+      const pending: string = yield select(PreferencesSelectors.pending)
+      if (pending) {
+        yield call(TextileNode.setAvatarId, pending)
+        const profile = yield call(TextileNode.getProfile)
+        yield put(PreferencesActions.getProfileSuccess(profile))
+      }
+    } catch (error) {
+      // nada
+    }
+    try {
+      const pending: string[] = yield select(ContactsSelectors.pending)
+      for (let contactId of pending){
+        const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
+        yield put(ContactsActions.newContactSuccess(contact))
+      }
+    } catch (error) {
+      // nothing...
     }
   }
 }
@@ -363,7 +383,6 @@ export function * chooseProfilePhoto () {
 }
 
 export function * photosTask () {
-  console.log('photosTask')
   while (true) {
     // This take effect inside a while loop ensures that the entire photoTask
     // will run before the next startNodeSuccess is received and photoTask run again

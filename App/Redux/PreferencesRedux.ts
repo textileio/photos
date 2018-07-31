@@ -14,6 +14,9 @@ const actions = {
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
     return (profile: TextileTypes.Profile) => resolve({ profile })
   }),
+  pendingAvatar: createAction('PROFILE_UPDATE_SUCCESS', resolve => {
+    return (avatarId: string) => resolve({avatarId})
+  }),
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
     return (publicKey: string) => resolve({ publicKey })
   }),
@@ -27,6 +30,7 @@ export type PreferencesState = {
   mnemonic?: string
   publicKey?: string
   profile?: TextileTypes.Profile
+  pending?: string
 }
 
 export const initialState: PreferencesState = {
@@ -43,7 +47,9 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
     case getType(actions.updatecMnemonic):
       return { ...state, mnemonic: action.payload.mnemonic }
     case getType(actions.getProfileSuccess):
-      return { ...state, profile: action.payload.profile }
+      return { ...state, profile: action.payload.profile, pending: undefined}
+    case getType(actions.pendingAvatar):
+      return { ...state, pending: action.payload.avatarId }
     case getType(actions.getPublicKeySuccess):
       return { ...state, publicKey: action.payload.publicKey }
     default:
@@ -53,7 +59,9 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
 
 export const PreferencesSelectors = {
   // TODO: Need typed state
-  onboarded: (state: any) => state.preferences.onboarded
+  onboarded: (state: any) => state.preferences.onboarded,
+  pending: (state: any) => state.preferences.pending,
+  profile: (state: any) => state.preferences.profile
 }
 
 export default actions

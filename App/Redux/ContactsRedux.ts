@@ -9,7 +9,10 @@ const actions = {
     return (profile: TextileTypes.Profile) => resolve({profile})
   }),
   newContactFailure: createAction('NEW_CONTACT_FAILURE', resolve => {
-    return (error: Error) => resolve({ error })
+    return (id: string, error: Error) => resolve({ id, error })
+  }),
+  updateContactsComplete: createAction('UPDATE_CONTACTS_COMPLETE', resolve => {
+    return () => resolve()
   })
 }
 
@@ -17,7 +20,7 @@ export type ContactsAction = ActionType<typeof actions>
 
 export type ContactsState = {
   readonly profiles: ReadonlyArray<TextileTypes.Profile>,
-  readonly pending: ReadonlyArray<string>
+  readonly pending: ReadonlyArray<TextileTypes.PendingProfile>
 }
 
 export const initialState: ContactsState = {
@@ -29,19 +32,38 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
   switch (action.type) {
     case getType(actions.newContactRequest):
       const {id} = action.payload
-      const updatedPending = state.pending.filter((p) => p !== id )
-      return { ...state, pending: [...updatedPending, id] }
+      const updatedPending = state.pending.filter((p) => p.id !== id )
+      return { ...state, pending: [...updatedPending, {id, attempts: 3}] }
     case getType(actions.newContactSuccess):
-      const {profile} = action.payload
+      const profile = action.payload.profile
       const profiles = state.profiles.filter((c) => c.id !== profile.id)
-      const filteredPending = state.pending.filter(p=>p!==profile.id)
+      const filteredPending = state.pending.filter(p=>p.id!==profile.id)
       return { profiles: [...profiles, profile], pending: filteredPending }
+    case getType(actions.newContactFailure):
+      const profile_id = action.payload.id
+
+      // if we already have a successful one, let's just remove it
+      if (state.profiles.find((c) => c.id !== profile_id)) {
+        return {...state, pending: state.pending.filter((c) => c.id !== profile_id) }
+      }
+
+      // if we have remaining attampts, allow them to happen
+      const existing = state.pending.find((c) => c.id === profile_id)
+      if (existing && existing.attempts - 1 > 0)  {
+        const pending = state.pending.filter((c) => c.id !== profile_id)
+        const updated = {id: existing.id, attempts: existing.attempts - 1}
+        return {...state, pending: [...pending, updated] }
+      }
+
+      // just remove it, we're out of tries
+      return { ...state, pending: state.pending.filter((p) => p.id !== profile_id) }
     default:
       return state
   }
 }
 
 export const ContactsSelectors = {
+  pending: (state) => state.contacts.pending.map((p) => p.id),
   isKnown: (state, id: string) => {
     return state.contacts && state.contacts.profiles && state.contacts.profiles.some((p) => p.id === id)
   },

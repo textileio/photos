@@ -28,6 +28,11 @@ export interface Profile {
   avatar_id?: string
 }
 
+export interface PendingProfile {
+  id: string
+  attempts: number
+}
+
 export interface Photo {
   id: string
   date: string
