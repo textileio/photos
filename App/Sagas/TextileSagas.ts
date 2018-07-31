@@ -280,7 +280,7 @@ export function * updateContacts (action: ActionType<typeof TextileNodeActions.g
           yield put(ContactsActions.newContactRequest(contactId))
         }
       } catch (error) {
-        yield put(ContactsActions.newContactFailure(error))
+        yield put(ContactsActions.newContactFailure(contactId, error))
       }
     }
   }
