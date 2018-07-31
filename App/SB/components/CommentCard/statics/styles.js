@@ -51,12 +51,17 @@ export default StyleSheet.create({
     fontSize: 14,
     marginBottom: 5
   },
+  commentTextWrapper: {
+    marginBottom: 14,
+    flexDirection:'row',
+  },
   commentText: {
     fontFamily: "BentonSans",
     fontSize: 12,
     lineHeight: 16,
     color: "#4a4a4a",
-    marginBottom: 14
+    flexWrap: 'wrap',
+    flex: 1
   },
   commentIconLabel: {
     color: "#4a4a4a",
