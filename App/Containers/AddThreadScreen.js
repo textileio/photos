@@ -60,6 +60,7 @@ class AddThreadScreen extends React.Component {
 
   _submit () {
     this.props.submit(this.state.value)
+    this.props.navigation.goBack()
   }
 
   render () {
