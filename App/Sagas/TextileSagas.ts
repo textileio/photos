@@ -131,7 +131,7 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   }
 }
 
-export function * viewPhoto ( data ) {
+export function * getProfile ( data ) {
   const {photoId, threadId} = data.payload
   const threads = yield select(TextileNodeSelectors.threads)
   if (threads && threads[threadId]) {
@@ -146,8 +146,11 @@ export function * viewPhoto ( data ) {
       //nothing for now
     }
   }
-  // const item = state.ipfs.threads[state.ui.viewingPhoto.threadId]
+}
+
+export function * viewPhoto ( data ) {
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
+  yield call(getProfile, data)
 }
 
 export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeActions.lock>) {
