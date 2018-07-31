@@ -14,7 +14,7 @@ const actions = {
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
     return (profile: TextileTypes.Profile) => resolve({ profile })
   }),
-  pendingAvatar: createAction('PROFILE_UPDATE_SUCCESS', resolve => {
+  pendingAvatar: createAction('PENDING_AVATAR_REQUEST', resolve => {
     return (avatarId: string) => resolve({avatarId})
   }),
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
