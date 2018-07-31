@@ -50,11 +50,11 @@ class PhotoDetail extends Component {
           <TouchableOpacity onPress={params.sharePressed}>
             <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
           </TouchableOpacity>
-          <Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>
+          {/*<Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>*/}
           <TouchableOpacity onPress={params.getPublicLink}>
             <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
           </TouchableOpacity>
-          <Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>
+          {/*<Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>*/}
         </View>
     )
 
@@ -115,14 +115,14 @@ class PhotoDetail extends Component {
         {this.renderImage()}
         <View style={styles.photoDetails}>
           <View style={styles.detailItem}>
-            <Image style={styles.iconLocation} source={require('./statics/icon-location.png')}/>
-            <Text style={styles.detailText}>Earth</Text>
+            {/*<Image style={styles.iconLocation} source={require('./statics/icon-location.png')}/>*/}
+            {/*<Text style={styles.detailText}>Earth</Text>*/}
           </View>
-          <View style={[styles.detailItem, {marginLeft: 24, flexGrow: 1}]}>
+          <View style={[styles.detailItem, {flexGrow: 1}]}>
             <Image style={styles.iconCalendar} source={require('./statics/icon-calendar.png')} />
             <Text style={styles.detailText}>{this.props.date}</Text>
           </View>
-          <Image style={styles.iconInfo} source={require('./statics/icon-info.png')} />
+          {/*<Image style={styles.iconInfo} source={require('./statics/icon-info.png')} />*/}
         </View>
         <ScrollView style={styles.contentContainer}>
           <Text style={styles.threadsTitle}>
