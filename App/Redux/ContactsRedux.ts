@@ -29,7 +29,6 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
 }
 
 export const ContactsSelectors = {
-  pending: (state) => state.contacts.pending.map((p) => p.id),
   isKnown: (state, id: string) => {
     return state.contacts && state.contacts.profiles && state.contacts.profiles.some((p) => p.id === id)
   }
