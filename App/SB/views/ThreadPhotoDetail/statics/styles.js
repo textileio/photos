@@ -8,14 +8,13 @@ export default StyleSheet.create({
   },
   contentContainer: {},
   toolbarLeft: {
+    marginTop: 0,
     height: 16,
     width: 40,
-    marginBottom: 16
   },
   toolBarRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16
   },
   toolbarIconMore: {
     height: 4,
