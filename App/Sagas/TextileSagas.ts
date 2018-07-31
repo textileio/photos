@@ -131,7 +131,22 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   }
 }
 
-export function * viewPhoto () {
+export function * viewPhoto ( data ) {
+  const {photoId, threadId} = data.payload
+  const threads = yield select(TextileNodeSelectors.threads)
+  if (threads && threads[threadId]) {
+    const photo = threads[threadId].items.find((it) => it.photo.id === photoId).photo
+    try {
+      const isKnown = yield select(ContactsSelectors.isKnown, photo.author_id)
+      if (!isKnown) {
+        const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, photo.author_id)
+        yield put(ContactsActions.newContactSuccess(contact))
+      }
+    } catch (error) {
+      //nothing for now
+    }
+  }
+  // const item = state.ipfs.threads[state.ui.viewingPhoto.threadId]
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
 }
 
@@ -262,28 +277,6 @@ export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.g
   }
 }
 
-// Will look at a set of hash updates and see if we have the author in our contact list
-export function * updateContacts (action: ActionType<typeof TextileNodeActions.getPhotoHashesSuccess>) {
-  const { threadId, items } = action.payload
-  for (let item of items) {
-    if(item.photo && item.photo.author_id) {
-      const contactId = item.photo.author_id
-      try {
-        const isKnown: boolean = yield select(ContactsSelectors.isKnown, contactId)
-        if (!isKnown) {
-          yield put(ContactsActions.newContactRequest(contactId))
-        }
-      } catch (error) {
-        yield put(ContactsActions.newContactFailure(contactId, error))
-      }
-    }
-  }
-  if (items.length > 0) {
-    // only call it if there were updates made
-    yield put(ContactsActions.updateContactsComplete())
-  }
-}
-
 export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {
@@ -301,16 +294,6 @@ export function * nodeOnlineSaga () {
     } catch (error) {
       // nada
     }
-      const pending: string[] = yield select(ContactsSelectors.pending)
-      // limit to 2 just to ensure we aren't blocking too long
-      for (let contactId of pending.slice(Math.max(pending.length - 2, 0))){
-        try {
-          const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
-          yield put(ContactsActions.newContactSuccess(contact))
-        } catch (error) {
-          yield put(ContactsActions.newContactFailure(contactId, error))
-        }
-      }
   }
 }
 

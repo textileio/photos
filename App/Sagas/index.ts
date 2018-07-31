@@ -45,7 +45,6 @@ import {
   backgroundLocationPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
-  updateContacts,
   presentPublicLinkInterface,
   nodeOnlineSaga
 } from './TextileSagas'
@@ -111,10 +110,8 @@ export default function * root () {
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
 
     // Update contacts
-    takeEvery(getType(TextileNodeActions.getPhotoHashesSuccess), updateContacts),
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
     takeLatest(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),
-    takeLatest(getType(ContactsActions.updateContactsComplete), nodeOnlineSaga),
 
     initializeAppState()
   ])
