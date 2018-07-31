@@ -302,8 +302,8 @@ export function * nodeOnlineSaga () {
       // nada
     }
       const pending: string[] = yield select(ContactsSelectors.pending)
-      console.log(pending)
-      for (let contactId of pending){
+      // limit to 2 just to ensure we aren't blocking too long
+      for (let contactId of pending.slice(Math.max(pending.length - 2, 0))){
         try {
           const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
           yield put(ContactsActions.newContactSuccess(contact))
