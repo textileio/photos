@@ -100,11 +100,6 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 
     yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
 
-    // set it as our profile picture
-    yield call(TextileNode.setAvatarId, addResult.id)
-    const profile = yield call(TextileNode.getProfile)
-    yield put(PreferencesActions.getProfileSuccess(profile))
-
     try {
       yield uploadFile(
         addResult.id,
@@ -122,6 +117,10 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
       }
       yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
     }
+
+    // set it as our profile picture
+    yield put(PreferencesActions.pendingAvatar(addResult.id))
+
   } catch (error) {
     // TODO: What do to if adding profile photo fails?
   } finally {
@@ -132,8 +131,26 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   }
 }
 
-export function * viewPhoto () {
+export function * getProfile ( data ) {
+  const {photoId, threadId} = data.payload
+  const threads = yield select(TextileNodeSelectors.threads)
+  if (threads && threads[threadId]) {
+    const photo = threads[threadId].items.find((it) => it.photo.id === photoId).photo
+    try {
+      const isKnown = yield select(ContactsSelectors.isKnown, photo.author_id)
+      if (!isKnown) {
+        const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, photo.author_id)
+        yield put(ContactsActions.newContactSuccess(contact))
+      }
+    } catch (error) {
+      //nothing for now
+    }
+  }
+}
+
+export function * viewPhoto ( data ) {
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
+  yield call(getProfile, data)
 }
 
 export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeActions.lock>) {
@@ -226,16 +243,9 @@ export function * startNode () {
 
     // isolate
     try {
-      const profile = yield call(TextileNode.getProfile)
-      yield put(PreferencesActions.getProfileSuccess(profile))
-    } catch (error) {}
-
-    // isolate
-    try {
       const publicKey = yield call(TextileNode.getPublicKey)
       yield put(PreferencesActions.getPublicKeySuccess(publicKey))
     } catch (error) {}
-
 
   } catch (error) {
     yield put(TextileNodeActions.startNodeFailure(error))
@@ -270,22 +280,22 @@ export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.g
   }
 }
 
-// Will look at a set of hash updates and see if we have the author in our contact list
-export function * updateContacts (action: ActionType<typeof TextileNodeActions.getPhotoHashesSuccess>) {
-  const { threadId, items } = action.payload
-  for (let item of items) {
-    if(item.photo && item.photo.author_id) {
-      const contactId = item.photo.author_id
-      try {
-        const isKnown: boolean = yield select(ContactsSelectors.isKnown, contactId)
-        if (!isKnown) {
-          yield put(ContactsActions.newContactRequest(contactId))
-          const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
-          yield put(ContactsActions.newContactSuccess(contact))
-        }
-      } catch (error) {
-        yield put(ContactsActions.newContactFailure(error))
+export function * nodeOnlineSaga () {
+  const online = yield select(TextileNodeSelectors.online)
+  if (online) {
+    try {
+      const pending: string = yield select(PreferencesSelectors.pending)
+      if (pending) {
+        yield call(TextileNode.setAvatarId, pending)
+        const profile = yield call(TextileNode.getProfile)
+        yield put(PreferencesActions.getProfileSuccess(profile))
+      } else {
+        // just updated it directly
+        const profile = yield call(TextileNode.getProfile)
+        yield put(PreferencesActions.getProfileSuccess(profile))
       }
+    } catch (error) {
+      // nada
     }
   }
 }

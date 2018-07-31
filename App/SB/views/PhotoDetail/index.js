@@ -167,7 +167,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state, ownProps) => {
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
-  const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items[state.ui.viewingPhoto.index]
+  const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items.find((it) => it.photo.id === state.ui.viewingPhoto.photoId)
 
   // Used to generate lists of which Threads the image is and
   // which Threads you might want to share the image to
@@ -199,7 +199,6 @@ const mapStateToProps = (state, ownProps) => {
     // TODO: real dimensions are in the metadata alread now
     dimensions: { width: 150, height: 150 },
     displayImages: state.ipfs.nodeState.state === 'started',
-    currentIndex: state.ui.viewingPhoto.index,
     threadsIn: state.threads.threads.filter(t => containingThreads.indexOf(t.id) > -1 && t.name !== 'default'),
     threadsNotIn,
     thumbs

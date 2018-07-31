@@ -83,7 +83,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state, ownProps) => {
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
-  const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items[state.ui.viewingPhoto.index]
+  const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items.find((it) => it.photo.id === state.ui.viewingPhoto.photoId)
   return {
     ...item,
     comments: [item],
