@@ -546,7 +546,6 @@ export function * addThread (action: ActionType<typeof ThreadsActions.addThreadR
     const thread: TextileTypes.Thread = yield call(TextileNode.addThread, name, mnemonic)
     yield put(ThreadsActions.addThreadSuccess(thread))
     yield put(TextileNodeActions.getPhotoHashesRequest(thread.id))
-    yield call(PhotosNavigationService.goBack)
   } catch (error) {
     yield put(ThreadsActions.addThreadError(error))
   }
