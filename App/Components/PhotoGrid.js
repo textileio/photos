@@ -111,7 +111,7 @@ export default class PhotoGrid extends React.PureComponent {
             width: '100%',
             height: '100%',
             resizeMode: 'stretch',
-            position: 'absolute',
+            position: 'absolute'
           }} source={require('../Images/backgrounds/TextileBackground.png')} />
         </View>
         {

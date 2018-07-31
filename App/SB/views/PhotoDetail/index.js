@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import Toast from 'react-native-easy-toast'
+import Modal from 'react-native-modal'
+
+import ShareToThread from '../../../Components/ShareToThread'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
@@ -15,6 +18,12 @@ import styles from './statics/styles'
 import UIActions from '../../../Redux/UIRedux'
 
 const { width } = Dimensions.get('window')
+
+// via https://github.com/react-native-community/react-native-modal/issues/147
+const WIDTH = Dimensions.get('window').width
+
+// May be slightly off on some bigger Android devices...
+const HEIGHT = Dimensions.get('window').height
 
 class PhotoDetail extends Component {
   constructor (props) {
@@ -90,11 +99,6 @@ class PhotoDetail extends Component {
     this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
   }
 
-  createThread () {
-    this.setState({drawer: false})
-    this.props.navigation.navigate('AddThread')
-  }
-
   renderImage () {
     return (<ProgressiveImage
       imageId={this.props.photo.id}
@@ -129,11 +133,19 @@ class PhotoDetail extends Component {
               <PhotoWithTextBox key={i} text={thread.name} item={this.props.thumbs[thread.id]}/>
             </TouchableOpacity>
           ))}
-          { this.props.threadsIn.length > 0 && <TouchableOpacity onPress={() => { this.createThread() }}>
-            <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}}/>
+          { this.props.threadsIn.length > 0 && 
+          <TouchableOpacity onPress={this.sharePressed.bind(this)}>
+            <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}} title='Share in another thread'/>
           </TouchableOpacity> }
         </ScrollView>
-        {this.state.drawer && <BottomDrawerPhotos isVisible selector={this.shareIntoThread.bind(this)} threads={this.props.threadsNotIn} createThread={() => this.createThread()} thumbs={this.props.thumbs} onClose={() => this.shareClosed()}/>}
+        <Modal isVisible={this.state.drawer} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: "flex-end"}}>
+          <ShareToThread
+            selector={this.shareIntoThread.bind(this)} 
+            threads={this.props.threadsNotIn}
+            thumbs={this.props.thumbs} 
+            onClose={() => this.shareClosed()}
+          />
+        </Modal>
         <Toast
           ref='toast'
           position='top'
@@ -155,7 +167,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state, ownProps) => {
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
-  const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items[state.ui.viewingPhoto.index]
+  const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items.find((it) => it.photo.id === state.ui.viewingPhoto.photoId)
 
   // Used to generate lists of which Threads the image is and
   // which Threads you might want to share the image to
@@ -187,7 +199,6 @@ const mapStateToProps = (state, ownProps) => {
     // TODO: real dimensions are in the metadata alread now
     dimensions: { width: 150, height: 150 },
     displayImages: state.ipfs.nodeState.state === 'started',
-    currentIndex: state.ui.viewingPhoto.index,
     threadsIn: state.threads.threads.filter(t => containingThreads.indexOf(t.id) > -1 && t.name !== 'default'),
     threadsNotIn,
     thumbs
