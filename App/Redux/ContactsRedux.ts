@@ -33,7 +33,7 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
     case getType(actions.newContactRequest):
       const {id} = action.payload
       const updatedPending = state.pending.filter((p) => p.id !== id )
-      return { ...state, pending: [...updatedPending, {id, attempts: 3}] }
+      return { ...state, pending: [...updatedPending, {id, attempts: 2}] }
     case getType(actions.newContactSuccess):
       const profile = action.payload.profile
       const profiles = state.profiles.filter((c) => c.id !== profile.id)

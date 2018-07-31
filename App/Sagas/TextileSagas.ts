@@ -229,12 +229,6 @@ export function * startNode () {
       yield put(PreferencesActions.getPublicKeySuccess(publicKey))
     } catch (error) {}
 
-    // isolate
-    try {
-      const profile = yield call(TextileNode.getProfile)
-      yield put(PreferencesActions.getProfileSuccess(profile))
-    } catch (error) {}
-
   } catch (error) {
     yield put(TextileNodeActions.startNodeFailure(error))
     yield put(TextileNodeActions.lock(false))
@@ -284,7 +278,10 @@ export function * updateContacts (action: ActionType<typeof TextileNodeActions.g
       }
     }
   }
-  yield put(ContactsActions.updateContactsComplete())
+  if (items.length > 0) {
+    // only call it if there were updates made
+    yield put(ContactsActions.updateContactsComplete())
+  }
 }
 
 export function * nodeOnlineSaga () {
@@ -296,19 +293,24 @@ export function * nodeOnlineSaga () {
         yield call(TextileNode.setAvatarId, pending)
         const profile = yield call(TextileNode.getProfile)
         yield put(PreferencesActions.getProfileSuccess(profile))
+      } else {
+        // just updated it directly
+        const profile = yield call(TextileNode.getProfile)
+        yield put(PreferencesActions.getProfileSuccess(profile))
       }
     } catch (error) {
       // nada
     }
-    try {
       const pending: string[] = yield select(ContactsSelectors.pending)
+      console.log(pending)
       for (let contactId of pending){
-        const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
-        yield put(ContactsActions.newContactSuccess(contact))
+        try {
+          const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, contactId)
+          yield put(ContactsActions.newContactSuccess(contact))
+        } catch (error) {
+          yield put(ContactsActions.newContactFailure(contactId, error))
+        }
       }
-    } catch (error) {
-      // nothing...
-    }
   }
 }
 

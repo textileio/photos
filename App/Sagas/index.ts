@@ -112,9 +112,9 @@ export default function * root () {
 
     // Update contacts
     takeEvery(getType(TextileNodeActions.getPhotoHashesSuccess), updateContacts),
-    takeEvery(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
-    takeEvery(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),
-    takeEvery(getType(ContactsActions.updateContactsComplete), nodeOnlineSaga),
+    takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
+    takeLatest(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),
+    takeLatest(getType(ContactsActions.updateContactsComplete), nodeOnlineSaga),
 
     initializeAppState()
   ])
