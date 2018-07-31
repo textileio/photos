@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.3.4</string>
+	<string>0.3.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -45,10 +45,10 @@
 	<string>We use location changes to trigger auto-uploading of your photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We use location changes to trigger auto-uploading of your photos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>So you can pick photos to store in the secure Textile cloud.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-  <string>We would like to save photos to your photo gallery</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
