@@ -47,6 +47,7 @@ jobs:
   android:
     environment:
       GRADLE_OPTS: "-Xmx512m"
+      REACT_NATIVE_MAX_WORKERS: "2"
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android
@@ -86,6 +87,7 @@ jobs:
   android-beta:
     environment:
       GRADLE_OPTS: "-Xmx512m"
+      REACT_NATIVE_MAX_WORKERS: "2"
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android

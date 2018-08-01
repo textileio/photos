@@ -19,6 +19,7 @@ platform :android do
 
   before_all do
     ENV["GRADLE_OPTS"] = "-Xmx512m"
+    ENV["REACT_NATIVE_MAX_WORKERS"] = "2"
   end
 
   desc "Runs all the tests"
