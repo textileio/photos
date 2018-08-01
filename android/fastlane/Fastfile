@@ -17,6 +17,10 @@ default_platform(:android)
 
 platform :android do
 
+  before_all do
+    ENV["GRADLE_OPTS"] = "-Xmx512m"
+  end
+
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
