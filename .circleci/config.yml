@@ -51,7 +51,7 @@ jobs:
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android
     docker:
-      - image: circleci/android:api-27-node8-alpha
+      - image: circleci/android:api-26-alpha
     steps:
       - checkout:
           path: ~/textile-mobile
@@ -90,7 +90,7 @@ jobs:
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android
     docker:
-      - image: circleci/android:api-27-node8-alpha
+      - image: circleci/android:api-26-alpha
     steps:
       - checkout:
           path: ~/textile-mobile
