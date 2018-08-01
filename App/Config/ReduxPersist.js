@@ -1,4 +1,3 @@
-import immutablePersistenceTransform from '../Services/ImmutablePersistenceTransform'
 import { AsyncStorage } from 'react-native'
 import { createMigrate } from 'redux-persist'
 
@@ -73,8 +72,7 @@ const REDUX_PERSIST = {
     // blacklist: ['nav', 'ipfs', 'auth', 'ui'],
     // Optionally, just specify the keys you DO want stored to persistence.
     // An empty array means 'don't store any reducers' -> infinitered/ignite#409
-    whitelist: ['preferences', 'uploadingImages', 'cameraRoll', 'contacts'],
-    transforms: [immutablePersistenceTransform]
+    whitelist: ['preferences', 'uploadingImages', 'cameraRoll', 'contacts']
   }
 }
 
