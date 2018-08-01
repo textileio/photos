@@ -46,7 +46,7 @@ jobs:
 
   android:
     environment:
-      _JAVA_OPTIONS: "-Xmx1024m"
+      GRADLE_OPTS: "-Xmx512m"
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android
@@ -84,7 +84,7 @@ jobs:
 
   android-beta:
     environment:
-      _JAVA_OPTIONS: "-Xmx1024m"
+      GRADLE_OPTS: "-Xmx512m"
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android
