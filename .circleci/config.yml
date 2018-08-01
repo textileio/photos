@@ -72,16 +72,16 @@ jobs:
       - run:
           name: fastlane tests
           command: |
-            mkdir -p test-results/fastlane
-            # bundle exec fastlane test
+            #mkdir -p test-results/fastlane
+            #bundle exec fastlane test
             ./gradlew test -p .
-            mv fastlane/report.xml test-results/fastlane
+            #mv fastlane/report.xml test-results/fastlane
 
-      - store_test_results:
-          path: test-results
+    #   - store_test_results:
+    #       path: test-results
 
-      - store_artifacts:
-          path: test-results
+    #   - store_artifacts:
+    #       path: test-results
 
   android-beta:
     environment:
