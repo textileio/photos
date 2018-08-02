@@ -54,7 +54,7 @@ const SharedPhotosNav = StackNavigator(
       screen: AddThreadScreen
     },
     ViewThread: {
-      screen: TextilePhotos
+      screen: ThreadsDetail
     },
     PhotoViewer: {
       screen: ThreadPhotoDetail

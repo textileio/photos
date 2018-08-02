@@ -23,12 +23,8 @@ const ThreadDetailCard = props => {
   switch (type) {
     case 'photo': {
       const date = moment(props.photo.date)
-      console.log(props.photo.date)
-      console.log(date.format())
-      console.log(moment().subtract(1, 'hours').format())
       let dateSmall = ''
       let dateLarge = ''
-
       if (lessThanFiveMinutesAgo(date)) {
         dateSmall = 'just'
         dateLarge = 'NOW'
