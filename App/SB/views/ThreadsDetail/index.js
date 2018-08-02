@@ -1,42 +1,203 @@
 import React from 'react'
-import { View, Text, Image, ScrollView } from 'react-native'
+import { connect } from 'react-redux'
+import {View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
 
-import Toolbar from '../../components/Toolbar'
-import BottomBar from '../../components/BottomBar'
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
 
 import styles from './statics/styles'
 import list from './constants'
+import UIActions from '../../../Redux/UIRedux'
+import TextileNodeActions, { PhotosQueryResult, ThreadData } from '../../../Redux/TextileNodeRedux'
+import PreferencesActions from '../../../Redux/PreferencesRedux'
+import ThreadsActions from '../../../Redux/ThreadsRedux'
+import navStyles from '../../../Navigation/Styles/NavigationStyles'
+import ActionSheet from 'react-native-actionsheet'
 
-const ThreadsEdit = () => {
-  const showDrawer = false // Should uncomment to display drawer
+class ThreadsEdit extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.state = {
+      showDrawer: false
+    }
+  }
+  static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {}
+    const headerLeft =  (
+      <TouchableOpacity onPress={ () => {
+        navigation.goBack(null)
+      }}>
+        <Image
+          style={navStyles.headerLeft}
+          source={require('./statics/icon-arrow-left.png')}
+        />
+      </TouchableOpacity>
+    )
+    const headerRight = (
+      <View style={navStyles.headerRight}>
+        {/*<TouchableOpacity onPress={ () => {*/}
+        {/*console.log('TODO: HANDLE CLICKED PHOTO ADD FROM SHARED THREAD')*/}
+        {/*}}>*/}
+        {/*<Image*/}
+        {/*style={navStyles.headerIconPhoto}*/}
+        {/*source={require('../SB/views/ThreadsDetail/statics/icon-photo.png')}*/}
+        {/*/>*/}
+        {/*</TouchableOpacity>*/}
+        <TouchableOpacity onPress={params.showActionSheet}>
+          <Image
+            style={navStyles.headerIconMore}
+            source={require('./statics/icon-more.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    )
 
-  return (
-    <View style={styles.container}>
-      <Toolbar
-        left={<Image style={styles.toolbarLeft} source={require('./statics/icon-arrow-left.png')} />}
-        right={
-          <View style={styles.toolBarRight}>
-            <Image style={styles.toolbarIconPhoto} source={require('./statics/icon-photo.png')} />
-            <Image style={styles.toolbarIconMore} source={require('./statics/icon-more.png')} />
-          </View>
-        }>
-        <Text style={styles.toolbarTitle}>Summer</Text>
-        <View style={styles.toolbarUserContainer}>
-          <Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo1.png')} />
-          <Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo2.png')} />
-          <Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo3.png')} />
-          <Image style={styles.toolbarUserIcon} source={require('./statics/icon-user-more.png')} />
-        </View>
-      </Toolbar>
-      <ScrollView style={styles.contentContainer}>
-        { list.map((item, i) => <ThreadDetailCard key={i} last={i === list.length - 1} {...item} />) }
-      </ScrollView>
-      <BottomBar active='threads' />
-      { showDrawer && <BottomDrawerList /> }
-    </View>
-  )
+    const headerTitle = (
+      <Text style={navStyles.headerTitle}>{params.threadName}</Text>
+    )
+
+    return {
+      // TODO: headerTitle should exist a row below the nav buttons, need to figure out
+      headerTitle,
+      // TODO: no current menu needed for Wallet view
+      headerRight,
+      headerLeft,
+      tabBarVisible: false
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
+      this.props.threadName !== prevProps.threadName ||
+      this.props.profile !== prevProps.profile
+    ) {
+      this.props.navigation.setParams({
+        profile: this.props.profile,
+        toggleVerboseUi: this.props.toggleVerboseUi,
+        threadName: this.props.threadName,
+        showActionSheet: this.showActionSheet.bind(this)
+      })
+    }
+  }
+
+  componentDidMount () {
+    // Unload any full screen photo
+    // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
+    this.props.dismissPhoto()
+    // Set params
+    this.props.navigation.setParams({
+      profile: this.props.profile,
+      toggleVerboseUi: this.props.toggleVerboseUi,
+      threadName: this.props.threadName,
+      showActionSheet: this.showActionSheet.bind(this)
+    })
+  }
+
+  showActionSheet () {
+    this.actionSheet.show()
+  }
+
+  handleActionSheetResponse (index: number) {
+    if (index === 0) {
+      this.props.invite(this.props.threadId, this.props.threadName)
+    } else if (index === 1) {
+      this.props.leaveThread(this.props.threadId)
+    }
+  }
+
+  onPhotoSelect = () => {
+    return (photoId) => {
+      this.props.viewPhoto(photoId, this.props.threadId)
+    }
+  }
+
+  render () {
+    return (
+      <View style={styles.container}>
+        <ScrollView style={styles.contentContainer}>
+          {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this.onPhotoSelect()}/>)}
+        </ScrollView>
+
+        {this.state.showDrawer && <BottomDrawerList/>}
+
+        <ActionSheet
+          ref={o => this.actionSheet = o}
+          title={this.props.threadName + ' options'}
+          options={['Invite Others', 'Leave Thread', 'Cancel']}
+          cancelButtonIndex={2}
+          onPress={this.handleActionSheetResponse.bind(this)}
+        />
+      </View>
+    )
+  }
 }
 
-export default ThreadsEdit
+
+
+const mapStateToProps = (state, ownProps) => {
+  // TODO: Can this be a selector?
+  const navParams = ownProps.navigation.state.params || {}
+  const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
+  const defaultThreadId = defaultThread ? defaultThread.id : undefined
+
+  const threadId = navParams.id || defaultThreadId
+
+  var items: PhotosQueryResult[] = []
+  var refreshing = false
+  var thread = undefined
+  if (threadId) {
+    const threadData: ThreadData = state.ipfs.threads[threadId] || { querying: false, items: [] }
+    items = threadData.items.map((item) => {
+      item.type = 'photo'
+      return item
+    })
+    refreshing = threadData.querying
+    thread = state.threads.threads.find(thread => thread.id === threadId)
+  }
+
+  // I saw a really weird state where thread was all undefined....
+  // seems like we should show a loading state if that ever happens.
+  // at the very least i put the user on the default screen instead of a
+  // blank Thread screen
+  const threadName = thread ? thread.name : undefined
+
+  const nodeStatus = state.ipfs.nodeState.error
+    ? 'Error - ' + state.ipfs.nodeState.error.message
+    : state.ipfs.nodeState.state
+
+  const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
+
+  const placeholderText = state.ipfs.nodeState.state !== 'started'
+    ? 'Wallet Status:\n' + nodeStatus
+    : (threadName === 'default'
+      ? 'Any new photos you take will be added to your Textile wallet.'
+      : 'Share your first photo to the ' + threadName + ' thread.')
+
+  return {
+    threadId,
+    threadName,
+    items,
+    progressData: state.uploadingImages.images,
+    refreshing,
+    displayImages: state.ipfs.nodeState.state === 'started',
+    placeholderText,
+    nodeStatus,
+    queryingCameraRollStatus,
+    verboseUi: state.preferences.verboseUi,
+    profile: state.preferences.profile
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
+    viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
+    refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
+    invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
+    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThreadsEdit)

@@ -8622,6 +8622,13 @@ react-native-create-bridge@^2.0.1:
     mkdirp-promise "^5.0.0"
     mz "^2.6.0"
 
+react-native-dash@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-dash/-/react-native-dash-0.0.9.tgz#a07eb06a360530e42980e9cf90fd7f862705e2f2"
+  dependencies:
+    prop-types "^15.5.10"
+    react-native-measureme "0.0.1"
+
 react-native-deep-link@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/react-native-deep-link/-/react-native-deep-link-0.1.5.tgz#22f90992434ba9b47b8ddd035813bfb2840cda56"
@@ -8712,12 +8719,20 @@ react-native-keyboard-aware-scroll-view@^0.5.0:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
 
+react-native-measureme@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-measureme/-/react-native-measureme-0.0.1.tgz#8b1c5595cdbb1cfdf85bff98fe36d33e98b6162c"
+
 react-native-modal@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.0.0.tgz#72b829454cde207848e4323a96a440c152f7508e"
   dependencies:
     prop-types "^15.6.1"
     react-native-animatable "^1.2.4"
+
+react-native-permissions@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
 
 react-native-platform-touchable@^1.1.1:
   version "1.1.1"
