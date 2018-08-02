@@ -64,7 +64,6 @@
     "react-native-i18n": "1.0.0",
     "react-native-image-gallery": "git+https://git@github.com/textileio/react-native-image-gallery.git",
     "react-native-image-picker": "^0.26.10",
-    "react-native-image-resizer": "^1.0.0",
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
     "react-native-modal": "^6.0.0",
     "react-native-permissions": "^1.1.1",
