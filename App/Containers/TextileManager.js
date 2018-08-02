@@ -62,17 +62,17 @@ class TextileManager extends React.PureComponent {
   async setup () {
     // await PushNotificationIOS.requestPermissions()
     AppState.addEventListener('change', this.handleNewAppState.bind(this))
+    this.progressSubscription = Upload.addListener('progress', null, this.props.uploadProgress)
+    this.completionSubscription = Upload.addListener('completed', null, this.handleUploadComplete.bind(this))
+    this.cancelledSubscription = Upload.addListener('cancelled', null, this.props.uploadError)
+    this.errorSubscription = Upload.addListener('error', null, this.props.uploadError)
 
+    // TODO: will need aaron to revist this guy...
     Permissions.check('location', { type: 'always' }).then((response) => {
       if (response === 'authorized') {
         navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
       }
     })
-
-    this.progressSubscription = Upload.addListener('progress', null, this.props.uploadProgress)
-    this.completionSubscription = Upload.addListener('completed', null, this.handleUploadComplete.bind(this))
-    this.cancelledSubscription = Upload.addListener('cancelled', null, this.props.uploadError)
-    this.errorSubscription = Upload.addListener('error', null, this.props.uploadError)
   }
 
   render () {

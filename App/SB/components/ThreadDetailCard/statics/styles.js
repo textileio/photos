@@ -61,6 +61,7 @@ export default StyleSheet.create({
     height: 200,
     overflow: 'hidden',
     alignItems: 'center',
+    justifyContent: 'center'
   },
   imageStretch: {
     position: 'absolute',
