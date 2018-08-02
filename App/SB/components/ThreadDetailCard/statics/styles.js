@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
+import { Colors } from '../../../../Themes'
+import { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_OFFSET } from '../../../../Components/Styles/PhotoGridStyles'
 
 export default StyleSheet.create({
   toolbarUserIcon: {
@@ -45,7 +47,7 @@ export default StyleSheet.create({
   },
   day: {
     fontFamily: 'BentonSans',
-    fontSize: 30,
+    fontSize: 20,
     textAlign: 'center'
   },
   cardAction: {
@@ -55,7 +57,20 @@ export default StyleSheet.create({
   },
   cardImage: {
     marginBottom: 8,
-    width: 280
+    width: 280,
+    height: 200,
+    overflow: 'hidden',
+    alignItems: 'center',
+  },
+  imageStretch: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  image: {
+    alignItems: 'center',
   },
   cardActionName: {
     ...BentonSansBold()

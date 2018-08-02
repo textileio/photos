@@ -5,8 +5,6 @@ import { Image } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import TextilePhotos from '../Containers/TextilePhotos'
 import InfoView from '../Containers/InfoView'
-import PhotoViewerScreen from '../Containers/PhotoViewerScreen'
-import Colors from '../Themes/Colors'
 // import Notifications from '../Containers/Notifications'
 
 // import SwipeNavigation from './SwipeNavigation'
@@ -18,6 +16,7 @@ import AddThreadScreen from '../Containers/AddThreadScreen'
 // BEGIN: SB Screens
 import PhotoDetail from '../SB/views/PhotoDetail'
 import ThreadPhotoDetail from '../SB/views/ThreadPhotoDetail'
+import ThreadsDetail from '../SB/views/ThreadsDetail'
 import AddCaptionScreen from '../Containers/AddCaptionScreen'
 
 
