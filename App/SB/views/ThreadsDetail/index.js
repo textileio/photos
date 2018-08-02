@@ -2,8 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import {View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
 
-import Toolbar from '../../components/Toolbar'
-import BottomBar from '../../components/BottomBar'
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
 
@@ -118,7 +116,7 @@ class ThreadsEdit extends React.PureComponent {
         <ScrollView style={styles.contentContainer}>
           {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this.onPhotoSelect.bind(this)}/>)}
         </ScrollView>
-        <BottomBar active='threads'/>
+
         {this.state.showDrawer && <BottomDrawerList/>}
 
         <ActionSheet
