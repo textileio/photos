@@ -1,8 +1,5 @@
 import React from 'react'
 import {View, Text, Image, TouchableWithoutFeedback, TouchableOpacity} from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
-import HeaderButtons from 'react-navigation-header-buttons'
-import { NavigationActions } from 'react-navigation'
 import ActionSheet from 'react-native-actionsheet'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'

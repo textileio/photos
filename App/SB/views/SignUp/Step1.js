@@ -47,7 +47,7 @@ const Step1 = props => {
           </View>
         </View>
       </ScrollView>
-      <Alert display={displayError} bottom msg={'Sign up error: ' +  errorMessage}/>
+      <Alert display={displayError} top msg={'Sign up error: ' +  errorMessage}/>
       <Footer>
         <Text style={styles.footerText}>Already have an account? </Text>
         <TouchableOpacity onPress={switchToSignIn}>
