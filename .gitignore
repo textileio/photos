@@ -1,6 +1,7 @@
 # Android
 
 *.keystore
+*.jks
 
 # OSX
 #
