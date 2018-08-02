@@ -106,7 +106,7 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         vectorDrawables.useSupportLibrary = true
-        versionName "1.4"
+        versionName "1.5.1"
         versionCode 138
     }
 
