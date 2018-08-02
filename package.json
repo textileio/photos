@@ -73,7 +73,7 @@
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^1.5.11",
     "react-navigation-header-buttons": "^0.0.4",
-    "react-redux": "^5.0.6",
+    "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.0",
