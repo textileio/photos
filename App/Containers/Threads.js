@@ -7,7 +7,6 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import UIActions from '../Redux/UIRedux'
-import TextileImage from '../../TextileImage'
 
 // Styles
 import styles from './Styles/ThreadsStyle'
@@ -49,12 +48,10 @@ class Threads extends React.PureComponent {
 
         <View style={navStyles.headerIconUser}>
           <View style={navStyles.iconContainer}>
-            {(params.profile && params.profile.avatar_id) && <TextileImage
-              imageId={params.profile.avatar_id}
-              path={'thumb'}
+            {(params.profile && params.profile.avatar_id) && <Image
+              source={{uri: params.profile.avatar_id}}
               resizeMode={'cover'}
-              height={24}
-              width={24}
+              style={{width: 24, height: 24}}
             />}
           </View>
         </View>

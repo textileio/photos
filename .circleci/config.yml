@@ -46,11 +46,14 @@ jobs:
 
   android:
     environment:
+      _JAVA_OPTIONS: "-Xmx512m"
+      GRADLE_OPTS: "-Xmx512m"
+      REACT_NATIVE_MAX_WORKERS: "2"
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android
     docker:
-      - image: circleci/android:api-27-node8-alpha
+      - image: circleci/android:api-26-node8-alpha
     steps:
       - checkout:
           path: ~/textile-mobile
@@ -58,15 +61,15 @@ jobs:
       - attach_workspace:
           at: ~/textile-mobile
 
-      - restore_cache:
-          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+    #   - restore_cache:
+    #       key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
 
       - run: bundle install
 
-      - save_cache:
-          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-          paths:
-            - vendor/bundle
+    #   - save_cache:
+    #       key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+    #       paths:
+    #         - vendor/bundle
 
       - run:
           name: fastlane tests
@@ -83,11 +86,14 @@ jobs:
 
   android-beta:
     environment:
+      _JAVA_OPTIONS: "-Xmx512m"
+      GRADLE_OPTS: "-Xmx512m"
+      REACT_NATIVE_MAX_WORKERS: "2"
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile/android
     docker:
-      - image: circleci/android:api-27-node8-alpha
+      - image: circleci/android:api-26-node8-alpha
     steps:
       - checkout:
           path: ~/textile-mobile
@@ -99,15 +105,15 @@ jobs:
       - attach_workspace:
           at: ~/textile-mobile
 
-      - restore_cache:
-          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+    #   - restore_cache:
+    #       key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
 
       - run: bundle install
 
-      - save_cache:
-          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-          paths:
-            - vendor/bundle
+    #   - save_cache:
+    #       key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+    #       paths:
+    #         - vendor/bundle
 
       - run:
           command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
@@ -272,9 +278,9 @@ workflows:
   node-android-ios:
     jobs:
       - node
-      #- android:
-      #    requires:
-      #      - node
+      - android:
+          requires:
+            - node
       - ios:
           requires:
             - node
@@ -285,10 +291,10 @@ workflows:
             branches:
               only:
                 - master
-      #- android-beta:
-      #    requires:
-      #      - android
-      #    filters:
-      #      branches:
-      #        only:
-      #          - master
+      - android-beta:
+          requires:
+            - android
+          filters:
+            branches:
+              only:
+                - master
