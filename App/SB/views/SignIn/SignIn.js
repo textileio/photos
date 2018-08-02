@@ -52,7 +52,7 @@ const SignIn = props => {
           </View>
         </View>
       </ScrollView>
-      <Alert display={displayError} bottom msg={'Sign in error: ' +  errorMessage}/>
+      <Alert display={displayError} top msg={'Sign in error: ' +  errorMessage}/>
       <Footer>
         <Text style={styles.footerText}>Don't have an account? </Text>
         <TouchableOpacity onPress={switchToSignUp}>
