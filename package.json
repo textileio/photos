@@ -53,6 +53,7 @@
     "react-native-background-timer": "^2.0.1",
     "react-native-background-upload": "https://github.com/textileio/react-native-background-upload#845926d849b29f808da6a7110f50dc14a2f06dfe",
     "react-native-config": "^0.10.0",
+    "react-native-dash": "^0.0.9",
     "react-native-deep-link": "^0.1.5",
     "react-native-device-info": "^0.21.5",
     "react-native-dropdownalert": "^3.4.0",
