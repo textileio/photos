@@ -60,7 +60,7 @@ const Step1 = props => {
           </View>
         </View>
       </ScrollView>
-      <Alert display={displayError} bottom msg={'Sign up error: ' +  errorMessage}/>
+      <Alert display={displayError} top msg={'Sign up error: ' +  errorMessage}/>
       <Footer>
         <TouchableOpacity onPress={onPreviousStep}>
           <Text style={[styles.footerLink, styles.link, styles.strong]}>Go back</Text>

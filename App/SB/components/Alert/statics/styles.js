@@ -19,5 +19,11 @@ export default StyleSheet.create({
     bottom: 60,
     width: '100%',
     zIndex: 100
+  },
+  top: {
+    position: 'absolute',
+    top: 34,
+    width: '100%',
+    zIndex: 100
   }
 })
