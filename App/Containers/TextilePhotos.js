@@ -12,7 +12,6 @@ import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import TextileImage from '../../TextileImage'
 
 import BottomDrawerList from '../SB/components/BottomDrawerList'
 
@@ -30,12 +29,10 @@ class TextilePhotos extends React.PureComponent {
       <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
         <View style={navStyles.headerIconUser}>
           <View style={navStyles.iconContainer}>
-            {(params.profile && params.profile.avatar_id) && <TextileImage
-              imageId={params.profile.avatar_id}
-              path={'thumb'}
+            {(params.profile && params.profile.avatar_id) && <Image
+              source={{uri: params.profile.avatar_id}}
               resizeMode={'cover'}
-              height={24}
-              width={24}
+              style={{width: 24, height: 24}}
             />}
           </View>
         </View>

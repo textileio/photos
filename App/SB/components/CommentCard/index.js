@@ -6,7 +6,6 @@ import SmallIconTag from '../SmallIconTag'
 import moment from 'moment'
 import SvgUri from 'react-native-svg-uri'
 const jdenticon = require('jdenticon')
-import TextileImage from '../../../../TextileImage'
 
 import styles from './statics/styles'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
@@ -33,9 +32,8 @@ const CommentCard = props => {
       <View style={styles.commentProfileImage}>
         {(profile && profile.avatar_id) &&
           <View style={styles.profileContainer}>
-            <TextileImage
-              imageId={profile.avatar_id}
-              path={'thumb'}
+            <Image
+              source={{uri: profile.avatar_id}}
               resizeMode={'cover'}
               style={styles.commentImage}
             />
