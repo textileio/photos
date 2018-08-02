@@ -106,15 +106,17 @@ class ThreadsEdit extends React.PureComponent {
     }
   }
 
-  onPhotoSelect = (photoId) => {
+  onPhotoSelect = () => {
+    return (photoId) => {
       this.props.viewPhoto(photoId, this.props.threadId)
+    }
   }
 
   render () {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.contentContainer}>
-          {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this.onPhotoSelect.bind(this)}/>)}
+          {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this.onPhotoSelect()}/>)}
         </ScrollView>
 
         {this.state.showDrawer && <BottomDrawerList/>}
