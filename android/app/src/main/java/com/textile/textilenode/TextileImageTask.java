@@ -45,7 +45,7 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
             return bitmap;
         } catch (Exception e) {
             this.e = e;
-            return Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888);
+            return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
         }
     }
 
