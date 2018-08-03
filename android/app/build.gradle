@@ -106,8 +106,9 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         vectorDrawables.useSupportLibrary = true
-        versionName "1.5.1"
-        versionCode 140
+
+        versionName "1.5.2"
+        versionCode 142
     }
 
     splits {
@@ -158,7 +159,6 @@ dependencies {
     compile project(':react-native-config')
     compile project(':react-native-background-timer')
     compile project(':react-native-background-task')
-    compile project(':react-native-image-resizer')
     compile project(':react-native-fs')
     compile project(':appcenter-crashes')
     compile project(':appcenter-analytics')
