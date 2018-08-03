@@ -16,7 +16,7 @@ export default combineReducers({
   cameraRoll: cameraRollReducer,
   contacts: contactsReducer,
   devices: devicesReducer,
-  prefrences: prefrencesReducer,
+  preferences: prefrencesReducer,
   textileNode: textileNodeReducer,
   threads: threadsReducer,
   ui: uiReducer,

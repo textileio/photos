@@ -37,7 +37,7 @@ class SharingDialog extends Component {
 const mapStateToProps = (state) => {
   return {
     hash: state.ui.sharingPhoto.hash,
-    displayImages: state.ipfs.nodeState.state === 'started'
+    displayImages: state.textileNode.nodeState.state === 'started'
   }
 }
 

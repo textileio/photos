@@ -146,8 +146,8 @@ class PairingView extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
-  const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
+  const online = state.textileNode && state.textileNode.online && state.textileNode.online ? state.textileNode.online : false
+  const nodeState = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
   return {
     devices: state.devices && state.devices.devices ? state.devices.devices : [],
     online: nodeState && online
