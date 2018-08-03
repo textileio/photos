@@ -20,8 +20,5 @@ export default combineReducers({
   textileNode: textileNodeReducer,
   threads: threadsReducer,
   ui: uiReducer,
-  uploadingImages: uploadingImagesReducer,
-  _persist: (state: PersistState | undefined, action: any) => { 
-    return state || { version: 0, rehydrated: false } 
-  }
+  uploadingImages: uploadingImagesReducer
 })
