@@ -21,5 +21,7 @@ export default combineReducers({
   threads: threadsReducer,
   ui: uiReducer,
   uploadingImages: uploadingImagesReducer,
-  _persist: (state: PersistState | undefined, action: any) => { return state || { version: 0, rehydrated: false } }
+  _persist: (state: PersistState | undefined, action: any) => { 
+    return state || { version: 0, rehydrated: false } 
+  }
 })
