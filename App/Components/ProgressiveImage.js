@@ -2,7 +2,6 @@ import React from 'react'
 import { View } from 'react-native'
 import TextileImage from '../../TextileImage'
 
-// IPFS Image is aware of how to load higher resolution images progressively
 export default class ProgressiveImage extends React.Component {
   constructor (props) {
     super(props)

@@ -164,7 +164,7 @@ class PhotoViewerScreen extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
-  const items = state.ipfs.threads[state.ui.viewingPhoto.threadId].items
+  const items = state.textileNode.threads[state.ui.viewingPhoto.threadId].items
   const path = thread.name === 'default' ? '/photo' : '/thumb'
   const sharable = thread.name === 'default'
   const imageData = items.map(item => {
@@ -173,7 +173,7 @@ const mapStateToProps = (state, ownProps) => {
       key: item.photo.id + path,
       source: {url: 'file://' + item.photo.id + '.png'}, // <-- in case RN uses to know things
       dimensions: { width: 150, height: 150 },
-      displayImages: state.ipfs.nodeState.state === 'started'
+      displayImages: state.textileNode.nodeState.state === 'started'
     }
   })
   return {

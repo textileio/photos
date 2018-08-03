@@ -182,7 +182,7 @@ const mapStateToProps = (state, ownProps) => {
   var refreshing = false
   var thread = undefined
   if (threadId) {
-    const threadData: ThreadData = state.ipfs.threads[threadId] || { querying: false, items: [] }
+    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
     items = threadData.items
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
@@ -194,13 +194,13 @@ const mapStateToProps = (state, ownProps) => {
   // blank Thread screen
   const threadName = thread ? thread.name : undefined
 
-  const nodeStatus = state.ipfs.nodeState.error
-    ? 'Error - ' + state.ipfs.nodeState.error.message
-    : state.ipfs.nodeState.state
+  const nodeStatus = state.textileNode.nodeState.error
+    ? 'Error - ' + state.textileNode.nodeState.error.message
+    : state.textileNode.nodeState.state
 
   const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
 
-  const placeholderText = state.ipfs.nodeState.state !== 'started'
+  const placeholderText = state.textileNode.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
     : (threadName === 'default'
     ? 'Any new photos you take will be added to your Textile wallet.'
@@ -212,7 +212,7 @@ const mapStateToProps = (state, ownProps) => {
     items,
     progressData: state.uploadingImages.images,
     refreshing,
-    displayImages: state.ipfs.nodeState.state === 'started',
+    displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
     queryingCameraRollStatus,
