@@ -2,7 +2,6 @@ import {
   CameraRoll
 } from 'react-native'
 import RNFS from 'react-native-fs'
-import ImageResizer from 'react-native-image-resizer'
 import IPFS from '../../TextileNode'
 
 export async function getPage (pageSize, cursor) {
