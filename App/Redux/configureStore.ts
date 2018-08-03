@@ -1,31 +1,27 @@
-import { createStore } from 'redux'
-import { persistStore, persistReducer, PersistConfig, createMigrate, MigrationManifest, PersistedState, PersistState } from 'redux-persist'
-import { AsyncStorage } from 'react-native'
+import { createStore, applyMiddleware } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
+import createSagaMiddleware from 'redux-saga'
+import Reactotron from 'reactotron-react-native'
 
+import DebugConfig from '../Config/DebugConfig'
+import persistConfig from '../Config/ReduxPersist'
 import rootReducer from './RootReducer'
-import { RootState } from './Types'
-
-type Foo = {
-  name: string,
-  _persist?: PersistState
-}
-
-type Hmm = Foo & PersistedState
-
-const manifest: MigrationManifest = {
-  0: (state: PersistedState) => {
-    const xxx = state as RootState
-    type hmm = typeof xxx
-    return xxx
-  }
-}
-
-const persistConfig: PersistConfig = {
-  key: 'root',
-  storage: AsyncStorage,
-  version: 4,
-  whitelist: [],
-  migrate: createMigrate(manifest, { debug: false })
-}
+import StartupActions from '../Redux/StartupRedux'
+import rootSaga from '../Sagas'
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+export default () => {
+  const sagaMonitor = DebugConfig.useReactotron ? Reactotron.createSagaMonitor() : undefined
+  const sagaMiddleware = createSagaMiddleware({ sagaMonitor })
+
+  const createAppropriateStore = DebugConfig.useReactotron ? Reactotron.createStore : createStore
+  let store = createAppropriateStore(persistedReducer, applyMiddleware(sagaMiddleware))
+  
+  const bootstrappedCallback = () => store.dispatch(StartupActions.startup())
+  let persistor = persistStore(store, undefined, bootstrappedCallback)
+
+  sagaMiddleware.run(rootSaga)
+
+  return { store, persistor }
+}

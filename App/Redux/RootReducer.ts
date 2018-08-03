@@ -1,4 +1,4 @@
-import { combineReducers, Action } from 'redux'
+import { combineReducers } from 'redux'
 import { PersistState } from 'redux-persist'
 
 import { reducer as authReducer } from './AuthRedux'
@@ -10,7 +10,6 @@ import { reducer as textileNodeReducer } from './TextileNodeRedux'
 import { reducer as threadsReducer } from './ThreadsRedux'
 import { reducer as uiReducer } from './UIRedux'
 import { reducer as uploadingImagesReducer } from './UploadingImagesRedux'
-import { reducer as persistReducer } from './PersistRedux'
 
 export default combineReducers({
   auth: authReducer,
@@ -22,5 +21,5 @@ export default combineReducers({
   threads: threadsReducer,
   ui: uiReducer,
   uploadingImages: uploadingImagesReducer,
-  _persist: persistReducer
+  _persist: (state: PersistState | undefined, action: any) => { return state || { version: 0, rehydrated: false } }
 })
