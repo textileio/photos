@@ -45,6 +45,11 @@ const ThreadDetailCard = props => {
         caption = caption.substring(0, caption.lastIndexOf(' ')) + '...'
       }
 
+      let username = "anonymous"
+      if (props.metadata && props.metadata.username) {
+        username = props.metadata.username
+      }
+
       return (
         <View style={styles.card}>
           <View style={styles.cardLeft}>
@@ -55,7 +60,7 @@ const ThreadDetailCard = props => {
             { !last && <Dash style={styles.carLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
           </View>
           <View style={styles.cardRight}>
-            <Text style={styles.cardAction}><Text style={styles.cardActionName}>{props.metadata.username}</Text> added a photo</Text>
+            <Text style={styles.cardAction}><Text style={styles.cardActionName}>{username}</Text> added a photo</Text>
             <TouchableOpacity style={styles.cardImage} onPress={() => {
               props.onSelect(props.photo.id)
             }} >
