@@ -33,9 +33,6 @@
   "dependencies": {
     "@types/react-navigation": "1.5.11",
     "apisauce": "^0.14.2",
-    "appcenter": "^1.7.1",
-    "appcenter-analytics": "^1.7.1",
-    "appcenter-crashes": "^1.7.1",
     "format-json": "^1.0.3",
     "identity-obj-proxy": "^3.0.0",
     "jdenticon": "dmester/jdenticon",
@@ -96,7 +93,6 @@
     "@types/react-native-fs": "^2.8.1",
     "@types/react-redux": "^6.0.3",
     "@types/react-test-renderer": "^16.0.1",
-    "appcenter-cli": "^1.1.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.1.1",
     "babel-jest": "22.4.1",
@@ -150,10 +146,6 @@
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
     },
     "setupFiles": [
-      "<rootDir>/Tests/Setup",
-      "<rootDir>/node_modules/appcenter-analytics/test/AppCenterAnalyticsMock.js",
-      "<rootDir>/node_modules/appcenter/test/AppCenterMock.js",
-      "<rootDir>/node_modules/appcenter-crashes/test/AppCenterCrashesMock.js"
     ],
     "collectCoverage": true,
     "collectCoverageFrom": [

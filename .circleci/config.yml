@@ -255,23 +255,11 @@ jobs:
           command: bundle exec fastlane beta
           working_directory: ios
 
-      - run:
-          command: npm install -g react-native-cli appcenter-cli
-
-      - run:
-          command: react-native bundle --entry-file index.js --platform ios --dev false --reset-cache --bundle-output unused.jsbundle --sourcemap-output index.ios.map
-
-      - store_artifacts:
-          path: ./index.ios.map
-
       - store_artifacts:
           path: ./ios/TextilePhotos.app.dSYM.zip
 
       - store_artifacts:
           path: ./ios/TextilePhotos.ipa
-
-      - run:
-          command: appcenter crashes upload-symbols -m ./index.ios.map -s ./ios/TextilePhotos.app.dSYM.zip  --app $APP_CENTER_APP --token $APP_CENTER_API_TOKEN --disable-telemetry
 
 workflows:
   version: 2
