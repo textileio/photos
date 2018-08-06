@@ -57,6 +57,7 @@
     "react-native-easy-toast": "^1.1.0",
     "react-native-elements": "^1.0.0-beta5",
     "react-native-extra-dimensions-android": "^0.21.0",
+    "react-native-fabric": "^0.5.1",
     "react-native-fs": "^2.9.12",
     "react-native-i18n": "1.0.0",
     "react-native-image-gallery": "git+https://git@github.com/textileio/react-native-image-gallery.git",
@@ -145,8 +146,7 @@
     "moduleNameMapper": {
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
     },
-    "setupFiles": [
-    ],
+    "setupFiles": [],
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.{js,jsx,ts,tsx}",
