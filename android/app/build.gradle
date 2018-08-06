@@ -166,6 +166,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fabric')
     compile project(':react-native-image-picker')
     compile project(':react-native-background-upload')
     compile project(':react-native-background-fetch')
