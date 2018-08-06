@@ -46,6 +46,7 @@ import {
   chooseProfilePhoto,
   handleProfilePhotoSelected,
   presentPublicLinkInterface,
+  showImagePicker,
   nodeOnlineSaga
 } from './TextileSagas'
 import {ContactsAction} from '../Redux/ContactsRedux'
@@ -108,6 +109,7 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
 
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
+    takeEvery(getType(UIActions.showImagePicker), showImagePicker),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
