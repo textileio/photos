@@ -38,6 +38,7 @@ import * as TextileTypes from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import DeepLink from '../Services/DeepLink'
+import ImagePicker from 'react-native-image-picker'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -562,6 +563,109 @@ export function * refreshThreads () {
   } catch (error) {
     yield put(ThreadsActions.refreshThreadsError(error))
   }
+}
+
+
+// export function * shareImageFromPath(photoPath: string, threadId: string) {
+//   const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+//   if (!addResult.archive) {
+//     throw new Error('no archive returned')
+//   }
+//   yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, threadId)
+//   yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+//   yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
+//
+//   // Pin the file remote
+//   try {
+//     if (!addResult.archive) {
+//       throw new Error('no archive to upload')
+//     }
+//     yield uploadFile(
+//       addResult.id,
+//       addResult.archive.path
+//     )
+//   } catch (error) {
+//     // Leave all the data in place so we can rerty upload
+//     let message = ''
+//     if (!error) {
+//       message = ''
+//     } else if (typeof error === 'string') {
+//       message = error
+//     } else if (error.message) {
+//       message = error.message
+//     }
+//     yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
+//   }
+// }
+
+export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
+  const { threadId } = action.payload
+
+  console.log('TODO: WIP -- THREAD PICKER SAGA', threadId)
+
+  // TODO: Check permissions, if not exist ask for them
+
+  // Turn ImagePicker into a Promise
+  const pickerPromise = new Promise((resolve, reject) => {
+    const pickerOptions = {
+      title: 'Select a photo',
+      storageOptions: {
+        skipBackup: true,
+        waitUntilSaved: true
+      }
+    }
+    ImagePicker.showImagePicker(pickerOptions, (response) => {
+      resolve(response)
+    })
+  })
+
+  // Present image picker
+  const pickerResponse = yield pickerPromise
+
+  console.log('TODO - WIP, handle response', pickerResponse)
+
+  if (pickerResponse.didCancel) {
+    // Detect cancel of image picker
+    console.log('TODO: User cancelled image picker')
+  }
+  else if (pickerResponse.error) {
+    console.log('TODO: ImagePicker Error: ', pickerResponse.error)
+  }
+  else if (pickerResponse.customButton) {
+    console.log('TODO: User tapped custom button: ', pickerResponse.customButton)
+  }
+  else {
+
+    console.log('TODO: handle image', pickerResponse)
+    const pickerResult: TextileTypes.SharedImage = {
+      data: pickerResponse.data,
+      origURL: pickerResponse.origURL,
+      uri: pickerResponse.uri,
+      height: pickerResponse.height,
+      width: pickerResponse.width,
+      isVertical: pickerResponse.isVertical,
+      timestamp: pickerResponse.timestamp,
+      fileName: pickerResponse.fileName,
+      fileSize: pickerResponse.fileSize,
+      threadIds: [threadId]
+    }
+    console.log('TODO: handle result', pickerResult)
+
+    // TODO check if photo has already been pinned... by URI?
+    
+    yield put(UIActions.imagePickerSuccess(threadId, pickerResult)
+​
+    // yield put(UIActions.imageUploadError(addResult.id, message))
+
+    // Detect selection of photo
+    // Show a 'pending' thumbnail
+    // Trigger Add photo cycle
+    // Listen for upload completion
+    // Share photo to Thread
+    // Remove 'pending' thumbnail / add real thumbnail
+    // Complete
+  }
+  // Return user to Thread view...
 }
 
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
