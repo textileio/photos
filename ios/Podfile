@@ -6,9 +6,6 @@ target 'TextilePhotos' do
   # use_frameworks!
 
   # Pods for TextilePhotos
-  pod 'AppCenter/Crashes', '~> 1.8.0'
-  pod 'AppCenter/Analytics', '~> 1.8.0'
-  pod 'AppCenterReactNativeShared', '~> 1.7.1'
 
   target 'TextilePhotosTests' do
     inherit! :search_paths

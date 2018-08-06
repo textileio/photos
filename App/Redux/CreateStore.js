@@ -5,7 +5,6 @@ import ReduxPersist from '../Config/ReduxPersist'
 import Config from '../Config/DebugConfig'
 import createSagaMiddleware from 'redux-saga'
 import ScreenTracking from './ScreenTrackingMiddleware'
-import EventLogging from './EventLogging'
 import StartupActions from './StartupRedux'
 
 // creates the store
