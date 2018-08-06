@@ -35,14 +35,12 @@ class ThreadsEdit extends React.PureComponent {
     )
     const headerRight = (
       <View style={navStyles.headerRight}>
-        {/*<TouchableOpacity onPress={ () => {*/}
-        {/*console.log('TODO: HANDLE CLICKED PHOTO ADD FROM SHARED THREAD')*/}
-        {/*}}>*/}
-        {/*<Image*/}
-        {/*style={navStyles.headerIconPhoto}*/}
-        {/*source={require('../SB/views/ThreadsDetail/statics/icon-photo.png')}*/}
-        {/*/>*/}
-        {/*</TouchableOpacity>*/}
+        <TouchableOpacity onPress={params.showImagePicker}>
+        <Image
+          style={navStyles.headerIconPhoto}
+          source={require('./statics/icon-photo.png')}
+        />
+        </TouchableOpacity>
         <TouchableOpacity onPress={params.showActionSheet}>
           <Image
             style={navStyles.headerIconMore}
@@ -76,7 +74,8 @@ class ThreadsEdit extends React.PureComponent {
         profile: this.props.profile,
         toggleVerboseUi: this.props.toggleVerboseUi,
         threadName: this.props.threadName,
-        showActionSheet: this.showActionSheet.bind(this)
+        showActionSheet: this.showActionSheet.bind(this),
+        showImagePicker: this.showImagePicker.bind(this)
       })
     }
   }
@@ -90,12 +89,17 @@ class ThreadsEdit extends React.PureComponent {
       profile: this.props.profile,
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName,
-      showActionSheet: this.showActionSheet.bind(this)
+      showActionSheet: this.showActionSheet.bind(this),
+      showImagePicker: this.showImagePicker.bind(this)
     })
   }
 
   showActionSheet () {
     this.actionSheet.show()
+  }
+
+  showImagePicker () {
+    this.props.showImagePicker(this.props.threadId)
   }
 
   handleActionSheetResponse (index: number) {
@@ -193,6 +197,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
+    showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
