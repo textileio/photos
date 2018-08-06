@@ -81,6 +81,19 @@ export interface ImageData {
   metadata: PhotoMetadata
 }
 
+export type SharedImage = {
+  data: string,
+  origURL: string,
+  uri: string,
+  height: number,
+  width: number,
+  isVertical: boolean,
+  timestamp: string,
+  fileName: string,
+  fileSize: number,
+  threadIds: Array<string>
+}
+
 export type CafeTokens = {
   readonly access: string
   readonly refresh: string
