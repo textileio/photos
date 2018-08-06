@@ -1,4 +1,5 @@
 import { StateType } from 'typesafe-actions'
+import { PersistPartial } from 'redux-persist'
 
 import RootReducer from './RootReducer'
 import { AuthAction } from './AuthRedux'
@@ -11,7 +12,7 @@ import { ThreadsAction } from './ThreadsRedux'
 import { UIAction } from './UIRedux'
 import { UploadingImagesAction } from './UploadingImagesRedux'
 
-export type RootState = StateType<typeof RootReducer>
+export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction = 
   AuthAction |
   CameraRollAction |
