@@ -16,6 +16,7 @@ import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
+import com.smixx.fabric.FabricPackage;
 import com.textile.textilenode.TextileNodePackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
@@ -34,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
+        new FabricPackage(),
         new MainReactPackage(),
         new UploaderReactPackage(),
         new ImagePickerPackage(),
