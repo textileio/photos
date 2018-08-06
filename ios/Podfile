@@ -6,6 +6,8 @@ target 'TextilePhotos' do
   # use_frameworks!
 
   # Pods for TextilePhotos
+  pod 'Fabric'
+  pod 'Crashlytics'
 
   target 'TextilePhotosTests' do
     inherit! :search_paths
