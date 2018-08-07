@@ -64,7 +64,8 @@ class TextilePhotos extends React.PureComponent {
     ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
-        toggleVerboseUi: this.props.toggleVerboseUi
+        toggleVerboseUi: this.props.toggleVerboseUi,
+        threadName: this.props.threadName
       })
     }
   }
@@ -76,7 +77,8 @@ class TextilePhotos extends React.PureComponent {
     // Set params
     this.props.navigation.setParams({
       profile: this.props.profile,
-      toggleVerboseUi: this.props.toggleVerboseUi
+      toggleVerboseUi: this.props.toggleVerboseUi,
+      threadName: this.props.threadName
     })
   }
 

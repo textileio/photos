@@ -574,7 +574,6 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
       title: 'Select a photo',
       mediaType: 'photo',
       noData: true,
-      allowsEditing: true,
       storageOptions: {
         skipBackup: true,
         waitUntilSaved: true
@@ -595,7 +594,6 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
     // This shouldn't be possible currently
   } else {
     try {
-      console.log(pickerResponse)
       const image: TextileTypes.SharedImage = {
         origURL: pickerResponse.origURL || pickerResponse.uri,
         uri: pickerResponse.uri,
