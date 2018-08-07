@@ -616,6 +616,10 @@
   version "9.4.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.6.tgz#d8176d864ee48753d053783e4e463aec86b8d82e"
 
+"@types/react-native-fabric@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-fabric/-/react-native-fabric-0.5.0.tgz#9f957864b2673584fc314644bd98e4f781fa809b"
+
 "@types/react-native-fs@^2.8.1":
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/@types/react-native-fs/-/react-native-fs-2.8.1.tgz#cbe5d5b733490fd75b96b9733dbbc37479b91c23"
@@ -633,13 +637,6 @@
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.55.26.tgz#a7150ca15e0de7e435cc66a1ca44f6b506c99e40"
   dependencies:
     "@types/react" "*"
-
-"@types/react-navigation@1.5.11":
-  version "1.5.11"
-  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-1.5.11.tgz#317eb81ff8a4dfbad8f374cadab30e07e0effa31"
-  dependencies:
-    "@types/react" "*"
-    "@types/react-native" "*"
 
 "@types/react-redux@^6.0.3":
   version "6.0.3"
@@ -659,6 +656,10 @@
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.6.tgz#5024957c6bcef4f02823accf5974faba2e54fada"
   dependencies:
     csstype "^2.2.0"
+
+"@types/stacktrace-js@^0.0.32":
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/@types/stacktrace-js/-/stacktrace-js-0.0.32.tgz#d23e4a36a5073d39487fbea8234cc6186862d389"
 
 abab@^1.0.4:
   version "1.0.4"
@@ -3590,6 +3591,12 @@ error-ex@^1.2.0, error-ex@^1.3.1:
   resolved "https://registry.yarnpkg.com/error-ex/-/error-ex-1.3.1.tgz#f855a86ce61adc4e8621c3cda21e7a7612c3a8dc"
   dependencies:
     is-arrayish "^0.2.1"
+
+error-stack-parser@^2.0.1:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/error-stack-parser/-/error-stack-parser-2.0.2.tgz#4ae8dbaa2bf90a8b450707b9149dcabca135520d"
+  dependencies:
+    stackframe "^1.0.4"
 
 errorhandler@^1.5.0:
   version "1.5.0"
@@ -9265,6 +9272,10 @@ source-map-url@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/source-map-url/-/source-map-url-0.4.0.tgz#3e935d7ddd73631b97659956d55128e87b5084a3"
 
+source-map@0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
+
 source-map@0.5.x, source-map@^0.5.0, source-map@^0.5.3, source-map@^0.5.6, source-map@^0.5.7, source-map@~0.5.1:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
@@ -9342,6 +9353,12 @@ ssri@^5.2.4:
   dependencies:
     safe-buffer "^5.1.1"
 
+stack-generator@^2.0.1:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/stack-generator/-/stack-generator-2.0.3.tgz#bb74385c67ffc4ccf3c4dee5831832d4e509c8a0"
+  dependencies:
+    stackframe "^1.0.4"
+
 stack-trace@0.0.x:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
@@ -9349,6 +9366,25 @@ stack-trace@0.0.x:
 stack-utils@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-1.0.1.tgz#d4f33ab54e8e38778b0ca5cfd3b3afb12db68620"
+
+stackframe@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-1.0.4.tgz#357b24a992f9427cba6b545d96a14ed2cbca187b"
+
+stacktrace-gps@^3.0.1:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/stacktrace-gps/-/stacktrace-gps-3.0.2.tgz#33f8baa4467323ab2bd1816efa279942ba431ccc"
+  dependencies:
+    source-map "0.5.6"
+    stackframe "^1.0.4"
+
+stacktrace-js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/stacktrace-js/-/stacktrace-js-2.0.0.tgz#776ca646a95bc6c6b2b90776536a7fc72c6ddb58"
+  dependencies:
+    error-stack-parser "^2.0.1"
+    stack-generator "^2.0.1"
+    stacktrace-gps "^3.0.1"
 
 stacktrace-parser@^0.1.3:
   version "0.1.4"
