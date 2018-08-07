@@ -15,8 +15,8 @@ export default StyleSheet.create({
     maxWidth: '70%'
   },
   bottom: {
-    position: 'relative',
-    bottom: 60,
+    position: 'absolute',
+    bottom: 0,
     width: '100%',
     zIndex: 100
   },

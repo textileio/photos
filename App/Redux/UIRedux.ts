@@ -40,6 +40,18 @@ const actions = {
   }),
   imageSharingError: createAction('IMAGE_SHARING_ERROR', resolve => {
     return (error: Error) => resolve(error)
+  }),
+  showImagePicker: createAction('SHOW_IMAGE_PICKER', resolve => {
+    return (threadId: string) => resolve({ threadId })
+  }),
+  newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', resolve => {
+    return (threadId: string) => resolve({ threadId })
+  }),
+  newImagePickerError: createAction('NEW_IMAGE_PICKER_ERROR', resolve => {
+    return (error: Error, message?: string) => resolve({ error, message })
+  }),
+  dismissImagePickerError: createAction('DISMISS_IMAGE_PICKER_ERROR', resolve => {
+    return () => resolve()
   })
 }
 
@@ -61,7 +73,8 @@ export type UIState = {
     readonly hash?: string,
     readonly selectedThreads: ReadonlyMap<string, boolean>,
     readonly comment?: string
-  }
+  },
+  readonly imagePickerError?: string // used to notify the user of any error during photo picking
 }
 
 export const initialState: UIState = {
@@ -72,7 +85,7 @@ export const initialState: UIState = {
   sharingPhoto: {
     active: false,
     selectedThreads: new Map<string, boolean>()
-  }
+  },
 }
 
 export function reducer (state: UIState = initialState, action: UIAction): UIState {
@@ -95,6 +108,11 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
       return { ...state, sharingPhoto: { ...state.sharingPhoto, selectedThreads: action.payload.threadIds } }
     case getType(actions.updateComment):
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment: action.payload } }
+    case getType(actions.newImagePickerError):
+      const msg = action.payload.message || action.payload.error.message
+      return { ...state, imagePickerError:  msg}
+    case getType(actions.dismissImagePickerError):
+      return { ...state, imagePickerError: undefined }
     default:
       return state
   }

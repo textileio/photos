@@ -20,7 +20,7 @@ class AddThreadScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
-      headerTitle: undefined,
+      headerTitle: 'New Thread',
       headerLeft: (
         <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
           <Image
@@ -66,13 +66,12 @@ class AddThreadScreen extends React.Component {
   render () {
     return (
         <ScrollView style={styles.contentContainer}>
-          <Text style={styles.title}>New thread</Text>
           <View>
             <Input
               style={{height: 40}}
               value={this.state.value}
               label={this.state.value === '' ? 'Add a title...' : ''}
-              onChangeText={this.handleNewText.bind(this)}/>
+              onChangeText={this.handleNewText.bind(this)} />
           </View>
         </ScrollView>
     )

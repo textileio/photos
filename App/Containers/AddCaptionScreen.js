@@ -8,6 +8,7 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import UIActions from '../Redux/UIRedux'
+import CameraRollActions from '../Redux/CameraRollRedux'
 
 
 class AddCaptionScreen extends React.Component {
@@ -21,7 +22,7 @@ class AddCaptionScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
-      headerTitle: undefined,
+      headerTitle: 'Photo Caption',
       headerLeft: (
         <TouchableOpacity onPress={ () => {
           params.close()
@@ -58,29 +59,45 @@ class AddCaptionScreen extends React.Component {
 
   componentWillMount () {
     this.props.navigation.setParams({
-      close: () => { this.props.close() },
+      close: this._close.bind(this),
       submit: () => { this._share(this.state.value) },
       submitEnabled: false
     })
   }
 
-  _share (comment) {
-    this.props.share(this.props.navigation.state.params.photo.id, [this.props.navigation.state.params.thread.id], comment)
-    this.props.close()
-    this.props.navigation.goBack()
+  _close () {
+    const params = this.props.navigation.state.params
+    if (params.photo) {
+      // from the wallet
+      this.props.close()
+    } else {
+      // from the photo picker
+      this.props.cancelShare(params.threadId, params.image)
+    }
+  }
+
+  _share (caption) {
+    const params = this.props.navigation.state.params
+    if (params.photo) {
+      // from the wallet
+      this.props.share(params.photo.id, [params.thread.id], caption)
+      this.props.close()
+      this.props.navigation.goBack()
+    } else {
+      // from the photo picker
+      this.props.addComment(params.threadId, params.image, caption)
+      this.props.navigation.goBack()
+    }
   }
 
   render () {
     return (
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>Photo caption</Text>
-          <View>
-            <Input
-              style={{height: 40}}
-              value={this.state.value}
-              label={this.state.value === '' ? 'Add a caption...' : ''}
-              onChangeText={this.handleNewText.bind(this)}/>
-          </View>
+          <Input
+            style={{height: 40}}
+            value={this.state.value}
+            label={this.state.value === '' ? 'Add a caption...' : ''}
+            onChangeText={this.handleNewText.bind(this)}/>
         </View>
     )
   }
@@ -94,10 +111,13 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // submit: (name: string) => { dispatch(ThreadsActions.addThreadRequest(name)) }
-    share: (hash, threads, comment) => { dispatch(UIActions.sharePhotoRequest(hash, threads, comment)) },
+    updateComment: (text) => { dispatch(UIActions.updateComment(text)) },
+    // Share from Wallet methods
+    share: (hash, threads, caption) => { dispatch(UIActions.sharePhotoRequest(hash, threads, caption)) },
     close: () => { dispatch(UIActions.cancelAuthoringPhotoShare()) },
-    updateComment: (text) => { dispatch(UIActions.updateComment(text)) }
+    // Share from CameraRoll methods
+    addComment: (threadId, image, caption) => { dispatch(CameraRollActions.addComment(threadId, image, caption)) },
+    cancelShare: (threadId, image) => { dispatch(CameraRollActions.cancelShare(threadId, image)) },
   }
 }
 

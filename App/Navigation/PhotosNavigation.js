@@ -1,13 +1,8 @@
 import React from 'react'
-import DismissableStackNavigator from '../Components/DismissableStackNavigator'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import { Image } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import TextilePhotos from '../Containers/TextilePhotos'
 import InfoView from '../Containers/InfoView'
-// import Notifications from '../Containers/Notifications'
-
-// import SwipeNavigation from './SwipeNavigation'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
 import Threads from '../Containers/Threads'
@@ -18,7 +13,7 @@ import PhotoDetail from '../SB/views/PhotoDetail'
 import ThreadPhotoDetail from '../SB/views/ThreadPhotoDetail'
 import ThreadsDetail from '../SB/views/ThreadsDetail'
 import AddCaptionScreen from '../Containers/AddCaptionScreen'
-
+import WalletPicker from '../Containers/WalletPicker'
 
 // Manifest of possible screens
 
@@ -58,6 +53,12 @@ const SharedPhotosNav = StackNavigator(
     },
     PhotoViewer: {
       screen: ThreadPhotoDetail
+    },
+    SharePhoto: {
+      screen: AddCaptionScreen
+    },
+    WalletPicker: {
+      screen: WalletPicker
     }
   },
   {

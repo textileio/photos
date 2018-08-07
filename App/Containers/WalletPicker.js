@@ -1,69 +1,44 @@
 import React from 'react'
-import {View, Text, Image, TouchableWithoutFeedback, TouchableOpacity} from 'react-native'
-import ActionSheet from 'react-native-actionsheet'
+import {View, Text, Image, TouchableOpacity} from 'react-native'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions, { ThreadData, PhotosQueryResult } from '../Redux/TextileNodeRedux'
-import UIActions from '../Redux/UIRedux'
-import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
+import { NavigationActions } from 'react-navigation'
 
-import BottomDrawerList from '../SB/components/BottomDrawerList'
-
-class TextilePhotos extends React.PureComponent {
+class TextileWalletPicker extends React.PureComponent {
   constructor (props) {
     super(props)
   }
 
   static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
     const headerLeft = (
-      <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
-        <View style={navStyles.headerIconUser}>
-          <View style={navStyles.iconContainer}>
-            {(params.profile && params.profile.avatar_id) && <Image
-              source={{uri: params.profile.avatar_id}}
-              resizeMode={'cover'}
-              style={{width: 24, height: 24}}
-            />}
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+      <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
+        <Image
+          style={navStyles.headerLeft}
+          source={require('../SB/views/ThreadsDetail/statics/icon-arrow-left.png')}
+        />
+      </TouchableOpacity>
     )
-    const headerRight = undefined
-      // Wallet menu not available yet
-    //   : (
-    //     <TouchableOpacity onPress={ () => {
-    // console.log('TODO: HANDLE MENU CLICK FROM WALLET')
-    // }}>
-    // <Image style={navStyles.headerIconList} source={require('../SB/views/WalletList/statics/icon-list.png')} />
-    // </TouchableOpacity>
-    //   )
 
-    const greeting = params.profile && params.profile.username ? 'Hello, ' + params.profile.username : 'Hi there!'
     const headerTitle = (
-      <Text style={navStyles.headerTitle}>{greeting}</Text>
+      <Text style={navStyles.headerTitle}>Choose a Photo</Text>
     )
 
     return {
-      // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerTitle,
-      // TODO: no current menu needed for Wallet view
-      headerRight,
       headerLeft,
-      tabBarVisible: params.threadName === 'default'
+      tabBarVisible: false
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
-      this.props.profile !== prevProps.profile
+      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi
     ) {
       this.props.navigation.setParams({
-        profile: this.props.profile,
         toggleVerboseUi: this.props.toggleVerboseUi,
         threadName: this.props.threadName
       })
@@ -71,20 +46,25 @@ class TextilePhotos extends React.PureComponent {
   }
 
   componentDidMount () {
-    // Unload any full screen photo
-    // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
-    this.props.dismissPhoto()
-    // Set params
     this.props.navigation.setParams({
-      profile: this.props.profile,
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName
     })
   }
 
   onSelect = (row) => {
+    const params = this.props.navigation.state.params
     return () => {
-      this.props.viewPhoto(row.item.photo.id, this.props.threadId)
+      this.props.navigation.dispatch(NavigationActions.back())
+      this.props.navigation.dispatch(
+        NavigationActions.navigate({
+          routeName: 'SharePhoto',
+          params: {
+            photo: {id: row.item.photo.id},
+            thread: {id: params.shareTo}
+          }
+        })
+      )
     }
   }
 
@@ -118,11 +98,8 @@ class TextilePhotos extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
-  const navParams = ownProps.navigation.state.params || {}
   const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
-  const defaultThreadId = defaultThread ? defaultThread.id : undefined
-
-  const threadId = navParams.id || defaultThreadId
+  const threadId = defaultThread ? defaultThread.id : undefined
 
   var items: PhotosQueryResult[] = []
   var refreshing = false
@@ -148,9 +125,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const placeholderText = state.textileNode.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
-    : (threadName === 'default'
-    ? 'Any new photos you take will be added to your Textile wallet.'
-    : 'Share your first photo to the ' + threadName + ' thread.')
+    : 'You need to add some photos first.'
 
   return {
     threadId,
@@ -162,18 +137,15 @@ const mapStateToProps = (state, ownProps) => {
     placeholderText,
     nodeStatus,
     queryingCameraRollStatus,
-    verboseUi: state.preferences.verboseUi,
-    profile: state.preferences.profile
+    verboseUi: state.preferences.verboseUi
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
-    viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextilePhotos)
+export default connect(mapStateToProps, mapDispatchToProps)(TextileWalletPicker)
