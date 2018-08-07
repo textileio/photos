@@ -68,13 +68,24 @@ const migrations: MigrationManifest = {
         verboseUi: state.textile.preferences.verboseUi
       }
     }
+  },
+  5: (persistedState) => {
+    const state = persistedState as any
+    // Not migrating devices because we didn't previously have meaningful device data
+    return {
+      ...state,
+      cameraRoll: {
+        ...state.cameraRoll,
+        pendingShares: {}
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 4,
+  version: 5,
   whitelist: ['preferences', 'uploadingImages', 'cameraRoll', 'contacts'],
   migrate: createMigrate(migrations, { debug: false })
 }
