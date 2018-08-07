@@ -574,6 +574,10 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
       title: 'Select a photo',
       mediaType: 'photo',
       noData: true,
+      customButtons: [{
+        name: 'wallet',
+        title: 'Choose from Wallet...'
+      }],
       storageOptions: {
         skipBackup: true,
         waitUntilSaved: true
@@ -591,7 +595,9 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   } else if (pickerResponse.error) {
     yield put(UIActions.newImagePickerError(pickerResponse.error, 'There was an issue with the photo picker. Please try again.'))
   } else if (pickerResponse.customButton) {
+    // pickerResponse.customButton === 'wallet'
     // This shouldn't be possible currently
+    yield call(PhotosNavigationService.navigate, 'WalletPicker', {shareTo: threadId})
   } else {
     try {
       const image: TextileTypes.SharedImage = {

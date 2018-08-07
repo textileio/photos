@@ -18,7 +18,7 @@ import PhotoDetail from '../SB/views/PhotoDetail'
 import ThreadPhotoDetail from '../SB/views/ThreadPhotoDetail'
 import ThreadsDetail from '../SB/views/ThreadsDetail'
 import AddCaptionScreen from '../Containers/AddCaptionScreen'
-
+import TextileWalletPicker from '../Containers/TextileWalletPicker'
 
 // Manifest of possible screens
 
@@ -61,6 +61,9 @@ const SharedPhotosNav = StackNavigator(
     },
     SharePhoto: {
       screen: AddCaptionScreen
+    },
+    WalletPicker: {
+      screen: TextileWalletPicker
     }
   },
   {
