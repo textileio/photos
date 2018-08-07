@@ -22,7 +22,7 @@ class AddCaptionScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
-      headerTitle: undefined,
+      headerTitle: 'Photo Caption',
       headerLeft: (
         <TouchableOpacity onPress={ () => {
           params.close()
@@ -93,14 +93,11 @@ class AddCaptionScreen extends React.Component {
   render () {
     return (
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>Photo caption</Text>
-          <View>
-            <Input
-              style={{height: 40}}
-              value={this.state.value}
-              label={this.state.value === '' ? 'Add a caption...' : ''}
-              onChangeText={this.handleNewText.bind(this)}/>
-          </View>
+          <Input
+            style={{height: 40}}
+            value={this.state.value}
+            label={this.state.value === '' ? 'Add a caption...' : ''}
+            onChangeText={this.handleNewText.bind(this)}/>
         </View>
     )
   }
