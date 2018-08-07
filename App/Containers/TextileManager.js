@@ -14,7 +14,6 @@ import PhotosNavigation from '../Navigation/PhotosNavigation'
 import Upload from 'react-native-background-upload'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import DeepLink from '../Services/DeepLink'
-import Permissions from 'react-native-permissions'
 
 class TextileManager extends React.PureComponent {
   componentDidMount () {
@@ -68,11 +67,7 @@ class TextileManager extends React.PureComponent {
     this.errorSubscription = Upload.addListener('error', null, this.props.uploadError)
 
     // TODO: will need aaron to revist this guy...
-    Permissions.check('location', { type: 'always' }).then((response) => {
-      if (response === 'authorized') {
-        navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
-      }
-    })
+    // navigator.geolocation.watchPosition(() => this.props.locationUpdate(), null, { useSignificantChanges: true })
   }
 
   render () {
