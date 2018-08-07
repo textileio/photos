@@ -1,26 +1,21 @@
 PODS:
-  - AppCenter/Analytics (1.8.0):
-    - AppCenter/Core
-  - AppCenter/Core (1.8.0)
-  - AppCenter/Crashes (1.8.0):
-    - AppCenter/Core
-  - AppCenterReactNativeShared (1.7.1):
-    - AppCenter/Core (= 1.8.0)
+  - Crashlytics (3.10.5):
+    - Fabric (~> 1.7.9)
+  - Fabric (1.7.9)
 
 DEPENDENCIES:
-  - AppCenter/Analytics (~> 1.8.0)
-  - AppCenter/Crashes (~> 1.8.0)
-  - AppCenterReactNativeShared (~> 1.7.1)
+  - Crashlytics
+  - Fabric
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - AppCenter
-    - AppCenterReactNativeShared
+    - Crashlytics
+    - Fabric
 
 SPEC CHECKSUMS:
-  AppCenter: 7e7b42e94b70294d1de3d747f164f0c1668a28e1
-  AppCenterReactNativeShared: 713c4b8da168d517297061d4168f7e2f4d2df9c5
+  Crashlytics: 7f2e38d302d9da96475b3d64d86fb29e31a542b7
+  Fabric: a2917d3895e4c1569b9c3170de7320ea1b1e6661
 
-PODFILE CHECKSUM: c47409cee93462f0bcaac8e60366ead4e2ece60f
+PODFILE CHECKSUM: 403e15c9469d66dbcc8dff3e2bba0772a1a3b45d
 
 COCOAPODS: 1.5.0

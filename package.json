@@ -31,11 +31,7 @@
     "git-hook": "npm run lint -s && npm run test -s"
   },
   "dependencies": {
-    "@types/react-navigation": "1.5.11",
     "apisauce": "^0.14.2",
-    "appcenter": "^1.7.1",
-    "appcenter-analytics": "^1.7.1",
-    "appcenter-crashes": "^1.7.1",
     "format-json": "^1.0.3",
     "identity-obj-proxy": "^3.0.0",
     "jdenticon": "dmester/jdenticon",
@@ -60,6 +56,7 @@
     "react-native-easy-toast": "^1.1.0",
     "react-native-elements": "^1.0.0-beta5",
     "react-native-extra-dimensions-android": "^0.21.0",
+    "react-native-fabric": "^0.5.1",
     "react-native-fs": "^2.9.12",
     "react-native-i18n": "1.0.0",
     "react-native-image-gallery": "git+https://git@github.com/textileio/react-native-image-gallery.git",
@@ -80,6 +77,7 @@
     "redux-saga": "^0.16.0",
     "reduxsauce": "0.7.0",
     "reselect": "^3.0.1",
+    "stacktrace-js": "^2.0.0",
     "tcomb-form-native": "^0.6.11",
     "typesafe-actions": "^2.0.4",
     "utility-types": "^2.0.0"
@@ -92,10 +90,11 @@
     "@types/jest": "^23.1.3",
     "@types/react": "^16.4.6",
     "@types/react-native": "^0.55.26",
+    "@types/react-native-fabric": "^0.5.0",
     "@types/react-native-fs": "^2.8.1",
     "@types/react-redux": "^6.0.3",
     "@types/react-test-renderer": "^16.0.1",
-    "appcenter-cli": "^1.1.0",
+    "@types/stacktrace-js": "^0.0.32",
     "babel-core": "6.26.0",
     "babel-eslint": "7.1.1",
     "babel-jest": "22.4.1",
@@ -148,12 +147,7 @@
     "moduleNameMapper": {
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
     },
-    "setupFiles": [
-      "<rootDir>/Tests/Setup",
-      "<rootDir>/node_modules/appcenter-analytics/test/AppCenterAnalyticsMock.js",
-      "<rootDir>/node_modules/appcenter/test/AppCenterMock.js",
-      "<rootDir>/node_modules/appcenter-crashes/test/AppCenterCrashesMock.js"
-    ],
+    "setupFiles": [],
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.{js,jsx,ts,tsx}",
