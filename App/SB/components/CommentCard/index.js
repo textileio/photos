@@ -12,9 +12,9 @@ import navStyles from '../../../Navigation/Styles/NavigationStyles'
 
 const CommentCard = props => {
   // const { userName, comment, date, subComments, isSubComment, photo } = props
-  const userName = props.metadata.username
+  const userName = props.metadata && props.metadata.username ? props.metadata.username : "anonymous"
   const comment = props.photo.caption
-  const date = moment.utc(props.metadata.added).fromNow()
+  const date = moment.utc(props.photo.date).fromNow()
   const subComments = undefined
   const isSubComment = false
 
