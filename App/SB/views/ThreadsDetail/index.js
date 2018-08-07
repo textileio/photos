@@ -175,7 +175,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  var items = []
+  var items: PhotosQueryResult[] = []
   var refreshing = false
   var thread = undefined
   if (threadId) {
