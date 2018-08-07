@@ -565,39 +565,6 @@ export function * refreshThreads () {
   }
 }
 
-
-// export function * shareImageFromPath(photoPath: string, threadId: string) {
-//   const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
-//   if (!addResult.archive) {
-//     throw new Error('no archive returned')
-//   }
-//   yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, threadId)
-//   yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-//   yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
-//
-//   // Pin the file remote
-//   try {
-//     if (!addResult.archive) {
-//       throw new Error('no archive to upload')
-//     }
-//     yield uploadFile(
-//       addResult.id,
-//       addResult.archive.path
-//     )
-//   } catch (error) {
-//     // Leave all the data in place so we can rerty upload
-//     let message = ''
-//     if (!error) {
-//       message = ''
-//     } else if (typeof error === 'string') {
-//       message = error
-//     } else if (error.message) {
-//       message = error.message
-//     }
-//     yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
-//   }
-// }
-
 export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
   const { threadId } = action.payload
 
@@ -622,8 +589,6 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   // Present image picker
   const pickerResponse = yield pickerPromise
 
-  console.log('TODO - WIP, handle response', pickerResponse)
-
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
     console.log('TODO: User cancelled image picker')
@@ -636,7 +601,6 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   }
   else {
 
-    console.log('TODO: handle image', pickerResponse)
     const pickerResult: TextileTypes.SharedImage = {
       data: pickerResponse.data,
       origURL: pickerResponse.origURL,
@@ -647,25 +611,62 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
       timestamp: pickerResponse.timestamp,
       fileName: pickerResponse.fileName,
       fileSize: pickerResponse.fileSize,
-      threadIds: [threadId]
+      added: Date.now()
     }
-    console.log('TODO: handle result', pickerResult)
 
-    // TODO check if photo has already been pinned... by URI?
-    
-    yield put(UIActions.imagePickerSuccess(threadId, pickerResult)
-​
-    // yield put(UIActions.imageUploadError(addResult.id, message))
-
-    // Detect selection of photo
-    // Show a 'pending' thumbnail
-    // Trigger Add photo cycle
-    // Listen for upload completion
-    // Share photo to Thread
-    // Remove 'pending' thumbnail / add real thumbnail
-    // Complete
+    yield put(CameraRollActions.imagePickerSuccess(threadId, pickerResult))
   }
-  // Return user to Thread view...
+​}
+
+export function * imageCaptionRequest(action: ActionType<typeof CameraRollActions.imagePickerSuccess>) {
+  const { threadId, image } = action.payload
+  console.log('CAPTION', action.payload)
+  // yield call(PhotosNavigationService.navigate, 'SharePhoto', {threadId, image})
+}
+
+export function * remotePinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
+  const { threadId, image } = action.payload
+
+  const photoPath = yield call(CameraRoll.getPhotoPath, image.origURL)
+  const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+  if (!addResult.archive) {
+    throw new Error('no archive returned')
+  }
+
+  // Get default thread
+  let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
+
+  console.log('adding to default')
+  yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+
+  console.log('marking for upload recovery if fail')
+  yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+
+  console.log('init upload')
+  yield uploadFile(
+    addResult.id,
+    addResult.archive.path
+  )
+
+  // update our image
+  image.addResult = addResult
+  yield put(CameraRollActions.imagePinSuccess(threadId, image))
+
+  console.log('TODO: WIP -- IMAGE PIN SUCCESS...', threadId, addResult.id)
+}
+
+export function * shareImageToThread (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
+  const { dataId } = action.payload
+
+  const pendingShares = yield select(cameraRollSelectors.pendingSharesById, dataId)
+
+  for (let threadId of Object.keys(pendingShares)) {
+    const image = pendingShares[threadId]
+    yield call(TextileNode.sharePhotoToThread, dataId, threadId, image.caption)
+    yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
+    yield put(CameraRollActions.imageShareSuccess(threadId, image))
+  }
+
 }
 
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
