@@ -15,14 +15,11 @@ import BottomDrawerList from '../SB/components/BottomDrawerList'
 class TextilePhotos extends React.PureComponent {
   constructor (props) {
     super(props)
-    this.state = {
-      showDrawer: false
-    }
   }
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const headerLeft = params.threadName === 'default' ? (
+    const headerLeft = (
       <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
         <View style={navStyles.headerIconUser}>
           <View style={navStyles.iconContainer}>
@@ -34,34 +31,8 @@ class TextilePhotos extends React.PureComponent {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    ) : (
-      <TouchableOpacity onPress={ () => {
-        navigation.goBack(null)
-      }}>
-        <Image
-          style={navStyles.headerLeft}
-          source={require('../SB/views/ThreadsDetail/statics/icon-arrow-left.png')}
-        />
-      </TouchableOpacity>
     )
-    const headerRight = params.threadName !== 'default' ? (
-      <View style={navStyles.headerRight}>
-        {/*<TouchableOpacity onPress={ () => {*/}
-          {/*console.log('TODO: HANDLE CLICKED PHOTO ADD FROM SHARED THREAD')*/}
-        {/*}}>*/}
-          {/*<Image*/}
-            {/*style={navStyles.headerIconPhoto}*/}
-            {/*source={require('../SB/views/ThreadsDetail/statics/icon-photo.png')}*/}
-          {/*/>*/}
-        {/*</TouchableOpacity>*/}
-        <TouchableOpacity onPress={params.showActionSheet}>
-          <Image
-            style={navStyles.headerIconMore}
-            source={require('../SB/views/ThreadsDetail/statics/icon-more.png')}
-          />
-        </TouchableOpacity>
-      </View>
-    ) : undefined
+    const headerRight = undefined
       // Wallet menu not available yet
     //   : (
     //     <TouchableOpacity onPress={ () => {
@@ -72,9 +43,8 @@ class TextilePhotos extends React.PureComponent {
     //   )
 
     const greeting = params.profile && params.profile.username ? 'Hello, ' + params.profile.username : 'Hi there!'
-    const headerText = params.threadName === 'default' ? greeting : params.threadName
     const headerTitle = (
-      <Text style={navStyles.headerTitle}>{headerText}</Text>
+      <Text style={navStyles.headerTitle}>{greeting}</Text>
     )
 
     return {
@@ -90,14 +60,11 @@ class TextilePhotos extends React.PureComponent {
   componentDidUpdate(prevProps, prevState) {
     if (
       this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
-      this.props.threadName !== prevProps.threadName ||
       this.props.profile !== prevProps.profile
     ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
-        toggleVerboseUi: this.props.toggleVerboseUi,
-        threadName: this.props.threadName,
-        showActionSheet: this.showActionSheet.bind(this)
+        toggleVerboseUi: this.props.toggleVerboseUi
       })
     }
   }
@@ -109,9 +76,7 @@ class TextilePhotos extends React.PureComponent {
     // Set params
     this.props.navigation.setParams({
       profile: this.props.profile,
-      toggleVerboseUi: this.props.toggleVerboseUi,
-      threadName: this.props.threadName,
-      showActionSheet: this.showActionSheet.bind(this)
+      toggleVerboseUi: this.props.toggleVerboseUi
     })
   }
 
@@ -123,18 +88,6 @@ class TextilePhotos extends React.PureComponent {
 
   onRefresh () {
     this.props.refresh(this.props.threadId)
-  }
-
-  showActionSheet () {
-    this.actionSheet.show()
-  }
-
-  handleActionSheetResponse (index: number) {
-    if (index === 0) {
-      this.props.invite(this.props.threadId, this.props.threadName)
-    } else if (index === 1) {
-      this.props.leaveThread(this.props.threadId)
-    }
   }
 
   render () {
@@ -150,15 +103,6 @@ class TextilePhotos extends React.PureComponent {
           displayImages={this.props.displayImages}
           verboseUi={this.props.verboseUi}
         />
-        <ActionSheet
-          ref={o => this.actionSheet = o}
-          title={this.props.threadName + ' options'}
-          options={['Invite Others', 'Leave Thread', 'Cancel']}
-          cancelButtonIndex={2}
-          onPress={this.handleActionSheetResponse.bind(this)}
-        />
-
-        { this.state.showDrawer && <BottomDrawerList /> }
 
         {this.props.verboseUi &&
           <View style={style.bottomOverlay} >
@@ -226,9 +170,7 @@ const mapDispatchToProps = (dispatch) => {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
-    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
-    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) }
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }
 
