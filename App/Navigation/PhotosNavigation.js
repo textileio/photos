@@ -58,6 +58,9 @@ const SharedPhotosNav = StackNavigator(
     },
     PhotoViewer: {
       screen: ThreadPhotoDetail
+    },
+    SharePhoto: {
+      screen: AddCaptionScreen
     }
   },
   {

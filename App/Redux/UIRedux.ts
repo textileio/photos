@@ -1,5 +1,4 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import * as TextileTypes from '../Models/TextileTypes'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
@@ -47,10 +46,7 @@ const actions = {
   }),
   newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', resolve => {
     return (threadId: string) => resolve({ threadId })
-  }),
-  imagePickerSuccess: createAction('IMAGE_PICKER_SUCCESS', resolve => {
-    return (threadId: string, image: TextileTypes.SharedImage) => resolve({ threadId, image })
-  }),
+  })
 }
 
 export type UIAction = ActionType<typeof actions>
@@ -72,11 +68,6 @@ export type UIState = {
     readonly selectedThreads: ReadonlyMap<string, boolean>,
     readonly comment?: string
   },
-  // A list of all pending image shares with status
-  readonly pendingImageShares: Array<TextileTypes.SharedImage>,
-  // A map of threads and their pending images from pendingImageShares
-  // An image may be shared to multiple threads before finishing upload, so required split
-  readonly pendingThreadShares: { [index:string] : Array<string> }
 }
 
 export const initialState: UIState = {
@@ -88,8 +79,6 @@ export const initialState: UIState = {
     active: false,
     selectedThreads: new Map<string, boolean>()
   },
-  pendingImageShares: [],
-  pendingThreadShares: {}
 }
 
 export function reducer (state: UIState = initialState, action: UIAction): UIState {
@@ -112,25 +101,6 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
       return { ...state, sharingPhoto: { ...state.sharingPhoto, selectedThreads: action.payload.threadIds } }
     case getType(actions.updateComment):
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment: action.payload } }
-    case getType(actions.imagePickerSuccess):
-      const { image } = action.payload
-      // if the image already exists as a pending invite to the thread... skip it
-      if (action.payload.threadId in state.pendingThreadShares) {
-        if (state.pendingThreadShares[action.payload.threadId].find((uri) => uri === image.uri)) {
-          return state
-        }
-      }
-
-      if (!state.pendingImageShares.find((img) => img.uri === image.uri)) {
-        // if the image doesn't already exist, add it to our state
-
-      } else {
-        // otherwise, just add the ia
-
-      }
-
-      console.log('THREAD PICKER', action.payload.threadId)
-      return state
     default:
       return state
   }

@@ -91,7 +91,9 @@ export type SharedImage = {
   timestamp: string,
   fileName: string,
   fileSize: number,
-  threadIds: Array<string>
+  added: number, // used for pre-upload display
+  caption?: string // used for pre-upload display
+  addResult?: AddResult,
 }
 
 export type CafeTokens = {

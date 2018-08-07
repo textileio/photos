@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
+import {View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
 
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
@@ -13,6 +13,8 @@ import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import ActionSheet from 'react-native-actionsheet'
+
+const WIDTH = Dimensions.get('window').width
 
 class ThreadsEdit extends React.PureComponent {
   constructor (props) {
@@ -132,6 +134,7 @@ class ThreadsEdit extends React.PureComponent {
           cancelButtonIndex={2}
           onPress={this.handleActionSheetResponse.bind(this)}
         />
+
       </View>
     )
   }
@@ -147,7 +150,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  var items: PhotosQueryResult[] = []
+  var items = []
   var refreshing = false
   var thread = undefined
   if (threadId) {
@@ -177,6 +180,11 @@ const mapStateToProps = (state, ownProps) => {
     : (threadName === 'default'
       ? 'Any new photos you take will be added to your Textile wallet.'
       : 'Share your first photo to the ' + threadName + ' thread.')
+
+  const pendingPhotos = state.cameraRoll.pendingShares[threadId]
+  console.log('THREAD VIEW')
+  console.log(state.cameraRoll.pendingShares)
+  // TODO: show any pending shares at the top of the thread?
 
   return {
     threadId,
