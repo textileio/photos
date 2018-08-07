@@ -31,7 +31,6 @@ import {
   addDevice,
   getPhotoHashes,
   shareImage,
-  photosTask,
   removePayloadFile,
   handleUploadError,
   addThread,
@@ -47,9 +46,8 @@ import {
   handleProfilePhotoSelected,
   presentPublicLinkInterface,
   showImagePicker,
-  imageCaptionRequest,
+  localPinRequest,
   remotePinRequest,
-  shareImageToThread,
   nodeOnlineSaga,
 } from './TextileSagas'
 import CameraRollActions from '../Redux/CameraRollRedux'
@@ -58,7 +56,6 @@ import CameraRollActions from '../Redux/CameraRollRedux'
 
 export default function * root () {
   yield all([
-    photosTask(),
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
 
@@ -116,12 +113,10 @@ export default function * root () {
     // Flow to add image from ImagePicker to Thread
     // 1. Image picker open request => trigger open image picker
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
-    // 2. Image selected success => trigger caption request
-    takeEvery(getType(CameraRollActions.imagePickerSuccess), imageCaptionRequest),
+    // Pin the file to our local node
+    takeEvery(getType(CameraRollActions.addComment), localPinRequest),
     // Begin upload of the file to the remote pinner
-    takeEvery(getType(CameraRollActions.addComment), remotePinRequest),
-    // Finalize the share of the photo to the Thread
-    takeEvery(getType(UploadingImagesActions.imageUploadComplete), shareImageToThread),
+    takeEvery(getType(CameraRollActions.localPinSuccess), remotePinRequest),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
