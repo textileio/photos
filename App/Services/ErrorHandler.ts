@@ -1,11 +1,11 @@
-import { Platform, ErrorUtils } from 'react-native'
+import { Platform } from 'react-native'
 import StackTrace from 'stacktrace-js'
 import { Crashlytics } from 'react-native-fabric'
 
 export function initErrorHandler () {
-  // if (__DEV__) {
-  //   return
-  // }
+  if (__DEV__) {
+    return
+  }
   const originalHandler = ErrorUtils.getGlobalHandler()
   function errorHandler (error: any, isFatal?: boolean) {
     if (!(error instanceof Error)) {
@@ -13,7 +13,7 @@ export function initErrorHandler () {
     }
     StackTrace.fromError(error, {offline: true}).then(frames => {
       const frameData = frames.map(frame => {
-        return { ...frame, fileName: `${frame.fileName}:${frame.lineNumber || 0}:${frame.columnNumber || 0}` }
+        return frame.toString()
       })
       Crashlytics.recordCustomExceptionName(error.message, error.message, frameData)
     })
