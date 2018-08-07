@@ -136,11 +136,16 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
       }
       existing.caption = action.payload.caption
 
-      const shares = state.pendingShares
-      shares[action.payload.threadId] = shares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
-      shares[action.payload.threadId].push(existing)
+      const thread = state.pendingShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
+      thread.push(existing)
 
-      return {...state, pendingShares: shares}
+      return {
+        ...state,
+        pendingShares: {
+          ...state.pendingShares,
+          [action.payload.threadId]: thread
+        }
+      }
     case getType(actions.localPinSuccess):
       if (state.pendingShares[action.payload.threadId] === undefined) {
         return state
@@ -151,11 +156,15 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
       }
       partial.addResult = action.payload.addResult
 
-      const ps = state.pendingShares
-      ps[action.payload.threadId] = ps[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
-      ps[action.payload.threadId].push(partial)
+      const ps = state.pendingShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
+      ps.push(partial)
 
-      return {...state, pendingShares: ps}
+      return {
+        ...state,
+        pendingShares: {
+          ...state.pendingShares,
+          [action.payload.threadId]: ps
+        }}
     case getType(actions.remotePinSuccess):
     case getType(actions.imagePinError):
       if (state.pendingShares[action.payload.threadId] === undefined) {
@@ -163,15 +172,32 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
       }
 
       const filteredShares = state.pendingShares
-      filteredShares[action.payload.threadId] = filteredShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
+      const newArray = filteredShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
+      if (newArray.length > 0) {
+        filteredShares[action.payload.threadId] = newArray
+      } else {
+        // remove the key from the object if array=0
+        delete filteredShares[action.payload.threadId]
+      }
       return {...state, pendingShares: filteredShares}
     case getType(actions.cancelShare):
       if (state.pendingShares[action.payload.threadId] === undefined) {
         return state
       }
-      const pendingShares = state.pendingShares
-      pendingShares[action.payload.threadId] = pendingShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
-      return {...state, pendingShares}
+      const filteredArray = state.pendingShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
+      if (filteredArray.length < 1) {
+        const pendingShares = state.pendingShares
+        delete pendingShares[action.payload.threadId]
+        return {...state, pendingShares}
+      } else {
+        return {
+          ...state,
+          pendingShares: {
+            ...state.pendingShares,
+            [action.payload.threadId]: filteredArray
+          }
+        }
+      }
     default:
       return state
   }
