@@ -167,18 +167,18 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state, ownProps) => {
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
-  const item = state.ipfs.threads[state.ui.viewingPhoto.threadId].items.find((it) => it.photo.id === state.ui.viewingPhoto.photoId)
+  const item = state.textileNode.threads[state.ui.viewingPhoto.threadId].items.find((it) => it.photo.id === state.ui.viewingPhoto.photoId)
 
   // Used to generate lists of which Threads the image is and
   // which Threads you might want to share the image to
   let containingThreads = []
   // Used to pick the thumb to show beside each thread
   const thumbs = {}
-  for (let t in state.ipfs.threads) {
-    if (state.ipfs.threads[t].items.length > 0) {
-      thumbs[t] = state.ipfs.threads[t].items[state.ipfs.threads[t].items.length - 1]
+  for (let t in state.textileNode.threads) {
+    if (state.textileNode.threads[t].items.length > 0) {
+      thumbs[t] = state.textileNode.threads[t].items[state.textileNode.threads[t].items.length - 1]
     }
-    if (state.ipfs.threads[t].items.find(i => i.metadata.name === item.metadata.name)) {
+    if (state.textileNode.threads[t].items.find(i => i.metadata.name === item.metadata.name)) {
       containingThreads.push(t)
     }
   }
@@ -186,7 +186,7 @@ const mapStateToProps = (state, ownProps) => {
   let threadsNotIn = state.threads.threads.filter(t => containingThreads.indexOf(t.id) < 0 && t.name !== 'default').map(t => {
     return {
       ...t,
-      size: !state.ipfs.threads[t.id] ? 0 : state.ipfs.threads[t.id].items.length
+      size: !state.textileNode.threads[t.id] ? 0 : state.textileNode.threads[t.id].items.length
     } }).sort((a, b) => b - a)
 
 
@@ -198,7 +198,7 @@ const mapStateToProps = (state, ownProps) => {
     source: {url: 'file://' + item.photo.id + '.png'}, // <-- in case RN uses to know things
     // TODO: real dimensions are in the metadata alread now
     dimensions: { width: 150, height: 150 },
-    displayImages: state.ipfs.nodeState.state === 'started',
+    displayImages: state.textileNode.nodeState.state === 'started',
     threadsIn: state.threads.threads.filter(t => containingThreads.indexOf(t.id) > -1 && t.name !== 'default'),
     threadsNotIn,
     thumbs
