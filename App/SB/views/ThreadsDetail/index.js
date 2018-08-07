@@ -1,19 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
+import {View, Text, Image, TouchableOpacity, ScrollView, RefreshControl} from 'react-native'
 
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
 
 import styles from './statics/styles'
-import list from './constants'
 import UIActions from '../../../Redux/UIRedux'
-import TextileNodeActions, { PhotosQueryResult, ThreadData } from '../../../Redux/TextileNodeRedux'
+import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import ActionSheet from 'react-native-actionsheet'
-import TimerMixin from 'react-timer-mixin'
 
 import Alert from '../../../SB/components/Alert'
 
@@ -22,7 +20,8 @@ class ThreadsEdit extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      showDrawer: false
+      showDrawer: false,
+      refreshing: false
     }
   }
   static navigationOptions = ({ navigation }) => {
@@ -106,10 +105,6 @@ class ThreadsEdit extends React.PureComponent {
     this.actionSheet.show()
   }
 
-  showImagePicker () {
-    this.props.showImagePicker(this.props.threadId)
-  }
-
   handleActionSheetResponse (index: number) {
     if (index === 0) {
       this.props.invite(this.props.threadId, this.props.threadName)
@@ -118,17 +113,43 @@ class ThreadsEdit extends React.PureComponent {
     }
   }
 
-  onPhotoSelect = () => {
+  showImagePicker () {
+    this.props.showImagePicker(this.props.threadId)
+  }
+
+  _onPhotoSelect = () => {
     return (photoId) => {
       this.props.viewPhoto(photoId, this.props.threadId)
+    }
+  }
+
+  _onRefresh = () => {
+    this.props.refresh(this.props.threadId)
+  }
+
+  _progressStyle = (fillBar) => {
+    if (fillBar) {
+      return {height: 1, backgroundColor: '#2935ff', flex: this.props.progress}
+    } else {
+      return {height: 1, backgroundColor: 'transparent', flex: 1.0 - this.props.progress}
     }
   }
 
   render () {
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.contentContainer}>
-          {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this.onPhotoSelect()}/>)}
+        {this.props.showProgress && <View style={{height: 1, flexDirection: 'row', padding: 0, margin: 0}}>
+          <View style={this._progressStyle(true)} />
+          <View style={this._progressStyle()} />
+        </View>}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.refreshing}
+              onRefresh={this._onRefresh}
+            />}
+          style={styles.contentContainer}>
+          {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this._onPhotoSelect()}/>)}
         </ScrollView>
 
         {this.state.showDrawer && <BottomDrawerList/>}
@@ -146,8 +167,6 @@ class ThreadsEdit extends React.PureComponent {
     )
   }
 }
-
-
 
 const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
@@ -188,11 +207,27 @@ const mapStateToProps = (state, ownProps) => {
       ? 'Any new photos you take will be added to your Textile wallet.'
       : 'Share your first photo to the ' + threadName + ' thread.')
 
+
+  // A little bit of feedback for the user to show that an image is
+  // processing... fills the gap before it shows up in the thread
+  const pendingShares = state.cameraRoll.pendingShares[threadId] || []
+  let progress = 0.0
+  if (pendingShares.length > 0) {
+    const firstShare = pendingShares[0]
+    if (firstShare.caption) {
+      progress = 0.3
+      if (firstShare.addResult) {
+        progress = 0.6
+        if (state.uploadingImages.images[firstShare.addResult.id]) {
+          progress = 0.8
+        }
+      }
+    }
+  }
   return {
     threadId,
     threadName,
     items,
-    progressData: state.uploadingImages.images,
     refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
@@ -201,7 +236,9 @@ const mapStateToProps = (state, ownProps) => {
     verboseUi: state.preferences.verboseUi,
     profile: state.preferences.profile,
     errorMessage: state.ui.imagePickerError,
-    displayError: state.ui.imagePickerError !== undefined
+    displayError: state.ui.imagePickerError !== undefined,
+    showProgress: progress > 0,
+    progress
   }
 }
 

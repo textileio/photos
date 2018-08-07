@@ -646,6 +646,8 @@ export function * localPinRequest(action: ActionType<typeof CameraRollActions.ad
 
 export function * remotePinRequest(action: ActionType<typeof CameraRollActions.localPinSuccess>) {
   const {threadId, image, addResult} = action.payload
+  // There is a possibility that an image could successfully load into a users thread locally by
+  // here, but not succeed with 'UploadingImagesActions.addImage' so never upload
   try {
     if (!addResult.archive) {
       throw new Error('no archive returned')
