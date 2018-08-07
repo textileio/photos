@@ -97,7 +97,7 @@ describe('queried photos stories', () => {
       const state1 = reducer(state0, actions.addComment(ids[0], pickerImage, caption))
       const state2 = reducer(state1, actions.localPinSuccess(ids[0], pickerImage, addResult))
       expect(state2.pendingShares[ids[0]]).toBeTruthy()
-      const state3 = reducer(state2, actions.remotePinSuccess(ids[0], pickerImage))
+      const state3 = reducer(state2, actions.remotePinStarted(ids[0], pickerImage))
       expect(state3.pendingShares[ids[0]]).toBeFalsy()
     })
   })

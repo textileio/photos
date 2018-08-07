@@ -650,7 +650,7 @@ export function * remotePinRequest(action: ActionType<typeof CameraRollActions.l
     )
 
     // Remove the image from the CameraRoll actions
-    yield put(CameraRollActions.remotePinSuccess(threadId, image))
+    yield put(CameraRollActions.remotePinStarted(threadId, image))
 
   } catch (error) {
     try {
