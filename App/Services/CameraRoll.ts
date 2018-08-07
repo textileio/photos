@@ -99,25 +99,17 @@ export async function choosePhoto(): Promise<PickerImage> {
       }
     }
     ImagePicker.showImagePicker(options, response => {
-      if (response.didCancel) {
-        reject(new Error('user canceled'))
+      const result: PickerImage = {
+        uri: response.uri,
+        height: response.height,
+        width: response.width,
+        isVertical: response.isVertical,
+        origURL: response.origURL,
+        didCancel: response.didCancel,
+        customButton: response.customButton,
+        error: response.error
       }
-      else if (response.error) {
-        reject(new Error(response.error))
-      }
-      else {
-        const result: PickerImage = {
-          uri: response.uri,
-          height: response.height,
-          width: response.width,
-          isVertical: response.isVertical,
-          origURL: response.origURL,
-          didCancel: response.didCancel,
-          customButton: response.customButton,
-          error: response.error
-        }
-        resolve(result)
-      }
+      resolve(result)
     })
   })
 }

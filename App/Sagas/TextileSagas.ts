@@ -570,7 +570,6 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
 
   // Present image picker
   const pickerResponse = yield CameraRoll.choosePhoto()
-
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
   } else if (pickerResponse.error) {
