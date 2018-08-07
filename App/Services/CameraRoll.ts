@@ -1,7 +1,18 @@
-import { CameraRoll } from 'react-native'
+import {CameraRoll, ImagePickerResult} from 'react-native'
 import RNFS from 'react-native-fs'
 import ImagePicker from 'react-native-image-picker'
 import TextileNode from '../../TextileNode'
+
+export type PickerImage = {
+  uri: string,
+  height: number,
+  width: number,
+  isVertical: boolean,
+  origURL?: string,
+  didCancel?: boolean,
+  customButton?: string,
+  error?: string
+}
 
 export async function getPhotos (first: number = -1): Promise<string[]> {
   const result = await CameraRoll.getPhotos({ first })
@@ -67,6 +78,45 @@ export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         const { uri, data } = response
         resolve({ uri, data })
+      }
+    })
+  })
+}
+
+export async function choosePhoto(): Promise<PickerImage> {
+  return new Promise<PickerImage>((resolve, reject) => {
+    const options = {
+      title: 'Select a photo',
+      mediaType: 'photo' as 'photo',
+      noData: true,
+      customButtons: [{
+        name: 'wallet',
+        title: 'Choose from Wallet...'
+      }],
+      storageOptions: {
+        skipBackup: true,
+        waitUntilSaved: true
+      }
+    }
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        reject(new Error('user canceled'))
+      }
+      else if (response.error) {
+        reject(new Error(response.error))
+      }
+      else {
+        const result: PickerImage = {
+          uri: response.uri,
+          height: response.height,
+          width: response.width,
+          isVertical: response.isVertical,
+          origURL: response.origURL,
+          didCancel: response.didCancel,
+          customButton: response.customButton,
+          error: response.error
+        }
+        resolve(result)
       }
     })
   })

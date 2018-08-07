@@ -568,32 +568,15 @@ export function * refreshThreads () {
 export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
   const { threadId } = action.payload
 
-  // Turn ImagePicker into a Promise
-  const pickerPromise = new Promise((resolve, reject) => {
-    const pickerOptions = {
-      title: 'Select a photo',
-      mediaType: 'photo',
-      noData: true,
-      customButtons: [{
-        name: 'wallet',
-        title: 'Choose from Wallet...'
-      }],
-      storageOptions: {
-        skipBackup: true,
-        waitUntilSaved: true
-      }
-    }
-    ImagePicker.showImagePicker(pickerOptions, (response) => {
-      resolve(response)
-    })
-  })
-
   // Present image picker
-  const pickerResponse = yield pickerPromise
+  const pickerResponse = yield CameraRoll.choosePhoto()
+
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
   } else if (pickerResponse.error) {
-    yield put(UIActions.newImagePickerError(pickerResponse.error, 'There was an issue with the photo picker. Please try again.'))
+    //pickerResponse.error is a string... i think all the time
+    const error = new Error('Image picker error')
+    yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
   } else if (pickerResponse.customButton) {
     // pickerResponse.customButton === 'wallet'
     // This shouldn't be possible currently
