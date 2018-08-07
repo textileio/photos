@@ -31,7 +31,7 @@ const actions = {
   localPinSuccess: createAction('LOCAL_PIN_SUCCESS', resolve => {
     return (threadId: string, image: TextileTypes.SharedImage, addResult: TextileTypes.AddResult) => resolve({ threadId, image, addResult })
   }),
-  remotePinSuccess: createAction('REMOTE_PIN_SUCCESS', resolve => {
+  remotePinStarted: createAction('REMOTE_PIN_SUCCESS', resolve => {
     return (threadId: string, image: TextileTypes.SharedImage) => resolve({ threadId, image })
   }),
   imagePinError: createAction('IMAGE_PICKER_PIN_ERROR', resolve => {
@@ -171,7 +171,7 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
           ...state.pendingShares,
           [action.payload.threadId]: newThreadData
         }}
-    case getType(actions.remotePinSuccess):
+    case getType(actions.remotePinStarted):
     case getType(actions.imagePinError):
       if (state.pendingShares[action.payload.threadId] === undefined) {
         return state
