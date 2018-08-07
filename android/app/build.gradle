@@ -1,5 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.25.4'
+    }
+}
+
 apply plugin: "com.android.application"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 import com.android.build.OutputFile
 
@@ -152,6 +166,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fabric')
     compile project(':react-native-image-picker')
     compile project(':react-native-background-upload')
     compile project(':react-native-background-fetch')
@@ -160,9 +175,6 @@ dependencies {
     compile project(':react-native-background-timer')
     compile project(':react-native-background-task')
     compile project(':react-native-fs')
-    compile project(':appcenter-crashes')
-    compile project(':appcenter-analytics')
-    compile project(':appcenter')
     compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')
     compile project(':react-native-svg')
@@ -170,6 +182,9 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.facebook.react:react-native:0.55.3'
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
+        transitive = true;
+    }
     // From node_modules
 }
 

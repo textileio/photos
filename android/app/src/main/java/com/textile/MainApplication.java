@@ -3,25 +3,23 @@ package com.textile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.vydia.RNUploader.UploaderReactPackage;
-import com.imagepicker.ImagePickerPackage;
-import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
-import com.ocetnik.timer.BackgroundTimerPackage;
-import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
-import com.rnfs.RNFSPackage;
-import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
-import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
-import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
-import com.i18n.reactnativei18n.ReactNativeI18n;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
-import com.horcrux.svg.SvgPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.horcrux.svg.SvgPackage;
+import com.i18n.reactnativei18n.ReactNativeI18n;
+import com.imagepicker.ImagePickerPackage;
+import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.ocetnik.timer.BackgroundTimerPackage;
+import com.rnfs.RNFSPackage;
+import com.smixx.fabric.FabricPackage;
 import com.textile.textilenode.TextileNodePackage;
+import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.vydia.RNUploader.UploaderReactPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
+        new FabricPackage(),
         new MainReactPackage(),
         new UploaderReactPackage(),
         new ImagePickerPackage(),
@@ -47,9 +46,6 @@ public class MainApplication extends Application implements ReactApplication {
         new BackgroundTaskPackage(),
         new SvgPackage(),
         new RNFSPackage(),
-        new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
-        new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
-        new AppCenterReactNativePackage(MainApplication.this),
         new ReactNativeI18n(),
         new VectorIconsPackage(),
         new TextileNodePackage()
