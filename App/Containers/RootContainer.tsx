@@ -6,18 +6,16 @@ import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
 import ReduxPersist from '../Config/ReduxPersist'
 import NavigationService from '../Services/NavigationService'
+import { RootState } from '../Redux/Types'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
 
-class RootContainer extends Component {
-  componentDidMount () {
-    // if redux persist is not active fire startup action
-    if (!ReduxPersist.active) {
-      this.props.startup()
-    }
-  }
+type Props = {
+  showOverlay: boolean
+}
 
+class RootContainer extends Component<Props> {
   render () {
     return (
       <View style={styles.applicationView}>
@@ -38,7 +36,7 @@ class RootContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     showOverlay: state.auth.processing
   }
@@ -46,7 +44,6 @@ const mapStateToProps = (state) => {
 
 // wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = (dispatch) => ({
-  startup: () => dispatch(StartupActions.startup())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(RootContainer)

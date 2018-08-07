@@ -124,7 +124,7 @@ const mapStateToProps = (state) => {
     data: state.threads.threads.filter(thread => thread.name !== 'default').map(t => {
       return {
         ...t,
-        size: !state.ipfs.threads[t.id] ? 0 : state.ipfs.threads[t.id].items.length
+        size: !state.textileNode.threads[t.id] ? 0 : state.textileNode.threads[t.id].items.length
       }}).sort((a, b) => b - a)
   }
 }

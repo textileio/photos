@@ -157,8 +157,8 @@ class ThreadInvite extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const online = state.ipfs && state.ipfs.online && state.ipfs.online ? state.ipfs.online : false
-  const nodeState = state.ipfs && state.ipfs.nodeState ? state.ipfs.nodeState.state === 'started' : false
+  const online = state.textileNode && state.textileNode.online && state.textileNode.online ? state.textileNode.online : false
+  const nodeState = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
 
   const navParams = ownProps.navigation.state.params || {}
   const inviteId = navParams.request.id || undefined
