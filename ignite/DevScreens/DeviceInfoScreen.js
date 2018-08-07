@@ -2,6 +2,7 @@
 import React from 'react'
 import { View, ScrollView, Text, Image, NetInfo, TouchableOpacity } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
+import Reactotron from 'reactotron-react-native'
 import { Metrics, Images } from './DevTheme'
 import styles from './Styles/DeviceInfoScreenStyles'
 
@@ -49,7 +50,7 @@ export default class DeviceInfoScreen extends React.Component {
     NetInfo.addEventListener('connectionChange', this.updateConnectionInfoHistory)
 
     // an example of how to display a custom Reactotron message
-    // console.tron.display({
+    // Reactotron.display({
     //   name: 'SPECS',
     //   value: {
     //     hardware: fromPairs(map((o) => [o.title, o.info], HARDWARE_DATA)),
