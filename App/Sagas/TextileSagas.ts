@@ -38,6 +38,7 @@ import * as TextileTypes from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import DeepLink from '../Services/DeepLink'
+import ImagePicker from 'react-native-image-picker'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -47,7 +48,7 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
     yield put(AuthActions.getTokensSuccess(tokens))
     // TODO: Put username into textile-go for addition to metadata model
     yield put(AuthActions.signUpSuccess())
-    yield call(NavigationService.navigate, 'Permissions')
+    yield call(NavigationService.navigate, 'ProfilePic')
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
@@ -60,7 +61,7 @@ export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
     yield put(AuthActions.logInSuccess())
-    yield call(NavigationService.navigate, 'Permissions')
+    yield call(NavigationService.navigate, 'ProfilePic')
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }
@@ -561,6 +562,108 @@ export function * refreshThreads () {
     yield put(ThreadsActions.refreshThreadsSuccess(threads))
   } catch (error) {
     yield put(ThreadsActions.refreshThreadsError(error))
+  }
+}
+
+export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
+  const { threadId } = action.payload
+
+  // Present image picker
+  const pickerResponse = yield CameraRoll.choosePhoto()
+  if (pickerResponse.didCancel) {
+    // Detect cancel of image picker
+  } else if (pickerResponse.error) {
+    //pickerResponse.error is a string... i think all the time
+    const error = new Error('Image picker error')
+    yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
+  } else if (pickerResponse.customButton) {
+    // pickerResponse.customButton === 'wallet'
+    // This shouldn't be possible currently
+    yield call(PhotosNavigationService.navigate, 'WalletPicker', {shareTo: threadId})
+  } else {
+    try {
+      const image: TextileTypes.SharedImage = {
+        origURL: pickerResponse.origURL || pickerResponse.uri,
+        uri: pickerResponse.uri,
+        height: pickerResponse.height,
+        width: pickerResponse.width,
+        isVertical: pickerResponse.isVertical
+      }
+      yield put(CameraRollActions.imagePickerSuccess(threadId, image))
+      yield call(PhotosNavigationService.navigate, 'SharePhoto', {threadId, image})
+    } catch (error) {
+      yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
+    }
+  }
+​}
+
+export function * localPinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
+  const {threadId, image} = action.payload
+  const photoPath = image.uri.replace('file://', '')
+  try {
+    // add the result to our local node
+    const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+    if (!addResult.archive) {
+      throw new Error('No archive returned')
+    }
+
+    // Get the ID of our Default Thread
+    let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
+    // Add the image to our defaul thread // i.e the wallet
+    yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+
+    // Share the photo to the target Thread
+    yield call(TextileNode.sharePhotoToThread, addResult.id, threadId, image.caption)
+    // Notify the UI to update via updating the hashes
+    yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
+
+    // Store the addResult with the image
+    yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))
+  } catch (error) {
+    try {
+      yield put(CameraRollActions.imagePinError(threadId, image))
+      const exists: boolean = yield call(RNFS.exists, photoPath)
+      if (exists) {
+        yield call(RNFS.unlink, photoPath)
+      }
+    } finally {
+      yield put(UIActions.newImagePickerError(error, 'There was an issue with your local IPFS node. Please try again.'))
+    }
+  }
+}
+
+export function * remotePinRequest(action: ActionType<typeof CameraRollActions.localPinSuccess>) {
+  const {threadId, image, addResult} = action.payload
+  // There is a possibility that an image could successfully load into a users thread locally by
+  // here, but not succeed with 'UploadingImagesActions.addImage' so never upload
+  try {
+    if (!addResult.archive) {
+      throw new Error('no archive returned')
+    }
+    // Add the image upload job to the tracked jobs
+    yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+
+    // Begin the image upload to the Cafe pinner
+    yield uploadFile(
+      addResult.id,
+      addResult.archive.path
+    )
+
+    // Remove the image from the CameraRoll actions
+    yield put(CameraRollActions.remotePinStarted(threadId, image))
+
+  } catch (error) {
+    try {
+      yield put(CameraRollActions.imagePinError(threadId, image))
+      if (addResult.archive) {
+        const exists: boolean = yield call(RNFS.exists, addResult.archive.path)
+        if (exists) {
+          yield call(RNFS.unlink, addResult.archive.path)
+        }
+      }
+    } finally {
+      yield put(UIActions.newImagePickerError(error, 'There was an issue with your connection. Please try again.'))
+    }
   }
 }
 

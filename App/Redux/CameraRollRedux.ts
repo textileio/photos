@@ -1,4 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
+import * as TextileTypes from '../Models/TextileTypes'
+import {UploadingImage} from './UploadingImagesRedux'
+import {AddResult} from '../Models/TextileTypes'
 
 const actions = {
   initialzePhotos: createAction('INITIALIZE_PHOTOS', resolve => {
@@ -18,6 +21,24 @@ const actions = {
   }),
   untrackPhotos: createAction('UNTRACK_PHOTOS', resolve => {
     return (ids: string[]) => resolve({ ids })
+  }),
+  imagePickerSuccess: createAction('IMAGE_PICKER_SUCCESS', resolve => {
+    return (threadId: string, image: TextileTypes.SharedImage) => resolve({ threadId, image })
+  }),
+  addComment: createAction('ADD_IMAGE_PICKER_COMMENT', resolve => {
+    return (threadId: string, image: TextileTypes.SharedImage, caption: string) => resolve({ threadId, image, caption })
+  }),
+  localPinSuccess: createAction('LOCAL_PIN_SUCCESS', resolve => {
+    return (threadId: string, image: TextileTypes.SharedImage, addResult: TextileTypes.AddResult) => resolve({ threadId, image, addResult })
+  }),
+  remotePinStarted: createAction('REMOTE_PIN_STARTED', resolve => {
+    return (threadId: string, image: TextileTypes.SharedImage) => resolve({ threadId, image })
+  }),
+  imagePinError: createAction('IMAGE_PICKER_PIN_ERROR', resolve => {
+    return (threadId: string, image: TextileTypes.SharedImage) => resolve({ threadId, image })
+  }),
+  cancelShare: createAction('CANCEL_IMAGE_PICKER_SHARE', resolve => {
+    return (threadId: string, image: TextileTypes.SharedImage) => resolve({ threadId, image })
   })
 }
 
@@ -30,13 +51,16 @@ export type QueriedPhotosMap = {
 export type CameraRollState = {
   readonly initialized: boolean
   readonly querying: boolean
-  readonly queriedPhotos: QueriedPhotosMap
+  readonly queriedPhotos: QueriedPhotosMap,
+  // A map of threads and their pending images from pendingImageShares
+  readonly pendingShares: { [index:string] : Array<TextileTypes.SharedImage> }
 }
 
 export const initialState: CameraRollState = {
   initialized: false,
   querying: false,
-  queriedPhotos: {}
+  queriedPhotos: {},
+  pendingShares: {}
 }
 
 export const cameraRollSelectors = {
@@ -85,6 +109,101 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
       )
       return { ...state, queriedPhotos }
     }
+    case getType(actions.imagePickerSuccess):
+      const { image } = action.payload
+      const threadShares = state.pendingShares
+
+      if (threadShares[action.payload.threadId] === undefined) {
+        // add the image uir to the thread's pending shares
+        threadShares[action.payload.threadId] = [image]
+      } else {
+        if (state.pendingShares[action.payload.threadId].find((img) => img.origURL === image.origURL)) {
+          // if the image already exists as a pending invite to the thread... skip it
+          return state
+        } else {
+          // add the image to the thread's pending shares
+          threadShares[action.payload.threadId].push(image)
+        }
+      }
+      return {...state, pendingShares: threadShares}
+    case getType(actions.addComment):
+      if (state.pendingShares[action.payload.threadId] === undefined) {
+        return state
+      }
+      const existing = state.pendingShares[action.payload.threadId].find(img=>img.origURL === action.payload.image.origURL)
+      if (!existing || existing.caption !== undefined) {
+        return state
+      }
+
+      const newThread = state.pendingShares[action.payload.threadId].map((img) => {
+        if (img.origURL === action.payload.image.origURL) {
+          img.caption = action.payload.caption
+        }
+        return img
+      })
+
+      return {
+        ...state,
+        pendingShares: {
+          ...state.pendingShares,
+          [action.payload.threadId]: newThread
+        }
+      }
+    case getType(actions.localPinSuccess):
+      if (state.pendingShares[action.payload.threadId] === undefined) {
+        return state
+      }
+      const partial = state.pendingShares[action.payload.threadId].find(img=>img.origURL === action.payload.image.origURL)
+      if (!partial || partial.addResult !== undefined) {
+        return state
+      }
+
+      const newThreadData = state.pendingShares[action.payload.threadId].map((img) => {
+        if (img.origURL === action.payload.image.origURL) {
+          img.addResult = action.payload.addResult
+        }
+        return img
+      })
+
+      return {
+        ...state,
+        pendingShares: {
+          ...state.pendingShares,
+          [action.payload.threadId]: newThreadData
+        }}
+    case getType(actions.remotePinStarted):
+    case getType(actions.imagePinError):
+      if (state.pendingShares[action.payload.threadId] === undefined) {
+        return state
+      }
+
+      const filteredShares = state.pendingShares
+      const newArray = filteredShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
+      if (newArray.length > 0) {
+        filteredShares[action.payload.threadId] = newArray
+      } else {
+        // remove the key from the object if array=0
+        delete filteredShares[action.payload.threadId]
+      }
+      return {...state, pendingShares: filteredShares}
+    case getType(actions.cancelShare):
+      if (state.pendingShares[action.payload.threadId] === undefined) {
+        return state
+      }
+      const filteredArray = state.pendingShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
+      if (filteredArray.length < 1) {
+        const pendingShares = state.pendingShares
+        delete pendingShares[action.payload.threadId]
+        return {...state, pendingShares}
+      } else {
+        return {
+          ...state,
+          pendingShares: {
+            ...state.pendingShares,
+            [action.payload.threadId]: filteredArray
+          }
+        }
+      }
     default:
       return state
   }

@@ -1,20 +1,22 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
+import {View, Text, Image, TouchableOpacity, ScrollView, RefreshControl} from 'react-native'
 
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
 
 import styles from './statics/styles'
-import list from './constants'
 import UIActions from '../../../Redux/UIRedux'
-import TextileNodeActions, { PhotosQueryResult, ThreadData } from '../../../Redux/TextileNodeRedux'
+import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import ActionSheet from 'react-native-actionsheet'
 
+import Alert from '../../../SB/components/Alert'
+
 class ThreadsEdit extends React.PureComponent {
+
   constructor (props) {
     super(props)
     this.state = {
@@ -35,14 +37,12 @@ class ThreadsEdit extends React.PureComponent {
     )
     const headerRight = (
       <View style={navStyles.headerRight}>
-        {/*<TouchableOpacity onPress={ () => {*/}
-        {/*console.log('TODO: HANDLE CLICKED PHOTO ADD FROM SHARED THREAD')*/}
-        {/*}}>*/}
-        {/*<Image*/}
-        {/*style={navStyles.headerIconPhoto}*/}
-        {/*source={require('../SB/views/ThreadsDetail/statics/icon-photo.png')}*/}
-        {/*/>*/}
-        {/*</TouchableOpacity>*/}
+        <TouchableOpacity onPress={params.showImagePicker}>
+        <Image
+          style={navStyles.headerIconPhoto}
+          source={require('./statics/icon-photo.png')}
+        />
+        </TouchableOpacity>
         <TouchableOpacity onPress={params.showActionSheet}>
           <Image
             style={navStyles.headerIconMore}
@@ -76,8 +76,13 @@ class ThreadsEdit extends React.PureComponent {
         profile: this.props.profile,
         toggleVerboseUi: this.props.toggleVerboseUi,
         threadName: this.props.threadName,
-        showActionSheet: this.showActionSheet.bind(this)
+        showActionSheet: this.showActionSheet.bind(this),
+        showImagePicker: this.showImagePicker.bind(this)
       })
+    }
+
+    if (this.props.displayError) {
+      setTimeout(this.props.dismissError, 2500)
     }
   }
 
@@ -90,7 +95,8 @@ class ThreadsEdit extends React.PureComponent {
       profile: this.props.profile,
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName,
-      showActionSheet: this.showActionSheet.bind(this)
+      showActionSheet: this.showActionSheet.bind(this),
+      showImagePicker: this.showImagePicker.bind(this)
     })
   }
 
@@ -106,17 +112,43 @@ class ThreadsEdit extends React.PureComponent {
     }
   }
 
-  onPhotoSelect = () => {
+  showImagePicker () {
+    this.props.showImagePicker(this.props.threadId)
+  }
+
+  _onPhotoSelect = () => {
     return (photoId) => {
       this.props.viewPhoto(photoId, this.props.threadId)
+    }
+  }
+
+  _onRefresh = () => {
+    this.props.refresh(this.props.threadId)
+  }
+
+  _progressStyle = (fillBar) => {
+    if (fillBar) {
+      return {height: 1, backgroundColor: '#2935ff', flex: this.props.progress}
+    } else {
+      return {height: 1, backgroundColor: 'transparent', flex: 1.0 - this.props.progress}
     }
   }
 
   render () {
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.contentContainer}>
-          {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this.onPhotoSelect()}/>)}
+        {this.props.showProgress && <View style={{height: 1, flexDirection: 'row', padding: 0, margin: 0}}>
+          <View style={this._progressStyle(true)} />
+          <View style={this._progressStyle()} />
+        </View>}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.refreshing}
+              onRefresh={this._onRefresh}
+            />}
+          style={styles.contentContainer}>
+          {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this._onPhotoSelect()}/>)}
         </ScrollView>
 
         {this.state.showDrawer && <BottomDrawerList/>}
@@ -128,12 +160,12 @@ class ThreadsEdit extends React.PureComponent {
           cancelButtonIndex={2}
           onPress={this.handleActionSheetResponse.bind(this)}
         />
+
+        <Alert display={this.props.displayError} bottom msg={'Error: ' + this.props.errorMessage} />
       </View>
     )
   }
 }
-
-
 
 const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
@@ -174,18 +206,38 @@ const mapStateToProps = (state, ownProps) => {
       ? 'Any new photos you take will be added to your Textile wallet.'
       : 'Share your first photo to the ' + threadName + ' thread.')
 
+
+  // A little bit of feedback for the user to show that an image is
+  // processing... fills the gap before it shows up in the thread
+  const pendingShares = state.cameraRoll.pendingShares[threadId] || []
+  let progress = 0.0
+  if (pendingShares.length > 0) {
+    const firstShare = pendingShares[0]
+    if (firstShare.caption) {
+      progress = 0.3
+      if (firstShare.addResult) {
+        progress = 0.6
+        if (state.uploadingImages.images[firstShare.addResult.id]) {
+          progress = 0.8
+        }
+      }
+    }
+  }
   return {
     threadId,
     threadName,
     items,
-    progressData: state.uploadingImages.images,
     refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
     queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
-    profile: state.preferences.profile
+    profile: state.preferences.profile,
+    errorMessage: state.ui.imagePickerError,
+    displayError: state.ui.imagePickerError !== undefined,
+    showProgress: progress > 0,
+    progress
   }
 }
 
@@ -193,10 +245,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
+    showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
-    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) }
+    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
+    dismissError: () => { dispatch(UIActions.dismissImagePickerError()) }
   }
 }
 
