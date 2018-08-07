@@ -71,7 +71,6 @@ const migrations: MigrationManifest = {
   },
   5: (persistedState) => {
     const state = persistedState as any
-    // Not migrating devices because we didn't previously have meaningful device data
     return {
       ...state,
       cameraRoll: {
