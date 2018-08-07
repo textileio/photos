@@ -11,7 +11,6 @@ const OnboardingNav = StackNavigator(
     Onboarding: OnboardingScreen,
     SignUp: SignUpScreen,
     SignIn: SignInScreen,
-    Permissions: PermissionsScreen,
     ProfilePic: ProfilePicScreen
   },
   {

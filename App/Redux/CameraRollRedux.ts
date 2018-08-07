@@ -1,6 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
 import {UploadingImage} from './UploadingImagesRedux'
+import {AddResult} from '../Models/TextileTypes'
 
 const actions = {
   initialzePhotos: createAction('INITIALIZE_PHOTOS', resolve => {
@@ -27,10 +28,13 @@ const actions = {
   addComment: createAction('ADD_IMAGE_PICKER_COMMENT', resolve => {
     return (threadId: string, image: TextileTypes.SharedImage, caption: string) => resolve({ threadId, image, caption })
   }),
-  imagePinSuccess: createAction('IMAGE_PICKER_PIN_SUCCESS', resolve => {
+  localPinSuccess: createAction('LOCAL_PIN_SUCCESS', resolve => {
+    return (threadId: string, image: TextileTypes.SharedImage, addResult: TextileTypes.AddResult) => resolve({ threadId, image, addResult })
+  }),
+  remotePinSuccess: createAction('REMOTE_PIN_SUCCESS', resolve => {
     return (threadId: string, image: TextileTypes.SharedImage) => resolve({ threadId, image })
   }),
-  imageShareSuccess: createAction('IMAGE_PICKER_SHARE_SUCCESS', resolve => {
+  imagePinError: createAction('IMAGE_PICKER_PIN_ERROR', resolve => {
     return (threadId: string, image: TextileTypes.SharedImage) => resolve({ threadId, image })
   }),
   cancelShare: createAction('CANCEL_IMAGE_PICKER_SHARE', resolve => {
@@ -61,19 +65,7 @@ export const initialState: CameraRollState = {
 
 export const cameraRollSelectors = {
   initialized: state => state.cameraRoll.initialized as boolean,
-  queriedPhotos: state => state.cameraRoll.queriedPhotos as QueriedPhotosMap,
-  pendingSharesById: (state, id: string) => {
-    let output: { [index:string] : string } = {}
-    for (let threadId of Object.keys(state.cameraRoll.pendingShares)) {
-      const existing = state.cameraRoll.pendingShares[threadId].find((img: TextileTypes.SharedImage) => {
-        return img.addResult && img.addResult.id === id
-      })
-      if (existing) {
-        output[threadId] = existing
-      }
-    }
-    return output
-  },
+  queriedPhotos: state => state.cameraRoll.queriedPhotos as QueriedPhotosMap
 }
 
 export function reducer (state: CameraRollState = initialState, action: CameraRollAction): CameraRollState {
@@ -121,29 +113,25 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
       const { image } = action.payload
       const threadShares = state.pendingShares
 
-      // todo: remove and uncomment
-      threadShares[action.payload.threadId] = [image]
-      // if (threadShares[action.payload.threadId] === undefined) {
-      //   // add the image uir to the thread's pending shares
-      //   threadShares[action.payload.threadId] = [image]
-      // } else {
-      //   if (state.pendingShares[action.payload.threadId].find((img) => img.origURL === image.origURL)) {
-      //     // if the image already exists as a pending invite to the thread... skip it
-      //     return state
-      //   } else {
-      //     // add the image to the thread's pending shares
-      //     threadShares[action.payload.threadId].push(image)
-      //   }
-      // }
+      if (threadShares[action.payload.threadId] === undefined) {
+        // add the image uir to the thread's pending shares
+        threadShares[action.payload.threadId] = [image]
+      } else {
+        if (state.pendingShares[action.payload.threadId].find((img) => img.origURL === image.origURL)) {
+          // if the image already exists as a pending invite to the thread... skip it
+          return state
+        } else {
+          // add the image to the thread's pending shares
+          threadShares[action.payload.threadId].push(image)
+        }
+      }
       return {...state, pendingShares: threadShares}
     case getType(actions.addComment):
       if (state.pendingShares[action.payload.threadId] === undefined) {
-        console.log('no thread')
         return state
       }
       const existing = state.pendingShares[action.payload.threadId].find(img=>img.origURL === action.payload.image.origURL)
       if (!existing || existing.caption !== undefined) {
-        console.log('no existing or comment', existing)
         return state
       }
       existing.caption = action.payload.caption
@@ -152,33 +140,30 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
       shares[action.payload.threadId] = shares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
       shares[action.payload.threadId].push(existing)
 
-      console.log('updating pending share', action.payload.threadId, existing)
       return {...state, pendingShares: shares}
-    case getType(actions.imagePinSuccess):
+    case getType(actions.localPinSuccess):
       if (state.pendingShares[action.payload.threadId] === undefined) {
         return state
       }
-      if (!state.pendingShares[action.payload.threadId].find(img=>img.origURL === action.payload.image.origURL)) {
-        console.log('no existing or comment')
+      const partial = state.pendingShares[action.payload.threadId].find(img=>img.origURL === action.payload.image.origURL)
+      if (!partial || partial.addResult !== undefined) {
         return state
       }
+      partial.addResult = action.payload.addResult
 
-      const pending = state.pendingShares
-      pending[action.payload.threadId] = pending[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
-      pending[action.payload.threadId].push(action.payload.image)
+      const ps = state.pendingShares
+      ps[action.payload.threadId] = ps[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
+      ps[action.payload.threadId].push(partial)
 
-      console.log('updating pending share', action.payload.threadId, action.payload.image)
-      return {...state, pendingShares: pending}
-
-    case getType(actions.imagePinSuccess):
+      return {...state, pendingShares: ps}
+    case getType(actions.remotePinSuccess):
+    case getType(actions.imagePinError):
       if (state.pendingShares[action.payload.threadId] === undefined) {
         return state
       }
 
       const filteredShares = state.pendingShares
-      filteredShares[action.payload.threadId] = filteredShares[action.payload.threadId].filter((img) => {
-        img.origURL !== image.origURL
-      })
+      filteredShares[action.payload.threadId] = filteredShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
       return {...state, pendingShares: filteredShares}
     case getType(actions.cancelShare):
       if (state.pendingShares[action.payload.threadId] === undefined) {

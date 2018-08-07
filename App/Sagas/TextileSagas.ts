@@ -48,7 +48,7 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
     yield put(AuthActions.getTokensSuccess(tokens))
     // TODO: Put username into textile-go for addition to metadata model
     yield put(AuthActions.signUpSuccess())
-    yield call(NavigationService.navigate, 'Permissions')
+    yield call(NavigationService.navigate, 'ProfilePic')
   } catch (error) {
     yield put(AuthActions.signUpFailure(error))
   }
@@ -61,7 +61,7 @@ export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
     yield put(AuthActions.logInSuccess())
-    yield call(NavigationService.navigate, 'Permissions')
+    yield call(NavigationService.navigate, 'ProfilePic')
   } catch (error) {
     yield put(AuthActions.logInFailure(error))
   }
@@ -568,14 +568,12 @@ export function * refreshThreads () {
 export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
   const { threadId } = action.payload
 
-  console.log('TODO: WIP -- THREAD PICKER SAGA', threadId)
-
-  // TODO: Check permissions, if not exist ask for them
-
   // Turn ImagePicker into a Promise
   const pickerPromise = new Promise((resolve, reject) => {
     const pickerOptions = {
       title: 'Select a photo',
+      mediaType: 'photo',
+      noData: true,
       storageOptions: {
         skipBackup: true,
         waitUntilSaved: true
@@ -588,85 +586,89 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
 
   // Present image picker
   const pickerResponse = yield pickerPromise
-
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
-    console.log('TODO: User cancelled image picker')
-  }
-  else if (pickerResponse.error) {
-    console.log('TODO: ImagePicker Error: ', pickerResponse.error)
-  }
-  else if (pickerResponse.customButton) {
-    console.log('TODO: User tapped custom button: ', pickerResponse.customButton)
-  }
-  else {
-
-    const pickerResult: TextileTypes.SharedImage = {
-      data: pickerResponse.data,
-      origURL: pickerResponse.origURL,
-      uri: pickerResponse.uri,
-      height: pickerResponse.height,
-      width: pickerResponse.width,
-      isVertical: pickerResponse.isVertical,
-      timestamp: pickerResponse.timestamp,
-      fileName: pickerResponse.fileName,
-      fileSize: pickerResponse.fileSize,
-      added: Date.now()
+  } else if (pickerResponse.error) {
+    yield put(UIActions.newImagePickerError(pickerResponse.error, 'There was an issue with the photo picker. Please try again.'))
+  } else if (pickerResponse.customButton) {
+    // This shouldn't be possible currently
+  } else {
+    try {
+      console.log(pickerResponse)
+      const image: TextileTypes.SharedImage = {
+        origURL: pickerResponse.origURL || pickerResponse.uri,
+        uri: pickerResponse.uri,
+        height: pickerResponse.height,
+        width: pickerResponse.width,
+        isVertical: pickerResponse.isVertical
+      }
+      yield put(CameraRollActions.imagePickerSuccess(threadId, image))
+      yield call(PhotosNavigationService.navigate, 'SharePhoto', {threadId, image})
+    } catch (error) {
+      yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
     }
-
-    yield put(CameraRollActions.imagePickerSuccess(threadId, pickerResult))
   }
 ​}
 
-export function * imageCaptionRequest(action: ActionType<typeof CameraRollActions.imagePickerSuccess>) {
-  const { threadId, image } = action.payload
-  console.log('CAPTION', action.payload)
-  // yield call(PhotosNavigationService.navigate, 'SharePhoto', {threadId, image})
-}
+export function * localPinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
+  const {threadId, image} = action.payload
+  const photoPath = image.uri.replace('file://', '')
+  try {
+    if (photoPath === '') {
+      throw new Error('Error getting photo path')
+    }
+    // add the result to our local node
+    const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+    if (!addResult.archive) {
+      throw new Error('No archive returned')
+    }
 
-export function * remotePinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
-  const { threadId, image } = action.payload
+    // Get the ID of our Default Thread
+    let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
+    // Add the image to our defaul thread // i.e the wallet
+    yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
 
-  const photoPath = yield call(CameraRoll.getPhotoPath, image.origURL)
-  const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
-  if (!addResult.archive) {
-    throw new Error('no archive returned')
-  }
-
-  // Get default thread
-  let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
-
-  console.log('adding to default')
-  yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-
-  console.log('marking for upload recovery if fail')
-  yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-
-  console.log('init upload')
-  yield uploadFile(
-    addResult.id,
-    addResult.archive.path
-  )
-
-  // update our image
-  image.addResult = addResult
-  yield put(CameraRollActions.imagePinSuccess(threadId, image))
-
-  console.log('TODO: WIP -- IMAGE PIN SUCCESS...', threadId, addResult.id)
-}
-
-export function * shareImageToThread (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
-  const { dataId } = action.payload
-
-  const pendingShares = yield select(cameraRollSelectors.pendingSharesById, dataId)
-
-  for (let threadId of Object.keys(pendingShares)) {
-    const image = pendingShares[threadId]
-    yield call(TextileNode.sharePhotoToThread, dataId, threadId, image.caption)
+    // Share the photo to the target Thread
+    yield call(TextileNode.sharePhotoToThread, addResult.id, threadId, image.caption)
+    // Notify the UI to update via updating the hashes
     yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
-    yield put(CameraRollActions.imageShareSuccess(threadId, image))
-  }
 
+    // Store the addResult with the image
+    yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))
+  } catch (error) {
+    try {
+      yield put(CameraRollActions.imagePinError(threadId, image))
+    } finally {
+      yield put(UIActions.newImagePickerError(error, 'There was an issue with your local IPFS node. Please try again.'))
+    }
+  }
+}
+
+export function * remotePinRequest(action: ActionType<typeof CameraRollActions.localPinSuccess>) {
+  const {threadId, image, addResult} = action.payload
+  try {
+    if (!addResult.archive) {
+      throw new Error('no archive returned')
+    }
+    // Add the image upload job to the tracked jobs
+    yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+
+    // Begin the image upload to the Cafe pinner
+    yield uploadFile(
+      addResult.id,
+      addResult.archive.path
+    )
+
+    // Remove the image from the CameraRoll actions
+    yield put(CameraRollActions.remotePinSuccess(threadId, image))
+
+  } catch (error) {
+    try {
+      yield put(CameraRollActions.imagePinError(threadId, image))
+    } finally {
+      yield put(UIActions.newImagePickerError(error, 'There was an issue with your connection. Please try again.'))
+    }
+  }
 }
 
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {

@@ -82,18 +82,13 @@ export interface ImageData {
 }
 
 export type SharedImage = {
-  data: string,
   origURL: string,
   uri: string,
   height: number,
   width: number,
   isVertical: boolean,
-  timestamp: string,
-  fileName: string,
-  fileSize: number,
-  added: number, // used for pre-upload display
-  caption?: string // used for pre-upload display
-  addResult?: AddResult,
+  caption?: string, // used for pre-upload display
+  addResult?: AddResult, // used to pickup uploads if restart
 }
 
 export type CafeTokens = {

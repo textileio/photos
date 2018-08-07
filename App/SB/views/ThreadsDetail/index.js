@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native'
+import {View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
 
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
@@ -13,10 +13,12 @@ import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import ActionSheet from 'react-native-actionsheet'
+import TimerMixin from 'react-timer-mixin'
 
-const WIDTH = Dimensions.get('window').width
+import Alert from '../../../SB/components/Alert'
 
 class ThreadsEdit extends React.PureComponent {
+
   constructor (props) {
     super(props)
     this.state = {
@@ -80,6 +82,10 @@ class ThreadsEdit extends React.PureComponent {
         showImagePicker: this.showImagePicker.bind(this)
       })
     }
+
+    if (this.props.displayError) {
+      setTimeout(this.props.dismissError, 2500)
+    }
   }
 
   componentDidMount () {
@@ -135,6 +141,7 @@ class ThreadsEdit extends React.PureComponent {
           onPress={this.handleActionSheetResponse.bind(this)}
         />
 
+        <Alert display={this.props.displayError} bottom msg={'Error: ' + this.props.errorMessage} />
       </View>
     )
   }
@@ -181,11 +188,6 @@ const mapStateToProps = (state, ownProps) => {
       ? 'Any new photos you take will be added to your Textile wallet.'
       : 'Share your first photo to the ' + threadName + ' thread.')
 
-  const pendingPhotos = state.cameraRoll.pendingShares[threadId]
-  console.log('THREAD VIEW')
-  console.log(state.cameraRoll.pendingShares)
-  // TODO: show any pending shares at the top of the thread?
-
   return {
     threadId,
     threadName,
@@ -197,7 +199,9 @@ const mapStateToProps = (state, ownProps) => {
     nodeStatus,
     queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
-    profile: state.preferences.profile
+    profile: state.preferences.profile,
+    errorMessage: state.ui.imagePickerError,
+    displayError: state.ui.imagePickerError !== undefined
   }
 }
 
@@ -209,7 +213,8 @@ const mapDispatchToProps = (dispatch) => {
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
-    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) }
+    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
+    dismissError: () => { dispatch(UIActions.dismissImagePickerError()) }
   }
 }
 
