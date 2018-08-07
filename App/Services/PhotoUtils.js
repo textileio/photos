@@ -2,7 +2,7 @@ import {
   CameraRoll
 } from 'react-native'
 import RNFS from 'react-native-fs'
-import IPFS from '../../TextileNode'
+import TextileNode from '../../TextileNode'
 
 export async function getPage (pageSize, cursor) {
   let queryParams = { first: pageSize }
@@ -55,7 +55,7 @@ export async function getPhotoPath (photo) {
   }
   // Android Method
   else if (photo.uri.includes('content://media')) {
-    photo['path'] = await IPFS.getFilePath(photo.uri)
+    photo['path'] = await TextileNode.getFilePath(photo.uri)
   }
   return photo
 }

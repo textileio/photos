@@ -10,7 +10,6 @@ import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
 import { Colors } from '../Themes'
-// import IPFSImage from './IPFSImage'
 import TextileImage from '../../TextileImage'
 import { UploadingImage } from '../Redux/UploadingImagesRedux'
 

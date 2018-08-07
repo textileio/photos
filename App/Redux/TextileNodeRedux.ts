@@ -143,10 +143,10 @@ function createEmptyThreadData (): ThreadData {
 
 // TODO: create RootState type that will be passed into these
 export const TextileNodeSelectors = {
-  locked: (state: any) => (state.ipfs as TextileNodeState).locked,
-  appState: (state: any) => (state.ipfs as TextileNodeState).appState,
-  online: (state: any) => (state.ipfs as TextileNodeState).online,
-  threads: (state: any) => (state.ipfs as TextileNodeState).threads,
+  locked: (state: any) => (state.textileNode as TextileNodeState).locked,
+  appState: (state: any) => (state.textileNode as TextileNodeState).appState,
+  online: (state: any) => (state.textileNode as TextileNodeState).online,
+  threads: (state: any) => (state.textileNode as TextileNodeState).threads,
 }
 
 export default actions

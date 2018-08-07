@@ -84,7 +84,7 @@ class TextileManager extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    currentAppState: state.ipfs.appState
+    currentAppState: state.textileNode.appState
   }
 }
 
