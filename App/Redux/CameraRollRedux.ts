@@ -134,16 +134,19 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
       if (!existing || existing.caption !== undefined) {
         return state
       }
-      existing.caption = action.payload.caption
 
-      const thread = state.pendingShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
-      thread.push(existing)
+      const newThread = state.pendingShares[action.payload.threadId].map((img) => {
+        if (img.origURL === action.payload.image.origURL) {
+          img.caption = action.payload.caption
+        }
+        return img
+      })
 
       return {
         ...state,
         pendingShares: {
           ...state.pendingShares,
-          [action.payload.threadId]: thread
+          [action.payload.threadId]: newThread
         }
       }
     case getType(actions.localPinSuccess):
@@ -154,16 +157,19 @@ export function reducer (state: CameraRollState = initialState, action: CameraRo
       if (!partial || partial.addResult !== undefined) {
         return state
       }
-      partial.addResult = action.payload.addResult
 
-      const ps = state.pendingShares[action.payload.threadId].filter((img) => img.origURL !== action.payload.image.origURL)
-      ps.push(partial)
+      const newThreadData = state.pendingShares[action.payload.threadId].map((img) => {
+        if (img.origURL === action.payload.image.origURL) {
+          img.addResult = action.payload.addResult
+        }
+        return img
+      })
 
       return {
         ...state,
         pendingShares: {
           ...state.pendingShares,
-          [action.payload.threadId]: ps
+          [action.payload.threadId]: newThreadData
         }}
     case getType(actions.remotePinSuccess):
     case getType(actions.imagePinError):
