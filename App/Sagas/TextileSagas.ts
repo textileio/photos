@@ -574,6 +574,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
       title: 'Select a photo',
       mediaType: 'photo',
       noData: true,
+      allowsEditing: true,
       storageOptions: {
         skipBackup: true,
         waitUntilSaved: true
@@ -614,9 +615,6 @@ export function * localPinRequest(action: ActionType<typeof CameraRollActions.ad
   const {threadId, image} = action.payload
   const photoPath = image.uri.replace('file://', '')
   try {
-    if (photoPath === '') {
-      throw new Error('Error getting photo path')
-    }
     // add the result to our local node
     const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
     if (!addResult.archive) {
@@ -638,6 +636,10 @@ export function * localPinRequest(action: ActionType<typeof CameraRollActions.ad
   } catch (error) {
     try {
       yield put(CameraRollActions.imagePinError(threadId, image))
+      const exists: boolean = yield call(RNFS.exists, photoPath)
+      if (exists) {
+        yield call(RNFS.unlink, photoPath)
+      }
     } finally {
       yield put(UIActions.newImagePickerError(error, 'There was an issue with your local IPFS node. Please try again.'))
     }
@@ -665,6 +667,12 @@ export function * remotePinRequest(action: ActionType<typeof CameraRollActions.l
   } catch (error) {
     try {
       yield put(CameraRollActions.imagePinError(threadId, image))
+      if (addResult.archive) {
+        const exists: boolean = yield call(RNFS.exists, addResult.archive.path)
+        if (exists) {
+          yield call(RNFS.unlink, addResult.archive.path)
+        }
+      }
     } finally {
       yield put(UIActions.newImagePickerError(error, 'There was an issue with your connection. Please try again.'))
     }
