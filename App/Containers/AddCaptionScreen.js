@@ -24,7 +24,7 @@ class AddCaptionScreen extends React.Component {
     return {
       headerTitle: 'Photo Caption',
       headerLeft: (
-        <TouchableOpacity onPress={ () => {
+        <TouchableOpacity style={navStyles.backButtonWrapper} onPress={ () => {
           params.close()
           navigation.dispatch(NavigationActions.back())
         }}>
