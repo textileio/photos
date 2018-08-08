@@ -19,7 +19,7 @@ export default class BottomDrawerPhotos extends Component {
         <View style={styles.container} >
           <View style={styles.header}>
             <Text style={styles.title}>Share this photo in:</Text>
-            <TouchableOpacity onPress={ () => {
+            <TouchableOpacity style={styles.closeButtonWrapper} onPress={ () => {
               this.props.screenProps.onClose()
             }}>
               <Image style={styles.closeIcon} source={require('./statics/icon-cancel.png')}/>
