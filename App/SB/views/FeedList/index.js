@@ -40,7 +40,6 @@ class Notifications extends React.PureComponent {
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
   return {
   }

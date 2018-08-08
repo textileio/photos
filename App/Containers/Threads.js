@@ -46,7 +46,7 @@ class Threads extends React.PureComponent {
     const headerLeft = (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('Settings')
+          navigation.navigate('Account')
         }}
       >
 

@@ -4,6 +4,7 @@ import TextileManager from '../Containers/TextileManager'
 import OnboardingCheck from '../Containers/OnboardingCheck'
 import AndrewPairingInvite from '../SB/views/AndrewDeviceInvite'
 import AndrewThreadInvite from '../SB/views/AndrewThreadInvite'
+import AccountNavigation from './AccountNavigation'
 
 const PrimaryNav = SwitchNavigator(
   {
