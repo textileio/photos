@@ -22,7 +22,7 @@ class AddThreadScreen extends React.Component {
     return {
       headerTitle: 'New Thread',
       headerLeft: (
-        <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
+        <TouchableOpacity style={navStyles.backButtonWrapper} onPress={() => { navigation.dispatch(NavigationActions.back()) }}>
           <Image
             style={navStyles.headerLeft}
             source={require('../SB/views/ThreadsDetail/statics/icon-arrow-left.png')}

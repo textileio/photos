@@ -42,6 +42,7 @@ export default StyleSheet.create({
   footerLink: {
     fontFamily: 'BentonSans',
     fontSize: 13,
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+    padding: 10
   }
 })

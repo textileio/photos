@@ -49,6 +49,9 @@ export default StyleSheet.create({
     height: 16,
     width: 40
   },
+  backButtonWrapper: {
+    paddingVertical: 5,
+  },
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
