@@ -8,7 +8,6 @@ import AccountNavigation from './AccountNavigation'
 import Threads from '../Containers/Threads'
 import AddThreadScreen from '../Containers/AddThreadScreen'
 
-
 // BEGIN: SB Screens
 import PhotoDetail from '../SB/views/PhotoDetail'
 import Notifications from '../SB/views/FeedList'
