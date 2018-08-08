@@ -11,7 +11,7 @@
 *************************************************************/
 import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, select, take } from 'redux-saga/effects'
+import { call, put, select, take, fork } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
@@ -132,26 +132,8 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   }
 }
 
-export function * getProfile ( data ) {
-  const {photoId, threadId} = data.payload
-  const threads = yield select(TextileNodeSelectors.threads)
-  if (threads && threads[threadId]) {
-    const photo = threads[threadId].items.find((it) => it.photo.id === photoId).photo
-    try {
-      const isKnown = yield select(ContactsSelectors.isKnown, photo.author_id)
-      if (!isKnown) {
-        const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, photo.author_id)
-        yield put(ContactsActions.newContactSuccess(contact))
-      }
-    } catch (error) {
-      //nothing for now
-    }
-  }
-}
-
-export function * viewPhoto ( data ) {
+export function * viewPhoto ( action: ActionType<typeof UIActions.viewPhotoRequest> ) {
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
-  yield call(getProfile, data)
 }
 
 export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeActions.lock>) {
