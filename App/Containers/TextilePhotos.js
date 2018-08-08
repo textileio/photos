@@ -11,6 +11,7 @@ import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 
 import BottomDrawerList from '../SB/components/BottomDrawerList'
+import NavigationService from '../Services/NavigationService'
 
 class TextilePhotos extends React.PureComponent {
   constructor (props) {
@@ -20,7 +21,13 @@ class TextilePhotos extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const headerLeft = (
-      <TouchableWithoutFeedback delayLongPress={3000} onLongPress={params.toggleVerboseUi}>
+      <TouchableWithoutFeedback
+        delayLongPress={3000}
+        onLongPress={params.toggleVerboseUi}
+        onPress={() => {
+          navigation.navigate('Settings')
+        }}
+      >
         <View style={navStyles.headerIconUser}>
           <View style={navStyles.iconContainer}>
             {(params.profile && params.profile.avatar_id) && <Image
