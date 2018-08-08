@@ -50,11 +50,15 @@ export default StyleSheet.create({
     width: 40
   },
   backButtonWrapper: {
-    paddingVertical: 5,
+    paddingVertical: 5
   },
   headerRight: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
+  },
+  moreButtonWrapper: {
+    paddingVertical: 2,
+    paddingHorizontal: 6
   },
   headerIconPhoto: {
     height: 24,
