@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import TextileTypes from '../Models/TextileTypes'
+import { Profile } from '../Models/TextileTypes'
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', resolve => {
@@ -12,7 +12,7 @@ const actions = {
     return (mnemonic: string) => resolve({ mnemonic })
   }),
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
-    return (profile: TextileTypes.Profile) => resolve({ profile })
+    return (profile: Profile) => resolve({ profile })
   }),
   setAvatar: createAction('SET_AVATAR_REQUEST', resolve => {
     return (avatarId: string) => resolve({avatarId})
@@ -32,7 +32,7 @@ export type PreferencesState = {
   verboseUi: boolean
   mnemonic?: string
   publicKey?: string
-  profile?: TextileTypes.Profile
+  profile?: Profile
   pending?: string
 }
 
