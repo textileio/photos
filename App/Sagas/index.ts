@@ -19,6 +19,7 @@ import {startup} from './StartupSagas'
 import {
   signUp,
   logIn,
+  logOut,
   recoverPassword,
   viewPhoto,
   initializeAppState,
@@ -75,6 +76,7 @@ export default function * root () {
 
     takeEvery(getType(AuthActions.signUpRequest), signUp),
     takeEvery(getType(AuthActions.logInRequest), logIn),
+    takeEvery(getType(AuthActions.logOutRequest), logOut),
     takeEvery(getType(AuthActions.recoverPasswordRequest), recoverPassword),
 
     takeEvery(getType(DevicesActions.addDeviceRequest), addDevice),

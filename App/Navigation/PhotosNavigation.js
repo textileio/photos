@@ -133,7 +133,7 @@ const RootStack = StackNavigator(
     }
   },
   {
-    mode: 'modal',
+    mode: 'card',
     headerMode: 'none',
     navigationOptions: {
       gesturesEnabled: false
