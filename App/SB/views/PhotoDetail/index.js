@@ -38,7 +38,7 @@ class PhotoDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     const {params = {}} = navigation.state
     const headerLeft = (
-      <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
+      <TouchableOpacity style={styles.backButtonWrapper} onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
         <Image
           style={styles.toolbarLeft}
           source={require('./statics/icon-arrow-left.png')}
@@ -47,12 +47,12 @@ class PhotoDetail extends Component {
     )
     const headerRight = (
         <View style={styles.toolbarIconsList}>
-          <TouchableOpacity onPress={params.sharePressed}>
+          <TouchableOpacity style={styles.moreButtonWrapper} onPress={params.sharePressed}>
             <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
           </TouchableOpacity>
           {/*<Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>*/}
-          <TouchableOpacity onPress={params.getPublicLink}>
-            <Image style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
+          <TouchableOpacity style={styles.moreButtonWrapper} onPress={params.getPublicLink}>
+            <Image resizeMode={'stretch'} style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
           </TouchableOpacity>
           {/*<Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>*/}
         </View>
@@ -133,16 +133,16 @@ class PhotoDetail extends Component {
               <PhotoWithTextBox key={i} text={thread.name} item={this.props.thumbs[thread.id]}/>
             </TouchableOpacity>
           ))}
-          { this.props.threadsIn.length > 0 && 
+          { this.props.threadsIn.length > 0 &&
           <TouchableOpacity onPress={this.sharePressed.bind(this)}>
             <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}} title='Share in another thread'/>
           </TouchableOpacity> }
         </ScrollView>
         <Modal isVisible={this.state.drawer} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: "flex-end"}}>
           <ShareToThread
-            selector={this.shareIntoThread.bind(this)} 
+            selector={this.shareIntoThread.bind(this)}
             threads={this.props.threadsNotIn}
-            thumbs={this.props.thumbs} 
+            thumbs={this.props.thumbs}
             onClose={() => this.shareClosed()}
           />
         </Modal>
