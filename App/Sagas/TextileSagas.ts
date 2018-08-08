@@ -15,7 +15,6 @@ import { call, put, select, take } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
-import Reactotron from 'reactotron-react-native'
 import NavigationService from '../Services/NavigationService'
 import PhotosNavigationService from '../Services/PhotosNavigationService'
 import TextileNode from '../../TextileNode'
@@ -180,14 +179,11 @@ export function * handleNewAppState (action: ActionType<typeof TextileNodeAction
   const { previousState, newState } = action.payload
   console.log('handleNewAppState', previousState, newState)
   if (previousState.match(/default|unknown/) && newState === 'background') {
-    Reactotron.logImportant('launched into background')
     yield * triggerCreateNode()
   } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {
-    Reactotron.logImportant('app transitioned to foreground')
     yield put(TextileNodeActions.lock(false))
     yield * triggerCreateNode()
   } else if (previousState.match(/inactive|active/) && newState === 'background') {
-    Reactotron.logImportant('app transitioned to background')
     yield * triggerStopNode()
   }
 }
