@@ -27,23 +27,29 @@ export default StyleSheet.create({
     height: 16,
     width: 40
   },
+  backButtonWrapper: {
+    paddingVertical: 5
+  },
+  moreButtonWrapper: {
+    paddingVertical: 2,
+    paddingRight: 15,
+    paddingLeft: 25
+  },
   toolbarIconsList: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   toolbarAddIcon: {
     width: 24,
     height: 24,
-    marginLeft: 35
   },
   toolbarDownloadIcon: {
     width: 22,
     height: 21,
-     marginLeft: 35
   },
   toolbarShareIcon: {
+    marginTop: 3,
     width: 18,
-    height: 19,
-     marginLeft: 35
+    height: 18
   },
   toolbarRemoveIcon: {
     width: 14,

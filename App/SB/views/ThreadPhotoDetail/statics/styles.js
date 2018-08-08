@@ -24,6 +24,9 @@ export default StyleSheet.create({
     fontFamily: "BentonSans",
     fontSize: 30,
   },
+  backButtonWrapper: {
+    paddingVertical: 5
+  },
   mainPhoto: {
     width: '100%'
   },
