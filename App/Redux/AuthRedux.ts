@@ -20,6 +20,9 @@ const actions = {
   logInRequest: createAction('LOG_IN_REQUEST', resolve => {
     return (username: string, password: string) => resolve({ username, password })
   }),
+  logOutRequest: createAction('LOG_OUT_REQUEST', resolve => {
+    return () => resolve()
+  }),
   recoverPasswordRequest: createAction('RECOVER_PASSWORD_REQUEST', resolve => {
     return (data: any) => resolve({ data })
   }),
@@ -39,6 +42,9 @@ const actions = {
     return (error: Error) => resolve({ error })
   }),
   logInFailure: createAction('LOG_IN_FAILURE', resolve => {
+    return (error: Error) => resolve({ error })
+  }),
+  logOutFailure: createAction('LOG_OUT_FAILURE', resolve => {
     return (error: Error) => resolve({ error })
   }),
   recoverPasswordFailure: createAction('RECOVER_PASSWORD_FAILURE', resolve => {

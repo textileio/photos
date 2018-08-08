@@ -17,18 +17,15 @@ import styles from './statics/styles'
 
 import UIActions from '../../../Redux/UIRedux'
 
-const { width } = Dimensions.get('window')
-
 // via https://github.com/react-native-community/react-native-modal/issues/147
 const WIDTH = Dimensions.get('window').width
-
 // May be slightly off on some bigger Android devices...
 const HEIGHT = Dimensions.get('window').height
 
 class PhotoDetail extends Component {
   constructor (props) {
     super(props)
-    const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * width
+    const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * WIDTH
     this.state = {
       drawer: false,
       heightByWidth
@@ -104,7 +101,7 @@ class PhotoDetail extends Component {
       imageId={this.props.photo.id}
       previewPath={'thumb'}
       path={'photo'}
-      style={{height: this.state.heightByWidth, width: width, marginBottom: 10}}
+      style={{height: this.state.heightByWidth, width: WIDTH, marginBottom: 10}}
       resizeMode={'cover'}
     />)
   }
@@ -133,16 +130,16 @@ class PhotoDetail extends Component {
               <PhotoWithTextBox key={i} text={thread.name} item={this.props.thumbs[thread.id]}/>
             </TouchableOpacity>
           ))}
-          { this.props.threadsIn.length > 0 && 
+          { this.props.threadsIn.length > 0 &&
           <TouchableOpacity onPress={this.sharePressed.bind(this)}>
             <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}} title='Share in another thread'/>
           </TouchableOpacity> }
         </ScrollView>
         <Modal isVisible={this.state.drawer} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: "flex-end"}}>
           <ShareToThread
-            selector={this.shareIntoThread.bind(this)} 
+            selector={this.shareIntoThread.bind(this)}
             threads={this.props.threadsNotIn}
-            thumbs={this.props.thumbs} 
+            thumbs={this.props.thumbs}
             onClose={() => this.shareClosed()}
           />
         </Modal>

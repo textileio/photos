@@ -36,6 +36,7 @@ export default StyleSheet.create({
     marginBottom: 10
   },
   toolbarImage: {
+    borderRadius: 20,
     marginTop: 36,
     height: 59,
     width: 59
@@ -77,6 +78,20 @@ export default StyleSheet.create({
     height: 10,
     width: 10,
     backgroundColor: '#6FC110',
+    borderRadius: 20,
+    marginRight: 4
+  },
+  inActiveIcon: {
+    height: 10,
+    width: 10,
+    backgroundColor: '#ff1c3f',
+    borderRadius: 20,
+    marginRight: 4
+  },
+  activatingIcon: {
+    height: 10,
+    width: 10,
+    backgroundColor: '#ffce00',
     borderRadius: 20,
     marginRight: 4
   },

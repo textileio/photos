@@ -54,6 +54,15 @@ export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) 
   }
 }
 
+export function * logOut (action: ActionType<typeof AuthActions.logOutRequest>) {
+  try {
+    yield call(TextileNode.signOut)
+    yield call(NavigationService.navigate, 'OnboardingNavigation')
+  } catch (error) {
+    yield put(AuthActions.logOutFailure(error))
+  }
+}
+
 export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
   const {username, password} = action.payload
   try {
@@ -98,7 +107,6 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
     }
     const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-
 
     yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
 

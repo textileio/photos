@@ -14,6 +14,9 @@ const actions = {
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
     return (profile: TextileTypes.Profile) => resolve({ profile })
   }),
+  setAvatar: createAction('SET_AVATAR_REQUEST', resolve => {
+    return (avatarId: string) => resolve({avatarId})
+  }),
   pendingAvatar: createAction('PENDING_AVATAR_REQUEST', resolve => {
     return (avatarId: string) => resolve({avatarId})
   }),
