@@ -22,6 +22,13 @@ export interface Devices {
   items: Device[]
 }
 
+export interface Notification {
+  category: 'node' | 'devices' | 'threads' | 'content'
+  type: string
+  date: number
+  payload?: any
+}
+
 export interface Profile {
   id: string
   username?: string
@@ -32,7 +39,7 @@ export interface Photo {
   id: string
   date: string
   author_id: string
-  catption: string
+  caption: string
 }
 
 export interface Photos {

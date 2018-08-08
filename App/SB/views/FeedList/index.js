@@ -12,10 +12,6 @@ import styles from './statics/styles'
 import list from './constants'
 
 class Notifications extends React.PureComponent {
-  constructor (props) {
-    super(props)
-  }
-
   static navigationOptions = ({ navigation }) => {
     return {
       headerStyle: [navStyles.header, {
@@ -41,7 +37,9 @@ class Notifications extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state.notifications.notifications)
   return {
+    notifications: state.notifications.notifications
   }
 }
 
