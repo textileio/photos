@@ -2,7 +2,7 @@ import React from 'react'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import { Image } from 'react-native'
 import TextilePhotos from '../Containers/TextilePhotos'
-import InfoView from '../Containers/InfoView'
+import Settings from '../Containers/Settings'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
 import Threads from '../Containers/Threads'
@@ -10,13 +10,13 @@ import AddThreadScreen from '../Containers/AddThreadScreen'
 
 // BEGIN: SB Screens
 import PhotoDetail from '../SB/views/PhotoDetail'
+import Notifications from '../SB/views/FeedList'
 import ThreadPhotoDetail from '../SB/views/ThreadPhotoDetail'
 import ThreadsDetail from '../SB/views/ThreadsDetail'
 import AddCaptionScreen from '../Containers/AddCaptionScreen'
 import WalletPicker from '../Containers/WalletPicker'
 
 // Manifest of possible screens
-
 const PhotosNav = StackNavigator(
   {
     TextilePhotos: {
@@ -27,6 +27,9 @@ const PhotosNav = StackNavigator(
     },
     SharePhoto: {
       screen: AddCaptionScreen
+    },
+    Settings: {
+      screen: Settings
     }
   },
   {
@@ -59,16 +62,15 @@ const SharedPhotosNav = StackNavigator(
     },
     WalletPicker: {
       screen: WalletPicker
+    },
+    Settings: {
+      screen: Settings
     }
   },
   {
     // Default config for all screens
     headerMode: 'float',
     navigationOptions: {
-      // headerStyle: styles.header,
-      // headerTitleStyle: styles.headerTitle,
-      // headerTintColor: headerTintColor,
-      // headerBackTitleStyle: styles.headerButton
       headerStyle: styles.header,
       headerTitleContainerStyle: styles.headerTitle,
       headerTintColor: headerTintColor
@@ -76,9 +78,9 @@ const SharedPhotosNav = StackNavigator(
   }
 )
 
-const InfoNav = StackNavigator(
+const NotificationsNav = StackNavigator(
   {
-    InfoView: InfoView
+    Notifications: Notifications
   },
   {
     // Default config for all screens
@@ -95,7 +97,7 @@ const TabNav = TabNavigator(
   {
     PhotosNav: { screen: PhotosNav },
     SharedPhotosNav: { screen: SharedPhotosNav },
-    InfoNav: { screen: InfoNav }
+    NotificationsNav: { screen: NotificationsNav }
   },
   {
     navigationOptions: ({ navigation }) => {
@@ -107,7 +109,7 @@ const TabNav = TabNavigator(
             icon = focused ? require('../SB/components/BottomBar/statics/icon-wallet-active.png') : require('../SB/components/BottomBar/statics/icon-wallet.png')
           } else if (routeName === 'SharedPhotosNav') {
             icon = focused ? require('../SB/components/BottomBar/statics/icon-threads-active.png') : require('../SB/components/BottomBar/statics/icon-threads.png')
-          } else if (routeName === 'InfoNav') {
+          } else if (routeName === 'NotificationsNav') {
             icon = focused ? require('../SB/components/BottomBar/statics/icon-feed-active.png') : require('../SB/components/BottomBar/statics/icon-feed.png')
           }
           return <Image style={styles.bottomBarIcon} source={icon} />
