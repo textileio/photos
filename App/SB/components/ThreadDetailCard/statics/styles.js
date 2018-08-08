@@ -18,7 +18,7 @@ export default StyleSheet.create({
   cardLeft: {
     marginRight: 16,
     alignItems: 'center',
-    width: 50
+    width: 40
   },
   dateContainer: {
     backgroundColor: '#FAFCFE',
@@ -50,6 +50,9 @@ export default StyleSheet.create({
     fontSize: 20,
     textAlign: 'center'
   },
+  now: {
+    fontSize: 16
+  },
   cardAction: {
     fontFamily: 'BentonSans',
     fontSize: 14,
@@ -57,8 +60,8 @@ export default StyleSheet.create({
   },
   cardImage: {
     marginBottom: 8,
-    width: 280,
-    height: 200,
+    width: 270,
+    height: 270,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center'
@@ -71,7 +74,7 @@ export default StyleSheet.create({
     right: 0
   },
   image: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   cardActionName: {
     ...BentonSansBold()
