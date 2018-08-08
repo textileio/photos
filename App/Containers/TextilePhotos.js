@@ -25,7 +25,7 @@ class TextilePhotos extends React.PureComponent {
         delayLongPress={3000}
         onLongPress={params.toggleVerboseUi}
         onPress={() => {
-          navigation.navigate('Settings')
+          navigation.navigate('Account')
         }}
       >
         <View style={navStyles.headerIconUser}>

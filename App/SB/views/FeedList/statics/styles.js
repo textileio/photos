@@ -6,7 +6,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   toolbarTitle: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 30,
     marginTop: 16,
     marginBottom: 8

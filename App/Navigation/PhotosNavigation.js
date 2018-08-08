@@ -2,11 +2,12 @@ import React from 'react'
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation'
 import { Image } from 'react-native'
 import TextilePhotos from '../Containers/TextilePhotos'
-import Settings from '../Containers/Settings'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
+import AccountNavigation from './AccountNavigation'
 import Threads from '../Containers/Threads'
 import AddThreadScreen from '../Containers/AddThreadScreen'
+
 
 // BEGIN: SB Screens
 import PhotoDetail from '../SB/views/PhotoDetail'
@@ -15,6 +16,7 @@ import ThreadPhotoDetail from '../SB/views/ThreadPhotoDetail'
 import ThreadsDetail from '../SB/views/ThreadsDetail'
 import AddCaptionScreen from '../Containers/AddCaptionScreen'
 import WalletPicker from '../Containers/WalletPicker'
+
 
 // Manifest of possible screens
 const PhotosNav = StackNavigator(
@@ -27,9 +29,6 @@ const PhotosNav = StackNavigator(
     },
     SharePhoto: {
       screen: AddCaptionScreen
-    },
-    Settings: {
-      screen: Settings
     }
   },
   {
@@ -62,9 +61,6 @@ const SharedPhotosNav = StackNavigator(
     },
     WalletPicker: {
       screen: WalletPicker
-    },
-    Settings: {
-      screen: Settings
     }
   },
   {
@@ -131,6 +127,9 @@ const RootStack = StackNavigator(
   {
     PrimaryNav: {
       screen: TabNav
+    },
+    Account: {
+      screen: AccountNavigation
     }
   },
   {

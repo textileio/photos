@@ -3,17 +3,30 @@ import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
   container: {
-    marginTop: 20,
     backgroundColor: '#FAFCFE',
     flex: 1
-  },
-  toolbarLeft: {
-    height: 16,
-    width: 40
   },
   toolBarRight: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  toolbarBack: {
+    paddingVertical: 20
+  },
+  toolbarBackIcon: {
+    height: 16,
+    width: 40
+  },
+  toolbarUserName: {
+    fontFamily: 'BentonSans',
+    fontSize: 24,
+    marginBottom: 8
+  },
+  toolbarThreadsQty: {
+    flexDirection: 'row',
+    fontFamily: 'BentonSans',
+    fontSize: 13,
+    flex: 1
   },
   toolbarBottom: {
     flexDirection: 'row',
@@ -23,17 +36,9 @@ export default StyleSheet.create({
     marginBottom: 10
   },
   toolbarImage: {
+    marginTop: 36,
     height: 59,
     width: 59
-  },
-  toolbarUserName: {
-    fontFamily: 'BentonSans',
-    fontSize: 24,
-    marginBottom: 8
-  },
-  toolbarThreadsQty: {
-    fontFamily: 'BentonSans',
-    fontSize: 13
   },
   strong: {
     ...BentonSansBold()
