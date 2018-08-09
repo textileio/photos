@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Share, View, Text, Image, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
+import { Share, View, ScrollView, Text, Image, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, {DURATION} from 'react-native-easy-toast'
@@ -90,7 +90,7 @@ class UserProfile extends React.PureComponent {
 
   render () {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.listItem} onPress={this._settings.bind(this)}>
             <Text style={styles.listText}>Settings</Text>
@@ -117,11 +117,6 @@ class UserProfile extends React.PureComponent {
           }}>
             <Text style={styles.listText}>Invite Friends!</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={() => {
-            Linking.openURL('https://textile.photos/')
-          }}>
-            <Text style={styles.listText}>Visit Textile</Text>
-          </TouchableOpacity>
           {/*<TouchableOpacity style={styles.listItem} onPress={this._lockScreen.bind(this)}>*/}
             {/*<Text style={[styles.listText, styles.warning]}>Lock screen</Text>*/}
           {/*</TouchableOpacity>*/}
@@ -134,7 +129,7 @@ class UserProfile extends React.PureComponent {
         <ContactModal height={200} width={WIDTH} onClose={this._contact.bind(this)} isVisible={this.state.contactModal} />
 
         <Toast ref='toast' position='center' />
-      </View>
+      </ScrollView>
     )
   }
 }

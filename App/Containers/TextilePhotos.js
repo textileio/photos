@@ -31,7 +31,7 @@ class TextilePhotos extends React.PureComponent {
         <View style={navStyles.headerIconUser}>
           <View style={navStyles.iconContainer}>
             {(params.profile && params.profile.avatar_id) && <Image
-              source={{uri: params.profile.avatar_id}}
+              source={{uri: 'https://cafe.us-east-1.textile.io' + params.profile.avatar_id}}
               resizeMode={'cover'}
               style={{width: 24, height: 24}}
             />}

@@ -19,16 +19,6 @@ const lessThanOneDayAgo = (date) => {
   return date.isAfter(moment().subtract(1, 'days'))
 }
 
-function getImage (id, imageWidth) {
-  <TextileImage
-    imageId={id}
-    path={'thumb'}
-    style={[styles.image, {width: imageWidth, height: 270}]}
-    resizeMode={'cover'}
-    width={imageWidth}
-    height={270}
-  />
-}
 const ThreadDetailCard = props => {
   const { type, last, profile } = props
   switch (type) {
@@ -65,9 +55,10 @@ const ThreadDetailCard = props => {
       if (props.metadata && props.metadata.username && props.metadata.username !== '') {
         username = props.metadata.username
       }
+
+      // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH - 68
       let imageHeight = imageWidth
-      console.log(props.metadata)
       if (props.metadata && props.metadata.height && props.metadata.height > 0) {
         imageHeight = (props.metadata.height / props.metadata.width) * imageWidth
       }
