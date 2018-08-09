@@ -60,7 +60,7 @@ class TextilePhotos extends React.PureComponent {
       // TODO: no current menu needed for Wallet view
       headerRight,
       headerLeft,
-      tabBarVisible: params.threadName === 'default'
+      tabBarVisible: true
     }
   }
 
