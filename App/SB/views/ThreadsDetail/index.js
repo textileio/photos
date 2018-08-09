@@ -182,7 +182,6 @@ const mapStateToProps = (state, ownProps) => {
   var refreshing = false
   var thread = undefined
 
-  console.log('Thread', threadId)
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
     items = threadData.items.map((item) => {
