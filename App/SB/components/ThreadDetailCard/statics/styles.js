@@ -4,11 +4,6 @@ import { Colors } from '../../../../Themes'
 import { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_OFFSET } from '../../../../Components/Styles/PhotoGridStyles'
 
 export default StyleSheet.create({
-  toolbarUserIcon: {
-    height: 27,
-    width: 27,
-    marginRight: 10
-  },
   card: {
     flexDirection: 'row',
     paddingBottom: 25,
@@ -28,7 +23,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 8
   },
-  carLeftLine: {
+  cardLeftLine: {
     width: 1,
     height: '100%',
     position: 'absolute',
@@ -38,6 +33,11 @@ export default StyleSheet.create({
     paddingBottom: 25
   },
   cardRight: {},
+  toolbarUserIcon: {
+    height: 27,
+    width: 27,
+    marginRight: 10
+  },
   month: {
     fontFamily: 'BentonSans',
     fontSize: 12,
@@ -60,11 +60,9 @@ export default StyleSheet.create({
   },
   cardImage: {
     marginBottom: 8,
-    width: 270,
-    height: 270,
     overflow: 'hidden',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   imageStretch: {
     position: 'absolute',

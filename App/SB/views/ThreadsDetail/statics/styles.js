@@ -10,7 +10,13 @@ export default StyleSheet.create({
   },
   threadsDetail: {
     paddingTop: 22,
-    paddingHorizontal: 24
+    paddingHorizontal: 4
+  },
+  toolbarTitle: {
+    fontFamily: 'BentonSans',
+    fontSize: 30,
+    marginBottom: 10,
+    paddingLeft: 8
   },
   imageList: {
     paddingTop: 22,
@@ -34,11 +40,6 @@ export default StyleSheet.create({
   toolbarIconMore: {
     height: 4,
     width: 16
-  },
-  toolbarTitle: {
-    fontFamily: 'BentonSans',
-    fontSize: 30,
-    marginBottom: 10
   },
   toolbarUserContainer: {
     flexDirection: 'row'

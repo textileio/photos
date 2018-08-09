@@ -1,8 +1,9 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 import Dash from 'react-native-dash'
 import moment from 'moment'
 import TextileImage from '../../../../TextileImage'
+const WIDTH = Dimensions.get('window').width
 
 import SmallIconTag from '../SmallIconTag'
 
@@ -18,6 +19,16 @@ const lessThanOneDayAgo = (date) => {
   return date.isAfter(moment().subtract(1, 'days'))
 }
 
+function getImage (id, imageWidth) {
+  <TextileImage
+    imageId={id}
+    path={'thumb'}
+    style={[styles.image, {width: imageWidth, height: 270}]}
+    resizeMode={'cover'}
+    width={imageWidth}
+    height={270}
+  />
+}
 const ThreadDetailCard = props => {
   const { type, last, profile } = props
   switch (type) {
@@ -33,7 +44,7 @@ const ThreadDetailCard = props => {
         dateLarge = Math.abs(date.diff(moment(), 'm'))
       } else if (lessThanOneDayAgo(date)) {
         dateSmall = date.format('A')
-        dateLarge = date.format('H')
+        dateLarge = date.format('h')
       } else {
         dateSmall = date.format('MMM')
         dateLarge = date.format('DD')
@@ -50,16 +61,19 @@ const ThreadDetailCard = props => {
         caption += '... (+)'
       }
 
-      const author = props.contacts.find((p) => {
-        return p.id === props.photo.author_id
-      })
-
       let username = 'anonymous'
       if (props.metadata && props.metadata.username && props.metadata.username !== '') {
         username = props.metadata.username
       }
+      let imageWidth = WIDTH - 68
+      let imageHeight = imageWidth
+      console.log(props.metadata)
+      if (props.metadata && props.metadata.height && props.metadata.height > 0) {
+        imageHeight = (props.metadata.height / props.metadata.width) * imageWidth
+      }
+
       const defaultSource = require('../../views/Settings/statics/main-image.png')
-      const src = props.metadata.peer_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar_id'} : defaultSource
+      const src = props.metadata.peer_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar'} : defaultSource
 
       return (
         <View style={styles.card}>
@@ -68,7 +82,7 @@ const ThreadDetailCard = props => {
               <Text style={styles.month}>{dateSmall.toUpperCase()}</Text>
               <Text style={[styles.day, dateLarge === 'NOW' && styles.now]}>{dateLarge}</Text>
             </View>
-            { !last && <Dash style={styles.carLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
+            { !last && <Dash style={styles.cardLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
           </View>
           <TouchableOpacity style={styles.cardRight} onPress={() => {
             props.onSelect(props.photo.id)
@@ -76,15 +90,15 @@ const ThreadDetailCard = props => {
             <Text style={styles.cardAction}><Text style={styles.cardActionName}>
               {profile.username === username ? 'You' : username}
             </Text> added a photo</Text>
-            <View style={styles.cardImage}>
+            <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
               <View style={styles.imageStretch}>
                 <TextileImage
                   imageId={props.photo.id}
                   path={'thumb'}
                   style={styles.image}
                   resizeMode={'cover'}
-                  width={270}
-                  height={270}
+                  width={imageWidth}
+                  height={imageHeight}
                 />
               </View>
             </View>
