@@ -12,12 +12,13 @@ import navStyles from '../../../Navigation/Styles/NavigationStyles'
 
 const CommentCard = props => {
   // const { userName, comment, date, subComments, isSubComment, photo } = props
-  const userName = props.metadata && props.metadata.username ? props.metadata.username : 'anonymous'
   const comment = props.photo.caption
   const date = moment.utc(props.photo.date).fromNow()
   const subComments = undefined
   const isSubComment = false
 
+  const profile = props.profiles.find(p => p.id === props.photo.author_id)
+  const userName = profile && profile.username ? profile.username : 'A user'
   const defaultSource = require('../../views/Settings/statics/main-image.png')
   const uri = props.metadata.peer_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar' : undefined
 

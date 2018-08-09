@@ -23,6 +23,7 @@ export const initialState: ContactsState = {
 export function reducer (state: ContactsState = initialState, action: ContactsAction): ContactsState {
   switch (action.type) {
     case getType(actions.newContactSuccess):
+      console.log(action.payload)
       const profile = action.payload.profile
       const profiles = state.profiles.filter((c) => c.id !== profile.id)
       return { ...state, profiles: [...profiles, profile] }
