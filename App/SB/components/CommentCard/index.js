@@ -5,7 +5,7 @@ import SmallIconTag from '../SmallIconTag'
 
 import moment from 'moment'
 import SvgUri from 'react-native-svg-uri'
-const jdenticon = require('jdenticon')
+import Avatar from '../../../Components/Avatar'
 
 import styles from './statics/styles'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
@@ -19,20 +19,11 @@ const CommentCard = props => {
   const isSubComment = false
 
   const defaultSource = require('../../views/Settings/statics/main-image.png')
-  const src = props.metadata.peer_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar_id'} : defaultSource
+  const uri = props.metadata.peer_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar' : undefined
 
   return (
     <View style={[styles.comment, isSubComment ? styles.subComment : styles.withDivider ]}>
-      <View style={styles.commentProfileImage}>
-        <View style={styles.profileContainer}>
-          <Image
-            source={src}
-            resizeMode={'cover'}
-            style={styles.commentImage}
-            defaultSource={defaultSource}
-          />
-        </View>
-      </View>
+      <Avatar style={{marginRight: 11}} width={38} height={38} uri={uri} defaultSource={defaultSource} />
       <View style={styles.commentTexts}>
         <Text style={styles.commentUser}>{userName}</Text>
         <View style={styles.commentTextWrapper}><Text style={styles.commentText}>{comment}</Text></View>
