@@ -162,11 +162,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    getProfile: (peerId: string) => {
-      dispatch(ContactsActions.getProfile(peerId))
-    }
-  }
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThreadsList)
