@@ -1,9 +1,9 @@
 import { Store } from 'redux'
 import { AppState, AppStateStatus } from 'react-native'
 
-import { RootState } from '../Redux/Types'
+import { RootState } from '../../Redux/Types'
 
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import TextileNodeActions from '../../Redux/TextileNodeRedux'
 
 export default class AppStateEventHandler {
   store: Store<RootState>

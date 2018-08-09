@@ -2,9 +2,9 @@ import { Store } from 'redux'
 // TODO: Create typings
 import Upload from 'react-native-background-upload'
 
-import { RootState } from '../Redux/Types'
+import { RootState } from '../../Redux/Types'
 
-import UploadingImagesActions from '../Redux/UploadingImagesRedux'
+import UploadingImagesActions from '../../Redux/UploadingImagesRedux'
 
 export default class UploadEventHandler {
   store: Store<RootState>

@@ -1,7 +1,7 @@
 import { Store } from 'redux'
 import { Linking, Platform } from 'react-native'
 
-import DeepLink from './DeepLink'
+import DeepLink from '../DeepLink'
 
 export default class DeepLinkEventHandler {
   constructor() {
