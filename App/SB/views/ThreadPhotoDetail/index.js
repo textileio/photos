@@ -48,7 +48,7 @@ class ThreadPhotoDetail extends Component {
   renderImage () {
     return (<ProgressiveImage
       imageId={this.props.photo.id}
-      previewPath={'thumb'}
+      previewPath={'small'}
       path={'photo'}
       style={[styles.mainPhoto, {height: width}]}
       resizeMode={'contain'}
