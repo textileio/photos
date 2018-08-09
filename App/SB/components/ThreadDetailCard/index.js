@@ -19,7 +19,7 @@ const lessThanOneDayAgo = (date) => {
 }
 
 const ThreadDetailCard = props => {
-  const { type, last } = props
+  const { type, last, profile } = props
   switch (type) {
     case 'photo': {
       const date = moment(props.photo.date)
@@ -40,43 +40,55 @@ const ThreadDetailCard = props => {
       }
 
       let caption = props.photo.caption
-      if (caption > 90) {
-        caption = props.photo.caption.substring(0, 87)
-        caption = caption.substring(0, caption.lastIndexOf(' ')) + '...'
+      // format really long strings to just show a (+) to read the whole thing
+      if (caption.length > 120) {
+        caption = props.photo.caption.substring(0, 117)
+        caption = caption.substring(0, caption.lastIndexOf(' '))
+        while (caption[caption.length - 1] === '.' || caption[caption.length - 1] === ' ') {
+          caption = caption.slice(0, -1)
+        }
+        caption += '... (+)'
       }
 
-      let username = "anonymous"
-      if (props.metadata && props.metadata.username) {
+      const author = props.contacts.find((p) => p.id === props.photo.author_id)
+
+      let username = 'anonymous'
+      if (props.metadata && props.metadata.username && props.metadata.username !== '') {
         username = props.metadata.username
       }
+
+      const defaultSource = require('../../views/ThreadsDetail/statics/default-profile.png')
+      const src = author && author.avatar_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + author.avatar_id + '/avatar_id'} : defaultSource
 
       return (
         <View style={styles.card}>
           <View style={styles.cardLeft}>
             <View style={styles.dateContainer}>
               <Text style={styles.month}>{dateSmall.toUpperCase()}</Text>
-              <Text style={styles.day}>{dateLarge}</Text>
+              <Text style={[styles.day, dateLarge === 'NOW' && styles.now]}>{dateLarge}</Text>
             </View>
             { !last && <Dash style={styles.carLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
           </View>
-          <View style={styles.cardRight}>
-            <Text style={styles.cardAction}><Text style={styles.cardActionName}>{username}</Text> added a photo</Text>
-            <TouchableOpacity style={styles.cardImage} onPress={() => {
-              props.onSelect(props.photo.id)
-            }} >
+          <TouchableOpacity style={styles.cardRight} onPress={() => {
+            props.onSelect(props.photo.id)
+          }} >
+            <Text style={styles.cardAction}><Text style={styles.cardActionName}>
+              {profile.username === username ? 'You' : username}
+            </Text> added a photo</Text>
+            <View style={styles.cardImage}>
               <View style={styles.imageStretch}>
                 <TextileImage
                   imageId={props.photo.id}
                   path={'thumb'}
                   style={styles.image}
                   resizeMode={'cover'}
-                  width={280}
-                  height={200}
+                  width={270}
+                  height={270}
                 />
               </View>
-            </TouchableOpacity>
-            <SmallIconTag syle={{flexDirection: 'row'}} text={ caption } image={require('./statics/icon-comment.png')} />
-          </View>
+            </View>
+            <SmallIconTag syle={{flexDirection: 'row'}} text={caption} image={src} defaultSource={defaultSource}/>
+          </TouchableOpacity>
         </View>
       )
     }

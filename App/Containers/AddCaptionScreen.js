@@ -5,7 +5,6 @@ import Input from '../SB/components/Input'
 import { Button } from 'react-native-elements'
 import { NavigationActions } from 'react-navigation'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import ThreadsActions from '../Redux/ThreadsRedux'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import UIActions from '../Redux/UIRedux'
 import CameraRollActions from '../Redux/CameraRollRedux'
@@ -24,7 +23,7 @@ class AddCaptionScreen extends React.Component {
     return {
       headerTitle: 'Photo Caption',
       headerLeft: (
-        <TouchableOpacity onPress={ () => {
+        <TouchableOpacity style={navStyles.backButtonWrapper} onPress={ () => {
           params.close()
           navigation.dispatch(NavigationActions.back())
         }}>

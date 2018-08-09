@@ -3,18 +3,24 @@ import { StyleSheet } from 'react-native'
 export default StyleSheet.create({
   detail: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginRight: 9
+    marginRight: 9,
+    marginTop: 4
   },
   detailImage: {
-    height: 12,
-    width: 12,
-    marginRight: 8
+    height: 27,
+    width: 27,
+    marginRight: 10,
+    borderRadius: 10
+  },
+  detailTextView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: 33
   },
   detailText: {
-    fontFamily: 'BentonSans',
-    fontSize: 12,
-    lineHeight: 11,
-    width: 190,
+    fontFamily: 'BentonSans-Light',
+    fontSize: 14,
+    lineHeight: 16,
+    width: 233
   }
 })

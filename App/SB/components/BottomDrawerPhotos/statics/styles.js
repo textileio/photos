@@ -26,6 +26,10 @@ export default StyleSheet.create({
     fontSize: 14,
     color: "#9b9b9b"
   },
+  closeButtonWrapper: {
+    paddingVertical: 4,
+    paddingHorizontal: 12
+  },
   closeIcon: {
     paddingBottom: 16,
     width: 13,

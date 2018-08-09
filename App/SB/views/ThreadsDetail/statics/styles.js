@@ -3,12 +3,19 @@ import { StyleSheet } from 'react-native'
 export default StyleSheet.create({
   container: {
     marginTop: 0,
+    paddingHorizontal: 0,
+    marginHorizontal: 0,
     backgroundColor: '#FAFCFE',
     flex: 1
   },
-  contentContainer: {
+  threadsDetail: {
     paddingTop: 22,
     paddingHorizontal: 24
+  },
+  imageList: {
+    paddingTop: 22,
+    paddingHorizontal: 0,
+    marginHorizontal: 0
   },
   toolbarLeft: {
     height: 16,

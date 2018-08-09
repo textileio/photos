@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, FlatList, ScrollView, Image, Text, TouchableOpacity } from 'react-native'
-import HeaderButtons from 'react-navigation-header-buttons'
+import { View, FlatList, Image, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import Toast, {DURATION} from 'react-native-easy-toast'
 import Colors from '../Themes/Colors'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-import UIActions from '../Redux/UIRedux'
 
 // Styles
 import styles from './Styles/ThreadsStyle'
@@ -49,7 +45,6 @@ class Threads extends React.PureComponent {
           navigation.navigate('Account')
         }}
       >
-
         <View style={navStyles.headerIconUser}>
           <View style={navStyles.iconContainer}>
             {(params.profile && params.profile.avatar_id) && <Image
@@ -63,7 +58,7 @@ class Threads extends React.PureComponent {
       </TouchableOpacity>
     )
     const headerRight = (
-      <TouchableOpacity onPress={() => { navigation.navigate('AddThread') }}>
+      <TouchableOpacity style={navStyles.moreButtonWrapper} onPress={() => { navigation.navigate('AddThread') }}>
         <Image style={navStyles.headerIcon} source={require('../SB/views/ThreadsList/statics/plus.png')} />
       </TouchableOpacity>
     )

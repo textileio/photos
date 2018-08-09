@@ -28,7 +28,7 @@ class ThreadPhotoDetail extends Component {
   }
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
-      <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
+      <TouchableOpacity style={styles.backButtonWrapper} onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
         <Image style={styles.toolbarLeft} source={require('./statics/icon-arrow-left.png')} />
       </TouchableOpacity>
     )
