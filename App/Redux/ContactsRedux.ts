@@ -4,6 +4,9 @@ import * as TextileTypes from '../Models/TextileTypes'
 const actions = {
   newContactSuccess: createAction('NEW_CONTACT_SUCCESS', resolve => {
     return (profile: TextileTypes.Profile) => resolve({profile})
+  }),
+  getProfile: createAction('GET_PROFILE_REQUEST', resolve => {
+    return (peerId: string) => resolve({peerId})
   })
 }
 

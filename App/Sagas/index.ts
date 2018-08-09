@@ -50,6 +50,7 @@ import {
   localPinRequest,
   remotePinRequest,
   nodeOnlineSaga,
+  getProfile,
 } from './TextileSagas'
 import CameraRollActions from '../Redux/CameraRollRedux'
 
@@ -123,6 +124,7 @@ export default function * root () {
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
     takeLatest(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),
+    takeEvery(getType(TextileNodeActions.getPhotoHashesSuccess), getProfile),
 
     initializeAppState()
   ])

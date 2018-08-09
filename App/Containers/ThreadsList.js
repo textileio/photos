@@ -7,10 +7,12 @@ import Button from '../SB/components/Button'
 import ThreadCard from '../SB/components/ThreadListCard'
 
 import Avatar from '../Components/Avatar'
+import ContactsActions from '../Redux/ContactsRedux'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Colors from '../Themes/Colors'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
 
 class MyListItem extends React.PureComponent {
   _onPress = () => {
@@ -133,6 +135,7 @@ const mapStateToProps = (state) => {
     .map(thread => {
       const nodeThread = state.textileNode.threads[thread.id]
       // Todo: we'll want to get all this from a better source
+      thread.photos = []
       if (nodeThread && nodeThread.items) {
         const items = nodeThread.items
         // total number of images in the thread
@@ -145,7 +148,8 @@ const mapStateToProps = (state) => {
           // latest update based on the latest item
         thread.updated = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.date ? moment(thread.photos[0].photo.date) : undefined
         // latest peer to push to the thread
-        thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.author_id ? thread.photos[0].photo.author_id : undefined
+        // thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.author_id ? thread.photos[0].photo.author_id : undefined
+        thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].metadata && thread.photos[0].metadata.peer_id ? thread.photos[0].metadata.peer_id : undefined
       }
       return thread
     })
@@ -158,7 +162,11 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    getProfile: (peerId: string) => {
+      dispatch(ContactsActions.getProfile(peerId))
+    }
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThreadsList)
