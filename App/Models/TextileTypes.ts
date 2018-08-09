@@ -25,7 +25,9 @@ export interface Devices {
 export interface Notification {
   category: 'node' | 'devices' | 'threads' | 'content'
   type: string
-  date: number
+  read: boolean
+  timestamp: number
+  unique?: boolean
   payload?: any
 }
 

@@ -25,7 +25,9 @@ TextileNode.eventEmitter.addListener('onOnline', () => {
   store.dispatch(NotificationActions.newNotification({
     category: 'node',
     type: 'onOnline',
-    date: Date.now()
+    read: false,
+    unique: true,
+    timestamp: Date.now()
   }))
 })
 // TODO: add types to event emitter if possible
@@ -34,37 +36,45 @@ TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {
   store.dispatch(NotificationActions.newNotification({
     category: 'content',
     type: 'onThreadUpdate',
-    date: Date.now(),
-    payload: payload
+    read: false,
+    timestamp: Date.now(),
+    payload
   }))
 })
-TextileNode.eventEmitter.addListener('onThreadAdded', () => {
+TextileNode.eventEmitter.addListener('onThreadAdded', (payload) => {
   store.dispatch(ThreadActions.refreshThreadsRequest())
   store.dispatch(NotificationActions.newNotification({
     category: 'threads',
     type: 'onThreadAdded',
-    date: Date.now()
+    read: false,
+    timestamp: Date.now(),
+    payload
   }))
 })
-TextileNode.eventEmitter.addListener('onThreadRemoved', () => {
+TextileNode.eventEmitter.addListener('onThreadRemoved', (payload) => {
   store.dispatch(ThreadActions.refreshThreadsRequest())
   store.dispatch(NotificationActions.newNotification({
     category: 'threads',
     type: 'onThreadRemoved',
-    date: Date.now()
+    read: false,
+    timestamp: Date.now(),
+    payload
   }))
 })
 TextileNode.eventEmitter.addListener('onDeviceAdded', () => {
   store.dispatch(NotificationActions.newNotification({
     category: 'devices',
     type: 'onDeviceAdded',
-    date: Date.now()
+    read: false,
+    timestamp: Date.now()
   }))
 })
 TextileNode.eventEmitter.addListener('onDeviceRemoved', () => {
   store.dispatch(NotificationActions.newNotification({
     category: 'devices',
-    type: 'onDeviceRemoved'
+    type: 'onDeviceRemoved',
+    read: false,
+    timestamp: Date.now()
   }))
 })
 class App extends Component {
