@@ -7,7 +7,7 @@ const actions = {
     return (value: boolean) => resolve({ value })
   }),
   appStateChange: createAction('APP_STATE_CHANGE', resolve => {
-    return (previousState: AppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
+    return (previousState: TextileAppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
   }),
   createNodeRequest: createAction('CREATE_NODE_REQUEST', resolve => {
     return (path: string) => resolve({ path })
@@ -67,9 +67,11 @@ type ThreadMap = {
   readonly [key: string]: ThreadData
 }
 
+type TextileAppStateStatus = AppStateStatus | 'unknown'
+
 type TextileNodeState = {
   readonly locked: boolean
-  readonly appState: AppStateStatus | 'unknown'
+  readonly appState: TextileAppStateStatus
   readonly online: boolean
   readonly nodeState: {
     readonly state?: 'creating' | 'stopped' | 'starting' | 'started' | 'stopping'
