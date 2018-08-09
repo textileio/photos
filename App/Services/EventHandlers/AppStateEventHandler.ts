@@ -15,9 +15,9 @@ export default class AppStateEventHandler {
 
   handleAppState (newState: AppStateStatus) {
     const currentState = this.store.getState().textileNode.appState
-      if (newState !== currentState) {
-        this.store.dispatch(TextileNodeActions.appStateChange(currentState, newState))
-      }
+    if (newState !== currentState) {
+      this.store.dispatch(TextileNodeActions.appStateChange(currentState, newState))
+    }
   }
 
   setup () {
