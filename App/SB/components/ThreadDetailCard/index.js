@@ -58,7 +58,6 @@ const ThreadDetailCard = props => {
       if (props.metadata && props.metadata.username && props.metadata.username !== '') {
         username = props.metadata.username
       }
-
       const defaultSource = require('../../views/Settings/statics/main-image.png')
       const src = props.metadata.peer_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar_id'} : defaultSource
 

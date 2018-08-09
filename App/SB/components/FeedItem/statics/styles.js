@@ -12,7 +12,7 @@ export default StyleSheet.create({
     borderColor: '#ECEDEE',
   },
   textContainer: {
-    flexGrow: 1,
+    flex: 1,
     marginLeft: 11
   },
   text: {
