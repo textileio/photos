@@ -140,22 +140,6 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   }
 }
 
-export function * getProfile ( action: ActionType<typeof TextileNodeActions.getPhotoHashesSuccess> ) {
-  const {threadId, items} = action.payload
-  for (let item of items) {
-    if (item && item.metadata && item.metadata.peer_id)
-    try {
-      const isKnown = yield select(ContactsSelectors.isKnown, item.metadata.peer_id)
-      if (!isKnown) {
-        const contact: TextileTypes.Profile = yield call(TextileNode.getPeerProfile, item.metadata.peer_id)
-        yield put(ContactsActions.newContactSuccess(contact))
-      }
-    } catch (error) {
-      //nothing for now
-    }
-  }
-}
-
 export function * viewPhoto ( action: ActionType<typeof UIActions.viewPhotoRequest> ) {
   yield call(PhotosNavigationService.navigate, 'PhotoViewer')
 }
