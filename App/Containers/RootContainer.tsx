@@ -4,8 +4,6 @@ import { Overlay } from 'react-native-elements'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
-import StartupActions from '../Redux/StartupRedux'
-import ReduxPersist from '../Config/ReduxPersist'
 import NavigationService from '../Services/NavigationService'
 import { RootState } from '../Redux/Types'
 
