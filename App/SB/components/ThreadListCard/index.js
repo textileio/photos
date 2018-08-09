@@ -12,7 +12,7 @@ const ThreadCard = props => {
   const { name, latestPeerId, updated, userCount, photos, onPress } = props
   const lastUpdatedTime = moment(updated).fromNow()
   const commentsCount = photos.length
-  console.log('ooo', photos)
+  const uri = latestPeerId ? 'https://cafe.us-east-1.textile.io/ipns/' + latestPeerId + '/avatar' : undefined
   return (
     <TouchableOpacity activeOpacity={0.8} style={styles.threadCard} onPress={() => {
       onPress(props)
@@ -33,7 +33,7 @@ const ThreadCard = props => {
           </View>
         </View>
         <View style={styles.threadCardHeaderRight}>
-          <Avatar width={48} height={48} uri={latestPeerId} defaultSource={require('../../views/Settings/statics/main-image.png')} />
+          <Avatar width={48} height={48} uri={uri} defaultSource={require('../../views/Settings/statics/main-image.png')} />
         </View>
       </View>
       <View style={styles.threadCardBody}>
