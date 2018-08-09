@@ -226,7 +226,7 @@ const mapStateToProps = (state, ownProps) => {
       }
     }
   }
-  console.log(state.preferences)
+  
   return {
     threadId,
     threadName,
