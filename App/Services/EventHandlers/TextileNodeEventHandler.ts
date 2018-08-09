@@ -1,11 +1,11 @@
 import { Store } from 'redux'
 
-import TextileNode from '../../TextileNode'
-import { RootState } from '../Redux/Types'
+import TextileNode from '../../../TextileNode'
+import { RootState } from '../../Redux/Types'
 
-import TextileNodeActions from '../Redux/TextileNodeRedux'
-import NotificationActions from '../Redux/NotificationsRedux'
-import ThreadsActions from '../Redux/ThreadsRedux'
+import TextileNodeActions from '../../Redux/TextileNodeRedux'
+import NotificationActions from '../../Redux/NotificationsRedux'
+import ThreadsActions from '../../Redux/ThreadsRedux'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
