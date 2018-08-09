@@ -11,10 +11,10 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 import styles, {buttonColor1, buttonColor2, buttonColor3, buttonColor4} from './Styles/InfoViewStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 
-class InfoView extends React.PureComponent {
+class Settings extends React.PureComponent {
 
   static navigationOptions = {
-    headerTitle: (<Text style={navStyles.headerTitle}>Support/Feedback</Text>)
+    headerTitle: (<Text style={navStyles.headerTitle}>Settings</Text>)
 
   }
 
@@ -96,5 +96,5 @@ const mapDispatchToProps = (dispatch) => {
   return {}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InfoView)
+export default connect(mapStateToProps, mapDispatchToProps)(Settings)
 

@@ -17,18 +17,15 @@ import styles from './statics/styles'
 
 import UIActions from '../../../Redux/UIRedux'
 
-const { width } = Dimensions.get('window')
-
 // via https://github.com/react-native-community/react-native-modal/issues/147
 const WIDTH = Dimensions.get('window').width
-
 // May be slightly off on some bigger Android devices...
 const HEIGHT = Dimensions.get('window').height
 
 class PhotoDetail extends Component {
   constructor (props) {
     super(props)
-    const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * width
+    const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * WIDTH
     this.state = {
       drawer: false,
       heightByWidth
@@ -104,7 +101,7 @@ class PhotoDetail extends Component {
       imageId={this.props.photo.id}
       previewPath={'thumb'}
       path={'photo'}
-      style={{height: this.state.heightByWidth, width: width, marginBottom: 10}}
+      style={{height: this.state.heightByWidth, width: WIDTH, marginBottom: 10}}
       resizeMode={'cover'}
     />)
   }

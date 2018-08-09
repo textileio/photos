@@ -1,29 +1,57 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { View, Text, ScrollView } from 'react-native'
 
-import Toolbar from '../../components/Toolbar'
 import FeedItem from '../../components/FeedItem'
-import FeedItemUpdate from '../../components/FeedItemUpdate'
-import BottomBar from '../../components/BottomBar'
+import Toast from 'react-native-easy-toast'
 
+import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import styles from './statics/styles'
-import list from './constants'
 
-const Notifications = () => {
-  return (
-    <View style={styles.container}>
-      <Toolbar>
-        <Text style={styles.toolbarTitle}>Notifications</Text>
-      </Toolbar>
-      <FeedItemUpdate />
-      <ScrollView style={styles.contentContainer}>
-        { list.map((item, i) => (
-          <FeedItem key={i} {...item} />
-        )) }
-      </ScrollView>
-      <BottomBar active='feed' />
-    </View>
-  )
+class Notifications extends React.PureComponent {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerStyle: [navStyles.header, {
+        height: 60,
+        paddingHorizontal: 16
+      }],
+      headerLeft: (<Text style={styles.toolbarTitle}>{'Notifications'}</Text>)
+    }
+  }
+
+  _onClick (category, target) {
+    console.log(category, target)
+    if (target && (category === 'threads' || category === 'content')) {
+      this.props.navigation.navigate('ViewThread', target)
+    } else {
+      this.refs.toast.show('Wohoo!', 500)
+    }
+  }
+
+  render () {
+    return (
+      <View style={styles.container}>
+        {/*<FeedItemUpdate />*/}
+        <ScrollView style={styles.contentContainer}>
+          {this.props.notifications.map((item, i) => (
+            <FeedItem key={i} profile={this.props.profile} {...item} onClick={this._onClick.bind(this)}/>
+          ))}
+        </ScrollView>
+        <Toast ref='toast' position='center' />
+      </View>
+    )
+  }
 }
 
-export default Notifications
+const mapStateToProps = (state, ownProps) => {
+  return {
+    notifications: state.notifications.notifications
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Notifications)
