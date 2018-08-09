@@ -50,8 +50,7 @@ const ThreadDetailCard = props => {
         caption += '... (+)'
       }
 
-      const author = props.contacts.length > 0 && props.contacts.find((p) => {
-        console.log(p)
+      const author = props.contacts.find((p) => {
         return p.id === props.photo.author_id
       })
 
