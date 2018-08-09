@@ -71,7 +71,6 @@ class Threads extends React.PureComponent {
 
   state = {selected: (new Map(): Map<string, boolean>)}
 
-
   componentDidMount () {
     this.props.navigation.setParams({
       profile: this.props.profile

@@ -5,7 +5,8 @@ import TextilePhotos from '../Containers/TextilePhotos'
 
 import styles, {headerTintColor} from './Styles/NavigationStyles'
 import AccountNavigation from './AccountNavigation'
-import Threads from '../Containers/Threads'
+import ThreadsList from '../Containers/ThreadsList'
+
 import AddThreadScreen from '../Containers/AddThreadScreen'
 
 // BEGIN: SB Screens
@@ -44,7 +45,7 @@ const PhotosNav = StackNavigator(
 const SharedPhotosNav = StackNavigator(
   {
     SharedPhotos: {
-      screen: Threads
+      screen: ThreadsList
     },
     AddThread: {
       screen: AddThreadScreen
