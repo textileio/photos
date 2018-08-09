@@ -50,7 +50,10 @@ const ThreadDetailCard = props => {
         caption += '... (+)'
       }
 
-      const author = props.contacts.find((p) => p.id === props.photo.author_id)
+      const author = props.contacts.length > 0 && props.contacts.find((p) => {
+        console.log(p)
+        return p.id === props.photo.author_id
+      })
 
       let username = 'anonymous'
       if (props.metadata && props.metadata.username && props.metadata.username !== '') {
@@ -116,7 +119,7 @@ const ThreadDetailCard = props => {
     }
 
     default: {
-      return <View />
+      return (<View />)
     }
   }
 }

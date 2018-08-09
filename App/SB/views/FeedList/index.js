@@ -20,6 +20,7 @@ class Notifications extends React.PureComponent {
   }
 
   _onClick (category, target) {
+    console.log(category, target)
     if (target && (category === 'threads' || category === 'content')) {
       this.props.navigation.navigate('ViewThread', target)
     } else {
