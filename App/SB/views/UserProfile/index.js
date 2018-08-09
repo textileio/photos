@@ -73,7 +73,7 @@ class UserProfile extends React.PureComponent {
     if (this.props.nodeRunning && this.props.online) {
       return (<View style={styles.servers}>
         <View style={styles.activeIcon} />
-        <Text style={styles.serversText}>IPFS Node Started and Online</Text>
+        <Text style={styles.serversText}>IPFS Node Started and Ready</Text>
       </View>)
     } else if (this.props.nodeRunning && !this.props.online) {
       return (<View style={styles.servers}>
