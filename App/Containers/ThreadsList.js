@@ -145,7 +145,7 @@ const mapStateToProps = (state) => {
           // latest update based on the latest item
         thread.updated = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.date ? moment(thread.photos[0].photo.date) : undefined
         // latest peer to push to the thread
-        thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].metadata && thread.photos[0].metadata.peer_id ? thread.photos[0].metadata.peer_id : undefined
+        thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.author_id ? thread.photos[0].photo.author_id : undefined
       }
       return thread
     })
