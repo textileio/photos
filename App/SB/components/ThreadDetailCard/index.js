@@ -59,8 +59,8 @@ const ThreadDetailCard = props => {
         username = props.metadata.username
       }
 
-      const defaultSource = require('../../views/ThreadsDetail/statics/default-profile.png')
-      const src = author && author.avatar_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + author.avatar_id + '/avatar_id'} : defaultSource
+      const defaultSource = require('../../views/Settings/statics/main-image.png')
+      const src = props.metadata.peer_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar_id'} : defaultSource
 
       return (
         <View style={styles.card}>
