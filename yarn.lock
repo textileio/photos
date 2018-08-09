@@ -8121,9 +8121,9 @@ react-native-extra-dimensions-android@^0.21.0:
   version "0.21.0"
   resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-0.21.0.tgz#2992384a90df738cf678a452cadbf251052ce7bc"
 
-react-native-fabric@^0.5.1:
+"react-native-fabric@https://github.com/textileio/react-native-fabric#68ad79244523b60b47a16d620e8f2e2ab03a4214":
   version "0.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-fabric/-/react-native-fabric-0.5.1.tgz#e5eb65c56196355b41f230c14adcc9c4bcf60dda"
+  resolved "https://github.com/textileio/react-native-fabric#68ad79244523b60b47a16d620e8f2e2ab03a4214"
 
 react-native-fs@^2.9.12:
   version "2.9.12"
