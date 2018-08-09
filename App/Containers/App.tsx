@@ -6,10 +6,10 @@ import {PersistGate} from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import configureStore from '../Redux/configureStore'
 import AppStateEventHander from '../Services/EventHandlers/AppStateEventHandler'
-import TextileNodeEventHandler from '../Services/TextileNodeEventHandler'
-import UploadEventHandler from '../Services/UploadEventHandler'
-import DeepLinkEventHandler from '../Services/DeepLinkEventHandler'
-import BackgroundTaskEventHandler from '../Services/BackgroundTaskEventHandler'
+import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
+import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
+import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
+import BackgroundTaskEventHandler from '../Services/EventHandlers/BackgroundTaskEventHandler'
 
 const { store, persistor } = configureStore()
 
