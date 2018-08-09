@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { PRODUCT_ITEM_OFFSET } from '../../../../Components/Styles/PhotoGridStyles'
 
 export default StyleSheet.create({
   detail: {
@@ -6,11 +7,26 @@ export default StyleSheet.create({
     marginRight: 9,
     marginTop: 4
   },
+
+  detailImageView: {
+    height: 27,
+    width: 27,
+    overflow: 'hidden',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginRight: 10
+  },
+  detailImageContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+
   detailImage: {
     height: 27,
     width: 27,
-    marginRight: 10,
-    borderRadius: 10
   },
   detailTextView: {
     justifyContent: 'center',
