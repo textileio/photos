@@ -9,6 +9,7 @@ import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
+import Avatar from '../Components/Avatar'
 
 import BottomDrawerList from '../SB/components/BottomDrawerList'
 import NavigationService from '../Services/NavigationService'
@@ -20,24 +21,18 @@ class TextilePhotos extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
+    const avatarUrl = params.profile && params.profile.avatar_id ? 'https://cafe.us-east-1.textile.io' + params.profile.avatar_id : undefined
+    const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
-      <TouchableWithoutFeedback
+      <TouchableOpacity
         delayLongPress={3000}
         onLongPress={params.toggleVerboseUi}
         onPress={() => {
-          navigation.navigate('Account')
+          navigation.navigate('Account', {avatarUrl, username})
         }}
       >
-        <View style={navStyles.headerIconUser}>
-          <View style={navStyles.iconContainer}>
-            {(params.profile && params.profile.avatar_id) && <Image
-              source={{uri: params.profile.avatar_id}}
-              resizeMode={'cover'}
-              style={{width: 24, height: 24}}
-            />}
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+        <Avatar width={24} height={24} uri={avatarUrl} defaultSource={require('../SB/views/Settings/statics/main-image.png')} />
+      </TouchableOpacity>
     )
     const headerRight = undefined
       // Wallet menu not available yet
@@ -49,7 +44,7 @@ class TextilePhotos extends React.PureComponent {
     // </TouchableOpacity>
     //   )
 
-    const greeting = params.profile && params.profile.username ? 'Hello, ' + params.profile.username : 'Hi there!'
+    const greeting = username ? 'Hello, ' + params.profile.username : 'Hi there!'
     const headerTitle = (
       <Text style={navStyles.headerTitle}>{greeting}</Text>
     )

@@ -22,20 +22,6 @@ export default StyleSheet.create({
   //   paddingTop: 23,
   //   color: Colors.charcoal
   // },
-  headerIconUser: {
-    width: 24,
-    height: 24,
-    overflow: 'hidden',
-    alignItems: 'center',
-    borderRadius: 7
-  },
-  iconContainer: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
 
   headerLogo: {
     width: 82.5,

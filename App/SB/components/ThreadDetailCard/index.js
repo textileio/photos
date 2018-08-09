@@ -1,8 +1,9 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 import Dash from 'react-native-dash'
 import moment from 'moment'
 import TextileImage from '../../../../TextileImage'
+const WIDTH = Dimensions.get('window').width
 
 import SmallIconTag from '../SmallIconTag'
 
@@ -33,7 +34,7 @@ const ThreadDetailCard = props => {
         dateLarge = Math.abs(date.diff(moment(), 'm'))
       } else if (lessThanOneDayAgo(date)) {
         dateSmall = date.format('A')
-        dateLarge = date.format('H')
+        dateLarge = date.format('h')
       } else {
         dateSmall = date.format('MMM')
         dateLarge = date.format('DD')
@@ -50,17 +51,20 @@ const ThreadDetailCard = props => {
         caption += '... (+)'
       }
 
-      const author = props.contacts.find((p) => {
-        return p.id === props.photo.author_id
-      })
-
       let username = 'anonymous'
       if (props.metadata && props.metadata.username && props.metadata.username !== '') {
         username = props.metadata.username
       }
 
+      // Unsquares the images by maintaining the aspect ratio no matter device size
+      let imageWidth = WIDTH - 68
+      let imageHeight = imageWidth
+      if (props.metadata && props.metadata.height && props.metadata.height > 0) {
+        imageHeight = (props.metadata.height / props.metadata.width) * imageWidth
+      }
+
       const defaultSource = require('../../views/Settings/statics/main-image.png')
-      const src = props.metadata.peer_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar_id'} : defaultSource
+      const uri = props.metadata.peer_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar' : undefined
 
       return (
         <View style={styles.card}>
@@ -69,7 +73,7 @@ const ThreadDetailCard = props => {
               <Text style={styles.month}>{dateSmall.toUpperCase()}</Text>
               <Text style={[styles.day, dateLarge === 'NOW' && styles.now]}>{dateLarge}</Text>
             </View>
-            { !last && <Dash style={styles.carLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
+            { !last && <Dash style={styles.cardLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
           </View>
           <TouchableOpacity style={styles.cardRight} onPress={() => {
             props.onSelect(props.photo.id)
@@ -77,19 +81,19 @@ const ThreadDetailCard = props => {
             <Text style={styles.cardAction}><Text style={styles.cardActionName}>
               {profile.username === username ? 'You' : username}
             </Text> added a photo</Text>
-            <View style={styles.cardImage}>
+            <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
               <View style={styles.imageStretch}>
                 <TextileImage
                   imageId={props.photo.id}
                   path={'thumb'}
                   style={styles.image}
                   resizeMode={'cover'}
-                  width={270}
-                  height={270}
+                  width={imageWidth}
+                  height={imageHeight}
                 />
               </View>
             </View>
-            <SmallIconTag syle={{flexDirection: 'row'}} text={caption} image={src} defaultSource={defaultSource}/>
+            <SmallIconTag syle={{flexDirection: 'row'}} text={caption} uri={uri} defaultSource={defaultSource} avatarStyle={{marginRight: 10}}/>
           </TouchableOpacity>
         </View>
       )

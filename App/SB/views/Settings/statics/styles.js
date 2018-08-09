@@ -53,7 +53,7 @@ export default StyleSheet.create({
   },
   permissionsButtonStyle: {
     height: 38,
-    width: 100,
+    width: 70,
     backgroundColor: '#2625FF'
   },
   footer: {

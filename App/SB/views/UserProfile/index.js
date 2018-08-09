@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Share, View, Text, Image, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
+import { Share, View, ScrollView, Text, Image, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import AuthActions from '../../../Redux/AuthRedux'
+import Avatar from '../../../Components/Avatar'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
@@ -22,8 +23,8 @@ class UserProfile extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const greeting = params.profile && params.profile.username ? 'Hello ' + params.profile.username : 'Hello'
-    const src = params.profile && params.profile.avatar_id ? {uri: params.profile.avatar_id} : undefined
+    const greeting = params.username ? 'Hello ' + params.username : 'Hello'
+    // const src = params.avatarUrl ? {uri: params.avatarUrl} : undefined
     return {
       headerLeft: (
         <TouchableOpacity onPress={ () => {
@@ -37,21 +38,17 @@ class UserProfile extends React.PureComponent {
         </TouchableOpacity>),
       headerRight: (
         <TouchableOpacity>
-
-          <Image style={styles.toolbarImage} source={require('../Settings/statics/main-image.png')}/>
+          <Avatar style={styles.toolbarImage} width={59} height={59} uri={params.avatarUrl} defaultSource={require('../Settings/statics/main-image.png')}/>
         </TouchableOpacity>
       )
     }
   }
 
-  componentDidMount () {
-    this.props.navigation.setParams({
-      profile: this.props.profile
-    })
-  }
-
   _settings () {
-    this.props.navigation.navigate('Settings')
+    this.props.navigation.navigate('Settings', {
+      avatarUrl: this.props.navigation.state.params.avatarUrl,
+      username: this.props.navigation.state.params.username
+    })
   }
   _pubKey () {
     Clipboard.setString(this.props.publicKey)
@@ -90,7 +87,7 @@ class UserProfile extends React.PureComponent {
 
   render () {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.listItem} onPress={this._settings.bind(this)}>
             <Text style={styles.listText}>Settings</Text>
@@ -117,11 +114,6 @@ class UserProfile extends React.PureComponent {
           }}>
             <Text style={styles.listText}>Invite Friends!</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={() => {
-            Linking.openURL('https://textile.photos/')
-          }}>
-            <Text style={styles.listText}>Visit Textile</Text>
-          </TouchableOpacity>
           {/*<TouchableOpacity style={styles.listItem} onPress={this._lockScreen.bind(this)}>*/}
             {/*<Text style={[styles.listText, styles.warning]}>Lock screen</Text>*/}
           {/*</TouchableOpacity>*/}
@@ -134,7 +126,7 @@ class UserProfile extends React.PureComponent {
         <ContactModal height={200} width={WIDTH} onClose={this._contact.bind(this)} isVisible={this.state.contactModal} />
 
         <Toast ref='toast' position='center' />
-      </View>
+      </ScrollView>
     )
   }
 }
@@ -146,7 +138,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
-    profile: state.preferences.profile,
     online,
     nodeRunning
   }

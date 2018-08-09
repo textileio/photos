@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { View, FlatList, Image, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Colors from '../Themes/Colors'
+import Avatar from '../Components/Avatar'
 
 // Styles
 import styles from './Styles/ThreadsStyle'
@@ -39,21 +40,16 @@ class Threads extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
 
+    const avatarUrl = params.profile && params.profile.avatar_id ? 'https://cafe.us-east-1.textile.io' + params.profile.avatar_id : undefined
+    const username = params.profile && params.profile.username ? params.profile.username : undefined
+
     const headerLeft = (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('Account')
+          navigation.navigate('Account', {avatarUrl, username})
         }}
       >
-        <View style={navStyles.headerIconUser}>
-          <View style={navStyles.iconContainer}>
-            {(params.profile && params.profile.avatar_id) && <Image
-              source={{uri: params.profile.avatar_id}}
-              resizeMode={'cover'}
-              style={{width: 24, height: 24}}
-            />}
-          </View>
-        </View>
+        <Avatar width={24} height={24} uri={avatarUrl} defaultSource={require('../SB/views/Settings/statics/main-image.png')}/>
         {/*<Image style={navStyles.headerIcon} source={require('../SB/views/ThreadsList/statics/photo.png')} />*/}
       </TouchableOpacity>
     )
