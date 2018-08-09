@@ -15,7 +15,7 @@ const PhotoWithTextBox = props => {
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
             imageId={item.photo.id}
-            path={'thumb'}
+            path={'small'}
             style={styles.itemPhoto}
             width={70}
             height={50}
