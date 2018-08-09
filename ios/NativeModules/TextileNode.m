@@ -302,19 +302,9 @@ RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit threadId:(NSStri
   }
 }
 
-RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId path:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _getPhotoData:photoId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getThumbData:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getThumbData:photoId error:&error];
+  NSString *result = [self _getPhotoData:photoId path:path error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -510,12 +500,8 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   return [self.node getPhotos:offset limit:limit threadId:threadId error:error];
 }
 
-- (NSString *)_getPhotoData:(NSString *)photoId error:(NSError**)error {
-  return [self.node getPhotoData:photoId error:error];
-}
-
-- (NSString *)_getThumbData:(NSString *)photoId error:(NSError**)error {
-  return [self.node getThumbData:photoId error:error];
+- (NSString *)_getPhotoData:(NSString *)photoId path:(NSString *)path error:(NSError**)error {
+  return [self.node getPhotoData:photoId path:path error:error];
 }
 
 - (NSString *)_getPhotoMetadata:(NSString *)photoId error:(NSError**)error {

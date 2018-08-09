@@ -13,8 +13,7 @@
 
 @interface TextileNode : NSObject <RCTBridgeModule>
   // Define class properties here with @property
-- (NSString *)_getPhotoData:(NSString *)photoId error:(NSError**)error;
-- (NSString *)_getThumbData:(NSString *)photoId error:(NSError**)error;
+- (NSString *)_getPhotoData:(NSString *)photoId path:(NSString *)photoId error:(NSError**)error;
 @end
 
 @interface RCTBridge (TextileNode)

@@ -61,11 +61,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       NSError *error;
       UIImage *image;
       NSString *jsonString;
-      if ([self.path isEqualToString:@"thumb"]) {
-        jsonString = [_bridge.textileNode _getThumbData:self.imageId error:&error];
-      } else {
-        jsonString = [_bridge.textileNode _getPhotoData:self.imageId error:&error];
-      }
+      jsonString = [_bridge.textileNode _getPhotoData:self.imageId path:self.path error:&error];
       if (jsonString) {
         NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSError *error;
