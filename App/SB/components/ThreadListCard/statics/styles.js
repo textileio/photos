@@ -104,5 +104,17 @@ export default StyleSheet.create({
     fontFamily: 'BentonSans',
     fontSize: 30,
     color: 'white'
+  },
+  imageContainer: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  imageStretch: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   }
 })
