@@ -27,7 +27,7 @@ export default StyleSheet.create({
     height: 24,
     overflow: 'hidden',
     alignItems: 'center',
-    borderRadius: 9
+    borderRadius: 7
   },
   iconContainer: {
     position: 'absolute',

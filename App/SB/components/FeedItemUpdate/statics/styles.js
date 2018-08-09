@@ -8,7 +8,7 @@ export default StyleSheet.create({
     paddingRight: 9,
     paddingLeft: 16,
     paddingVertical: 17,
-    backgroundColor: '#EDF1F5'
+    backgroundColor: '#EDF1F5',
   },
   textContainer: {
     justifyContent: 'center',

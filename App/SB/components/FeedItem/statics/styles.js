@@ -5,10 +5,11 @@ export default StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingLeft: 18,
     paddingRight: 9,
     paddingVertical: 11,
     borderBottomWidth: 1,
-    borderColor: '#ECEDEE'
+    borderColor: '#ECEDEE',
   },
   textContainer: {
     flexGrow: 1,
@@ -23,6 +24,23 @@ export default StyleSheet.create({
     fontFamily: "BentonSans",
     fontSize: 11,
     color: '#9B9B9B'
+  },
+  unread: {
+    fontFamily: 'BentonSans-Bold'
+  },
+  headerIconUser: {
+    width: 29,
+    height: 29,
+    overflow: 'hidden',
+    alignItems: 'center',
+    borderRadius: 12
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   },
   strong: {
     ...BentonSansBold()

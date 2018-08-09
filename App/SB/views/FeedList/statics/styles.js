@@ -12,6 +12,5 @@ export default StyleSheet.create({
     marginBottom: 8
   },
   contentContainer: {
-    paddingLeft: 18
   }
 })
