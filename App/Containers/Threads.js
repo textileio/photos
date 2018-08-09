@@ -40,7 +40,11 @@ class Threads extends React.PureComponent {
     const params = navigation.state.params || {}
 
     const headerLeft = (
-      <TouchableOpacity >
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Account')
+        }}
+      >
         <View style={navStyles.headerIconUser}>
           <View style={navStyles.iconContainer}>
             {(params.profile && params.profile.avatar_id) && <Image
