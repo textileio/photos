@@ -181,6 +181,7 @@ const mapStateToProps = (state, ownProps) => {
   var items: PhotosQueryResult[] = []
   var refreshing = false
   var thread = undefined
+
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
     items = threadData.items.map((item) => {
@@ -226,7 +227,7 @@ const mapStateToProps = (state, ownProps) => {
       }
     }
   }
-  
+
   return {
     threadId,
     threadName,
