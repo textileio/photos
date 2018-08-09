@@ -131,7 +131,7 @@ class UserProfile extends React.PureComponent {
           </View>
         </View>
 
-        <ContactModal height={300} width={WIDTH} onClose={this._contact.bind(this)} isVisible={this.state.contactModal} />
+        <ContactModal height={200} width={WIDTH} onClose={this._contact.bind(this)} isVisible={this.state.contactModal} />
 
         <Toast ref='toast' position='center' />
       </View>
