@@ -71,7 +71,7 @@ const FeedItem = props => {
       switch (type) {
         case ('onThreadUpdate'):
           const block = payload && payload.block
-          if (block && block.type && block.type !== 4 || payload.thread_name === 'default') { break }
+          if ((block && block.type && block.type !== 4) || payload.thread_name === 'default') { break }
           actor = 'New photo added'
           message = payload.thread_name ? ' - ' + dotString(payload.thread_name, 26) : ''
           target = {id: payload.thread_id, name: payload.thread_name}
