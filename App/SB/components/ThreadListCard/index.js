@@ -1,32 +1,39 @@
 import React from 'react'
-import { View, Image, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
+import moment from 'moment'
+import TextileImage from '../../../../TextileImage'
 
-import SmallIconTag from '../SmallIconTag'
+import IconTag from '../IconTag'
+import Avatar from '../../../Components/Avatar'
 
 import styles, { cardImageContainerStyle, cardImageStyle } from './statics/styles'
 
 const ThreadCard = props => {
-  const { title, userProfilePicture, lastUpdatedTime, commentsQty, usersQty, photos } = props
-
+  const { name, latestPeerId, updated, userCount, photos, onPress } = props
+  const lastUpdatedTime = moment(updated).fromNow()
+  const commentsCount = photos.length
+  console.log('ooo', photos)
   return (
-    <View style={styles.threadCard}>
+    <TouchableOpacity activeOpacity={0.8} style={styles.threadCard} onPress={() => {
+      onPress(props)
+    }}>
       <View style={styles.threadCardHeader}>
         <View style={styles.threadCardHeaderLeft}>
-          <Text style={styles.threadCardTitle}>{title}</Text>
+          <Text style={styles.threadCardTitle}>{name}</Text>
           <View style={styles.threadCardHeaderLeftDetail}>
             <Text style={styles.detailUpdateTime}>{lastUpdatedTime}</Text>
-            <SmallIconTag
-              text={usersQty}
+            <IconTag
+              text={userCount}
               image={require('./statics/icon-user.png')}
             />
-            <SmallIconTag
-              text={commentsQty}
+            <IconTag
+              text={commentsCount}
               image={require('./statics/icon-comment.png')}
             />
           </View>
         </View>
         <View style={styles.threadCardHeaderRight}>
-          <Image source={userProfilePicture} />
+          <Avatar width={48} height={48} uri={latestPeerId} defaultSource={require('../../views/Settings/statics/main-image.png')} />
         </View>
       </View>
       <View style={styles.threadCardBody}>
@@ -37,12 +44,24 @@ const ThreadCard = props => {
             </View>
           )}
 
-          { photos.map((item, i) => (
-            <Image key={i} style={cardImageStyle(photos, i)} source={item.image} />
-          )) }
+          { photos.map((item, i) => {
+            const imageStyle = cardImageStyle(photos, i)
+            return (
+              <View key={i} style={[styles.imageContainer, imageStyle]}>
+                <View style={styles.imageStretch}>
+                  <TextileImage
+                    imageId={item.photo.id}
+                    path={'thumb'}
+                    resizeMode={'cover'}
+                    height={imageStyle.height}
+                  />
+                </View>
+              </View>
+            )
+          }) }
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
