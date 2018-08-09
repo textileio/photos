@@ -52,13 +52,7 @@ class ThreadsEdit extends React.PureComponent {
       </View>
     )
 
-    const headerTitle = (
-      <Text style={navStyles.headerTitle}>{params.threadName}</Text>
-    )
-
     return {
-      // TODO: headerTitle should exist a row below the nav buttons, need to figure out
-      headerTitle,
       // TODO: no current menu needed for Wallet view
       headerRight,
       headerLeft,
@@ -72,13 +66,7 @@ class ThreadsEdit extends React.PureComponent {
       this.props.threadName !== prevProps.threadName ||
       this.props.profile !== prevProps.profile
     ) {
-      this.props.navigation.setParams({
-        profile: this.props.profile,
-        toggleVerboseUi: this.props.toggleVerboseUi,
-        threadName: this.props.threadName,
-        showActionSheet: this.showActionSheet.bind(this),
-        showImagePicker: this.showImagePicker.bind(this)
-      })
+      this._setHeaderParams()
     }
 
     if (this.props.displayError) {
@@ -90,14 +78,7 @@ class ThreadsEdit extends React.PureComponent {
     // Unload any full screen photo
     // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
     this.props.dismissPhoto()
-    // Set params
-    this.props.navigation.setParams({
-      profile: this.props.profile,
-      toggleVerboseUi: this.props.toggleVerboseUi,
-      threadName: this.props.threadName,
-      showActionSheet: this.showActionSheet.bind(this),
-      showImagePicker: this.showImagePicker.bind(this)
-    })
+    this._setHeaderParams()
   }
 
   showActionSheet () {
@@ -114,6 +95,17 @@ class ThreadsEdit extends React.PureComponent {
 
   showImagePicker () {
     this.props.showImagePicker(this.props.threadId)
+  }
+
+  _setHeaderParams () {
+    // Set params
+    this.props.navigation.setParams({
+      profile: this.props.profile,
+      toggleVerboseUi: this.props.toggleVerboseUi,
+      threadName: this.props.threadName,
+      showActionSheet: this.showActionSheet.bind(this),
+      showImagePicker: this.showImagePicker.bind(this)
+    })
   }
 
   _onPhotoSelect = () => {
@@ -147,10 +139,21 @@ class ThreadsEdit extends React.PureComponent {
               refreshing={this.props.refreshing}
               onRefresh={this._onRefresh}
             />}
-          style={styles.contentContainer}>
-          {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} onSelect={this._onPhotoSelect()}/>)}
-        </ScrollView>
+          style={styles.threadsDetail}
+        >
 
+          <Text style={styles.toolbarTitle}>{this.props.threadName}</Text>
+          {/*<View style={styles.toolbarUserContainer}>*/}
+            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo1.png')} />*/}
+            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo2.png')} />*/}
+            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo3.png')} />*/}
+            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-user-more.png')} />*/}
+          {/*</View>*/}
+
+          <View style={styles.imageList}>
+            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
+          </View>
+        </ScrollView>
         {this.state.showDrawer && <BottomDrawerList/>}
 
         <ActionSheet
@@ -234,6 +237,8 @@ const mapStateToProps = (state, ownProps) => {
     queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
     profile: state.preferences.profile,
+    contacts: state.contacts.profiles,
+    // Image Picker details
     errorMessage: state.ui.imagePickerError,
     displayError: state.ui.imagePickerError !== undefined,
     showProgress: progress > 0,
