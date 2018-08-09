@@ -1,20 +1,13 @@
 import React from 'react'
 import { View, Text, Image } from 'react-native'
 import styles from './statics/styles'
-import navStyles from '../../../Navigation/Styles/NavigationStyles'
+import Avatar from '../../../Components/Avatar'
 
 const SmallIconTag = props => {
-  const { text, image, textStyle, imageStyle, style, defaultSource } = props
+  const { text, uri, textStyle, avatarStyle, style, defaultSource } = props
   return (
     <View style={[styles.detail, style]}>
-
-
-      <View style={styles.detailImageView}>
-        <View style={styles.detailImageContainer}>
-          <Image style={[styles.detailImage, imageStyle]} resizeMode={'cover'} source={image} defaultSource={defaultSource} />
-        </View>
-      </View>
-
+      <Avatar style={avatarStyle} width={27} height={27} uri={uri} defaultSource={defaultSource} />
       <View style={[styles.detailTextView]}>
         <Text style={[styles.detailText, textStyle]}>{text}</Text>
       </View>

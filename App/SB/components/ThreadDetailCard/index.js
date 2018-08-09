@@ -64,7 +64,7 @@ const ThreadDetailCard = props => {
       }
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
-      const src = props.metadata.peer_id ? {uri: 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar'} : defaultSource
+      const uri = props.metadata.peer_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar' : undefined
 
       return (
         <View style={styles.card}>
@@ -93,7 +93,7 @@ const ThreadDetailCard = props => {
                 />
               </View>
             </View>
-            <SmallIconTag syle={{flexDirection: 'row'}} text={caption} image={src} defaultSource={defaultSource}/>
+            <SmallIconTag syle={{flexDirection: 'row'}} text={caption} uri={uri} defaultSource={defaultSource} avatarStyle={{marginRight: 10}}/>
           </TouchableOpacity>
         </View>
       )

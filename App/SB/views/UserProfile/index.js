@@ -5,6 +5,7 @@ import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import AuthActions from '../../../Redux/AuthRedux'
+import Avatar from '../../../Components/Avatar'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
@@ -23,7 +24,7 @@ class UserProfile extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const greeting = params.username ? 'Hello ' + params.username : 'Hello'
-    const src = params.avatarUrl ? {uri: params.avatarUrl} : undefined
+    // const src = params.avatarUrl ? {uri: params.avatarUrl} : undefined
     return {
       headerLeft: (
         <TouchableOpacity onPress={ () => {
@@ -37,8 +38,7 @@ class UserProfile extends React.PureComponent {
         </TouchableOpacity>),
       headerRight: (
         <TouchableOpacity>
-
-          <Image style={styles.toolbarImage} source={src} defaultSource={require('../Settings/statics/main-image.png')}/>
+          <Avatar style={styles.toolbarImage} width={59} height={59} uri={params.avatarUrl} defaultSource={require('../Settings/statics/main-image.png')}/>
         </TouchableOpacity>
       )
     }

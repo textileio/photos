@@ -10,6 +10,7 @@ import PermissionsInfo from '../../components/PermissionsInfo'
 
 import styles from './statics/styles'
 import navStyles from '../UserProfile/statics/styles'
+import Avatar from '../../../Components/Avatar'
 import { NavigationActions } from 'react-navigation'
 
 class SyncPermissions extends React.PureComponent {
@@ -28,7 +29,6 @@ class SyncPermissions extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const greeting = params.username ? 'Hello ' + params.username : 'Hello'
-    const src = params.avatarUrl ? {uri: params.avatarUrl} : undefined
     return {
       headerLeft: (
         <TouchableOpacity onPress={ () => {
@@ -42,7 +42,7 @@ class SyncPermissions extends React.PureComponent {
         </TouchableOpacity>),
       headerRight: (
         <TouchableOpacity>
-          <Image style={navStyles.toolbarImage} source={src} defaultSource={require('./statics/main-image.png')} />
+          <Avatar style={navStyles.toolbarImage} width={59} height={59} uri={params.avatarUrl} defaultSource={require('../Settings/statics/main-image.png')} />
         </TouchableOpacity>
       )
     }

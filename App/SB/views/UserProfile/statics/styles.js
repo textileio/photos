@@ -37,9 +37,7 @@ export default StyleSheet.create({
   },
   toolbarImage: {
     borderRadius: 20,
-    marginTop: 36,
-    height: 59,
-    width: 59
+    marginTop: 36
   },
   strong: {
     ...BentonSansBold()
