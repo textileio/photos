@@ -27,8 +27,8 @@ class SyncPermissions extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const greeting = params.profile && params.profile.username ? 'Hello ' + params.profile.username : 'Hello'
-    const src = params.profile && params.profile.avatar_id ? {uri: params.profile.avatar_id} : undefined
+    const greeting = params.username ? 'Hello ' + params.username : 'Hello'
+    const src = params.avatarUrl ? {uri: params.avatarUrl} : undefined
     return {
       headerLeft: (
         <TouchableOpacity onPress={ () => {
@@ -42,7 +42,7 @@ class SyncPermissions extends React.PureComponent {
         </TouchableOpacity>),
       headerRight: (
         <TouchableOpacity>
-          <Image style={navStyles.toolbarImage} source={require('./statics/main-image.png')} />
+          <Image style={navStyles.toolbarImage} source={src} defaultSource={require('./statics/main-image.png')} />
         </TouchableOpacity>
       )
     }

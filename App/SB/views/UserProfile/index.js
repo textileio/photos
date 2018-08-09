@@ -22,8 +22,8 @@ class UserProfile extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const greeting = params.profile && params.profile.username ? 'Hello ' + params.profile.username : 'Hello'
-    const src = params.profile && params.profile.avatar_id ? {uri: params.profile.avatar_id} : undefined
+    const greeting = params.username ? 'Hello ' + params.username : 'Hello'
+    const src = params.avatarUrl ? {uri: params.avatarUrl} : undefined
     return {
       headerLeft: (
         <TouchableOpacity onPress={ () => {
@@ -38,20 +38,17 @@ class UserProfile extends React.PureComponent {
       headerRight: (
         <TouchableOpacity>
 
-          <Image style={styles.toolbarImage} source={require('../Settings/statics/main-image.png')}/>
+          <Image style={styles.toolbarImage} source={src} defaultSource={require('../Settings/statics/main-image.png')}/>
         </TouchableOpacity>
       )
     }
   }
 
-  componentDidMount () {
-    this.props.navigation.setParams({
-      profile: this.props.profile
-    })
-  }
-
   _settings () {
-    this.props.navigation.navigate('Settings')
+    this.props.navigation.navigate('Settings', {
+      avatarUrl: this.props.navigation.state.params.avatarUrl,
+      username: this.props.navigation.state.params.username
+    })
   }
   _pubKey () {
     Clipboard.setString(this.props.publicKey)
@@ -141,7 +138,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
-    profile: state.preferences.profile,
     online,
     nodeRunning
   }
