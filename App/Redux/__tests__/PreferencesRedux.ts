@@ -32,4 +32,10 @@ describe('preferences stories', () => {
       expect(state.mnemonic).toEqual(mnemonic)
     })
   })
+  describe('grid view', () => {
+    it('should update mnemonic', () => {
+      const state = reducer(initialState, actions.updateSetting('wallet', 'grid'))
+      expect(state.uiSettings.wallet).toEqual('grid')
+    })
+  })
 })
