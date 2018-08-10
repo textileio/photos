@@ -239,6 +239,7 @@ const mapStateToProps = (state, ownProps) => {
     queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
     profile: state.preferences.profile,
+    profiles: state.contacts.profiles,
     contacts: state.contacts.profiles,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,

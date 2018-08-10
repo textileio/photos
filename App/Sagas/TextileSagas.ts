@@ -166,7 +166,6 @@ export function * initializeAppState () {
 
 export function * handleNewAppState (action: ActionType<typeof TextileNodeActions.appStateChange>) {
   const { previousState, newState } = action.payload
-  console.log('handleNewAppState', previousState, newState)
   if (previousState.match(/default|unknown/) && newState === 'background') {
     yield * triggerCreateNode()
   } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {

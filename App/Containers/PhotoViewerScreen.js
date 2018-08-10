@@ -31,7 +31,7 @@ class PhotoViewerScreen extends React.PureComponent {
   renderImage (props, dims) {
     return (<ProgressiveImage
       imageId={props.image.photo.id}
-      previewPath={'thumb'}
+      previewPath={'small'}
       path={'photo'}
       style={{flex: 1, height: undefined, width: undefined}}
       resizeMode={props.resizeMode}
