@@ -4,7 +4,8 @@ import {
   Image,
   Text,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import Icon from 'react-native-vector-icons/EvilIcons'
 import * as Progress from 'react-native-progress'
@@ -14,9 +15,44 @@ import TextileImage from '../../TextileImage'
 import { UploadingImage } from '../Redux/UploadingImagesRedux'
 
 // Styles
-import styles, {ITEM_WIDTH, PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
+import styles from './Styles/PhotoGridStyles'
+
+const WIDTH = Dimensions.get('window').width
+const HEIGHT = Dimensions.get('window').height
 
 export default class PhotoGrid extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.state = this.getLayout(props)
+  }
+
+  getLayout () {
+    const screenWidth = WIDTH < HEIGHT ? WIDTH : HEIGHT
+    const isSmallDevice = screenWidth <= 414
+    const numColumns = this.props.gridView ? isSmallDevice ? 3 : 4 : 1
+    const itemOffset = 3
+    const itemMargin = itemOffset * 2
+    const itemWidth = (screenWidth - itemMargin) / numColumns - itemMargin
+    return {
+      flatListKey: this.props.gridView ? 0 : 1,
+      screenWidth,
+      isSmallDevice,
+      numColumns,
+      itemOffset,
+      itemMargin,
+      itemWidth,
+      itemHeight: itemWidth
+    }
+  }
+
+  componentDidUpdate (prevProps, prevState, ss) {
+    if (
+      this.props.gridView !== prevProps.gridView
+    ) {
+      this.setState(this.getLayout())
+    }
+  }
+
   /* ***********************************************************
   * `renderRow` function. How each cell/row should be rendered
   * It's our best practice to place a single component here:
@@ -41,14 +77,21 @@ export default class PhotoGrid extends React.PureComponent {
         </TouchableOpacity>
       }
     }
-    const height = ITEM_WIDTH * row.item.metadata.height / row.item.metadata.width
+    const height = this.state.itemWidth * row.item.metadata.height / row.item.metadata.width
+    const width = this.state.itemWidth
     return (
-      <TouchableOpacity style={[styles.item, {height}]} onPress={this.props.onSelect(row)} >
+      <TouchableOpacity style={[styles.item, {
+        height,
+        width,
+        margin: this.state.itemOffset
+      }]} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
             imageId={row.item.photo.id}
             path={'small'}
-            style={styles.itemImage}
+            style={[styles.itemImage, {
+              width: this.state.itemWidth,
+              height: this.state.itemHeight}]}
             resizeMode={'cover'}
           />
         </View>
@@ -60,7 +103,7 @@ export default class PhotoGrid extends React.PureComponent {
   }
 
   _getItemLayout = (data, index) => {
-    const productHeight = PRODUCT_ITEM_HEIGHT + PRODUCT_ITEM_MARGIN
+    const productHeight = this.state.itemHeight + this.state.itemMargin
     return {
       length: productHeight,
       offset: productHeight * index,
@@ -115,20 +158,36 @@ export default class PhotoGrid extends React.PureComponent {
           }} source={require('../Images/backgrounds/TextileBackground.png')} />
         </View>
         {
-          this.props.items.length ? (
+          this.props.items.length && this.state.numColumns > 1 ? (
             <FlatList
-              style={styles.listContainer}
+              key={this.state.flatListKey}
+              style={[styles.listContainer, {padding: this.state.itemOffset}]}
               data={this.props.items}
               keyExtractor={this.keyExtractor}
               renderItem={this.renderRow.bind(this)}
               getItemLayout={this._getItemLayout}
-              numColumns={numColumns}
+              numColumns={this.state.numColumns}
               windowSize={this.oneScreensWorth}
               initialNumToRender={this.oneScreensWorth}
               onEndReachedThreshold={0.55}
               onRefresh={this.props.onRefresh}
               refreshing={this.props.refreshing}
               columnWrapperStyle={styles.columnWrapper}
+            />
+          ) : this.props.items.length ? (
+            <FlatList
+              key={this.state.flatListKey}
+              style={[styles.listContainer, {padding: this.state.itemOffset}]}
+              data={this.props.items}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderRow.bind(this)}
+              getItemLayout={this._getItemLayout}
+              numColumns={this.state.numColumns}
+              windowSize={this.oneScreensWorth}
+              initialNumToRender={this.oneScreensWorth}
+              onEndReachedThreshold={0.55}
+              onRefresh={this.props.onRefresh}
+              refreshing={this.props.refreshing}
             />
           ) : (
             <View style={styles.emptyListStyle}>

@@ -1,19 +1,6 @@
 import {Dimensions, StyleSheet, Platform} from 'react-native'
 import { ApplicationStyles, Metrics, Colors } from '../../Themes'
 
-const { width, height } = Dimensions.get('window');
-// orientation must fixed
-export const SCREEN_WIDTH = width < height ? width : height
-
-export const isSmallDevice = SCREEN_WIDTH <= 414
-export const numColumns = isSmallDevice ? 3 : 4
-
-export const PRODUCT_ITEM_OFFSET = 3
-export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET * 2
-export const ITEM_WIDTH = (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
-  PRODUCT_ITEM_MARGIN
-export const PRODUCT_ITEM_HEIGHT = ITEM_WIDTH
-
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   navigationBar: {
@@ -40,14 +27,10 @@ export default StyleSheet.create({
     backgroundColor: Colors.snow
   },
   listContainer: {
-    flex: 1,
-    padding: PRODUCT_ITEM_OFFSET
+    flex: 1
   },
   item: {
-    margin: PRODUCT_ITEM_OFFSET,
     overflow: 'hidden',
-    width: ITEM_WIDTH,
-    height: PRODUCT_ITEM_HEIGHT,
     alignItems: 'center',
     backgroundColor: Colors.snow
   },
@@ -65,28 +48,8 @@ export default StyleSheet.create({
     margin: 5
   },
   itemImage: {
-    width: ITEM_WIDTH,
-    height: PRODUCT_ITEM_HEIGHT,
     flex: 1,
     flexDirection: 'column'
-  },
-  itemTitle: {
-    flex: 1,
-    ...Platform.select({
-      ios: {
-        fontWeight: '400'
-      }
-    }),
-    margin: PRODUCT_ITEM_OFFSET * 2
-  },
-  itemFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: PRODUCT_ITEM_OFFSET * 2,
-    borderWidth: 0,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(0,0,0,0.15)',
-    margin: PRODUCT_ITEM_OFFSET * 2
   },
   columnWrapper: {
     alignItems: 'flex-end'
