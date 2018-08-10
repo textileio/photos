@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from 'react-navigation'
+import React from 'react'
 import { Image } from 'react-native'
 
 import Wallet from './Wallet'
@@ -26,8 +27,7 @@ const nav = createBottomTabNavigator(
           } else if (routeName === 'NotificationsNav') {
             icon = focused ? require('../../../../SB/components/BottomBar/statics/icon-feed-active.png') : require('../../../../SB/components/BottomBar/statics/icon-feed.png')
           }
-          return null
-          // return <Image style={styles.bottomBarIcon} source={icon} />
+          return <Image style={styles.bottomBarIcon} source={icon} />
         }
       }
     },
