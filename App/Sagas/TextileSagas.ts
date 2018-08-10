@@ -16,7 +16,6 @@ import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import NavigationService from '../Services/NavigationService'
-import PhotosNavigationService from '../Services/PhotosNavigationService'
 import TextileNode from '../../TextileNode'
 import { getPhotos } from '../Services/CameraRoll'
 import { getAllPhotos, getPhotoPath, getPage } from '../Services/PhotoUtils'
@@ -87,7 +86,7 @@ export function * recoverPassword (action: ActionType<typeof AuthActions.recover
 
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield put(PreferencesActions.onboardedSuccess())
-  yield call(NavigationService.navigate, 'TextileManager')
+  yield call(NavigationService.navigate, 'PhotosNavigation')
   yield take(getType(TextileNodeActions.startNodeSuccess))
 
   let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
@@ -141,7 +140,7 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 }
 
 export function * viewPhoto ( action: ActionType<typeof UIActions.viewPhotoRequest> ) {
-  yield call(PhotosNavigationService.navigate, 'PhotoViewer')
+  yield call(NavigationService.navigate, 'PhotoViewer')
 }
 
 export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeActions.lock>) {
@@ -533,7 +532,7 @@ export function * removeThread (action: ActionType<typeof ThreadsActions.removeT
     // TODO: something with this blockId
     const blockId: string = yield call(TextileNode.removeThread, id)
     yield put(ThreadsActions.removeThreadSuccess(id))
-    yield call(PhotosNavigationService.goBack)
+    yield call(NavigationService.goBack)
   } catch (error) {
     yield put(ThreadsActions.removeThreadError(error))
   }
@@ -565,7 +564,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   } else if (pickerResponse.customButton) {
     // pickerResponse.customButton === 'wallet'
     // This shouldn't be possible currently
-    yield call(PhotosNavigationService.navigate, 'WalletPicker', {shareTo: threadId})
+    yield call(NavigationService.navigate, 'WalletPicker', {shareTo: threadId})
   } else {
     try {
       const image: TextileTypes.SharedImage = {
@@ -576,7 +575,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
         isVertical: pickerResponse.isVertical
       }
       yield put(CameraRollActions.imagePickerSuccess(threadId, image))
-      yield call(PhotosNavigationService.navigate, 'SharePhoto', {threadId, image})
+      yield call(NavigationService.navigate, 'SharePhoto', {threadId, image})
     } catch (error) {
       yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
     }

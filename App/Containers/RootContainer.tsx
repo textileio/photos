@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { View, StatusBar, ActivityIndicator } from 'react-native'
 import { Overlay } from 'react-native-elements'
+import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
-import StartupActions from '../Redux/StartupRedux'
-import ReduxPersist from '../Config/ReduxPersist'
 import NavigationService from '../Services/NavigationService'
 import { RootState } from '../Redux/Types'
 
@@ -20,7 +19,7 @@ class RootContainer extends Component<Props> {
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle='dark-content' />
-        <AppNavigation ref={navRef => { NavigationService.setTopLevelNavigator(navRef) }} />
+        <AppNavigation ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }} />
         <Overlay
           isVisible={this.props.showOverlay}
           windowBackgroundColor='rgba(0, 0, 0, .1)'
