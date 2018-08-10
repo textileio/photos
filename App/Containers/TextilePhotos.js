@@ -1,6 +1,5 @@
 import React from 'react'
 import {View, Text, Image, TouchableWithoutFeedback, TouchableOpacity} from 'react-native'
-import ActionSheet from 'react-native-actionsheet'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
@@ -10,9 +9,6 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Avatar from '../Components/Avatar'
-
-import BottomDrawerList from '../SB/components/BottomDrawerList'
-import NavigationService from '../Services/NavigationService'
 
 class TextilePhotos extends React.PureComponent {
   constructor (props) {
@@ -34,15 +30,14 @@ class TextilePhotos extends React.PureComponent {
         <Avatar width={24} height={24} uri={avatarUrl} defaultSource={require('../SB/views/Settings/statics/main-image.png')} />
       </TouchableOpacity>
     )
-    const headerRight = undefined
-      // Wallet menu not available yet
-    //   : (
-    //     <TouchableOpacity onPress={ () => {
-    // console.log('TODO: HANDLE MENU CLICK FROM WALLET')
-    // }}>
-    // <Image style={navStyles.headerIconList} source={require('../SB/views/WalletList/statics/icon-list.png')} />
-    // </TouchableOpacity>
-    //   )
+    const headerRight =(
+      <TouchableOpacity onPress={ () => {
+        params.toggleGridView()
+      }}>
+        {params.gridView && <Image style={navStyles.headerIconList} source={require('../SB/views/WalletList/statics/icon-list.png')} />}
+        {!params.gridView && <Image style={navStyles.headerIconList} source={require('../SB/views/WalletList/statics/icon-grid.png')} />}
+      </TouchableOpacity>
+      )
 
     const greeting = username ? 'Hello, ' + params.profile.username : 'Hi there!'
     const headerTitle = (
@@ -62,12 +57,15 @@ class TextilePhotos extends React.PureComponent {
   componentDidUpdate(prevProps, prevState) {
     if (
       this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
-      this.props.profile !== prevProps.profile
+      this.props.profile !== prevProps.profile ||
+      this.props.gridView !== prevProps.gridView
     ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
         toggleVerboseUi: this.props.toggleVerboseUi,
-        threadName: this.props.threadName
+        threadName: this.props.threadName,
+        gridView: this.props.gridView,
+        toggleGridView: this._toggleGridView.bind(this)
       })
     }
   }
@@ -80,8 +78,15 @@ class TextilePhotos extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile,
       toggleVerboseUi: this.props.toggleVerboseUi,
-      threadName: this.props.threadName
+      threadName: this.props.threadName,
+      gridView: this.props.gridView,
+      toggleGridView: this._toggleGridView.bind(this)
     })
+  }
+
+  _toggleGridView () {
+    const newValue = this.props.gridView ? 'list' : 'grid'
+    this.props.toggleGridView(newValue)
   }
 
   onSelect = (row) => {
@@ -106,6 +111,7 @@ class TextilePhotos extends React.PureComponent {
           placeholderText={this.props.placeholderText}
           displayImages={this.props.displayImages}
           verboseUi={this.props.verboseUi}
+          gridView={this.props.gridView}
         />
 
         {this.props.verboseUi &&
@@ -165,7 +171,8 @@ const mapStateToProps = (state, ownProps) => {
     nodeStatus,
     queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
-    profile: state.preferences.profile
+    profile: state.preferences.profile,
+    gridView: state.preferences.uiSettings.walletLayout && state.preferences.uiSettings.walletLayout === 'grid'
   }
 }
 
@@ -174,6 +181,7 @@ const mapDispatchToProps = (dispatch) => {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
+    toggleGridView: (value) => { dispatch(PreferencesActions.updateSetting('walletLayout', value)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }

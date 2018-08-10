@@ -3,6 +3,7 @@
 exports[`preferences stories initial state should match snapshot 1`] = `
 Object {
   "onboarded": false,
+  "uiSettings": Object {},
   "verboseUi": false,
 }
 `;
