@@ -46,7 +46,7 @@ export default class PhotoGrid extends React.PureComponent {
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
             imageId={row.item.photo.id}
-            path={'thumb'}
+            path={'small'}
             style={styles.itemImage}
             resizeMode={'cover'}
           />

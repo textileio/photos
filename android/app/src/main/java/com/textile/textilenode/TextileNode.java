@@ -340,19 +340,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoData (String photoId, Promise promise) {
+    public void getPhotoData (String photoId, String path, Promise promise) {
         try {
-            promise.resolve(node.getPhotoData(photoId));
-        }
-        catch (Exception e) {
-            promise.reject("GET BLOCK DATA ERROR", e);
-        }
-    }
-
-    @ReactMethod
-    public void getThumbData (String photoId, Promise promise) {
-        try {
-            promise.resolve(node.getThumbData(photoId));
+            promise.resolve(node.getPhotoData(photoId, path));
         }
         catch (Exception e) {
             promise.reject("GET BLOCK DATA ERROR", e);

@@ -17,7 +17,7 @@ class SharingDialog extends Component {
       <View style={styles.container}>
         <ProgressiveImage
           imageId={this.props.hash}
-          path={'thumb'}
+          path={'small'}
           style={{flex: 1, height: undefined, width: undefined}}
           resizeMode={'cover'}
         />
