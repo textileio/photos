@@ -5,79 +5,23 @@ import {Provider} from 'react-redux'
 import {PersistGate} from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import configureStore from '../Redux/configureStore'
-import TriggersActions from '../Redux/TriggersRedux'
-import NotificationActions from '../Redux/NotificationsRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
-import ThreadActions from '../Redux/ThreadsRedux'
-import BackgroundTask from 'react-native-background-task'
-import TextileNode from '../../TextileNode'
+import AppStateEventHander from '../Services/EventHandlers/AppStateEventHandler'
+import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
+import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
+import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
+import BackgroundTaskEventHandler from '../Services/EventHandlers/BackgroundTaskEventHandler'
 
 const { store, persistor } = configureStore()
 
-BackgroundTask.define(() => {
-  store.dispatch(TriggersActions.backgroundTask())
-})
+const backgroundTaskEventHandler = new BackgroundTaskEventHandler(store)
 
-// subscribe to native events
-// NOTE: we may want to cancel listener with the returned handle at some point with subscription.remove()
-TextileNode.eventEmitter.addListener('onOnline', () => {
-  store.dispatch(TextileNodeActions.nodeOnline())
-  store.dispatch(NotificationActions.newNotification({
-    category: 'node',
-    type: 'onOnline',
-    read: false,
-    unique: true,
-    timestamp: Date.now()
-  }))
-})
-// TODO: add types to event emitter if possible
-TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {
-  store.dispatch(TextileNodeActions.getPhotoHashesRequest(payload.thread_id))
-  store.dispatch(NotificationActions.newNotification({
-    category: 'content',
-    type: 'onThreadUpdate',
-    read: false,
-    timestamp: Date.now(),
-    payload
-  }))
-})
-TextileNode.eventEmitter.addListener('onThreadAdded', (payload) => {
-  store.dispatch(ThreadActions.refreshThreadsRequest())
-  store.dispatch(NotificationActions.newNotification({
-    category: 'threads',
-    type: 'onThreadAdded',
-    read: false,
-    timestamp: Date.now(),
-    payload
-  }))
-})
-TextileNode.eventEmitter.addListener('onThreadRemoved', (payload) => {
-  store.dispatch(ThreadActions.refreshThreadsRequest())
-  store.dispatch(NotificationActions.newNotification({
-    category: 'threads',
-    type: 'onThreadRemoved',
-    read: false,
-    timestamp: Date.now(),
-    payload
-  }))
-})
-TextileNode.eventEmitter.addListener('onDeviceAdded', () => {
-  store.dispatch(NotificationActions.newNotification({
-    category: 'devices',
-    type: 'onDeviceAdded',
-    read: false,
-    timestamp: Date.now()
-  }))
-})
-TextileNode.eventEmitter.addListener('onDeviceRemoved', () => {
-  store.dispatch(NotificationActions.newNotification({
-    category: 'devices',
-    type: 'onDeviceRemoved',
-    read: false,
-    timestamp: Date.now()
-  }))
-})
 class App extends Component {
+
+  appStateEventHander = new AppStateEventHander(store)
+  textileNodeEventHandler = new TextileNodeEventHandler(store)
+  uploadEventHandler = new UploadEventHandler(store)
+  deepLinkEventHandler = new DeepLinkEventHandler()
+
   render () {
     return (
       <Provider store={store}>
@@ -86,6 +30,21 @@ class App extends Component {
         </PersistGate>
       </Provider>
     )
+  }
+
+  componentDidMount () {
+    backgroundTaskEventHandler.schedule()
+  }
+
+  componentWillUnmount () {
+    if (super.componentWillUnmount) {
+      super.componentWillUnmount()
+    }
+    this.appStateEventHander.tearDown()
+    this.textileNodeEventHandler.tearDown()
+    this.uploadEventHandler.tearDown()
+    this.deepLinkEventHandler.tearDown()
+    backgroundTaskEventHandler.tearDown()
   }
 }
 
