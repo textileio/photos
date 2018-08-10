@@ -227,7 +227,6 @@ const mapStateToProps = (state, ownProps) => {
       }
     }
   }
-  console.log(state.ui.imagePickerError)
 
   return {
     threadId,
