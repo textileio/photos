@@ -17,8 +17,7 @@ const CommentCard = props => {
   const subComments = undefined
   const isSubComment = false
 
-  const profile = props.profiles.find(p => p.id === props.photo.author_id)
-  const userName = profile && profile.username ? profile.username : 'A user'
+  const username =  props.photo.username ? props.photo.username : props.photo.author_id.substring(0, 8).toUpperCase()
   const defaultSource = require('../../views/Settings/statics/main-image.png')
   const uri = props.metadata.peer_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar' : undefined
 
@@ -26,7 +25,7 @@ const CommentCard = props => {
     <View style={[styles.comment, isSubComment ? styles.subComment : styles.withDivider ]}>
       <Avatar style={{marginRight: 11}} width={38} height={38} uri={uri} defaultSource={defaultSource} />
       <View style={styles.commentTexts}>
-        <Text style={styles.commentUser}>{userName}</Text>
+        <Text style={styles.commentUser}>{username}</Text>
         <View style={styles.commentTextWrapper}><Text style={styles.commentText}>{comment}</Text></View>
         {/*<SmallIconTag textStyle={styles.commentIconLabel} image={require('./statics/icon-comment.png')} text='Reply comment' />*/}
         { subComments && subComments.map((subComment, i) => (

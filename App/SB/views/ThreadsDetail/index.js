@@ -151,7 +151,7 @@ class ThreadsEdit extends React.PureComponent {
           {/*</View>*/}
 
           <View style={styles.imageList}>
-            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} profile={this.props.profile} profiles={this.props.profiles} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
+            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
           </View>
         </ScrollView>
         {this.state.showDrawer && <BottomDrawerList/>}
