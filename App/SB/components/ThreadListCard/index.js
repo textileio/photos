@@ -14,7 +14,7 @@ const ThreadCard = props => {
   const commentsCount = photos.length
   const uri = latestPeerId ? 'https://cafe.us-east-1.textile.io/ipns/' + latestPeerId + '/avatar' : undefined
   return (
-    <TouchableOpacity activeOpacity={0.8} style={styles.threadCard} onPress={() => {
+    <TouchableOpacity activeOpacity={0.95} style={styles.threadCard} onPress={() => {
       onPress(props)
     }}>
       <View style={styles.threadCardHeader}>

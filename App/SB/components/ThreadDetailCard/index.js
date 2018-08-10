@@ -50,8 +50,7 @@ const ThreadDetailCard = props => {
         }
         caption += '... (+)'
       }
-      const profile = props.profiles.find(p => p.id === props.photo.author_id)
-      const username = profile && profile.username ? profile.username : 'A user'
+      const username =  props.photo.username ? props.photo.username : props.photo.author_id.substring(0, 8).toUpperCase()
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH - 68
