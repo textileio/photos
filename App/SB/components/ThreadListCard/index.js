@@ -12,7 +12,7 @@ const ThreadCard = props => {
   const { name, latestPeerId, updated, userCount, photos, onPress } = props
   const lastUpdatedTime = moment(updated).fromNow()
   const commentsCount = photos.length
-  const uri = latestPeerId ? 'https://cafe.us-east-1.textile.io/ipns/' + latestPeerId + '/avatar' : undefined
+  let uri = latestPeerId ? 'https://cafe.us-east-1.textile.io/ipns/' + latestPeerId + '/avatar' : undefined
   return (
     <TouchableOpacity activeOpacity={0.95} style={styles.threadCard} onPress={() => {
       onPress(props)

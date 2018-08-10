@@ -130,12 +130,14 @@ class ThreadsList extends React.PureComponent {
 
 
 const mapStateToProps = (state) => {
+  const profile = state.preferences.profile
   const threads = state.threads.threads
     .filter(thread => thread.name !== 'default')
     .map(thread => {
       const nodeThread = state.textileNode.threads[thread.id]
       // Todo: we'll want to get all this from a better source
       thread.photos = []
+      thread.updated = Date.now() // TODO: could use a thread created timestamp...
       if (nodeThread && nodeThread.items) {
         const items = nodeThread.items
         // total number of images in the thread
@@ -144,19 +146,19 @@ const mapStateToProps = (state) => {
         thread.photos = items.slice(0, 3)
 
         // get a rough count of distinct users
-        thread.userCount = thread.photos && thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.metadata.peer_id))].length : 1
+        thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.metadata.peer_id))].length : 1
           // latest update based on the latest item
-        thread.updated = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.date ? moment(thread.photos[0].photo.date) : undefined
+        thread.updated = thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.date ? moment(thread.photos[0].photo.date) : undefined
         // latest peer to push to the thread
         // thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.author_id ? thread.photos[0].photo.author_id : undefined
-        thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].metadata && thread.photos[0].metadata.peer_id ? thread.photos[0].metadata.peer_id : undefined
+        thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].metadata && thread.photos[0].metadata.peer_id ? thread.photos[0].metadata.peer_id : undefined
       }
       return thread
     })
     .sort((a, b) => a.updated < b.updated)
 
   return {
-    profile: state.preferences.profile,
+    profile,
     threads
   }
 }
