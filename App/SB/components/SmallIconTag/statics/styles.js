@@ -37,6 +37,6 @@ export default StyleSheet.create({
     fontFamily: 'BentonSans-Light',
     fontSize: 14,
     lineHeight: 16,
-    width: 233
+    width: 215
   }
 })
