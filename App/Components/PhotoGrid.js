@@ -14,7 +14,7 @@ import TextileImage from '../../TextileImage'
 import { UploadingImage } from '../Redux/UploadingImagesRedux'
 
 // Styles
-import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
+import styles, {ITEM_WIDTH, PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
 
 export default class PhotoGrid extends React.PureComponent {
   /* ***********************************************************
@@ -41,8 +41,9 @@ export default class PhotoGrid extends React.PureComponent {
         </TouchableOpacity>
       }
     }
+    const height = ITEM_WIDTH * row.item.metadata.height / row.item.metadata.width
     return (
-      <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
+      <TouchableOpacity style={[styles.item, {height}]} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
             imageId={row.item.photo.id}
@@ -127,6 +128,7 @@ export default class PhotoGrid extends React.PureComponent {
               onEndReachedThreshold={0.55}
               onRefresh={this.props.onRefresh}
               refreshing={this.props.refreshing}
+              columnWrapperStyle={styles.columnWrapper}
             />
           ) : (
             <View style={styles.emptyListStyle}>

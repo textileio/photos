@@ -8,9 +8,9 @@ export const SCREEN_WIDTH = width < height ? width : height
 export const isSmallDevice = SCREEN_WIDTH <= 414
 export const numColumns = isSmallDevice ? 3 : 4
 
-export const PRODUCT_ITEM_OFFSET = 0.5
+export const PRODUCT_ITEM_OFFSET = 3
 export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET * 2
-const ITEM_WIDTH = (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
+export const ITEM_WIDTH = (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
   PRODUCT_ITEM_MARGIN
 export const PRODUCT_ITEM_HEIGHT = ITEM_WIDTH
 
@@ -26,18 +26,18 @@ export default StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: Colors.transparent,
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   navigationIcon: {
     flex: 1,
     // position: 'relative',
     flexDirection: 'row',
     color: Colors.frost,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.transparent
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.snow,
+    backgroundColor: Colors.snow
   },
   listContainer: {
     flex: 1,
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     width: ITEM_WIDTH,
     height: PRODUCT_ITEM_HEIGHT,
     alignItems: 'center',
-    backgroundColor: Colors.snow,
+    backgroundColor: Colors.snow
   },
   itemBackgroundContainer: {
     position: 'absolute',
@@ -67,8 +67,6 @@ export default StyleSheet.create({
   itemImage: {
     width: ITEM_WIDTH,
     height: PRODUCT_ITEM_HEIGHT,
-    // justifyContent: 'center',
-    // alignItems: 'center',
     flex: 1,
     flexDirection: 'column'
   },
@@ -76,10 +74,10 @@ export default StyleSheet.create({
     flex: 1,
     ...Platform.select({
       ios: {
-        fontWeight: '400',
-      },
+        fontWeight: '400'
+      }
     }),
-    margin: PRODUCT_ITEM_OFFSET * 2,
+    margin: PRODUCT_ITEM_OFFSET * 2
   },
   itemFooter: {
     flexDirection: 'row',
@@ -88,32 +86,31 @@ export default StyleSheet.create({
     borderWidth: 0,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: 'rgba(0,0,0,0.15)',
-    margin: PRODUCT_ITEM_OFFSET * 2,
+    margin: PRODUCT_ITEM_OFFSET * 2
   },
-  itemPrice: {
-    fontWeight: 'bold',
-  },
-  itemPriceClearance: {
-    fontWeight: 'bold',
-    color: 'red',
+  columnWrapper: {
+    alignItems: 'flex-end'
   },
   tileStyle: {
     padding: 0,
     margin: 0,
-    height: 15,
+    height: 15
   },
   statusCell: {
     flex: 1,
     position: 'absolute',
-    left: 0, right: 0, bottom: 0, top: -18,
-    height: 10,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: -18,
+    height: 10
   },
   photoCell: {
   },
   photoStatus: {
     flex: 1,
     flexDirection: 'row',
-    alignSelf: 'flex-end',
+    alignSelf: 'flex-end'
   },
   emptyListStyle: {
     flex: 1,
@@ -134,33 +131,12 @@ export default StyleSheet.create({
     marginRight: 6,
     borderWidth: 1.5,
     borderColor: Colors.silver,
-    backgroundColor: Colors.transparent,
-  },
-  statusPink: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 6,
-    backgroundColor: Colors.brandPink,
-  },
-  statusRed: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 6,
-    backgroundColor: Colors.brandRed,
-  },
-  statusBlue: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 6,
-    backgroundColor: Colors.brandBlue,
+    backgroundColor: Colors.transparent
   },
   message: {
     flex: 1,
     width: '90%',
     flexDirection: 'row',
-    alignSelf: 'flex-start',
+    alignSelf: 'flex-start'
   }
 })

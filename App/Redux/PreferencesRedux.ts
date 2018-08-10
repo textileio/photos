@@ -23,6 +23,9 @@ const actions = {
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
     return (publicKey: string) => resolve({ publicKey })
   }),
+  updateSetting: createAction('UPDATE_SETTING', resolve => {
+    return (name: string, value: string) => resolve({ name, value })
+  }),
 }
 
 export type PreferencesAction = ActionType<typeof actions>
@@ -34,11 +37,13 @@ export type PreferencesState = {
   publicKey?: string
   profile?: Profile
   pending?: string
+  uiSettings: {[index: string]: string}
 }
 
 export const initialState: PreferencesState = {
   onboarded: false,
-  verboseUi: false
+  verboseUi: false,
+  uiSettings: {}
 }
 
 export function reducer (state: PreferencesState = initialState, action: PreferencesAction): PreferencesState {
@@ -55,6 +60,11 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, pending: action.payload.avatarId }
     case getType(actions.getPublicKeySuccess):
       return { ...state, publicKey: action.payload.publicKey }
+    case getType(actions.updateSetting):
+      const { name, value } = action.payload
+      const uiSettings = state.uiSettings
+      uiSettings[name] = value
+      return { ...state, uiSettings }
     default:
       return state
   }
