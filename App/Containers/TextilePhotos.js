@@ -1,6 +1,7 @@
 import React from 'react'
 import {View, Text, Image, TouchableWithoutFeedback, TouchableOpacity} from 'react-native'
 import ActionSheet from 'react-native-actionsheet'
+import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
@@ -10,6 +11,7 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Avatar from '../Components/Avatar'
+import { TextileHeaderButtons, Item as TextileHeaderButton } from '../Components/HeaderButtons'
 
 import BottomDrawerList from '../SB/components/BottomDrawerList'
 import NavigationService from '../Services/NavigationService'
@@ -24,17 +26,23 @@ class TextilePhotos extends React.PureComponent {
     const avatarUrl = params.profile && params.profile.avatar_id ? 'https://cafe.us-east-1.textile.io' + params.profile.avatar_id : undefined
     const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
-      <TouchableOpacity
-        delayLongPress={3000}
-        onLongPress={params.toggleVerboseUi}
-        onPress={() => {
-          navigation.navigate('Account', {avatarUrl, username})
-        }}
-      >
-        <Avatar width={24} height={24} uri={avatarUrl} defaultSource={require('../SB/views/Settings/statics/main-image.png')} />
-      </TouchableOpacity>
+      <HeaderButtons left>
+        <Item 
+          title='Account'
+          delayLongPress={3000}
+          onLongPress={params.toggleVerboseUi}
+          onPress={() => navigation.navigate('Account', {avatarUrl, username})}
+          ButtonElement={
+            <Avatar
+              width={24} 
+              height={24} 
+              uri={avatarUrl} 
+              defaultSource={require('../SB/views/Settings/statics/main-image.png')}
+            />
+          }
+        />
+      </HeaderButtons>
     )
-    const headerRight = undefined
       // Wallet menu not available yet
     //   : (
     //     <TouchableOpacity onPress={ () => {
@@ -46,15 +54,22 @@ class TextilePhotos extends React.PureComponent {
 
     const greeting = username ? 'Hello, ' + params.profile.username : 'Hi there!'
     const headerTitle = (
-      <Text style={navStyles.headerTitle}>{greeting}</Text>
+      <Text style={navStyles.headerTitle}>
+        {greeting}
+      </Text>
     )
 
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerTitle,
       // TODO: no current menu needed for Wallet view
-      headerRight,
       headerLeft,
+      headerRight: (
+        <TextileHeaderButtons>
+          <TextileHeaderButton title='add' iconName='add-thread' onPress={() => console.warn('add')} />
+          <TextileHeaderButton title='edit' iconName='share' onPress={() => console.warn('edit')} />
+        </TextileHeaderButtons>
+      ),
       tabBarVisible: true
     }
   }
