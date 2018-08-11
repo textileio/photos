@@ -159,6 +159,8 @@
 - (void)setAuthorId:(NSString*)v;
 - (NSString*)caption;
 - (void)setCaption:(NSString*)v;
+- (NSString*)username;
+- (void)setUsername:(NSString*)v;
 @end
 
 @interface MobilePhotos : NSObject <goSeqRefInterface> {

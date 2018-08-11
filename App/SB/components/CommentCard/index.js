@@ -19,7 +19,7 @@ const CommentCard = props => {
 
   const username =  props.photo.username ? props.photo.username : props.photo.author_id.substring(0, 8).toUpperCase()
   const defaultSource = require('../../views/Settings/statics/main-image.png')
-  const uri = props.metadata.peer_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar' : undefined
+  const uri = props.photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.photo.author_id + '/avatar' : undefined
 
   return (
     <View style={[styles.comment, isSubComment ? styles.subComment : styles.withDivider ]}>

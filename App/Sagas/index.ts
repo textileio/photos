@@ -6,7 +6,7 @@ import { getType } from 'typesafe-actions'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions from '../Redux/UploadingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import UIActions from '../Redux/UIRedux'
+import UIActions, {UIAction} from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -22,6 +22,7 @@ import {
   logOut,
   recoverPassword,
   viewPhoto,
+  viewThread,
   initializeAppState,
   handleNewAppState,
   toggleBackgroundTimer,
@@ -29,6 +30,7 @@ import {
   createNode,
   startNode,
   stopNode,
+  refreshMessages,
   addDevice,
   getPhotoHashes,
   shareImage,
@@ -73,6 +75,7 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.appStateChange), handleNewAppState),
 
     takeEvery(getType(UIActions.viewPhotoRequest), viewPhoto),
+    takeEvery(getType(UIActions.viewThreadRequest), viewThread),
 
     takeEvery(getType(AuthActions.signUpRequest), signUp),
     takeEvery(getType(AuthActions.logInRequest), logIn),
@@ -82,6 +85,7 @@ export default function * root () {
     takeEvery(getType(DevicesActions.addDeviceRequest), addDevice),
 
     takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
+    takeEvery(getType(UIActions.refreshMessagesRequest), refreshMessages),
 
     takeEvery(getType(UIActions.sharePhotoRequest), shareImage),
 
