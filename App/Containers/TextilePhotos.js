@@ -11,7 +11,6 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Avatar from '../Components/Avatar'
-import { TextileHeaderButtons, Item as TextileHeaderButton } from '../Components/HeaderButtons'
 
 import BottomDrawerList from '../SB/components/BottomDrawerList'
 import NavigationService from '../Services/NavigationService'
@@ -32,6 +31,7 @@ class TextilePhotos extends React.PureComponent {
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
           onPress={() => navigation.navigate('Account', {avatarUrl, username})}
+          buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
             <Avatar
               width={24} 
@@ -43,14 +43,6 @@ class TextilePhotos extends React.PureComponent {
         />
       </HeaderButtons>
     )
-      // Wallet menu not available yet
-    //   : (
-    //     <TouchableOpacity onPress={ () => {
-    // console.log('TODO: HANDLE MENU CLICK FROM WALLET')
-    // }}>
-    // <Image style={navStyles.headerIconList} source={require('../SB/views/WalletList/statics/icon-list.png')} />
-    // </TouchableOpacity>
-    //   )
 
     const greeting = username ? 'Hello, ' + params.profile.username : 'Hi there!'
     const headerTitle = (
@@ -64,12 +56,6 @@ class TextilePhotos extends React.PureComponent {
       headerTitle,
       // TODO: no current menu needed for Wallet view
       headerLeft,
-      headerRight: (
-        <TextileHeaderButtons>
-          <TextileHeaderButton title='add' iconName='add-thread' onPress={() => console.warn('add')} />
-          <TextileHeaderButton title='edit' iconName='share' onPress={() => console.warn('edit')} />
-        </TextileHeaderButtons>
-      ),
       tabBarVisible: true
     }
   }
