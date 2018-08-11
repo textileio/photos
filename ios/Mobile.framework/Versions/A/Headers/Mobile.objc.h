@@ -84,8 +84,6 @@
 - (instancetype)init;
 - (NSString*)url;
 - (void)setUrl:(NSString*)v;
-// skipped field ImageData.Metadata with unsupported type: *types.Pointer
-
 @end
 
 @interface MobileMobile : NSObject <goSeqRefInterface> {
@@ -108,13 +106,12 @@
 - (NSString*)devices:(NSError**)error;
 - (NSString*)getId:(NSError**)error;
 - (NSString*)getPeerProfile:(NSString*)peerId error:(NSError**)error;
-- (NSString*)getPhotoData:(NSString*)id_ error:(NSError**)error;
+- (NSString*)getPhotoData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
 - (NSString*)getPhotoKey:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotoMetadata:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit threadId:(NSString*)threadId error:(NSError**)error;
 - (NSString*)getProfile:(NSError**)error;
 - (NSString*)getPubKey:(NSError**)error;
-- (NSString*)getThumbData:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getTokens:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
 - (BOOL)isSignedIn;
@@ -162,6 +159,8 @@
 - (void)setAuthorId:(NSString*)v;
 - (NSString*)caption;
 - (void)setCaption:(NSString*)v;
+- (NSString*)username;
+- (void)setUsername:(NSString*)v;
 @end
 
 @interface MobilePhotos : NSObject <goSeqRefInterface> {

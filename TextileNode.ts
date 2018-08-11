@@ -123,14 +123,8 @@ export default {
     return photos
   },
 
-  getPhotoData: async function (id: string): Promise<TextileTypes.ImageData> {
-    const jsonString = await TextileNode.getPhotoData(id)
-    const imageData = JSON.parse(jsonString) as TextileTypes.ImageData
-    return imageData
-  },
-
-  getThumbData: async function (id: string): Promise<TextileTypes.ImageData> {
-    const jsonString = await TextileNode.getThumbData(id)
+  getPhotoData: async function (id: string, path: string): Promise<TextileTypes.ImageData> {
+    const jsonString = await TextileNode.getPhotoData(id, path)
     const imageData = JSON.parse(jsonString) as TextileTypes.ImageData
     return imageData
   },

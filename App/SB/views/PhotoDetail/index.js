@@ -25,10 +25,19 @@ const HEIGHT = Dimensions.get('window').height
 class PhotoDetail extends Component {
   constructor (props) {
     super(props)
-    const heightByWidth = (this.props.metadata.height / this.props.metadata.width) * WIDTH
+    let heightByWidth = this.props.metadata ? (this.props.metadata.height / this.props.metadata.width) * WIDTH : WIDTH
     this.state = {
       drawer: false,
       heightByWidth
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.metadata !== prevProps.metadata
+    ) {
+      let heightByWidth = this.props.metadata ? (this.props.metadata.height / this.props.metadata.width) * WIDTH : WIDTH
+      this.setState({heightByWidth})
     }
   }
 
@@ -99,7 +108,7 @@ class PhotoDetail extends Component {
   renderImage () {
     return (<ProgressiveImage
       imageId={this.props.photo.id}
-      previewPath={'thumb'}
+      previewPath={'small'}
       path={'photo'}
       style={{height: this.state.heightByWidth, width: WIDTH, marginBottom: 10}}
       resizeMode={'cover'}
@@ -175,7 +184,7 @@ const mapStateToProps = (state, ownProps) => {
     if (state.textileNode.threads[t].items.length > 0) {
       thumbs[t] = state.textileNode.threads[t].items[state.textileNode.threads[t].items.length - 1]
     }
-    if (state.textileNode.threads[t].items.find(i => i.metadata.name === item.metadata.name)) {
+    if (state.textileNode.threads[t].items.find(i => i.photo.id === item.photo.id)) {
       containingThreads.push(t)
     }
   }
@@ -190,7 +199,7 @@ const mapStateToProps = (state, ownProps) => {
   const path = thread.name === 'default' ? '/photo' : '/thumb'
   return {
     ...item,
-    date: item.metadata.added.split('T')[0],
+    date: item.photo.date.split('T')[0],
     key: item.photo.id + path,
     source: {url: 'file://' + item.photo.id + '.png'}, // <-- in case RN uses to know things
     // TODO: real dimensions are in the metadata alread now
