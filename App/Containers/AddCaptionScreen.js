@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, Image, ScrollView } from 'react-native'
+import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import Input from '../SB/components/Input'
 import { Button } from 'react-native-elements'
 import { NavigationActions } from 'react-navigation'
-import navStyles from '../Navigation/Styles/NavigationStyles'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import UIActions from '../Redux/UIRedux'
 import CameraRollActions from '../Redux/CameraRollRedux'
@@ -23,26 +23,14 @@ class AddCaptionScreen extends React.Component {
     return {
       headerTitle: 'Photo Caption',
       headerLeft: (
-        <TouchableOpacity style={navStyles.backButtonWrapper} onPress={ () => {
-          params.close()
-          navigation.dispatch(NavigationActions.back())
-        }}>
-          <Image
-            style={navStyles.headerLeft}
-            source={require('../SB/views/ThreadsDetail/statics/icon-arrow-left.png')}
-          />
-        </TouchableOpacity>
+        <TextileHeaderButtons left>
+          <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+        </TextileHeaderButtons>
       ),
       headerRight: params.submitEnabled && (
-        <View style={styles.toolBarRight}>
-          <Button
-            buttonStyle={{backgroundColor: 'rgba(0,0,0,0)', elevation: 0}}
-            titleStyle={styles.link}
-            onPress={() => params.submit()}
-            title={'Next'}
-            color='#fff'
-          />
-        </View>
+        <TextileHeaderButtons>
+          <Item title='Save' onPress={() => params.submit()} />
+        </TextileHeaderButtons>
       ),
     }
   }

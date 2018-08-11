@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, Dimensions } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions } from 'react-navigation'
+
+import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import Toolbar from '../../components/Toolbar'
 import BottomDrawerList from '../../components/BottomDrawerList'
@@ -28,20 +30,12 @@ class ThreadPhotoDetail extends Component {
   }
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
-      <TouchableOpacity style={styles.backButtonWrapper} onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
-        <Image style={styles.toolbarLeft} source={require('./statics/icon-arrow-left.png')} />
-      </TouchableOpacity>
+      <TextileHeaderButtons left>
+        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+      </TextileHeaderButtons>
     )
-    const headerRight = (
-        <TouchableOpacity style={styles.toolBarRight}>
-          <Image style={styles.toolbarIconMore} source={require('./statics/icon-more.png')} />
-        </TouchableOpacity>
-    )
-
     return {
-      headerLeft,
-      // headerRight,
-      tabBarVisible: false
+      headerLeft
     }
   }
 

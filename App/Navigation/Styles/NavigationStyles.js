@@ -8,7 +8,6 @@ export default StyleSheet.create({
   header: {
     // Styles the screen header in Textile Photos feed view
     // backgroundColor: Colors.brandBlue
-    paddingHorizontal: 10,
     backgroundColor: 'white',
     borderBottomColor: '#ECEDEE',
   },

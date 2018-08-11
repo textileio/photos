@@ -1,7 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, TouchableOpacity, RefreshControl } from 'react-native'
+import { View, Text, Image, ScrollView, RefreshControl } from 'react-native'
+import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import moment from 'moment'
+
+import { TextileHeaderButtons, Item as TextileItem } from '../Components/HeaderButtons'
 
 import Button from '../SB/components/Button'
 import ThreadCard from '../SB/components/ThreadListCard'
@@ -15,60 +18,38 @@ import Colors from '../Themes/Colors'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 
-class MyListItem extends React.PureComponent {
-  _onPress = () => {
-    this.props.onPressItem(this.props.item)
-  }
-
-  render () {
-    return (
-      <TouchableOpacity onPress={this._onPress}>
-        <View style={styles.listItem}>
-          <Text style={styles.listItemText}>
-            {this.props.item.name}
-          </Text>
-          <Icon name={'ios-arrow-forward'} size={30} color={Colors.steel} />
-        </View>
-      </TouchableOpacity>
-    )
-  }
-}
-
 class ThreadsList extends React.PureComponent {
-  constructor (props) {
-    super(props)
-    this.state = {
-      empty: true,
-      pullRefresh: true,
-      selected: (new Map(): Map<string, boolean>)
-    }
-  }
-
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-
     const avatarUrl = params.profile && params.profile.avatar_id ? 'https://cafe.us-east-1.textile.io' + params.profile.avatar_id : undefined
     const username = params.profile && params.profile.username ? params.profile.username : undefined
-
     const headerLeft = (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Account', {avatarUrl, username})
-        }}
-      >
-        <Avatar width={24} height={24} uri={avatarUrl} defaultSource={require('../SB/views/Settings/statics/main-image.png')} />
-        {/*<Image style={navStyles.headerIcon} source={require('../SB/views/ThreadsList/statics/photo.png')} />*/}
-      </TouchableOpacity>
+      <HeaderButtons left>
+        <Item 
+          title='Account'
+          delayLongPress={3000}
+          onLongPress={params.toggleVerboseUi}
+          onPress={() => navigation.navigate('Account', {avatarUrl, username})}
+          buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+          ButtonElement={
+            <Avatar
+              width={24} 
+              height={24} 
+              uri={avatarUrl} 
+              defaultSource={require('../SB/views/Settings/statics/main-image.png')}
+            />
+          }
+        />
+      </HeaderButtons>
     )
     const headerRight = (
-      <TouchableOpacity style={navStyles.moreButtonWrapper} onPress={() => { navigation.navigate('AddThread') }}>
-        <Image style={navStyles.headerIcon} source={require('../SB/views/ThreadsList/statics/plus.png')} />
-      </TouchableOpacity>
+      <TextileHeaderButtons>
+        <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
+      </TextileHeaderButtons>
     )
     const headerTitle = (
       <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
     )
-
     return {
       headerLeft,
       headerTitle,
@@ -87,23 +68,9 @@ class ThreadsList extends React.PureComponent {
     })
   }
 
-  _keyExtractor = (item, index) => item.id
-
   _onPressItem = (item) => {
     const { id, name } = item
     this.props.viewThread(id, name )
-  }
-
-  _renderItem = ({item}) => (
-    <MyListItem
-      item={item}
-      onPressItem={this._onPressItem}
-      selected={!!this.state.selected.get(item.id)}
-    />
-  )
-
-  _onSubmit = () => {
-    this.props.navigation.navigate('Comment')
   }
 
   _onRefresh = () => {
@@ -128,6 +95,7 @@ class ThreadsList extends React.PureComponent {
           </View>
         )}
         {this.props.threads.length !== 0 && (
+          // FIXME: This should be a FlatList for sure
           <ScrollView
             style={styles.contentContainer}
             refreshControl={
