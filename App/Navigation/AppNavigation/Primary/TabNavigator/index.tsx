@@ -2,6 +2,8 @@ import { createBottomTabNavigator } from 'react-navigation'
 import React from 'react'
 import { Image } from 'react-native'
 
+import Icons from '../../../../Components/Icons'
+
 import Wallet from './Wallet'
 import Threads from './Threads'
 import Notifications from './Notifications'
@@ -21,13 +23,14 @@ const nav = createBottomTabNavigator(
         tabBarIcon: ({focused, tintColor}) => {
           let icon
           if (routeName === 'Wallet') {
-            icon = focused ? require('../../../../SB/components/BottomBar/statics/icon-wallet-active.png') : require('../../../../SB/components/BottomBar/statics/icon-wallet.png')
+            icon = 'home'
           } else if (routeName === 'Threads') {
-            icon = focused ? require('../../../../SB/components/BottomBar/statics/icon-threads-active.png') : require('../../../../SB/components/BottomBar/statics/icon-threads.png')
-          } else if (routeName === 'Notifications') {
-            icon = focused ? require('../../../../SB/components/BottomBar/statics/icon-feed-active.png') : require('../../../../SB/components/BottomBar/statics/icon-feed.png')
+            icon = 'threads'
+          } else {
+            icon = 'notifications'
           }
-          return <Image style={styles.bottomBarIcon} source={icon} />
+          const tint = tintColor || undefined
+          return <Icons name={icon} size={25} color={tint} />
         }
       }
     },
