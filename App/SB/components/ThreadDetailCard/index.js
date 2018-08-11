@@ -50,11 +50,7 @@ const ThreadDetailCard = props => {
         }
         caption += '... (+)'
       }
-
-      let username = 'anonymous'
-      if (props.metadata && props.metadata.username && props.metadata.username !== '') {
-        username = props.metadata.username
-      }
+      const username =  props.photo.username ? props.photo.username : props.photo.author_id.substring(0, 8).toUpperCase()
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH - 68
@@ -64,7 +60,7 @@ const ThreadDetailCard = props => {
       }
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
-      const uri = props.metadata.peer_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.metadata.peer_id + '/avatar' : undefined
+      const uri = props.photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.photo.author_id + '/avatar' : undefined
 
       return (
         <View style={styles.card}>
@@ -85,7 +81,7 @@ const ThreadDetailCard = props => {
               <View style={styles.imageStretch}>
                 <TextileImage
                   imageId={props.photo.id}
-                  path={'thumb'}
+                  path={'small'}
                   style={styles.image}
                   resizeMode={'cover'}
                   width={imageWidth}
