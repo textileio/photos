@@ -74,6 +74,11 @@ class ThreadsEdit extends React.PureComponent {
     }
   }
 
+  componentWillMount () {
+    // refresh our messages
+    this.props.refreshMessages(true)
+  }
+
   componentDidMount () {
     // Unload any full screen photo
     // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
@@ -115,7 +120,7 @@ class ThreadsEdit extends React.PureComponent {
   }
 
   _onRefresh = () => {
-    this.props.refresh(this.props.threadId)
+    this.props.refreshMessages()
   }
 
   _progressStyle = (fillBar) => {
@@ -254,7 +259,7 @@ const mapDispatchToProps = (dispatch) => {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
-    refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
+    refreshMessages: (hidden) => { dispatch(UIActions.refreshMessagesRequest(hidden)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
