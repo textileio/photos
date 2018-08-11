@@ -289,7 +289,6 @@ export function * stopNode () {
 
 export function * refreshMessages (action: ActionType<typeof UIActions.refreshMessagesRequest>) {
   try {
-    console.log('REFRESHING NOW')
     yield call(TextileNode.refreshMessages)
     yield put(UIActions.refreshMessagesSuccess(Date.now()))
   } catch (error) {

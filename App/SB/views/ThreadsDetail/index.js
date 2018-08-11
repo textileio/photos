@@ -78,7 +78,7 @@ class ThreadsEdit extends React.PureComponent {
     // refresh our messages
     this.props.refreshMessages(true)
   }
-  
+
   componentDidMount () {
     // Unload any full screen photo
     // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
