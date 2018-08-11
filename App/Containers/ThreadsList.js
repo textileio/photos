@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, Image, ScrollView, TouchableOpacity, RefreshControl } from 'react-native'
 import moment from 'moment'
 
 import Button from '../SB/components/Button'
@@ -13,6 +13,7 @@ import styles from '../SB/views/ThreadsList/statics/styles'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Colors from '../Themes/Colors'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
+import UIActions from '../Redux/UIRedux'
 
 class MyListItem extends React.PureComponent {
   _onPress = () => {
@@ -38,6 +39,7 @@ class ThreadsList extends React.PureComponent {
     super(props)
     this.state = {
       empty: true,
+      pullRefresh: true,
       selected: (new Map(): Map<string, boolean>)
     }
   }
@@ -74,6 +76,11 @@ class ThreadsList extends React.PureComponent {
     }
   }
 
+  componentWillMount () {
+    // refresh our messages
+    this.props.refreshMessages(true)
+  }
+
   componentDidMount () {
     this.props.navigation.setParams({
       profile: this.props.profile
@@ -84,7 +91,7 @@ class ThreadsList extends React.PureComponent {
 
   _onPressItem = (item) => {
     const { id, name } = item
-    this.props.navigation.navigate('ViewThread', { id: id, name: name })
+    this.props.viewThread(id, name )
   }
 
   _renderItem = ({item}) => (
@@ -97,6 +104,10 @@ class ThreadsList extends React.PureComponent {
 
   _onSubmit = () => {
     this.props.navigation.navigate('Comment')
+  }
+
+  _onRefresh = () => {
+    this.props.refreshMessages()
   }
 
   render () {
@@ -117,7 +128,14 @@ class ThreadsList extends React.PureComponent {
           </View>
         )}
         {this.props.threads.length !== 0 && (
-          <ScrollView style={styles.contentContainer}>
+          <ScrollView
+            style={styles.contentContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.props.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }>
             {this.props.threads.map((item, i) => (
               <ThreadCard key={i} {...item} onPress={this._onPressItem}/>
             ))}
@@ -146,12 +164,12 @@ const mapStateToProps = (state) => {
         thread.photos = items.slice(0, 3)
 
         // get a rough count of distinct users
-        thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.metadata.peer_id))].length : 1
+        thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.photo.author_id))].length : 1
           // latest update based on the latest item
         thread.updated = thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.date ? moment(thread.photos[0].photo.date) : undefined
         // latest peer to push to the thread
         // thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.author_id ? thread.photos[0].photo.author_id : undefined
-        thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].metadata && thread.photos[0].metadata.peer_id ? thread.photos[0].metadata.peer_id : undefined
+        thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.author_id ? thread.photos[0].photo.author_id : undefined
       }
       return thread
     })
@@ -159,12 +177,16 @@ const mapStateToProps = (state) => {
 
   return {
     profile,
-    threads
+    threads,
+    refreshing: !!state.ui.refreshingMessages
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    viewThread: (threadId, threadName) => { dispatch(UIActions.viewThreadRequest(threadId, threadName)) },
+    refreshMessages: (hidden) => { dispatch(UIActions.refreshMessagesRequest(hidden)) }
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThreadsList)

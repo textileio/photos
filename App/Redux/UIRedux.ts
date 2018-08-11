@@ -11,6 +11,9 @@ const actions = {
   selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', resolve => {
     return (uri: string) => resolve({ uri })
   }),
+  viewThreadRequest: createAction('VIEW_THREAD_REQUEST', resolve => {
+    return (threadId: string, threadName: string) => resolve({ threadId, threadName })
+  }),
   viewPhotoRequest: createAction('VIEW_PHOTO_REQUEST', resolve => {
     return (photoId: string, threadId: string) => resolve({ photoId, threadId })
   }),
@@ -52,6 +55,15 @@ const actions = {
   }),
   dismissImagePickerError: createAction('DISMISS_IMAGE_PICKER_ERROR', resolve => {
     return () => resolve()
+  }),
+  refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
+    return (hidden?: boolean) => resolve({hidden})
+  }),
+  refreshMessagesSuccess: createAction('REFRESH_MESSAGES_SUCCESS', resolve => {
+    return (timestamp: number) => resolve({ timestamp })
+  }),
+  refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', resolve => {
+    return (error: Error) => resolve({ error })
   })
 }
 
@@ -75,6 +87,7 @@ export type UIState = {
     readonly comment?: string
   },
   readonly imagePickerError?: string // used to notify the user of any error during photo picking
+  readonly refreshingMessages: boolean
 }
 
 export const initialState: UIState = {
@@ -113,6 +126,12 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
       return { ...state, imagePickerError:  msg}
     case getType(actions.dismissImagePickerError):
       return { ...state, imagePickerError: undefined }
+    case getType(actions.refreshMessagesRequest):
+      if (action.payload.hidden) return state // don't store the update status so the ui will ignore it
+      return { ...state, refreshingMessages: true }
+    case getType(actions.refreshMessagesSuccess):
+    case getType(actions.refreshMessagesFailure):
+      return { ...state, refreshingMessages: false }
     default:
       return state
   }
