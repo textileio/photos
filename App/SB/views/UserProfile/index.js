@@ -4,6 +4,10 @@ import { Share, View, ScrollView, Text, Image, TouchableOpacity, Clipboard, Dime
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, {DURATION} from 'react-native-easy-toast'
+import HeaderButtons, { Item } from 'react-navigation-header-buttons'
+
+import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
+
 import AuthActions from '../../../Redux/AuthRedux'
 import Avatar from '../../../Components/Avatar'
 
@@ -26,20 +30,27 @@ class UserProfile extends React.PureComponent {
     const greeting = params.username ? 'Hello ' + params.username : 'Hello'
     // const src = params.avatarUrl ? {uri: params.avatarUrl} : undefined
     return {
+      headerTitle: 'Your Account',
       headerLeft: (
-        <TouchableOpacity onPress={ () => {
-          navigation.dispatch(NavigationActions.back())
-        }}>
-          <View style={styles.toolbarBack}>
-            <Image style={styles.toolbarBackIcon} source={require('./statics/icon-arrow-left.png')} />
-          </View>
-          <Text style={styles.toolbarUserName}>{ greeting }</Text>
-          <Text style={styles.toolbarThreadsQty}><Text style={styles.strong}></Text>Your account</Text>
-        </TouchableOpacity>),
+        <TextileHeaderButtons left>
+          <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+        </TextileHeaderButtons>
+      ),
       headerRight: (
-        <TouchableOpacity>
-          <Avatar style={styles.toolbarImage} width={59} height={59} uri={params.avatarUrl} defaultSource={require('../Settings/statics/main-image.png')}/>
-        </TouchableOpacity>
+        <HeaderButtons>
+          <Item 
+            title='Avatar'
+            buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+            ButtonElement={
+              <Avatar
+                width={32} 
+                height={32} 
+                uri={params.avatarUrl} 
+                defaultSource={require('../Settings/statics/main-image.png')}
+              />
+            }
+          />
+        </HeaderButtons>
       )
     }
   }
