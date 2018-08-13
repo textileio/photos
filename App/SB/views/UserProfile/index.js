@@ -164,8 +164,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    lockScreen: () => { dispatch(AuthActions.logOutRequest()) },
-    changeAvatar: () => { dispatch(PreferencesActions.changeAvatarRequest()) }
+    lockScreen: () => { dispatch(AuthActions.logOutRequest()) }
   }
 }
 
