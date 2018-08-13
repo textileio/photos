@@ -26,7 +26,7 @@ class TextilePhotos extends React.PureComponent {
     const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
       <HeaderButtons left>
-        <Item 
+        <Item
           title='Account'
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
@@ -34,9 +34,9 @@ class TextilePhotos extends React.PureComponent {
           buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
             <Avatar
-              width={24} 
-              height={24} 
-              uri={avatarUrl} 
+              width={24}
+              height={24}
+              uri={avatarUrl}
               defaultSource={require('../SB/views/Settings/statics/main-image.png')}
             />
           }

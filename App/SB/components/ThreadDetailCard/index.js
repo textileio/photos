@@ -60,7 +60,11 @@ const ThreadDetailCard = props => {
       }
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
-      const uri = props.photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.photo.author_id + '/avatar' : undefined
+      let uri = props.photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.photo.author_id + '/avatar' : undefined
+      // ensure we have the user's latest avatar even if the cafe is still caching
+      if (props.profile && props.profile.id && props.profile.id === props.photo.author_id) {
+        uri = 'https://cafe.us-east-1.textile.io' + props.profile.avatar_id
+      }
 
       return (
         <View style={styles.card}>
