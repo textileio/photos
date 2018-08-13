@@ -25,7 +25,7 @@ class ThreadsList extends React.PureComponent {
     const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
       <HeaderButtons left>
-        <Item 
+        <Item
           title='Account'
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
@@ -33,9 +33,9 @@ class ThreadsList extends React.PureComponent {
           buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
             <Avatar
-              width={24} 
-              height={24} 
-              uri={avatarUrl} 
+              width={24}
+              height={24}
+              uri={avatarUrl}
               defaultSource={require('../SB/views/Settings/statics/main-image.png')}
             />
           }
@@ -68,9 +68,19 @@ class ThreadsList extends React.PureComponent {
     })
   }
 
+  componentDidUpdate (prevProps, prevState, ss) {
+    if (
+      this.props.profile !== prevProps.profile
+    ) {
+      this.props.navigation.setParams({
+        profile: this.props.profile
+      })
+    }
+  }
+
   _onPressItem = (item) => {
     const { id, name } = item
-    this.props.viewThread(id, name )
+    this.props.viewThread(id, name)
   }
 
   _onRefresh = () => {
@@ -105,7 +115,7 @@ class ThreadsList extends React.PureComponent {
               />
             }>
             {this.props.threads.map((item, i) => (
-              <ThreadCard key={i} {...item} onPress={this._onPressItem}/>
+              <ThreadCard key={i} {...item} profile={this.props.profile} onPress={this._onPressItem}/>
             ))}
           </ScrollView>
         )}

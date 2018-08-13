@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Share, View, ScrollView, Text, Image, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
+import { Share, View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
+import PreferencesActions from '../../../Redux/PreferencesRedux'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
@@ -15,7 +16,6 @@ import styles from './statics/styles'
 import ContactModal from './ContactModal'
 
 const WIDTH = Dimensions.get('window').width
-const HEIGHT = Dimensions.get('window').height
 
 class UserProfile extends React.PureComponent {
   constructor (props) {
@@ -27,8 +27,6 @@ class UserProfile extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const greeting = params.username ? 'Hello ' + params.username : 'Hello'
-    // const src = params.avatarUrl ? {uri: params.avatarUrl} : undefined
     return {
       headerTitle: 'Your Account',
       headerLeft: (
@@ -38,14 +36,14 @@ class UserProfile extends React.PureComponent {
       ),
       headerRight: (
         <HeaderButtons>
-          <Item 
+          <Item
             title='Avatar'
             buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
             ButtonElement={
               <Avatar
-                width={32} 
-                height={32} 
-                uri={params.avatarUrl} 
+                width={32}
+                height={32}
+                uri={params.avatarUrl}
                 defaultSource={require('../Settings/statics/main-image.png')}
               />
             }
@@ -60,6 +58,13 @@ class UserProfile extends React.PureComponent {
       avatarUrl: this.props.navigation.state.params.avatarUrl,
       username: this.props.navigation.state.params.username
     })
+  }
+  _changeAvatar () {
+    const payload = {
+      avatarUrl: this.props.navigation.state.params.avatarUrl,
+      username: this.props.navigation.state.params.username
+    }
+    this.props.navigation.navigate('ChangeAvatar', payload)
   }
   _pubKey () {
     Clipboard.setString(this.props.publicKey)
@@ -102,6 +107,9 @@ class UserProfile extends React.PureComponent {
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.listItem} onPress={this._settings.bind(this)}>
             <Text style={styles.listText}>Settings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
+            <Text style={styles.listText}>Change Avatar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._pubKey.bind(this)}>
             <Text style={styles.listText}>Copy Public Key</Text>
@@ -156,7 +164,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    lockScreen: () => { dispatch(AuthActions.logOutRequest()) }
+    lockScreen: () => { dispatch(AuthActions.logOutRequest()) },
+    changeAvatar: () => { dispatch(PreferencesActions.changeAvatarRequest()) }
   }
 }
 
