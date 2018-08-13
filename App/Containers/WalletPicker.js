@@ -1,5 +1,6 @@
 import React from 'react'
-import {View, Text, Image, TouchableOpacity} from 'react-native'
+import { View, Text } from 'react-native'
+import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
@@ -15,22 +16,16 @@ class TextileWalletPicker extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
-      <TouchableOpacity onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
-        <Image
-          style={navStyles.headerLeft}
-          source={require('../SB/views/ThreadsDetail/statics/icon-arrow-left.png')}
-        />
-      </TouchableOpacity>
+      <TextileHeaderButtons left>
+        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+      </TextileHeaderButtons>
     )
-
     const headerTitle = (
       <Text style={navStyles.headerTitle}>Choose a Photo</Text>
     )
-
     return {
       headerTitle,
-      headerLeft,
-      tabBarVisible: false
+      headerLeft
     }
   }
 

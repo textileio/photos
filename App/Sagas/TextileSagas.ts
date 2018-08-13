@@ -85,7 +85,7 @@ export function * recoverPassword (action: ActionType<typeof AuthActions.recover
 
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield put(PreferencesActions.onboardedSuccess())
-  yield call(NavigationService.navigate, 'PhotosNavigation')
+  yield call(NavigationService.navigate, 'PrimaryNavigation')
   yield take(getType(TextileNodeActions.startNodeSuccess))
 
   let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)

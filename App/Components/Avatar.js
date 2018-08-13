@@ -3,7 +3,7 @@ import { View, Image } from 'react-native'
 
 import styles from './Styles/AvatarStyles'
 
-const Alert = props => {
+const Avatar = props => {
   const { uri, height, width, defaultSource, style } = props
   let borderRadius = height / 5
   return (
@@ -20,4 +20,4 @@ const Alert = props => {
   )
 }
 
-export default Alert
+export default Avatar

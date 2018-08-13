@@ -5,6 +5,8 @@ import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'rea
 import Toast from 'react-native-easy-toast'
 import Modal from 'react-native-modal'
 
+import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
+
 import ShareToThread from '../../../Components/ShareToThread'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
@@ -44,30 +46,19 @@ class PhotoDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     const {params = {}} = navigation.state
     const headerLeft = (
-      <TouchableOpacity style={styles.backButtonWrapper} onPress={ () => { navigation.dispatch(NavigationActions.back()) }}>
-        <Image
-          style={styles.toolbarLeft}
-          source={require('./statics/icon-arrow-left.png')}
-        />
-      </TouchableOpacity>
+      <TextileHeaderButtons left>
+        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+      </TextileHeaderButtons>
     )
     const headerRight = (
-        <View style={styles.toolbarIconsList}>
-          <TouchableOpacity style={styles.moreButtonWrapper} onPress={params.sharePressed}>
-            <Image style={styles.toolbarAddIcon} source={require('./statics/icon-add.png')}/>
-          </TouchableOpacity>
-          {/*<Image style={styles.toolbarDownloadIcon} source={require('./statics/icon-download.png')}/>*/}
-          <TouchableOpacity style={styles.moreButtonWrapper} onPress={params.getPublicLink}>
-            <Image resizeMode={'stretch'} style={styles.toolbarShareIcon} source={require('./statics/icon-share.png')}/>
-          </TouchableOpacity>
-          {/*<Image style={styles.toolbarRemoveIcon} source={require('./statics/icon-remove.png')}/>*/}
-        </View>
+      <TextileHeaderButtons>
+        <Item title='Add To Thread' iconName='add-user' onPress={params.sharePressed} />
+        <Item title='Share' iconName='share' onPress={params.getPublicLink} />
+      </TextileHeaderButtons>
     )
-
     return {
       headerRight,
-      headerLeft,
-      tabBarVisible: false
+      headerLeft
     }
   }
 

@@ -4,9 +4,11 @@ import { Switch, Image, View, Text, ScrollView, TouchableOpacity, Platform } fro
 import ImageSc from 'react-native-scalable-image'
 import AuthAction from '../../../Redux/AuthRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
-
 import { Button } from 'react-native-elements'
 import PermissionsInfo from '../../components/PermissionsInfo'
+import HeaderButtons, { Item } from 'react-navigation-header-buttons'
+
+import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
 import navStyles from '../UserProfile/statics/styles'
@@ -30,20 +32,27 @@ class SyncPermissions extends React.PureComponent {
     const params = navigation.state.params || {}
     const greeting = params.username ? 'Hello ' + params.username : 'Hello'
     return {
+      headerTitle: 'Settings',
       headerLeft: (
-        <TouchableOpacity onPress={ () => {
-          navigation.dispatch(NavigationActions.back())
-        }}>
-          <View style={navStyles.toolbarBack}>
-            <Image style={navStyles.toolbarBackIcon} source={require('../UserProfile/statics/icon-arrow-left.png')} />
-          </View>
-          <Text style={navStyles.toolbarUserName}>{ greeting }</Text>
-          <Text style={navStyles.toolbarThreadsQty}>Your account</Text>
-        </TouchableOpacity>),
+        <TextileHeaderButtons left>
+          <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+        </TextileHeaderButtons>
+      ),
       headerRight: (
-        <TouchableOpacity>
-          <Avatar style={navStyles.toolbarImage} width={59} height={59} uri={params.avatarUrl} defaultSource={require('../Settings/statics/main-image.png')} />
-        </TouchableOpacity>
+        <HeaderButtons>
+          <Item 
+            title='Avatar'
+            buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+            ButtonElement={
+              <Avatar
+                width={32} 
+                height={32} 
+                uri={params.avatarUrl} 
+                defaultSource={require('../Settings/statics/main-image.png')}
+              />
+            }
+          />
+        </HeaderButtons>
       )
     }
   }
