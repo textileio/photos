@@ -37,6 +37,7 @@
 		7E18D611B45242668D9DF319 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2228F350674B45EDA607BC39 /* SimpleLineIcons.ttf */; };
 		7FC7F435032D438592423B7B /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE244265DFAD489F8F07A711 /* Entypo.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9310C564211EB33A0091B9CE /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9310C526211EB33A0091B9CE /* icomoon.ttf */; };
 		932E4DB820B8D7E100358ED3 /* Biotif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DA820B8D7DF00358ED3 /* Biotif-Medium.ttf */; };
 		932E4DB920B8D7E100358ED3 /* Biotif-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DA920B8D7DF00358ED3 /* Biotif-LightItalic.ttf */; };
 		932E4DBA20B8D7E100358ED3 /* Biotif-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DAA20B8D7DF00358ED3 /* Biotif-SemiBold.ttf */; };
@@ -574,6 +575,7 @@
 		88D2CFFF10CDCE008CB531AD /* libPods-TextilePhotos-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TextilePhotos-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BEB37EF438445BC8A765A69 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		8E49E968ABAC4F63AE94D9C4 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		9310C526211EB33A0091B9CE /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = ../App/Fonts/icomoon.ttf; sourceTree = "<group>"; };
 		932E4DA820B8D7DF00358ED3 /* Biotif-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Medium.ttf"; path = "../App/Fonts/Biotif-Medium.ttf"; sourceTree = "<group>"; };
 		932E4DA920B8D7DF00358ED3 /* Biotif-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-LightItalic.ttf"; path = "../App/Fonts/Biotif-LightItalic.ttf"; sourceTree = "<group>"; };
 		932E4DAA20B8D7DF00358ED3 /* Biotif-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-SemiBold.ttf"; path = "../App/Fonts/Biotif-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -831,6 +833,7 @@
 		6583B009634D42DE99FC41BF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9310C526211EB33A0091B9CE /* icomoon.ttf */,
 				9345CEAC2102B68A0061EFD6 /* BentonSans-Bold.otf */,
 				9345CEAB2102B68A0061EFD6 /* BentonSans-Light.otf */,
 				9345CEA62102B24D0061EFD6 /* BentonSans.otf */,
@@ -1770,6 +1773,7 @@
 				94F237902F5845BC8A2BF5DF /* MaterialCommunityIcons.ttf in Resources */,
 				36F172E5279B465682338DDB /* MaterialIcons.ttf in Resources */,
 				3C52B42EBA6547ACB45C6C7F /* Octicons.ttf in Resources */,
+				9310C564211EB33A0091B9CE /* icomoon.ttf in Resources */,
 				932E4DB920B8D7E100358ED3 /* Biotif-LightItalic.ttf in Resources */,
 				932E4DC120B8D7E100358ED3 /* Biotif-Book.ttf in Resources */,
 				932E4DC320B8D7E100358ED3 /* Biotif-Black.ttf in Resources */,

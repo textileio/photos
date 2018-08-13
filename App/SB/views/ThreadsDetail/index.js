@@ -1,6 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {View, Text, Image, TouchableOpacity, ScrollView, RefreshControl} from 'react-native'
+import { NavigationActions } from 'react-navigation'
+
+import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
@@ -26,37 +29,20 @@ class ThreadsEdit extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const headerLeft =  (
-      <TouchableOpacity onPress={ () => {
-        navigation.goBack(null)
-      }}>
-        <Image
-          style={navStyles.headerLeft}
-          source={require('./statics/icon-arrow-left.png')}
-        />
-      </TouchableOpacity>
+      <TextileHeaderButtons left>
+        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+      </TextileHeaderButtons>
     )
     const headerRight = (
-      <View style={navStyles.headerRight}>
-        <TouchableOpacity onPress={params.showImagePicker}>
-        <Image
-          style={navStyles.headerIconPhoto}
-          source={require('./statics/icon-photo.png')}
-        />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={params.showActionSheet}>
-          <Image
-            style={navStyles.headerIconMore}
-            source={require('./statics/icon-more.png')}
-          />
-        </TouchableOpacity>
-      </View>
+      <TextileHeaderButtons>
+        <Item title='Add Photo' iconName='add-photo' onPress={params.showImagePicker} />
+        <Item title='Share' iconName='more' onPress={params.showActionSheet} />
+      </TextileHeaderButtons>
     )
-
     return {
       // TODO: no current menu needed for Wallet view
       headerRight,
-      headerLeft,
-      tabBarVisible: false
+      headerLeft
     }
   }
 
@@ -138,6 +124,7 @@ class ThreadsEdit extends React.PureComponent {
           <View style={this._progressStyle(true)} />
           <View style={this._progressStyle()} />
         </View>}
+        {/* FIXME: This really needs to be a FlatList */}
         <ScrollView
           refreshControl={
             <RefreshControl

@@ -1,11 +1,11 @@
-import { StackNavigator } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation'
 
 import BottomDrawerPhotos from '../SB/components/BottomDrawerPhotos'
 import AddThreadScreen from '../Containers/AddThreadScreen'
 
-import styles, {headerTintColor} from './Styles/NavigationStyles'
+import styles, { headerTintColor } from './Styles/NavigationStyles'
 
-const nav = StackNavigator(
+const nav = createStackNavigator(
   {
     ShareToThreadList: {
       screen: BottomDrawerPhotos,
@@ -21,10 +21,9 @@ const nav = StackNavigator(
     headerMode: 'float',
     initialRouteName: 'ShareToThreadList',
     navigationOptions: {
-      swipeEnabled: false,
       gesturesEnabled: false,
       headerStyle: styles.header,
-      headerTitleContainerStyle: styles.headerTitle,
+      headerTitleStyle: styles.headerTitle,
       headerTintColor: headerTintColor
     }
   }

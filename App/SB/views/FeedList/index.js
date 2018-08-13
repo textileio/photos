@@ -11,11 +11,7 @@ import styles from './statics/styles'
 class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerStyle: [navStyles.header, {
-        height: 60,
-        paddingHorizontal: 16
-      }],
-      headerLeft: (<Text style={styles.toolbarTitle}>{'Notifications'}</Text>)
+      headerTitle: 'Notifications'
     }
   }
 

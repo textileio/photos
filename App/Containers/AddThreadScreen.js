@@ -1,11 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, Image, ScrollView } from 'react-native'
 import Input from '../SB/components/Input'
-import { Button } from 'react-native-elements'
 import { NavigationActions } from 'react-navigation'
-import HeaderButtons from 'react-navigation-header-buttons'
-import navStyles from '../Navigation/Styles/NavigationStyles'
+import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 // import styles from './Styles/AddThreadStyle'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import styles from '../SB/views/ThreadCreate/statics/styles'
@@ -22,23 +20,14 @@ class AddThreadScreen extends React.Component {
     return {
       headerTitle: 'New Thread',
       headerLeft: (
-        <TouchableOpacity style={navStyles.backButtonWrapper} onPress={() => { navigation.dispatch(NavigationActions.back()) }}>
-          <Image
-            style={navStyles.headerLeft}
-            source={require('../SB/views/ThreadsDetail/statics/icon-arrow-left.png')}
-          />
-        </TouchableOpacity>
+        <TextileHeaderButtons left>
+          <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+        </TextileHeaderButtons>
       ),
       headerRight: params.submitEnabled && (
-        <View style={styles.toolBarRight}>
-          <Button
-            buttonStyle={{backgroundColor: 'rgba(0,0,0,0)', elevation: 0}}
-            titleStyle={styles.link}
-            onPress={() => params.submit()}
-            title={'Next'}
-            color='#fff'
-          />
-        </View>
+        <TextileHeaderButtons>
+          <Item title='Create' onPress={() => params.submit()} />
+        </TextileHeaderButtons>
       ),
     }
   }
