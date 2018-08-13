@@ -78,13 +78,25 @@ const migrations: MigrationManifest = {
         pendingShares: {}
       }
     }
+  },
+  6: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        tourScreens: {
+          wallet: true
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 5,
+  version: 6,
   whitelist: ['preferences', 'uploadingImages', 'cameraRoll', 'notifications'],
   migrate: createMigrate(migrations, { debug: false })
 }
