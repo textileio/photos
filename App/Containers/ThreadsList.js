@@ -25,7 +25,7 @@ class ThreadsList extends React.PureComponent {
     const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
       <HeaderButtons left>
-        <Item 
+        <Item
           title='Account'
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
@@ -33,9 +33,9 @@ class ThreadsList extends React.PureComponent {
           buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
             <Avatar
-              width={24} 
-              height={24} 
-              uri={avatarUrl} 
+              width={24}
+              height={24}
+              uri={avatarUrl}
               defaultSource={require('../SB/views/Settings/statics/main-image.png')}
             />
           }
@@ -86,10 +86,11 @@ class ThreadsList extends React.PureComponent {
               style={styles.emptyStateImage}
               source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
             <Text style={styles.emptyStateText}>
-              Start sharing your memories with
-              friends and family with threads.
+              This is where you can create shared
+              Threads. Invite only groups to share
+              photos with your friends and family.
             </Text>
-            <Button primary text='Create new thread' onPress={() => {
+            <Button primary text='Create a thread' onPress={() => {
               this.props.navigation.navigate('AddThread')
             }} />
           </View>

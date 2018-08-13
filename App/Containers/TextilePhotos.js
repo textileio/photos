@@ -12,8 +12,10 @@ import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Avatar from '../Components/Avatar'
 
+import Button from '../SB/components/Button'
 import BottomDrawerList from '../SB/components/BottomDrawerList'
 import NavigationService from '../Services/NavigationService'
+import styles from '../SB/views/ThreadsList/statics/styles'
 
 class TextilePhotos extends React.PureComponent {
   constructor (props) {
@@ -26,7 +28,7 @@ class TextilePhotos extends React.PureComponent {
     const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
       <HeaderButtons left>
-        <Item 
+        <Item
           title='Account'
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
@@ -34,9 +36,9 @@ class TextilePhotos extends React.PureComponent {
           buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
             <Avatar
-              width={24} 
-              height={24} 
-              uri={avatarUrl} 
+              width={24}
+              height={24}
+              uri={avatarUrl}
               defaultSource={require('../SB/views/Settings/statics/main-image.png')}
             />
           }
@@ -98,6 +100,22 @@ class TextilePhotos extends React.PureComponent {
   render () {
     return (
       <View style={style.container}>
+        {this.props.showTourScreen && (
+          <View style={styles.emptyStateContainer}>
+            <Image
+              style={styles.emptyStateImage}
+              source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
+            <Text style={styles.emptyStateText}>
+              This is the Textile wallet, a private
+              space where you can manage the data
+              you create while using the app.
+            </Text>
+            <Button primary text='Get started' onPress={() => {
+              this.props.completeTourScreen()
+            }} />
+          </View>
+        )}
+        {!this.props.showTourScreen && (
         <PhotoGrid
           items={this.props.items}
           progressData={this.props.progressData}
@@ -108,11 +126,11 @@ class TextilePhotos extends React.PureComponent {
           displayImages={this.props.displayImages}
           verboseUi={this.props.verboseUi}
         />
-
+        )}
         {this.props.verboseUi &&
-          <View style={style.bottomOverlay} >
-            <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
-          </View>
+        <View style={style.bottomOverlay} >
+          <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
+        </View>
         }
       </View>
     )
@@ -166,7 +184,8 @@ const mapStateToProps = (state, ownProps) => {
     nodeStatus,
     queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
-    profile: state.preferences.profile
+    profile: state.preferences.profile,
+    showTourScreen: state.preferences.tourScreens.wallet
   }
 }
 
@@ -175,7 +194,8 @@ const mapDispatchToProps = (dispatch) => {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
-    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
+    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) }
   }
 }
 

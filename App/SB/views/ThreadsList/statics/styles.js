@@ -18,6 +18,7 @@ export default StyleSheet.create({
     paddingHorizontal: 15
   },
   emptyStateContainer: {
+    backgroundColor: '#FAFCFE',
     paddingTop: 75,
     alignItems: 'center'
   },
