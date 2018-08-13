@@ -104,13 +104,13 @@ class TextilePhotos extends React.PureComponent {
           <View style={styles.emptyStateContainer}>
             <Image
               style={styles.emptyStateImage}
-              source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
+              source={require('../Images/v2/permissions.png')}/>
             <Text style={styles.emptyStateText}>
               This is the Textile wallet, a private
               space where you can manage the data
               you create while using the app.
             </Text>
-            <Button primary text='Get started' onPress={() => {
+            <Button primary text='See your wallet' onPress={() => {
               this.props.completeTourScreen()
             }} />
           </View>
@@ -140,7 +140,9 @@ class TextilePhotos extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
   const navParams = ownProps.navigation.state.params || {}
-  const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
+
+  const threadName = 'default'
+  const defaultThread = state.threads.threads.find(thread => thread.name === threadName)
   const defaultThreadId = defaultThread ? defaultThread.id : undefined
 
   const threadId = navParams.id || defaultThreadId
@@ -155,12 +157,6 @@ const mapStateToProps = (state, ownProps) => {
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
-  // I saw a really weird state where thread was all undefined....
-  // seems like we should show a loading state if that ever happens.
-  // at the very least i put the user on the default screen instead of a
-  // blank Thread screen
-  const threadName = thread ? thread.name : undefined
-
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
     : state.textileNode.nodeState.state
@@ -169,9 +165,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const placeholderText = state.textileNode.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
-    : (threadName === 'default'
-    ? 'Any new photos you take will be added to your Textile wallet.'
-    : 'Share your first photo to the ' + threadName + ' thread.')
+    : 'Any new photos you take will be added to your Textile wallet.'
 
   return {
     threadId,
