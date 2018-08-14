@@ -14,9 +14,6 @@ const actions = {
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
     return (profile: Profile) => resolve({ profile })
   }),
-  changeAvatarRequest: createAction('CHANGE_AVATAR_REQUEST', resolve => {
-    return () => resolve()
-  }),
   setAvatar: createAction('SET_AVATAR_REQUEST', resolve => {
     return (avatarId: string) => resolve({avatarId})
   }),
