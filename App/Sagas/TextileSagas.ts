@@ -616,9 +616,8 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
     const error = new Error('Image picker error')
     yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
   } else if (pickerResponse.customButton) {
-    // pickerResponse.customButton === 'wallet'
-    // This shouldn't be possible currently
-    yield call(NavigationService.navigate, 'WalletPicker', {shareTo: threadId})
+    yield put(UIActions.updateSharingPhotoThread(threadId))
+    yield call(NavigationService.navigate, 'WalletPicker')
   } else {
     try {
       const image: TextileTypes.SharedImage = {
@@ -629,8 +628,9 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
         width: pickerResponse.width,
         isVertical: pickerResponse.isVertical
       }
-      yield put(CameraRollActions.imagePickerSuccess(threadId, image))
-      yield call(NavigationService.navigate, 'SharePhoto', {threadId, image})
+      yield put(UIActions.updateSharingPhotoThread(threadId))
+      yield put(UIActions.updateSharingPhotoImage(image))
+      yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
     } catch (error) {
       yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
     }

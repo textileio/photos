@@ -88,7 +88,7 @@ class PhotoDetail extends Component {
     this.setState({drawer: false})
     const thread = this.props.threadsNotIn[i]
     this.props.shareToThread(thread.id)
-    this.props.navigation.navigate('WalletSharePhoto')
+    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PhotoViewer' })
   }
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
