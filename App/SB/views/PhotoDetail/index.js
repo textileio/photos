@@ -15,6 +15,8 @@ import BottomDrawerPhotos from '../../components/BottomDrawerPhotos'
 import PhotoWithTextBox from '../../components/PhotoWithTextBox'
 import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 
+import { getHeight } from '../../../Services/PhotoUtils'
+
 import styles from './statics/styles'
 
 import UIActions from '../../../Redux/UIRedux'
@@ -27,10 +29,10 @@ const HEIGHT = Dimensions.get('window').height
 class PhotoDetail extends Component {
   constructor (props) {
     super(props)
-    let heightByWidth = this.props.metadata ? (this.props.metadata.height / this.props.metadata.width) * WIDTH : WIDTH
+    const heightProperties = getHeight(this.props.metadata, WIDTH)
     this.state = {
-      drawer: false,
-      heightByWidth
+      ...heightProperties,
+      drawer: false
     }
   }
 
@@ -38,8 +40,10 @@ class PhotoDetail extends Component {
     if (
       this.props.metadata !== prevProps.metadata
     ) {
-      let heightByWidth = this.props.metadata ? (this.props.metadata.height / this.props.metadata.width) * WIDTH : WIDTH
-      this.setState({heightByWidth})
+      const heightProperties = getHeight(this.props.metadata, WIDTH)
+      this.setState({
+        ...heightProperties
+      })
     }
   }
 
@@ -101,7 +105,7 @@ class PhotoDetail extends Component {
       imageId={this.props.photo.id}
       previewPath={'small'}
       path={'photo'}
-      style={{height: this.state.heightByWidth, width: WIDTH, marginBottom: 10}}
+      style={{height: this.state.height, width: WIDTH, marginBottom: 10}}
       resizeMode={'cover'}
     />)
   }
@@ -109,7 +113,9 @@ class PhotoDetail extends Component {
   render () {
     return (
       <ScrollView style={styles.bodyContainer}>
-        {this.renderImage()}
+        <View style={{overflow: 'hidden', height: this.state.height, width: WIDTH}}>
+          {this.renderImage()}
+        </View>
         <View style={styles.photoDetails}>
           <View style={styles.detailItem}>
             {/*<Image style={styles.iconLocation} source={require('./statics/icon-location.png')}/>*/}
@@ -185,7 +191,6 @@ const mapStateToProps = (state, ownProps) => {
       ...t,
       size: !state.textileNode.threads[t.id] ? 0 : state.textileNode.threads[t.id].items.length
     } }).sort((a, b) => b - a)
-
 
   const path = thread.name === 'default' ? '/photo' : '/thumb'
   return {
