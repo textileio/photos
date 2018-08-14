@@ -6,15 +6,15 @@ import TextileImage from '../../../../TextileImage'
 import styles from './statics/styles'
 
 const PhotoWithTextBox = props => {
-  const { item, text, style } = props
+  const { photo, text, style } = props
 
   return (
     <View style={[styles.itemContainer, style]}>
-      {item &&
+      {photo &&
       <View style={styles.item}>
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
-            imageId={item.photo.id}
+            imageId={photo.id}
             path={'small'}
             style={styles.itemPhoto}
             width={70}
@@ -25,7 +25,7 @@ const PhotoWithTextBox = props => {
         </View>
       </View>
       }
-      {(!item || !item.photo) &&
+      {(!photo) &&
         <View style={styles.itemBox}>
           <Image style={styles.itemBoxPlus} source={require('../PhotoBoxEmpty/statics/icon-big-plus.png')} />
         </View>
@@ -36,7 +36,7 @@ const PhotoWithTextBox = props => {
 }
 
 PhotoWithTextBox.propTypes = {
-  photo: propTypes.number,
+  photo: propTypes.object.isRequired,
   text: propTypes.string.isRequired
 }
 

@@ -30,7 +30,7 @@ export default class BottomDrawerPhotos extends Component {
               <TouchableOpacity  key={i} onPress={() => {
                 this.props.screenProps.selector(i)
               }}>
-                <PhotoWithTextBox style={styles.photoElement} item={this.props.screenProps.thumbs[thread.id]} text={thread.name} />
+                <PhotoWithTextBox style={styles.photoElement} photo={this.props.screenProps.thumbs[thread.id]} text={thread.name} />
               </TouchableOpacity>
             ))}
             <TouchableOpacity onPress={() => {
