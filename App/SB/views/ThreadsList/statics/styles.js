@@ -18,8 +18,14 @@ export default StyleSheet.create({
     marginHorizontal: 15
   },
   emptyStateContainer: {
+    backgroundColor: '#FAFCFE',
     paddingTop: 75,
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    left: 0,
+    right: 0
   },
   emptyStateImage: {
     width: 159,
