@@ -2,13 +2,14 @@ import {Dimensions, StyleSheet, Platform} from 'react-native'
 import { ApplicationStyles, Metrics, Colors } from '../../Themes'
 
 const { width, height } = Dimensions.get('window')
+
 // orientation must fixed
-export const SCREEN_WIDTH = width < height ? width - 20 : height
+export const SCREEN_WIDTH = width < height ? width : height
 
 export const isSmallDevice = SCREEN_WIDTH <= 414
 export const numColumns = isSmallDevice ? 3 : 4
 
-export const PRODUCT_ITEM_OFFSET = 0.5
+export const PRODUCT_ITEM_OFFSET = 1
 export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET * 2
 const ITEM_WIDTH = (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
   PRODUCT_ITEM_MARGIN
@@ -41,8 +42,7 @@ export default StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    marginHorizontal: 1,
-    padding: PRODUCT_ITEM_OFFSET
+    margin: PRODUCT_ITEM_OFFSET
   },
   item: {
     margin: PRODUCT_ITEM_OFFSET,

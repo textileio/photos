@@ -10,7 +10,7 @@ export default StyleSheet.create({
   },
   threadsDetail: {
     paddingTop: 22,
-    marginHorizontal: 4
+    paddingHorizontal: 4
   },
   toolbarTitle: {
     fontFamily: 'BentonSans',
