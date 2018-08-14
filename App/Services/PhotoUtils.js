@@ -3,6 +3,16 @@ import {
 } from 'react-native'
 import RNFS from 'react-native-fs'
 import TextileNode from '../../TextileNode'
+import * as TextileTypes from '../Models/TextileTypes'
+
+export function getHeight (metadata: Object, targetWidth: number) {
+  const known = metadata && metadata.height && metadata.height > 0 && metadata.width && metadata.width > 0
+  const height = known ? (metadata.height / metadata.width) * targetWidth : targetWidth
+  return {
+    known,
+    height
+  }
+}
 
 export async function getPage (pageSize, cursor) {
   let queryParams = { first: pageSize }

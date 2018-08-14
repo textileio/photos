@@ -2,12 +2,13 @@ import React from 'react'
 import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 import Dash from 'react-native-dash'
 import moment from 'moment'
-import TextileImage from '../../../../TextileImage'
-const WIDTH = Dimensions.get('window').width
-
 import SmallIconTag from '../SmallIconTag'
+import TextileImage from '../../../../TextileImage'
+import { getHeight } from '../../../Services/PhotoUtils'
 
 import styles from './statics/styles'
+
+const WIDTH = Dimensions.get('window').width
 
 const lessThanFiveMinutesAgo = (date) => {
   return date.isAfter(moment().subtract(5, 'minutes'))
@@ -50,14 +51,13 @@ const ThreadDetailCard = props => {
         }
         caption += '... (+)'
       }
-      const username =  props.photo.username ? props.photo.username : props.photo.author_id.substring(0, 8).toUpperCase()
+      const username = props.photo.username ? props.photo.username : props.photo.author_id.substring(0, 8).toUpperCase()
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH - 68
-      let imageHeight = imageWidth
-      if (props.metadata && props.metadata.height && props.metadata.height > 0) {
-        imageHeight = (props.metadata.height / props.metadata.width) * imageWidth
-      }
+      console.log(props.metadata)
+      const heightProperties = getHeight(props.metadata, imageWidth)
+      const imageHeight = heightProperties.height
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
       let uri = props.photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.photo.author_id + '/avatar' : undefined
