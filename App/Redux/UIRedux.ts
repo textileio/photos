@@ -68,9 +68,6 @@ const actions = {
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
     return (hidden?: boolean) => resolve({hidden})
   }),
-  refreshMessagesSuccess: createAction('REFRESH_MESSAGES_SUCCESS', resolve => {
-    return (timestamp: number) => resolve({ timestamp })
-  }),
   refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', resolve => {
     return (error: Error) => resolve({ error })
   })
@@ -116,7 +113,6 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.chooseProfilePhotoError):
       return { ...state, chosenProfilePhoto: { ...state.chosenProfilePhoto, ...action.payload } }
     case getType(actions.updateProfilePicture):
-    case getType(actions.updateProfileSuccess):
     case getType(actions.cancelProfileUpdate):
       return { ...state, chosenProfilePhoto: {} }
     case getType(actions.viewPhotoRequest):
