@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, Image, TouchableOpacity, ScrollView, RefreshControl} from 'react-native'
+import {View, Text, ScrollView, RefreshControl} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -10,10 +10,9 @@ import BottomDrawerList from '../../components/BottomDrawerList'
 
 import styles from './statics/styles'
 import UIActions from '../../../Redux/UIRedux'
-import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
+import { ThreadData, PhotosQueryResult } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
-import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import ActionSheet from 'react-native-actionsheet'
 
 import Alert from '../../../SB/components/Alert'
@@ -170,15 +169,14 @@ const mapStateToProps = (state, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  var items: PhotosQueryResult[] = []
+  var items: [{type: string, item: PhotosQueryResult}] = []
   var refreshing = false
   var thread = undefined
 
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
     items = threadData.items.map((item) => {
-      item.type = 'photo'
-      return item
+      return {type: 'photo', item}
     })
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
