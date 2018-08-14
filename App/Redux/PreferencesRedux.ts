@@ -23,6 +23,9 @@ const actions = {
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
     return (publicKey: string) => resolve({ publicKey })
   }),
+  completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', resolve => {
+  return (tourKey: string) => resolve({ tourKey })
+}),
 }
 
 export type PreferencesAction = ActionType<typeof actions>
@@ -33,12 +36,17 @@ export type PreferencesState = {
   mnemonic?: string
   publicKey?: string
   profile?: Profile
-  pending?: string
+  pending?: string,
+  // tracks if a user has seen a particular tour screen
+  readonly tourScreens: {[index: string]: boolean} // true = still need to show, false = no need
 }
 
 export const initialState: PreferencesState = {
   onboarded: false,
-  verboseUi: false
+  verboseUi: false,
+  tourScreens: {
+    wallet: true
+  }
 }
 
 export function reducer (state: PreferencesState = initialState, action: PreferencesAction): PreferencesState {
@@ -55,6 +63,11 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, pending: action.payload.avatarId }
     case getType(actions.getPublicKeySuccess):
       return { ...state, publicKey: action.payload.publicKey }
+    case getType(actions.completeTourSuccess):
+      const tours = state.tourScreens
+      if(!tours.hasOwnProperty(action.payload.tourKey)) return state
+      tours[action.payload.tourKey] = false
+      return { ...state, tourScreens: tours }
     default:
       return state
   }
