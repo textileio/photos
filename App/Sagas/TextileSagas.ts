@@ -104,6 +104,7 @@ export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.
   let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
 
   yield processAvatarImage(action.payload.uri, defaultThread)
+  yield put(UIActions)
 }
 
 function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
