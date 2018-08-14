@@ -6,6 +6,7 @@ import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions, { ThreadData, PhotosQueryResult } from '../Redux/TextileNodeRedux'
+import * as TextileTypes from '../Models/TextileTypes'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
@@ -87,7 +88,7 @@ class TextilePhotos extends React.PureComponent {
 
   onSelect = (row) => {
     return () => {
-      this.props.viewPhoto(row.item.photo.id, this.props.threadId)
+      this.props.viewPhoto(row.item.id, this.props.threadId)
     }
   }
 
@@ -99,7 +100,7 @@ class TextilePhotos extends React.PureComponent {
     return (
       <View style={style.container}>
         <PhotoGrid
-          items={this.props.items}
+          photos={this.props.photos}
           progressData={this.props.progressData}
           onSelect={this.onSelect}
           onRefresh={this.onRefresh.bind(this)}
@@ -127,12 +128,12 @@ const mapStateToProps = (state, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  var items: PhotosQueryResult[] = []
+  var photos: TextileTypes.Photo[] = []
   var refreshing = false
   var thread = undefined
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
-    items = threadData.items
+    photos = threadData.photos
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
@@ -158,7 +159,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     threadId,
     threadName,
-    items,
+    photos,
     progressData: state.uploadingImages.images,
     refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',

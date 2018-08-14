@@ -42,9 +42,10 @@ export interface Photo {
   date: string
   author_id: string
   caption: string
+  metadata: PhotoMetadata
 }
 
-export interface Photos {
+export interface GetPhotosResult {
   items: Photo[]
 }
 
