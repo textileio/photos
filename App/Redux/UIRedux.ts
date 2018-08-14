@@ -14,6 +14,9 @@ const actions = {
   updateProfilePicture: createAction('UPDATE_PROFILE_PICTURE', resolve => {
     return (uri: string) => resolve({ uri })
   }),
+  updateProfileSuccess: createAction('UPDATE_PROFILE_PICTURE_SUCCESS', resolve => {
+    return () => resolve()
+  }),
   cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', resolve => {
     return () => resolve()
   }),
@@ -113,6 +116,7 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.chooseProfilePhotoError):
       return { ...state, chosenProfilePhoto: { ...state.chosenProfilePhoto, ...action.payload } }
     case getType(actions.updateProfilePicture):
+    case getType(actions.updateProfileSuccess):
     case getType(actions.cancelProfileUpdate):
       return { ...state, chosenProfilePhoto: {} }
     case getType(actions.viewPhotoRequest):
