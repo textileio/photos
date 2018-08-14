@@ -14,9 +14,6 @@ const actions = {
   updateProfilePicture: createAction('UPDATE_PROFILE_PICTURE', resolve => {
     return (uri: string) => resolve({ uri })
   }),
-  updateProfileSuccess: createAction('UPDATE_PROFILE_PICTURE_SUCCESS', resolve => {
-    return () => resolve()
-  }),
   cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', resolve => {
     return () => resolve()
   }),
@@ -67,6 +64,9 @@ const actions = {
   }),
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
     return (hidden?: boolean) => resolve({hidden})
+  }),
+  refreshMessagesSuccess: createAction('REFRESH_MESSAGES_SUCCESS', resolve => {
+    return (timestamp: number) => resolve({ timestamp })
   }),
   refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', resolve => {
     return (error: Error) => resolve({ error })
