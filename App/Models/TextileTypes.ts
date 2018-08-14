@@ -42,9 +42,10 @@ export interface Photo {
   date: string
   author_id: string
   caption: string
+  metadata: PhotoMetadata
 }
 
-export interface Photos {
+export interface GetPhotosResult {
   items: Photo[]
 }
 
@@ -77,12 +78,15 @@ export interface FileMetadata extends Metadata {
 }
 
 export interface PhotoMetadata extends FileMetadata {
-  format: string
-  format_thumb: string
-  width: number
-  height: number
-  latitude?: number
-  longitude?: number
+  version: string,
+  created: string,
+  added: string,
+  name: string,
+  extension: string,
+  width: number,
+  height: number,
+  original_format: string,
+  encoding_format: string
 }
 
 export interface ImageData {

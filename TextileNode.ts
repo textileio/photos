@@ -117,22 +117,16 @@ export default {
     return await TextileNode.sharePhotoToThread(dataId, threadId, caption)
   },
 
-  getPhotos: async function (limit: number, threadId: string, offset: string = ''): Promise<TextileTypes.Photos> {
+  getPhotos: async function (limit: number, threadId: string, offset: string = ''): Promise<TextileTypes.Photo[]> {
     const jsonString = await TextileNode.getPhotos(offset, limit, threadId)
-    const photos = JSON.parse(jsonString) as TextileTypes.Photos
-    return photos
+    const result = JSON.parse(jsonString) as TextileTypes.GetPhotosResult
+    return result.items
   },
 
   getPhotoData: async function (id: string, path: string): Promise<TextileTypes.ImageData> {
     const jsonString = await TextileNode.getPhotoData(id, path)
     const imageData = JSON.parse(jsonString) as TextileTypes.ImageData
     return imageData
-  },
-
-  getPhotoMetadata: async function (id: string): Promise<TextileTypes.PhotoMetadata> {
-    const jsonString = await TextileNode.getPhotoMetadata(id)
-    const photoMetadata = JSON.parse(jsonString) as TextileTypes.PhotoMetadata
-    return photoMetadata
   },
 
   getPhotoThreads: async function (id: string): Promise<Array<string>> {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, Image, TouchableOpacity, ScrollView, RefreshControl} from 'react-native'
+import {View, Text, ScrollView, RefreshControl} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -10,10 +10,10 @@ import BottomDrawerList from '../../components/BottomDrawerList'
 
 import styles from './statics/styles'
 import UIActions from '../../../Redux/UIRedux'
-import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
+import { ThreadData, PhotosQueryResult } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
-import navStyles from '../../../Navigation/Styles/NavigationStyles'
+import * as TextileTypes from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
 import Alert from '../../../SB/components/Alert'
@@ -143,7 +143,7 @@ class ThreadsEdit extends React.PureComponent {
           {/*</View>*/}
 
           <View style={styles.imageList}>
-            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
+            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
           </View>
         </ScrollView>
         {this.state.showDrawer && <BottomDrawerList/>}
@@ -170,15 +170,14 @@ const mapStateToProps = (state, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  var items: PhotosQueryResult[] = []
+  var items: [{type: string, photo: TextileTypes.Photo}] = []
   var refreshing = false
   var thread = undefined
 
   if (threadId) {
-    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
-    items = threadData.items.map((item) => {
-      item.type = 'photo'
-      return item
+    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
+    items = threadData.photos.map((photo) => {
+      return {type: 'photo', photo}
     })
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
