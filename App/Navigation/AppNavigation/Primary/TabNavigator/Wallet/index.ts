@@ -10,7 +10,7 @@ const nav = createStackNavigator(
   {
     TextilePhotos: TextilePhotos,
     PhotoViewer: PhotoDetail,
-    SharePhoto: AddCaptionScreen
+    WalletSharePhoto: AddCaptionScreen
   },
   {
     headerMode: 'float',

@@ -1,4 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
+import { SharedImage } from '../Models/TextileTypes'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
@@ -29,26 +30,24 @@ const actions = {
   dismissViewedPhoto: createAction('DISMISS_VIEWED_PHOTO', resolve => {
     return () => resolve()
   }),
-  authorPhotoShareRequest: createAction('AUTHOR_PHOTO_SHARE_REQUEST', resolve => {
-    return (hash: string) => resolve(hash)
+  updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', resolve => {
+    return (image: SharedImage | string) => resolve({ image })
   }),
-  cancelAuthoringPhotoShare: createAction('CANCEL_AUTHORING_PHOTO_SHARE', resolve => {
+  updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', resolve => {
+    return (threadId: string) => resolve({ threadId })
+  }),
+  updateSharingPhotoComment: createAction('UPDATE_SHARING_PHOTO_COMMENT', resolve => {
+    return (comment: string) => resolve({ comment })
+  }),
+  sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST'),
+  cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', resolve => {
     return () => resolve()
-  }),
-  updateSelectedThreads: createAction('UPDATE_SELECTED_THREADS', resolve => {
-    return (threadIds: ReadonlyMap<string, boolean>) => resolve({ threadIds })
-  }),
-  updateComment: createAction('UPDATE_COMMENT', resolve => {
-    return (comment: string) => resolve(comment)
-  }),
-  sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
-    return (id: string, threadIds: [string], caption?: string) => resolve({ id, threadIds, caption })
-  }),
-  getPublicLink: createAction('GET_PUBLIC_LINK', resolve => {
-    return (photoId: string) => resolve({ photoId })
   }),
   imageSharingError: createAction('IMAGE_SHARING_ERROR', resolve => {
     return (error: Error) => resolve(error)
+  }),
+  getPublicLink: createAction('GET_PUBLIC_LINK', resolve => {
+    return (photoId: string) => resolve({ photoId })
   }),
   showImagePicker: createAction('SHOW_IMAGE_PICKER', resolve => {
     return (threadId: string) => resolve({ threadId })
@@ -86,10 +85,9 @@ export type UIState = {
     readonly photoId?: string
     readonly threadId?: string
   },
-  readonly sharingPhoto: {
-    readonly active: boolean,
-    readonly hash?: string,
-    readonly selectedThreads: ReadonlyMap<string, boolean>,
+  readonly sharingPhoto?: {
+    readonly image?: SharedImage | string,
+    readonly threadId?: string,
     readonly comment?: string
   },
   readonly imagePickerError?: string // used to notify the user of any error during photo picking
@@ -101,10 +99,7 @@ export const initialState: UIState = {
   viewingPhoto: {
     active: false
   },
-  sharingPhoto: {
-    active: false,
-    selectedThreads: new Map<string, boolean>()
-  },
+  refreshingMessages: false
 }
 
 export function reducer (state: UIState = initialState, action: UIAction): UIState {
@@ -122,14 +117,18 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
       return { ...state, viewingPhoto: { ...state.viewingPhoto, photoId: action.payload } }
     case getType(actions.dismissViewedPhoto):
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: false } }
-    case getType(actions.authorPhotoShareRequest):
-      return { ...state, sharingPhoto: { ...state.sharingPhoto, active: true, hash: action.payload, selectedThreads: new Map<string, boolean>() } }
-    case getType(actions.cancelAuthoringPhotoShare):
-      return { ...state, sharingPhoto: { ...state.sharingPhoto, active: false } }
-    case getType(actions.updateSelectedThreads):
-      return { ...state, sharingPhoto: { ...state.sharingPhoto, selectedThreads: action.payload.threadIds } }
-    case getType(actions.updateComment):
-      return { ...state, sharingPhoto: { ...state.sharingPhoto, comment: action.payload } }
+    case getType(actions.updateSharingPhotoImage):
+      const { image } = action.payload
+      return { ...state, sharingPhoto: { ...state.sharingPhoto, image } }
+    case getType(actions.updateSharingPhotoThread): {
+      const { threadId } = action.payload
+      return { ...state, sharingPhoto: { ...state.sharingPhoto, threadId } }
+    }
+    case getType(actions.updateSharingPhotoComment):
+      const { comment } = action.payload
+      return { ...state, sharingPhoto: { ...state.sharingPhoto, comment } }
+    case getType(actions.cancelSharingPhoto):
+      return { ... state, sharingPhoto: undefined }
     case getType(actions.newImagePickerError):
       const msg = action.payload.message || action.payload.error.message
       return { ...state, imagePickerError:  msg}

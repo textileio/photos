@@ -87,8 +87,8 @@ class PhotoDetail extends Component {
   shareIntoThread (i) {
     this.setState({drawer: false})
     const thread = this.props.threadsNotIn[i]
-    this.props.authorShare(this.props.photo.id)
-    this.props.navigation.navigate('SharePhoto', {thread, photo: this.props.photo})
+    this.props.shareToThread(thread.id)
+    this.props.navigation.navigate('WalletSharePhoto')
   }
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
@@ -156,8 +156,8 @@ class PhotoDetail extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    authorShare: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
-    shareImage: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
+    shareImage: (imageId) => { dispatch(UIActions.updateSharingPhotoImage(imageId)) },
+    shareToThread: (threadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) },
     getPublicLink: (imageId) => { dispatch(UIActions.getPublicLink(imageId)) }
   }
 }
