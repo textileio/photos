@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 export default StyleSheet.create({
   container: {
     backgroundColor: '#FAFCFE',
-    flex: 1
+    flex: 1,
   },
   toolbarLogo: {
     width: 82.5,
@@ -14,8 +14,8 @@ export default StyleSheet.create({
     height: 24
   },
   contentContainer: {
-    paddingTop: 25,
-    paddingHorizontal: 15
+    marginTop: 25,
+    marginHorizontal: 15
   },
   emptyStateContainer: {
     paddingTop: 75,
