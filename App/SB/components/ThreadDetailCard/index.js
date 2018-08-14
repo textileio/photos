@@ -75,9 +75,7 @@ const ThreadDetailCard = props => {
             </View>
             { !last && <Dash style={styles.cardLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
           </View>
-          <TouchableOpacity style={styles.cardRight} onPress={() => {
-            props.onSelect(props.photo.id)
-          }} >
+          <View style={styles.cardRight}>
             <Text style={styles.cardAction}><Text style={styles.cardActionName}>
               {profile.username === username ? 'You' : username}
             </Text> added a photo</Text>
@@ -94,7 +92,7 @@ const ThreadDetailCard = props => {
               </View>
             </View>
             <SmallIconTag syle={{flexDirection: 'row'}} text={caption} uri={uri} defaultSource={defaultSource} avatarStyle={{marginRight: 10}}/>
-          </TouchableOpacity>
+          </View>
         </View>
       )
     }

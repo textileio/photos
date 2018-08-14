@@ -5,11 +5,15 @@ import styles from './statics/styles'
 
 const Alert = props => {
   const { display, bottom, msg, top } = props
-  return (
-    <View style={[styles.container, !display && { display: 'none' }, bottom && styles.bottom, top && styles.top]}>
-      <Text style={styles.msg}>{msg}</Text>
-    </View>
-  )
+  if (display === true) {
+    return (
+      <View style={[styles.container, bottom && styles.bottom, top && styles.top]}>
+        <Text style={styles.msg}>{msg}</Text>
+      </View>
+    )
+  } else {
+    return (<View/>)
+  }
 }
 
 export default Alert

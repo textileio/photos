@@ -93,6 +93,7 @@ export interface ImageData {
 export type SharedImage = {
   origURL: string,
   uri: string,
+  path?: string,
   height: number,
   width: number,
   isVertical: boolean,
