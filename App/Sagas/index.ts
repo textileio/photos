@@ -121,10 +121,6 @@ export default function * root () {
     // Flow to add image from ImagePicker to Thread
     // 1. Image picker open request => trigger open image picker
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
-    // Pin the file to our local node
-    takeEvery(getType(CameraRollActions.addComment), localPinRequest),
-    // Begin upload of the file to the remote pinner
-    takeEvery(getType(CameraRollActions.localPinSuccess), remotePinRequest),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),

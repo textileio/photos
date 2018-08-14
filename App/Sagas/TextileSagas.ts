@@ -663,10 +663,10 @@ export function * localPinRequest(action: ActionType<typeof CameraRollActions.ad
     yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
 
     // Store the addResult with the image
-    yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))
+    // yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))
   } catch (error) {
     try {
-      yield put(CameraRollActions.imagePinError(threadId, image))
+      // yield put(CameraRollActions.imagePinError(threadId, image))
       const exists: boolean = yield call(RNFS.exists, photoPath)
       if (exists) {
         yield call(RNFS.unlink, photoPath)
@@ -695,11 +695,11 @@ export function * remotePinRequest(action: ActionType<typeof CameraRollActions.l
     )
 
     // Remove the image from the CameraRoll actions
-    yield put(CameraRollActions.remotePinStarted(threadId, image))
+    // yield put(CameraRollActions.remotePinStarted(threadId, image))
 
   } catch (error) {
     try {
-      yield put(CameraRollActions.imagePinError(threadId, image))
+      // yield put(CameraRollActions.imagePinError(threadId, image))
       if (addResult.archive) {
         const exists: boolean = yield call(RNFS.exists, addResult.archive.path)
         if (exists) {
