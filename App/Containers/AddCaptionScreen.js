@@ -16,13 +16,16 @@ class AddCaptionScreen extends React.Component {
         <TextileHeaderButtons left>
           <Item title='Back' iconName='arrow-left' onPress={() => {
             params.cancelShare()
-            navigation.dispatch(NavigationActions.back())
+            navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
           }} />
         </TextileHeaderButtons>
       ),
       headerRight: params.submitEnabled && (
         <TextileHeaderButtons>
-          <Item title='Share' onPress={() => params.share()} />
+          <Item title='Share' onPress={() => {
+            params.share()
+            navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+          }} />
         </TextileHeaderButtons>
       ),
     }
