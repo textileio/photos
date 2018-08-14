@@ -21,10 +21,12 @@ const lessThanOneDayAgo = (date) => {
 }
 
 const ThreadDetailCard = props => {
-  const { type, last, profile, item } = props
+  const { last, profile, item } = props
+  const type = item.type
   switch (type) {
     case 'photo': {
-      const date = moment(item.photo.date)
+      const photo = item.photo
+      const date = moment(photo.date)
       let dateSmall = ''
       let dateLarge = ''
       if (lessThanFiveMinutesAgo(date)) {
@@ -41,27 +43,27 @@ const ThreadDetailCard = props => {
         dateLarge = date.format('DD')
       }
 
-      let caption = item.photo.caption
+      let caption = photo.caption
       // format really long strings to just show a (+) to read the whole thing
       if (caption.length > 120) {
-        caption = item.photo.caption.substring(0, 117)
+        caption = photo.caption.substring(0, 117)
         caption = caption.substring(0, caption.lastIndexOf(' '))
         while (caption[caption.length - 1] === '.' || caption[caption.length - 1] === ' ') {
           caption = caption.slice(0, -1)
         }
         caption += '... (+)'
       }
-      const username = item.photo.username ? item.photo.username : item.photo.author_id.substring(0, 8).toUpperCase()
+      const username = photo.username ? photo.username : photo.author_id.substring(0, 8).toUpperCase()
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH - 68
-      const heightProperties = getHeight(item.metadata, imageWidth)
+      const heightProperties = getHeight(photo.metadata, imageWidth)
       const imageHeight = heightProperties.height
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
-      let uri = item.photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + item.photo.author_id + '/avatar' : undefined
+      let uri = photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + photo.author_id + '/avatar' : undefined
       // ensure we have the user's latest avatar even if the cafe is still caching
-      if (props.profile && props.profile.id && props.profile.id === item.photo.author_id) {
+      if (props.profile && props.profile.id && props.profile.id === photo.author_id) {
         uri = 'https://cafe.us-east-1.textile.io' + props.profile.avatar_id
       }
 
@@ -74,16 +76,17 @@ const ThreadDetailCard = props => {
             </View>
             { !last && <Dash style={styles.cardLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
           </View>
-          <TouchableOpacity style={styles.cardRight} onPress={() => {
-            props.onSelect(item.photo.id)
-          }} >
+          <View style={styles.cardRight}>
+          {/*<TouchableOpacity style={styles.cardRight} onPress={() => {*/}
+            {/*props.onSelect(photo.id)*/}
+          {/*}} >*/}
             <Text style={styles.cardAction}><Text style={styles.cardActionName}>
               {profile.username === username ? 'You' : username}
             </Text> added a photo</Text>
             <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
               <View style={styles.imageStretch}>
                 <TextileImage
-                  imageId={item.photo.id}
+                  imageId={photo.id}
                   path={'small'}
                   style={styles.image}
                   resizeMode={'cover'}
@@ -92,8 +95,8 @@ const ThreadDetailCard = props => {
                 />
               </View>
             </View>
-            <SmallIconTag syle={{flexDirection: 'row'}} text={caption} uri={uri} defaultSource={defaultSource} avatarStyle={{marginRight: 10}}/>
-          </TouchableOpacity>
+            <SmallIconTag syle={{flexDirection: 'row'}} text={caption} uri={uri} defaultSource={defaultSource} avatarStyle={{marginRight: 10}} />
+          </View>
         </View>
       )
     }

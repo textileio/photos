@@ -120,6 +120,7 @@
 - (NSString*)getId:(NSError**)error;
 - (NSString*)getPeerProfile:(NSString*)peerId error:(NSError**)error;
 - (NSString*)getPhotoData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
+- (NSString*)getPhotoDataForMinWidth:(NSString*)id_ minWidth:(long)minWidth error:(NSError**)error;
 - (NSString*)getPhotoKey:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotoMetadata:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit threadId:(NSString*)threadId error:(NSError**)error;

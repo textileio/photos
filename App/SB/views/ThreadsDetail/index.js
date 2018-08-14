@@ -13,6 +13,7 @@ import UIActions from '../../../Redux/UIRedux'
 import { ThreadData, PhotosQueryResult } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
+import * as TextileTypes from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
 import Alert from '../../../SB/components/Alert'
@@ -142,7 +143,7 @@ class ThreadsEdit extends React.PureComponent {
           {/*</View>*/}
 
           <View style={styles.imageList}>
-            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} {...item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
+            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
           </View>
         </ScrollView>
         {this.state.showDrawer && <BottomDrawerList/>}
@@ -169,14 +170,14 @@ const mapStateToProps = (state, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  var items: [{type: string, item: PhotosQueryResult}] = []
+  var items: [{type: string, photo: TextileTypes.Photo}] = []
   var refreshing = false
   var thread = undefined
 
   if (threadId) {
-    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
-    items = threadData.items.map((item) => {
-      return {type: 'photo', item}
+    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
+    items = threadData.photos.map((photo) => {
+      return {type: 'photo', photo}
     })
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)

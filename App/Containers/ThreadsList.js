@@ -78,8 +78,8 @@ class ThreadsList extends React.PureComponent {
     }
   }
 
-  _onPressItem = (item) => {
-    const { id, name } = item
+  _onPressItem = (photo) => {
+    const { id, name } = photo
     this.props.viewThread(id, name)
   }
 
@@ -134,20 +134,19 @@ const mapStateToProps = (state) => {
       // Todo: we'll want to get all this from a better source
       thread.photos = []
       thread.updated = Date.now() // TODO: could use a thread created timestamp...
-      if (nodeThread && nodeThread.items) {
-        const items = nodeThread.items
+      if (nodeThread && nodeThread.photos) {
+        const photos = nodeThread.photos
         // total number of images in the thread
-        thread.size = nodeThread.items.length
+        thread.size = nodeThread.photos.length
         // just keep the top 2
-        thread.photos = items.slice(0, 3)
+        thread.photos = photos.slice(0, 3)
 
         // get a rough count of distinct users
-        thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.photo.author_id))].length : 1
+        thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1
           // latest update based on the latest item
-        thread.updated = thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.date ? moment(thread.photos[0].photo.date) : undefined
+        thread.updated = thread.photos.length > 0 && thread.photos[0].date ? moment(thread.photos[0].date) : undefined
         // latest peer to push to the thread
-        // thread.latestPeerId = thread.photos && thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.author_id ? thread.photos[0].photo.author_id : undefined
-        thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].photo && thread.photos[0].photo.author_id ? thread.photos[0].photo.author_id : undefined
+        thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
       }
       return thread
     })
