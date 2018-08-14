@@ -96,10 +96,11 @@ class ThreadsList extends React.PureComponent {
               style={styles.emptyStateImage}
               source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
             <Text style={styles.emptyStateText}>
-              Start sharing your memories with
-              friends and family with threads.
+              This is where you can create shared
+              Threads. Invite only groups to share
+              photos with your friends and family.
             </Text>
-            <Button primary text='Create new thread' onPress={() => {
+            <Button primary text='Create a thread' onPress={() => {
               this.props.navigation.navigate('AddThread')
             }} />
           </View>

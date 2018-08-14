@@ -12,8 +12,10 @@ import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Avatar from '../Components/Avatar'
 
+import Button from '../SB/components/Button'
 import BottomDrawerList from '../SB/components/BottomDrawerList'
 import NavigationService from '../Services/NavigationService'
+import styles from '../SB/views/ThreadsList/statics/styles'
 
 class TextilePhotos extends React.PureComponent {
   constructor (props) {
@@ -98,6 +100,22 @@ class TextilePhotos extends React.PureComponent {
   render () {
     return (
       <View style={style.container}>
+        {this.props.showTourScreen && (
+          <View style={styles.emptyStateContainer}>
+            <Image
+              style={styles.emptyStateImage}
+              source={require('../Images/v2/permissions.png')}/>
+            <Text style={styles.emptyStateText}>
+              This is the Textile wallet, a private
+              space where you can manage the data
+              you create while using the app.
+            </Text>
+            <Button primary text='See your wallet' onPress={() => {
+              this.props.completeTourScreen()
+            }} />
+          </View>
+        )}
+        {!this.props.showTourScreen && (
         <PhotoGrid
           items={this.props.items}
           progressData={this.props.progressData}
@@ -108,11 +126,11 @@ class TextilePhotos extends React.PureComponent {
           displayImages={this.props.displayImages}
           verboseUi={this.props.verboseUi}
         />
-
+        )}
         {this.props.verboseUi &&
-          <View style={style.bottomOverlay} >
-            <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
-          </View>
+        <View style={style.bottomOverlay} >
+          <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
+        </View>
         }
       </View>
     )
@@ -122,7 +140,9 @@ class TextilePhotos extends React.PureComponent {
 const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
   const navParams = ownProps.navigation.state.params || {}
-  const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
+
+  const threadName = 'default'
+  const defaultThread = state.threads.threads.find(thread => thread.name === threadName)
   const defaultThreadId = defaultThread ? defaultThread.id : undefined
 
   const threadId = navParams.id || defaultThreadId
@@ -137,12 +157,6 @@ const mapStateToProps = (state, ownProps) => {
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
-  // I saw a really weird state where thread was all undefined....
-  // seems like we should show a loading state if that ever happens.
-  // at the very least i put the user on the default screen instead of a
-  // blank Thread screen
-  const threadName = thread ? thread.name : undefined
-
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
     : state.textileNode.nodeState.state
@@ -151,9 +165,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const placeholderText = state.textileNode.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
-    : (threadName === 'default'
-    ? 'Any new photos you take will be added to your Textile wallet.'
-    : 'Share your first photo to the ' + threadName + ' thread.')
+    : 'Any new photos you take will be added to your Textile wallet.'
 
   return {
     threadId,
@@ -166,7 +178,8 @@ const mapStateToProps = (state, ownProps) => {
     nodeStatus,
     queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
-    profile: state.preferences.profile
+    profile: state.preferences.profile,
+    showTourScreen: state.preferences.tourScreens.wallet
   }
 }
 
@@ -175,7 +188,8 @@ const mapDispatchToProps = (dispatch) => {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
-    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
+    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) }
   }
 }
 
