@@ -624,6 +624,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
       const image: TextileTypes.SharedImage = {
         origURL: pickerResponse.origURL || pickerResponse.uri,
         uri: pickerResponse.uri,
+        path: pickerResponse.path,
         height: pickerResponse.height,
         width: pickerResponse.width,
         isVertical: pickerResponse.isVertical
@@ -638,7 +639,12 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
 
 export function * localPinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
   const {threadId, image} = action.payload
-  const photoPath = image.uri.replace('file://', '')
+  let photoPath = image.uri.replace('file://', '')
+
+  if (Platform.OS === 'android' && image.hasOwnProperty('path') && image.path !== undefined) {
+    photoPath = image.path
+  }
+
   try {
     // add the result to our local node
     const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
