@@ -90,7 +90,7 @@ export type UIState = {
     readonly threadId?: string,
     readonly comment?: string
   },
-  readonly imagePickerError?: string // used to notify the user of any error during photo picking
+  readonly imagePickerError?: string, // used to notify the user of any error during photo picking
   readonly refreshingMessages: boolean
 }
 
