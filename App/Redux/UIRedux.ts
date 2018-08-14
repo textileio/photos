@@ -11,6 +11,12 @@ const actions = {
   selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', resolve => {
     return (uri: string) => resolve({ uri })
   }),
+  updateProfilePicture: createAction('UPDATE_PROFILE_PICTURE', resolve => {
+    return (uri: string) => resolve({ uri })
+  }),
+  cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', resolve => {
+    return () => resolve()
+  }),
   viewThreadRequest: createAction('VIEW_THREAD_REQUEST', resolve => {
     return (threadId: string, threadName: string) => resolve({ threadId, threadName })
   }),
@@ -106,6 +112,9 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.chooseProfilePhotoSuccess):
     case getType(actions.chooseProfilePhotoError):
       return { ...state, chosenProfilePhoto: { ...state.chosenProfilePhoto, ...action.payload } }
+    case getType(actions.updateProfilePicture):
+    case getType(actions.cancelProfileUpdate):
+      return { ...state, chosenProfilePhoto: {} }
     case getType(actions.viewPhotoRequest):
       const { photoId, threadId } = action.payload
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, photoId, threadId } }

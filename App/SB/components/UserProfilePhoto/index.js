@@ -11,14 +11,12 @@ const UserProfilePhoto = props => {
 
   return (
     <View style={[styles.container, style]}>
-      {/* <ImageSc style={styles.filter} width={width} source={require('./statics/user-profile-filter.png')} /> */}
       <ImageSc style={{ ...styles.image, borderRadius: width/2 }} height={width} width={width} source={source} />
     </View>
   )
 }
 
 UserProfilePhoto.propTypes = {
-  // source: propTypes.number.isRequired,
   width: propTypes.number.isRequired
 }
 

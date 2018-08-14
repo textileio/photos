@@ -25,27 +25,36 @@ export default StyleSheet.create({
     fontFamily: "BentonSans",
     fontSize: 20,
     lineHeight: 25,
+    marginBottom: 20
   },
   subtitle: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 16,
     lineHeight: 27,
     textAlign: 'center',
     marginBottom: 25
   },
   strong: {
-    ...BentonSansBold(),
+    ...BentonSansBold()
   },
   uploadIcon: {
+    borderRadius: 24,
+    marginBottom: 18
+  },
+  avatarPhoto: {
     marginBottom: 18
   },
   uploadContainer: {
     alignItems: 'center'
   },
   photoUploaded: {
-    marginBottom: 40
+    marginBottom: 40,
+    borderRadius: 58
   },
   uploadButton: {
     marginBottom: 35
+  },
+  uploadButtonText: {
+    paddingTop: 4
   }
 })

@@ -11,6 +11,7 @@ class UserOnBoardingContainer extends React.Component {
       <UserOnBoarding
         {...this.props}
         chooseProfilePicture={this.props.chooseProfilePicture}
+        selectProfilePicture={this.props.selectProfilePicture}
       />
     )
   }

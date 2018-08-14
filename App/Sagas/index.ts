@@ -47,6 +47,7 @@ import {
   backgroundLocationPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
+  handleProfilePhotoUpdated,
   presentPublicLinkInterface,
   showImagePicker,
   localPinRequest,
@@ -65,6 +66,7 @@ export default function * root () {
     // profile photo
     takeEvery(getType(UIActions.chooseProfilePhotoRequest), chooseProfilePhoto),
     takeEvery(getType(UIActions.selectProfilePicture), handleProfilePhotoSelected),
+    takeEvery(getType(UIActions.updateProfilePicture), handleProfilePhotoUpdated),
 
     // permissions request events
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),

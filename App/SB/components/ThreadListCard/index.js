@@ -13,6 +13,12 @@ const ThreadCard = props => {
   const lastUpdatedTime = moment(updated).fromNow()
   const commentsCount = photos.length
   let uri = latestPeerId ? 'https://cafe.us-east-1.textile.io/ipns/' + latestPeerId + '/avatar' : undefined
+
+  // ensure we have the user's latest avatar even if the cafe is still caching
+  if (props.profile && props.profile.id && props.profile.id === latestPeerId) {
+    uri = 'https://cafe.us-east-1.textile.io' + props.profile.avatar_id
+  }
+
   return (
     <TouchableOpacity activeOpacity={0.95} style={styles.threadCard} onPress={() => {
       onPress(props)
