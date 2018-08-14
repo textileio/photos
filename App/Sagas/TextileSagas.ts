@@ -95,47 +95,7 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
     defaultThread = action.payload.thread
     yield put(ThreadsActions.refreshThreadsRequest())
   }
-
-  const photoPath = action.payload.uri.replace('file://', '')
-  try {
-    const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
-    if (!addResult.archive) {
-      throw new Error('no archive returned')
-    }
-    const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-    yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-
-    yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
-
-    try {
-      yield uploadFile(
-        addResult.id,
-        addResult.archive.path
-      )
-    } catch (error) {
-      // Leave all the data in place so we can rerty upload
-      let message = ''
-      if (!error) {
-        message = ''
-      } else if (typeof error === 'string') {
-        message = error
-      } else if (error.message) {
-        message = error.message
-      }
-      yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
-    }
-
-    // set it as our profile picture
-    yield put(PreferencesActions.pendingAvatar(addResult.id))
-
-  } catch (error) {
-    // TODO: What do to if adding profile photo fails?
-  } finally {
-    const exists: boolean = yield call(RNFS.exists, photoPath)
-    if (exists) {
-      yield call(RNFS.unlink, photoPath)
-    }
-  }
+  yield processAvatarImage(action.payload.uri, defaultThread)
 }
 
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
@@ -143,17 +103,20 @@ export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.
 
   let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
 
-  const photoPath = action.payload.uri.replace('file://', '')
+  yield processAvatarImage(action.payload.uri, defaultThread)
+}
+
+function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
+  const photoPath = uri.replace('file://', '')
   try {
     const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
     if (!addResult.archive) {
       throw new Error('no archive returned')
     }
-    const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+    yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
-    // set it as our official avatar
-    yield call(TextileNode.setAvatarId, addResult.id)
+    yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
 
     // set it as our profile picture
     yield put(PreferencesActions.pendingAvatar(addResult.id))
