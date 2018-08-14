@@ -41,6 +41,7 @@ const nav = createBottomTabNavigator(
     initialRouteName: 'Threads',
     animationEnabled: false,
     swipeEnabled: false,
+    initialRouteName: 'Threads'
   }
 )
 

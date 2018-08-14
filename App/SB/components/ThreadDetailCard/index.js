@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Text, Image, Dimensions } from 'react-native'
 import Dash from 'react-native-dash'
 import moment from 'moment'
 import SmallIconTag from '../SmallIconTag'
@@ -77,9 +77,6 @@ const ThreadDetailCard = props => {
             { !last && <Dash style={styles.cardLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
           </View>
           <View style={styles.cardRight}>
-          {/*<TouchableOpacity style={styles.cardRight} onPress={() => {*/}
-            {/*props.onSelect(photo.id)*/}
-          {/*}} >*/}
             <Text style={styles.cardAction}><Text style={styles.cardActionName}>
               {profile.username === username ? 'You' : username}
             </Text> added a photo</Text>

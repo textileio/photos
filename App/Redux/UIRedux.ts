@@ -92,7 +92,7 @@ export type UIState = {
     readonly selectedThreads: ReadonlyMap<string, boolean>,
     readonly comment?: string
   },
-  readonly imagePickerError?: string // used to notify the user of any error during photo picking
+  readonly imagePickerError?: string, // used to notify the user of any error during photo picking
   readonly refreshingMessages: boolean
 }
 
@@ -104,7 +104,7 @@ export const initialState: UIState = {
   sharingPhoto: {
     active: false,
     selectedThreads: new Map<string, boolean>()
-  },
+  }
 }
 
 export function reducer (state: UIState = initialState, action: UIAction): UIState {

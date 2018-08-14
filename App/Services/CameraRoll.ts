@@ -5,6 +5,7 @@ import TextileNode from '../../TextileNode'
 
 export type PickerImage = {
   uri: string,
+  path?: string,
   height: number,
   width: number,
   isVertical: boolean,
@@ -101,6 +102,7 @@ export async function choosePhoto(): Promise<PickerImage> {
     ImagePicker.showImagePicker(options, response => {
       const result: PickerImage = {
         uri: response.uri,
+        path: response.path,
         height: response.height,
         width: response.width,
         isVertical: response.isVertical,

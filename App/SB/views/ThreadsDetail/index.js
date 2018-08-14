@@ -234,7 +234,7 @@ const mapStateToProps = (state, ownProps) => {
     contacts: state.contacts.profiles,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
-    displayError: state.ui.imagePickerError !== undefined,
+    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,
     showProgress: progress > 0,
     progress
   }
