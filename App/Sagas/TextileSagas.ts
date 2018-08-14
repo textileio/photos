@@ -653,8 +653,9 @@ export function * localPinRequest(action: ActionType<typeof CameraRollActions.ad
 
     // Share the photo to the target Thread
     yield call(TextileNode.sharePhotoToThread, addResult.id, threadId, image.caption)
-    // Notify the UI to update via updating the hashes
-    yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
+
+    // update our local metadata since this will run while looking at the thread
+    yield * getPhotoMetadata({threadId, photoId: addResult.id})
 
     // Store the addResult with the image
     yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))

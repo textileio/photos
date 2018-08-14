@@ -125,7 +125,15 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
       // TODO: This isn't working?
       const { threadId, items } = action.payload
       const threadData = state.threads[threadId] || createEmptyThreadData()
-      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, items: items } }
+      const newItems = items.map((item) => {
+        const existing = threadData.items.find((it) => it.photo.id === item.photo.id)
+        if (existing) {
+          return existing
+        } else {
+          return item
+        }
+      })
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, items: newItems } }
       return { ...state, threads }
     }
     case getType(actions.getPhotoHashesFailure): {
@@ -138,12 +146,17 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
       // TODO: This isn't working?
       const { threadId, photoId, metadata } = action.payload
       const threadData = state.threads[threadId]
+      console.log('AXH', 'okay')
       if (!threadData) return state
       const items = threadData.items
+      console.log('AXH', '2')
+      console.log('AXH', photoId)
       if (!items) return state
       const target = items.find(itm => itm.photo.id === photoId)
+      console.log('AXH', '3', target)
       if (!target) return state
       target.metadata = metadata
+      console.log('AXH', 'okay', metadata)
       const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, items: items.map(itm => {
             if (itm.photo.id !== photoId) {
               return itm
