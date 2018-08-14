@@ -17,6 +17,13 @@ describe('preferences stories', () => {
       expect(state.onboarded).toBe(true)
     })
   })
+  describe('tour screens', () => {
+    it('wallet should be viewed', () => {
+      expect(initialState.tourScreens.wallet).toBe(true)
+      const state = reducer(initialState, actions.completeTourSuccess('wallet'))
+      expect(state.tourScreens.wallet).toBe(false)
+    })
+  })
   describe('verbose ui', () => {
     it('should toggle', () => {
       expect(initialState.verboseUi).toBe(false)
