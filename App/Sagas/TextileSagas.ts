@@ -95,7 +95,7 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
     defaultThread = action.payload.thread
     yield put(ThreadsActions.refreshThreadsRequest())
   }
-  yield processAvatarImage(action.payload.uri, defaultThread)
+  yield * processAvatarImage(action.payload.uri, defaultThread)
 }
 
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
@@ -103,7 +103,7 @@ export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.
 
   let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
 
-  yield processAvatarImage(action.payload.uri, defaultThread)
+  yield * processAvatarImage(action.payload.uri, defaultThread)
 }
 
 function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
