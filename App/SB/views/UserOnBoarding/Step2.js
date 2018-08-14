@@ -3,7 +3,7 @@ import { Text, View, ScrollView, TouchableOpacity } from 'react-native'
 
 import Logo from '../../components/Logo'
 import Button from '../../components/Button'
-import UserProfilePhoto from '../../components/UserProfilePhoto'
+import ImageSc from 'react-native-scalable-image'
 
 import styles from './statics/styles'
 
@@ -18,10 +18,10 @@ const Step2 = props => {
         </Logo>
         <View style={styles.contentContainer}>
           <View style={styles.uploadContainer}>
-            <UserProfilePhoto style={styles.photoUploaded} width={183} source={source} />
-            <Button style={styles.uploadButton} text='Confirm Picture' onPress={() => { selectProfilePicture(profilePictureUri) }} />
+            <ImageSc style={styles.photoUploaded} width={183} height={183} source={source} />
+            <Button style={styles.uploadButton} textStyle={styles.uploadButtonText} text='Confirm Picture' onPress={() => { selectProfilePicture(profilePictureUri) }} />
             <TouchableOpacity onPress={chooseProfilePicture}>
-              <Text style={styles.link}>Select Profile Picture</Text>
+              <Text style={styles.link}>Select New Picture</Text>
             </TouchableOpacity>
           </View>
         </View>

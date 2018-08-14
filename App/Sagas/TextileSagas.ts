@@ -89,23 +89,37 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   yield take(getType(TextileNodeActions.startNodeSuccess))
 
   let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
-    if (!defaultThread) {
-      yield put(ThreadsActions.addThreadRequest('default'))
-      const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
-      defaultThread = action.payload.thread
-      yield put(ThreadsActions.refreshThreadsRequest())
-    }
+  if (!defaultThread) {
+    yield put(ThreadsActions.addThreadRequest('default'))
+    const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
+    defaultThread = action.payload.thread
+    yield put(ThreadsActions.refreshThreadsRequest())
+  }
+  yield * processAvatarImage(action.payload.uri, defaultThread)
+}
 
-  const photoPath = action.payload.uri.replace('file://', '')
+export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
+  yield call(NavigationService.navigate, 'TabNavigator')
+
+  let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
+
+  yield * processAvatarImage(action.payload.uri, defaultThread)
+}
+
+function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
+  const photoPath = uri.replace('file://', '')
   try {
     const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
     if (!addResult.archive) {
       throw new Error('no archive returned')
     }
-    const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+    yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
     yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
+
+    // set it as our profile picture
+    yield put(PreferencesActions.pendingAvatar(addResult.id))
 
     try {
       yield uploadFile(
@@ -124,10 +138,6 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
       }
       yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
     }
-
-    // set it as our profile picture
-    yield put(PreferencesActions.pendingAvatar(addResult.id))
-
   } catch (error) {
     // TODO: What do to if adding profile photo fails?
   } finally {
