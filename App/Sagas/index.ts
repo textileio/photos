@@ -101,8 +101,8 @@ export default function * root () {
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
 
-    takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
-    takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
+    // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
+    // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
 
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
