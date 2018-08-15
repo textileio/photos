@@ -25,7 +25,7 @@ export default class PhotoGrid extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow (row) {
-    const uploadingImage: UploadingImage | undefined = this.props.progressData[row.item.photo.id]
+    const uploadingImage: UploadingImage | undefined = this.props.progressData[row.item.id]
     let overlay
     if (uploadingImage && this.props.verboseUi) {
       if (uploadingImage.state === 'pending') {
@@ -45,7 +45,7 @@ export default class PhotoGrid extends React.PureComponent {
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
-            imageId={row.item.photo.id}
+            imageId={row.item.id}
             path={'small'}
             style={styles.itemImage}
             resizeMode={'cover'}
@@ -70,7 +70,7 @@ export default class PhotoGrid extends React.PureComponent {
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item, index) => item.photo.id
+  keyExtractor = (item, index) => item.id
 
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 20
@@ -114,10 +114,10 @@ export default class PhotoGrid extends React.PureComponent {
           }} source={require('../Images/backgrounds/TextileBackground.png')} />
         </View>
         {
-          this.props.items.length ? (
+          this.props.photos.length ? (
             <FlatList
               style={styles.listContainer}
-              data={this.props.items}
+              data={this.props.photos}
               keyExtractor={this.keyExtractor}
               renderItem={this.renderRow.bind(this)}
               getItemLayout={this._getItemLayout}

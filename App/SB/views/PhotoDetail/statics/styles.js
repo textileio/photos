@@ -12,6 +12,9 @@ export default StyleSheet.create({
     backgroundColor: '#FAFCFE',
     flex: 1,
   },
+  photoContainer: {
+    overflow: 'hidden'
+  },
   contentContainer: {
     paddingHorizontal: 19,
     paddingTop: 24

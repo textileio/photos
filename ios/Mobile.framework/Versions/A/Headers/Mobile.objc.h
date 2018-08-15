@@ -10,6 +10,7 @@
 #include "Universe.objc.h"
 
 
+@class MobileContacts;
 @class MobileDevice;
 @class MobileDevices;
 @class MobileEvent;
@@ -26,6 +27,16 @@
 
 @protocol MobileMessenger <NSObject>
 - (void)notify:(MobileEvent*)event;
+@end
+
+@interface MobileContacts : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field Contacts.Items with unsupported type: *types.Slice
+
 @end
 
 @interface MobileDevice : NSObject <goSeqRefInterface> {
@@ -103,10 +114,13 @@
 - (NSString*)addPhotoToThread:(NSString*)dataId key:(NSString*)key threadId:(NSString*)threadId caption:(NSString*)caption error:(NSError**)error;
 - (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
 - (NSString*)addThreadInvite:(NSString*)threadId inviteePk:(NSString*)inviteePk error:(NSError**)error;
+- (NSString*)contactThreads:(NSString*)id_ error:(NSError**)error;
+- (NSString*)contacts:(NSError**)error;
 - (NSString*)devices:(NSError**)error;
 - (NSString*)getId:(NSError**)error;
 - (NSString*)getPeerProfile:(NSString*)peerId error:(NSError**)error;
 - (NSString*)getPhotoData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
+- (NSString*)getPhotoDataForMinWidth:(NSString*)id_ minWidth:(long)minWidth error:(NSError**)error;
 - (NSString*)getPhotoKey:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotoMetadata:(NSString*)id_ error:(NSError**)error;
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit threadId:(NSString*)threadId error:(NSError**)error;
@@ -115,6 +129,7 @@
 - (NSString*)getTokens:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
 - (BOOL)isSignedIn;
+- (NSString*)overview:(NSError**)error;
 - (NSString*)photoThreads:(NSString*)id_ error:(NSError**)error;
 - (BOOL)refreshMessages:(NSError**)error;
 - (BOOL)removeDevice:(NSString*)id_ error:(NSError**)error;
@@ -126,6 +141,7 @@
 - (BOOL)signUpWithEmail:(NSString*)email username:(NSString*)username password:(NSString*)password referral:(NSString*)referral error:(NSError**)error;
 - (BOOL)start:(NSError**)error;
 - (BOOL)stop:(NSError**)error;
+- (NSString*)threadInfo:(NSString*)threadId error:(NSError**)error;
 - (NSString*)threads:(NSError**)error;
 @end
 
@@ -161,6 +177,8 @@
 - (void)setCaption:(NSString*)v;
 - (NSString*)username;
 - (void)setUsername:(NSString*)v;
+// skipped field Photo.Metadata with unsupported type: *types.Pointer
+
 @end
 
 @interface MobilePhotos : NSObject <goSeqRefInterface> {
