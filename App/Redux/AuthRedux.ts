@@ -56,9 +56,6 @@ const actions = {
   }),
   requestCameraPermissions: createAction('REQUEST_CAMERA_PERMISSIONS', resolve => {
     return () => resolve()
-  }),
-  requestBackgroundLocationPermissions: createAction('REQUEST_BACKGROUND_LOCATION_PERMISSIONS', resolve => {
-    return () => resolve()
   })
 }
 
