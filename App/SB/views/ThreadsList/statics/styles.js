@@ -25,7 +25,8 @@ export default StyleSheet.create({
     bottom: 0,
     top: 0,
     left: 0,
-    right: 0
+    right: 0,
+    zIndex: 100
   },
   emptyStateImage: {
     width: 159,

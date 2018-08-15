@@ -17,6 +17,7 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 import Colors from '../Themes/Colors'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
+import PreferencesActions from '../Redux/PreferencesRedux'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -90,7 +91,7 @@ class ThreadsList extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {this.props.threads.length === 0 && (
+        {!this.props.hideTourScreen && (
           <View style={styles.emptyStateContainer}>
             <Image
               style={styles.emptyStateImage}
@@ -101,6 +102,7 @@ class ThreadsList extends React.PureComponent {
               photos with your friends and family.
             </Text>
             <Button primary text='Create a thread' onPress={() => {
+              this.props.completeTourScreen()
               this.props.navigation.navigate('AddThread')
             }} />
           </View>
@@ -156,14 +158,16 @@ const mapStateToProps = (state) => {
   return {
     profile,
     threads,
-    refreshing: !!state.ui.refreshingMessages
+    refreshing: !!state.ui.refreshingMessages,
+    hideTourScreen: !state.preferences.tourScreens.threads // <- default off so users don't see a screen flash
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId, threadName) => { dispatch(UIActions.viewThreadRequest(threadId, threadName)) },
-    refreshMessages: (hidden) => { dispatch(UIActions.refreshMessagesRequest(hidden)) }
+    refreshMessages: (hidden) => { dispatch(UIActions.refreshMessagesRequest(hidden)) },
+    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threads')) }
   }
 }
 
