@@ -702,7 +702,7 @@ export function * updateServices (action: ActionType<typeof PreferencesActions.u
   if (name === 'backgroundLocation' && update.status === true) {
     yield * backgroundLocationPermissionsTrigger()
   } else {
-    yield sendNotification(1, 'hi hihi', '2017-01-02 12:30')
+    yield call(sendNotification)
   }
 }
 

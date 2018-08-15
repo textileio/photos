@@ -9,6 +9,8 @@ target 'TextilePhotos' do
   pod 'Fabric'
   pod 'Crashlytics'
 
+  pod 'react-native-notifications', :path => '../node_modules/react-native-notifications'
+
   target 'TextilePhotosTests' do
     inherit! :search_paths
     # Pods for testing

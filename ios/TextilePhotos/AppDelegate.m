@@ -14,12 +14,43 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 
+#import "RNNotifications.h"
+
+// Required for local notifications to show up
+#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [Fabric with:@[[Crashlytics class]]];
+
+  // Begin local notification requirements
+  if( SYSTEM_VERSION_LESS_THAN( @"10.0" ) )
+  {
+    [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+  }
+  else
+  {
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    center.delegate = self;
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge) completionHandler:^(BOOL granted, NSError * _Nullable error)
+     {
+       if (!error)
+       {
+         [[UIApplication sharedApplication] registerForRemoteNotifications];  // required to get the app to do anything at all about push notifications
+         NSLog( @"Push registration success." );
+       }
+       else
+       {
+         NSLog( @"Push registration FAILED" );
+         NSLog( @"ERROR: %@ - %@", error.localizedFailureReason, error.localizedDescription );
+         NSLog( @"SUGGESTIONS: %@ - %@", error.localizedRecoveryOptions, error.localizedRecoverySuggestion );
+       }
+     }];
+  }
+  // End local notification requirements
   
   NSURL *jsCodeLocation;
 
@@ -50,6 +81,28 @@
   return [RCTLinkingManager application:application
                    continueUserActivity:userActivity
                      restorationHandler:restorationHandler];
+}
+
+// Begin more Notification Requirements
+// Required for the localNotification event.
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+  [RNNotifications didReceiveLocalNotification:notification];
+}
+// End WIX stated requirements
+
+// Adds a final requirement for Local as stated here,
+// https://github.com/wix/react-native-notifications/issues/203#issuecomment-380512384
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
+{
+  UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+  localNotification.alertTitle = notification.request.content.title;
+  localNotification.alertBody = notification.request.content.body;
+  localNotification.userInfo = notification.request.content.userInfo;
+
+  [RNNotifications didReceiveLocalNotification:localNotification];
+
+  completionHandler(UNNotificationPresentationOptionAlert);
 }
 
 @end
