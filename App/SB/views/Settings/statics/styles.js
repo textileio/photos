@@ -34,17 +34,23 @@ export default StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#d8d8d8'
   },
+  childItem: {
+    marginLeft: 10
+  },
   itemTitle: {
     ...BentonSansBold(),
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 16,
     lineHeight: 27,
   },
+  childTitle: {
+    fontSize: 14,
+  },
   itemDescription: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 14,
     lineHeight: 27,
-    color: "#4a4a4a",
+    color: '#4a4a4a',
     marginRight: 6
   },
   itemTexts: {
