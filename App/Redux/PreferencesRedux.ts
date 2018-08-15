@@ -45,7 +45,8 @@ export const initialState: PreferencesState = {
   onboarded: false,
   verboseUi: false,
   tourScreens: {
-    wallet: true
+    wallet: true,
+    threads: true
   }
 }
 

@@ -350,12 +350,12 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoMetadata (String photoId, Promise promise) {
+    public void ignorePhoto (String blockId, Promise promise) {
         try {
-            promise.resolve(node.getPhotoMetadata(photoId));
+            promise.resolve(node.ignorePhoto(blockId));
         }
         catch (Exception e) {
-            promise.reject("GET BLOCK DATA ERROR", e);
+            promise.reject("IGNORE PHOTO ERROR", e);
         }
     }
 

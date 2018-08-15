@@ -312,16 +312,6 @@ RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId path:(NSString *)path resolve
   }
 }
 
-RCT_EXPORT_METHOD(getPhotoMetadata:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getPhotoMetadata:photoId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
 
 RCT_EXPORT_METHOD(getPhotoThreads:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
@@ -336,6 +326,17 @@ RCT_EXPORT_METHOD(getPhotoThreads:(NSString *)photoId resolver:(RCTPromiseResolv
 RCT_EXPORT_METHOD(getPhotoKey:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _getPhotoKey:photoId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+
+RCT_EXPORT_METHOD(ignorePhoto:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _ignorePhoto:blockId error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -504,16 +505,16 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   return [self.node getPhotoData:photoId path:path error:error];
 }
 
-- (NSString *)_getPhotoMetadata:(NSString *)photoId error:(NSError**)error {
-  return [self.node getPhotoMetadata:photoId error:error];
-}
-
 - (NSString *)_getPhotoThreads:(NSString *)photoId error:(NSError**)error {
   return [self.node photoThreads:photoId error:error];
 }
 
 - (NSString *)_getPhotoKey:(NSString *)photoId error:(NSError**)error {
   return [self.node getPhotoKey:photoId error:error];
+}
+
+- (NSString *)_ignorePhoto:(NSString *)blockId error:(NSError**)error {
+  return [self.node ignorePhoto:blockId error:error];
 }
 
 - (void)_addDevice:(NSString *)name pubKey:(NSString *)pkb64 error:(NSError**)error {
