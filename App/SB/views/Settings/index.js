@@ -190,7 +190,6 @@ const mapStateToProps = state => {
       return previous
     }, {})
 
-  console.log(services)
   return {
     profile: state.preferences.profile,
     allServices,

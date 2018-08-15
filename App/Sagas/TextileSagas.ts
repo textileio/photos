@@ -21,6 +21,7 @@ import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
 import { getPhotos } from '../Services/CameraRoll'
 import { getAllPhotos, getPhotoPath, getPage } from '../Services/PhotoUtils'
+import { sendNotification } from '../Services/Notifications'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
@@ -700,6 +701,8 @@ export function * updateServices (action: ActionType<typeof PreferencesActions.u
   console.log('AXXXH', action.payload)
   if (name === 'backgroundLocation' && update.status === true) {
     yield * backgroundLocationPermissionsTrigger()
+  } else {
+    yield sendNotification(1, 'hi hihi', '2017-01-02 12:30')
   }
 }
 
