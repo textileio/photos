@@ -39,6 +39,9 @@ const actions = {
   nodeOnline: createAction('NODE_ONLINE', resolve => {
     return () => resolve()
   }),
+  ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', resolve => {
+    return (threadId: string, blockId: string) => resolve({ threadId, blockId })
+  }),
   getPhotoHashesRequest: createAction('GET_PHOTO_HASHES_REQUEST', resolve => {
     return (threadId: string) => resolve({ threadId })
   }),

@@ -33,6 +33,7 @@ import {
   refreshMessages,
   addDevice,
   getPhotoHashes,
+  ignorePhoto,
   removePayloadFile,
   handleUploadError,
   addThread,
@@ -84,6 +85,8 @@ export default function * root () {
     takeEvery(getType(DevicesActions.addDeviceRequest), addDevice),
 
     takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
+    takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
+
     takeEvery(getType(UIActions.refreshMessagesRequest), refreshMessages),
 
     takeEvery(getType(TextileNodeActions.lock), toggleBackgroundTimer),
