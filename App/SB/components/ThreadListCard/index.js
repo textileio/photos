@@ -50,13 +50,13 @@ const ThreadCard = props => {
             </View>
           )}
 
-          { photos.map((item, i) => {
+          { photos.map((photo, i) => {
             const imageStyle = cardImageStyle(photos, i)
             return (
               <View key={i} style={[styles.imageContainer, imageStyle]}>
                 <View style={styles.imageStretch}>
                   <TextileImage
-                    imageId={item.photo.id}
+                    imageId={photo.id}
                     path={'small'}
                     resizeMode={'cover'}
                     height={imageStyle.height}

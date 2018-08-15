@@ -21,7 +21,7 @@ import { getPhotos } from '../Services/CameraRoll'
 import { getAllPhotos, getPhotoPath, getPage } from '../Services/PhotoUtils'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
-import TextileNodeActions, { TextileNodeSelectors, PhotosQueryResult } from '../Redux/TextileNodeRedux'
+import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
@@ -156,37 +156,13 @@ export function * viewThread ( action: ActionType<typeof UIActions.viewThreadReq
   } catch (error) {
     yield put(UIActions.refreshMessagesFailure(error))
   }
-  // Request made from the ThreadsList view
-  // Get all items in the thread, or undefined
-  const items = yield select(TextileNodeSelectors.itemsByThreadId, action.payload.threadId)
-  if (items) {
-    for (let item of items) {
-      if (item.photo && !item.metadata) {
-        // for every item that we don't yet have the metadata for, add it now
-        // This step will be greatly improved with paging
-        yield call(getPhotoMetadata, {threadId: action.payload.threadId, photoId: item.photo.id})
-      }
-    }
-  }
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
 export function * viewPhoto ( action: ActionType<typeof UIActions.viewPhotoRequest> ) {
   // Request made from the Wallet view
   // request the metadata for the photo we are about to view full size
-  yield call(getPhotoMetadata, action.payload)
   yield call(NavigationService.navigate, 'PhotoViewer')
-}
-
-export function * getPhotoMetadata (payload: {threadId: string, photoId: string}) {
-  try {
-    const existing = yield select(TextileNodeSelectors.metadataById, payload.threadId, payload.photoId)
-    if (existing) return
-    const metadata: TextileTypes.PhotoMetadata = yield call(TextileNode.getPhotoMetadata, payload.photoId)
-    yield put(TextileNodeActions.getPhotoMetadataSuccess(payload.threadId, payload.photoId, metadata))
-  } catch (error) {
-    yield put(TextileNodeActions.refreshMessagesFailure(error))
-  }
 }
 
 export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeActions.lock>) {
@@ -309,13 +285,8 @@ export function * refreshMessages (action: ActionType<typeof UIActions.refreshMe
 export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.getPhotoHashesRequest>) {
   const { threadId } = action.payload
   try {
-    const photos: TextileTypes.Photos = yield call(TextileNode.getPhotos, -1, threadId)
-    let data: PhotosQueryResult[] = []
-    for (let photo of photos.items) {
-      // const metadata: TextileTypes.PhotoMetadata = yield call(TextileNode.getPhotoMetadata, photo.id)
-      data.push({ photo })
-    }
-    yield put(TextileNodeActions.getPhotoHashesSuccess(threadId, data))
+    const photos: TextileTypes.Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
+    yield put(TextileNodeActions.getPhotoHashesSuccess(threadId, photos))
   } catch (error) {
     yield put(TextileNodeActions.getPhotoHashesFailure(threadId, error))
   }
@@ -668,8 +639,6 @@ export function * localPinRequest(action: ActionType<typeof CameraRollActions.ad
 
     // Share the photo to the target Thread
     yield call(TextileNode.sharePhotoToThread, addResult.id, threadId, image.caption)
-    // Notify the UI to update via updating the hashes
-    yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
 
     // Store the addResult with the image
     // yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))

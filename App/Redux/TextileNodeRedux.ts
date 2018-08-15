@@ -43,7 +43,7 @@ const actions = {
     return (threadId: string) => resolve({ threadId })
   }),
   getPhotoHashesSuccess: createAction('GET_PHOTO_HASHES_SUCCESS', resolve => {
-    return (threadId: string, items: PhotosQueryResult[]) => resolve({ threadId, items })
+    return (threadId: string, photos: TextileTypes.Photo[]) => resolve({ threadId, photos })
   }),
   getPhotoHashesFailure: createAction('GET_PHOTO_HASHES_FAILURE', resolve => {
     return (threadId: string, error: Error) => resolve({ threadId, error })
@@ -55,14 +55,9 @@ const actions = {
 
 export type TextileNodeAction = ActionType<typeof actions>
 
-export type PhotosQueryResult = {
-  photo: TextileTypes.Photo,
-  metadata?: TextileTypes.PhotoMetadata
-}
-
 export type ThreadData = {
   readonly querying: boolean
-  readonly items: ReadonlyArray<PhotosQueryResult>
+  readonly photos: ReadonlyArray<TextileTypes.Photo>
   readonly error?: Error
 }
 
@@ -123,35 +118,15 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     }
     case getType(actions.getPhotoHashesSuccess): {
       // TODO: This isn't working?
-      const { threadId, items } = action.payload
+      const { threadId, photos } = action.payload
       const threadData = state.threads[threadId] || createEmptyThreadData()
-      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, items: items } }
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, photos: photos } }
       return { ...state, threads }
     }
     case getType(actions.getPhotoHashesFailure): {
       const { threadId, error } = action.payload
       const threadData = state.threads[threadId] || createEmptyThreadData()
       const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, error } }
-      return { ...state, threads }
-    }
-    case getType(actions.getPhotoMetadataSuccess): {
-      // TODO: This isn't working?
-      const { threadId, photoId, metadata } = action.payload
-      const threadData = state.threads[threadId]
-      if (!threadData) return state
-      const items = threadData.items
-      if (!items) return state
-      const target = items.find(itm => itm.photo.id === photoId)
-      if (!target) return state
-      target.metadata = metadata
-      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, items: items.map(itm => {
-            if (itm.photo.id !== photoId) {
-              return itm
-            } else {
-              itm.metadata = metadata
-              return itm
-            }
-      })}}
       return { ...state, threads }
     }
     default:
@@ -162,7 +137,7 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
 function createEmptyThreadData (): ThreadData {
   return {
     querying: false,
-    items: Array<PhotosQueryResult>()
+    photos: Array<TextileTypes.Photo>()
   }
 }
 
@@ -172,19 +147,10 @@ export const TextileNodeSelectors = {
   appState: (state: any) => (state.textileNode as TextileNodeState).appState,
   online: (state: any) => (state.textileNode as TextileNodeState).online,
   threads: (state: any) => (state.textileNode as TextileNodeState).threads,
-  metadataById: (state: any, threadId: string, photoId: string) => {
+  photosByThreadId: (state: any, threadId: string) => {
     const threadData = (state.textileNode as TextileNodeState).threads[threadId]
     if (!threadData) return undefined
-    const items = threadData.items
-    if (!items) return undefined
-    const target = items.find(itm => itm.photo.id === photoId)
-    if (!target) return undefined
-    return target.metadata
-  },
-  itemsByThreadId: (state: any, threadId: string) => {
-    const threadData = (state.textileNode as TextileNodeState).threads[threadId]
-    if (!threadData) return undefined
-    return threadData.items
+    return threadData.photos
   }
 }
 
