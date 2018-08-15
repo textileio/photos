@@ -292,6 +292,18 @@ export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.g
   }
 }
 
+export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.ignorePhotoRequest>) {
+  const { threadId, blockId } = action.payload
+  try {
+    yield put(UIActions.dismissViewedPhoto())
+    yield call(NavigationService.goBack)
+    yield call(TextileNode.ignorePhoto, blockId)
+  } catch (error) {
+    console.log(error)
+    // do nothing new for now
+  }
+}
+
 export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {

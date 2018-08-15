@@ -128,6 +128,7 @@
 - (NSString*)getPubKey:(NSError**)error;
 - (NSString*)getTokens:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
+- (NSString*)ignorePhoto:(NSString*)blockId error:(NSError**)error;
 - (BOOL)isSignedIn;
 - (NSString*)overview:(NSError**)error;
 - (NSString*)photoThreads:(NSString*)id_ error:(NSError**)error;
@@ -169,6 +170,8 @@
 - (instancetype)init;
 - (NSString*)id_;
 - (void)setId:(NSString*)v;
+- (NSString*)blockId;
+- (void)setBlockId:(NSString*)v;
 // skipped field Photo.Date with unsupported type: *types.Named
 
 - (NSString*)authorId;
