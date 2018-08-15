@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>Fabric</key>
-  <dict>
-    <key>APIKey</key>
-    <string>59497e1c708bbca68843a5c707d11dc9b9b8bbb9</string>
-    <key>Kits</key>
-    <array>
-      <dict>
-        <key>KitInfo</key>
-        <dict/>
-        <key>KitName</key>
-        <string>Crashlytics</string>
-      </dict>
-    </array>
-  </dict>
+	<dict>
+		<key>APIKey</key>
+		<string>59497e1c708bbca68843a5c707d11dc9b9b8bbb9</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>

@@ -63,6 +63,7 @@
     "react-native-image-picker": "^0.26.10",
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
     "react-native-modal": "^6.0.0",
+    "react-native-notifications": "^1.1.19",
     "react-native-progress": "^3.4.0",
     "react-native-scalable-image": "^0.4.0",
     "react-native-svg": "6.3.1",
