@@ -91,7 +91,7 @@ class ThreadsList extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {!this.props.hideTourScreen && (
+        {(!this.props.hideTourScreen && this.props.threads.length === 0) && (
           <View style={styles.emptyStateContainer}>
             <Image
               style={styles.emptyStateImage}
