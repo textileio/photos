@@ -14,7 +14,8 @@ import DevicesActions from '../Redux/DevicesRedux'
 
 /* ------------- Sagas ------------- */
 
-import {startup} from './StartupSagas'
+import { startup } from './StartupSagas'
+import { handleSharePhotoRequest } from './HandleSharePhotoRequest'
 import {
   signUp,
   logIn,
@@ -48,7 +49,6 @@ import {
   handleProfilePhotoUpdated,
   presentPublicLinkInterface,
   showImagePicker,
-  handleSharePhotoRequest,
   nodeOnlineSaga,
 } from './TextileSagas'
 import CameraRollActions from '../Redux/CameraRollRedux'

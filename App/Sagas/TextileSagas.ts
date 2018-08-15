@@ -29,13 +29,12 @@ import ContactsActions, { ContactsSelectors } from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
-import Upload from 'react-native-background-upload'
-import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import DeepLink from '../Services/DeepLink'
+import { uploadFile } from './UploadFile'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -122,7 +121,7 @@ function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
     yield put(PreferencesActions.pendingAvatar(addResult.id))
 
     try {
-      yield uploadFile(
+      yield * uploadFile(
         addResult.id,
         addResult.archive.path
       )
@@ -429,7 +428,7 @@ export function * photosTask () {
         if (!addedPhotoData.addResult.archive) {
           throw new Error('no archive to upload')
         }
-        yield uploadFile(
+        yield * uploadFile(
           addedPhotoData.addResult.id,
           addedPhotoData.addResult.archive.path
         )
@@ -457,7 +456,7 @@ export function * photosTask () {
     const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
     for (const imageToRetry of imagesToRetry) {
       try {
-        yield uploadFile(imageToRetry.dataId, imageToRetry.path)
+        yield * uploadFile(imageToRetry.dataId, imageToRetry.path)
       } catch (error) {
         let message = ''
         if (!error) {
@@ -503,28 +502,6 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
     // even though we're not going to retry the upload again.
     // yield put(UploadingImagesActions.imageRemovalComplete(dataId))
   }
-}
-
-function * uploadFile (id: string, payloadPath: string) {
-  let tokens = yield select(AuthSelectors.tokens)
-  if (!tokens) {
-    tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens))
-  }
-  yield call(
-    Upload.startUpload,
-    {
-      customUploadId: id,
-      path: payloadPath,
-      url: Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
-      method: 'POST',
-      type: 'raw',
-      headers: {
-        'Authorization': 'Bearer ' + tokens.access,
-        'Content-Type': 'application/gzip'
-      }
-    }
-  )
 }
 
 export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
@@ -595,28 +572,6 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   }
 ​}
 
-export function * handleSharePhotoRequest(action: ActionType<typeof UIActions.sharePhotoRequest>) {
-  const { image, threadId, comment } = action.payload
-  if (!image || !threadId) {
-    return
-  }
-  if (typeof image === 'string') {
-    yield call(shareImage, image, threadId, comment)
-  } else {
-    // TODO: Upload image etc
-  }
-}
-
-function * shareImage (id: string, threadId: string, comment?: string) {
-  try {
-    // TODO: Insert some state into the processing photos redux in case this takes long or fails
-    const blockId: string = yield call(TextileNode.sharePhotoToThread, id, threadId, comment)
-    yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
-  } catch (error) {
-    yield put(UIActions.imageSharingError(error))
-  }
-}
-
 export function * localPinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
   const {threadId, image} = action.payload
   let photoPath = image.uri.replace('file://', '')
@@ -667,7 +622,7 @@ export function * remotePinRequest(action: ActionType<typeof CameraRollActions.l
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
     // Begin the image upload to the Cafe pinner
-    yield uploadFile(
+    yield * uploadFile(
       addResult.id,
       addResult.archive.path
     )
