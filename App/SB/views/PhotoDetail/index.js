@@ -39,14 +39,14 @@ class PhotoDetail extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // if (
-    //   this.props.photo.metadata !== prevProps.photo.metadata
-    // ) {
-    //   const heightProperties = getHeight(this.props.photo.metadata, WIDTH)
-    //   this.setState({
-    //     ...heightProperties
-    //   })
-    // }
+    if (
+      this.props.photo.metadata !== prevProps.photo.metadata
+    ) {
+      const heightProperties = getHeight(this.props.photo.metadata, WIDTH)
+      this.setState({
+        ...heightProperties
+      })
+    }
   }
 
   static navigationOptions = ({ navigation }) => {
