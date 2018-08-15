@@ -4,7 +4,7 @@ import { getType } from 'typesafe-actions'
 /* ------------- Types ------------- */
 
 import StartupActions from '../Redux/StartupRedux'
-import UploadingImagesActions from '../Redux/UploadingImagesRedux'
+import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
@@ -16,6 +16,7 @@ import DevicesActions from '../Redux/DevicesRedux'
 
 import { startup } from './StartupSagas'
 import { handleSharePhotoRequest } from './HandleSharePhotoRequest'
+import { handleImageUploadComplete } from './HandleImageUploadComplete'
 import {
   signUp,
   logIn,
@@ -119,6 +120,7 @@ export default function * root () {
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
+    takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),

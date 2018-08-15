@@ -1,5 +1,5 @@
-import { call, put, select, take, fork } from 'redux-saga/effects'
-import { ActionType, getType } from 'typesafe-actions'
+import { call, put } from 'redux-saga/effects'
+import { ActionType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 
 import { uploadFile } from './UploadFile'
@@ -48,7 +48,7 @@ function * addAndUploadImage (image: SharedImage, threadId: string, comment?: st
     yield put(ProcessingImagesActions.imageAdded(image, addResult))
     yield call(uploadFile, addResult.id, addResult.archive.path)
   } catch (error) {
-    yield put(ProcessingImagesActions.error(image, error))
+    yield put(ProcessingImagesActions.addingError(image, error))
     // TODO: Unlink now or later?
     // Maybe we want to leave it up to the user to retry or cancel share.
     // In that case, we don't want to unlink here
