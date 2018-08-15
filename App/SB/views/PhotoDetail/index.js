@@ -219,8 +219,9 @@ const mapStateToProps = (state, ownProps) => {
 
   const path = thread.name === 'default' ? '/photo' : '/thumb'
   const source = photo ? {url: 'file://' + photo.id + '.png'} : {url: 'file://.png'}
+
   return {
-    photo: photo,
+    photo,
     date: photo && photo.date ? photo.date.split('T')[0] : '',
     key: photo && photo.id ? photo.id + path : path,
     // TODO: real dimensions are in the metadata alread now
