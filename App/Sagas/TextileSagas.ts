@@ -299,7 +299,6 @@ export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.igno
     yield call(NavigationService.goBack)
     yield call(TextileNode.ignorePhoto, blockId)
   } catch (error) {
-    console.log(error)
     // do nothing new for now
   }
 }
