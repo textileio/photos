@@ -4,7 +4,7 @@ import Upload from 'react-native-background-upload'
 
 import { RootState } from '../../Redux/Types'
 
-import UploadingImagesActions from '../../Redux/UploadingImagesRedux'
+import ProcessingImagesActions from '../../Redux/ProcessingImagesRedux'
 
 export default class UploadEventHandler {
   store: Store<RootState>
@@ -15,24 +15,24 @@ export default class UploadEventHandler {
   }
 
   uploadProgress (e: any) {
-    this.store.dispatch(UploadingImagesActions.imageUploadProgress(e.id, e.progress))
+    this.store.dispatch(ProcessingImagesActions.imageUploadProgress(e.id, e.progress))
   }
 
   uploadComplete (e: any) {
     const { responseCode } = e
     if (responseCode >= 200 && responseCode < 300) {
-      this.store.dispatch(UploadingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody))
+      this.store.dispatch(ProcessingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody))
     } else {
-      this.store.dispatch(UploadingImagesActions.imageUploadError(e.id, 'Response code: ' + responseCode))
+      this.store.dispatch(ProcessingImagesActions.imageUploadError(e.id, 'Response code: ' + responseCode))
     }
   }
 
   uploadCancelled (e: any) {
-    this.store.dispatch(UploadingImagesActions.imageUploadError(e.id, 'Cancelled'))
+    this.store.dispatch(ProcessingImagesActions.imageUploadError(e.id, 'Cancelled'))
   }
 
   uploadError (e: any) {
-    this.store.dispatch(UploadingImagesActions.imageUploadError(e.id, e.error))
+    this.store.dispatch(ProcessingImagesActions.imageUploadError(e.id, e.error))
   }
 
   setup () {

@@ -15,6 +15,8 @@ import { call, put, select, take, fork } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
+import Config from 'react-native-config'
+
 import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
 import { getPhotos } from '../Services/CameraRoll'

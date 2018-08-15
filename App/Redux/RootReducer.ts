@@ -10,6 +10,7 @@ import { reducer as textileNodeReducer } from './TextileNodeRedux'
 import { reducer as threadsReducer } from './ThreadsRedux'
 import { reducer as uiReducer } from './UIRedux'
 import { reducer as uploadingImagesReducer } from './UploadingImagesRedux'
+import { reducer as processingImagesReducer } from './ProcessingImagesRedux'
 
 export default combineReducers({
   auth: authReducer,
@@ -21,5 +22,6 @@ export default combineReducers({
   textileNode: textileNodeReducer,
   threads: threadsReducer,
   ui: uiReducer,
-  uploadingImages: uploadingImagesReducer
+  uploadingImages: uploadingImagesReducer,
+  processingImages: processingImagesReducer
 })
