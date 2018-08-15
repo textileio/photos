@@ -58,9 +58,6 @@ export const initialState: PreferencesState = {
     threads: true
   },
   services: {
-    backgroundLocation: {
-      status: false
-    },
     notifications: {
       status: false,
     },
@@ -91,6 +88,9 @@ export const initialState: PreferencesState = {
     peerLeftNotification: {
       status: false,
       dependsOn: 'notifications'
+    },
+    backgroundLocation: {
+      status: false
     }
   }
 }
