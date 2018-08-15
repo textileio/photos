@@ -24,12 +24,21 @@ const actions = {
     return (publicKey: string) => resolve({ publicKey })
   }),
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', resolve => {
-  return (tourKey: string) => resolve({ tourKey })
-}),
+    return (tourKey: TourScreens) => resolve({ tourKey })
+  }),
+  updateServiceRequest: createAction('UPDATE_SERVICE_REQUEST', resolve => {
+    return (name: Services, update: Service) => resolve({ name, update })
+  }),
 }
 
 export type PreferencesAction = ActionType<typeof actions>
 
+export type TourScreens = 'wallet' | 'threads'
+export type Services = 'backgroundLocation' | 'notifications' | 'newSharedPhoto'
+export type Service = {
+  status: boolean,
+  dependsOn?: Services
+}
 export type PreferencesState = {
   onboarded: boolean
   verboseUi: boolean
@@ -37,7 +46,7 @@ export type PreferencesState = {
   publicKey?: string
   profile?: Profile
   pending?: string,
-  // tracks if a user has seen a particular tour screen
+  readonly services: {[index: string]: Service}
   readonly tourScreens: {[index: string]: boolean} // true = still need to show, false = no need
 }
 
@@ -47,6 +56,42 @@ export const initialState: PreferencesState = {
   tourScreens: {
     wallet: true,
     threads: true
+  },
+  services: {
+    backgroundLocation: {
+      status: false
+    },
+    notifications: {
+      status: false,
+    },
+    receivedInviteNotification: {
+      status: false,
+      dependsOn: 'notifications'
+    },
+    deviceAddedNotification: {
+      status: false,
+      dependsOn: 'notifications'
+    },
+    photoAddedNotification: {
+      status: false,
+      dependsOn: 'notifications'
+    },
+    commentAddedNotification: {
+      status: false,
+      dependsOn: 'notifications'
+    },
+    likeAddedNotification: {
+      status: false,
+      dependsOn: 'notifications'
+    },
+    peerJoinedNotification: {
+      status: false,
+      dependsOn: 'notifications'
+    },
+    peerLeftNotification: {
+      status: false,
+      dependsOn: 'notifications'
+    }
   }
 }
 
@@ -69,6 +114,9 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       if(!tours.hasOwnProperty(action.payload.tourKey)) return state
       tours[action.payload.tourKey] = false
       return { ...state, tourScreens: tours }
+    case getType(actions.updateServiceRequest):
+      console.log('axh', action.payload)
+      return { ...state, services: {...state.services, [action.payload.name]: action.payload.update} }
     default:
       return state
   }

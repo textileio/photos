@@ -64,6 +64,7 @@ class ThreadsList extends React.PureComponent {
       profile: this.props.profile,
       hideCreateButton: this.props.tourScreen === true
     })
+    this.props.navigation.navigate('Settings')
   }
 
   componentDidUpdate (prevProps, prevState, ss) {

@@ -106,6 +106,8 @@ const migrations: MigrationManifest = {
   }
 }
 
+console.log('Migrate 8 after master merge w/ remove photos')
+
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,

@@ -1,21 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Switch, Image, View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native'
+import { Switch, View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
 import AuthAction from '../../../Redux/AuthRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
-import { Button } from 'react-native-elements'
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
+import SettingsRow from './SettingsRow'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
-import navStyles from '../UserProfile/statics/styles'
 import Avatar from '../../../Components/Avatar'
 import { NavigationActions } from 'react-navigation'
 
-class SyncPermissions extends React.PureComponent {
+class AccountSettings extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -40,14 +39,14 @@ class SyncPermissions extends React.PureComponent {
       ),
       headerRight: (
         <HeaderButtons>
-          <Item 
+          <Item
             title='Avatar'
             buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
             ButtonElement={
               <Avatar
-                width={32} 
-                height={32} 
-                uri={params.avatarUrl} 
+                width={32}
+                height={32}
+                uri={params.avatarUrl}
                 defaultSource={require('../Settings/statics/main-image.png')}
               />
             }
@@ -68,32 +67,76 @@ class SyncPermissions extends React.PureComponent {
     this.setState({locationBackground: true, complete: this.state.cameraRoll})
   }
 
+  toggleService (name) {
+    let update = this.props.allServices[name]
+    update.status = !update.status
+    this.props.toggleServiceRequest(name, update)
+  }
+
   hideInfo () {
     this.setState({infoVisible: false})
   }
 
-  showInfo (infoFocus) {
-    let info = {}
-    switch (infoFocus) {
-      case 'alwaysAllow':
-        info = {
-          title: 'Choose, Always Allow',
-          details: 'In the location permission, please select, "Always Allow". It is needed by the app to periodically wake up and ensure you are getting updates to and from your peer network. Without it, the app will provide a lonely experience. We never collect, store, or share your location data.'
-        }
-        break
-      case 'camera':
-        info = {
-          title: 'Camera Roll',
-          details: 'Textile accesses your camera roll to import any new photos you take after you install the app. Without access to your camera roll, you will have no photos to view or share in the app. Photos added to Textile are privately encrypted - only visible to you ever - and hosted on IPFS. The only time they will ever be visible to anyone else is if you share them with your friends via our shared Threads feature.'
-        }
-        break
-      case 'background':
-      default:
-        info = {
+  getInfo (service) {
+    switch (service) {
+      case 'backgroundLocation':
+        return {
           title: 'Background location',
+          subtitle: 'Wakes app up for updates',
           details: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network. Without background location the app will never get any new information, it will be a pretty boring place. We never keep, store, process, or share your location data with anyone or any device.'
         }
+      case 'notifications':
+        return {
+          title: 'Notifications',
+          subtitle: 'Enable push notifications',
+          details: 'Notifications can be enabled or disabled at any time.'
+        }
+      case 'receivedInviteNotification':
+        return {
+          title: 'New Thread Invite',
+          subtitle: 'Someone shares a photo with you'
+        }
+      case 'deviceAddedNotification':
+        return {
+          title: 'New Device Paired',
+          subtitle: 'Someone shares a photo with you'
+        }
+      case 'photoAddedNotification':
+        return {
+          title: 'New Shared Photos',
+          subtitle: 'Someone shares a photo with you'
+        }
+      case 'commentAddedNotification':
+        return {
+          title: 'New Comment',
+          subtitle: 'Someone shares a photo with you'
+        }
+      case 'likeAddedNotification':
+        return {
+          title: 'New Like',
+          subtitle: 'Someone shares a photo with you'
+        }
+      case 'peerJoinedNotification':
+        return {
+          title: 'New Contact',
+          subtitle: 'Someone shares a photo with you'
+        }
+      case 'peerLeftNotification':
+        return {
+          title: 'Contact Left Thread',
+          subtitle: 'Someone shares a photo with you'
+        }
+      default:
+        return {
+          title: 'Sentience',
+          subtitle: 'Enable decentralized intelligence.',
+          info: 'There is no going back.'
+        }
     }
+  }
+
+  showInfo (service) {
+    const info = this.getInfo(service)
     this.setState({infoVisible: true, info})
   }
 
@@ -105,18 +148,25 @@ class SyncPermissions extends React.PureComponent {
         </View>
         <ScrollView style={styles.contentContainer}>
           <View style={styles.listContainer}>
-            <View style={styles.listItem}>
-              <View>
-                <Text style={styles.itemTitle}>Background Location</Text>
-                <View style={styles.itemTexts}>
-                  <Text style={styles.itemDescription}>Wakes app up for updates</Text>
-                  <TouchableOpacity onPress={() => { this.showInfo('background') }}>
-                    <ImageSc width={15} source={require('./statics/icon-info.png')} />
-                  </TouchableOpacity>
+            {Object.keys(this.props.services).map((service, i) => {
+              const value = !!this.props.services[service].status
+              var children = Object.keys(this.props.children)
+                .filter((key) => this.props.children[key].dependsOn === service)
+                .reduce((previous, current) => {
+                  previous[current] = this.props.children[current]
+                  return previous
+                }, {})
+
+              return (
+                <View key={i} >
+                  <SettingsRow service={service} info={this.getInfo(service)} value={value} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
+                  {value && children && Object.keys(children).map((child, i) =>
+                    <SettingsRow key={i * 33} child service={child} info={this.getInfo(child)} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
+                    )}
                 </View>
-              </View>
-              <Button title={'enable'} color={'#4a4a4a'} buttonStyle={styles.permissionsButtonStyle} onPress={this.toggleBackground.bind(this)} />
-            </View>
+                )
+              }
+            )}
           </View>
         </ScrollView>
         {this.state.infoVisible && <PermissionsInfo isVisible info={this.state.info} close={this.hideInfo.bind(this)} />}
@@ -126,15 +176,35 @@ class SyncPermissions extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
+  const allServices = state.preferences.services
+  // get all top level services
+  const services = Object.keys(allServices)
+    .filter((key) => !allServices[key].dependsOn)
+    .reduce((previous, current) => {
+      previous[current] = allServices[current]
+      return previous
+    }, {})
+  // get any services that depend on top level services
+  const children = Object.keys(allServices)
+    .filter((key) => !!allServices[key].dependsOn)
+    .reduce((previous, current) => {
+      previous[current] = allServices[current]
+      return previous
+    }, {})
+
+  console.log(services)
   return {
     profile: state.preferences.profile,
+    allServices,
+    services,
+    children
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    triggerBackgroundLocationPermissions: () => { dispatch(AuthAction.requestBackgroundLocationPermissions()) }
+    toggleServiceRequest: (name, update) => { dispatch(PreferencesActions.updateServiceRequest(name, update)) }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SyncPermissions)
+export default connect(mapStateToProps, mapDispatchToProps)(AccountSettings)
