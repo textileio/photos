@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import { Alert, View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import Modal from 'react-native-modal'
+
+import UIActions from '../../../Redux/UIRedux'
+import TextileNodeActions from '../../../Redux/TextileNodeRedux'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
@@ -11,7 +14,6 @@ import ShareToThread from '../../../Components/ShareToThread'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
-import BottomDrawerPhotos from '../../components/BottomDrawerPhotos'
 import PhotoWithTextBox from '../../components/PhotoWithTextBox'
 import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 
@@ -19,7 +21,6 @@ import { getHeight } from '../../../Services/PhotoUtils'
 
 import styles from './statics/styles'
 
-import UIActions from '../../../Redux/UIRedux'
 
 // via https://github.com/react-native-community/react-native-modal/issues/147
 const WIDTH = Dimensions.get('window').width
@@ -29,7 +30,8 @@ const HEIGHT = Dimensions.get('window').height
 class PhotoDetail extends Component {
   constructor (props) {
     super(props)
-    const heightProperties = getHeight(this.props.photo.metadata, WIDTH)
+    const metadata = this.props.photo && this.props.photo.metadata
+    const heightProperties = getHeight(metadata, WIDTH)
     this.state = {
       ...heightProperties,
       drawer: false
@@ -37,14 +39,14 @@ class PhotoDetail extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.metadata !== prevProps.metadata
-    ) {
-      const heightProperties = getHeight(this.props.photo.metadata, WIDTH)
-      this.setState({
-        ...heightProperties
-      })
-    }
+    // if (
+    //   this.props.photo.metadata !== prevProps.photo.metadata
+    // ) {
+    //   const heightProperties = getHeight(this.props.photo.metadata, WIDTH)
+    //   this.setState({
+    //     ...heightProperties
+    //   })
+    // }
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -58,6 +60,7 @@ class PhotoDetail extends Component {
       <TextileHeaderButtons>
         <Item title='Add To Thread' iconName='add-user' onPress={params.sharePressed} />
         <Item title='Share' iconName='share' onPress={params.getPublicLink} />
+        <Item title='Delete' iconName='delete' onPress={params.removePhoto} />
       </TextileHeaderButtons>
     )
     return {
@@ -69,13 +72,33 @@ class PhotoDetail extends Component {
   componentDidMount () {
     this.props.navigation.setParams({
       sharePressed: this.sharePressed.bind(this),
-      getPublicLink: this.getPublicLink.bind(this)
+      getPublicLink: this.getPublicLink.bind(this),
+      removePhoto: this.removePhoto.bind(this)
     })
   }
 
   sharePressed () {
     this.setState({drawer: true})
     this.props.shareImage(this.props.photo.id)
+  }
+
+  removePhoto () {
+    if (this.props.photo && this.props.photo.block_id) {
+      Alert.alert(
+        'Remove Photo',
+        'This will remove the photo from your private wallet. Camera roll, Profile, and Threads will not be modified.',
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {
+            text: 'OK',
+            onPress: () => {
+              this.props.ignorePhoto(this.props.threadId, this.props.photo.block_id)
+            }
+          }
+        ],
+        { cancelable: false }
+      )
+    }
   }
 
   getPublicLink () {
@@ -100,9 +123,9 @@ class PhotoDetail extends Component {
     this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
   }
 
-  renderImage () {
+  renderImage (id) {
     return (<ProgressiveImage
-      imageId={this.props.photo.id}
+      imageId={id}
       previewPath={'small'}
       path={'photo'}
       style={{height: this.state.height, width: WIDTH, marginBottom: 10}}
@@ -114,7 +137,7 @@ class PhotoDetail extends Component {
     return (
       <ScrollView style={styles.bodyContainer}>
         <View style={{overflow: 'hidden', height: this.state.height, width: WIDTH}}>
-          {this.renderImage()}
+          {this.props.photo && this.renderImage(this.props.photo.id)}
         </View>
         <View style={styles.photoDetails}>
           <View style={styles.detailItem}>
@@ -164,7 +187,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     authorShare: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
     shareImage: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
-    getPublicLink: (imageId) => { dispatch(UIActions.getPublicLink(imageId)) }
+    getPublicLink: (imageId) => { dispatch(UIActions.getPublicLink(imageId)) },
+    ignorePhoto: (threadId, blockId) => { dispatch(TextileNodeActions.ignorePhotoRequest(threadId, blockId)) }
   }
 }
 
@@ -181,7 +205,7 @@ const mapStateToProps = (state, ownProps) => {
     if (state.textileNode.threads[t].photos.length > 0) {
       thumbs[t] = state.textileNode.threads[t].photos[state.textileNode.threads[t].photos.length - 1]
     }
-    if (state.textileNode.threads[t].photos.find(i => i.id === photo.id)) {
+    if (photo && photo.id && state.textileNode.threads[t].photos.find(i => i.id === photo.id)) {
       containingThreads.push(t)
     }
   }
@@ -194,19 +218,20 @@ const mapStateToProps = (state, ownProps) => {
   }).sort((a, b) => b - a)
 
   const path = thread.name === 'default' ? '/photo' : '/thumb'
+  const source = photo ? {url: 'file://' + photo.id + '.png'} : {url: 'file://.png'}
   return {
-    photo,
-    date: photo.date.split('T')[0],
-    key: photo.id + path,
-    source: {url: 'file://' + photo.id + '.png'}, // <-- in case RN uses to know things
+    photo: photo,
+    date: photo && photo.date ? photo.date.split('T')[0] : '',
+    key: photo && photo.id ? photo.id + path : path,
     // TODO: real dimensions are in the metadata alread now
     dimensions: { width: 150, height: 150 },
     displayImages: state.textileNode.nodeState.state === 'started',
+    threadId: state.ui.viewingPhoto.threadId,
     threadsIn: state.threads.threads.filter(t => containingThreads.indexOf(t.id) > -1 && t.name !== 'default'),
     threadsNotIn,
-    thumbs
+    thumbs,
+    source // <-- in case RN uses to know things
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PhotoDetail)
-

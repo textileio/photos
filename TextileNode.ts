@@ -140,6 +140,11 @@ export default {
     return key
   },
 
+  ignorePhoto: async function (blockId: string): Promise<string> {
+    const key = await TextileNode.ignorePhoto(blockId)
+    return key
+  },
+
   addDevice: async function (name: string, pubKey: string): Promise<void> {
     return await TextileNode.addDevice(name, pubKey)
   },
