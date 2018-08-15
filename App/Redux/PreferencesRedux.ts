@@ -26,7 +26,7 @@ const actions = {
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', resolve => {
     return (tourKey: TourScreens) => resolve({ tourKey })
   }),
-  updateServiceRequest: createAction('UPDATE_SERVICE_REQUEST', resolve => {
+  updateServicesRequest: createAction('UPDATE_SERVICES_REQUEST', resolve => {
     return (name: Services, update: Service) => resolve({ name, update })
   }),
 }
@@ -61,16 +61,16 @@ export const initialState: PreferencesState = {
     notifications: {
       status: false,
     },
+    photoAddedNotification: {
+      status: true,
+      dependsOn: 'notifications'
+    },
     receivedInviteNotification: {
-      status: false,
+      status: true,
       dependsOn: 'notifications'
     },
     deviceAddedNotification: {
-      status: false,
-      dependsOn: 'notifications'
-    },
-    photoAddedNotification: {
-      status: false,
+      status: true,
       dependsOn: 'notifications'
     },
     commentAddedNotification: {
@@ -82,7 +82,7 @@ export const initialState: PreferencesState = {
       dependsOn: 'notifications'
     },
     peerJoinedNotification: {
-      status: false,
+      status: true,
       dependsOn: 'notifications'
     },
     peerLeftNotification: {
@@ -114,8 +114,7 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       if(!tours.hasOwnProperty(action.payload.tourKey)) return state
       tours[action.payload.tourKey] = false
       return { ...state, tourScreens: tours }
-    case getType(actions.updateServiceRequest):
-      console.log('axh', action.payload)
+    case getType(actions.updateServicesRequest):
       return { ...state, services: {...state.services, [action.payload.name]: action.payload.update} }
     default:
       return state

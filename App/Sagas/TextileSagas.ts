@@ -695,6 +695,14 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   }
 }
 
+export function * updateServices (action: ActionType<typeof PreferencesActions.updateServicesRequest>) {
+  const {name, update} = action.payload
+  console.log('AXXXH', action.payload)
+  if (name === 'backgroundLocation' && update.status === true) {
+    yield * backgroundLocationPermissionsTrigger()
+  }
+}
+
 export function * cameraPermissionsTrigger () {
   // Will trigger a camera permission request
   if (Platform.OS === 'android') {

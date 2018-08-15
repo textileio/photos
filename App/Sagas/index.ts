@@ -45,13 +45,13 @@ import {
   acceptExternalInvite,
   pendingInvitesTask,
   cameraPermissionsTrigger,
-  backgroundLocationPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
   handleProfilePhotoUpdated,
   presentPublicLinkInterface,
   showImagePicker,
   nodeOnlineSaga,
+  updateServices
 } from './TextileSagas'
 import CameraRollActions from '../Redux/CameraRollRedux'
 
@@ -69,7 +69,7 @@ export default function * root () {
 
     // permissions request events
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
-    takeLatest(getType(AuthActions.requestBackgroundLocationPermissions), backgroundLocationPermissionsTrigger),
+    takeLatest(getType(PreferencesActions.updateServicesRequest), updateServices),
 
     // some sagas receive extra parameters in addition to an action
 
