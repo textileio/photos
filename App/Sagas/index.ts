@@ -1,4 +1,4 @@
-import { takeLatest, takeEvery, all } from 'redux-saga/effects'
+import { takeLatest, takeEvery, all, take } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
 
 /* ------------- Types ------------- */
@@ -6,12 +6,11 @@ import { getType } from 'typesafe-actions'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions from '../Redux/UploadingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import UIActions, {UIAction} from '../Redux/UIRedux'
+import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
-import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -33,7 +32,6 @@ import {
   refreshMessages,
   addDevice,
   getPhotoHashes,
-  shareImage,
   removePayloadFile,
   handleUploadError,
   addThread,
@@ -50,8 +48,7 @@ import {
   handleProfilePhotoUpdated,
   presentPublicLinkInterface,
   showImagePicker,
-  localPinRequest,
-  remotePinRequest,
+  handleSharePhotoRequest,
   nodeOnlineSaga,
 } from './TextileSagas'
 import CameraRollActions from '../Redux/CameraRollRedux'
@@ -89,8 +86,6 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
     takeEvery(getType(UIActions.refreshMessagesRequest), refreshMessages),
 
-    takeEvery(getType(UIActions.sharePhotoRequest), shareImage),
-
     takeEvery(getType(TextileNodeActions.lock), toggleBackgroundTimer),
 
     takeEvery(getType(TextileNodeActions.createNodeRequest), createNode),
@@ -118,9 +113,9 @@ export default function * root () {
 
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
 
-    // Flow to add image from ImagePicker to Thread
-    // 1. Image picker open request => trigger open image picker
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
+
+    takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),

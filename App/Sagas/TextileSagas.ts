@@ -351,19 +351,6 @@ export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceR
   }
 }
 
-export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequest>) {
-  try {
-    const { id, threadIds, caption} = action.payload
-    for (const threadId of threadIds) {
-      // TODO: Do something with this blockId
-      const blockId: string = yield call(TextileNode.sharePhotoToThread, id, threadId, caption)
-      yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
-    }
-  } catch (error) {
-    yield put(UIActions.imageSharingError(error))
-  }
-}
-
 async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
   const threads = await TextileNode.threads()
   var defaultThread = threads.items.find(thread => thread.name === 'default')
@@ -636,6 +623,28 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
     }
   }
 ​}
+
+export function * handleSharePhotoRequest(action: ActionType<typeof UIActions.sharePhotoRequest>) {
+  const { image, threadId, comment } = action.payload
+  if (!image || !threadId) {
+    return
+  }
+  if (typeof image === 'string') {
+    yield call(shareImage, image, threadId, comment)
+  } else {
+    // TODO: Upload image etc
+  }
+}
+
+function * shareImage (id: string, threadId: string, comment?: string) {
+  try {
+    // TODO: Insert some state into the processing photos redux in case this takes long or fails
+    const blockId: string = yield call(TextileNode.sharePhotoToThread, id, threadId, comment)
+    yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
+  } catch (error) {
+    yield put(UIActions.imageSharingError(error))
+  }
+}
 
 export function * localPinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
   const {threadId, image} = action.payload

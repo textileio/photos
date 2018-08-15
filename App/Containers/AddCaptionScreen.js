@@ -34,8 +34,6 @@ class AddCaptionScreen extends React.Component {
   handleNewText = (text: string) => {
     this.props.updateComment(text)
     this.props.navigation.setParams({
-      cancelShare: () => { this.props.cancelShare() },
-      share: () => { this.props.share() },
       submitEnabled: (text.length > 0)
     })
   }
@@ -43,7 +41,7 @@ class AddCaptionScreen extends React.Component {
   componentWillMount () {
     this.props.navigation.setParams({
       cancelShare: () => { this.props.cancelShare() },
-      share: () => { this.props.share() },
+      share: () => { this.props.share(this.props.image, this.props.threadId, this.props.comment) },
       submitEnabled: false
     })
   }
@@ -65,6 +63,8 @@ class AddCaptionScreen extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const sharingPhoto = state.ui.sharingPhoto || {}
   return {
+    image: sharingPhoto.image,
+    threadId: sharingPhoto.threadId,
     comment: sharingPhoto.comment
   }
 }
@@ -72,7 +72,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     updateComment: (text) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
-    share: () => { dispatch(UIActions.sharePhotoRequest()) },
+    share: (image, threadId, comment) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
   }
 }

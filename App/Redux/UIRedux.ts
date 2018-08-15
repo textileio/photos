@@ -39,7 +39,9 @@ const actions = {
   updateSharingPhotoComment: createAction('UPDATE_SHARING_PHOTO_COMMENT', resolve => {
     return (comment: string) => resolve({ comment })
   }),
-  sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST'),
+  sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
+    return (image?: SharedImage | string, threadId?: string, comment?: string) => resolve({ image, threadId, comment })
+  }),
   cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', resolve => {
     return () => resolve()
   }),
@@ -127,6 +129,7 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.updateSharingPhotoComment):
       const { comment } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment } }
+    case getType(actions.sharePhotoRequest):
     case getType(actions.cancelSharingPhoto):
       return { ... state, sharingPhoto: undefined }
     case getType(actions.newImagePickerError):
