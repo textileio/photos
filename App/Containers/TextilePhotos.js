@@ -150,12 +150,10 @@ const mapStateToProps = (state, ownProps) => {
 
   var photos: TextileTypes.Photo[] = []
   var refreshing = false
-  var thread = undefined
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
     photos = threadData.photos
     refreshing = threadData.querying
-    thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
   const nodeStatus = state.textileNode.nodeState.error
