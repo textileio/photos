@@ -96,9 +96,7 @@ export type SharedImage = {
   path?: string,
   height: number,
   width: number,
-  isVertical: boolean,
-  caption?: string, // used for pre-upload display
-  addResult?: AddResult, // used to pickup uploads if restart
+  isVertical: boolean
 }
 
 export type CafeTokens = {
