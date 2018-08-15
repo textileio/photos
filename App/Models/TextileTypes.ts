@@ -39,6 +39,7 @@ export interface Profile {
 
 export interface Photo {
   id: string
+  block_id: string
   date: string
   author_id: string
   caption: string
