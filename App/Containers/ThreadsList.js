@@ -122,6 +122,8 @@ class ThreadsList extends React.PureComponent {
               data={this.props.threads}
               keyExtractor={this._keyExtractor}
               renderItem={this._renderItem}
+              refreshing={this.props.refreshing}
+              onRefresh={this._onRefresh}
             />
           </View>
         )}

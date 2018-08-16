@@ -11,16 +11,6 @@ import styles, { cardImageContainerStyle, cardImageStyle } from './statics/style
 const ThreadCard = props => {
   const { name, updated, userCount, photos, onPress } = props
 
-  let title = name
-  if (title.length > 17) {
-    title = title.substring(0, 32)
-    title = title.substring(0, title.lastIndexOf(' '))
-    while (title[title.length - 1] === '.' || title[title.length - 1] === ' ') {
-      title = title.slice(0, -1)
-    }
-    title += '...'
-  }
-
   const commentsCount = photos.length
   let lastUpdatedTime = moment(updated).fromNow()
   if (commentsCount === 0) {
@@ -33,7 +23,7 @@ const ThreadCard = props => {
     }}>
       <View style={styles.threadCardHeader}>
         <View style={styles.threadCardHeaderLeft}>
-          <Text style={styles.threadCardTitle}>{title}</Text>
+          <Text numberOfLines={2} style={styles.threadCardTitle}>{name}</Text>
         </View>
         <View style={styles.threadCardHeaderRight}>
           <View style={styles.threadCardHeaderRightDetail}>
