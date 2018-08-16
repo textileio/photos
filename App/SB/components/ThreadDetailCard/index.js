@@ -25,16 +25,6 @@ const ThreadDetailCard = props => {
       const date = moment(photo.date)
       const dateString = date.fromNow()
 
-      let caption = photo.caption
-      // format really long strings to just show a (+) to read the whole thing
-      if (caption.length > 120) {
-        caption = photo.caption.substring(0, 117)
-        caption = caption.substring(0, caption.lastIndexOf(' '))
-        while (caption[caption.length - 1] === '.' || caption[caption.length - 1] === ' ') {
-          caption = caption.slice(0, -1)
-        }
-        caption += '... (+)'
-      }
       const username = photo.username ? photo.username : photo.author_id.substring(0, 8).toUpperCase()
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
@@ -72,7 +62,7 @@ const ThreadDetailCard = props => {
               />
             </View>
           </View>
-          <SmallIconTag syle={{flexDirection: 'row'}} text={caption} uri={uri} defaultSource={defaultSource} avatarStyle={{marginRight: 10, marginLeft: 8}} />
+          <SmallIconTag syle={{flexDirection: 'row'}} text={photo.caption} uri={uri} defaultSource={defaultSource} avatarStyle={{marginRight: 10, marginLeft: 8}} />
         </View>
       )
     }
