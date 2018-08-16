@@ -15,7 +15,7 @@ const nav = createStackNavigator(
     AddThread: AddThreadScreen,
     ViewThread: ThreadsDetail,
     PhotoViewer: ThreadPhotoDetail,
-    SharePhoto: AddCaptionScreen,
+    ThreadSharePhoto: AddCaptionScreen,
     WalletPicker: WalletPicker
   },
   {

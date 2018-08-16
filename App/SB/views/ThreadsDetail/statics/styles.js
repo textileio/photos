@@ -9,19 +9,21 @@ export default StyleSheet.create({
     flex: 1
   },
   threadsDetail: {
-    paddingTop: 22,
-    paddingHorizontal: 4
-  },
-  toolbarTitle: {
-    fontFamily: 'BentonSans',
-    fontSize: 30,
-    marginBottom: 10,
-    paddingLeft: 8
+    paddingHorizontal: 4,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   },
   imageList: {
-    paddingTop: 22,
     paddingHorizontal: 0,
-    marginHorizontal: 0
+    marginHorizontal: 0,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   },
   toolbarLeft: {
     height: 16,

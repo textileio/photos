@@ -68,25 +68,41 @@ export default StyleSheet.create({
   threadCardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 11
+    alignItems: 'flex-end',
+    marginVertical: 11,
+    marginHorizontal: 11
   },
-  threadCardHeaderLeft: {},
+  threadCardHeaderLeft: {
+    width: '50%'
+  },
   threadCardHeaderRight: {},
-  threadCardHeaderLeftDetail: {
+  threadCardHeaderRightDetail: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'flex-end',
+    marginBottom: 2
+  },
+  threadCardFooter: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginTop: 11,
+    marginHorizontal: 11
+  },
+  threadCardFooterDetail: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+    width: '100%',
+    marginBottom: 2
   },
   threadCardTitle: {
     fontFamily: 'BentonSans',
-    fontSize: 30,
-    marginBottom: 7
+    fontSize: 22,
+    maxHeight: 46
   },
   detailUpdateTime: {
     fontFamily: 'BentonSans',
     fontSize: 12,
-    color: '#9b9b9b',
-    marginRight: 24
+    color: '#9b9b9b'
   },
   threadCardBody: {},
   moreImages: {

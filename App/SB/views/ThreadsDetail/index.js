@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, ScrollView, RefreshControl} from 'react-native'
+import {View, FlatList} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -10,13 +10,17 @@ import BottomDrawerList from '../../components/BottomDrawerList'
 
 import styles from './statics/styles'
 import UIActions from '../../../Redux/UIRedux'
-import { ThreadData, PhotosQueryResult } from '../../../Redux/TextileNodeRedux'
+import { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
 import * as TextileTypes from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
 import Alert from '../../../SB/components/Alert'
+
+import { RootState } from '../../../Redux/Types'
+import { ProcessingImage } from '../../../Redux/ProcessingImagesRedux'
+import ProcessingImageCard, { ProcessingImageProps } from '../../../Components/ProcessingImage'
 
 class ThreadsEdit extends React.PureComponent {
 
@@ -117,35 +121,32 @@ class ThreadsEdit extends React.PureComponent {
     }
   }
 
+  _keyExtractor = (item, index) => item.id
+
+  _renderItem = ({item}) => {
+    if (item.type === 'processingItem') {
+      return <ProcessingImageCard {...item.props} />
+    } else {
+      return (
+        <ThreadDetailCard id={item.id} last={item === this.props.items[this.props.items.length - 1]} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
+      )
+    }
+  }
+
   render () {
     return (
       <View style={styles.container}>
-        {this.props.showProgress && <View style={{height: 1, flexDirection: 'row', padding: 0, margin: 0}}>
-          <View style={this._progressStyle(true)} />
-          <View style={this._progressStyle()} />
-        </View>}
-        {/* FIXME: This really needs to be a FlatList */}
-        <ScrollView
-          refreshControl={
-            <RefreshControl
+        <View style={styles.threadsDetail} >
+          <View style={styles.imageList}>
+            <FlatList
+              data={this.props.items}
+              keyExtractor={this._keyExtractor.bind(this)}
+              renderItem={this._renderItem.bind(this)}
               refreshing={this.props.refreshing}
               onRefresh={this._onRefresh}
-            />}
-          style={styles.threadsDetail}
-        >
-
-          <Text style={styles.toolbarTitle}>{this.props.threadName}</Text>
-          {/*<View style={styles.toolbarUserContainer}>*/}
-            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo1.png')} />*/}
-            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo2.png')} />*/}
-            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo3.png')} />*/}
-            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-user-more.png')} />*/}
-          {/*</View>*/}
-
-          <View style={styles.imageList}>
-            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
+            />
           </View>
-        </ScrollView>
+        </View>
         {this.state.showDrawer && <BottomDrawerList/>}
 
         <ActionSheet
@@ -162,7 +163,7 @@ class ThreadsEdit extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: RootState, ownProps) => {
   // TODO: Can this be a selector?
   const navParams = ownProps.navigation.state.params || {}
   const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
@@ -171,14 +172,39 @@ const mapStateToProps = (state, ownProps) => {
   const threadId = navParams.id || defaultThreadId
 
   var items: [{type: string, photo: TextileTypes.Photo}] = []
+  var processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
   var refreshing = false
   var thread = undefined
 
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
-      return {type: 'photo', photo}
+      return {type: 'photo', photo, id: photo.id}
     })
+    processingItems = state.processingImages.images
+      .filter(image => image.destinationThreadId === threadId)
+      .map(image => {
+        let progress = 0
+        if (image.shareToThreadData) {
+          progress = 1
+        } else if (image.addToWalletData) {
+          progress = 0.95
+        } else if (image.uploadData) {
+          progress = 0.1 + (image.uploadData.uploadProgress * 0.8)
+        } else if (image.addData) {
+          progress = 0.1
+        }
+        return {
+          id: image.sharedImage.path,
+          type: 'processingItem',
+          props: {
+            imageUri: image.sharedImage.uri,
+            progress,
+            retry: () => console.log('RETRY'),
+            cancel: () => console.log('CANCEL')
+          }
+        }
+      })
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
@@ -202,22 +228,15 @@ const mapStateToProps = (state, ownProps) => {
       : 'Share your first photo to the ' + threadName + ' thread.')
 
 
-  // A little bit of feedback for the user to show that an image is
-  // processing... fills the gap before it shows up in the thread
-  const pendingShares = state.cameraRoll.pendingShares[threadId] || []
-  let progress = 0.0
-  if (pendingShares.length > 0) {
-    const firstShare = pendingShares[0]
-    if (firstShare.caption) {
-      progress = 0.3
-      if (firstShare.addResult) {
-        progress = 0.6
-        if (state.uploadingImages.images[firstShare.addResult.id]) {
-          progress = 0.8
-        }
-      }
-    }
-  }
+  // add processing items to the beginning of the list
+  items.unshift(...processingItems)
+
+  // add the title to the top of the flatlist
+  items.unshift({
+    type: 'title',
+    name: threadName,
+    id: threadName + '_title'
+  })
 
   return {
     threadId,
@@ -234,9 +253,7 @@ const mapStateToProps = (state, ownProps) => {
     contacts: state.contacts.profiles,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
-    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,
-    showProgress: progress > 0,
-    progress
+    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined
   }
 }
 

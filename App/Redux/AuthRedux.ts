@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { CafeTokens } from '../Models/TextileTypes'
+import { RootState } from '../Redux/Types'
 
 const actions = {
   updateReferralCode: createAction('UPDATE_REFERRAL_CODE', resolve => {
@@ -117,7 +118,7 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
 }
 
 export const AuthSelectors = {
-  tokens: (state: any) => state.auth.tokens
+  tokens: (state: RootState) => state.auth.tokens
 }
 
 export default actions

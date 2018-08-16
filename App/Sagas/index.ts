@@ -1,21 +1,22 @@
-import { takeLatest, takeEvery, all } from 'redux-saga/effects'
+import { takeLatest, takeEvery, all, take } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
 
 /* ------------- Types ------------- */
 
 import StartupActions from '../Redux/StartupRedux'
-import UploadingImagesActions from '../Redux/UploadingImagesRedux'
+import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import UIActions, {UIAction} from '../Redux/UIRedux'
+import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
-import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
 
-import {startup} from './StartupSagas'
+import { startup } from './StartupSagas'
+import { handleSharePhotoRequest } from './HandleSharePhotoRequest'
+import { handleImageUploadComplete } from './HandleImageUploadComplete'
 import {
   signUp,
   logIn,
@@ -34,7 +35,6 @@ import {
   addDevice,
   getPhotoHashes,
   ignorePhoto,
-  shareImage,
   removePayloadFile,
   handleUploadError,
   addThread,
@@ -51,8 +51,6 @@ import {
   handleProfilePhotoUpdated,
   presentPublicLinkInterface,
   showImagePicker,
-  localPinRequest,
-  remotePinRequest,
   nodeOnlineSaga,
 } from './TextileSagas'
 import CameraRollActions from '../Redux/CameraRollRedux'
@@ -92,8 +90,6 @@ export default function * root () {
 
     takeEvery(getType(UIActions.refreshMessagesRequest), refreshMessages),
 
-    takeEvery(getType(UIActions.sharePhotoRequest), shareImage),
-
     takeEvery(getType(TextileNodeActions.lock), toggleBackgroundTimer),
 
     takeEvery(getType(TextileNodeActions.createNodeRequest), createNode),
@@ -106,8 +102,8 @@ export default function * root () {
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
 
-    takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
-    takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
+    // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
+    // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
 
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
@@ -121,13 +117,10 @@ export default function * root () {
 
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
 
-    // Flow to add image from ImagePicker to Thread
-    // 1. Image picker open request => trigger open image picker
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
-    // Pin the file to our local node
-    takeEvery(getType(CameraRollActions.addComment), localPinRequest),
-    // Begin upload of the file to the remote pinner
-    takeEvery(getType(CameraRollActions.localPinSuccess), remotePinRequest),
+
+    takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
+    takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
