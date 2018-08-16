@@ -15,6 +15,8 @@ import { call, put, select, take, fork } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
+import Config from 'react-native-config'
+
 import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
 import { getPhotos } from '../Services/CameraRoll'
@@ -29,13 +31,12 @@ import ContactsActions, { ContactsSelectors } from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
-import Upload from 'react-native-background-upload'
-import Config from 'react-native-config'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import DeepLink from '../Services/DeepLink'
+import { uploadFile } from './UploadFile'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -122,7 +123,7 @@ function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
     yield put(PreferencesActions.pendingAvatar(addResult.id))
 
     try {
-      yield uploadFile(
+      yield * uploadFile(
         addResult.id,
         addResult.archive.path
       )
@@ -333,19 +334,6 @@ export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceR
   }
 }
 
-export function * shareImage (action: ActionType<typeof UIActions.sharePhotoRequest>) {
-  try {
-    const { id, threadIds, caption} = action.payload
-    for (const threadId of threadIds) {
-      // TODO: Do something with this blockId
-      const blockId: string = yield call(TextileNode.sharePhotoToThread, id, threadId, caption)
-      yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
-    }
-  } catch (error) {
-    yield put(UIActions.imageSharingError(error))
-  }
-}
-
 async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
   const threads = await TextileNode.threads()
   var defaultThread = threads.items.find(thread => thread.name === 'default')
@@ -453,7 +441,7 @@ export function * photosTask () {
         if (!addedPhotoData.addResult.archive) {
           throw new Error('no archive to upload')
         }
-        yield uploadFile(
+        yield * uploadFile(
           addedPhotoData.addResult.id,
           addedPhotoData.addResult.archive.path
         )
@@ -481,7 +469,7 @@ export function * photosTask () {
     const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
     for (const imageToRetry of imagesToRetry) {
       try {
-        yield uploadFile(imageToRetry.dataId, imageToRetry.path)
+        yield * uploadFile(imageToRetry.dataId, imageToRetry.path)
       } catch (error) {
         let message = ''
         if (!error) {
@@ -529,28 +517,6 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
   }
 }
 
-function * uploadFile (id: string, payloadPath: string) {
-  let tokens = yield select(AuthSelectors.tokens)
-  if (!tokens) {
-    tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens))
-  }
-  yield call(
-    Upload.startUpload,
-    {
-      customUploadId: id,
-      path: payloadPath,
-      url: Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
-      method: 'POST',
-      type: 'raw',
-      headers: {
-        'Authorization': 'Bearer ' + tokens.access,
-        'Content-Type': 'application/gzip'
-      }
-    }
-  )
-}
-
 export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
   const { name, mnemonic } = action.payload
   try {
@@ -590,7 +556,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   const { threadId } = action.payload
 
   // Present image picker
-  const pickerResponse = yield CameraRoll.choosePhoto()
+  const pickerResponse: CameraRoll.PickerImage = yield CameraRoll.choosePhoto()
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
   } else if (pickerResponse.error) {
@@ -598,21 +564,22 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
     const error = new Error('Image picker error')
     yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
   } else if (pickerResponse.customButton) {
-    // pickerResponse.customButton === 'wallet'
-    // This shouldn't be possible currently
-    yield call(NavigationService.navigate, 'WalletPicker', {shareTo: threadId})
+    yield put(UIActions.updateSharingPhotoThread(threadId))
+    yield call(NavigationService.navigate, 'WalletPicker')
   } else {
     try {
       const image: TextileTypes.SharedImage = {
-        origURL: pickerResponse.origURL || pickerResponse.uri,
+        origURL: pickerResponse.origURL,
         uri: pickerResponse.uri,
         path: pickerResponse.path,
+        canDelete: pickerResponse.canDelete,
         height: pickerResponse.height,
         width: pickerResponse.width,
         isVertical: pickerResponse.isVertical
       }
-      yield put(CameraRollActions.imagePickerSuccess(threadId, image))
-      yield call(NavigationService.navigate, 'SharePhoto', {threadId, image})
+      yield put(UIActions.updateSharingPhotoThread(threadId))
+      yield put(UIActions.updateSharingPhotoImage(image))
+      yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
     } catch (error) {
       yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
     }
@@ -643,10 +610,10 @@ export function * localPinRequest(action: ActionType<typeof CameraRollActions.ad
     yield call(TextileNode.sharePhotoToThread, addResult.id, threadId, image.caption)
 
     // Store the addResult with the image
-    yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))
+    // yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))
   } catch (error) {
     try {
-      yield put(CameraRollActions.imagePinError(threadId, image))
+      // yield put(CameraRollActions.imagePinError(threadId, image))
       const exists: boolean = yield call(RNFS.exists, photoPath)
       if (exists) {
         yield call(RNFS.unlink, photoPath)
@@ -669,17 +636,17 @@ export function * remotePinRequest(action: ActionType<typeof CameraRollActions.l
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
     // Begin the image upload to the Cafe pinner
-    yield uploadFile(
+    yield * uploadFile(
       addResult.id,
       addResult.archive.path
     )
 
     // Remove the image from the CameraRoll actions
-    yield put(CameraRollActions.remotePinStarted(threadId, image))
+    // yield put(CameraRollActions.remotePinStarted(threadId, image))
 
   } catch (error) {
     try {
-      yield put(CameraRollActions.imagePinError(threadId, image))
+      // yield put(CameraRollActions.imagePinError(threadId, image))
       if (addResult.archive) {
         const exists: boolean = yield call(RNFS.exists, addResult.archive.path)
         if (exists) {

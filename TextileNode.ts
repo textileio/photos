@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import * as TextileTypes from './App/Models/TextileTypes'
 import {Profile} from './App/Models/TextileTypes'
+import {NodeOverview} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
@@ -74,6 +75,12 @@ export default {
   getTokens: async function (): Promise<TextileTypes.CafeTokens> {
     const jsonString = await TextileNode.getTokens()
     const tokens = JSON.parse(jsonString) as TextileTypes.CafeTokens
+    return tokens
+  },
+
+  getOverview: async function (): Promise<TextileTypes.NodeOverview> {
+    const jsonString = await TextileNode.getOverview()
+    const tokens = JSON.parse(jsonString) as TextileTypes.NodeOverview
     return tokens
   },
 

@@ -5,6 +5,7 @@ import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
+import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
@@ -12,9 +13,13 @@ import * as TextileTypes from '../Models/TextileTypes'
 
 class TextileWalletPicker extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
+    const params = navigation.state.params || {}
     const headerLeft = (
       <TextileHeaderButtons left>
-        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+        <Item title='Back' iconName='arrow-left' onPress={() => {
+          params.cancelSharingPhoto()
+          navigation.dispatch(NavigationActions.back())
+        }} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
@@ -39,24 +44,15 @@ class TextileWalletPicker extends React.PureComponent {
 
   componentDidMount () {
     this.props.navigation.setParams({
-      toggleVerboseUi: this.props.toggleVerboseUi,
-      threadName: this.props.threadName
+      cancelSharingPhoto: this.props.cancelSharingPhoto
     })
   }
 
   onSelect = (row) => {
     const params = this.props.navigation.state.params
     return () => {
-      this.props.navigation.dispatch(NavigationActions.back())
-      this.props.navigation.dispatch(
-        NavigationActions.navigate({
-          routeName: 'SharePhoto',
-          params: {
-            photo: {id: row.item.id},
-            thread: {id: params.shareTo}
-          }
-        })
-      )
+      this.props.sharePhoto(row.item.id)
+      this.props.navigation.navigate('ThreadSharePhoto', { backTo: 'ViewThread' })
     }
   }
 
@@ -130,6 +126,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    sharePhoto: (photoId: string) => { dispatch(UIActions.updateSharingPhotoImage(photoId)) },
+    cancelSharingPhoto: () => { dispatch(UIActions.cancelSharingPhoto()) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }

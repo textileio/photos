@@ -1,5 +1,4 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { read } from 'fs';
 
 const actions = {
   addImage: createAction('ADD_IMAGE', resolve => {

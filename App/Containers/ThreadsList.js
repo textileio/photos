@@ -1,21 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, RefreshControl } from 'react-native'
+import { View, Text, Image, FlatList } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import moment from 'moment'
 
-import { TextileHeaderButtons, Item as TextileItem } from '../Components/HeaderButtons'
+import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
 import Button from '../SB/components/Button'
 import ThreadCard from '../SB/components/ThreadListCard'
 
 import Avatar from '../Components/Avatar'
-import ContactsActions from '../Redux/ContactsRedux'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import Colors from '../Themes/Colors'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 
@@ -88,6 +84,14 @@ class ThreadsList extends React.PureComponent {
     this.props.refreshMessages()
   }
 
+  _keyExtractor = (item, index) => item.id
+
+  _renderItem = ({item}) => {
+    return (
+      <ThreadCard id={item.id} {...item} profile={this.props.profile} onPress={this._onPressItem} />
+    )
+  }
+
   render () {
     return (
       <View style={styles.container}>
@@ -109,18 +113,15 @@ class ThreadsList extends React.PureComponent {
         )}
         {this.props.threads.length !== 0 && (
           // FIXME: This should be a FlatList for sure
-          <ScrollView
-            style={styles.contentContainer}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.props.refreshing}
-                onRefresh={this._onRefresh}
-              />
-            }>
-            {this.props.threads.map((item, i) => (
-              <ThreadCard key={i} {...item} profile={this.props.profile} onPress={this._onPressItem}/>
-            ))}
-          </ScrollView>
+          <View style={styles.contentContainer} >
+            <FlatList
+              data={this.props.threads}
+              keyExtractor={this._keyExtractor}
+              renderItem={this._renderItem}
+              refreshing={this.props.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          </View>
         )}
       </View>
     )
@@ -136,7 +137,7 @@ const mapStateToProps = (state) => {
       const nodeThread = state.textileNode.threads[thread.id]
       // Todo: we'll want to get all this from a better source
       thread.photos = []
-      thread.updated = Date.now() // TODO: could use a thread created timestamp...
+      thread.updated = 0 // TODO: could use a thread created timestamp...
       if (nodeThread && nodeThread.photos) {
         const photos = nodeThread.photos
         // total number of images in the thread
@@ -147,7 +148,7 @@ const mapStateToProps = (state) => {
         // get a rough count of distinct users
         thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1
           // latest update based on the latest item
-        thread.updated = thread.photos.length > 0 && thread.photos[0].date ? moment(thread.photos[0].date) : undefined
+        thread.updated = thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0
         // latest peer to push to the thread
         thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
       }

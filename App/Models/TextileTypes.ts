@@ -96,17 +96,24 @@ export interface ImageData {
 }
 
 export type SharedImage = {
-  origURL: string,
+  origURL?: string,
   uri: string,
-  path?: string,
+  path: string,
+  canDelete: boolean,
   height: number,
   width: number,
-  isVertical: boolean,
-  caption?: string, // used for pre-upload display
-  addResult?: AddResult, // used to pickup uploads if restart
+  isVertical: boolean
 }
 
 export type CafeTokens = {
   readonly access: string
   readonly refresh: string
+}
+
+export type NodeOverview = {
+  readonly swarm_size: number
+  readonly device_count: number
+  readonly thread_count: number
+  readonly photo_count: number
+  readonly contact_count: number
 }
