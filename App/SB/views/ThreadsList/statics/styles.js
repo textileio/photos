@@ -14,8 +14,14 @@ export default StyleSheet.create({
     height: 24
   },
   contentContainer: {
-    marginTop: 25,
-    marginHorizontal: 15
+    marginTop: 0,
+    marginHorizontal: 4,
+    position: 'absolute',
+    // ensure the flatlist spreads the whole container
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
   },
   emptyStateContainer: {
     backgroundColor: '#FAFCFE',

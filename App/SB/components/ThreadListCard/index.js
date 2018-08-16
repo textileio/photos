@@ -9,14 +9,12 @@ import Avatar from '../../../Components/Avatar'
 import styles, { cardImageContainerStyle, cardImageStyle } from './statics/styles'
 
 const ThreadCard = props => {
-  const { name, latestPeerId, updated, userCount, photos, onPress } = props
-  const lastUpdatedTime = moment(updated).fromNow()
-  const commentsCount = photos.length
-  let uri = latestPeerId ? 'https://cafe.us-east-1.textile.io/ipns/' + latestPeerId + '/avatar' : undefined
+  const { name, updated, userCount, photos, onPress } = props
 
-  // ensure we have the user's latest avatar even if the cafe is still caching
-  if (props.profile && props.profile.id && props.profile.id === latestPeerId) {
-    uri = 'https://cafe.us-east-1.textile.io' + props.profile.avatar_id
+  const commentsCount = photos.length
+  let lastUpdatedTime = moment(updated).fromNow()
+  if (commentsCount === 0) {
+    lastUpdatedTime = 'no activity'
   }
 
   return (
@@ -25,21 +23,12 @@ const ThreadCard = props => {
     }}>
       <View style={styles.threadCardHeader}>
         <View style={styles.threadCardHeaderLeft}>
-          <Text style={styles.threadCardTitle}>{name}</Text>
-          <View style={styles.threadCardHeaderLeftDetail}>
-            <Text style={styles.detailUpdateTime}>{lastUpdatedTime}</Text>
-            <IconTag
-              text={userCount}
-              image={require('./statics/icon-user.png')}
-            />
-            <IconTag
-              text={commentsCount}
-              image={require('./statics/icon-comment.png')}
-            />
-          </View>
+          <Text numberOfLines={2} style={styles.threadCardTitle}>{name}</Text>
         </View>
         <View style={styles.threadCardHeaderRight}>
-          <Avatar width={48} height={48} uri={uri} defaultSource={require('../../views/Settings/statics/main-image.png')} />
+          <View style={styles.threadCardHeaderRightDetail}>
+            <Text style={styles.detailUpdateTime}>{lastUpdatedTime}</Text>
+          </View>
         </View>
       </View>
       <View style={styles.threadCardBody}>
@@ -67,6 +56,18 @@ const ThreadCard = props => {
           }) }
         </View>
       </View>
+      {commentsCount !== 0 && <View style={styles.threadCardFooter}>
+        <View style={styles.threadCardFooterDetail}>
+          <IconTag
+            text={userCount}
+            image={require('./statics/icon-user.png')}
+          />
+          <IconTag
+            text={commentsCount}
+            image={require('./statics/icon-photo.png')}
+          />
+        </View>
+      </View>}
     </TouchableOpacity>
   )
 }
