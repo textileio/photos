@@ -109,3 +109,11 @@ export type CafeTokens = {
   readonly access: string
   readonly refresh: string
 }
+
+export type NodeOverview = {
+  readonly swarm_size: number
+  readonly device_count: number
+  readonly thread_count: number
+  readonly photo_count: number
+  readonly contact_count: number
+}
