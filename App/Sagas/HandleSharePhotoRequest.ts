@@ -34,15 +34,14 @@ function * shareWalletImage (id: string, threadId: string, comment?: string) {
 function * addAndUploadImage (image: SharedImage, threadId: string, comment?: string) {
   try {
     yield put(ProcessingImagesActions.insertAddingImage(image, threadId, comment))
-    const path = image.uri.replace('file://', '')
-    const addResult: AddResult = yield call(TextileNode.addPhoto, path)
+    const addResult: AddResult = yield call(TextileNode.addPhoto, image.path)
     if (!addResult.archive) {
       throw new Error('no archive returned')
     }
     try {
-      const exists: boolean = yield call(RNFS.exists, path)
-      if (exists) {
-        yield call(RNFS.unlink, path)
+      const exists: boolean = yield call(RNFS.exists, image.path)
+      if (exists && image.canDelete) {
+        yield call(RNFS.unlink, image.path)
       }
     } catch (e) {}
     yield put(ProcessingImagesActions.imageAdded(image, addResult))

@@ -36,7 +36,7 @@ const PhotoWithTextBox = props => {
 }
 
 PhotoWithTextBox.propTypes = {
-  photo: propTypes.object.isRequired,
+  photo: propTypes.object,
   text: propTypes.string.isRequired
 }
 
