@@ -1,11 +1,12 @@
-import {CameraRoll, ImagePickerResult} from 'react-native'
+import { CameraRoll, Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import ImagePicker from 'react-native-image-picker'
 import TextileNode from '../../TextileNode'
 
 export type PickerImage = {
   uri: string,
-  path?: string,
+  path: string,
+  canDelete: boolean,
   height: number,
   width: number,
   isVertical: boolean,
@@ -64,7 +65,8 @@ export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}
       cameraType: 'front' as 'front' | 'back' | undefined,
       storageOptions: {
         skipBackup: true,
-        path: 'images'
+        path: 'images',
+        waitUntilSaved: true
       }
     }
     ImagePicker.showImagePicker(options, response => {
@@ -95,14 +97,25 @@ export async function choosePhoto(): Promise<PickerImage> {
         title: 'Choose from Wallet...'
       }],
       storageOptions: {
+        path: 'images',
         skipBackup: true,
         waitUntilSaved: true
       }
     }
     ImagePicker.showImagePicker(options, response => {
+      let path: string
+      let canDelete: boolean
+      if (Platform.OS === 'ios') {
+        path = response.uri.replace('file://', '')
+        canDelete = true
+      } else {
+        path = response.path!
+        canDelete = false
+      }
       const result: PickerImage = {
         uri: response.uri,
-        path: response.path,
+        path,
+        canDelete,
         height: response.height,
         width: response.width,
         isVertical: response.isVertical,
