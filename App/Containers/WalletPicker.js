@@ -4,17 +4,14 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions, { ThreadData, PhotosQueryResult } from '../Redux/TextileNodeRedux'
+import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
+import * as TextileTypes from '../Models/TextileTypes'
 
 class TextileWalletPicker extends React.PureComponent {
-  constructor (props) {
-    super(props)
-  }
-
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const headerLeft = (
@@ -34,7 +31,7 @@ class TextileWalletPicker extends React.PureComponent {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState, ss) {
     if (
       this.props.toggleVerboseUi !== prevProps.toggleVerboseUi
     ) {
@@ -67,7 +64,7 @@ class TextileWalletPicker extends React.PureComponent {
     return (
       <View style={style.container}>
         <PhotoGrid
-          items={this.props.items}
+          photos={this.props.photos}
           progressData={this.props.progressData}
           onSelect={this.onSelect}
           onRefresh={this.onRefresh.bind(this)}
@@ -87,25 +84,20 @@ class TextileWalletPicker extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  // TODO: Can this be a selector?
+const mapStateToProps = (state) => {
   const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
   const threadId = defaultThread ? defaultThread.id : undefined
 
-  var items: PhotosQueryResult[] = []
-  var refreshing = false
-  var thread = undefined
+  let photos: TextileTypes.Photo[] = []
+  let refreshing = false
+  let thread
   if (threadId) {
-    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
-    items = threadData.items
+    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
+    photos = threadData.photos
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
-  // I saw a really weird state where thread was all undefined....
-  // seems like we should show a loading state if that ever happens.
-  // at the very least i put the user on the default screen instead of a
-  // blank Thread screen
   const threadName = thread ? thread.name : undefined
 
   const nodeStatus = state.textileNode.nodeState.error
@@ -121,7 +113,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     threadId,
     threadName,
-    items,
+    photos,
     progressData: state.uploadingImages.images,
     refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
