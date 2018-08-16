@@ -24,8 +24,11 @@ const actions = {
   addingToWallet: createAction('processingImages/ADDING_TO_WALLET', resolve => {
     return (dataId: string) => resolve({ dataId })
   }),
-  sharingToThread: createAction('processingImages/SHARING_TO_THREAD', resolve => {
-    return (dataId: string) => resolve({ dataId })
+  addedToWallet: createAction('processingImages/ADDED_TO_WALLET', resolve => {
+    return (dataId: string, blockId: string) => resolve({ dataId, blockId })
+  }),
+  sharedToThread: createAction('processingImages/SHARED_TO_THREAD', resolve => {
+    return (dataId: string, blockId: string) => resolve({ dataId, blockId })
   }),
   sharingError: createAction('processingImages/SHARING_ERROR', resolve => {
     return (dataId: string, error: any) => resolve({ dataId, error })
@@ -41,7 +44,7 @@ export type ProcessingImage = {
   readonly sharedImage: SharedImage
   readonly destinationThreadId: string
   readonly comment?: string
-  readonly state: 'adding' | 'uploading' | 'addingToWallet' | 'sharing'
+  readonly state: 'adding' | 'uploading' | 'addingToWallet' | 'sharing' | 'complete'
   readonly error?: string
   readonly addData?: {
     readonly addResult: AddResult
@@ -51,6 +54,12 @@ export type ProcessingImage = {
     readonly responseCode?: string
     readonly responseBody?: string
     readonly errorMessage?: string
+  }
+  readonly addToWalletData?: {
+    readonly blockId: string
+  }
+  readonly shareToThreadData?: {
+    readonly blockId: string
   }
 }
 
@@ -161,14 +170,28 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
       })
       return { ...state, images }
     }
-    case getType(actions.sharingToThread): {
-      const { dataId } = action.payload
+    case getType(actions.addedToWallet): {
+      const { dataId, blockId } = action.payload
       const images = state.images.map(image => {
         if (!image.addData) {
           return image
         }
         if (image.addData.addResult.id === dataId) {
-          const updated: ProcessingImage = { ...image, state: 'sharing' }
+          const updated: ProcessingImage = { ...image, addToWalletData: { blockId }, state: 'sharing' }
+          return updated
+        }
+        return image
+      })
+      return { ...state, images }
+    }
+    case getType(actions.sharedToThread): {
+      const { dataId, blockId } = action.payload
+      const images = state.images.map(image => {
+        if (!image.addData) {
+          return image
+        }
+        if (image.addData.addResult.id === dataId) {
+          const updated: ProcessingImage = { ...image, shareToThreadData: { blockId }, state: 'complete' }
           return updated
         }
         return image

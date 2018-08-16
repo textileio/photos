@@ -18,6 +18,10 @@ import ActionSheet from 'react-native-actionsheet'
 
 import Alert from '../../../SB/components/Alert'
 
+import { RootState } from '../../../Redux/Types'
+import { ProcessingImage } from '../../../Redux/ProcessingImagesRedux'
+import ProcessingImageCard, { ProcessingImageProps } from '../../../Components/ProcessingImage'
+
 class ThreadsEdit extends React.PureComponent {
 
   constructor (props) {
@@ -120,9 +124,13 @@ class ThreadsEdit extends React.PureComponent {
   _keyExtractor = (item, index) => item.id
 
   _renderItem = ({item}) => {
-    return (
-      <ThreadDetailCard id={item.id} last={item === this.props.items[this.props.items.length - 1]} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
-    )
+    if (item.type === 'processingItem') {
+      return <ProcessingImageCard {...item.props} />
+    } else {
+      return (
+        <ThreadDetailCard id={item.id} last={item === this.props.items[this.props.items.length - 1]} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
+      )
+    }
   }
 
   render () {
@@ -155,7 +163,7 @@ class ThreadsEdit extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: RootState, ownProps) => {
   // TODO: Can this be a selector?
   const navParams = ownProps.navigation.state.params || {}
   const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
@@ -164,6 +172,7 @@ const mapStateToProps = (state, ownProps) => {
   const threadId = navParams.id || defaultThreadId
 
   var items: [{type: string, photo: TextileTypes.Photo}] = []
+  var processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
   var refreshing = false
   var thread = undefined
 
@@ -172,6 +181,30 @@ const mapStateToProps = (state, ownProps) => {
     items = threadData.photos.map((photo) => {
       return {type: 'photo', photo, id: photo.id}
     })
+    processingItems = state.processingImages.images
+      .filter(image => image.destinationThreadId === threadId)
+      .map(image => {
+        let progress = 0
+        if (image.shareToThreadData) {
+          progress = 1
+        } else if (image.addToWalletData) {
+          progress = 0.95
+        } else if (image.uploadData) {
+          progress = 0.1 + (image.uploadData.uploadProgress * 0.8)
+        } else if (image.addData) {
+          progress = 0.1
+        }
+        return {
+          id: image.sharedImage.path,
+          type: 'processingItem',
+          props: {
+            imageUri: image.sharedImage.uri,
+            progress,
+            retry: () => console.log('RETRY'),
+            cancel: () => console.log('CANCEL')
+          }
+        }
+      })
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
@@ -193,6 +226,10 @@ const mapStateToProps = (state, ownProps) => {
     : (threadName === 'default'
       ? 'Any new photos you take will be added to your Textile wallet.'
       : 'Share your first photo to the ' + threadName + ' thread.')
+
+
+  // add processing items to the beginning of the list
+  items.unshift(...processingItems)
 
   // add the title to the top of the flatlist
   items.unshift({

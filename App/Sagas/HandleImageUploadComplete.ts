@@ -18,9 +18,10 @@ export function * handleImageUploadComplete (action: ActionType<typeof Processin
     const { id, key } = processingImage.addData.addResult
     const { destinationThreadId, comment } = processingImage
     const defaultThread: Thread = yield * getDefaultThread()
-    yield call(TextileNode.addPhotoToThread, id, key, defaultThread.id)
-    yield put(ProcessingImagesActions.sharingToThread(id))
-    yield call(TextileNode.sharePhotoToThread, id, destinationThreadId, comment)
+    const blockId: string = yield call(TextileNode.addPhotoToThread, id, key, defaultThread.id)
+    yield put(ProcessingImagesActions.addedToWallet(id, blockId))
+    const shareBlockId: string = yield call(TextileNode.sharePhotoToThread, id, destinationThreadId, comment)
+    yield put(ProcessingImagesActions.sharedToThread(id, shareBlockId))
     yield put(ProcessingImagesActions.complete(id))
     // TODO: Refresh photos hashes for this thread???
     // Seems to be happening already, not sure where
