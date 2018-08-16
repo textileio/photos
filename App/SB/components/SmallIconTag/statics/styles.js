@@ -5,7 +5,8 @@ export default StyleSheet.create({
   detail: {
     flexDirection: 'row',
     marginRight: 9,
-    marginTop: 4
+    marginTop: 4,
+    width: '100%'
   },
 
   detailImageView: {
@@ -29,6 +30,7 @@ export default StyleSheet.create({
     width: 27,
   },
   detailTextView: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: 33
@@ -36,7 +38,6 @@ export default StyleSheet.create({
   detailText: {
     fontFamily: 'BentonSans-Light',
     fontSize: 14,
-    lineHeight: 16,
-    width: 215
+    lineHeight: 16
   }
 })
