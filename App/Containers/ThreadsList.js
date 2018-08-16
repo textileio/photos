@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, RefreshControl } from 'react-native'
+import { View, Text, Image, ScrollView, RefreshControl, FlatList } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import moment from 'moment'
 
@@ -88,6 +88,14 @@ class ThreadsList extends React.PureComponent {
     this.props.refreshMessages()
   }
 
+  _keyExtractor = (item, index) => item.id
+
+  _renderItem = ({item}) => {
+    return (
+      <ThreadCard id={item.id} {...item} profile={this.props.profile} onPress={this._onPressItem} />
+    )
+  }
+
   render () {
     return (
       <View style={styles.container}>
@@ -109,18 +117,13 @@ class ThreadsList extends React.PureComponent {
         )}
         {this.props.threads.length !== 0 && (
           // FIXME: This should be a FlatList for sure
-          <ScrollView
-            style={styles.contentContainer}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.props.refreshing}
-                onRefresh={this._onRefresh}
-              />
-            }>
-            {this.props.threads.map((item, i) => (
-              <ThreadCard key={i} {...item} profile={this.props.profile} onPress={this._onPressItem}/>
-            ))}
-          </ScrollView>
+          <View style={styles.contentContainer} >
+            <FlatList
+              data={this.props.threads}
+              keyExtractor={this._keyExtractor}
+              renderItem={this._renderItem}
+            />
+          </View>
         )}
       </View>
     )

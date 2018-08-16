@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, ScrollView, RefreshControl} from 'react-native'
+import {View, Text, ScrollView, RefreshControl, FlatList} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -10,7 +10,7 @@ import BottomDrawerList from '../../components/BottomDrawerList'
 
 import styles from './statics/styles'
 import UIActions from '../../../Redux/UIRedux'
-import { ThreadData, PhotosQueryResult } from '../../../Redux/TextileNodeRedux'
+import { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
 import * as TextileTypes from '../../../Models/TextileTypes'
@@ -117,6 +117,14 @@ class ThreadsEdit extends React.PureComponent {
     }
   }
 
+  _keyExtractor = (item, index) => item.id
+
+  _renderItem = ({item}) => {
+    return (
+      <ThreadDetailCard id={item.id} last={item === this.props.items[this.props.items.length - 1]} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
+    )
+  }
+
   render () {
     return (
       <View style={styles.container}>
@@ -124,28 +132,16 @@ class ThreadsEdit extends React.PureComponent {
           <View style={this._progressStyle(true)} />
           <View style={this._progressStyle()} />
         </View>}
-        {/* FIXME: This really needs to be a FlatList */}
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.props.refreshing}
-              onRefresh={this._onRefresh}
-            />}
-          style={styles.threadsDetail}
-        >
 
-          <Text style={styles.toolbarTitle}>{this.props.threadName}</Text>
-          {/*<View style={styles.toolbarUserContainer}>*/}
-            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo1.png')} />*/}
-            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo2.png')} />*/}
-            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-photo3.png')} />*/}
-            {/*<Image style={styles.toolbarUserIcon} source={require('./statics/icon-user-more.png')} />*/}
-          {/*</View>*/}
-
+        <View style={styles.threadsDetail} >
           <View style={styles.imageList}>
-            {this.props.items.map((item, i) => <ThreadDetailCard key={i} last={i === this.props.items.length - 1} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()}/>)}
+            <FlatList
+              data={this.props.items}
+              keyExtractor={this._keyExtractor.bind(this)}
+              renderItem={this._renderItem.bind(this)}
+            />
           </View>
-        </ScrollView>
+        </View>
         {this.state.showDrawer && <BottomDrawerList/>}
 
         <ActionSheet
@@ -177,7 +173,7 @@ const mapStateToProps = (state, ownProps) => {
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
-      return {type: 'photo', photo}
+      return {type: 'photo', photo, id: photo.id}
     })
     refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
@@ -218,6 +214,13 @@ const mapStateToProps = (state, ownProps) => {
       }
     }
   }
+
+  // add the title to the top of the flatlist
+  items.unshift({
+    type: 'title',
+    name: threadName,
+    id: threadName + '_title'
+  })
 
   return {
     threadId,
