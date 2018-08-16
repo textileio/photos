@@ -10,16 +10,6 @@ import styles from './statics/styles'
 
 const WIDTH = Dimensions.get('window').width
 
-const lessThanFiveMinutesAgo = (date) => {
-  return date.isAfter(moment().subtract(5, 'minutes'))
-}
-const lessThanOneHourAgo = (date) => {
-  return date.isAfter(moment().subtract(1, 'hours'))
-}
-const lessThanOneDayAgo = (date) => {
-  return date.isAfter(moment().subtract(1, 'days'))
-}
-
 const ThreadDetailCard = props => {
   const { last, profile, item } = props
   const type = item.type
@@ -34,21 +24,6 @@ const ThreadDetailCard = props => {
       const photo = item.photo
       const date = moment(photo.date)
       const dateString = date.fromNow()
-      let dateSmall = ''
-      let dateLarge = ''
-      if (lessThanFiveMinutesAgo(date)) {
-        dateSmall = 'just'
-        dateLarge = 'NOW'
-      } else if (lessThanOneHourAgo(date)) {
-        dateSmall = 'min'
-        dateLarge = Math.abs(date.diff(moment(), 'm'))
-      } else if (lessThanOneDayAgo(date)) {
-        dateSmall = date.format('A')
-        dateLarge = date.format('h')
-      } else {
-        dateSmall = date.format('MMM')
-        dateLarge = date.format('DD')
-      }
 
       let caption = photo.caption
       // format really long strings to just show a (+) to read the whole thing
@@ -66,7 +41,6 @@ const ThreadDetailCard = props => {
       let imageWidth = WIDTH
       const heightProperties = getHeight(photo.metadata, imageWidth)
       const imageHeight = heightProperties.height
-      console.log(imageHeight, imageWidth)
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
       let uri = photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + photo.author_id + '/avatar' : undefined
@@ -74,15 +48,6 @@ const ThreadDetailCard = props => {
       if (props.profile && props.profile.id && props.profile.id === photo.author_id) {
         uri = 'https://cafe.us-east-1.textile.io' + props.profile.avatar_id
       }
-
-      //          <View style={styles.cardLeft}>
-      //             <View style={styles.dateContainer}>
-      //               <Text style={styles.month}>{dateSmall.toUpperCase()}</Text>
-      //               <Text style={[styles.day, dateLarge === 'NOW' && styles.now]}>{dateLarge}</Text>
-      //             </View>
-      //             { !last && <Dash style={styles.cardLeftLine} dashLength={4} dashGap={3} dashColor='#979797' /> }
-      //           </View>
-
       return (
         <View style={styles.card}>
           <View style={styles.cardHeader} >
