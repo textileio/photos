@@ -109,21 +109,9 @@ class ThreadsEdit extends React.PureComponent {
     this.props.refreshMessages()
   }
 
-  _progressStyle = (fillBar) => {
-    if (fillBar) {
-      return {height: 1, backgroundColor: '#2935ff', flex: this.props.progress}
-    } else {
-      return {height: 1, backgroundColor: 'transparent', flex: 1.0 - this.props.progress}
-    }
-  }
-
   render () {
     return (
       <View style={styles.container}>
-        {this.props.showProgress && <View style={{height: 1, flexDirection: 'row', padding: 0, margin: 0}}>
-          <View style={this._progressStyle(true)} />
-          <View style={this._progressStyle()} />
-        </View>}
         {/* FIXME: This really needs to be a FlatList */}
         <ScrollView
           refreshControl={
@@ -201,24 +189,6 @@ const mapStateToProps = (state, ownProps) => {
       ? 'Any new photos you take will be added to your Textile wallet.'
       : 'Share your first photo to the ' + threadName + ' thread.')
 
-
-  // A little bit of feedback for the user to show that an image is
-  // processing... fills the gap before it shows up in the thread
-  const pendingShares = state.cameraRoll.pendingShares[threadId] || []
-  let progress = 0.0
-  if (pendingShares.length > 0) {
-    const firstShare = pendingShares[0]
-    if (firstShare.caption) {
-      progress = 0.3
-      if (firstShare.addResult) {
-        progress = 0.6
-        if (state.uploadingImages.images[firstShare.addResult.id]) {
-          progress = 0.8
-        }
-      }
-    }
-  }
-
   return {
     threadId,
     threadName,
@@ -234,9 +204,7 @@ const mapStateToProps = (state, ownProps) => {
     contacts: state.contacts.profiles,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
-    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,
-    showProgress: progress > 0,
-    progress
+    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined
   }
 }
 
