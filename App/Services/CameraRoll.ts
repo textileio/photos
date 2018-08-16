@@ -106,7 +106,7 @@ export async function choosePhoto(): Promise<PickerImage> {
       let path: string
       let canDelete: boolean
       if (Platform.OS === 'ios') {
-        path = response.uri.replace('file://', '')
+        path = response.uri ? response.uri.replace('file://', '') : ''
         canDelete = true
       } else {
         path = response.path!
