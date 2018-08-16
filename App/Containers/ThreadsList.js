@@ -139,7 +139,7 @@ const mapStateToProps = (state) => {
       const nodeThread = state.textileNode.threads[thread.id]
       // Todo: we'll want to get all this from a better source
       thread.photos = []
-      thread.updated = Date.now() // TODO: could use a thread created timestamp...
+      thread.updated = 0 // TODO: could use a thread created timestamp...
       if (nodeThread && nodeThread.photos) {
         const photos = nodeThread.photos
         // total number of images in the thread
@@ -150,8 +150,10 @@ const mapStateToProps = (state) => {
         // get a rough count of distinct users
         thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1
           // latest update based on the latest item
-        thread.updated = thread.photos.length > 0 && thread.photos[0].date ? moment(thread.photos[0].date) : undefined
+        thread.updated = thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0
         // latest peer to push to the thread
+        console.log('k')
+        console.log(thread.updated)
         thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
       }
       return thread
