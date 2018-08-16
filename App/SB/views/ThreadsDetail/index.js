@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, Text, ScrollView, RefreshControl, FlatList} from 'react-native'
+import {View, FlatList} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -128,11 +128,6 @@ class ThreadsEdit extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {this.props.showProgress && <View style={{height: 1, flexDirection: 'row', padding: 0, margin: 0}}>
-          <View style={this._progressStyle(true)} />
-          <View style={this._progressStyle()} />
-        </View>}
-
         <View style={styles.threadsDetail} >
           <View style={styles.imageList}>
             <FlatList
@@ -197,24 +192,6 @@ const mapStateToProps = (state, ownProps) => {
       ? 'Any new photos you take will be added to your Textile wallet.'
       : 'Share your first photo to the ' + threadName + ' thread.')
 
-
-  // A little bit of feedback for the user to show that an image is
-  // processing... fills the gap before it shows up in the thread
-  const pendingShares = state.cameraRoll.pendingShares[threadId] || []
-  let progress = 0.0
-  if (pendingShares.length > 0) {
-    const firstShare = pendingShares[0]
-    if (firstShare.caption) {
-      progress = 0.3
-      if (firstShare.addResult) {
-        progress = 0.6
-        if (state.uploadingImages.images[firstShare.addResult.id]) {
-          progress = 0.8
-        }
-      }
-    }
-  }
-
   // add the title to the top of the flatlist
   items.unshift({
     type: 'title',
@@ -237,9 +214,7 @@ const mapStateToProps = (state, ownProps) => {
     contacts: state.contacts.profiles,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
-    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,
-    showProgress: progress > 0,
-    progress
+    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined
   }
 }
 

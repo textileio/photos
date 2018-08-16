@@ -556,7 +556,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   const { threadId } = action.payload
 
   // Present image picker
-  const pickerResponse = yield CameraRoll.choosePhoto()
+  const pickerResponse: CameraRoll.PickerImage = yield CameraRoll.choosePhoto()
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
   } else if (pickerResponse.error) {
@@ -569,9 +569,10 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   } else {
     try {
       const image: TextileTypes.SharedImage = {
-        origURL: pickerResponse.origURL || pickerResponse.uri,
+        origURL: pickerResponse.origURL,
         uri: pickerResponse.uri,
         path: pickerResponse.path,
+        canDelete: pickerResponse.canDelete,
         height: pickerResponse.height,
         width: pickerResponse.width,
         isVertical: pickerResponse.isVertical
