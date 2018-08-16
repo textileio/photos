@@ -9,7 +9,7 @@ export default StyleSheet.create({
     fontSize: 30,
     marginTop: 11,
     marginBottom: 11,
-    paddingLeft: 8
+    paddingHorizontal: 8
   },
   card: {
     paddingBottom: 25,
