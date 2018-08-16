@@ -1,21 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView, RefreshControl, FlatList } from 'react-native'
+import { View, Text, Image, FlatList } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import moment from 'moment'
 
-import { TextileHeaderButtons, Item as TextileItem } from '../Components/HeaderButtons'
+import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
 import Button from '../SB/components/Button'
 import ThreadCard from '../SB/components/ThreadListCard'
 
 import Avatar from '../Components/Avatar'
-import ContactsActions from '../Redux/ContactsRedux'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import Colors from '../Themes/Colors'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 
