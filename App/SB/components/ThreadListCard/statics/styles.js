@@ -96,7 +96,8 @@ export default StyleSheet.create({
   },
   threadCardTitle: {
     fontFamily: 'BentonSans',
-    fontSize: 22
+    fontSize: 22,
+    maxHeight: 46
   },
   detailUpdateTime: {
     fontFamily: 'BentonSans',

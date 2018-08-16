@@ -134,6 +134,8 @@ class ThreadsEdit extends React.PureComponent {
               data={this.props.items}
               keyExtractor={this._keyExtractor.bind(this)}
               renderItem={this._renderItem.bind(this)}
+              refreshing={this.props.refreshing}
+              onRefresh={this._onRefresh}
             />
           </View>
         </View>
