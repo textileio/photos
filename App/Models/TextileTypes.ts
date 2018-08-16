@@ -96,9 +96,10 @@ export interface ImageData {
 }
 
 export type SharedImage = {
-  origURL: string,
+  origURL?: string,
   uri: string,
-  path?: string,
+  path: string,
+  canDelete: boolean,
   height: number,
   width: number,
   isVertical: boolean
