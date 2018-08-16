@@ -90,7 +90,7 @@ export default StyleSheet.create({
   threadCardFooterDetail: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     width: '100%',
     marginBottom: 2
   },
