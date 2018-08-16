@@ -201,6 +201,16 @@ RCT_EXPORT_METHOD(getTokens:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromise
   }
 }
 
+RCT_EXPORT_METHOD(getOverview:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *overview = [self _getOverview:&error];
+  if (!error) {
+    resolve(overview);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _addThread:name withMnemonic:mnemonic error:&error];
@@ -437,6 +447,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (NSString *)_getId:(NSError**)error {
   return [self.node getId:error];
+}
+
+- (NSString *)_getOverview:(NSError**)error {
+  return [self.node overview:error];
 }
 
 - (NSString *)_getPubKey:(NSError**)error {

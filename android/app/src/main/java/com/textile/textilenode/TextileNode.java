@@ -234,6 +234,16 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void getOverview (Promise promise) {
+        try {
+            promise.resolve(node.overview());
+        }
+        catch (Exception e) {
+            promise.reject("GET OVERVIEW ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void addThread (String name, String mnemonic, Promise promise) {
         try {
             promise.resolve(node.addThread(name, mnemonic));
