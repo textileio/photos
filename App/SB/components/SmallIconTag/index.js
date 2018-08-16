@@ -9,7 +9,7 @@ const SmallIconTag = props => {
     <View style={[styles.detail, style]}>
       <Avatar style={avatarStyle} width={27} height={27} uri={uri} defaultSource={defaultSource} />
       <View style={[styles.detailTextView]}>
-        <Text numberOfLines={3} style={[styles.detailText, textStyle]}>{text}</Text>
+        <Text style={[styles.detailText, textStyle]}>{text}</Text>
       </View>
     </View>
   )
