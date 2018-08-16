@@ -9,11 +9,21 @@ export default StyleSheet.create({
     flex: 1
   },
   threadsDetail: {
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   },
   imageList: {
     paddingHorizontal: 0,
-    marginHorizontal: 0
+    marginHorizontal: 0,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   },
   toolbarLeft: {
     height: 16,
