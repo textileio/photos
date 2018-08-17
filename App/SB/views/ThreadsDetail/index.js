@@ -121,14 +121,14 @@ class ThreadsEdit extends React.PureComponent {
     }
   }
 
-  _keyExtractor = (item, index) => item.id
+  _keyExtractor = (item, index) => item.id + '_' + index
 
   _renderItem = ({item}) => {
     if (item.type === 'processingItem') {
       return <ProcessingImageCard {...item.props} />
     } else {
       return (
-        <ThreadDetailCard id={item.id} last={item === this.props.items[this.props.items.length - 1]} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
+        <ThreadDetailCard id={item.id + '_card'} last={item === this.props.items[this.props.items.length - 1]} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
       )
     }
   }

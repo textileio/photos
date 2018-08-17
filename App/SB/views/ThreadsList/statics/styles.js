@@ -15,7 +15,7 @@ export default StyleSheet.create({
   },
   contentContainer: {
     marginTop: 0,
-    marginHorizontal: 4,
+    marginHorizontal: 1,
     position: 'absolute',
     // ensure the flatlist spreads the whole container
     top: 0,

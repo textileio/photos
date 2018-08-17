@@ -1,10 +1,12 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
 import moment from 'moment'
 import TextileImage from '../../../../TextileImage'
 
 import IconTag from '../IconTag'
 import Avatar from '../../../Components/Avatar'
+
+const { width } = Dimensions.get('window')
 
 import styles, { cardImageContainerStyle, cardImageStyle } from './statics/styles'
 
@@ -25,11 +27,6 @@ const ThreadCard = props => {
         <View style={styles.threadCardHeaderLeft}>
           <Text numberOfLines={2} style={styles.threadCardTitle}>{name}</Text>
         </View>
-        <View style={styles.threadCardHeaderRight}>
-          <View style={styles.threadCardHeaderRightDetail}>
-            <Text style={styles.detailUpdateTime}>{lastUpdatedTime}</Text>
-          </View>
-        </View>
       </View>
       <View style={styles.threadCardBody}>
         <View style={cardImageContainerStyle(photos)}>
@@ -40,7 +37,7 @@ const ThreadCard = props => {
           )}
 
           { photos.map((photo, i) => {
-            const imageStyle = cardImageStyle(photos, i)
+            const imageStyle = cardImageStyle(photos, i, width)
             return (
               <View key={i} style={[styles.imageContainer, imageStyle]}>
                 <View style={styles.imageStretch}>
@@ -57,15 +54,10 @@ const ThreadCard = props => {
         </View>
       </View>
       {commentsCount !== 0 && <View style={styles.threadCardFooter}>
-        <View style={styles.threadCardFooterDetail}>
-          <IconTag
-            text={userCount}
-            image={require('./statics/icon-user.png')}
-          />
-          <IconTag
-            text={commentsCount}
-            image={require('./statics/icon-photo.png')}
-          />
+        <View style={styles.threadCardFooterRight}>
+          <View style={styles.threadCardFooterRightDetail}>
+            <Text style={styles.detailUpdateTime}>{'Updated ' + lastUpdatedTime}</Text>
+          </View>
         </View>
       </View>}
     </TouchableOpacity>
