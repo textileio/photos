@@ -5,8 +5,6 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import * as TextileTypes from './App/Models/TextileTypes'
-import {Profile} from './App/Models/TextileTypes'
-import {NodeOverview} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 

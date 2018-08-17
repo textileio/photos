@@ -94,7 +94,7 @@ export async function choosePhoto(): Promise<PickerImage> {
       noData: true,
       customButtons: [{
         name: 'wallet',
-        title: 'Choose from Wallet...'
+        title: 'Choose from Textile...'
       }],
       storageOptions: {
         path: 'images',

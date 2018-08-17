@@ -26,18 +26,18 @@ const actions = {
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', resolve => {
     return (tourKey: TourScreens) => resolve({ tourKey })
   }),
-  updateServicesRequest: createAction('UPDATE_SERVICES_REQUEST', resolve => {
-    return (name: Services, update: Service) => resolve({ name, update })
-  }),
+  toggleServicesRequest: createAction('TOGGLE_SERVICES_REQUEST', resolve => {
+    return (name: ServiceType, status?: boolean) => resolve({ name, status })
+  })
 }
 
 export type PreferencesAction = ActionType<typeof actions>
 
 export type TourScreens = 'wallet' | 'threads'
-export type Services = 'backgroundLocation' | 'notifications' | 'newSharedPhoto'
+export type ServiceType = 'backgroundLocation' | 'notifications' | 'newSharedPhoto'
 export type Service = {
   status: boolean,
-  dependsOn?: Services
+  dependsOn?: ServiceType
 }
 export type PreferencesState = {
   onboarded: boolean
@@ -115,8 +115,11 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       if(!tours.hasOwnProperty(action.payload.tourKey)) return state
       tours[action.payload.tourKey] = false
       return { ...state, tourScreens: tours }
-    case getType(actions.updateServicesRequest):
-      return { ...state, services: {...state.services, [action.payload.name]: action.payload.update} }
+    case getType(actions.toggleServicesRequest):
+      let service = state.services[action.payload.name]
+      if (!service) return state
+      service.status = action.payload.status === undefined ? !service.status : action.payload.status
+      return { ...state, services: {...state.services, [action.payload.name]: service} }
     default:
       return state
   }
@@ -126,7 +129,8 @@ export const PreferencesSelectors = {
   // TODO: Need typed state
   onboarded: (state: any) => state.preferences.onboarded,
   pending: (state: any) => state.preferences.pending,
-  profile: (state: any) => state.preferences.profile
+  profile: (state: any) => state.preferences.profile,
+  service: (state: any, name: ServiceType) => state.preferences.services[name]
 }
 
 export default actions

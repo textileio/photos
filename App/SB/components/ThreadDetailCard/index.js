@@ -6,6 +6,7 @@ import SmallIconTag from '../SmallIconTag'
 import TextileImage from '../../../../TextileImage'
 import { getHeight } from '../../../Services/PhotoUtils'
 import Avatar from '../../../Components/Avatar'
+import Config from 'react-native-config'
 
 import styles from './statics/styles'
 
@@ -31,20 +32,13 @@ const ThreadDetailCard = props => {
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH
       const heightProperties = getHeight(photo.metadata, imageWidth)
-      console.log(photo.caption)
-      if (photo.caption === 'Part 5') {
-        console.log(heightProperties)
-        console.log(item.photo)
-        console.log(imageWidth)
-        console.log(heightProperties.height)
-      }
       const imageHeight = heightProperties.height
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
-      let uri = photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + photo.author_id + '/avatar' : undefined
+      let uri = photo.author_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + photo.author_id + '/avatar' : undefined
       // ensure we have the user's latest avatar even if the cafe is still caching
       if (props.profile && props.profile.id && props.profile.id === photo.author_id) {
-        uri = 'https://cafe.us-east-1.textile.io' + props.profile.avatar_id
+        uri = Config.TEXTILE_CAFE_URI + props.profile.avatar_id
       }
       return (
         <View style={styles.card}>
