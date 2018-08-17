@@ -166,6 +166,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-extra-dimensions-android')
+    compile project(':react-native-push-notification')
     compile project(':react-native-notifications')
     compile project(':react-native-fabric')
     compile project(':react-native-image-picker')
