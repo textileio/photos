@@ -1,8 +1,10 @@
 import React from 'react'
 import { View, Image, ViewStyle, ImageStyle } from 'react-native'
 
+import Colors from '../Themes/Colors'
+
 const TRACK: ViewStyle = {
-  flex: 1,
+  width: '100%',
   height: 4,
   borderRadius: 2,
   backgroundColor: 'rgb(220, 220, 220)',
@@ -11,7 +13,7 @@ const TRACK: ViewStyle = {
 
 const PROGRESS: ViewStyle = {
   height: 4,
-  backgroundColor: 'blue'
+  backgroundColor: Colors.brandBlue
 }
 
 export type ProgressBarProps = {
