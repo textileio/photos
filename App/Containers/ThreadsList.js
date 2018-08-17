@@ -153,6 +153,8 @@ const mapStateToProps = (state) => {
         // just keep the top 2
         thread.photos = photos.slice(0, 3)
 
+
+        
         // get a rough count of distinct users
         thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1
           // latest update based on the latest item
