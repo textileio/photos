@@ -22,7 +22,7 @@ import { RootState } from '../../../Redux/Types'
 import { ProcessingImage } from '../../../Redux/ProcessingImagesRedux'
 import ProcessingImageCard, { ProcessingImageProps } from '../../../Components/ProcessingImage'
 
-class ThreadsEdit extends React.PureComponent {
+class ThreadsDetail extends React.PureComponent {
 
   constructor (props) {
     super(props)
@@ -194,12 +194,14 @@ const mapStateToProps = (state: RootState, ownProps) => {
         } else if (image.addData) {
           progress = 0.1
         }
+        const message = image.state
         return {
           id: image.sharedImage.path,
           type: 'processingItem',
           props: {
             imageUri: image.sharedImage.uri,
             progress,
+            message,
             retry: () => console.log('RETRY'),
             cancel: () => console.log('CANCEL')
           }
@@ -270,4 +272,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadsEdit)
+export default connect(mapStateToProps, mapDispatchToProps)(ThreadsDetail)
