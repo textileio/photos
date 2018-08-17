@@ -18,7 +18,7 @@ const Step2 = props => {
         </Logo>
         <View style={styles.contentContainer}>
           <View style={styles.uploadContainer}>
-            <ImageSc style={styles.photoUploaded} width={183} height={183} source={source} />
+            <ImageSc style={styles.photoUploaded} width={184} height={184} source={source} />
             <Button style={styles.uploadButton} textStyle={styles.uploadButtonText} text='Confirm Picture' onPress={() => { selectProfilePicture(profilePictureUri) }} />
             <TouchableOpacity onPress={chooseProfilePicture}>
               <Text style={styles.link}>Select New Picture</Text>
