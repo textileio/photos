@@ -49,7 +49,7 @@ export default StyleSheet.create({
   },
   photoUploaded: {
     marginBottom: 40,
-    borderRadius: 58
+    borderRadius: 92
   },
   uploadButton: {
     marginBottom: 35
