@@ -35,6 +35,15 @@ const actions = {
   }),
   complete: createAction('processingImages/COMPLETE', resolve => {
     return (dataId: string) => resolve({ dataId })
+  }),
+  retry: createAction('processingImages/RETRY', resolve => {
+    return (dataId: string) => resolve({ dataId })
+  }),
+  cancelRequest: createAction('processingImages/CANCEL', resolve => {
+    return (dataId: string) => resolve({ dataId })
+  }),
+  cancelComplete: createAction('processingImages/CANCEL_COMPLETE', resolve => {
+    return (dataId: string) => resolve({ dataId })
   })
 }
 
@@ -212,6 +221,7 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
       })
       return { ...state, images }
     }
+    case getType(actions.cancelComplete):
     case getType(actions.complete): {
       const { dataId } = action.payload
       const images = state.images.filter(image => {
@@ -219,6 +229,19 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
           return true
         }
         return image.addData.addResult.id !== dataId
+      })
+      return { ...state, images }
+    }
+    case getType(actions.retry): {
+      const { dataId } = action.payload
+      const images = state.images.map(image => {
+        if (!image.addData) {
+          return image
+        }
+        if (image.addData.addResult.id === dataId) {
+          return { ...image, error: undefined }
+        }
+        return image
       })
       return { ...state, images }
     }
