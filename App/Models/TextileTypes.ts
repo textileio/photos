@@ -3,12 +3,24 @@ export interface Event {
   payload: string
 }
 
+export enum NotificationType {
+  receivedInviteNotification,
+  deviceAddedNotification,
+  photoAddedNotification,
+  commentAddedNotification,
+  likeAddedNotification,
+  peerJoinedNotification,
+  peerLeftNotification
+}
+
 export interface Notification {
   id: string
   date: string
   actor_id: string
+  actor_username: string
   target_id: string
-  type: string
+  type: number
+  category: string
   read: boolean
 }
 

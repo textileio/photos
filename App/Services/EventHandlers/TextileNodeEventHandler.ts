@@ -19,11 +19,18 @@ export default class TextileNodeEventHandler {
     TextileNode.eventEmitter.addListener('onOnline', () => {
       this.store.dispatch(TextileNodeActions.nodeOnline())
     })
+    TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {
+      this.store.dispatch(TextileNodeActions.getPhotoHashesRequest(payload.thread_id))
+    })
+    TextileNode.eventEmitter.addListener('onThreadAdded', () => {
+      this.store.dispatch(ThreadsActions.refreshThreadsRequest())
+    })
     TextileNode.eventEmitter.addListener('onThreadRemoved', () => {
       this.store.dispatch(ThreadsActions.refreshThreadsRequest())
     })
     TextileNode.eventEmitter.addListener('onNotification', (payload) => {
-      this.store.dispatch(NotificationActions.newNotification(payload))
+      console.log('n', payload)
+      this.store.dispatch(NotificationActions.newNotificationRequest(payload))
     })
   }
 

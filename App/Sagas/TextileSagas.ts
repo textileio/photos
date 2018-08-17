@@ -21,14 +21,14 @@ import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
 import { getPhotos } from '../Services/CameraRoll'
 import { getAllPhotos, getPhotoPath, getPage } from '../Services/PhotoUtils'
-import { notificationsPermissionTrigger, disableNotifications } from '../Services/Notifications'
+import * as NotificationsSagas from './NotificationsSagas'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import NotificationsAction from '../Redux/NotificationsRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
-import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
-import ContactsActions, { ContactsSelectors } from '../Redux/ContactsRedux'
+import AuthActions  from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
@@ -696,13 +696,17 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   }
 }
 
-export function * updateServices (action: ActionType<typeof PreferencesActions.updateServicesRequest>) {
-  const {name, update} = action.payload
-  console.log('AXXXH', action.payload)
-  if (name === 'backgroundLocation' && update.status === true) {
+export function * updateServices (action: ActionType<typeof PreferencesActions.toggleServicesRequest>) {
+  const {name} = action.payload
+  let currentStatus = action.payload.status
+  if (!currentStatus) {
+    const service = yield select(PreferencesSelectors.service, name)
+    currentStatus = !service ? false : service.status
+  }
+  if (name === 'backgroundLocation' && currentStatus===true) {
     yield * backgroundLocationPermissionsTrigger()
-  } else if (name === 'notifications' && update.status === true){
-    yield call(notificationsPermissionTrigger)
+  } else if (name === 'notifications' && currentStatus===true){
+    yield call(NotificationsSagas.enable)
   }
 }
 

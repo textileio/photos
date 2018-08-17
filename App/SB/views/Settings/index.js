@@ -27,7 +27,6 @@ class AccountSettings extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const greeting = params.username ? 'Hello ' + params.username : 'Hello'
     return {
       headerTitle: 'Settings',
       headerLeft: (
@@ -61,9 +60,11 @@ class AccountSettings extends React.PureComponent {
   }
 
   toggleService (name) {
-    let update = this.props.allServices[name]
-    update.status = !update.status
-    this.props.updateServicesRequest(name, update)
+    if (name === 'notifications') {
+      // never prompt the user later to get those
+      this.props.completeScreen(name)
+    }
+    this.props.toggleServicesRequest(name)
   }
 
   hideInfo () {
@@ -173,7 +174,6 @@ class AccountSettings extends React.PureComponent {
 
 const mapStateToProps = state => {
   const allServices = state.preferences.services
-  console.log(allServices)
   // get all top level services
   const services = Object.keys(allServices)
     .filter((key) => !allServices[key].dependsOn)
@@ -181,7 +181,6 @@ const mapStateToProps = state => {
       previous[current] = allServices[current]
       return previous
     }, {})
-  console.log(services)
   // get any services that depend on top level services
   const children = Object.keys(allServices)
     .filter((key) => !!allServices[key].dependsOn)
@@ -189,8 +188,6 @@ const mapStateToProps = state => {
       previous[current] = allServices[current]
       return previous
     }, {})
-  console.log(children)
-  console.log(state.preferences.profile)
 
   return {
     profile: state.preferences.profile,
@@ -202,7 +199,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateServicesRequest: (name, update) => { dispatch(PreferencesActions.updateServicesRequest(name, update)) }
+    toggleServicesRequest: (name) => { dispatch(PreferencesActions.toggleServicesRequest(name)) },
+    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) }
   }
 }
 

@@ -14,11 +14,12 @@ import styles from '../SB/views/ThreadsList/statics/styles'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import UIActions from '../Redux/UIRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
+import Config from 'react-native-config'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const avatarUrl = params.profile && params.profile.avatar_id ? 'https://cafe.us-east-1.textile.io' + params.profile.avatar_id : undefined
+    const avatarUrl = params.profile && params.profile.avatar_id ? Config.TEXTILE_CAFE_URI + params.profile.avatar_id : undefined
     const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
       <HeaderButtons left>
@@ -63,8 +64,7 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile
     })
-    // this.props.navigation.navigate('Settings')
-    this._notificationPrompt()
+    this.props.navigation.navigate('Settings')
   }
 
   componentDidUpdate (prevProps, prevState, ss) {
@@ -75,19 +75,31 @@ class ThreadsList extends React.PureComponent {
         profile: this.props.profile
       })
     }
+    if (
+      this.props.threads.length !== prevProps.threads.length
+    ) {
+      this._notificationPrompt()
+    }
   }
 
   _notificationPrompt () {
-    console.log(this.props.notificationsPrompt, this.props.threads.length)
-    if (this.props.notificationsPrompt && this.props.threads.length > 0) {
+    if (this.props.notificationsPrompt && !this.props.tourScreen && this.props.threads.length > 0) {
+      // never show it again
+      this.props.completeScreen('notifications')
+      // give the user a prompt
       Alert.alert(
         'Notifications',
-        'Want to receive notifications when you recieve new photos or invites?',
+        'Want to receive notifications when you receive new photos or invites?',
         [
-          {text: 'Definitely!'},
-          {text: 'No', style: 'cancel'},
           {
-            text: 'Options',
+            text: 'Yes please',
+            onPress: () => {
+              this.props.enableNotifications()
+            }
+          },
+          {text: 'Not now', style: 'cancel'},
+          {
+            text: 'Show all options',
             onPress: () => {
               this.props.navigation.navigate('Settings')
             }
@@ -115,25 +127,32 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
+  _renderTour () {
+    if (this.props.tourScreen === true) {
+      return (
+        <View style={styles.emptyStateContainer}>
+          <Image
+            style={styles.emptyStateImage}
+            source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
+          <Text style={styles.emptyStateText}>
+            This is where you can create shared
+            Threads. Invite only groups to share
+            photos with your friends and family.
+          </Text>
+          <Button primary text='Create a thread' onPress={() => {
+            this.props.completeScreen('threads')
+            this.props.navigation.navigate('AddThread')
+          }} />
+        </View>
+      )
+    }
+    return null
+  }
+
   render () {
     return (
       <View style={styles.container}>
-        {(!this.props.hideTourScreen && this.props.threads.length === 0) && (
-          <View style={styles.emptyStateContainer}>
-            <Image
-              style={styles.emptyStateImage}
-              source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
-            <Text style={styles.emptyStateText}>
-              This is where you can create shared
-              Threads. Invite only groups to share
-              photos with your friends and family.
-            </Text>
-            <Button primary text='Create a thread' onPress={() => {
-              this.props.completeTourScreen()
-              this.props.navigation.navigate('AddThread')
-            }} />
-          </View>
-        )}
+        {this._renderTour()}
         {this.props.threads.length !== 0 && (
           // FIXME: This should be a FlatList for sure
           <View style={styles.contentContainer} >
@@ -183,8 +202,9 @@ const mapStateToProps = (state) => {
     profile,
     threads,
     refreshing: !!state.ui.refreshingMessages,
-    notificationsPrompt: !state.preferences.tourScreens.notifications,
-    hideTourScreen: !state.preferences.tourScreens.threads // <- default off so users don't see a screen flash
+    notificationsPrompt: state.preferences.tourScreens.notifications,
+    services: state.preferences.services,
+    tourScreen: state.preferences.tourScreens.threads // <- default off so users don't see a screen flash
   }
 }
 
@@ -192,7 +212,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId, threadName) => { dispatch(UIActions.viewThreadRequest(threadId, threadName)) },
     refreshMessages: (hidden) => { dispatch(UIActions.refreshMessagesRequest(hidden)) },
-    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threads')) }
+    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
+    enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) }
   }
 }
 

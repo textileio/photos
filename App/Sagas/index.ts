@@ -6,6 +6,7 @@ import { getType } from 'typesafe-actions'
 import StartupActions from '../Redux/StartupRedux'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
+import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
@@ -17,6 +18,10 @@ import DevicesActions from '../Redux/DevicesRedux'
 import { startup } from './StartupSagas'
 import { handleSharePhotoRequest } from './HandleSharePhotoRequest'
 import { handleImageUploadComplete } from './HandleImageUploadComplete'
+import {
+  handleNewNotification
+} from './NotificationsSagas'
+
 import {
   signUp,
   logIn,
@@ -35,8 +40,6 @@ import {
   addDevice,
   getPhotoHashes,
   ignorePhoto,
-  removePayloadFile,
-  handleUploadError,
   addThread,
   removeThread,
   refreshThreads,
@@ -53,7 +56,6 @@ import {
   nodeOnlineSaga,
   updateServices
 } from './TextileSagas'
-import CameraRollActions from '../Redux/CameraRollRedux'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -69,7 +71,7 @@ export default function * root () {
 
     // permissions request events
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
-    takeLatest(getType(PreferencesActions.updateServicesRequest), updateServices),
+    takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
 
     // some sagas receive extra parameters in addition to an action
 
@@ -121,6 +123,9 @@ export default function * root () {
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
     takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
+
+    // Notifications
+    takeEvery(getType(NotificationsActions.newNotificationRequest), handleNewNotification),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
