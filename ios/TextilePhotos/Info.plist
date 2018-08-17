@@ -62,7 +62,9 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>So you can pick photos to store in the secure Textile cloud.</string>
+	<string>So you can pick photos to use in Textile sharing and storage.</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

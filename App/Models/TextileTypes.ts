@@ -3,6 +3,15 @@ export interface Event {
   payload: string
 }
 
+export interface Notification {
+  id: string
+  date: string
+  actor_id: string
+  target_id: string
+  type: string
+  read: boolean
+}
+
 export interface Thread {
   id: string
   name: string
@@ -20,15 +29,6 @@ export interface Device {
 
 export interface Devices {
   items: Device[]
-}
-
-export interface Notification {
-  category: 'node' | 'devices' | 'threads' | 'content'
-  type: string
-  read: boolean
-  timestamp: number
-  unique?: boolean
-  payload?: any
 }
 
 export interface Profile {

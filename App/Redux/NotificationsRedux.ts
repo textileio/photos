@@ -21,10 +21,8 @@ export function reducer (state: NotificationsState = initialState, action: Notif
   switch (action.type) {
     case getType(actions.newNotification):
       const notification = action.payload.notification
-      const possible = notification.unique ? state.notifications.filter((n) => {
-        return n.category !== notification.category && n.type !== notification.type
-      }).slice(0, 99) : state.notifications.slice(0, 99)
-      return { ...state, notifications: [notification, ...possible] }
+      const latest = state.notifications.slice(0, 99)
+      return { ...state, notifications: [notification, ...latest] }
     default:
       return state
   }

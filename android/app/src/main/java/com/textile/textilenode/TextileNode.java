@@ -434,6 +434,16 @@ public class TextileNode extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void getNotifications (String offset, Integer limit, Promise promise) {
+        try {
+            promise.resolve(node.getNotifications(offset, limit));
+        }
+        catch (Exception e) {
+            promise.reject("GET NOTIFICATIONS ERROR", e);
+        }
+    }
+
     // Android specific method for turning photo URI into path + ext
     @ReactMethod
     public void getFilePath(String uriString, Promise promise) {
