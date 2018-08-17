@@ -67,7 +67,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 25,
+    paddingVertical: 25
   },
   serversText: {
     color: '#4A4A4A'
@@ -95,6 +95,6 @@ export default StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: 90
+    marginTop: 30
   }
 })
