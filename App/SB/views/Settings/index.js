@@ -73,23 +73,23 @@ class AccountSettings extends React.PureComponent {
 
   getInfo (service) {
     switch (service) {
-      case 'backgroundLocation':
-        return {
-          title: 'Always allow location',
-          subtitle: 'Better background updates',
-          details: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network. Without background location the app will never get any new information, it will be a pretty boring place. We never keep, store, process, or share your location data with anyone or any device.'
-        }
+      // case 'backgroundLocation':
+      //   return {
+      //     title: 'Always allow location',
+      //     subtitle: 'Better background updates',
+      //     details: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network. Without background location the app will never get any new information, it will be a pretty boring place. We never keep, store, process, or share your location data with anyone or any device.'
+      //   }
       case 'notifications':
         return {
           title: 'Notifications',
           subtitle: 'Enable notifications',
           details: 'Choose Textile events that trigger notifications. Notifications can be enabled or disabled at any time.'
         }
-      case 'receivedInviteNotification':
-        return {
-          title: 'New Thread Invite',
-          subtitle: 'Someone shares a photo with you'
-        }
+      // case 'receivedInviteNotification':
+      //   return {
+      //     title: 'New Thread Invite',
+      //     subtitle: 'Someone shares a photo with you'
+      //   }
       case 'deviceAddedNotification':
         return {
           title: 'New Device Paired',
