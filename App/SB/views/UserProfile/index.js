@@ -105,6 +105,9 @@ class UserProfile extends React.PureComponent {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
+          <TouchableOpacity style={styles.listItem} onPress={this._settings.bind(this)}>
+            <Text style={styles.listText}>Notifications</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
           </TouchableOpacity>

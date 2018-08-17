@@ -64,7 +64,6 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile
     })
-    this.props.navigation.navigate('Settings')
   }
 
   componentDidUpdate (prevProps, prevState, ss) {
