@@ -105,9 +105,6 @@ class UserProfile extends React.PureComponent {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
-          {/*<TouchableOpacity style={styles.listItem} onPress={this._settings.bind(this)}>*/}
-            {/*<Text style={styles.listText}>Settings</Text>*/}
-          {/*</TouchableOpacity>*/}
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
           </TouchableOpacity>
@@ -133,9 +130,6 @@ class UserProfile extends React.PureComponent {
           }}>
             <Text style={styles.listText}>Invite Friends!</Text>
           </TouchableOpacity>
-          {/*<TouchableOpacity style={styles.listItem} onPress={this._lockScreen.bind(this)}>*/}
-            {/*<Text style={[styles.listText, styles.warning]}>Lock screen</Text>*/}
-          {/*</TouchableOpacity>*/}
           {this.connectivity()}
           <View style={styles.logoContainer}>
             <ImageSc width={83} source={require('./statics/textile-gray-logo.png')}/>

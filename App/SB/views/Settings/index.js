@@ -1,8 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Switch, View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native'
-import ImageSc from 'react-native-scalable-image'
-import AuthAction from '../../../Redux/AuthRedux'
+import { View, Text, ScrollView, Platform } from 'react-native'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
@@ -175,6 +173,7 @@ class AccountSettings extends React.PureComponent {
 
 const mapStateToProps = state => {
   const allServices = state.preferences.services
+  console.log(allServices)
   // get all top level services
   const services = Object.keys(allServices)
     .filter((key) => !allServices[key].dependsOn)
@@ -182,6 +181,7 @@ const mapStateToProps = state => {
       previous[current] = allServices[current]
       return previous
     }, {})
+  console.log(services)
   // get any services that depend on top level services
   const children = Object.keys(allServices)
     .filter((key) => !!allServices[key].dependsOn)
@@ -189,6 +189,8 @@ const mapStateToProps = state => {
       previous[current] = allServices[current]
       return previous
     }, {})
+  console.log(children)
+  console.log(state.preferences.profile)
 
   return {
     profile: state.preferences.profile,

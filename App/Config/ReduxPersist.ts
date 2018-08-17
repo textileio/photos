@@ -103,15 +103,62 @@ const migrations: MigrationManifest = {
         }
       }
     }
+  },
+  8: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        tourScreens: {
+          ...state.preferences.tourScreens,
+          threads: true
+        },
+        services: {
+          notifications: {
+            status: false,
+          },
+          photoAddedNotification: {
+            status: true,
+            dependsOn: 'notifications'
+          },
+          receivedInviteNotification: {
+            status: true,
+            dependsOn: 'notifications'
+          },
+          deviceAddedNotification: {
+            status: true,
+            dependsOn: 'notifications'
+          },
+          commentAddedNotification: {
+            status: false,
+            dependsOn: 'notifications'
+          },
+          likeAddedNotification: {
+            status: false,
+            dependsOn: 'notifications'
+          },
+          peerJoinedNotification: {
+            status: true,
+            dependsOn: 'notifications'
+          },
+          peerLeftNotification: {
+            status: false,
+            dependsOn: 'notifications'
+          },
+          backgroundLocation: {
+            status: false
+          }
+        }
+      }
+    }
   }
 }
-
-console.log('Migrate 8 after master merge w/ remove photos')
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 7,
+  version: 8,
   whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'notifications'],
   migrate: createMigrate(migrations, { debug: false })
 }

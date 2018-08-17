@@ -3,6 +3,7 @@
 #import "TextileNode.h"
 #import "Events.h"
 #import <Mobile/Mobile.h>
+#import "RNNotifications.h"
 
 // import RCTBridge
 #if __has_include(<React/RCTBridge.h>)
@@ -12,6 +13,8 @@
 #else
 #import “React/RCTBridge.h” // Required when used as a Pod in a Swift project
 #endif
+
+#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface Messenger : NSObject<MobileMessenger>
 // Define class properties here with @property
@@ -376,6 +379,16 @@ RCT_EXPORT_METHOD(removeDevice:(NSString *)deviceId resolver:(RCTPromiseResolveB
   }
 }
 
+RCT_EXPORT_METHOD(getNotifications:(NSString *)offset limit:(int)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *jsonString = [self _getNotifications:offset limit:limit error:&error];
+  if (!error) {
+    resolve(jsonString);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *jsonString = [self _devices:&error];
@@ -541,6 +554,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (NSString *)_devices:(NSError**)error {
   return [self.node devices:error];
+}
+
+- (NSString *)_getNotifications:(NSString *)offset limit:(long)limit error:(NSError**)error {
+  return [self.node getNotifications:offset limit:limit error:error];
 }
 
 - (void)_refreshMessages:(NSError**)error {
