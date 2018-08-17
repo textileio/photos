@@ -55,7 +55,8 @@ export const initialState: PreferencesState = {
   verboseUi: false,
   tourScreens: {
     wallet: true,
-    threads: true
+    threads: true,
+    notifications: true
   },
   services: {
     notifications: {
@@ -70,7 +71,7 @@ export const initialState: PreferencesState = {
       dependsOn: 'notifications'
     },
     deviceAddedNotification: {
-      status: true,
+      status: false,
       dependsOn: 'notifications'
     },
     commentAddedNotification: {
@@ -82,7 +83,7 @@ export const initialState: PreferencesState = {
       dependsOn: 'notifications'
     },
     peerJoinedNotification: {
-      status: true,
+      status: false,
       dependsOn: 'notifications'
     },
     peerLeftNotification: {

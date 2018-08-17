@@ -112,7 +112,8 @@ const migrations: MigrationManifest = {
         ...state.preferences,
         tourScreens: {
           ...state.preferences.tourScreens,
-          threads: true
+          threads: true,
+          notifications: true
         },
         services: {
           notifications: {
@@ -127,7 +128,7 @@ const migrations: MigrationManifest = {
             dependsOn: 'notifications'
           },
           deviceAddedNotification: {
-            status: true,
+            status: false,
             dependsOn: 'notifications'
           },
           commentAddedNotification: {
@@ -139,7 +140,7 @@ const migrations: MigrationManifest = {
             dependsOn: 'notifications'
           },
           peerJoinedNotification: {
-            status: true,
+            status: false,
             dependsOn: 'notifications'
           },
           peerLeftNotification: {

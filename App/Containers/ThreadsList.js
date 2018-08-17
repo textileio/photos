@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, FlatList } from 'react-native'
+import { View, Text, Image, FlatList, Alert } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
@@ -39,9 +39,9 @@ class ThreadsList extends React.PureComponent {
         />
       </HeaderButtons>
     )
-    const headerRight = !params.hideCreateButton && (
+    const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread')}} />
+        <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
@@ -61,10 +61,10 @@ class ThreadsList extends React.PureComponent {
 
   componentDidMount () {
     this.props.navigation.setParams({
-      profile: this.props.profile,
-      hideCreateButton: this.props.tourScreen === true
+      profile: this.props.profile
     })
-    this.props.navigation.navigate('Settings')
+    // this.props.navigation.navigate('Settings')
+    this._notificationPrompt()
   }
 
   componentDidUpdate (prevProps, prevState, ss) {
@@ -74,6 +74,27 @@ class ThreadsList extends React.PureComponent {
       this.props.navigation.setParams({
         profile: this.props.profile
       })
+    }
+  }
+
+  _notificationPrompt () {
+    console.log(this.props.notificationsPrompt, this.props.threads.length)
+    if (this.props.notificationsPrompt && this.props.threads.length > 0) {
+      Alert.alert(
+        'Notifications',
+        'Want to receive notifications when you recieve new photos or invites?',
+        [
+          {text: 'Definitely!'},
+          {text: 'No', style: 'cancel'},
+          {
+            text: 'Options',
+            onPress: () => {
+              this.props.navigation.navigate('Settings')
+            }
+          }
+        ],
+        {cancelable: false}
+      )
     }
   }
 
@@ -94,33 +115,26 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
-  _renderTour () {
-    if (this.props.tourScreen === true) {
-      return (
-        <View style={styles.emptyStateContainer}>
-          <Image
-            style={styles.emptyStateImage}
-            source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
-          <Text style={styles.emptyStateText}>
-            This is where you can create shared
-            Threads. Invite only groups to share
-            photos with your friends and family.
-          </Text>
-          <Button primary text='Create a thread' onPress={() => {
-            this.props.completeTourScreen()
-            this.props.navigation.navigate('AddThread')
-          }} />
-        </View>
-      )
-    }
-    return null
-  }
-
   render () {
     return (
       <View style={styles.container}>
-        {this._renderTour()}
-        {this.props.threads.length > 0 && (
+        {(!this.props.hideTourScreen && this.props.threads.length === 0) && (
+          <View style={styles.emptyStateContainer}>
+            <Image
+              style={styles.emptyStateImage}
+              source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
+            <Text style={styles.emptyStateText}>
+              This is where you can create shared
+              Threads. Invite only groups to share
+              photos with your friends and family.
+            </Text>
+            <Button primary text='Create a thread' onPress={() => {
+              this.props.completeTourScreen()
+              this.props.navigation.navigate('AddThread')
+            }} />
+          </View>
+        )}
+        {this.props.threads.length !== 0 && (
           // FIXME: This should be a FlatList for sure
           <View style={styles.contentContainer} >
             <FlatList
@@ -154,8 +168,6 @@ const mapStateToProps = (state) => {
         // just keep the top 2
         thread.photos = photos.slice(0, 3)
 
-
-        
         // get a rough count of distinct users
         thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1
           // latest update based on the latest item
@@ -171,8 +183,8 @@ const mapStateToProps = (state) => {
     profile,
     threads,
     refreshing: !!state.ui.refreshingMessages,
-    tourScreens: state.preferences.tourScreens,
-    tourScreen: state.preferences.tourScreens.threads // <- default off so users don't see a screen flash
+    notificationsPrompt: !state.preferences.tourScreens.notifications,
+    hideTourScreen: !state.preferences.tourScreens.threads // <- default off so users don't see a screen flash
   }
 }
 
