@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StatusBar, ActivityIndicator } from 'react-native'
+import { View, StatusBar, ActivityIndicator, Platform } from 'react-native'
 import { Overlay } from 'react-native-elements'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
@@ -16,9 +16,10 @@ type Props = {
 
 class RootContainer extends Component<Props> {
   render () {
+    const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content'
     return (
       <View style={styles.applicationView}>
-        <StatusBar barStyle='dark-content' />
+        <StatusBar barStyle={barStyle} />
         <AppNavigation ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }} />
         <Overlay
           isVisible={this.props.showOverlay}
