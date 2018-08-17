@@ -16,31 +16,31 @@ export const cardImageContainerStyle = list => {
   }
 }
 
-export const cardImageStyle = (list, index) => {
+export const cardImageStyle = (list, index, width) => {
   if (list.length === 1) {
     return {
-      width: '100%',
+      width,
       height: 170
     }
   }
 
   if (list.length === 2) {
     return {
-      width: '49.5%',
+      width: width / 2 - 2,
       height: 170
     }
   }
 
   if (list.length >= 3 && index === 0) {
     return {
-      width: '74%',
+      width: 3 * width / 4 - 2,
       height: 170
     }
   }
 
   if (list.length >= 3 && index === 1) {
     return {
-      width: '25%',
+      width: width / 4 - 1,
       height: 85,
       alignSelf: 'flex-end'
     }
@@ -48,8 +48,8 @@ export const cardImageStyle = (list, index) => {
 
   if (list.length >= 3 && index === 2) {
     return {
-      width: '25%',
-      height: 82,
+      width: width / 4 - 1,
+      height: 84,
       alignSelf: 'flex-end'
     }
   }
@@ -63,41 +63,36 @@ export const cardImageStyle = (list, index) => {
 
 export default StyleSheet.create({
   threadCard: {
-    marginBottom: 37
+    marginTop: 27,
+    marginBottom: 9
   },
   threadCardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    marginVertical: 11,
+    marginBottom: 5,
     marginHorizontal: 11
   },
   threadCardHeaderLeft: {
-    width: '50%'
-  },
-  threadCardHeaderRight: {},
-  threadCardHeaderRightDetail: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginBottom: 2
   },
   threadCardFooter: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 11,
+    alignItems: 'flex-start',
+    marginTop: 10,
     marginHorizontal: 11
   },
-  threadCardFooterDetail: {
+  threadCardFooterRight: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-start',
-    width: '100%',
-    marginBottom: 2
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
+  },
+  threadCardFooterRightDetail: {
+    marginTop: 1
   },
   threadCardTitle: {
     fontFamily: 'BentonSans',
-    fontSize: 22,
-    maxHeight: 46
+    fontSize: 28
   },
   detailUpdateTime: {
     fontFamily: 'BentonSans',

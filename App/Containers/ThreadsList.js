@@ -39,9 +39,9 @@ class ThreadsList extends React.PureComponent {
         />
       </HeaderButtons>
     )
-    const headerRight = (
+    const headerRight = !params.hideCreateButton && (
       <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
+        <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread')}} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
@@ -61,7 +61,8 @@ class ThreadsList extends React.PureComponent {
 
   componentDidMount () {
     this.props.navigation.setParams({
-      profile: this.props.profile
+      profile: this.props.profile,
+      hideCreateButton: this.props.tourScreen === true
     })
   }
 
@@ -92,26 +93,33 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
+  _renderTour () {
+    if (this.props.tourScreen === true) {
+      return (
+        <View style={styles.emptyStateContainer}>
+          <Image
+            style={styles.emptyStateImage}
+            source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
+          <Text style={styles.emptyStateText}>
+            This is where you can create shared
+            Threads. Invite only groups to share
+            photos with your friends and family.
+          </Text>
+          <Button primary text='Create a thread' onPress={() => {
+            this.props.completeTourScreen()
+            this.props.navigation.navigate('AddThread')
+          }} />
+        </View>
+      )
+    }
+    return null
+  }
+
   render () {
     return (
       <View style={styles.container}>
-        {(!this.props.hideTourScreen && this.props.threads.length === 0) && (
-          <View style={styles.emptyStateContainer}>
-            <Image
-              style={styles.emptyStateImage}
-              source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')}/>
-            <Text style={styles.emptyStateText}>
-              This is where you can create shared
-              Threads. Invite only groups to share
-              photos with your friends and family.
-            </Text>
-            <Button primary text='Create a thread' onPress={() => {
-              this.props.completeTourScreen()
-              this.props.navigation.navigate('AddThread')
-            }} />
-          </View>
-        )}
-        {this.props.threads.length !== 0 && (
+        {this._renderTour()}
+        {this.props.threads.length > 0 && (
           // FIXME: This should be a FlatList for sure
           <View style={styles.contentContainer} >
             <FlatList
@@ -145,6 +153,8 @@ const mapStateToProps = (state) => {
         // just keep the top 2
         thread.photos = photos.slice(0, 3)
 
+
+        
         // get a rough count of distinct users
         thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1
           // latest update based on the latest item
@@ -160,7 +170,8 @@ const mapStateToProps = (state) => {
     profile,
     threads,
     refreshing: !!state.ui.refreshingMessages,
-    hideTourScreen: !state.preferences.tourScreens.threads // <- default off so users don't see a screen flash
+    tourScreens: state.preferences.tourScreens,
+    tourScreen: state.preferences.tourScreens.threads // <- default off so users don't see a screen flash
   }
 }
 
