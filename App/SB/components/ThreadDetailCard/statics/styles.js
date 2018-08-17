@@ -12,8 +12,10 @@ export default StyleSheet.create({
     paddingHorizontal: 11
   },
   card: {
+    flex: 1,
+    flexDirection: 'column',
     paddingBottom: 25,
-    marginBottom: 9
+    marginBottom: 9,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -33,13 +35,14 @@ export default StyleSheet.create({
     ...BentonSansBold()
   },
   cardImage: {
-    marginBottom: 10
+    marginBottom: 10,
+    overflow: 'hidden'
   },
   cardFooter: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
-    paddingHorizontal: 11
+    paddingHorizontal: 11,
   },
   profileName: {
     fontFamily: 'BentonSans',
@@ -62,7 +65,7 @@ export default StyleSheet.create({
   },
   detailUpdateTime: {
     fontFamily: 'BentonSans',
-    fontSize: 12,
+    fontSize: 10,
     color: '#9b9b9b',
     paddingRight: 8
   },
