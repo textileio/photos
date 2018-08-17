@@ -10,7 +10,7 @@ export const isSmallDevice = SCREEN_WIDTH <= 414
 export const numColumns = isSmallDevice ? 3 : 4
 
 export const PRODUCT_ITEM_OFFSET = 0.5
-export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET * 2
+export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET
 const ITEM_WIDTH = (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
   PRODUCT_ITEM_MARGIN
 export const PRODUCT_ITEM_HEIGHT = ITEM_WIDTH

@@ -16,31 +16,31 @@ export const cardImageContainerStyle = list => {
   }
 }
 
-export const cardImageStyle = (list, index) => {
+export const cardImageStyle = (list, index, width) => {
   if (list.length === 1) {
     return {
-      width: '100%',
+      width,
       height: 170
     }
   }
 
   if (list.length === 2) {
     return {
-      width: '49.5%',
+      width: width / 2 - 2,
       height: 170
     }
   }
 
   if (list.length >= 3 && index === 0) {
     return {
-      width: '74%',
+      width: 3 * width / 4 - 2,
       height: 170
     }
   }
 
   if (list.length >= 3 && index === 1) {
     return {
-      width: '25%',
+      width: width / 4 - 1,
       height: 85,
       alignSelf: 'flex-end'
     }
@@ -48,8 +48,8 @@ export const cardImageStyle = (list, index) => {
 
   if (list.length >= 3 && index === 2) {
     return {
-      width: '25%',
-      height: 82,
+      width: width / 4 - 1,
+      height: 84,
       alignSelf: 'flex-end'
     }
   }
