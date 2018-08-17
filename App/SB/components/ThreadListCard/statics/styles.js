@@ -26,7 +26,7 @@ export const cardImageStyle = (list, index, width) => {
 
   if (list.length === 2) {
     return {
-      width: width / 2 - 2,
+      width: width / 2 - 1.5,
       height: 170
     }
   }
