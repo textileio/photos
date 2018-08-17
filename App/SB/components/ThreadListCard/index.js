@@ -1,10 +1,12 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
 import moment from 'moment'
 import TextileImage from '../../../../TextileImage'
 
 import IconTag from '../IconTag'
 import Avatar from '../../../Components/Avatar'
+
+const { width } = Dimensions.get('window')
 
 import styles, { cardImageContainerStyle, cardImageStyle } from './statics/styles'
 
@@ -35,7 +37,7 @@ const ThreadCard = props => {
           )}
 
           { photos.map((photo, i) => {
-            const imageStyle = cardImageStyle(photos, i)
+            const imageStyle = cardImageStyle(photos, i, width)
             return (
               <View key={i} style={[styles.imageContainer, imageStyle]}>
                 <View style={styles.imageStretch}>
