@@ -9,7 +9,7 @@ export default StyleSheet.create({
     fontSize: 30,
     marginTop: 11,
     marginBottom: 11,
-    paddingHorizontal: 8
+    paddingHorizontal: 11
   },
   card: {
     paddingBottom: 25,
@@ -17,35 +17,54 @@ export default StyleSheet.create({
   },
   cardHeader: {
     flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start'
-  },
-  cardHeaderRight: {
-    width: '50%',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end'
-  },
-  cardHeaderLeft: {
-    width: '50%'
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 11,
+    marginBottom: 8
   },
   cardAction: {
     fontFamily: 'BentonSans',
     fontSize: 14,
-    marginBottom: 8,
-    paddingLeft: 8
+    lineHeight: 14,
+    paddingLeft: 4,
+    paddingTop: 4
   },
   cardActionName: {
     ...BentonSansBold()
+  },
+  cardImage: {
+    marginBottom: 10
+  },
+  cardFooter: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    paddingHorizontal: 11
+  },
+  profileName: {
+    fontFamily: 'BentonSans',
+    fontSize: 14,
+    lineHeight: 16,
+  },
+  captionText: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    fontFamily: 'BentonSans-Light',
+    fontSize: 14,
+    paddingBottom: 8
+  },
+  cardFooterBottom: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
   },
   detailUpdateTime: {
     fontFamily: 'BentonSans',
     fontSize: 12,
     color: '#9b9b9b',
     paddingRight: 8
-  },
-  cardImage: {
-    marginBottom: 8
   },
   dateContainer: {
     backgroundColor: '#FAFCFE',

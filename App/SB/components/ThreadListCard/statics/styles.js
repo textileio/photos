@@ -63,41 +63,36 @@ export const cardImageStyle = (list, index) => {
 
 export default StyleSheet.create({
   threadCard: {
-    marginBottom: 37
+    marginTop: 27,
+    marginBottom: 9
   },
   threadCardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    marginVertical: 11,
+    marginBottom: 5,
     marginHorizontal: 11
   },
   threadCardHeaderLeft: {
-    width: '50%'
-  },
-  threadCardHeaderRight: {},
-  threadCardHeaderRightDetail: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginBottom: 2
   },
   threadCardFooter: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 11,
+    alignItems: 'flex-start',
+    marginTop: 10,
     marginHorizontal: 11
   },
-  threadCardFooterDetail: {
+  threadCardFooterRight: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-start',
-    width: '100%',
-    marginBottom: 2
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
+  },
+  threadCardFooterRightDetail: {
+    marginTop: 1
   },
   threadCardTitle: {
     fontFamily: 'BentonSans',
-    fontSize: 22,
-    maxHeight: 46
+    fontSize: 28
   },
   detailUpdateTime: {
     fontFamily: 'BentonSans',

@@ -25,11 +25,6 @@ const ThreadCard = props => {
         <View style={styles.threadCardHeaderLeft}>
           <Text numberOfLines={2} style={styles.threadCardTitle}>{name}</Text>
         </View>
-        <View style={styles.threadCardHeaderRight}>
-          <View style={styles.threadCardHeaderRightDetail}>
-            <Text style={styles.detailUpdateTime}>{lastUpdatedTime}</Text>
-          </View>
-        </View>
       </View>
       <View style={styles.threadCardBody}>
         <View style={cardImageContainerStyle(photos)}>
@@ -57,15 +52,10 @@ const ThreadCard = props => {
         </View>
       </View>
       {commentsCount !== 0 && <View style={styles.threadCardFooter}>
-        <View style={styles.threadCardFooterDetail}>
-          <IconTag
-            text={userCount}
-            image={require('./statics/icon-user.png')}
-          />
-          <IconTag
-            text={commentsCount}
-            image={require('./statics/icon-photo.png')}
-          />
+        <View style={styles.threadCardFooterRight}>
+          <View style={styles.threadCardFooterRightDetail}>
+            <Text style={styles.detailUpdateTime}>{'Updated ' + lastUpdatedTime}</Text>
+          </View>
         </View>
       </View>}
     </TouchableOpacity>

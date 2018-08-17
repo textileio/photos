@@ -5,6 +5,7 @@ import moment from 'moment'
 import SmallIconTag from '../SmallIconTag'
 import TextileImage from '../../../../TextileImage'
 import { getHeight } from '../../../Services/PhotoUtils'
+import Avatar from '../../../Components/Avatar'
 
 import styles from './statics/styles'
 
@@ -41,14 +42,10 @@ const ThreadDetailCard = props => {
       return (
         <View style={styles.card}>
           <View style={styles.cardHeader} >
-            <View style={styles.cardHeaderLeft} >
+              <Avatar style={styles.cardAvatar} width={18} height={18} uri={uri} defaultSource={defaultSource} />
               <Text style={styles.cardAction}><Text style={styles.cardActionName}>
                 {profile.username === username ? 'You' : username}
               </Text> added a photo</Text>
-            </View>
-            <View style={styles.cardHeaderRight} >
-              <Text style={styles.detailUpdateTime}>{dateString}</Text>
-            </View>
           </View>
           <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
             <View style={styles.imageStretch}>
@@ -62,7 +59,14 @@ const ThreadDetailCard = props => {
               />
             </View>
           </View>
-          <SmallIconTag syle={{flexDirection: 'row'}} text={photo.caption} uri={uri} defaultSource={defaultSource} avatarStyle={{marginRight: 10, marginLeft: 8}} />
+          <View style={styles.cardFooter} >
+            <Text style={[styles.captionText]}>
+              <Text style={[styles.profileName]}>{username + ' '}</Text>{photo.caption}
+            </Text>
+            <View style={styles.cardFooterBottom} >
+              <Text style={styles.detailUpdateTime}>{dateString}</Text>
+            </View>
+          </View>
         </View>
       )
     }
