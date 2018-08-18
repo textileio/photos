@@ -27,7 +27,7 @@ const ThreadDetailCard = props => {
       const date = moment(photo.date)
       const dateString = date.fromNow()
 
-      const username = photo.username ? photo.username : photo.author_id.substring(0, 8).toUpperCase()
+      const username = photo.username ? photo.username : photo.author_id.substring(0, 8)
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH

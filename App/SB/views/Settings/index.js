@@ -28,7 +28,7 @@ class AccountSettings extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
-      headerTitle: 'Settings',
+      headerTitle: 'Notifications',
       headerLeft: (
         <TextileHeaderButtons left>
           <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
@@ -138,7 +138,7 @@ class AccountSettings extends React.PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Everything can run a bit better with a few permissions</Text>
+          <Text style={styles.title}>Choose the types of notifications you want to receive.</Text>
         </View>
         <ScrollView style={styles.contentContainer}>
           <View style={styles.listContainer}>
@@ -146,7 +146,7 @@ class AccountSettings extends React.PureComponent {
               .filter((name) => this.getInfo(name).title !== '')
               .map((service, i) => {
                 const value = !!this.props.services[service].status
-                var children = Object.keys(this.props.children)
+                let children = Object.keys(this.props.children)
                   .filter((name) => this.getInfo(name).title !== '')
                   .filter((key) => this.props.children[key].dependsOn === service)
                   .reduce((previous, current) => {
@@ -157,8 +157,8 @@ class AccountSettings extends React.PureComponent {
                 return (
                   <View key={i} >
                     <SettingsRow service={service} info={this.getInfo(service)} value={value} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
-                    {value && children && Object.keys(children).map((child, i) =>
-                      <SettingsRow key={i * 33} child service={child} info={this.getInfo(child)} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
+                    {children && Object.keys(children).map((child, i) =>
+                      <SettingsRow key={i * 33} child service={child} info={this.getInfo(child)} disabled={!value} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
                       )}
                   </View>
                   )

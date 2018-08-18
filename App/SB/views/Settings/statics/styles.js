@@ -43,6 +43,9 @@ export default StyleSheet.create({
     fontSize: 16,
     lineHeight: 27,
   },
+  disabledTitle: {
+    color: '#4a4a4a'
+  },
   childTitle: {
     fontSize: 14,
   },
