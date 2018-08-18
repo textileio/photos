@@ -14,6 +14,7 @@ import styles from '../SB/views/ThreadsList/statics/styles'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import UIActions from '../Redux/UIRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
 import Config from 'react-native-config'
 
 class ThreadsList extends React.PureComponent {
@@ -57,7 +58,7 @@ class ThreadsList extends React.PureComponent {
 
   componentWillMount () {
     // refresh our messages
-    this.props.refreshMessages(true)
+    this.props.refreshMessages()
   }
 
   componentDidMount () {
@@ -212,7 +213,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId, threadName) => { dispatch(UIActions.viewThreadRequest(threadId, threadName)) },
-    refreshMessages: (hidden) => { dispatch(UIActions.refreshMessagesRequest(hidden)) },
+    refreshMessages: (hidden) => { dispatch(TextileNodeActions.refreshMessagesRequest(hidden)) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) }
   }

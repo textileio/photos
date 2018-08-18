@@ -117,8 +117,7 @@ export async function enable(): Promise<void> {
         // (required) Called when a remote or local notification is opened or received
         onNotification:   function(notification: any) {
           if (notification.userInteraction === true) {
-            // TODO
-            console.log('success')
+            console.log('success', notification)
           }
           notification.finish(PushNotificationIOS.FetchResult.NoData);
         },

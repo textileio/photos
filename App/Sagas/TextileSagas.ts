@@ -26,7 +26,6 @@ import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import NotificationsAction from '../Redux/NotificationsRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import AuthActions  from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
@@ -151,13 +150,7 @@ function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
 }
 
 export function * viewThread ( action: ActionType<typeof UIActions.viewThreadRequest> ) {
-  try {
-    // Refresh our messages
-    yield call(TextileNode.refreshMessages)
-    yield put(UIActions.refreshMessagesSuccess(Date.now()))
-  } catch (error) {
-    yield put(UIActions.refreshMessagesFailure(error))
-  }
+  yield call(TextileNodeActions.refreshMessagesRequest, false)
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
@@ -275,12 +268,17 @@ export function * stopNode () {
   }
 }
 
-export function * refreshMessages (action: ActionType<typeof UIActions.refreshMessagesRequest>) {
+export function * refreshMessages () {
   try {
-    yield call(TextileNode.refreshMessages)
-    yield put(UIActions.refreshMessagesSuccess(Date.now()))
+    // Refresh our messages
+    const refreshing = yield select(TextileNodeSelectors.refreshingMessages)
+    // Ensure we don't stack a bunch of calls (swipe, swipe swipe!)
+    if (!refreshing) {
+      yield call(TextileNode.refreshMessages)
+      yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
+    }
   } catch (error) {
-    yield put(UIActions.refreshMessagesFailure(error))
+    yield put(TextileNodeActions.refreshMessagesFailure(error))
   }
 }
 
