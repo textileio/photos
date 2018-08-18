@@ -11,13 +11,10 @@ const { width } = Dimensions.get('window')
 import styles, { cardImageContainerStyle, cardImageStyle } from './statics/styles'
 
 const ThreadCard = props => {
-  const { name, updated, userCount, photos, onPress } = props
+  const { name, updated, photos, onPress } = props
 
   const commentsCount = photos.length
-  let lastUpdatedTime = moment(updated).fromNow()
-  if (commentsCount === 0) {
-    lastUpdatedTime = 'no activity'
-  }
+  const status = commentsCount === 0 ? 'Click to add a photo' : 'Updated ' + moment(updated).fromNow()
 
   return (
     <TouchableOpacity activeOpacity={0.95} style={styles.threadCard} onPress={() => {
@@ -53,13 +50,13 @@ const ThreadCard = props => {
           }) }
         </View>
       </View>
-      {commentsCount !== 0 && <View style={styles.threadCardFooter}>
-        <View style={styles.threadCardFooterRight}>
-          <View style={styles.threadCardFooterRightDetail}>
-            <Text style={styles.detailUpdateTime}>{'Updated ' + lastUpdatedTime}</Text>
+        <View style={styles.threadCardFooter}>
+          <View style={styles.threadCardFooterRight}>
+            <View style={styles.threadCardFooterRightDetail}>
+              <Text style={styles.detailUpdateTime}>{status}</Text>
+            </View>
           </View>
         </View>
-      </View>}
     </TouchableOpacity>
   )
 }

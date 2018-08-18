@@ -169,7 +169,6 @@ class ThreadsList extends React.PureComponent {
   }
 }
 
-
 const mapStateToProps = (state) => {
   const profile = state.preferences.profile
   const threads = state.threads.threads

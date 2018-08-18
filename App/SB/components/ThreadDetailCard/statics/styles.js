@@ -24,6 +24,7 @@ export default StyleSheet.create({
     paddingHorizontal: 11,
     marginBottom: 8
   },
+  cardAvatar: {},
   cardAction: {
     fontFamily: 'BentonSans',
     fontSize: 14,
@@ -55,6 +56,7 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
     fontFamily: 'BentonSans-Light',
     fontSize: 14,
+    lineHeight: 16,
     paddingBottom: 8
   },
   cardFooterBottom: {
