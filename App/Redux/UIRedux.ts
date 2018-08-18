@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { SharedImage } from '../Models/TextileTypes'
+import { RootState } from '../Redux/Types'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
@@ -62,15 +63,6 @@ const actions = {
   }),
   dismissImagePickerError: createAction('DISMISS_IMAGE_PICKER_ERROR', resolve => {
     return () => resolve()
-  }),
-  refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
-    return (hidden?: boolean) => resolve({hidden})
-  }),
-  refreshMessagesSuccess: createAction('REFRESH_MESSAGES_SUCCESS', resolve => {
-    return (timestamp: number) => resolve({ timestamp })
-  }),
-  refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', resolve => {
-    return (error: Error) => resolve({ error })
   })
 }
 
@@ -92,16 +84,14 @@ export type UIState = {
     readonly threadId?: string,
     readonly comment?: string
   },
-  readonly imagePickerError?: string, // used to notify the user of any error during photo picking
-  readonly refreshingMessages: boolean
+  readonly imagePickerError?: string // used to notify the user of any error during photo picking
 }
 
 export const initialState: UIState = {
   chosenProfilePhoto: {},
   viewingPhoto: {
     active: false
-  },
-  refreshingMessages: false
+  }
 }
 
 export function reducer (state: UIState = initialState, action: UIAction): UIState {
@@ -137,12 +127,6 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
       return { ...state, imagePickerError:  msg}
     case getType(actions.dismissImagePickerError):
       return { ...state, imagePickerError: undefined }
-    case getType(actions.refreshMessagesRequest):
-      if (action.payload.hidden) return state // don't store the update status so the ui will ignore it
-      return { ...state, refreshingMessages: true }
-    case getType(actions.refreshMessagesSuccess):
-    case getType(actions.refreshMessagesFailure):
-      return { ...state, refreshingMessages: false }
     default:
       return state
   }

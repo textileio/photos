@@ -1,6 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
 import * as TextileTypes from '../Models/TextileTypes'
+import {RootState} from './Types'
 
 const actions = {
   lock: createAction('LOCK', resolve => {
@@ -53,6 +54,18 @@ const actions = {
   }),
   getPhotoMetadataSuccess: createAction('GET_PHOTO_METADATA_SUCCESS', resolve => {
     return (threadId: string, photoId: string, metadata: TextileTypes.PhotoMetadata) => resolve({ threadId, photoId, metadata })
+  }),
+  refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
+    return () => resolve()
+  }),
+  refreshMessagesSubmitted: createAction('REFRESH_MESSAGES_SUBMITTED', resolve => {
+    return () => resolve()
+  }),
+  refreshMessagesSuccess: createAction('REFRESH_MESSAGES_SUCCESS', resolve => {
+    return (timestamp: number) => resolve({ timestamp })
+  }),
+  refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', resolve => {
+    return (error: Error) => resolve({ error })
   })
 }
 
@@ -78,7 +91,8 @@ type TextileNodeState = {
     readonly state?: 'creating' | 'stopped' | 'starting' | 'started' | 'stopping'
     readonly error?: Error
   }
-  readonly threads: ThreadMap
+  readonly threads: ThreadMap,
+  readonly refreshingMessages: boolean
 }
 
 export const initialState: TextileNodeState = {
@@ -87,6 +101,7 @@ export const initialState: TextileNodeState = {
   online: false,
   nodeState: {},
   threads: {},
+  refreshingMessages: false
 }
 
 export function reducer (state: TextileNodeState = initialState, action: TextileNodeAction): TextileNodeState {
@@ -132,6 +147,11 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
       const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, error } }
       return { ...state, threads }
     }
+    case getType(actions.refreshMessagesSubmitted):
+      return { ...state, refreshingMessages: true }
+    case getType(actions.refreshMessagesSuccess):
+    case getType(actions.refreshMessagesFailure):
+      return { ...state, refreshingMessages: false }
     default:
       return state
   }
@@ -146,15 +166,16 @@ function createEmptyThreadData (): ThreadData {
 
 // TODO: create RootState type that will be passed into these
 export const TextileNodeSelectors = {
-  locked: (state: any) => (state.textileNode as TextileNodeState).locked,
-  appState: (state: any) => (state.textileNode as TextileNodeState).appState,
-  online: (state: any) => (state.textileNode as TextileNodeState).online,
-  threads: (state: any) => (state.textileNode as TextileNodeState).threads,
+  locked: (state: RootState) => (state.textileNode as TextileNodeState).locked,
+  appState: (state: RootState) => (state.textileNode as TextileNodeState).appState,
+  online: (state: RootState) => (state.textileNode as TextileNodeState).online,
+  threads: (state: RootState) => (state.textileNode as TextileNodeState).threads,
   photosByThreadId: (state: any, threadId: string) => {
     const threadData = (state.textileNode as TextileNodeState).threads[threadId]
     if (!threadData) return undefined
     return threadData.photos
-  }
+  },
+  refreshingMessages: (state: RootState) => (state.textileNode as TextileNodeState).refreshingMessages,
 }
 
 export default actions

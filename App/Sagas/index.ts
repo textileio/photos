@@ -90,7 +90,7 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
     takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
 
-    takeEvery(getType(UIActions.refreshMessagesRequest), refreshMessages),
+    takeEvery(getType(TextileNodeActions.refreshMessagesRequest), refreshMessages),
 
     takeEvery(getType(TextileNodeActions.lock), toggleBackgroundTimer),
 
