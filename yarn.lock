@@ -2561,10 +2561,6 @@ caniuse-lite@^1.0.30000792, caniuse-lite@^1.0.30000805:
   version "1.0.30000813"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000813.tgz#7b25e27fdfb8d133f3c932b01f77452140fcc6c9"
 
-canvas-renderer@~2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/canvas-renderer/-/canvas-renderer-2.0.1.tgz#0124a39b2022010d3a3533225da5f4a0aa08263d"
-
 case-sensitive-paths-webpack-plugin@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.1.2.tgz#c899b52175763689224571dad778742e133f0192"
@@ -5536,12 +5532,6 @@ istanbul-reports@^1.1.4:
   dependencies:
     handlebars "^4.0.3"
 
-jdenticon@dmester/jdenticon:
-  version "2.1.0"
-  resolved "https://codeload.github.com/dmester/jdenticon/tar.gz/5bbdf8cb262fb7288c799fe7b2f7baf866c0b313"
-  dependencies:
-    canvas-renderer "~2.0.1"
-
 jest-changed-files@^22.2.0:
   version "22.2.0"
   resolved "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-22.2.0.tgz#517610c4a8ca0925bdc88b0ca53bd678aa8d019e"
@@ -8161,10 +8151,6 @@ react-native-elements@^1.0.0-beta5:
     prop-types "^15.5.8"
     react-native-touchable-scale "2.0.0"
 
-react-native-extra-dimensions-android@^0.21.0:
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-0.21.0.tgz#2992384a90df738cf678a452cadbf251052ce7bc"
-
 "react-native-fabric@https://github.com/textileio/react-native-fabric#68ad79244523b60b47a16d620e8f2e2ab03a4214":
   version "0.5.1"
   resolved "https://github.com/textileio/react-native-fabric#68ad79244523b60b47a16d620e8f2e2ab03a4214"
@@ -8213,13 +8199,6 @@ react-native-modal@^6.0.0:
   dependencies:
     prop-types "^15.6.1"
     react-native-animatable "^1.2.4"
-
-react-native-notifications@^1.1.19:
-  version "1.1.19"
-  resolved "https://registry.yarnpkg.com/react-native-notifications/-/react-native-notifications-1.1.19.tgz#0b702878ae8c4e46874f6e8e96864acd2a001b4c"
-  dependencies:
-    core-js "^1.0.0"
-    uuid "^2.0.3"
 
 react-native-platform-touchable@^1.1.1:
   version "1.1.1"
@@ -10193,10 +10172,6 @@ utils-merge@1.0.1:
 uuid@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
-
-uuid@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
 
 uuid@^3.0.0, uuid@^3.1.0:
   version "3.2.1"

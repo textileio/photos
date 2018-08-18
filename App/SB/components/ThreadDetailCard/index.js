@@ -19,7 +19,16 @@ const ThreadDetailCard = props => {
     case 'title': {
       // TODO: We should do this with Navbar integration later
       return (
-        <Text style={styles.titleCard}>{item.name}</Text>
+        <View>
+          <Text style={styles.titleCard}>{item.name}</Text>
+          {last &&
+          <View style={styles.cardFooter}>
+            <View style={styles.cardFooterBottom}>
+              <Text style={styles.detailUpdateTime}>0 photos</Text>
+            </View>
+          </View>
+          }
+        </View>
       )
     }
     case 'photo': {

@@ -40,7 +40,7 @@ class ThreadsList extends React.PureComponent {
         />
       </HeaderButtons>
     )
-    const headerRight = (
+    const headerRight = params.onTour ? undefined : (
       <TextileHeaderButtons>
         <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
       </TextileHeaderButtons>
@@ -62,16 +62,19 @@ class ThreadsList extends React.PureComponent {
 
   componentDidMount () {
     this.props.navigation.setParams({
-      profile: this.props.profile
+      profile: this.props.profile,
+      onTour: this.props.tourScreen === true
     })
   }
 
   componentDidUpdate (prevProps, prevState, ss) {
     if (
-      this.props.profile !== prevProps.profile
+      this.props.profile !== prevProps.profile ||
+      this.props.tourScreen !== prevProps.tourScreen
     ) {
       this.props.navigation.setParams({
-        profile: this.props.profile
+        profile: this.props.profile,
+        onTour: this.props.tourScreen === true
       })
     }
     if (

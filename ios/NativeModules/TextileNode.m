@@ -3,7 +3,6 @@
 #import "TextileNode.h"
 #import "Events.h"
 #import <Mobile/Mobile.h>
-#import "RNNotifications.h"
 
 // import RCTBridge
 #if __has_include(<React/RCTBridge.h>)

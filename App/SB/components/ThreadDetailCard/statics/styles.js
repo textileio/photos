@@ -7,7 +7,7 @@ export default StyleSheet.create({
   titleCard: {
     fontFamily: 'BentonSans',
     fontSize: 30,
-    marginTop: 11,
+    marginTop: 27,
     marginBottom: 11,
     paddingHorizontal: 11
   },
