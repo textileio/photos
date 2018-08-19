@@ -29,7 +29,6 @@ export default class TextileNodeEventHandler {
       this.store.dispatch(ThreadsActions.refreshThreadsRequest())
     })
     TextileNode.eventEmitter.addListener('onNotification', (payload) => {
-      console.log('n', payload)
       this.store.dispatch(NotificationActions.newNotificationRequest(payload))
     })
   }
