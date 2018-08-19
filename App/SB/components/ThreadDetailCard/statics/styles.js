@@ -48,7 +48,7 @@ export default StyleSheet.create({
   profileName: {
     fontFamily: 'BentonSans',
     fontSize: 14,
-    lineHeight: 16,
+    lineHeight: 16
   },
   captionText: {
     flex: 1,
@@ -57,6 +57,8 @@ export default StyleSheet.create({
     fontFamily: 'BentonSans-Light',
     fontSize: 14,
     lineHeight: 16,
+    overflow: 'visible',
+    paddingTop: 6,
     paddingBottom: 8
   },
   cardFooterBottom: {
