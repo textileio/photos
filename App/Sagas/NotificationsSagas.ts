@@ -24,6 +24,7 @@ export function * enable () {
 }
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
+  console.log(action)
   const service = yield select(PreferencesSelectors.service, 'notifications')
   // TODO: handle within-app notifications
 

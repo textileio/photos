@@ -3,7 +3,6 @@
 exports[`ui stories initial state should match snapshot 1`] = `
 Object {
   "chosenProfilePhoto": Object {},
-  "refreshingMessages": false,
   "viewingPhoto": Object {
     "active": false,
   },
