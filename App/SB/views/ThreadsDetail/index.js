@@ -19,7 +19,6 @@ import ActionSheet from 'react-native-actionsheet'
 import Alert from '../../../SB/components/Alert'
 
 import { RootState } from '../../../Redux/Types'
-import { ProcessingImage } from '../../../Redux/ProcessingImagesRedux'
 import ProcessingImageCard, { ProcessingImageProps } from '../../../Components/ProcessingImage'
 
 class ThreadsEdit extends React.PureComponent {

@@ -37,6 +37,7 @@ import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import DeepLink from '../Services/DeepLink'
 import { uploadFile } from './UploadFile'
+import * as NotificationsServices from '../Services/Notifications'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -270,10 +271,10 @@ export function * stopNode () {
 
 export function * refreshMessages () {
   try {
-    // Refresh our messages
-    const refreshing = yield select(TextileNodeSelectors.refreshingMessages)
     // Ensure we don't stack a bunch of calls (swipe, swipe swipe!)
+    const refreshing = yield select(TextileNodeSelectors.refreshingMessages)
     if (!refreshing) {
+      // refresh the messages
       yield call(TextileNode.refreshMessages)
       yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
     }
@@ -584,79 +585,6 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
     }
   }
 ​}
-
-export function * localPinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
-  const {threadId, image} = action.payload
-  let photoPath = image.uri.replace('file://', '')
-
-  if (Platform.OS === 'android' && image.hasOwnProperty('path') && image.path !== undefined) {
-    photoPath = image.path
-  }
-
-  try {
-    // add the result to our local node
-    const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
-    if (!addResult.archive) {
-      throw new Error('No archive returned')
-    }
-
-    // Get the ID of our Default Thread
-    let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
-    // Add the image to our defaul thread // i.e the wallet
-    yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-
-    // Share the photo to the target Thread
-    yield call(TextileNode.sharePhotoToThread, addResult.id, threadId, image.caption)
-
-    // Store the addResult with the image
-    // yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))
-  } catch (error) {
-    try {
-      // yield put(CameraRollActions.imagePinError(threadId, image))
-      const exists: boolean = yield call(RNFS.exists, photoPath)
-      if (exists) {
-        yield call(RNFS.unlink, photoPath)
-      }
-    } finally {
-      yield put(UIActions.newImagePickerError(error, 'There was an issue with your local IPFS node. Please try again.'))
-    }
-  }
-}
-
-export function * remotePinRequest(action: ActionType<typeof CameraRollActions.localPinSuccess>) {
-  const {threadId, image, addResult} = action.payload
-  // There is a possibility that an image could successfully load into a users thread locally by
-  // here, but not succeed with 'UploadingImagesActions.addImage' so never upload
-  try {
-    if (!addResult.archive) {
-      throw new Error('no archive returned')
-    }
-    // Add the image upload job to the tracked jobs
-    yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-
-    // Begin the image upload to the Cafe pinner
-    yield * uploadFile(
-      addResult.id,
-      addResult.archive.path
-    )
-
-    // Remove the image from the CameraRoll actions
-    // yield put(CameraRollActions.remotePinStarted(threadId, image))
-
-  } catch (error) {
-    try {
-      // yield put(CameraRollActions.imagePinError(threadId, image))
-      if (addResult.archive) {
-        const exists: boolean = yield call(RNFS.exists, addResult.archive.path)
-        if (exists) {
-          yield call(RNFS.unlink, addResult.archive.path)
-        }
-      }
-    } finally {
-      yield put(UIActions.newImagePickerError(error, 'There was an issue with your connection. Please try again.'))
-    }
-  }
-}
 
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
   const { photoId } = action.payload

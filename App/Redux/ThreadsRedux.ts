@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
+import { RootState } from '../Redux/Types'
 
 const actions = {
   addThreadRequest: createAction('ADD_THREAD_REQUEST', resolve => {
@@ -213,7 +214,8 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
 }
 
 export const ThreadsSelectors = {
-  threads: (state: any) => state.threads
+  threads: (state: RootState) => state.threads,
+  threadByName: (state: RootState, name: string) => state.threads.threads.find((thread: TextileTypes.Thread) => thread.name === name)
 }
 
 export default actions

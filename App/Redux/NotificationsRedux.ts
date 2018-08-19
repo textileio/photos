@@ -5,8 +5,8 @@ const actions = {
   newNotificationRequest: createAction('NEW_NOTIFICATION_REQUEST', resolve => {
     return (notification: TextileTypes.Notification) => resolve({notification})
   }),
-  newNotificationSuccess: createAction('NEW_NOTIFICATION_REQUEST', resolve => {
-    return () => resolve()
+  newNotificationEngagement: createAction('NEW_NOTIFICATION_ENGAGEMENT', resolve => {
+    return (engagement: TextileTypes.NotificationEngagement) => resolve({ engagement: engagement })
   })
 }
 
@@ -26,9 +26,6 @@ export function reducer (state: NotificationsState = initialState, action: Notif
       const notification = action.payload.notification
       const latest = state.notifications.slice(0, 99)
       return { ...state, notifications: [notification, ...latest] }
-    case getType(actions.newNotificationSuccess):
-      console.log('woot mofo')
-      return state
     default:
       return state
   }

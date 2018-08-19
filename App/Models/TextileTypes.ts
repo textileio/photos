@@ -24,6 +24,17 @@ export interface Notification {
   read: boolean
 }
 
+export interface NotificationEngagement {
+  alert: string,
+  badge: number,
+  foreground: boolean,
+  message: string,
+  sound: string,
+  userInteraction: boolean,
+  data?: any,
+  finish?: Function
+}
+
 export interface Thread {
   id: string
   name: string
