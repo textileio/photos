@@ -7,7 +7,7 @@ export interface NotificationsPayload {
   category: string
 }
 
-function getAddressable (notification) : string {
+function getAddressable (notification: TextileTypes.Notification) : string {
   let actor = notification.actor_username || notification.actor_username.substring(0, 6)
   if (!actor || actor === '') {
     actor = 'Someone'
