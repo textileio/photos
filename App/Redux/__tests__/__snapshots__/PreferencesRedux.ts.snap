@@ -3,7 +3,44 @@
 exports[`preferences stories initial state should match snapshot 1`] = `
 Object {
   "onboarded": false,
+  "services": Object {
+    "backgroundLocation": Object {
+      "status": false,
+    },
+    "commentAddedNotification": Object {
+      "dependsOn": "notifications",
+      "status": false,
+    },
+    "deviceAddedNotification": Object {
+      "dependsOn": "notifications",
+      "status": false,
+    },
+    "likeAddedNotification": Object {
+      "dependsOn": "notifications",
+      "status": false,
+    },
+    "notifications": Object {
+      "status": false,
+    },
+    "peerJoinedNotification": Object {
+      "dependsOn": "notifications",
+      "status": false,
+    },
+    "peerLeftNotification": Object {
+      "dependsOn": "notifications",
+      "status": false,
+    },
+    "photoAddedNotification": Object {
+      "dependsOn": "notifications",
+      "status": true,
+    },
+    "receivedInviteNotification": Object {
+      "dependsOn": "notifications",
+      "status": true,
+    },
+  },
   "tourScreens": Object {
+    "notifications": true,
     "threads": true,
     "wallet": true,
   },
