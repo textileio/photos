@@ -15,8 +15,7 @@ import DevicesActions from '../Redux/DevicesRedux'
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
-import { handleSharePhotoRequest } from './HandleSharePhotoRequest'
-import { handleImageUploadComplete } from './HandleImageUploadComplete'
+import { handleSharePhotoRequest, handleImageUploadComplete } from './ImageSharingTriggers'
 import {
   signUp,
   logIn,

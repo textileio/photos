@@ -63,7 +63,6 @@ export interface AddResult {
 }
 
 export interface FileArchive {
-  id: string
   path: string
 }
 

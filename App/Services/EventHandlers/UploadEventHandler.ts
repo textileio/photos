@@ -23,16 +23,16 @@ export default class UploadEventHandler {
     if (responseCode >= 200 && responseCode < 300) {
       this.store.dispatch(ProcessingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody))
     } else {
-      this.store.dispatch(ProcessingImagesActions.imageUploadError(e.id, 'Response code: ' + responseCode))
+      this.store.dispatch(ProcessingImagesActions.error(e.id, 'Response code: ' + responseCode))
     }
   }
 
   uploadCancelled (e: any) {
-    this.store.dispatch(ProcessingImagesActions.imageUploadError(e.id, 'Cancelled'))
+    this.store.dispatch(ProcessingImagesActions.error(e.id, 'Cancelled'))
   }
 
   uploadError (e: any) {
-    this.store.dispatch(ProcessingImagesActions.imageUploadError(e.id, e.error))
+    this.store.dispatch(ProcessingImagesActions.error(e.id, e.error))
   }
 
   setup () {
