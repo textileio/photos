@@ -3,8 +3,11 @@ import { SharedImage, AddResult } from '../Models/TextileTypes'
 import { RootState } from './Types'
 
 const actions = {
-  insertAddingImage: createAction('processingImages/INSERT_ADDING_IMAGE', resolve => {
+  insertImage: createAction('processingImages/INSERT_IMAGE', resolve => {
     return (sharedImage: SharedImage, destinationThreadId: string, comment?: string) => resolve({ sharedImage, destinationThreadId, comment })
+  }),
+  addingImage: createAction('processingImages/ADDING_IMAGE', resolve => {
+    return (sharedImage: SharedImage) => resolve({ sharedImage })
   }),
   imageAdded: createAction('processingImages/IMAGE_ADDED', resolve => {
     return (sharedImage: SharedImage, addResult: AddResult) => resolve({ sharedImage, addResult })
@@ -12,14 +15,14 @@ const actions = {
   addingError: createAction('processingImages/ADDING_ERROR', resolve => {
     return (sharedImage: SharedImage, error: any) => resolve({ sharedImage, error })
   }),
+  uploadStarted: createAction('processingImages/UPLOAD_STARTED', resolve => {
+    return (dataId: string) => resolve({ dataId })
+  }),
   imageUploadProgress: createAction('processingImages/IMAGE_UPLOAD_PROGRESS', resolve => {
     return (dataId: string, progress: number) => resolve({ dataId, progress })
   }),
   imageUploadComplete: createAction('processingImages/IMAGE_UPLOAD_COMPLETE', resolve => {
     return (dataId: string, responseCode: string, responseBody: string) => resolve({ dataId, responseCode, responseBody })
-  }),
-  imageUploadError: createAction('processingImages/IMAGE_UPLOAD_ERROR', resolve => {
-    return (dataId: string, errorMessage: string) => resolve({ dataId, errorMessage })
   }),
   addingToWallet: createAction('processingImages/ADDING_TO_WALLET', resolve => {
     return (dataId: string) => resolve({ dataId })
@@ -27,11 +30,11 @@ const actions = {
   addedToWallet: createAction('processingImages/ADDED_TO_WALLET', resolve => {
     return (dataId: string, blockId: string) => resolve({ dataId, blockId })
   }),
+  sharingToThread: createAction('processingImages/SHARING_TO_THREAD', resolve => {
+    return (dataId: string) => resolve({ dataId })
+  }),
   sharedToThread: createAction('processingImages/SHARED_TO_THREAD', resolve => {
     return (dataId: string, blockId: string) => resolve({ dataId, blockId })
-  }),
-  sharingError: createAction('processingImages/SHARING_ERROR', resolve => {
-    return (dataId: string, error: any) => resolve({ dataId, error })
   }),
   complete: createAction('processingImages/COMPLETE', resolve => {
     return (dataId: string) => resolve({ dataId })
@@ -44,7 +47,10 @@ const actions = {
   }),
   cancelComplete: createAction('processingImages/CANCEL_COMPLETE', resolve => {
     return (dataId: string) => resolve({ dataId })
-  })
+  }),
+  error: createAction('processingImages/ERROR', resolve => {
+    return (dataId: string, error: any) => resolve({ dataId, error })
+  }),
 }
 
 export type ProcessingImagesAction = ActionType<typeof actions>
@@ -53,7 +59,7 @@ export type ProcessingImage = {
   readonly sharedImage: SharedImage
   readonly destinationThreadId: string
   readonly comment?: string
-  readonly state: 'adding' | 'uploading' | 'addingToWallet' | 'sharing' | 'complete'
+  readonly state: 'pending' | 'adding' | 'added' | 'uploading' | 'uploaded' | 'addingToWallet' | 'addedToWallet' | 'sharing' | 'shared'
   readonly error?: string
   readonly addData?: {
     readonly addResult: AddResult
@@ -62,7 +68,6 @@ export type ProcessingImage = {
     readonly uploadProgress: number
     readonly responseCode?: string
     readonly responseBody?: string
-    readonly errorMessage?: string
   }
   readonly addToWalletData?: {
     readonly blockId: string
@@ -94,18 +99,26 @@ export const ProcessingImagesSelectors = {
 
 export function reducer(state: ProcessingImagesState = initialState, action: ProcessingImagesAction): ProcessingImagesState {
   switch (action.type) {
-    case getType(actions.insertAddingImage): {
-      const processingImage: ProcessingImage = {
-        ...action.payload,
-        state: 'adding'
-      }
+    case getType(actions.insertImage): {
+      const processingImage: ProcessingImage = { ...action.payload, state: 'pending' }
       return { ...state, images: [...state.images, processingImage]}
+    }
+    case getType(actions.addingImage): {
+      const { sharedImage } = action.payload
+      const images = state.images.map(image => {
+        if (image.sharedImage === sharedImage) {
+          const processingImage: ProcessingImage = { ...image, state: 'adding' }
+          return processingImage
+        }
+        return image
+      })
+      return { ...state, images }
     }
     case getType(actions.imageAdded): {
       const { sharedImage, addResult } = action.payload
       const images = state.images.map(image => {
         if (image.sharedImage === sharedImage) {
-          const processingImage: ProcessingImage = { ...image, addData: { addResult }, state: 'uploading' }
+          const processingImage: ProcessingImage = { ...image, addData: { addResult }, state: 'added' }
           return processingImage
         }
         return image
@@ -118,6 +131,20 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
       const images = state.images.map(image => {
         if (image.sharedImage === sharedImage) {
           return { ...image, error: e }
+        }
+        return image
+      })
+      return { ...state, images }
+    }
+    case getType(actions.uploadStarted): {
+      const { dataId } = action.payload
+      const images = state.images.map(image => {
+        if (!image.addData) {
+          return image
+        }
+        if (image.addData.addResult.id === dataId) {
+          const processingImage: ProcessingImage = { ...image, uploadData: { uploadProgress: 0 }, state: 'uploading' }
+          return processingImage
         }
         return image
       })
@@ -144,21 +171,7 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
           return image
         }
         if (image.addData.addResult.id === dataId) {
-          const updated: ProcessingImage = { ...image, uploadData: { ...image.uploadData, uploadProgress: 1, responseCode, responseBody } }
-          return updated
-        }
-        return image
-      })
-      return { ...state, images }
-    }
-    case getType(actions.imageUploadError): {
-      const { dataId, errorMessage } = action.payload
-      const images = state.images.map(image => {
-        if (!image.addData) {
-          return image
-        }
-        if (image.addData.addResult.id === dataId) {
-          const updated: ProcessingImage = { ...image, error: errorMessage }
+          const updated: ProcessingImage = { ...image, uploadData: { ...image.uploadData, uploadProgress: 1, responseCode, responseBody }, state: 'uploaded' }
           return updated
         }
         return image
@@ -186,7 +199,21 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
           return image
         }
         if (image.addData.addResult.id === dataId) {
-          const updated: ProcessingImage = { ...image, addToWalletData: { blockId }, state: 'sharing' }
+          const updated: ProcessingImage = { ...image, addToWalletData: { blockId }, state: 'addedToWallet' }
+          return updated
+        }
+        return image
+      })
+      return { ...state, images }
+    }
+    case getType(actions.sharingToThread): {
+      const { dataId } = action.payload
+      const images = state.images.map(image => {
+        if (!image.addData) {
+          return image
+        }
+        if (image.addData.addResult.id === dataId) {
+          const updated: ProcessingImage = { ...image, state: 'sharing' }
           return updated
         }
         return image
@@ -200,22 +227,8 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
           return image
         }
         if (image.addData.addResult.id === dataId) {
-          const updated: ProcessingImage = { ...image, shareToThreadData: { blockId }, state: 'complete' }
+          const updated: ProcessingImage = { ...image, shareToThreadData: { blockId }, state: 'shared' }
           return updated
-        }
-        return image
-      })
-      return { ...state, images }
-    }
-    case getType(actions.sharingError): {
-      const { dataId, error } = action.payload
-      const e = (error.message as string) || (error as string) || 'unknown'
-      const images = state.images.map(image => {
-        if (!image.addData) {
-          return image
-        }
-        if (image.addData.addResult.id === dataId) {
-          return { ...image, error: e }
         }
         return image
       })
@@ -240,6 +253,20 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
         }
         if (image.addData.addResult.id === dataId) {
           return { ...image, error: undefined }
+        }
+        return image
+      })
+      return { ...state, images }
+    }
+    case getType(actions.error): {
+      const { dataId, error } = action.payload
+      const e = (error.message as string) || (error as string) || 'unknown'
+      const images = state.images.map(image => {
+        if (!image.addData) {
+          return image
+        }
+        if (image.addData.addResult.id === dataId) {
+          return { ...image, error: e }
         }
         return image
       })
