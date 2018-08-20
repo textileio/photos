@@ -1,4 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
+import { RootState } from '../Redux/Types'
 import { Profile } from '../Models/TextileTypes'
 
 const actions = {
@@ -127,10 +128,10 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
 
 export const PreferencesSelectors = {
   // TODO: Need typed state
-  onboarded: (state: any) => state.preferences.onboarded,
-  pending: (state: any) => state.preferences.pending,
-  profile: (state: any) => state.preferences.profile,
-  service: (state: any, name: ServiceType) => state.preferences.services[name]
+  onboarded: (state: RootState) => state.preferences.onboarded,
+  pending: (state: RootState) => state.preferences.pending,
+  profile: (state: RootState) => state.preferences.profile,
+  service: (state: RootState, name: ServiceType) => state.preferences.services[name]
 }
 
 export default actions

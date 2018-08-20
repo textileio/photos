@@ -8,34 +8,27 @@ Object {
       "status": false,
     },
     "commentAddedNotification": Object {
-      "dependsOn": "notifications",
       "status": false,
     },
     "deviceAddedNotification": Object {
-      "dependsOn": "notifications",
       "status": false,
     },
     "likeAddedNotification": Object {
-      "dependsOn": "notifications",
       "status": false,
     },
     "notifications": Object {
       "status": false,
     },
     "peerJoinedNotification": Object {
-      "dependsOn": "notifications",
       "status": false,
     },
     "peerLeftNotification": Object {
-      "dependsOn": "notifications",
       "status": false,
     },
     "photoAddedNotification": Object {
-      "dependsOn": "notifications",
       "status": true,
     },
     "receivedInviteNotification": Object {
-      "dependsOn": "notifications",
       "status": true,
     },
   },
