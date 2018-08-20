@@ -5,6 +5,7 @@ import PreferencesActions from '../../../Redux/PreferencesRedux'
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import SettingsRow from './SettingsRow'
+import GetServiceInfo from './GetServiceInfo'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
@@ -71,66 +72,8 @@ class AccountSettings extends React.PureComponent {
     this.setState({infoVisible: false})
   }
 
-  getInfo (service) {
-    switch (service) {
-      // case 'backgroundLocation':
-      //   return {
-      //     title: 'Always allow location',
-      //     subtitle: 'Better background updates',
-      //     details: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network. Without background location the app will never get any new information, it will be a pretty boring place. We never keep, store, process, or share your location data with anyone or any device.'
-      //   }
-      case 'notifications':
-        return {
-          title: 'Notifications',
-          subtitle: 'Enable notifications',
-          details: 'Choose Textile events that trigger notifications. Notifications can be enabled or disabled at any time.'
-        }
-      // case 'receivedInviteNotification':
-      //   return {
-      //     title: 'New Thread Invite',
-      //     subtitle: 'Someone shares a photo with you'
-      //   }
-      case 'deviceAddedNotification':
-        return {
-          title: 'New Device Paired',
-          subtitle: 'Someone shares a photo with you'
-        }
-      case 'photoAddedNotification':
-        return {
-          title: 'New Shared Photos',
-          subtitle: 'Someone shares a photo with you'
-        }
-      // case 'commentAddedNotification':
-      //   return {
-      //     title: 'New Photo Comment',
-      //     subtitle: 'Someone shares a photo with you'
-      //   }
-      // case 'likeAddedNotification':
-      //   return {
-      //     title: 'New Photo Like',
-      //     subtitle: 'Someone shares a photo with you'
-      //   }
-      case 'peerJoinedNotification':
-        return {
-          title: 'Contact Joined Thread',
-          subtitle: 'Someone shares a photo with you'
-        }
-      case 'peerLeftNotification':
-        return {
-          title: 'Contact Left Thread',
-          subtitle: 'Someone shares a photo with you'
-        }
-      default:
-        return {
-          title: '',
-          subtitle: '',
-          info: ''
-        }
-    }
-  }
-
-  showInfo (service) {
-    const info = this.getInfo(service)
+  showInfo (service: string) {
+    const info = GetServiceInfo(service)
     this.setState({infoVisible: true, info})
   }
 
@@ -143,12 +86,10 @@ class AccountSettings extends React.PureComponent {
         <ScrollView style={styles.contentContainer}>
           <View style={styles.listContainer}>
             {Object.keys(this.props.services)
-              .filter((name) => this.getInfo(name).title !== '')
               .map((service, i) => {
                 const value = !!this.props.services[service].status
                 let children = Object.keys(this.props.children)
-                  .filter((name) => this.getInfo(name).title !== '')
-                  .filter((key) => this.props.children[key].dependsOn === service)
+                  .filter((key) => this.props.children[key].info.dependsOn === service)
                   .reduce((previous, current) => {
                     previous[current] = this.props.children[current]
                     return previous
@@ -156,9 +97,9 @@ class AccountSettings extends React.PureComponent {
 
                 return (
                   <View key={i} >
-                    <SettingsRow service={service} info={this.getInfo(service)} value={value} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
+                    <SettingsRow service={service} info={this.props.services[service].info} value={value} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
                     {children && Object.keys(children).map((child, i) =>
-                      <SettingsRow key={i * 33} child service={child} info={this.getInfo(child)} disabled={!value} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
+                      <SettingsRow key={i * 33} child service={child} info={this.props.children[child].info} disabled={!value} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
                       )}
                   </View>
                   )
@@ -173,17 +114,25 @@ class AccountSettings extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  const allServices = state.preferences.services
   // get all top level services
-  const services = Object.keys(allServices)
-    .filter((key) => !allServices[key].dependsOn)
+  const allServices: {[index: string]: string} = Object.keys(state.preferences.services)
+    .reduce((previous, current) => {
+      let basic = state.preferences.services[current]
+      basic.info = GetServiceInfo(current)
+      previous[current] = basic
+      return previous
+    }, {})
+
+  const services: {[index: string]: string} = Object.keys(allServices)
+    .filter((key) => allServices[key].info !== undefined && allServices[key].info.dependsOn === undefined)
     .reduce((previous, current) => {
       previous[current] = allServices[current]
       return previous
     }, {})
+
   // get any services that depend on top level services
   const children = Object.keys(allServices)
-    .filter((key) => !!allServices[key].dependsOn)
+    .filter((key) => allServices[key].info !== undefined && allServices[key].info.dependsOn !== undefined)
     .reduce((previous, current) => {
       previous[current] = allServices[current]
       return previous

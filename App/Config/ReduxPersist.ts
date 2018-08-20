@@ -120,32 +120,25 @@ const migrations: MigrationManifest = {
             status: false,
           },
           photoAddedNotification: {
-            status: true,
-            dependsOn: 'notifications'
+            status: true
           },
           receivedInviteNotification: {
-            status: true,
-            dependsOn: 'notifications'
+            status: true
           },
           deviceAddedNotification: {
-            status: false,
-            dependsOn: 'notifications'
+            status: false
           },
           commentAddedNotification: {
-            status: false,
-            dependsOn: 'notifications'
+            status: false
           },
           likeAddedNotification: {
-            status: false,
-            dependsOn: 'notifications'
+            status: false
           },
           peerJoinedNotification: {
-            status: false,
-            dependsOn: 'notifications'
+            status: false
           },
           peerLeftNotification: {
-            status: false,
-            dependsOn: 'notifications'
+            status: false
           },
           backgroundLocation: {
             status: false
