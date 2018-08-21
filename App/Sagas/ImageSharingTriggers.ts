@@ -6,7 +6,7 @@ import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } f
 import UIActions from '../Redux/UIRedux'
 import { insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread } from './ImageSharingSagas'
 
-export function * handleSharePhotoRequest(action: ActionType<typeof UIActions.sharePhotoRequest>) {
+export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
   if (!image || !threadId) {
     return
