@@ -1,7 +1,7 @@
 import { Store } from 'redux'
 import { Linking, Platform } from 'react-native'
 
-import TriggersActions from '../../Redux/TriggersRedux'
+import UIActions from '../../Redux/UIRedux'
 import {RootState} from '../../Redux/Types'
 
 export default class DeepLinkEventHandler {
@@ -14,11 +14,11 @@ export default class DeepLinkEventHandler {
 
   _handleIOS (event: any) {
     this._handleUrl(event.url)
-    this.store.dispatch(TriggersActions.routeDeepLinkRequest(event.url))
+    this.store.dispatch(UIActions.routeDeepLinkRequest(event.url))
   }
 
   _handleUrl (url: string) {
-    this.store.dispatch(TriggersActions.routeDeepLinkRequest(url))
+    this.store.dispatch(UIActions.routeDeepLinkRequest(url))
   }
 
   setup () {
