@@ -1,15 +1,19 @@
 import { Store } from 'redux'
 import { Linking, Platform } from 'react-native'
 
-import DeepLink from '../DeepLink'
+import TriggersActions from '../../Redux/TriggersRedux'
+import {RootState} from '../../Redux/Types'
 
 export default class DeepLinkEventHandler {
-  constructor() {
+  store: Store<RootState>
+
+  constructor(store: Store<RootState>) {
+    this.store = store
     this.setup()
   }
 
   openUrl (url: string) {
-    DeepLink.route(url)
+    this.store.dispatch(TriggersActions.routeDeepLinkRequest(url))
   }
 
   setup () {
@@ -25,6 +29,6 @@ export default class DeepLinkEventHandler {
   }
 
   tearDown () {
-    
+
   }
 }

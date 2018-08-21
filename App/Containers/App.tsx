@@ -22,7 +22,7 @@ class App extends Component {
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
-  deepLinkEventHandler = new DeepLinkEventHandler()
+  deepLinkEventHandler = new DeepLinkEventHandler(store)
 
   render () {
     return (

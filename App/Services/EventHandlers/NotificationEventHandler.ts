@@ -1,6 +1,7 @@
 import { Store } from 'redux'
+import { PushNotificationIOS, Platform } from 'react-native'
 import PushNotification from 'react-native-push-notification'
-import {PushNotificationIOS, Platform} from 'react-native'
+
 import { RootState } from '../../Redux/Types'
 import TriggersActions from '../../Redux/TriggersRedux'
 import * as TextileTypes from '../../Models/TextileTypes'
