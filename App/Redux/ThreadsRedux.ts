@@ -214,8 +214,9 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
 }
 
 export const ThreadsSelectors = {
-  threads: (state: RootState) => state.threads,
-  threadByName: (state: RootState, name: string) => state.threads.threads.find((thread: TextileTypes.Thread) => thread.name === name)
+  threads: (state: RootState): ThreadsState => state.threads,
+  threadById: (state: RootState, id: string): TextileTypes.Thread | undefined => state.threads.threads.find((thread: TextileTypes.Thread) => thread.id === id),
+  threadByName: (state: RootState, name: string): TextileTypes.Thread | undefined => state.threads.threads.find((thread: TextileTypes.Thread) => thread.name === name)
 }
 
 export default actions

@@ -9,21 +9,18 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import {AppState, Share, PermissionsAndroid, Platform, PushNotificationIOS} from 'react-native'
-import { call, put, select, take, fork } from 'redux-saga/effects'
-import { Alert } from 'react-native'
-import NavigationService from '../Services/NavigationService'
+import { Platform } from 'react-native'
+import { call, put, select } from 'redux-saga/effects'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions  from '../Redux/NotificationsRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import UIActions from '../Redux/UIRedux'
-import { ActionType, getType } from 'typesafe-actions'
+import { ActionType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
 import * as NotificationsServices from '../Services/Notifications'
-import PreferencesActions from '../Redux/PreferencesRedux'
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
-import {delay} from 'redux-saga'
 import TextileNode from '../../TextileNode'
+import {delay} from 'redux-saga'
 
 export function * enable () {
   yield call(NotificationsServices.enable)
@@ -40,8 +37,13 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
   const preferences = yield select(PreferencesSelectors.service, type as ServiceType)
   if (!preferences || preferences.status !== true) return
 
-  // fire the notification
-  NotificationsServices.createNew(notification)
+  yield delay(1500)
+  // Ensure we aren't in the foreground (Android only req)
+  const queriedAppState = yield select(TextileNodeSelectors.appState)
+  if (Platform.OS === 'ios' || queriedAppState.match(/background/)) {
+    // fire the notification
+    NotificationsServices.createNew(notification)
+  }
 }
 
 export function * handleEngagement (action: ActionType<typeof NotificationsActions.notificationEngagement>) {
@@ -59,9 +61,10 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Handles a view request for in App notification clicking or Engagement notification clicking
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
+  console.log('axh click', notification)
   try {
     if (notification.type in [2,3,4,5,6] && notification.target_id && notification.target_id !== '') {
-      const thread = yield select(ThreadsSelectors.threadByName, notification.category)
+      const thread = yield select(ThreadsSelectors.threadById, notification.target_id)
       yield call(TextileNode.readNotification, notification.id)
       yield put(UIActions.viewThreadRequest(thread.id, thread.name))
     }
@@ -75,6 +78,6 @@ export function * refreshNotifications () {
     const notificationResponse = yield call(TextileNode.getNotifications, -1)
     yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.items))
   } catch (error) {
-    // Nothing to do
+    yield put(NotificationsActions.refreshNotificationsFailure())
   }
 }

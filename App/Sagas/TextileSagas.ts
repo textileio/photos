@@ -185,6 +185,49 @@ export function * initializeAppState () {
 
 export function * handleNewAppState (action: ActionType<typeof TextileNodeActions.appStateChange>) {
   const { previousState, newState } = action.payload
+
+  if (newState === 'background') {
+    const notification = {
+      //{…}
+      // meta: undefined
+      // payload: {…}
+      // notification: {…}
+      actor_id: "QmaUL2834zY6cAueGDjtPo51x4YGk9T1tnJpD9CUegTbGy",
+      actor_username: "",
+      body: "added a photo",
+      category: "Weekend Adventures",
+      date: "2018-08-20T15:26:24.376466Z",
+      id: "19585QVEFWwLSSh6LfiSKRwhXpW",
+      read: false,
+      target_id: "QmXuWMFdp8o9dsNuoEceVnW5wADsf6zKWckax1bucgycLi",
+      type: 2
+      // <prototype>: Object { … }
+      // <prototype>: Object { … }
+      // type: "NEW_NOTIFICATION_REQUEST"
+      // <prototype>: Object { … }
+      // 4aecfc4e-f1af-8645-9e1c-4dcebd75f0e5:184973:13
+    } as TextileTypes.Notification
+    //{…}
+    // meta: undefined
+    // payload: {…}
+    // notification: {…}
+    // actor_id: "QmaUL2834zY6cAueGDjtPo51x4YGk9T1tnJpD9CUegTbGy"
+    // actor_username: ""
+    // body: "added a photo"
+    // category: "Weekend Adventures"
+    // date: "2018-08-20T15:26:24.376466Z"
+    // id: "19585QVEFWwLSSh6LfiSKRwhXpW"
+    // read: false
+    // target_id: "QmXuWMFdp8o9dsNuoEceVnW5wADsf6zKWckax1bucgycLi"
+    // type: 2
+    // <prototype>: Object { … }
+    // <prototype>: Object { … }
+    // type: "NEW_NOTIFICATION_REQUEST"
+    // <prototype>: Object { … }
+    // 4aecfc4e-f1af-8645-9e1c-4dcebd75f0e5:184973:13
+    yield put(NotificationsActions.newNotificationRequest(notification))
+    // NotificationsServices.createNew(notification)
+  }
   if (previousState.match(/default|unknown/) && newState === 'background') {
     yield * triggerCreateNode()
   } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {

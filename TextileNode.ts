@@ -175,6 +175,7 @@ export default {
 
   getNotifications: async function (limit: number, offset: string = ''): Promise<TextileTypes.GetNotificationsResult> {
     const jsonString = await TextileNode.getNotifications(offset, limit)
+    console.log('axh', JSON.parse(jsonString))
     return JSON.parse(jsonString) as TextileTypes.GetNotificationsResult
   },
 
