@@ -1,6 +1,6 @@
 import { Store } from 'redux'
 import PushNotification from 'react-native-push-notification'
-import {PushNotificationIOS} from 'react-native'
+import {PushNotificationIOS, Platform} from 'react-native'
 import { RootState } from '../../Redux/Types'
 import TriggersActions from '../../Redux/TriggersRedux'
 import * as TextileTypes from '../../Models/TextileTypes'
@@ -17,7 +17,7 @@ export default class NotificationEventHandler {
     if (notification.userInteraction === true) {
       this.store.dispatch(TriggersActions.newEngagement(notification))
     }
-    if (notification.finish) {
+    if (notification.finish && Platform.OS === 'ios') {
       notification.finish(PushNotificationIOS.FetchResult.NoData)
     }
   }

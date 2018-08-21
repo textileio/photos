@@ -166,16 +166,16 @@ function createEmptyThreadData (): ThreadData {
 
 // TODO: create RootState type that will be passed into these
 export const TextileNodeSelectors = {
-  locked: (state: RootState) => (state.textileNode as TextileNodeState).locked,
-  appState: (state: RootState) => (state.textileNode as TextileNodeState).appState,
-  online: (state: RootState) => (state.textileNode as TextileNodeState).online,
-  threads: (state: RootState) => (state.textileNode as TextileNodeState).threads,
+  locked: (state: RootState) => state.textileNode.locked,
+  appState: (state: RootState) => state.textileNode.appState,
+  online: (state: RootState) => state.textileNode.online,
+  threads: (state: RootState) => state.textileNode.threads,
   photosByThreadId: (state: any, threadId: string) => {
-    const threadData = (state.textileNode as TextileNodeState).threads[threadId]
+    const threadData = state.textileNode.threads[threadId]
     if (!threadData) return undefined
     return threadData.photos
   },
-  refreshingMessages: (state: RootState) => (state.textileNode as TextileNodeState).refreshingMessages,
+  refreshingMessages: (state: RootState) => state.textileNode.refreshingMessages,
 }
 
 export default actions

@@ -4,7 +4,7 @@ import * as TextileTypes from '../Models/TextileTypes'
 const actions = {
   backgroundTask: createAction('BACKGROUND_TASK'),
   locationUpdate: createAction('LOCATION_UPDATE'),
-  newEngagement: createAction('NEW_NOTIFICATION_ENGAGEMENT', resolve => {
+  newEngagement: createAction('NOTIFICATION_ENGAGEMENT', resolve => {
     return (engagement: TextileTypes.NotificationEngagement) => resolve({ engagement: engagement })
   })
 }

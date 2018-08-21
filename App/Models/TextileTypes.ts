@@ -13,15 +13,20 @@ export enum NotificationType {
   peerLeftNotification
 }
 
+export interface GetNotificationsResult {
+  items: Notification[]
+}
+
 export interface Notification {
-  id: string
-  date: string
   actor_id: string
   actor_username: string
-  target_id: string
-  type: number
+  body: string
   category: string
+  date: string
+  id: string
   read: boolean
+  target_id: string
+  type: NotificationType
 }
 
 export interface NotificationEngagement {

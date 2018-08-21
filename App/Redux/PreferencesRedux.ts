@@ -35,10 +35,9 @@ const actions = {
 export type PreferencesAction = ActionType<typeof actions>
 
 export type TourScreens = 'wallet' | 'threads'
-export type ServiceType = 'backgroundLocation' | 'notifications' | 'newSharedPhoto'
+export type ServiceType = 'backgroundLocation' | 'notifications' | 'photoAddedNotification' | 'receivedInviteNotification' | 'deviceAddedNotification' | 'commentAddedNotification' | 'likeAddedNotification' | 'peerJoinedNotification' | 'peerLeftNotification'
 export type Service = {
   status: boolean,
-  dependsOn?: ServiceType
 }
 export type PreferencesState = {
   onboarded: boolean
@@ -61,35 +60,28 @@ export const initialState: PreferencesState = {
   },
   services: {
     notifications: {
-      status: false,
+      status: false
     },
     photoAddedNotification: {
-      status: true,
-      dependsOn: 'notifications'
+      status: true
     },
     receivedInviteNotification: {
-      status: true,
-      dependsOn: 'notifications'
+      status: true
     },
     deviceAddedNotification: {
-      status: false,
-      dependsOn: 'notifications'
+      status: false
     },
     commentAddedNotification: {
-      status: false,
-      dependsOn: 'notifications'
+      status: false
     },
     likeAddedNotification: {
-      status: false,
-      dependsOn: 'notifications'
+      status: false
     },
     peerJoinedNotification: {
-      status: false,
-      dependsOn: 'notifications'
+      status: false
     },
     peerLeftNotification: {
-      status: false,
-      dependsOn: 'notifications'
+      status: false
     },
     backgroundLocation: {
       status: false
@@ -116,11 +108,12 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       if(!tours.hasOwnProperty(action.payload.tourKey)) return state
       tours[action.payload.tourKey] = false
       return { ...state, tourScreens: tours }
-    case getType(actions.toggleServicesRequest):
+    case getType(actions.toggleServicesRequest): {
       let service = state.services[action.payload.name]
       if (!service) return state
       service.status = action.payload.status === undefined ? !service.status : action.payload.status
-      return { ...state, services: {...state.services, [action.payload.name]: service} }
+      return {...state, services: {...state.services, [action.payload.name]: service}}
+    }
     default:
       return state
   }

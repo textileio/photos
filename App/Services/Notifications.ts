@@ -1,103 +1,87 @@
 import PushNotification from 'react-native-push-notification'
-import * as TextileTypes from '../Models/TextileTypes'
+import {NotificationType, Notification, NotificationEngagement} from '../Models/TextileTypes'
+import {Platform} from 'react-native'
 
 export interface NotificationsPayload {
   title: string,
   message: string,
-  category: string
+  typeString: string
 }
 
-function getAddressable (notification: TextileTypes.Notification) : string {
-  let actor = notification.actor_username || notification.actor_username.substring(0, 6)
-  if (!actor || actor === '') {
-    actor = 'Someone'
-  }
-  return actor
-}
+export function toPayload(notification: Notification): NotificationsPayload | undefined {
+  const typeString = NotificationType[notification.type] as string
+  const actor = notification.actor_username || 'A peer'
+  // Skip sending incomplete message
+  // if (!actor || actor === '') return undefined
 
-function notificationToPayload(notification: TextileTypes.Notification): NotificationsPayload {
-  const category = TextileTypes.NotificationType[notification.type] as string
   switch (notification.type) {
-    case(0): {
-      const actor = getAddressable(notification)
-      const target = notification.category && notification.category != ' to a new Thread ' ? ' to ' + notification.category : ''
-      return {
-        title: "New Invite",
-        message: actor + " sent you an invite" + target,
-        category
-      }
+    case(NotificationType.receivedInviteNotification): {
+      const target = notification.category && notification.category != '' ? 'to ' + notification.category : 'to a new Thread'
+      const title = 'New Invite'
+      const message =  [actor, notification.body, target].join(' ') + '.'
+      return {title, message, typeString}
     }
-    case(1): {
-      return {
-        title: "New Device",
-        message: "A new device has paired with your wallet",
-        category
-      }
+    case(NotificationType.deviceAddedNotification): {
+      const title = 'New Device'
+      const message = 'A new device has paired with your wallet'
+      return {title, message, typeString}
     }
-    case(2): {
-      const actor = getAddressable(notification)
-      const target = notification.category && notification.category != '' ? ' in ' + notification.category : ''
-      return {
-        title: "New Photo",
-        message: actor + " sent you a new photo" + target,
-        category
-      }
+    case(NotificationType.photoAddedNotification): {
+      const target = notification.category && notification.category != '' ? 'to ' + notification.category : ''
+      const title = 'New Photo'
+      const message =  [actor, notification.body, target].join(' ') + '.'
+      return {title, message, typeString}
     }
-    case(3): {
-      const actor = getAddressable(notification)
-      return {
-        title: "New comment",
-        message: actor + " commented on a photo",
-        category
-      }
+    case(NotificationType.commentAddedNotification): {
+      const title =  'New comment'
+      const message = [actor, notification.body].join(' ') + '.'
+      return {title, message, typeString}
     }
-    case(4): {
-      const actor = getAddressable(notification)
-      return {
-        title: "New like",
-        message: actor + " liked a photo",
-        category
-      }
+    case(NotificationType.likeAddedNotification): {
+      const title = 'New like'
+      const message = [actor, notification.body].join(' ') + '.'
+      return {title, message, typeString}
     }
-    case(5): {
-      const actor = getAddressable(notification)
-      const target = notification.category && notification.category != ' a thread' ? ' ' + notification.category : ''
-      return {
-        title: "New Peer",
-        message: actor + " joined" + target,
-        category
-      }
+    case(NotificationType.peerJoinedNotification): {
+      const target = notification.category && notification.category != 'a thread' ? ' ' + notification.category : ''
+      const title = 'New Peer'
+      const message =  [actor, notification.body, target].join(' ') + '.'
+      return {title, message, typeString}
     }
-    case(6): {
-      const actor = getAddressable(notification)
-      const target = notification.category && notification.category != ' a thread' ? ' ' + notification.category : ''
-      return {
-        title: "Peer left",
-        message: actor + " left" + target,
-        category
-      }
+    case(NotificationType.peerLeftNotification): {
+      const target = notification.category && notification.category != 'a thread' ? ' ' + notification.category : ''
+      const title = 'Peer left'
+      const message =  [actor, notification.body, target].join(' ') + '.'
+      return {title, message, typeString}
     }
     default: {
-      return {
-        title: '',
-        message: '',
-        category: 'unknown'
-      }
+      return undefined
     }
   }
 }
 
-export async function newLocalNotification(notification: TextileTypes.Notification): Promise<void> {
+export function getData(engagement: NotificationEngagement): any {
+  if (Platform.OS === 'ios') {
+  } else {
+    console.log('HELLLLOOO ANDROID', engagement)
+    const { data } = engagement
+    return data
+  }
+}
+
+export async function createNew(notification: Notification): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
-      const payload = notificationToPayload(notification)
+      const payload = toPayload(notification)
+      if (!payload) return
+      setTimeout(function(){
       PushNotification.localNotification({
         title: payload.title,
         message: payload.message,
         /* Android Only Property */
-        group: payload.category, // (optional) add group to message
+        group: payload.typeString, // (optional) add group to message
         /* iOS Only Property */
-        category: payload.category, // (optional) default: null
+        category: payload.typeString, // (optional) default: null
         userInfo: { notification },
 
         /* Android Only Properties */
@@ -111,6 +95,7 @@ export async function newLocalNotification(notification: TextileTypes.Notificati
         // alertAction: 'view' // (optional) default: view
         playSound: false
       })
+      }, 1500)
     } catch (error) {
       // nothing to do
     }
