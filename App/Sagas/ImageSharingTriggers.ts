@@ -51,6 +51,28 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
 
 export function * cancelImageShare (action: ActionType<typeof ProcessingImagesActions.cancelRequest>) {
   const { uuid } = action.payload
-  // TODO: Implement cancel logic, it's currently just being deleted in the reducer
+  try {
+    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
+    if (!processingImage) {
+      return
+    }
+
+    // Delete the shared image if needed
+    const exists: boolean = yield call(RNFS.exists, processingImage.sharedImage.path)
+    if (exists && processingImage.sharedImage.canDelete) {
+      yield call(RNFS.unlink, processingImage.sharedImage.path)
+    }
+
+    // Delete the Textile payload
+    if (processingImage.addData && processingImage.addData.addResult.archive) {
+      const exists: boolean = yield call(RNFS.exists, processingImage.addData.addResult.archive.path)
+      if (exists) {
+        yield call(RNFS.unlink, processingImage.addData.addResult.archive.path)
+      }
+    }
+
+    // What else? Undo local add, remote pin, remove from wallet?
+
+  } catch (e) {}
   yield put(ProcessingImagesActions.cancelComplete(uuid))
 }
