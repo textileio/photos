@@ -46,8 +46,8 @@ export type PreferencesState = {
   publicKey?: string
   profile?: Profile
   pending?: string,
-  readonly services: {[index: string]: Service}
-  readonly tourScreens: {[index: string]: boolean} // true = still need to show, false = no need
+  readonly services: {[k in ServiceType]: Service}
+  readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need
 }
 
 export const initialState: PreferencesState = {
