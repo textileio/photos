@@ -42,7 +42,7 @@ export interface Photo {
   block_id: string
   date: string
   author_id: string
-  caption: string
+  caption?: string
   metadata: PhotoMetadata
 }
 
@@ -63,7 +63,6 @@ export interface AddResult {
 }
 
 export interface FileArchive {
-  id: string
   path: string
 }
 
