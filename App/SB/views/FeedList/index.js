@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, ScrollView } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import FeedItem from '../../components/FeedItem'
 import Toast from 'react-native-easy-toast'
 
@@ -26,15 +26,38 @@ class Notifications extends React.PureComponent {
     this.props.clickNotification(notification)
   }
 
+  _onRefresh = () => {
+    this.props.refreshNotifications()
+  }
+
+  _keyExtractor = (item, index) => item.id
+
+  _renderItem = ({item}) => {
+    return (
+      <FeedItem profile={this.props.profile} notification={item} onClick={this._onClick.bind(this)}/>
+    )
+  }
+
   render () {
     return (
       <View style={styles.container}>
         {/*<FeedItemUpdate />*/}
-        <ScrollView style={styles.contentContainer}>
-          {this.props.notifications.map((item, i) => (
-            <FeedItem key={i} profile={this.props.profile} notification={item} onClick={this._onClick.bind(this)}/>
-          ))}
-        </ScrollView>
+
+        <View style={styles.contentContainer}>
+        <FlatList
+          data={this.props.notifications}
+          keyExtractor={this._keyExtractor.bind(this)}
+          renderItem={this._renderItem.bind(this)}
+          refreshing={this.props.refreshing}
+          onRefresh={this._onRefresh}
+        />
+
+        {/*<ScrollView style={styles.contentContainer}>*/}
+          {/*{this.props.notifications.map((item, i) => (*/}
+            {/*<FeedItem key={i} profile={this.props.profile} notification={item} onClick={this._onClick.bind(this)}/>*/}
+          {/*))}*/}
+        {/*</ScrollView>*/}
+        </View>
         <Toast ref='toast' position='center' />
       </View>
     )
@@ -42,9 +65,9 @@ class Notifications extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state.notifications.notifications)
   return {
-    notifications: state.notifications.notifications
+    notifications: state.notifications.notifications,
+    refreshing: !!state.notifications.refreshing
   }
 }
 
