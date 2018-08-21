@@ -204,7 +204,7 @@ const mapStateToProps = (state: RootState, ownProps) => {
           id: image.uuid,
           type: 'processingItem',
           props: {
-            imageUri: image.sharedImage.uri,
+            imageUri: image.sharedImage.origURL || image.sharedImage.uri, // TODO: Check this on Android
             progress,
             message,
             errorMessage: image.error
