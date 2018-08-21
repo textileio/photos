@@ -31,13 +31,6 @@ const ThreadDetailCard = props => {
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH
       const heightProperties = getHeight(photo.metadata, imageWidth)
-      console.log(photo.caption)
-      if (photo.caption === 'Part 5') {
-        console.log(heightProperties)
-        console.log(item.photo)
-        console.log(imageWidth)
-        console.log(heightProperties.height)
-      }
       const imageHeight = heightProperties.height
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
