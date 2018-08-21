@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Image, ViewStyle, ImageStyle, FlexStyle } from 'react-native'
+import React, { Fragment } from 'react'
+import { View, Image, Button, ViewStyle, ImageStyle, Text, TextStyle } from 'react-native'
 
 import ProgressBar from './ProgressBar'
 
@@ -12,11 +12,11 @@ const CONTAINER: ViewStyle = {
 }
 
 const ITEM = {
-  marginLeft: 8
+  marginLeft: 12
 }
 
 const LAST_ITEM = {
-  marginRight: 8
+  marginRight: 12
 }
 
 const IMAGE: ImageStyle = {
@@ -25,24 +25,62 @@ const IMAGE: ImageStyle = {
   height: 80
 }
 
-const PROGRESS: ViewStyle = {
+const STACK: ViewStyle = {
   ...ITEM,
-  ...LAST_ITEM
+  ...LAST_ITEM,
+  flex: 1,
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignContent: 'stretch'
+}
+
+const STATUS: TextStyle = {
+  fontFamily: 'BentonSans',
+  fontSize: 12,
+  color: 'rgb(185, 185, 185)',
+  textAlign: 'center',
+  marginTop: 6,
+  marginBottom: 6
+}
+
+const ERROR: TextStyle = {
+  ...ITEM,
+  ...STATUS
 }
 
 export type ProcessingImageProps = {
   imageUri: string,
   progress: number,
-  retry: () => void,
-  cancel: () => void
+  message?: string,
+  errorMessage?: string,
+  retry?: () => void,
+  cancel?: () => void
 }
 
 const ProcessingImage = (props: ProcessingImageProps) => {
-  const { imageUri, progress } = props
+  const { imageUri, progress, message, errorMessage, retry, cancel } = props
+
+  let content: JSX.Element
+  if (errorMessage) {
+    content =
+      <Fragment>
+        <Text style={ERROR}>{'Error: ' + errorMessage}</Text>
+        {retry && <Button title='Retry' onPress={retry} />}
+        {cancel && <Button title='Cancel' onPress={cancel} />}
+      </Fragment>
+  } else {
+    content =
+      <View style={STACK}>
+        <Text style={STATUS} />
+        <ProgressBar progress={progress} />
+        <Text style={STATUS}>{message}</Text>
+      </View>
+  }
+
   return (
     <View style={CONTAINER}>
       <Image style={IMAGE} source={{uri: imageUri}} resizeMode='cover' />
-      <ProgressBar progress={progress} style={PROGRESS} />
+      {content}
     </View>
   )
 }

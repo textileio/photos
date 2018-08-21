@@ -15,8 +15,12 @@ import DevicesActions from '../Redux/DevicesRedux'
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
-import { handleSharePhotoRequest } from './HandleSharePhotoRequest'
-import { handleImageUploadComplete } from './HandleImageUploadComplete'
+import {
+  handleSharePhotoRequest,
+  handleImageUploadComplete,
+  retryImageShare,
+  cancelImageShare
+} from './ImageSharingTriggers'
 import {
   signUp,
   logIn,
@@ -121,6 +125,8 @@ export default function * root () {
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
     takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
+    takeEvery(getType(ProcessingImagesActions.retry), retryImageShare),
+    takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),

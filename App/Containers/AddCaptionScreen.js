@@ -20,7 +20,7 @@ class AddCaptionScreen extends React.Component {
           }} />
         </TextileHeaderButtons>
       ),
-      headerRight: params.submitEnabled && (
+      headerRight: (
         <TextileHeaderButtons>
           <Item title='Share' onPress={() => {
             params.share()
@@ -33,16 +33,12 @@ class AddCaptionScreen extends React.Component {
 
   handleNewText = (text: string) => {
     this.props.updateComment(text)
-    this.props.navigation.setParams({
-      submitEnabled: (text.length > 0)
-    })
   }
 
   componentWillMount () {
     this.props.navigation.setParams({
       cancelShare: () => { this.props.cancelShare() },
-      share: () => { this.props.share(this.props.image, this.props.threadId, this.props.comment) },
-      submitEnabled: false
+      share: () => { this.props.share(this.props.image, this.props.threadId, this.props.comment) }
     })
   }
 
