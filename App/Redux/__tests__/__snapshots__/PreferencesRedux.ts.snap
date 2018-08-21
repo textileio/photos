@@ -33,6 +33,7 @@ Object {
     },
   },
   "tourScreens": Object {
+    "feed": true,
     "notifications": true,
     "threads": true,
     "wallet": true,
