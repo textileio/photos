@@ -22,6 +22,7 @@ import {
   retryImageShare,
   cancelImageShare
 } from './ImageSharingTriggers'
+
 import {
   routeDeepLink
 } from './DeepLinkSagas'
@@ -32,6 +33,18 @@ import {
   notificationView,
   refreshNotifications
 } from './NotificationsSagas'
+
+import {
+  addThread,
+  removeThread,
+  refreshThreads,
+  addExternalInvite,
+  presentShareInterface,
+  acceptExternalInvite,
+  pendingInvitesTask,
+  reviewThreadInvite,
+  acceptInvite
+} from './ThreadsSagas'
 
 import {
   signUp,
@@ -51,13 +64,6 @@ import {
   addDevice,
   getPhotoHashes,
   ignorePhoto,
-  addThread,
-  removeThread,
-  refreshThreads,
-  addExternalInvite,
-  presentShareInterface,
-  acceptExternalInvite,
-  pendingInvitesTask,
   cameraPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
@@ -127,6 +133,8 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
 
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
+    takeEvery(getType(ThreadsActions.reviewThreadInvite), reviewThreadInvite),
+    takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),
 
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
 

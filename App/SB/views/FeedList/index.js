@@ -16,7 +16,7 @@ import styles from './statics/styles'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 
-class Notifications extends React.PureComponent {
+class Notifications extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
@@ -53,6 +53,7 @@ class Notifications extends React.PureComponent {
   }
 
   componentDidMount () {
+    this.props.refreshNotifications()
     this.props.navigation.setParams({
       profile: this.props.profile
     })
@@ -65,7 +66,6 @@ class Notifications extends React.PureComponent {
   _onClick (notification) {
     // TODO: get rid of this parsing once all notification types are mapped to an action in notificationView
     this.props.clickNotification(notification)
-    this.refs.toast.show('Wohoo!', 250) // < for now, in case the msg doesn't forward the user anywhere
   }
 
   _onRefresh = () => {
@@ -76,7 +76,7 @@ class Notifications extends React.PureComponent {
 
   _renderItem = ({item}) => {
     return (
-      <FeedItem profile={this.props.profile} notification={item} onClick={this._onClick.bind(this)}/>
+      <FeedItem profile={this.props.profile} notification={item} onClick={this._onClick.bind(this)} />
     )
   }
 

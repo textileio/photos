@@ -190,6 +190,10 @@ export default {
     return await TextileNode.readAllNotification()
   },
 
+  acceptThreadInviteViaNotification: async function (id: string): Promise<string> {
+    return await TextileNode.acceptThreadInviteViaNotification(id)
+  },
+
   eventEmitter: Platform.select({
     ios: new NativeEventEmitter(Events),
     android: DeviceEventEmitter,
