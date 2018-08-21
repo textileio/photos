@@ -9,18 +9,21 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { Platform } from 'react-native'
+import {Platform} from 'react-native'
+import {delay} from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
+import { ActionType } from 'typesafe-actions'
+
+import TextileNode from '../../TextileNode'
+import UIActions from '../Redux/UIRedux'
+import { NotificationType } from '../Models/TextileTypes'
+// import { reviewThreadInvite } from '../Sagas/ThreadsSagas'
+
+import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
+import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors }  from '../Redux/NotificationsRedux'
-import { ThreadsSelectors } from '../Redux/ThreadsRedux'
-import UIActions from '../Redux/UIRedux'
-import { ActionType } from 'typesafe-actions'
-import * as TextileTypes from '../Models/TextileTypes'
 import * as NotificationsServices from '../Services/Notifications'
-import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
-import TextileNode from '../../TextileNode'
-import {delay} from 'redux-saga'
 
 export function * enable () {
   yield call(NotificationsServices.enable)
@@ -31,7 +34,7 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
   // if No notifications enabled, return
   if (!service || service.status !== true) return
   const { notification } = action.payload
-  const type = TextileTypes.NotificationType[notification.type] as string
+  const type = NotificationType[notification.type] as string
 
   // if notifications for this type are not enabled, return
   const preferences = yield select(PreferencesSelectors.service, type as ServiceType)
@@ -60,13 +63,22 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Handles a view request for in App notification clicking or Engagement notification clicking
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
+  console.log(notification)
   try {
-    if (notification.type in [2,3,4,5,6] && notification.target_id && notification.target_id !== '') {
-      const thread = yield select(ThreadsSelectors.threadById, notification.target_id)
-      yield call(TextileNode.readNotification, notification.id)
-      yield put(UIActions.viewThreadRequest(thread.id, thread.name))
-    } else {
-      yield call(TextileNode.readNotification, notification.id)
+    switch (notification.type){
+      case NotificationType.receivedInviteNotification:
+        yield call(TextileNode.readNotification, notification.id)
+        yield put(ThreadsActions.reviewThreadInvite(notification))
+        break;
+      case NotificationType.deviceAddedNotification:
+      case NotificationType.photoAddedNotification:
+      case NotificationType.commentAddedNotification:
+      case NotificationType.likeAddedNotification:
+      case NotificationType.peerJoinedNotification:
+      case NotificationType.peerLeftNotification:
+        const thread = yield select(ThreadsSelectors.threadById, notification.target_id)
+        yield call(TextileNode.readNotification, notification.id)
+        yield put(UIActions.viewThreadRequest(thread.id, thread.name))
     }
     // Helpful so that the feedview will update with latest
     // TODO: remove here and add to the Load time of Feedview...
@@ -78,6 +90,13 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
 
 export function * refreshNotifications () {
   try {
+    let timeToWait = 1000 // ms
+    let online = yield select(TextileNodeSelectors.online)
+    while(!online && 0 < timeToWait) {
+      yield delay(10)
+      online = yield select(TextileNodeSelectors.online)
+      timeToWait -= 10
+    }
     const busy = yield select(NotificationsSelectors.refreshing)
     // skip multi-request back to back
     if (busy) return
@@ -88,3 +107,5 @@ export function * refreshNotifications () {
     yield put(NotificationsActions.refreshNotificationsFailure())
   }
 }
+
+

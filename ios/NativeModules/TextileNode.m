@@ -414,6 +414,16 @@ RCT_EXPORT_METHOD(readAllNotifications:(NSString *)id resolver:(RCTPromiseResolv
   }
 }
 
+RCT_EXPORT_METHOD(acceptThreadInviteViaNotification:(NSString *)id resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *threadId = [self _acceptThreadInviteViaNotification:id error:&error];
+  if (!error) {
+    resolve(threadId);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *jsonString = [self _devices:&error];
@@ -595,6 +605,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (void)_readAllNotifications:(NSError**)error {
   [self.node readAllNotifications:error];
+}
+
+- (NSString *)_acceptThreadInviteViaNotification:(NSString *)id error:(NSError**)error {
+  return [self.node acceptThreadInviteViaNotification:id error:error];
 }
 
 - (void)_refreshMessages:(NSError**)error {
