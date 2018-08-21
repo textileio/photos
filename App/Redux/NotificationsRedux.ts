@@ -32,7 +32,7 @@ const actions = {
 export type NotificationsAction = ActionType<typeof actions>
 
 export type NotificationsState = {
-  readonly notifications: Array<TextileTypes.Notification>,
+  readonly notifications: ReadonlyArray<TextileTypes.Notification>,
   refreshing: boolean
 }
 
