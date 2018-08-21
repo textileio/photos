@@ -25,6 +25,7 @@ export default class DeepLinkEventHandler {
     if (Platform.OS === 'ios') {
       Linking.addEventListener('url', this._handleIOS.bind(this))
     }
+    // just uses Android method or iOS when init
     Linking.getInitialURL().then(this._handleUrl.bind(this))
   }
 
