@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>Fabric</key>
-  <dict>
-    <key>APIKey</key>
-    <string>59497e1c708bbca68843a5c707d11dc9b9b8bbb9</string>
-    <key>Kits</key>
-    <array>
-      <dict>
-        <key>KitInfo</key>
-        <dict/>
-        <key>KitName</key>
-        <string>Crashlytics</string>
-      </dict>
-    </array>
-  </dict>
+	<dict>
+		<key>APIKey</key>
+		<string>59497e1c708bbca68843a5c707d11dc9b9b8bbb9</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -62,7 +62,9 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>So you can pick photos to store in the secure Textile cloud.</string>
+	<string>So you can pick photos to use in Textile sharing and storage.</string>
+	<key>LSApplicationCategoryType</key>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

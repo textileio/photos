@@ -51,6 +51,12 @@ export default StyleSheet.create({
   contentContainer: {
     paddingLeft: 16
   },
+  listItemFirst: {
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#ECEDEE'
+  },
   listItem: {
     paddingVertical: 20,
     borderBottomWidth: 1,

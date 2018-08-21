@@ -10,7 +10,7 @@ import BottomDrawerList from '../../components/BottomDrawerList'
 
 import styles from './statics/styles'
 import UIActions from '../../../Redux/UIRedux'
-import { ThreadData } from '../../../Redux/TextileNodeRedux'
+import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
 import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
@@ -20,7 +20,6 @@ import ActionSheet from 'react-native-actionsheet'
 import Alert from '../../../SB/components/Alert'
 
 import { RootState } from '../../../Redux/Types'
-import { ProcessingImage } from '../../../Redux/ProcessingImagesRedux'
 import ProcessingImageCard, { ProcessingImageProps } from '../../../Components/ProcessingImage'
 
 class ThreadsDetail extends React.PureComponent {
@@ -268,7 +267,7 @@ const mapDispatchToProps = (dispatch) => {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
-    refreshMessages: (hidden) => { dispatch(UIActions.refreshMessagesRequest(hidden)) },
+    refreshMessages: (hidden) => { dispatch(TextileNodeActions.refreshMessagesRequest(hidden)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },

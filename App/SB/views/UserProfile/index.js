@@ -28,7 +28,6 @@ class UserProfile extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
-      headerTitle: 'Your Account',
       headerLeft: (
         <TextileHeaderButtons left>
           <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
@@ -105,9 +104,13 @@ class UserProfile extends React.PureComponent {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
-          {/*<TouchableOpacity style={styles.listItem} onPress={this._settings.bind(this)}>*/}
-            {/*<Text style={styles.listText}>Settings</Text>*/}
-          {/*</TouchableOpacity>*/}
+          <View style={styles.logoContainer}>
+            <ImageSc width={83} source={require('./statics/textile-gray-logo.png')}/>
+          </View>
+          {this.connectivity()}
+          <TouchableOpacity style={styles.listItemFirst} onPress={this._settings.bind(this)}>
+            <Text style={styles.listText}>Notifications</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
           </TouchableOpacity>
@@ -133,13 +136,6 @@ class UserProfile extends React.PureComponent {
           }}>
             <Text style={styles.listText}>Invite Friends!</Text>
           </TouchableOpacity>
-          {/*<TouchableOpacity style={styles.listItem} onPress={this._lockScreen.bind(this)}>*/}
-            {/*<Text style={[styles.listText, styles.warning]}>Lock screen</Text>*/}
-          {/*</TouchableOpacity>*/}
-          {this.connectivity()}
-          <View style={styles.logoContainer}>
-            <ImageSc width={83} source={require('./statics/textile-gray-logo.png')}/>
-          </View>
         </View>
 
         <ContactModal height={200} width={WIDTH} onClose={this._contact.bind(this)} isVisible={this.state.contactModal} />

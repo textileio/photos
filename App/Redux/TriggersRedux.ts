@@ -1,4 +1,5 @@
 import { createAction } from 'typesafe-actions'
+import * as TextileTypes from '../Models/TextileTypes'
 
 const actions = {
   backgroundTask: createAction('BACKGROUND_TASK'),

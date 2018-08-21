@@ -6,6 +6,7 @@ import SmallIconTag from '../SmallIconTag'
 import TextileImage from '../../../../TextileImage'
 import { getHeight } from '../../../Services/PhotoUtils'
 import Avatar from '../../../Components/Avatar'
+import Config from 'react-native-config'
 
 import styles from './statics/styles'
 
@@ -18,7 +19,16 @@ const ThreadDetailCard = props => {
     case 'title': {
       // TODO: We should do this with Navbar integration later
       return (
-        <Text style={styles.titleCard}>{item.name}</Text>
+        <View>
+          <Text style={styles.titleCard}>{item.name}</Text>
+          {last &&
+          <View style={styles.cardFooter}>
+            <View style={styles.cardFooterBottom}>
+              <Text style={styles.detailUpdateTime}>0 photos</Text>
+            </View>
+          </View>
+          }
+        </View>
       )
     }
     case 'photo': {
@@ -26,7 +36,7 @@ const ThreadDetailCard = props => {
       const date = moment(photo.date)
       const dateString = date.fromNow()
 
-      const username = photo.username ? photo.username : photo.author_id.substring(0, 8).toUpperCase()
+      const username = photo.username ? photo.username : photo.author_id.substring(0, 8)
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH
@@ -34,10 +44,10 @@ const ThreadDetailCard = props => {
       const imageHeight = heightProperties.height
 
       const defaultSource = require('../../views/Settings/statics/main-image.png')
-      let uri = photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + photo.author_id + '/avatar' : undefined
+      let uri = photo.author_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + photo.author_id + '/avatar' : undefined
       // ensure we have the user's latest avatar even if the cafe is still caching
       if (props.profile && props.profile.id && props.profile.id === photo.author_id) {
-        uri = 'https://cafe.us-east-1.textile.io' + props.profile.avatar_id
+        uri = Config.TEXTILE_CAFE_URI + props.profile.avatar_id
       }
       return (
         <View style={styles.card}>

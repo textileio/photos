@@ -3,6 +3,43 @@ export interface Event {
   payload: string
 }
 
+export enum NotificationType {
+  receivedInviteNotification,
+  deviceAddedNotification,
+  photoAddedNotification,
+  commentAddedNotification,
+  likeAddedNotification,
+  peerJoinedNotification,
+  peerLeftNotification
+}
+
+export interface GetNotificationsResult {
+  items: Notification[]
+}
+
+export interface Notification {
+  actor_id: string
+  actor_username: string
+  body: string
+  category: string
+  date: string
+  id: string
+  read: boolean
+  target_id: string
+  type: NotificationType
+}
+
+export interface NotificationEngagement {
+  alert: string,
+  badge: number,
+  foreground: boolean,
+  message: string,
+  sound: string,
+  userInteraction: boolean,
+  data?: any,
+  finish?: Function
+}
+
 export interface Thread {
   id: string
   name: string
@@ -20,15 +57,6 @@ export interface Device {
 
 export interface Devices {
   items: Device[]
-}
-
-export interface Notification {
-  category: 'node' | 'devices' | 'threads' | 'content'
-  type: string
-  read: boolean
-  timestamp: number
-  unique?: boolean
-  payload?: any
 }
 
 export interface Profile {
@@ -115,4 +143,15 @@ export type NodeOverview = {
   readonly thread_count: number
   readonly photo_count: number
   readonly contact_count: number
+}
+
+export type DeepLinkData = {
+  readonly href: string,
+  readonly protocol: string,
+  readonly host: string,
+  readonly hostname: string,
+  readonly port: string,
+  readonly path: string,
+  readonly search: string
+  readonly hash: string
 }

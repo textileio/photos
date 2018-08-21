@@ -103,14 +103,58 @@ const migrations: MigrationManifest = {
         }
       }
     }
+  },
+  8: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        tourScreens: {
+          ...state.preferences.tourScreens,
+          feed: true,
+          notifications: true,
+          threads: true
+        },
+        services: {
+          notifications: {
+            status: false,
+          },
+          photoAddedNotification: {
+            status: true
+          },
+          receivedInviteNotification: {
+            status: true
+          },
+          deviceAddedNotification: {
+            status: false
+          },
+          commentAddedNotification: {
+            status: false
+          },
+          likeAddedNotification: {
+            status: false
+          },
+          peerJoinedNotification: {
+            status: false
+          },
+          peerLeftNotification: {
+            status: false
+          },
+          backgroundLocation: {
+            status: false
+          }
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 7,
-  whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'notifications'],
+  version: 8,
+  whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll'],
   migrate: createMigrate(migrations, { debug: false })
 }
 

@@ -4,8 +4,9 @@ import ActionSheet from 'react-native-actionsheet'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
+import Config from 'react-native-config'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions, { ThreadData, PhotosQueryResult } from '../Redux/TextileNodeRedux'
+import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
 import * as TextileTypes from '../Models/TextileTypes'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -25,7 +26,7 @@ class TextilePhotos extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const avatarUrl = params.profile && params.profile.avatar_id ? 'https://cafe.us-east-1.textile.io' + params.profile.avatar_id : undefined
+    const avatarUrl = params.profile && params.profile.avatar_id ? Config.TEXTILE_CAFE_URI + params.profile.avatar_id : undefined
     const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
       <HeaderButtons left>
