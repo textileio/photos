@@ -34,7 +34,7 @@ const actions = {
 
 export type PreferencesAction = ActionType<typeof actions>
 
-export type TourScreens = 'wallet' | 'threads'
+export type TourScreens = 'wallet' | 'threads' | 'notifications' | 'feed'
 export type ServiceType = 'backgroundLocation' | 'notifications' | 'photoAddedNotification' | 'receivedInviteNotification' | 'deviceAddedNotification' | 'commentAddedNotification' | 'likeAddedNotification' | 'peerJoinedNotification' | 'peerLeftNotification'
 export type Service = {
   status: boolean,
@@ -56,7 +56,8 @@ export const initialState: PreferencesState = {
   tourScreens: {
     wallet: true,
     threads: true,
-    notifications: true
+    notifications: true,
+    feed: true
   },
   services: {
     notifications: {
