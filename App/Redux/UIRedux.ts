@@ -63,6 +63,9 @@ const actions = {
   }),
   dismissImagePickerError: createAction('DISMISS_IMAGE_PICKER_ERROR', resolve => {
     return () => resolve()
+  }),
+  routeDeepLinkRequest: createAction('ROUTE_DEEP_LINK_REQUEST', resolve => {
+    return (url: string) => resolve({url})
   })
 }
 

@@ -145,3 +145,14 @@ export type NodeOverview = {
   readonly photo_count: number
   readonly contact_count: number
 }
+
+export type DeepLinkData = {
+  readonly href: string,
+  readonly protocol: string,
+  readonly host: string,
+  readonly hostname: string,
+  readonly port: string,
+  readonly path: string,
+  readonly search: string
+  readonly hash: string
+}

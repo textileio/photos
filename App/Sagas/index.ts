@@ -19,6 +19,10 @@ import { startup } from './StartupSagas'
 import { handleSharePhotoRequest } from './HandleSharePhotoRequest'
 import { handleImageUploadComplete } from './HandleImageUploadComplete'
 import {
+  routeDeepLink
+} from './DeepLinkSagas'
+
+import {
   handleNewNotification,
   handleEngagement,
   notificationView,
@@ -132,6 +136,9 @@ export default function * root () {
     takeEvery(getType(NotificationsActions.notificationEngagement), handleEngagement),
     takeEvery(getType(NotificationsActions.notificationSuccess), notificationView),
     takeEvery(getType(NotificationsActions.refreshNotificationsRequest), refreshNotifications),
+
+    // DeepLinks
+    takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
