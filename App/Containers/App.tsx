@@ -25,6 +25,7 @@ class App extends Component {
   deepLinkEventHandler = new DeepLinkEventHandler(store)
 
   render () {
+    console.log('render...')
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -35,10 +36,12 @@ class App extends Component {
   }
 
   componentDidMount () {
+    console.log('mounted...')
     backgroundTaskEventHandler.schedule()
   }
 
   componentWillUnmount () {
+    console.log('unmounting...')
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
     }

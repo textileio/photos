@@ -30,5 +30,6 @@ export function routeDeepLink (action: ActionType<typeof UIActions.routeDeepLink
       }
     }
   } catch (error) {
+    console.log('axh deeplink error', error)
   }
 }
