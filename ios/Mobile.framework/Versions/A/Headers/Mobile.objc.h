@@ -18,6 +18,7 @@
 @class MobileImageData;
 @class MobileMobile;
 @class MobileNodeConfig;
+@class MobileNotifications;
 @class MobilePhoto;
 @class MobilePhotos;
 @class MobileThread;
@@ -108,6 +109,7 @@
 - (NSString*)mnemonic;
 - (void)setMnemonic:(NSString*)v;
 - (NSString*)acceptExternalThreadInvite:(NSString*)id_ key:(NSString*)key error:(NSError**)error;
+- (NSString*)acceptThreadInviteViaNotification:(NSString*)id_ error:(NSError**)error;
 - (BOOL)addDevice:(NSString*)name pubKey:(NSString*)pubKey error:(NSError**)error;
 - (NSString*)addExternalThreadInvite:(NSString*)threadId error:(NSError**)error;
 - (NSString*)addPhoto:(NSString*)path error:(NSError**)error;
@@ -116,8 +118,10 @@
 - (NSString*)addThreadInvite:(NSString*)threadId inviteePk:(NSString*)inviteePk error:(NSError**)error;
 - (NSString*)contactThreads:(NSString*)id_ error:(NSError**)error;
 - (NSString*)contacts:(NSError**)error;
+- (long)countUnreadNotifications;
 - (NSString*)devices:(NSError**)error;
 - (NSString*)getId:(NSError**)error;
+- (NSString*)getNotifications:(NSString*)offset limit:(long)limit error:(NSError**)error;
 - (NSString*)getPeerProfile:(NSString*)peerId error:(NSError**)error;
 - (NSString*)getPhotoData:(NSString*)id_ path:(NSString*)path error:(NSError**)error;
 - (NSString*)getPhotoDataForMinWidth:(NSString*)id_ minWidth:(long)minWidth error:(NSError**)error;
@@ -132,6 +136,8 @@
 - (BOOL)isSignedIn;
 - (NSString*)overview:(NSError**)error;
 - (NSString*)photoThreads:(NSString*)id_ error:(NSError**)error;
+- (BOOL)readAllNotifications:(NSError**)error;
+- (BOOL)readNotification:(NSString*)id_ error:(NSError**)error;
 - (BOOL)refreshMessages:(NSError**)error;
 - (BOOL)removeDevice:(NSString*)id_ error:(NSError**)error;
 - (NSString*)removeThread:(NSString*)id_ error:(NSError**)error;
@@ -160,6 +166,16 @@
 - (void)setLogLevel:(NSString*)v;
 - (BOOL)logFiles;
 - (void)setLogFiles:(BOOL)v;
+@end
+
+@interface MobileNotifications : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field Notifications.Items with unsupported type: *types.Slice
+
 @end
 
 @interface MobilePhoto : NSObject <goSeqRefInterface> {

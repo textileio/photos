@@ -10,6 +10,7 @@ import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventH
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
 import BackgroundTaskEventHandler from '../Services/EventHandlers/BackgroundTaskEventHandler'
+import NotificationEventHandler from '../Services/EventHandlers/NotificationEventHandler'
 
 const { store, persistor } = configureStore()
 
@@ -18,9 +19,10 @@ const backgroundTaskEventHandler = new BackgroundTaskEventHandler(store)
 class App extends Component {
 
   appStateEventHander = new AppStateEventHander(store)
+  notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
-  deepLinkEventHandler = new DeepLinkEventHandler()
+  deepLinkEventHandler = new DeepLinkEventHandler(store)
 
   render () {
     return (
@@ -41,6 +43,7 @@ class App extends Component {
       super.componentWillUnmount()
     }
     this.appStateEventHander.tearDown()
+    this.notificationEventHandler.tearDown()
     this.textileNodeEventHandler.tearDown()
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()

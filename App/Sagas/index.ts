@@ -6,6 +6,7 @@ import { getType } from 'typesafe-actions'
 import StartupActions from '../Redux/StartupRedux'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
+import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
@@ -21,6 +22,17 @@ import {
   retryImageShare,
   cancelImageShare
 } from './ImageSharingTriggers'
+import {
+  routeDeepLink
+} from './DeepLinkSagas'
+
+import {
+  handleNewNotification,
+  handleEngagement,
+  notificationView,
+  refreshNotifications
+} from './NotificationsSagas'
+
 import {
   signUp,
   logIn,
@@ -39,8 +51,6 @@ import {
   addDevice,
   getPhotoHashes,
   ignorePhoto,
-  removePayloadFile,
-  handleUploadError,
   addThread,
   removeThread,
   refreshThreads,
@@ -49,15 +59,14 @@ import {
   acceptExternalInvite,
   pendingInvitesTask,
   cameraPermissionsTrigger,
-  backgroundLocationPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
   handleProfilePhotoUpdated,
   presentPublicLinkInterface,
   showImagePicker,
   nodeOnlineSaga,
+  updateServices
 } from './TextileSagas'
-import CameraRollActions from '../Redux/CameraRollRedux'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -73,7 +82,7 @@ export default function * root () {
 
     // permissions request events
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
-    takeLatest(getType(AuthActions.requestBackgroundLocationPermissions), backgroundLocationPermissionsTrigger),
+    takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
 
     // some sagas receive extra parameters in addition to an action
 
@@ -92,7 +101,7 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
     takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
 
-    takeEvery(getType(UIActions.refreshMessagesRequest), refreshMessages),
+    takeEvery(getType(TextileNodeActions.refreshMessagesRequest), refreshMessages),
 
     takeEvery(getType(TextileNodeActions.lock), toggleBackgroundTimer),
 
@@ -127,6 +136,15 @@ export default function * root () {
     takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
     takeEvery(getType(ProcessingImagesActions.retry), retryImageShare),
     takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
+
+    // Notifications
+    takeEvery(getType(NotificationsActions.newNotificationRequest), handleNewNotification),
+    takeEvery(getType(NotificationsActions.notificationEngagement), handleEngagement),
+    takeEvery(getType(NotificationsActions.notificationSuccess), notificationView),
+    takeEvery(getType(NotificationsActions.refreshNotificationsRequest), refreshNotifications),
+
+    // DeepLinks
+    takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),

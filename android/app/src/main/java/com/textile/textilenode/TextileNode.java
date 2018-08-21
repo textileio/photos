@@ -434,6 +434,48 @@ public class TextileNode extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void getNotifications (String offset, Integer limit, Promise promise) {
+        try {
+            promise.resolve(node.getNotifications(offset, limit));
+        }
+        catch (Exception e) {
+            promise.reject("GET NOTIFICATIONS ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void countUnreadNotifications (Promise promise) {
+        try {
+            promise.resolve(node.countUnreadNotifications());
+        }
+        catch (Exception e) {
+            promise.reject("COUNT NOTIFICATIONS ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void readNotification (String id, Promise promise) {
+        try {
+            node.readNotification(id);
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("READ NOTIFICATION ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void readAllNotifications (Promise promise) {
+        try {
+            node.readAllNotifications();
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("READ ALL NOTIFICATIONS ERROR", e);
+        }
+    }
+
     // Android specific method for turning photo URI into path + ext
     @ReactMethod
     public void getFilePath(String uriString, Promise promise) {

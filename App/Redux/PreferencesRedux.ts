@@ -1,4 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
+import { RootState } from '../Redux/Types'
 import { Profile } from '../Models/TextileTypes'
 
 const actions = {
@@ -24,12 +25,20 @@ const actions = {
     return (publicKey: string) => resolve({ publicKey })
   }),
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', resolve => {
-  return (tourKey: string) => resolve({ tourKey })
-}),
+    return (tourKey: TourScreens) => resolve({ tourKey })
+  }),
+  toggleServicesRequest: createAction('TOGGLE_SERVICES_REQUEST', resolve => {
+    return (name: ServiceType, status?: boolean) => resolve({ name, status })
+  })
 }
 
 export type PreferencesAction = ActionType<typeof actions>
 
+export type TourScreens = 'wallet' | 'threads' | 'notifications' | 'feed'
+export type ServiceType = 'backgroundLocation' | 'notifications' | 'photoAddedNotification' | 'receivedInviteNotification' | 'deviceAddedNotification' | 'commentAddedNotification' | 'likeAddedNotification' | 'peerJoinedNotification' | 'peerLeftNotification'
+export type Service = {
+  status: boolean,
+}
 export type PreferencesState = {
   onboarded: boolean
   verboseUi: boolean
@@ -37,7 +46,7 @@ export type PreferencesState = {
   publicKey?: string
   profile?: Profile
   pending?: string,
-  // tracks if a user has seen a particular tour screen
+  readonly services: {[index: string]: Service}
   readonly tourScreens: {[index: string]: boolean} // true = still need to show, false = no need
 }
 
@@ -46,7 +55,38 @@ export const initialState: PreferencesState = {
   verboseUi: false,
   tourScreens: {
     wallet: true,
-    threads: true
+    threads: true,
+    notifications: true,
+    feed: true
+  },
+  services: {
+    notifications: {
+      status: false
+    },
+    photoAddedNotification: {
+      status: true
+    },
+    receivedInviteNotification: {
+      status: true
+    },
+    deviceAddedNotification: {
+      status: false
+    },
+    commentAddedNotification: {
+      status: false
+    },
+    likeAddedNotification: {
+      status: false
+    },
+    peerJoinedNotification: {
+      status: false
+    },
+    peerLeftNotification: {
+      status: false
+    },
+    backgroundLocation: {
+      status: false
+    }
   }
 }
 
@@ -69,6 +109,12 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       if(!tours.hasOwnProperty(action.payload.tourKey)) return state
       tours[action.payload.tourKey] = false
       return { ...state, tourScreens: tours }
+    case getType(actions.toggleServicesRequest): {
+      let service = state.services[action.payload.name]
+      if (!service) return state
+      service.status = action.payload.status === undefined ? !service.status : action.payload.status
+      return {...state, services: {...state.services, [action.payload.name]: service}}
+    }
     default:
       return state
   }
@@ -76,9 +122,10 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
 
 export const PreferencesSelectors = {
   // TODO: Need typed state
-  onboarded: (state: any) => state.preferences.onboarded,
-  pending: (state: any) => state.preferences.pending,
-  profile: (state: any) => state.preferences.profile
+  onboarded: (state: RootState) => state.preferences.onboarded,
+  pending: (state: RootState) => state.preferences.pending,
+  profile: (state: RootState) => state.preferences.profile,
+  service: (state: RootState, name: ServiceType) => state.preferences.services[name]
 }
 
 export default actions

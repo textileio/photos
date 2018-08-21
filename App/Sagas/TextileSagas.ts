@@ -16,18 +16,18 @@ import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import Config from 'react-native-config'
-
 import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
 import { getPhotos } from '../Services/CameraRoll'
 import { getAllPhotos, getPhotoPath, getPage } from '../Services/PhotoUtils'
+import * as NotificationsSagas from './NotificationsSagas'
+import NotificationsActions from '../Redux/NotificationsRedux'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
-import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
-import ContactsActions, { ContactsSelectors } from '../Redux/ContactsRedux'
+import AuthActions  from '../Redux/AuthRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
@@ -37,6 +37,8 @@ import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import DeepLink from '../Services/DeepLink'
 import { uploadFile } from './UploadFile'
+import * as NotificationsServices from '../Services/Notifications'
+import {NotificationsAction} from '../Redux/NotificationsRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -150,13 +152,7 @@ function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
 }
 
 export function * viewThread ( action: ActionType<typeof UIActions.viewThreadRequest> ) {
-  try {
-    // Refresh our messages
-    yield call(TextileNode.refreshMessages)
-    yield put(UIActions.refreshMessagesSuccess(Date.now()))
-  } catch (error) {
-    yield put(UIActions.refreshMessagesFailure(error))
-  }
+  yield call(TextileNodeActions.refreshMessagesRequest, false)
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
@@ -176,19 +172,20 @@ export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeAc
 }
 
 export function * initializeAppState () {
-  yield take(getType(StartupActions.startup))
-  const defaultAppState = yield select(TextileNodeSelectors.appState)
-  let queriedAppState = defaultAppState
-  while (queriedAppState.match(/default|unknown/)) {
-    yield delay(10)
-    const currentAppState = yield call(() => AppState.currentState)
-    queriedAppState = currentAppState || 'unknown'
-  }
+    yield take(getType(StartupActions.startup))
+    const defaultAppState = yield select(TextileNodeSelectors.appState)
+    let queriedAppState = defaultAppState
+    while (queriedAppState.match(/default|unknown/)) {
+      yield delay(10)
+      const currentAppState = yield call(() => AppState.currentState)
+      queriedAppState = currentAppState || 'unknown'
+    }
   yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
 
 export function * handleNewAppState (action: ActionType<typeof TextileNodeActions.appStateChange>) {
   const { previousState, newState } = action.payload
+
   if (previousState.match(/default|unknown/) && newState === 'background') {
     yield * triggerCreateNode()
   } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {
@@ -274,12 +271,17 @@ export function * stopNode () {
   }
 }
 
-export function * refreshMessages (action: ActionType<typeof UIActions.refreshMessagesRequest>) {
+export function * refreshMessages () {
   try {
-    yield call(TextileNode.refreshMessages)
-    yield put(UIActions.refreshMessagesSuccess(Date.now()))
+    // Ensure we don't stack a bunch of calls (swipe, swipe swipe!)
+    const refreshing = yield select(TextileNodeSelectors.refreshingMessages)
+    if (!refreshing) {
+      // refresh the messages
+      yield call(TextileNode.refreshMessages)
+      yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
+    }
   } catch (error) {
-    yield put(UIActions.refreshMessagesFailure(error))
+    yield put(TextileNodeActions.refreshMessagesFailure(error))
   }
 }
 
@@ -586,79 +588,6 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   }
 ​}
 
-export function * localPinRequest(action: ActionType<typeof CameraRollActions.addComment>) {
-  const {threadId, image} = action.payload
-  let photoPath = image.uri.replace('file://', '')
-
-  if (Platform.OS === 'android' && image.hasOwnProperty('path') && image.path !== undefined) {
-    photoPath = image.path
-  }
-
-  try {
-    // add the result to our local node
-    const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
-    if (!addResult.archive) {
-      throw new Error('No archive returned')
-    }
-
-    // Get the ID of our Default Thread
-    let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
-    // Add the image to our defaul thread // i.e the wallet
-    yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-
-    // Share the photo to the target Thread
-    yield call(TextileNode.sharePhotoToThread, addResult.id, threadId, image.caption)
-
-    // Store the addResult with the image
-    // yield put(CameraRollActions.localPinSuccess(threadId, image, addResult))
-  } catch (error) {
-    try {
-      // yield put(CameraRollActions.imagePinError(threadId, image))
-      const exists: boolean = yield call(RNFS.exists, photoPath)
-      if (exists) {
-        yield call(RNFS.unlink, photoPath)
-      }
-    } finally {
-      yield put(UIActions.newImagePickerError(error, 'There was an issue with your local IPFS node. Please try again.'))
-    }
-  }
-}
-
-export function * remotePinRequest(action: ActionType<typeof CameraRollActions.localPinSuccess>) {
-  const {threadId, image, addResult} = action.payload
-  // There is a possibility that an image could successfully load into a users thread locally by
-  // here, but not succeed with 'UploadingImagesActions.addImage' so never upload
-  try {
-    if (!addResult.archive) {
-      throw new Error('no archive returned')
-    }
-    // Add the image upload job to the tracked jobs
-    yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-
-    // Begin the image upload to the Cafe pinner
-    yield * uploadFile(
-      addResult.id,
-      addResult.archive.path
-    )
-
-    // Remove the image from the CameraRoll actions
-    // yield put(CameraRollActions.remotePinStarted(threadId, image))
-
-  } catch (error) {
-    try {
-      // yield put(CameraRollActions.imagePinError(threadId, image))
-      if (addResult.archive) {
-        const exists: boolean = yield call(RNFS.exists, addResult.archive.path)
-        if (exists) {
-          yield call(RNFS.unlink, addResult.archive.path)
-        }
-      }
-    } finally {
-      yield put(UIActions.newImagePickerError(error, 'There was an issue with your connection. Please try again.'))
-    }
-  }
-}
-
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
   const { photoId } = action.payload
   try {
@@ -692,6 +621,20 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, id))
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
+  }
+}
+
+export function * updateServices (action: ActionType<typeof PreferencesActions.toggleServicesRequest>) {
+  const {name} = action.payload
+  let currentStatus = action.payload.status
+  if (!currentStatus) {
+    const service = yield select(PreferencesSelectors.service, name)
+    currentStatus = !service ? false : service.status
+  }
+  if (name === 'backgroundLocation' && currentStatus===true) {
+    yield * backgroundLocationPermissionsTrigger()
+  } else if (name === 'notifications' && currentStatus===true){
+    yield call(NotificationsSagas.enable)
   }
 }
 

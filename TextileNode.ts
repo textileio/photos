@@ -5,8 +5,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import * as TextileTypes from './App/Models/TextileTypes'
-import {Profile} from './App/Models/TextileTypes'
-import {NodeOverview} from './App/Models/TextileTypes'
+import {Notification} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
@@ -172,6 +171,23 @@ export default {
 
   refreshMessages: async function (): Promise<void> {
     return await TextileNode.refreshMessages()
+  },
+
+  getNotifications: async function (limit: number, offset: string = ''): Promise<TextileTypes.GetNotificationsResult> {
+    const jsonString = await TextileNode.getNotifications(offset, limit)
+    return JSON.parse(jsonString) as TextileTypes.GetNotificationsResult
+  },
+
+  countUnreadNotifications: async function (): Promise<number> {
+    return await TextileNode.countUnreadNotifications()
+  },
+
+  readNotification: async function (id: string): Promise<void> {
+    return await TextileNode.readNotification(id)
+  },
+
+  readAllNotification: async function (): Promise<void> {
+    return await TextileNode.readAllNotification()
   },
 
   eventEmitter: Platform.select({

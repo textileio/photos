@@ -7,7 +7,7 @@ export default StyleSheet.create({
   titleCard: {
     fontFamily: 'BentonSans',
     fontSize: 30,
-    marginTop: 11,
+    marginTop: 27,
     marginBottom: 11,
     paddingHorizontal: 11
   },
@@ -24,6 +24,7 @@ export default StyleSheet.create({
     paddingHorizontal: 11,
     marginBottom: 8
   },
+  cardAvatar: {},
   cardAction: {
     fontFamily: 'BentonSans',
     fontSize: 14,
@@ -47,7 +48,7 @@ export default StyleSheet.create({
   profileName: {
     fontFamily: 'BentonSans',
     fontSize: 14,
-    lineHeight: 16,
+    lineHeight: 16
   },
   captionText: {
     flex: 1,
@@ -55,6 +56,9 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
     fontFamily: 'BentonSans-Light',
     fontSize: 14,
+    lineHeight: 16,
+    overflow: 'visible',
+    paddingTop: 6,
     paddingBottom: 8
   },
   cardFooterBottom: {

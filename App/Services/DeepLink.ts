@@ -1,7 +1,7 @@
 import NavigationService from './NavigationService'
-import { ExternalInvite } from '../Models/TextileTypes'
+import { ExternalInvite, DeepLinkData } from '../Models/TextileTypes'
 
-function getParams (hash: string) {
+function getParams (hash: string): { [key: string]: (string | string[]) } {
   let query = hash.replace('#', '')
   let vars = query.split('&')
   let queryString: { [key: string]: (string | string[]) } = {}
@@ -12,8 +12,7 @@ function getParams (hash: string) {
       queryString[pair[0]] = decodeURIComponent(pair[1])
       // If second entry with this name
     } else if (typeof queryString[pair[0]] === 'string') {
-      let arr = [queryString[pair[0]] as string, decodeURIComponent(pair[1])]
-      queryString[pair[0]] = arr
+      queryString[pair[0]] = [queryString[pair[0]] as string, decodeURIComponent(pair[1])]
       // If third or later entry with this name
     } else {
       (queryString[pair[0]] as string[]).push(decodeURIComponent(pair[1]))
@@ -22,8 +21,9 @@ function getParams (hash: string) {
   return queryString
 }
 
-function getData (href: string) {
-  var regex = new RegExp([
+
+function getData (href: string): DeepLinkData | undefined {
+  const regex = new RegExp([
     '^(https?:)//',
     '(([^:/?#]*)(?::([0-9]+))?)',
     '(/{0,1}[^?#]*)',
@@ -31,7 +31,8 @@ function getData (href: string) {
     '(#.*|)$'
   ].join(''))
   const match = href.match(regex)
-  return match && {
+  if (!match) return undefined
+  return {
     href: href,
     protocol: match[1],
     host: match[2],
@@ -43,7 +44,7 @@ function getData (href: string) {
   }
 }
 
-function createInviteLink (invite: ExternalInvite, threadName: string) {
+function createInviteLink (invite: ExternalInvite, threadName: string): string {
   let hash: string[] = []
   hash.push('id=' + encodeURIComponent(invite.id))
   hash.push('key=' + encodeURIComponent(invite.key))
