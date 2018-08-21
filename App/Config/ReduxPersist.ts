@@ -112,8 +112,9 @@ const migrations: MigrationManifest = {
         ...state.preferences,
         tourScreens: {
           ...state.preferences.tourScreens,
-          threads: true,
-          notifications: true
+          feed: true,
+          notifications: true,
+          threads: true
         },
         services: {
           notifications: {

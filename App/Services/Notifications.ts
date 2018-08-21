@@ -71,7 +71,6 @@ export async function createNew(notification: Notification): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
       const payload = toPayload(notification)
-      console.log('axh', payload)
       if (!payload) return
       PushNotification.localNotification({
         title: payload.title,

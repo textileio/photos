@@ -12,7 +12,7 @@
 import { Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
-import NotificationsActions  from '../Redux/NotificationsRedux'
+import NotificationsActions, { NotificationsSelectors }  from '../Redux/NotificationsRedux'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import UIActions from '../Redux/UIRedux'
 import { ActionType } from 'typesafe-actions'
@@ -37,7 +37,6 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
   const preferences = yield select(PreferencesSelectors.service, type as ServiceType)
   if (!preferences || preferences.status !== true) return
 
-  yield delay(1500)
   // Ensure we aren't in the foreground (Android only req)
   const queriedAppState = yield select(TextileNodeSelectors.appState)
   if (Platform.OS === 'ios' || queriedAppState.match(/background/)) {
@@ -61,13 +60,17 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Handles a view request for in App notification clicking or Engagement notification clicking
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
-  console.log('axh click', notification)
   try {
     if (notification.type in [2,3,4,5,6] && notification.target_id && notification.target_id !== '') {
       const thread = yield select(ThreadsSelectors.threadById, notification.target_id)
       yield call(TextileNode.readNotification, notification.id)
       yield put(UIActions.viewThreadRequest(thread.id, thread.name))
+    } else {
+      yield call(TextileNode.readNotification, notification.id)
     }
+    // Helpful so that the feedview will update with latest
+    // TODO: remove here and add to the Load time of Feedview...
+    yield * refreshNotifications()
   } catch (error) {
     yield put(NotificationsActions.notificationFailure(notification))
   }
@@ -75,7 +78,11 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
 
 export function * refreshNotifications () {
   try {
-    const notificationResponse = yield call(TextileNode.getNotifications, -1)
+    const busy = yield select(NotificationsSelectors.refreshing)
+    // skip multi-request back to back
+    if (busy) return
+    yield put(NotificationsActions.refreshNotificationsStart())
+    const notificationResponse = yield call(TextileNode.getNotifications, 99)
     yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.items))
   } catch (error) {
     yield put(NotificationsActions.refreshNotificationsFailure())

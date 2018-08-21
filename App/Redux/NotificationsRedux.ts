@@ -1,8 +1,12 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
+import { RootState } from '../Redux/Types'
 
 const actions = {
   refreshNotificationsRequest: createAction('REFRESH_NOTIFICATIONS_REQUEST', resolve => {
+    return () => resolve()
+  }),
+  refreshNotificationsStart: createAction('REFRESH_NOTIFICATIONS_IN_PROGRESS', resolve => {
     return () => resolve()
   }),
   refreshNotificationsSuccess: createAction('REFRESH_NOTIFICATIONS_SUCCESS', resolve => {
@@ -39,7 +43,13 @@ export const initialState: NotificationsState = {
 
 export function reducer (state: NotificationsState = initialState, action: NotificationsAction): NotificationsState {
   switch (action.type) {
-    case getType(actions.refreshNotificationsRequest):
+    case getType(actions.newNotificationRequest): {
+      // Useful so that new notifications you receive while staring at the Feed will just pop in
+      const notifications = state.notifications.splice(0, 99)
+      notifications.unshift(action.payload.notification)
+      return {...state, notifications}
+    }
+    case getType(actions.refreshNotificationsStart):
       return { ...state, refreshing: true }
     case getType(actions.refreshNotificationsSuccess):
       // Add it to our list for display
@@ -53,6 +63,7 @@ export function reducer (state: NotificationsState = initialState, action: Notif
 }
 
 export const NotificationsSelectors = {
+  refreshing: (state: RootState): boolean => state.notifications.refreshing
 }
 
 export default actions
