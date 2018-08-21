@@ -22,12 +22,9 @@ export default class DeepLinkEventHandler {
   }
 
   setup () {
-    if (Platform.OS === 'android') {
-      Linking.getInitialURL().then(this._handleUrl.bind(this))
-    } else {
+    if (Platform.OS === 'ios') {
       Linking.addEventListener('url', this._handleIOS.bind(this))
     }
-    // Run this in case we are launching from a DeepLink
     Linking.getInitialURL().then(this._handleUrl.bind(this))
   }
 
