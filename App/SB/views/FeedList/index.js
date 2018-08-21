@@ -1,11 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, ScrollView } from 'react-native'
-
 import FeedItem from '../../components/FeedItem'
 import Toast from 'react-native-easy-toast'
 
-import navStyles from '../../../Navigation/Styles/NavigationStyles'
+import * as TextileTypes from '../../../Models/TextileTypes'
+import NotificationsActions from '../../../Redux/NotificationsRedux'
+
 import styles from './statics/styles'
 
 class Notifications extends React.PureComponent {
@@ -15,13 +16,14 @@ class Notifications extends React.PureComponent {
     }
   }
 
-  _onClick (category, target) {
-    console.log(category, target)
-    if (target && (category === 'threads' || category === 'content')) {
-      this.props.navigation.navigate('ViewThread', target)
-    } else {
-      this.refs.toast.show('Wohoo!', 500)
-    }
+  componentWillMount () {
+    this.props.refreshNotifications()
+  }
+
+  _onClick (notification) {
+    // TODO: get rid of this parsing once all notification types are mapped to an action in notificationView
+    this.refs.toast.show('Wohoo!', 500) // < for now, in case the msg doesn't forward the user anywhere
+    this.props.clickNotification(notification)
   }
 
   render () {
@@ -30,7 +32,7 @@ class Notifications extends React.PureComponent {
         {/*<FeedItemUpdate />*/}
         <ScrollView style={styles.contentContainer}>
           {this.props.notifications.map((item, i) => (
-            <FeedItem key={i} profile={this.props.profile} {...item} onClick={this._onClick.bind(this)}/>
+            <FeedItem key={i} profile={this.props.profile} notification={item} onClick={this._onClick.bind(this)}/>
           ))}
         </ScrollView>
         <Toast ref='toast' position='center' />
@@ -40,6 +42,7 @@ class Notifications extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state.notifications.notifications)
   return {
     notifications: state.notifications.notifications
   }
@@ -47,6 +50,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    refreshNotifications: () => dispatch(NotificationsActions.refreshNotificationsRequest()),
+    clickNotification: (notification: TextileTypes.Notification) => dispatch(NotificationsActions.notificationSuccess(notification))
   }
 }
 

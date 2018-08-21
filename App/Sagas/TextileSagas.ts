@@ -16,12 +16,12 @@ import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
 import Config from 'react-native-config'
-
 import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
 import { getPhotos } from '../Services/CameraRoll'
 import { getAllPhotos, getPhotoPath, getPage } from '../Services/PhotoUtils'
 import * as NotificationsSagas from './NotificationsSagas'
+import NotificationsActions from '../Redux/NotificationsRedux'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
@@ -38,6 +38,7 @@ import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Red
 import DeepLink from '../Services/DeepLink'
 import { uploadFile } from './UploadFile'
 import * as NotificationsServices from '../Services/Notifications'
+import {NotificationsAction} from '../Redux/NotificationsRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -171,14 +172,14 @@ export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeAc
 }
 
 export function * initializeAppState () {
-  yield take(getType(StartupActions.startup))
-  const defaultAppState = yield select(TextileNodeSelectors.appState)
-  let queriedAppState = defaultAppState
-  while (queriedAppState.match(/default|unknown/)) {
-    yield delay(10)
-    const currentAppState = yield call(() => AppState.currentState)
-    queriedAppState = currentAppState || 'unknown'
-  }
+    yield take(getType(StartupActions.startup))
+    const defaultAppState = yield select(TextileNodeSelectors.appState)
+    let queriedAppState = defaultAppState
+    while (queriedAppState.match(/default|unknown/)) {
+      yield delay(10)
+      const currentAppState = yield call(() => AppState.currentState)
+      queriedAppState = currentAppState || 'unknown'
+    }
   yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
 

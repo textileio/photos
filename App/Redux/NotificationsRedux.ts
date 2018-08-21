@@ -2,11 +2,23 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
 
 const actions = {
+  refreshNotificationsRequest: createAction('REFRESH_NOTIFICATIONS_REQUEST', resolve => {
+    return () => resolve()
+  }),
+  refreshNotificationsSuccess: createAction('REFRESH_NOTIFICATIONS_SUCCESS', resolve => {
+    return (notifications: TextileTypes.Notification[]) => resolve({notifications})
+  }),
   newNotificationRequest: createAction('NEW_NOTIFICATION_REQUEST', resolve => {
     return (notification: TextileTypes.Notification) => resolve({notification})
   }),
-  newNotificationEngagement: createAction('NEW_NOTIFICATION_ENGAGEMENT', resolve => {
+  notificationEngagement: createAction('NOTIFICATION_ENGAGEMENT', resolve => {
     return (engagement: TextileTypes.NotificationEngagement) => resolve({ engagement: engagement })
+  }),
+  notificationSuccess: createAction('NOTIFICATION_SUCCESS', resolve => {
+    return (notification: TextileTypes.Notification) => resolve({ notification })
+  }),
+  notificationFailure: createAction('NOTIFICATION_FAILURE', resolve => {
+    return (notification: TextileTypes.Notification) => resolve({ notification })
   })
 }
 
@@ -22,10 +34,10 @@ export const initialState: NotificationsState = {
 
 export function reducer (state: NotificationsState = initialState, action: NotificationsAction): NotificationsState {
   switch (action.type) {
-    case getType(actions.newNotificationRequest):
-      const notification = action.payload.notification
-      const latest = state.notifications.slice(0, 99)
-      return { ...state, notifications: [notification, ...latest] }
+    case getType(actions.refreshNotificationsSuccess):
+      // Add it to our list for display
+      const notifications = action.payload.notifications
+      return { ...state, notifications }
     default:
       return state
   }

@@ -388,6 +388,32 @@ RCT_EXPORT_METHOD(getNotifications:(NSString *)offset limit:(int)limit resolver:
   }
 }
 
+RCT_EXPORT_METHOD(countUnreadNotifications:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  long count = [self _countUnreadNotifications];
+  NSNumber *num = [NSNumber numberWithLong:count];
+  resolve(num);
+}
+
+RCT_EXPORT_METHOD(readNotification:(NSString *)id resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _readNotification:id error:&error];
+  if (!error) {
+    resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(readAllNotifications:(NSString *)id resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _readAllNotifications:&error];
+  if (!error) {
+    resolve(nil);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *jsonString = [self _devices:&error];
@@ -557,6 +583,18 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (NSString *)_getNotifications:(NSString *)offset limit:(long)limit error:(NSError**)error {
   return [self.node getNotifications:offset limit:limit error:error];
+}
+
+- (long)_countUnreadNotifications {
+  return [self.node countUnreadNotifications];
+}
+
+- (void)_readNotification:(NSString *)id error:(NSError**)error {
+  [self.node readNotification:id error:error];
+}
+
+- (void)_readAllNotifications:(NSError**)error {
+  [self.node readAllNotifications:error];
 }
 
 - (void)_refreshMessages:(NSError**)error {

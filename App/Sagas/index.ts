@@ -20,7 +20,9 @@ import { handleSharePhotoRequest } from './HandleSharePhotoRequest'
 import { handleImageUploadComplete } from './HandleImageUploadComplete'
 import {
   handleNewNotification,
-  handleEngagement
+  handleEngagement,
+  notificationView,
+  refreshNotifications
 } from './NotificationsSagas'
 
 import {
@@ -127,7 +129,9 @@ export default function * root () {
 
     // Notifications
     takeEvery(getType(NotificationsActions.newNotificationRequest), handleNewNotification),
-    takeEvery(getType(NotificationsActions.newNotificationEngagement), handleEngagement),
+    takeEvery(getType(NotificationsActions.notificationEngagement), handleEngagement),
+    takeEvery(getType(NotificationsActions.notificationSuccess), notificationView),
+    takeEvery(getType(NotificationsActions.refreshNotificationsRequest), refreshNotifications),
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
