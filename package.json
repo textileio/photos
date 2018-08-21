@@ -79,7 +79,8 @@
     "stacktrace-js": "^2.0.0",
     "tcomb-form-native": "^0.6.11",
     "typesafe-actions": "^2.0.4",
-    "utility-types": "^2.0.0"
+    "utility-types": "^2.0.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@storybook/addon-storyshots": "^3.2.16",
@@ -96,6 +97,7 @@
     "@types/react-redux": "^6.0.3",
     "@types/react-test-renderer": "^16.0.1",
     "@types/stacktrace-js": "^0.0.32",
+    "@types/uuid": "^3.4.3",
     "babel-core": "6.26.0",
     "babel-eslint": "7.1.1",
     "babel-jest": "22.4.1",

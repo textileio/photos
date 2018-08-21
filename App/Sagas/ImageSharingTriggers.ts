@@ -4,7 +4,7 @@ import RNFS from 'react-native-fs'
 
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
-import { insertImage, addToIpfs, uploadFromAddResult, shareWalletImage, addToWallet, shareToThread } from './ImageSharingSagas'
+import { insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread } from './ImageSharingSagas'
 
 export function * handleSharePhotoRequest(action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -19,45 +19,38 @@ export function * handleSharePhotoRequest(action: ActionType<typeof UIActions.sh
 }
 
 export function * handleImageUploadComplete (action: ActionType<typeof ProcessingImagesActions.imageUploadComplete>) {
-  const { dataId } = action.payload
-  const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByAddResultId, dataId)
-  if (!processingImage) {
-    return
-  }
-  yield call(addToWallet, processingImage)
+  const { uuid } = action.payload
+  yield call(addToWallet, uuid)
   try {
-    if (!processingImage.addData || !processingImage.addData.addResult.archive) {
-      return
-    }
-    const payloadPath = processingImage.addData.addResult.archive.path
-    const exists: boolean = yield call(RNFS.exists, payloadPath)
-    if (exists) {
-      yield call(RNFS.unlink, payloadPath)
+    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
+    if (processingImage && processingImage.addData && processingImage.addData.addResult.archive) {
+      const exists: boolean = yield call(RNFS.exists, processingImage.addData.addResult.archive.path)
+      if (exists) {
+        yield call(RNFS.unlink, processingImage.addData.addResult.archive.path)
+      }
     }
   } catch (e) {}
 }
 
 export function * retryImageShare (action: ActionType<typeof ProcessingImagesActions.retry>) {
-  const { dataId } = action.payload
-  const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByAddResultId, dataId)
+  const { uuid } = action.payload
+  const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
   if (!processingImage) {
     return
   }
   if (processingImage.state === 'addedToWallet' || processingImage.state === 'sharing') {
-    yield call(shareToThread, processingImage)
+    yield call(shareToThread, uuid)
   } else if (processingImage.state === 'uploaded' || processingImage.state === 'addingToWallet') {
-    yield call(addToWallet, processingImage)
+    yield call(addToWallet, uuid)
   } else if (processingImage.state === 'added' || processingImage.state === 'uploading') {
-    if (processingImage.addData) {
-      yield call(uploadFromAddResult, processingImage.addData.addResult)
-    }
+    yield call(uploadArchive, uuid)
   } else if (processingImage.state === 'pending' || processingImage.state ==='adding') {
-    yield call(addToIpfs, processingImage.sharedImage, processingImage.destinationThreadId, processingImage.comment)
+    yield call(addToIpfs, uuid)
   }
 }
 
 export function * cancelImageShare (action: ActionType<typeof ProcessingImagesActions.cancelRequest>) {
-  const { dataId } = action.payload
+  const { uuid } = action.payload
   // TODO: Implement cancel logic, it's currently just being deleted in the reducer
-  yield put(ProcessingImagesActions.cancelComplete(dataId))
+  yield put(ProcessingImagesActions.cancelComplete(uuid))
 }

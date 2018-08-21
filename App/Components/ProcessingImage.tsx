@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Image, ViewStyle, ImageStyle, Text, TextStyle } from 'react-native'
+import React, { Fragment } from 'react'
+import { View, Image, Button, ViewStyle, ImageStyle, Text, TextStyle } from 'react-native'
 
 import ProgressBar from './ProgressBar'
 
@@ -43,24 +43,44 @@ const STATUS: TextStyle = {
   marginBottom: 6
 }
 
+const ERROR: TextStyle = {
+  ...ITEM,
+  ...STATUS
+}
+
 export type ProcessingImageProps = {
   imageUri: string,
   progress: number,
   message?: string,
-  retry: () => void,
-  cancel: () => void
+  errorMessage?: string,
+  retry?: () => void,
+  cancel?: () => void
 }
 
 const ProcessingImage = (props: ProcessingImageProps) => {
-  const { imageUri, progress, message } = props
-  return (
-    <View style={CONTAINER}>
-      <Image style={IMAGE} source={{uri: imageUri}} resizeMode='cover' />
+  const { imageUri, progress, message, errorMessage, retry, cancel } = props
+
+  let content: JSX.Element
+  if (errorMessage) {
+    content =
+      <Fragment>
+        <Text style={ERROR}>{'Error: ' + errorMessage}</Text>
+        {retry && <Button title='Retry' onPress={retry} />}
+        {cancel && <Button title='Cancel' onPress={cancel} />}
+      </Fragment>
+  } else {
+    content =
       <View style={STACK}>
         <Text style={STATUS} />
         <ProgressBar progress={progress} />
         <Text style={STATUS}>{message}</Text>
       </View>
+  }
+
+  return (
+    <View style={CONTAINER}>
+      <Image style={IMAGE} source={{uri: imageUri}} resizeMode='cover' />
+      {content}
     </View>
   )
 }

@@ -13,6 +13,7 @@ import UIActions from '../../../Redux/UIRedux'
 import { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
+import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
 import * as TextileTypes from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
@@ -125,7 +126,11 @@ class ThreadsDetail extends React.PureComponent {
 
   _renderItem = ({item}) => {
     if (item.type === 'processingItem') {
-      return <ProcessingImageCard {...item.props} />
+      return <ProcessingImageCard
+        {...item.props}
+        retry={() => { this.props.retryShare(item.id) }}
+        cancel={() => { this.props.cancelShare(item.id) }}
+      />
     } else {
       return (
         <ThreadDetailCard id={item.id + '_card'} last={item === this.props.items[this.props.items.length - 1]} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
@@ -196,14 +201,13 @@ const mapStateToProps = (state: RootState, ownProps) => {
         }
         const message = image.state
         return {
-          id: image.sharedImage.path,
+          id: image.uuid,
           type: 'processingItem',
           props: {
             imageUri: image.sharedImage.uri,
             progress,
             message,
-            retry: () => console.log('RETRY'),
-            cancel: () => console.log('CANCEL')
+            errorMessage: image.error
           }
         }
       })
@@ -268,7 +272,9 @@ const mapDispatchToProps = (dispatch) => {
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
-    dismissError: () => { dispatch(UIActions.dismissImagePickerError()) }
+    dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
+    retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
+    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) }
   }
 }
 
