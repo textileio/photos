@@ -23,7 +23,7 @@ platform :android do
 
   before_all do
     ENV["_JAVA_OPTIONS"] = "-Xmx512m"
-    ENV["GRADLE_OPTS"] = '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
+    ENV["GRADLE_OPTS"] = '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
     ENV["REACT_NATIVE_MAX_WORKERS"] = "2"
   end
 
