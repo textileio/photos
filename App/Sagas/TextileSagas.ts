@@ -11,7 +11,7 @@
 *************************************************************/
 import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, select, take } from 'redux-saga/effects'
+import { call, put, select, take, fork } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
@@ -27,6 +27,7 @@ import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions  from '../Redux/AuthRedux'
+import ContactsActions  from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
@@ -35,6 +36,7 @@ import * as TextileTypes from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
+import {ContactsAction} from '../Redux/ContactsRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -150,6 +152,31 @@ function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
 export function * viewThread ( action: ActionType<typeof UIActions.viewThreadRequest> ) {
   yield call(TextileNodeActions.refreshMessagesRequest, false)
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
+}
+
+export function * getUsername (contact: TextileTypes.Contact) {
+  try {
+    if (contact.username !== undefined) return
+    const uri = contact.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username' : undefined
+    const response = yield call(fetch, uri)
+    const username = yield call([response, response.text])
+    yield put(ContactsActions.getUsernameSuccess(contact, username))
+  } catch (error) {
+    // nada
+  }
+}
+
+export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
+  try {
+    const contactResult = yield call(TextileNode.getContacts)
+    const contacts = contactResult.items
+    yield put(ContactsActions.getContactsSuccess(contacts))
+    for (let contact of contacts) {
+      yield fork(getUsername, contact)
+    }
+  } finally {
+    yield call(NavigationService.navigate, 'AddFriends', { threadId: action.payload.threadId})
+  }
 }
 
 export function * viewPhoto ( action: ActionType<typeof UIActions.viewPhotoRequest> ) {

@@ -37,6 +37,8 @@ class ThreadsDetail extends React.PureComponent {
         <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
       </TextileHeaderButtons>
     )
+
+      // <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add Photo' iconName='add-photo' onPress={params.showImagePicker} />
@@ -46,7 +48,8 @@ class ThreadsDetail extends React.PureComponent {
     return {
       // TODO: no current menu needed for Wallet view
       headerRight,
-      headerLeft
+      headerLeft,
+      tabBarVisible: false
     }
   }
 
@@ -82,7 +85,8 @@ class ThreadsDetail extends React.PureComponent {
 
   handleActionSheetResponse (index: number) {
     if (index === 0) {
-      this.props.invite(this.props.threadId, this.props.threadName)
+      this.props.addFriendRequest(this.props.threadId, this.props.threadName)
+      // this.props.invite(this.props.threadId, this.props.threadName)
     } else if (index === 1) {
       this.props.leaveThread(this.props.threadId)
     }
@@ -175,8 +179,6 @@ const mapStateToProps = (state: RootState, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  console.log('Viewing', threadId)
-  console.log(state.threads.threads)
   var items: [{type: string, photo: TextileTypes.Photo}] = []
   var processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
   var refreshing = false
@@ -272,11 +274,11 @@ const mapDispatchToProps = (dispatch) => {
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refreshMessages: (hidden) => { dispatch(TextileNodeActions.refreshMessagesRequest(hidden)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
-    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) }
+    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
+    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
   }
 }
 

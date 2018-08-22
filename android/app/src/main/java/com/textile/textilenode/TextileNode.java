@@ -274,9 +274,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addThreadInvite (String threadId, String inviteeKey, Promise promise) {
+    public void addThreadInvite (String threadId, String inviteePk, Promise promise) {
         try {
-            promise.resolve(node.addThreadInvite(threadId, inviteeKey));
+            promise.resolve(node.addThreadInvite(threadId, inviteePk));
         }
         catch (Exception e) {
             promise.reject("ADD EXTERNAL INVITE ERROR", e);

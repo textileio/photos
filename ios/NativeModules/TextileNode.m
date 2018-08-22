@@ -243,9 +243,9 @@ RCT_REMAP_METHOD(threads, threadsWithResolver:(RCTPromiseResolveBlock)resolve re
   }
 }
 
-RCT_EXPORT_METHOD(addThreadInvite:(NSString *)threadId inviteeKey:(NSString *)inviteeKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addThreadInvite:(NSString *)threadId inviteePk:(NSString *)inviteePk resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _addThreadInvite:threadId inviteeKey:inviteeKey error:&error];
+  NSString *result = [self _addThreadInvite:threadId inviteePk:inviteePk error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -424,6 +424,16 @@ RCT_EXPORT_METHOD(acceptThreadInviteViaNotification:(NSString *)id resolver:(RCT
   }
 }
 
+RCT_EXPORT_METHOD(getContacts:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *jsonString = [self _getContacts:&error];
+  if (!error) {
+    resolve(jsonString);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *jsonString = [self _devices:&error];
@@ -525,8 +535,8 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   return [self.node threads:error];
 }
 
-- (NSString *)_addThreadInvite:(NSString *)threadId inviteeKey:(NSString *)inviteeKey error:(NSError**)error {
-  return [self.node addThreadInvite:threadId inviteePk:inviteeKey error:error];
+- (NSString *)_addThreadInvite:(NSString *)threadId inviteePk:(NSString *)inviteePk error:(NSError**)error {
+  return [self.node addThreadInvite:threadId inviteePk:inviteePk error:error];
 }
 
 - (NSString *)_addExternalThreadInvite:(NSString *)threadId error:(NSError**)error {
@@ -609,6 +619,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (NSString *)_acceptThreadInviteViaNotification:(NSString *)id error:(NSError**)error {
   return [self.node acceptThreadInviteViaNotification:id error:error];
+}
+
+- (NSString *)_getContacts:(NSError**)error {
+  return [self.node contacts:error];
 }
 
 - (void)_refreshMessages:(NSError**)error {

@@ -4,6 +4,7 @@ import ThreadsList from '../../../../../Containers/ThreadsList'
 import AddThreadScreen from '../../../../../Containers/AddThreadScreen'
 import ThreadsDetail from '../../../../../SB/views/ThreadsDetail'
 import ThreadPhotoDetail from '../../../../../SB/views/ThreadPhotoDetail'
+import ThreadsEditFriends from '../../../../../SB/views/ThreadsEditFriends'
 import AddCaptionScreen from '../../../../../Containers/AddCaptionScreen'
 import WalletPicker from '../../../../../Containers/WalletPicker'
 
@@ -13,6 +14,7 @@ const nav = createStackNavigator(
   {
     SharedPhotos: ThreadsList,
     AddThread: AddThreadScreen,
+    AddFriends: ThreadsEditFriends,
     ViewThread: ThreadsDetail,
     PhotoViewer: ThreadPhotoDetail,
     ThreadSharePhoto: AddCaptionScreen,

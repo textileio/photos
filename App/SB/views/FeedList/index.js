@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'
 
 import FeedItem from '../../components/FeedItem'
@@ -15,6 +14,7 @@ import NotificationsActions from '../../../Redux/NotificationsRedux'
 import styles from './statics/styles'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
+import TextileNodeActions from '../../../Redux/TextileNodeRedux'
 
 class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -64,12 +64,11 @@ class Notifications extends React.PureComponent {
   }
 
   _onClick (notification) {
-    // TODO: get rid of this parsing once all notification types are mapped to an action in notificationView
     this.props.clickNotification(notification)
   }
 
   _onRefresh = () => {
-    this.props.refreshNotifications()
+    this.props.refreshMessages()
   }
 
   _keyExtractor = (item, index) => item.id + '_' + index
@@ -113,7 +112,7 @@ class Notifications extends React.PureComponent {
             onRefresh={this._onRefresh}
           />
         </View>
-        <Toast ref='toast' position='center' />
+        {/*<Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />*/}
       </View>
     )
   }
@@ -131,6 +130,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     refreshNotifications: () => dispatch(NotificationsActions.refreshNotificationsRequest()),
+    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     clickNotification: (notification: TextileTypes.Notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) }
   }
