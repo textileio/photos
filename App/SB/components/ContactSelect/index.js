@@ -17,10 +17,11 @@ const ContactSelect = (props) => {
             <Text style={[styles.link, styles.small]}>invite new users</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.subtitle}>Suggested peers</Text>
+
+        {contacts.length > 0 && <Text style={styles.subtitle}>Suggested peers</Text> }
+        {contacts.length == 0 && <Text style={styles.subtitle}>No peers yet</Text> }
         {topFive.length > 0 && <View style={styles.selectedContactList}>
           {topFive.map((item) => {
-            console.log('item', item)
             // const item = contacts.find(c => c.id === id)
             if (!item) return (<View />)
 
@@ -44,7 +45,7 @@ const ContactSelect = (props) => {
           {/*<Image style={styles.searchBoxIcon} source={require('./statics/icon-search.png')} />*/}
           {/*<TextInput style={styles.searchBoxInput} placeholder='Search' onChangeText={search} />*/}
         {/*</View>*/}
-        {topFive.length > 0 &&<View style={styles.searchBoxPlaceholder} />}
+        {topFive.length > 0 && <View style={styles.searchBoxPlaceholder} />}
 
         <FlatList
           data={contacts}
