@@ -61,15 +61,15 @@ jobs:
             - attach_workspace:
                 at: ~/textile-mobile
 
-            # - restore_cache:
-            #     key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+            - restore_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
 
             - run: bundle install
 
-            # - save_cache:
-            #     key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-            #     paths:
-            #         - vendor/bundle
+            - save_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+                paths:
+                    - vendor/bundle
 
             - run:
                 name: fastlane tests
@@ -105,15 +105,15 @@ jobs:
             - attach_workspace:
                 at: ~/textile-mobile
 
-            # - restore_cache:
-            #     key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+            - restore_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
 
             - run: bundle install
 
-            # - save_cache:
-            #     key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-            #     paths:
-            #         - vendor/bundle
+            - save_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+                paths:
+                    - vendor/bundle
 
             - run:
                 command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
