@@ -11,7 +11,7 @@
 *************************************************************/
 import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, select, take, fork } from 'redux-saga/effects'
+import { call, put, select, take } from 'redux-saga/effects'
 import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
 import BackgroundTask from 'react-native-background-task'
@@ -181,7 +181,6 @@ export function * initializeAppState () {
 
 export function * handleNewAppState (action: ActionType<typeof TextileNodeActions.appStateChange>) {
   const { previousState, newState } = action.payload
-
   if (previousState.match(/default|unknown/) && newState === 'background') {
     yield * triggerCreateNode()
   } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {

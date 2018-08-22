@@ -54,9 +54,6 @@ const actions = {
   removeExternalInviteLink: createAction('REMOVE_EXTERNAL_INVITE_LINK', resolve => {
     return () => resolve()
   }),
-  reviewThreadInvite: createAction('REVIEW_THREAD_INVITE', resolve => {
-    return (notification: TextileTypes.Notification) => resolve({ notification })
-  }),
   acceptInviteRequest: createAction('ACCEPT_THREAD_INVITE', resolve => {
     return (notificationId: string, threadName: string) => resolve({ notificationId, threadName  })
   }),

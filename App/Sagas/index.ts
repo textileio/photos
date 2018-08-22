@@ -31,7 +31,8 @@ import {
   handleNewNotification,
   handleEngagement,
   notificationView,
-  refreshNotifications
+  refreshNotifications,
+  reviewThreadInvite
 } from './NotificationsSagas'
 
 import {
@@ -42,7 +43,6 @@ import {
   presentShareInterface,
   acceptExternalInvite,
   pendingInvitesTask,
-  reviewThreadInvite,
   acceptInvite
 } from './ThreadsSagas'
 
@@ -133,7 +133,6 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
 
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
-    takeEvery(getType(ThreadsActions.reviewThreadInvite), reviewThreadInvite),
     takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),
 
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
@@ -150,6 +149,7 @@ export default function * root () {
     takeEvery(getType(NotificationsActions.notificationEngagement), handleEngagement),
     takeEvery(getType(NotificationsActions.notificationSuccess), notificationView),
     takeEvery(getType(NotificationsActions.refreshNotificationsRequest), refreshNotifications),
+    takeEvery(getType(NotificationsActions.reviewNotificationThreadInvite), reviewThreadInvite),
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
