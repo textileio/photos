@@ -34,13 +34,6 @@ class ThreadsEdit extends React.PureComponent {
       </TextileHeaderButtons>
     )
 
-    // TODO: don't love the visual hierarchy of the links currently, need to figure out
-    //   (
-    //   <TextileHeaderButtons>
-    //     <Item title='Share' iconName='share' onPress={params.getPublicLink} />
-    //   </TextileHeaderButtons>
-    // )
-
     return {
       headerRight,
       headerLeft
