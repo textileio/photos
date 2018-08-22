@@ -19,9 +19,7 @@ import DeepLink from '../Services/DeepLink'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import NavigationService from '../Services/NavigationService'
-import * as NotificationsServices from '../Services/Notifications'
-import NotificationsActions from '../Redux/NotificationsRedux'
-import {Thread} from '../Models/TextileTypes'
+import UIActions from '../Redux/UIRedux'
 
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
@@ -50,7 +48,7 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   }
 }
 
-async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
+export async function getDefaultThread (): Promise<TextileTypes.Thread | undefined> {
   const threads = await TextileNode.threads()
   var defaultThread = threads.items.find(thread => thread.name === 'default')
   return defaultThread
@@ -101,57 +99,13 @@ export function * removeThread (action: ActionType<typeof ThreadsActions.removeT
   }
 }
 
-function bindCallbackToPromise() {
-  let _resolve
-  const promise = () => {
-    return new Promise((resolve) => {
-      _resolve = resolve
-    })
-  }
-  const cb = (args) => _resolve(args)
-
-  return {
-    promise
-    , cb
-  }
-}
-
-async function displayAlert(message: string) {
-  const alert = new Promise<void>((resolve, reject) => {
-    Alert.alert(
-      'Accept Invite',
-      message,
-      [
-        {
-          text: 'Accept',
-          onPress: resolve
-        },
-        {
-          text: 'Ignore',
-          style: 'cancel',
-          onPress: reject
-        }
-      ],
-      {cancelable: false}
-    )
-  })
-  await alert
-}
-export function * reviewThreadInvite (action: ActionType<typeof ThreadsActions.reviewThreadInvite>) {
-  const {notification} = action.payload
-  const payload = NotificationsServices.toPayload(notification)
-  if (!payload) return
-
-  try {
-    yield call(displayAlert, payload.message)
-    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.category))
-  } catch (error) {
-    // Ignore invite
-  }
-}
-
 export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
-  const { notificationId, threadName } = action.payload
-  const newThreadId = yield call(TextileNode.acceptThreadInviteViaNotification, notificationId)
-  yield call(NavigationService.navigate, 'ViewThread', { id: newThreadId, name: threadName })
+  const {notificationId, threadName} = action.payload
+  try {
+    const threadId = yield call(TextileNode.acceptThreadInviteViaNotification, notificationId)
+    yield * refreshThreads()
+    yield put(UIActions.viewThreadRequest(threadId, threadName))
+  } catch (error) {
+    // TODO: it would be nice to tell the user when they've already joined the thread
+  }
 }

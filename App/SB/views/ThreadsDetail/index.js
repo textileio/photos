@@ -175,6 +175,8 @@ const mapStateToProps = (state: RootState, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
+  console.log('Viewing', threadId)
+  console.log(state.threads.threads)
   var items: [{type: string, photo: TextileTypes.Photo}] = []
   var processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
   var refreshing = false
@@ -214,11 +216,12 @@ const mapStateToProps = (state: RootState, ownProps) => {
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
+  console.log(items)
   // I saw a really weird state where thread was all undefined....
   // seems like we should show a loading state if that ever happens.
   // at the very least i put the user on the default screen instead of a
   // blank Thread screen
-  const threadName = thread ? thread.name : undefined
+  const threadName = thread ? thread.name : navParams.name ? navParams.name : undefined
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
