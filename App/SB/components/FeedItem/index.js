@@ -14,7 +14,7 @@ const FeedItem = props => {
 
   if (!payload) return (<View />)
 
-  let avatarUri = notification.actor_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + 'QmfA9gBfGYXXJYY7QEn4KM94gUbrfNMiD6zhFWaowC5f5m' + '/avatar' : undefined
+  let avatarUri = notification.actor_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + notification.actor_id + '/avatar' : undefined
 
   const leftSource = (
     <Avatar
