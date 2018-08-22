@@ -53,7 +53,13 @@ const actions = {
   }),
   removeExternalInviteLink: createAction('REMOVE_EXTERNAL_INVITE_LINK', resolve => {
     return () => resolve()
-  })
+  }),
+  acceptInviteRequest: createAction('ACCEPT_THREAD_INVITE', resolve => {
+    return (notificationId: string, threadName: string) => resolve({ notificationId, threadName  })
+  }),
+  addInternalInvitesRequest: createAction('ADD_INTERNAL_INVITES_REQUEST', resolve => {
+    return (threadId: string, inviteePks: string[]) => resolve({ threadId, inviteePks  })
+  }),
 }
 
 export type ThreadsAction = ActionType<typeof actions>

@@ -3,13 +3,21 @@ import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
   container: {
-    marginTop: 20,
     backgroundColor: '#FAFCFE',
     flex: 1
   },
   contentContainer: {
     paddingTop: 18,
     paddingHorizontal: 16
+  },
+  toast: {
+    backgroundColor: '#EEF0F3'
+  },
+  toastText: {
+    color: '#2D3237',
+    textAlign: 'center',
+    fontSize: 18,
+    padding: 24
   },
   toolbarLeft: {
     height: 16,
