@@ -46,7 +46,7 @@ class ThreadsEditFriends extends React.PureComponent {
     this.props.navigation.setParams({
       getPublicLink: this._getPublicLink.bind(this),
       updateThread: this._updateThread.bind(this),
-      updateEnabled: this.props.topFive.length > 0
+      updateEnabled: this.props.contacts.length > 0 && this.props.notInThread > 0
     })
   }
 
@@ -93,6 +93,7 @@ class ThreadsEditFriends extends React.PureComponent {
           select={this._select.bind(this)}
           selected={this.state.selected}
           topFive={this.props.topFive}
+          notInThread={this.props.notInThread}
         />
         <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />
       </View>
@@ -108,20 +109,24 @@ const mapStateToProps = (state, ownProps) => {
       included: contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
     }
   })
-  const popularity = contacts.filter(c => !c.included).sort((a, b) => a.thread_ids.length < b.thread_ids.length)
+  const notInThread = contacts.filter(c => !c.included)
+  const popularity = notInThread.sort((a, b) => a.thread_ids.length < b.thread_ids.length)
+  const topFive = popularity.slice(0, 5)
+  const sortedContacts = contacts.sort((a, b) => {
+    if (a.username === null || a.username === '') {
+      return 1
+    } else if (b.username === null || b.username === '') {
+      return -1
+    } else if (a.username === b.username) {
+      return 0
+    } else {
+      return a.username < b.username ? -1 : 1
+    }
+  })
   return {
-    topFive: popularity.slice(0, 5),
-    contacts: contacts.sort((a, b) => {
-      if (a.username === null || a.username === '') {
-        return 1
-      } else if (b.username === null || b.username === '') {
-        return -1
-      } else if (a.username === b.username) {
-        return 0
-      } else {
-        return a.username < b.username ? -1 : 1
-      }
-    })
+    topFive,
+    contacts: sortedContacts,
+    notInThread: notInThread.length
   }
 }
 

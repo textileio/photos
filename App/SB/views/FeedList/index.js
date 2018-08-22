@@ -12,9 +12,11 @@ import * as TextileTypes from '../../../Models/TextileTypes'
 import NotificationsActions from '../../../Redux/NotificationsRedux'
 
 import styles from './statics/styles'
+import feedItemStyle from '../../components/FeedItem/statics/styles'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
+import { NotificationType } from '../../../Models/TextileTypes'
 
 class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -104,6 +106,24 @@ class Notifications extends React.PureComponent {
         {/*<FeedItemUpdate />*/}
         {this.props.showTourScreen && this._renderTour()}
         <View style={styles.contentContainer}>
+          {this.props.notifications.length === 0 &&
+          <View style={feedItemStyle.itemContainer} >
+            <View style={feedItemStyle.headerIconUser}>
+              <View style={feedItemStyle.iconContainer}>
+                <Avatar
+                  width={24}
+                  height={24}
+                  uri={''}
+                  defaultSource={require('../../../Images/v2/new_avatar.png')}
+                />
+              </View>
+            </View>
+            <View style={feedItemStyle.textContainer}>
+              <Text style={feedItemStyle.text}>{'Welcome to Textile. Now go share some photos!'}</Text>
+              <Text style={feedItemStyle.timestamp}>{'Now'}</Text>
+            </View>
+          </View>
+          }
           <FlatList
             data={this.props.notifications}
             keyExtractor={this._keyExtractor.bind(this)}
