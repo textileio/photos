@@ -18,7 +18,7 @@ const ContactSelect = (props) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.subtitle}>Suggested peers</Text>
-        <View style={styles.selectedContactList}>
+        {topFive.length > 0 && <View style={styles.selectedContactList}>
           {topFive.map((item) => {
             console.log('item', item)
             // const item = contacts.find(c => c.id === id)
@@ -37,14 +37,14 @@ const ContactSelect = (props) => {
               </TouchableOpacity>
             )
           })}
-        </View>
+        </View>}
       </View>
       <View style={styles.body}>
         {/*<View style={styles.searchBoxContainer}>*/}
           {/*<Image style={styles.searchBoxIcon} source={require('./statics/icon-search.png')} />*/}
           {/*<TextInput style={styles.searchBoxInput} placeholder='Search' onChangeText={search} />*/}
         {/*</View>*/}
-        <View style={styles.searchBoxPlaceholder} />
+        {topFive.length > 0 &&<View style={styles.searchBoxPlaceholder} />}
 
         <FlatList
           data={contacts}

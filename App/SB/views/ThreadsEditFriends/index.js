@@ -108,7 +108,7 @@ const mapStateToProps = (state, ownProps) => {
       included: contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
     }
   })
-  const popularity = contacts.sort((a, b) => a.thread_ids.length < b.thread_ids.length)
+  const popularity = contacts.filter(c => !c.included).sort((a, b) => a.thread_ids.length < b.thread_ids.length)
   return {
     topFive: popularity.slice(0, 5),
     contacts: contacts.sort((a, b) => {
