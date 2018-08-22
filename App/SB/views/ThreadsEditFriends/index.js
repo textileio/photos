@@ -28,7 +28,7 @@ class ThreadsEditFriends extends React.PureComponent {
       </TextileHeaderButtons>
     )
 
-    const headerRight = (
+    const headerRight = params.updateEnabled && (
       <TextileHeaderButtons >
         <Item title='invite' onPress={() => {
           params.updateThread()
@@ -46,7 +46,7 @@ class ThreadsEditFriends extends React.PureComponent {
     this.props.navigation.setParams({
       getPublicLink: this._getPublicLink.bind(this),
       updateThread: this._updateThread.bind(this),
-      updateEnabled: false
+      updateEnabled: this.props.topFive.length > 0
     })
   }
 
