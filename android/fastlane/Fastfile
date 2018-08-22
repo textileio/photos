@@ -35,7 +35,7 @@ platform :android do
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     versionCodes = google_play_track_version_codes(track: "internal")
-    # set_version_code(version: versionCodes[0] + 1)
+    set_version_code(version: versionCodes[0] + 1)
     gradle(task: "clean assembleRelease")
     changelog_from_git_commits
     supply(
