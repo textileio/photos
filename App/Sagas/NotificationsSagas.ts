@@ -112,7 +112,6 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
     yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.category))
   } catch (error) {
     // Ignore invite
-    console.log(error)
   }
 }
 

@@ -16,7 +16,7 @@ import styles from './statics/styles'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 
-class Notifications extends React.Component {
+class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
