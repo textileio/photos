@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from 'react-navigation'
 import React from 'react'
-import { Image } from 'react-native'
 
 import Icons from '../../../../Components/Icons'
 

@@ -22,6 +22,7 @@ import {
   retryImageShare,
   cancelImageShare
 } from './ImageSharingTriggers'
+
 import {
   routeDeepLink
 } from './DeepLinkSagas'
@@ -30,8 +31,21 @@ import {
   handleNewNotification,
   handleEngagement,
   notificationView,
-  refreshNotifications
+  refreshNotifications,
+  reviewThreadInvite
 } from './NotificationsSagas'
+
+import {
+  addThread,
+  removeThread,
+  refreshThreads,
+  addExternalInvite,
+  presentShareInterface,
+  acceptExternalInvite,
+  addInternalInvites,
+  pendingInvitesTask,
+  acceptInvite
+} from './ThreadsSagas'
 
 import {
   signUp,
@@ -40,6 +54,7 @@ import {
   recoverPassword,
   viewPhoto,
   viewThread,
+  addFriends,
   initializeAppState,
   handleNewAppState,
   toggleBackgroundTimer,
@@ -51,13 +66,6 @@ import {
   addDevice,
   getPhotoHashes,
   ignorePhoto,
-  addThread,
-  removeThread,
-  refreshThreads,
-  addExternalInvite,
-  presentShareInterface,
-  acceptExternalInvite,
-  pendingInvitesTask,
   cameraPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
@@ -90,6 +98,7 @@ export default function * root () {
 
     takeEvery(getType(UIActions.viewPhotoRequest), viewPhoto),
     takeEvery(getType(UIActions.viewThreadRequest), viewThread),
+    takeEvery(getType(UIActions.addFriendRequest), addFriends),
 
     takeEvery(getType(AuthActions.signUpRequest), signUp),
     takeEvery(getType(AuthActions.logInRequest), logIn),
@@ -125,8 +134,10 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
     takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
+    takeEvery(getType(ThreadsActions.addInternalInvitesRequest), addInternalInvites),
 
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
+    takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),
 
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
 
@@ -142,6 +153,7 @@ export default function * root () {
     takeEvery(getType(NotificationsActions.notificationEngagement), handleEngagement),
     takeEvery(getType(NotificationsActions.notificationSuccess), notificationView),
     takeEvery(getType(NotificationsActions.refreshNotificationsRequest), refreshNotifications),
+    takeEvery(getType(NotificationsActions.reviewNotificationThreadInvite), reviewThreadInvite),
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),

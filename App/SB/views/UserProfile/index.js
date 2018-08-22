@@ -5,7 +5,6 @@ import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import PreferencesActions from '../../../Redux/PreferencesRedux'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 

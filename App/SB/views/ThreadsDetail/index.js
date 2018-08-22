@@ -37,6 +37,8 @@ class ThreadsDetail extends React.PureComponent {
         <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
       </TextileHeaderButtons>
     )
+
+      // <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add Photo' iconName='add-photo' onPress={params.showImagePicker} />
@@ -46,7 +48,8 @@ class ThreadsDetail extends React.PureComponent {
     return {
       // TODO: no current menu needed for Wallet view
       headerRight,
-      headerLeft
+      headerLeft,
+      tabBarVisible: false
     }
   }
 
@@ -82,7 +85,8 @@ class ThreadsDetail extends React.PureComponent {
 
   handleActionSheetResponse (index: number) {
     if (index === 0) {
-      this.props.invite(this.props.threadId, this.props.threadName)
+      this.props.addFriendRequest(this.props.threadId, this.props.threadName)
+      // this.props.invite(this.props.threadId, this.props.threadName)
     } else if (index === 1) {
       this.props.leaveThread(this.props.threadId)
     }
@@ -214,11 +218,12 @@ const mapStateToProps = (state: RootState, ownProps) => {
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
+  console.log(items)
   // I saw a really weird state where thread was all undefined....
   // seems like we should show a loading state if that ever happens.
   // at the very least i put the user on the default screen instead of a
   // blank Thread screen
-  const threadName = thread ? thread.name : undefined
+  const threadName = thread ? thread.name : navParams.name ? navParams.name : undefined
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
@@ -269,11 +274,11 @@ const mapDispatchToProps = (dispatch) => {
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refreshMessages: (hidden) => { dispatch(TextileNodeActions.refreshMessagesRequest(hidden)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
-    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) }
+    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
+    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
   }
 }
 
