@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import Config from 'react-native-config'
 import ImageSc from 'react-native-scalable-image'
 import * as NotificationServices from '../../../Services/Notifications'
@@ -14,14 +14,14 @@ const FeedItem = props => {
 
   if (!payload) return (<View />)
 
-  let avatarUri = notification.actor_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + 'QmfA9gBfGYXXJYY7QEn4KM94gUbrfNMiD6zhFWaowC5f5m' + '/avatar' : undefined
+  let avatarUri = notification.actor_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + notification.actor_id + '/avatar' : undefined
 
   const leftSource = (
     <Avatar
       width={24}
       height={24}
       uri={avatarUri}
-      defaultSource={require('./statics/main-image.png')}
+      defaultSource={require('../../../Images/v2/main-image.png')}
     />)
 
   return (
@@ -37,6 +37,7 @@ const FeedItem = props => {
         <Text style={styles.text}>{payload.message}</Text>
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
+      {!notification.read && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
     </TouchableOpacity>
   )
 }

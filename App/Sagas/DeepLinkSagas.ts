@@ -18,6 +18,7 @@ import NavigationService from '../Services/NavigationService'
 
 export function routeDeepLink (action: ActionType<typeof UIActions.routeDeepLinkRequest>) {
   const { url } = action.payload
+  if (!url) return
   try {
     const data = DeepLink.getData(url)
     if (data) {

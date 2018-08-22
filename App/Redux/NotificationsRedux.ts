@@ -26,6 +26,9 @@ const actions = {
   }),
   notificationFailure: createAction('NOTIFICATION_FAILURE', resolve => {
     return (notification: TextileTypes.Notification) => resolve({ notification })
+  }),
+  reviewNotificationThreadInvite: createAction('REVIEW_NOTIFICATION_THREAD_INVITE', resolve => {
+    return (notification: TextileTypes.Notification) => resolve({ notification })
   })
 }
 
@@ -45,7 +48,7 @@ export function reducer (state: NotificationsState = initialState, action: Notif
   switch (action.type) {
     case getType(actions.newNotificationRequest): {
       // Useful so that new notifications you receive while staring at the Feed will just pop in
-      const notifications = state.notifications.splice(0, 99)
+      const notifications = state.notifications.slice(0, 99)
       notifications.unshift(action.payload.notification)
       return {...state, notifications}
     }

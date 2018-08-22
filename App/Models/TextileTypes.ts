@@ -3,6 +3,17 @@ export interface Event {
   payload: string
 }
 
+export interface Contact {
+  id: string
+  pk: string
+  thread_ids: string[]
+  username?: string
+}
+
+export interface GetContactsResult {
+  items: Contact[]
+}
+
 export enum NotificationType {
   receivedInviteNotification,
   deviceAddedNotification,

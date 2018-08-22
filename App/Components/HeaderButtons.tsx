@@ -21,4 +21,8 @@ export const TextileHeaderButtons = props => {
   )
 }
 
-export const Item = HeaderButtons.Item
+export const Item = props => {
+  return (
+    <HeaderButtons.Item {...props} />
+  )
+}

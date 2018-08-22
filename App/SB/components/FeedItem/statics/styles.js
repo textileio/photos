@@ -9,24 +9,25 @@ export default StyleSheet.create({
     paddingRight: 9,
     paddingVertical: 11,
     borderBottomWidth: 1,
-    borderColor: '#ECEDEE',
+    borderColor: '#ECEDEE'
   },
   textContainer: {
     flex: 1,
     marginLeft: 11
   },
   text: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 12,
     marginBottom: 5
   },
   timestamp: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 11,
     color: '#9B9B9B'
   },
   unread: {
-    fontFamily: 'BentonSans-Bold'
+    // color: '#7C848D'
+    // fontFamily: 'BentonSans-Bold'
   },
   headerIconUser: {
     width: 29,
