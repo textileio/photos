@@ -17,6 +17,10 @@ default_platform(:android)
 
 platform :android do
 
+  def set_version_code(gradle_build: 'app/build.gradle', version: 0)
+    sh %Q{cd ../ && echo "$(awk '{sub(/versionCode [[:digit:]]+$/,"versionCode "#{version})}1' #{gradle_build})" > #{gradle_build} && cd -}
+  end
+
   before_all do
     ENV["_JAVA_OPTIONS"] = "-Xmx512m"
     ENV["GRADLE_OPTS"] = "-Xmx512m"
@@ -30,9 +34,8 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
-    increment_version_code(
-        gradle_file_path: "app/build.gradle",
-    )
+    versionCodes = google_play_track_version_codes(track: "internal")
+    # set_version_code(version: versionCodes[0] + 1)
     gradle(task: "clean assembleRelease")
     changelog_from_git_commits
     supply(
