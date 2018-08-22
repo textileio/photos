@@ -12,7 +12,7 @@ import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 import styles from './statics/styles'
 import Config from 'react-native-config'
 
-class ThreadsEdit extends React.PureComponent {
+class ThreadsEditFriends extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -132,4 +132,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadsEdit)
+export default connect(mapStateToProps, mapDispatchToProps)(ThreadsEditFriends)
