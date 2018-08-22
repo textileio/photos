@@ -107,7 +107,17 @@ class ThreadsEdit extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    contacts: state.contacts.contacts.sort((a, b) => a.username < b.username)
+    contacts: state.contacts.contacts.sort((a, b) => {
+      if (a.username === null || a.username === '') {
+        return 1
+      } else if (b.username === null || b.username === '') {
+        return -1
+      } else if (a.username === b.username) {
+        return 0
+      } else {
+        return a.username < b.username ? -1 : 1
+      }
+    })
   }
 }
 
