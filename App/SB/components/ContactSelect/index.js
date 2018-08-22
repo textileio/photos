@@ -1,14 +1,13 @@
 import React from 'react'
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
 import Avatar from '../../../Components/Avatar'
-import Config from 'react-native-config'
 
 import RadioButton from '../../components/RadioButton'
 
 import styles from './statics/styles'
 
 const ContactSelect = (props) => {
-  const { getPublicLink, contacts, select, selected, threadId, topFive } = props
+  const { getPublicLink, contacts, select, selected, topFive } = props
   return (
     <View style={styles.contentContainer}>
       <View style={styles.header}>
@@ -21,6 +20,7 @@ const ContactSelect = (props) => {
         <Text style={styles.subtitle}>Suggested peers</Text>
         <View style={styles.selectedContactList}>
           {topFive.map((item) => {
+            console.log('item', item)
             // const item = contacts.find(c => c.id === id)
             if (!item) return (<View />)
 
