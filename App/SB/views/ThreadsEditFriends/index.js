@@ -28,7 +28,7 @@ class ThreadsEdit extends React.PureComponent {
 
     const headerRight = (
       <TextileHeaderButtons >
-        <Item title='Update Thread' onPress={() => {
+        <Item title='invite' onPress={() => {
           params.updateThread()
         }} />
       </TextileHeaderButtons>
@@ -98,6 +98,7 @@ class ThreadsEdit extends React.PureComponent {
           select={this._select.bind(this)}
           selected={this.state.selected}
           threadId={this.props.navigation.state.params.threadId}
+          topFive={this.props.topFive}
         />
         <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />
       </View>
@@ -106,7 +107,9 @@ class ThreadsEdit extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const popularity = state.contacts.contacts.sort((a, b) => a.thread_ids.length < b.thread_ids.length).map((c) => c.id)
   return {
+    topFive: popularity.splice(0, 5),
     contacts: state.contacts.contacts.sort((a, b) => {
       if (a.username === null || a.username === '') {
         return 1

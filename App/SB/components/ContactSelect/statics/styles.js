@@ -67,6 +67,14 @@ export default StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 11
   },
+  searchBoxPlaceholder: {
+    flexDirection: 'row',
+    height: 4,
+    backgroundColor: '#EEF0F3',
+    borderRadius: 2,
+    marginBottom: 10,
+    paddingHorizontal: 4
+  },
   searchBoxIcon: {
     height: 14,
     width: 14,
