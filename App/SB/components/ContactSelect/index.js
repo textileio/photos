@@ -6,8 +6,20 @@ import RadioButton from '../../components/RadioButton'
 
 import styles from './statics/styles'
 
+function getSubTitle(contacts, topFive, notInThread): string {
+  if (contacts.length === 0) {
+    return 'No peers yet'
+  } else if (contacts.length > 0 && notInThread === 0) {
+    return 'No peers left to invite'
+  } else if (topFive.length > 0 && topFive.length > notInThread) {
+    return 'Suggested peers'
+  }
+  return 'Select peers to invite'
+}
 const ContactSelect = (props) => {
-  const { getPublicLink, contacts, select, selected, topFive } = props
+  const { getPublicLink, contacts, select, selected, topFive, notInThread } = props
+  const subTitle = getSubTitle(contacts, topFive, notInThread)
+  const showSuggested = topFive.length > 0 && topFive.length > notInThread
   return (
     <View style={styles.contentContainer}>
       <View style={styles.header}>
@@ -18,9 +30,9 @@ const ContactSelect = (props) => {
           </TouchableOpacity>
         </View>
 
-        {contacts.length > 0 && <Text style={styles.subtitle}>Suggested peers</Text> }
-        {contacts.length == 0 && <Text style={styles.subtitle}>No peers yet</Text> }
-        {topFive.length > 0 && <View style={styles.selectedContactList}>
+        {subTitle && <Text style={styles.subtitle}> { subTitle } </Text> }
+
+        {showSuggested && <View style={styles.selectedContactList}>
           {topFive.map((item) => {
             // const item = contacts.find(c => c.id === id)
             if (!item) return (<View />)
@@ -45,7 +57,7 @@ const ContactSelect = (props) => {
           {/*<Image style={styles.searchBoxIcon} source={require('./statics/icon-search.png')} />*/}
           {/*<TextInput style={styles.searchBoxInput} placeholder='Search' onChangeText={search} />*/}
         {/*</View>*/}
-        {topFive.length > 0 && <View style={styles.searchBoxPlaceholder} />}
+        <View style={styles.searchBoxPlaceholder} />
 
         <FlatList
           data={contacts}
