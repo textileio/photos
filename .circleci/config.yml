@@ -54,6 +54,7 @@ jobs:
         working_directory: ~/textile-mobile/android
         docker:
             - image: circleci/android:api-26-node8-alpha
+        resource_class: large
         steps:
             - checkout:
                 path: ~/textile-mobile
@@ -94,6 +95,7 @@ jobs:
         working_directory: ~/textile-mobile/android
         docker:
             - image: circleci/android:api-26-node8-alpha
+        resource_class: large
         steps:
             - checkout:
                 path: ~/textile-mobile
