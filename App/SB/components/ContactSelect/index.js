@@ -20,22 +20,19 @@ const ContactSelect = (props) => {
         </View>
         <Text style={styles.subtitle}>Suggested peers</Text>
         <View style={styles.selectedContactList}>
-          {topFive.map((id) => {
-
-            const item = contacts.find(c => c.id === id)
+          {topFive.map((item) => {
+            // const item = contacts.find(c => c.id === id)
             if (!item) return (<View />)
 
             const defaultSource = require('../../../Images/v2/main-image.png')
-            let uri = item.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + item.id + '/avatar' : undefined
 
-            const included = item.thread_ids.includes(threadId)
-            const selectState = !!selected[item.id] || included
+            const selectState = !!selected[item.id] || item.included
 
             return (
-              <TouchableOpacity key={id} style={styles.selectedContact} onPress={() => {
-                select(item, included)
+              <TouchableOpacity key={item.id} style={styles.selectedContact} onPress={() => {
+                select(item, item.included)
               }}>
-                <Avatar style={styles.selectedContact} width={43} height={43} uri={uri} defaultSource={defaultSource} />
+                <Avatar style={styles.selectedContact} width={43} height={43} uri={item.uri} defaultSource={defaultSource} />
                 {selectState && <Image style={styles.selectedContactIcon} source={require('./statics/icon-select.png')} />}
               </TouchableOpacity>
             )
@@ -51,23 +48,21 @@ const ContactSelect = (props) => {
 
         <FlatList
           data={contacts}
-          keyExtractor={(item, index) => item.pk}
+          keyExtractor={(item) => item.pk}
           extraData={selected}
           renderItem={(contact) => {
             const {item} = contact
             const defaultSource = require('../../../Images/v2/main-image.png')
-            let uri = item.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + item.id + '/avatar' : undefined
 
-            const included = item.thread_ids.includes(threadId)
-            const selectState = !!selected[item.id] || included
+            const selectState = !!selected[item.id] || item.included
             return (
               <TouchableOpacity style={styles.contactItem} onPress={() => {
-                select(item, included)
+                select(item, item.included)
               }}>
-                <Avatar style={styles.selectedContact} width={43} height={43} uri={uri} defaultSource={defaultSource} />
+                <Avatar style={styles.selectedContact} width={43} height={43} uri={item.uri} defaultSource={defaultSource} />
                 <Text style={styles.contactName}>{item.username || 'peer'}</Text>
                 <View style={styles.contactSelectRadio}>
-                  <RadioButton disabled={included} selected={selectState} />
+                  <RadioButton disabled={item.included} selected={selectState} />
                 </View>
               </TouchableOpacity>
             )

@@ -9,6 +9,7 @@ import ThreadsActions from '../../../Redux/ThreadsRedux'
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
+import Config from 'react-native-config'
 
 class ThreadsEdit extends React.PureComponent {
   constructor (props) {
@@ -100,9 +101,9 @@ class ThreadsEdit extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const popularity = state.contacts.contacts.sort((a, b) => a.thread_ids.length < b.thread_ids.length).map((c) => c.id)
+  const popularity = state.contacts.contacts.sort((a, b) => a.thread_ids.length < b.thread_ids.length)
   return {
-    topFive: popularity.splice(0, 5),
+    topFive: popularity.slice(0, 5),
     contacts: state.contacts.contacts.sort((a, b) => {
       if (a.username === null || a.username === '') {
         return 1
@@ -113,6 +114,10 @@ const mapStateToProps = (state, ownProps) => {
       } else {
         return a.username < b.username ? -1 : 1
       }
+    }).map((contact) => {
+      contact.uri = contact.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/avatar' : undefined
+      contact.included = contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
+      return contact
     })
   }
 }
