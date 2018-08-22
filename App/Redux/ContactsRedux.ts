@@ -33,14 +33,18 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
       return { ...state, contacts }
     }
     case getType(actions.getContactsSuccess):
-      const contacts = action.payload.contacts.map(contact => {
-        const existing = state.contacts
-          .filter((c) => c.username !== undefined)
-          .find((c) => c.id === contact.id)
-        if (existing) {
-          contact.username = existing.username
-        }
-        return contact
+
+      // Bandaid until we put username responsibility into Go
+      const keepers = state.contacts
+        .filter((c) => c.username !== undefined)
+        .reduce(function(map, obj) {
+          map[obj.id] = obj
+          return map;
+        }, {} as {[index: string]: TextileTypes.Contact})
+
+      const contacts = action.payload.contacts.map((c) => {
+        c.username = keepers[c.id] ? keepers[c.id].username : undefined
+        return c
       })
       return { ...state, contacts }
     default:
@@ -49,9 +53,7 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
 }
 
 export const ContactsSelectors = {
-  isKnown: (state: RootState, id: string) => {
-    return state.contacts && state.contacts.contacts && state.contacts.contacts.some((p) => p.id === id)
-  }
+  isKnown: (state: RootState, id: string) => state.contacts.contacts.some((p) => p.id === id)
 }
 
 export default actions
