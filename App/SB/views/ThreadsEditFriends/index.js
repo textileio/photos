@@ -6,6 +6,7 @@ import Toast from 'react-native-easy-toast'
 
 import ContactSelect from '../../components/ContactSelect'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
+import * as TextileTypes from '../../../Models/TextileTypes'
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
@@ -91,7 +92,6 @@ class ThreadsEdit extends React.PureComponent {
           contacts={this.props.contacts}
           select={this._select.bind(this)}
           selected={this.state.selected}
-          threadId={this.props.navigation.state.params.threadId}
           topFive={this.props.topFive}
         />
         <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />
@@ -101,10 +101,17 @@ class ThreadsEdit extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const popularity = state.contacts.contacts.sort((a, b) => a.thread_ids.length < b.thread_ids.length)
+  const contacts = state.contacts.contacts.map((contact): TextileTypes.Contact & {uri?: string, included: boolean} => {
+    return {
+      ...contact,
+      uri: contact.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/avatar' : undefined,
+      included: contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
+    }
+  })
+  const popularity = contacts.sort((a, b) => a.thread_ids.length < b.thread_ids.length)
   return {
     topFive: popularity.slice(0, 5),
-    contacts: state.contacts.contacts.sort((a, b) => {
+    contacts: contacts.sort((a, b) => {
       if (a.username === null || a.username === '') {
         return 1
       } else if (b.username === null || b.username === '') {
@@ -114,10 +121,6 @@ const mapStateToProps = (state, ownProps) => {
       } else {
         return a.username < b.username ? -1 : 1
       }
-    }).map((contact) => {
-      contact.uri = contact.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/avatar' : undefined
-      contact.included = contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
-      return contact
     })
   }
 }
