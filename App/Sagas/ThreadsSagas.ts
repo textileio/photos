@@ -81,7 +81,7 @@ export function * addThread (action: ActionType<typeof ThreadsActions.addThreadR
   try {
     const thread: TextileTypes.Thread = yield call(TextileNode.addThread, name, mnemonic)
     yield put(ThreadsActions.addThreadSuccess(thread))
-    yield put(TextileNodeActions.getPhotoHashesRequest(thread.id))
+    yield put(UIActions.viewThreadRequest(thread.id, thread.name))
   } catch (error) {
     yield put(ThreadsActions.addThreadError(error))
   }
