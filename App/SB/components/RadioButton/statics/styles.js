@@ -10,6 +10,14 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  disabled: {
+    height: 17,
+    width: 17,
+    borderRadius: 12,
+    backgroundColor: '#9B9B9B',
+    borderColor: '#9B9B9B',
+    borderWidth: 2
+  },
   buttonImage: {
     height: 8,
     width: 10,
@@ -23,5 +31,9 @@ export default StyleSheet.create({
     backgroundColor: '#2625FF',
     borderColor: '#2625FF',
     borderWidth: 2
+  },
+  buttonDisabled: {
+    backgroundColor: '#9B9B9B',
+    borderColor: '#9B9B9B'
   }
 })

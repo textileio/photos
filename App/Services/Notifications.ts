@@ -1,6 +1,6 @@
 import PushNotification from 'react-native-push-notification'
 import {NotificationType, Notification, NotificationEngagement} from '../Models/TextileTypes'
-import {Platform} from 'react-native'
+import {Alert, Platform} from 'react-native'
 
 export interface NotificationsPayload {
   title: string,
@@ -113,3 +113,28 @@ export async function enable(): Promise<void> {
   })
 }
 
+export function displayInvitePromise(message: string): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    Alert.alert(
+      'Accept Invite',
+      message,
+      [
+        {
+          text: 'Accept',
+          onPress: resolve
+        },
+        {
+          text: 'Ignore',
+          style: 'cancel',
+          onPress: reject
+        }
+      ],
+      {cancelable: false}
+    )
+  })
+}
+
+export async function displayInviteAlert(message: string) {
+  await displayInvitePromise(message)
+  return true
+}

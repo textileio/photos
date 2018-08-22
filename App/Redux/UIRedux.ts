@@ -66,6 +66,9 @@ const actions = {
   }),
   routeDeepLinkRequest: createAction('ROUTE_DEEP_LINK_REQUEST', resolve => {
     return (url: string) => resolve({url})
+  }),
+  addFriendRequest: createAction('ADD_FRIEND_REQUEST', resolve => {
+    return (threadId: string, threadName: string) => resolve({threadId, threadName})
   })
 }
 

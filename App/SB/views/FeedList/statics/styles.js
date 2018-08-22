@@ -5,6 +5,15 @@ export default StyleSheet.create({
     backgroundColor: '#FAFCFE',
     flex: 1
   },
+  toast: {
+    backgroundColor: '#EEF0F3'
+  },
+  toastText: {
+    color: '#2D3237',
+    textAlign: 'center',
+    fontSize: 18,
+    padding: 24
+  },
   toolbarTitle: {
     fontFamily: 'BentonSans',
     fontSize: 30,

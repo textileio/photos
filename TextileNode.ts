@@ -99,6 +99,12 @@ export default {
     return threads
   },
 
+  addThreadInvite: async function (threadId: string, inviteePk: string): Promise<string> {
+    const jsonString = await TextileNode.addThreadInvite(threadId, inviteePk)
+    // const thread = JSON.parse(jsonString) as TextileTypes.Thread
+    return jsonString
+  },
+
   addExternalThreadInvite: async function (id: string): Promise<TextileTypes.ExternalInvite> {
     const jsonString = await TextileNode.addExternalThreadInvite(id)
     const externalInvite = JSON.parse(jsonString) as TextileTypes.ExternalInvite
@@ -188,6 +194,15 @@ export default {
 
   readAllNotification: async function (): Promise<void> {
     return await TextileNode.readAllNotification()
+  },
+
+  acceptThreadInviteViaNotification: async function (id: string): Promise<string> {
+    return await TextileNode.acceptThreadInviteViaNotification(id)
+  },
+
+  getContacts: async function (): Promise<TextileTypes.GetContactsResult> {
+    const jsonString = await TextileNode.getContacts()
+    return JSON.parse(jsonString) as TextileTypes.GetContactsResult
   },
 
   eventEmitter: Platform.select({
