@@ -30,7 +30,7 @@ platform :ios do
   desc "Push a new beta build to TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
-    # Config that came from 
+    # Config that came from
     # https://raw.githubusercontent.com/CircleCI-Public/circleci-demo-react-native/master/ios/fastlane/Fastfile
     # -----------------------------------------------------------------------------------------------------------
     match(type: "appstore") # more information: https://codesigning.guide
@@ -42,23 +42,23 @@ platform :ios do
     # Config that came with fastlane init
     # ----------------------------------------------------------------------------
     versionNumber = get_version_number
-    newBuildNumber = latest_testflight_build_number(version: versionNumber) + 1
-    increment_build_number(
-      build_number: newBuildNumber,
-      xcodeproj: "TextilePhotos.xcodeproj"
-    )
+    newBuildNumber = 10 #latest_testflight_build_number(version: versionNumber) + 1
+    # increment_build_number(
+    #   build_number: newBuildNumber,
+    #   xcodeproj: "TextilePhotos.xcodeproj"
+    # )
     gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
     changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: false)
     upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
-    sh("git", "stash")
-    git_pull
-    sh("git", "stash", "pop")
-    commit_version_bump(
-      message: "Build number bump to " + newBuildNumber.to_s + " [skip ci]",
-      xcodeproj: "TextilePhotos.xcodeproj",
-      force: true
-    )
+    #sh("git", "stash")
+    #git_pull
+    #sh("git", "stash", "pop")
+    # commit_version_bump(
+    #   message: "Build number bump to " + newBuildNumber.to_s + " [skip ci]",
+    #   xcodeproj: "TextilePhotos.xcodeproj",
+    #   force: true
+    # )
     add_git_tag(tag: "builds/iosbeta/" + versionNumber.to_s + "(" + newBuildNumber.to_s + ")")
     push_to_git_remote
   end
