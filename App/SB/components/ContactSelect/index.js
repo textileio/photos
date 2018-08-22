@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, FlatList, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
 import Avatar from '../../../Components/Avatar'
 import Config from 'react-native-config'
 
@@ -47,8 +47,7 @@ const ContactSelect = (props) => {
           {/*<Image style={styles.searchBoxIcon} source={require('./statics/icon-search.png')} />*/}
           {/*<TextInput style={styles.searchBoxInput} placeholder='Search' onChangeText={search} />*/}
         {/*</View>*/}
-        <View style={styles.searchBoxPlaceholder}>
-        </View>
+        <View style={styles.searchBoxPlaceholder} />
 
         <FlatList
           data={contacts}
@@ -66,7 +65,6 @@ const ContactSelect = (props) => {
                 select(item, included)
               }}>
                 <Avatar style={styles.selectedContact} width={43} height={43} uri={uri} defaultSource={defaultSource} />
-                {/*<Image style={styles.selectedContact} source={require('./statics/icon-photo1.png')} />*/}
                 <Text style={styles.contactName}>{item.username || 'peer'}</Text>
                 <View style={styles.contactSelectRadio}>
                   <RadioButton disabled={included} selected={selectState} />
