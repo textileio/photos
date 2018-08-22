@@ -42,6 +42,7 @@ import {
   addExternalInvite,
   presentShareInterface,
   acceptExternalInvite,
+  addInternalInvites,
   pendingInvitesTask,
   acceptInvite
 } from './ThreadsSagas'
@@ -53,6 +54,7 @@ import {
   recoverPassword,
   viewPhoto,
   viewThread,
+  addFriends,
   initializeAppState,
   handleNewAppState,
   toggleBackgroundTimer,
@@ -96,6 +98,7 @@ export default function * root () {
 
     takeEvery(getType(UIActions.viewPhotoRequest), viewPhoto),
     takeEvery(getType(UIActions.viewThreadRequest), viewThread),
+    takeEvery(getType(UIActions.addFriendRequest), addFriends),
 
     takeEvery(getType(AuthActions.signUpRequest), signUp),
     takeEvery(getType(AuthActions.logInRequest), logIn),
@@ -131,6 +134,7 @@ export default function * root () {
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
     takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
+    takeEvery(getType(ThreadsActions.addInternalInvitesRequest), addInternalInvites),
 
     takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
     takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),

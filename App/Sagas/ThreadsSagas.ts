@@ -10,7 +10,7 @@
 *    you'll need to define a constant in that file.
 *************************************************************/
 import {Platform, Share, Alert} from 'react-native'
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, fork } from 'redux-saga/effects'
 import { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import {ActionType, createAction} from 'typesafe-actions'
 import * as TextileTypes from '../Models/TextileTypes'
@@ -41,7 +41,8 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   const { inviteId, key } = action.payload
   try {
     const id: string = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
-    yield put(ThreadsActions.refreshThreadsRequest())
+    const threads: TextileTypes.Threads = yield call(TextileNode.threads)
+    yield put(ThreadsActions.refreshThreadsSuccess(threads))
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, id))
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
@@ -103,9 +104,22 @@ export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptI
   const {notificationId, threadName} = action.payload
   try {
     const threadId = yield call(TextileNode.acceptThreadInviteViaNotification, notificationId)
-    yield * refreshThreads()
+    const threads: TextileTypes.Threads = yield call(TextileNode.threads)
+    yield put(ThreadsActions.refreshThreadsSuccess(threads))
     yield put(UIActions.viewThreadRequest(threadId, threadName))
   } catch (error) {
     // TODO: it would be nice to tell the user when they've already joined the thread
+    console.log('ERROR acceptInvite', error)
+  }
+}
+
+export function * addInternalInvites (action: ActionType<typeof ThreadsActions.addInternalInvitesRequest>) {
+  const {threadId, inviteePks} = action.payload
+  try {
+    for (let inviteePk of inviteePks) {
+      yield fork(TextileNode.addThreadInvite, threadId, inviteePk)
+    }
+  } catch (error) {
+    console.log('ERROR addInternalInvites', error)
   }
 }
