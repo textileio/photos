@@ -47,7 +47,7 @@ jobs:
     android:
         environment:
             _JAVA_OPTIONS: "-Xmx512m"
-            GRADLE_OPTS: "-Xmx512m"
+            GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
             REACT_NATIVE_MAX_WORKERS: "2"
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -61,15 +61,15 @@ jobs:
             - attach_workspace:
                 at: ~/textile-mobile
 
-            # - restore_cache:
-            #     key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+            - restore_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
 
             - run: bundle install
 
-            # - save_cache:
-            #     key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-            #     paths:
-            #         - vendor/bundle
+            - save_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+                paths:
+                    - vendor/bundle
 
             - run:
                 name: fastlane tests
@@ -87,7 +87,7 @@ jobs:
     android-beta:
         environment:
             _JAVA_OPTIONS: "-Xmx512m"
-            GRADLE_OPTS: "-Xmx512m"
+            GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
             REACT_NATIVE_MAX_WORKERS: "2"
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -105,15 +105,15 @@ jobs:
             - attach_workspace:
                 at: ~/textile-mobile
 
-            # - restore_cache:
-            #     key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+            - restore_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
 
             - run: bundle install
 
-            # - save_cache:
-            #     key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
-            #     paths:
-            #         - vendor/bundle
+            - save_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+                paths:
+                    - vendor/bundle
 
             - run:
                 command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
