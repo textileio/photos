@@ -46,12 +46,12 @@ jobs:
 
     android:
         environment:
-            JVM_OPTS: -Xmx2048m
-            _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            JVM_OPTS: -Xmx1024m
+            _JAVA_OPTIONS: "-Xmx1024m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
             # _JAVA_OPTIONS: "-Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
             # _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
             # GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
-            GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
+            GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m"'
             REACT_NATIVE_MAX_WORKERS: "2"
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -91,12 +91,12 @@ jobs:
 
     android-beta:
         environment:
-            JVM_OPTS: -Xmx2048m
-            _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            JVM_OPTS: -Xmx1024m
+            _JAVA_OPTIONS: "-Xmx1024m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
             # _JAVA_OPTIONS: "-Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
             # _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
             # GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
-            GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
+            GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m"'
             REACT_NATIVE_MAX_WORKERS: "2"
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
