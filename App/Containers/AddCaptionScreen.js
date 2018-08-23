@@ -23,8 +23,13 @@ class AddCaptionScreen extends React.Component {
       headerRight: (
         <TextileHeaderButtons>
           <Item title='Share' onPress={() => {
-            params.share()
-            navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+            if (params.withPhoto && params.withThreadName) {
+              params.shareToNewThread(params.withPhoto, params.withThreadName)
+              navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+            } else {
+              params.share()
+              navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+            }
           }} />
         </TextileHeaderButtons>
       ),
@@ -38,20 +43,28 @@ class AddCaptionScreen extends React.Component {
   componentWillMount () {
     this.props.navigation.setParams({
       cancelShare: () => { this.props.cancelShare() },
-      share: () => { this.props.share(this.props.image, this.props.threadId, this.props.comment) }
+      share: () => { this.props.share(this.props.image, this.props.threadId, this.props.comment) },
+      shareToNewThread: this._shareToNewThread.bind(this)
     })
+  }
+
+  _shareToNewThread (withPhoto, withThreadName) {
+    console.log('Sharing',
+      withThreadName, this.props.comment, withPhoto,
+    )
+    this.props.shareNewThread(withPhoto.id, withThreadName, this.props.comment)
   }
 
   render () {
     return (
-        <View style={styles.contentContainer}>
-          <Input
-            style={{height: 40}}
-            value={this.props.comment}
-            label='Add a caption...'
-            onChangeText={this.handleNewText.bind(this)}
-          />
-        </View>
+      <View style={styles.contentContainer}>
+        <Input
+          style={{height: 40}}
+          value={this.props.comment}
+          label='Add a caption...'
+          onChangeText={this.handleNewText.bind(this)}
+        />
+      </View>
     )
   }
 }
@@ -70,6 +83,7 @@ const mapDispatchToProps = (dispatch) => {
     updateComment: (text) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
     share: (image, threadId, comment) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
+    shareNewThread: (imageId, threadName, comment) => { dispatch(UIActions.sharePhotoToNewThreadRequest(imageId, threadName, comment)) }
   }
 }
 
