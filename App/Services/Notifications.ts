@@ -8,6 +8,21 @@ export interface NotificationsPayload {
   typeString: string
 }
 
+export function isPhoto(notification: TT.Notification): boolean {
+  if (!notification.data_id) return false
+  switch (notification.type){
+    case TT.NotificationType.receivedInviteNotification:
+    case TT.NotificationType.deviceAddedNotification:
+    case TT.NotificationType.peerJoinedNotification:
+    case TT.NotificationType.peerLeftNotification:
+      return false
+    case TT.NotificationType.photoAddedNotification:
+    case TT.NotificationType.commentAddedNotification:
+    case TT.NotificationType.likeAddedNotification:
+      return true
+  }
+}
+
 export function toPayload(notification: TT.Notification): NotificationsPayload | undefined {
   const typeString = TT.NotificationType[notification.type] as string
   const actor = notification.actor_username || 'A peer'

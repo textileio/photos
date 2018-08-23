@@ -332,7 +332,7 @@ export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {
     try {
-      const pending: string = yield select(PreferencesSelectors.pending)
+      const pending: TT.PhotoId = yield select(PreferencesSelectors.pending)
       if (pending) {
         yield call(TextileNode.setAvatarId, pending)
         const profile = yield call(TextileNode.getProfile)
@@ -349,12 +349,12 @@ export function * nodeOnlineSaga () {
 }
 
 export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceRequest>) {
-  const { name, pubKey } = action.payload
+  const { name, deviceId } = action.payload
   try {
-    yield call(TextileNode.addDevice, name, pubKey)
-    yield put(DevicesActions.addDeviceSuccess(pubKey))
+    yield call(TextileNode.addDevice, name, deviceId)
+    yield put(DevicesActions.addDeviceSuccess(deviceId))
   } catch (error) {
-    yield put(DevicesActions.addDeviceError(pubKey, error))
+    yield put(DevicesActions.addDeviceError(deviceId, error))
   }
 }
 

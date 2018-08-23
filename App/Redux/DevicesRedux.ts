@@ -3,7 +3,7 @@ import * as TT from '../Models/TextileTypes'
 
 const actions = {
   addDeviceRequest: createAction('ADD_DEVICE_REQUEST', resolve => {
-    return (name: TT.DeviceName, pubKey: TT.PublicKey) => resolve({ name, pubKey })
+    return (name: TT.DeviceName, deviceId: TT.DeviceId) => resolve({ name, deviceId })
   }),
   addDeviceSuccess: createAction('ADD_DEVICE_SUCCESS', resolve => {
     return (deviceId: TT.DeviceId) => resolve({ deviceId })
@@ -53,8 +53,8 @@ export const initialState: DevicesState = {
 export function reducer (state: DevicesState = initialState, action: DevicesAction): DevicesState {
   switch (action.type) {
     case getType(actions.addDeviceRequest): {
-      const { name, pubKey } = action.payload
-      const deviceItem: TT.Device = {name, id: pubKey}
+      const { name, deviceId } = action.payload
+      const deviceItem: TT.Device = {name, id: deviceId}
       const devices = state.devices.concat([{ state: 'adding', deviceItem }])
       return { ...state, devices }
     }

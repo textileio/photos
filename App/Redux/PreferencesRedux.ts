@@ -19,7 +19,7 @@ const actions = {
     return (avatarId: TT.AvatarId) => resolve({ avatarId })
   }),
   pendingAvatar: createAction('PENDING_AVATAR_REQUEST', resolve => {
-    return (avatarId: TT.AvatarId) => resolve({avatarId})
+    return (avatarId: TT.PhotoId) => resolve({avatarId})
   }),
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
     return (publicKey: TT.PublicKey) => resolve({ publicKey })
@@ -45,7 +45,7 @@ export type PreferencesState = {
   mnemonic?: string
   publicKey?: string
   profile?: TT.Profile
-  pending?: string,
+  pending?: TT.PhotoId,
   readonly services: {[k in ServiceType]: Service}
   readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need
 }

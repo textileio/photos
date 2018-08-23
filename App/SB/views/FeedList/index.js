@@ -113,7 +113,6 @@ class Notifications extends React.PureComponent {
                 <Avatar
                   width={24}
                   height={24}
-                  uri={''}
                   defaultSource={require('../../../Images/v2/new_avatar.png')}
                 />
               </View>
