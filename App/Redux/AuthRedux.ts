@@ -16,7 +16,7 @@ const actions = {
     return (password: string) => resolve({ password })
   }),
   signUpRequest: createAction('SIGN_UP_REQUEST', resolve => {
-    return (referralCode: string, email: string, username: string, password: string) => resolve({ referralCode, email, username, password })
+    return (referralCode: string, email: string, username: TT.UserName, password: string) => resolve({ referralCode, email, username, password })
   }),
   logInRequest: createAction('LOG_IN_REQUEST', resolve => {
     return (username: TT.UserName, password: string) => resolve({ username, password })
@@ -71,7 +71,7 @@ export type AuthState = {
   readonly formData: {
     readonly referralCode?: string
     readonly email?: string
-    readonly username?: string
+    readonly username?: TT.UserName
     readonly password?: string
   }
 }

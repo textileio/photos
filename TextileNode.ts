@@ -5,7 +5,6 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import * as TT from './App/Models/TextileTypes'
-import {Notification} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 

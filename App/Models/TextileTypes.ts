@@ -13,6 +13,7 @@ export type ThreadName = string
 export type DeviceName = string
 export type PublicKey = string
 export type PrivateKey = string
+export type Mnemonic = string
 
 export interface Event {
   name: string
