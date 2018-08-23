@@ -21,11 +21,11 @@ platform :android do
     sh %Q{cd ../ && echo "$(awk '{sub(/versionCode [[:digit:]]+$/,"versionCode "#{version})}1' #{gradle_build})" > #{gradle_build} && cd -}
   end
 
-  # before_all do
-  #   ENV["_JAVA_OPTIONS"] = "-Xmx512m"
-  #   ENV["GRADLE_OPTS"] = '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
-  #   ENV["REACT_NATIVE_MAX_WORKERS"] = "2"
-  # end
+  before_all do
+    ENV["_JAVA_OPTIONS"] = "-Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
+    ENV["GRADLE_OPTS"] = '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
+    ENV["REACT_NATIVE_MAX_WORKERS"] = "2"
+  end
 
   desc "Runs all the tests"
   lane :test do
