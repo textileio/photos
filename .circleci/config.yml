@@ -120,6 +120,7 @@ jobs:
 
             - run:
                 command: bundle exec fastlane beta
+                working_directory: ~/textile-mobile/android
 
     ios:
         macos:
