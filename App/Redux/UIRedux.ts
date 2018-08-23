@@ -128,6 +128,7 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.updateSharingPhotoComment):
       const { comment } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment } }
+    case getType(actions.sharePhotoToNewThreadRequest):
     case getType(actions.sharePhotoRequest):
     case getType(actions.cancelSharingPhoto):
       return { ... state, sharingPhoto: undefined }
