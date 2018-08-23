@@ -7,6 +7,7 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 // import styles from './Styles/AddThreadStyle'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import styles from '../SB/views/ThreadCreate/statics/styles'
+import UIActions from '../Redux/UIRedux'
 
 class AddThreadScreen extends React.Component {
 
@@ -17,16 +18,30 @@ class AddThreadScreen extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
+    const title = params.withPhoto ? 'Next' : 'Create'
     return {
       headerTitle: 'New Thread',
       headerLeft: (
         <TextileHeaderButtons left>
-          <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+          <Item title='Back' iconName='arrow-left' onPress={() => {
+            if (params.backTo) {
+              navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+            } else {
+              navigation.dispatch(NavigationActions.back())
+            }
+          }} />
         </TextileHeaderButtons>
       ),
       headerRight: params.submitEnabled && (
         <TextileHeaderButtons>
-          <Item title='Create' onPress={() => params.submit()} />
+          <Item title={title} onPress={() => {
+            if (params.withPhoto) {
+              // With photo indicates that we are creating the thread already having a photo to share to it
+              params.submitWithPhoto(params.withPhoto)
+            } else {
+              params.submit()
+            }
+          }} />
         </TextileHeaderButtons>
       ),
     }
@@ -43,10 +58,15 @@ class AddThreadScreen extends React.Component {
   componentWillMount () {
     this.props.navigation.setParams({
       submit: () => { this.props.submit(this.state.value) },
-      submitEnabled: false
+      submitEnabled: false,
+      submitWithPhoto: this._submitWithPhoto.bind(this)
     })
   }
 
+  _submitWithPhoto (withPhoto) {
+    const withThreadName = this.state.value
+    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PhotoViewer', withPhoto, withThreadName})
+  }
   _submit () {
     this.props.submit(this.state.value)
     this.props.navigation.goBack()
@@ -54,15 +74,15 @@ class AddThreadScreen extends React.Component {
 
   render () {
     return (
-        <ScrollView style={styles.contentContainer}>
-          <View>
-            <Input
-              style={{height: 40}}
-              value={this.state.value}
-              label={this.state.value === '' ? 'Add a title...' : ''}
-              onChangeText={this.handleNewText.bind(this)} />
-          </View>
-        </ScrollView>
+      <ScrollView style={styles.contentContainer}>
+        <View>
+          <Input
+            style={{height: 40}}
+            value={this.state.value}
+            label={this.state.value === '' ? 'Add a title...' : ''}
+            onChangeText={this.handleNewText.bind(this)} />
+        </View>
+      </ScrollView>
     )
   }
 }
