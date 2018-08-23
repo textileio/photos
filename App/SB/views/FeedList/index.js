@@ -106,23 +106,6 @@ class Notifications extends React.PureComponent {
         {/*<FeedItemUpdate />*/}
         {this.props.showTourScreen && this._renderTour()}
         <View style={styles.contentContainer}>
-          {this.props.profile && this.props.notifications.length === 0 &&
-          <View style={feedItemStyle.itemContainer} >
-            <View style={feedItemStyle.headerIconUser}>
-              <View style={feedItemStyle.iconContainer}>
-                <Avatar
-                  width={24}
-                  height={24}
-                  defaultSource={require('../../../Images/v2/new_avatar.png')}
-                />
-              </View>
-            </View>
-            <View style={feedItemStyle.textContainer}>
-              <Text style={feedItemStyle.text}>{'Welcome to Textile. Now go share some photos!'}</Text>
-              <Text style={feedItemStyle.timestamp}>{'Now'}</Text>
-            </View>
-          </View>
-          }
           <FlatList
             data={this.props.notifications}
             keyExtractor={this._keyExtractor.bind(this)}
