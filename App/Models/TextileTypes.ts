@@ -109,14 +109,14 @@ export interface Photo {
   id: PhotoId
   block_id: BlockId
   date: string
-  author_id: string
+  author_id: PeerId
   caption?: string
   metadata: PhotoMetadata
 }
 
 export interface ExternalInvite {
-  id: string,
-  key: string,
+  id: BlockId,
+  key: PrivateKey,
   inviter: string
 }
 
