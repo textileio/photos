@@ -10,19 +10,27 @@ const actions = {
   appStateChange: createAction('APP_STATE_CHANGE', resolve => {
     return (previousState: TextileAppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
   }),
-  creatingNode: createAction('CREATING_NODE'),
-  createNodeSuccess: createAction('CREATE_NODE_SUCCESS'),
+  createNodeRequest: createAction('CREATE_NODE_REQUEST', resolve => {
+    return (path: string) => resolve({ path })
+  }),
+  createNodeSuccess: createAction('CREATE_NODE_SUCCESS', resolve => {
+    return () => resolve()
+  }),
   createNodeFailure: createAction('CREATE_NODE_FAILURE', resolve => {
     return (error: Error) => resolve({ error })
   }),
-  startingNode: createAction('STARTING_NODE'),
+  startNodeRequest: createAction('START_NODE_REQUEST', resolve => {
+    return () => resolve()
+  }),
   startNodeSuccess: createAction('START_NODE_SUCCESS', resolve => {
     return () => resolve()
   }),
   startNodeFailure: createAction('START_NODE_FAILURE', resolve => {
     return (error: Error) => resolve({ error })
   }),
-  stoppingNode: createAction('STOP_NODE_REQUEST'),
+  stopNodeRequest: createAction('STOP_NODE_REQUEST', resolve => {
+    return () => resolve()
+  }),
   stopNodeSuccess: createAction('STOP_NODE_SUCCESS', resolve => {
     return () => resolve()
   }),
@@ -102,15 +110,15 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
       return { ...state, locked: action.payload.value }
     case getType(actions.appStateChange):
       return { ...state, appState: action.payload.newState }
-    case getType(actions.creatingNode):
+    case getType(actions.createNodeRequest):
       return { ...state, nodeState: { ...state.nodeState, state: 'creating' } }
     case getType(actions.createNodeSuccess):
       return { ...state, nodeState: { ...state.nodeState, state: 'stopped' } }
-    case getType(actions.startingNode):
+    case getType(actions.startNodeRequest):
       return { ...state, nodeState: { ...state.nodeState, state: 'starting' } }
     case getType(actions.startNodeSuccess):
       return { ...state, nodeState: {...state.nodeState, state: 'started' } }
-    case getType(actions.stoppingNode):
+    case getType(actions.stopNodeRequest):
       return { ...state, nodeState: { ...state.nodeState, state: 'stopping' } }
     case getType(actions.stopNodeSuccess):
       return { ...state, nodeState: { ...state.nodeState, state: 'stopped' } }
