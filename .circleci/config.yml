@@ -46,8 +46,8 @@ jobs:
 
     android:
         environment:
-            # _JAVA_OPTIONS: "-Xmx512m"
-            GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+            _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            # GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
             REACT_NATIVE_MAX_WORKERS: "2"
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -87,8 +87,8 @@ jobs:
 
     android-beta:
         environment:
-            # _JAVA_OPTIONS: "-Xmx512m"
-            GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+            _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+            # GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
             REACT_NATIVE_MAX_WORKERS: "2"
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
