@@ -107,7 +107,7 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
     const payload = NotificationsServices.toPayload(notification)
     if (!payload) return
     yield call(NotificationsServices.displayInviteAlert, payload.message)
-    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.subject))
+    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.subject as TT.ThreadName))
   } catch (error) {
     // Ignore invite
   }
