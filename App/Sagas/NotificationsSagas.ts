@@ -75,7 +75,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
       case TT.NotificationType.likeAddedNotification:
       case TT.NotificationType.peerJoinedNotification:
       case TT.NotificationType.peerLeftNotification:
-        const thread = yield select(ThreadsSelectors.threadById, notification.target_id)
+        const thread = yield select(ThreadsSelectors.threadById, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         yield put(UIActions.viewThreadRequest(thread.id, thread.name))
         // Helpful so that the feedview will update with latest
@@ -107,7 +107,7 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
     const payload = NotificationsServices.toPayload(notification)
     if (!payload) return
     yield call(NotificationsServices.displayInviteAlert, payload.message)
-    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.category))
+    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.subject))
   } catch (error) {
     // Ignore invite
   }
