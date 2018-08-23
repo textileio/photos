@@ -1,7 +1,6 @@
 import { createStackNavigator } from 'react-navigation'
 
 import BottomDrawerPhotos from '../SB/components/BottomDrawerPhotos'
-import AddThreadScreen from '../Containers/AddThreadScreen'
 
 import styles, { headerTintColor } from './Styles/NavigationStyles'
 
@@ -12,9 +11,6 @@ const nav = createStackNavigator(
       navigationOptions: {
         header: null
       }
-    },
-    AddThreadForShare: {
-      screen: AddThreadScreen,
     }
   },
   {
