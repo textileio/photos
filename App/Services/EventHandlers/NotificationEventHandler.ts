@@ -4,7 +4,7 @@ import PushNotification from 'react-native-push-notification'
 
 import { RootState } from '../../Redux/Types'
 import NotificationsActions from '../../Redux/NotificationsRedux'
-import * as TextileTypes from '../../Models/TextileTypes'
+import * as TT from '../../Models/TextileTypes'
 
 export default class NotificationEventHandler {
   store: Store<RootState>
@@ -14,7 +14,7 @@ export default class NotificationEventHandler {
     this.setup()
   }
 
-  onNotification (notification: TextileTypes.NotificationEngagement) {
+  onNotification (notification: TT.NotificationEngagement) {
     if (notification.userInteraction === true) {
       this.store.dispatch(NotificationsActions.notificationEngagement(notification))
     }

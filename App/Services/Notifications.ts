@@ -1,5 +1,5 @@
 import PushNotification from 'react-native-push-notification'
-import {NotificationType, Notification, NotificationEngagement} from '../Models/TextileTypes'
+import * as TT from '../Models/TextileTypes'
 import {Alert, Platform} from 'react-native'
 
 export interface NotificationsPayload {
@@ -8,46 +8,46 @@ export interface NotificationsPayload {
   typeString: string
 }
 
-export function toPayload(notification: Notification): NotificationsPayload | undefined {
-  const typeString = NotificationType[notification.type] as string
+export function toPayload(notification: TT.Notification): NotificationsPayload | undefined {
+  const typeString = TT.NotificationType[notification.type] as string
   const actor = notification.actor_username || 'A peer'
 
   switch (notification.type) {
-    case(NotificationType.receivedInviteNotification): {
-      const target = notification.category && notification.category != '' ? 'to ' + notification.category : 'to a new Thread'
+    case(TT.NotificationType.receivedInviteNotification): {
+      const target = notification.subject && notification.subject != '' ? 'to ' + notification.subject : 'to a new Thread'
       const title = 'New Invite'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(NotificationType.deviceAddedNotification): {
+    case(TT.NotificationType.deviceAddedNotification): {
       const title = 'New Device'
       const message = 'A new device has paired with your wallet'
       return {title, message, typeString}
     }
-    case(NotificationType.photoAddedNotification): {
-      const target = notification.category && notification.category != '' ? 'to ' + notification.category : ''
+    case(TT.NotificationType.photoAddedNotification): {
+      const target = notification.subject && notification.subject != '' ? 'to ' + notification.subject : ''
       const title = 'New Photo'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(NotificationType.commentAddedNotification): {
+    case(TT.NotificationType.commentAddedNotification): {
       const title =  'New comment'
       const message = [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(NotificationType.likeAddedNotification): {
+    case(TT.NotificationType.likeAddedNotification): {
       const title = 'New like'
       const message = [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(NotificationType.peerJoinedNotification): {
-      const target = notification.category && notification.category != 'a thread' ? ' ' + notification.category : ''
+    case(TT.NotificationType.peerJoinedNotification): {
+      const target = notification.subject && notification.subject != 'a thread' ? ' ' + notification.subject : ''
       const title = 'New Peer'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(NotificationType.peerLeftNotification): {
-      const target = notification.category && notification.category != 'a thread' ? ' ' + notification.category : ''
+    case(TT.NotificationType.peerLeftNotification): {
+      const target = notification.subject && notification.subject != 'a thread' ? ' ' + notification.subject : ''
       const title = 'Peer left'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
@@ -58,16 +58,15 @@ export function toPayload(notification: Notification): NotificationsPayload | un
   }
 }
 
-export function getData(engagement: NotificationEngagement): any {
+export function getData(engagement: TT.NotificationEngagement): any {
   if (Platform.OS === 'ios') {
   } else {
-    console.log('HELLLLOOO ANDROID', engagement)
     const { data } = engagement
     return data
   }
 }
 
-export async function createNew(notification: Notification): Promise<void> {
+export async function createNew(notification: TT.Notification): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
       const payload = toPayload(notification)
