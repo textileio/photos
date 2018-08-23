@@ -10,16 +10,16 @@ const actions = {
     return () => resolve()
   }),
   updatecMnemonic: createAction('UPDATE_MNEMONIC', resolve => {
-    return (mnemonic: string) => resolve({ mnemonic })
+    return (mnemonic: TT.Mnemonic) => resolve({ mnemonic })
   }),
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
     return (profile: TT.Profile) => resolve({ profile })
   }),
   setAvatar: createAction('SET_AVATAR_REQUEST', resolve => {
-    return (avatarId: TT.AvatarId) => resolve({ avatarId })
+    return (avatarId: TT.PhotoId) => resolve({ avatarId })
   }),
   pendingAvatar: createAction('PENDING_AVATAR_REQUEST', resolve => {
-    return (avatarId: TT.PhotoId) => resolve({avatarId})
+    return (avatarId: TT.PhotoId) => resolve({ avatarId })
   }),
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
     return (publicKey: TT.PublicKey) => resolve({ publicKey })
@@ -42,10 +42,10 @@ export type Service = {
 export type PreferencesState = {
   onboarded: boolean
   verboseUi: boolean
-  mnemonic?: string
-  publicKey?: string
+  mnemonic?: TT.Mnemonic
+  publicKey?: TT.PublicKey
   profile?: TT.Profile
-  pending?: TT.PhotoId,
+  pending?: TT.PhotoId
   readonly services: {[k in ServiceType]: Service}
   readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need
 }
@@ -97,11 +97,13 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
     case getType(actions.toggleVerboseUi):
       return { ...state, verboseUi: !state.verboseUi }
     case getType(actions.updatecMnemonic):
-      return { ...state, mnemonic: action.payload.mnemonic }
+      const mnemonic = action.payload.mnemonic
+      return { ...state, mnemonic: mnemonic }
     case getType(actions.getProfileSuccess):
       return { ...state, profile: action.payload.profile, pending: undefined}
     case getType(actions.pendingAvatar):
-      return { ...state, pending: action.payload.avatarId }
+      const pending = action.payload.avatarId
+      return { ...state, pending }
     case getType(actions.getPublicKeySuccess):
       return { ...state, publicKey: action.payload.publicKey }
     case getType(actions.completeTourSuccess):

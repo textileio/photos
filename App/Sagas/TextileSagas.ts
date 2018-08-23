@@ -90,7 +90,7 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 
   let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
   if (!defaultThread) {
-    yield put(ThreadsActions.addThreadRequest('default'))
+    yield put(ThreadsActions.addThreadRequest('default' as TT.ThreadName))
     const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
     defaultThread = action.payload.thread
     yield put(ThreadsActions.refreshThreadsRequest())
@@ -238,7 +238,7 @@ export function * createNode (action: ActionType<typeof TextileNodeActions.creat
     yield call(TextileNode.create, path, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
     yield put(TextileNodeActions.createNodeSuccess())
     try {
-      const mnemonic: string = yield call(TextileNode.mnemonic)
+      const mnemonic = yield call(TextileNode.mnemonic)
       yield put(PreferencesActions.updatecMnemonic(mnemonic))
     } catch(error) {
       // This only succeeds when the node is first created so this error is expected
@@ -396,7 +396,7 @@ export function * photosTask () {
 
     let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {
-      yield put(ThreadsActions.addThreadRequest('default'))
+      yield put(ThreadsActions.addThreadRequest('default' as TT.ThreadName))
       const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
       defaultThread = action.payload.thread
       yield put(ThreadsActions.refreshThreadsRequest())

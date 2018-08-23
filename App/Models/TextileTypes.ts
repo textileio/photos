@@ -8,22 +8,29 @@ enum ThreadIdBase {}
 enum PhotoIdBase {}
 enum PeerIdBase {}
 enum DeviceIdBase {}
-enum AvatarIdBase {}
+enum ProfileAvatarIdBase {}
 enum NotificationIdBase {}
-export type TextileId = TextileIdBase & string
-export type BlockId = BlockIdBase & string
-export type ThreadId = ThreadIdBase & string
-export type PhotoId = PhotoIdBase & string
-export type PeerId = PeerIdBase & string
-export type DeviceId = DeviceIdBase & string
-export type AvatarId = AvatarIdBase & string
-export type NotificationId = NotificationIdBase & string
-export type UserName = string
-export type ThreadName = string
-export type DeviceName = string
-export type PublicKey = string
-export type PrivateKey = string
-export type Mnemonic = string
+export type TextileId = TextileIdBase & string & undefined
+export type BlockId = BlockIdBase & string & undefined
+export type ThreadId = ThreadIdBase & string & undefined
+export type PhotoId = PhotoIdBase & string & undefined
+export type PeerId = PeerIdBase & string & undefined
+export type DeviceId = DeviceIdBase & string & undefined
+export type ProfileAvatarId = ProfileAvatarIdBase & string & undefined
+export type NotificationId = NotificationIdBase & string & undefined
+
+enum UserNameBase {}
+enum ThreadNameBase {}
+enum DeviceNameBase {}
+enum PublicKeyBase {}
+enum PrivateKeyBase {}
+enum MnemonicBase {}
+export type UserName = UserNameBase & string & undefined
+export type ThreadName = ThreadNameBase & string & undefined
+export type DeviceName = DeviceNameBase & string & undefined
+export type PublicKey = PublicKeyBase & string & undefined
+export type PrivateKey = PrivateKeyBase & string & undefined
+export type Mnemonic = MnemonicBase & string & undefined
 
 export interface Event {
   name: string
@@ -78,7 +85,7 @@ export interface Contact {
 export interface Profile {
   id: PeerId
   username?: UserName
-  avatar_id?: AvatarId
+  avatar_id?: ProfileAvatarId
 }
 
 export interface GetContactsResult {

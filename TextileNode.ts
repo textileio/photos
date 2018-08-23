@@ -14,7 +14,7 @@ export default {
     return await TextileNode.create(dataDir, apiUrl, logLevel, logFiles)
   },
 
-  mnemonic: async function (): Promise<string> {
+  mnemonic: async function (): Promise<TT.Mnemonic> {
     return await TextileNode.mnemonic()
   },
 
@@ -156,7 +156,7 @@ export default {
     return key
   },
 
-  addDevice: async function (name: TT.DeviceName, pubKey: TT.PublicKey): Promise<void> {
+  addDevice: async function (name: TT.DeviceName, pubKey: TT.DeviceId): Promise<void> {
     return await TextileNode.addDevice(name, pubKey)
   },
 
