@@ -1,7 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import * as TextileTypes from '../Models/TextileTypes'
-import {UploadingImage} from './UploadingImagesRedux'
-import {AddResult} from '../Models/TextileTypes'
+import { RootState } from '../Redux/Types'
 
 const actions = {
   initialzePhotos: createAction('INITIALIZE_PHOTOS', resolve => {
@@ -43,8 +41,8 @@ export const initialState: CameraRollState = {
 }
 
 export const cameraRollSelectors = {
-  initialized: state => state.cameraRoll.initialized as boolean,
-  queriedPhotos: state => state.cameraRoll.queriedPhotos as QueriedPhotosMap
+  initialized: (state: RootState) => state.cameraRoll.initialized as boolean,
+  queriedPhotos: (state: RootState) => state.cameraRoll.queriedPhotos as QueriedPhotosMap
 }
 
 export function reducer (state: CameraRollState = initialState, action: CameraRollAction): CameraRollState {

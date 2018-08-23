@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from '../Redux/Types'
-import { Profile } from '../Models/TextileTypes'
+import * as TT from '../Models/TextileTypes'
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', resolve => {
@@ -13,16 +13,16 @@ const actions = {
     return (mnemonic: string) => resolve({ mnemonic })
   }),
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
-    return (profile: Profile) => resolve({ profile })
+    return (profile: TT.Profile) => resolve({ profile })
   }),
   setAvatar: createAction('SET_AVATAR_REQUEST', resolve => {
-    return (avatarId: string) => resolve({avatarId})
+    return (avatarId: TT.AvatarId) => resolve({ avatarId })
   }),
   pendingAvatar: createAction('PENDING_AVATAR_REQUEST', resolve => {
-    return (avatarId: string) => resolve({avatarId})
+    return (avatarId: TT.AvatarId) => resolve({avatarId})
   }),
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
-    return (publicKey: string) => resolve({ publicKey })
+    return (publicKey: TT.PublicKey) => resolve({ publicKey })
   }),
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', resolve => {
     return (tourKey: TourScreens) => resolve({ tourKey })
@@ -44,7 +44,7 @@ export type PreferencesState = {
   verboseUi: boolean
   mnemonic?: string
   publicKey?: string
-  profile?: Profile
+  profile?: TT.Profile
   pending?: string,
   readonly services: {[k in ServiceType]: Service}
   readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need

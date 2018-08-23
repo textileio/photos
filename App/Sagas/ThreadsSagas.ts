@@ -40,10 +40,10 @@ export function * presentShareInterface(action: ActionType<typeof ThreadsActions
 export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const id: string = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
+    const threadId: string = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
     const threads: TextileTypes.Threads = yield call(TextileNode.threads)
     yield put(ThreadsActions.refreshThreadsSuccess(threads))
-    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, id))
+    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, threadId))
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
   }

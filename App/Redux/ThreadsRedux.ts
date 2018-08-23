@@ -1,22 +1,22 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import * as TextileTypes from '../Models/TextileTypes'
+import * as TT from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 const actions = {
   addThreadRequest: createAction('ADD_THREAD_REQUEST', resolve => {
-    return (name: string, mnemonic?: string) => resolve({ name, mnemonic })
+    return (name: TT.ThreadName, mnemonic?: TT.Mnemonic) => resolve({ name, mnemonic })
   }),
   addThreadSuccess: createAction('ADD_THREAD_SUCCESS', resolve => {
-    return (thread: TextileTypes.Thread) => resolve({ thread })
+    return (thread: TT.Thread) => resolve({ thread })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', resolve => {
     return (error: Error) => resolve({ error })
   }),
   removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', resolve => {
-    return (id: string) => resolve({ id })
+    return (id: TT.ThreadId) => resolve({ id })
   }),
   removeThreadSuccess: createAction('REMOVE_THREAD_SUCCESS', resolve => {
-    return (id: string) => resolve({ id })
+    return (id: TT.ThreadId) => resolve({ id })
   }),
   removeThreadError: createAction('REMOVE_THREAD_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -25,28 +25,28 @@ const actions = {
     return () => resolve()
   }),
   refreshThreadsSuccess: createAction('REFRESH_THREADS_SUCCESS', resolve => {
-    return (threads: TextileTypes.Threads) => resolve({ threads })
+    return (threads: TT.Threads) => resolve({ threads })
   }),
   refreshThreadsError: createAction('REFRESH_THREADS_ERROR', resolve => {
     return (error: Error) => resolve({ error })
   }),
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
-    return (id: string, name: string) => resolve({ id, name })
+    return (id: TT.ThreadId, name: TT.ThreadName) => resolve({ id, name })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
-    return (id: string, name: string, invite: TextileTypes.ExternalInvite) => resolve({ id, name, invite })
+    return (id: TT.ThreadId, name: TT.ThreadName, invite: TT.ExternalInvite) => resolve({ id, name, invite })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
-    return (id: string, error: Error) => resolve({ id, error })
+    return (id: TT.ThreadId, error: Error) => resolve({ id, error })
   }),
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', resolve => {
-    return (inviteId: string, key: string, name?: string, inviter?: string) => resolve({ inviteId, key, name, inviter })
+    return (inviteId: TT.BlockId, key: TT.PrivateKey, name?: TT.ThreadName, inviter?: TT.UserName) => resolve({ inviteId, key, name, inviter })
   }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
-    return (inviteId: string, id: string) => resolve({inviteId, id})
+    return (inviteId: TT.BlockId, id: TT.ThreadId) => resolve({inviteId, id})
   }),
   acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
-    return (inviteId: string, error: Error) => resolve({ inviteId, error })
+    return (inviteId: TT.BlockId, error: Error) => resolve({ inviteId, error })
   }),
   storeExternalInviteLink: createAction('STORE_EXTERNAL_INVITE_LINK', resolve => {
     return (link: string) => resolve({ link })
@@ -55,10 +55,10 @@ const actions = {
     return () => resolve()
   }),
   acceptInviteRequest: createAction('ACCEPT_THREAD_INVITE', resolve => {
-    return (notificationId: string, threadName: string) => resolve({ notificationId, threadName  })
+    return (notificationId: TT.NotificationId, threadName: TT.ThreadName) => resolve({ notificationId, threadName  })
   }),
   addInternalInvitesRequest: createAction('ADD_INTERNAL_INVITES_REQUEST', resolve => {
-    return (threadId: string, inviteePks: string[]) => resolve({ threadId, inviteePks  })
+    return (threadId: TT.ThreadId, inviteePks: TT.PublicKey[]) => resolve({ threadId, inviteePks  })
   }),
 }
 
@@ -66,18 +66,18 @@ export type ThreadsAction = ActionType<typeof actions>
 
 
 export type OutboundInvite = {
-  readonly id: string
-  readonly name: string
-  readonly invite?: TextileTypes.ExternalInvite
+  readonly id: TT.ThreadId
+  readonly name: TT.ThreadName
+  readonly invite?: TT.ExternalInvite
   readonly error?: Error
 }
 
 export type InboundInvite = {
-  readonly inviteId: string
-  readonly key: string
-  readonly id?: string
-  readonly name?: string
-  readonly inviter?: string
+  readonly inviteId: TT.BlockId
+  readonly key: TT.PrivateKey
+  readonly id?: TT.ThreadId
+  readonly name?: TT.ThreadName
+  readonly inviter?: TT.UserName
   readonly error?: Error
 }
 
@@ -85,16 +85,16 @@ export type ThreadsState = {
   readonly refreshing: boolean
   readonly refreshError?: Error
   readonly adding?: {
-    readonly name: string,
+    readonly name: TT.ThreadName,
     readonly error?: Error
   }
   readonly removing?: {
-    readonly id: string
+    readonly id: TT.ThreadId
     readonly error?: Error
   }
   readonly outboundInvites: ReadonlyArray<OutboundInvite>
   readonly inboundInvites: ReadonlyArray<InboundInvite>
-  readonly threads: ReadonlyArray<TextileTypes.Thread>
+  readonly threads: ReadonlyArray<TT.Thread>
   readonly pendingInviteLink?: string // used to hold an invite if triggered before login
 }
 
@@ -164,7 +164,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       return { ...state, outboundInvites }
     }
     case getType(actions.addExternalInviteSuccess): {
-      const { id, name, invite } = action.payload
+      const { id, invite } = action.payload
       // update the outbound invite with the new Invite object
       const outboundInvites = state.outboundInvites.map(outbound => {
         return outbound.id === id ? { ...outbound, invite } : outbound
@@ -221,8 +221,8 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
 
 export const ThreadsSelectors = {
   threads: (state: RootState): ThreadsState => state.threads,
-  threadById: (state: RootState, id: string): TextileTypes.Thread | undefined => state.threads.threads.find((thread: TextileTypes.Thread) => thread.id === id),
-  threadByName: (state: RootState, name: string): TextileTypes.Thread | undefined => state.threads.threads.find((thread: TextileTypes.Thread) => thread.name === name)
+  threadById: (state: RootState, id: string): TT.Thread | undefined => state.threads.threads.find((thread: TT.Thread) => thread.id === id),
+  threadByName: (state: RootState, name: string): TT.Thread | undefined => state.threads.threads.find((thread: TT.Thread) => thread.name === name)
 }
 
 export default actions
