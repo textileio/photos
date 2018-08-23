@@ -30,14 +30,20 @@ platform :android do
 
   desc "Runs all the tests"
   lane :test do
-    gradle(task: "test")
+    gradle(
+      task: "test",
+      flags: "--init-script init.gradle"
+    )
   end
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     versionCodes = google_play_track_version_codes(track: "internal")
     set_version_code(version: versionCodes[0] + 1)
-    gradle(task: "clean assembleRelease")
+    gradle(
+      task: "clean assembleRelease",
+      flags: "--init-script init.gradle"
+    )
     changelog_from_git_commits
     supply(
       track: "internal"
