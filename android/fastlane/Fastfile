@@ -21,23 +21,10 @@ platform :android do
     sh %Q{cd ../ && echo "$(awk '{sub(/versionCode [[:digit:]]+$/,"versionCode "#{version})}1' #{gradle_build})" > #{gradle_build} && cd -}
   end
 
-  before_all do
-    ENV["JVM_OPTS"] = "-Xmx1024m"
-    ENV["_JAVA_OPTIONS"] = "-Xmx1024m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-    ENV["GRADLE_OPTS"] = '-Dorg.gradle.jvmargs="-Xmx1024m"'
-    ENV["REACT_NATIVE_MAX_WORKERS"] = "2"
-  end
-
   desc "Runs all the tests"
   lane :test do
     gradle(
       task: "test",
-      properties: {
-        "org.gradle.jvmargs" => "-Xmx1024m"
-      },
-      system_properties: {
-        "org.gradle.jvmargs" => "-Xmx1024m"
-      },
       flags: "--init-script init.gradle"
     )
   end
@@ -48,12 +35,6 @@ platform :android do
     set_version_code(version: versionCodes[0] + 1)
     gradle(
       task: "clean assembleRelease",
-      properties: {
-        "org.gradle.jvmargs" => "-Xmx1024m"
-      },
-      system_properties: {
-        "org.gradle.jvmargs" => "-Xmx1024m"
-      },
       flags: "--init-script init.gradle"
     )
     changelog_from_git_commits
