@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { CafeTokens } from '../Models/TextileTypes'
+import * as TT from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 const actions = {
@@ -10,7 +10,7 @@ const actions = {
     return (email: string) => resolve({ email })
   }),
   updateUsername: createAction('UPDATE_USERNAME', resolve => {
-    return (username: string) => resolve({ username })
+    return (username: TT.UserName) => resolve({ username })
   }),
   updatePassword: createAction('UPDATE_PASSWORD', resolve => {
     return (password: string) => resolve({ password })
@@ -19,7 +19,7 @@ const actions = {
     return (referralCode: string, email: string, username: string, password: string) => resolve({ referralCode, email, username, password })
   }),
   logInRequest: createAction('LOG_IN_REQUEST', resolve => {
-    return (username: string, password: string) => resolve({ username, password })
+    return (username: TT.UserName, password: string) => resolve({ username, password })
   }),
   logOutRequest: createAction('LOG_OUT_REQUEST', resolve => {
     return () => resolve()
@@ -34,7 +34,7 @@ const actions = {
     return () => resolve()
   }),
   getTokensSuccess: createAction('GET_TOKENS_SUCCESS', resolve => {
-    return (tokens: CafeTokens) => resolve({ tokens })
+    return (tokens: TT.CafeTokens) => resolve({ tokens })
   }),
   recoverPasswordSuccess: createAction('RECOVER_PASSWORD_SUCCESS', resolve => {
     return () => resolve()
@@ -67,7 +67,7 @@ export type AuthAction = ActionType<typeof actions>
 export type AuthState = {
   readonly processing: boolean
   readonly error?: string
-  readonly tokens?: CafeTokens
+  readonly tokens?: TT.CafeTokens
   readonly formData: {
     readonly referralCode?: string
     readonly email?: string
