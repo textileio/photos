@@ -1,13 +1,23 @@
 // BEGIN API Types
 
-export type TextileId = string
-export type BlockId = TextileId
-export type ThreadId = TextileId
-export type PhotoId = TextileId
-export type PeerId = TextileId
-export type DeviceId = TextileId
-export type AvatarId = TextileId
-export type NotificationId = TextileId
+// private enums to enforce strict id types
+// read here: https://basarat.gitbooks.io/typescript/docs/tips/nominalTyping.html#using-enums
+enum TextileIdBase {}
+enum BlockIdBase {}
+enum ThreadIdBase {}
+enum PhotoIdBase {}
+enum PeerIdBase {}
+enum DeviceIdBase {}
+enum AvatarIdBase {}
+enum NotificationIdBase {}
+export type TextileId = TextileIdBase & string
+export type BlockId = BlockIdBase & string
+export type ThreadId = ThreadIdBase & string
+export type PhotoId = PhotoIdBase & string
+export type PeerId = PeerIdBase & string
+export type DeviceId = DeviceIdBase & string
+export type AvatarId = AvatarIdBase & string
+export type NotificationId = NotificationIdBase & string
 export type UserName = string
 export type ThreadName = string
 export type DeviceName = string
@@ -117,8 +127,8 @@ export type NodeOverview = {
 }
 
 export interface AddResult {
-  id: string
-  key: string
+  id: PhotoId
+  key: PrivateKey
   archive?: FileArchive
 }
 
