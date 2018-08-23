@@ -118,6 +118,12 @@ class PhotoDetail extends Component {
     this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PhotoViewer' })
   }
 
+  // For when the user wants to share it into a selected thread
+  shareIntoNewThread (i) {
+    this.setState({drawer: false})
+    this.props.navigation.navigate('CreateThreadScreen', { backTo: 'PhotoViewer', withPhoto: this.props.photo })
+  }
+
   // If a user wants to see a photo in a thread, this will navigate to the thread
   viewThread (thread) {
     this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
@@ -164,9 +170,10 @@ class PhotoDetail extends Component {
             <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}} title='Share in another thread'/>
           </TouchableOpacity> }
         </ScrollView>
-        <Modal isVisible={this.state.drawer} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: "flex-end"}}>
+        <Modal isVisible={this.state.drawer} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: 'flex-end'}}>
           <ShareToThread
             selector={this.shareIntoThread.bind(this)}
+            newThread={this.shareIntoNewThread.bind(this)}
             threads={this.props.threadsNotIn}
             thumbs={this.props.thumbs}
             onClose={() => this.shareClosed()}

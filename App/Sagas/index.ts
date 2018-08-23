@@ -44,7 +44,8 @@ import {
   acceptExternalInvite,
   addInternalInvites,
   pendingInvitesTask,
-  acceptInvite
+  acceptInvite,
+  handlePhotoToNewThreadRequest
 } from './ThreadsSagas'
 
 import {
@@ -147,6 +148,8 @@ export default function * root () {
     takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
     takeEvery(getType(ProcessingImagesActions.retry), retryImageShare),
     takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
+
+    takeEvery(getType(UIActions.sharePhotoToNewThreadRequest), handlePhotoToNewThreadRequest),
 
     // Notifications
     takeEvery(getType(NotificationsActions.newNotificationRequest), handleNewNotification),

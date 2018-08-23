@@ -43,6 +43,9 @@ const actions = {
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
     return (image?: SharedImage | string, threadId?: string, comment?: string) => resolve({ image, threadId, comment })
   }),
+  sharePhotoToNewThreadRequest: createAction('SHARE_PHOTO_TO_NEW_THREAD_REQUEST', resolve => {
+    return (imageId: string, threadName: string, comment?: string) => resolve({ imageId, threadName, comment })
+  }),
   cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', resolve => {
     return () => resolve()
   }),
