@@ -18,6 +18,7 @@ class AddThreadScreen extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
+    const title = params.withPhoto ? 'Next' : 'Create'
     return {
       headerTitle: 'New Thread',
       headerLeft: (
@@ -33,7 +34,7 @@ class AddThreadScreen extends React.Component {
       ),
       headerRight: params.submitEnabled && (
         <TextileHeaderButtons>
-          <Item title='Create' onPress={() => {
+          <Item title={title} onPress={() => {
             if (params.withPhoto) {
               // With photo indicates that we are creating the thread already having a photo to share to it
               params.submitWithPhoto(params.withPhoto)
