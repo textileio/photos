@@ -12,22 +12,16 @@ const actions = {
   }),
   creatingNode: createAction('CREATING_NODE'),
   createNodeSuccess: createAction('CREATE_NODE_SUCCESS'),
-  createNodeFailure: createAction('CREATE_NODE_FAILURE', resolve => {
-    return (error: Error) => resolve({ error })
-  }),
   startingNode: createAction('STARTING_NODE'),
   startNodeSuccess: createAction('START_NODE_SUCCESS', resolve => {
     return () => resolve()
-  }),
-  startNodeFailure: createAction('START_NODE_FAILURE', resolve => {
-    return (error: Error) => resolve({ error })
   }),
   stoppingNode: createAction('STOP_NODE_REQUEST'),
   stopNodeSuccess: createAction('STOP_NODE_SUCCESS', resolve => {
     return () => resolve()
   }),
-  stopNodeFailure: createAction('STOP_NODE_FAILURE', resolve => {
-    return (error: Error) => resolve({ error })
+  nodeError: createAction('NODE_ERROR', resolve => {
+    return (error: any) => resolve({ error })
   }),
   nodeOnline: createAction('NODE_ONLINE', resolve => {
     return () => resolve()
@@ -75,13 +69,23 @@ type ThreadMap = {
 
 type TextileAppStateStatus = AppStateStatus | 'unknown'
 
+export enum NodeState {
+  'nonexistent' = 'nonexistent',
+  'creating' = 'creating',
+  'created' = 'created', // Node has been created, on it's way to being starting
+  'starting' = 'starting',
+  'started' = 'started',
+  'stopping' = 'stopping',
+  'stopped' = 'stopped' // Node has been explicitly stopped, different than created
+}
+
 type TextileNodeState = {
   readonly locked: boolean
   readonly appState: TextileAppStateStatus
   readonly online: boolean
   readonly nodeState: {
-    readonly state?: 'creating' | 'stopped' | 'starting' | 'started' | 'stopping'
-    readonly error?: Error
+    readonly state: NodeState
+    readonly error?: string
   }
   readonly threads: ThreadMap,
   readonly refreshingMessages: boolean
@@ -91,7 +95,9 @@ export const initialState: TextileNodeState = {
   locked: false,
   appState: 'unknown',
   online: false,
-  nodeState: {},
+  nodeState: {
+    state: NodeState.nonexistent
+  },
   threads: {},
   refreshingMessages: false
 }
@@ -103,21 +109,21 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.appStateChange):
       return { ...state, appState: action.payload.newState }
     case getType(actions.creatingNode):
-      return { ...state, nodeState: { ...state.nodeState, state: 'creating' } }
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.creating } }
     case getType(actions.createNodeSuccess):
-      return { ...state, nodeState: { ...state.nodeState, state: 'stopped' } }
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.created } }
     case getType(actions.startingNode):
-      return { ...state, nodeState: { ...state.nodeState, state: 'starting' } }
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.starting } }
     case getType(actions.startNodeSuccess):
-      return { ...state, nodeState: {...state.nodeState, state: 'started' } }
+      return { ...state, nodeState: {...state.nodeState, state: NodeState.started } }
     case getType(actions.stoppingNode):
-      return { ...state, nodeState: { ...state.nodeState, state: 'stopping' } }
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.stopping } }
     case getType(actions.stopNodeSuccess):
-      return { ...state, nodeState: { ...state.nodeState, state: 'stopped' } }
-    case getType(actions.createNodeFailure):
-    case getType(actions.startNodeFailure):
-    case getType(actions.stopNodeFailure):
-      return { ...state, nodeState: { ...state.nodeState, error: action.payload.error } }
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.stopped } }
+    case getType(actions.nodeError):
+      const { error } = action.payload
+      const errorMessage = (error.message as string) || (error as string) || 'unknown'
+      return { ...state, nodeState: { ...state.nodeState, error: errorMessage } }
     case getType(actions.nodeOnline):
       return { ...state, online: true }
     case getType(actions.getPhotoHashesRequest): {
@@ -160,6 +166,7 @@ function createEmptyThreadData (): ThreadData {
 export const TextileNodeSelectors = {
   locked: (state: RootState) => state.textileNode.locked,
   appState: (state: RootState) => state.textileNode.appState,
+  nodeState: (state: RootState) => state.textileNode.nodeState.state,
   online: (state: RootState) => state.textileNode.online,
   threads: (state: RootState) => state.textileNode.threads,
   photosByThreadId: (state: any, threadId: string) => {

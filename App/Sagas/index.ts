@@ -59,12 +59,7 @@ import {
   viewThread,
   addFriends,
   initializeAppState,
-  handleNewAppState,
   toggleBackgroundTimer,
-  triggerCreateNode,
-  createNode,
-  startNode,
-  stopNode,
   refreshMessages,
   addDevice,
   getPhotoHashes,
@@ -97,10 +92,6 @@ export default function * root () {
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
     takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
 
-    // some sagas receive extra parameters in addition to an action
-
-    takeEvery(getType(TextileNodeActions.appStateChange), handleNewAppState),
-
     takeEvery(getType(UIActions.viewPhotoRequest), viewPhoto),
     takeEvery(getType(UIActions.viewThreadRequest), viewThread),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
@@ -118,13 +109,6 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.refreshMessagesRequest), refreshMessages),
 
     takeEvery(getType(TextileNodeActions.lock), toggleBackgroundTimer),
-
-    takeEvery(getType(TextileNodeActions.createNodeRequest), createNode),
-    takeEvery(getType(TextileNodeActions.startNodeRequest), startNode),
-    takeEvery(getType(TextileNodeActions.stopNodeRequest), stopNode),
-
-    // Actions that trigger creating (therefore starting/stopping) the node
-    takeEvery(getType(PreferencesActions.onboardedSuccess), triggerCreateNode),
 
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),

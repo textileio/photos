@@ -206,93 +206,6 @@ export function * initializeAppState () {
   yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
 
-export function * handleNewAppState (action: ActionType<typeof TextileNodeActions.appStateChange>) {
-  const { previousState, newState } = action.payload
-  if (previousState.match(/default|unknown/) && newState === 'background') {
-    yield * triggerCreateNode()
-  } else if (previousState.match(/default|unknown|inactive|background/) && newState === 'active') {
-    yield put(TextileNodeActions.lock(false))
-    yield * triggerCreateNode()
-  } else if (previousState.match(/inactive|active/) && newState === 'background') {
-    yield * triggerStopNode()
-  }
-}
-
-export function * triggerCreateNode () {
-  const locked = yield select(TextileNodeSelectors.locked)
-  if (locked) {
-    return
-  }
-  yield put(TextileNodeActions.lock(true))
-  yield put(TextileNodeActions.createNodeRequest(RNFS.DocumentDirectoryPath))
-}
-
-export function * triggerStopNode () {
-  yield put(TextileNodeActions.stopNodeRequest())
-}
-
-export function * createNode (action: ActionType<typeof TextileNodeActions.createNodeRequest>) {
-  const { path } = action.payload
-  try {
-    const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-    const logFiles = !__DEV__
-    yield call(TextileNode.create, path, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
-    yield put(TextileNodeActions.createNodeSuccess())
-    try {
-      const mnemonic: string = yield call(TextileNode.mnemonic)
-      yield put(PreferencesActions.updatecMnemonic(mnemonic))
-    } catch(error) {
-      // This only succeeds when the node is first created so this error is expected
-    }
-
-    yield put(TextileNodeActions.startNodeRequest())
-  } catch (error) {
-    yield put(TextileNodeActions.createNodeFailure(error))
-    yield put(TextileNodeActions.lock(false))
-  }
-}
-
-export function * startNode () {
-  const onboarded = yield select(PreferencesSelectors.onboarded)
-  if (!onboarded) {
-    yield put(TextileNodeActions.lock(false))
-    return
-  }
-
-  try {
-    yield call(TextileNode.start)
-    yield put(TextileNodeActions.startNodeSuccess())
-
-    // Restore our tokens and username
-    const tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens))
-
-    yield put(ThreadsActions.refreshThreadsRequest())
-
-    // isolate
-    try {
-      const publicKey = yield call(TextileNode.getPublicKey)
-      yield put(PreferencesActions.getPublicKeySuccess(publicKey))
-    } catch (error) {}
-
-  } catch (error) {
-    yield put(TextileNodeActions.startNodeFailure(error))
-    yield put(TextileNodeActions.lock(false))
-  }
-}
-
-export function * stopNode () {
-  yield put(TextileNodeActions.lock(true))
-  try {
-    yield call(TextileNode.stop)
-    yield put(TextileNodeActions.stopNodeSuccess())
-  } catch (error) {
-    yield put(TextileNodeActions.stopNodeFailure(error))
-  } finally {
-    yield put(TextileNodeActions.lock(false))
-  }
-}
-
 export function * refreshMessages () {
   try {
     // Ensure we don't stack a bunch of calls (swipe, swipe swipe!)
@@ -494,7 +407,7 @@ export function * photosTask () {
 
     const appState = yield select(TextileNodeSelectors.appState)
     if (appState.match(/background/)) {
-      yield * stopNode()
+      // yield * stopNode()
     }
   }
 }
@@ -596,9 +509,11 @@ export function * cameraPermissionsTrigger () {
 }
 
 export function * backgroundLocationPermissionsTrigger () {
-  // Will trigger a camera permission request
   if (Platform.OS === 'android') {
-    yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.')
+    yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+      title: 'Location Please',
+      message: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.'
+    })
   } else {
     yield call(navigator.geolocation.requestAuthorization)
   }
