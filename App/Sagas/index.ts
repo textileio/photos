@@ -16,6 +16,9 @@ import DevicesActions from '../Redux/DevicesRedux'
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
+
+import { manageNode } from './NodeLifecycle'
+
 import {
   handleSharePhotoRequest,
   handleImageUploadComplete,
@@ -80,6 +83,8 @@ import {
 
 export default function * root () {
   yield all([
+    manageNode(),
+
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
 
