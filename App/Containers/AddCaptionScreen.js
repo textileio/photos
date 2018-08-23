@@ -49,9 +49,6 @@ class AddCaptionScreen extends React.Component {
   }
 
   _shareToNewThread (withPhoto, withThreadName) {
-    console.log('Sharing',
-      withThreadName, this.props.comment, withPhoto,
-    )
     this.props.shareNewThread(withPhoto.id, withThreadName, this.props.comment)
   }
 
