@@ -4,10 +4,10 @@ import Config from 'react-native-config'
 
 import TextileNode from '../../TextileNode'
 import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
-import { CafeTokens } from '../Models/TextileTypes'
+import * as TT from '../Models/TextileTypes'
 
 export function * uploadFile (id: string, payloadPath: string) {
-  let tokens: CafeTokens | undefined = yield select(AuthSelectors.tokens)
+  let tokens: TT.CafeTokens | undefined = yield select(AuthSelectors.tokens)
   if (!tokens) {
     tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens!))
