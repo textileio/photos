@@ -9,6 +9,7 @@ import * as TT from '../Models/TextileTypes'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
+import {ActionType} from 'typesafe-actions'
 
 export function * shareWalletImage (id: string, threadId: string, comment?: string) {
   try {

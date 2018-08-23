@@ -106,7 +106,7 @@ class Notifications extends React.PureComponent {
         {/*<FeedItemUpdate />*/}
         {this.props.showTourScreen && this._renderTour()}
         <View style={styles.contentContainer}>
-          {this.props.notifications.length === 0 &&
+          {this.props.profile && this.props.notifications.length === 0 &&
           <View style={feedItemStyle.itemContainer} >
             <View style={feedItemStyle.headerIconUser}>
               <View style={feedItemStyle.iconContainer}>

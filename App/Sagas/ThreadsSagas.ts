@@ -20,6 +20,7 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
+import { shareWalletImage } from './ImageSharingSagas'
 
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
@@ -121,4 +122,11 @@ export function * addInternalInvites (action: ActionType<typeof ThreadsActions.a
   } catch (error) {
     console.log('ERROR addInternalInvites', error)
   }
+}
+
+export function * handlePhotoToNewThreadRequest (action: ActionType<typeof UIActions.sharePhotoToNewThreadRequest>) {
+  const {imageId, threadName, comment} = action.payload
+  const thread: TextileTypes.Thread = yield call(TextileNode.addThread, threadName)
+  yield put(ThreadsActions.addThreadSuccess(thread))
+  yield call(shareWalletImage, imageId, thread.id, comment)
 }
