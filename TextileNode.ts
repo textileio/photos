@@ -189,8 +189,8 @@ export default {
     return await TextileNode.readNotification(id)
   },
 
-  readAllNotification: async function (): Promise<void> {
-    return await TextileNode.readAllNotification()
+  readAllNotifications: async function (): Promise<void> {
+    return await TextileNode.readAllNotifications()
   },
 
   acceptThreadInviteViaNotification: async function (id: TT.NotificationId): Promise<TT.BlockId> {
