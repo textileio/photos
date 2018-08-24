@@ -445,7 +445,7 @@ RCT_EXPORT_METHOD(readNotification:(NSString *)id resolver:(RCTPromiseResolveBlo
   }
 }
 
-RCT_EXPORT_METHOD(readAllNotifications:(NSString *)id resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(readAllNotifications:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self _readAllNotifications:&error];
   if (!error) {
