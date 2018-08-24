@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import * as TT from './App/Models/TextileTypes'
 import {Threads} from './App/Models/TextileTypes'
+import {GetContactsResult} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
@@ -152,6 +153,22 @@ export default {
 
   ignorePhoto: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
     return await TextileNode.ignorePhoto(blockId)
+  },
+
+  addPhotoComment: async function (blockId: TT.BlockId, body: string): Promise<TT.BlockId> {
+    return await TextileNode.addPhotoComment(blockId, body)
+  },
+
+  ignorePhotoComment: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+    return await TextileNode.ignorePhotoComment(blockId)
+  },
+
+  addPhotoLike: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+    return await TextileNode.addPhotoLike(blockId)
+  },
+
+  ignorePhotoLike: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+    return await TextileNode.ignorePhotoLike(blockId)
   },
 
   addDevice: async function (name: TT.DeviceName, pubKey: TT.DeviceId): Promise<void> {
