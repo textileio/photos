@@ -149,7 +149,6 @@ function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
 }
 
 export function * viewThread ( action: ActionType<typeof UIActions.viewThreadRequest> ) {
-  yield put(TextileNodeActions.refreshMessagesRequest())
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
@@ -197,16 +196,13 @@ export function * initializeAppState () {
 }
 
 export function * refreshMessages () {
-  try {
-    // Ensure we don't stack a bunch of calls (swipe, swipe swipe!)
-    const refreshing = yield select(TextileNodeSelectors.refreshingMessages)
-    if (!refreshing) {
-      // refresh the messages
+  while (yield take(getType(TextileNodeActions.refreshMessagesRequest))) {
+    try {
       yield call(TextileNode.refreshMessages)
       yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
+    } catch (error) {
+      yield put(TextileNodeActions.refreshMessagesFailure(error))
     }
-  } catch (error) {
-    yield put(TextileNodeActions.refreshMessagesFailure(error))
   }
 }
 
@@ -393,11 +389,6 @@ export function * photosTask () {
         }
         yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, message))
       }
-    }
-
-    const appState = yield select(TextileNodeSelectors.appState)
-    if (appState.match(/background/)) {
-      // yield * stopNode()
     }
   }
 }

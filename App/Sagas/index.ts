@@ -112,7 +112,7 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
     takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
 
-    takeEvery(getType(TextileNodeActions.refreshMessagesRequest), refreshMessages),
+    call(refreshMessages),
 
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
