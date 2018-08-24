@@ -3,6 +3,9 @@ import { Notification, NotificationEngagement } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 const actions = {
+  readAllNotificationsRequest: createAction('CLEAR_ALL_NOTIFICATIONS_REQUEST', resolve => {
+    return () => resolve()
+  }),
   refreshNotificationsRequest: createAction('REFRESH_NOTIFICATIONS_REQUEST', resolve => {
     return () => resolve()
   }),

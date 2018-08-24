@@ -356,6 +356,47 @@ RCT_EXPORT_METHOD(ignorePhoto:(NSString *)blockId resolver:(RCTPromiseResolveBlo
   }
 }
 
+RCT_EXPORT_METHOD(addPhotoComment:(NSString *)blockId body:(NSString *)body resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _addPhotoComment:blockId body:body error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(ignorePhotoComment:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _ignorePhotoComment:blockId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+
+RCT_EXPORT_METHOD(addPhotoLike:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _addPhotoLike:blockId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+RCT_EXPORT_METHOD(ignorePhotoLike:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _ignorePhotoLike:blockId error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
 RCT_EXPORT_METHOD(addDevice:(NSString *)name pubKey:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSError *error;
@@ -404,7 +445,7 @@ RCT_EXPORT_METHOD(readNotification:(NSString *)id resolver:(RCTPromiseResolveBlo
   }
 }
 
-RCT_EXPORT_METHOD(readAllNotifications:(NSString *)id resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(readAllNotifications:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self _readAllNotifications:&error];
   if (!error) {
@@ -587,6 +628,22 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (NSString *)_ignorePhoto:(NSString *)blockId error:(NSError**)error {
   return [self.node ignorePhoto:blockId error:error];
+}
+
+- (NSString *)_addPhotoComment:(NSString *)blockId body:(NSString *)body error:(NSError**)error {
+  return [self.node addPhotoComment:blockId body:body error:error];
+}
+
+- (NSString *)_ignorePhotoComment:(NSString *)blockId error:(NSError**)error {
+  return [self.node ignorePhotoComment:blockId error:error];
+}
+
+- (NSString *)_addPhotoLike:(NSString *)blockId error:(NSError**)error {
+  return [self.node addPhotoLike:blockId error:error];
+}
+
+- (NSString *)_ignorePhotoLike:(NSString *)blockId error:(NSError**)error {
+  return [self.node ignorePhotoLike:blockId error:error];
 }
 
 - (void)_addDevice:(NSString *)name pubKey:(NSString *)pkb64 error:(NSError**)error {
