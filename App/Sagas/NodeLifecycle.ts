@@ -17,14 +17,11 @@ export function * manageNode () {
         yield take((action: RootAction) =>
           action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
         )
-      console.log('GOT APP STATE:', action.payload.newState)
 
       // Get our current node state and create/start the node if it doesn't exist or is stopped
       // Use fork so we don't block listening for the next app state change while the node is created and started
       const nodeState: NodeState = yield select(TextileNodeSelectors.nodeState)
-      console.log('CURRENT NODE STATE:', nodeState)
       if (nodeState === NodeState.nonexistent || nodeState === NodeState.stopped) {
-        console.log('CREATING/STARTING NODE')
         yield fork(createAndStartNode)
       }
 
@@ -65,16 +62,12 @@ function * createAndStartNode () {
 }
 
 function * stopNodeAfterDelay (ms: number) {
-  console.log('RUNNING FOR MS:', ms)
   try {
     yield delay(ms)
-    console.log('DELAY OVER')
   } finally {
     if (yield cancelled()) {
       // Let it keep running
-      console.log('SHUT DOWN CANCELLED, STILL RUNNING')
     } else {
-      console.log('STOPPING NODE')
       yield put(TextileNodeActions.stoppingNode())
       yield call(TextileNode.stop)
       yield put(TextileNodeActions.stopNodeSuccess())
