@@ -10,12 +10,15 @@
 #include "Universe.objc.h"
 
 
+@class MobileAnnotation;
+@class MobileComment;
 @class MobileContacts;
 @class MobileDevice;
 @class MobileDevices;
 @class MobileEvent;
 @class MobileExternalInvite;
 @class MobileImageData;
+@class MobileLike;
 @class MobileMobile;
 @class MobileNodeConfig;
 @class MobileNotifications;
@@ -28,6 +31,34 @@
 
 @protocol MobileMessenger <NSObject>
 - (void)notify:(MobileEvent*)event;
+@end
+
+@interface MobileAnnotation : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+- (NSString*)id_;
+- (void)setId:(NSString*)v;
+// skipped field Annotation.Date with unsupported type: *types.Named
+
+- (NSString*)authorId;
+- (void)setAuthorId:(NSString*)v;
+- (NSString*)username;
+- (void)setUsername:(NSString*)v;
+@end
+
+@interface MobileComment : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field Comment.Annotation with unsupported type: *types.Named
+
+- (NSString*)body;
+- (void)setBody:(NSString*)v;
 @end
 
 @interface MobileContacts : NSObject <goSeqRefInterface> {
@@ -98,6 +129,16 @@
 - (void)setUrl:(NSString*)v;
 @end
 
+@interface MobileLike : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (instancetype)init;
+// skipped field Like.Annotation with unsupported type: *types.Named
+
+@end
+
 @interface MobileMobile : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) id _ref;
@@ -113,6 +154,8 @@
 - (BOOL)addDevice:(NSString*)name pubKey:(NSString*)pubKey error:(NSError**)error;
 - (NSString*)addExternalThreadInvite:(NSString*)threadId error:(NSError**)error;
 - (NSString*)addPhoto:(NSString*)path error:(NSError**)error;
+- (NSString*)addPhotoComment:(NSString*)blockId body:(NSString*)body error:(NSError**)error;
+- (NSString*)addPhotoLike:(NSString*)blockId error:(NSError**)error;
 - (NSString*)addPhotoToThread:(NSString*)dataId key:(NSString*)key threadId:(NSString*)threadId caption:(NSString*)caption error:(NSError**)error;
 - (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
 - (NSString*)addThreadInvite:(NSString*)threadId inviteePk:(NSString*)inviteePk error:(NSError**)error;
@@ -133,6 +176,8 @@
 - (NSString*)getTokens:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
 - (NSString*)ignorePhoto:(NSString*)blockId error:(NSError**)error;
+- (NSString*)ignorePhotoComment:(NSString*)blockId error:(NSError**)error;
+- (NSString*)ignorePhotoLike:(NSString*)blockId error:(NSError**)error;
 - (BOOL)isSignedIn;
 - (NSString*)overview:(NSError**)error;
 - (NSString*)photoThreads:(NSString*)id_ error:(NSError**)error;
@@ -197,6 +242,10 @@
 - (NSString*)username;
 - (void)setUsername:(NSString*)v;
 // skipped field Photo.Metadata with unsupported type: *types.Pointer
+
+// skipped field Photo.Comments with unsupported type: *types.Slice
+
+// skipped field Photo.Likes with unsupported type: *types.Slice
 
 @end
 

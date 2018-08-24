@@ -101,6 +101,22 @@ export interface Device {
   name: DeviceName
 }
 
+export interface Annotation {
+  id: BlockId
+  date: string
+  author_id: PeerId
+  username?: UserName
+}
+
+export interface UserComment {
+  annotation: Annotation
+  body: string
+}
+
+export interface UserLike {
+  annotation: Annotation
+}
+
 export interface GetPhotosResult {
   items: Photo[]
 }
@@ -112,12 +128,14 @@ export interface Photo {
   author_id: PeerId
   caption?: string
   metadata: PhotoMetadata
+  comments: UserComment[]
+  Likes: UserLike[]
 }
 
 export interface ExternalInvite {
   id: BlockId,
   key: PrivateKey,
-  inviter: string
+  inviter: UserName
 }
 
 export type CafeTokens = {

@@ -370,6 +370,46 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void addPhotoComment (String blockId, String body, Promise promise) {
+        try {
+            promise.resolve(node.addPhotoComment(blockId, body));
+        }
+        catch (Exception e) {
+            promise.reject("ADD PHOTO COMMENT ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void ignorePhotoComment (String blockId, Promise promise) {
+        try {
+            promise.resolve(node.ignorePhotoComment(blockId));
+        }
+        catch (Exception e) {
+            promise.reject("IGNORE PHOTO COMMENT ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void addPhotoLike (String blockId, Promise promise) {
+        try {
+            promise.resolve(node.addPhotoLike(blockId));
+        }
+        catch (Exception e) {
+            promise.reject("ADD PHOTO LIKE ERROR", e);
+        }
+    }
+
+    @ReactMethod
+    public void ignorePhotoLike (String blockId, Promise promise) {
+        try {
+            promise.resolve(node.ignorePhotoLike(blockId));
+        }
+        catch (Exception e) {
+            promise.reject("IGNORE PHOTO LIKE ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void getPhotoThreads (String photoId, Promise promise) {
         try {
             promise.resolve(node.photoThreads(photoId));
