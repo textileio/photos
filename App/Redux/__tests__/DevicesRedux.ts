@@ -1,4 +1,4 @@
-import actions, { reducer, Device } from '../DevicesRedux'
+import actions, { reducer, DeviceWithState } from '../DevicesRedux'
 import * as TT from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
@@ -16,18 +16,18 @@ describe('devices stories', () => {
   describe('adding devices', () => {
     it('should add a device', () => {
       const state0 = reducer(initialState, actions.addDeviceRequest(name, deviceId))
-      const match0: Device = { state: 'adding', deviceItem: { id: deviceId, name } }
+      const match0: DeviceWithState = { state: 'adding', deviceItem: { id: deviceId, name } }
       expect(state0.devices[0]).toMatchObject(match0)
       const state1 = reducer(state0, actions.addDeviceSuccess(deviceId))
-      const match1: Device = { state: 'added', deviceItem: { id: deviceId, name } }
+      const match1: DeviceWithState = { state: 'added', deviceItem: { id: deviceId, name } }
       expect(state1.devices[0]).toMatchObject(match1)
     })
     it('should fail at adding a device', () => {
       const state0 = reducer(initialState, actions.addDeviceRequest(name, deviceId))
-      const match0: Device = { state: 'adding', deviceItem: { id: deviceId, name } }
+      const match0: DeviceWithState = { state: 'adding', deviceItem: { id: deviceId, name } }
       expect(state0.devices[0]).toMatchObject(match0)
       const state1 = reducer(state0, actions.addDeviceError(deviceId, error))
-      const match1: Device = { error, state: 'adding', deviceItem: { id: deviceId, name } }
+      const match1: DeviceWithState = { error, state: 'adding', deviceItem: { id: deviceId, name } }
       expect(state1.devices[0]).toMatchObject(match1)
     })
   })
@@ -36,7 +36,7 @@ describe('devices stories', () => {
       const state0 = reducer(initialState, actions.addDeviceRequest(name, deviceId))
       const state1 = reducer(state0, actions.addDeviceSuccess(deviceId))
       const state2 = reducer(state1, actions.removeDeviceRequest(deviceId))
-      const match2: Device = { state: 'removing', deviceItem: { id: deviceId, name} }
+      const match2: DeviceWithState = { state: 'removing', deviceItem: { id: deviceId, name} }
       expect(state2.devices[0]).toMatchObject(match2)
       const state3 = reducer(state2, actions.removeDeviceSuccess(deviceId))
       expect(state3.devices).toHaveLength(0)
@@ -45,10 +45,10 @@ describe('devices stories', () => {
       const state0 = reducer(initialState, actions.addDeviceRequest(name, deviceId))
       const state1 = reducer(state0, actions.addDeviceSuccess(deviceId))
       const state2 = reducer(state1, actions.removeDeviceRequest(deviceId))
-      const match2: Device = { state: 'removing', deviceItem: { id: deviceId, name} }
+      const match2: DeviceWithState = { state: 'removing', deviceItem: { id: deviceId, name} }
       expect(state2.devices[0]).toMatchObject(match2)
       const state3 = reducer(state2, actions.removeDeviceError(deviceId, error))
-      const match3: Device = { error, state: 'removing', deviceItem: { id: deviceId, name} }
+      const match3: DeviceWithState = { error, state: 'removing', deviceItem: { id: deviceId, name} }
       expect(state3.devices[0]).toMatchObject(match3)
     })
   })
