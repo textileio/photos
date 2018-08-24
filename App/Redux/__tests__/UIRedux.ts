@@ -1,17 +1,20 @@
 import actions, { reducer } from '../UIRedux'
-import { SharedImage } from '../../Models/TextileTypes'
+import * as TT from '../../Models/TextileTypes'
 import { hash } from 'react-native-fs';
 
 const initialState = reducer(undefined, {} as any)
-const threadId = 'threadId'
+const threadId = 'threadId' as TT.ThreadId
 const comment = 'comment'
-const sharedImage: SharedImage = {
+const sharedImage: TT.SharedImage = {
   origURL: 'origURL',
   uri: 'uri',
+  path: '/here',
+  canDelete: false,
   height: 20,
   isVertical: true,
   width: 20
 }
+
 const sharedHash = 'hash'
 
 describe('ui stories', () => {

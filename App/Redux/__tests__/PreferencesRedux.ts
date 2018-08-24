@@ -1,8 +1,9 @@
 import actions, { reducer } from '../PreferencesRedux'
+import * as TT from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
-const mnemonic = 'mnemonic'
+const mnemonic = 'mnemonic' as TT.Mnemonic
 
 describe('preferences stories', () => {
   describe('initial state', () => {
