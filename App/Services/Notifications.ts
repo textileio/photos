@@ -1,5 +1,5 @@
 import PushNotification from 'react-native-push-notification'
-import {NotificationType, Notification, NotificationEngagement} from '../Models/TextileTypes'
+import { Notification, NotificationEngagement, NotificationType } from '../Models/TextileTypes'
 import {Alert, Platform} from 'react-native'
 
 export interface NotificationsPayload {
@@ -8,13 +8,28 @@ export interface NotificationsPayload {
   typeString: string
 }
 
+export function isPhoto(notification: Notification): boolean {
+  if (!notification.data_id) return false
+  switch (notification.type){
+    case NotificationType.receivedInviteNotification:
+    case NotificationType.deviceAddedNotification:
+    case NotificationType.peerJoinedNotification:
+    case NotificationType.peerLeftNotification:
+      return false
+    case NotificationType.photoAddedNotification:
+    case NotificationType.commentAddedNotification:
+    case NotificationType.likeAddedNotification:
+      return true
+  }
+}
+
 export function toPayload(notification: Notification): NotificationsPayload | undefined {
   const typeString = NotificationType[notification.type] as string
   const actor = notification.actor_username || 'A peer'
 
   switch (notification.type) {
     case(NotificationType.receivedInviteNotification): {
-      const target = notification.category && notification.category != '' ? 'to ' + notification.category : 'to a new Thread'
+      const target = notification.subject && notification.subject != '' ? 'to ' + notification.subject : 'to a new Thread'
       const title = 'New Invite'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
@@ -25,7 +40,7 @@ export function toPayload(notification: Notification): NotificationsPayload | un
       return {title, message, typeString}
     }
     case(NotificationType.photoAddedNotification): {
-      const target = notification.category && notification.category != '' ? 'to ' + notification.category : ''
+      const target = notification.subject && notification.subject != '' ? 'to ' + notification.subject : ''
       const title = 'New Photo'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
@@ -41,13 +56,13 @@ export function toPayload(notification: Notification): NotificationsPayload | un
       return {title, message, typeString}
     }
     case(NotificationType.peerJoinedNotification): {
-      const target = notification.category && notification.category != 'a thread' ? ' ' + notification.category : ''
+      const target = notification.subject && notification.subject != 'a thread' ? ' ' + notification.subject : ''
       const title = 'New Peer'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
     }
     case(NotificationType.peerLeftNotification): {
-      const target = notification.category && notification.category != 'a thread' ? ' ' + notification.category : ''
+      const target = notification.subject && notification.subject != 'a thread' ? ' ' + notification.subject : ''
       const title = 'Peer left'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
@@ -61,7 +76,6 @@ export function toPayload(notification: Notification): NotificationsPayload | un
 export function getData(engagement: NotificationEngagement): any {
   if (Platform.OS === 'ios') {
   } else {
-    console.log('HELLLLOOO ANDROID', engagement)
     const { data } = engagement
     return data
   }

@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import * as TextileTypes from '../Models/TextileTypes'
+import { Notification, NotificationEngagement } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 const actions = {
@@ -10,32 +10,32 @@ const actions = {
     return () => resolve()
   }),
   refreshNotificationsSuccess: createAction('REFRESH_NOTIFICATIONS_SUCCESS', resolve => {
-    return (notifications: TextileTypes.Notification[]) => resolve({notifications})
+    return (notifications: Notification[]) => resolve({notifications})
   }),
   refreshNotificationsFailure: createAction('REFRESH_NOTIFICATIONS_FAILURE', resolve => {
     return () => resolve()
   }),
   newNotificationRequest: createAction('NEW_NOTIFICATION_REQUEST', resolve => {
-    return (notification: TextileTypes.Notification) => resolve({notification})
+    return (notification: Notification) => resolve({notification})
   }),
   notificationEngagement: createAction('NOTIFICATION_ENGAGEMENT', resolve => {
-    return (engagement: TextileTypes.NotificationEngagement) => resolve({ engagement: engagement })
+    return (engagement: NotificationEngagement) => resolve({ engagement: engagement })
   }),
   notificationSuccess: createAction('NOTIFICATION_SUCCESS', resolve => {
-    return (notification: TextileTypes.Notification) => resolve({ notification })
+    return (notification: Notification) => resolve({ notification })
   }),
   notificationFailure: createAction('NOTIFICATION_FAILURE', resolve => {
-    return (notification: TextileTypes.Notification) => resolve({ notification })
+    return (notification: Notification) => resolve({ notification })
   }),
   reviewNotificationThreadInvite: createAction('REVIEW_NOTIFICATION_THREAD_INVITE', resolve => {
-    return (notification: TextileTypes.Notification) => resolve({ notification })
+    return (notification: Notification) => resolve({ notification })
   })
 }
 
 export type NotificationsAction = ActionType<typeof actions>
 
 export type NotificationsState = {
-  readonly notifications: ReadonlyArray<TextileTypes.Notification>,
+  readonly notifications: ReadonlyArray<Notification>,
   refreshing: boolean
 }
 

@@ -1,29 +1,41 @@
 import actions, { reducer, NotificationsState } from '../NotificationsRedux'
-import {GetNotificationsResult, Notification} from '../../Models/TextileTypes'
+import {
+  BlockId,
+  GetNotificationsResult,
+  Notification,
+  NotificationId,
+  PeerId,
+  TextileId,
+  UserName,
+} from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
 const notification1: Notification = {
-  actor_id: 'abc',
-  actor_username: 'bert',
-  body: 'added a photo',
-  category: 'My favorite thread',
+  actor_id: 'PeerId' as PeerId,
+  actor_username: 'UserName' as UserName,
+  block_id: 'BlockId' as BlockId,
+  body: 'some photo',
+  data_id: 'TextileId' as TextileId,
   date: '1999-01-01T00:00:00Z',
-  id: 'notification1',
+  id: 'NotificationId' as NotificationId,
   read: false,
-  target_id: 'thread1',
+  subject: 'a notification',
+  subject_id: 'TextileId' as TextileId,
   type: 2
 }
 
 const notification2: Notification = {
-  actor_id: 'abc',
-  actor_username: 'bert',
-  body: 'added a photo',
-  category: 'My favorite thread',
+  actor_id: 'abc' as PeerId,
+  actor_username: 'UserName' as UserName,
+  block_id: 'BlockId' as BlockId,
+  body: 'some other photo',
+  data_id: 'TextileId' as TextileId,
   date: '1999-01-02T00:00:00Z',
-  id: 'notification1',
+  id: 'NotificationId' as NotificationId,
   read: false,
-  target_id: 'thread1',
+  subject: 'a notification',
+  subject_id: 'TextileId' as TextileId,
   type: 2
 }
 

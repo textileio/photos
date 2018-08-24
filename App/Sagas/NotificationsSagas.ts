@@ -11,20 +11,18 @@
 *************************************************************/
 import {Platform} from 'react-native'
 import {delay} from 'redux-saga'
-import { call, put, select, fork } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
 import TextileNode from '../../TextileNode'
 import UIActions from '../Redux/UIRedux'
-import { Notification, NotificationType } from '../Models/TextileTypes'
-// import { reviewThreadInvite } from '../Sagas/ThreadsSagas'
+import { NotificationType, ThreadName } from '../Models/TextileTypes'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors }  from '../Redux/NotificationsRedux'
 import * as NotificationsServices from '../Services/Notifications'
-import {NotificationsPayload} from '../Services/Notifications'
 
 export function * enable () {
   yield call(NotificationsServices.enable)
@@ -77,7 +75,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
       case NotificationType.likeAddedNotification:
       case NotificationType.peerJoinedNotification:
       case NotificationType.peerLeftNotification:
-        const thread = yield select(ThreadsSelectors.threadById, notification.target_id)
+        const thread = yield select(ThreadsSelectors.threadById, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         yield put(UIActions.viewThreadRequest(thread.id, thread.name))
         // Helpful so that the feedview will update with latest
@@ -109,7 +107,7 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
     const payload = NotificationsServices.toPayload(notification)
     if (!payload) return
     yield call(NotificationsServices.displayInviteAlert, payload.message)
-    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.category))
+    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.subject as ThreadName))
   } catch (error) {
     // Ignore invite
   }

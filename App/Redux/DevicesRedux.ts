@@ -1,30 +1,30 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import * as TextileTypes from '../Models/TextileTypes'
+import { DeviceId, Device, Devices, DeviceName } from '../Models/TextileTypes'
 
 const actions = {
   addDeviceRequest: createAction('ADD_DEVICE_REQUEST', resolve => {
-    return (name: string, pubKey: string) => resolve({ name, pubKey })
+    return (name: DeviceName, deviceId: DeviceId) => resolve({ name, deviceId })
   }),
   addDeviceSuccess: createAction('ADD_DEVICE_SUCCESS', resolve => {
-    return (deviceId: string) => resolve({ deviceId })
+    return (deviceId: DeviceId) => resolve({ deviceId })
   }),
   addDeviceError: createAction('ADD_DEVICE_ERROR', resolve => {
-    return (deviceId: string, error: Error) => resolve({ deviceId, error })
+    return (deviceId: DeviceId, error: Error) => resolve({ deviceId, error })
   }),
   removeDeviceRequest: createAction('REMOVE_DEVICE_REQUEST', resolve => {
-    return (deviceId: string) => resolve({ deviceId })
+    return (deviceId: DeviceId) => resolve({ deviceId })
   }),
   removeDeviceSuccess: createAction('REMOVE_DEVICE_SUCCESS', resolve => {
-    return (deviceId: string) => resolve({ deviceId })
+    return (deviceId: DeviceId) => resolve({ deviceId })
   }),
   removeDeviceError: createAction('REMOVE_DEVICE_ERROR', resolve => {
-    return (deviceId: string, error: Error) => resolve({ deviceId, error })
+    return (deviceId: DeviceId, error: Error) => resolve({ deviceId, error })
   }),
   refreshDevicesRequest: createAction('REFRESH_DEVICES_REQUEST', resolve => {
     return () => resolve()
   }),
   refreshDevicesSuccess: createAction('REFRESH_DEVICES_SUCCESS', resolve => {
-    return (devices: TextileTypes.Devices) => resolve({ devices })
+    return (devices: Devices) => resolve({ devices })
   }),
   refreshDevicesError: createAction('REFRESH_DEVICES_ERROR', resolve => {
     return (error: Error) => resolve({ error })
@@ -33,16 +33,16 @@ const actions = {
 
 export type DevicesAction = ActionType<typeof actions>
 
-export type Device = {
+export type DeviceWithState = {
   readonly state: 'adding' | 'added' | 'removing'
   readonly error?: Error
-  readonly deviceItem: TextileTypes.Device
+  readonly deviceItem: Device
 }
 
 export type DevicesState = {
   readonly refreshing: boolean
   readonly refreshError?: Error
-  readonly devices: ReadonlyArray<Device>
+  readonly devices: ReadonlyArray<DeviceWithState>
 }
 
 export const initialState: DevicesState = {
@@ -53,8 +53,8 @@ export const initialState: DevicesState = {
 export function reducer (state: DevicesState = initialState, action: DevicesAction): DevicesState {
   switch (action.type) {
     case getType(actions.addDeviceRequest): {
-      const { name, pubKey } = action.payload
-      const deviceItem: TextileTypes.Device = {name, id: pubKey}
+      const { name, deviceId } = action.payload
+      const deviceItem: Device = {name, id: deviceId}
       const devices = state.devices.concat([{ state: 'adding', deviceItem }])
       return { ...state, devices }
     }
@@ -62,7 +62,7 @@ export function reducer (state: DevicesState = initialState, action: DevicesActi
       const { deviceId } = action.payload
       const devices = state.devices.map(device => {
         if (device.deviceItem.id === deviceId) {
-          const updatedDevice: Device = { ...device, state: 'added' }
+          const updatedDevice: DeviceWithState = { ...device, state: 'added' }
           return updatedDevice
         } else {
           return device
@@ -74,7 +74,7 @@ export function reducer (state: DevicesState = initialState, action: DevicesActi
       const { deviceId, error } = action.payload
       const devices = state.devices.map(device => {
         if (device.deviceItem.id === deviceId) {
-          const updatedDevice: Device = { ...device, error }
+          const updatedDevice: DeviceWithState = { ...device, error }
           return updatedDevice
         } else {
           return device
@@ -86,7 +86,7 @@ export function reducer (state: DevicesState = initialState, action: DevicesActi
       const { deviceId } = action.payload
       const devices = state.devices.map(device => {
         if (device.deviceItem.id === deviceId) {
-          const updatedDevice: Device = { ...device, state: 'removing' }
+          const updatedDevice: DeviceWithState = { ...device, state: 'removing' }
           return updatedDevice
         } else {
           return device
@@ -103,7 +103,7 @@ export function reducer (state: DevicesState = initialState, action: DevicesActi
       const { deviceId, error } = action.payload
       const devices = state.devices.map(device => {
         if (device.deviceItem.id === deviceId) {
-          const updatedDevice: Device = { ...device, error }
+          const updatedDevice: DeviceWithState = { ...device, error }
           return updatedDevice
         } else {
           return device
@@ -115,7 +115,7 @@ export function reducer (state: DevicesState = initialState, action: DevicesActi
       return { ...state, refreshing: true, refreshError: undefined }
     case getType(actions.refreshDevicesSuccess):
       const devices = action.payload.devices.items.map(deviceItem => {
-        const device: Device = { state: 'added', deviceItem }
+        const device: DeviceWithState = { state: 'added', deviceItem }
         return device
       })
       return { ...state, refreshing: false, refreshError: undefined, devices }

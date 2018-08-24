@@ -32,11 +32,10 @@ import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import { ActionType, getType } from 'typesafe-actions'
-import * as TextileTypes from '../Models/TextileTypes'
+import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
-import {ContactsAction} from '../Redux/ContactsRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -89,9 +88,9 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   yield call(NavigationService.navigate, 'PrimaryNavigation')
   yield take(getType(TextileNodeActions.startNodeSuccess))
 
-  let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
+  let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
   if (!defaultThread) {
-    yield put(ThreadsActions.addThreadRequest('default'))
+    yield put(ThreadsActions.addThreadRequest('default' as TT.ThreadName))
     const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
     defaultThread = action.payload.thread
     yield put(ThreadsActions.refreshThreadsRequest())
@@ -102,15 +101,15 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
   yield call(NavigationService.navigate, 'TabNavigator')
 
-  let defaultThread: TextileTypes.Thread = yield call(getDefaultThread)
+  let defaultThread: TT.Thread = yield call(getDefaultThread)
 
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
 
-function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
+function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
   const photoPath = uri.replace('file://', '')
   try {
-    const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+    const addResult: TT.AddResult = yield call(TextileNode.addPhoto, photoPath)
     if (!addResult.archive) {
       throw new Error('no archive returned')
     }
@@ -154,7 +153,7 @@ export function * viewThread ( action: ActionType<typeof UIActions.viewThreadReq
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
-export function * getUsername (contact: TextileTypes.Contact) {
+export function * getUsername (contact: TT.Contact) {
   try {
     if (contact.username !== undefined) return
     const uri = contact.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username' : undefined
@@ -214,7 +213,7 @@ export function * refreshMessages () {
 export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.getPhotoHashesRequest>) {
   const { threadId } = action.payload
   try {
-    const photos: TextileTypes.Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
+    const photos: TT.Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
     yield put(TextileNodeActions.getPhotoHashesSuccess(threadId, photos))
   } catch (error) {
     yield put(TextileNodeActions.getPhotoHashesFailure(threadId, error))
@@ -236,7 +235,7 @@ export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {
     try {
-      const pending: string = yield select(PreferencesSelectors.pending)
+      const pending: TT.PhotoId = yield select(PreferencesSelectors.pending)
       if (pending) {
         yield call(TextileNode.setAvatarId, pending)
         const profile = yield call(TextileNode.getProfile)
@@ -253,12 +252,12 @@ export function * nodeOnlineSaga () {
 }
 
 export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceRequest>) {
-  const { name, pubKey } = action.payload
+  const { name, deviceId } = action.payload
   try {
-    yield call(TextileNode.addDevice, name, pubKey)
-    yield put(DevicesActions.addDeviceSuccess(pubKey))
+    yield call(TextileNode.addDevice, name, deviceId)
+    yield put(DevicesActions.addDeviceSuccess(deviceId))
   } catch (error) {
-    yield put(DevicesActions.addDeviceError(pubKey, error))
+    yield put(DevicesActions.addDeviceError(deviceId, error))
   }
 }
 
@@ -299,9 +298,9 @@ export function * photosTask () {
     // will run before the next startNodeSuccess is received and photoTask run again
     yield take(getType(TextileNodeActions.startNodeSuccess))
 
-    let defaultThread: TextileTypes.Thread | undefined = yield call(getDefaultThread)
+    let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {
-      yield put(ThreadsActions.addThreadRequest('default'))
+      yield put(ThreadsActions.addThreadRequest('default' as TT.ThreadName))
       const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
       defaultThread = action.payload.thread
       yield put(ThreadsActions.refreshThreadsRequest())
@@ -325,17 +324,17 @@ export function * photosTask () {
     const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
     yield put(CameraRollActions.trackPhotos(urisToProcess))
 
-    let addedPhotosData: { uri: string, addResult: TextileTypes.AddResult, blockId: string }[] = []
+    let addedPhotosData: { uri: string, addResult: TT.AddResult, blockId: string }[] = []
 
     for (const uri of urisToProcess) {
       let photoPath = ''
       try {
         photoPath = yield call(CameraRoll.getPhotoPath, uri)
-        const addResult: TextileTypes.AddResult = yield call(TextileNode.addPhoto, photoPath)
+        const addResult: TT.AddResult = yield call(TextileNode.addPhoto, photoPath)
         if (!addResult.archive) {
           throw new Error('no archive returned')
         }
-        const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+        const blockId: TT.BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
         yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
         yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
         addedPhotosData.push({ uri, addResult, blockId })
@@ -446,7 +445,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
     yield call(NavigationService.navigate, 'WalletPicker')
   } else {
     try {
-      const image: TextileTypes.SharedImage = {
+      const image: TT.SharedImage = {
         origURL: pickerResponse.origURL,
         uri: pickerResponse.uri,
         path: pickerResponse.path,

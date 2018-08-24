@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from '../Redux/Types'
-import { Profile } from '../Models/TextileTypes'
+import { Mnemonic, PhotoId, Profile, PublicKey } from '../Models/TextileTypes'
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', resolve => {
@@ -10,19 +10,19 @@ const actions = {
     return () => resolve()
   }),
   updatecMnemonic: createAction('UPDATE_MNEMONIC', resolve => {
-    return (mnemonic: string) => resolve({ mnemonic })
+    return (mnemonic: Mnemonic) => resolve({ mnemonic })
   }),
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
     return (profile: Profile) => resolve({ profile })
   }),
   setAvatar: createAction('SET_AVATAR_REQUEST', resolve => {
-    return (avatarId: string) => resolve({avatarId})
+    return (avatarId: PhotoId) => resolve({ avatarId })
   }),
   pendingAvatar: createAction('PENDING_AVATAR_REQUEST', resolve => {
-    return (avatarId: string) => resolve({avatarId})
+    return (avatarId: PhotoId) => resolve({ avatarId })
   }),
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
-    return (publicKey: string) => resolve({ publicKey })
+    return (publicKey: PublicKey) => resolve({ publicKey })
   }),
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', resolve => {
     return (tourKey: TourScreens) => resolve({ tourKey })
@@ -42,10 +42,10 @@ export type Service = {
 export type PreferencesState = {
   onboarded: boolean
   verboseUi: boolean
-  mnemonic?: string
-  publicKey?: string
+  mnemonic?: Mnemonic
+  publicKey?: PublicKey
   profile?: Profile
-  pending?: string,
+  pending?: PhotoId
   readonly services: {[k in ServiceType]: Service}
   readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need
 }
@@ -97,11 +97,13 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
     case getType(actions.toggleVerboseUi):
       return { ...state, verboseUi: !state.verboseUi }
     case getType(actions.updatecMnemonic):
-      return { ...state, mnemonic: action.payload.mnemonic }
+      const mnemonic = action.payload.mnemonic
+      return { ...state, mnemonic: mnemonic }
     case getType(actions.getProfileSuccess):
       return { ...state, profile: action.payload.profile, pending: undefined}
     case getType(actions.pendingAvatar):
-      return { ...state, pending: action.payload.avatarId }
+      const pending = action.payload.avatarId
+      return { ...state, pending }
     case getType(actions.getPublicKeySuccess):
       return { ...state, publicKey: action.payload.publicKey }
     case getType(actions.completeTourSuccess):
