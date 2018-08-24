@@ -5,6 +5,7 @@ import {Provider} from 'react-redux'
 import {PersistGate} from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import configureStore from '../Redux/configureStore'
+import LocationEventHandler from '../Services/EventHandlers/LocationEventHandler'
 import AppStateEventHander from '../Services/EventHandlers/AppStateEventHandler'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
@@ -18,6 +19,7 @@ const backgroundTaskEventHandler = new BackgroundTaskEventHandler(store)
 
 class App extends Component {
 
+  locationEventHandler = new LocationEventHandler(store)
   appStateEventHander = new AppStateEventHander(store)
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
@@ -42,6 +44,7 @@ class App extends Component {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
     }
+    this.locationEventHandler.tearDown()
     this.appStateEventHander.tearDown()
     this.notificationEventHandler.tearDown()
     this.textileNodeEventHandler.tearDown()
