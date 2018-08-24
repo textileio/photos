@@ -108,7 +108,7 @@ class UserProfile extends React.PureComponent {
           </View>
           {this.connectivity()}
           <TouchableOpacity style={styles.listItemFirst} onPress={this._settings.bind(this)}>
-            <Text style={styles.listText}>Notifications</Text>
+            <Text style={styles.listText}>Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>

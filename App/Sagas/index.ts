@@ -1,4 +1,4 @@
-import { takeLatest, takeEvery, all, take } from 'redux-saga/effects'
+import { takeLatest, takeEvery, all, call } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
 
 /* ------------- Types ------------- */
@@ -16,6 +16,12 @@ import DevicesActions from '../Redux/DevicesRedux'
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
+
+import { manageNode } from './NodeLifecycle'
+import { onNodeCreated } from './NodeCreated'
+import { onNodeStarted } from './NodeStarted'
+import { onNodeOnline } from './NodeOnline'
+
 import {
   handleSharePhotoRequest,
   handleImageUploadComplete,
@@ -57,12 +63,6 @@ import {
   viewThread,
   addFriends,
   initializeAppState,
-  handleNewAppState,
-  toggleBackgroundTimer,
-  triggerCreateNode,
-  createNode,
-  startNode,
-  stopNode,
   refreshMessages,
   addDevice,
   getPhotoHashes,
@@ -81,6 +81,11 @@ import {
 
 export default function * root () {
   yield all([
+    call(manageNode),
+    call(onNodeCreated),
+    call(onNodeStarted),
+    call(onNodeOnline),
+
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
 
@@ -92,10 +97,6 @@ export default function * root () {
     // permissions request events
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
     takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
-
-    // some sagas receive extra parameters in addition to an action
-
-    takeEvery(getType(TextileNodeActions.appStateChange), handleNewAppState),
 
     takeEvery(getType(UIActions.viewPhotoRequest), viewPhoto),
     takeEvery(getType(UIActions.viewThreadRequest), viewThread),
@@ -111,16 +112,7 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
     takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
 
-    takeEvery(getType(TextileNodeActions.refreshMessagesRequest), refreshMessages),
-
-    takeEvery(getType(TextileNodeActions.lock), toggleBackgroundTimer),
-
-    takeEvery(getType(TextileNodeActions.createNodeRequest), createNode),
-    takeEvery(getType(TextileNodeActions.startNodeRequest), startNode),
-    takeEvery(getType(TextileNodeActions.stopNodeRequest), stopNode),
-
-    // Actions that trigger creating (therefore starting/stopping) the node
-    takeEvery(getType(PreferencesActions.onboardedSuccess), triggerCreateNode),
+    call(refreshMessages),
 
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
