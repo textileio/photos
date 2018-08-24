@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import * as TT from './App/Models/TextileTypes'
 import {Threads} from './App/Models/TextileTypes'
+import {GetContactsResult} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
@@ -154,6 +155,22 @@ export default {
     return await TextileNode.ignorePhoto(blockId)
   },
 
+  addPhotoComment: async function (blockId: TT.BlockId, body: string): Promise<TT.BlockId> {
+    return await TextileNode.addPhotoComment(blockId, body)
+  },
+
+  ignorePhotoComment: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+    return await TextileNode.ignorePhotoComment(blockId)
+  },
+
+  addPhotoLike: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+    return await TextileNode.addPhotoLike(blockId)
+  },
+
+  ignorePhotoLike: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+    return await TextileNode.ignorePhotoLike(blockId)
+  },
+
   addDevice: async function (name: TT.DeviceName, pubKey: TT.DeviceId): Promise<void> {
     return await TextileNode.addDevice(name, pubKey)
   },
@@ -189,8 +206,8 @@ export default {
     return await TextileNode.readNotification(id)
   },
 
-  readAllNotification: async function (): Promise<void> {
-    return await TextileNode.readAllNotification()
+  readAllNotifications: async function (): Promise<void> {
+    return await TextileNode.readAllNotifications()
   },
 
   acceptThreadInviteViaNotification: async function (id: TT.NotificationId): Promise<TT.BlockId> {
