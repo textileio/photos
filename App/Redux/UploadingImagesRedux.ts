@@ -1,4 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
+import { RootState } from '../Redux/Types'
 
 const actions = {
   addImage: createAction('ADD_IMAGE', resolve => {
@@ -50,13 +51,13 @@ export const initialState: UploadingImagesState = {
 }
 
 export const UploadingImagesSelectors = {
-  uploadingImageById: (state, id) => state.uploadingImages.images[id] as UploadingImage,
-  imagesForRetry: (state) => {
+  uploadingImageById: (state: RootState, id: string) => state.uploadingImages.images[id] as UploadingImage,
+  imagesForRetry: (state: RootState) => {
     return Object.keys(state.uploadingImages.images)
       .map(key => state.uploadingImages.images[key])
       .filter(image => image.state === 'error' && image.remainingUploadAttempts > 0) as UploadingImage[]
   },
-  uploadingImageIds: (state) => {
+  uploadingImageIds: (state: RootState) => {
     let keys: string[] = []
     for (let key in state.uploadingImages.images) {
       if (state.uploadingImages.images.hasOwnProperty(key) && state.uploadingImages.images[key].state === 'uploading') {

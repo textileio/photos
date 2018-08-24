@@ -1,22 +1,18 @@
 import React from 'react'
-import {View, Text, Image, TouchableWithoutFeedback, TouchableOpacity} from 'react-native'
-import ActionSheet from 'react-native-actionsheet'
+import {View, Text, Image } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import Config from 'react-native-config'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
-import * as TextileTypes from '../Models/TextileTypes'
+import { ThreadName, Photo } from '../Models/TextileTypes'
 import UIActions from '../Redux/UIRedux'
-import ThreadsActions from '../Redux/ThreadsRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Avatar from '../Components/Avatar'
 
 import Button from '../SB/components/Button'
-import BottomDrawerList from '../SB/components/BottomDrawerList'
-import NavigationService from '../Services/NavigationService'
 import styles from '../SB/views/ThreadsList/statics/styles'
 
 class TextilePhotos extends React.PureComponent {
@@ -106,7 +102,7 @@ class TextilePhotos extends React.PureComponent {
           <View style={styles.emptyStateContainer}>
             <Image
               style={styles.emptyStateImage}
-              source={require('../Images/v2/permissions.png')}/>
+              source={require('../Images/v2/permissions.png')} />
             <Text style={styles.emptyStateText}>
               This is the Textile wallet, a private
               space where you can manage the data
@@ -143,13 +139,13 @@ const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
   const navParams = ownProps.navigation.state.params || {}
 
-  const threadName = 'default'
+  const threadName: ThreadName = 'default'
   const defaultThread = state.threads.threads.find(thread => thread.name === threadName)
   const defaultThreadId = defaultThread ? defaultThread.id : undefined
 
   const threadId = navParams.id || defaultThreadId
 
-  var photos: TextileTypes.Photo[] = []
+  var photos: Photo[] = []
   var refreshing = false
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }

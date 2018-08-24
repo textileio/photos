@@ -6,6 +6,7 @@ import ImageSc from 'react-native-scalable-image'
 import * as NotificationServices from '../../../Services/Notifications'
 import Avatar from '../../../Components/Avatar'
 import styles from './statics/styles'
+import TextileImage from '../../../../TextileImage'
 
 const FeedItem = props => {
   const { notification, onClick } = props
@@ -14,7 +15,9 @@ const FeedItem = props => {
 
   if (!payload) return (<View />)
 
-  let avatarUri = notification.actor_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + notification.actor_id + '/avatar' : undefined
+  const avatarUri = notification.actor_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + notification.actor_id + '/avatar' : undefined
+
+  const isPhotoType = NotificationServices.isPhoto(notification)
 
   const leftSource = (
     <Avatar
@@ -37,7 +40,9 @@ const FeedItem = props => {
         <Text style={styles.text}>{payload.message}</Text>
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
-      {!notification.read && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
+      {!notification.read && !isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
+      {!notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
+      {notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} ><View style={styles.readImage}></View></TextileImage>}
     </TouchableOpacity>
   )
 }

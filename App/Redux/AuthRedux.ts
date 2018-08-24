@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { CafeTokens } from '../Models/TextileTypes'
+import { CafeTokens, UserName } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 const actions = {
@@ -10,16 +10,16 @@ const actions = {
     return (email: string) => resolve({ email })
   }),
   updateUsername: createAction('UPDATE_USERNAME', resolve => {
-    return (username: string) => resolve({ username })
+    return (username: UserName) => resolve({ username })
   }),
   updatePassword: createAction('UPDATE_PASSWORD', resolve => {
     return (password: string) => resolve({ password })
   }),
   signUpRequest: createAction('SIGN_UP_REQUEST', resolve => {
-    return (referralCode: string, email: string, username: string, password: string) => resolve({ referralCode, email, username, password })
+    return (referralCode: string, email: string, username: UserName, password: string) => resolve({ referralCode, email, username, password })
   }),
   logInRequest: createAction('LOG_IN_REQUEST', resolve => {
-    return (username: string, password: string) => resolve({ username, password })
+    return (username: UserName, password: string) => resolve({ username, password })
   }),
   logOutRequest: createAction('LOG_OUT_REQUEST', resolve => {
     return () => resolve()
@@ -71,7 +71,7 @@ export type AuthState = {
   readonly formData: {
     readonly referralCode?: string
     readonly email?: string
-    readonly username?: string
+    readonly username?: UserName
     readonly password?: string
   }
 }

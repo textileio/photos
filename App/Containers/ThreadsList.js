@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Image, FlatList, Alert } from 'react-native'
+import Config from 'react-native-config'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
@@ -15,7 +16,6 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 import UIActions from '../Redux/UIRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import Config from 'react-native-config'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
