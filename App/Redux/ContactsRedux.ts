@@ -1,20 +1,20 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from '../Redux/Types'
-import * as TT from '../Models/TextileTypes'
+import { Contact } from '../Models/TextileTypes'
 
 const actions = {
   getContactsSuccess: createAction('GET_CONTACT_SUCCESS', resolve => {
-    return (contacts: TT.Contact[]) => resolve({contacts})
+    return (contacts: Contact[]) => resolve({contacts})
   }),
   getUsernameSuccess: createAction('GET_USERNAME_SUCCESS', resolve => {
-    return (contact: TT.Contact, username: string) => resolve({contact, username})
+    return (contact: Contact, username: string) => resolve({contact, username})
   })
 }
 
 export type ContactsAction = ActionType<typeof actions>
 
 export type ContactsState = {
-  readonly contacts: ReadonlyArray<TT.Contact>
+  readonly contacts: ReadonlyArray<Contact>
 }
 
 export const initialState: ContactsState = {
@@ -40,7 +40,7 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         .reduce(function(map, obj) {
           map[obj.id] = obj
           return map;
-        }, {} as {[index: string]: TT.Contact})
+        }, {} as {[index: string]: Contact})
 
       const contacts = action.payload.contacts.map((c) => {
         c.username = keepers[c.id] ? keepers[c.id].username : undefined

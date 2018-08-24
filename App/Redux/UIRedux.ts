@@ -1,6 +1,10 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import * as TT from '../Models/TextileTypes'
-import { RootState } from '../Redux/Types'
+import {
+  PhotoId,
+  SharedImage,
+  ThreadId,
+  ThreadName
+} from '../Models/TextileTypes'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
@@ -20,31 +24,28 @@ const actions = {
     return () => resolve()
   }),
   viewThreadRequest: createAction('VIEW_THREAD_REQUEST', resolve => {
-    return (threadId: TT.ThreadId, threadName: TT.ThreadName) => resolve({ threadId, threadName })
+    return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
   }),
   viewPhotoRequest: createAction('VIEW_PHOTO_REQUEST', resolve => {
-    return (photoId: TT.PhotoId, threadId: TT.ThreadId) => resolve({ photoId, threadId })
-  }),
-  switchViewdPhoto: createAction('SWITCH_VIEWED_PHOTO', resolve => {
-    return (photoId: TT.PhotoId) => resolve(photoId)
+    return (photoId: PhotoId, threadId: ThreadId) => resolve({ photoId, threadId })
   }),
   dismissViewedPhoto: createAction('DISMISS_VIEWED_PHOTO', resolve => {
     return () => resolve()
   }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', resolve => {
-    return (image: TT.SharedImage | string) => resolve({ image })
+    return (image: SharedImage | string) => resolve({ image })
   }),
   updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', resolve => {
-    return (threadId: TT.ThreadId) => resolve({ threadId })
+    return (threadId: ThreadId) => resolve({ threadId })
   }),
   updateSharingPhotoComment: createAction('UPDATE_SHARING_PHOTO_COMMENT', resolve => {
     return (comment: string) => resolve({ comment })
   }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
-    return (image?: TT.SharedImage | string, threadId?: TT.ThreadId, comment?: string) => resolve({ image, threadId, comment })
+    return (image?: SharedImage | string, threadId?: ThreadId, comment?: string) => resolve({ image, threadId, comment })
   }),
   sharePhotoToNewThreadRequest: createAction('SHARE_PHOTO_TO_NEW_THREAD_REQUEST', resolve => {
-    return (imageId: string, threadName: string, comment?: string) => resolve({ imageId, threadName, comment })
+    return (imageId: PhotoId, threadName: ThreadName, comment?: string) => resolve({ imageId, threadName, comment })
   }),
   cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', resolve => {
     return () => resolve()
@@ -53,13 +54,13 @@ const actions = {
     return (error: Error) => resolve(error)
   }),
   getPublicLink: createAction('GET_PUBLIC_LINK', resolve => {
-    return (photoId: TT.PhotoId) => resolve({ photoId })
+    return (photoId: PhotoId) => resolve({ photoId })
   }),
   showImagePicker: createAction('SHOW_IMAGE_PICKER', resolve => {
-    return (threadId: TT.ThreadId) => resolve({ threadId })
+    return (threadId: ThreadId) => resolve({ threadId })
   }),
   newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', resolve => {
-    return (threadId: TT.ThreadId) => resolve({ threadId })
+    return (threadId: ThreadId) => resolve({ threadId })
   }),
   newImagePickerError: createAction('NEW_IMAGE_PICKER_ERROR', resolve => {
     return (error: Error, message?: string) => resolve({ error, message })
@@ -71,7 +72,7 @@ const actions = {
     return (url: string) => resolve({url})
   }),
   addFriendRequest: createAction('ADD_FRIEND_REQUEST', resolve => {
-    return (threadId: TT.ThreadId, threadName: TT.ThreadName) => resolve({threadId, threadName})
+    return (threadId: ThreadId, threadName: ThreadName) => resolve({threadId, threadName})
   })
 }
 
@@ -85,12 +86,12 @@ export type UIState = {
   }
   readonly viewingPhoto: {
     readonly active: boolean
-    readonly photoId?: TT.PhotoId
-    readonly threadId?: TT.ThreadId
+    readonly photoId?: PhotoId
+    readonly threadId?: ThreadId
   },
   readonly sharingPhoto?: {
-    readonly image?: TT.SharedImage | string,
-    readonly threadId?: TT.ThreadId,
+    readonly image?: SharedImage | string,
+    readonly threadId?: ThreadId,
     readonly comment?: string
   },
   readonly imagePickerError?: string // used to notify the user of any error during photo picking
@@ -114,8 +115,6 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.viewPhotoRequest):
       const { photoId, threadId } = action.payload
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, photoId, threadId } }
-    case getType(actions.switchViewdPhoto):
-      return { ...state, viewingPhoto: { ...state.viewingPhoto, photoId: action.payload } }
     case getType(actions.dismissViewedPhoto):
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: false } }
     case getType(actions.updateSharingPhotoImage):

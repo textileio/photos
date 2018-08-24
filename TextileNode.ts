@@ -5,6 +5,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import * as TT from './App/Models/TextileTypes'
+import {Threads} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
@@ -58,15 +59,15 @@ export default {
     return profile
   },
 
-  getPublicKey: async function (): Promise<string> {
+  getPublicKey: async function (): Promise<TT.PublicKey> {
     return await TextileNode.getPubKey()
   },
 
-  getId: async function (): Promise<string> {
+  getId: async function (): Promise<TT.PeerId> {
     return await TextileNode.getId()
   },
 
-  getUsername: async function (): Promise<string> {
+  getUsername: async function (): Promise<TT.UserName> {
     return await TextileNode.getUsername()
   },
 
@@ -88,7 +89,7 @@ export default {
     return thread
   },
 
-  removeThread: async function (threadId: TT.ThreadId): Promise<string> {
+  removeThread: async function (threadId: TT.ThreadId): Promise<TT.BlockId> {
     return await TextileNode.removeThread(threadId)
   },
 
@@ -98,10 +99,8 @@ export default {
     return threads
   },
 
-  addThreadInvite: async function (threadId: TT.ThreadId, inviteePk: TT.PublicKey): Promise<string> {
-    const jsonString = await TextileNode.addThreadInvite(threadId, inviteePk)
-    // const thread = JSON.parse(jsonString) as TextileTypes.Thread
-    return jsonString
+  addThreadInvite: async function (threadId: TT.ThreadId, inviteePk: TT.PublicKey): Promise<TT.BlockId> {
+    return await TextileNode.addThreadInvite(threadId, inviteePk)
   },
 
   addExternalThreadInvite: async function (id: TT.ThreadId): Promise<TT.ExternalInvite> {
@@ -110,7 +109,7 @@ export default {
     return externalInvite
   },
 
-  acceptExternalThreadInvite: async function (inviteId: TT.BlockId, key: TT.PrivateKey): Promise<string> {
+  acceptExternalThreadInvite: async function (inviteId: TT.BlockId, key: TT.PrivateKey): Promise<TT.BlockId> {
     return await TextileNode.acceptExternalThreadInvite(inviteId, key)
   },
 
@@ -120,11 +119,11 @@ export default {
     return addResult
   },
 
-  addPhotoToThread: async function (dataId: TT.PhotoId, key: TT.PrivateKey, threadId: TT.ThreadId, caption?: string): Promise<string> {
+  addPhotoToThread: async function (dataId: TT.PhotoId, key: TT.PrivateKey, threadId: TT.ThreadId, caption?: string): Promise<TT.BlockId> {
     return await TextileNode.addPhotoToThread(dataId, key, threadId, caption)
   },
 
-  sharePhotoToThread: async function (dataId: TT.PhotoId, threadId: TT.ThreadId, caption?: string): Promise<string> {
+  sharePhotoToThread: async function (dataId: TT.PhotoId, threadId: TT.ThreadId, caption?: string): Promise<TT.BlockId> {
     return await TextileNode.sharePhotoToThread(dataId, threadId, caption)
   },
 
@@ -140,20 +139,19 @@ export default {
     return imageData
   },
 
-  getPhotoThreads: async function (id: TT.PhotoId): Promise<Array<string>> {
+  getPhotoThreads: async function (id: TT.PhotoId): Promise<TT.Threads> {
     const jsonString = await TextileNode.getPhotoThreads(id)
-    const threads = JSON.parse(jsonString) as Array<string>
+    const threads = JSON.parse(jsonString) as TT.Threads
     return threads
   },
 
-  getPhotoKey: async function (id: TT.PhotoId): Promise<string> {
+  getPhotoKey: async function (id: TT.PhotoId): Promise<TT.PrivateKey> {
     const key = await TextileNode.getPhotoKey(id)
     return key
   },
 
-  ignorePhoto: async function (blockId: TT.BlockId): Promise<string> {
-    const key = await TextileNode.ignorePhoto(blockId)
-    return key
+  ignorePhoto: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+    return await TextileNode.ignorePhoto(blockId)
   },
 
   addDevice: async function (name: TT.DeviceName, pubKey: TT.DeviceId): Promise<void> {

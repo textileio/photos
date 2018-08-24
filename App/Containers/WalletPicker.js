@@ -9,7 +9,7 @@ import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
-import * as TT from '../Models/TextileTypes'
+import { Photo } from '../Models/TextileTypes'
 
 class TextileWalletPicker extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -88,7 +88,7 @@ const mapStateToProps = (state) => {
   const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
   const threadId = defaultThread ? defaultThread.id : undefined
 
-  let photos: TT.Photo[] = []
+  let photos: Photo[] = []
   let refreshing = false
   let thread
   if (threadId) {

@@ -150,7 +150,7 @@ class PhotoViewerScreen extends React.PureComponent {
           initialPage={this.props.currentIndex}
           // flatListProps={{windowSize: 1, initialNumToRender: 6}}
           imageComponent={this.renderImage.bind(this)}
-          onPageSelected={this.props.selectImage}
+          onPageSelected={() => {}}
         />
 
         { this.galleryCount }
@@ -187,7 +187,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     authorShare: (imageId) => { dispatch(UIActions.authorPhotoShareRequest(imageId)) },
-    selectImage: (index) => { dispatch(UIActions.switchViewdPhoto(index)) },
+    // selectImage: (index) => { dispatch(UIActions.switchViewdPhoto(index)) },
     dismiss: () => { dispatch(UIActions.dismissViewedPhoto()) }
   }
 }
