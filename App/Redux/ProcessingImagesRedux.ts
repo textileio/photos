@@ -1,10 +1,11 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { SharedImage, AddResult } from '../Models/TextileTypes'
+import { ThreadId, SharedImage, AddResult, BlockId } from '../Models/TextileTypes'
 import { RootState } from './Types'
 
 const actions = {
   insertImage: createAction('processingImages/INSERT_IMAGE', resolve => {
-    return (uuid: string, sharedImage: SharedImage, destinationThreadId: string, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
+    return (uuid: string, sharedImage: SharedImage, destinationThreadId: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
+    return (uuid: string, sharedImage: SharedImage, destinationThreadId: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
   }),
   addingImage: createAction('processingImages/ADDING_IMAGE', resolve => {
     return (uuid: string) => resolve({ uuid })
@@ -25,13 +26,13 @@ const actions = {
     return (uuid: string) => resolve({ uuid })
   }),
   addedToWallet: createAction('processingImages/ADDED_TO_WALLET', resolve => {
-    return (uuid: string, blockId: string) => resolve({ uuid, blockId })
+    return (uuid: string, blockId: BlockId) => resolve({ uuid, blockId })
   }),
   sharingToThread: createAction('processingImages/SHARING_TO_THREAD', resolve => {
     return (uuid: string) => resolve({ uuid })
   }),
   sharedToThread: createAction('processingImages/SHARED_TO_THREAD', resolve => {
-    return (uuid: string, blockId: string) => resolve({ uuid, blockId })
+    return (uuid: string, blockId: BlockId) => resolve({ uuid, blockId })
   }),
   complete: createAction('processingImages/COMPLETE', resolve => {
     return (uuid: string) => resolve({ uuid })
@@ -55,7 +56,7 @@ export type ProcessingImagesAction = ActionType<typeof actions>
 export type ProcessingImage = {
   readonly uuid: string,
   readonly sharedImage: SharedImage
-  readonly destinationThreadId: string
+  readonly destinationThreadId: ThreadId
   readonly comment?: string
   readonly state: 'pending' | 'adding' | 'added' | 'uploading' | 'uploaded' | 'addingToWallet' | 'addedToWallet' | 'sharing' | 'shared'
   readonly error?: string
@@ -68,10 +69,10 @@ export type ProcessingImage = {
     readonly responseBody?: string
   }
   readonly addToWalletData?: {
-    readonly blockId: string
+    readonly blockId: BlockId
   }
   readonly shareToThreadData?: {
-    readonly blockId: string
+    readonly blockId: BlockId
   }
 }
 
@@ -135,8 +136,7 @@ export function reducer(state: ProcessingImagesState = initialState, action: Pro
       const { uuid, progress } = action.payload
       const images = state.images.map(image => {
         if (image.uuid === uuid) {
-          const updated: ProcessingImage = { ...image, uploadData: { ...image.uploadData, uploadProgress: progress/100}}
-          return updated
+          return { ...image, uploadData: { ...image.uploadData, uploadProgress: progress/100}}
         }
         return image
       })

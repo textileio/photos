@@ -1,17 +1,40 @@
+// BEGIN API Types
+
+// private enums to enforce strict id types
+// read here: https://basarat.gitbooks.io/typescript/docs/tips/nominalTyping.html#using-enums
+enum TextileIdBase {}
+enum BlockIdBase {}
+enum ThreadIdBase {}
+enum PhotoIdBase {}
+enum PeerIdBase {}
+enum DeviceIdBase {}
+enum ProfileAvatarIdBase {}
+enum NotificationIdBase {}
+export type TextileId = TextileIdBase & string & undefined
+export type BlockId = BlockIdBase & string & undefined
+export type ThreadId = ThreadIdBase & string & undefined
+export type PhotoId = PhotoIdBase & string & undefined
+export type PeerId = PeerIdBase & string & undefined
+export type DeviceId = DeviceIdBase & string & undefined
+export type ProfileAvatarId = ProfileAvatarIdBase & string & undefined
+export type NotificationId = NotificationIdBase & string & undefined
+
+enum UserNameBase {}
+enum ThreadNameBase {}
+enum DeviceNameBase {}
+enum PublicKeyBase {}
+enum PrivateKeyBase {}
+enum MnemonicBase {}
+export type UserName = UserNameBase & string & undefined
+export type ThreadName = ThreadNameBase & string & undefined
+export type DeviceName = DeviceNameBase & string & undefined
+export type PublicKey = PublicKeyBase & string & undefined
+export type PrivateKey = PrivateKeyBase & string & undefined
+export type Mnemonic = MnemonicBase & string & undefined
+
 export interface Event {
   name: string
   payload: string
-}
-
-export interface Contact {
-  id: string
-  pk: string
-  thread_ids: string[]
-  username?: string
-}
-
-export interface GetContactsResult {
-  items: Contact[]
 }
 
 export enum NotificationType {
@@ -24,36 +47,27 @@ export enum NotificationType {
   peerLeftNotification
 }
 
+export interface Notification {
+  actor_id: PeerId
+  actor_username: UserName
+  block_id?: BlockId
+  body: string
+  data_id?: TextileId
+  date: string
+  id: NotificationId
+  read: boolean
+  subject: string
+  subject_id: TextileId
+  type: NotificationType
+}
+
 export interface GetNotificationsResult {
   items: Notification[]
 }
 
-export interface Notification {
-  actor_id: string
-  actor_username: string
-  body: string
-  category: string
-  date: string
-  id: string
-  read: boolean
-  target_id: string
-  type: NotificationType
-}
-
-export interface NotificationEngagement {
-  alert: string,
-  badge: number,
-  foreground: boolean,
-  message: string,
-  sound: string,
-  userInteraction: boolean,
-  data?: any,
-  finish?: Function
-}
-
 export interface Thread {
-  id: string
-  name: string
+  id: ThreadId
+  name: ThreadName
   peers: number
 }
 
@@ -61,43 +75,67 @@ export interface Threads  {
   items: Thread[]
 }
 
-export interface Device {
-  id: string
-  name: string
+export interface Contact {
+  id: PeerId
+  pk: PublicKey
+  thread_ids: string[]
+  username?: string // <- Added by RN, perhaps replace with an embedded Profile
+}
+
+export interface Profile {
+  id: PeerId
+  username?: UserName
+  avatar_id?: ProfileAvatarId
+}
+
+export interface GetContactsResult {
+  items: Contact[]
 }
 
 export interface Devices {
   items: Device[]
 }
 
-export interface Profile {
-  id: string
-  username?: string
-  avatar_id?: string
-}
-
-export interface Photo {
-  id: string
-  block_id: string
-  date: string
-  author_id: string
-  caption?: string
-  metadata: PhotoMetadata
+export interface Device {
+  id: DeviceId
+  name: DeviceName
 }
 
 export interface GetPhotosResult {
   items: Photo[]
 }
 
+export interface Photo {
+  id: PhotoId
+  block_id: BlockId
+  date: string
+  author_id: PeerId
+  caption?: string
+  metadata: PhotoMetadata
+}
+
 export interface ExternalInvite {
-  id: string,
-  key: string,
+  id: BlockId,
+  key: PrivateKey,
   inviter: string
 }
 
+export type CafeTokens = {
+  readonly access: string
+  readonly refresh: string
+}
+
+export type NodeOverview = {
+  readonly swarm_size: number
+  readonly device_count: number
+  readonly thread_count: number
+  readonly photo_count: number
+  readonly contact_count: number
+}
+
 export interface AddResult {
-  id: string
-  key: string
+  id: PhotoId
+  key: PrivateKey
   archive?: FileArchive
 }
 
@@ -106,7 +144,7 @@ export interface FileArchive {
 }
 
 export interface Metadata {
-  username?: string
+  username?: UserName
   created?: string
   added?: string
 }
@@ -143,19 +181,6 @@ export type SharedImage = {
   isVertical: boolean
 }
 
-export type CafeTokens = {
-  readonly access: string
-  readonly refresh: string
-}
-
-export type NodeOverview = {
-  readonly swarm_size: number
-  readonly device_count: number
-  readonly thread_count: number
-  readonly photo_count: number
-  readonly contact_count: number
-}
-
 export type DeepLinkData = {
   readonly href: string,
   readonly protocol: string,
@@ -165,4 +190,15 @@ export type DeepLinkData = {
   readonly path: string,
   readonly search: string
   readonly hash: string
+}
+
+export interface NotificationEngagement {
+  alert: string,
+  badge: number,
+  foreground: boolean,
+  message: string,
+  sound: string,
+  userInteraction: boolean,
+  data?: any,
+  finish?: Function
 }

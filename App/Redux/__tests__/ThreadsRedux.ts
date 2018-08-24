@@ -1,13 +1,21 @@
 import actions, { reducer } from '../ThreadsRedux'
-import { Thread, ExternalInvite } from '../../Models/TextileTypes'
+import {
+  BlockId,
+  ExternalInvite,
+  PrivateKey,
+  Thread,
+  ThreadId,
+  ThreadName,
+  UserName
+} from '../../Models/TextileTypes'
 
-const id = 'id'
-const name = 'myThread'
+const id = 'id' as ThreadId
+const name = 'myThread' as ThreadName
 const peers = 3
 const error = new Error('an error')
-const inviteId = 'invite_id'
-const inviteKey = 'a_key'
-const invite: ExternalInvite = {id: inviteId, inviter: 'tests', key: inviteKey}
+const inviteId = 'invite_id' as BlockId
+const inviteKey = 'a_key' as PrivateKey
+const invite: ExternalInvite = {id: inviteId, inviter: 'tests' as UserName, key: inviteKey}
 
 const initialState = reducer(undefined, {} as any)
 
@@ -89,7 +97,7 @@ describe('ui stories', () => {
   })
   describe('leaving threads', () => {
     it('should leave a thread successfully', () => {
-      const state0 = reducer(initialState, actions.addThreadRequest(id))
+      const state0 = reducer(initialState, actions.addThreadRequest(name))
       const state1 = reducer(state0, actions.addThreadSuccess({ id, name, peers }))
       expect(state1.threads).toHaveLength(1)
       const state2 = reducer(state1, actions.removeThreadRequest(id))
@@ -100,7 +108,7 @@ describe('ui stories', () => {
       expect(state3.removing).toBeUndefined()
     })
     it('should fail at leaving a thread', () => {
-      const state0 = reducer(initialState, actions.addThreadRequest(id))
+      const state0 = reducer(initialState, actions.addThreadRequest(name))
       const state1 = reducer(state0, actions.addThreadSuccess({ id, name, peers }))
       const state2 = reducer(state1, actions.removeThreadRequest(id))
       const match2 = { id }
@@ -111,7 +119,7 @@ describe('ui stories', () => {
       expect(state3.threads).toHaveLength(1)
     })
     it('should ignore out of order events', () => {
-      const state0 = reducer(initialState, actions.removeThreadSuccess(name))
+      const state0 = reducer(initialState, actions.removeThreadSuccess(id))
       expect(state0).toMatchObject(initialState)
       const state1 = reducer(initialState, actions.removeThreadError(error))
       expect(state1).toMatchObject(initialState)
