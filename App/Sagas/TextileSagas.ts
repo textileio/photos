@@ -430,7 +430,7 @@ export function * photosTask () {
         if (!addResult.archive) {
           throw new Error('no archive returned')
         }
-        const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+        const blockId: TT.BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
         yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
         yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
         addedPhotosData.push({ uri, addResult, blockId })

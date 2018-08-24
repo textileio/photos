@@ -1,13 +1,21 @@
 import actions, { reducer } from '../ThreadsRedux'
-import * as TT from '../../Models/TextileTypes'
+import {
+  BlockId,
+  ExternalInvite,
+  PrivateKey,
+  Thread,
+  ThreadId,
+  ThreadName,
+  UserName
+} from '../../Models/TextileTypes'
 
-const id = 'id' as TT.ThreadId
-const name = 'myThread' as TT.ThreadName
+const id = 'id' as ThreadId
+const name = 'myThread' as ThreadName
 const peers = 3
 const error = new Error('an error')
-const inviteId = 'invite_id' as TT.BlockId
-const inviteKey = 'a_key' as TT.PrivateKey
-const invite: TT.ExternalInvite = {id: inviteId, inviter: 'tests' as TT.UserName, key: inviteKey}
+const inviteId = 'invite_id' as BlockId
+const inviteKey = 'a_key' as PrivateKey
+const invite: ExternalInvite = {id: inviteId, inviter: 'tests' as UserName, key: inviteKey}
 
 const initialState = reducer(undefined, {} as any)
 
@@ -66,7 +74,7 @@ describe('ui stories', () => {
       const state0 = reducer(initialState, actions.addThreadRequest(name))
       const match0 = { name }
       expect(state0.adding).toMatchObject(match0)
-      const match1: TT.Thread = { id, name, peers }
+      const match1: Thread = { id, name, peers }
       const state1 = reducer(state0, actions.addThreadSuccess(match1))
       expect(state1.threads[0]).toMatchObject(match1)
       expect(state1.adding).toBeUndefined()

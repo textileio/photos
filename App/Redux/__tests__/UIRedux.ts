@@ -1,11 +1,11 @@
 import actions, { reducer } from '../UIRedux'
-import * as TT from '../../Models/TextileTypes'
+import { SharedImage, ThreadId } from '../../Models/TextileTypes'
 import { hash } from 'react-native-fs';
 
 const initialState = reducer(undefined, {} as any)
-const threadId = 'threadId' as TT.ThreadId
+const threadId = 'threadId' as ThreadId
 const comment = 'comment'
-const sharedImage: TT.SharedImage = {
+const sharedImage: SharedImage = {
   origURL: 'origURL',
   uri: 'uri',
   path: '/here',

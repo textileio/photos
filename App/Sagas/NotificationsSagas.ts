@@ -16,7 +16,7 @@ import { ActionType } from 'typesafe-actions'
 
 import TextileNode from '../../TextileNode'
 import UIActions from '../Redux/UIRedux'
-import * as TT from '../Models/TextileTypes'
+import { NotificationType, ThreadName } from '../Models/TextileTypes'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
@@ -33,7 +33,7 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
   // if No notifications enabled, return
   if (!service || service.status !== true) return
   const { notification } = action.payload
-  const type = TT.NotificationType[notification.type] as string
+  const type = NotificationType[notification.type] as string
 
   // if notifications for this type are not enabled, return
   const preferences = yield select(PreferencesSelectors.service, type as ServiceType)
@@ -64,17 +64,17 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   const { notification } = action.payload
   try {
     switch (notification.type){
-      case TT.NotificationType.receivedInviteNotification:
+      case NotificationType.receivedInviteNotification:
         yield * waitUntilOnline(1000)
         yield call(TextileNode.readNotification, notification.id)
         yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
         break;
-      case TT.NotificationType.deviceAddedNotification:
-      case TT.NotificationType.photoAddedNotification:
-      case TT.NotificationType.commentAddedNotification:
-      case TT.NotificationType.likeAddedNotification:
-      case TT.NotificationType.peerJoinedNotification:
-      case TT.NotificationType.peerLeftNotification:
+      case NotificationType.deviceAddedNotification:
+      case NotificationType.photoAddedNotification:
+      case NotificationType.commentAddedNotification:
+      case NotificationType.likeAddedNotification:
+      case NotificationType.peerJoinedNotification:
+      case NotificationType.peerLeftNotification:
         const thread = yield select(ThreadsSelectors.threadById, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         yield put(UIActions.viewThreadRequest(thread.id, thread.name))
@@ -107,7 +107,7 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
     const payload = NotificationsServices.toPayload(notification)
     if (!payload) return
     yield call(NotificationsServices.displayInviteAlert, payload.message)
-    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.subject as TT.ThreadName))
+    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.subject as ThreadName))
   } catch (error) {
     // Ignore invite
   }

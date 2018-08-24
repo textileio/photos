@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from '../Redux/Types'
-import * as TT from '../Models/TextileTypes'
+import { Mnemonic, PhotoId, Profile, PublicKey } from '../Models/TextileTypes'
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', resolve => {
@@ -10,19 +10,19 @@ const actions = {
     return () => resolve()
   }),
   updatecMnemonic: createAction('UPDATE_MNEMONIC', resolve => {
-    return (mnemonic: TT.Mnemonic) => resolve({ mnemonic })
+    return (mnemonic: Mnemonic) => resolve({ mnemonic })
   }),
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', resolve => {
-    return (profile: TT.Profile) => resolve({ profile })
+    return (profile: Profile) => resolve({ profile })
   }),
   setAvatar: createAction('SET_AVATAR_REQUEST', resolve => {
-    return (avatarId: TT.PhotoId) => resolve({ avatarId })
+    return (avatarId: PhotoId) => resolve({ avatarId })
   }),
   pendingAvatar: createAction('PENDING_AVATAR_REQUEST', resolve => {
-    return (avatarId: TT.PhotoId) => resolve({ avatarId })
+    return (avatarId: PhotoId) => resolve({ avatarId })
   }),
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', resolve => {
-    return (publicKey: TT.PublicKey) => resolve({ publicKey })
+    return (publicKey: PublicKey) => resolve({ publicKey })
   }),
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', resolve => {
     return (tourKey: TourScreens) => resolve({ tourKey })
@@ -42,10 +42,10 @@ export type Service = {
 export type PreferencesState = {
   onboarded: boolean
   verboseUi: boolean
-  mnemonic?: TT.Mnemonic
-  publicKey?: TT.PublicKey
-  profile?: TT.Profile
-  pending?: TT.PhotoId
+  mnemonic?: Mnemonic
+  publicKey?: PublicKey
+  profile?: Profile
+  pending?: PhotoId
   readonly services: {[k in ServiceType]: Service}
   readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need
 }

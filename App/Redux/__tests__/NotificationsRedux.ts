@@ -1,37 +1,45 @@
 import actions, { reducer, NotificationsState } from '../NotificationsRedux'
-import * as TT from '../../Models/TextileTypes'
+import {
+  BlockId,
+  GetNotificationsResult,
+  Notification,
+  NotificationId,
+  PeerId,
+  TextileId,
+  UserName,
+} from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
-const notification1: TT.Notification = {
-  actor_id: 'PeerId' as TT.PeerId,
-  actor_username: 'UserName' as TT.UserName,
-  block_id: 'BlockId' as TT.BlockId,
+const notification1: Notification = {
+  actor_id: 'PeerId' as PeerId,
+  actor_username: 'UserName' as UserName,
+  block_id: 'BlockId' as BlockId,
   body: 'some photo',
-  data_id: 'TextileId' as TT.TextileId,
+  data_id: 'TextileId' as TextileId,
   date: '1999-01-01T00:00:00Z',
-  id: 'NotificationId' as TT.NotificationId,
+  id: 'NotificationId' as NotificationId,
   read: false,
   subject: 'a notification',
-  subject_id: 'TextileId' as TT.TextileId,
+  subject_id: 'TextileId' as TextileId,
   type: 2
 }
 
-const notification2: TT.Notification = {
-  actor_id: 'abc' as TT.PeerId,
-  actor_username: 'UserName' as TT.UserName,
-  block_id: 'BlockId' as TT.BlockId,
+const notification2: Notification = {
+  actor_id: 'abc' as PeerId,
+  actor_username: 'UserName' as UserName,
+  block_id: 'BlockId' as BlockId,
   body: 'some other photo',
-  data_id: 'TextileId' as TT.TextileId,
+  data_id: 'TextileId' as TextileId,
   date: '1999-01-02T00:00:00Z',
-  id: 'NotificationId' as TT.NotificationId,
+  id: 'NotificationId' as NotificationId,
   read: false,
   subject: 'a notification',
-  subject_id: 'TextileId' as TT.TextileId,
+  subject_id: 'TextileId' as TextileId,
   type: 2
 }
 
-const getResult: TT.GetNotificationsResult = {items: [notification1]}
+const getResult: GetNotificationsResult = {items: [notification1]}
 
 describe('notifications stories', () => {
   describe('initial state', () => {

@@ -1,10 +1,10 @@
 import actions, { reducer, DeviceWithState } from '../DevicesRedux'
-import * as TT from '../../Models/TextileTypes'
+import { DeviceId, DeviceName } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
-const name = 'deviceName' as TT.DeviceName
-const deviceId = 'someid' as TT.DeviceId
+const name = 'deviceName' as DeviceName
+const deviceId = 'someid' as DeviceId
 const error = new Error('an error')
 
 describe('devices stories', () => {

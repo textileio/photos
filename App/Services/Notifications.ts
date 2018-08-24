@@ -1,5 +1,5 @@
 import PushNotification from 'react-native-push-notification'
-import * as TT from '../Models/TextileTypes'
+import { Notification, NotificationEngagement, NotificationType } from '../Models/TextileTypes'
 import {Alert, Platform} from 'react-native'
 
 export interface NotificationsPayload {
@@ -8,60 +8,60 @@ export interface NotificationsPayload {
   typeString: string
 }
 
-export function isPhoto(notification: TT.Notification): boolean {
+export function isPhoto(notification: Notification): boolean {
   if (!notification.data_id) return false
   switch (notification.type){
-    case TT.NotificationType.receivedInviteNotification:
-    case TT.NotificationType.deviceAddedNotification:
-    case TT.NotificationType.peerJoinedNotification:
-    case TT.NotificationType.peerLeftNotification:
+    case NotificationType.receivedInviteNotification:
+    case NotificationType.deviceAddedNotification:
+    case NotificationType.peerJoinedNotification:
+    case NotificationType.peerLeftNotification:
       return false
-    case TT.NotificationType.photoAddedNotification:
-    case TT.NotificationType.commentAddedNotification:
-    case TT.NotificationType.likeAddedNotification:
+    case NotificationType.photoAddedNotification:
+    case NotificationType.commentAddedNotification:
+    case NotificationType.likeAddedNotification:
       return true
   }
 }
 
-export function toPayload(notification: TT.Notification): NotificationsPayload | undefined {
-  const typeString = TT.NotificationType[notification.type] as string
+export function toPayload(notification: Notification): NotificationsPayload | undefined {
+  const typeString = NotificationType[notification.type] as string
   const actor = notification.actor_username || 'A peer'
 
   switch (notification.type) {
-    case(TT.NotificationType.receivedInviteNotification): {
+    case(NotificationType.receivedInviteNotification): {
       const target = notification.subject && notification.subject != '' ? 'to ' + notification.subject : 'to a new Thread'
       const title = 'New Invite'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(TT.NotificationType.deviceAddedNotification): {
+    case(NotificationType.deviceAddedNotification): {
       const title = 'New Device'
       const message = 'A new device has paired with your wallet'
       return {title, message, typeString}
     }
-    case(TT.NotificationType.photoAddedNotification): {
+    case(NotificationType.photoAddedNotification): {
       const target = notification.subject && notification.subject != '' ? 'to ' + notification.subject : ''
       const title = 'New Photo'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(TT.NotificationType.commentAddedNotification): {
+    case(NotificationType.commentAddedNotification): {
       const title =  'New comment'
       const message = [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(TT.NotificationType.likeAddedNotification): {
+    case(NotificationType.likeAddedNotification): {
       const title = 'New like'
       const message = [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(TT.NotificationType.peerJoinedNotification): {
+    case(NotificationType.peerJoinedNotification): {
       const target = notification.subject && notification.subject != 'a thread' ? ' ' + notification.subject : ''
       const title = 'New Peer'
       const message =  [actor, notification.body, target].join(' ') + '.'
       return {title, message, typeString}
     }
-    case(TT.NotificationType.peerLeftNotification): {
+    case(NotificationType.peerLeftNotification): {
       const target = notification.subject && notification.subject != 'a thread' ? ' ' + notification.subject : ''
       const title = 'Peer left'
       const message =  [actor, notification.body, target].join(' ') + '.'
@@ -73,7 +73,7 @@ export function toPayload(notification: TT.Notification): NotificationsPayload |
   }
 }
 
-export function getData(engagement: TT.NotificationEngagement): any {
+export function getData(engagement: NotificationEngagement): any {
   if (Platform.OS === 'ios') {
   } else {
     const { data } = engagement
@@ -81,7 +81,7 @@ export function getData(engagement: TT.NotificationEngagement): any {
   }
 }
 
-export async function createNew(notification: TT.Notification): Promise<void> {
+export async function createNew(notification: Notification): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
       const payload = toPayload(notification)

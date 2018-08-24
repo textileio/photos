@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import Config from 'react-native-config'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
-import * as TT from '../Models/TextileTypes'
+import { ThreadName, Photo } from '../Models/TextileTypes'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
@@ -139,13 +139,13 @@ const mapStateToProps = (state, ownProps) => {
   // TODO: Can this be a selector?
   const navParams = ownProps.navigation.state.params || {}
 
-  const threadName: TT.ThreadName = 'default'
+  const threadName: ThreadName = 'default'
   const defaultThread = state.threads.threads.find(thread => thread.name === threadName)
   const defaultThreadId = defaultThread ? defaultThread.id : undefined
 
   const threadId = navParams.id || defaultThreadId
 
-  var photos: TT.Photo[] = []
+  var photos: Photo[] = []
   var refreshing = false
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }

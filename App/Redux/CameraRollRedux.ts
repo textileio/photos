@@ -41,8 +41,8 @@ export const initialState: CameraRollState = {
 }
 
 export const cameraRollSelectors = {
-  initialized: (state: RootState) => state.cameraRoll.initialized as boolean,
-  queriedPhotos: (state: RootState) => state.cameraRoll.queriedPhotos as QueriedPhotosMap
+  initialized: (state: RootState) => state.cameraRoll.initialized,
+  queriedPhotos: (state: RootState) => state.cameraRoll.queriedPhotos
 }
 
 export function reducer (state: CameraRollState = initialState, action: CameraRollAction): CameraRollState {

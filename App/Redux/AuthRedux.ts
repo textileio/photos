@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import * as TT from '../Models/TextileTypes'
+import { CafeTokens, UserName } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 const actions = {
@@ -10,16 +10,16 @@ const actions = {
     return (email: string) => resolve({ email })
   }),
   updateUsername: createAction('UPDATE_USERNAME', resolve => {
-    return (username: TT.UserName) => resolve({ username })
+    return (username: UserName) => resolve({ username })
   }),
   updatePassword: createAction('UPDATE_PASSWORD', resolve => {
     return (password: string) => resolve({ password })
   }),
   signUpRequest: createAction('SIGN_UP_REQUEST', resolve => {
-    return (referralCode: string, email: string, username: TT.UserName, password: string) => resolve({ referralCode, email, username, password })
+    return (referralCode: string, email: string, username: UserName, password: string) => resolve({ referralCode, email, username, password })
   }),
   logInRequest: createAction('LOG_IN_REQUEST', resolve => {
-    return (username: TT.UserName, password: string) => resolve({ username, password })
+    return (username: UserName, password: string) => resolve({ username, password })
   }),
   logOutRequest: createAction('LOG_OUT_REQUEST', resolve => {
     return () => resolve()
@@ -34,7 +34,7 @@ const actions = {
     return () => resolve()
   }),
   getTokensSuccess: createAction('GET_TOKENS_SUCCESS', resolve => {
-    return (tokens: TT.CafeTokens) => resolve({ tokens })
+    return (tokens: CafeTokens) => resolve({ tokens })
   }),
   recoverPasswordSuccess: createAction('RECOVER_PASSWORD_SUCCESS', resolve => {
     return () => resolve()
@@ -67,11 +67,11 @@ export type AuthAction = ActionType<typeof actions>
 export type AuthState = {
   readonly processing: boolean
   readonly error?: string
-  readonly tokens?: TT.CafeTokens
+  readonly tokens?: CafeTokens
   readonly formData: {
     readonly referralCode?: string
     readonly email?: string
-    readonly username?: TT.UserName
+    readonly username?: UserName
     readonly password?: string
   }
 }
