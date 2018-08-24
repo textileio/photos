@@ -82,7 +82,7 @@ export default {
     return tokens
   },
 
-  addThread: async function (name: TT.ThreadName, mnemonic?: string): Promise<TT.Thread> {
+  addThread: async function (name: TT.ThreadName, mnemonic?: TT.Mnemonic): Promise<TT.Thread> {
     const jsonString = await TextileNode.addThread(name, mnemonic)
     const thread = JSON.parse(jsonString) as TT.Thread
     return thread
