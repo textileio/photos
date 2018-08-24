@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image } from 'react-native'
+import { NavigationEvents } from 'react-navigation'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import Config from 'react-native-config'
 
@@ -8,17 +9,19 @@ import FeedItem from '../../components/FeedItem'
 import Button from '../../components/Button'
 import Avatar from '../../../Components/Avatar'
 
-import * as TextileTypes from '../../../Models/TextileTypes'
+import { Notification } from '../../../Models/TextileTypes'
 import NotificationsActions from '../../../Redux/NotificationsRedux'
 
 import styles from './statics/styles'
-import feedItemStyle from '../../components/FeedItem/statics/styles'
 import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
-import { NotificationType } from '../../../Models/TextileTypes'
 
 class Notifications extends React.PureComponent {
+  state = {
+    readAllOnExit: false
+  }
+
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
@@ -54,23 +57,56 @@ class Notifications extends React.PureComponent {
     }
   }
 
+  // gets called every time  the user enters this tab
+  _onFocus () {
+    // refresh the messages for the user
+    this.props.refreshNotifications() // < will get called on the very first entry too
+    // reset our readAll flag to re-time
+    this.setState({readAllOnExit: false})
+    // set a timer to clear all unread messages
+    this._setReadAllTimer()
+  }
+
+  // gets called every time the user exists the tab
+  _onBlur () {
+    // will be 0 if already run
+    if (this.readAllHandle) {
+      clearTimeout(this.readAllHandle)
+      this.readAllHandle = 0
+    }
+    // if the user was on the page long enough, we'll just clear all unread
+    if (this.state.readAllOnExit) {
+      this.props.readAllNotifications()
+    }
+  }
+
   componentDidMount () {
-    this.props.refreshNotifications()
+    // on mount, set listeners for enter and exit of the tab
+    this.props.navigation.addListener('willFocus', this._onFocus.bind(this))
+    this.props.navigation.addListener('willBlur', this._onBlur.bind(this))
     this.props.navigation.setParams({
       profile: this.props.profile
     })
   }
 
-  componentWillMount () {
-    this.props.refreshNotifications()
+  componentWillUnmount () {
+    // remove the listeners for enter / exit the tab
+    this.props.navigation.removeListener('blur', this._onBlur.bind(this))
+    this.props.navigation.removeListener('onFocus', this._onFocus.bind(this))
+  }
+
+  _readAll () {
+    this.setState({readAllOnExit: true})
+    this.readAllHandle = 0
+  }
+  _setReadAllTimer = () => {
+    if (this.readAllHandle) return
+    // After the user has been on the screen for 6 seconds, mark all as unread next time the user unmounts
+    this.readAllHandle = setTimeout(this._readAll.bind(this), 6000)
   }
 
   _onClick (notification) {
     this.props.clickNotification(notification)
-  }
-
-  _onRefresh = () => {
-    this.props.refreshMessages()
   }
 
   _keyExtractor = (item, index) => item.id + '_' + index
@@ -111,7 +147,7 @@ class Notifications extends React.PureComponent {
             keyExtractor={this._keyExtractor.bind(this)}
             renderItem={this._renderItem.bind(this)}
             refreshing={this.props.refreshing}
-            onRefresh={this._onRefresh}
+            onRefresh={this.props.refreshMessages}
           />
         </View>
         {/*<Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />*/}
@@ -132,8 +168,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     refreshNotifications: () => dispatch(NotificationsActions.refreshNotificationsRequest()),
+    readAllNotifications: () => dispatch(NotificationsActions.readAllNotificationsRequest()),
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
-    clickNotification: (notification: TextileTypes.Notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
+    clickNotification: (notification: Notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) }
   }
 }

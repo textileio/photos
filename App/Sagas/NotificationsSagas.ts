@@ -28,6 +28,10 @@ export function * enable () {
   yield call(NotificationsServices.enable)
 }
 
+export function * readAllNotifications (action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
+  yield call(TextileNode.readAllNotifications)
+}
+
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
   const service = yield select(PreferencesSelectors.service, 'notifications')
   // if No notifications enabled, return
