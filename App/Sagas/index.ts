@@ -32,7 +32,8 @@ import {
   handleEngagement,
   notificationView,
   refreshNotifications,
-  reviewThreadInvite
+  reviewThreadInvite,
+  readAllNotifications
 } from './NotificationsSagas'
 
 import {
@@ -157,6 +158,7 @@ export default function * root () {
     takeEvery(getType(NotificationsActions.notificationSuccess), notificationView),
     takeEvery(getType(NotificationsActions.refreshNotificationsRequest), refreshNotifications),
     takeEvery(getType(NotificationsActions.reviewNotificationThreadInvite), reviewThreadInvite),
+    takeEvery(getType(NotificationsActions.readAllNotificationsRequest), readAllNotifications),
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
