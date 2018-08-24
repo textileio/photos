@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
-import * as TextileTypes from '../Models/TextileTypes'
+import { ThreadId, BlockId, Photo, PhotoId, PhotoMetadata } from '../Models/TextileTypes'
 import {RootState} from './Types'
 
 const actions = {
@@ -41,19 +41,19 @@ const actions = {
     return () => resolve()
   }),
   ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', resolve => {
-    return (threadId: string, blockId: string) => resolve({ threadId, blockId })
+    return (threadId: ThreadId, blockId: BlockId) => resolve({ threadId, blockId })
   }),
   getPhotoHashesRequest: createAction('GET_PHOTO_HASHES_REQUEST', resolve => {
-    return (threadId: string) => resolve({ threadId })
+    return (threadId: ThreadId) => resolve({ threadId })
   }),
   getPhotoHashesSuccess: createAction('GET_PHOTO_HASHES_SUCCESS', resolve => {
-    return (threadId: string, photos: TextileTypes.Photo[]) => resolve({ threadId, photos })
+    return (threadId: ThreadId, photos: Photo[]) => resolve({ threadId, photos })
   }),
   getPhotoHashesFailure: createAction('GET_PHOTO_HASHES_FAILURE', resolve => {
-    return (threadId: string, error: Error) => resolve({ threadId, error })
+    return (threadId: ThreadId, error: Error) => resolve({ threadId, error })
   }),
   getPhotoMetadataSuccess: createAction('GET_PHOTO_METADATA_SUCCESS', resolve => {
-    return (threadId: string, photoId: string, metadata: TextileTypes.PhotoMetadata) => resolve({ threadId, photoId, metadata })
+    return (threadId: ThreadId, photoId: PhotoId, metadata: PhotoMetadata) => resolve({ threadId, photoId, metadata })
   }),
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
     return () => resolve()
@@ -73,7 +73,7 @@ export type TextileNodeAction = ActionType<typeof actions>
 
 export type ThreadData = {
   readonly querying: boolean
-  readonly photos: ReadonlyArray<TextileTypes.Photo>
+  readonly photos: ReadonlyArray<Photo>
   readonly error?: Error
 }
 
@@ -160,7 +160,7 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
 function createEmptyThreadData (): ThreadData {
   return {
     querying: false,
-    photos: Array<TextileTypes.Photo>()
+    photos: Array<Photo>()
   }
 }
 

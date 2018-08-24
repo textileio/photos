@@ -29,6 +29,15 @@ export default StyleSheet.create({
     // color: '#7C848D'
     // fontFamily: 'BentonSans-Bold'
   },
+  readImage: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    opacity: 0.85,
+    backgroundColor: '#ECEDEE',
+    width: 40,
+    height: 40
+  },
   headerIconUser: {
     width: 29,
     height: 29,
