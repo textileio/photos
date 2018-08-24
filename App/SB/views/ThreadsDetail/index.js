@@ -69,7 +69,7 @@ class ThreadsDetail extends React.PureComponent {
 
   componentWillMount () {
     // refresh our messages
-    this.props.refreshMessages(true)
+    this.props.refreshMessages()
   }
 
   componentDidMount () {
@@ -272,7 +272,7 @@ const mapDispatchToProps = (dispatch) => {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
-    refreshMessages: (hidden) => { dispatch(TextileNodeActions.refreshMessagesRequest(hidden)) },
+    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },

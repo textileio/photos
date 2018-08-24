@@ -1,4 +1,4 @@
-import { takeLatest, takeEvery, all, take } from 'redux-saga/effects'
+import { takeLatest, takeEvery, all, call } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
 
 /* ------------- Types ------------- */
@@ -18,6 +18,9 @@ import DevicesActions from '../Redux/DevicesRedux'
 import { startup } from './StartupSagas'
 
 import { manageNode } from './NodeLifecycle'
+import { onNodeCreated } from './NodeCreated'
+import { onNodeStarted } from './NodeStarted'
+import { onNodeOnline } from './NodeOnline'
 
 import {
   handleSharePhotoRequest,
@@ -78,7 +81,10 @@ import {
 
 export default function * root () {
   yield all([
-    manageNode(),
+    call(manageNode),
+    call(onNodeCreated),
+    call(onNodeStarted),
+    call(onNodeOnline),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),

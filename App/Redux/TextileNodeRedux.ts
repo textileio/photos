@@ -41,9 +41,6 @@ const actions = {
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
     return () => resolve()
   }),
-  refreshMessagesSubmitted: createAction('REFRESH_MESSAGES_SUBMITTED', resolve => {
-    return () => resolve()
-  }),
   refreshMessagesSuccess: createAction('REFRESH_MESSAGES_SUCCESS', resolve => {
     return (timestamp: number) => resolve({ timestamp })
   }),
@@ -138,7 +135,7 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
       const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, error } }
       return { ...state, threads }
     }
-    case getType(actions.refreshMessagesSubmitted):
+    case getType(actions.refreshMessagesRequest):
       return { ...state, refreshingMessages: true }
     case getType(actions.refreshMessagesSuccess):
     case getType(actions.refreshMessagesFailure):

@@ -150,7 +150,7 @@ function * processAvatarImage(uri: string, defaultThread: TextileTypes.Thread) {
 }
 
 export function * viewThread ( action: ActionType<typeof UIActions.viewThreadRequest> ) {
-  yield call(TextileNodeActions.refreshMessagesRequest, false)
+  yield put(TextileNodeActions.refreshMessagesRequest())
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
