@@ -185,15 +185,6 @@ export function * viewPhoto ( action: ActionType<typeof UIActions.viewPhotoReque
   yield call(NavigationService.navigate, 'PhotoViewer')
 }
 
-export function * toggleBackgroundTimer (action: ActionType<typeof TextileNodeActions.lock>) {
-  if (action.payload.value) {
-    yield call(BackgroundTimer.start)
-  } else {
-    yield call(BackgroundTimer.stop)
-    yield call(BackgroundTask.finish)
-  }
-}
-
 export function * initializeAppState () {
     yield take(getType(StartupActions.startup))
     const defaultAppState = yield select(TextileNodeSelectors.appState)
@@ -500,8 +491,8 @@ export function * cameraPermissionsTrigger () {
   // Will trigger a camera permission request
   if (Platform.OS === 'android') {
     const permission = yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE, {
-        'title': 'Textile Photos Photos Permission',
-        'message': 'Textile accesses your photo storage to import any new photos you take after you install the app.'
+        title: 'Textile Photos Photos Permission',
+        message: 'Textile accesses your photo storage to import any new photos you take after you install the app.'
       })
   } else {
     getPhotos(1)

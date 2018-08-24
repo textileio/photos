@@ -4,9 +4,6 @@ import * as TextileTypes from '../Models/TextileTypes'
 import {RootState} from './Types'
 
 const actions = {
-  lock: createAction('LOCK', resolve => {
-    return (value: boolean) => resolve({ value })
-  }),
   appStateChange: createAction('APP_STATE_CHANGE', resolve => {
     return (previousState: TextileAppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
   }),
@@ -72,7 +69,7 @@ type TextileAppStateStatus = AppStateStatus | 'unknown'
 export enum NodeState {
   'nonexistent' = 'nonexistent',
   'creating' = 'creating',
-  'created' = 'created', // Node has been created, on it's way to being starting
+  'created' = 'created', // Node has been created, on it's way to starting
   'starting' = 'starting',
   'started' = 'started',
   'stopping' = 'stopping',
@@ -80,7 +77,6 @@ export enum NodeState {
 }
 
 type TextileNodeState = {
-  readonly locked: boolean
   readonly appState: TextileAppStateStatus
   readonly online: boolean
   readonly nodeState: {
@@ -92,7 +88,6 @@ type TextileNodeState = {
 }
 
 export const initialState: TextileNodeState = {
-  locked: false,
   appState: 'unknown',
   online: false,
   nodeState: {
@@ -104,8 +99,6 @@ export const initialState: TextileNodeState = {
 
 export function reducer (state: TextileNodeState = initialState, action: TextileNodeAction): TextileNodeState {
   switch (action.type) {
-    case getType(actions.lock):
-      return { ...state, locked: action.payload.value }
     case getType(actions.appStateChange):
       return { ...state, appState: action.payload.newState }
     case getType(actions.creatingNode):

@@ -148,7 +148,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.refreshThreadsRequest):
       return { ...state, refreshing: true, refreshError: undefined }
     case getType(actions.refreshThreadsSuccess):
-      const threads = action.payload.threads.items || []
+      const threads = action.payload.threads.items
       return { ...state, refreshing: false, refreshError: undefined, threads }
     case getType(actions.refreshThreadsError):
       return { ...state, refreshing: false, refreshError: action.payload.error }

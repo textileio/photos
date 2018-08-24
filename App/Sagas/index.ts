@@ -60,7 +60,6 @@ import {
   viewThread,
   addFriends,
   initializeAppState,
-  toggleBackgroundTimer,
   refreshMessages,
   addDevice,
   getPhotoHashes,
@@ -108,8 +107,6 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
 
     takeEvery(getType(TextileNodeActions.refreshMessagesRequest), refreshMessages),
-
-    takeEvery(getType(TextileNodeActions.lock), toggleBackgroundTimer),
 
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
