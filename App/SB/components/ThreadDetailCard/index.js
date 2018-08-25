@@ -54,7 +54,7 @@ const ThreadDetailCard = props => {
           <View style={styles.cardHeader} >
             <Avatar style={styles.cardAvatar} width={18} height={18} uri={uri} defaultSource={defaultSource} />
             <Text style={styles.cardAction}><Text style={styles.cardActionName}>
-              {profile.username && profile.username === username ? 'You' : username}
+              {profile && profile.username === username ? 'You' : username}
             </Text> added a photo</Text>
           </View>
           <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
