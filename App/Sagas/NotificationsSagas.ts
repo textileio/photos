@@ -16,7 +16,17 @@ import { ActionType } from 'typesafe-actions'
 
 import TextileNode from '../../TextileNode'
 import UIActions from '../Redux/UIRedux'
-import { NotificationType, ThreadName } from '../Models/TextileTypes'
+import {
+  BlockId,
+  Notification,
+  NotificationId,
+  NotificationType,
+  PeerId,
+  TextileId,
+  ThreadName,
+  UserName,
+} from '../Models/TextileTypes'
+import * as TT from '../Models/TextileTypes'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
