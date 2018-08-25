@@ -8,13 +8,13 @@ Object {
       "status": false,
     },
     "commentAddedNotification": Object {
-      "status": false,
+      "status": true,
     },
     "deviceAddedNotification": Object {
       "status": false,
     },
     "likeAddedNotification": Object {
-      "status": false,
+      "status": true,
     },
     "notifications": Object {
       "status": false,
