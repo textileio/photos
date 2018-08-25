@@ -173,7 +173,7 @@ export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequ
       yield fork(getUsername, contact)
     }
   } finally {
-    yield call(NavigationService.navigate, 'AddFriends', { threadId: action.payload.threadId})
+    yield call(NavigationService.navigate, 'AddFriends', { threadId: action.payload.threadId, threadName: action.payload.threadName})
   }
 }
 

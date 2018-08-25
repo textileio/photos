@@ -3,7 +3,7 @@ const brandYellow = '#FFCE00'
 const brandRed = '#FF1C3F'
 const brandPink = '#FFB6D5'
 
-const colors = {
+const colors: {[index: string]: string} = {
   primaryBackground: 'rgb(255,255,255)',
   headerBackground: brandBlue,
   headerText: 'rgb(255,255,255)',

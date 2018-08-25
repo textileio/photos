@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, ViewStyle, ImageStyle } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 
 import Colors from '../Themes/Colors'
 
@@ -23,7 +23,7 @@ export type ProgressBarProps = {
 
 const ProgressBar = (props: ProgressBarProps) => {
   const { style, progress } = props
-  const progressPercentage = progress * 100 + '%'
+  const progressPercentage = Math.max(progress, 0.02) * 100 + '%'
   return <View style={{...TRACK, ...style}} >
     <View style={{...PROGRESS, width: progressPercentage}} />
   </View>

@@ -73,10 +73,10 @@ export const initialState: PreferencesState = {
       status: false
     },
     commentAddedNotification: {
-      status: false
+      status: true
     },
     likeAddedNotification: {
-      status: false
+      status: true
     },
     peerJoinedNotification: {
       status: false

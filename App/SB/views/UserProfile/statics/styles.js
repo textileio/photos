@@ -102,5 +102,29 @@ export default StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     marginTop: 30
-  }
+  },
+  subScreen: {
+    backgroundColor: '#FAFCFE',
+    paddingTop: 75,
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100
+  },
+  headerImage: {
+    width: 159,
+    height: 146,
+    marginBottom: 16
+  },
+  subScreenText: {
+    fontFamily: 'BentonSans',
+    fontSize: 16,
+    lineHeight: 26,
+    textAlign: 'center',
+    paddingHorizontal: 52,
+    marginBottom: 24
+  },
 })
