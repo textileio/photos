@@ -63,6 +63,7 @@ import {
   viewPhoto,
   viewThread,
   addFriends,
+  addPhotoLike,
   initializeAppState,
   refreshMessages,
   addDevice,
@@ -102,6 +103,7 @@ export default function * root () {
     takeEvery(getType(UIActions.viewPhotoRequest), viewPhoto),
     takeEvery(getType(UIActions.viewThreadRequest), viewThread),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
+    takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
 
     takeEvery(getType(AuthActions.signUpRequest), signUp),
     takeEvery(getType(AuthActions.logInRequest), logIn),

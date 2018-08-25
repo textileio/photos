@@ -499,3 +499,12 @@ export function * backgroundLocationPermissionsTrigger () {
     yield call(navigator.geolocation.requestAuthorization)
   }
 }
+
+export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
+  const { blockId } = action.payload
+  try {
+    yield call(TextileNode.addPhotoLike, blockId)
+  } catch (error) {
+
+  }
+}
