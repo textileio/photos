@@ -19,7 +19,6 @@ const backgroundTaskEventHandler = new BackgroundTaskEventHandler(store)
 
 class App extends Component {
 
-  locationEventHandler = new LocationEventHandler(store)
   appStateEventHander = new AppStateEventHander(store)
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
@@ -44,7 +43,6 @@ class App extends Component {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
     }
-    this.locationEventHandler.tearDown()
     this.appStateEventHander.tearDown()
     this.notificationEventHandler.tearDown()
     this.textileNodeEventHandler.tearDown()
