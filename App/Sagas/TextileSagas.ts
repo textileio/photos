@@ -173,7 +173,7 @@ export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequ
       yield fork(getUsername, contact)
     }
   } finally {
-    yield call(NavigationService.navigate, 'AddFriends', { threadId: action.payload.threadId})
+    yield call(NavigationService.navigate, 'AddFriends', { threadId: action.payload.threadId, threadName: action.payload.threadName})
   }
 }
 
@@ -497,5 +497,14 @@ export function * backgroundLocationPermissionsTrigger () {
     })
   } else {
     yield call(navigator.geolocation.requestAuthorization)
+  }
+}
+
+export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
+  const { blockId } = action.payload
+  try {
+    yield call(TextileNode.addPhotoLike, blockId)
+  } catch (error) {
+
   }
 }

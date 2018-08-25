@@ -1,6 +1,7 @@
 import React from 'react'
-import { View, Text, Image, Dimensions } from 'react-native'
+import { View, Text, Image, Dimensions, TouchableOpacity } from 'react-native'
 import Dash from 'react-native-dash'
+import ImageSc from 'react-native-scalable-image'
 import moment from 'moment'
 import SmallIconTag from '../SmallIconTag'
 import TextileImage from '../../../../TextileImage'
@@ -13,7 +14,7 @@ import styles from './statics/styles'
 const WIDTH = Dimensions.get('window').width
 
 const ThreadDetailCard = props => {
-  const { last, profile, item } = props
+  const { last, profile, item, onLike } = props
   const type = item.type
   switch (type) {
     case 'title': {
@@ -35,20 +36,25 @@ const ThreadDetailCard = props => {
       const photo = item.photo
       const date = moment(photo.date)
       const dateString = date.fromNow()
+      const selfId = props.profile && props.profile.id
+      const ownPhoto = selfId && selfId === photo.author_id
 
       const username = photo.username ? photo.username : photo.author_id.substring(0, 8)
+
+      const defaultSource = require('../../views/Settings/statics/main-image.png')
+      let uri = photo.author_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + photo.author_id + '/avatar' : undefined
+      // ensure we have the user's latest avatar even if the cafe is still caching
+      if (ownPhoto) {
+        uri = Config.TEXTILE_CAFE_URI + props.profile.avatar_id
+      }
+
+      const didLike = photo.likes && photo.likes.find((like) => like.author_id === selfId)
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH
       const heightProperties = getHeight(photo.metadata, imageWidth)
       const imageHeight = heightProperties.height
 
-      const defaultSource = require('../../views/Settings/statics/main-image.png')
-      let uri = photo.author_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + photo.author_id + '/avatar' : undefined
-      // ensure we have the user's latest avatar even if the cafe is still caching
-      if (props.profile && props.profile.id && props.profile.id === photo.author_id) {
-        uri = Config.TEXTILE_CAFE_URI + props.profile.avatar_id
-      }
       return (
         <View style={styles.card}>
           <View style={styles.cardHeader} >
@@ -70,6 +76,14 @@ const ThreadDetailCard = props => {
             </View>
           </View>
           <View style={styles.cardFooter} >
+            <View style={styles.cardFooterTop} >
+              {didLike && <ImageSc width={32} source={require('../../../Images/v2/hearted.png')} />}
+              {!didLike && <TouchableOpacity onPress={() => {
+                onLike(photo)
+              }}>
+                <ImageSc width={32} source={require('../../../Images/v2/heart.png')} />
+              </TouchableOpacity>}
+            </View>
             <Text style={[styles.captionText]}>
               <Text style={[styles.profileName]}>{username + ' '}</Text>{photo.caption}
             </Text>

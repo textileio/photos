@@ -101,20 +101,19 @@ export interface Device {
   name: DeviceName
 }
 
-export interface Annotation {
+export interface UserComment {
   id: BlockId
   date: string
   author_id: PeerId
   username?: UserName
-}
-
-export interface UserComment {
-  annotation: Annotation
   body: string
 }
 
 export interface UserLike {
-  annotation: Annotation
+  id: BlockId
+  date: string
+  author_id: PeerId
+  username?: UserName
 }
 
 export interface GetPhotosResult {

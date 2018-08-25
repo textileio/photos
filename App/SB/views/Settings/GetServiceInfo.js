@@ -12,11 +12,11 @@ export default function (service: string): {[index: string]: string} | undefined
         subtitle: 'Enable notifications',
         details: 'Choose Textile events that trigger notifications. Notifications can be enabled or disabled at any time.'
       }
-    // case 'receivedInviteNotification':
-    //   return {
-    //     title: 'New Thread Invite',
-    //     subtitle: 'Someone shares a photo with you'
-    //   }
+    case 'receivedInviteNotification':
+      return {
+        title: 'New Thread Invite',
+        subtitle: 'Someone shares a photo with you'
+      }
     case 'deviceAddedNotification':
       return {
         title: 'New Device Paired',
@@ -35,12 +35,12 @@ export default function (service: string): {[index: string]: string} | undefined
     //     subtitle: 'Someone shares a photo with you',
     //           dependsOn: 'notifications'
     //   }
-    // case 'likeAddedNotification':
-    //   return {
-    //     title: 'New Photo Like',
-    //     subtitle: 'Someone shares a photo with you',
-    //           dependsOn: 'notifications'
-    //   }
+    case 'likeAddedNotification':
+      return {
+        title: 'New Photo Like',
+        subtitle: 'Someone shares a photo with you',
+        dependsOn: 'notifications'
+      }
     case 'peerJoinedNotification':
       return {
         title: 'Contact Joined Thread',
