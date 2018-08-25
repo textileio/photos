@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import {
+  BlockId,
   PhotoId,
   SharedImage,
   ThreadId,
@@ -42,7 +43,7 @@ const actions = {
     return (comment: string) => resolve({ comment })
   }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
-    return (image?: SharedImage, imageId?: PhotoId, threadId?: ThreadId, comment?: string) => resolve({ image, imageId, threadId, comment })
+    return (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => resolve({ image, threadId, comment })
   }),
   sharePhotoToNewThreadRequest: createAction('SHARE_PHOTO_TO_NEW_THREAD_REQUEST', resolve => {
     return (imageId: PhotoId, threadName: ThreadName, comment?: string) => resolve({ imageId, threadName, comment })
@@ -73,6 +74,9 @@ const actions = {
   }),
   addFriendRequest: createAction('ADD_FRIEND_REQUEST', resolve => {
     return (threadId: ThreadId, threadName: ThreadName) => resolve({threadId, threadName})
+  }),
+  addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
+    return (blockId: BlockId) => resolve({blockId})
   })
 }
 

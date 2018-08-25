@@ -45,6 +45,12 @@ export default StyleSheet.create({
     alignItems: 'flex-start',
     paddingHorizontal: 11,
   },
+  cardFooterTop: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
+  },
   profileName: {
     fontFamily: 'BentonSans',
     fontSize: 14,

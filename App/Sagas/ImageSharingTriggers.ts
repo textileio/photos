@@ -8,12 +8,12 @@ import UIActions from '../Redux/UIRedux'
 import { insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread } from './ImageSharingSagas'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
-  const { image, imageId, threadId, comment } = action.payload
-  if ((!image && !imageId) || !threadId) {
+  const { image, threadId, comment } = action.payload
+  if ((!image) || !threadId) {
     return
   }
-  if (imageId) {
-    yield call(shareWalletImage, imageId, threadId, comment)
+  if (typeof image === 'string') {
+    yield call(shareWalletImage, image as PhotoId, threadId, comment)
   } else if (image) {
     yield call(insertImage, image, threadId, comment)
   }
