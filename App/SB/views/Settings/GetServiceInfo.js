@@ -15,7 +15,8 @@ export default function (service: string): {[index: string]: string} | undefined
     case 'receivedInviteNotification':
       return {
         title: 'New Thread Invite',
-        subtitle: 'Someone shares a photo with you'
+        subtitle: 'Someone shares a photo with you',
+        dependsOn: 'notifications'
       }
     case 'deviceAddedNotification':
       return {
