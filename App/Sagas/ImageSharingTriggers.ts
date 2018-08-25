@@ -14,7 +14,7 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
   }
   if (typeof image === 'string') {
     yield call(shareWalletImage, image as PhotoId, threadId, comment)
-  } else if (image) {
+  } else {
     yield call(insertImage, image, threadId, comment)
   }
 }
