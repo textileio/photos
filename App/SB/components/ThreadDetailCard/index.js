@@ -48,7 +48,14 @@ const ThreadDetailCard = props => {
         uri = Config.TEXTILE_CAFE_URI + props.profile.avatar_id
       }
 
-      const didLike = photo.likes && photo.likes.find((like) => like.author_id === selfId)
+      const isLiked = photo.likes && photo.likes.length > 0
+      const didLike = isLiked && photo.likes.find((like) => like.author_id === selfId)
+
+      // you are the only like or there are no likes, return ''
+      const likeRow = !isLiked || (didLike && photo.likes.length === 1) ? undefined
+        : (<Text style={[styles.likedText]}>
+          <Text style={[styles.profileName]}>{photo.likes.length.toString() + (photo.likes.length > 1 ? ' likes' : ' like')}</Text>
+        </Text>)
 
       // Unsquares the images by maintaining the aspect ratio no matter device size
       let imageWidth = WIDTH
@@ -67,7 +74,7 @@ const ThreadDetailCard = props => {
             <View style={styles.imageStretch}>
               <TextileImage
                 imageId={photo.id}
-                path={'small'}
+                path={'medium'}
                 style={[styles.image, {width: imageWidth, height: imageHeight}]}
                 resizeMode={'cover'}
                 width={imageWidth}
@@ -84,8 +91,11 @@ const ThreadDetailCard = props => {
                 <ImageSc width={32} source={require('../../../Images/v2/heart.png')} />
               </TouchableOpacity>}
             </View>
+            {isLiked && likeRow
+            }
             <Text style={[styles.captionText]}>
-              <Text style={[styles.profileName]}>{username + ' '}</Text>{photo.caption}
+              <Text style={[styles.profileName]}>{username}</Text>
+              {' ' + photo.caption}
             </Text>
             <View style={styles.cardFooterBottom} >
               <Text style={styles.detailUpdateTime}>{dateString.toUpperCase()}</Text>
