@@ -95,7 +95,8 @@ const ThreadDetailCard = props => {
             }
             <Text style={[styles.captionText]}>
               <Text style={[styles.profileName]}>{username}</Text>
-              {' ' + photo.caption}
+              {' '}
+              {photo.caption}
             </Text>
             <View style={styles.cardFooterBottom} >
               <Text style={styles.detailUpdateTime}>{dateString.toUpperCase()}</Text>
