@@ -18,8 +18,7 @@ default_platform(:android)
 platform :android do
 
   def set_version_code(gradle_build: 'app/build.gradle', version: 0)
-    sh 'pwd'
-    sh %Q{echo "$(awk '{sub(/versionCode [[:digit:]]+$/,"versionCode "#{version})}1' #{gradle_build})" > #{gradle_build}}
+    sh %Q{cd ../ && echo "$(awk '{sub(/versionCode [0-9]+$/,"versionCode "#{version})}1' #{gradle_build})" > #{gradle_build}.tmp && mv #{gradle_build}.tmp #{gradle_build} && cd -}
   end
 
   desc "Runs all the tests"
