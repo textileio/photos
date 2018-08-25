@@ -40,9 +40,11 @@ const FeedItem = props => {
         <Text style={styles.text}>{payload.message}</Text>
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
-      {!notification.read && !isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
-      {!notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
-      {notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} ><View style={styles.readImage}></View></TextileImage>}
+      <View style={{width: 40, height: 40, overflow: 'hidden'}}>
+        {!notification.read && !isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
+        {!notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
+        {notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} ><View style={styles.readImage}></View></TextileImage>}
+      </View>
     </TouchableOpacity>
   )
 }
