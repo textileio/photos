@@ -13,7 +13,8 @@ export default StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginLeft: 11
+    marginLeft: 11,
+    marginRight: 11
   },
   text: {
     fontFamily: 'BentonSans',
