@@ -9,7 +9,7 @@ import { insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, s
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
-  if ((!image) || !threadId) {
+  if (!image || !threadId) {
     return
   }
   if (typeof image === 'string') {
