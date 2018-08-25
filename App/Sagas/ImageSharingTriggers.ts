@@ -1,6 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
+import { PhotoId } from '../Models/TextileTypes'
 
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
@@ -12,7 +13,7 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
     return
   }
   if (typeof image === 'string') {
-    yield call(shareWalletImage, image, threadId, comment)
+    yield call(shareWalletImage, image as PhotoId, threadId, comment)
   } else {
     yield call(insertImage, image, threadId, comment)
   }

@@ -9,7 +9,7 @@ export default StyleSheet.create({
     // Styles the screen header in Textile Photos feed view
     // backgroundColor: Colors.brandBlue
     backgroundColor: 'white',
-    borderBottomColor: '#ECEDEE',
+    borderBottomColor: '#ECEDEE'
   },
   headerIconList: {
     width: 23,
@@ -81,7 +81,7 @@ export default StyleSheet.create({
     marginHorizontal: 16
   },
   headerTitle: {
-    fontFamily: "BentonSans-Bold",
+    fontFamily: 'BentonSans-Bold',
     fontSize: 17,
     paddingTop: 8, // <- needed because BentonSans has that weird bottom gap
     color: Colors.charcoal
