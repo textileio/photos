@@ -9,7 +9,6 @@ function setTopLevelNavigator (navigatorRef: NavigationContainerComponent) {
 function navigate (routeName: string, params?: NavigationParams) {
   _navigator.dispatch(
     NavigationActions.navigate({
-      // type: NavigationActions.NAVIGATE,
       routeName,
       params,
     })

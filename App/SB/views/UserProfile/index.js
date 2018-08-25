@@ -72,8 +72,10 @@ class UserProfile extends React.PureComponent {
     this.setState({contactModal: this.state.contactModal === false})
   }
   _mnemonic () {
-    Clipboard.setString(this.props.mnemonic)
-    this.refs.toast.show('Copied, now be careful! Keep this 100% private!', 2500)
+    this.props.navigation.navigate('Mnemonic', {
+      avatarUrl: this.props.navigation.state.params.avatarUrl,
+      username: this.props.navigation.state.params.username
+    })
   }
   _lockScreen () {
     // Todo: this kinda works, but you have to re-onboard with taking a profile picture
@@ -117,7 +119,7 @@ class UserProfile extends React.PureComponent {
             <Text style={styles.listText}>Copy Public Key</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._mnemonic.bind(this)}>
-            <Text style={[styles.listText, styles.warning]}>Copy Mnemonic</Text>
+            <Text style={[styles.listText, styles.warning]}>Get Mnemonic</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={() => {
             Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/PRIVACY.md')
@@ -145,7 +147,7 @@ class UserProfile extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const online = state.textileNode && state.textileNode.online && state.textileNode.online ? state.textileNode.online : false
   const nodeRunning = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
 

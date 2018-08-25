@@ -1,6 +1,7 @@
 import { createStackNavigator } from 'react-navigation'
 
 import Account from '../../../../SB/views/UserProfile'
+import Mnemonic from '../../../../SB/views/UserProfile/Mnemonic'
 import Settings from '../../../../SB/views/Settings'
 import UpdateAvatar from '../../../../SB/views/UserOnBoarding/UpdateAvatar'
 
@@ -10,6 +11,7 @@ const nav = createStackNavigator(
   {
     About: Account,
     Settings: Settings,
+    Mnemonic: Mnemonic,
     ChangeAvatar: UpdateAvatar
   },
   {
