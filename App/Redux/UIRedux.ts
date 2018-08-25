@@ -42,7 +42,7 @@ const actions = {
     return (comment: string) => resolve({ comment })
   }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
-    return (image?: SharedImage | string, threadId?: ThreadId, comment?: string) => resolve({ image, threadId, comment })
+    return (image?: SharedImage, imageId?: PhotoId, threadId?: ThreadId, comment?: string) => resolve({ image, imageId, threadId, comment })
   }),
   sharePhotoToNewThreadRequest: createAction('SHARE_PHOTO_TO_NEW_THREAD_REQUEST', resolve => {
     return (imageId: PhotoId, threadName: ThreadName, comment?: string) => resolve({ imageId, threadName, comment })
