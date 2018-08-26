@@ -56,6 +56,17 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16
   },
+  likedText: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    fontFamily: 'BentonSans-Light',
+    fontSize: 14,
+    lineHeight: 16,
+    overflow: 'visible',
+    paddingTop: 6,
+    paddingBottom: 2
+  },
   captionText: {
     flex: 1,
     flexDirection: 'row',

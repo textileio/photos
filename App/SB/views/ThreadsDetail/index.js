@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, FlatList} from 'react-native'
+import {View, FlatList, Text} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -8,7 +8,6 @@ import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
 
-import styles from './statics/styles'
 import UIActions from '../../../Redux/UIRedux'
 import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
@@ -22,12 +21,15 @@ import Alert from '../../../SB/components/Alert'
 import { RootState } from '../../../Redux/Types'
 import ProcessingImageCard, { ProcessingImageProps } from '../../../Components/ProcessingImage'
 
-class ThreadsDetail extends React.PureComponent {
+import styles from './statics/styles'
+import cardStyles from '../../components/ThreadDetailCard/statics/styles'
 
+class ThreadsDetail extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      showDrawer: false
+      showDrawer: false,
+      refreshing: false
     }
   }
   static navigationOptions = ({ navigation }) => {
@@ -112,11 +114,6 @@ class ThreadsDetail extends React.PureComponent {
       this.props.viewPhoto(photoId, this.props.threadId)
     }
   }
-  _onPhotoLike = () => {
-    return (photo) => {
-      this.props.addPhotoLike(photo.block_id)
-    }
-  }
 
   _onRefresh = () => {
     this.props.refreshMessages()
@@ -132,17 +129,38 @@ class ThreadsDetail extends React.PureComponent {
 
   _keyExtractor = (item, index) => item.id + '_' + index
 
-  _renderItem = ({item}) => {
-    if (item.type === 'processingItem') {
-      return <ProcessingImageCard
-        {...item.props}
-        retry={() => { this.props.retryShare(item.id) }}
-        cancel={() => { this.props.cancelShare(item.id) }}
-      />
-    } else {
-      return (
-        <ThreadDetailCard id={item.id + '_card'} last={item === this.props.items[this.props.items.length - 1]} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} onLike={this._onPhotoLike()} />
-      )
+  _renderItem = ({item, last}) => {
+    switch (item.type) {
+      case 'title': {
+        // TODO: We should do this with Navbar integration later
+        return (
+          <View>
+            <Text style={cardStyles.titleCard}>{item.name}</Text>
+            {item === this.props.items[this.props.items.length - 1] &&
+            <View style={cardStyles.cardFooter}>
+              <View style={cardStyles.cardFooterBottom}>
+                <Text style={cardStyles.detailUpdateTime}>0 photos</Text>
+              </View>
+            </View>
+            }
+          </View>
+        )
+      }
+      case 'processingItem': {
+        return <ProcessingImageCard
+          {...item.props}
+          retry={() => { this.props.retryShare(item.id) }}
+          cancel={() => { this.props.cancelShare(item.id) }}
+        />
+      }
+      case 'photo': {
+        return (
+          <ThreadDetailCard id={item.id + '_card'} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
+        )
+      }
+      default: {
+        return (<View />)
+      }
     }
   }
 
@@ -155,7 +173,7 @@ class ThreadsDetail extends React.PureComponent {
               data={this.props.items}
               keyExtractor={this._keyExtractor.bind(this)}
               renderItem={this._renderItem.bind(this)}
-              refreshing={this.props.refreshing}
+              refreshing={this.state.refreshing}
               onRefresh={this._onRefresh}
             />
           </View>
@@ -186,7 +204,6 @@ const mapStateToProps = (state: RootState, ownProps) => {
 
   var items: [{type: string, photo: TextileTypes.Photo}] = []
   var processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
-  var refreshing = false
   var thread = undefined
 
   if (threadId) {
@@ -219,7 +236,6 @@ const mapStateToProps = (state: RootState, ownProps) => {
           }
         }
       })
-    refreshing = threadData.querying
     thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
@@ -252,7 +268,6 @@ const mapStateToProps = (state: RootState, ownProps) => {
     threadId,
     threadName,
     items,
-    refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
     nodeStatus,
@@ -271,7 +286,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
-    addPhotoLike: (photoBlockId) => { dispatch(UIActions.addLikeRequest(photoBlockId)) },
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
