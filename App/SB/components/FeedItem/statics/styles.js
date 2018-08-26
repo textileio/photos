@@ -34,7 +34,7 @@ export default StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
-    opacity: 0.92,
+    opacity: 0.70,
     backgroundColor: '#ECEDEE',
     width: 40,
     height: 40
