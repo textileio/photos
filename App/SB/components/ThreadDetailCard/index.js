@@ -7,6 +7,7 @@ import TextileImage from '../../../../TextileImage'
 import { getHeight } from '../../../Services/PhotoUtils'
 import Avatar from '../../../Components/Avatar'
 import Config from 'react-native-config'
+import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
 
@@ -61,7 +62,7 @@ class ThreadDetailCard extends React.PureComponent {
           <View style={styles.cardFooterTop} >
             {didLike && <ImageSc width={32} source={require('../../../Images/v2/hearted.png')} />}
             {!didLike && <TouchableOpacity onPress={() => {
-              onLike(photo)
+              this.props.addPhotoLike(photo.block_id)
             }}>
               <ImageSc width={32} source={require('../../../Images/v2/heart.png')} />
             </TouchableOpacity>}
@@ -125,6 +126,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    addPhotoLike: (photoBlockId) => { dispatch(UIActions.addLikeRequest(photoBlockId)) }
   }
 }
 

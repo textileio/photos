@@ -114,11 +114,6 @@ class ThreadsDetail extends React.PureComponent {
       this.props.viewPhoto(photoId, this.props.threadId)
     }
   }
-  _onPhotoLike = () => {
-    return (photo) => {
-      this.props.addPhotoLike(photo.block_id)
-    }
-  }
 
   _onRefresh = () => {
     this.props.refreshMessages()
@@ -160,7 +155,7 @@ class ThreadsDetail extends React.PureComponent {
       }
       case 'photo': {
         return (
-          <ThreadDetailCard id={item.id + '_card'} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} onLike={this._onPhotoLike()} />
+          <ThreadDetailCard id={item.id + '_card'} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
         )
       }
       default: {
@@ -291,7 +286,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
-    addPhotoLike: (photoBlockId) => { dispatch(UIActions.addLikeRequest(photoBlockId)) },
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
