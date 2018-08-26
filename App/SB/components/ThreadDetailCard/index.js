@@ -36,7 +36,7 @@ class ThreadDetailCard extends React.PureComponent {
       username
     } = this.props
     const photo = item.photo
-    const likeRow = this.renderLikes()
+    const likeRow = this.renderLikes(isLiked, didLike, photo)
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader} >
