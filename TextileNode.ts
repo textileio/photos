@@ -131,7 +131,6 @@ export default {
   getPhotos: async function (limit: number, threadId: TT.ThreadId, offset: string = ''): Promise<TT.Photo[]> {
     const jsonString = await TextileNode.getPhotos(offset, limit, threadId)
     const result = JSON.parse(jsonString) as TT.GetPhotosResult
-    console.log(result.items)
     return result.items
   },
 

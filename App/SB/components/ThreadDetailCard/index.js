@@ -26,7 +26,6 @@ class ThreadDetailCard extends React.PureComponent {
     const {
       profile,
       item,
-      onLike,
       avatarUri,
       dateString,
       defaultSource,
