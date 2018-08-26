@@ -29,42 +29,38 @@ export function toPayload(notification: Notification): NotificationsPayload | un
 
   switch (notification.type) {
     case(NotificationType.receivedInviteNotification): {
-      const target = notification.subject && notification.subject != '' ? 'to ' + notification.subject : 'to a new Thread'
       const title = 'New Invite'
-      const message =  [actor, notification.body, target].join(' ') + '.'
+      const message =  [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
     case(NotificationType.deviceAddedNotification): {
       const title = 'New Device'
-      const message = 'A new device has paired with your wallet'
+      const message = notification.body + " called " + notification.subject
       return {title, message, typeString}
     }
     case(NotificationType.photoAddedNotification): {
-      const target = notification.subject && notification.subject != '' ? 'to ' + notification.subject : ''
-      const title = 'New Photo'
-      const message =  [actor, notification.body, target].join(' ') + '.'
+      const title = notification.subject
+      const message =  [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
     case(NotificationType.commentAddedNotification): {
-      const title =  'New comment'
+      const title =  notification.subject
       const message = [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
     case(NotificationType.likeAddedNotification): {
-      const title = 'New like'
+      const title = notification.subject
       const message = [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
     case(NotificationType.peerJoinedNotification): {
-      const target = notification.subject && notification.subject != 'a thread' ? ' ' + notification.subject : ''
-      const title = 'New Peer'
-      const message =  [actor, notification.body, target].join(' ') + '.'
+      const title = notification.subject
+      const message =  [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
     case(NotificationType.peerLeftNotification): {
-      const target = notification.subject && notification.subject != 'a thread' ? ' ' + notification.subject : ''
-      const title = 'Peer left'
-      const message =  [actor, notification.body, target].join(' ') + '.'
+      const title = notification.subject
+      const message =  [actor, notification.body].join(' ') + '.'
       return {title, message, typeString}
     }
     default: {
