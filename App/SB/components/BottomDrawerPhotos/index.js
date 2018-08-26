@@ -22,7 +22,7 @@ export default class BottomDrawerPhotos extends Component {
             <TouchableOpacity style={styles.closeButtonWrapper} onPress={ () => {
               this.props.screenProps.onClose()
             }}>
-              <Image style={styles.closeIcon} source={require('./statics/icon-cancel.png')}/>
+              <Image style={styles.closeIcon} source={require('./statics/icon-cancel.png')} />
             </TouchableOpacity>
           </View>
           <ScrollView style={styles.listContainer}>
