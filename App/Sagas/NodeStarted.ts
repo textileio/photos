@@ -7,12 +7,16 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 
 export function * onNodeStarted () {
-  while (yield take(getType(TextileNodeActions.startNodeSuccess))) {
-    yield all([
-      put(ThreadsActions.refreshThreadsRequest()),
-      call(refreshTokens),
-      call(refreshPublicKey)
-    ])
+  while (yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])) {
+    try {
+      yield all([
+        put(ThreadsActions.refreshThreadsRequest()),
+        call(refreshTokens),
+        call(refreshPublicKey)
+      ])
+    } catch (error) {
+      // nothing to do here for now
+    }
   }
 }
 
