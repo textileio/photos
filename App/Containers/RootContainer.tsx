@@ -1,21 +1,27 @@
 import React, { Component } from 'react'
+import Redux, { Dispatch } from 'redux'
 import { View, StatusBar, ActivityIndicator, Platform, PermissionsAndroid } from 'react-native'
 import { Overlay } from 'react-native-elements'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
 import NavigationService from '../Services/NavigationService'
-import { RootState } from '../Redux/Types'
+import { RootState, RootAction } from '../Redux/Types'
 import TriggersActions from '../Redux/TriggersRedux'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
 
-type Props = {
+type StateProps = {
   showOverlay: boolean
   monitorLocation: boolean
+}
+
+type DispatchProps = {
   locationUpdate: () => void
 }
+
+type Props = StateProps & DispatchProps
 
 class RootContainer extends Component<Props> {
 
@@ -72,7 +78,7 @@ class RootContainer extends Component<Props> {
   }
 }
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state: RootState): StateProps => {
   return {
     showOverlay: state.auth.processing,
     monitorLocation: state.preferences.services.backgroundLocation.status
@@ -80,7 +86,7 @@ const mapStateToProps = (state: RootState) => {
 }
 
 // wraps dispatch to create nicer functions to call within our component
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   locationUpdate: () => dispatch(TriggersActions.locationUpdate())
 })
 

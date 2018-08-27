@@ -10,6 +10,7 @@ import { PreferencesAction } from './PreferencesRedux'
 import { NotificationsAction } from './NotificationsRedux'
 import { TextileNodeAction } from './TextileNodeRedux'
 import { ThreadsAction } from './ThreadsRedux'
+import { TriggersAction } from './TriggersRedux'
 import { UIAction } from './UIRedux'
 import { UploadingImagesAction } from './UploadingImagesRedux'
 
@@ -23,5 +24,6 @@ export type RootAction =
   NotificationsAction |
   TextileNodeAction |
   ThreadsAction |
+  TriggersAction |
   UIAction |
   UploadingImagesAction
