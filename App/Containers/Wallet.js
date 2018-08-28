@@ -11,6 +11,7 @@ import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import Avatar from '../Components/Avatar'
+import WalletHeader from '../Components/WalletHeader'
 
 import Button from '../SB/components/Button'
 import styles from '../SB/views/ThreadsList/statics/styles'
@@ -101,63 +102,17 @@ class Wallet extends React.PureComponent {
   renderWallet () {
     return (
       <View style={style.container}>
-        <View style={style.walletHeader}>
-          <TouchableOpacity
-            style={style.walletAvatar}
-            onPress={() => {
-              this.props.navigation.navigate('ChangeAvatar', {avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet'})
-            }}
-          >
-            <Avatar
-              width={96}
-              height={96}
-              uri={this.props.avatarUrl}
-              defaultSource={require('../Images/v2/update-avatar.png')}
-            />
-          </TouchableOpacity>
-          <View style={style.walletStats}>
-            <View style={style.walletStatsTop}>
-              <View
-                style={style.walletStatsTopColumn}
-              >
-                <Text style={[style.walletStatsCount, !this.props.overview.available && style.statDim]}>
-                  {this.props.overview.photoCount}
-                </Text>
-                <Text style={style.walletStatsTitle}>
-                  {this.props.overview.photoTitle}
-                </Text>
-              </View>
-              <View
-                style={style.walletStatsTopColumn}
-              >
-                <Text style={[style.walletStatsCount, !this.props.overview.available && style.statDim]}>{this.props.overview.peerCount}</Text>
-                <Text style={style.walletStatsTitle}>
-                  {this.props.overview.peerTitle}
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={style.walletStatsTopColumn}
-                onPress={() => this.props.navigation.navigate('Threads')
-                }
-              >
-                <Text style={[style.walletStatsCount, !this.props.overview.available && style.statDim]}>{this.props.overview.threadCount}</Text>
-                <Text style={style.walletStatsTitle}>
-                  {this.props.overview.threadTitle}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={style.walletStatsBottom}>
-              <TouchableOpacity
-                style={style.walletSettingsButton}
-                onPress={() => {
-                  this.props.navigation.navigate('Account', {avatarUrl: this.props.avatarUrl, username: this.props.username})
-                }}
-              >
-                <Text style={style.walletSettingsText}>View Settings</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+        <WalletHeader
+          avatarUrl={this.props.avatarUrl}
+          overview={this.props.overview}
+          changeAvatar={() => {
+            this.props.navigation.navigate('ChangeAvatar', {avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet'})
+          }}
+          updateSettings={() => {
+            this.props.navigation.navigate('Account', {avatarUrl: this.props.avatarUrl, username: this.props.username})
+          }}
+          viewThreads={() => this.props.navigation.navigate('Threads')}
+        />
         <View style={style.gridContainer}>
           <PhotoGrid
             photos={this.props.photos}
@@ -218,11 +173,11 @@ const mapStateToProps = (state, ownProps) => {
 
   const overview = {
     available: !!state.textileNode.overview,
-    photoCount: state.textileNode.overview ? state.textileNode.overview.photo_count : '-',
+    photoCount: state.textileNode.overview ? state.textileNode.overview.photo_count.toString() : '-',
     photoTitle: !state.textileNode.overview || state.textileNode.overview.photo_count !== 1 ? 'photos' : 'photo',
-    threadCount: state.textileNode.overview ? state.textileNode.overview.thread_count : '-',
+    threadCount: state.textileNode.overview ? state.textileNode.overview.thread_count.toString() : '-',
     threadTitle: !state.textileNode.overview || state.textileNode.overview.thread_count !== 1 ? 'threads' : 'thread',
-    peerCount: state.textileNode.overview ? state.textileNode.overview.contact_count : '-',
+    peerCount: state.textileNode.overview ? state.textileNode.overview.contact_count.toString() : '-',
     peerTitle: !state.textileNode.overview || state.textileNode.overview.contact_count !== 1 ? 'peers' : 'peer'
   }
   const profile = state.preferences.profile
