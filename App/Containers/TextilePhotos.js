@@ -16,73 +16,10 @@ import Button from '../SB/components/Button'
 import styles from '../SB/views/ThreadsList/statics/styles'
 
 class TextilePhotos extends React.PureComponent {
-  constructor (props) {
-    super(props)
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    const avatarUrl = params.profile && params.profile.avatar_id ? Config.TEXTILE_CAFE_URI + params.profile.avatar_id : undefined
-    const username = params.profile && params.profile.username ? params.profile.username : undefined
-    const headerLeft = (
-      <HeaderButtons left>
-        <Item
-          title='Account'
-          delayLongPress={3000}
-          onLongPress={params.toggleVerboseUi}
-          onPress={() => navigation.navigate('Account', {avatarUrl, username})}
-          buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
-          ButtonElement={
-            <Avatar
-              width={24}
-              height={24}
-              uri={avatarUrl}
-              defaultSource={require('../SB/views/Settings/statics/main-image.png')}
-            />
-          }
-        />
-      </HeaderButtons>
-    )
-
-    const greeting = username ? 'Hello, ' + params.profile.username : 'Hi there!'
-    const headerTitle = (
-      <Text style={navStyles.headerTitle}>
-        {greeting}
-      </Text>
-    )
-
-    return {
-      // TODO: headerTitle should exist a row below the nav buttons, need to figure out
-      headerTitle,
-      // TODO: no current menu needed for Wallet view
-      headerLeft,
-      tabBarVisible: true
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
-      this.props.profile !== prevProps.profile
-    ) {
-      this.props.navigation.setParams({
-        profile: this.props.profile,
-        toggleVerboseUi: this.props.toggleVerboseUi,
-        threadName: this.props.threadName
-      })
-    }
-  }
-
   componentDidMount () {
     // Unload any full screen photo
     // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
     this.props.dismissPhoto()
-    // Set params
-    this.props.navigation.setParams({
-      profile: this.props.profile,
-      toggleVerboseUi: this.props.toggleVerboseUi,
-      threadName: this.props.threadName
-    })
   }
 
   onSelect = (row) => {

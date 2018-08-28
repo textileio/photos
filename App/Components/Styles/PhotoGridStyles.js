@@ -25,7 +25,7 @@ export default StyleSheet.create({
     right: 0,
     paddingHorizontal: 30,
     paddingVertical: 10,
-    backgroundColor: Colors.transparent,
+    backgroundColor: 'transparent',
     alignItems: 'flex-end',
     justifyContent: 'flex-end'
   },
