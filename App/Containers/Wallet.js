@@ -18,29 +18,7 @@ import styles from '../SB/views/ThreadsList/statics/styles'
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const avatarUrl = params.profile && params.profile.avatar_id ? Config.TEXTILE_CAFE_URI + params.profile.avatar_id : undefined
-    const username = params.profile && params.profile.username ? params.profile.username : undefined
-    // const headerLeft = (
-    //   <HeaderButtons left>
-    //     <Item
-    //       title='Account'
-    //       delayLongPress={3000}
-    //       onLongPress={params.toggleVerboseUi}
-    //       onPress={() => navigation.navigate('Account', {avatarUrl, username})}
-    //       buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
-    //       ButtonElement={
-    //         <Avatar
-    //           width={24}
-    //           height={24}
-    //           uri={avatarUrl}
-    //           defaultSource={require('../SB/views/Settings/statics/main-image.png')}
-    //         />
-    //       }
-    //     />
-    //   </HeaderButtons>
-    // )
-
-    const greeting = username ? 'Hello, ' + params.profile.username : 'Hi there!'
+    const greeting = params.username ? 'Hello, ' + params.username : 'Hi there!'
     const headerTitle = (
       <Text style={navStyles.headerTitle}>
         {greeting}
@@ -50,8 +28,6 @@ class Wallet extends React.PureComponent {
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerTitle,
-      // TODO: no current menu needed for Wallet view
-      // headerLeft,
       tabBarVisible: true,
 
       headerStyle: style.navHeader
@@ -64,7 +40,7 @@ class Wallet extends React.PureComponent {
       this.props.profile !== prevProps.profile
     ) {
       this.props.navigation.setParams({
-        profile: this.props.profile,
+        username: this.props.username,
         toggleVerboseUi: this.props.toggleVerboseUi
       })
     }
@@ -76,9 +52,19 @@ class Wallet extends React.PureComponent {
     this.props.dismissPhoto()
     // Set params
     this.props.navigation.setParams({
-      profile: this.props.profile,
+      username: this.props.username,
       toggleVerboseUi: this.props.toggleVerboseUi
     })
+    this.props.navigation.addListener('willFocus', this._onFocus.bind(this))
+  }
+
+  componentWillUnmount () {
+    // remove the listeners for enter tab
+    this.props.navigation.removeListener('onFocus', this._onFocus.bind(this))
+  }
+
+  _onFocus () {
+    this.props.updateOverview()
   }
 
   onSelect = (row) => {
@@ -89,6 +75,7 @@ class Wallet extends React.PureComponent {
 
   onRefresh () {
     this.props.refresh(this.props.threadId)
+    this.props.updateOverview()
   }
 
   renderTour () {
@@ -123,35 +110,45 @@ class Wallet extends React.PureComponent {
           <TouchableOpacity
             style={style.walletAvatar}
             onPress={() => {
-              this.props.navigation.navigate('ChangeAvatar', {avatarUrl: this.props.avatarUrl, username: this.props.username})
+              this.props.navigation.navigate('ChangeAvatar', {avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet'})
             }}
           >
             <Avatar
               width={96}
               height={96}
               uri={this.props.avatarUrl}
-              defaultSource={require('../SB/views/Settings/statics/main-image.png')}
+              defaultSource={require('../Images/v2/update-avatar.png')}
             />
           </TouchableOpacity>
           <View style={style.walletStats}>
             <View style={style.walletStatsTop}>
-              <TouchableOpacity
+              <View
                 style={style.walletStatsTopColumn}
               >
-                <Text style={style.walletStatsCount}>40</Text>
-                <Text style={style.walletStatsTitle}>photos</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+                <Text style={[style.walletStatsCount, !this.props.overview.available && style.statDim]}>
+                  {this.props.overview.photoCount}
+                </Text>
+                <Text style={style.walletStatsTitle}>
+                  {this.props.overview.photoTitle}
+                </Text>
+              </View>
+              <View
                 style={style.walletStatsTopColumn}
               >
-                <Text style={style.walletStatsCount}>1</Text>
-                <Text style={style.walletStatsTitle}>thread</Text>
-              </TouchableOpacity>
+                <Text style={[style.walletStatsCount, !this.props.overview.available && style.statDim]}>{this.props.overview.peerCount}</Text>
+                <Text style={style.walletStatsTitle}>
+                  {this.props.overview.peerTitle}
+                </Text>
+              </View>
               <TouchableOpacity
                 style={style.walletStatsTopColumn}
+                onPress={() => this.props.navigation.navigate('Threads')
+                }
               >
-                <Text style={style.walletStatsCount}>8</Text>
-                <Text style={style.walletStatsTitle}>peers</Text>
+                <Text style={[style.walletStatsCount, !this.props.overview.available && style.statDim]}>{this.props.overview.threadCount}</Text>
+                <Text style={style.walletStatsTitle}>
+                  {this.props.overview.threadTitle}
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={style.walletStatsBottom}>
@@ -224,6 +221,15 @@ const mapStateToProps = (state, ownProps) => {
     ? 'Wallet Status:\n' + nodeStatus
     : 'Any new photos you take will be added to your Textile wallet.'
 
+  const overview = {
+    available: !!state.textileNode.overview,
+    photoCount: state.textileNode.overview ? state.textileNode.overview.photo_count : '-',
+    photoTitle: !state.textileNode.overview || state.textileNode.overview.photo_count !== 1 ? 'photos' : 'photo',
+    threadCount: state.textileNode.overview ? state.textileNode.overview.thread_count : '-',
+    threadTitle: !state.textileNode.overview || state.textileNode.overview.thread_count !== 1 ? 'threads' : 'thread',
+    peerCount: state.textileNode.overview ? state.textileNode.overview.contact_count : '-',
+    peerTitle: !state.textileNode.overview || state.textileNode.overview.contact_count !== 1 ? 'peers' : 'peer'
+  }
   const profile = state.preferences.profile
   return {
     threadId,
@@ -239,7 +245,8 @@ const mapStateToProps = (state, ownProps) => {
     profile,
     showTourScreen: state.preferences.tourScreens.wallet,
     avatarUrl: profile && profile.avatar_id ? Config.TEXTILE_CAFE_URI + profile.avatar_id : undefined,
-    username: profile && profile.username ? profile.username : undefined
+    username: profile && profile.username ? profile.username : undefined,
+    overview
   }
 }
 
@@ -249,7 +256,8 @@ const mapDispatchToProps = (dispatch) => {
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) }
+    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },
+    updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) }
   }
 }
 

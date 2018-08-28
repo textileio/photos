@@ -65,6 +65,9 @@ export default StyleSheet.create({
     fontSize: 20,
     marginBottom: 2
   },
+  statDim: {
+    color: 'rgba(20,20,33,0.2)'
+  },
   walletStatsTitle: {
     fontFamily: 'BentonSans',
     color: 'rgba(20,20,33,0.5)',
@@ -89,8 +92,7 @@ export default StyleSheet.create({
     textAlign: 'center'
   },
   gridContainer: {
-    flex: 1,
-    backgroundColor: 'transparent'
+    flex: 1
   },
   bottomOverlay: {
     justifyContent: 'center',
