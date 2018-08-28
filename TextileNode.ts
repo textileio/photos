@@ -80,8 +80,8 @@ export default {
 
   getOverview: async function (): Promise<TT.NodeOverview> {
     const jsonString = await TextileNode.getOverview()
-    const tokens = JSON.parse(jsonString) as TT.NodeOverview
-    return tokens
+    const overview = JSON.parse(jsonString) as TT.NodeOverview
+    return overview
   },
 
   addThread: async function (name: TT.ThreadName, mnemonic?: TT.Mnemonic): Promise<TT.Thread> {
