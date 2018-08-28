@@ -6,24 +6,6 @@ export default StyleSheet.create({
   container: {
     flex: 1
   },
-  backgroundOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 1
-  },
-  backgroundOverlayImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'stretch'
-  },
   navHeader: {
     // remove the border in this case
     backgroundColor: 'white',

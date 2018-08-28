@@ -101,11 +101,6 @@ class Wallet extends React.PureComponent {
   renderWallet () {
     return (
       <View style={style.container}>
-        <View
-          style={style.backgroundOverlay}
-        >
-          <Image style={style.backgroundOverlayImage} source={require('../Images/backgrounds/TextileBackground.png')} />
-        </View>
         <View style={style.walletHeader}>
           <TouchableOpacity
             style={style.walletAvatar}
