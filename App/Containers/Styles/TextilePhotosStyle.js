@@ -6,6 +6,14 @@ export default StyleSheet.create({
   container: {
     flex: 1
   },
+  navHeader: {
+    // remove the border in this case
+    backgroundColor: 'white',
+    borderBottomWidth: 0
+  },
+  gridContainer: {
+    flex: 1
+  },
   bottomOverlay: {
     justifyContent: 'center',
     alignItems: 'center',

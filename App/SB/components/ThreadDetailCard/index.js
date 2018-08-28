@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { View, Text, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
 import moment from 'moment'
-import TextileImage from '../../../../TextileImage'
+import ProgressiveImage from '../../../Components/ProgressiveImage'
 import { getHeight } from '../../../Services/PhotoUtils'
 import Avatar from '../../../Components/Avatar'
 import Config from 'react-native-config'
@@ -49,8 +49,9 @@ class ThreadDetailCard extends React.PureComponent {
           </View>
           <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
             <View style={styles.imageStretch}>
-              <TextileImage
+              <ProgressiveImage
                 imageId={photo.id}
+                previewPath={'small'}
                 path={'medium'}
                 style={[styles.image, {width: imageWidth, height: imageHeight}]}
                 resizeMode={'cover'}

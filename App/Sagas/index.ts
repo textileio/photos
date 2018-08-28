@@ -59,6 +59,7 @@ import {
   signUp,
   logIn,
   logOut,
+  updateNodeOverview,
   recoverPassword,
   viewPhoto,
   viewThread,
@@ -124,6 +125,9 @@ export default function * root () {
 
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
+
+    // update the node stats
+    takeEvery(getType(TextileNodeActions.updateOverviewRequest), updateNodeOverview),
 
 
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),

@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
-import { ThreadId, BlockId, Photo, PhotoId, PhotoMetadata } from '../Models/TextileTypes'
+import { ThreadId, BlockId, Photo, PhotoId, PhotoMetadata, NodeOverview } from '../Models/TextileTypes'
 import {RootState} from './Types'
 
 const actions = {
@@ -34,7 +34,13 @@ const actions = {
   }),
   refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', resolve => {
     return (error: Error) => resolve({ error })
-  })
+  }),
+  updateOverviewRequest: createAction('UPDATE_OVERVIEW_REQUEST', resolve => {
+    return () => resolve()
+  }),
+  updateOverviewSuccess: createAction('UPDATE_OVERVIEW_SUCCESS', resolve => {
+    return (overview: NodeOverview) => resolve({ overview })
+  }),
 }
 
 export type TextileNodeAction = ActionType<typeof actions>
@@ -59,6 +65,7 @@ type TextileNodeState = {
     readonly error?: string
   }
   readonly refreshingMessages: boolean
+  readonly overview?: NodeOverview
 }
 
 export const initialState: TextileNodeState = {
@@ -97,6 +104,8 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.refreshMessagesSuccess):
     case getType(actions.refreshMessagesFailure):
       return { ...state, refreshingMessages: false }
+    case getType(actions.updateOverviewSuccess):
+      return { ...state, overview: action.payload.overview }
     default:
       return state
   }
