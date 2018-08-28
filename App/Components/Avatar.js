@@ -10,6 +10,7 @@ const Avatar = props => {
     <View style={[styles.container, style, {width, height, borderRadius}]}>
       <View style={styles.stretch}>
         {uri && <Image
+          key={uri}
           source={{uri: uri}}
           resizeMode={'cover'}
           style={{width, height}}
@@ -17,6 +18,7 @@ const Avatar = props => {
         />}
         {/* avoids a null uri warning */}
         {!uri && defaultSource && <Image
+          key={uri}
           source={defaultSource}
           resizeMode={'cover'}
           style={{width, height}}
