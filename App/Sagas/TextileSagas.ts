@@ -83,6 +83,16 @@ export function * recoverPassword (action: ActionType<typeof AuthActions.recover
   }
 }
 
+export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActions.updateOverviewRequest> ) {
+  try {
+    yield call(NotificationsSagas.waitUntilOnline, 2500)
+    const overview = yield call(TextileNode.getOverview)
+    yield put(TextileNodeActions.updateOverviewSuccess(overview))
+  } catch (error) {
+    // do nothing
+  }
+}
+
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield put(PreferencesActions.onboardedSuccess())
   yield call(NavigationService.navigate, 'PrimaryNavigation')
