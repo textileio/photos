@@ -15,33 +15,6 @@ import {
 import { RootState } from '../Redux/Types'
 
 const actions = {
-  addThreadRequest: createAction('ADD_THREAD_REQUEST', resolve => {
-    return (name: ThreadName, mnemonic?: Mnemonic) => resolve({ name, mnemonic })
-  }),
-  addThreadSuccess: createAction('ADD_THREAD_SUCCESS', resolve => {
-    return (thread: Thread) => resolve({ thread })
-  }),
-  addThreadError: createAction('ADD_THREAD_ERROR', resolve => {
-    return (error: Error) => resolve({ error })
-  }),
-  removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', resolve => {
-    return (id: ThreadId) => resolve({ id })
-  }),
-  removeThreadSuccess: createAction('REMOVE_THREAD_SUCCESS', resolve => {
-    return (id: ThreadId) => resolve({ id })
-  }),
-  removeThreadError: createAction('REMOVE_THREAD_ERROR', resolve => {
-    return (error: Error) => resolve({ error })
-  }),
-  refreshThreadsRequest: createAction('REFRESH_THREADS_REQUEST', resolve => {
-    return () => resolve()
-  }),
-  refreshThreadsSuccess: createAction('REFRESH_THREADS_SUCCESS', resolve => {
-    return (threads: Threads) => resolve({ threads })
-  }),
-  refreshThreadsError: createAction('REFRESH_THREADS_ERROR', resolve => {
-    return (error: Error) => resolve({ error })
-  }),
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
     return (id: ThreadId, name: ThreadName) => resolve({ id, name })
   }),
@@ -94,7 +67,6 @@ export type InboundInvite = {
 }
 
 export type ThreadsState = {
-  readonly refreshing: boolean
   readonly refreshError?: Error
   readonly adding?: {
     readonly name: ThreadName,
@@ -106,64 +78,16 @@ export type ThreadsState = {
   }
   readonly outboundInvites: ReadonlyArray<OutboundInvite>
   readonly inboundInvites: ReadonlyArray<InboundInvite>
-  readonly threads: ReadonlyArray<Thread>
   readonly pendingInviteLink?: string // used to hold an invite if triggered before login
 }
 
 export const initialState: ThreadsState = {
-  refreshing: false,
-  threads: [],
   outboundInvites: [],
   inboundInvites: []
 }
 
 export function reducer (state: ThreadsState = initialState, action: ThreadsAction): ThreadsState {
   switch (action.type) {
-    case getType(actions.addThreadRequest): {
-      const { name } = action.payload
-      return { ...state, adding: { name } }
-    }
-    case getType(actions.addThreadSuccess): {
-      if (!state.adding) {
-        return state
-      }
-      const { thread } = action.payload
-      const threads = state.threads.concat([thread])
-      return { ...state, adding: undefined, threads }
-    }
-    case getType(actions.addThreadError): {
-      if (!state.adding) {
-        return state
-      }
-      const { error } = action.payload
-      return { ...state, adding: { ...state.adding, error } }
-    }
-    case getType(actions.removeThreadRequest): {
-      const { id } = action.payload
-      return { ...state, removing: { id } }
-    }
-    case getType(actions.removeThreadSuccess): {
-      if (!state.removing) {
-        return state
-      }
-      const { id } = action.payload
-      const threads = state.threads.filter(thread => thread.id !== id)
-      return { ...state, removing: undefined, threads }
-    }
-    case getType(actions.removeThreadError): {
-      if (!state.removing) {
-        return state
-      }
-      const { error } = action.payload
-      return { ...state, removing: { ...state.removing, error } }
-    }
-    case getType(actions.refreshThreadsRequest):
-      return { ...state, refreshing: true, refreshError: undefined }
-    case getType(actions.refreshThreadsSuccess):
-      const threads = action.payload.threads.items
-      return { ...state, refreshing: false, refreshError: undefined, threads }
-    case getType(actions.refreshThreadsError):
-      return { ...state, refreshing: false, refreshError: action.payload.error }
     case getType(actions.addExternalInviteRequest): {
       const { id, name } = action.payload
       const existing = state.outboundInvites.find(invite => invite.id === id )
@@ -232,9 +156,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
 }
 
 export const ThreadsSelectors = {
-  threads: (state: RootState): ThreadsState => state.threads,
-  threadById: (state: RootState, id: string): Thread | undefined => state.threads.threads.find((thread: Thread) => thread.id === id),
-  threadByName: (state: RootState, name: string): Thread | undefined => state.threads.threads.find((thread: Thread) => thread.name === name)
+  pendingInviteLink: (state: RootState) => state.threads.pendingInviteLink
 }
 
 export default actions
