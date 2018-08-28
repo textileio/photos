@@ -2,7 +2,7 @@ import { createStackNavigator } from 'react-navigation'
 
 import ThreadsList from '../../../../../Containers/ThreadsList'
 import AddThreadScreen from '../../../../../Containers/AddThreadScreen'
-import ThreadsDetail from '../../../../../SB/views/ThreadsDetail'
+import ThreadDetail from '../../../../../SB/views/ThreadDetail'
 import ThreadPhotoDetail from '../../../../../SB/views/ThreadPhotoDetail'
 import ThreadsEditFriends from '../../../../../SB/views/ThreadsEditFriends'
 import AddCaptionScreen from '../../../../../Containers/AddCaptionScreen'
@@ -15,7 +15,7 @@ const nav = createStackNavigator(
     SharedPhotos: ThreadsList,
     AddThread: AddThreadScreen,
     AddFriends: ThreadsEditFriends,
-    ViewThread: ThreadsDetail,
+    ViewThread: ThreadDetail,
     PhotoViewer: ThreadPhotoDetail,
     ThreadSharePhoto: AddCaptionScreen,
     WalletPicker: WalletPicker
