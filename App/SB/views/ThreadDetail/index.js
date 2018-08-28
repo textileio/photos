@@ -109,9 +109,9 @@ class ThreadDetail extends React.PureComponent {
     })
   }
 
-  _onPhotoSelect = (photoId: string) => {
+  _onPhotoSelect = (photo: Photo) => {
     return () => {
-      this.props.viewPhoto(photoId, this.props.threadId)
+      this.props.viewPhoto(photo, this.props.threadId)
     }
   }
 
@@ -160,7 +160,7 @@ class ThreadDetail extends React.PureComponent {
             item={item}
             profile={this.props.profile}
             contacts={this.props.contacts}
-            onSelect={this._onPhotoSelect(item.id)}
+            onSelect={this._onPhotoSelect(item.photo)}
           />
         )
       }
@@ -291,7 +291,7 @@ const mapStateToProps = (state: RootState, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
-    viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
+    viewPhoto: (photo, threadId) => { dispatch(UIActions.viewPhotoRequest(photo, threadId)) },
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },

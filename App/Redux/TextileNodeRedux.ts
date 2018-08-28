@@ -35,9 +35,6 @@ const actions = {
   getPhotoHashesFailure: createAction('GET_PHOTO_HASHES_FAILURE', resolve => {
     return (threadId: ThreadId, error: Error) => resolve({ threadId, error })
   }),
-  getPhotoMetadataSuccess: createAction('GET_PHOTO_METADATA_SUCCESS', resolve => {
-    return (threadId: ThreadId, photoId: PhotoId, metadata: PhotoMetadata) => resolve({ threadId, photoId, metadata })
-  }),
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
     return () => resolve()
   }),

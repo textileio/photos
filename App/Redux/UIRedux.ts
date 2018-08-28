@@ -4,8 +4,10 @@ import {
   PhotoId,
   SharedImage,
   ThreadId,
-  ThreadName
+  ThreadName,
+  Photo
 } from '../Models/TextileTypes'
+import { RootState } from './Types';
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
@@ -28,7 +30,7 @@ const actions = {
     return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
   }),
   viewPhotoRequest: createAction('VIEW_PHOTO_REQUEST', resolve => {
-    return (photoId: PhotoId, threadId: ThreadId) => resolve({ photoId, threadId })
+    return (photo: Photo, threadId: ThreadId) => resolve({ photo, threadId })
   }),
   dismissViewedPhoto: createAction('DISMISS_VIEWED_PHOTO', resolve => {
     return () => resolve()
@@ -77,7 +79,11 @@ const actions = {
   }),
   addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
     return (blockId: BlockId) => resolve({blockId})
-  })
+  }),
+  updateComment: createAction('UPDATE_COMMENT', resolve => {
+    return (comment: string) => resolve({ comment })
+  }),
+  addCommentRequest: createAction('ADD_COMMENT_REQUEST')
 }
 
 export type UIAction = ActionType<typeof actions>
@@ -90,8 +96,9 @@ export type UIState = {
   }
   readonly viewingPhoto: {
     readonly active: boolean
-    readonly photoId?: PhotoId
-    readonly threadId?: ThreadId
+    readonly photo?: Photo
+    readonly threadId?: string
+    readonly comment?: string
   },
   readonly sharingPhoto?: {
     readonly image?: SharedImage | string,
@@ -117,10 +124,14 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.cancelProfileUpdate):
       return { ...state, chosenProfilePhoto: {} }
     case getType(actions.viewPhotoRequest):
-      const { photoId, threadId } = action.payload
-      return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, photoId, threadId } }
+      const { photo, threadId } = action.payload
+      return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, photo, threadId, comment: undefined } }
     case getType(actions.dismissViewedPhoto):
       return { ...state, viewingPhoto: { ...state.viewingPhoto, active: false } }
+    case getType(actions.updateComment): {
+      const { comment } = action.payload
+      return { ...state, viewingPhoto: { ...state.viewingPhoto, comment } }
+    }
     case getType(actions.updateSharingPhotoImage):
       const { image } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, image } }
@@ -143,6 +154,11 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     default:
       return state
   }
+}
+
+export const UISelectors = {
+  viewingPhoto: (state: RootState) => state.ui.viewingPhoto.photo,
+  comment: (state: RootState) => state.ui.viewingPhoto.comment
 }
 
 export default actions
