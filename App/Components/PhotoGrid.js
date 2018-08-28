@@ -91,27 +91,6 @@ export default class PhotoGrid extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            opacity: 1
-          }}
-        >
-          <Image style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            resizeMode: 'stretch',
-          }} source={require('../Images/backgrounds/TextileBackground.png')} />
-        </View>
         {
           this.props.photos.length ? (
             <FlatList
