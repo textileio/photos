@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React  from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
 import Avatar from './Avatar'
 import style from './Styles/WalletHeader'
