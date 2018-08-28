@@ -13,7 +13,7 @@ export type WalletHeaderProps = {
     photoCount: string,
     photoTitle: string
   },
-  avatarUrl: number,
+  avatarUrl: string,
   changeAvatar: () => void,
   updateSettings: () => void,
   viewThreads: () => void,
