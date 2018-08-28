@@ -133,7 +133,7 @@ class PhotoDetail extends Component {
     return (<ProgressiveImage
       imageId={id}
       previewPath={'small'}
-      path={'photo'}
+      path={'medium'}
       style={{height: this.state.height, width: WIDTH, marginBottom: 10}}
       resizeMode={'cover'}
     />)
