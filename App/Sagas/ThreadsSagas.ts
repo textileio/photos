@@ -57,46 +57,10 @@ export async function getDefaultThread (): Promise<Thread | undefined> {
 
 export function * pendingInvitesTask () {
   // Process any pending external invites created while user wasn't logged in
-  const threads = yield select(ThreadsSelectors.threads)
-  if (threads.pendingInviteLink) {
-    yield call(DeepLink.route, threads.pendingInviteLink, NavigationService)
+  const pendingInviteLink: string | undefined = yield select(ThreadsSelectors.pendingInviteLink)
+  if (pendingInviteLink) {
+    yield call(DeepLink.route, pendingInviteLink, NavigationService)
     yield put(ThreadsActions.removeExternalInviteLink())
-  }
-}
-
-export function * refreshThreads () {
-  try {
-    const threads: Threads = yield call(TextileNode.threads)
-    for (const thread of threads.items) {
-      yield put(TextileNodeActions.getPhotoHashesRequest(thread.id))
-    }
-    yield put(ThreadsActions.refreshThreadsSuccess(threads))
-  } catch (error) {
-    yield put(ThreadsActions.refreshThreadsError(error))
-  }
-}
-
-export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
-  const { name, mnemonic } = action.payload
-  try {
-    const thread: Thread = yield call(TextileNode.addThread, name, mnemonic)
-    yield put(ThreadsActions.addThreadSuccess(thread))
-    yield put(UIActions.viewThreadRequest(thread.id, thread.name))
-  } catch (error) {
-    yield put(ThreadsActions.addThreadError(error))
-  }
-}
-
-
-export function * removeThread (action: ActionType<typeof ThreadsActions.removeThreadRequest>) {
-  const { id } = action.payload
-  try {
-    // TODO: something with this blockId
-    const blockId: BlockId = yield call(TextileNode.removeThread, id)
-    yield put(ThreadsActions.removeThreadSuccess(id))
-    yield call(NavigationService.goBack)
-  } catch (error) {
-    yield put(ThreadsActions.removeThreadError(error))
   }
 }
 
