@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
 import moment from 'moment'
 import TextileImage from '../../../../TextileImage'
@@ -33,51 +33,54 @@ class ThreadDetailCard extends React.PureComponent {
       isLiked,
       imageHeight,
       imageWidth,
-      username
+      username,
+      onSelect
     } = this.props
     const photo = item.photo
     const likeRow = this.renderLikes(isLiked, didLike, photo)
     return (
-      <View style={styles.card}>
-        <View style={styles.cardHeader} >
-          <Avatar style={styles.cardAvatar} width={18} height={18} uri={avatarUri} defaultSource={defaultSource} />
-          <Text style={styles.cardAction}><Text style={styles.cardActionName}>
-            {profile && profile.username === username ? 'You' : username}
-          </Text> added a photo</Text>
-        </View>
-        <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
-          <View style={styles.imageStretch}>
-            <TextileImage
-              imageId={photo.id}
-              path={'medium'}
-              style={[styles.image, {width: imageWidth, height: imageHeight}]}
-              resizeMode={'cover'}
-              width={imageWidth}
-              height={imageHeight}
-            />
+      <TouchableWithoutFeedback onPress={onSelect}>
+        <View style={styles.card}>
+          <View style={styles.cardHeader} >
+            <Avatar style={styles.cardAvatar} width={18} height={18} uri={avatarUri} defaultSource={defaultSource} />
+            <Text style={styles.cardAction}><Text style={styles.cardActionName}>
+              {profile && profile.username === username ? 'You' : username}
+            </Text> added a photo</Text>
+          </View>
+          <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
+            <View style={styles.imageStretch}>
+              <TextileImage
+                imageId={photo.id}
+                path={'medium'}
+                style={[styles.image, {width: imageWidth, height: imageHeight}]}
+                resizeMode={'cover'}
+                width={imageWidth}
+                height={imageHeight}
+              />
+            </View>
+          </View>
+          <View style={styles.cardFooter} >
+            <View style={styles.cardFooterTop} >
+              {didLike && <ImageSc width={32} source={require('../../../Images/v2/hearted.png')} />}
+              {!didLike && <TouchableOpacity onPress={() => {
+                this.props.addPhotoLike(photo.block_id)
+              }}>
+                <ImageSc width={32} source={require('../../../Images/v2/heart.png')} />
+              </TouchableOpacity>}
+            </View>
+            {isLiked && likeRow
+            }
+            <Text style={[styles.captionText]}>
+              <Text style={[styles.profileName]}>{username}</Text>
+              {' '}
+              {photo.caption}
+            </Text>
+            <View style={styles.cardFooterBottom} >
+              <Text style={styles.detailUpdateTime}>{dateString.toUpperCase()}</Text>
+            </View>
           </View>
         </View>
-        <View style={styles.cardFooter} >
-          <View style={styles.cardFooterTop} >
-            {didLike && <ImageSc width={32} source={require('../../../Images/v2/hearted.png')} />}
-            {!didLike && <TouchableOpacity onPress={() => {
-              this.props.addPhotoLike(photo.block_id)
-            }}>
-              <ImageSc width={32} source={require('../../../Images/v2/heart.png')} />
-            </TouchableOpacity>}
-          </View>
-          {isLiked && likeRow
-          }
-          <Text style={[styles.captionText]}>
-            <Text style={[styles.profileName]}>{username}</Text>
-            {' '}
-            {photo.caption}
-          </Text>
-          <View style={styles.cardFooterBottom} >
-            <Text style={styles.detailUpdateTime}>{dateString.toUpperCase()}</Text>
-          </View>
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     )
   }
 }

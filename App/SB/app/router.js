@@ -8,7 +8,7 @@ import {
   WelcomeMessage,
   OnBoarding,
   ThreadsList,
-  ThreadsDetail,
+  ThreadDetail,
   ThreadsEditName,
   ThreadsEditFriends,
   ThreadCreate,
@@ -31,7 +31,7 @@ const App = props => {
       {/*<Route render={() => <SignIn/>}/>*/}
       {/*<Route render={() => <SignUp/>}/>*/}
       {/*<Route render={() => <ThreadsList />}/>*/}
-      {/*<Route render={() => <ThreadsDetail />}/>*/}
+      {/*<Route render={() => <ThreadDetail />}/>*/}
       {/*<Route render={() => <ThreadsEditName />}/>*/}
       {/*<Route render={() => <ThreadsEditFriends />}/>*/}
       {/*<Route render={() => <ThreadCreate />}/>*/}

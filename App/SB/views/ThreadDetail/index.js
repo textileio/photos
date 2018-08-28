@@ -24,7 +24,7 @@ import ProcessingImageCard, { ProcessingImageProps } from '../../../Components/P
 import styles from './statics/styles'
 import cardStyles from '../../components/ThreadDetailCard/statics/styles'
 
-class ThreadsDetail extends React.PureComponent {
+class ThreadDetail extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -109,8 +109,8 @@ class ThreadsDetail extends React.PureComponent {
     })
   }
 
-  _onPhotoSelect = () => {
-    return (photoId) => {
+  _onPhotoSelect = (photoId: string) => {
+    return () => {
       this.props.viewPhoto(photoId, this.props.threadId)
     }
   }
@@ -155,7 +155,13 @@ class ThreadsDetail extends React.PureComponent {
       }
       case 'photo': {
         return (
-          <ThreadDetailCard id={item.id + '_card'} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
+          <ThreadDetailCard
+            id={item.id + '_card'}
+            item={item}
+            profile={this.props.profile}
+            contacts={this.props.contacts}
+            onSelect={this._onPhotoSelect(item.id)}
+          />
         )
       }
       default: {
@@ -167,7 +173,7 @@ class ThreadsDetail extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <View style={styles.threadsDetail} >
+        <View style={styles.threadDetail} >
           <View style={styles.imageList}>
             <FlatList
               data={this.props.items}
@@ -297,4 +303,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadsDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ThreadDetail)

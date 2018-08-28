@@ -126,7 +126,8 @@ export interface Photo {
   date: string
   author_id: PeerId
   caption?: string
-  metadata: PhotoMetadata
+  username?: string
+  metadata?: PhotoMetadata
   comments: UserComment[]
   Likes: UserLike[]
 }
