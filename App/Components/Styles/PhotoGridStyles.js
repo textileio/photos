@@ -25,7 +25,6 @@ export default StyleSheet.create({
     right: 0,
     paddingHorizontal: 30,
     paddingVertical: 10,
-    backgroundColor: 'transparent',
     alignItems: 'flex-end',
     justifyContent: 'flex-end'
   },
@@ -38,7 +37,7 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.snow,
+    backgroundColor: 'white'
   },
   listContainer: {
     flex: 1,
@@ -91,13 +90,6 @@ export default StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.15)',
     margin: PRODUCT_ITEM_OFFSET * 2,
   },
-  itemPrice: {
-    fontWeight: 'bold',
-  },
-  itemPriceClearance: {
-    fontWeight: 'bold',
-    color: 'red',
-  },
   tileStyle: {
     padding: 0,
     margin: 0,
@@ -107,14 +99,14 @@ export default StyleSheet.create({
     flex: 1,
     position: 'absolute',
     left: 0, right: 0, bottom: 0, top: -18,
-    height: 10,
+    height: 10
   },
   photoCell: {
   },
   photoStatus: {
     flex: 1,
     flexDirection: 'row',
-    alignSelf: 'flex-end',
+    alignSelf: 'flex-end'
   },
   emptyListStyle: {
     flex: 1,

@@ -17,7 +17,11 @@ class UserOnBoardingContainer extends React.Component {
         <TextileHeaderButtons left>
           <Item title='Back' iconName='arrow-left' onPress={() => {
             params.cancelProfileUpdate()
-            navigation.dispatch(NavigationActions.back())
+            if (params.backTo) {
+              navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+            } else {
+              navigation.dispatch(NavigationActions.back())
+            }
           }} />
         </TextileHeaderButtons>
       )

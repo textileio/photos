@@ -117,7 +117,7 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
   }
 }
 
-function * waitUntilOnline(ms: number) {
+export function * waitUntilOnline(ms: number) {
   let ttw = ms
   let online = yield select(TextileNodeSelectors.online)
   while(!online && 0 < ttw) {
