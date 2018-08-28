@@ -28,7 +28,7 @@ import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRe
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions  from '../Redux/AuthRedux'
 import ContactsActions  from '../Redux/ContactsRedux'
-import UIActions from '../Redux/UIRedux'
+import UIActions, { UISelectors } from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import { ActionType, getType } from 'typesafe-actions'
@@ -506,5 +506,18 @@ export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeReque
     yield call(TextileNode.addPhotoLike, blockId)
   } catch (error) {
 
+  }
+}
+
+export function * addPhotoComment (action: ActionType<typeof UIActions.addCommentRequest>) {
+  const photo: TT.Photo | undefined = yield select(UISelectors.viewingPhoto)
+  const comment: string | undefined = yield select(UISelectors.comment)
+  if (!photo || !comment) {
+    return
+  }
+  try {
+    yield call(TextileNode.addPhotoComment, photo.block_id, comment)
+  } catch (error) {
+    console.log(error)
   }
 }
