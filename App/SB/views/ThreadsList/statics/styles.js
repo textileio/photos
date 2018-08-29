@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#FAFCFE',
     flex: 1,
+    backgroundColor: '#FAFCFE'
   },
   toolbarLogo: {
     width: 82.5,
