@@ -70,11 +70,14 @@ const ProcessingImage = (props: ProcessingImageProps) => {
       </Fragment>
   } else {
     content =
-      <View style={STACK}>
-        <Text style={STATUS} />
-        <ProgressBar progress={progress} />
-        <Text style={STATUS}>{message}</Text>
-      </View>
+      <Fragment>
+        <View style={STACK}>
+          <Text style={STATUS} />
+          <ProgressBar progress={progress} />
+          <Text style={STATUS}>{message}</Text>
+        </View>
+        {cancel && <Button title='Cancel' onPress={cancel} />}
+      </Fragment>
   }
 
   return (
