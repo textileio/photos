@@ -11,6 +11,22 @@ export default StyleSheet.create({
     paddingTop: 19,
     paddingHorizontal: 16
   },
+  commentRow: {
+  },
+  comment: {
+    height: 40
+  },
+  imagePreviewRow: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    marginTop: 40
+  },
+  image: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200
+  },
   toolbarLeft: {
     height: 16,
     width: 40
