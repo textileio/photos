@@ -1,6 +1,8 @@
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
+import Upload from 'react-native-background-upload'
+
 import { PhotoId } from '../Models/TextileTypes'
 
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
@@ -56,6 +58,10 @@ export function * cancelImageShare (action: ActionType<typeof ProcessingImagesAc
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
     if (!processingImage) {
       return
+    }
+
+    if (processingImage.state === 'uploading') {
+      yield call(Upload.cancelUpload, processingImage.uuid)
     }
 
     // Delete the shared image if needed
