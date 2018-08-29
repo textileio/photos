@@ -20,7 +20,7 @@ export type WalletHeaderProps = {
 }
 
 const WalletHeader = (props: WalletHeaderProps) => {
-  const { overview, avatarUrl, changeAvatar, updateSettings, viewThreads } = props
+  const { overview, changeAvatar, updateSettings, viewThreads } = props
   return (
     <View style={style.walletHeader}>
       <TouchableOpacity
@@ -30,8 +30,8 @@ const WalletHeader = (props: WalletHeaderProps) => {
         <Avatar
           width={96}
           height={96}
-          uri={avatarUrl}
           defaultSource={require('../Images/v2/update-avatar.png')}
+          owner
         />
       </TouchableOpacity>
       <View style={style.walletStats}>
