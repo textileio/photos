@@ -178,7 +178,6 @@ const mapStateToProps = (state, ownProps) => {
     peerTitle: !state.textileNode.overview || state.textileNode.overview.contact_count !== 1 ? 'peers' : 'peer'
   }
   const profile = state.preferences.profile
-  console.log(state.textileNode)
   return {
     threadId,
     threadName,
