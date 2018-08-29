@@ -12,7 +12,8 @@ export default StyleSheet.create({
     borderBottomWidth: 0
   },
   gridContainer: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#FAFCFE'
   },
   bottomOverlay: {
     justifyContent: 'center',

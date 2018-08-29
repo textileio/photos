@@ -7,7 +7,7 @@ import TextileImage from '../../TextileImage'
 import { Profile } from '../Models/TextileTypes'
 
 import styles from './Styles/AvatarStyles'
-import {RootState} from '../Redux/Types'
+import { RootState } from '../Redux/Types'
 
 interface StateFromProps {
   profile: Profile | undefined
