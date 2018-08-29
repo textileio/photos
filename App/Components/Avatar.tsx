@@ -9,12 +9,12 @@ import { Profile } from '../Models/TextileTypes'
 import styles from './Styles/AvatarStyles'
 import { RootState } from '../Redux/Types'
 
-interface StateFromProps {
+interface PropsFromState {
   profile: Profile | undefined
   online: boolean
 }
 
-export interface AvatarProps extends StateFromProps {
+export interface AvatarProps extends PropsFromState {
   height: number,
   width: number,
   owner?: boolean, // flags if it is known already to be the local user's profile
@@ -105,7 +105,7 @@ class Avatar extends React.PureComponent<AvatarProps> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateFromProps => {
+const mapStateToProps = (state: RootState): PropsFromState => {
   return {
     profile: state.preferences.profile,
     online: !!state.textileNode.online
