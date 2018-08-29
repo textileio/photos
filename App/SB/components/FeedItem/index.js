@@ -16,6 +16,7 @@ const FeedItem = props => {
 
   const isPhotoType = NotificationServices.isPhoto(notification)
 
+  const message = [payload.message, payload.suffix].join(' ')
   const leftSource = (
     <Avatar
       width={24}
@@ -34,7 +35,7 @@ const FeedItem = props => {
         </View>
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.text}>{payload.message}</Text>
+        <Text style={styles.text}>{message}</Text>
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
       <View style={{width: 40, height: 40, overflow: 'hidden'}}>
