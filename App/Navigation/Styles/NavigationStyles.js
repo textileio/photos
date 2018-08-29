@@ -9,19 +9,13 @@ export default StyleSheet.create({
     // Styles the screen header in Textile Photos feed view
     // backgroundColor: Colors.brandBlue
     backgroundColor: 'white',
-    borderBottomColor: '#ECEDEE'
+    borderBottomColor: '#ECEDEE',
+    flex: 1
   },
   headerIconList: {
     width: 23,
     height: 20
   },
-  // headerTitle: {
-  //   fontFamily: "BentonSans",
-  //   fontSize: 30,
-  //   paddingTop: 23,
-  //   color: Colors.charcoal
-  // },
-
   headerLogo: {
     width: 82.5,
     height: 23
@@ -80,11 +74,15 @@ export default StyleSheet.create({
   headerTitleImage: {
     marginHorizontal: 16
   },
+  headerCenter: {
+    flex: 1,
+    alignItems: 'center',
+  },
   headerTitle: {
     fontFamily: 'BentonSans-Bold',
     fontSize: 17,
     paddingTop: 8, // <- needed because BentonSans has that weird bottom gap
-    color: Colors.charcoal
+    color: Colors.charcoal,
   },
   headerButton: {
     fontFamily: 'BentonSans',

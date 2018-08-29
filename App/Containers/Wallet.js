@@ -19,16 +19,17 @@ class Wallet extends React.PureComponent {
     const params = navigation.state.params || {}
     const greeting = params.username ? 'Hello, ' + params.username : 'Hi there!'
     const headerTitle = (
-      <Text style={navStyles.headerTitle}>
-        {greeting}
-      </Text>
+      <View style={navStyles.headerCenter}>
+        <Text style={navStyles.headerTitle}>
+          {greeting}
+        </Text>
+      </View>
     )
 
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerTitle,
       tabBarVisible: true,
-
       headerStyle: style.navHeader
     }
   }
