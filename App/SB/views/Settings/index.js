@@ -27,7 +27,6 @@ class AccountSettings extends React.PureComponent {
   }
 
   static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
     return {
       headerTitle: 'Settings',
       headerLeft: (
@@ -44,7 +43,6 @@ class AccountSettings extends React.PureComponent {
               <Avatar
                 width={32}
                 height={32}
-                uri={params.avatarUrl}
                 defaultSource={require('../Settings/statics/main-image.png')}
               />
             }
@@ -52,12 +50,6 @@ class AccountSettings extends React.PureComponent {
         </HeaderButtons>
       )
     }
-  }
-
-  componentDidMount () {
-    this.props.navigation.setParams({
-      profile: this.props.profile
-    })
   }
 
   toggleService (name) {
@@ -102,7 +94,7 @@ class AccountSettings extends React.PureComponent {
                       <SettingsRow key={i * 33} child service={child} info={this.props.children[child].info} disabled={!value} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
                       )}
                   </View>
-                  )
+                )
               }
             )}
           </View>
@@ -139,7 +131,6 @@ const mapStateToProps = state => {
     }, {})
 
   return {
-    profile: state.preferences.profile,
     allServices,
     services,
     children

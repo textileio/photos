@@ -1,84 +1,118 @@
 import React from 'react'
 import Config from 'react-native-config'
+import ImageSc from 'react-native-scalable-image'
+import { connect } from 'react-redux'
 import {View, Image, ImageURISource, StyleProp, ViewStyle} from 'react-native'
 import TextileImage from '../../TextileImage'
-import { Profile, PhotoId } from '../Models/TextileTypes'
+import { Profile } from '../Models/TextileTypes'
 
 import styles from './Styles/AvatarStyles'
+import {RootState} from '../Redux/Types'
+import {NavigationScreenProps} from 'react-navigation'
 
-export type AvatarProps = {
-  profile: Profile,
-  peer_id?: string,
+
+interface Props extends NavigationScreenProps<{}> {
   height: number,
   width: number,
+  peer_id?: string,
   defaultSource?: number | ImageURISource | undefined,
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<ViewStyle>,
+  profile?: Profile
+  online?: boolean
 }
 
-const PlaceHolderAvatar = (props: AvatarProps) => {
-  const { height, width, defaultSource, style } = props
-  const borderRadius = height / 2
-  return (
-    <View style={[styles.container, style, {width, height, borderRadius}]}>
-      <View style={styles.stretch}>
-        {defaultSource && <Image
-          source={defaultSource}
-          resizeMode={'cover'}
-          style={{width, height}}
-        />}
+class Avatar extends React.PureComponent<Props> {
+  getCafeAddress (peer_id: string) {
+    return Config.TEXTILE_CAFE_URI + '/ipns/' + peer_id + '/avatar'
+  }
+  photoIdFromAvatar () {
+    const { profile } = this.props
+    const avatar_id: string = profile && profile.avatar_id || ''
+    return avatar_id && avatar_id.split('/').length > 1 && avatar_id.split('/')[2]
+  }
+  renderSelf () {
+    const { height, width, defaultSource, style } = this.props
+    const photoId = this.photoIdFromAvatar()
+    return (
+      <View style={[styles.container, style, {width, height, borderRadius: height / 2}]}>
+        <View style={styles.stretch}>
+          <TextileImage
+            imageId={photoId}
+            path={'small'}
+            style={{width, height}}
+            resizeMode={'cover'}
+            width={width}
+            height={height}
+            defaultSource={defaultSource}
+          />
+        </View>
       </View>
-    </View>
-  )
-}
-
-const OwnAvatar = (props: AvatarProps) => {
-  const { profile, height, width, defaultSource, style } = props
-  const photoId = profile.avatar_id
-  const borderRadius = height / 2
-  return (
-    <View style={[styles.container, style, {width, height, borderRadius}]}>
-      <View style={styles.stretch}>
-        <TextileImage
-          imageId={photoId}
-          path={'small'}
-          style={{width, height}}
-          resizeMode={'cover'}
-          width={width}
-          height={height}
-          defaultSource={defaultSource}
-        />
+    )
+  }
+  renderPeer (peer_id: string) {
+    const { height, width, defaultSource, style } = this.props
+    const avatarUri = this.getCafeAddress(peer_id)
+    return (
+      <View style={[styles.container, style, {width, height, borderRadius: height / 2}]}>
+        <View style={styles.stretch}>
+          <Image
+            source={{uri: avatarUri}}
+            resizeMode={'cover'}
+            style={{width, height}}
+            defaultSource={defaultSource}
+          />
+        </View>
       </View>
-    </View>
-  )
-}
+    )
+  }
 
-const PeerAvatar = (props: AvatarProps) => {
-  const { peer_id, height, width, defaultSource, style } = props
-  const avatarUri = Config.TEXTILE_CAFE_URI + '/ipns/' + peer_id+ '/avatar'
-  const borderRadius = height / 2
-  return (
-    <View style={[styles.container, style, {width, height, borderRadius}]}>
-      <View style={styles.stretch}>
-        <Image
-          source={{uri: avatarUri}}
-          resizeMode={'cover'}
-          style={{width, height}}
-          defaultSource={defaultSource}
-        />
+  renderPlaceholder = () => {
+    const { height, width, defaultSource, style } = this.props
+    return (
+      <View style={[styles.container, style, {width, height, borderRadius: height / 2}]}>
+        <View style={styles.stretch}>
+          {defaultSource && <ImageSc
+            style={{width, height}}
+            width={width}
+            height={height}
+            source={defaultSource} />}
+        </View>
       </View>
-    </View>
-  )
-}
+    )
+  }
 
-const Avatar = (props: AvatarProps) => {
-  const { profile, peer_id } = props
-  if (!peer_id) {
-    return PlaceHolderAvatar(props)
-  } else if (profile.id !== peer_id) {
-    return PeerAvatar(props)
-  } else {
-    return OwnAvatar(props)
+  // shouldComponentUpdate (nextProps) {
+  //   return nextProps.online && this.props.online != nextProps.online ||
+  //     this.props.profile != nextProps.profile
+  // }
+
+  render () {
+    const profile = this.props.profile
+    const online = this.props.online
+    const peer_id = this.props.peer_id || profile && profile.id || undefined
+
+    if (!peer_id) {
+      // just fill the gap
+      return this.renderPlaceholder()
+    } else if (!online || !profile || profile.id != peer_id) {
+      // if node not online, use cafe no matter what
+      // if no profile provided, or the peer_id isn't own profile, use cafe
+      return this.renderPeer(peer_id)
+    } else if ((!peer_id || profile.id === peer_id) && profile.avatar_id) {
+      // peer_id isn't null and equals our profile.id
+      // also the node is online, so let's render it now
+      return this.renderSelf()
+    }
+    return this.renderPlaceholder()
   }
 }
 
-export default Avatar
+
+const mapStateToProps = (state: RootState) => {
+  return {
+    profile: state.preferences.profile,
+    online: !!state.textileNode.online
+  }
+}
+
+export default connect(mapStateToProps, undefined)(Avatar)
