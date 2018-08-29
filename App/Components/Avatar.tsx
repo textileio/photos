@@ -11,7 +11,7 @@ import {RootState} from '../Redux/Types'
 import {NavigationScreenProps} from 'react-navigation'
 
 
-interface Props extends NavigationScreenProps<{}> {
+interface Props {
   height: number,
   width: number,
   owner?: boolean, // flags if it is known already to be the local user's profile
@@ -50,7 +50,7 @@ class Avatar extends React.PureComponent<Props> {
       </View>
     )
   }
-  renderPeer (peer_id: string) {
+  renderCafe (peer_id: string) {
     const { height, width, defaultSource, style } = this.props
     const avatarUri = this.getCafeAddress(peer_id)
     return (
@@ -83,25 +83,26 @@ class Avatar extends React.PureComponent<Props> {
   }
 
   render () {
-    const { profile, online, owner } = this.props
-    const peer_id = this.props.peer_id || profile && profile.id || undefined
-
-    if (!peer_id) {
-      // just fill the gap
-      return this.renderPlaceholder()
-    } else if (!online || !profile || profile.id != peer_id) {
-      // if node not online, use cafe no matter what
-      // if no profile provided, or the peer_id isn't own profile, use cafe
-      return this.renderPeer(peer_id)
-    } else if ((owner || profile.id === peer_id) && profile.avatar_id) {
-      // peer_id isn't null and equals our profile.id
-      // also the node is online, so let's render it now
+    const { profile, online, owner, peer_id } = this.props
+    if (owner && profile) {
+      if (!online || !profile.avatar_id) {
+        // not online or no url and owner, render cafe
+        return this.renderCafe(profile.id)
+      }
+      // owner, render local
       return this.renderSelf()
+    }
+    else if (peer_id) {
+      if (online && profile && profile.id === peer_id && profile.avatar_id) {
+        // owner, render local
+        return this.renderSelf()
+      }
+      // render cafe
+      return this.renderCafe(peer_id)
     }
     return this.renderPlaceholder()
   }
 }
-
 
 const mapStateToProps = (state: RootState) => {
   return {
