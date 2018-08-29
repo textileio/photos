@@ -37,7 +37,7 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: '#FAFCFE'
   },
   listContainer: {
     flex: 1,
