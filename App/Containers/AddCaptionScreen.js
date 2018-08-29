@@ -74,7 +74,7 @@ class AddCaptionScreen extends React.Component {
         style={styles.image} />
     )
   }
-  
+
   _renderImage () {
     if (typeof this.props.image === 'string') {
       return this._renderTextileImage()
