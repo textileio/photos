@@ -31,6 +31,7 @@ const WalletHeader = (props: WalletHeaderProps) => {
           width={96}
           height={96}
           defaultSource={require('../Images/v2/update-avatar.png')}
+          owner
         />
       </TouchableOpacity>
       <View style={style.walletStats}>

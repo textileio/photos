@@ -34,6 +34,7 @@ class ThreadsList extends React.PureComponent {
               width={24}
               height={24}
               defaultSource={require('../SB/views/Settings/statics/main-image.png')}
+              owner
             />
           }
         />

@@ -31,6 +31,7 @@ class Mnemonic extends React.PureComponent {
                 width={32}
                 height={32}
                 defaultSource={require('../Settings/statics/main-image.png')}
+                owner
               />
             }
           />
