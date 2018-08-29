@@ -8,6 +8,7 @@ import BackgroundTimer from 'react-native-background-timer'
 import TextileNodeActions, { TextileNodeSelectors, NodeState } from '../Redux/TextileNodeRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
+import { Threads, ThreadName } from '../Models/TextileTypes'
 
 export function * manageNode () {
   while (true) {
@@ -58,6 +59,11 @@ function * createAndStartNode () {
   yield put(TextileNodeActions.createNodeSuccess())
   yield put(TextileNodeActions.startingNode())
   yield call(TextileNode.start)
+  const threads: Threads = yield call(TextileNode.threads)
+  const defaultThread = threads.items.find(thread => thread.name === 'default')
+  if (!defaultThread) {
+    yield call(TextileNode.addThread, 'default' as ThreadName)
+  }
   yield put(TextileNodeActions.startNodeSuccess())
 }
 
