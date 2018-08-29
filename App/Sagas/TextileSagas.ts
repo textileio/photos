@@ -110,11 +110,9 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   yield call(NavigationService.navigate, 'PrimaryNavigation')
 
   // PreferencesActions.onboardedSuccess will setup the node/default thread, so wait for those
-  let online = yield select(TextileNodeSelectors.online)
   let defaultThread: TT.Thread = yield call(getDefaultThread)
-  while (!online && !defaultThread) {
+  while (!defaultThread) {
     yield call(delay, 150)
-    online = yield select(TextileNodeSelectors.online)
     defaultThread = yield call(getDefaultThread)
   }
   yield * processAvatarImage(action.payload.uri, defaultThread)
@@ -122,13 +120,6 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
   yield call(NavigationService.navigate, 'TabNavigator')
-
-  // Ensure that our node is online before we try to update the profile
-  let online = yield select(TextileNodeSelectors.online)
-  while (!online) {
-    yield call(delay, 150)
-    online = yield select(TextileNodeSelectors.online)
-  }
 
   let defaultThread: TT.Thread = yield call(getDefaultThread)
   yield * processAvatarImage(action.payload.uri, defaultThread)
