@@ -61,6 +61,7 @@ import {
   logOut,
   updateNodeOverview,
   recoverPassword,
+  onboardedSuccess,
   viewPhoto,
   viewThread,
   addFriends,
@@ -91,6 +92,8 @@ export default function * root () {
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
+
+    takeEvery(getType(PreferencesActions.onboardedSuccess), onboardedSuccess),
 
     // profile photo
     takeEvery(getType(UIActions.chooseProfilePhotoRequest), chooseProfilePhoto),

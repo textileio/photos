@@ -8,7 +8,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 export function * onNodeCreated () {
   while (yield take(getType(TextileNodeActions.createNodeSuccess))) {
     try {
-      const mnemonic: string = yield call(TextileNode.mnemonic)
+      const mnemonic = yield call(TextileNode.mnemonic)
       yield put(PreferencesActions.updatecMnemonic(mnemonic))
     } catch {
       // This only succeeds when the node is first created so this error is expected

@@ -25,20 +25,18 @@ class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
-    const avatarUrl = params.profile && params.profile.avatar_id ? Config.TEXTILE_CAFE_URI + params.profile.avatar_id : undefined
     const headerLeft = (
       <HeaderButtons left>
         <Item
           title='Account'
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
-          onPress={() => navigation.navigate('Account', {avatarUrl, username})}
+          onPress={() => navigation.navigate('Account', {username})}
           buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
             <Avatar
               width={24}
               height={24}
-              uri={avatarUrl}
               defaultSource={require('../../../Images/v2/main-image.png')}
             />
           }

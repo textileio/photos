@@ -101,7 +101,6 @@ class Wallet extends React.PureComponent {
     return (
       <View style={style.container}>
         <WalletHeader
-          avatarUrl={this.props.avatarUrl}
           overview={this.props.overview}
           changeAvatar={() => {
             this.props.navigation.navigate('ChangeAvatar', {avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet'})
@@ -179,6 +178,7 @@ const mapStateToProps = (state, ownProps) => {
     peerTitle: !state.textileNode.overview || state.textileNode.overview.contact_count !== 1 ? 'peers' : 'peer'
   }
   const profile = state.preferences.profile
+  console.log(state.textileNode)
   return {
     threadId,
     threadName,

@@ -36,6 +36,7 @@ import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
+import {Thread} from '../Models/TextileTypes'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -93,17 +94,28 @@ export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActi
   }
 }
 
+export function * onboardedSuccess(action: ActionType<typeof PreferencesActions.onboardedSuccess>) {
+  let defaultThread: TT.Thread = yield call(getDefaultThread)
+  if (!defaultThread) {
+    // Skipping the normal addThread request here because we don't
+    // want to redirect to the default thread after complete
+    const thread: Thread = yield call(TextileNode.addThread, 'default' as TT.ThreadName)
+    yield put(ThreadsActions.addThreadSuccess(thread))
+    yield put(ThreadsActions.refreshThreadsRequest())
+  }
+}
+
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield put(PreferencesActions.onboardedSuccess())
   yield call(NavigationService.navigate, 'PrimaryNavigation')
-  yield take(getType(TextileNodeActions.startNodeSuccess))
 
-  let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
-  if (!defaultThread) {
-    yield put(ThreadsActions.addThreadRequest('default' as TT.ThreadName))
-    const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
-    defaultThread = action.payload.thread
-    yield put(ThreadsActions.refreshThreadsRequest())
+  // PreferencesActions.onboardedSuccess will setup the node/default thread, so wait for those
+  let online = yield select(TextileNodeSelectors.online)
+  let defaultThread: TT.Thread = yield call(getDefaultThread)
+  while (!online && !defaultThread) {
+    yield call(delay, 150)
+    online = yield select(TextileNodeSelectors.online)
+    defaultThread = yield call(getDefaultThread)
   }
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
@@ -111,8 +123,14 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
   yield call(NavigationService.navigate, 'TabNavigator')
 
-  let defaultThread: TT.Thread = yield call(getDefaultThread)
+  // Ensure that our node is online before we try to update the profile
+  let online = yield select(TextileNodeSelectors.online)
+  while (!online) {
+    yield call(delay, 150)
+    online = yield select(TextileNodeSelectors.online)
+  }
 
+  let defaultThread: TT.Thread = yield call(getDefaultThread)
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
 
@@ -125,8 +143,6 @@ function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
     }
     yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-
-    yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
 
     // set it as our profile picture
     yield put(PreferencesActions.pendingAvatar(addResult.id))

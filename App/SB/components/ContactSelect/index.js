@@ -45,7 +45,7 @@ const ContactSelect = (props) => {
               <TouchableOpacity key={item.id} style={styles.selectedContact} onPress={() => {
                 select(item, item.included)
               }}>
-                <Avatar style={styles.selectedContact} width={43} height={43} uri={item.uri} defaultSource={defaultSource} />
+                <Avatar style={styles.selectedContact} width={43} height={43} peer_id={item.id} defaultSource={defaultSource} />
                 {selectState && <Image style={styles.selectedContactIcon} source={require('./statics/icon-select.png')} />}
               </TouchableOpacity>
             )
@@ -64,6 +64,7 @@ const ContactSelect = (props) => {
           keyExtractor={(item) => item.pk}
           extraData={selected}
           renderItem={(contact) => {
+            console.log('item', contact)
             const {item} = contact
             const defaultSource = require('../../../Images/v2/main-image.png')
 
@@ -72,7 +73,7 @@ const ContactSelect = (props) => {
               <TouchableOpacity style={styles.contactItem} onPress={() => {
                 select(item, item.included)
               }}>
-                <Avatar style={styles.selectedContact} width={43} height={43} uri={item.uri} defaultSource={defaultSource} />
+                <Avatar style={styles.selectedContact} width={43} height={43} peer_id={item.id} defaultSource={defaultSource} />
                 <Text style={styles.contactName}>{item.username || 'peer'}</Text>
                 <View style={styles.contactSelectRadio}>
                   <RadioButton disabled={item.included} selected={selectState} />
