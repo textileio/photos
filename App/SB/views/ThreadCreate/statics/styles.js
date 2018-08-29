@@ -11,21 +11,30 @@ export default StyleSheet.create({
     paddingTop: 19,
     paddingHorizontal: 16
   },
+  topRow: {
+    flexDirection: 'row'
+  },
   commentRow: {
+    flex: 1
   },
   comment: {
-    height: 40
+    minHeight: 40,
+    flexWrap: 'wrap'
   },
   imagePreviewRow: {
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
-    marginTop: 40
+    marginRight: 10,
+    overflow: 'hidden',
+    height: 70,
+    width: 70
   },
   image: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 200
+    height: 70,
+    width: 70
   },
   toolbarLeft: {
     height: 16,

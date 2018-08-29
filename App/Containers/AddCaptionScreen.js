@@ -59,9 +59,9 @@ class AddCaptionScreen extends React.Component {
     return (<TextileImage
       imageId={this.props.image}
       path={'small'}
-      height={200}
-      width={WIDTH}
-      resizeMode={'contain'}
+      height={70}
+      width={70}
+      resizeMode={'cover'}
       style={styles.image}
     />)
   }
@@ -70,10 +70,11 @@ class AddCaptionScreen extends React.Component {
     return (
       <Image
         source={{uri: this.props.image.origURL}}
-        resizeMode={'contain'}
-        style={[styles.image, {width: WIDTH}]} />
+        resizeMode={'cover'}
+        style={styles.image} />
     )
   }
+  
   _renderImage () {
     if (typeof this.props.image === 'string') {
       return this._renderTextileImage()
@@ -85,16 +86,19 @@ class AddCaptionScreen extends React.Component {
   render () {
     return (
       <View style={styles.contentContainer}>
-        <View style={styles.commentRow}>
-          <Input
-            style={styles.comment}
-            value={this.props.comment}
-            label='Add a caption...'
-            onChangeText={this.handleNewText.bind(this)}
-          />
-        </View>
-        <View style={styles.imagePreviewRow}>
-          { this._renderImage() }
+        <View style={styles.topRow}>
+          <View style={styles.imagePreviewRow}>
+            { this._renderImage() }
+          </View>
+          <View style={styles.commentRow}>
+            <Input
+              style={styles.comment}
+              value={this.props.comment}
+              label='Add a caption...'
+              numberOfLines={5}
+              onChangeText={this.handleNewText.bind(this)}
+            />
+          </View>
         </View>
       </View>
     )
