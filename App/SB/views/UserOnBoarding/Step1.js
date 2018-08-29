@@ -35,6 +35,7 @@ const Step1 = props => {
               height={79}
               style={styles.avatarPhoto}
               defaultSource={previewSrc}
+              owner
             />
             <Text style={styles.link}>{linkText}</Text>
           </TouchableOpacity>

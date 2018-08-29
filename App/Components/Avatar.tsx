@@ -14,7 +14,8 @@ import {NavigationScreenProps} from 'react-navigation'
 interface Props extends NavigationScreenProps<{}> {
   height: number,
   width: number,
-  peer_id?: string,
+  owner?: boolean, // flags if it is known already to be the local user's profile
+  peer_id?: string, // will auto check to see if it is the same as the local user's
   defaultSource?: number | ImageURISource | undefined,
   style?: StyleProp<ViewStyle>,
   profile?: Profile
@@ -81,14 +82,8 @@ class Avatar extends React.PureComponent<Props> {
     )
   }
 
-  // shouldComponentUpdate (nextProps) {
-  //   return nextProps.online && this.props.online != nextProps.online ||
-  //     this.props.profile != nextProps.profile
-  // }
-
   render () {
-    const profile = this.props.profile
-    const online = this.props.online
+    const { profile, online, owner } = this.props
     const peer_id = this.props.peer_id || profile && profile.id || undefined
 
     if (!peer_id) {
@@ -98,7 +93,7 @@ class Avatar extends React.PureComponent<Props> {
       // if node not online, use cafe no matter what
       // if no profile provided, or the peer_id isn't own profile, use cafe
       return this.renderPeer(peer_id)
-    } else if ((!peer_id || profile.id === peer_id) && profile.avatar_id) {
+    } else if ((owner || profile.id === peer_id) && profile.avatar_id) {
       // peer_id isn't null and equals our profile.id
       // also the node is online, so let's render it now
       return this.renderSelf()

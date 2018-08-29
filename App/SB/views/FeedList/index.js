@@ -38,6 +38,7 @@ class Notifications extends React.PureComponent {
               width={24}
               height={24}
               defaultSource={require('../../../Images/v2/main-image.png')}
+              owner
             />
           }
         />

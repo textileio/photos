@@ -40,7 +40,7 @@ const Step1 = props => {
           />
           <View style={styles.bottomLine}>
             <Button
-              text="Continue"
+              text='Continue'
               disabled={!referralCode || !email}
               onPress={onNextStep}
             />
