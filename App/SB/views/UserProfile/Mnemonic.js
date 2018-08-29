@@ -15,7 +15,6 @@ import styles from './statics/styles'
 
 class Mnemonic extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
     return {
       headerLeft: (
         <TextileHeaderButtons left>
@@ -31,8 +30,8 @@ class Mnemonic extends React.PureComponent {
               <Avatar
                 width={32}
                 height={32}
-                uri={params.avatarUrl}
                 defaultSource={require('../Settings/statics/main-image.png')}
+                owner
               />
             }
           />
