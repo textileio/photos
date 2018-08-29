@@ -8,21 +8,22 @@ import { Profile } from '../Models/TextileTypes'
 
 import styles from './Styles/AvatarStyles'
 import {RootState} from '../Redux/Types'
-import {NavigationScreenProps} from 'react-navigation'
 
+interface StateFromProps {
+  profile: Profile | undefined
+  online: boolean
+}
 
-interface Props {
+export interface AvatarProps extends StateFromProps {
   height: number,
   width: number,
   owner?: boolean, // flags if it is known already to be the local user's profile
   peer_id?: string, // will auto check to see if it is the same as the local user's
   defaultSource?: number | ImageURISource | undefined,
-  style?: StyleProp<ViewStyle>,
-  profile?: Profile
-  online?: boolean
+  style?: StyleProp<ViewStyle>
 }
 
-class Avatar extends React.PureComponent<Props> {
+class Avatar extends React.PureComponent<AvatarProps> {
   getCafeAddress (peer_id: string) {
     return Config.TEXTILE_CAFE_URI + '/ipns/' + peer_id + '/avatar'
   }
@@ -104,7 +105,7 @@ class Avatar extends React.PureComponent<Props> {
   }
 }
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state: RootState): StateFromProps => {
   return {
     profile: state.preferences.profile,
     online: !!state.textileNode.online
