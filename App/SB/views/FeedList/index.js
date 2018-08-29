@@ -156,8 +156,14 @@ class Notifications extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state.notifications.notifications)
+  const notifications = state.notifications.notifications
+    .filter((n) => {
+      if (n.type === 1) return true // a device notification
+      return n.actor_username !== undefined && n.actor_username !== ''
+    })
   return {
-    notifications: state.notifications.notifications,
+    notifications,
     profile: state.preferences.profile,
     refreshing: !!state.notifications.refreshing,
     showTourScreen: state.preferences.tourScreens.feed === true
