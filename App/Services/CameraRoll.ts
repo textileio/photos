@@ -46,7 +46,8 @@ export async function getPhotoPath (uri: string): Promise<string> {
     return path
   }
   // Android Method
-  else if (uri.includes('content://media')) {
+  else if (uri.includes('content://')) {
+    console.log('axh', 'aha!')
     const path = await TextileNode.getFilePath(uri)
     return path
   }

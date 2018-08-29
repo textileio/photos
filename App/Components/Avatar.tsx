@@ -54,15 +54,17 @@ class Avatar extends React.PureComponent<AvatarProps> {
   renderCafe (peer_id: string) {
     const { height, width, defaultSource, style } = this.props
     const avatarUri = this.getCafeAddress(peer_id)
+    console.log('axh avatar', avatarUri)
     return (
       <View style={[styles.container, style, {width, height, borderRadius: height / 2}]}>
         <View style={styles.stretch}>
-          <Image
+          <ImageSc
             source={{uri: avatarUri}}
-            resizeMode={'cover'}
             style={{width, height}}
+            width={width}
+            height={height}
             defaultSource={defaultSource}
-          />
+            resizeMode={'cover'} />
         </View>
       </View>
     )
@@ -85,22 +87,30 @@ class Avatar extends React.PureComponent<AvatarProps> {
 
   render () {
     const { profile, online, owner, peer_id } = this.props
-    if (owner && profile) {
+    console.log('axh', 0)
+    if (owner && (profile && profile.avatar_id !== undefined)) {
+      console.log('axh', 1)
       if (!online || !profile.avatar_id) {
+        console.log('axh', 2, profile)
         // not online or no url and owner, render cafe
         return this.renderCafe(profile.id)
       }
+      console.log('axh', 3)
       // owner, render local
       return this.renderSelf()
     }
     else if (peer_id) {
+      console.log('axh', 4)
       if (online && profile && profile.id === peer_id && profile.avatar_id) {
+        console.log('axh', 5)
         // owner, render local
         return this.renderSelf()
       }
+      console.log('axh', 6)
       // render cafe
       return this.renderCafe(peer_id)
     }
+    console.log('axh', 7)
     return this.renderPlaceholder()
   }
 }

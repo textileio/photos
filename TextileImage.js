@@ -1,12 +1,13 @@
 import React from 'react'
-import { requireNativeComponent, ViewPropTypes } from 'react-native'
+import { requireNativeComponent } from 'react-native'
 
 type Props = {
   imageId: string,
   path: string,
   resizeMode: string,
   onLoad?: () => void,
-  onError?: (string) => void
+  onError?: (string) => void,
+  children: React.ReactNode
 }
 
 export default class TextileImage extends React.Component<Props, *> {
@@ -36,7 +37,9 @@ export default class TextileImage extends React.Component<Props, *> {
       onLoad: this._onLoaded.bind(this),
       onError: this._onError.bind(this)
     }
-    return <TextileImageView {...nativeProps} />
+    return <TextileImageView {...nativeProps} >
+      {this.props.children}
+    </TextileImageView>
   }
 }
 
