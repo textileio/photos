@@ -64,7 +64,6 @@ const ContactSelect = (props) => {
           keyExtractor={(item) => item.pk}
           extraData={selected}
           renderItem={(contact) => {
-            console.log('item', contact)
             const {item} = contact
             const defaultSource = require('../../../Images/v2/main-image.png')
 
