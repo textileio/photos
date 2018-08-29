@@ -172,8 +172,8 @@ const mapStateToProps = (state, ownProps) => {
     available: !!state.textileNode.overview,
     photoCount: state.textileNode.overview ? state.textileNode.overview.photo_count.toString() : '-',
     photoTitle: !state.textileNode.overview || state.textileNode.overview.photo_count !== 1 ? 'photos' : 'photo',
-    threadCount: state.textileNode.overview ? state.textileNode.overview.thread_count.toString() : '-',
-    threadTitle: !state.textileNode.overview || state.textileNode.overview.thread_count !== 1 ? 'threads' : 'thread',
+    threadCount: state.textileNode.overview ? (state.textileNode.overview.thread_count - 1).toString() : '-',
+    threadTitle: !state.textileNode.overview || state.textileNode.overview.thread_count - 1 !== 1 ? 'threads' : 'thread',
     peerCount: state.textileNode.overview ? state.textileNode.overview.contact_count.toString() : '-',
     peerTitle: !state.textileNode.overview || state.textileNode.overview.contact_count !== 1 ? 'peers' : 'peer'
   }
