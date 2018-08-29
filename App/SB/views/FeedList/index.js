@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image } from 'react-native'
-import { NavigationEvents } from 'react-navigation'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import Config from 'react-native-config'
 
 import FeedItem from '../../components/FeedItem'
 import Button from '../../components/Button'
@@ -155,7 +153,7 @@ class Notifications extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   console.log(state.notifications.notifications)
   const notifications = state.notifications.notifications
     .filter((n) => {
