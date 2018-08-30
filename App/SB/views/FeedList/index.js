@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image } from 'react-native'
-import { NavigationEvents } from 'react-navigation'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import Config from 'react-native-config'
 
 import FeedItem from '../../components/FeedItem'
 import Button from '../../components/Button'
@@ -25,35 +23,31 @@ class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
-    const avatarUrl = params.profile && params.profile.avatar_id ? Config.TEXTILE_CAFE_URI + params.profile.avatar_id : undefined
     const headerLeft = (
       <HeaderButtons left>
         <Item
           title='Account'
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
-          onPress={() => navigation.navigate('Account', {avatarUrl, username})}
+          onPress={() => navigation.navigate('Account', {username})}
           buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
             <Avatar
               width={24}
               height={24}
-              uri={avatarUrl}
               defaultSource={require('../../../Images/v2/main-image.png')}
+              owner
             />
           }
         />
       </HeaderButtons>
     )
-    const headerTitle = (
-      <Text style={navStyles.headerTitle}>
-        {'Feed'}
-      </Text>
-    )
+    const headerTitle = 'Feed'
 
     return {
       headerLeft,
-      headerTitle
+      headerTitle,
+      headerRight: (<View />) // ensure spacing in android
     }
   }
 
@@ -156,9 +150,15 @@ class Notifications extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
+  console.log(state.notifications.notifications)
+  const notifications = state.notifications.notifications
+    .filter((n) => {
+      if (n.type === 1) return true // a device notification
+      return n.actor_username !== undefined && n.actor_username !== ''
+    })
   return {
-    notifications: state.notifications.notifications,
+    notifications,
     profile: state.preferences.profile,
     refreshing: !!state.notifications.refreshing,
     showTourScreen: state.preferences.tourScreens.feed === true

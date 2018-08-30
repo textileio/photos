@@ -122,6 +122,7 @@ class TextField extends Component {
           }}
           editable={!disabled}
           ref="input"
+          multiline
           value={this.state.text}
           {...props}
         />

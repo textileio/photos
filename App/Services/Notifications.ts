@@ -5,6 +5,7 @@ import {Alert, Platform} from 'react-native'
 export interface NotificationsPayload {
   title: string,
   message: string,
+  suffix: string,
   typeString: string
 }
 
@@ -30,38 +31,45 @@ export function toPayload(notification: Notification): NotificationsPayload | un
   switch (notification.type) {
     case(NotificationType.receivedInviteNotification): {
       const title = 'New Invite'
-      const message =  [actor, notification.body].join(' ') + '.'
-      return {title, message, typeString}
+      const message =  [actor, notification.body].join(' ')
+      const suffix = ['to', notification.subject].join(' ')
+      return {title, message, suffix, typeString}
     }
     case(NotificationType.deviceAddedNotification): {
       const title = 'New Device'
-      const message = notification.body + " called " + notification.subject
-      return {title, message, typeString}
+      const message = 'You paired with a new device'
+      const suffix = ''
+      return {title, message, suffix, typeString}
     }
     case(NotificationType.photoAddedNotification): {
       const title = notification.subject
-      const message =  [actor, notification.body].join(' ') + '.'
-      return {title, message, typeString}
+      const message =  [actor, notification.body].join(' ')
+      const suffix = ['to', notification.subject].join(' ')
+      return {title, message, suffix, typeString}
     }
     case(NotificationType.commentAddedNotification): {
       const title =  notification.subject
-      const message = [actor, notification.body].join(' ') + '.'
-      return {title, message, typeString}
+      const message = [actor, notification.body].join(' ')
+      const suffix = ['in', notification.subject].join(' ')
+      return {title, message, suffix, typeString}
     }
     case(NotificationType.likeAddedNotification): {
       const title = notification.subject
-      const message = [actor, notification.body].join(' ') + '.'
-      return {title, message, typeString}
+      const message = [actor, notification.body].join(' ')
+      const suffix = ['in', notification.subject].join(' ')
+      return {title, message, suffix, typeString}
     }
     case(NotificationType.peerJoinedNotification): {
       const title = notification.subject
-      const message =  [actor, notification.body].join(' ') + '.'
-      return {title, message, typeString}
+      const message =  [actor, notification.body].join(' ')
+      const suffix = ['to thread', notification.subject].join(' ')
+      return {title, message, suffix, typeString}
     }
     case(NotificationType.peerLeftNotification): {
       const title = notification.subject
-      const message =  [actor, notification.body].join(' ') + '.'
-      return {title, message, typeString}
+      const message =  [actor, notification.body].join(' ')
+      const suffix = ['the thread', notification.subject].join(' ')
+      return {title, message, suffix, typeString}
     }
     default: {
       return undefined
@@ -84,7 +92,7 @@ export async function createNew(notification: Notification): Promise<void> {
       if (!payload) return
       PushNotification.localNotification({
         title: payload.title,
-        message: payload.message,
+        message: payload.message + '.',
         /* Android Only Property */
         group: payload.typeString, // (optional) add group to message
         /* iOS Only Property */

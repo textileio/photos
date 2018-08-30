@@ -26,7 +26,7 @@ class ThreadDetailCard extends React.PureComponent {
     const {
       profile,
       item,
-      avatarUri,
+      peer_id,
       dateString,
       defaultSource,
       didLike,
@@ -42,7 +42,7 @@ class ThreadDetailCard extends React.PureComponent {
       <TouchableWithoutFeedback onPress={onSelect}>
         <View style={styles.card}>
           <View style={styles.cardHeader} >
-            <Avatar style={styles.cardAvatar} width={18} height={18} uri={avatarUri} defaultSource={defaultSource} />
+            <Avatar style={styles.cardAvatar} width={18} height={18} peer_id={peer_id} defaultSource={defaultSource} />
             <Text style={styles.cardAction}><Text style={styles.cardActionName}>
               {profile && profile.username === username ? 'You' : username}
             </Text> added a photo</Text>
@@ -94,16 +94,10 @@ const mapStateToProps = (state, ownProps) => {
   const date = moment(photo.date)
   const dateString = date.fromNow()
   const selfId = profile && profile.id
-  const ownPhoto = selfId && selfId === photo.author_id
 
   const username = photo.username ? photo.username : photo.author_id.substring(0, 8)
 
   const defaultSource = require('../../views/Settings/statics/main-image.png')
-  let avatarUri = photo.author_id ? Config.TEXTILE_CAFE_URI + '/ipns/' + photo.author_id + '/avatar' : undefined
-  // ensure we have the user's latest avatar even if the cafe is still caching
-  if (ownPhoto) {
-    avatarUri = Config.TEXTILE_CAFE_URI + profile.avatar_id
-  }
 
   const totalLikes = photo.likes ? photo.likes.length : 0
   const isLiked = photo.likes && photo.likes.length > 0
@@ -115,7 +109,7 @@ const mapStateToProps = (state, ownProps) => {
   const imageHeight = heightProperties.height
 
   return {
-    avatarUri,
+    peer_id: photo.author_id,
     dateString,
     defaultSource,
     didLike,
