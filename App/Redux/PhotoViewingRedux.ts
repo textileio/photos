@@ -3,7 +3,7 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { ThreadId, Photo, PhotoId, Thread, ThreadName, Mnemonic } from '../Models/TextileTypes'
 
 const actions = {
-  insertThread: createAction('ADD_THREAD_SUCCESS', resolve => {
+  insertThread: createAction('INSERT_THREAD', resolve => {
     return (thread: Thread) => resolve({ thread })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', resolve => {
@@ -134,25 +134,29 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     case getType(actions.refreshThreadRequest): {
       const { threadId } = action.payload
       const threadData = state.threads[threadId]
+      if (!threadData)
+        // We can get refreshThreadRequest events triggered by the go layer immediately after creating a new
+        // thread, but before we've dispatched an addThreadSuccess action. Need to ignore.
+        return state
       const threads = { ...state.threads, [threadId]: { ...threadData, querying: true } }
       return { ...state, threads }
     }
     case getType(actions.refreshThreadSuccess): {
-      const { thread, photos } = action.payload
-      const threadData = state.threads[thread.id]
-      const threads = { ...state.threads, [thread.id]: { ...threadData, querying: false, photos } }
+      const { threadId, photos } = action.payload
+      const threadData = state.threads[threadId]
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, photos } }
       let viewingPhoto: Photo | undefined
-      if (state.viewingThread && state.viewingThread === thread && state.viewingPhoto) {
+      if (state.viewingThread && state.viewingThread.id === threadId && state.viewingPhoto) {
         const currentViewingPhoto = state.viewingPhoto
         viewingPhoto = photos.find(photo => currentViewingPhoto.id === photo.id)
       }
       return { ...state, threads, viewingPhoto }
     }
     case getType(actions.refreshThreadError): {
-      const { thread, error } = action.payload
-      const threadData = state.threads[thread.id]
+      const { threadId, error } = action.payload
+      const threadData = state.threads[threadId]
       const threadError = (error.message as string) || (error as string) || 'unknown'
-      const threads = { ...state.threads, [thread.id]: { ...threadData, querying: false, error: threadError } }
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, error: threadError } }
       return { ...state, threads }
     }
     case getType(actions.viewWalletPhoto): {
@@ -166,11 +170,15 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       return { ...state, viewingWalletPhoto }
     }
     case getType(actions.viewThread): {
-      const { thread } = action.payload
-      return { ...state, viewingThread: thread }
+      const { threadId } = action.payload
+      return { ...state, viewingThread: state.threads[threadId].thread }
     }
     case getType(actions.viewPhoto): {
-      const { photo } = action.payload
+      const { photoId } = action.payload
+      if (!state.viewingThread)
+        return state
+      const threadData = state.threads[state.viewingThread.id]
+      const photo = threadData.photos.find(photo => photo.id === photoId)
       return { ...state, viewingPhoto: photo, authoringComment: undefined }
     }
     case getType(actions.updateComment): {

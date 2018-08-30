@@ -12,6 +12,7 @@ import UIActions from '../../../Redux/UIRedux'
 import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
+import { threadDataByThreadId } from '../../../Redux/PhotoViewingSelectors'
 import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
 import * as TextileTypes from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
@@ -108,8 +109,8 @@ class ThreadDetail extends React.PureComponent {
 
   _onPhotoSelect = (photo: Photo) => {
     return () => {
-      // TODO: Navigate
       this.props.viewPhoto(photo.id)
+      this.props.navigation.navigate('PhotoViewer')
     }
   }
 
@@ -198,20 +199,15 @@ class ThreadDetail extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps) => {
-  // TODO: Can this be a selector?
-  const navParams = ownProps.navigation.state.params || {}
-  const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
-  const defaultThreadId = defaultThread ? defaultThread.id : undefined
+const mapStateToProps = (state: RootState) => {
+  const viewingThread = state.photoViewing.viewingThread
 
-  const threadId = navParams.id || defaultThreadId
-
+  const threadId = viewingThread.id
   var items: [{type: string, photo: TextileTypes.Photo}] = []
   var processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
-  var thread = undefined
 
-  if (threadId) {
-    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
+  if (viewingThread) {
+    const threadData: ThreadData = threadDataByThreadId(state, viewingThread.id) || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
       return {type: 'photo', photo, id: photo.id}
     })
@@ -240,10 +236,9 @@ const mapStateToProps = (state: RootState, ownProps) => {
           }
         }
       })
-    thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
-  const threadName = thread ? thread.name : navParams.name ? navParams.name : undefined
+  const threadName = viewingThread ? viewingThread.name : undefined
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
