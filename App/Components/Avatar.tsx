@@ -57,12 +57,13 @@ class Avatar extends React.PureComponent<AvatarProps> {
     return (
       <View style={[styles.container, style, {width, height, borderRadius: height / 2}]}>
         <View style={styles.stretch}>
-          <Image
+          <ImageSc
             source={{uri: avatarUri}}
-            resizeMode={'cover'}
             style={{width, height}}
+            width={width}
+            height={height}
             defaultSource={defaultSource}
-          />
+            resizeMode={'cover'} />
         </View>
       </View>
     )
@@ -85,7 +86,7 @@ class Avatar extends React.PureComponent<AvatarProps> {
 
   render () {
     const { profile, online, owner, peer_id } = this.props
-    if (owner && profile) {
+    if (owner && (profile && profile.avatar_id !== undefined)) {
       if (!online || !profile.avatar_id) {
         // not online or no url and owner, render cafe
         return this.renderCafe(profile.id)

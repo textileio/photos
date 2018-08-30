@@ -31,7 +31,7 @@ export function toPayload(notification: Notification): NotificationsPayload | un
   switch (notification.type) {
     case(NotificationType.receivedInviteNotification): {
       const title = 'New Invite'
-      const message =  [actor, notification.body, 'to', notification.subject].join(' ')
+      const message =  [actor, notification.body].join(' ')
       const suffix = ['to', notification.subject].join(' ')
       return {title, message, suffix, typeString}
     }
@@ -61,7 +61,7 @@ export function toPayload(notification: Notification): NotificationsPayload | un
     }
     case(NotificationType.peerJoinedNotification): {
       const title = notification.subject
-      const message =  [actor, notification.body].join(' ') + '.'
+      const message =  [actor, notification.body].join(' ')
       const suffix = ['to thread', notification.subject].join(' ')
       return {title, message, suffix, typeString}
     }

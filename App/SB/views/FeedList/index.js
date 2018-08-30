@@ -42,15 +42,12 @@ class Notifications extends React.PureComponent {
         />
       </HeaderButtons>
     )
-    const headerTitle = (
-      <Text style={navStyles.headerTitle}>
-        {'Feed'}
-      </Text>
-    )
+    const headerTitle = 'Feed'
 
     return {
       headerLeft,
-      headerTitle
+      headerTitle,
+      headerRight: (<View />) // ensure spacing in android
     }
   }
 

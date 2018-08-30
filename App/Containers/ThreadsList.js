@@ -46,7 +46,9 @@ class ThreadsList extends React.PureComponent {
       </TextileHeaderButtons>
     )
     const headerTitle = (
-      <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
+      <View style={navStyles.headerTitleLogo}>
+        <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
+      </View>
     )
     return {
       headerLeft,
