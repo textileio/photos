@@ -119,7 +119,6 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 }
 
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
-  console.log('axh', 'updated', action)
   yield call(NavigationService.navigate, 'TabNavigator')
 
   let defaultThread: TT.Thread = yield call(getDefaultThread)
@@ -130,18 +129,14 @@ function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
   const photoPath = uri.replace('file://', '')
   try {
     const addResult: TT.AddResult = yield call(TextileNode.addPhoto, photoPath)
-    console.log('axh', 'added', addResult.id)
     if (!addResult.archive) {
       throw new Error('no archive returned')
     }
     yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-    console.log('axh', 'toThread')
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
-    console.log('axh', 'uploading')
     // set it as our profile picture
     yield put(PreferencesActions.pendingAvatar(addResult.id))
-    console.log('axh', 'to profile')
 
     try {
       yield * uploadFile(
