@@ -38,6 +38,7 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
   try {
     const threads: Threads = yield call(TextileNode.threads)
     for (const thread of threads.items) {
+      yield put(PhotoViewingActions.insertThread(thread))
       yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
   } catch (error) {

@@ -102,8 +102,8 @@ export function * onboardedSuccess(action: ActionType<typeof PreferencesActions.
     // Skipping the normal addThread request here because we don't
     // want to redirect to the default thread after complete
     const thread: Thread = yield call(TextileNode.addThread, 'default' as TT.ThreadName)
-    yield put(ThreadsActions.addThreadSuccess(thread))
-    yield put(ThreadsActions.refreshThreadsRequest())
+    yield put(PhotoViewingActions.addThreadSuccess(thread))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
   }
 }
 

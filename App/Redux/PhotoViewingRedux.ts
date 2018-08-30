@@ -3,6 +3,9 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { ThreadId, Photo, PhotoId, Thread, ThreadName, Mnemonic } from '../Models/TextileTypes'
 
 const actions = {
+  insertThread: createAction('ADD_THREAD_SUCCESS', resolve => {
+    return (thread: Thread) => resolve({ thread })
+  }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', resolve => {
     return (name: ThreadName, mnemonic?: Mnemonic) => resolve({ name, mnemonic })
   }),
@@ -34,6 +37,9 @@ const actions = {
   refreshThreadError: createAction('REFRESH_THREAD_ERROR', resolve => {
     return (threadId: ThreadId, error: any) => resolve({ threadId, error })
   }),
+  viewWalletPhoto: createAction('VIEW_WALLET_PHOTO', resolve => {
+    return (photoId: PhotoId) => resolve({ photoId })
+  }),
   viewThread: createAction('VIEW_THREAD', resolve => {
     return (threadId: ThreadId) => resolve({ threadId })
   }),
@@ -56,7 +62,7 @@ export type ThreadData = {
 }
 
 type ThreadMap = {
-  readonly [key: string]: ThreadData | undefined
+  readonly [key: string]: ThreadData
 }
 
 type PhotoViewingState = {
@@ -70,6 +76,7 @@ type PhotoViewingState = {
     readonly id: ThreadId
     readonly error?: string
   }
+  readonly viewingWalletPhoto?: Photo,
   readonly viewingThread?: Thread,
   readonly viewingPhoto?: Photo,
   readonly authoringComment?: string
@@ -81,6 +88,13 @@ const initialState: PhotoViewingState = {
 
 export function reducer (state: PhotoViewingState = initialState, action: PhotoViewingAction): PhotoViewingState {
   switch (action.type) {
+    case getType(actions.insertThread): {
+      const { thread } = action.payload
+      if (state.threads[thread.id]) {
+        return state
+      }
+      return { ...state, threads: { ...state.threads, [thread.id as string]: { thread, querying: false, photos: [] } } }
+    }
     case getType(actions.addThreadRequest): {
       const { name } = action.payload
       return { ...state, addingThread: { name }}
@@ -119,15 +133,13 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.refreshThreadRequest): {
       const { threadId } = action.payload
-      const threadData = state.threads[threadId] || createNewThreadData(threadId)
-      const threads = { ...state.threads, [thread.id]: { ...threadData, querying: true } }
+      const threadData = state.threads[threadId]
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: true } }
       return { ...state, threads }
     }
     case getType(actions.refreshThreadSuccess): {
       const { thread, photos } = action.payload
       const threadData = state.threads[thread.id]
-      if (!threadData)
-        return state
       const threads = { ...state.threads, [thread.id]: { ...threadData, querying: false, photos } }
       let viewingPhoto: Photo | undefined
       if (state.viewingThread && state.viewingThread === thread && state.viewingPhoto) {
@@ -139,11 +151,19 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     case getType(actions.refreshThreadError): {
       const { thread, error } = action.payload
       const threadData = state.threads[thread.id]
-      if (!threadData)
-        return state
       const threadError = (error.message as string) || (error as string) || 'unknown'
       const threads = { ...state.threads, [thread.id]: { ...threadData, querying: false, error: threadError } }
       return { ...state, threads }
+    }
+    case getType(actions.viewWalletPhoto): {
+      const { photoId } = action.payload
+      const defaultThreadData = Object.keys(state.threads)
+        .map(key => state.threads[key] )
+        .find(threadData => threadData.thread.name === 'default')
+      if (!defaultThreadData)
+        return state
+      const viewingWalletPhoto = defaultThreadData.photos.find(photo => photo.id === photoId)
+      return { ...state, viewingWalletPhoto }
     }
     case getType(actions.viewThread): {
       const { thread } = action.payload
@@ -159,14 +179,6 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     default:
       return state
-  }
-}
-
-function createNewThreadData(thread: Thread): ThreadData {
-  return {
-    thread,
-    photos: [],
-    querying: false
   }
 }
 
