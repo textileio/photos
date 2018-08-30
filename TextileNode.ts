@@ -50,7 +50,7 @@ export default {
 
   getProfile: async function (): Promise<TT.Profile> {
     const jsonString = await TextileNode.getProfile()
-    if (jsonString === '') Error('Profile not found')
+    if (jsonString === '') Error('getProfile returned an empty result')
     const profile = JSON.parse(jsonString) as TT.Profile
     return profile
   },
