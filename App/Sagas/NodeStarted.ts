@@ -20,8 +20,10 @@ export function * onNodeStarted () {
 }
 
 export function * refreshTokens () {
-  const tokens = yield call(TextileNode.getTokens)
-  yield put(AuthActions.getTokensSuccess(tokens))
+  while (yield take(getType(TextileNodeActions.startNodeSuccess))) {
+    const tokens = yield call(TextileNode.getTokens)
+    yield put(AuthActions.getTokensSuccess(tokens))
+  }
 }
 
 function * refreshPublicKey () {
