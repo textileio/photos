@@ -17,14 +17,7 @@ import styles from '../SB/views/ThreadsList/statics/styles'
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const greeting = params.username ? 'Hello, ' + params.username : 'Hi there!'
-    const headerTitle = (
-      <View style={navStyles.headerCenter}>
-        <Text style={navStyles.headerTitle}>
-          {greeting}
-        </Text>
-      </View>
-    )
+    const headerTitle = params.username ? 'Hello, ' + params.username : 'Hi there!'
 
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out

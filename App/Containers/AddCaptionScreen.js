@@ -33,7 +33,7 @@ class AddCaptionScreen extends React.Component {
             }
           }} />
         </TextileHeaderButtons>
-      ),
+      )
     }
   }
 
