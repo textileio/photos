@@ -25,10 +25,11 @@ import { getDefaultThread } from './ThreadsSagas'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions  from '../Redux/AuthRedux'
 import ContactsActions  from '../Redux/ContactsRedux'
-import UIActions, { UISelectors } from '../Redux/UIRedux'
+import UIActions from '../Redux/UIRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import { ActionType, getType } from 'typesafe-actions'
@@ -36,6 +37,7 @@ import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
+import Upload from 'react-native-background-upload'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -100,10 +102,10 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
 
   let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
   if (!defaultThread) {
-    yield put(ThreadsActions.addThreadRequest('default' as TT.ThreadName))
-    const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
+    yield put(PhotoViewingActions.addThreadRequest('default' as TT.ThreadName))
+    const action: ActionType<typeof PhotoViewingActions.addThreadSuccess> = yield take(getType(PhotoViewingActions.addThreadSuccess))
     defaultThread = action.payload.thread
-    yield put(ThreadsActions.refreshThreadsRequest())
+    yield put(PhotoViewingActions.refreshThreadsRequest())
   }
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
@@ -126,7 +128,7 @@ function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
     yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
-    yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
+    yield put(PhotoViewingActions.refreshThreadRequest(defaultThread.id))
 
     // set it as our profile picture
     yield put(PreferencesActions.pendingAvatar(addResult.id))
@@ -159,7 +161,7 @@ function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
 }
 
 export function * viewThread ( action: ActionType<typeof UIActions.viewThreadRequest> ) {
-  yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
+  yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.name })
 }
 
 export function * getUsername (contact: TT.Contact) {
@@ -187,12 +189,6 @@ export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequ
   }
 }
 
-export function * viewPhoto ( action: ActionType<typeof UIActions.viewPhotoRequest> ) {
-  // Request made from the Wallet view
-  // request the metadata for the photo we are about to view full size
-  yield call(NavigationService.navigate, 'PhotoViewer')
-}
-
 export function * initializeAppState () {
     yield take(getType(StartupActions.startup))
     const defaultAppState = yield select(TextileNodeSelectors.appState)
@@ -216,20 +212,9 @@ export function * refreshMessages () {
   }
 }
 
-export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.getPhotoHashesRequest>) {
-  const { threadId } = action.payload
-  try {
-    const photos: TT.Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
-    yield put(TextileNodeActions.getPhotoHashesSuccess(threadId, photos))
-  } catch (error) {
-    yield put(TextileNodeActions.getPhotoHashesFailure(threadId, error))
-  }
-}
-
 export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.ignorePhotoRequest>) {
   const { threadId, blockId } = action.payload
   try {
-    yield put(UIActions.dismissViewedPhoto())
     yield call(NavigationService.goBack)
     yield call(TextileNode.ignorePhoto, blockId)
   } catch (error) {
@@ -306,10 +291,10 @@ export function * photosTask () {
 
     let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
     if (!defaultThread) {
-      yield put(ThreadsActions.addThreadRequest('default' as TT.ThreadName))
-      const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
+      yield put(PhotoViewingActions.addThreadRequest('default' as TT.ThreadName))
+      const action: ActionType<typeof PhotoViewingActions.addThreadSuccess> = yield take(getType(PhotoViewingActions.addThreadSuccess))
       defaultThread = action.payload.thread
-      yield put(ThreadsActions.refreshThreadsRequest())
+      yield put(PhotoViewingActions.refreshThreadsRequest())
     }
 
     const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
@@ -342,7 +327,7 @@ export function * photosTask () {
         }
         const blockId: TT.BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
         yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-        yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
+        yield put(PhotoViewingActions.refreshThreadRequest(defaultThread.id))
         addedPhotosData.push({ uri, addResult, blockId })
       } catch (error) {
         yield put(CameraRollActions.untrackPhoto(uri))
@@ -516,18 +501,5 @@ export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeReque
     yield call(TextileNode.addPhotoLike, blockId)
   } catch (error) {
 
-  }
-}
-
-export function * addPhotoComment (action: ActionType<typeof UIActions.addCommentRequest>) {
-  const photo: TT.Photo | undefined = yield select(UISelectors.viewingPhoto)
-  const comment: string | undefined = yield select(UISelectors.comment)
-  if (!photo || !comment) {
-    return
-  }
-  try {
-    yield call(TextileNode.addPhotoComment, photo.block_id, comment)
-  } catch (error) {
-    console.log(error)
   }
 }

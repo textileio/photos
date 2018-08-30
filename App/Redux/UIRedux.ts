@@ -68,6 +68,9 @@ const actions = {
   }),
   addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
     return (blockId: BlockId) => resolve({blockId})
+  }),
+  viewThreadRequest: createAction('VIEW_THREAD_REQUEST', resolve => {
+    return (threadId: ThreadId, threadName: string) => resolve({ threadId, name })
   })
 }
 
@@ -121,9 +124,6 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     default:
       return state
   }
-}
-
-export const UISelectors = {
 }
 
 export default actions

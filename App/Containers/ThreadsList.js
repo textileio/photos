@@ -13,7 +13,7 @@ import Avatar from '../Components/Avatar'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import UIActions from '../Redux/UIRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 
@@ -115,7 +115,8 @@ class ThreadsList extends React.PureComponent {
 
   _onPressItem = (photo) => {
     const { id, name } = photo
-    this.props.viewThread(id, name)
+    this.props.viewThread(id)
+    // TODO: Navigate
   }
 
   _onRefresh = () => {
@@ -212,7 +213,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    viewThread: (threadId, threadName) => { dispatch(UIActions.viewThreadRequest(threadId, threadName)) },
+    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) }

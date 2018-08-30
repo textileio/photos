@@ -11,7 +11,7 @@ import BottomDrawerList from '../../components/BottomDrawerList'
 import UIActions from '../../../Redux/UIRedux'
 import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
-import ThreadsActions from '../../../Redux/ThreadsRedux'
+import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
 import * as TextileTypes from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
@@ -75,9 +75,6 @@ class ThreadDetail extends React.PureComponent {
   }
 
   componentDidMount () {
-    // Unload any full screen photo
-    // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
-    this.props.dismissPhoto()
     this._setHeaderParams()
   }
 
@@ -111,7 +108,8 @@ class ThreadDetail extends React.PureComponent {
 
   _onPhotoSelect = (photo: Photo) => {
     return () => {
-      this.props.viewPhoto(photo, this.props.threadId)
+      // TODO: Navigate
+      this.props.viewPhoto(photo.id)
     }
   }
 
@@ -290,12 +288,11 @@ const mapStateToProps = (state: RootState, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
-    viewPhoto: (photo, threadId) => { dispatch(UIActions.viewPhotoRequest(photo, threadId)) },
+    viewPhoto: (photoId) => { dispatch(PhotoViewingActions.viewPhoto(photoId)) },
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
+    leaveThread: (threadId: string) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) },
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },

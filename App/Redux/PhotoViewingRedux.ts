@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
-import { ThreadId, Photo, Thread, ThreadName, Mnemonic } from '../Models/TextileTypes'
+import { ThreadId, Photo, PhotoId, Thread, ThreadName, Mnemonic } from '../Models/TextileTypes'
 
 const actions = {
   addThreadRequest: createAction('ADD_THREAD_REQUEST', resolve => {
@@ -26,19 +26,19 @@ const actions = {
     return (error: any) => resolve({ error })
   }),
   refreshThreadRequest: createAction('REFRESH_THREAD_REQUEST', resolve => {
-    return (thread: Thread) => resolve({ thread })
+    return (threadId: ThreadId) => resolve({ threadId })
   }),
   refreshThreadSuccess: createAction('REFRESH_THREAD_SUCCESS', resolve => {
-    return (thread: Thread, photos: Photo[]) => resolve({ thread, photos })
+    return (threadId: ThreadId, photos: Photo[]) => resolve({ threadId, photos })
   }),
   refreshThreadError: createAction('REFRESH_THREAD_ERROR', resolve => {
-    return (thread: Thread, error: any) => resolve({ thread, error })
+    return (threadId: ThreadId, error: any) => resolve({ threadId, error })
   }),
   viewThread: createAction('VIEW_THREAD', resolve => {
-    return (thread: Thread) => resolve({ thread })
+    return (threadId: ThreadId) => resolve({ threadId })
   }),
   viewPhoto: createAction('VIEW_PHOTO', resolve => {
-    return (photo: Photo) => resolve({ photo })
+    return (photoId: PhotoId) => resolve({ photoId })
   }),
   updateComment: createAction('UPDATE_COMMENT', resolve => {
     return (comment: string) => resolve({ comment })
@@ -118,8 +118,8 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       return { ...state, threadsError }
     }
     case getType(actions.refreshThreadRequest): {
-      const { thread } = action.payload
-      const threadData = state.threads[thread.id] || createNewThreadData(thread)
+      const { threadId } = action.payload
+      const threadData = state.threads[threadId] || createNewThreadData(threadId)
       const threads = { ...state.threads, [thread.id]: { ...threadData, querying: true } }
       return { ...state, threads }
     }

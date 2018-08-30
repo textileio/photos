@@ -8,6 +8,7 @@ import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -43,9 +44,14 @@ import {
 } from './NotificationsSagas'
 
 import {
+  refreshThreads,
+  refreshThread,
   addThread,
   removeThread,
-  refreshThreads,
+  addPhotoComment
+} from './PhotoViewingSagas'
+
+import {
   addExternalInvite,
   presentShareInterface,
   acceptExternalInvite,
@@ -61,15 +67,12 @@ import {
   logOut,
   updateNodeOverview,
   recoverPassword,
-  viewPhoto,
   viewThread,
   addFriends,
   addPhotoLike,
-  addPhotoComment,
   initializeAppState,
   refreshMessages,
   addDevice,
-  getPhotoHashes,
   ignorePhoto,
   cameraPermissionsTrigger,
   chooseProfilePhoto,
@@ -102,11 +105,9 @@ export default function * root () {
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
     takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
 
-    takeEvery(getType(UIActions.viewPhotoRequest), viewPhoto),
     takeEvery(getType(UIActions.viewThreadRequest), viewThread),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
-    takeEvery(getType(UIActions.addCommentRequest), addPhotoComment),
 
     takeEvery(getType(AuthActions.signUpRequest), signUp),
     takeEvery(getType(AuthActions.logInRequest), logIn),
@@ -115,7 +116,12 @@ export default function * root () {
 
     takeEvery(getType(DevicesActions.addDeviceRequest), addDevice),
 
-    takeEvery(getType(TextileNodeActions.getPhotoHashesRequest), getPhotoHashes),
+    takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
+    takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),
+    takeEvery(getType(PhotoViewingActions.refreshThreadsRequest), refreshThreads),
+    takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
+    takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
+
     takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
 
     call(refreshMessages),
@@ -129,16 +135,11 @@ export default function * root () {
     // update the node stats
     takeEvery(getType(TextileNodeActions.updateOverviewRequest), updateNodeOverview),
 
-
-    takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
-    takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),
-
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
     takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
     takeEvery(getType(ThreadsActions.addInternalInvitesRequest), addInternalInvites),
 
-    takeEvery(getType(ThreadsActions.refreshThreadsRequest), refreshThreads),
     takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),
 
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
