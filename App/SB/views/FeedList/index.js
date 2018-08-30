@@ -11,7 +11,6 @@ import { Notification } from '../../../Models/TextileTypes'
 import NotificationsActions from '../../../Redux/NotificationsRedux'
 
 import styles from './statics/styles'
-import navStyles from '../../../Navigation/Styles/NavigationStyles'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
 
@@ -140,7 +139,7 @@ class Notifications extends React.PureComponent {
             data={this.props.notifications}
             keyExtractor={this._keyExtractor.bind(this)}
             renderItem={this._renderItem.bind(this)}
-            refreshing={this.props.refreshing}
+            refreshing={false}
             onRefresh={this.props.refreshMessages}
           />
         </View>
@@ -151,7 +150,6 @@ class Notifications extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.notifications.notifications)
   const notifications = state.notifications.notifications
     .filter((n) => {
       if (n.type === 1) return true // a device notification
@@ -160,7 +158,6 @@ const mapStateToProps = (state) => {
   return {
     notifications,
     profile: state.preferences.profile,
-    refreshing: !!state.notifications.refreshing,
     showTourScreen: state.preferences.tourScreens.feed === true
   }
 }
