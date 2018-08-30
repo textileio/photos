@@ -4,15 +4,18 @@ import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import Config from 'react-native-config'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
+import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { ThreadName, Photo } from '../Models/TextileTypes'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import WalletHeader from '../Components/WalletHeader'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
 import styles from '../SB/views/ThreadsList/statics/styles'
+import { RootState } from '../Redux/Types';
 
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -46,9 +49,6 @@ class Wallet extends React.PureComponent {
   }
 
   componentDidMount () {
-    // Unload any full screen photo
-    // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
-    this.props.dismissPhoto()
     // Set params
     this.props.navigation.setParams({
       username: this.props.username,
@@ -68,7 +68,7 @@ class Wallet extends React.PureComponent {
 
   onSelect = (row) => {
     return () => {
-      this.props.viewPhoto(row.item.id, this.props.threadId)
+      // this.props.viewPhoto(row.item.id, this.props.threadId)
     }
   }
 
@@ -141,23 +141,11 @@ class Wallet extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  // TODO: Can this be a selector?
-  const navParams = ownProps.navigation.state.params || {}
-
-  const threadName: ThreadName = 'default'
-  const defaultThread = state.threads.threads.find(thread => thread.name === threadName)
-  const defaultThreadId = defaultThread ? defaultThread.id : undefined
-
-  const threadId = navParams.id || defaultThreadId
-
-  var photos: Photo[] = []
-  var refreshing = false
-  if (threadId) {
-    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
-    photos = threadData.photos
-    refreshing = threadData.querying
-  }
+const mapStateToProps = (state: RootState, ownProps) => {
+  const default = defaultThreadData(state)
+  const threadId = default ? default.thread.id : undefined
+  const photos: Photo[] = default ? default.photos : []
+  const refreshing = default ? default.querying : false
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
@@ -200,9 +188,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
-    viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
-    refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
+    viewPhoto: (photoId) => { /* TODO: Create some new redux for wallet viewing state */ },
+    refresh: (threadId: string) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },
     updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) }

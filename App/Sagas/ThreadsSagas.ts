@@ -17,7 +17,7 @@ import { BlockId, ExternalInvite, Thread, Threads, ThreadId } from '../Models/Te
 import TextileNode from '../../TextileNode'
 import DeepLink from '../Services/DeepLink'
 import ThreadsActions from '../Redux/ThreadsRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import { shareWalletImage } from './ImageSharingSagas'
@@ -42,9 +42,8 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   const { inviteId, key } = action.payload
   try {
     const threadId: ThreadId = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
-    const threads: Threads = yield call(TextileNode.threads)
-    yield put(ThreadsActions.refreshThreadsSuccess(threads))
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, threadId))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
   }
@@ -69,7 +68,7 @@ export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptI
   try {
     const threadId = yield call(TextileNode.acceptThreadInviteViaNotification, notificationId)
     const threads: Threads = yield call(TextileNode.threads)
-    yield put(ThreadsActions.refreshThreadsSuccess(threads))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
     yield put(UIActions.viewThreadRequest(threadId, threadName))
   } catch (error) {
     // TODO: it would be nice to tell the user when they've already joined the thread
@@ -91,6 +90,6 @@ export function * addInternalInvites (action: ActionType<typeof ThreadsActions.a
 export function * handlePhotoToNewThreadRequest (action: ActionType<typeof UIActions.sharePhotoToNewThreadRequest>) {
   const {imageId, threadName, comment} = action.payload
   const thread: Thread = yield call(TextileNode.addThread, threadName)
-  yield put(ThreadsActions.addThreadSuccess(thread))
+  yield put(PhotoViewingActions.addThreadSuccess(thread))
   yield call(shareWalletImage, imageId, thread.id, comment)
 }

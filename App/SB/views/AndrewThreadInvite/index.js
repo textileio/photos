@@ -9,6 +9,7 @@ import Toolbar from '../../components/Toolbar'
 
 import styles from './statics/styles'
 import ThreadsAction from '../../../Redux/ThreadsRedux'
+import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import style from '../../../Containers/Styles/PairingViewStyle'
 // import style from '../../../Containers/Styles/PairingViewStyle'
 
@@ -171,7 +172,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     acceptExternalInvite: (inviteId, inviteKey, name, inviter) => { dispatch(ThreadsAction.acceptExternalInviteRequest(inviteId, inviteKey, name, inviter)) },
-    removeThreadRequest: (threadId) => { dispatch(ThreadsAction.removeThreadRequest(threadId)) }
+    removeThreadRequest: (threadId) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) }
   }
 }
 

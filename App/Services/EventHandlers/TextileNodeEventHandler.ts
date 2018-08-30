@@ -5,7 +5,7 @@ import { RootState } from '../../Redux/Types'
 
 import TextileNodeActions from '../../Redux/TextileNodeRedux'
 import NotificationActions from '../../Redux/NotificationsRedux'
-import ThreadsActions from '../../Redux/ThreadsRedux'
+import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
@@ -20,13 +20,13 @@ export default class TextileNodeEventHandler {
       this.store.dispatch(TextileNodeActions.nodeOnline())
     })
     TextileNode.eventEmitter.addListener('onThreadUpdate', (payload) => {
-      this.store.dispatch(TextileNodeActions.getPhotoHashesRequest(payload.thread_id))
+      this.store.dispatch(PhotoViewingActions.refreshThreadRequest(payload.thread_id))
     })
     TextileNode.eventEmitter.addListener('onThreadAdded', () => {
-      this.store.dispatch(ThreadsActions.refreshThreadsRequest())
+      this.store.dispatch(PhotoViewingActions.refreshThreadsRequest())
     })
     TextileNode.eventEmitter.addListener('onThreadRemoved', () => {
-      this.store.dispatch(ThreadsActions.refreshThreadsRequest())
+      this.store.dispatch(PhotoViewingActions.refreshThreadsRequest())
     })
     TextileNode.eventEmitter.addListener('onNotification', (payload) => {
       this.store.dispatch(NotificationActions.newNotificationRequest(payload))

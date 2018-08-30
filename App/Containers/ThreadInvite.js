@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, Button, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import ThreadsAction from '../Redux/ThreadsRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 
 // Styles
 import style from './Styles/PairingViewStyle'
@@ -172,7 +173,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     acceptExternalInvite: (inviteId, inviteKey, name, inviter) => { dispatch(ThreadsAction.acceptExternalInviteRequest(inviteId, inviteKey, name, inviter)) },
-    removeThreadRequest: (threadId) => { dispatch(ThreadsAction.removeThreadRequest(threadId)) }
+    removeThreadRequest: (threadId) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) }
   }
 }
 

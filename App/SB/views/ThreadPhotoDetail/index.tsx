@@ -14,8 +14,7 @@ import CommentBox from '../../components/CommentBox/CommentBoxContainer'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
 import styles from './statics/styles'
-import comments from './constants'
-import UIActions from '../../../Redux/UIRedux'
+import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
 import { BlockId, PhotoId } from '../../../Models/TextileTypes'
 
@@ -135,8 +134,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Props): DispatchProps => ({
-  updateComment: (comment: string) => dispatch(UIActions.updateComment(comment)),
-  submitComment: () => dispatch(UIActions.addCommentRequest())
+  updateComment: (comment: string) => dispatch(PhotoViewingActions.updateComment(comment)),
+  submitComment: () => dispatch(PhotoViewingActions.addCommentRequest())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThreadPhotoDetail)

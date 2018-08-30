@@ -4,13 +4,13 @@ import TextileNode from '../../TextileNode'
 import AuthActions from '../Redux/AuthRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import ThreadsActions from '../Redux/ThreadsRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 
 export function * onNodeStarted () {
   while (yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])) {
     try {
       yield all([
-        put(ThreadsActions.refreshThreadsRequest()),
+        put(PhotoViewingActions.refreshThreadsRequest()),
         call(refreshTokens),
         call(refreshPublicKey)
       ])
