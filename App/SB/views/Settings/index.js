@@ -12,7 +12,6 @@ import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/H
 import styles from './statics/styles'
 import Avatar from '../../../Components/Avatar'
 import { NavigationActions } from 'react-navigation'
-import navStyles from '../../../Navigation/Styles/NavigationStyles'
 
 class AccountSettings extends React.PureComponent {
   constructor (props) {

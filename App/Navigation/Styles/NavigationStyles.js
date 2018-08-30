@@ -89,11 +89,6 @@ export default StyleSheet.create({
   headerTitleImage: {
     marginHorizontal: 16
   },
-  headerCenter: {
-    flex: 1,
-    alignSelf: 'center',
-    alignItems: 'center'
-  },
   headerButton: {
     fontFamily: 'BentonSans',
     color: Colors.charcoal,
