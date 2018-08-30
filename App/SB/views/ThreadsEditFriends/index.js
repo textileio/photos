@@ -1,9 +1,8 @@
 import React from 'react'
-import { View, Image } from 'react-native'
+import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
-import HeaderButtons from 'react-navigation-header-buttons'
 
 import ContactSelect from '../../components/ContactSelect'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
@@ -28,32 +27,17 @@ class ThreadsEditFriends extends React.PureComponent {
       </TextileHeaderButtons>
     )
 
-    // const headerRight = params.updateEnabled && (
-    //   <TextileHeaderButtons >
-    //     <Item title='invite' onPress={() => {
-    //       params.updateThread()
-    //     }} />
-    //   </TextileHeaderButtons>
-    // )
-
-    const headerRight = (
-      <HeaderButtons right>
-        <Item
-          title='External invite'
-          onPress={() => { params.getPublicLink() }}
-          buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
-          ButtonElement={
-            <Image
-              source={require('../../../Images/v2/send.png')}
-              width={24}
-              height={24}
-              style={{height: 24, width: 24}}
-            />
-          }
-        />
-      </HeaderButtons>
+    const headerRight = params.updateEnabled ? (
+      <TextileHeaderButtons >
+        <Item title='invite' onPress={() => {
+          params.updateThread()
+        }} />
+      </TextileHeaderButtons>
+    ) : (
+      <View style={styles.headerRight}>
+        <Text style={styles.headerRightText}>Invite</Text>
+      </View>
     )
-
 
     return {
       headerRight,
@@ -63,10 +47,18 @@ class ThreadsEditFriends extends React.PureComponent {
 
   componentDidMount () {
     this.props.navigation.setParams({
-      getPublicLink: this._getPublicLink.bind(this),
       updateThread: this._updateThread.bind(this),
-      updateEnabled: this.props.contacts.length > 0 && this.props.notInThread > 0
+      updateEnabled: false
     })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.selected !== this.state.selected) {
+      const updateEnabled = Object.keys(this.state.selected).find((k) => this.state.selected[k] === true)
+      this.props.navigation.setParams({
+        updateEnabled: !!updateEnabled
+      })
+    }
   }
 
   _getPublicLink () {
@@ -107,7 +99,7 @@ class ThreadsEditFriends extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ContactSelect
-          updateThread={this._updateThread.bind(this)}
+          getPublicLink={this._getPublicLink.bind(this)}
           contacts={this.props.contacts}
           select={this._select.bind(this)}
           selected={this.state.selected}
@@ -122,9 +114,10 @@ class ThreadsEditFriends extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const contacts = state.contacts.contacts
-    .map((contact): TextileTypes.Contact & {included: boolean} => {
+    .map((contact): TextileTypes.Contact & {included: boolean, type: string} => {
       return {
         ...contact,
+        type: 'contact',
         included: contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
       }
     })
@@ -146,6 +139,7 @@ const mapStateToProps = (state, ownProps) => {
   })
   return {
     topFive,
+    // puts a placeholder row in contacts for adding external invite link
     contacts: sortedContacts,
     notInThread: notInThread.length
   }
