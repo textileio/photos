@@ -1,8 +1,9 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
+import HeaderButtons from 'react-navigation-header-buttons'
 
 import ContactSelect from '../../components/ContactSelect'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
@@ -27,13 +28,32 @@ class ThreadsEditFriends extends React.PureComponent {
       </TextileHeaderButtons>
     )
 
-    const headerRight = params.updateEnabled && (
-      <TextileHeaderButtons >
-        <Item title='invite' onPress={() => {
-          params.updateThread()
-        }} />
-      </TextileHeaderButtons>
+    // const headerRight = params.updateEnabled && (
+    //   <TextileHeaderButtons >
+    //     <Item title='invite' onPress={() => {
+    //       params.updateThread()
+    //     }} />
+    //   </TextileHeaderButtons>
+    // )
+
+    const headerRight = (
+      <HeaderButtons right>
+        <Item
+          title='External invite'
+          onPress={() => { params.getPublicLink() }}
+          buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+          ButtonElement={
+            <Image
+              source={require('../../../Images/v2/send.png')}
+              width={24}
+              height={24}
+              style={{height: 24, width: 24}}
+            />
+          }
+        />
+      </HeaderButtons>
     )
+
 
     return {
       headerRight,
@@ -87,7 +107,7 @@ class ThreadsEditFriends extends React.PureComponent {
     return (
       <View style={styles.container}>
         <ContactSelect
-          getPublicLink={this._getPublicLink.bind(this)}
+          updateThread={this._updateThread.bind(this)}
           contacts={this.props.contacts}
           select={this._select.bind(this)}
           selected={this.state.selected}

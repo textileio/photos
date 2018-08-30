@@ -16,18 +16,28 @@ function getSubTitle (contacts, topFive, notInThread): string {
   }
   return 'Select peers to invite'
 }
+
+const getUpdateButton = (updateButtonVisible, onPress) => {
+  if (updateButtonVisible) {
+    return (
+      <TouchableOpacity onPress={onPress}>
+        <Text style={[styles.link, styles.small]}>Confirm Update</Text>
+      </TouchableOpacity>
+    )
+  }
+}
 const ContactSelect = (props) => {
-  const { getPublicLink, contacts, select, selected, topFive, notInThread } = props
+  const { updateThread, contacts, select, selected, topFive, notInThread } = props
   const subTitle = getSubTitle(contacts, topFive, notInThread)
   const showSuggested = topFive.length > 0 && topFive.length > notInThread
+  console.log(selected)
+  const updateButtonVisible = selected.length !== 0
   return (
     <View style={styles.contentContainer}>
       <View style={styles.header}>
         <View style={styles.headerTitle}>
           <Text style={styles.title}>Add peers</Text>
-          <TouchableOpacity onPress={getPublicLink}>
-            <Text style={[styles.link, styles.small]}>invite new users</Text>
-          </TouchableOpacity>
+          {getUpdateButton(updateButtonVisible, updateThread)}
         </View>
 
         {subTitle && <Text style={styles.subtitle}> { subTitle } </Text> }
