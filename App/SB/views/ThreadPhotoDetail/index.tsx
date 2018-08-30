@@ -91,29 +91,29 @@ class ThreadPhotoDetail extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps  => {
-  const { threadId, photo } = state.ui.viewingPhoto
-  if (!threadId || !photo) {
-    throw 'no threadId or photoId'
+  const { viewingPhoto } = state.photoViewing
+  if (!viewingPhoto) {
+    throw 'no viewing thread or photo'
   }
 
   let size: { height: number, width: number} | undefined
-  if (photo.metadata) {
-    size = { height: photo.metadata.height, width: photo.metadata.width }
+  if (viewingPhoto.metadata) {
+    size = { height: viewingPhoto.metadata.height, width: viewingPhoto.metadata.width }
   }
 
   let captionCommentCardProps: CommentCardProps | undefined
-  if (photo.caption) {
+  if (viewingPhoto.caption) {
     captionCommentCardProps = {
-      username: photo.username || photo.author_id,
-      avatarUri: 'https://cafe.textile.io/ipns/' + photo.author_id + '/avatar',
-      comment: photo.caption,
-      date: photo.date,
+      username: viewingPhoto.username || viewingPhoto.author_id,
+      avatarUri: 'https://cafe.textile.io/ipns/' + viewingPhoto.author_id + '/avatar',
+      comment: viewingPhoto.caption,
+      date: viewingPhoto.date,
       isSubComment: false,
       subComments: []
     }
   }
   // TODO: comments should always be defined: https://github.com/textileio/textile-go/issues/270
-  const comments = photo.comments || []
+  const comments = viewingPhoto.comments || []
   const commentCardProps = comments.map(comment => {
     const props: CommentCardProps = {
       username: comment.username || 'unknown',
@@ -126,8 +126,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
     return props
   })
   return {
-    photoId: photo.id,
-    blockId: photo.block_id,
+    photoId: viewingPhoto.id,
+    blockId: viewingPhoto.block_id,
     size,
     commentCardProps: captionCommentCardProps ? [{...captionCommentCardProps}, ...commentCardProps] : commentCardProps
   }

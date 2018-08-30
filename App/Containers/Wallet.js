@@ -15,7 +15,7 @@ import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
 import styles from '../SB/views/ThreadsList/statics/styles'
-import { RootState } from '../Redux/Types';
+import { RootState } from '../Redux/Types'
 
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -62,7 +62,8 @@ class Wallet extends React.PureComponent {
 
   onSelect = (row) => {
     return () => {
-      // this.props.viewPhoto(row.item.id, this.props.threadId)
+      this.props.viewWalletPhoto(row.item.id)
+      this.props.navigation.navigate('PhotoViewer')
     }
   }
 
@@ -134,11 +135,11 @@ class Wallet extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps) => {
-  const default = defaultThreadData(state)
-  const threadId = default ? default.thread.id : undefined
-  const photos: Photo[] = default ? default.photos : []
-  const refreshing = default ? default.querying : false
+const mapStateToProps = (state: RootState) => {
+  const defaultData = defaultThreadData(state)
+  const threadId = defaultData ? defaultData.thread.id : undefined
+  const photos: Photo[] = defaultData ? defaultData.photos : []
+  const refreshing = defaultData ? defaultData.querying : false
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
@@ -162,7 +163,6 @@ const mapStateToProps = (state: RootState, ownProps) => {
   const profile = state.preferences.profile
   return {
     threadId,
-    threadName,
     photos,
     progressData: state.uploadingImages.images,
     refreshing,
@@ -181,7 +181,7 @@ const mapStateToProps = (state: RootState, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    viewPhoto: (photoId) => { /* TODO: Create some new redux for wallet viewing state */ },
+    viewWalletPhoto: (photoId) => { dispatch(PhotoViewingActions.viewWalletPhoto(photoId)) },
     refresh: (threadId: string) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },

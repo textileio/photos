@@ -16,6 +16,7 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
+import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -120,7 +121,7 @@ class ThreadsList extends React.PureComponent {
   _onPressItem = (photo) => {
     const { id, name } = photo
     this.props.viewThread(id)
-    // TODO: Navigate
+    this.props.navigation.navigate('ViewThread')
   }
 
   _onRefresh = () => {
@@ -180,10 +181,11 @@ class ThreadsList extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   const profile = state.preferences.profile
-  const threads = state.threads.threads
+  const allThreads = getThreads(state)
+  const threads = allThreads
     .filter(thread => thread.name !== 'default')
     .map(thread => {
-      const nodeThread = state.textileNode.threads[thread.id]
+      const nodeThread = state.photoViewing.threads[thread.id]
       // Todo: we'll want to get all this from a better source
       thread.photos = []
       thread.updated = 0 // TODO: could use a thread created timestamp...

@@ -3,16 +3,13 @@ import { ThreadData } from './PhotoViewingRedux'
 
 export function defaultThreadData (state: RootState): ThreadData | undefined {
   return Object.keys(state.photoViewing.threads)
-    .map(key => state.photoViewing.threads[key]! )
+    .map(key => state.photoViewing.threads[key] )
     .find(threadData => threadData.thread.name === 'default')
 }
 
-export function threadById (state: RootState, id: string) {
+export function threadDataByThreadId (state: RootState, id: string) {
   const threadData = state.photoViewing.threads[id]
-  if (!threadData) {
-    return undefined
-  }
-  return threadData.thread
+  return threadData
 }
 
 export function photoAndComment (state: RootState) {
@@ -20,4 +17,9 @@ export function photoAndComment (state: RootState) {
     photo: state.photoViewing.viewingPhoto,
     comment: state.photoViewing.authoringComment
   }
+}
+
+export function getThreads (state: RootState) {
+  return Object.keys(state.photoViewing.threads)
+    .map(key => state.photoViewing.threads[key].thread )
 }
