@@ -6,8 +6,7 @@ type Props = {
   path: string,
   resizeMode: string,
   onLoad?: () => void,
-  onError?: (string) => void,
-  children: React.ReactNode
+  onError?: (string) => void
 }
 
 export default class TextileImage extends React.Component<Props, *> {
@@ -37,9 +36,7 @@ export default class TextileImage extends React.Component<Props, *> {
       onLoad: this._onLoaded.bind(this),
       onError: this._onError.bind(this)
     }
-    return <TextileImageView {...nativeProps} >
-      {this.props.children}
-    </TextileImageView>
+    return <TextileImageView {...nativeProps} />
   }
 }
 
