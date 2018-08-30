@@ -113,7 +113,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
     }
   }
   // TODO: comments should always be defined: https://github.com/textileio/textile-go/issues/270
-  const comments = viewingPhoto.comments.reverse() || []
+  const comments = viewingPhoto.comments.slice().reverse() || []
   const commentCardProps = comments.map(comment => {
     const props: CommentCardProps = {
       username: comment.username || 'unknown',
