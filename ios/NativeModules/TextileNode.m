@@ -213,9 +213,9 @@ RCT_EXPORT_METHOD(getOverview:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
   }
 }
 
-RCT_EXPORT_METHOD(addThread:(NSString *)name withMnemonic:(NSString *)mnemonic resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addThread:(NSString *)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self _addThread:name withMnemonic:mnemonic error:&error];
+  NSString *result = [self _addThread:name error:&error];
   if (!error) {
     resolve(result);
   } else {
@@ -568,8 +568,8 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   return [self.node getPeerProfile:peerId error:error];
 }
 
-- (NSString *)_addThread:(NSString *)name withMnemonic:(NSString *)mnemonic error:(NSError**)error {
-  return [self.node addThread:name mnemonic:mnemonic error:error];
+- (NSString *)_addThread:(NSString *)name error:(NSError**)error {
+  return [self.node addThread:name error:error];
 }
 
 - (NSString *)_threads:(NSError**)error {
