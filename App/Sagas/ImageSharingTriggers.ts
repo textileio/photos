@@ -59,7 +59,7 @@ export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingIma
     yield call(refreshTokens)
     yield put(ProcessingImagesActions.retry(uuid))
   } catch (error) {
-    yield put(ProcessingImagesActions.error(uuid, error.message))
+    yield put(ProcessingImagesActions.error(uuid, 'Failed refresh tokens'))
   }
 }
 
