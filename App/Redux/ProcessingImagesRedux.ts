@@ -46,6 +46,9 @@ const actions = {
   cancelComplete: createAction('processingImages/CANCEL_COMPLETE', resolve => {
     return (uuid: string) => resolve({ uuid })
   }),
+  expiredTokenError: createAction('processingImages/EXPIRED_TOKEN', resolve => {
+    return (uuid: string) => resolve({ uuid })
+  }),
   error: createAction('processingImages/ERROR', resolve => {
     return (uuid: string, error: any) => resolve({ uuid, error })
   }),
