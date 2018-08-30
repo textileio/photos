@@ -77,9 +77,9 @@ export function * refreshThreads () {
 }
 
 export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
-  const { name, mnemonic } = action.payload
+  const { name } = action.payload
   try {
-    const thread: Thread = yield call(TextileNode.addThread, name, mnemonic)
+    const thread: Thread = yield call(TextileNode.addThread, name)
     yield put(ThreadsActions.addThreadSuccess(thread))
     yield put(UIActions.viewThreadRequest(thread.id, thread.name))
   } catch (error) {
