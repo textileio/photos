@@ -1,14 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Image, View, Dimensions } from 'react-native'
+import { Image, View } from 'react-native'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import Input from '../SB/components/Input'
 import { NavigationActions } from 'react-navigation'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import UIActions from '../Redux/UIRedux'
 import TextileImage from '../../TextileImage'
-
-const WIDTH = Dimensions.get("screen").width
 
 class AddCaptionScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -35,7 +33,7 @@ class AddCaptionScreen extends React.Component {
             }
           }} />
         </TextileHeaderButtons>
-      ),
+      )
     }
   }
 
@@ -67,9 +65,12 @@ class AddCaptionScreen extends React.Component {
   }
 
   _renderAsset () {
+    const sourceUri = this.props.image.origURL && this.props.image.origURL !== ''
+      ? this.props.image.origURL
+      : this.props.image.uri
     return (
       <Image
-        source={{uri: this.props.image.origURL}}
+        source={{uri: sourceUri, isStatic: true}}
         resizeMode={'cover'}
         style={styles.image} />
     )
@@ -105,7 +106,7 @@ class AddCaptionScreen extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const sharingPhoto = state.ui.sharingPhoto || {}
   return {
     image: sharingPhoto.image,

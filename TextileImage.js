@@ -1,5 +1,5 @@
 import React from 'react'
-import { requireNativeComponent, ViewPropTypes } from 'react-native'
+import { requireNativeComponent } from 'react-native'
 
 type Props = {
   imageId: string,
