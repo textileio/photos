@@ -25,7 +25,6 @@ class UserProfile extends React.PureComponent {
   }
 
   static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
     return {
       headerLeft: (
         <TextileHeaderButtons left>
@@ -41,8 +40,8 @@ class UserProfile extends React.PureComponent {
               <Avatar
                 width={32}
                 height={32}
-                uri={params.avatarUrl}
                 defaultSource={require('../Settings/statics/main-image.png')}
+                owner
               />
             }
           />
@@ -53,13 +52,11 @@ class UserProfile extends React.PureComponent {
 
   _settings () {
     this.props.navigation.navigate('Settings', {
-      avatarUrl: this.props.navigation.state.params.avatarUrl,
       username: this.props.navigation.state.params.username
     })
   }
   _changeAvatar () {
     const payload = {
-      avatarUrl: this.props.navigation.state.params.avatarUrl,
       username: this.props.navigation.state.params.username
     }
     this.props.navigation.navigate('ChangeAvatar', payload)
@@ -73,7 +70,6 @@ class UserProfile extends React.PureComponent {
   }
   _mnemonic () {
     this.props.navigation.navigate('Mnemonic', {
-      avatarUrl: this.props.navigation.state.params.avatarUrl,
       username: this.props.navigation.state.params.username
     })
   }

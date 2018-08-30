@@ -38,6 +38,7 @@ import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
+import { Thread } from '../Models/TextileTypes'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -95,17 +96,26 @@ export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActi
   }
 }
 
+export function * onboardedSuccess(action: ActionType<typeof PreferencesActions.onboardedSuccess>) {
+  let defaultThread: TT.Thread = yield call(getDefaultThread)
+  if (!defaultThread) {
+    // Skipping the normal addThread request here because we don't
+    // want to redirect to the default thread after complete
+    const thread: Thread = yield call(TextileNode.addThread, 'default' as TT.ThreadName)
+    yield put(ThreadsActions.addThreadSuccess(thread))
+    yield put(ThreadsActions.refreshThreadsRequest())
+  }
+}
+
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield put(PreferencesActions.onboardedSuccess())
   yield call(NavigationService.navigate, 'PrimaryNavigation')
-  yield take(getType(TextileNodeActions.startNodeSuccess))
 
-  let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
-  if (!defaultThread) {
-    yield put(PhotoViewingActions.addThreadRequest('default' as TT.ThreadName))
-    const action: ActionType<typeof PhotoViewingActions.addThreadSuccess> = yield take(getType(PhotoViewingActions.addThreadSuccess))
-    defaultThread = action.payload.thread
-    yield put(PhotoViewingActions.refreshThreadsRequest())
+  // PreferencesActions.onboardedSuccess will setup the node/default thread, so wait for those
+  let defaultThread: TT.Thread = yield call(getDefaultThread)
+  while (!defaultThread) {
+    yield call(delay, 150)
+    defaultThread = yield call(getDefaultThread)
   }
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
@@ -114,7 +124,6 @@ export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.
   yield call(NavigationService.navigate, 'TabNavigator')
 
   let defaultThread: TT.Thread = yield call(getDefaultThread)
-
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
 

@@ -10,7 +10,6 @@ import * as TextileTypes from '../../../Models/TextileTypes'
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
-import Config from 'react-native-config'
 
 class ThreadsEditFriends extends React.PureComponent {
   constructor (props) {
@@ -102,13 +101,15 @@ class ThreadsEditFriends extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const contacts = state.contacts.contacts.map((contact): TextileTypes.Contact & {uri?: string, included: boolean} => {
-    return {
-      ...contact,
-      uri: contact.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/avatar' : undefined,
-      included: contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
-    }
-  })
+  const contacts = state.contacts.contacts
+    .map((contact): TextileTypes.Contact & {included: boolean} => {
+      return {
+        ...contact,
+        included: contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
+      }
+    })
+    .filter(c => c.username !== '' && c.username !== undefined)
+
   const notInThread = contacts.filter(c => !c.included)
   const popularity = notInThread.sort((a, b) => a.thread_ids.length < b.thread_ids.length)
   const topFive = popularity.slice(0, 5)

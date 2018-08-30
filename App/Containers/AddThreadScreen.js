@@ -32,7 +32,7 @@ class AddThreadScreen extends React.Component {
           }} />
         </TextileHeaderButtons>
       ),
-      headerRight: params.submitEnabled && (
+      headerRight: params.submitEnabled ? (
         <TextileHeaderButtons>
           <Item title={title} onPress={() => {
             if (params.withPhoto) {
@@ -43,7 +43,7 @@ class AddThreadScreen extends React.Component {
             }
           }} />
         </TextileHeaderButtons>
-      ),
+      ) : (<View />) // ensure spacing in android
     }
   }
 

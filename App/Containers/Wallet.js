@@ -20,18 +20,12 @@ import { RootState } from '../Redux/Types';
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const greeting = params.username ? 'Hello, ' + params.username : 'Hi there!'
-    const headerTitle = (
-      <Text style={navStyles.headerTitle}>
-        {greeting}
-      </Text>
-    )
+    const headerTitle = params.username ? 'Hello, ' + params.username : 'Hi there!'
 
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerTitle,
       tabBarVisible: true,
-
       headerStyle: style.navHeader
     }
   }
@@ -101,7 +95,6 @@ class Wallet extends React.PureComponent {
     return (
       <View style={style.container}>
         <WalletHeader
-          avatarUrl={this.props.avatarUrl}
           overview={this.props.overview}
           changeAvatar={() => {
             this.props.navigation.navigate('ChangeAvatar', {avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet'})
@@ -161,8 +154,8 @@ const mapStateToProps = (state: RootState, ownProps) => {
     available: !!state.textileNode.overview,
     photoCount: state.textileNode.overview ? state.textileNode.overview.photo_count.toString() : '-',
     photoTitle: !state.textileNode.overview || state.textileNode.overview.photo_count !== 1 ? 'photos' : 'photo',
-    threadCount: state.textileNode.overview ? state.textileNode.overview.thread_count.toString() : '-',
-    threadTitle: !state.textileNode.overview || state.textileNode.overview.thread_count !== 1 ? 'threads' : 'thread',
+    threadCount: state.textileNode.overview ? (state.textileNode.overview.thread_count - 1).toString() : '-',
+    threadTitle: !state.textileNode.overview || state.textileNode.overview.thread_count - 1 !== 1 ? 'threads' : 'thread',
     peerCount: state.textileNode.overview ? state.textileNode.overview.contact_count.toString() : '-',
     peerTitle: !state.textileNode.overview || state.textileNode.overview.contact_count !== 1 ? 'peers' : 'peer'
   }

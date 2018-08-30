@@ -20,7 +20,6 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const avatarUrl = params.profile && params.profile.avatar_id ? Config.TEXTILE_CAFE_URI + params.profile.avatar_id : undefined
     const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerLeft = (
       <HeaderButtons left>
@@ -28,14 +27,14 @@ class ThreadsList extends React.PureComponent {
           title='Account'
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
-          onPress={() => navigation.navigate('Account', {avatarUrl, username})}
+          onPress={() => navigation.navigate('Account', {username})}
           buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
             <Avatar
               width={24}
               height={24}
-              uri={avatarUrl}
               defaultSource={require('../SB/views/Settings/statics/main-image.png')}
+              owner
             />
           }
         />
@@ -47,7 +46,9 @@ class ThreadsList extends React.PureComponent {
       </TextileHeaderButtons>
     )
     const headerTitle = (
-      <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
+      <View style={navStyles.headerTitleLogo}>
+        <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
+      </View>
     )
     return {
       headerLeft,
@@ -64,6 +65,7 @@ class ThreadsList extends React.PureComponent {
   componentDidMount () {
     this.props.navigation.setParams({
       profile: this.props.profile,
+      online: this.props.online,
       onTour: this.props.tourScreen === true
     })
   }
@@ -71,10 +73,12 @@ class ThreadsList extends React.PureComponent {
   componentDidUpdate (prevProps, prevState, ss) {
     if (
       this.props.profile !== prevProps.profile ||
-      this.props.tourScreen !== prevProps.tourScreen
+      this.props.tourScreen !== prevProps.tourScreen ||
+      this.props.online !== prevProps.online
     ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
+        online: this.props.online,
         onTour: this.props.tourScreen === true
       })
     }
@@ -207,7 +211,7 @@ const mapStateToProps = (state) => {
     refreshing: !!state.ui.refreshingMessages,
     notificationsPrompt: state.preferences.tourScreens.notifications,
     services: state.preferences.services,
-    tourScreen: state.preferences.tourScreens.threads // <- default off so users don't see a screen flash
+    tourScreen: state.preferences.tourScreens.threads // <- default off so users don't see a screen flash,
   }
 }
 
