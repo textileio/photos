@@ -11,13 +11,30 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     borderBottomColor: '#ECEDEE'
   },
-  headerIconList: {
-    width: 23,
-    height: 20
+  headerTitle: {
+    fontFamily: 'BentonSans-Bold',
+    fontSize: 17,
+    paddingTop: 8, // <- needed because BentonSans has that weird bottom gap
+    color: Colors.charcoal,
+    flex: 1,
+    textAlign: 'center', // import center-overkill
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center'
+  },
+  headerTitleLogo: {
+    flex: 1,
+    justifyContent: 'center', // import center-overkill
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   headerLogo: {
     width: 82.5,
     height: 23
+  },
+  headerIconList: {
+    width: 23,
+    height: 20
   },
   headerIcon: {
     width: 24,
@@ -76,12 +93,6 @@ export default StyleSheet.create({
     flex: 1,
     alignSelf: 'center',
     alignItems: 'center'
-  },
-  headerTitle: {
-    fontFamily: 'BentonSans-Bold',
-    fontSize: 17,
-    paddingTop: 8, // <- needed because BentonSans has that weird bottom gap
-    color: Colors.charcoal
   },
   headerButton: {
     fontFamily: 'BentonSans',

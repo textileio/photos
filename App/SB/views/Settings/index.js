@@ -29,13 +29,7 @@ class AccountSettings extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: (
-        <View style={navStyles.headerCenter}>
-          <Text style={navStyles.headerTitle}>
-            Settings
-          </Text>
-        </View>
-      ),
+      headerTitle: 'Settings',
       headerLeft: (
         <TextileHeaderButtons left>
           <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
