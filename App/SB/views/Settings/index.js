@@ -12,6 +12,7 @@ import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/H
 import styles from './statics/styles'
 import Avatar from '../../../Components/Avatar'
 import { NavigationActions } from 'react-navigation'
+import navStyles from '../../../Navigation/Styles/NavigationStyles'
 
 class AccountSettings extends React.PureComponent {
   constructor (props) {
@@ -28,7 +29,13 @@ class AccountSettings extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: 'Settings',
+      headerTitle: (
+        <View style={navStyles.headerCenter}>
+          <Text style={navStyles.headerTitle}>
+            Settings
+          </Text>
+        </View>
+      ),
       headerLeft: (
         <TextileHeaderButtons left>
           <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />

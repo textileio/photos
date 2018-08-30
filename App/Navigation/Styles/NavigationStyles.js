@@ -9,8 +9,7 @@ export default StyleSheet.create({
     // Styles the screen header in Textile Photos feed view
     // backgroundColor: Colors.brandBlue
     backgroundColor: 'white',
-    borderBottomColor: '#ECEDEE',
-    flex: 1
+    borderBottomColor: '#ECEDEE'
   },
   headerIconList: {
     width: 23,
@@ -70,19 +69,19 @@ export default StyleSheet.create({
   },
 
   // END SB Styles
-
   headerTitleImage: {
     marginHorizontal: 16
   },
   headerCenter: {
     flex: 1,
-    alignItems: 'center',
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   headerTitle: {
     fontFamily: 'BentonSans-Bold',
     fontSize: 17,
     paddingTop: 8, // <- needed because BentonSans has that weird bottom gap
-    color: Colors.charcoal,
+    color: Colors.charcoal
   },
   headerButton: {
     fontFamily: 'BentonSans',
