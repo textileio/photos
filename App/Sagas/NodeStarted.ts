@@ -19,13 +19,6 @@ export function * onNodeStarted () {
   }
 }
 
-export function * refreshTokens () {
-  while (yield take(getType(TextileNodeActions.startNodeSuccess))) {
-    const tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens))
-  }
-}
-
 function * refreshPublicKey () {
   const publicKey = yield call(TextileNode.getPublicKey)
   yield put(PreferencesActions.getPublicKeySuccess(publicKey))
