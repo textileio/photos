@@ -7,7 +7,9 @@ export default StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 25,
     borderTopColor: '#ECEDEE',
-    borderTopWidth: 1
+    borderTopWidth: 1,
+    flex: 1,
+    flexDirection: 'column'
   },
   link: {
     ...BentonSansBold(),
@@ -57,7 +59,9 @@ export default StyleSheet.create({
     height: 43,
     width: 43
   },
-  body: {},
+  body: {
+    flex: 1
+  },
   searchBoxContainer: {
     flexDirection: 'row',
     height: 36,
