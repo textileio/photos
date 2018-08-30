@@ -65,7 +65,7 @@ class AddCaptionScreen extends React.Component {
   }
 
   _renderAsset () {
-    const sourceUri = this.props.image.origURL
+    const sourceUri = this.props.image.origURL && this.props.image.origURL !== ''
       ? this.props.image.origURL
       : this.props.image.uri
     return (
