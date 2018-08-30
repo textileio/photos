@@ -94,27 +94,12 @@ export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActi
   }
 }
 
-export function * onboardedSuccess(action: ActionType<typeof PreferencesActions.onboardedSuccess>) {
-  let defaultThread: TT.Thread = yield call(getDefaultThread)
-  if (!defaultThread) {
-    // Skipping the normal addThread request here because we don't
-    // want to redirect to the default thread after complete
-    const thread: Thread = yield call(TextileNode.addThread, 'default' as TT.ThreadName)
-    yield put(ThreadsActions.addThreadSuccess(thread))
-    yield put(ThreadsActions.refreshThreadsRequest())
-  }
-}
-
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield put(PreferencesActions.onboardedSuccess())
   yield call(NavigationService.navigate, 'PrimaryNavigation')
 
   // PreferencesActions.onboardedSuccess will setup the node/default thread, so wait for those
   let defaultThread: TT.Thread = yield call(getDefaultThread)
-  while (!defaultThread) {
-    yield call(delay, 150)
-    defaultThread = yield call(getDefaultThread)
-  }
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
 
@@ -311,13 +296,7 @@ export function * photosTask () {
     // will run before the next startNodeSuccess is received and photoTask run again
     yield take(getType(TextileNodeActions.startNodeSuccess))
 
-    let defaultThread: TT.Thread | undefined = yield call(getDefaultThread)
-    if (!defaultThread) {
-      yield put(ThreadsActions.addThreadRequest('default' as TT.ThreadName))
-      const action: ActionType<typeof ThreadsActions.addThreadSuccess> = yield take(getType(ThreadsActions.addThreadSuccess))
-      defaultThread = action.payload.thread
-      yield put(ThreadsActions.refreshThreadsRequest())
-    }
+    let defaultThread: TT.Thread = yield call(getDefaultThread)
 
     const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
     if (!queriredPhotosInitialized) {
