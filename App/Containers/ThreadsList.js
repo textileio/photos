@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, FlatList, Alert } from 'react-native'
-import Config from 'react-native-config'
+import { View, Text, Image, FlatList, Alert, TouchableWithoutFeedback } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
@@ -26,8 +25,6 @@ class ThreadsList extends React.PureComponent {
       <HeaderButtons left>
         <Item
           title='Account'
-          delayLongPress={3000}
-          onLongPress={params.toggleVerboseUi}
           onPress={() => navigation.navigate('Account', {username})}
           buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
           ButtonElement={
@@ -47,9 +44,12 @@ class ThreadsList extends React.PureComponent {
       </TextileHeaderButtons>
     )
     const headerTitle = (
-      <View style={navStyles.headerTitleLogo}>
+      <TouchableWithoutFeedback
+        delayLongPress={3000}
+        onLongPress={params.toggleVerboseUi}
+        style={navStyles.headerTitleLogo}>
         <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
-      </View>
+      </TouchableWithoutFeedback>
     )
     return {
       headerLeft,
@@ -67,7 +67,8 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile,
       online: this.props.online,
-      onTour: this.props.tourScreen === true
+      onTour: this.props.tourScreen === true,
+      toggleVerboseUi: this.props.toggleVerboseUi
     })
   }
 
@@ -222,7 +223,8 @@ const mapDispatchToProps = (dispatch) => {
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
-    enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) }
+    enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }
 

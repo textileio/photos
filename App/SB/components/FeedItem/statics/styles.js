@@ -19,6 +19,7 @@ export default StyleSheet.create({
   text: {
     fontFamily: 'BentonSans',
     fontSize: 12,
+    lineHeight: 16,
     marginBottom: 5
   },
   timestamp: {
@@ -26,10 +27,7 @@ export default StyleSheet.create({
     fontSize: 11,
     color: '#9B9B9B'
   },
-  unread: {
-    // color: '#7C848D'
-    // fontFamily: 'BentonSans-Bold'
-  },
+  unread: { },
   readImage: {
     position: 'absolute',
     left: 0,

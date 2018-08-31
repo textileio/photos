@@ -15,6 +15,7 @@ import { UploadingImage } from '../Redux/UploadingImagesRedux'
 
 // Styles
 import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
+import { uploadArchive } from '../Sagas/ImageSharingSagas'
 
 export default class PhotoGrid extends React.PureComponent {
   /* ***********************************************************
@@ -25,9 +26,11 @@ export default class PhotoGrid extends React.PureComponent {
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
   renderRow (row) {
+    // TODO: not longer meaningful in the Wallet. Progress data isn't there. Good when we add sync back
     const uploadingImage: UploadingImage | undefined = this.props.progressData[row.item.id]
     let overlay
     if (uploadingImage && this.props.verboseUi) {
+      console.log('found', uploadingImage)
       if (uploadingImage.state === 'pending') {
         overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
       } else if (uploadingImage.state === 'uploading') {
