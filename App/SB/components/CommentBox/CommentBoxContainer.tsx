@@ -4,6 +4,7 @@ import { Keyboard, EmitterSubscription } from 'react-native'
 import CommentBox from './CommentBox'
 
 type Props = {
+  value: string | undefined
   onUpdate: (text: string) => void
   onSubmit: () => void
 }

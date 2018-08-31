@@ -62,6 +62,7 @@ export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions
   }
   try {
     yield call(TextileNode.addPhotoComment, result.photo.block_id, result.comment)
+    yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
     console.log(error)
   }
