@@ -45,7 +45,8 @@ const STATUS: TextStyle = {
 
 const ERROR: TextStyle = {
   ...ITEM,
-  ...STATUS
+  ...STATUS,
+  flex: 1
 }
 
 export type ProcessingImageProps = {
