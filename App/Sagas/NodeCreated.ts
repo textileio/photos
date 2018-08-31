@@ -17,13 +17,13 @@ export function * onNodeCreated () {
   }
 }
 
-export function * refreshTokens () {
+export function * refreshTokens (force: boolean) {
   const nodeState = yield select(TextileNodeSelectors.nodeState)
   if (nodeState === NodeState.nonexistent || nodeState === NodeState.creating) {
     // Sit and wait until the the node is Created
     yield take(getType(TextileNodeActions.createNodeSuccess))
   }
   // Get new tokens
-  const tokens = yield call(TextileNode.getTokens)
+  const tokens = yield call(TextileNode.getTokens, force)
   yield put(AuthActions.getTokensSuccess(tokens))
 }

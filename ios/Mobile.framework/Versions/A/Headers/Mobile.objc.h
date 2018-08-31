@@ -173,7 +173,7 @@
 - (NSString*)getPhotos:(NSString*)offsetId limit:(long)limit threadId:(NSString*)threadId error:(NSError**)error;
 - (NSString*)getProfile:(NSError**)error;
 - (NSString*)getPubKey:(NSError**)error;
-- (NSString*)getTokens:(NSError**)error;
+- (NSString*)getTokens:(BOOL)forceRefresh error:(NSError**)error;
 - (NSString*)getUsername:(NSError**)error;
 - (NSString*)ignorePhoto:(NSString*)blockId error:(NSError**)error;
 - (NSString*)ignorePhotoComment:(NSString*)blockId error:(NSError**)error;

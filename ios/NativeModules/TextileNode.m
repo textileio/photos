@@ -193,9 +193,9 @@ RCT_EXPORT_METHOD(getUsername:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
   }
 }
 
-RCT_EXPORT_METHOD(getTokens:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getTokens:(BOOL *)force resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *token = [self _getTokens:&error];
+  NSString *token = [self _getTokens:force error:&error];
   if (!error) {
     resolve(token);
   } else {
@@ -540,8 +540,8 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   return [self.node getUsername:error];
 }
 
-- (NSString *)_getTokens:(NSError**)error {
-  return [self.node getTokens:error];
+- (NSString *)_getTokens:(BOOL *)force error:(NSError**)error {
+  return [self.node getTokens:force error:error];
 }
 
 - (NSString *)_getId:(NSError**)error {
