@@ -15,7 +15,7 @@ function getSubTitle (contacts, topFive, notInThread): string {
   } else if (topFive.length > 0 && topFive.length > notInThread) {
     return 'Suggested peers'
   }
-  return 'Select peers to invite'
+  return 'Press invite when done'
 }
 
 const ContactSelect = (props) => {
@@ -27,7 +27,7 @@ const ContactSelect = (props) => {
     <View style={styles.contentContainer}>
       <View style={styles.header}>
         <View style={styles.headerTitle}>
-          <Text style={styles.title}>Add peers</Text>
+          <Text style={styles.title}>Select new peers</Text>
         </View>
 
         {subTitle && <Text style={styles.subtitle}> { subTitle } </Text> }
@@ -60,32 +60,27 @@ const ContactSelect = (props) => {
         <View style={styles.searchBoxPlaceholder} />
 
         <FlatList
-          data={[{type: 'invite', pk: 'invite'}].concat(contacts)}
+          data={contacts}
           keyExtractor={(item) => item.pk}
           extraData={selected}
           renderItem={(contact) => {
             const {item} = contact
-            if (item.type === 'invite') {
-              return (
-                <TouchableOpacity style={styles.inviteItem} onPress={getPublicLink}>
-                  <ImageSc
-                    source={require('../../../Images/v2/send.png')}
-                    width={20}
-                    height={20}
-                    resizeMode={'cover'}
-                    style={!!anySelected && styles.inviteLessImage}
-                  />
-                  <Text style={[styles.inviteLink, !!anySelected && styles.inviteLess]}>Send external invite</Text>
-                </TouchableOpacity>
-              )
-            } else {
-              const selectState = !!selected[item.id] || item.included
-              return (
-                <ContactSelectCard item={item} select={select} selected={selectState} />
-              )
-            }
+            const selectState = !!selected[item.id] || item.included
+            return (
+              <ContactSelectCard item={item} select={select} selected={selectState} />
+            )
           }}
         />
+        <TouchableOpacity style={styles.inviteItem} onPress={getPublicLink}>
+          <ImageSc
+            source={require('../../../Images/v2/send.png')}
+            width={20}
+            height={20}
+            resizeMode={'cover'}
+            style={!!anySelected && styles.inviteLessImage}
+          />
+          <Text style={[styles.inviteLink, !!anySelected && styles.inviteLess]}>Invite a new user</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
