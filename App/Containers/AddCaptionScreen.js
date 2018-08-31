@@ -96,7 +96,8 @@ class AddCaptionScreen extends React.Component {
               style={styles.comment}
               value={this.props.comment}
               label='Add a caption...'
-              numberOfLines={5}
+              numberOfLines={10}
+              multiline
               onChangeText={this.handleNewText.bind(this)}
             />
           </View>
