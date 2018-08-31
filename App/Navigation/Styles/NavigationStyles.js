@@ -49,7 +49,7 @@ export default StyleSheet.create({
   },
   headerRight: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   moreButtonWrapper: {
     paddingVertical: 2,
