@@ -22,6 +22,8 @@ export default class UploadEventHandler {
     const { responseCode } = e
     if (responseCode >= 200 && responseCode < 300) {
       this.store.dispatch(ProcessingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody))
+    } else if (responseCode === 401) {
+      this.store.dispatch(ProcessingImagesActions.expiredTokenError(e.id))
     } else {
       this.store.dispatch(ProcessingImagesActions.error(e.id, 'Response code: ' + responseCode))
     }

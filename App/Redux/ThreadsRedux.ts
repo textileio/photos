@@ -2,14 +2,11 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import {
   BlockId,
   ExternalInvite,
-  Mnemonic,
   NotificationId,
   PrivateKey,
   PublicKey,
-  Thread,
   ThreadId,
   ThreadName,
-  Threads,
   UserName
 } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'

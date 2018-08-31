@@ -5,8 +5,8 @@ import {Alert, Platform} from 'react-native'
 export interface NotificationsPayload {
   title: string,
   message: string,
-  suffix: string,
-  typeString: string
+  feed: string
+  typeString: string,
 }
 
 export function isPhoto(notification: Notification): boolean {
@@ -32,44 +32,45 @@ export function toPayload(notification: Notification): NotificationsPayload | un
     case(NotificationType.receivedInviteNotification): {
       const title = 'New Invite'
       const message =  [actor, notification.body].join(' ')
-      const suffix = ['to', notification.subject].join(' ')
-      return {title, message, suffix, typeString}
+      const feed = [actor, notification.body, 'to', notification.subject].join(' ')
+      return {title, message, feed, typeString}
     }
     case(NotificationType.deviceAddedNotification): {
       const title = 'New Device'
       const message = 'You paired with a new device'
-      const suffix = ''
-      return {title, message, suffix, typeString}
+      const feed = message
+      return {title, message, feed, typeString}
     }
     case(NotificationType.photoAddedNotification): {
       const title = notification.subject
       const message =  [actor, notification.body].join(' ')
-      const suffix = ['to', notification.subject].join(' ')
-      return {title, message, suffix, typeString}
+      const feed = [actor, notification.body, 'to', notification.subject].join(' ')
+      return {title, message, feed, typeString}
     }
     case(NotificationType.commentAddedNotification): {
       const title =  notification.subject
       const message = [actor, notification.body].join(' ')
-      const suffix = ['in', notification.subject].join(' ')
-      return {title, message, suffix, typeString}
+      const body = notification.body.split (': ')
+      const feed = [actor, body[0], 'in', notification.subject].join(' ')
+      return {title, message, feed, typeString}
     }
     case(NotificationType.likeAddedNotification): {
       const title = notification.subject
       const message = [actor, notification.body].join(' ')
-      const suffix = ['in', notification.subject].join(' ')
-      return {title, message, suffix, typeString}
+      const feed = [actor, notification.body, 'in', notification.subject].join(' ')
+      return {title, message, feed, typeString}
     }
     case(NotificationType.peerJoinedNotification): {
       const title = notification.subject
       const message =  [actor, notification.body].join(' ')
-      const suffix = notification.subject
-      return {title, message, suffix, typeString}
+      const feed = [actor, notification.body, 'thread', notification.subject].join(' ')
+      return {title, message, feed, typeString}
     }
     case(NotificationType.peerLeftNotification): {
       const title = notification.subject
       const message =  [actor, notification.body].join(' ')
-      const suffix = notification.subject
-      return {title, message, suffix, typeString}
+      const feed = [actor, notification.body, 'thread', notification.subject].join(' ')
+      return {title, message, feed, typeString}
     }
     default: {
       return undefined
