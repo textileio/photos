@@ -176,7 +176,7 @@ const mapStateToProps = (state, ownProps) => {
     threadId,
     threadName,
     photos,
-    progressData: state.uploadingImages.images,
+    progressData: state.processingImages.images,
     refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
@@ -196,7 +196,6 @@ const mapDispatchToProps = (dispatch) => {
     dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
     viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
     refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
-    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },
     updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) }
   }
