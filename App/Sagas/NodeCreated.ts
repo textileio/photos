@@ -2,7 +2,7 @@ import { call, put, take, select } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
 import TextileNode from '../../TextileNode'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions, {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
+import TextileNodeActions, {NodeState, TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 
 
@@ -20,7 +20,7 @@ export function * onNodeCreated () {
 export function * refreshTokens () {
   const nodeState = yield select(TextileNodeSelectors.nodeState)
   if (nodeState !== 'started') { // <- what is going to happen when nodeState === stopping?
-    if (nodeState === 'stopping' || nodeState === 'stopped') {
+    if (nodeState === NodeState.stopping || nodeState === NodeState.stopped) {
       // For now, if this happens, we'll just let the user tap Refresh like other error cases
       return Error('Failed refresh while node offline')
     }
