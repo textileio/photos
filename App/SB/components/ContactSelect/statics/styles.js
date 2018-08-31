@@ -101,8 +101,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignContent: 'center',
-    paddingVertical: 22,
-    borderBottomWidth: 1,
+    paddingVertical: 28,
+    borderTopWidth: 1,
     borderColor: '#ECEDEE'
   },
   inviteLink: {
