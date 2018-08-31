@@ -56,9 +56,10 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
 export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.expiredTokenError>) {
   const { uuid } = action.payload
   try {
-    yield call(refreshTokens)
+    yield call(refreshTokens, true)
     yield put(ProcessingImagesActions.retry(uuid))
   } catch (error) {
+    // TODO: Should redirect user back to login
     yield put(ProcessingImagesActions.error(uuid, 'Failed refresh tokens'))
   }
 }

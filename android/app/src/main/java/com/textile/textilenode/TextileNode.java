@@ -224,9 +224,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getTokens (Promise promise) {
+    public void getTokens (Boolean force, Promise promise) {
         try {
-            promise.resolve(node.getTokens());
+            promise.resolve(node.getTokens(force));
         }
         catch (Exception e) {
             promise.reject("GET TOKENS ERROR", e);
