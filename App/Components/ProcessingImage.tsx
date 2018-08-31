@@ -4,11 +4,12 @@ import { View, Image, Button, ViewStyle, ImageStyle, Text, TextStyle } from 'rea
 import ProgressBar from './ProgressBar'
 
 const CONTAINER: ViewStyle = {
+  flex: 1,
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
   height: 80,
-  marginBottom: 10
+  marginBottom: 10,
 }
 
 const ITEM = {
@@ -45,7 +46,8 @@ const STATUS: TextStyle = {
 
 const ERROR: TextStyle = {
   ...ITEM,
-  ...STATUS
+  ...STATUS,
+  flex: 1
 }
 
 export type ProcessingImageProps = {
