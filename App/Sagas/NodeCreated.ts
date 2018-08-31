@@ -2,7 +2,7 @@ import { call, put, take, select } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
 import TextileNode from '../../TextileNode'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions, {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
+import TextileNodeActions, {NodeState, TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 
 
@@ -19,7 +19,7 @@ export function * onNodeCreated () {
 
 export function * refreshTokens () {
   const nodeState = yield select(TextileNodeSelectors.nodeState)
-  if (nodeState === 'nonexistent' || nodeState === 'creating') {
+  if (nodeState === NodeState.nonexistent || nodeState === NodeState.creating) {
     // Sit and wait until the the node is Created
     yield take(getType(TextileNodeActions.createNodeSuccess))
   }
