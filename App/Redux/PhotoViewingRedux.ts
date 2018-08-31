@@ -49,7 +49,8 @@ const actions = {
   updateComment: createAction('UPDATE_COMMENT', resolve => {
     return (comment: string) => resolve({ comment })
   }),
-  addCommentRequest: createAction('ADD_COMMENT_REQUEST')
+  addCommentRequest: createAction('ADD_COMMENT_REQUEST'),
+  addCommentSuccess: createAction('ADD_COMMENT_SUCCESS')
 }
 
 export type PhotoViewingAction = ActionType<typeof actions>
@@ -184,6 +185,9 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     case getType(actions.updateComment): {
       const { comment } = action.payload
       return { ...state, authoringComment: comment }
+    }
+    case getType(actions.addCommentSuccess): {
+      return { ...state, authoringComment: undefined }
     }
     default:
       return state

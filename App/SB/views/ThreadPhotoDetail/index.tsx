@@ -21,13 +21,14 @@ import { BlockId, PhotoId } from '../../../Models/TextileTypes'
 const { width } = Dimensions.get('window')
 
 type StateProps = {
-  photoId: PhotoId,
-  blockId: BlockId,
+  photoId: PhotoId
+  blockId: BlockId
   size?: {
     height: number
     width: number
   }
   commentCardProps: CommentCardProps[]
+  commentValue: string | undefined
 }
 
 type DispatchProps = {
@@ -83,7 +84,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
             ))}
           </View>
         </ScrollView>
-        <CommentBox onUpdate={this.props.updateComment} onSubmit={this.props.submitComment} />
+        <CommentBox onUpdate={this.props.updateComment} onSubmit={this.props.submitComment} value={this.props.commentValue} />
         {this.state.drawer && <BottomDrawerList/>}
       </View>
     )
@@ -113,8 +114,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
     }
   }
   // TODO: comments should always be defined: https://github.com/textileio/textile-go/issues/270
-  const comments = viewingPhoto.comments.slice().reverse() || []
-  const commentCardProps = comments.map(comment => {
+  const comments = viewingPhoto.comments || []
+  const commentCardProps = comments.slice().reverse().map(comment => {
     const props: CommentCardProps = {
       username: comment.username || 'unknown',
       avatarUri: 'https://cafe.textile.io/ipns/' + comment.author_id + '/avatar',
@@ -129,7 +130,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
     photoId: viewingPhoto.id,
     blockId: viewingPhoto.block_id,
     size,
-    commentCardProps: captionCommentCardProps ? [{...captionCommentCardProps}, ...commentCardProps] : commentCardProps
+    commentCardProps: captionCommentCardProps ? [{...captionCommentCardProps}, ...commentCardProps] : commentCardProps,
+    commentValue : state.photoViewing.authoringComment
   }
 }
 
