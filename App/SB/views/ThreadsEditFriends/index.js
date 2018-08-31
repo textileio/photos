@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
@@ -27,12 +27,16 @@ class ThreadsEditFriends extends React.PureComponent {
       </TextileHeaderButtons>
     )
 
-    const headerRight = params.updateEnabled && (
+    const headerRight = params.updateEnabled ? (
       <TextileHeaderButtons >
         <Item title='invite' onPress={() => {
           params.updateThread()
         }} />
       </TextileHeaderButtons>
+    ) : (
+      <View style={styles.headerRight}>
+        <Text style={styles.headerRightText}>Invite</Text>
+      </View>
     )
 
     return {
@@ -43,10 +47,18 @@ class ThreadsEditFriends extends React.PureComponent {
 
   componentDidMount () {
     this.props.navigation.setParams({
-      getPublicLink: this._getPublicLink.bind(this),
       updateThread: this._updateThread.bind(this),
-      updateEnabled: this.props.contacts.length > 0 && this.props.notInThread > 0
+      updateEnabled: false
     })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.selected !== this.state.selected) {
+      const updateEnabled = Object.keys(this.state.selected).find((k) => this.state.selected[k] === true)
+      this.props.navigation.setParams({
+        updateEnabled: !!updateEnabled
+      })
+    }
   }
 
   _getPublicLink () {
@@ -102,9 +114,10 @@ class ThreadsEditFriends extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const contacts = state.contacts.contacts
-    .map((contact): TextileTypes.Contact & {included: boolean} => {
+    .map((contact): TextileTypes.Contact & {included: boolean, type: string} => {
       return {
         ...contact,
+        type: 'contact',
         included: contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
       }
     })
@@ -126,6 +139,7 @@ const mapStateToProps = (state, ownProps) => {
   })
   return {
     topFive,
+    // puts a placeholder row in contacts for adding external invite link
     contacts: sortedContacts,
     notInThread: notInThread.length
   }
