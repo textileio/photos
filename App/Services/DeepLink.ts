@@ -1,4 +1,5 @@
 import NavigationService from './NavigationService'
+import Config from 'react-native-config'
 import { ExternalInvite, DeepLinkData } from '../Models/TextileTypes'
 
 function getParams (hash: string): { [key: string]: (string | string[]) } {
@@ -50,6 +51,10 @@ function createInviteLink (invite: ExternalInvite, threadName: string): string {
   hash.push('key=' + encodeURIComponent(invite.key))
   hash.push('inviter=' + encodeURIComponent(invite.inviter))
   hash.push('name=' + encodeURIComponent(threadName))
+  console.log(Config)
+  if (Config.TEMPORARY_REFERRAL) {
+    hash.push('referral=', Config.TEMPORARY_REFERRAL)
+  }
   return 'https://www.textile.photos/invites/new#' + hash.join('&')
 }
 

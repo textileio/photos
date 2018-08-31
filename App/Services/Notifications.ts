@@ -62,13 +62,13 @@ export function toPayload(notification: Notification): NotificationsPayload | un
     case(NotificationType.peerJoinedNotification): {
       const title = notification.subject
       const message =  [actor, notification.body].join(' ')
-      const suffix = ['to thread', notification.subject].join(' ')
+      const suffix = notification.subject
       return {title, message, suffix, typeString}
     }
     case(NotificationType.peerLeftNotification): {
       const title = notification.subject
       const message =  [actor, notification.body].join(' ')
-      const suffix = ['the thread', notification.subject].join(' ')
+      const suffix = notification.subject
       return {title, message, suffix, typeString}
     }
     default: {
