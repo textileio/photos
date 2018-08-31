@@ -15,7 +15,6 @@ export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: s
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
     const blockId: BlockId = yield call(TextileNode.sharePhotoToThread, id, threadId, comment)
-    yield put(PhotoViewingActions.refreshThreadRequest(threadId))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
