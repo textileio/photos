@@ -56,6 +56,9 @@ const actions = {
   }),
   requestCameraPermissions: createAction('REQUEST_CAMERA_PERMISSIONS', resolve => {
     return () => resolve()
+  }),
+  onboardWithInviteRequest: createAction('ONBOARD_WITH_INVITE_REQUEST', resolve => {
+    return (url: string, hash: string, referral: string ) => resolve( { url, hash, referral } )
   })
 }
 
@@ -73,6 +76,11 @@ export type AuthState = {
     readonly email?: string
     readonly username?: UserName
     readonly password?: string
+  }
+  readonly invite?: {
+    url: string
+    hash: string
+    referral: string
   }
 }
 
@@ -109,13 +117,16 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
       return { ...state, processing: false, error: action.payload.error.message }
     case getType(actions.dismissError):
       return { ...state, error: undefined }
+    case getType(actions.onboardWithInviteRequest):
+      return { ...state, invite: action.payload, formData: {...state.formData, referralCode: action.payload.referral} }
     default:
       return state
   }
 }
 
 export const AuthSelectors = {
-  tokens: (state: RootState) => state.auth.tokens
+  tokens: (state: RootState) => state.auth.tokens,
+  invite: (state: RootState) => state.auth.invite
 }
 
 export default actions

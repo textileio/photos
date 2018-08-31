@@ -30,6 +30,7 @@ import {
 } from './ImageSharingTriggers'
 
 import {
+  inviteAfterOnboard,
   routeDeepLink
 } from './DeepLinkSagas'
 
@@ -160,6 +161,9 @@ export default function * root () {
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
+    takeEvery(getType(PreferencesActions.onboardedSuccess), inviteAfterOnboard),
+
+
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
