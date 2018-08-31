@@ -84,8 +84,8 @@ export default {
    * Go will return an empty string, gobind doesn't support nil
    * @returns {Promise<CafeTokens | undefined>}
    */
-  getTokens: async function (): Promise<TT.CafeTokens | undefined> {
-    const jsonString = await TextileNode.getTokens()
+  getTokens: async function (force: boolean = false): Promise<TT.CafeTokens | undefined> {
+    const jsonString = await TextileNode.getTokens(force)
     if (jsonString === '') return undefined
     return JSON.parse(jsonString) as TT.CafeTokens
   },
