@@ -53,7 +53,7 @@ function createInviteLink (invite: ExternalInvite, threadName: string): string {
   hash.push('name=' + encodeURIComponent(threadName))
   console.log(Config)
   if (Config.TEMPORARY_REFERRAL) {
-    hash.push('name=', Config.TEMPORARY_REFERRAL)
+    hash.push('referral=', Config.TEMPORARY_REFERRAL)
   }
   return 'https://www.textile.photos/invites/new#' + hash.join('&')
 }
