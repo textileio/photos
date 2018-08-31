@@ -45,10 +45,7 @@ class ThreadsList extends React.PureComponent {
     const headerTitle = (
       <TouchableWithoutFeedback
         delayLongPress={3000}
-        onLongPress={()=>{
-          console.log('long')
-          params.toggleVerboseUi()
-        }}
+        onLongPress={params.toggleVerboseUi}
         style={navStyles.headerTitleLogo}>
         <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
       </TouchableWithoutFeedback>
