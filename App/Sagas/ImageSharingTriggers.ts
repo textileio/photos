@@ -8,6 +8,7 @@ import { PhotoId } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
 import { insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread } from './ImageSharingSagas'
+import { refreshTokens } from './NodeCreated'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -51,6 +52,17 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
     yield call(addToIpfs, uuid)
   }
 }
+
+export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.expiredTokenError>) {
+  const { uuid } = action.payload
+  try {
+    yield call(refreshTokens)
+    yield put(ProcessingImagesActions.retry(uuid))
+  } catch (error) {
+    yield put(ProcessingImagesActions.error(uuid, 'Failed refresh tokens'))
+  }
+}
+
 
 export function * cancelImageShare (action: ActionType<typeof ProcessingImagesActions.cancelRequest>) {
   const { uuid } = action.payload
