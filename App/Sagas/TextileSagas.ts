@@ -122,8 +122,6 @@ function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
     yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
-    yield put(PhotoViewingActions.refreshThreadRequest(defaultThread.id))
-
     // set it as our profile picture
     yield put(PreferencesActions.pendingAvatar(addResult.id))
 
@@ -315,7 +313,6 @@ export function * photosTask () {
         }
         const blockId: TT.BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
         yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-        yield put(PhotoViewingActions.refreshThreadRequest(defaultThread.id))
         addedPhotosData.push({ uri, addResult, blockId })
       } catch (error) {
         yield put(CameraRollActions.untrackPhoto(uri))
