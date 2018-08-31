@@ -23,7 +23,6 @@ export function * refreshTokens () {
     // Sit and wait until the the node is Created
     yield take(getType(TextileNodeActions.createNodeSuccess))
   }
-
   // Get new tokens
   const tokens = yield call(TextileNode.getTokens)
   yield put(AuthActions.getTokensSuccess(tokens))
