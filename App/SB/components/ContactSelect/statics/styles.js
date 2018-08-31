@@ -7,12 +7,17 @@ export default StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 25,
     borderTopColor: '#ECEDEE',
-    borderTopWidth: 1
+    borderTopWidth: 1,
+    flex: 1,
+    flexDirection: 'column'
   },
   link: {
     ...BentonSansBold(),
     fontSize: 16,
     color: '#2625ff'
+  },
+  inactive: {
+    color: 'rgba(33, 33, 33, 0.6)'
   },
   header: {
     marginBottom: 21
@@ -57,7 +62,9 @@ export default StyleSheet.create({
     height: 43,
     width: 43
   },
-  body: {},
+  body: {
+    flex: 1
+  },
   searchBoxContainer: {
     flexDirection: 'row',
     height: 36,
@@ -69,11 +76,13 @@ export default StyleSheet.create({
   },
   searchBoxPlaceholder: {
     flexDirection: 'row',
-    height: 4,
-    backgroundColor: '#EEF0F3',
-    borderRadius: 2,
-    marginBottom: 10,
-    paddingHorizontal: 4
+    // height: 4,
+    // backgroundColor: '#EEF0F3',
+    // borderRadius: 2,
+    marginBottom: 2,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
+    borderColor: '#ECEDEE'
   },
   searchBoxIcon: {
     height: 14,
@@ -86,6 +95,26 @@ export default StyleSheet.create({
     color: '#8e8e93'
   },
   contactList: {},
+  inviteItem: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+    paddingVertical: 28,
+    borderTopWidth: 1,
+    borderColor: '#ECEDEE'
+  },
+  inviteLink: {
+    textAlign: 'center',
+    color: '#2E8BFE'
+  },
+  inviteLessImage: {
+    opacity: 0.1
+  },
+  inviteLess: {
+    opacity: 0.4
+  },
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
