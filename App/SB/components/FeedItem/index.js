@@ -4,9 +4,9 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
 import * as NotificationServices from '../../../Services/Notifications'
 import Avatar from '../../../Components/Avatar'
-import styles from './statics/styles'
 import TextileImage from '../../../../TextileImage'
-import { NotificationType } from '../../../Models/TextileTypes'
+
+import styles from './statics/styles'
 
 const FeedItem = props => {
   const { notification, onClick } = props
@@ -26,7 +26,7 @@ const FeedItem = props => {
     />)
 
   return (
-    <TouchableOpacity style={styles.itemContainer} onPress={() => {
+    <TouchableOpacity activeOpacity={0.6} style={styles.itemContainer} onPress={() => {
       onClick(notification)
     }}>
       <View style={styles.headerIconUser}>

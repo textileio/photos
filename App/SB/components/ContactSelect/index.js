@@ -42,7 +42,7 @@ const ContactSelect = (props) => {
             const selectState = !!selected[item.id] || item.included
 
             return (
-              <TouchableOpacity key={item.id} style={styles.selectedContact} onPress={() => {
+              <TouchableOpacity key={item.id} activeOpacity={0.6} style={styles.selectedContact} onPress={() => {
                 select(item, item.included)
               }}>
                 <Avatar style={styles.selectedContact} width={43} height={43} peer_id={item.id} defaultSource={defaultSource} />
@@ -71,7 +71,7 @@ const ContactSelect = (props) => {
             )
           }}
         />
-        <TouchableOpacity style={styles.inviteItem} onPress={getPublicLink}>
+        <TouchableOpacity activeOpacity={0.4}  style={styles.inviteItem} onPress={getPublicLink}>
           <ImageSc
             source={require('../../../Images/v2/send.png')}
             width={20}
