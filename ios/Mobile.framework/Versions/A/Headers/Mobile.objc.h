@@ -157,7 +157,7 @@
 - (NSString*)addPhotoComment:(NSString*)blockId body:(NSString*)body error:(NSError**)error;
 - (NSString*)addPhotoLike:(NSString*)blockId error:(NSError**)error;
 - (NSString*)addPhotoToThread:(NSString*)dataId key:(NSString*)key threadId:(NSString*)threadId caption:(NSString*)caption error:(NSError**)error;
-- (NSString*)addThread:(NSString*)name mnemonic:(NSString*)mnemonic error:(NSError**)error;
+- (NSString*)addThread:(NSString*)name error:(NSError**)error;
 - (NSString*)addThreadInvite:(NSString*)threadId inviteePk:(NSString*)inviteePk error:(NSError**)error;
 - (NSString*)contactThreads:(NSString*)id_ error:(NSError**)error;
 - (NSString*)contacts:(NSError**)error;

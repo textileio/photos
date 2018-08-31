@@ -11,18 +11,12 @@ export function * onNodeStarted () {
     try {
       yield all([
         put(ThreadsActions.refreshThreadsRequest()),
-        call(refreshTokens),
         call(refreshPublicKey)
       ])
     } catch (error) {
       // nothing to do here for now
     }
   }
-}
-
-function * refreshTokens () {
-  const tokens = yield call(TextileNode.getTokens)
-  yield put(AuthActions.getTokensSuccess(tokens))
 }
 
 function * refreshPublicKey () {
