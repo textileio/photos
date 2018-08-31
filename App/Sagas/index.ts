@@ -26,7 +26,8 @@ import {
   handleSharePhotoRequest,
   handleImageUploadComplete,
   retryImageShare,
-  cancelImageShare
+  cancelImageShare,
+  retryWithTokenRefresh
 } from './ImageSharingTriggers'
 
 import {
@@ -147,6 +148,7 @@ export default function * root () {
     takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
     takeEvery(getType(ProcessingImagesActions.retry), retryImageShare),
     takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
+    takeEvery(getType(ProcessingImagesActions.expiredTokenError), retryWithTokenRefresh),
 
     takeEvery(getType(UIActions.sharePhotoToNewThreadRequest), handlePhotoToNewThreadRequest),
 

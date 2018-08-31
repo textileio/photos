@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Image, FlatList, Alert } from 'react-native'
-import Config from 'react-native-config'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'

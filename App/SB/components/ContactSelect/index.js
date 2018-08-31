@@ -1,8 +1,9 @@
 import React from 'react'
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
 import Avatar from '../../../Components/Avatar'
+import ImageSc from 'react-native-scalable-image'
 
-import RadioButton from '../../components/RadioButton'
+import ContactSelectCard from './ContactSelectCard'
 
 import styles from './statics/styles'
 
@@ -16,18 +17,17 @@ function getSubTitle (contacts, topFive, notInThread): string {
   }
   return 'Select peers to invite'
 }
+
 const ContactSelect = (props) => {
   const { getPublicLink, contacts, select, selected, topFive, notInThread } = props
   const subTitle = getSubTitle(contacts, topFive, notInThread)
   const showSuggested = topFive.length > 0 && topFive.length > notInThread
+  const anySelected = Object.keys(selected).find(k => selected[k] === true)
   return (
     <View style={styles.contentContainer}>
       <View style={styles.header}>
         <View style={styles.headerTitle}>
           <Text style={styles.title}>Add peers</Text>
-          <TouchableOpacity onPress={getPublicLink}>
-            <Text style={[styles.link, styles.small]}>invite new users</Text>
-          </TouchableOpacity>
         </View>
 
         {subTitle && <Text style={styles.subtitle}> { subTitle } </Text> }
@@ -60,25 +60,30 @@ const ContactSelect = (props) => {
         <View style={styles.searchBoxPlaceholder} />
 
         <FlatList
-          data={contacts}
+          data={[{type: 'invite', pk: 'invite'}].concat(contacts)}
           keyExtractor={(item) => item.pk}
           extraData={selected}
           renderItem={(contact) => {
             const {item} = contact
-            const defaultSource = require('../../../Images/v2/main-image.png')
-
-            const selectState = !!selected[item.id] || item.included
-            return (
-              <TouchableOpacity style={styles.contactItem} onPress={() => {
-                select(item, item.included)
-              }}>
-                <Avatar style={styles.selectedContact} width={43} height={43} peer_id={item.id} defaultSource={defaultSource} />
-                <Text style={styles.contactName}>{item.username || 'peer'}</Text>
-                <View style={styles.contactSelectRadio}>
-                  <RadioButton disabled={item.included} selected={selectState} />
-                </View>
-              </TouchableOpacity>
-            )
+            if (item.type === 'invite') {
+              return (
+                <TouchableOpacity style={styles.inviteItem} onPress={getPublicLink}>
+                  <ImageSc
+                    source={require('../../../Images/v2/send.png')}
+                    width={20}
+                    height={20}
+                    resizeMode={'cover'}
+                    style={!!anySelected && styles.inviteLessImage}
+                  />
+                  <Text style={[styles.inviteLink, !!anySelected && styles.inviteLess]}>Send external invite</Text>
+                </TouchableOpacity>
+              )
+            } else {
+              const selectState = !!selected[item.id] || item.included
+              return (
+                <ContactSelectCard item={item} select={select} selected={selectState} />
+              )
+            }
           }}
         />
       </View>

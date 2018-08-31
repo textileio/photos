@@ -68,14 +68,26 @@ export default {
     return await TextileNode.getId()
   },
 
-  getUsername: async function (): Promise<TT.UserName> {
-    return await TextileNode.getUsername()
+  /**
+   * Get the current user's Username
+   * Go will return an empty string, gobind doesn't support nil
+   * @returns {Promise<UserName | undefined>}
+   */
+  getUsername: async function (): Promise<TT.UserName | undefined> {
+    const username = await TextileNode.getUsername()
+    if (username === '') return undefined
+    return  username
   },
 
-  getTokens: async function (): Promise<TT.CafeTokens> {
+  /**
+   * Get the current Cafe tokens
+   * Go will return an empty string, gobind doesn't support nil
+   * @returns {Promise<CafeTokens | undefined>}
+   */
+  getTokens: async function (): Promise<TT.CafeTokens | undefined> {
     const jsonString = await TextileNode.getTokens()
-    const tokens = JSON.parse(jsonString) as TT.CafeTokens
-    return tokens
+    if (jsonString === '') return undefined
+    return JSON.parse(jsonString) as TT.CafeTokens
   },
 
   getOverview: async function (): Promise<TT.NodeOverview> {
@@ -84,8 +96,8 @@ export default {
     return overview
   },
 
-  addThread: async function (name: TT.ThreadName, mnemonic?: TT.Mnemonic): Promise<TT.Thread> {
-    const jsonString = await TextileNode.addThread(name, mnemonic)
+  addThread: async function (name: TT.ThreadName): Promise<TT.Thread> {
+    const jsonString = await TextileNode.addThread(name)
     const thread = JSON.parse(jsonString) as TT.Thread
     return thread
   },
