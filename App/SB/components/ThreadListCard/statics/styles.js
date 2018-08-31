@@ -92,7 +92,7 @@ export default StyleSheet.create({
   },
   threadCardTitle: {
     fontFamily: 'BentonSans',
-    fontSize: 28
+    fontSize: 22
   },
   detailUpdateTime: {
     fontFamily: 'BentonSans',
