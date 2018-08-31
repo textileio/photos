@@ -131,10 +131,13 @@ const mapStateToProps = (state, ownProps) => {
       return 1
     } else if (b.username === null || b.username === '') {
       return -1
-    } else if (a.username === b.username) {
+    }
+    let A: string = a.username.toString().toUpperCase()
+    let B: string = b.username.toString().toUpperCase()
+    if (A === B) {
       return 0
     } else {
-      return a.username < b.username ? -1 : 1
+      return A < B ? -1 : 1
     }
   })
   return {

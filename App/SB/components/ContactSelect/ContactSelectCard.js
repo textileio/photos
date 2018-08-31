@@ -11,7 +11,7 @@ const ContactSelectCard = (props) => {
   const defaultSource = require('../../../Images/v2/main-image.png')
 
   return (
-    <TouchableOpacity style={styles.contactItem} onPress={() => {
+    <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={() => {
       select(item, item.included)
     }}>
       <Avatar style={styles.selectedContact} width={43} height={43} peer_id={item.id} defaultSource={defaultSource} />
