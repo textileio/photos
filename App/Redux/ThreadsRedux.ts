@@ -67,15 +67,6 @@ export type InboundInvite = {
 }
 
 export type ThreadsState = {
-  readonly refreshError?: Error
-  readonly adding?: {
-    readonly name: ThreadName,
-    readonly error?: Error
-  }
-  readonly removing?: {
-    readonly id: ThreadId
-    readonly error?: Error
-  }
   readonly outboundInvites: ReadonlyArray<OutboundInvite>
   readonly inboundInvites: ReadonlyArray<InboundInvite>
   readonly pendingInviteLink?: string // used to hold an invite if triggered before login
