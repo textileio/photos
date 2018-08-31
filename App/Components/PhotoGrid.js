@@ -30,19 +30,18 @@ export default class PhotoGrid extends React.PureComponent {
     const uploadingImage: UploadingImage | undefined = this.props.progressData[row.item.id]
     let overlay
     if (uploadingImage && this.props.verboseUi) {
-      console.log('found', uploadingImage)
-      if (uploadingImage.state === 'pending') {
-        overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
-      } else if (uploadingImage.state === 'uploading') {
-        overlay = <Progress.Pie progress={uploadingImage.uploadProgress} size={20} color={Colors.brandPink} />
-      } else if (uploadingImage.state === 'error') {
-        const displayError = () => {
-          this.refs.toast.show(uploadingImage.errorMessage, 2000)
-        }
-        overlay = <TouchableOpacity onPress={displayError}>
-          <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
-        </TouchableOpacity>
-      }
+      // if (uploadingImage.state === 'pending') {
+      //   overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
+      // } else if (uploadingImage.state === 'uploading') {
+      //   overlay = <Progress.Pie progress={uploadingImage.uploadProgress} size={20} color={Colors.brandPink} />
+      // } else if (uploadingImage.state === 'error') {
+      //   const displayError = () => {
+      //     this.refs.toast.show(uploadingImage.errorMessage, 2000)
+      //   }
+      //   overlay = <TouchableOpacity onPress={displayError}>
+      //     <Icon name='exclamation' size={30} color={Colors.brandRed} style={{backgroundColor: Colors.clear}} />
+      //   </TouchableOpacity>
+      // }
     }
     return (
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
