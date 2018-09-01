@@ -26,6 +26,8 @@ jobs:
                 - node_modules
     lint:
         working_directory: ~/textile-mobile
+        docker:
+            - image: circleci/node:8
         steps:
             - run:
                 name: js lint
@@ -38,6 +40,8 @@ jobs:
                 path: reports/junit
     tests:
         working_directory: ~/textile-mobile
+        docker:
+            - image: circleci/node:8
         steps:
             - run:
                 name: jest tests
@@ -281,6 +285,7 @@ workflows:
                     - node
             - tests:
                 requires:
+                    - node
                     - lint
             - android:
                 requires:
