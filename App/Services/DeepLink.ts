@@ -6,8 +6,7 @@ function getParams (hash: string): { [key: string]: (string | string[]) } {
   const query = hash.replace('#', '')
   const vars = query.split('&')
   const queryString: { [key: string]: (string | string[]) } = {}
-  for (let i = 0; i < vars.length; i = i + 1) {
-    const pair = vars[i].split('=')
+  for (const pair of vars) {
     // If first entry with this name
     if (typeof queryString[pair[0]] === 'undefined') {
       queryString[pair[0]] = decodeURIComponent(pair[1])

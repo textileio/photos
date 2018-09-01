@@ -6,7 +6,7 @@ import sagaPlugin from 'reactotron-redux-saga'
 
 if (Config.useReactotron) {
   const scriptURL = NativeModules.SourceCode.scriptURL
-  const scriptHostname = scriptURL.split('://')[1].split(':')[0];
+  const scriptHostname = scriptURL.split('://')[1].split(':')[0]
   Reactotron
     .configure({ host: scriptHostname, name: 'Textile' })
     .use(trackGlobalErrors())
@@ -16,6 +16,5 @@ if (Config.useReactotron) {
     .use(reactotronRedux())
     .use(sagaPlugin())
     .connect()
-    
   Reactotron.clear()
 }

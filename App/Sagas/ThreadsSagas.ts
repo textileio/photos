@@ -121,7 +121,7 @@ export function * addInternalInvites (action: ActionType<typeof ThreadsActions.a
 }
 
 export function * handlePhotoToNewThreadRequest (action: ActionType<typeof UIActions.sharePhotoToNewThreadRequest>) {
-  const {imageId, threadName, comment} = action.payload
+  const { imageId, threadName, comment } = action.payload
   const thread: Thread = yield call(TextileNode.addThread, threadName)
   yield put(ThreadsActions.addThreadSuccess(thread))
   yield call(shareWalletImage, imageId, thread.id, comment)
