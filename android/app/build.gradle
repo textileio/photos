@@ -121,7 +121,7 @@ android {
         }
         vectorDrawables.useSupportLibrary = true
 
-        versionName "1.6.2"
+        versionName "1.6.3"
         versionCode 193
     }
 
