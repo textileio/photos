@@ -108,7 +108,7 @@ class ThreadInvite extends React.PureComponent {
         <Text style={styles.deviceId}>{message}</Text>
         {!cont && <ActivityIndicator size='large' color='#000000' animating={this.state.status !== 'success'} />
         }
-        <View style={styles.buttonList}>
+        <View style={styles.buttonSingle}>
           <Button
             style={styles.button}
             title={cont ? 'Continue' : 'Wait'}
@@ -166,6 +166,7 @@ const mapStateToProps = (state, ownProps) => {
   const navParams = ownProps.navigation.state.params || {}
   const inviteId = navParams.request.id || undefined
 
+  console.log('axh', state.textileNode.nodeState, state.textileNode.online)
   return {
     invite: state.threads.inboundInvites.find(invite => invite.inviteId === inviteId),
     online: nodeState && online

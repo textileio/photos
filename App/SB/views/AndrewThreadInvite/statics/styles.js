@@ -44,11 +44,18 @@ export default StyleSheet.create({
     paddingHorizontal: 28,
     marginBottom: 28
   },
+  buttonSingle: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 28,
+    marginBottom: 28
+  },
   button: {
     fontFamily: 'BentonSans',
     color: Colors.charcoal,
     fontSize: 18,
-    alignSelf: 'center',
+    alignSelf: 'stretch',
     textAlign: 'justify'
   },
 })
