@@ -13,7 +13,8 @@
         "App/Redux/**/*",
         "App/Navigation/**/*",
         "App/Models/**/*",
-        "App/SB/**/*"
+        "App/SB/**/*",
+        "**.json"
       ]
     },
     "jsRules": {},
