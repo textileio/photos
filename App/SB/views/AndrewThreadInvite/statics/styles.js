@@ -46,10 +46,7 @@ export default StyleSheet.create({
   },
   buttonSingle: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: 28,
-    marginBottom: 28
+    paddingHorizontal: 10
   },
   button: {
     fontFamily: 'BentonSans',

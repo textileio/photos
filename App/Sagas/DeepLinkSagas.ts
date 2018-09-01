@@ -36,8 +36,6 @@ export function * routeThreadInvite(url: string, hash: string ) {
   }
   const onboarded = yield select(PreferencesSelectors.onboarded)
   if (true || onboarded) {
-    // invite the user to the thread
-    yield call(delay, 500) // seems to protect against launch out of background
     NavigationService.navigate('ThreadInvite', { url, request: DeepLink.getParams(hash) })
   } else {
     // simply store the pending invite information to act on after onboarding success
