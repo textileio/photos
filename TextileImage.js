@@ -1,7 +1,7 @@
 import React from 'react'
 import { requireNativeComponent } from 'react-native'
 
-type Props = {
+type IProps = {
   imageId: string,
   path: string,
   resizeMode: string,
