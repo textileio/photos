@@ -12,6 +12,7 @@ import { TextileNodeAction } from './TextileNodeRedux'
 import { ThreadsAction } from './ThreadsRedux'
 import { UIAction } from './UIRedux'
 import { UploadingImagesAction } from './UploadingImagesRedux'
+import { StartupAction } from './StartupRedux'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -24,4 +25,5 @@ export type RootAction =
   TextileNodeAction |
   ThreadsAction |
   UIAction |
-  UploadingImagesAction
+  UploadingImagesAction |
+  StartupAction
