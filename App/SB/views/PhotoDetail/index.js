@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import { Alert, View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
@@ -21,7 +21,6 @@ import { getHeight } from '../../../Services/PhotoUtils'
 
 import styles from './statics/styles'
 
-
 // via https://github.com/react-native-community/react-native-modal/issues/147
 const WIDTH = Dimensions.get('window').width
 // May be slightly off on some bigger Android devices...
@@ -38,7 +37,7 @@ class PhotoDetail extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
     if (
       this.props.photo.metadata !== prevProps.photo.metadata
     ) {
@@ -50,7 +49,7 @@ class PhotoDetail extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    const {params = {}} = navigation.state
+    const { params = {} } = navigation.state
     const headerLeft = (
       <TextileHeaderButtons left>
         <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
@@ -78,7 +77,7 @@ class PhotoDetail extends Component {
   }
 
   sharePressed () {
-    this.setState({drawer: true})
+    this.setState({ drawer: true })
     this.props.shareImage(this.props.photo.id)
   }
 
@@ -88,7 +87,7 @@ class PhotoDetail extends Component {
         'Remove Photo',
         'This will remove the photo from your private wallet. Camera roll, Profile, and Threads will not be modified.',
         [
-          {text: 'Cancel', style: 'cancel'},
+          { text: 'Cancel', style: 'cancel' },
           {
             text: 'OK',
             onPress: () => {
@@ -107,20 +106,20 @@ class PhotoDetail extends Component {
   }
 
   shareClosed () {
-    this.setState({drawer: false})
+    this.setState({ drawer: false })
   }
 
   // For when the user wants to share it into a selected thread
   shareIntoThread (i) {
-    this.setState({drawer: false})
+    this.setState({ drawer: false })
     const thread = this.props.threadsNotIn[i]
     this.props.shareToThread(thread.id)
     this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PhotoViewer' })
   }
 
   // For when the user wants to share it into a selected thread
-  shareIntoNewThread (i) {
-    this.setState({drawer: false})
+  shareIntoNewThread () {
+    this.setState({ drawer: false })
     this.props.navigation.navigate('CreateThreadScreen', { backTo: 'PhotoViewer', withPhoto: this.props.photo })
   }
 
@@ -134,7 +133,7 @@ class PhotoDetail extends Component {
       imageId={id}
       previewPath={'small'}
       path={'medium'}
-      style={{height: this.state.height, width: WIDTH, marginBottom: 10}}
+      style={{ height: this.state.height, width: WIDTH, marginBottom: 10 }}
       resizeMode={'cover'}
     />)
   }
@@ -142,19 +141,19 @@ class PhotoDetail extends Component {
   render () {
     return (
       <ScrollView style={styles.bodyContainer}>
-        <View style={{overflow: 'hidden', height: this.state.height, width: WIDTH}}>
+        <View style={{ overflow: 'hidden', height: this.state.height, width: WIDTH }}>
           {this.props.photo && this.renderImage(this.props.photo.id)}
         </View>
         <View style={styles.photoDetails}>
           <View style={styles.detailItem}>
-            {/*<Image style={styles.iconLocation} source={require('./statics/icon-location.png')}/>*/}
-            {/*<Text style={styles.detailText}>Earth</Text>*/}
+            {/* <Image style={styles.iconLocation} source={require('./statics/icon-location.png')}/> */}
+            {/* <Text style={styles.detailText}>Earth</Text> */}
           </View>
-          <View style={[styles.detailItem, {flexGrow: 1}]}>
+          <View style={[styles.detailItem, { flexGrow: 1 }]}>
             <Image style={styles.iconCalendar} source={require('./statics/icon-calendar.png')} />
             <Text style={styles.detailText}>{this.props.date}</Text>
           </View>
-          {/*<Image style={styles.iconInfo} source={require('./statics/icon-info.png')} />*/}
+          {/* <Image style={styles.iconInfo} source={require('./statics/icon-info.png')} /> */}
         </View>
         <ScrollView style={styles.contentContainer}>
           <Text style={styles.threadsTitle}>
@@ -162,15 +161,15 @@ class PhotoDetail extends Component {
           </Text>
           {this.props.threadsIn.map((thread, i) => (
             <TouchableOpacity key={i} onPress={() => { this.viewThread(thread) }}>
-              <PhotoWithTextBox key={i} text={thread.name} photo={this.props.thumbs[thread.id]}/>
+              <PhotoWithTextBox key={i} text={thread.name} photo={this.props.thumbs[thread.id]} />
             </TouchableOpacity>
           ))}
           { this.props.threadsIn.length > 0 &&
           <TouchableOpacity onPress={this.sharePressed.bind(this)}>
-            <PhotoBoxEmpty style={{marginBottom: 9, marginTop: 0}} title='Share in another thread'/>
+            <PhotoBoxEmpty style={{ marginBottom: 9, marginTop: 0 }} title='Share in another thread' />
           </TouchableOpacity> }
         </ScrollView>
-        <Modal isVisible={this.state.drawer} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: 'flex-end'}}>
+        <Modal isVisible={this.state.drawer} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: 'flex-end' }}>
           <ShareToThread
             selector={this.shareIntoThread.bind(this)}
             newThread={this.shareIntoNewThread.bind(this)}
@@ -189,7 +188,6 @@ class PhotoDetail extends Component {
   }
 }
 
-
 const mapDispatchToProps = (dispatch) => {
   return {
     shareImage: (imageId) => { dispatch(UIActions.updateSharingPhotoImage(imageId)) },
@@ -199,7 +197,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const thread = state.threads.threads.find(thread => thread.id === state.ui.viewingPhoto.threadId)
   const photo = state.textileNode.threads[state.ui.viewingPhoto.threadId].photos.find((it) => it.id === state.ui.viewingPhoto.photoId)
 
@@ -225,7 +223,7 @@ const mapStateToProps = (state, ownProps) => {
   }).sort((a, b) => b - a)
 
   const path = thread.name === 'default' ? '/photo' : '/thumb'
-  const source = photo ? {url: 'file://' + photo.id + '.png'} : {url: 'file://.png'}
+  const source = photo ? { url: 'file://' + photo.id + '.png' } : { url: 'file://.png' }
 
   return {
     photo,

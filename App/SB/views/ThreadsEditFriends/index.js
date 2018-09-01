@@ -20,7 +20,7 @@ class ThreadsEditFriends extends React.PureComponent {
   }
 
   static navigationOptions = ({ navigation }) => {
-    const {params = {}} = navigation.state
+    const { params = {} } = navigation.state
     const headerLeft = (
       <TextileHeaderButtons left>
         <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
@@ -52,7 +52,7 @@ class ThreadsEditFriends extends React.PureComponent {
     })
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
     if (prevState.selected !== this.state.selected) {
       const updateEnabled = Object.keys(this.state.selected).find((k) => this.state.selected[k] === true)
       this.props.navigation.setParams({
@@ -74,7 +74,7 @@ class ThreadsEditFriends extends React.PureComponent {
     if (included) return // if the user is already part of the thread
     const state = !this.state.selected[contact.id]
     this.setState({
-      selected: {...this.state.selected, [contact.id]: state}
+      selected: { ...this.state.selected, [contact.id]: state }
     })
   }
 

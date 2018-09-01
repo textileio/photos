@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Share, View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast, { DURATION } from 'react-native-easy-toast'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
@@ -35,7 +35,7 @@ class UserProfile extends React.PureComponent {
         <HeaderButtons>
           <Item
             title='Avatar'
-            buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+            buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
             ButtonElement={
               <Avatar
                 width={32}
@@ -66,7 +66,7 @@ class UserProfile extends React.PureComponent {
     this.refs.toast.show('Copied Public Key to Clipboard', DURATION.LENGTH_SHORT)
   }
   _contact () {
-    this.setState({contactModal: this.state.contactModal === false})
+    this.setState({ contactModal: this.state.contactModal === false })
   }
   _mnemonic () {
     this.props.navigation.navigate('Mnemonic', {
@@ -102,7 +102,7 @@ class UserProfile extends React.PureComponent {
       <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
           <View style={styles.logoContainer}>
-            <ImageSc width={83} source={require('./statics/textile-gray-logo.png')}/>
+            <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
           </View>
           {this.connectivity()}
           <TouchableOpacity style={styles.listItemFirst} onPress={this._settings.bind(this)}>

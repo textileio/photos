@@ -1,5 +1,4 @@
-import { select, put } from 'redux-saga/effects'
-import { selectAvatar, startup } from '../../App/Sagas/StartupSagas'
+import { startup } from '../../App/Sagas/StartupSagas'
 
 const stepper = (fn) => (mock) => fn.next(mock).value
 
@@ -45,10 +44,10 @@ jest.mock('react-native-fs', () => {
     ExternalStorageDirectoryPath: jest.fn(),
     TemporaryDirectoryPath: jest.fn(),
     LibraryDirectoryPath: jest.fn(),
-    PicturesDirectoryPath: jest.fn(),
-  };
-});
+    PicturesDirectoryPath: jest.fn()
+  }
+})
 
 test('watches for the right action', () => {
-  const step = stepper(startup())
+  stepper(startup())
 })

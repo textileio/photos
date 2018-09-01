@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { View, TextInput, Text } from 'react-native'
 import PropTypes from 'prop-types'
 
@@ -54,7 +54,7 @@ class TextField extends Component {
       nextProps.value.length !== 0
         ? this.refs.floatingLabel.floatLabel()
         : this.refs.floatingLabel.sinkLabel()
-      this.setState({text: nextProps.value})
+      this.setState({ text: nextProps.value })
     }
   }
 
@@ -95,7 +95,7 @@ class TextField extends Component {
       ...props
     } = this.props
     return (
-      <View style={[dense ? styles.denseWrapper : styles.wrapper, wrapperStyle]} ref="wrapper">
+      <View style={[dense ? styles.denseWrapper : styles.wrapper, wrapperStyle]} ref='wrapper'>
         <TextInput
           style={[dense ? styles.denseTextInput : styles.textInput, {
             color: textColor
@@ -105,28 +105,28 @@ class TextField extends Component {
             color: textBlurColor
           } : {}, inputStyle]}
           onFocus={() => {
-            this.setState({isFocused: true})
+            this.setState({ isFocused: true })
             this.refs.floatingLabel.floatLabel()
             this.refs.underline.expandLine()
             onFocus && onFocus()
           }}
           onBlur={() => {
-            this.setState({isFocused: false})
+            this.setState({ isFocused: false })
             !this.state.text.length && this.refs.floatingLabel.sinkLabel()
             this.refs.underline.shrinkLine()
             onBlur && onBlur()
           }}
           onChangeText={text => {
-            this.setState({text})
+            this.setState({ text })
             onChangeText && onChangeText(text)
           }}
           editable={!disabled}
-          ref="input"
+          ref='input'
           value={this.state.text}
           {...props}
         />
         <Underline
-          ref="underline"
+          ref='underline'
           highlightColor={highlightColor}
           duration={duration}
           borderColor={error ? errorBorderColor : borderColor}
@@ -134,7 +134,7 @@ class TextField extends Component {
         { error && <Text style={styles.errorMsg}>{errorMsg}</Text> }
         <FloatingLabel
           isFocused={this.state.isFocused}
-          ref="floatingLabel"
+          ref='floatingLabel'
           focusHandler={this.focus.bind(this)}
           label={label}
           labelColor={labelColor}

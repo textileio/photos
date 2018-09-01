@@ -1,18 +1,13 @@
 import React from 'react'
 import { Image, View, Text, Button, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
-import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
-import DevicesActions from '../../../Redux/DevicesRedux'
 
 import Toolbar from '../../components/Toolbar'
 
 import styles from './statics/styles'
 import ThreadsAction from '../../../Redux/ThreadsRedux'
 import style from '../../../Containers/Styles/PairingViewStyle'
-// import style from '../../../Containers/Styles/PairingViewStyle'
-
-// const DevicePairing = () => {
 
 class ThreadInvite extends React.PureComponent {
   constructor (props) {
@@ -26,7 +21,7 @@ class ThreadInvite extends React.PureComponent {
       status: 'init'
     }
   }
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       tabBarVisible: false
     }
@@ -41,7 +36,7 @@ class ThreadInvite extends React.PureComponent {
 
   confirmRequest = () => {
     this.props.acceptExternalInvite(this.state.inviteId, this.state.inviteKey, this.state.name, this.state.inviter)
-    this.setState(() => ({status: 'added'}))
+    this.setState(() => ({ status: 'added' }))
   }
 
   cancel = () => {
@@ -57,7 +52,7 @@ class ThreadInvite extends React.PureComponent {
   renderConfirm () {
     return (
       <View style={styles.contentContainer}>
-        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
+        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')} />
         <Text style={styles.deviceId}>You have been invited by {this.state.inviter ? this.state.inviter : 'warning'} to join {this.state.name ? this.state.name : 'warning'}.</Text>
         <View style={styles.buttonList}>
           <View style={styles.buttonSingle}>
@@ -78,7 +73,7 @@ class ThreadInvite extends React.PureComponent {
             />
           </View>
         </View>
-        {!this.props.online && <ActivityIndicator style={{marginTop: 10, flex: 1}} size='large' color='#000000' animating={this.state.status !== 'success'} />
+        {!this.props.online && <ActivityIndicator style={{ marginTop: 10, flex: 1 }} size='large' color='#000000' animating={this.state.status !== 'success'} />
         }
       </View>
     )
@@ -87,7 +82,7 @@ class ThreadInvite extends React.PureComponent {
   renderError (message) {
     return (
       <View style={styles.contentContainer}>
-        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
+        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')} />
         <Text style={styles.deviceId}>{message}</Text>
         <View style={styles.buttonList}>
           <View style={styles.buttonSingle}>
@@ -114,7 +109,7 @@ class ThreadInvite extends React.PureComponent {
   renderStatus (message, cont) {
     return (
       <View style={styles.contentContainer}>
-        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
+        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')} />
         <Text style={styles.deviceId}>{message}</Text>
         <View style={styles.buttonSingle}>
           <Button
@@ -125,7 +120,7 @@ class ThreadInvite extends React.PureComponent {
             disabled={!cont}
           />
         </View>
-        {!cont && <ActivityIndicator style={{marginTop: 10, flex: 1}} size='large' color='#000000' animating={this.state.status !== 'success'} />
+        {!cont && <ActivityIndicator style={{ marginTop: 10, flex: 1 }} size='large' color='#000000' animating={this.state.status !== 'success'} />
         }
       </View>
     )
@@ -156,11 +151,11 @@ class ThreadInvite extends React.PureComponent {
         <Toolbar
           style={styles.toolbar}
           left={<TouchableOpacity onPress={() => { this.cancel() }}>
-              <Image
-                style={styles.toolbarLeft}
-                source={require('./statics/icon-arrow-left.png')}
-              />
-            </TouchableOpacity>}>
+            <Image
+              style={styles.toolbarLeft}
+              source={require('./statics/icon-arrow-left.png')}
+            />
+          </TouchableOpacity>}>
           <Text style={styles.toolbarTitle}>Thread Invite</Text>
           {this.renderBody()}
         </Toolbar>

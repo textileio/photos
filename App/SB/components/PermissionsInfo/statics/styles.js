@@ -18,8 +18,8 @@ export default StyleSheet.create({
     borderBottomWidth: 1
   },
   title: {
-    fontFamily: "BentonSans",
-    fontSize: 14,
+    fontFamily: 'BentonSans',
+    fontSize: 14
   },
   closeIcon: {
     paddingBottom: 16,
@@ -28,12 +28,12 @@ export default StyleSheet.create({
   },
   detailsContainer: {
     paddingVertical: 22,
-    paddingHorizontal: 14,
+    paddingHorizontal: 14
   },
   details: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 12,
-    color: "#9b9b9b",
+    color: '#9b9b9b',
     lineHeight: 18
   },
   photoElement: {

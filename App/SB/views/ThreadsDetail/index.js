@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {View, FlatList, Text} from 'react-native'
+import { View, FlatList, Text } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -34,13 +34,13 @@ class ThreadsDetail extends React.PureComponent {
   }
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const headerLeft =  (
+    const headerLeft = (
       <TextileHeaderButtons left>
         <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
       </TextileHeaderButtons>
     )
 
-      // <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
+    // <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add Photo' iconName='add-photo' onPress={params.showImagePicker} />
@@ -55,7 +55,7 @@ class ThreadsDetail extends React.PureComponent {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState, snapShot) {
     if (
       this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
       this.props.threadName !== prevProps.threadName ||
@@ -121,15 +121,15 @@ class ThreadsDetail extends React.PureComponent {
 
   _progressStyle = (fillBar) => {
     if (fillBar) {
-      return {height: 1, backgroundColor: '#2935ff', flex: this.props.progress}
+      return { height: 1, backgroundColor: '#2935ff', flex: this.props.progress }
     } else {
-      return {height: 1, backgroundColor: 'transparent', flex: 1.0 - this.props.progress}
+      return { height: 1, backgroundColor: 'transparent', flex: 1.0 - this.props.progress }
     }
   }
 
   _keyExtractor = (item, index) => item.id + '_' + index
 
-  _renderItem = ({item, last}) => {
+  _renderItem = ({ item }) => {
     switch (item.type) {
       case 'title': {
         // TODO: We should do this with Navbar integration later
@@ -178,10 +178,10 @@ class ThreadsDetail extends React.PureComponent {
             />
           </View>
         </View>
-        {this.state.showDrawer && <BottomDrawerList/>}
+        {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet
-          ref={o => this.actionSheet = o}
+          ref={o => { this.actionSheet = o }}
           title={this.props.threadName + ' options'}
           options={['Invite Others', 'Leave Thread', 'Cancel']}
           cancelButtonIndex={2}
@@ -202,14 +202,14 @@ const mapStateToProps = (state: RootState, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  var items: [{type: string, photo: TextileTypes.Photo}] = []
-  var processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
-  var thread = undefined
+  let items: [{type: string, photo: TextileTypes.Photo}] = []
+  let processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
+  let thread
 
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
-      return {type: 'photo', photo, id: photo.id}
+      return { type: 'photo', photo, id: photo.id }
     })
     processingItems = state.processingImages.images
       .filter(image => image.destinationThreadId === threadId)
@@ -253,7 +253,6 @@ const mapStateToProps = (state: RootState, ownProps) => {
       ? 'Any new photos you take will be added to your Textile wallet.'
       : 'Share your first photo to the ' + threadName + ' thread.')
 
-
   // add processing items to the beginning of the list
   items.unshift(...processingItems)
 
@@ -293,7 +292,7 @@ const mapDispatchToProps = (dispatch) => {
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
-    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
+    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) }
   }
 }
 

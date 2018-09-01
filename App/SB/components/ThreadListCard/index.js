@@ -3,12 +3,9 @@ import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
 import moment from 'moment'
 import TextileImage from '../../../../TextileImage'
 
-import IconTag from '../IconTag'
-import Avatar from '../../../Components/Avatar'
+import styles, { cardImageContainerStyle, cardImageStyle } from './statics/styles'
 
 const { width } = Dimensions.get('window')
-
-import styles, { cardImageContainerStyle, cardImageStyle } from './statics/styles'
 
 const ThreadCard = props => {
   const { name, updated, photos, onPress } = props
@@ -50,13 +47,13 @@ const ThreadCard = props => {
           }) }
         </View>
       </View>
-        <View style={styles.threadCardFooter}>
-          <View style={styles.threadCardFooterRight}>
-            <View style={styles.threadCardFooterRightDetail}>
-              <Text style={styles.detailUpdateTime}>{status}</Text>
-            </View>
+      <View style={styles.threadCardFooter}>
+        <View style={styles.threadCardFooterRight}>
+          <View style={styles.threadCardFooterRightDetail}>
+            <Text style={styles.detailUpdateTime}>{status}</Text>
           </View>
         </View>
+      </View>
     </TouchableOpacity>
   )
 }

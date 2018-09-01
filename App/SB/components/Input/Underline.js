@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { View, Animated } from 'react-native'
 import PropTypes from 'prop-types'
 
@@ -34,10 +34,10 @@ class Underline extends Component {
   }
 
   render () {
-    const {borderColor, highlightColor} = this.props
+    const { borderColor, highlightColor } = this.props
     return (
       <View
-        onLayout={e => this.wrapperWidth = e.nativeEvent.layout.width}
+        onLayout={(e) => { this.wrapperWidth = e.nativeEvent.layout.width }}
         style={[styles.underlineWrapper, {
           backgroundColor: borderColor
         }]}

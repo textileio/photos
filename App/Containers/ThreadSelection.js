@@ -1,12 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import { View, FlatList, ScrollView, Text, TouchableOpacity } from 'react-native'
+import { View, FlatList, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast, { DURATION } from 'react-native-easy-toast'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import UIActions from '../Redux/UIRedux'
-import Config from "react-native-config"
 
 // Styles
 import styles from './Styles/ThreadsStyle'
@@ -40,7 +39,7 @@ class MyListItem extends React.PureComponent {
 }
 
 class ThreadSelection extends React.PureComponent {
-  state = {selected: (new Map(): Map<string, boolean>)}
+  state = { selected: (new Map(): Map<string, boolean>) }
 
   _keyExtractor = (item, index) => item.id
 
@@ -55,7 +54,7 @@ class ThreadSelection extends React.PureComponent {
     this.props.updateSelectedThreads(selected)
   }
 
-  _renderItem = ({item}) => (
+  _renderItem = ({ item }) => (
     <MyListItem
       id={item.id}
       onPressItem={this._onPressItem}
@@ -72,7 +71,7 @@ class ThreadSelection extends React.PureComponent {
   render () {
     const disabled = [...this.props.selectedThreads.values()].filter(value => value).length === 0
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <FlatList
           ItemSeparatorComponent={() => (<View style={styles.separator} />)}
           style={styles.container}
@@ -107,7 +106,7 @@ const mapStateToProps = (state) => {
     })
   return {
     data: [
-      ...threads,
+      ...threads
       // {type: 'add', id: 'add', title: 'New Thread'}
     ],
     selectedThreads: state.ui.sharingPhoto.selectedThreads

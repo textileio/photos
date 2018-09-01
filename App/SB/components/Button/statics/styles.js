@@ -6,7 +6,7 @@ export default StyleSheet.create({
     minWidth: 300,
     paddingVertical: 18,
     paddingHorizontal: 65,
-    borderRadius: 6,
+    borderRadius: 6
   },
   buttonText: {
     fontFamily: 'BentonSans',

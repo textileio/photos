@@ -1,21 +1,16 @@
 import React from 'react'
 import {
   View,
-  Image,
   Text,
   FlatList,
   TouchableOpacity
 } from 'react-native'
-import Icon from 'react-native-vector-icons/EvilIcons'
-import * as Progress from 'react-native-progress'
 import Toast from 'react-native-easy-toast'
-import { Colors } from '../Themes'
 import TextileImage from '../../TextileImage'
 import { UploadingImage } from '../Redux/UploadingImagesRedux'
 
 // Styles
-import styles, {PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns} from './Styles/PhotoGridStyles'
-import { uploadArchive } from '../Sagas/ImageSharingSagas'
+import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PhotoGridStyles'
 
 export default class PhotoGrid extends React.PureComponent {
   /* ***********************************************************
@@ -28,7 +23,6 @@ export default class PhotoGrid extends React.PureComponent {
   renderRow (row) {
     // TODO: not longer meaningful in the Wallet. Progress data isn't there. Good when we add sync back
     const uploadingImage: UploadingImage | undefined = this.props.progressData[row.item.id]
-    let overlay
     if (uploadingImage && this.props.verboseUi) {
       // if (uploadingImage.state === 'pending') {
       //   overlay = <Progress.Pie indeterminate size={20} color={Colors.brandPink} />
@@ -54,7 +48,7 @@ export default class PhotoGrid extends React.PureComponent {
           />
         </View>
         <View style={styles.itemOverlay}>
-          {overlay}
+          {/* TODO: Add verbose back */}
         </View>
       </TouchableOpacity>
     )
@@ -72,7 +66,7 @@ export default class PhotoGrid extends React.PureComponent {
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item, index) => item.id
+  keyExtractor = (item) => item.id
 
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 20

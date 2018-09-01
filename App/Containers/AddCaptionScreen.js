@@ -70,7 +70,7 @@ class AddCaptionScreen extends React.Component {
       : this.props.image.uri
     return (
       <Image
-        source={{uri: sourceUri, isStatic: true}}
+        source={{ uri: sourceUri, isStatic: true }}
         resizeMode={'cover'}
         style={styles.image} />
     )
