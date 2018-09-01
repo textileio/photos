@@ -24,25 +24,38 @@ jobs:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
                 paths:
                 - node_modules
+    lint:
+        working_directory: ~/textile-mobile
+      # Setup steps omitted
+      - run:
+          name: js lint
+          # yarn here makes sure we are using the local jest binary
+          command: yarn lint -- --format junit -o reports/junit/js-lint-results.xml
+      # Note: this hasn't changed. Don't add this twice!
+      - store_test_results:
+          path: reports/junit
+      - store_artifacts:
+          path: reports/junit
+    tests:
+        working_directory: ~/textile-mobile
+      - run:
+          name: jest tests
+          command: |
+              mkdir -p test-results/jest
+              yarn run test
+          environment:
+              JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
 
-            - run:
-                name: jest tests
-                command: |
-                    mkdir -p test-results/jest
-                    yarn run test
-                environment:
-                    JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+      - persist_to_workspace:
+          root: ~/textile-mobile
+          paths:
+              - node_modules
 
-            - persist_to_workspace:
-                root: ~/textile-mobile
-                paths:
-                    - node_modules
+      - store_test_results:
+          path: test-results
 
-            - store_test_results:
-                path: test-results
-
-            - store_artifacts:
-                path: test-results
+      - store_artifacts:
+          path: test-results
 
     android:
         environment:
@@ -262,12 +275,18 @@ workflows:
     node-android-ios:
         jobs:
             - node
+            - lint
+                requires:
+                    - node
+            - tests
+                requires:
+                    - lint
             - android:
                 requires:
-                    - node
+                    - tests
             - ios:
                 requires:
-                    - node
+                    - tests
             - ios-beta:
                 requires:
                     - ios
