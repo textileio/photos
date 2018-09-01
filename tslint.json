@@ -8,17 +8,23 @@
     "linterOptions": {
       "exclude": [
         "node_modules/**",
-        "typings/**"
+        "typings/**",
+        "App/Sagas/**/*",
+        "App/Redux/**/*",
+        "App/Navigation/**/*",
+        "App/Models/**/*",
+        "App/SB/**/*"
       ]
     },
     "jsRules": {},
     "rules": {
+      "no-empty": false,
       "object-literal-sort-keys": false,
       "object-shorthand-properties-first": false,
+      "space-before-function-paren": false,
       "import-name": false,
       "ordered-imports": false,
       "member-access": false,
-      "space-before-function-paren": [true, "always"],
       "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
       "trailing-comma": [
         true,

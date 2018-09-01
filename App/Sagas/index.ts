@@ -129,7 +129,6 @@ export default function * root () {
     // update the node stats
     takeEvery(getType(TextileNodeActions.updateOverviewRequest), updateNodeOverview),
 
-
     takeEvery(getType(ThreadsActions.addThreadRequest), addThread),
     takeEvery(getType(ThreadsActions.removeThreadRequest), removeThread),
 
@@ -164,8 +163,6 @@ export default function * root () {
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardedSuccess), inviteAfterOnboard),
-
-
 
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),

@@ -11,13 +11,13 @@ import TriggersActions from '../Redux/TriggersRedux'
 // Styles
 import styles from './Styles/RootContainerStyles'
 
-type Props = {
+interface IProps {
   showOverlay: boolean
   monitorLocation: boolean
   locationUpdate: () => void
 }
 
-class RootContainer extends Component<Props> {
+class RootContainer extends Component<IProps> {
 
   // TODO: Move all this location handling out of here!!!
 
@@ -59,13 +59,13 @@ class RootContainer extends Component<Props> {
         <AppNavigation ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }} />
         <Overlay
           isVisible={this.props.showOverlay}
-          windowBackgroundColor='rgba(0, 0, 0, .1)'
-          overlayBackgroundColor='rgba(0, 0, 0, .8)'
+          windowBackgroundColor={'rgba(0, 0, 0, .1)'}
+          overlayBackgroundColor={'rgba(0, 0, 0, .8)'}
           borderRadius={8}
-          width='auto'
-          height='auto'
+          width={'auto'}
+          height={'auto'}
         >
-          <ActivityIndicator size='large' color='#ffffff' />
+          <ActivityIndicator size={'large'} color={'#ffffff'} />
         </Overlay>
       </View>
     )
@@ -80,7 +80,7 @@ const mapStateToProps = (state: RootState) => {
 }
 
 // wraps dispatch to create nicer functions to call within our component
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: any) => ({
   locationUpdate: () => dispatch(TriggersActions.locationUpdate())
 })
 

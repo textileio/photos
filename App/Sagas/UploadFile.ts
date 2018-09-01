@@ -21,7 +21,7 @@ export function * uploadFile (id: string, payloadPath: string) {
       method: 'POST',
       type: 'raw',
       headers: {
-        'Authorization': 'Bearer ' + tokens!.access,
+        Authorization: `Bearer ${tokens!.access}`,
         'Content-Type': 'application/gzip'
       }
     }
