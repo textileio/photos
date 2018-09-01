@@ -35,7 +35,7 @@ export function * routeThreadInvite(url: string, hash: string ) {
     yield take(getType(StartupActions.startup))
   }
   const onboarded = yield select(PreferencesSelectors.onboarded)
-  if (true || onboarded) {
+  if (onboarded) {
     NavigationService.navigate('ThreadInvite', { url, request: DeepLink.getParams(hash) })
   } else {
     // simply store the pending invite information to act on after onboarding success
