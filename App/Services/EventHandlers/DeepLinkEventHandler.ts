@@ -21,6 +21,7 @@ export default class DeepLinkEventHandler {
   }
 
   setup () {
+    console.log('axh', 'setup')
     if (Platform.OS === 'ios') {
       Linking.addEventListener('url', this._handleIOS.bind(this))
     }

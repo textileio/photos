@@ -37,7 +37,8 @@ export default StyleSheet.create({
     textAlign: 'center',
     marginBottom: 38
   },
-  imageList: {
+  buttonList: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 28,

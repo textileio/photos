@@ -30,6 +30,7 @@ export function * inviteAfterOnboard () {
 
 export function * routeThreadInvite(url: string, hash: string ) {
   const onboarded = yield select(PreferencesSelectors.onboarded)
+  console.log('axh', url, hash, onboarded)
   if (onboarded) {
     // invite the user to the thread
     NavigationService.navigate('ThreadInvite', { url, request: DeepLink.getParams(hash) })
