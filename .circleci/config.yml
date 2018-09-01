@@ -24,6 +24,11 @@ jobs:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
                 paths:
                 - node_modules
+                
+            - persist_to_workspace:
+                root: ~/textile-mobile
+                paths:
+                    - node_modules
     lint:
         working_directory: ~/textile-mobile
         docker:
@@ -31,13 +36,13 @@ jobs:
         steps:
             - run:
                 name: js lint
-                # yarn here makes sure we are using the local jest binary
-                command: yarn lint -- --format junit -o reports/junit/js-lint-results.xml
-            # Note: this hasn't changed. Don't add this twice!
+                command: |
+                    mkdir -p lint-results/junit
+                    yarn lint -- --format junit -o reports/junit/js-lint-results.xml
             - store_test_results:
-                path: reports/junit
+                path: lint-results/junit
             - store_artifacts:
-                path: reports/junit
+                path: lint-results/junit
     tests:
         working_directory: ~/textile-mobile
         docker:
@@ -50,11 +55,6 @@ jobs:
                     yarn run test
                 environment:
                     JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
-
-            - persist_to_workspace:
-                root: ~/textile-mobile
-                paths:
-                    - node_modules
 
             - store_test_results:
                 path: test-results
