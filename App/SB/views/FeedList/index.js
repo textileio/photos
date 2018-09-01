@@ -141,6 +141,7 @@ class Notifications extends React.PureComponent {
             renderItem={this._renderItem.bind(this)}
             refreshing={false}
             onRefresh={this.props.refreshMessages}
+            initialNumToRender={20}
           />
         </View>
         {/* <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} /> */}
