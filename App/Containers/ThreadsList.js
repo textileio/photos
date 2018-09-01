@@ -176,6 +176,7 @@ class ThreadsList extends React.PureComponent {
               renderItem={this._renderItem}
               refreshing={this.props.refreshing}
               onRefresh={this._onRefresh}
+              initialNumToRender={4}
             />
           </View>
         )}
