@@ -3,11 +3,11 @@ import Config from 'react-native-config'
 import { ExternalInvite, DeepLinkData } from '../Models/TextileTypes'
 
 function getParams (hash: string): { [key: string]: (string | string[]) } {
-  let query = hash.replace('#', '')
-  let vars = query.split('&')
-  let queryString: { [key: string]: (string | string[]) } = {}
-  for (let i = 0; i < vars.length; i++) {
-    let pair = vars[i].split('=')
+  const query = hash.replace('#', '')
+  const vars = query.split('&')
+  const queryString: { [key: string]: (string | string[]) } = {}
+  for (let i = 0; i < vars.length; i = i + 1) {
+    const pair = vars[i].split('=')
     // If first entry with this name
     if (typeof queryString[pair[0]] === 'undefined') {
       queryString[pair[0]] = decodeURIComponent(pair[1])
@@ -22,7 +22,6 @@ function getParams (hash: string): { [key: string]: (string | string[]) } {
   return queryString
 }
 
-
 function getData (href: string): DeepLinkData | undefined {
   const regex = new RegExp([
     '^(https?:)//',
@@ -34,7 +33,7 @@ function getData (href: string): DeepLinkData | undefined {
   const match = href.match(regex)
   if (!match) return undefined
   return {
-    href: href,
+    href,
     protocol: match[1],
     host: match[2],
     hostname: match[3],
@@ -46,15 +45,15 @@ function getData (href: string): DeepLinkData | undefined {
 }
 
 function createInviteLink (invite: ExternalInvite, threadName: string): string {
-  let hash: string[] = []
-  hash.push('id=' + encodeURIComponent(invite.id))
-  hash.push('key=' + encodeURIComponent(invite.key))
-  hash.push('inviter=' + encodeURIComponent(invite.inviter))
-  hash.push('name=' + encodeURIComponent(threadName))
+  const hash: string[] = []
+  hash.push(`id=${encodeURIComponent(invite.id)}`)
+  hash.push(`key=${encodeURIComponent(invite.key)}`)
+  hash.push(`inviter=${encodeURIComponent(invite.inviter)}`)
+  hash.push(`name=${encodeURIComponent(threadName)}`)
   if (Config.TEMPORARY_REFERRAL) {
-    hash.push('referral=' + Config.TEMPORARY_REFERRAL)
+    hash.push(`referral=${encodeURIComponent(Config.TEMPORARY_REFERRAL)}`)
   }
-  return 'https://www.textile.photos/invites/new#' + hash.join('&')
+  return `https://www.textile.photos/invites/new#${hash.join('&')}`
 }
 
 function route (link: string) {

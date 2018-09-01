@@ -14,9 +14,12 @@
     "jsRules": {},
     "rules": {
       "object-literal-sort-keys": false,
+      "object-shorthand-properties-first": false,
       "import-name": false,
       "ordered-imports": false,
       "member-access": false,
+      "space-before-function-paren": [true, "always"],
+      "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
       "trailing-comma": [
         true,
         {
