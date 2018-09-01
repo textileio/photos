@@ -56,10 +56,16 @@ export async function getPhotoPath (photo) {
 
   // iOS method
   if (photo.uri.includes('assets-library://')) {
-    let regex = /[?&]([^=#]+)=([^&#]*)/g; let params = {}; let match
-    while (match = regex.exec(photo.uri)) {
-      params[match[1]] = match[2]
-    }
+    let regex = /[?&]([^=#]+)=([^&#]*)/g
+    let params = {}
+    let match
+    do {
+      match = regex.exec(photo.uri)
+      if (match) {
+        params[match[1]] = match[2]
+      }
+    } while (match)
+
     const path = fullDir + params.id + '.JPG'
     await RNFS.copyAssetsFileIOS(photo.uri, path, 0, 0)
     photo['path'] = path
