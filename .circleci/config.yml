@@ -71,7 +71,7 @@ jobs:
 
             - restore_cache:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-                
+
             - run:
                 name: jest tests
                 command: |
@@ -310,12 +310,13 @@ workflows:
             - tests:
                 requires:
                     - node
-                    - lint
             - android:
                 requires:
+                    - lint
                     - tests
             - ios:
                 requires:
+                    - lint
                     - tests
             - ios-beta:
                 requires:
