@@ -122,7 +122,7 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         versionName "1.6.2"
-        versionCode 193
+        versionCode 194
     }
 
     splits {
