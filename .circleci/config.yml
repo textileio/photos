@@ -280,7 +280,9 @@ workflows:
     node-android-ios:
         jobs:
             - node
-            - lint
+            - lint:
+                requires:
+                    - node
             - tests:
                 requires:
                     - node
