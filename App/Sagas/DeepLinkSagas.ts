@@ -9,14 +9,15 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, take } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import UIActions from '../Redux/UIRedux'
-import { ActionType } from 'typesafe-actions'
+import { ActionType, getType } from 'typesafe-actions'
 import DeepLink from '../Services/DeepLink'
 import NavigationService from '../Services/NavigationService'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import AuthActions, {AuthSelectors} from '../Redux/AuthRedux'
+import StartupActions, {startupSelectors} from '../Redux/StartupRedux'
 
 
 export function * inviteAfterOnboard () {
@@ -29,6 +30,10 @@ export function * inviteAfterOnboard () {
 }
 
 export function * routeThreadInvite(url: string, hash: string ) {
+  const reduxStarted: boolean = yield select(startupSelectors.started)
+  if (!reduxStarted) {
+    yield take(getType(StartupActions.startup))
+  }
   const onboarded = yield select(PreferencesSelectors.onboarded)
   if (onboarded) {
     // invite the user to the thread
