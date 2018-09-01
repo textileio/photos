@@ -59,7 +59,7 @@ class ThreadInvite extends React.PureComponent {
       <View style={styles.contentContainer}>
         <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
         <Text style={styles.deviceId}>You have been invited by {this.state.inviter ? this.state.inviter : 'warning'} to join a group Thread named, {this.state.name ? this.state.name : 'warning'}.</Text>
-        <View style={styles.imageList}>
+        <View style={styles.buttonList}>
           <Button
             style={styles.button}
             title='Ignore'
@@ -83,18 +83,20 @@ class ThreadInvite extends React.PureComponent {
       <View style={styles.contentContainer}>
         <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
         <Text style={styles.deviceId}>{message}</Text>
-        <Button
-          style={styles.button}
-          title='Exit'
-          accessibilityLabel='exit'
-          onPress={this.cancel}
-        />
-        <Button
-          style={style.button}
-          title='Retry'
-          accessibilityLabel='retry'
-          onPress={this.confirmRequest.bind(this)}
-        />
+        <View style={styles.buttonList}>
+          <Button
+            style={styles.button}
+            title='Exit'
+            accessibilityLabel='exit'
+            onPress={this.cancel}
+          />
+          <Button
+            style={style.button}
+            title='Retry'
+            accessibilityLabel='retry'
+            onPress={this.confirmRequest.bind(this)}
+          />
+        </View>
       </View>
     )
   }
@@ -106,13 +108,15 @@ class ThreadInvite extends React.PureComponent {
         <Text style={styles.deviceId}>{message}</Text>
         {!cont && <ActivityIndicator size='large' color='#000000' animating={this.state.status !== 'success'} />
         }
-        <Button
-          style={styles.button}
-          title={cont ? 'Continue' : 'Wait'}
-          accessibilityLabel='Continue'
-          onPress={this.cancel}
-          disabled={!cont}
-        />
+        <View style={styles.buttonList}>
+          <Button
+            style={styles.button}
+            title={cont ? 'Continue' : 'Wait'}
+            accessibilityLabel='Continue'
+            onPress={this.cancel}
+            disabled={!cont}
+          />
+        </View>
       </View>
     )
   }

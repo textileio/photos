@@ -26,7 +26,8 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center', // import center-overkill
     alignSelf: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderWidth: 1, borderColor: 'red'
   },
   headerLogo: {
     width: 82.5,
