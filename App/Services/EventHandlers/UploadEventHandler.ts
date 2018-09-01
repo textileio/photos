@@ -25,7 +25,7 @@ export default class UploadEventHandler {
     } else if (responseCode === 401) {
       this.store.dispatch(ProcessingImagesActions.expiredTokenError(e.id))
     } else {
-      this.store.dispatch(ProcessingImagesActions.error(e.id, 'Response code: ' + responseCode))
+      this.store.dispatch(ProcessingImagesActions.error(e.id, `Response code: ${responseCode}`))
     }
   }
 

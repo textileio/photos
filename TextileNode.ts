@@ -1,70 +1,68 @@
 import {
-  NativeModules,
-  Platform,
-  NativeEventEmitter,
   DeviceEventEmitter,
+  NativeEventEmitter,
+  NativeModules,
+  Platform
 } from 'react-native'
 import * as TT from './App/Models/TextileTypes'
-import {Threads} from './App/Models/TextileTypes'
-import {GetContactsResult} from './App/Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
 export default {
-  create: async function (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): Promise<void> {
-    console.log(dataDir)
+  async create (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): Promise<void> {
+    // console.log(dataDir)
     return await TextileNode.create(dataDir, apiUrl, logLevel, logFiles)
   },
 
-  mnemonic: async function (): Promise<TT.Mnemonic> {
+  async mnemonic (): Promise<TT.Mnemonic> {
     return await TextileNode.mnemonic()
   },
 
-  start: async function (): Promise<void> {
+  async start (): Promise<void> {
     return await TextileNode.start()
   },
 
-  stop: async function (): Promise<void> {
+  async stop (): Promise<void> {
     return await TextileNode.stop()
   },
 
-  signUpWithEmail: async function (email: string, username: TT.UserName, password: string, referral: string): Promise<void> {
+  async signUpWithEmail (email: string, username: TT.UserName, password: string, referral: string): Promise<void> {
     return await TextileNode.signUpWithEmail(email, username, password, referral)
   },
 
-  signIn: async function (username: TT.UserName, password: string): Promise<void> {
+  async signIn (username: TT.UserName, password: string): Promise<void> {
     return await TextileNode.signIn(username, password)
   },
 
-  signOut: async function (): Promise<void> {
+  async signOut (): Promise<void> {
     return await TextileNode.signOut()
   },
 
-  isSignedIn: async function (): Promise<boolean> {
+  async isSignedIn (): Promise<boolean> {
     return await TextileNode.isSignedIn()
   },
 
-  setAvatarId: async function (id: TT.PhotoId): Promise<void> {
+  async setAvatarId (id: TT.PhotoId): Promise<void> {
     return await TextileNode.setAvatarId(id)
   },
 
-  getProfile: async function (): Promise<TT.Profile> {
+  async getProfile (): Promise<TT.Profile> {
     const jsonString = await TextileNode.getProfile()
     const profile = JSON.parse(jsonString) as TT.Profile
     return profile
   },
 
-  getPeerProfile: async function (id: TT.PeerId): Promise<TT.Profile> {
+  async getPeerProfile (id: TT.PeerId): Promise<TT.Profile> {
     const jsonString = await TextileNode.getPeerProfile(id)
     const profile = JSON.parse(jsonString) as TT.Profile
     return profile
   },
 
-  getPublicKey: async function (): Promise<TT.PublicKey> {
+  async getPublicKey (): Promise<TT.PublicKey> {
     return await TextileNode.getPubKey()
   },
 
-  getId: async function (): Promise<TT.PeerId> {
+  async getId (): Promise<TT.PeerId> {
     return await TextileNode.getId()
   },
 
@@ -73,7 +71,7 @@ export default {
    * Go will return an empty string, gobind doesn't support nil
    * @returns {Promise<UserName | undefined>}
    */
-  getUsername: async function (): Promise<TT.UserName | undefined> {
+  async getUsername (): Promise<TT.UserName | undefined> {
     const username = await TextileNode.getUsername()
     if (username === '') return undefined
     return  username
@@ -84,155 +82,155 @@ export default {
    * Go will return an empty string, gobind doesn't support nil
    * @returns {Promise<CafeTokens | undefined>}
    */
-  getTokens: async function (force: boolean = false): Promise<TT.CafeTokens | undefined> {
+  async getTokens (force: boolean = false): Promise<TT.CafeTokens | undefined> {
     const jsonString = await TextileNode.getTokens(force)
     if (jsonString === '') return undefined
     return JSON.parse(jsonString) as TT.CafeTokens
   },
 
-  getOverview: async function (): Promise<TT.NodeOverview> {
+  async getOverview (): Promise<TT.NodeOverview> {
     const jsonString = await TextileNode.getOverview()
     const overview = JSON.parse(jsonString) as TT.NodeOverview
     return overview
   },
 
-  addThread: async function (name: TT.ThreadName): Promise<TT.Thread> {
+  async addThread (name: TT.ThreadName): Promise<TT.Thread> {
     const jsonString = await TextileNode.addThread(name)
     const thread = JSON.parse(jsonString) as TT.Thread
     return thread
   },
 
-  removeThread: async function (threadId: TT.ThreadId): Promise<TT.BlockId> {
+  async removeThread (threadId: TT.ThreadId): Promise<TT.BlockId> {
     return await TextileNode.removeThread(threadId)
   },
 
-  threads: async function (): Promise<TT.Threads> {
+  async threads (): Promise<TT.Threads> {
     const jsonString = await TextileNode.threads()
     const threads = JSON.parse(jsonString) as TT.Threads
     return threads
   },
 
-  addThreadInvite: async function (threadId: TT.ThreadId, inviteePk: TT.PublicKey): Promise<TT.BlockId> {
+  async addThreadInvite (threadId: TT.ThreadId, inviteePk: TT.PublicKey): Promise<TT.BlockId> {
     return await TextileNode.addThreadInvite(threadId, inviteePk)
   },
 
-  addExternalThreadInvite: async function (id: TT.ThreadId): Promise<TT.ExternalInvite> {
+  async addExternalThreadInvite (id: TT.ThreadId): Promise<TT.ExternalInvite> {
     const jsonString = await TextileNode.addExternalThreadInvite(id)
     const externalInvite = JSON.parse(jsonString) as TT.ExternalInvite
     return externalInvite
   },
 
-  acceptExternalThreadInvite: async function (inviteId: TT.BlockId, key: TT.PrivateKey): Promise<TT.BlockId> {
+  async acceptExternalThreadInvite (inviteId: TT.BlockId, key: TT.PrivateKey): Promise<TT.BlockId> {
     return await TextileNode.acceptExternalThreadInvite(inviteId, key)
   },
 
-  addPhoto: async function (path: string): Promise<TT.AddResult> {
+  async addPhoto (path: string): Promise<TT.AddResult> {
     const jsonString = await TextileNode.addPhoto(path)
     const addResult = JSON.parse(jsonString) as TT.AddResult
     return addResult
   },
 
-  addPhotoToThread: async function (dataId: TT.PhotoId, key: TT.PrivateKey, threadId: TT.ThreadId, caption?: string): Promise<TT.BlockId> {
+  async addPhotoToThread (dataId: TT.PhotoId, key: TT.PrivateKey, threadId: TT.ThreadId, caption?: string): Promise<TT.BlockId> {
     return await TextileNode.addPhotoToThread(dataId, key, threadId, caption)
   },
 
-  sharePhotoToThread: async function (dataId: TT.PhotoId, threadId: TT.ThreadId, caption?: string): Promise<TT.BlockId> {
+  async sharePhotoToThread (dataId: TT.PhotoId, threadId: TT.ThreadId, caption?: string): Promise<TT.BlockId> {
     return await TextileNode.sharePhotoToThread(dataId, threadId, caption)
   },
 
-  getPhotos: async function (limit: number, threadId: TT.ThreadId, offset: string = ''): Promise<TT.Photo[]> {
+  async getPhotos (limit: number, threadId: TT.ThreadId, offset: string = ''): Promise<TT.Photo[]> {
     const jsonString = await TextileNode.getPhotos(offset, limit, threadId)
     const result = JSON.parse(jsonString) as TT.GetPhotosResult
     return result.items
   },
 
-  getPhotoData: async function (id: TT.PhotoId, path: string): Promise<TT.ImageData> {
+  async getPhotoData (id: TT.PhotoId, path: string): Promise<TT.ImageData> {
     const jsonString = await TextileNode.getPhotoData(id, path)
     const imageData = JSON.parse(jsonString) as TT.ImageData
     return imageData
   },
 
-  getPhotoThreads: async function (id: TT.PhotoId): Promise<TT.Threads> {
+  async getPhotoThreads (id: TT.PhotoId): Promise<TT.Threads> {
     const jsonString = await TextileNode.getPhotoThreads(id)
     const threads = JSON.parse(jsonString) as TT.Threads
     return threads
   },
 
-  getPhotoKey: async function (id: TT.PhotoId): Promise<TT.PrivateKey> {
+  async getPhotoKey (id: TT.PhotoId): Promise<TT.PrivateKey> {
     const key = await TextileNode.getPhotoKey(id)
     return key
   },
 
-  ignorePhoto: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+  async ignorePhoto (blockId: TT.BlockId): Promise<TT.BlockId> {
     return await TextileNode.ignorePhoto(blockId)
   },
 
-  addPhotoComment: async function (blockId: TT.BlockId, body: string): Promise<TT.BlockId> {
+  async addPhotoComment (blockId: TT.BlockId, body: string): Promise<TT.BlockId> {
     return await TextileNode.addPhotoComment(blockId, body)
   },
 
-  ignorePhotoComment: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+  async ignorePhotoComment (blockId: TT.BlockId): Promise<TT.BlockId> {
     return await TextileNode.ignorePhotoComment(blockId)
   },
 
-  addPhotoLike: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+  async addPhotoLike (blockId: TT.BlockId): Promise<TT.BlockId> {
     return await TextileNode.addPhotoLike(blockId)
   },
 
-  ignorePhotoLike: async function (blockId: TT.BlockId): Promise<TT.BlockId> {
+  async ignorePhotoLike (blockId: TT.BlockId): Promise<TT.BlockId> {
     return await TextileNode.ignorePhotoLike(blockId)
   },
 
-  addDevice: async function (name: TT.DeviceName, pubKey: TT.DeviceId): Promise<void> {
+  async addDevice (name: TT.DeviceName, pubKey: TT.DeviceId): Promise<void> {
     return await TextileNode.addDevice(name, pubKey)
   },
 
-  removeDevice: async function (id: TT.DeviceId): Promise<void> {
+  async removeDevice (id: TT.DeviceId): Promise<void> {
     return await TextileNode.removeDevice(id)
   },
 
-  devices: async function (): Promise<TT.Devices> {
+  async devices (): Promise<TT.Devices> {
     const jsonString = await TextileNode.devices()
     const devices = JSON.parse(jsonString) as TT.Devices
     return devices
   },
 
-  getFilePath: async function (uri: string): Promise<string> {
+  async getFilePath (uri: string): Promise<string> {
     return await TextileNode.getFilePath(uri)
   },
 
-  refreshMessages: async function (): Promise<void> {
+  async refreshMessages (): Promise<void> {
     return await TextileNode.refreshMessages()
   },
 
-  getNotifications: async function (limit: number, offset: string = ''): Promise<TT.GetNotificationsResult> {
+  async getNotifications (limit: number, offset: string = ''): Promise<TT.GetNotificationsResult> {
     const jsonString = await TextileNode.getNotifications(offset, limit)
     return JSON.parse(jsonString) as TT.GetNotificationsResult
   },
 
-  countUnreadNotifications: async function (): Promise<number> {
+  async countUnreadNotifications (): Promise<number> {
     return await TextileNode.countUnreadNotifications()
   },
 
-  readNotification: async function (id: TT.NotificationId): Promise<void> {
+  async readNotification (id: TT.NotificationId): Promise<void> {
     return await TextileNode.readNotification(id)
   },
 
-  readAllNotifications: async function (): Promise<void> {
+  async readAllNotifications (): Promise<void> {
     return await TextileNode.readAllNotifications()
   },
 
-  acceptThreadInviteViaNotification: async function (id: TT.NotificationId): Promise<TT.BlockId> {
+  async acceptThreadInviteViaNotification (id: TT.NotificationId): Promise<TT.BlockId> {
     return await TextileNode.acceptThreadInviteViaNotification(id)
   },
 
-  getContacts: async function (): Promise<TT.GetContactsResult> {
+  async getContacts (): Promise<TT.GetContactsResult> {
     const jsonString = await TextileNode.getContacts()
     return JSON.parse(jsonString) as TT.GetContactsResult
   },
 
   eventEmitter: Platform.select({
-    ios: new NativeEventEmitter(Events),
     android: DeviceEventEmitter,
+    ios: new NativeEventEmitter(Events)
   })
 }

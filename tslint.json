@@ -1,9 +1,31 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+      "tslint:recommended",
+      "tslint-config-airbnb",
+      "tslint-react"
     ],
+    "linterOptions": {
+      "exclude": [
+        "node_modules/**",
+        "typings/**"
+      ]
+    },
     "jsRules": {},
-    "rules": {},
+    "rules": {
+      "object-literal-sort-keys": false,
+      "import-name": false,
+      "ordered-imports": false,
+      "member-access": false,
+      "trailing-comma": [
+        true,
+        {
+          "multiline": "never",
+          "singleline": "never"
+        }
+      ],
+      "semicolon": [true, "never"],
+      "max-line-length": [true, 150]
+    },
     "rulesDirectory": []
 }
