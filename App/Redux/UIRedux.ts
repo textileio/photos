@@ -73,7 +73,7 @@ const actions = {
     return (url: string) => resolve({url})
   }),
   addFriendRequest: createAction('ADD_FRIEND_REQUEST', resolve => {
-    return (threadId: ThreadId, threadName: ThreadName) => resolve({threadId, threadName})
+    return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
   }),
   addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
     return (blockId: BlockId) => resolve({blockId})
