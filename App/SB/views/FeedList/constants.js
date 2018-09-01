@@ -26,5 +26,5 @@ export default [
     actionUser: 'You',
     timestamp: '9 minutos ago',
     photo: require('./statics/photo2.png')
-  },
+  }
 ]

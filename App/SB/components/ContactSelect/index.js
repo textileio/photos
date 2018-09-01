@@ -45,7 +45,7 @@ const ContactSelect = (props) => {
               <TouchableOpacity key={item.id} activeOpacity={0.6} style={styles.selectedContact} onPress={() => {
                 select(item, item.included)
               }}>
-                <Avatar style={styles.selectedContact} width={43} height={43} peer_id={item.id} defaultSource={defaultSource} />
+                <Avatar style={styles.selectedContact} width={43} height={43} peerId={item.id} defaultSource={defaultSource} />
                 {selectState && <Image style={styles.selectedContactIcon} source={require('./statics/icon-select.png')} />}
               </TouchableOpacity>
             )
@@ -53,10 +53,10 @@ const ContactSelect = (props) => {
         </View>}
       </View>
       <View style={styles.body}>
-        {/*<View style={styles.searchBoxContainer}>*/}
-          {/*<Image style={styles.searchBoxIcon} source={require('./statics/icon-search.png')} />*/}
-          {/*<TextInput style={styles.searchBoxInput} placeholder='Search' onChangeText={search} />*/}
-        {/*</View>*/}
+        {/* <View style={styles.searchBoxContainer}> */}
+        {/* <Image style={styles.searchBoxIcon} source={require('./statics/icon-search.png')} /> */}
+        {/* <TextInput style={styles.searchBoxInput} placeholder='Search' onChangeText={search} /> */}
+        {/* </View> */}
         <View style={styles.searchBoxPlaceholder} />
 
         <FlatList
@@ -64,7 +64,7 @@ const ContactSelect = (props) => {
           keyExtractor={(item) => item.pk}
           extraData={selected}
           renderItem={(contact) => {
-            const {item} = contact
+            const { item } = contact
             const selectState = !!selected[item.id] || item.included
             return (
               <ContactSelectCard item={item} select={select} selected={selectState} />

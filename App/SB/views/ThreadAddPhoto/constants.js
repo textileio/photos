@@ -1,6 +1,6 @@
 export default [
   {
-    photo: require('./statics/photo1.png'),
+    photo: require('./statics/photo1.png')
   },
   {
     photo: require('./statics/photo2.png')
@@ -126,5 +126,5 @@ export default [
   },
   {
     photo: require('./statics/photo4.png')
-  },
+  }
 ]

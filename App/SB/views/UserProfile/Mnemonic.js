@@ -25,7 +25,7 @@ class Mnemonic extends React.PureComponent {
         <HeaderButtons>
           <Item
             title='Avatar'
-            buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+            buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
             ButtonElement={
               <Avatar
                 width={32}

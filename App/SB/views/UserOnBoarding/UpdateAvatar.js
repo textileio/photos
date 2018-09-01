@@ -9,7 +9,6 @@ import { NavigationActions } from 'react-navigation'
 import UIActions from '../../../Redux/UIRedux'
 
 class UserOnBoardingContainer extends React.Component {
-
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {

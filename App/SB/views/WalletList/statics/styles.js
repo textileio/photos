@@ -5,12 +5,12 @@ export default StyleSheet.create({
   container: {
     marginTop: 20,
     backgroundColor: '#FAFCFE',
-    flex: 1,
+    flex: 1
   },
   contentContainer: {},
   toolbarIconUser: {
     width: 24,
-    height: 24,
+    height: 24
   },
   toolbar: {
     paddingHorizontal: 10
@@ -20,14 +20,14 @@ export default StyleSheet.create({
     height: 20
   },
   toolbarTitle: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 30,
-    paddingTop: 23,
+    paddingTop: 23
   },
   fixedDate: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 12,
-    color: "#4a4a4a",
+    color: '#4a4a4a',
     paddingLeft: 10,
     paddingBottom: 9,
     paddingTop: 20

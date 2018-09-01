@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { ApplicationStyles, Metrics, Colors } from '../../Themes'
+import { ApplicationStyles, Colors } from '../../Themes'
 
 export const buttonColor1 = Colors.brandPink
 export const buttonColor2 = Colors.brandYellow
@@ -11,12 +11,12 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.primaryBackground,
-    padding: 20,
+    padding: 20
   },
   messageContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'stretch',
+    alignItems: 'stretch'
   },
   iconsRow: {
     flexDirection: 'row',

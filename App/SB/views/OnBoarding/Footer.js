@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Text, View} from 'react-native'
+import { Text, View } from 'react-native'
 
-import pagePropType from '../../util/pagePropType'
 import styles from './statics/styles'
 
 const Footer = props => {
-  const {skipTitle, nextTitle, onNext, currentPageIndex, onSubmit, pages} = props
+  const { skipTitle, nextTitle, onNext, currentPageIndex, onSubmit, pages } = props
 
   return (
     <View style={styles.footerContainer}>
@@ -15,7 +14,7 @@ const Footer = props => {
         {pages.map((page, i) => (
           <View key={i} style={
             page.dotColor && page.order === currentPageIndex
-              ? [styles.dotActive, {backgroundColor: page.dotColor}]
+              ? [styles.dotActive, { backgroundColor: page.dotColor }]
               : styles.dot
           }
           />

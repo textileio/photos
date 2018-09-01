@@ -21,7 +21,7 @@ const FeedItem = props => {
     <Avatar
       width={24}
       height={24}
-      peer_id={notification.actor_id}
+      peerId={notification.actor_id}
       defaultSource={require('../../../Images/v2/main-image.png')}
     />)
 
@@ -38,10 +38,10 @@ const FeedItem = props => {
         <Text style={styles.text}>{payload.feed}</Text>
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
-      <View style={{width: 40, height: 40, overflow: 'hidden'}}>
+      <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
         {!notification.read && !isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
         {!notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
-        {notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} ><View style={styles.readImage}></View></TextileImage>}
+        {notification.read && isPhotoType && <TextileImage width={40} height={40} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} ><View style={styles.readImage} /></TextileImage>}
       </View>
     </TouchableOpacity>
   )

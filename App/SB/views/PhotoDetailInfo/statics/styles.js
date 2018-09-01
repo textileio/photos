@@ -4,7 +4,7 @@ export default StyleSheet.create({
   container: {
     marginTop: 20,
     backgroundColor: '#FAFCFE',
-    flex: 1,
+    flex: 1
   },
   contentContainer: {
     paddingHorizontal: 19,
@@ -16,8 +16,8 @@ export default StyleSheet.create({
     marginBottom: 16
   },
   toolbarTitle: {
-    fontFamily: "BentonSans",
-    fontSize: 30,
+    fontFamily: 'BentonSans',
+    fontSize: 30
   },
   itemContainer: {
     flexDirection: 'row',
@@ -28,12 +28,12 @@ export default StyleSheet.create({
     borderColor: '#ECEDEE'
   },
   itemTitle: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 14,
     color: '#9B9B9B'
   },
   itemDescription: {
-    fontFamily: "BentonSans",
-    fontSize: 16,
-  },
+    fontFamily: 'BentonSans',
+    fontSize: 16
+  }
 })

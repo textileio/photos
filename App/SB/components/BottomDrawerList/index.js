@@ -7,7 +7,7 @@ import styles from './statics/styles'
 
 const BottomDrawerList = () => {
   return (
-    <Drawer overlay={true} style={styles.container}>
+    <Drawer overlay style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Choose an option</Text>
         <Image style={styles.closeIcon} source={require('./statics/icon-cancel.png')} />

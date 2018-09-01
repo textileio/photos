@@ -38,7 +38,7 @@ class AccountSettings extends React.PureComponent {
         <HeaderButtons>
           <Item
             title='Avatar'
-            buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+            buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
             ButtonElement={
               <Avatar
                 width={32}
@@ -62,12 +62,12 @@ class AccountSettings extends React.PureComponent {
   }
 
   hideInfo () {
-    this.setState({infoVisible: false})
+    this.setState({ infoVisible: false })
   }
 
   showInfo (service: string) {
     const info = GetServiceInfo(service)
-    this.setState({infoVisible: true, info})
+    this.setState({ infoVisible: true, info })
   }
 
   render () {
@@ -93,11 +93,11 @@ class AccountSettings extends React.PureComponent {
                     <SettingsRow service={service} info={this.props.services[service].info} value={value} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
                     {children && Object.keys(children).map((child, i) =>
                       <SettingsRow key={i * 33} child service={child} info={this.props.children[child].info} disabled={!value} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
-                      )}
+                    )}
                   </View>
                 )
               }
-            )}
+              )}
           </View>
         </ScrollView>
         {this.state.infoVisible && <PermissionsInfo isVisible info={this.state.info} close={this.hideInfo.bind(this)} />}

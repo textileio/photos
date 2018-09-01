@@ -21,7 +21,7 @@ export default StyleSheet.create({
   photo: {
     marginLeft: 5,
     marginBottom: 5,
-    backgroundColor: 'red',
+    backgroundColor: 'red'
   },
   photoSelected: {
     backgroundColor: '#2625FF',
