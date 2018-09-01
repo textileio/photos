@@ -24,7 +24,7 @@ jobs:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
                 paths:
                 - node_modules
-                
+
             - persist_to_workspace:
                 root: ~/textile-mobile
                 paths:
@@ -280,9 +280,7 @@ workflows:
     node-android-ios:
         jobs:
             - node
-            - lint:
-                requires:
-                    - node
+            - lint
             - tests:
                 requires:
                     - node
