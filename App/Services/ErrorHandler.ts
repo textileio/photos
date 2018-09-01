@@ -26,9 +26,7 @@ export function initErrorHandler () {
         // Add a delay to give it time to log the custom JS exception before crashing the app.
         // The user facing effect of this delay is that separate JS errors will appear as separate
         // issues in the Crashlytics dashboard.
-        setTimeout(() => {
-          originalHandler(error, isFatal)
-        }, 500)
+        setTimeout(() => { originalHandler(error, isFatal) }, 500)
       }
     }
   }

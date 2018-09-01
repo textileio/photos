@@ -3,7 +3,7 @@ import Icons from './Icons'
 import HeaderButtons, { HeaderButton } from 'react-navigation-header-buttons'
 
 // define IconComponent, color, sizes and OverflowIcon in one place
-const TextileHeaderButton = props => {
+const TextileHeaderButton = (props: any) => {
   const color = !props.iconName ? 'blue' : 'black'
   const fontSize = !props.iconName ? 17 : 24
   return (
@@ -11,17 +11,17 @@ const TextileHeaderButton = props => {
   )
 }
 
-export const TextileHeaderButtons = props => {
+export const TextileHeaderButtons = (props: any) => {
   return (
     <HeaderButtons
       HeaderButtonComponent={TextileHeaderButton}
-      OverflowIcon={<Icons name='more' size={32} color='black' />}
+      OverflowIcon={<Icons name={'more'} size={32} color={'black'} />}
       {...props}
     />
   )
 }
 
-export const Item = props => {
+export const Item = (props: any) => {
   return (
     <HeaderButtons.Item {...props} />
   )

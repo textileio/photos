@@ -2,19 +2,19 @@ import React from 'react'
 import Config from 'react-native-config'
 import ImageSc from 'react-native-scalable-image'
 import { connect } from 'react-redux'
-import {View, ImageURISource, StyleProp, ViewStyle} from 'react-native'
+import { View, ImageURISource, StyleProp, ViewStyle } from 'react-native'
 import TextileImage from '../../TextileImage'
 import { Profile } from '../Models/TextileTypes'
 
 import styles from './Styles/AvatarStyles'
 import { RootState } from '../Redux/Types'
 
-interface PropsFromState {
+interface IPropsFromState {
   profile: Profile | undefined
   online: boolean
 }
 
-export interface AvatarProps extends PropsFromState {
+export interface IAvatarProps extends IPropsFromState {
   height: number,
   width: number,
   owner?: boolean, // flags if it is known already to be the local user's profile
@@ -23,25 +23,25 @@ export interface AvatarProps extends PropsFromState {
   style?: StyleProp<ViewStyle>
 }
 
-class Avatar extends React.PureComponent<AvatarProps> {
+class Avatar extends React.PureComponent<IAvatarProps> {
   getCafeAddress (peerId: string) {
-    return Config.TEXTILE_CAFE_URI + '/ipns/' + peerId + '/avatar'
+    return `${Config.TEXTILE_CAFE_URI}/ipns/${peerId}/avatar`
   }
   photoIdFromAvatar () {
     const { profile } = this.props
-    const avatar_id: string = profile && profile.avatar_id || ''
-    return avatar_id && avatar_id.split('/').length > 1 && avatar_id.split('/')[2]
+    const avatarId: string = profile && profile.avatar_id || ''
+    return avatarId && avatarId.split('/').length > 1 && avatarId.split('/')[2]
   }
   renderSelf () {
     const { height, width, defaultSource, style } = this.props
     const photoId = this.photoIdFromAvatar()
     return (
-      <View style={[styles.container, style, {width, height, borderRadius: height / 2}]}>
+      <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
         <View style={styles.stretch}>
           <TextileImage
             imageId={photoId}
             path={'small'}
-            style={{width, height}}
+            style={{ width, height }}
             resizeMode={'cover'}
             width={width}
             height={height}
@@ -55,15 +55,16 @@ class Avatar extends React.PureComponent<AvatarProps> {
     const { height, width, defaultSource, style } = this.props
     const avatarUri = this.getCafeAddress(peerId)
     return (
-      <View style={[styles.container, style, {width, height, borderRadius: height / 2}]}>
+      <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
         <View style={styles.stretch}>
           <ImageSc
-            source={{uri: avatarUri}}
-            style={{width, height}}
+            source={{ uri: avatarUri }}
+            style={{ width, height }}
             width={width}
             height={height}
             defaultSource={defaultSource}
-            resizeMode={'cover'} />
+            resizeMode={'cover'}
+          />
         </View>
       </View>
     )
@@ -72,13 +73,14 @@ class Avatar extends React.PureComponent<AvatarProps> {
   renderPlaceholder = () => {
     const { height, width, defaultSource, style } = this.props
     return (
-      <View style={[styles.container, style, {width, height, borderRadius: height / 2}]}>
+      <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
         <View style={styles.stretch}>
-          {defaultSource && <ImageSc
-            style={{width, height}}
+          { defaultSource && <ImageSc
+            style={{ width, height }}
             width={width}
             height={height}
-            source={defaultSource} />}
+            source={defaultSource}
+          />}
         </View>
       </View>
     )
@@ -94,7 +96,7 @@ class Avatar extends React.PureComponent<AvatarProps> {
       // owner, render local
       return this.renderSelf()
     }
-    else if (peerId) {
+    if (peerId) {
       if (online && profile && profile.id === peerId && profile.avatar_id) {
         // owner, render local
         return this.renderSelf()
@@ -106,7 +108,7 @@ class Avatar extends React.PureComponent<AvatarProps> {
   }
 }
 
-const mapStateToProps = (state: RootState): PropsFromState => {
+const mapStateToProps = (state: RootState): IPropsFromState => {
   return {
     profile: state.preferences.profile,
     online: !!state.textileNode.online

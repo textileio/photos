@@ -16,17 +16,19 @@ const PROGRESS: ViewStyle = {
   backgroundColor: Colors.brandBlue
 }
 
-export type ProgressBarProps = {
-  style?: ViewStyle,
+export interface IProgressBarProps {
+  style?: ViewStyle
   progress: number
 }
 
-const ProgressBar = (props: ProgressBarProps) => {
+const ProgressBar = (props: IProgressBarProps) => {
   const { style, progress } = props
-  const progressPercentage = Math.max(progress, 0.02) * 100 + '%'
-  return <View style={{...TRACK, ...style}} >
-    <View style={{...PROGRESS, width: progressPercentage}} />
-  </View>
+  const progressPercentage =  `${Math.max(progress, 0.02) * 100}%`
+  return (
+    <View style={{ ...TRACK, ...style }} >
+      <View style={{ ...PROGRESS, width: progressPercentage }} />
+    </View>
+  )
 }
 
 export default ProgressBar

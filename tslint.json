@@ -14,7 +14,7 @@
         "App/Navigation/**/*",
         "App/Models/**/*",
         "App/SB/**/*",
-        "**.json"
+        "**/*.json"
       ]
     },
     "jsRules": {},
@@ -23,10 +23,11 @@
       "object-literal-sort-keys": false,
       "object-shorthand-properties-first": false,
       "space-before-function-paren": false,
+      "jsx-no-multiline-js": false,
       "import-name": false,
       "ordered-imports": false,
       "member-access": false,
-      "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+      "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case", "allow-leading-underscore"],
       "trailing-comma": [
         true,
         {
@@ -35,7 +36,7 @@
         }
       ],
       "semicolon": [true, "never"],
-      "max-line-length": [true, 150]
+      "max-line-length": [true, 200]
     },
     "rulesDirectory": []
 }

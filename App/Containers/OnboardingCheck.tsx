@@ -5,13 +5,13 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import { RootState } from '../Redux/Types'
 
-interface Props extends NavigationScreenProps<{}> {
+interface IProps extends NavigationScreenProps<{}> {
   onboarded: boolean
 }
 
-class OnboardingCheck extends React.Component<Props> {
-  
-  constructor (props: Props) {
+class OnboardingCheck extends React.Component<IProps> {
+
+  constructor (props: IProps) {
     super(props)
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
@@ -20,7 +20,7 @@ class OnboardingCheck extends React.Component<Props> {
 
   render () {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <ActivityIndicator />
       </View>
     )
@@ -28,7 +28,7 @@ class OnboardingCheck extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState) => {
-  return {onboarded: state.preferences.onboarded}
+  return { onboarded: state.preferences.onboarded }
 }
 
 export default connect(mapStateToProps, undefined)(OnboardingCheck)
