@@ -34,6 +34,18 @@ jobs:
         docker:
             - image: circleci/node:8
         steps:
+            - checkout:
+                path: ~/textile-mobile
+
+            - attach_workspace:
+                at: ~/textile-mobile
+
+            - restore_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
             - run:
                 name: js lint
                 command: |
@@ -48,6 +60,18 @@ jobs:
         docker:
             - image: circleci/node:8
         steps:
+            - checkout:
+                path: ~/textile-mobile
+
+            - attach_workspace:
+                at: ~/textile-mobile
+
+            - restore_cache:
+                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+                
             - run:
                 name: jest tests
                 command: |
