@@ -170,7 +170,6 @@ export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequ
   const { threadId, threadName } = action.payload
   try {
     const contactResult = yield call(TextileNode.getContacts)
-    console.log('axh', contactResult)
     const contacts = contactResult.items
     yield put(ContactsActions.getContactsSuccess(contacts))
     for (let contact of contacts) {
