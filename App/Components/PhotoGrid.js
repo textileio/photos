@@ -6,11 +6,11 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Toast from 'react-native-easy-toast'
-import TextileImage from '../../TextileImage'
 import { UploadingImage } from '../Redux/UploadingImagesRedux'
 
 // Styles
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PhotoGridStyles'
+import ProgressiveImage from './ProgressiveImage'
 
 export default class PhotoGrid extends React.PureComponent {
   /* ***********************************************************
@@ -40,9 +40,10 @@ export default class PhotoGrid extends React.PureComponent {
     return (
       <TouchableOpacity style={styles.item} onPress={this.props.onSelect(row)} >
         <View style={styles.itemBackgroundContainer}>
-          <TextileImage
+          <ProgressiveImage
             imageId={row.item.id}
             path={'small'}
+            previewPath={'thumb'}
             style={styles.itemImage}
             resizeMode={'cover'}
           />
