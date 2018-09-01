@@ -46,5 +46,19 @@ export default StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 52,
     marginBottom: 24
+  },
+  tourButtons: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: 25
+  },
+  skipButton: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 25
+  },
+  skipButtonText: {
+    color: '#2E8BFE'
   }
+
 })

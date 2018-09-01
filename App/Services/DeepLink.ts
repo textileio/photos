@@ -51,7 +51,6 @@ function createInviteLink (invite: ExternalInvite, threadName: string): string {
   hash.push('key=' + encodeURIComponent(invite.key))
   hash.push('inviter=' + encodeURIComponent(invite.inviter))
   hash.push('name=' + encodeURIComponent(threadName))
-  console.log(Config)
   if (Config.TEMPORARY_REFERRAL) {
     hash.push('referral=' + Config.TEMPORARY_REFERRAL)
   }
