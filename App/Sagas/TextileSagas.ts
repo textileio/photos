@@ -167,15 +167,17 @@ export function * getUsername (contact: TT.Contact) {
 }
 
 export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
+  const { threadId, threadName } = action.payload
   try {
     const contactResult = yield call(TextileNode.getContacts)
+    console.log('axh', contactResult)
     const contacts = contactResult.items
     yield put(ContactsActions.getContactsSuccess(contacts))
     for (let contact of contacts) {
       yield fork(getUsername, contact)
     }
   } finally {
-    yield call(NavigationService.navigate, 'AddFriends', { threadId: action.payload.threadId, threadName: action.payload.threadName})
+    yield call(NavigationService.navigate, 'AddFriends', { threadId, threadName })
   }
 }
 
