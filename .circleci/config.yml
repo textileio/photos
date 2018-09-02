@@ -82,6 +82,19 @@ jobs:
             - store_artifacts:
                 path: test-results
 
+    cache-linux:
+        working_directory: ~/textile-mobile
+        docker:
+            - image: circleci/node:8
+        steps:
+            - restore_cache: # If any cache exists, it'll way speedup these checkouts
+                keys:
+                    - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v1-{{ arch }}-{{ .Branch }}-
+                    - source-v1-{{ arch }}-
+
+            - checkout
+
             # create a cache entry which will avoid checking out all 5GB of subsequent builds
             - save_cache:
                 key: source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
@@ -96,6 +109,7 @@ jobs:
             - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
+
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
                     - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
@@ -104,6 +118,9 @@ jobs:
 
             - checkout:
                 path: ~/textile-mobile
+
+            - attach_workspace:
+                at: ~/textile-mobile
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -154,6 +171,9 @@ jobs:
             - checkout:
                 path: ~/textile-mobile
 
+            - attach_workspace:
+                at: ~/textile-mobile
+
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
@@ -185,12 +205,6 @@ jobs:
 
             - run:
                 command: bundle exec fastlane beta
-
-            # create a android cache entry which will avoid checking out all 5GB of subsequent builds
-            - save_cache:
-                key: source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
     ios:
         macos:
             xcode: "9.4.0"
@@ -351,6 +365,10 @@ workflows:
         jobs:
             - lint
             - tests
+            - cache-linux:
+                requires:
+                    - lint
+                    - tests
             - android:
                 requires:
                     - lint
