@@ -5,8 +5,7 @@ jobs:
         docker:
             - image: circleci/node:8
         steps:
-            # If any cache exists, it'll way speedup these checkouts
-            - restore_cache:
+            - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 - source-v1-{{ .Branch }}-{{ .Revision }}
                 - source-v1-{{ .Branch }}-
                 - source-v1-
