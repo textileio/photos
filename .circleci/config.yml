@@ -5,6 +5,10 @@ jobs:
         docker:
             - image: circleci/node:8
         steps:
+            # If any cache exists, it'll way speedup these checkouts
+            - restore_cache:
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
+
             - checkout
 
             - restore_cache:
@@ -30,18 +34,17 @@ jobs:
                 paths:
                     - ".git"
 
+            # just persist the whole workspace
             - persist_to_workspace:
-                root: ~/textile-mobile
+                root: ~/
                 paths:
-                    - node_modules
+                    - textile-mobile
     lint:
         working_directory: ~/textile-mobile
         docker:
             - image: circleci/node:8
         steps:
-            - restore_cache: 
-                key: source-v1-{{ .Branch }}-{{ .Revision }}
-
+            # should never need to checkout or grab cache, since node persists it all
             - run:
                 name: js lint
                 command: |
