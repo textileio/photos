@@ -30,7 +30,9 @@ function getData (href: string): DeepLinkData | undefined {
     '(#.*|)$'
   ].join(''))
   const match = href.match(regex)
-  if (!match) return undefined
+  if (!match) {
+    return undefined
+  }
   return {
     href,
     protocol: match[1],
