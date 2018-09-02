@@ -225,8 +225,11 @@ jobs:
 
             - run:
                 name: setup workspace
-                commands:
+                command:
                     - mkdir ~/textile-mobile
+            - run:
+                name: own workspace
+                command:
                     - chown -R $USER:$USER ~/textile-mobile
 
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
