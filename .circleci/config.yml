@@ -223,10 +223,6 @@ jobs:
                 name: set Ruby version
                 command:  echo "ruby-2.4" > ~/.ruby-version
 
-            - run:
-                name: own workspace
-                command: chown -R $USER:$USER ~/textile-mobile
-
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
                     - source-v1-{{ .Branch }}-{{ .Revision }}
