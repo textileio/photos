@@ -55,6 +55,11 @@ jobs:
                 path: lint-results/junit
             - store_artifacts:
                 path: lint-results/junit
+
+            - run:
+                name: ts lint
+                command: |
+                    tslint -c tslint.json --project .
     tests:
         working_directory: ~/textile-mobile
         docker:
