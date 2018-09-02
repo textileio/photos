@@ -124,7 +124,8 @@ jobs:
                     - source-v1-{{ .Branch }}-
                     - source-v1-
 
-            - checkout
+            - checkout:
+                path: ~/textile-mobile
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -234,7 +235,8 @@ jobs:
                     - source-v1-{{ .Branch }}-
                     - source-v1-
 
-            - checkout
+            - checkout:
+                path: ~/textile-mobile
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -372,7 +374,11 @@ workflows:
                     - node
                     - lint
                     - tests
-            - ios
+            - ios:
+                requires:
+                    - node
+                    - lint
+                    - tests
             - ios-beta:
                 requires:
                     - ios
