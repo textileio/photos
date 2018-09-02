@@ -7,7 +7,7 @@ const TextileHeaderButton = (props: any) => {
   const color = !props.iconName ? 'blue' : 'black'
   const fontSize = !props.iconName ? 17 : 24
   return (
-    <HeaderButton {...props} IconComponent={Icons} buttonStyle={{fontFamily: 'BentonSans', fontSize, color}} />
+    <HeaderButton {...props} IconComponent={Icons} buttonStyle={{ fontFamily: 'BentonSans', fontSize, color }} />
   )
 }
 
