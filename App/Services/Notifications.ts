@@ -10,7 +10,9 @@ export interface INotificationsPayload {
 }
 
 export function isPhoto(notification: Notification): boolean {
-  if (!notification.data_id) return false
+  if (!notification.data_id) {
+    return false
+  }
   switch (notification.type) {
     case NotificationType.receivedInviteNotification:
     case NotificationType.deviceAddedNotification:
@@ -89,7 +91,9 @@ export async function createNew(notification: Notification): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
       const payload = toPayload(notification)
-      if (!payload) return
+      if (!payload) {
+        return
+      }
       PushNotification.localNotification({
         title: payload.title,
         message: `${payload.message}.`,
