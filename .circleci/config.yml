@@ -7,7 +7,9 @@ jobs:
         steps:
             # If any cache exists, it'll way speedup these checkouts
             - restore_cache:
-                key: source-v1-{{ .Branch }}-{{ .Revision }}
+                - source-v1-{{ .Branch }}-{{ .Revision }}
+                - source-v1-{{ .Branch }}-
+                - source-v1-
 
             - checkout
 
@@ -19,22 +21,25 @@ jobs:
 
             - run: yarn install
 
+            # cache our yarn cache
             - save_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
                 paths:
                     - ~/.cache/yarn
 
+            # cache our node_modules
             - save_cache:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
                 paths:
                     - node_modules
 
+            # create a cache entry which will avoid checking out subsequent builds
             - save_cache:
-                key: source-v1-{{ .Branch }}-{{ .Revision }}
+                key: source-v1-{{ .Branch }}
                 paths:
                     - ".git"
 
-            # just persist the whole workspace
+            # just persist the whole workspace for the rest of the tasks
             - persist_to_workspace:
                 root: ~/
                 paths:
@@ -45,6 +50,8 @@ jobs:
             - image: circleci/node:8
         steps:
             # should never need to checkout or grab cache, since node persists it all
+            - attach_workspace:
+                at: ~/
             - run:
                 name: js lint
                 command: |
