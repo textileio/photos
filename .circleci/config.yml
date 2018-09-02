@@ -6,9 +6,10 @@ jobs:
             - image: circleci/node:8
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                - source-v1-{{ .Branch }}-{{ .Revision }}
-                - source-v1-{{ .Branch }}-
-                - source-v1-
+                keys:
+                    - source-v1-{{ .Branch }}-{{ .Revision }}
+                    - source-v1-{{ .Branch }}-
+                    - source-v1-
 
             - checkout
 
