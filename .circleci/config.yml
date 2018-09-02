@@ -104,12 +104,11 @@ jobs:
         environment:
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
-        working_directory: ~/textile-mobile/android
+        working_directory: ~/textile-mobile
         docker:
             - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
-
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
                     - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
@@ -131,27 +130,29 @@ jobs:
             - run: yarn install
 
             - restore_cache:
-                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
 
             - run: bundle install
+                working_directory: android
 
             - save_cache:
-                key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
                 paths:
                     - vendor/bundle
 
             - run:
                 name: fastlane tests
+                working_directory: android
                 command: |
                     mkdir -p test-results/fastlane
                     bundle exec fastlane test
                     mv fastlane/report.xml test-results/fastlane
 
             - store_test_results:
-                path: test-results
+                path: android/test-results
 
             - store_artifacts:
-                path: test-results
+                path: android/test-results
 
     android-beta:
         environment:
