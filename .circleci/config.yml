@@ -222,6 +222,12 @@ jobs:
                 name: set Ruby version
                 command:  echo "ruby-2.4" > ~/.ruby-version
 
+            - run:
+                name: setup workspace
+                commands:
+                    - mkdir ~/textile-mobile
+                    - chown -R $USER:$USER ~/textile-mobile
+
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
                     - source-v1-{{ .Branch }}-{{ .Revision }}
@@ -366,11 +372,7 @@ workflows:
                     - node
                     - lint
                     - tests
-            - ios:
-                requires:
-                    - node
-                    - lint
-                    - tests
+            - ios
             - ios-beta:
                 requires:
                     - ios
