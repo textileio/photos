@@ -35,23 +35,21 @@ jobs:
 
             # create a cache entry which will avoid checking out subsequent builds
             - save_cache:
-                key: source-v1-{{ .Branch }}
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
                 paths:
                     - ".git"
-
-            # just persist the whole workspace for the rest of the tasks
-            - persist_to_workspace:
-                root: ~/
-                paths:
-                    - textile-mobile
     lint:
         working_directory: ~/textile-mobile
         docker:
             - image: circleci/node:8
         steps:
-            # should never need to checkout or grab cache, since node persists it all
-            - attach_workspace:
-                at: ~/
+            # should never need to checkout or yarn, since node persists it all
+            - restore_cache: # If any cache exists, it'll way speedup these checkouts
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
             - run:
                 name: js lint
                 command: |
@@ -71,15 +69,12 @@ jobs:
         docker:
             - image: circleci/node:8
         steps:
-            - attach_workspace:
-                at: ~/textile-mobile
-
+            - restore_cache:
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
             - restore_cache:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
             - run:
                 name: jest tests
                 command: |
@@ -103,11 +98,12 @@ jobs:
             - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
-            - checkout:
-                path: ~/textile-mobile
-
-            - attach_workspace:
-                at: ~/textile-mobile
+            - restore_cache:
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
             - restore_cache:
                 key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
@@ -141,15 +137,16 @@ jobs:
             - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
-            - checkout:
-                path: ~/textile-mobile
+            - restore_cache:
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
             - run: git config --global user.name $CIRCLE_USERNAME
             - run: git config --global user.email "ops@textile.io" # TODO: Use a variable here
             - run: git branch --set-upstream-to=origin/$CIRCLE_BRANCH $CIRCLE_BRANCH
-
-            - attach_workspace:
-                at: ~/textile-mobile
 
             - restore_cache:
                 key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
@@ -183,7 +180,12 @@ jobs:
         shell: /bin/bash --login -o pipefail
 
         steps:
-            - checkout
+            - restore_cache:
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
             - run:
                 name: set Ruby version
@@ -252,7 +254,12 @@ jobs:
         shell: /bin/bash --login -o pipefail
 
         steps:
-            - checkout
+            - restore_cache:
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
             - run: git config --global user.name $CIRCLE_USERNAME
             - run: git config --global user.email "ops@textile.io" # TODO: Use a variable here

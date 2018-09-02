@@ -11,7 +11,7 @@ export function initErrorHandler () {
     if (!(error instanceof Error)) {
       return
     }
-    StackTrace.fromError(error, {offline: true}).then(frames => {
+    StackTrace.fromError(error, { offline: true }).then((frames) => {
       const frameData = frames.map(frame => {
         return frame.toString()
       })
