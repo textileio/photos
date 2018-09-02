@@ -23,12 +23,12 @@ jobs:
             - save_cache:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
                 paths:
-                - node_modules
+                    - node_modules
 
             - save_cache:
-                key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
                 paths:
-                  - ~/textile-mobile
+                    - ".git"
 
             - persist_to_workspace:
                 root: ~/textile-mobile
@@ -39,15 +39,8 @@ jobs:
         docker:
             - image: circleci/node:8
         steps:
-
-            - restore_cache: # Restores the cached dependency.
-                key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+            - restore_cache: 
+                key: source-v1-{{ .Branch }}-{{ .Revision }}
 
             - run:
                 name: js lint
