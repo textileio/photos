@@ -348,7 +348,7 @@ jobs:
 
 workflows:
     version: 2
-    node-lint-tests-android-ios:
+    lint-tests-android-ios:
         jobs:
             - lint
             - tests

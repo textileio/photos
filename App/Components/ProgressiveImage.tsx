@@ -83,7 +83,9 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
         />
       )
     }
-    if (Platform.OS === 'ios') return this.ios()
+    if (Platform.OS === 'ios') {
+      return this.ios()
+    }
     return this.android()
   }
 }
