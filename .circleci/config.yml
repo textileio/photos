@@ -35,26 +35,30 @@ jobs:
 
             # create a cache entry which will avoid checking out all 5GB of subsequent builds
             - save_cache:
-                key: source-v1-{{ .Branch }}-{{ .Revision }}
+                key: source-v1-{{ .Branch }}
                 paths:
                     - ".git"
 
-            - persist_to_workspace:
-                root: ~/textile-mobile
-                paths:
-                    - ".git"
-                    - node_modules
     lint:
         working_directory: ~/textile-mobile
         docker:
             - image: circleci/node:8
         steps:
-            # should never need to checkout or yarn, since node persists it all
-            - attach_workspace:
-                at: ~/textile-mobile
+            - restore_cache: # If any cache exists, it'll way speedup these checkouts
+                keys:
+                    - source-v1-{{ .Branch }}-{{ .Revision }}
+                    - source-v1-{{ .Branch }}-
+                    - source-v1-
 
-            - checkout:
-                path: ~/textile-mobile
+            - checkout
+
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+            - run: yarn install
 
             - run:
                 name: js lint
@@ -75,10 +79,21 @@ jobs:
         docker:
             - image: circleci/node:8
         steps:
-            - attach_workspace:
-                at: ~/textile-mobile
-            - checkout:
-                path: ~/textile-mobile
+            - restore_cache: # If any cache exists, it'll way speedup these checkouts
+                keys:
+                    - source-v1-{{ .Branch }}-{{ .Revision }}
+                    - source-v1-{{ .Branch }}-
+                    - source-v1-
+
+            - checkout
+
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+            - run: yarn install
             - run:
                 name: jest tests
                 command: |
@@ -323,18 +338,16 @@ workflows:
     node-lint-tests-android-ios:
         jobs:
             - node
-            - lint:
-                requires:
-                    - node
-            - tests:
-                requires:
-                    - node
+            - lint
+            - tests
             - android:
                 requires:
+                    - node
                     - lint
                     - tests
             - ios:
                 requires:
+                    - node
                     - lint
                     - tests
             - ios-beta:
