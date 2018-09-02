@@ -33,23 +33,29 @@ jobs:
                 paths:
                     - node_modules
 
-            # create a cache entry which will avoid checking out subsequent builds
+            # create a cache entry which will avoid checking out all 5GB of subsequent builds
             - save_cache:
                 key: source-v1-{{ .Branch }}-{{ .Revision }}
                 paths:
                     - ".git"
+
+            - persist_to_workspace:
+                root: ~/textile-mobile
+                paths:
+                    - ".git"
+                    - node_modules
     lint:
         working_directory: ~/textile-mobile
         docker:
             - image: circleci/node:8
         steps:
             # should never need to checkout or yarn, since node persists it all
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                key: source-v1-{{ .Branch }}-{{ .Revision }}
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+            - attach_workspace:
+                at: ~/textile-mobile
+
+            - checkout:
+                path: ~/textile-mobile
+
             - run:
                 name: js lint
                 command: |
@@ -69,12 +75,10 @@ jobs:
         docker:
             - image: circleci/node:8
         steps:
-            - restore_cache:
-                key: source-v1-{{ .Branch }}-{{ .Revision }}
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+            - attach_workspace:
+                at: ~/textile-mobile
+            - checkout:
+                path: ~/textile-mobile
             - run:
                 name: jest tests
                 command: |
