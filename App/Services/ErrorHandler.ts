@@ -12,7 +12,7 @@ export function initErrorHandler () {
       return
     }
     StackTrace.fromError(error, { offline: true }).then((frames) => {
-      const frameData = frames.map(frame => {
+      const frameData = frames.map((frame) => {
         return frame.toString()
       })
       Crashlytics.recordCustomExceptionName(error.message, error.message, frameData)
