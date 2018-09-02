@@ -224,9 +224,6 @@ jobs:
                 command:  echo "ruby-2.4" > ~/.ruby-version
 
             - run:
-                name: setup workspace
-                command: mkdir ~/textile-mobile
-            - run:
                 name: own workspace
                 command: chown -R $USER:$USER ~/textile-mobile
 
