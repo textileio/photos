@@ -73,7 +73,9 @@ export default {
    */
   async getUsername (): Promise<TT.UserName | undefined> {
     const username = await TextileNode.getUsername()
-    if (username === '') return undefined
+    if (username === '') {
+      return undefined
+    }
     return  username
   },
 
@@ -84,7 +86,9 @@ export default {
    */
   async getTokens (force: boolean = false): Promise<TT.CafeTokens | undefined> {
     const jsonString = await TextileNode.getTokens(force)
-    if (jsonString === '') return undefined
+    if (jsonString === '') {
+      return undefined
+    }
     return JSON.parse(jsonString) as TT.CafeTokens
   },
 

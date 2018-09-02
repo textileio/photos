@@ -38,10 +38,10 @@ export default class UploadEventHandler {
   }
 
   setup () {
-    Upload.addListener('progress', null, this.uploadProgress.bind(this))
-    Upload.addListener('completed', null, this.uploadComplete.bind(this))
-    Upload.addListener('cancelled', null, this.uploadCancelled.bind(this))
-    Upload.addListener('error', null, this.uploadError.bind(this))
+    Upload.addListener('progress', undefined, this.uploadProgress.bind(this))
+    Upload.addListener('completed', undefined, this.uploadComplete.bind(this))
+    Upload.addListener('cancelled', undefined, this.uploadCancelled.bind(this))
+    Upload.addListener('error', undefined, this.uploadError.bind(this))
   }
 
   tearDown () {

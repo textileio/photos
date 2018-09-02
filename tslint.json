@@ -2,7 +2,6 @@
     "defaultSeverity": "error",
     "extends": [
       "tslint:recommended",
-      "tslint-config-airbnb",
       "tslint-react"
     ],
     "linterOptions": {
@@ -19,15 +18,27 @@
     },
     "jsRules": {},
     "rules": {
-      "no-empty": false,
+      "quotemark": [true, "single", "avoid-escape"],
+      "semicolon": [true, "never"],
+      "no-shadowed-variable": false,
+      "no-null-keyword": true,
+      "no-var-requires": false,
+      "no-string-literal": false,
+      "no-this-assignment": false,
+      "no-submodule-imports": false,
+      "variable-name": false,
+      "no-console": [true, "log"],
+      "interface-name": ["always-prefix"],
+      "no-namespace": [false],
+      "no-implicit-dependencies": [true, "dev"],
+      "max-classes-per-file": [false],
       "object-literal-sort-keys": false,
-      "object-shorthand-properties-first": false,
+      "ordered-imports": false,
+      // begin bandaids
+      "no-empty": false,
       "space-before-function-paren": false,
       "jsx-no-multiline-js": false,
-      "import-name": false,
-      "ordered-imports": false,
       "member-access": false,
-      "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case", "allow-leading-underscore"],
       "trailing-comma": [
         true,
         {
@@ -35,7 +46,6 @@
           "singleline": "never"
         }
       ],
-      "semicolon": [true, "never"],
       "max-line-length": [true, 200]
     },
     "rulesDirectory": []
