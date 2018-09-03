@@ -59,22 +59,28 @@ class ThreadInvite extends React.PureComponent {
     return (
       <View style={styles.contentContainer}>
         <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
-        <Text style={styles.deviceId}>You have been invited by {this.state.inviter ? this.state.inviter : 'warning'} to join a group Thread named, {this.state.name ? this.state.name : 'warning'}.</Text>
-        <View style={styles.imageList}>
-          <Button
-            style={styles.button}
-            title='Ignore'
-            accessibilityLabel='ignore'
-            onPress={this.cancel}
-          />
-          <Button
-            style={styles.button}
-            title={this.props.online === true ? 'Join' : 'Connecting'}
-            accessibilityLabel='Join'
-            onPress={this.confirmRequest.bind(this)}
-            disabled={!this.props.online === true}
-          />
+        <Text style={styles.deviceId}>You have been invited by {this.state.inviter ? this.state.inviter : 'warning'} to join {this.state.name ? this.state.name : 'warning'}.</Text>
+        <View style={styles.buttonList}>
+          <View style={styles.buttonSingle}>
+            <Button
+              style={styles.button}
+              title='Ignore'
+              accessibilityLabel='ignore'
+              onPress={this.cancel}
+            />
+          </View>
+          <View style={styles.buttonSingle}>
+            <Button
+              style={styles.button}
+              title={this.props.online === true ? 'Join' : 'Connecting'}
+              accessibilityLabel='Join'
+              onPress={this.confirmRequest.bind(this)}
+              disabled={!this.props.online === true}
+            />
+          </View>
         </View>
+        {!this.props.online && <ActivityIndicator style={{marginTop: 10, flex: 1}} size='large' color='#000000' animating={this.state.status !== 'success'} />
+        }
       </View>
     )
   }
@@ -84,18 +90,24 @@ class ThreadInvite extends React.PureComponent {
       <View style={styles.contentContainer}>
         <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
         <Text style={styles.deviceId}>{message}</Text>
-        <Button
-          style={styles.button}
-          title='Exit'
-          accessibilityLabel='exit'
-          onPress={this.cancel}
-        />
-        <Button
-          style={style.button}
-          title='Retry'
-          accessibilityLabel='retry'
-          onPress={this.confirmRequest.bind(this)}
-        />
+        <View style={styles.buttonList}>
+          <View style={styles.buttonSingle}>
+            <Button
+              style={styles.button}
+              title='Exit'
+              accessibilityLabel='exit'
+              onPress={this.cancel}
+            />
+          </View>
+          <View style={styles.buttonSingle}>
+            <Button
+              style={style.button}
+              title='Retry'
+              accessibilityLabel='retry'
+              onPress={this.confirmRequest.bind(this)}
+            />
+          </View>
+        </View>
       </View>
     )
   }
@@ -105,15 +117,17 @@ class ThreadInvite extends React.PureComponent {
       <View style={styles.contentContainer}>
         <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
         <Text style={styles.deviceId}>{message}</Text>
-        {!cont && <ActivityIndicator size='large' color='#000000' animating={this.state.status !== 'success'} />
+        <View style={styles.buttonSingle}>
+          <Button
+            style={styles.button}
+            title={cont ? 'Continue' : 'Wait'}
+            accessibilityLabel='Continue'
+            onPress={this.cancel}
+            disabled={!cont}
+          />
+        </View>
+        {!cont && <ActivityIndicator style={{marginTop: 10, flex: 1}} size='large' color='#000000' animating={this.state.status !== 'success'} />
         }
-        <Button
-          style={styles.button}
-          title={cont ? 'Continue' : 'Wait'}
-          accessibilityLabel='Continue'
-          onPress={this.cancel}
-          disabled={!cont}
-        />
       </View>
     )
   }

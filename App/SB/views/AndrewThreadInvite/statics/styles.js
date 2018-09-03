@@ -37,17 +37,22 @@ export default StyleSheet.create({
     textAlign: 'center',
     marginBottom: 38
   },
-  imageList: {
+  buttonList: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 28,
     marginBottom: 28
   },
+  buttonSingle: {
+    flex: 1,
+    paddingHorizontal: 10
+  },
   button: {
     fontFamily: 'BentonSans',
     color: Colors.charcoal,
     fontSize: 18,
-    alignSelf: 'center',
+    alignSelf: 'stretch',
     textAlign: 'justify'
   },
 })
