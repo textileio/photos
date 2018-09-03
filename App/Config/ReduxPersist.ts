@@ -20,7 +20,7 @@ const migrations: MigrationManifest = {
     const state = persistedState as any
     // Migration to add remaining retry attempts to any persisted image data
     const updatedItems = state.textile.images.items.map((item: any) => {
-      return {...item, remainingUploadAttempts: 3}
+      return { ...item, remainingUploadAttempts: 3 }
     })
     return {
       ...state,
@@ -36,8 +36,8 @@ const migrations: MigrationManifest = {
   2: (persistedState) => {
     const state = persistedState as any
     const uris = state.textile.camera && state.textile.camera.processed ? state.textile.camera.processed : []
-    let processed: { [key: string]: 'complete' } = {}
-    for (let uri of uris) {
+    const processed: { [key: string]: 'complete' } = {}
+    for (const uri of uris) {
       processed[uri] = 'complete'
     }
     return {
@@ -118,7 +118,7 @@ const migrations: MigrationManifest = {
         },
         services: {
           notifications: {
-            status: false,
+            status: false
           },
           photoAddedNotification: {
             status: true

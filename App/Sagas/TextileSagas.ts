@@ -421,7 +421,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   const { threadId } = action.payload
 
   // Present image picker
-  const pickerResponse: CameraRoll.PickerImage = yield CameraRoll.choosePhoto()
+  const pickerResponse: CameraRoll.IPickerImage = yield CameraRoll.choosePhoto()
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
   } else if (pickerResponse.error) {

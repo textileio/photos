@@ -24,11 +24,11 @@ export default StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     paddingTop: 20,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   walletStatsTopColumn: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   walletStatsCount: {
     fontFamily: 'BentonSans-Bold',

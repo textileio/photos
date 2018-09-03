@@ -1,4 +1,4 @@
-export type DebugConfig = {
+export interface IDebugConfig {
   showDevScreens: boolean,
   useFixtures: boolean,
   ezLogin: boolean,
@@ -8,7 +8,7 @@ export type DebugConfig = {
   useReactotron: boolean
 }
 
-const config: DebugConfig = {
+const config: IDebugConfig = {
   showDevScreens: __DEV__,
   useFixtures: false,
   ezLogin: false,
