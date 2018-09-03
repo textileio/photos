@@ -33,7 +33,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
       <Fragment>
         <TextileImage
           imageId={this.props.imageId}
-          path={'thumb'}
+          path={this.props.previewPath}
           style={this.props.style}
           resizeMode={this.props.resizeMode}
           capInsets={this.props.capInsets}
@@ -54,7 +54,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     return (
       <TextileImage
         imageId={this.props.imageId}
-        path={'thumb'}
+        path={this.props.previewPath}
         style={this.props.style}
         resizeMode={this.props.resizeMode}
         capInsets={this.props.capInsets}
