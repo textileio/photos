@@ -279,10 +279,6 @@ jobs:
         shell: /bin/bash --login -o pipefail
 
         steps:
-            - run: git config --global user.name $CIRCLE_USERNAME
-            - run: git config --global user.email "ops@textile.io" # TODO: Use a variable here
-            - run: git branch --set-upstream-to=origin/$CIRCLE_BRANCH $CIRCLE_BRANCH
-
             - run:
                 name: set Ruby version
                 command:  echo "ruby-2.4" > ~/.ruby-version
@@ -294,6 +290,10 @@ jobs:
                     - source-v1-{{ arch }}-
 
             - checkout
+
+            - run: git config --global user.name $CIRCLE_USERNAME
+            - run: git config --global user.email "ops@textile.io" # TODO: Use a variable here
+            - run: git branch --set-upstream-to=origin/$CIRCLE_BRANCH $CIRCLE_BRANCH
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
