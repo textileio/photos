@@ -14,7 +14,7 @@ import PreferencesActions from '../../../Redux/PreferencesRedux'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { threadDataByThreadId } from '../../../Redux/PhotoViewingSelectors'
 import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
-import * as TextileTypes from '../../../Models/TextileTypes'
+import { Photo } from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
 import Alert from '../../../SB/components/Alert'
@@ -203,7 +203,7 @@ const mapStateToProps = (state: RootState) => {
   const viewingThread = state.photoViewing.viewingThread
 
   const threadId = viewingThread.id
-  var items: [{type: string, photo: TextileTypes.Photo}] = []
+  var items: [{type: string, photo: Photo}] = []
   var processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
 
   if (viewingThread) {
