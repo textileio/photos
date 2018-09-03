@@ -24,12 +24,12 @@ class PairingView extends React.PureComponent {
       return deviceKey && d.deviceItem.id === deviceKey
     })
     if (device) {
-      this.setState(() => ({status: device.state}))
+      this.setState(() => ({ status: device.state }))
     }
   }
 
   confirmRequest = () => {
-    this.setState(() => ({status: 'confirmed'}))
+    this.setState(() => ({ status: 'confirmed' }))
     this.props.addDeviceRequest('desktop', this.state.key)
   }
 

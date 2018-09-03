@@ -1,16 +1,15 @@
 import { StyleSheet } from 'react-native'
-import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
   container: {
     marginTop: 20,
     backgroundColor: '#FAFCFE',
-    flex: 1,
+    flex: 1
   },
   bodyContainer: {
     marginTop: 0, // <- changed because headers will be outside of Containers now...
     backgroundColor: '#FAFCFE',
-    flex: 1,
+    flex: 1
   },
   photoContainer: {
     overflow: 'hidden'
@@ -43,11 +42,11 @@ export default StyleSheet.create({
   },
   toolbarAddIcon: {
     width: 24,
-    height: 24,
+    height: 24
   },
   toolbarDownloadIcon: {
     width: 22,
-    height: 21,
+    height: 21
   },
   toolbarShareIcon: {
     marginTop: 3,
@@ -57,7 +56,7 @@ export default StyleSheet.create({
   toolbarRemoveIcon: {
     width: 14,
     height: 18,
-     marginLeft: 35
+    marginLeft: 35
   },
   photoDetails: {
     flexDirection: 'row',
@@ -65,7 +64,7 @@ export default StyleSheet.create({
     paddingHorizontal: 18,
     height: 50,
     borderBottomWidth: 1,
-    borderColor: '#ECEDEE',
+    borderColor: '#ECEDEE'
   },
   detailItem: {
     flexDirection: 'row'
@@ -75,7 +74,7 @@ export default StyleSheet.create({
   },
   iconLocation: {
     width: 13,
-    height: 17,
+    height: 17
   },
   iconInfo: {
     width: 18,
@@ -83,12 +82,12 @@ export default StyleSheet.create({
   },
   iconCalendar: {
     width: 16,
-    height: 16,
+    height: 16
   },
   threadsTitle: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 14,
-    color: "#9b9b9b",
+    color: '#9b9b9b',
     paddingBottom: 16
   }
 })

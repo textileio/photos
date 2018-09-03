@@ -1,21 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Button, Linking, Clipboard } from 'react-native'
-import { Overlay, Icon } from 'react-native-elements'
-import {getUniqueID} from 'react-native-device-info'
-import Toast, {DURATION} from 'react-native-easy-toast'
+import { Icon } from 'react-native-elements'
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
 // Styles
-import styles, {buttonColor1, buttonColor2, buttonColor3, buttonColor4} from './Styles/InfoViewStyle'
+import styles, { buttonColor1, buttonColor2, buttonColor4 } from './Styles/InfoViewStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 
 class Settings extends React.PureComponent {
-
   static navigationOptions = {
     headerTitle: (<Text style={navStyles.headerTitle}>Settings</Text>)
-
   }
 
   constructor (props) {
@@ -63,7 +60,7 @@ class Settings extends React.PureComponent {
             />
           </View>
         </View>
-        <View style={{fontSize: 8}}>
+        <View style={{ fontSize: 8 }}>
           <Button
             onPress={this.handlePress.bind(this)}
             title='COPY PUBLIC KEY TO CLIPBOARD'
@@ -83,18 +80,11 @@ class Settings extends React.PureComponent {
   }
 }
 
-
-
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error'
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
-
+export default connect(mapStateToProps, undefined)(Settings)

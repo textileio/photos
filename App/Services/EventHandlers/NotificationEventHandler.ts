@@ -15,7 +15,7 @@ export default class NotificationEventHandler {
   }
 
   onNotification (notification: NotificationEngagement) {
-    if (notification.userInteraction === true) {
+    if (notification.userInteraction) {
       this.store.dispatch(NotificationsActions.notificationEngagement(notification))
     }
     if (notification.finish && Platform.OS === 'ios') {
@@ -30,7 +30,7 @@ export default class NotificationEventHandler {
       // Should the initial notification be popped automatically
       // default: true
       popInitialNotification: true,
-      requestPermissions: false,
+      requestPermissions: false
     })
   }
 

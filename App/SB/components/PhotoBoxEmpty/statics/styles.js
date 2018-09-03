@@ -4,7 +4,7 @@ export default StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 10
   },
   itemBox: {
     justifyContent: 'center',
@@ -17,7 +17,7 @@ export default StyleSheet.create({
   },
   itemBoxPlus: {
     width: 17.2,
-    height: 17.1,
+    height: 17.1
   },
   itemText: {
     fontFamily: 'BentonSans',

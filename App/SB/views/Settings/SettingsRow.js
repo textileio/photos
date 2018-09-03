@@ -4,7 +4,7 @@ import ImageSc from 'react-native-scalable-image'
 import styles from './statics/styles'
 
 const SettingsRow = (props) => {
-  const {service, info, infoPress, value, onChange, child, disabled} = props
+  const { service, info, infoPress, value, onChange, child, disabled } = props
   return (
     <View style={[styles.listItem, child && styles.childItem]}>
       <View>

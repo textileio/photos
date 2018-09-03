@@ -49,7 +49,7 @@ const ERROR: TextStyle = {
   flex: 1
 }
 
-export type ProcessingImageProps = {
+export interface IProcessingImageProps {
   imageUri: string,
   progress: number,
   message?: string,
@@ -58,32 +58,34 @@ export type ProcessingImageProps = {
   cancel?: () => void
 }
 
-const ProcessingImage = (props: ProcessingImageProps) => {
+const ProcessingImage = (props: IProcessingImageProps) => {
   const { imageUri, progress, message, errorMessage, retry, cancel } = props
 
   let content: JSX.Element
   if (errorMessage) {
-    content =
+    content = (
       <Fragment>
-        <Text style={ERROR}>{'Error: ' + errorMessage}</Text>
-        {retry && <Button title='Retry' onPress={retry} />}
-        {cancel && <Button title='Cancel' onPress={cancel} />}
+        <Text style={ERROR}>{`Error: ${errorMessage}`}</Text>
+        {retry && <Button title={'Retry'} onPress={retry} />}
+        {cancel && <Button title={'Cancel'} onPress={cancel} />}
       </Fragment>
+    )
   } else {
-    content =
+    content = (
       <Fragment>
         <View style={STACK}>
           <Text style={STATUS} />
           <ProgressBar progress={progress} />
           <Text style={STATUS}>{message}</Text>
         </View>
-        {cancel && <Button title='Cancel' onPress={cancel} />}
+        {cancel && <Button title={'Cancel'} onPress={cancel} />}
       </Fragment>
+    )
   }
 
   return (
     <View style={CONTAINER}>
-      <Image style={IMAGE} source={{uri: imageUri}} resizeMode='cover' />
+      <Image style={IMAGE} source={{ uri: imageUri }} resizeMode={'cover'} />
       {content}
     </View>
   )

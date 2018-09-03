@@ -6,7 +6,6 @@ import SignIn from './SignIn'
 import AuthActions from '../../../Redux/AuthRedux'
 
 class SignInContainer extends React.Component {
-  
   switchToSignUp = () => {
     this.props.navigation.goBack()
   }

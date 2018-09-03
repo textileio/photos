@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, KeyboardAvoidingView, Button, View } from 'react-native'
+import { Text, Button, View } from 'react-native'
 import { connect } from 'react-redux'
-import styles, {buttonColor} from './Styles/OnboardingScreenStyle'
+import styles, { buttonColor } from './Styles/OnboardingScreenStyle'
 
 class OnboardingScreen extends Component {
   render () {
@@ -23,12 +23,8 @@ class OnboardingScreen extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {}
-}
-
 const mapDispatchToProps = (dispatch) => {
   return { dispatch }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen)
+export default connect(undefined, mapDispatchToProps)(OnboardingScreen)

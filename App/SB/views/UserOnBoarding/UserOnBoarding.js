@@ -1,6 +1,4 @@
-import React  from 'react'
-import { View } from 'react-native'
-
+import React from 'react'
 import Step1 from './Step1'
 import Step2 from './Step2'
 

@@ -19,13 +19,13 @@ class CommentBoxContainer extends React.Component {
 
   _keyboardDidShow = e => {
     this.setState({
-      keyboardHeight: e.endCoordinates.height,
+      keyboardHeight: e.endCoordinates.height
     })
   }
 
   _keyboardDidHide = () => {
     this.setState({
-      keyboardHeight: 0,
+      keyboardHeight: 0
     })
   }
 
@@ -33,7 +33,6 @@ class CommentBoxContainer extends React.Component {
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }
-
 
   render () {
     return (

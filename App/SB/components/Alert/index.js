@@ -12,7 +12,7 @@ const Alert = props => {
       </View>
     )
   } else {
-    return (<View/>)
+    return (<View />)
   }
 }
 

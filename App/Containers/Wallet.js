@@ -8,7 +8,6 @@ import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
 import { ThreadName, Photo } from '../Models/TextileTypes'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
-import navStyles from '../Navigation/Styles/NavigationStyles'
 import WalletHeader from '../Components/WalletHeader'
 
 import Button from '../SB/components/Button'
@@ -27,7 +26,7 @@ class Wallet extends React.PureComponent {
     }
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState, snapshot) {
     if (
       this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
       this.props.profile !== prevProps.profile
@@ -97,10 +96,10 @@ class Wallet extends React.PureComponent {
         <WalletHeader
           overview={this.props.overview}
           changeAvatar={() => {
-            this.props.navigation.navigate('ChangeAvatar', {avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet'})
+            this.props.navigation.navigate('ChangeAvatar', { avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet' })
           }}
           updateSettings={() => {
-            this.props.navigation.navigate('Account', {avatarUrl: this.props.avatarUrl, username: this.props.username})
+            this.props.navigation.navigate('Account', { avatarUrl: this.props.avatarUrl, username: this.props.username })
           }}
           viewThreads={() => this.props.navigation.navigate('Threads')}
         />
@@ -144,8 +143,8 @@ const mapStateToProps = (state, ownProps) => {
 
   const threadId = navParams.id || defaultThreadId
 
-  var photos: Photo[] = []
-  var refreshing = false
+  let photos: Photo[] = []
+  let refreshing = false
   if (threadId) {
     const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, items: [] }
     photos = threadData.photos

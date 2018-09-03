@@ -9,7 +9,7 @@ class PhotoGridListContainer extends React.Component {
     this.state = {
       active: 0,
       labelPosition: 0,
-      elementPositions: {},
+      elementPositions: {}
     }
   }
 

@@ -28,7 +28,8 @@
     "lint": "standard --verbose | snazzy",
     "lintdiff": "git diff --name-only --cached --relative | grep '\\.js$' | xargs standard | snazzy",
     "fixcode": "standard --fix",
-    "git-hook": "npm run lint -s && npm run test -s"
+    "git-hook": "npm run lint -s && npm run test -s",
+    "tslint": "tslint -c tslint.json --project ."
   },
   "dependencies": {
     "apisauce": "^0.14.2",
@@ -127,6 +128,7 @@
     "standard": "10.0.2",
     "ts-jest": "^22.4.6",
     "tslint": "^5.10.0",
+    "tslint-react": "^3.6.0",
     "typescript": "^2.9.2"
   },
   "jest": {

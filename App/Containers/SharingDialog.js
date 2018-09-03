@@ -18,17 +18,17 @@ class SharingDialog extends Component {
         <ProgressiveImage
           imageId={this.props.hash}
           path={'small'}
-          style={{flex: 1, height: undefined, width: undefined}}
+          style={{ flex: 1, height: undefined, width: undefined }}
           resizeMode={'cover'}
         />
         <TouchableHighlight
           underlayColor={'transparent'}
-          style={{alignItems: 'center', position: 'absolute', top: 0, right: 0, width: 44, height: 44}}
+          style={{ alignItems: 'center', position: 'absolute', top: 0, right: 0, width: 44, height: 44 }}
           onPress={this.props.cancelAuthoringShare}
         >
           <Icon name={'ios-close'} size={44} color={'white'} />
         </TouchableHighlight>
-        <SharingNavigation style={{flex: 1}} />
+        <SharingNavigation style={{ flex: 1 }} />
       </View>
     )
   }

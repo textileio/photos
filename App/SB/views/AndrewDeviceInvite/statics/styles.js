@@ -5,7 +5,7 @@ export default StyleSheet.create({
   container: {
     marginTop: 20,
     backgroundColor: '#FAFCFE',
-    flex: 1,
+    flex: 1
   },
   contentContainer: {
     paddingHorizontal: 19,
@@ -18,21 +18,21 @@ export default StyleSheet.create({
     marginBottom: 16
   },
   toolbarTitle: {
-    fontFamily: "BentonSans",
-    fontSize: 30,
+    fontFamily: 'BentonSans',
+    fontSize: 30
   },
   mainImage: {
     alignSelf: 'center',
-    marginBottom: 44,
+    marginBottom: 44
   },
   deviceId: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 12,
     textAlign: 'center',
     marginBottom: 38
   },
   imageText: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 38
@@ -49,5 +49,5 @@ export default StyleSheet.create({
     fontSize: 18,
     alignSelf: 'center',
     textAlign: 'justify'
-  },
+  }
 })
