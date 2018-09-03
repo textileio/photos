@@ -106,7 +106,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
   if (viewingPhoto.caption) {
     captionCommentCardProps = {
       username: viewingPhoto.username || viewingPhoto.author_id,
-      avatarUri: 'https://cafe.textile.io/ipns/' + viewingPhoto.author_id + '/avatar',
+      peerId: viewingPhoto.author_id,
       comment: viewingPhoto.caption,
       date: viewingPhoto.date,
       isSubComment: false,
@@ -118,7 +118,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
   const commentCardProps = comments.slice().reverse().map(comment => {
     const props: CommentCardProps = {
       username: comment.username || 'unknown',
-      avatarUri: 'https://cafe.textile.io/ipns/' + comment.author_id + '/avatar',
+      peerId: comment.author_id,
       comment: comment.body,
       date: comment.date,
       isSubComment: false,
