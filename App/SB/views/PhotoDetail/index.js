@@ -8,6 +8,7 @@ import Modal from 'react-native-modal'
 import UIActions from '../../../Redux/UIRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
 import { getThreads, defaultThreadData } from '../../../Redux/PhotoViewingSelectors'
+import { RootState } from '../../../Redux/Types'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
@@ -21,7 +22,6 @@ import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 import { getHeight } from '../../../Services/PhotoUtils'
 
 import styles from './statics/styles'
-import { Thread } from '../../../Models/TextileTypes'
 
 // via https://github.com/react-native-community/react-native-modal/issues/147
 const WIDTH = Dimensions.get('window').width

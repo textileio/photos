@@ -121,7 +121,7 @@ class ThreadsList extends React.PureComponent {
   }
 
   _onPressItem = (photo) => {
-    const { id, name } = photo
+    const { id } = photo
     this.props.viewThread(id)
     this.props.navigation.navigate('ViewThread')
   }
