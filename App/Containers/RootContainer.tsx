@@ -12,18 +12,16 @@ import TriggersActions from '../Redux/TriggersRedux'
 // Styles
 import styles from './Styles/RootContainerStyles'
 
-type StateProps = {
+interface StateProps {
   showOverlay: boolean
   monitorLocation: boolean
 }
 
-type DispatchProps = {
+interface DispatchProps {
   locationUpdate: () => void
 }
 
-type Props = StateProps & DispatchProps
-
-class RootContainer extends Component<Props> {
+class RootContainer extends Component<StateProps & DispatchProps> {
 
   // TODO: Move all this location handling out of here!!!
 
