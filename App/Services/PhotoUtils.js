@@ -5,7 +5,7 @@ import RNFS from 'react-native-fs'
 import TextileNode from '../../TextileNode'
 
 export function getHeight (metadata: Object, targetWidth: number) {
-  const known = metadata && metadata.height && metadata.height > 0 && metadata.width && metadata.width > 0 ? true : false
+  const known = !!(metadata && metadata.height && metadata.height > 0 && metadata.width && metadata.width > 0)
   const height = known ? (metadata.height / metadata.width) * targetWidth : targetWidth * 0.6
   return {
     known,
@@ -27,7 +27,8 @@ export async function getAllPhotos (limit) {
   let cursor = null
   let page = 0 // I wanted to limit the total size of a return array
   let pageSize = 25
-  while (hasNextPage && (limit === -1 || page < limit / pageSize)) {
+  let lessThanLimit = limit === -1 || page < limit / pageSize
+  while (hasNextPage && lessThanLimit) {
     let photos = await getPage(pageSize, cursor)
     hasNextPage = photos.page_info.has_next_page
     cursor = photos.page_info.end_cursor
@@ -41,6 +42,7 @@ export async function getAllPhotos (limit) {
       }
     }))
     page += 1
+    lessThanLimit = limit === -1 || page < limit / pageSize
   }
   return data
 }
@@ -54,16 +56,21 @@ export async function getPhotoPath (photo) {
 
   // iOS method
   if (photo.uri.includes('assets-library://')) {
-    let regex = /[?&]([^=#]+)=([^&#]*)/g, params = {}, match
-    while (match = regex.exec(photo.uri)) {
-      params[match[1]] = match[2]
-    }
+    let regex = /[?&]([^=#]+)=([^&#]*)/g
+    let params = {}
+    let match
+    do {
+      match = regex.exec(photo.uri)
+      if (match) {
+        params[match[1]] = match[2]
+      }
+    } while (match)
+
     const path = fullDir + params.id + '.JPG'
     await RNFS.copyAssetsFileIOS(photo.uri, path, 0, 0)
     photo['path'] = path
-  }
-  // Android Method
-  else if (photo.uri.includes('content://media')) {
+  } else if (photo.uri.includes('content://media')) {
+    // Android Method
     photo['path'] = await TextileNode.getFilePath(photo.uri)
   }
   return photo

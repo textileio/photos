@@ -6,6 +6,6 @@ export default StyleSheet.create({
     marginTop: 39
   },
   image: {
-    marginBottom: 22,
-  },
+    marginBottom: 22
+  }
 })

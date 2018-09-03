@@ -33,7 +33,7 @@ class PhotoViewerScreen extends React.PureComponent {
       imageId={props.image.photo.id}
       previewPath={'small'}
       path={'photo'}
-      style={{flex: 1, height: undefined, width: undefined}}
+      style={{ flex: 1, height: undefined, width: undefined }}
       resizeMode={props.resizeMode}
       capInsets={props.capInsets}
     />)
@@ -94,14 +94,14 @@ class PhotoViewerScreen extends React.PureComponent {
             width={36}
           >
             <SvgUri
-              style={{margin: 2, width: 32, height: 32}}
+              style={{ margin: 2, width: 32, height: 32 }}
               width={32}
               height={32}
               svgXmlData={avatar}
-              />
+            />
           </View>
           <Text
-            style={{paddingLeft: 10, textAlign: 'left', color: 'white', fontSize: 18}}>
+            style={{ paddingLeft: 10, textAlign: 'left', color: 'white', fontSize: 18 }}>
             {username}
           </Text>
         </View>
@@ -136,7 +136,7 @@ class PhotoViewerScreen extends React.PureComponent {
 
   render () {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <StatusBar hidden />
 
         <Modal isVisible={this.props.visibleModal} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard >
@@ -171,7 +171,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
       ...item,
       key: item.photo.id + path,
-      source: {url: 'file://' + item.photo.id + '.png'}, // <-- in case RN uses to know things
+      source: { url: 'file://' + item.photo.id + '.png' }, // <-- in case RN uses to know things
       dimensions: { width: 150, height: 150 },
       displayImages: state.textileNode.nodeState.state === 'started'
     }

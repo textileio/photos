@@ -9,11 +9,9 @@ import Alert from '../../components/Alert'
 
 import commonStyles from '../commonStyles'
 import styles from './statics/styles'
-import { throws } from 'assert';
 
 const SignIn = props => {
   const { username, password, updateUsername, updatePassword, submit, switchToSignUp, displayError, errorMessage } = props
-  const displayAlert = true
 
   return (
     <Fragment>
@@ -30,7 +28,7 @@ const SignIn = props => {
             onChangeText={updateUsername}
             keyboardType='default'
             autoCapitalize='none'
-            style={{height: 40}}
+            style={{ height: 40 }}
           />
           <Input
             value={password}
@@ -39,20 +37,20 @@ const SignIn = props => {
             onChangeText={updatePassword}
             keyboardType='default'
             autoCapitalize='none'
-            style={{height: 40}}
+            style={{ height: 40 }}
           />
           {/* TODO: Forgot pw support */}
           {/* <Text style={styles.forgotText}>Forgot password</Text> */}
           <View style={styles.bottomLine}>
             <Button
-              text="Sign In"
+              text='Sign In'
               disabled={!username || !password}
               onPress={() => submit(username, password)}
             />
           </View>
         </View>
       </ScrollView>
-      <Alert display={displayError} top msg={'Sign in error: ' +  errorMessage}/>
+      <Alert display={displayError} top msg={'Sign in error: ' + errorMessage} />
       <Footer>
         <Text style={styles.footerText}>Don't have an account? </Text>
         <TouchableOpacity onPress={switchToSignUp}>

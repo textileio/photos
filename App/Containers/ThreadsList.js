@@ -24,8 +24,8 @@ class ThreadsList extends React.PureComponent {
       <HeaderButtons left>
         <Item
           title='Account'
-          onPress={() => navigation.navigate('Account', {username})}
-          buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+          onPress={() => navigation.navigate('Account', { username })}
+          buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
           ButtonElement={
             <Avatar
               width={24}
@@ -106,7 +106,7 @@ class ThreadsList extends React.PureComponent {
               this.props.enableNotifications()
             }
           },
-          {text: 'Not now', style: 'cancel'},
+          { text: 'Not now', style: 'cancel' },
           {
             text: 'Show all options',
             onPress: () => {
@@ -114,7 +114,7 @@ class ThreadsList extends React.PureComponent {
             }
           }
         ],
-        {cancelable: false}
+        { cancelable: false }
       )
     }
   }
@@ -130,7 +130,7 @@ class ThreadsList extends React.PureComponent {
 
   _keyExtractor = (item, index) => item.id
 
-  _renderItem = ({item}) => {
+  _renderItem = ({ item }) => {
     return (
       <ThreadCard id={item.id} {...item} profile={this.props.profile} onPress={this._onPressItem} />
     )
@@ -176,6 +176,7 @@ class ThreadsList extends React.PureComponent {
               renderItem={this._renderItem}
               refreshing={this.props.refreshing}
               onRefresh={this._onRefresh}
+              initialNumToRender={4}
             />
           </View>
         )}
@@ -202,7 +203,7 @@ const mapStateToProps = (state) => {
 
         // get a rough count of distinct users
         thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1
-          // latest update based on the latest item
+        // latest update based on the latest item
         thread.updated = thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0
         // latest peer to push to the thread
         thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined

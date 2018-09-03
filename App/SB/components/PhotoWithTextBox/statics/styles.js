@@ -18,11 +18,11 @@ export default StyleSheet.create({
     top: 0,
     bottom: 0,
     left: 0,
-    right: 0,
+    right: 0
   },
   itemText: {
-    fontFamily: "BentonSans",
-    fontSize: 14,
+    fontFamily: 'BentonSans',
+    fontSize: 14
   },
   itemBox: {
     justifyContent: 'center',
@@ -35,6 +35,6 @@ export default StyleSheet.create({
   },
   itemBoxPlus: {
     width: 17.2,
-    height: 17.1,
+    height: 17.1
   }
 })

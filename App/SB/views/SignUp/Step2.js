@@ -6,7 +6,6 @@ import Footer from '../../components/Footer'
 import Logo from '../../components/Logo'
 import Button from '../../components/Button'
 import Alert from '../../components/Alert'
-import PasswordValidator from '../../components/PasswordValidator/PasswordValidatorContainer'
 
 import commonStyles from '../commonStyles'
 import styles from './statics/styles'
@@ -33,7 +32,7 @@ const Step1 = props => {
             onChangeText={updateUsername}
             keyboardType='email-address'
             autoCapitalize='none'
-            style={{height: 40}}
+            style={{ height: 40 }}
           />
           <View style={{ position: 'relative' }}>
             <Input
@@ -43,7 +42,7 @@ const Step1 = props => {
               onChangeText={updatePassword}
               keyboardType='default'
               autoCapitalize='none'
-              style={{height: 40}}
+              style={{ height: 40 }}
             />
             {/* TODO: somthing with pw strength */}
             {/* <View style={{ position: 'absolute', right: 0, bottom: 20 }}>
@@ -53,14 +52,14 @@ const Step1 = props => {
           <View style={styles.bottomLine}>
             <Text style={styles.bottomLineLink}>By signing up you agree to our <Text style={styles.link}>Terms and Conditions</Text></Text>
             <Button
-              text="Create account"
+              text='Create account'
               disabled={!username || !password}
               onPress={() => submit(referralCode, email, username, password)}
             />
           </View>
         </View>
       </ScrollView>
-      <Alert display={displayError} top msg={'Sign up error: ' +  errorMessage}/>
+      <Alert display={displayError} top msg={'Sign up error: ' + errorMessage} />
       <Footer>
         <TouchableOpacity onPress={onPreviousStep}>
           <Text style={[styles.footerLink, styles.link, styles.strong]}>Go back</Text>

@@ -22,9 +22,9 @@ export default StyleSheet.create({
     borderBottomWidth: 1
   },
   title: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 14,
-    color: "#9b9b9b"
+    color: '#9b9b9b'
   },
   closeButtonWrapper: {
     paddingVertical: 4,

@@ -34,7 +34,7 @@ const create = (baseURL = 'https://randomuser.me/api/') => {
   // Since we can't hide from that, we embrace it by getting out of the
   // way at this level.
   //
-  const getUsers = (seed, page, results) => api.get('', {seed: seed, page: page, results: results})
+  const getUsers = (seed, page, results) => api.get('', { seed: seed, page: page, results: results })
 
   // ------
   // STEP 3

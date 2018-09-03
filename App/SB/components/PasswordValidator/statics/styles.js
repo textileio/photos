@@ -4,8 +4,8 @@ import { BentonSansBold } from '../../../util/fonts'
 export default StyleSheet.create({
   text: {
     ...BentonSansBold(),
-    fontSize: 13,
-  },
+    fontSize: 13
+  }
 })
 
 export const colors = {

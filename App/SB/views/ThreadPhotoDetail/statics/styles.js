@@ -4,25 +4,25 @@ export default StyleSheet.create({
   container: {
     marginTop: 0, // <- Removed until header gets reworked, orig = 20
     backgroundColor: '#FAFCFE',
-    flex: 1,
+    flex: 1
   },
   contentContainer: {},
   toolbarLeft: {
     marginTop: 0,
     height: 16,
-    width: 40,
+    width: 40
   },
   toolBarRight: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   toolbarIconMore: {
     height: 4,
     width: 16
   },
   toolbarTitle: {
-    fontFamily: "BentonSans",
-    fontSize: 30,
+    fontFamily: 'BentonSans',
+    fontSize: 30
   },
   backButtonWrapper: {
     paddingVertical: 5
@@ -34,5 +34,5 @@ export default StyleSheet.create({
     paddingLeft: 16,
     paddingTop: 17,
     paddingBottom: 36
-  },
+  }
 })

@@ -1,16 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, ScrollView } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import Input from '../SB/components/Input'
 import { NavigationActions } from 'react-navigation'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 // import styles from './Styles/AddThreadStyle'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import styles from '../SB/views/ThreadCreate/statics/styles'
-import UIActions from '../Redux/UIRedux'
 
 class AddThreadScreen extends React.Component {
-
   state = {
     value: '',
     submitted: false
@@ -48,7 +46,7 @@ class AddThreadScreen extends React.Component {
   }
 
   handleNewText = (text: string) => {
-    this.setState({ value: text})
+    this.setState({ value: text })
     this.props.navigation.setParams({
       submit: () => { this._submit() },
       submitEnabled: (text.length > 0)
@@ -65,7 +63,7 @@ class AddThreadScreen extends React.Component {
 
   _submitWithPhoto (withPhoto) {
     const withThreadName = this.state.value
-    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PhotoViewer', withPhoto, withThreadName})
+    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PhotoViewer', withPhoto, withThreadName })
   }
   _submit () {
     this.props.submit(this.state.value)
@@ -77,7 +75,7 @@ class AddThreadScreen extends React.Component {
       <ScrollView style={styles.contentContainer}>
         <View>
           <Input
-            style={{height: 40}}
+            style={{ height: 40 }}
             value={this.state.value}
             label={this.state.value === '' ? 'Add a title...' : ''}
             onChangeText={this.handleNewText.bind(this)} />
@@ -87,15 +85,10 @@ class AddThreadScreen extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-  }
-}
-
 const mapDispatchToProps = (dispatch) => {
   return {
     submit: (name: string) => { dispatch(ThreadsActions.addThreadRequest(name)) }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddThreadScreen)
+export default connect(undefined, mapDispatchToProps)(AddThreadScreen)

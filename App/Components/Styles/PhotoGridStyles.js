@@ -1,5 +1,5 @@
-import {Dimensions, StyleSheet, Platform} from 'react-native'
-import { ApplicationStyles, Metrics, Colors } from '../../Themes'
+import { Dimensions, StyleSheet, Platform } from 'react-native'
+import { ApplicationStyles, Colors } from '../../Themes'
 
 const { width, height } = Dimensions.get('window')
 
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     width: ITEM_WIDTH,
     height: PRODUCT_ITEM_HEIGHT,
     alignItems: 'center',
-    backgroundColor: Colors.snow,
+    backgroundColor: Colors.snow
   },
   itemBackgroundContainer: {
     position: 'absolute',
@@ -76,10 +76,10 @@ export default StyleSheet.create({
     flex: 1,
     ...Platform.select({
       ios: {
-        fontWeight: '400',
-      },
+        fontWeight: '400'
+      }
     }),
-    margin: PRODUCT_ITEM_OFFSET * 2,
+    margin: PRODUCT_ITEM_OFFSET * 2
   },
   itemFooter: {
     flexDirection: 'row',
@@ -88,17 +88,20 @@ export default StyleSheet.create({
     borderWidth: 0,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: 'rgba(0,0,0,0.15)',
-    margin: PRODUCT_ITEM_OFFSET * 2,
+    margin: PRODUCT_ITEM_OFFSET * 2
   },
   tileStyle: {
     padding: 0,
     margin: 0,
-    height: 15,
+    height: 15
   },
   statusCell: {
     flex: 1,
     position: 'absolute',
-    left: 0, right: 0, bottom: 0, top: -18,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: -18,
     height: 10
   },
   photoCell: {
@@ -127,33 +130,33 @@ export default StyleSheet.create({
     marginRight: 6,
     borderWidth: 1.5,
     borderColor: Colors.silver,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.transparent
   },
   statusPink: {
     width: 10,
     height: 10,
     borderRadius: 5,
     marginRight: 6,
-    backgroundColor: Colors.brandPink,
+    backgroundColor: Colors.brandPink
   },
   statusRed: {
     width: 10,
     height: 10,
     borderRadius: 5,
     marginRight: 6,
-    backgroundColor: Colors.brandRed,
+    backgroundColor: Colors.brandRed
   },
   statusBlue: {
     width: 10,
     height: 10,
     borderRadius: 5,
     marginRight: 6,
-    backgroundColor: Colors.brandBlue,
+    backgroundColor: Colors.brandBlue
   },
   message: {
     flex: 1,
     width: '90%',
     flexDirection: 'row',
-    alignSelf: 'flex-start',
+    alignSelf: 'flex-start'
   }
 })
