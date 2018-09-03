@@ -5,12 +5,12 @@ export default StyleSheet.create({
   container: {
     marginTop: 20,
     backgroundColor: '#FAFCFE',
-    flex: 1,
+    flex: 1
   },
   contentContainer: {},
   toolbarIconUser: {
     width: 24,
-    height: 24,
+    height: 24
   },
   toolbar: {
     paddingHorizontal: 10
@@ -22,33 +22,33 @@ export default StyleSheet.create({
   },
   toolbarAddIcon: {
     width: 24,
-    height: 24,
+    height: 24
   },
   toolbarDownloadIcon: {
     width: 22,
-    height: 21,
+    height: 21
   },
   toolbarShareIcon: {
     width: 18,
-    height: 19,
+    height: 19
   },
   toolbarRemoveIcon: {
     width: 14,
-    height: 18,
+    height: 18
   },
   toolbarIconList: {
     width: 23,
     height: 20
   },
   toolbarTitle: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 30,
-    paddingTop: 23,
+    paddingTop: 23
   },
   fixedDate: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 12,
-    color: "#4a4a4a",
+    color: '#4a4a4a',
     paddingLeft: 10,
     paddingBottom: 9,
     paddingTop: 20
@@ -57,13 +57,13 @@ export default StyleSheet.create({
     ...BentonSansBold()
   },
   text: {
-    fontFamily: "BentonSans",
-    fontSize: 14,
+    fontFamily: 'BentonSans',
+    fontSize: 14
   },
   link: {
     ...BentonSansBold(),
     fontSize: 12,
-    color: "#2625ff"
+    color: '#2625ff'
   },
   bottomBar: {
     flexDirection: 'row',

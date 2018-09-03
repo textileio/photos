@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
@@ -9,20 +9,20 @@ export default StyleSheet.create({
     marginBottom: 40
   },
   logoStep2: {
-    marginBottom: 26,
+    marginBottom: 26
   },
   contentContainer: {
     width: '100%',
     paddingHorizontal: 36
   },
   link: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 16,
     color: '#2625ff',
     textDecorationLine: 'underline'
   },
   title: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 20,
     lineHeight: 25,
     marginBottom: 20

@@ -6,7 +6,6 @@ import moment from 'moment'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 import { getHeight } from '../../../Services/PhotoUtils'
 import Avatar from '../../../Components/Avatar'
-import Config from 'react-native-config'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
@@ -26,7 +25,7 @@ class ThreadDetailCard extends React.PureComponent {
     const {
       profile,
       item,
-      peer_id,
+      peerId,
       dateString,
       defaultSource,
       didLike,
@@ -42,7 +41,7 @@ class ThreadDetailCard extends React.PureComponent {
       <TouchableWithoutFeedback onPress={onSelect}>
         <View style={styles.card}>
           <View style={styles.cardHeader} >
-            <Avatar style={styles.cardAvatar} width={18} height={18} peer_id={peer_id} defaultSource={defaultSource} />
+            <Avatar style={styles.cardAvatar} width={18} height={18} peerId={peerId} defaultSource={defaultSource} />
             <Text style={styles.cardAction}><Text style={styles.cardActionName}>
               {profile && profile.username === username ? 'You' : username}
             </Text> added a photo</Text>
@@ -86,9 +85,7 @@ class ThreadDetailCard extends React.PureComponent {
   }
 }
 
-
 const mapStateToProps = (state, ownProps) => {
-
   const { profile, item } = ownProps
   const photo = item.photo
   const date = moment(photo.date)
@@ -109,7 +106,7 @@ const mapStateToProps = (state, ownProps) => {
   const imageHeight = heightProperties.height
 
   return {
-    peer_id: photo.author_id,
+    peerId: photo.author_id,
     dateString,
     defaultSource,
     didLike,

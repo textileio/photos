@@ -65,13 +65,13 @@ class RootContainer extends Component<Props> {
         <AppNavigation ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }} />
         <Overlay
           isVisible={this.props.showOverlay}
-          windowBackgroundColor='rgba(0, 0, 0, .1)'
-          overlayBackgroundColor='rgba(0, 0, 0, .8)'
+          windowBackgroundColor={'rgba(0, 0, 0, .1)'}
+          overlayBackgroundColor={'rgba(0, 0, 0, .8)'}
           borderRadius={8}
-          width='auto'
-          height='auto'
+          width={'auto'}
+          height={'auto'}
         >
-          <ActivityIndicator size='large' color='#ffffff' />
+          <ActivityIndicator size={'large'} color={'#ffffff'} />
         </Overlay>
       </View>
     )

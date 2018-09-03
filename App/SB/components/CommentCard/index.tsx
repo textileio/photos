@@ -1,8 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-import SmallIconTag from '../SmallIconTag'
-
 import moment from 'moment'
 import Avatar from '../../../Components/Avatar'
 
@@ -30,9 +28,8 @@ const CommentCard = (props: Props) => {
       <View style={styles.commentTexts}>
         <Text style={styles.commentUser}>{username}</Text>
         <View style={styles.commentTextWrapper}><Text style={styles.commentText}>{comment}</Text></View>
-        {/*<SmallIconTag textStyle={styles.commentIconLabel} image={require('./statics/icon-comment.png')} text='Reply comment' />*/}
         { subComments && subComments.map((subComment, i) => (
-          <CommentCard key={i} isSubComment={true} {...subComment} />
+          <CommentCard key={i} isSubComment {...subComment} />
         ))}
       </View>
       { !isSubComment && <Text style={styles.commentDate}>{dateString}</Text> }

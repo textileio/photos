@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import {TextInput, Text, View, ScrollView, TouchableOpacity, Keyboard, TouchableWithoutFeedback} from 'react-native'
+import { Text, View, ScrollView, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
 
 import Input from '../../components/Input'
 import Footer from '../../components/Footer'
@@ -28,7 +28,7 @@ const Step1 = props => {
             onChangeText={updateReferralCode}
             keyboardType='default'
             autoCapitalize='characters'
-            style={{height: 40}}
+            style={{ height: 40 }}
           />
           <Input
             value={email}
@@ -36,7 +36,7 @@ const Step1 = props => {
             onChangeText={updateEmail}
             keyboardType='email-address'
             autoCapitalize='none'
-            style={{height: 40}}
+            style={{ height: 40 }}
           />
           <View style={styles.bottomLine}>
             <Button
@@ -47,7 +47,7 @@ const Step1 = props => {
           </View>
         </View>
       </ScrollView>
-      <Alert display={displayError} top msg={'Sign up error: ' +  errorMessage}/>
+      <Alert display={displayError} top msg={'Sign up error: ' + errorMessage} />
       <Footer>
         <Text style={styles.footerText}>Already have an account? </Text>
         <TouchableOpacity onPress={switchToSignIn}>

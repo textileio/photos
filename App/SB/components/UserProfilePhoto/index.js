@@ -11,7 +11,7 @@ const UserProfilePhoto = props => {
 
   return (
     <View style={[styles.container, style]}>
-      <ImageSc style={{ ...styles.image, borderRadius: width/2 }} height={width} width={width} source={source} />
+      <ImageSc style={{ ...styles.image, borderRadius: width / 2 }} height={width} width={width} source={source} />
     </View>
   )
 }

@@ -7,9 +7,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     height: 51,
     backgroundColor: 'white',
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderTopWidth: 1,
-    borderColor: "#EDEDEE",
+    borderColor: '#EDEDEE',
     paddingHorizontal: 20,
     position: 'absolute',
     width: '100%'

@@ -1,16 +1,12 @@
 import React from 'react'
 import { Image, View, Text, Button, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
-import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import DevicesActions from '../../../Redux/DevicesRedux'
 
 import Toolbar from '../../components/Toolbar'
 
 import styles from './statics/styles'
-// import style from '../../../Containers/Styles/PairingViewStyle'
-
-// const DevicePairing = () => {
 
 class DevicePairing extends React.PureComponent {
   constructor (props) {
@@ -21,13 +17,13 @@ class DevicePairing extends React.PureComponent {
     }
   }
 
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       tabBarVisible: false
     }
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps, prevState, snapShot) {
     // once the view is rendered and the node is online, submit the request
     // mirror the device state changes => status
     const deviceKey = this.state.key
@@ -35,12 +31,12 @@ class DevicePairing extends React.PureComponent {
       return deviceKey && d.deviceItem.id === deviceKey
     })
     if (device) {
-      this.setState(() => ({status: device.state}))
+      this.setState(() => ({ status: device.state }))
     }
   }
 
   confirmRequest = () => {
-    this.setState(() => ({status: 'confirmed'}))
+    this.setState(() => ({ status: 'confirmed' }))
     this.props.addDeviceRequest('desktop', this.state.key)
   }
 
@@ -56,7 +52,7 @@ class DevicePairing extends React.PureComponent {
   renderConfirm () {
     return (
       <View style={styles.contentContainer}>
-        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
+        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')} />
         <Text style={styles.deviceId}>Be sure it matches: {this.state.key}</Text>
         <View style={styles.imageList}>
           <Button
@@ -80,7 +76,7 @@ class DevicePairing extends React.PureComponent {
   renderError () {
     return (
       <View style={styles.contentContainer}>
-        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
+        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')} />
         <Text style={styles.deviceId}>There was an issue pairing with your new device. This may be caused by network connectivity or other issues. Please try again. If it continues, please report the issue with Textile.</Text>
         <Button
           style={styles.button}
@@ -95,7 +91,7 @@ class DevicePairing extends React.PureComponent {
   renderStatus (message, cont) {
     return (
       <View style={styles.contentContainer}>
-        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')}/>
+        <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')} />
         <Text style={styles.deviceId}>{message}</Text>
         {!cont &&
         <ActivityIndicator size='large' color='#000000' animating={this.state.status !== 'success'} />}
@@ -129,11 +125,11 @@ class DevicePairing extends React.PureComponent {
         <Toolbar
           style={styles.toolbar}
           left={<TouchableOpacity onPress={() => { this.cancel() }}>
-              <Image
-                style={styles.toolbarLeft}
-                source={require('./statics/icon-arrow-left.png')}
-              />
-            </TouchableOpacity>}>
+            <Image
+              style={styles.toolbarLeft}
+              source={require('./statics/icon-arrow-left.png')}
+            />
+          </TouchableOpacity>}>
           <Text style={styles.toolbarTitle}>Add New Device</Text>
           {this.renderBody()}
         </Toolbar>

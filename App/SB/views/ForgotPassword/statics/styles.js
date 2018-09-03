@@ -1,15 +1,15 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
   formContainer: {
     width: '100%',
-    paddingHorizontal: 36,
+    paddingHorizontal: 36
   },
   headerText: {
     fontFamily: 'BentonSans',
     fontSize: 16,
-    lineHeight: 25,
+    lineHeight: 25
   },
   link: {
     ...BentonSansBold(),

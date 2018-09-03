@@ -12,7 +12,7 @@ const PhotoGridList = props => {
     <Text onLayout={e => onLabelMounted(e.nativeEvent.layout.y)} key='0' style={styles.fixedDate}>
       <Text style={styles.bold}>{photos[active].month}</Text> {photos[active].photos.length} photos
     </Text>,
-    <ScrollView collapsable={true} key='1' onScroll={onScroll} scrollEventThrottle={100} style={styles.contentContainer}>
+    <ScrollView collapsable key='1' onScroll={onScroll} scrollEventThrottle={100} style={styles.contentContainer}>
       { photos.map((item, i) => [
         <View onLayout={e => onElementMounted(i, e.nativeEvent.layout.y)} key='label'>
           { i && (

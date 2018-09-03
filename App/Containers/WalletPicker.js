@@ -51,7 +51,6 @@ class TextileWalletPicker extends React.PureComponent {
   }
 
   onSelect = (row) => {
-    const params = this.props.navigation.state.params
     return () => {
       this.props.sharePhoto(row.item.id)
       this.props.navigation.navigate('ThreadSharePhoto', { backTo: 'ViewThread' })

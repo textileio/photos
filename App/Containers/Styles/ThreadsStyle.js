@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native'
-import { Colors, Metrics } from '../../Themes/'
+import { Colors } from '../../Themes/'
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
     // marginTop: Metrics.navBarHeight,
     // backgroundColor: Colors.brandPink
   },
@@ -22,7 +22,7 @@ export default StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontFamily: 'BentonSans',
-    color: "#9b9b9b",
+    color: '#9b9b9b',
     alignSelf: 'center'
   },
   button: {

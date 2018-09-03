@@ -23,19 +23,19 @@ const ForgotPassword = props => {
         <View style={styles.formContainer}>
           <Input
             value={email}
-            label="Email"
+            label='Email'
             onChangeText={value => onChange({ name: 'email', value })}
           />
-        <Button
-          style={styles.button}
-          text="Reset password"
-          disabled={!email}
-          onPress={() => history.push('/welcome')}
-        />
+          <Button
+            style={styles.button}
+            text='Reset password'
+            disabled={!email}
+            onPress={() => history.push('/welcome')}
+          />
         </View>
       </ScrollView>
       <Footer>
-        <Link to={{pathname: '/signIn'}}>
+        <Link to={{ pathname: '/signIn' }}>
           <Text style={[styles.footerLink, styles.link]}>Return to log in</Text>
         </Link>
       </Footer>

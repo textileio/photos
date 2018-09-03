@@ -5,7 +5,7 @@ import ImageSc from 'react-native-scalable-image'
 import AuthAction from '../../../Redux/AuthRedux'
 
 import { Button } from 'react-native-elements'
-import SB_Button from '../../components/Button'
+import ButtonSB from '../../components/Button'
 import PermissionsInfo from '../../components/PermissionsInfo'
 
 import styles from './statics/styles'
@@ -25,19 +25,19 @@ class SyncPermissions extends React.Component {
 
   toggleCamera () {
     this.props.triggerCameraPermissions()
-    this.setState({cameraRoll: true, complete: this.state.location})
+    this.setState({ cameraRoll: true, complete: this.state.location })
     if (this.state.iOS) {
-      this.showInfo ('alwaysAllow')
+      this.showInfo('alwaysAllow')
     }
   }
 
   toggleBackground () {
     this.props.triggerBackgroundLocationPermissions()
-    this.setState({locationBackground: true, complete: this.state.cameraRoll})
+    this.setState({ locationBackground: true, complete: this.state.cameraRoll })
   }
 
   hideInfo () {
-    this.setState({infoVisible: false})
+    this.setState({ infoVisible: false })
   }
 
   showInfo (infoFocus) {
@@ -62,7 +62,7 @@ class SyncPermissions extends React.Component {
           details: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network. Without background location the app will never get any new information, it will be a pretty boring place. We never keep, store, process, or share your location data with anyone or any device.'
         }
     }
-    this.setState({infoVisible: true, info})
+    this.setState({ infoVisible: true, info })
   }
 
   render () {
@@ -101,7 +101,7 @@ class SyncPermissions extends React.Component {
           </View>
         </ScrollView>
         <View style={styles.footer}>
-          <SB_Button disabled={!this.state.complete} style={styles.button} text='Continue' onPress={() => { this.props.navigation.navigate('ProfilePic') }} />
+          <ButtonSB disabled={!this.state.complete} style={styles.button} text='Continue' onPress={() => { this.props.navigation.navigate('ProfilePic') }} />
         </View>
         {this.state.infoVisible && <PermissionsInfo isVisible info={this.state.info} close={this.hideInfo.bind(this)} />}
       </View>

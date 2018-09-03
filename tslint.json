@@ -1,9 +1,52 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+      "tslint:recommended",
+      "tslint-react"
     ],
+    "linterOptions": {
+      "exclude": [
+        "node_modules/**",
+        "typings/**",
+        "App/Sagas/**/*",
+        "App/Redux/**/*",
+        "App/Navigation/**/*",
+        "App/Models/**/*",
+        "App/SB/**/*",
+        "**/*.json"
+      ]
+    },
     "jsRules": {},
-    "rules": {},
+    "rules": {
+      "quotemark": [true, "single", "avoid-escape"],
+      "semicolon": [true, "never"],
+      "no-shadowed-variable": false,
+      "no-null-keyword": true,
+      "no-var-requires": false,
+      "no-string-literal": false,
+      "no-this-assignment": false,
+      "no-submodule-imports": false,
+      "variable-name": false,
+      "no-console": [true, "log"],
+      "interface-name": ["always-prefix"],
+      "no-namespace": [false],
+      "no-implicit-dependencies": [true, "dev"],
+      "max-classes-per-file": [false],
+      "object-literal-sort-keys": false,
+      "ordered-imports": false,
+      // begin bandaids
+      "no-empty": false,
+      "space-before-function-paren": false,
+      "jsx-no-multiline-js": false,
+      "member-access": false,
+      "trailing-comma": [
+        true,
+        {
+          "multiline": "never",
+          "singleline": "never"
+        }
+      ],
+      "max-line-length": [true, 200]
+    },
     "rulesDirectory": []
 }

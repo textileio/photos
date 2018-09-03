@@ -11,12 +11,7 @@ type Props = {
 
 export default class TextileImage extends React.Component<Props, *> {
   static defaultProps = {}
-
-  constructor (props: Props) {
-    super(props)
-  }
-
-  _onLoaded (event) {
+  _onLoaded () {
     if (!this.props.onLoad) {
       return
     }

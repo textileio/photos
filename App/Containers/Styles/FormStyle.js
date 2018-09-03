@@ -1,18 +1,18 @@
-"use strict";
+'use strict'
 
-import { Platform, StyleSheet } from "react-native";
+import { Platform } from 'react-native'
 
-var LABEL_COLOR = "#9e9e9e";
-var INPUT_COLOR = "#000000";
-var ERROR_COLOR = "#a94442";
-var HELP_COLOR = "#999999";
-var BORDER_COLOR = "#cccccc";
-var DISABLED_COLOR = "#777777";
-var DISABLED_BACKGROUND_COLOR = "#eeeeee";
-var LABEL_FONT_SIZE = 14;
-var FONT_SIZE = 17;
-var FONT_WEIGHT = "500";
-var FONT_FAMILY = "BentonSans";
+const LABEL_COLOR = '#9e9e9e'
+const INPUT_COLOR = '#000000'
+const ERROR_COLOR = '#a94442'
+const HELP_COLOR = '#999999'
+const BORDER_COLOR = '#cccccc'
+const DISABLED_COLOR = '#777777'
+const DISABLED_BACKGROUND_COLOR = '#eeeeee'
+const LABEL_FONT_SIZE = 14
+const FONT_SIZE = 17
+const FONT_WEIGHT = '500'
+const FONT_FAMILY = 'BentonSans'
 
 export default Object.freeze({
   fieldset: {},
@@ -74,7 +74,7 @@ export default Object.freeze({
       fontSize: FONT_SIZE,
       fontFamily: FONT_FAMILY,
       height: 36,
-      paddingVertical: Platform.OS === "ios" ? 7 : 0,
+      paddingVertical: Platform.OS === 'ios' ? 7 : 0,
       paddingHorizontal: 7,
       borderRadius: 0,
       borderColor: BORDER_COLOR,
@@ -87,7 +87,7 @@ export default Object.freeze({
       fontSize: FONT_SIZE,
       fontFamily: FONT_FAMILY,
       height: 36,
-      paddingVertical: Platform.OS === "ios" ? 7 : 0,
+      paddingVertical: Platform.OS === 'ios' ? 7 : 0,
       paddingHorizontal: 7,
       borderRadius: 0,
       borderColor: ERROR_COLOR,
@@ -99,7 +99,7 @@ export default Object.freeze({
       fontSize: FONT_SIZE,
       fontFamily: FONT_FAMILY,
       height: 36,
-      paddingVertical: Platform.OS === "ios" ? 7 : 0,
+      paddingVertical: Platform.OS === 'ios' ? 7 : 0,
       paddingHorizontal: 7,
       borderRadius: 0,
       borderColor: BORDER_COLOR,
@@ -155,13 +155,13 @@ export default Object.freeze({
   pickerTouchable: {
     normal: {
       height: 44,
-      flexDirection: "row",
-      alignItems: "center"
+      flexDirection: 'row',
+      alignItems: 'center'
     },
     error: {
       height: 44,
-      flexDirection: "row",
-      alignItems: "center"
+      flexDirection: 'row',
+      alignItems: 'center'
     },
     active: {
       borderBottomWidth: 1,
@@ -212,17 +212,17 @@ export default Object.freeze({
   buttonText: {
     fontSize: 18,
     fontFamily: FONT_FAMILY,
-    color: "white",
-    alignSelf: "center"
+    color: 'white',
+    alignSelf: 'center'
   },
   button: {
     height: 36,
-    backgroundColor: "#48BBEC",
-    borderColor: "#48BBEC",
+    backgroundColor: '#48BBEC',
+    borderColor: '#48BBEC',
     borderWidth: 1,
     borderRadius: 0,
     marginBottom: 10,
-    alignSelf: "stretch",
-    justifyContent: "center"
+    alignSelf: 'stretch',
+    justifyContent: 'center'
   }
-});
+})

@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
-import { Colors } from '../../../../Themes'
-import { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_OFFSET } from '../../../../Components/Styles/PhotoGridStyles'
 
 export default StyleSheet.create({
   titleCard: {
@@ -15,7 +13,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     paddingBottom: 25,
-    marginBottom: 9,
+    marginBottom: 9
   },
   cardHeader: {
     flexDirection: 'row',
@@ -43,7 +41,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
-    paddingHorizontal: 11,
+    paddingHorizontal: 11
   },
   cardFooterTop: {
     flex: 1,
@@ -136,5 +134,5 @@ export default StyleSheet.create({
   },
   image: {
     alignItems: 'center'
-  },
+  }
 })

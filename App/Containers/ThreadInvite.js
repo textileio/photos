@@ -30,7 +30,7 @@ class ThreadInvite extends React.PureComponent {
 
   confirmRequest = () => {
     this.props.acceptExternalInvite(this.state.inviteId, this.state.inviteKey, this.state.name, this.state.inviter)
-    this.setState(() => ({status: 'added'}))
+    this.setState(() => ({ status: 'added' }))
   }
 
   cancel = () => {
