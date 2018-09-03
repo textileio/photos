@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, FlatList, Alert, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, Image, FlatList, Alert, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
@@ -44,12 +44,13 @@ class ThreadsList extends React.PureComponent {
       </TextileHeaderButtons>
     )
     const headerTitle = (
-      <TouchableWithoutFeedback
-        delayLongPress={3000}
-        onLongPress={params.toggleVerboseUi}
-        style={navStyles.headerTitleLogo}>
-        <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
-      </TouchableWithoutFeedback>
+      <View style={navStyles.headerTitleLogo}>
+        <TouchableWithoutFeedback
+          delayLongPress={3000}
+          onLongPress={params.toggleVerboseUi}>
+          <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
+        </TouchableWithoutFeedback>
+      </View>
     )
     return {
       headerLeft,
@@ -149,10 +150,15 @@ class ThreadsList extends React.PureComponent {
             Threads. Invite only groups to share
             photos with your friends and family.
           </Text>
-          <Button primary text='Create a thread' onPress={() => {
-            this.props.completeScreen('threads')
-            this.props.navigation.navigate('AddThread')
-          }} />
+          <View style={styles.tourButtons}>
+            <Button primary text='Create a thread' onPress={() => {
+              this.props.completeScreen('threads')
+              this.props.navigation.navigate('AddThread')
+            }} />
+            <TouchableOpacity style={styles.skipButton} onPress={() => { this.props.completeScreen('threads') }} >
+              <Text style={styles.skipButtonText}>Skip</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )
     }

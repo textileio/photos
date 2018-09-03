@@ -14,6 +14,7 @@ import { ThreadsAction } from './ThreadsRedux'
 import { TriggersAction } from './TriggersRedux'
 import { UIAction } from './UIRedux'
 import { UploadingImagesAction } from './UploadingImagesRedux'
+import { StartupAction } from './StartupRedux'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -28,4 +29,5 @@ export type RootAction =
   ThreadsAction |
   TriggersAction |
   UIAction |
-  UploadingImagesAction
+  UploadingImagesAction |
+  StartupAction

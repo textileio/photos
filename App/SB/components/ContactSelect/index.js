@@ -71,7 +71,7 @@ const ContactSelect = (props) => {
             )
           }}
         />
-        <TouchableOpacity activeOpacity={0.4}  style={styles.inviteItem} onPress={getPublicLink}>
+        <TouchableOpacity activeOpacity={0.4} style={styles.inviteItem} onPress={getPublicLink}>
           <ImageSc
             source={require('../../../Images/v2/send.png')}
             width={20}

@@ -244,6 +244,16 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void getContacts (Promise promise) {
+        try {
+            promise.resolve(node.contacts());
+        }
+        catch (Exception e) {
+            promise.reject("GET CONTACT ERROR", e);
+        }
+    }
+
+    @ReactMethod
     public void addThread (String name, Promise promise) {
         try {
             promise.resolve(node.addThread(name));
