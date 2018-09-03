@@ -11,12 +11,11 @@
 *************************************************************/
 import {Share} from 'react-native'
 import { call, put, select, fork } from 'redux-saga/effects'
-import { ThreadsSelectors } from '../Redux/ThreadsRedux'
+import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import { ActionType } from 'typesafe-actions'
 import { BlockId, ExternalInvite, Thread, Threads, ThreadId } from '../Models/TextileTypes'
 import TextileNode from '../../TextileNode'
 import DeepLink from '../Services/DeepLink'
-import ThreadsActions from '../Redux/ThreadsRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
@@ -87,7 +86,6 @@ export function * addThread (action: ActionType<typeof ThreadsActions.addThreadR
   }
 }
 
-
 export function * removeThread (action: ActionType<typeof ThreadsActions.removeThreadRequest>) {
   const { id } = action.payload
   try {
@@ -101,7 +99,7 @@ export function * removeThread (action: ActionType<typeof ThreadsActions.removeT
 }
 
 export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
-  const {notificationId, threadName} = action.payload
+  const { notificationId, threadName } = action.payload
   try {
     const threadId = yield call(TextileNode.acceptThreadInviteViaNotification, notificationId)
     const threads: Threads = yield call(TextileNode.threads)
@@ -109,23 +107,21 @@ export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptI
     yield put(UIActions.viewThreadRequest(threadId, threadName))
   } catch (error) {
     // TODO: it would be nice to tell the user when they've already joined the thread
-    console.log('ERROR acceptInvite', error)
   }
 }
 
 export function * addInternalInvites (action: ActionType<typeof ThreadsActions.addInternalInvitesRequest>) {
-  const {threadId, inviteePks} = action.payload
+  const { threadId, inviteePks } = action.payload
   try {
-    for (let inviteePk of inviteePks) {
+    for (const inviteePk of inviteePks) {
       yield fork(TextileNode.addThreadInvite, threadId, inviteePk)
     }
   } catch (error) {
-    console.log('ERROR addInternalInvites', error)
   }
 }
 
 export function * handlePhotoToNewThreadRequest (action: ActionType<typeof UIActions.sharePhotoToNewThreadRequest>) {
-  const {imageId, threadName, comment} = action.payload
+  const { imageId, threadName, comment } = action.payload
   const thread: Thread = yield call(TextileNode.addThread, threadName)
   yield put(ThreadsActions.addThreadSuccess(thread))
   yield call(shareWalletImage, imageId, thread.id, comment)

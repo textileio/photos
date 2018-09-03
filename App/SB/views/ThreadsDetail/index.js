@@ -19,7 +19,7 @@ import ActionSheet from 'react-native-actionsheet'
 import Alert from '../../../SB/components/Alert'
 
 import { RootState } from '../../../Redux/Types'
-import ProcessingImageCard, { ProcessingImageProps } from '../../../Components/ProcessingImage'
+import ProcessingImageCard, { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
 import styles from './statics/styles'
 import cardStyles from '../../components/ThreadDetailCard/statics/styles'
@@ -203,7 +203,7 @@ const mapStateToProps = (state: RootState, ownProps) => {
   const threadId = navParams.id || defaultThreadId
 
   let items: [{type: string, photo: TextileTypes.Photo}] = []
-  let processingItems: { type: 'processingItem', props: ProcessingImageProps }[] = []
+  let processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
   let thread
 
   if (threadId) {
