@@ -6,6 +6,6 @@ export default StyleSheet.create({
   },
   filter: {
     position: 'absolute',
-    zIndex: 10,
-  },
+    zIndex: 10
+  }
 })

@@ -28,8 +28,8 @@ class Notifications extends React.PureComponent {
           title='Account'
           delayLongPress={3000}
           onLongPress={params.toggleVerboseUi}
-          onPress={() => navigation.navigate('Account', {username})}
-          buttonWrapperStyle={{marginLeft: 11, marginRight: 11}}
+          onPress={() => navigation.navigate('Account', { username })}
+          buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
           ButtonElement={
             <Avatar
               width={24}
@@ -55,7 +55,7 @@ class Notifications extends React.PureComponent {
     // refresh the messages for the user
     this.props.refreshNotifications() // < will get called on the very first entry too
     // reset our readAll flag to re-time
-    this.setState({readAllOnExit: false})
+    this.setState({ readAllOnExit: false })
     // set a timer to clear all unread messages
     this._setReadAllTimer()
   }
@@ -89,7 +89,7 @@ class Notifications extends React.PureComponent {
   }
 
   _readAll () {
-    this.setState({readAllOnExit: true})
+    this.setState({ readAllOnExit: true })
     this.readAllHandle = 0
   }
   _setReadAllTimer = () => {
@@ -104,7 +104,7 @@ class Notifications extends React.PureComponent {
 
   _keyExtractor = (item, index) => item.id + '_' + index
 
-  _renderItem = ({item}) => {
+  _renderItem = ({ item }) => {
     return (
       <FeedItem profile={this.props.profile} notification={item} onClick={this._onClick.bind(this)} />
     )
@@ -132,7 +132,7 @@ class Notifications extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {/*<FeedItemUpdate />*/}
+        {/* <FeedItemUpdate /> */}
         {this.props.showTourScreen && this._renderTour()}
         <View style={styles.contentContainer}>
           <FlatList
@@ -141,9 +141,10 @@ class Notifications extends React.PureComponent {
             renderItem={this._renderItem.bind(this)}
             refreshing={false}
             onRefresh={this.props.refreshMessages}
+            initialNumToRender={20}
           />
         </View>
-        {/*<Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />*/}
+        {/* <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} /> */}
       </View>
     )
   }

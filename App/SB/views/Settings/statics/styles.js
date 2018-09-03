@@ -1,10 +1,10 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
   container: {
     marginTop: 20,
-    flex: 1,
+    flex: 1
   },
   header: {
     alignItems: 'center',
@@ -12,7 +12,7 @@ export default StyleSheet.create({
     paddingBottom: 21
   },
   title: {
-    fontFamily: "BentonSans",
+    fontFamily: 'BentonSans',
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'center',
@@ -41,13 +41,13 @@ export default StyleSheet.create({
     ...BentonSansBold(),
     fontFamily: 'BentonSans',
     fontSize: 16,
-    lineHeight: 27,
+    lineHeight: 27
   },
   disabledTitle: {
     color: '#4a4a4a'
   },
   childTitle: {
-    fontSize: 14,
+    fontSize: 14
   },
   itemDescription: {
     fontFamily: 'BentonSans',
@@ -58,7 +58,7 @@ export default StyleSheet.create({
   },
   itemTexts: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   permissionsButtonStyle: {
     height: 38,

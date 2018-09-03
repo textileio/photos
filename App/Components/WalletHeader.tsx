@@ -1,9 +1,9 @@
-import React  from 'react'
+import React from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
 import Avatar from './Avatar'
 import style from './Styles/WalletHeader'
 
-export type WalletHeaderProps = {
+export interface IWalletHeaderProps {
   overview: {
     available: boolean,
     peerCount: string,
@@ -16,10 +16,10 @@ export type WalletHeaderProps = {
   avatarUrl: string,
   changeAvatar: () => void,
   updateSettings: () => void,
-  viewThreads: () => void,
+  viewThreads: () => void
 }
 
-const WalletHeader = (props: WalletHeaderProps) => {
+const WalletHeader = (props: IWalletHeaderProps) => {
   const { overview, changeAvatar, updateSettings, viewThreads } = props
   return (
     <View style={style.walletHeader}>
@@ -31,7 +31,7 @@ const WalletHeader = (props: WalletHeaderProps) => {
           width={96}
           height={96}
           defaultSource={require('../Images/v2/update-avatar.png')}
-          owner
+          owner={true}
         />
       </TouchableOpacity>
       <View style={style.walletStats}>

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { Animated } from 'react-native'
 import PropTypes from 'prop-types'
 
@@ -66,7 +66,7 @@ class FloatingLabel extends Component {
   }
 
   render () {
-    const {label, labelColor, highlightColor, style} = this.props
+    const { label, labelColor, highlightColor, style } = this.props
     return (
       <Animated.Text
         style={[{

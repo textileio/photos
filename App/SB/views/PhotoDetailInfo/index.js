@@ -14,10 +14,10 @@ const PhotoDetail = () => {
       >
         <Text style={styles.toolbarTitle}>Photo info</Text>
       </Toolbar>
-     <View style={styles.itemContainer}>
-       <Text style={styles.itemTitle}>Name</Text>
-       <Text style={styles.itemDescription}>pm5322.jpg</Text>
-     </View>
+      <View style={styles.itemContainer}>
+        <Text style={styles.itemTitle}>Name</Text>
+        <Text style={styles.itemDescription}>pm5322.jpg</Text>
+      </View>
       <View style={styles.itemContainer}>
         <Text style={styles.itemTitle}>Size</Text>
         <Text style={styles.itemDescription}>602 KB</Text>

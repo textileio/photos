@@ -9,7 +9,7 @@ const PhotoGrid = props => {
   const { type, photos } = props
 
   return (
-    <View style={[styles.photoList, gridStyles(photos)[type].container ]}>
+    <View style={[ styles.photoList, gridStyles(photos)[type].container ]}>
       { photos.map((item, i) =>
         <View key={i} style={styles.photo}>
           { item.selected && [

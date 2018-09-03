@@ -9,7 +9,6 @@ import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { ThreadName, Photo } from '../Models/TextileTypes'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
-import navStyles from '../Navigation/Styles/NavigationStyles'
 import WalletHeader from '../Components/WalletHeader'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
@@ -30,7 +29,7 @@ class Wallet extends React.PureComponent {
     }
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState, snapshot) {
     if (
       this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
       this.props.profile !== prevProps.profile
@@ -98,10 +97,10 @@ class Wallet extends React.PureComponent {
         <WalletHeader
           overview={this.props.overview}
           changeAvatar={() => {
-            this.props.navigation.navigate('ChangeAvatar', {avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet'})
+            this.props.navigation.navigate('ChangeAvatar', { avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet' })
           }}
           updateSettings={() => {
-            this.props.navigation.navigate('Account', {avatarUrl: this.props.avatarUrl, username: this.props.username})
+            this.props.navigation.navigate('Account', { avatarUrl: this.props.avatarUrl, username: this.props.username })
           }}
           viewThreads={() => this.props.navigation.navigate('Threads')}
         />

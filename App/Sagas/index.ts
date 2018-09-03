@@ -168,8 +168,6 @@ export default function * root () {
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardedSuccess), inviteAfterOnboard),
 
-
-
     // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
     takeLatest(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),

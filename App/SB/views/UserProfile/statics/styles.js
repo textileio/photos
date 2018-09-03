@@ -126,5 +126,5 @@ export default StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 52,
     marginBottom: 24
-  },
+  }
 })

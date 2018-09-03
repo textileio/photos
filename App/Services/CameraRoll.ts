@@ -3,27 +3,27 @@ import RNFS from 'react-native-fs'
 import ImagePicker from 'react-native-image-picker'
 import TextileNode from '../../TextileNode'
 
-export type PickerImage = {
-  uri: string,
-  path: string,
-  canDelete: boolean,
-  height: number,
-  width: number,
-  isVertical: boolean,
-  origURL?: string,
-  didCancel?: boolean,
-  customButton?: string,
+export interface IPickerImage {
+  uri: string
+  path: string
+  canDelete: boolean
+  height: number
+  width: number
+  isVertical: boolean
+  origURL?: string
+  didCancel?: boolean
+  customButton?: string
   error?: string
 }
 
 export async function getPhotos (first: number = -1): Promise<string[]> {
   const result = await CameraRoll.getPhotos({ first })
-  const items = result.edges.map(edge => edge.node.image.uri)
+  const items = result.edges.map((edge) => edge.node.image.uri)
   return items
 }
 
 export async function getPhotoPath (uri: string): Promise<string> {
-  const fullDir = RNFS.DocumentDirectoryPath + '/images/full/'
+  const fullDir = `${RNFS.DocumentDirectoryPath}/images/full/`
   const fullExists = await RNFS.exists(fullDir)
   if (!fullExists) {
     await RNFS.mkdir(fullDir)
@@ -33,26 +33,26 @@ export async function getPhotoPath (uri: string): Promise<string> {
     const regex = /[?&]([^=#]+)=([^&#]*)/g
     let match: RegExpExecArray | null
     const params = new Map<string, string>()
-    while (match = regex.exec(uri)) {
-      if (!match) {
-        continue
+
+    do {
+      match = regex.exec(uri)
+      if (match) {
+        const key = match[1]
+        const value = match[2]
+        params.set(key, value)
       }
-      const key = match[1]
-      const value = match[2]
-      params.set(key, value)
-    }
-    const path = fullDir + params.get('id') + '.JPG'
+    } while (match)
+
+    const path = `${fullDir}${params.get('id')}.JPG`
     await RNFS.copyAssetsFileIOS(uri, path, 0, 0)
     return path
   }
-  // Android Method
-  else if (uri.includes('content://media')) {
+  if (uri.includes('content://media')) {
+    // Android Method
     const path = await TextileNode.getFilePath(uri)
     return path
   }
-  else {
-    throw new Error('unable to determine photo path.')
-  }
+  throw new Error('unable to determine photo path.')
 }
 
 export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}> {
@@ -69,14 +69,12 @@ export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}
         waitUntilSaved: true
       }
     }
-    ImagePicker.showImagePicker(options, response => {
+    ImagePicker.showImagePicker(options, (response) => {
       if (response.didCancel) {
         reject(new Error('user canceled'))
-      }
-      else if (response.error) {
+      } else if (response.error) {
         reject(new Error(response.error))
-      }
-      else {
+      } else {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         const { uri, data } = response
@@ -86,8 +84,8 @@ export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}
   })
 }
 
-export async function choosePhoto(): Promise<PickerImage> {
-  return new Promise<PickerImage>((resolve, reject) => {
+export async function choosePhoto (): Promise<IPickerImage> {
+  return new Promise<IPickerImage>((resolve, reject) => {
     const options = {
       title: 'Select a photo',
       mediaType: 'photo' as 'photo',
@@ -102,7 +100,7 @@ export async function choosePhoto(): Promise<PickerImage> {
         waitUntilSaved: true
       }
     }
-    ImagePicker.showImagePicker(options, response => {
+    ImagePicker.showImagePicker(options, (response) => {
       let path: string
       let canDelete: boolean
       if (Platform.OS === 'ios') {
@@ -112,7 +110,7 @@ export async function choosePhoto(): Promise<PickerImage> {
         path = response.path!
         canDelete = false
       }
-      const result: PickerImage = {
+      const result: IPickerImage = {
         uri: response.uri,
         path,
         canDelete,

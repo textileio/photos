@@ -2,20 +2,20 @@ import { NavigationActions, NavigationContainerComponent, NavigationParams } fro
 
 let _navigator: NavigationContainerComponent
 
-function setTopLevelNavigator (navigatorRef: NavigationContainerComponent) {
+function setTopLevelNavigator(navigatorRef: NavigationContainerComponent) {
   _navigator = navigatorRef
 }
 
-function navigate (routeName: string, params?: NavigationParams) {
+function navigate(routeName: string, params?: NavigationParams) {
   _navigator.dispatch(
     NavigationActions.navigate({
       routeName,
-      params,
+      params
     })
   )
 }
 
-function goBack () {
+function goBack() {
   _navigator.dispatch(
     NavigationActions.back()
   )
@@ -26,5 +26,5 @@ function goBack () {
 export default {
   navigate,
   goBack,
-  setTopLevelNavigator,
+  setTopLevelNavigator
 }

@@ -4,10 +4,13 @@ const brandRed = '#FF1C3F'
 const brandPink = '#FFB6D5'
 
 const colors: {[index: string]: string} = {
+  brandBlue,
+  brandYellow,
+  brandRed,
+  brandPink,
   primaryBackground: 'rgb(255,255,255)',
   headerBackground: brandBlue,
   headerText: 'rgb(255,255,255)',
-
   test: 'rgba(199,44,199,0.3)',
   backgroundColor: 'rgba(0,0,0,0)',
   background: '#1F0808',
@@ -32,11 +35,7 @@ const colors: {[index: string]: string} = {
   eggplant: '#251a34',
   border: '#483F53',
   banner: '#5F3E63',
-  text: '#E0D7E5',
-  brandBlue: brandBlue,
-  brandYellow: brandYellow,
-  brandRed: brandRed,
-  brandPink: brandPink
+  text: '#E0D7E5'
 }
 
 export default colors

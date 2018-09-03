@@ -4,7 +4,7 @@ export default StyleSheet.create({
   detail: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginRight: 9,
+    marginRight: 9
   },
   detailImage: {
     height: 13,
