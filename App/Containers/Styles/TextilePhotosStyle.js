@@ -14,19 +14,5 @@ export default StyleSheet.create({
   gridContainer: {
     flex: 1,
     backgroundColor: '#FAFCFE'
-  },
-  bottomOverlay: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    height: 20,
-    paddingHorizontal: 16,
-    backgroundColor: 'rgba(0,0,0,0.5)'
-  },
-  overlayText: {
-    color: 'white',
-    fontFamily: 'BentonSans'
   }
 })
