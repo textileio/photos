@@ -41,8 +41,6 @@ class ThreadInvite extends React.PureComponent {
   }
 
   cancel = () => {
-    // TODO: Figure out the right way to cancel a request. id here is the inviteId not a id
-    //   this.props.removeThreadRequest(this.state.id)
     this.props.navigation.navigate('OnboardingCheck')
   }
 
@@ -180,8 +178,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    acceptExternalInvite: (inviteId, inviteKey, name, inviter) => { dispatch(ThreadsAction.acceptExternalInviteRequest(inviteId, inviteKey, name, inviter)) },
-    removeThreadRequest: (threadId) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) }
+    acceptExternalInvite: (inviteId, inviteKey, name, inviter) => { dispatch(ThreadsAction.acceptExternalInviteRequest(inviteId, inviteKey, name, inviter)) }
   }
 }
 
