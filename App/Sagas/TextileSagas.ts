@@ -152,8 +152,8 @@ function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
   }
 }
 
-export function * viewThread ( action: ActionType<typeof UIActions.viewThreadRequest> ) {
-  yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.name })
+export function * navigateToThread ( action: ActionType<typeof UIActions.navigateToThreadRequest> ) {
+  yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
 export function * getUsername (contact: TT.Contact) {

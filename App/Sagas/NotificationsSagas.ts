@@ -84,7 +84,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         if (threadData) {
-          yield put(UIActions.viewThreadRequest(threadData.thread.id, threadData.thread.name))
+          yield put(UIActions.navigateToThreadRequest(threadData.thread.id, threadData.thread.name))
         }
         // Helpful so that the feedview will update with latest
         // TODO: remove here and add to the Load time of Feedview...

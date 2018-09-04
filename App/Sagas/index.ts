@@ -69,7 +69,7 @@ import {
   logOut,
   updateNodeOverview,
   recoverPassword,
-  viewThread,
+  navigateToThread,
   addFriends,
   addPhotoLike,
   initializeAppState,
@@ -107,7 +107,7 @@ export default function * root () {
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
     takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
 
-    takeEvery(getType(UIActions.viewThreadRequest), viewThread),
+    takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
 

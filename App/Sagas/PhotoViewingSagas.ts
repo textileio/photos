@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { photoAndComment } from '../Redux/PhotoViewingSelectors'
 import UIActions from '../Redux/UIRedux'
 import TextileNode from '../../TextileNode'
@@ -9,12 +9,12 @@ import { Threads, Thread, Photo, BlockId } from '../Models/TextileTypes'
 import NavigationService from '../Services/NavigationService'
 
 export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
-  const { name, mnemonic } = action.payload
+  const { name } = action.payload
   try {
-    const thread: Thread = yield call(TextileNode.addThread, name, mnemonic)
+    const thread: Thread = yield call(TextileNode.addThread, name)
     yield put(PhotoViewingActions.addThreadSuccess(thread))
-    // TODO: Meh
-    yield put(UIActions.viewThreadRequest(thread.id, thread.name))
+    yield put(PhotoViewingActions.viewThread(thread.id))
+    yield put(UIActions.navigateToThreadRequest(thread.id, thread.name))
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
   }
@@ -26,8 +26,7 @@ export function * removeThread (action: ActionType<typeof PhotoViewingActions.re
     // TODO: something with this blockId
     const blockId: BlockId = yield call(TextileNode.removeThread, id)
     yield put(PhotoViewingActions.removeThreadSuccess(id))
-    // TODO: Meh
-    yield call(NavigationService.goBack)
+    yield call(NavigationService.navigate, 'SharedPhotos')
   } catch (error) {
     yield put(PhotoViewingActions.removeThreadError(error))
   }
