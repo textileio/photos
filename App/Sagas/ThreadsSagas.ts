@@ -16,7 +16,7 @@ import { ActionType } from 'typesafe-actions'
 import { BlockId, ExternalInvite, Thread, Threads, ThreadId } from '../Models/TextileTypes'
 import TextileNode from '../../TextileNode'
 import DeepLink from '../Services/DeepLink'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import { shareWalletImage } from './ImageSharingSagas'
@@ -41,9 +41,8 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   const { inviteId, key } = action.payload
   try {
     const threadId: ThreadId = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
-    const threads: Threads = yield call(TextileNode.threads)
-    yield put(ThreadsActions.refreshThreadsSuccess(threads))
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, threadId))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
   }
@@ -56,45 +55,10 @@ export async function getDefaultThread (): Promise<Thread> {
 
 export function * pendingInvitesTask () {
   // Process any pending external invites created while user wasn't logged in
-  const threads = yield select(ThreadsSelectors.threads)
-  if (threads.pendingInviteLink) {
-    yield call(DeepLink.route, threads.pendingInviteLink, NavigationService)
+  const pendingInviteLink: string | undefined = yield select(ThreadsSelectors.pendingInviteLink)
+  if (pendingInviteLink) {
+    yield call(DeepLink.route, pendingInviteLink, NavigationService)
     yield put(ThreadsActions.removeExternalInviteLink())
-  }
-}
-
-export function * refreshThreads () {
-  try {
-    const threads: Threads = yield call(TextileNode.threads)
-    for (const thread of threads.items) {
-      yield put(TextileNodeActions.getPhotoHashesRequest(thread.id))
-    }
-    yield put(ThreadsActions.refreshThreadsSuccess(threads))
-  } catch (error) {
-    yield put(ThreadsActions.refreshThreadsError(error))
-  }
-}
-
-export function * addThread (action: ActionType<typeof ThreadsActions.addThreadRequest>) {
-  const { name } = action.payload
-  try {
-    const thread: Thread = yield call(TextileNode.addThread, name)
-    yield put(ThreadsActions.addThreadSuccess(thread))
-    yield put(UIActions.viewThreadRequest(thread.id, thread.name))
-  } catch (error) {
-    yield put(ThreadsActions.addThreadError(error))
-  }
-}
-
-export function * removeThread (action: ActionType<typeof ThreadsActions.removeThreadRequest>) {
-  const { id } = action.payload
-  try {
-    // TODO: something with this blockId
-    const blockId: BlockId = yield call(TextileNode.removeThread, id)
-    yield put(ThreadsActions.removeThreadSuccess(id))
-    yield call(NavigationService.goBack)
-  } catch (error) {
-    yield put(ThreadsActions.removeThreadError(error))
   }
 }
 
@@ -103,8 +67,8 @@ export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptI
   try {
     const threadId = yield call(TextileNode.acceptThreadInviteViaNotification, notificationId)
     const threads: Threads = yield call(TextileNode.threads)
-    yield put(ThreadsActions.refreshThreadsSuccess(threads))
-    yield put(UIActions.viewThreadRequest(threadId, threadName))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield put(UIActions.navigateToThreadRequest(threadId, threadName))
   } catch (error) {
     // TODO: it would be nice to tell the user when they've already joined the thread
   }
@@ -123,6 +87,6 @@ export function * addInternalInvites (action: ActionType<typeof ThreadsActions.a
 export function * handlePhotoToNewThreadRequest (action: ActionType<typeof UIActions.sharePhotoToNewThreadRequest>) {
   const { imageId, threadName, comment } = action.payload
   const thread: Thread = yield call(TextileNode.addThread, threadName)
-  yield put(ThreadsActions.addThreadSuccess(thread))
+  yield put(PhotoViewingActions.addThreadSuccess(thread))
   yield call(shareWalletImage, imageId, thread.id, comment)
 }

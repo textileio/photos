@@ -11,9 +11,10 @@ import BottomDrawerList from '../../components/BottomDrawerList'
 import UIActions from '../../../Redux/UIRedux'
 import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
-import ThreadsActions from '../../../Redux/ThreadsRedux'
+import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
+import { threadDataByThreadId } from '../../../Redux/PhotoViewingSelectors'
 import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
-import * as TextileTypes from '../../../Models/TextileTypes'
+import { Photo } from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
 import Alert from '../../../SB/components/Alert'
@@ -24,7 +25,7 @@ import ProcessingImageCard, { IProcessingImageProps } from '../../../Components/
 import styles from './statics/styles'
 import cardStyles from '../../components/ThreadDetailCard/statics/styles'
 
-class ThreadsDetail extends React.PureComponent {
+class ThreadDetail extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -75,9 +76,6 @@ class ThreadsDetail extends React.PureComponent {
   }
 
   componentDidMount () {
-    // Unload any full screen photo
-    // Needed to move here because the Navbar in PhotoDetail couldn't UIAction dispatch
-    this.props.dismissPhoto()
     this._setHeaderParams()
   }
 
@@ -109,9 +107,10 @@ class ThreadsDetail extends React.PureComponent {
     })
   }
 
-  _onPhotoSelect = () => {
-    return (photoId) => {
-      this.props.viewPhoto(photoId, this.props.threadId)
+  _onPhotoSelect = (photo: Photo) => {
+    return () => {
+      this.props.viewPhoto(photo.id)
+      this.props.navigation.navigate('PhotoViewer')
     }
   }
 
@@ -155,7 +154,13 @@ class ThreadsDetail extends React.PureComponent {
       }
       case 'photo': {
         return (
-          <ThreadDetailCard id={item.id + '_card'} item={item} profile={this.props.profile} contacts={this.props.contacts} onSelect={this._onPhotoSelect()} />
+          <ThreadDetailCard
+            id={item.id + '_card'}
+            item={item}
+            profile={this.props.profile}
+            contacts={this.props.contacts}
+            onSelect={this._onPhotoSelect(item.photo)}
+          />
         )
       }
       default: {
@@ -167,7 +172,7 @@ class ThreadsDetail extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <View style={styles.threadsDetail} >
+        <View style={styles.threadDetail} >
           <View style={styles.imageList}>
             <FlatList
               data={this.props.items}
@@ -194,20 +199,15 @@ class ThreadsDetail extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps) => {
-  // TODO: Can this be a selector?
-  const navParams = ownProps.navigation.state.params || {}
-  const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
-  const defaultThreadId = defaultThread ? defaultThread.id : undefined
+const mapStateToProps = (state: RootState) => {
+  const viewingThread = state.photoViewing.viewingThread
 
-  const threadId = navParams.id || defaultThreadId
+  const threadId = viewingThread.id
+  var items: [{type: string, photo: Photo}] = []
+  var processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
 
-  let items: [{type: string, photo: TextileTypes.Photo}] = []
-  let processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
-  let thread
-
-  if (threadId) {
-    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
+  if (viewingThread) {
+    const threadData: ThreadData = threadDataByThreadId(state, viewingThread.id) || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
       return { type: 'photo', photo, id: photo.id }
     })
@@ -236,10 +236,9 @@ const mapStateToProps = (state: RootState, ownProps) => {
           }
         }
       })
-    thread = state.threads.threads.find(thread => thread.id === threadId)
   }
 
-  const threadName = thread ? thread.name : navParams.name ? navParams.name : undefined
+  const threadName = viewingThread ? viewingThread.name : undefined
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
@@ -283,12 +282,11 @@ const mapStateToProps = (state: RootState, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    dismissPhoto: () => { dispatch(UIActions.dismissViewedPhoto()) },
-    viewPhoto: (photoId, threadId) => { dispatch(UIActions.viewPhotoRequest(photoId, threadId)) },
+    viewPhoto: (photoId) => { dispatch(PhotoViewingActions.viewPhoto(photoId)) },
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    leaveThread: (threadId: string) => { dispatch(ThreadsActions.removeThreadRequest(threadId)) },
+    leaveThread: (threadId: string) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) },
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
@@ -296,4 +294,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadsDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ThreadDetail)

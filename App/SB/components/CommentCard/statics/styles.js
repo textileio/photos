@@ -13,9 +13,6 @@ export default StyleSheet.create({
     paddingTop: 15,
     width: '100%'
   },
-  subComment: {
-    maxWidth: '70%'
-  },
   commentProfileImage: {
     width: 38,
     height: 37,
@@ -42,8 +39,6 @@ export default StyleSheet.create({
     fontFamily: 'BentonSans',
     fontSize: 12,
     color: '#9b9b9b',
-    textAlign: 'right',
-    maxWidth: 50,
     paddingRight: 12
   },
   commentUser: {
@@ -52,7 +47,7 @@ export default StyleSheet.create({
     marginBottom: 5
   },
   commentTextWrapper: {
-    marginBottom: 14,
+    marginBottom: 5,
     flexDirection: 'row'
   },
   commentText: {

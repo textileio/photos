@@ -4,7 +4,7 @@ import ForgotPassword from './ForgotPassword/ForgotPasswordContainer'
 import OnBoarding from './OnBoarding'
 import WelcomeMessage from './WelcomeMessage'
 import ThreadsList from './ThreadsList'
-import ThreadsDetail from './ThreadsDetail'
+import ThreadDetail from './ThreadDetail'
 import ThreadsEditName from './ThreadsEditName'
 import ThreadsEditFriends from './ThreadsEditFriends'
 import ThreadCreate from './ThreadCreate'
@@ -26,7 +26,7 @@ export { ForgotPassword }
 export { OnBoarding }
 export { WelcomeMessage }
 export { ThreadsList }
-export { ThreadsDetail }
+export { ThreadDetail }
 export { ThreadsEditName }
 export { ThreadsEditFriends }
 export { ThreadCreate }

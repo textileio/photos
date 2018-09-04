@@ -4,12 +4,13 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions, { ThreadData } from '../Redux/TextileNodeRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
 import { Photo } from '../Models/TextileTypes'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 class TextileWalletPicker extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -84,20 +85,12 @@ class TextileWalletPicker extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const defaultThread = state.threads.threads.find(thread => thread.name === 'default')
-  const threadId = defaultThread ? defaultThread.id : undefined
+  const defaultData = defaultThreadData(state)
+  const threadId = defaultData ? defaultData.thread.id : undefined
+  const photos: Photo[] = defaultData ? defaultData.photos : []
+  const refreshing = defaultData ? defaultData.querying : false
 
-  let photos: Photo[] = []
-  let refreshing = false
-  let thread
-  if (threadId) {
-    const threadData: ThreadData = state.textileNode.threads[threadId] || { querying: false, photos: [] }
-    photos = threadData.photos
-    refreshing = threadData.querying
-    thread = state.threads.threads.find(thread => thread.id === threadId)
-  }
-
-  const threadName = thread ? thread.name : undefined
+  const threadName = defaultData ? defaultData.thread.name : undefined
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
@@ -127,7 +120,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     sharePhoto: (photoId: string) => { dispatch(UIActions.updateSharingPhotoImage(photoId)) },
     cancelSharingPhoto: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    refresh: (threadId: string) => { dispatch(TextileNodeActions.getPhotoHashesRequest(threadId)) },
+    refresh: (threadId: string) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }

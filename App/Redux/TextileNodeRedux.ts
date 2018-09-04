@@ -26,18 +26,6 @@ const actions = {
   ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', resolve => {
     return (threadId: ThreadId, blockId: BlockId) => resolve({ threadId, blockId })
   }),
-  getPhotoHashesRequest: createAction('GET_PHOTO_HASHES_REQUEST', resolve => {
-    return (threadId: ThreadId) => resolve({ threadId })
-  }),
-  getPhotoHashesSuccess: createAction('GET_PHOTO_HASHES_SUCCESS', resolve => {
-    return (threadId: ThreadId, photos: Photo[]) => resolve({ threadId, photos })
-  }),
-  getPhotoHashesFailure: createAction('GET_PHOTO_HASHES_FAILURE', resolve => {
-    return (threadId: ThreadId, error: Error) => resolve({ threadId, error })
-  }),
-  getPhotoMetadataSuccess: createAction('GET_PHOTO_METADATA_SUCCESS', resolve => {
-    return (threadId: ThreadId, photoId: PhotoId, metadata: PhotoMetadata) => resolve({ threadId, photoId, metadata })
-  }),
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
     return () => resolve()
   }),
@@ -56,16 +44,6 @@ const actions = {
 }
 
 export type TextileNodeAction = ActionType<typeof actions>
-
-export type ThreadData = {
-  readonly querying: boolean
-  readonly photos: ReadonlyArray<Photo>
-  readonly error?: Error
-}
-
-type ThreadMap = {
-  readonly [key: string]: ThreadData
-}
 
 type TextileAppStateStatus = AppStateStatus | 'unknown'
 
@@ -86,7 +64,6 @@ type TextileNodeState = {
     readonly state: NodeState
     readonly error?: string
   }
-  readonly threads: ThreadMap,
   readonly refreshingMessages: boolean
   readonly overview?: NodeOverview
 }
@@ -97,7 +74,6 @@ export const initialState: TextileNodeState = {
   nodeState: {
     state: NodeState.nonexistent
   },
-  threads: {},
   refreshingMessages: false
 }
 
@@ -123,25 +99,6 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
       return { ...state, nodeState: { ...state.nodeState, error: errorMessage } }
     case getType(actions.nodeOnline):
       return { ...state, online: true }
-    case getType(actions.getPhotoHashesRequest): {
-      const { threadId } = action.payload
-      const threadData = state.threads[threadId] || createEmptyThreadData()
-      const threads = { ...state.threads, [threadId]: { ...threadData, querying: true } }
-      return { ...state, threads }
-    }
-    case getType(actions.getPhotoHashesSuccess): {
-      // TODO: This isn't working?
-      const { threadId, photos } = action.payload
-      const threadData = state.threads[threadId] || createEmptyThreadData()
-      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, photos: photos } }
-      return { ...state, threads }
-    }
-    case getType(actions.getPhotoHashesFailure): {
-      const { threadId, error } = action.payload
-      const threadData = state.threads[threadId] || createEmptyThreadData()
-      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, error } }
-      return { ...state, threads }
-    }
     case getType(actions.refreshMessagesRequest):
       return { ...state, refreshingMessages: true }
     case getType(actions.refreshMessagesSuccess):
@@ -154,24 +111,11 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
   }
 }
 
-function createEmptyThreadData (): ThreadData {
-  return {
-    querying: false,
-    photos: Array<Photo>()
-  }
-}
-
 // TODO: create RootState type that will be passed into these
 export const TextileNodeSelectors = {
   appState: (state: RootState) => state.textileNode.appState,
   nodeState: (state: RootState) => state.textileNode.nodeState.state,
   online: (state: RootState) => state.textileNode.online,
-  threads: (state: RootState) => state.textileNode.threads,
-  photosByThreadId: (state: any, threadId: string) => {
-    const threadData = state.textileNode.threads[threadId]
-    if (!threadData) return undefined
-    return threadData.photos
-  },
   refreshingMessages: (state: RootState) => state.textileNode.refreshingMessages,
 }
 
