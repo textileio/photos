@@ -11,28 +11,24 @@ export type Props = {
   peerId?: string,
   comment: string
   date: string
-  isSubComment: boolean
-  subComments: Props[]
+  isCaption: boolean
 }
 
 const CommentCard = (props: Props) => {
   // const uri = props.photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.photo.author_id + '/avatar' : undefined
   // const username =  props.photo.username ? props.photo.username : props.photo.author_id.substring(0, 8).toUpperCase()
 
-  const { username, peerId, comment, date, subComments, isSubComment } = props
+  const { username, peerId, comment, date, isCaption } = props
   const dateString = moment.utc(date).fromNow()
   const defaultSource = require('../../views/Settings/statics/main-image.png')
   return (
-    <View style={[styles.comment, isSubComment ? styles.subComment : styles.withDivider ]}>
+    <View style={[styles.comment, isCaption ? styles.withDivider : {} ]}>
       <Avatar style={{marginRight: 11}} width={38} height={38} peerId={peerId} defaultSource={defaultSource} />
       <View style={styles.commentTexts}>
         <Text style={styles.commentUser}>{username}</Text>
         <View style={styles.commentTextWrapper}><Text style={styles.commentText}>{comment}</Text></View>
-        { subComments && subComments.map((subComment, i) => (
-          <CommentCard key={i} isSubComment {...subComment} />
-        ))}
+        <Text style={styles.commentDate}>{dateString}</Text>
       </View>
-      { !isSubComment && <Text style={styles.commentDate}>{dateString}</Text> }
     </View>
   )
 }
