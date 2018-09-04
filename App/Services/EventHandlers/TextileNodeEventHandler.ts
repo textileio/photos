@@ -22,7 +22,10 @@ export default class TextileNodeEventHandler {
     })
     TextileNode.eventEmitter.addListener('onThreadUpdate', (update: Update) => {
       const { type } = update.block
-      if (type === BlockType.CommentBlock || type === BlockType.LikeBlock || type === BlockType.PhotoBlock) {
+      if (type === BlockType.CommentBlock ||
+        type === BlockType.LikeBlock ||
+        type === BlockType.PhotoBlock ||
+        type === BlockType.IgnoreBlock) {
         this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread_id))
       }
     })
