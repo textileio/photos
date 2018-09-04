@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text, Button, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import ThreadsAction from '../Redux/ThreadsRedux'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 
 // Styles
 import style from './Styles/PairingViewStyle'

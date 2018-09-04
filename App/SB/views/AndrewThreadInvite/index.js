@@ -7,7 +7,6 @@ import Toolbar from '../../components/Toolbar'
 
 import styles from './statics/styles'
 import ThreadsAction from '../../../Redux/ThreadsRedux'
-import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import style from '../../../Containers/Styles/PairingViewStyle'
 
 class ThreadInvite extends React.PureComponent {
