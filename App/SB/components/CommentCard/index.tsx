@@ -15,9 +15,6 @@ export type Props = {
 }
 
 const CommentCard = (props: Props) => {
-  // const uri = props.photo.author_id ? 'https://cafe.us-east-1.textile.io/ipns/' + props.photo.author_id + '/avatar' : undefined
-  // const username =  props.photo.username ? props.photo.username : props.photo.author_id.substring(0, 8).toUpperCase()
-
   const { username, peerId, comment, date, isCaption } = props
   const dateString = moment.utc(date).fromNow()
   const defaultSource = require('../../views/Settings/statics/main-image.png')
