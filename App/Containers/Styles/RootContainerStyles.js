@@ -20,5 +20,19 @@ export default StyleSheet.create({
     width: 200,
     height: 200,
     alignSelf: 'center'
+  },
+  bottomOverlay: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
+    height: 20,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(0,0,0,0.5)'
+  },
+  overlayText: {
+    color: 'white',
+    fontFamily: 'BentonSans'
   }
 })

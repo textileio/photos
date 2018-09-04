@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Redux, { Dispatch } from 'redux'
-import { View, StatusBar, ActivityIndicator, Platform, PermissionsAndroid } from 'react-native'
+import { View, StatusBar, ActivityIndicator, Platform, PermissionsAndroid, Text } from 'react-native'
 import { Overlay } from 'react-native-elements'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
@@ -15,6 +15,8 @@ import styles from './Styles/RootContainerStyles'
 interface StateProps {
   showOverlay: boolean
   monitorLocation: boolean
+  verboseUi: boolean
+  overlayMessage: string
 }
 
 interface DispatchProps {
@@ -71,15 +73,28 @@ class RootContainer extends Component<StateProps & DispatchProps> {
         >
           <ActivityIndicator size={'large'} color={'#ffffff'} />
         </Overlay>
+        {this.props.verboseUi &&
+        <View style={styles.bottomOverlay} >
+          <Text style={styles.overlayText}>{this.props.overlayMessage}</Text>
+        </View>
+        }
       </View>
     )
   }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  const nodeStatus = state.textileNode.nodeState.error
+    ? 'Error - ' + state.textileNode.nodeState.error
+    : state.textileNode.nodeState.state
+  const appState = state.textileNode.appState
+  const overlayMessage = appState + ' | ' + nodeStatus
+
   return {
     showOverlay: state.auth.processing,
-    monitorLocation: state.preferences.services.backgroundLocation.status
+    monitorLocation: state.preferences.services.backgroundLocation.status,
+    verboseUi: state.preferences.verboseUi,
+    overlayMessage
   }
 }
 
