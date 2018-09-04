@@ -7,7 +7,7 @@ const actions = {
     return (thread: Thread) => resolve({ thread })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', resolve => {
-    return (name: ThreadName, mnemonic?: Mnemonic) => resolve({ name, mnemonic })
+    return (name: ThreadName) => resolve({ name })
   }),
   addThreadSuccess: createAction('ADD_THREAD_SUCCESS', resolve => {
     return (thread: Thread) => resolve({ thread })

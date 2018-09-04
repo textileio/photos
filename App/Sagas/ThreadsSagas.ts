@@ -68,7 +68,7 @@ export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptI
     const threadId = yield call(TextileNode.acceptThreadInviteViaNotification, notificationId)
     const threads: Threads = yield call(TextileNode.threads)
     yield put(PhotoViewingActions.refreshThreadsRequest())
-    yield put(UIActions.viewThreadRequest(threadId, threadName))
+    yield put(UIActions.navigateToThreadRequest(threadId, threadName))
   } catch (error) {
     // TODO: it would be nice to tell the user when they've already joined the thread
   }
