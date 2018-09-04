@@ -109,8 +109,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
       peerId: viewingPhoto.author_id,
       comment: viewingPhoto.caption,
       date: viewingPhoto.date,
-      isSubComment: false,
-      subComments: []
+      isCaption: true
     }
   }
   // TODO: comments should always be defined: https://github.com/textileio/textile-go/issues/270
@@ -121,8 +120,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
       peerId: comment.author_id,
       comment: comment.body,
       date: comment.date,
-      isSubComment: false,
-      subComments: []
+      isCaption: false
     }
     return props
   })
