@@ -32,11 +32,6 @@ export type PublicKey = PublicKeyBase & string & undefined
 export type PrivateKey = PrivateKeyBase & string & undefined
 export type Mnemonic = MnemonicBase & string & undefined
 
-export interface Event {
-  name: string
-  payload: string
-}
-
 export enum NotificationType {
   receivedInviteNotification,
   deviceAddedNotification,
@@ -219,4 +214,26 @@ export interface NotificationEngagement {
   userInteraction: boolean,
   data?: any,
   finish?: Function
+}
+
+export enum BlockType {
+  InviteBlock = 0,
+	ExternalInviteBlock = 1,
+	JoinBlock = 2,
+	LeaveBlock = 3,
+	PhotoBlock = 4,
+	CommentBlock = 5,
+	LikeBlock,
+
+	IgnoreBlock = 200,
+	MergeBlock  = 201
+}
+export interface Block {
+  type: BlockType
+}
+
+export interface Update {
+  block: Block
+  thread_id: ThreadId
+  thread_name: ThreadName
 }
