@@ -12,9 +12,10 @@ import Avatar from '../Components/Avatar'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import UIActions from '../Redux/UIRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
+import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -120,8 +121,9 @@ class ThreadsList extends React.PureComponent {
   }
 
   _onPressItem = (photo) => {
-    const { id, name } = photo
-    this.props.viewThread(id, name)
+    const { id } = photo
+    this.props.viewThread(id)
+    this.props.navigation.navigate('ViewThread')
   }
 
   _onRefresh = () => {
@@ -187,10 +189,11 @@ class ThreadsList extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   const profile = state.preferences.profile
-  const threads = state.threads.threads
+  const allThreads = getThreads(state)
+  const threads = allThreads
     .filter(thread => thread.name !== 'default')
     .map(thread => {
-      const nodeThread = state.textileNode.threads[thread.id]
+      const nodeThread = state.photoViewing.threads[thread.id]
       // Todo: we'll want to get all this from a better source
       thread.photos = []
       thread.updated = 0 // TODO: could use a thread created timestamp...
@@ -224,7 +227,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    viewThread: (threadId, threadName) => { dispatch(UIActions.viewThreadRequest(threadId, threadName)) },
+    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },

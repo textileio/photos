@@ -8,7 +8,7 @@ export default StyleSheet.create({
     backgroundColor: '#FAFCFE',
     flex: 1
   },
-  threadsDetail: {
+  threadDetail: {
     paddingHorizontal: 4,
     position: 'absolute',
     top: 0,

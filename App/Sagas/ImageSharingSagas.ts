@@ -6,7 +6,7 @@ import { uploadFile } from './UploadFile'
 import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
 import { AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId } from '../Models/TextileTypes'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
 import {ActionType} from 'typesafe-actions'
@@ -15,7 +15,6 @@ export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: s
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
     const blockId: BlockId = yield call(TextileNode.sharePhotoToThread, id, threadId, comment)
-    yield put(TextileNodeActions.getPhotoHashesRequest(threadId))
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }

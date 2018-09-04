@@ -6,10 +6,12 @@ import { AuthAction } from './AuthRedux'
 import { CameraRollAction } from './CameraRollRedux'
 import { ContactsAction } from './ContactsRedux'
 import { DevicesAction } from './DevicesRedux'
+import { PhotoViewingAction } from './PhotoViewingRedux'
 import { PreferencesAction } from './PreferencesRedux'
 import { NotificationsAction } from './NotificationsRedux'
 import { TextileNodeAction } from './TextileNodeRedux'
 import { ThreadsAction } from './ThreadsRedux'
+import { TriggersAction } from './TriggersRedux'
 import { UIAction } from './UIRedux'
 import { UploadingImagesAction } from './UploadingImagesRedux'
 import { StartupAction } from './StartupRedux'
@@ -20,10 +22,12 @@ export type RootAction =
   CameraRollAction |
   ContactsAction |
   DevicesAction |
+  PhotoViewingAction |
   PreferencesAction |
   NotificationsAction |
   TextileNodeAction |
   ThreadsAction |
+  TriggersAction |
   UIAction |
   UploadingImagesAction |
   StartupAction

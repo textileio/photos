@@ -24,15 +24,6 @@ const actions = {
   cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', resolve => {
     return () => resolve()
   }),
-  viewThreadRequest: createAction('VIEW_THREAD_REQUEST', resolve => {
-    return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
-  }),
-  viewPhotoRequest: createAction('VIEW_PHOTO_REQUEST', resolve => {
-    return (photoId: PhotoId, threadId: ThreadId) => resolve({ photoId, threadId })
-  }),
-  dismissViewedPhoto: createAction('DISMISS_VIEWED_PHOTO', resolve => {
-    return () => resolve()
-  }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', resolve => {
     return (image: SharedImage | string) => resolve({ image })
   }),
@@ -77,6 +68,9 @@ const actions = {
   }),
   addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
     return (blockId: BlockId) => resolve({blockId})
+  }),
+  navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', resolve => {
+    return (threadId: ThreadId, threadName: string) => resolve({ threadId, threadName })
   })
 }
 
@@ -88,11 +82,6 @@ export type UIState = {
     readonly data?: string
     readonly error?: Error
   }
-  readonly viewingPhoto: {
-    readonly active: boolean
-    readonly photoId?: PhotoId
-    readonly threadId?: ThreadId
-  },
   readonly sharingPhoto?: {
     readonly image?: SharedImage | string,
     readonly threadId?: ThreadId,
@@ -103,9 +92,6 @@ export type UIState = {
 
 export const initialState: UIState = {
   chosenProfilePhoto: {},
-  viewingPhoto: {
-    active: false
-  }
 }
 
 export function reducer (state: UIState = initialState, action: UIAction): UIState {
@@ -116,11 +102,6 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.updateProfilePicture):
     case getType(actions.cancelProfileUpdate):
       return { ...state, chosenProfilePhoto: {} }
-    case getType(actions.viewPhotoRequest):
-      const { photoId, threadId } = action.payload
-      return { ...state, viewingPhoto: { ...state.viewingPhoto, active: true, photoId, threadId } }
-    case getType(actions.dismissViewedPhoto):
-      return { ...state, viewingPhoto: { ...state.viewingPhoto, active: false } }
     case getType(actions.updateSharingPhotoImage):
       const { image } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, image } }

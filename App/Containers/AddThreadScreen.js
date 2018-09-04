@@ -5,7 +5,7 @@ import Input from '../SB/components/Input'
 import { NavigationActions } from 'react-navigation'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 // import styles from './Styles/AddThreadStyle'
-import ThreadsActions from '../Redux/ThreadsRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 
 class AddThreadScreen extends React.Component {
@@ -87,7 +87,7 @@ class AddThreadScreen extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    submit: (name: string) => { dispatch(ThreadsActions.addThreadRequest(name)) }
+    submit: (name: string) => { dispatch(PhotoViewingActions.addThreadRequest(name)) }
   }
 }
 

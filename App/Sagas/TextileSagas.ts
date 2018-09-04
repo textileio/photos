@@ -25,6 +25,7 @@ import { getDefaultThread } from './ThreadsSagas'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions  from '../Redux/AuthRedux'
 import ContactsActions  from '../Redux/ContactsRedux'
@@ -36,7 +37,8 @@ import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
-import {Thread} from '../Models/TextileTypes'
+import Upload from 'react-native-background-upload'
+import { Thread } from '../Models/TextileTypes'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -150,7 +152,7 @@ function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
   }
 }
 
-export function * viewThread ( action: ActionType<typeof UIActions.viewThreadRequest> ) {
+export function * navigateToThread ( action: ActionType<typeof UIActions.navigateToThreadRequest> ) {
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
@@ -180,12 +182,6 @@ export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequ
   }
 }
 
-export function * viewPhoto ( action: ActionType<typeof UIActions.viewPhotoRequest> ) {
-  // Request made from the Wallet view
-  // request the metadata for the photo we are about to view full size
-  yield call(NavigationService.navigate, 'PhotoViewer')
-}
-
 export function * initializeAppState () {
     yield take(getType(StartupActions.startup))
     const defaultAppState = yield select(TextileNodeSelectors.appState)
@@ -209,20 +205,9 @@ export function * refreshMessages () {
   }
 }
 
-export function * getPhotoHashes (action: ActionType<typeof TextileNodeActions.getPhotoHashesRequest>) {
-  const { threadId } = action.payload
-  try {
-    const photos: TT.Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
-    yield put(TextileNodeActions.getPhotoHashesSuccess(threadId, photos))
-  } catch (error) {
-    yield put(TextileNodeActions.getPhotoHashesFailure(threadId, error))
-  }
-}
-
 export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.ignorePhotoRequest>) {
   const { threadId, blockId } = action.payload
   try {
-    yield put(UIActions.dismissViewedPhoto())
     yield call(NavigationService.goBack)
     yield call(TextileNode.ignorePhoto, blockId)
   } catch (error) {
@@ -329,7 +314,6 @@ export function * photosTask () {
         }
         const blockId: TT.BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
         yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-        yield put(TextileNodeActions.getPhotoHashesRequest(defaultThread.id))
         addedPhotosData.push({ uri, addResult, blockId })
       } catch (error) {
         yield put(CameraRollActions.untrackPhoto(uri))

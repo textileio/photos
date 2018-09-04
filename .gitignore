@@ -83,3 +83,6 @@ android/.env.default
 
 # React Native Config
 .env.production
+
+# expo
+.expo

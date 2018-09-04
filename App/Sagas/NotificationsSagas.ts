@@ -15,11 +15,13 @@ import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
 import TextileNode from '../../TextileNode'
-import UIActions from '../Redux/UIRedux'
 import { NotificationType, ThreadName } from '../Models/TextileTypes'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
-import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
+import ThreadsActions from '../Redux/ThreadsRedux'
+import { ThreadData } from '../Redux/PhotoViewingRedux'
+import UIActions from '../Redux/UIRedux'
+import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors }  from '../Redux/NotificationsRedux'
 import * as NotificationsServices from '../Services/Notifications'
@@ -79,9 +81,11 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
       case NotificationType.likeAddedNotification:
       case NotificationType.peerJoinedNotification:
       case NotificationType.peerLeftNotification:
-        const thread = yield select(ThreadsSelectors.threadById, notification.subject_id)
+        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
-        yield put(UIActions.viewThreadRequest(thread.id, thread.name))
+        if (threadData) {
+          yield put(UIActions.navigateToThreadRequest(threadData.thread.id, threadData.thread.name))
+        }
         // Helpful so that the feedview will update with latest
         // TODO: remove here and add to the Load time of Feedview...
         yield * refreshNotifications()
