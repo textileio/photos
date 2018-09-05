@@ -55,7 +55,7 @@ export function * refreshThread (action: ActionType<typeof PhotoViewingActions.r
 }
 
 export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions.addCommentRequest>) {
-  const result:  { photo: Photo | undefined, comment: string | undefined } = yield select(photoAndComment)
+  const result: { photo: Photo | undefined, comment: string | undefined } = yield select(photoAndComment)
   if (!result.photo || !result.comment) {
     return
   }
@@ -63,6 +63,5 @@ export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions
     yield call(TextileNode.addPhotoComment, result.photo.block_id, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
-    console.log(error)
   }
 }

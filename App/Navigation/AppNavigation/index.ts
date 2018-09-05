@@ -9,9 +9,9 @@ import AndrewThreadInvite from '../../SB/views/AndrewThreadInvite'
 
 const nav = createSwitchNavigator(
   {
-    OnboardingCheck: OnboardingCheck,
-    OnboardingNavigation: OnboardingNavigation,
-    PrimaryNavigation: PrimaryNavigation,
+    OnboardingCheck,
+    OnboardingNavigation,
+    PrimaryNavigation,
     PairingView: AndrewPairingInvite,
     ThreadInvite: AndrewThreadInvite
   },

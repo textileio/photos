@@ -29,8 +29,9 @@ export function * insertImage (image: SharedImage, threadId: ThreadId, comment?:
 export function * addToIpfs (uuid: string) {
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage)
+    if (!processingImage) {
       throw new Error('no ProcessingImage found')
+    }
     yield put(ProcessingImagesActions.addingImage(uuid))
     const { sharedImage, destinationThreadId, comment } = processingImage
     const addResult: AddResult = yield call(addImage, sharedImage, destinationThreadId, comment)
@@ -44,8 +45,9 @@ export function * addToIpfs (uuid: string) {
 export function * uploadArchive (uuid: string) {
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage)
+    if (!processingImage) {
       throw new Error('no ProcessingImage found')
+    }
     yield put(ProcessingImagesActions.uploadStarted(uuid))
     if (!processingImage.addData || !processingImage.addData.addResult.archive) {
       throw new Error('no addData or archive')
@@ -59,8 +61,9 @@ export function * uploadArchive (uuid: string) {
 export function * addToWallet (uuid: string) {
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage || !processingImage.addData)
+    if (!processingImage || !processingImage.addData) {
       throw new Error('no ProcessingImage or addData found')
+    }
     const { id, key } = processingImage.addData.addResult
     yield put(ProcessingImagesActions.addingToWallet(uuid))
     const defaultThread: Thread = yield * getDefaultThread()
@@ -75,8 +78,9 @@ export function * addToWallet (uuid: string) {
 export function * shareToThread (uuid: string) {
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage || !processingImage.addData)
+    if (!processingImage || !processingImage.addData) {
       throw new Error('no ProcessingImage or addData found')
+    }
     const { id } = processingImage.addData.addResult
     yield put(ProcessingImagesActions.sharingToThread(uuid))
     const { destinationThreadId, comment } = processingImage

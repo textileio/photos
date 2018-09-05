@@ -6,14 +6,14 @@ import styles, { headerTintColor } from '../../../../Styles/NavigationStyles'
 
 const nav = createStackNavigator(
   {
-    Notifications: Notifications
+    Notifications
   },
   {
     headerMode: 'float',
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
+      headerTintColor
     }
   }
 )
