@@ -44,7 +44,8 @@ type Props = StateProps & DispatchProps
 class ThreadPhotoDetail extends Component<Props, State> {
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
-      <TextileHeaderButtons left>
+      <TextileHeaderButtons left={true}>
+        {/* tslint:disable-next-line jsx-no-lambda */}
         <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
       </TextileHeaderButtons>
     )
@@ -62,13 +63,15 @@ class ThreadPhotoDetail extends Component<Props, State> {
 
   renderImage () {
     const height = this.props.size ? (this.props.size.height / this.props.size.width) * width : width
-    return (<ProgressiveImage
-      imageId={this.props.photoId}
-      previewPath={'small'}
-      path={'photo'}
-      style={[styles.mainPhoto, { height }]}
-      resizeMode={'cover'}
-    />)
+    return (
+      <ProgressiveImage
+        imageId={this.props.photoId}
+        previewPath={'small'}
+        path={'photo'}
+        style={[styles.mainPhoto, { height }]}
+        resizeMode={'cover'}
+      />
+    )
   }
 
   render () {
