@@ -45,7 +45,6 @@ public class MainApplication extends Application implements ReactApplication {
         new ReactNativeConfigPackage(),
         new BackgroundTimerPackage(),
         new BackgroundTaskPackage(),
-        new SvgPackage(),
         new RNFSPackage(),
         new ReactNativeI18n(),
         new VectorIconsPackage(),
