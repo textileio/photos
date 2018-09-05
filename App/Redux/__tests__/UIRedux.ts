@@ -1,6 +1,6 @@
 import actions, { reducer } from '../UIRedux'
 import { SharedImage, ThreadId } from '../../Models/TextileTypes'
-import { hash } from 'react-native-fs';
+import { hash } from 'react-native-fs'
 
 const initialState = reducer(undefined, {} as any)
 const threadId = 'threadId' as ThreadId

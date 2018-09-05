@@ -2,33 +2,33 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from '../Redux/Types'
 
 const actions = {
-  initialzePhotos: createAction('INITIALIZE_PHOTOS', resolve => {
+  initialzePhotos: createAction('INITIALIZE_PHOTOS', (resolve) => {
     return (ids: string[]) => resolve({ ids })
   }),
-  updateQuerying:  createAction('UPDATE_QUERYING', resolve => {
+  updateQuerying:  createAction('UPDATE_QUERYING', (resolve) => {
     return (querying: boolean) => resolve({ querying })
   }),
-  trackPhoto: createAction('TRACK_PHOTO', resolve => {
+  trackPhoto: createAction('TRACK_PHOTO', (resolve) => {
     return (id: string) => resolve({ id })
   }),
-  trackPhotos: createAction('TRACK_PHOTOS', resolve => {
+  trackPhotos: createAction('TRACK_PHOTOS', (resolve) => {
     return (ids: string[]) => resolve({ ids })
   }),
-  untrackPhoto: createAction('UNTRACK_PHOTO', resolve => {
+  untrackPhoto: createAction('UNTRACK_PHOTO', (resolve) => {
     return (id: string) => resolve({ id })
   }),
-  untrackPhotos: createAction('UNTRACK_PHOTOS', resolve => {
+  untrackPhotos: createAction('UNTRACK_PHOTOS', (resolve) => {
     return (ids: string[]) => resolve({ ids })
   })
 }
 
 export type CameraRollAction = ActionType<typeof actions>
 
-export type QueriedPhotosMap = {
+export interface QueriedPhotosMap {
   readonly [key: string]: true
 }
 
-export type CameraRollState = {
+export interface CameraRollState {
   readonly initialized: boolean
   readonly querying: boolean
   readonly queriedPhotos: QueriedPhotosMap

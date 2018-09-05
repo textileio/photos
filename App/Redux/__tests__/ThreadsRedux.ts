@@ -42,18 +42,18 @@ describe('ui stories', () => {
     })
     it('should succeed at accepting an invite', () => {
       const state0 = reducer(initialState, actions.acceptExternalInviteRequest(inviteId, inviteKey))
-      const match0 = [{ inviteId: inviteId, key:inviteKey }]
+      const match0 = [{ inviteId, key: inviteKey }]
       expect(state0.inboundInvites).toMatchObject(match0)
       const state1 = reducer(state0, actions.acceptExternalInviteSuccess(inviteId, id))
-      const match1 = [{ id, inviteId: inviteId, key:inviteKey }]
+      const match1 = [{ id, inviteId, key: inviteKey }]
       expect(state1.inboundInvites).toMatchObject(match1)
     })
     it('should fail at accepting an invite', () => {
       const state0 = reducer(initialState, actions.acceptExternalInviteRequest(inviteId, inviteKey))
-      const match0 = [{ inviteId: inviteId, key:inviteKey }]
+      const match0 = [{ inviteId, key: inviteKey }]
       expect(state0.inboundInvites).toMatchObject(match0)
       const state1 = reducer(state0, actions.acceptExternalInviteError(inviteId, error))
-      const match1 = [{ inviteId: inviteId, key:inviteKey, error }]
+      const match1 = [{ inviteId, key: inviteKey, error }]
       expect(state1.inboundInvites).toMatchObject(match1)
     })
     it('should ignore out of order events', () => {
