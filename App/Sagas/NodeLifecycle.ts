@@ -4,14 +4,17 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
+import PushNotification from 'react-native-push-notification'
 
-import TextileNodeActions, { TextileNodeSelectors, NodeState } from '../Redux/TextileNodeRedux'
+import TextileNodeActions, { NodeState, TextileNodeSelectors } from '../Redux/TextileNodeRedux'
+import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
 import { Threads, ThreadName } from '../Models/TextileTypes'
 
 export function * manageNode () {
   while (true) {
+    const verboseUi: boolean = yield select(PreferencesSelectors.verboseUi)
     try {
       // Block until we get an active or background app state
       const action: ActionType<typeof TextileNodeActions.appStateChange> =
@@ -19,10 +22,17 @@ export function * manageNode () {
           action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
         )
 
-      // Get our current node state and create/start the node if it doesn't exist or is stopped
+      if (verboseUi) {
+        yield call(displayNotification, 'App State Change: ' + action.payload.newState)
+      }
+
+      // Get our current node state and create/start the node if it isn't started
       // Use fork so we don't block listening for the next app state change while the node is created and started
       const nodeState: NodeState = yield select(TextileNodeSelectors.nodeState)
-      if (nodeState === NodeState.nonexistent || nodeState === NodeState.stopped) {
+      if (nodeState !== NodeState.started) {
+        if (verboseUi) {
+          yield call(displayNotification, 'Starting node')
+        }
         yield fork(createAndStartNode)
       }
 
@@ -46,6 +56,9 @@ export function * manageNode () {
         BackgroundTimer.stop()
       }
     } catch (error) {
+      if (verboseUi) {
+        yield call(displayNotification, error, 'Error')
+      }
       yield put(TextileNodeActions.nodeError(error))
     }
   }
@@ -68,15 +81,37 @@ function * createAndStartNode () {
 }
 
 function * stopNodeAfterDelay (ms: number) {
+  const verboseUi: boolean = yield select(PreferencesSelectors.verboseUi)
   try {
+    if (verboseUi) {
+      yield call(displayNotification, 'Running the node for 20 sec. in the background')
+    }
     yield delay(ms)
   } finally {
     if (yield cancelled()) {
       // Let it keep running
+      if (verboseUi) {
+        yield call(displayNotification, 'Delayed stop of node canceled because of foreground event')
+      }
     } else {
+      if (verboseUi) {
+        yield call(displayNotification, 'Stopping node')
+      }
       yield put(TextileNodeActions.stoppingNode())
       yield call(TextileNode.stop)
+      if (verboseUi) {
+        yield call(displayNotification, 'Node stopped')
+      }
       yield put(TextileNodeActions.stopNodeSuccess())
     }
   }
+}
+
+function displayNotification (message: string, title?: string) {
+  PushNotification.localNotification({
+    title,
+    message,
+    playSound: false,
+    vibrate: false
+  })
 }
