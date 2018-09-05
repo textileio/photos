@@ -14,7 +14,6 @@ import { Threads, ThreadName } from '../Models/TextileTypes'
 
 export function * manageNode () {
   while (true) {
-    const verboseUi: boolean = yield select(PreferencesSelectors.verboseUi)
     try {
       // Block until we get an active or background app state
       const action: ActionType<typeof TextileNodeActions.appStateChange> =
@@ -22,7 +21,7 @@ export function * manageNode () {
           action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
         )
 
-      if (verboseUi) {
+      if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
 
@@ -30,7 +29,7 @@ export function * manageNode () {
       // Use fork so we don't block listening for the next app state change while the node is created and started
       const nodeState: NodeState = yield select(TextileNodeSelectors.nodeState)
       if (nodeState !== NodeState.started) {
-        if (verboseUi) {
+        if (yield select(PreferencesSelectors.verboseUi)) {
           yield call(displayNotification, 'Starting node')
         }
         yield fork(createAndStartNode)
@@ -56,7 +55,7 @@ export function * manageNode () {
         BackgroundTimer.stop()
       }
     } catch (error) {
-      if (verboseUi) {
+      if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, error, 'Error')
       }
       yield put(TextileNodeActions.nodeError(error))
@@ -81,28 +80,28 @@ function * createAndStartNode () {
 }
 
 function * stopNodeAfterDelay (ms: number) {
-  const verboseUi: boolean = yield select(PreferencesSelectors.verboseUi)
   try {
-    if (verboseUi) {
+    if (yield select(PreferencesSelectors.verboseUi)) {
       yield call(displayNotification, 'Running the node for 20 sec. in the background')
     }
     yield delay(ms)
   } finally {
     if (yield cancelled()) {
       // Let it keep running
-      if (verboseUi) {
+      if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Delayed stop of node canceled because of foreground event')
       }
     } else {
-      if (verboseUi) {
+      if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Stopping node')
       }
       yield put(TextileNodeActions.stoppingNode())
       yield call(TextileNode.stop)
-      if (verboseUi) {
+      if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Node stopped')
       }
       yield put(TextileNodeActions.stopNodeSuccess())
+      yield delay(500)
     }
   }
 }
