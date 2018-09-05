@@ -15,12 +15,12 @@ import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
 import TextileNode from '../../TextileNode'
-import { NotificationType, ThreadName } from '../Models/TextileTypes'
+import { NotificationType, PhotoId, ThreadName } from '../Models/TextileTypes'
+import NavigationService from '../Services/NavigationService'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
-import { ThreadData } from '../Redux/PhotoViewingRedux'
-import UIActions from '../Redux/UIRedux'
+import PhotoViewingAction, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors } from '../Redux/NotificationsRedux'
@@ -84,11 +84,12 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         if (threadData) {
-          yield put(UIActions.navigateToThreadRequest(threadData.thread.id, threadData.thread.name))
+          yield put(PhotoViewingAction.viewThread(threadData.thread.id))
+          yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
+          yield call(
+            NavigationService.navigate, 'ViewThread', { id: threadData.thread.id, name: threadData.thread.name })
+          yield call(NavigationService.navigate, 'PhotoViewer')
         }
-        // Helpful so that the feedview will update with latest
-        // TODO: remove here and add to the Load time of Feedview...
-        yield * refreshNotifications()
     }
   } catch (error) {
     yield put(NotificationsActions.notificationFailure(notification))
