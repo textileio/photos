@@ -7,9 +7,10 @@ import { NavigationActions } from 'react-navigation'
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import Toolbar from '../../components/Toolbar'
+import KeyboardResponsiveContainer from '../../../Components/KeyboardResponsiveContainer'
 import BottomDrawerList from '../../components/BottomDrawerList'
 import CommentCard, { Props as CommentCardProps } from '../../components/CommentCard'
-import CommentBox from '../../components/CommentBox/CommentBoxContainer'
+import CommentBox from '../../components/CommentBox/CommentBox'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
@@ -74,10 +75,9 @@ class ThreadPhotoDetail extends Component<Props, State> {
 
   render () {
     return (
-      <View style={styles.container}>
+      <KeyboardResponsiveContainer>
         <ScrollView style={styles.contentContainer}>
           {this.renderImage()}
-          {/*<ImageSc style={styles.mainPhoto} width={width} source={require('./statics/photo2.png')}/>*/}
           <View style={styles.commentsContainer}>
             {this.props.commentCardProps.map((commentCardProps, i) => (
               <CommentCard key={i} {...commentCardProps} />
@@ -86,7 +86,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
         </ScrollView>
         <CommentBox onUpdate={this.props.updateComment} onSubmit={this.props.submitComment} value={this.props.commentValue} />
         {this.state.drawer && <BottomDrawerList/>}
-      </View>
+      </KeyboardResponsiveContainer>
     )
   }
 }
