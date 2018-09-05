@@ -133,12 +133,12 @@ export interface ExternalInvite {
   inviter: UserName
 }
 
-export type CafeTokens = {
+export interface CafeTokens {
   readonly access: string
   readonly refresh: string
 }
 
-export type NodeOverview = {
+export interface NodeOverview {
   readonly swarm_size: number
   readonly device_count: number
   readonly thread_count: number
@@ -184,7 +184,7 @@ export interface ImageData {
   metadata: PhotoMetadata
 }
 
-export type SharedImage = {
+export interface SharedImage {
   origURL?: string,
   uri: string,
   path: string,
@@ -194,7 +194,7 @@ export type SharedImage = {
   isVertical: boolean
 }
 
-export type DeepLinkData = {
+export interface DeepLinkData {
   readonly href: string,
   readonly protocol: string,
   readonly host: string,
@@ -213,20 +213,20 @@ export interface NotificationEngagement {
   sound: string,
   userInteraction: boolean,
   data?: any,
-  finish?: Function
+  finish?: () => void
 }
 
 export enum BlockType {
   InviteBlock = 0,
-	ExternalInviteBlock = 1,
-	JoinBlock = 2,
-	LeaveBlock = 3,
-	PhotoBlock = 4,
-	CommentBlock = 5,
-	LikeBlock,
+  ExternalInviteBlock = 1,
+  JoinBlock = 2,
+  LeaveBlock = 3,
+  PhotoBlock = 4,
+  CommentBlock = 5,
+  LikeBlock,
 
-	IgnoreBlock = 200,
-	MergeBlock  = 201
+  IgnoreBlock = 200,
+  MergeBlock  = 201
 }
 export interface Block {
   type: BlockType
