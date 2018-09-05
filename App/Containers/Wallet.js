@@ -61,7 +61,7 @@ class Wallet extends React.PureComponent {
   onSelect = (row) => {
     return () => {
       this.props.viewWalletPhoto(row.item.id)
-      this.props.navigation.navigate('PhotoViewer')
+      this.props.navigation.navigate('PrivatePhotoDetail')
     }
   }
 

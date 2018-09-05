@@ -62,11 +62,14 @@ class AddThreadScreen extends React.Component {
   }
 
   _submitWithPhoto (withPhoto) {
+    // This is when you are creating a new thread for a photo selected in the wallet
     const withThreadName = this.state.value
-    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PhotoViewer', withPhoto, withThreadName })
+    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PrivatePhotoDetail', withPhoto, withThreadName })
   }
+
   _submit () {
     this.props.submit(this.state.value)
+    // Todo: Should nav to the newly created thread
     this.props.navigation.goBack()
   }
 
