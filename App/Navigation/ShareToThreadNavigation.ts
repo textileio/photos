@@ -9,7 +9,7 @@ const nav = createStackNavigator(
     ShareToThreadList: {
       screen: BottomDrawerPhotos,
       navigationOptions: {
-        header: null
+        header: undefined
       }
     }
   },
@@ -20,7 +20,7 @@ const nav = createStackNavigator(
       gesturesEnabled: false,
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
+      headerTintColor
     }
   }
 )

@@ -9,7 +9,7 @@ import styles, {headerTintColor} from '../../../../Styles/NavigationStyles'
 
 const nav = createStackNavigator(
   {
-    Wallet: Wallet,
+    Wallet,
     PhotoViewer: PhotoDetail,
     WalletSharePhoto: AddCaptionScreen,
     CreateThreadScreen: AddThreadScreen
@@ -19,7 +19,7 @@ const nav = createStackNavigator(
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
+      headerTintColor
     }
   }
 )

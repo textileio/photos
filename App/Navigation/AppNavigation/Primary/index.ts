@@ -5,8 +5,8 @@ import Account from './Account'
 
 const nav = createStackNavigator(
   {
-    TabNavigator: TabNavigator,
-    Account: Account 
+    TabNavigator,
+    Account
   },
   {
     mode: 'card',
