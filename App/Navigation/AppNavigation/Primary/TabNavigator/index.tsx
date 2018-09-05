@@ -9,9 +9,9 @@ import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
 
 const nav = createBottomTabNavigator(
   {
-    Wallet: Wallet,
-    Threads: Threads,
-    Notifications: Notifications
+    Wallet,
+    Threads,
+    Notifications
   },
   {
     navigationOptions: ({ navigation }) => {

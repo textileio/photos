@@ -10,8 +10,8 @@ import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
 const nav = createStackNavigator(
   {
     About: Account,
-    Settings: Settings,
-    Mnemonic: Mnemonic,
+    Settings,
+    Mnemonic,
     ChangeAvatar: UpdateAvatar
   },
   {
@@ -19,7 +19,7 @@ const nav = createStackNavigator(
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
+      headerTintColor
     }
   }
 )

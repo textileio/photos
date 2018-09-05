@@ -18,14 +18,14 @@ const nav = createStackNavigator(
     ViewThread: ThreadDetail,
     PhotoViewer: ThreadPhotoDetail,
     ThreadSharePhoto: AddCaptionScreen,
-    WalletPicker: WalletPicker
+    WalletPicker
   },
   {
     headerMode: 'float',
     navigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
+      headerTintColor
     }
   }
 )
