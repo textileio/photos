@@ -7,7 +7,6 @@
     "linterOptions": {
       "exclude": [
         "node_modules/**",
-        "typings/**",
         "**/*.json"
       ]
     },
