@@ -10,7 +10,6 @@
         "typings/**",
         "App/Navigation/**/*",
         "App/Models/**/*",
-        "App/SB/**/*",
         "**/*.json"
       ]
     },

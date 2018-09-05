@@ -6,7 +6,7 @@ import Avatar from '../../../Components/Avatar'
 
 import styles from './statics/styles'
 
-export type Props = {
+export interface Props {
   username: string
   peerId?: string,
   comment: string

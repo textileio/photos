@@ -3,13 +3,13 @@ import { Keyboard, EmitterSubscription } from 'react-native'
 
 import CommentBox from './CommentBox'
 
-type Props = {
+interface Props {
   value: string | undefined
   onUpdate: (text: string) => void
   onSubmit: () => void
 }
 
-type State = {
+interface State {
   keyboardHeight: number
 }
 
@@ -30,15 +30,15 @@ class CommentBoxContainer extends React.Component<Props, State> {
     this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this._keyboardDidHide)
   }
 
-  _keyboardDidShow = e => {
+  _keyboardDidShow = (e) => {
     this.setState({
-      keyboardHeight: e.endCoordinates.height,
+      keyboardHeight: e.endCoordinates.height
     })
   }
 
   _keyboardDidHide = () => {
     this.setState({
-      keyboardHeight: 0,
+      keyboardHeight: 0
     })
   }
 
