@@ -127,7 +127,8 @@ export const PreferencesSelectors = {
   onboarded: (state: RootState) => state.preferences.onboarded,
   pending: (state: RootState) => state.preferences.pending,
   profile: (state: RootState) => state.preferences.profile,
-  service: (state: RootState, name: ServiceType) => state.preferences.services[name]
+  service: (state: RootState, name: ServiceType) => state.preferences.services[name],
+  verboseUi: (state: RootState) => state.preferences.verboseUi
 }
 
 export default actions
