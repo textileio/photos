@@ -8,7 +8,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.horcrux.svg.SvgPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.imagepicker.ImagePickerPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
