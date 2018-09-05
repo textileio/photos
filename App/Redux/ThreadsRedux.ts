@@ -12,49 +12,48 @@ import {
 import { RootState } from '../Redux/Types'
 
 const actions = {
-  addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', resolve => {
+  addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', (resolve) => {
     return (id: ThreadId, name: ThreadName) => resolve({ id, name })
   }),
-  addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
+  addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
     return (id: ThreadId, name: ThreadName, invite: ExternalInvite) => resolve({ id, name, invite })
   }),
-  addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
+  addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
     return (id: ThreadId, error: Error) => resolve({ id, error })
   }),
-  acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', resolve => {
+  acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', (resolve) => {
     return (inviteId: BlockId, key: PrivateKey, name?: ThreadName, inviter?: UserName) => resolve({ inviteId, key, name, inviter })
   }),
-  acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', resolve => {
+  acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
     return (inviteId: BlockId, id: ThreadId) => resolve({inviteId, id})
   }),
-  acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', resolve => {
+  acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
     return (inviteId: BlockId, error: Error) => resolve({ inviteId, error })
   }),
-  storeExternalInviteLink: createAction('STORE_EXTERNAL_INVITE_LINK', resolve => {
+  storeExternalInviteLink: createAction('STORE_EXTERNAL_INVITE_LINK', (resolve) => {
     return (link: string) => resolve({ link })
   }),
-  removeExternalInviteLink: createAction('REMOVE_EXTERNAL_INVITE_LINK', resolve => {
+  removeExternalInviteLink: createAction('REMOVE_EXTERNAL_INVITE_LINK', (resolve) => {
     return () => resolve()
   }),
-  acceptInviteRequest: createAction('ACCEPT_THREAD_INVITE', resolve => {
+  acceptInviteRequest: createAction('ACCEPT_THREAD_INVITE', (resolve) => {
     return (notificationId: NotificationId, threadName: ThreadName) => resolve({ notificationId, threadName  })
   }),
-  addInternalInvitesRequest: createAction('ADD_INTERNAL_INVITES_REQUEST', resolve => {
+  addInternalInvitesRequest: createAction('ADD_INTERNAL_INVITES_REQUEST', (resolve) => {
     return (threadId: ThreadId, inviteePks: PublicKey[]) => resolve({ threadId, inviteePks  })
-  }),
+  })
 }
 
 export type ThreadsAction = ActionType<typeof actions>
 
-
-export type OutboundInvite = {
+export interface OutboundInvite {
   readonly id: ThreadId
   readonly name: ThreadName
   readonly invite?: ExternalInvite
   readonly error?: Error
 }
 
-export type InboundInvite = {
+export interface InboundInvite {
   readonly inviteId: BlockId
   readonly key: PrivateKey
   readonly id?: ThreadId
@@ -63,7 +62,7 @@ export type InboundInvite = {
   readonly error?: Error
 }
 
-export type ThreadsState = {
+export interface ThreadsState {
   readonly outboundInvites: ReadonlyArray<OutboundInvite>
   readonly inboundInvites: ReadonlyArray<InboundInvite>
   readonly pendingInviteLink?: string // used to hold an invite if triggered before login
@@ -78,19 +77,19 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
   switch (action.type) {
     case getType(actions.addExternalInviteRequest): {
       const { id, name } = action.payload
-      const existing = state.outboundInvites.find(invite => invite.id === id )
+      const existing = state.outboundInvites.find((invite) => invite.id === id )
       if (existing && !existing.error) {
         // if the invite already exists and hasn't error'd, return
         return state
       }
       const outboundInvite = { id, name }
-      const outboundInvites = state.outboundInvites.filter(inv => inv.id != id).concat([outboundInvite])
+      const outboundInvites = state.outboundInvites.filter((inv) => inv.id !== id).concat([outboundInvite])
       return { ...state, outboundInvites }
     }
     case getType(actions.addExternalInviteSuccess): {
       const { id, invite } = action.payload
       // update the outbound invite with the new Invite object
-      const outboundInvites = state.outboundInvites.map(outbound => {
+      const outboundInvites = state.outboundInvites.map((outbound) => {
         return outbound.id === id ? { ...outbound, invite } : outbound
       })
       return { ...state, outboundInvites }
@@ -98,7 +97,7 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.addExternalInviteError): {
       const { id, error } = action.payload
       // update the outbound invite with the new error
-      const outboundInvites = state.outboundInvites.map(outbound => {
+      const outboundInvites = state.outboundInvites.map((outbound) => {
         return outbound.id === id ? { ...outbound, error } : outbound
       })
       return { ...state, outboundInvites }
@@ -106,13 +105,13 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     case getType(actions.acceptExternalInviteRequest): {
       // Store the external invite link in memory
       const { inviteId, key, name, inviter } = action.payload
-      const existing = state.inboundInvites.find(function (obj) { return obj.inviteId === inviteId })
+      const existing = state.inboundInvites.find((obj) => obj.inviteId === inviteId)
       if (existing && !existing.error) {
         // if the invite already exists and hasn't error'd, return
         return state
       }
       const inboundInvite = {inviteId, key, name, inviter}
-      const inboundInvites = state.inboundInvites.filter(inv => inv.inviteId != inviteId).concat([inboundInvite])
+      const inboundInvites = state.inboundInvites.filter((inv) => inv.inviteId !== inviteId).concat([inboundInvite])
       return { ...state, inboundInvites }
     }
     case getType(actions.acceptExternalInviteSuccess): {

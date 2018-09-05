@@ -9,7 +9,6 @@
         "node_modules/**",
         "typings/**",
         "App/Sagas/**/*",
-        "App/Redux/**/*",
         "App/Navigation/**/*",
         "App/Models/**/*",
         "App/SB/**/*",

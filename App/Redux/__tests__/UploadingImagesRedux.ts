@@ -20,7 +20,7 @@ const addedImage: UploadingImage = {
 
 const progressImage: UploadingImage = {
   ...addedImage,
-  uploadProgress: uploadProgress/100,
+  uploadProgress: uploadProgress / 100,
   state: 'uploading'
 }
 
@@ -34,7 +34,7 @@ const completeImage: UploadingImage = {
 const errorImage: UploadingImage = {
   ...progressImage,
   state: 'error',
-  errorMessage: errorMessage,
+  errorMessage,
   remainingUploadAttempts: progressImage.remainingUploadAttempts - 1
 }
 

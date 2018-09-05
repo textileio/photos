@@ -3,14 +3,14 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
 
 const actions = {
-  startup: createAction('STARTUP', resolve => {
+  startup: createAction('STARTUP', (resolve) => {
     return () => resolve()
-  }),
+  })
 }
 
 export type StartupAction = ActionType<typeof actions>
 
-export type StartupState = {
+export interface StartupState {
   started: boolean
 }
 

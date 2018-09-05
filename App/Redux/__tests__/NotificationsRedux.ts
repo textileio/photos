@@ -6,7 +6,7 @@ import {
   NotificationId,
   PeerId,
   TextileId,
-  UserName,
+  UserName
 } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
