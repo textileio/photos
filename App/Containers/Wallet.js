@@ -115,11 +115,6 @@ class Wallet extends React.PureComponent {
             verboseUi={this.props.verboseUi}
           />
         </View>
-        {this.props.verboseUi &&
-        <View style={style.bottomOverlay} >
-          <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
-        </View>
-        }
       </View>
     )
   }
@@ -140,10 +135,8 @@ const mapStateToProps = (state: RootState) => {
   const refreshing = defaultData ? defaultData.querying : false
 
   const nodeStatus = state.textileNode.nodeState.error
-    ? 'Error - ' + state.textileNode.nodeState.error.message
+    ? 'Error - ' + state.textileNode.nodeState.error
     : state.textileNode.nodeState.state
-
-  const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
 
   const placeholderText = state.textileNode.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
@@ -166,8 +159,6 @@ const mapStateToProps = (state: RootState) => {
     refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
-    nodeStatus,
-    queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi,
     profile,
     showTourScreen: state.preferences.tourScreens.wallet,
