@@ -66,8 +66,6 @@
     "react-native-progress": "^3.4.0",
     "react-native-push-notification": "^3.1.1",
     "react-native-scalable-image": "^0.4.0",
-    "react-native-svg": "6.3.1",
-    "react-native-svg-uri": "^1.2.3",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.11.2",
     "react-navigation-header-buttons": "^2.1.0",
