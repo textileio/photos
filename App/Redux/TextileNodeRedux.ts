@@ -4,43 +4,43 @@ import { ThreadId, BlockId, Photo, PhotoId, PhotoMetadata, NodeOverview } from '
 import {RootState} from './Types'
 
 const actions = {
-  appStateChange: createAction('APP_STATE_CHANGE', resolve => {
+  appStateChange: createAction('APP_STATE_CHANGE', (resolve) => {
     return (previousState: TextileAppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
   }),
   creatingNode: createAction('CREATING_NODE'),
   createNodeSuccess: createAction('CREATE_NODE_SUCCESS'),
   startingNode: createAction('STARTING_NODE'),
-  startNodeSuccess: createAction('START_NODE_SUCCESS', resolve => {
+  startNodeSuccess: createAction('START_NODE_SUCCESS', (resolve) => {
     return () => resolve()
   }),
   stoppingNode: createAction('STOP_NODE_REQUEST'),
-  stopNodeSuccess: createAction('STOP_NODE_SUCCESS', resolve => {
+  stopNodeSuccess: createAction('STOP_NODE_SUCCESS', (resolve) => {
     return () => resolve()
   }),
-  nodeError: createAction('NODE_ERROR', resolve => {
+  nodeError: createAction('NODE_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
   }),
-  nodeOnline: createAction('NODE_ONLINE', resolve => {
+  nodeOnline: createAction('NODE_ONLINE', (resolve) => {
     return () => resolve()
   }),
-  ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', resolve => {
+  ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', (resolve) => {
     return (threadId: ThreadId, blockId: BlockId) => resolve({ threadId, blockId })
   }),
-  refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', resolve => {
+  refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', (resolve) => {
     return () => resolve()
   }),
-  refreshMessagesSuccess: createAction('REFRESH_MESSAGES_SUCCESS', resolve => {
+  refreshMessagesSuccess: createAction('REFRESH_MESSAGES_SUCCESS', (resolve) => {
     return (timestamp: number) => resolve({ timestamp })
   }),
-  refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', resolve => {
+  refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
-  updateOverviewRequest: createAction('UPDATE_OVERVIEW_REQUEST', resolve => {
+  updateOverviewRequest: createAction('UPDATE_OVERVIEW_REQUEST', (resolve) => {
     return () => resolve()
   }),
-  updateOverviewSuccess: createAction('UPDATE_OVERVIEW_SUCCESS', resolve => {
+  updateOverviewSuccess: createAction('UPDATE_OVERVIEW_SUCCESS', (resolve) => {
     return (overview: NodeOverview) => resolve({ overview })
-  }),
+  })
 }
 
 export type TextileNodeAction = ActionType<typeof actions>
@@ -57,7 +57,7 @@ export enum NodeState {
   'stopped' = 'stopped' // Node has been explicitly stopped, different than created
 }
 
-type TextileNodeState = {
+interface TextileNodeState {
   readonly appState: TextileAppStateStatus
   readonly online: boolean
   readonly nodeState: {
@@ -116,7 +116,7 @@ export const TextileNodeSelectors = {
   appState: (state: RootState) => state.textileNode.appState,
   nodeState: (state: RootState) => state.textileNode.nodeState.state,
   online: (state: RootState) => state.textileNode.online,
-  refreshingMessages: (state: RootState) => state.textileNode.refreshingMessages,
+  refreshingMessages: (state: RootState) => state.textileNode.refreshingMessages
 }
 
 export default actions

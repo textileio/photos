@@ -2,32 +2,32 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from '../Redux/Types'
 
 const actions = {
-  addImage: createAction('ADD_IMAGE', resolve => {
+  addImage: createAction('ADD_IMAGE', (resolve) => {
     return (path: string, dataId: string, attempts: number) => resolve({ path, dataId, attempts })
   }),
-  imageUploadProgress: createAction('IMAGE_UPLOAD_PROGRESS', resolve => {
+  imageUploadProgress: createAction('IMAGE_UPLOAD_PROGRESS', (resolve) => {
     return (dataId: string, progress: number) => resolve({ dataId, progress })
   }),
-  imageUploadComplete: createAction('IMAGE_UPLOAD_COMPLETE', resolve => {
+  imageUploadComplete: createAction('IMAGE_UPLOAD_COMPLETE', (resolve) => {
     return (dataId: string, responseCode: string, responseBody: string) => resolve({ dataId, responseCode, responseBody })
   }),
-  imageUploadError: createAction('IMAGE_UPLOAD_ERROR', resolve => {
+  imageUploadError: createAction('IMAGE_UPLOAD_ERROR', (resolve) => {
     return (dataId: string, errorMessage: string) => resolve({ dataId, errorMessage })
   }),
-  imageUploadRetried: createAction('IMAGE_UPLOAD_RETRIED', resolve => {
+  imageUploadRetried: createAction('IMAGE_UPLOAD_RETRIED', (resolve) => {
     return (dataId: string) => resolve({ dataId })
   }),
-  imageRemovalComplete: createAction('IMAGE_REMOVAL_COMPLETE', resolve => {
+  imageRemovalComplete: createAction('IMAGE_REMOVAL_COMPLETE', (resolve) => {
     return (dataId: string) => resolve({ dataId })
   }),
-  synchronizeNativeUploadsError: createAction('SYNCHRONIZE_NATIVE_UPLOADS_ERROR', resolve => {
+  synchronizeNativeUploadsError: createAction('SYNCHRONIZE_NATIVE_UPLOADS_ERROR', (resolve) => {
     return (error: Error) => resolve(error)
-  }),
+  })
 }
 
 export type UploadingImagesAction = ActionType<typeof actions>
 
-export type UploadingImage = {
+export interface UploadingImage {
   readonly path: string
   readonly dataId: string
   readonly state: 'pending' | 'uploading' | 'complete' | 'error'
@@ -38,11 +38,11 @@ export type UploadingImage = {
   readonly errorMessage?: string
 }
 
-type UploadingImagesMap = {
+interface UploadingImagesMap {
   readonly [key: string]: UploadingImage
 }
 
-export type UploadingImagesState = {
+export interface UploadingImagesState {
   readonly images: UploadingImagesMap
 }
 
@@ -54,12 +54,12 @@ export const UploadingImagesSelectors = {
   uploadingImageById: (state: RootState, id: string) => state.uploadingImages.images[id] as UploadingImage,
   imagesForRetry: (state: RootState) => {
     return Object.keys(state.uploadingImages.images)
-      .map(key => state.uploadingImages.images[key])
-      .filter(image => image.state === 'error' && image.remainingUploadAttempts > 0) as UploadingImage[]
+      .map((key) => state.uploadingImages.images[key])
+      .filter((image) => image.state === 'error' && image.remainingUploadAttempts > 0) as UploadingImage[]
   },
   uploadingImageIds: (state: RootState) => {
-    let keys: string[] = []
-    for (let key in state.uploadingImages.images) {
+    const keys: string[] = []
+    for (const key in state.uploadingImages.images) {
       if (state.uploadingImages.images.hasOwnProperty(key) && state.uploadingImages.images[key].state === 'uploading') {
         keys.push(key)
       }
@@ -89,7 +89,7 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
     case getType(actions.imageUploadProgress): {
       const { dataId, progress } = action.payload
       const image = state.images[dataId]
-      const updated: UploadingImage = { ...image, state: 'uploading', uploadProgress: progress/100 }
+      const updated: UploadingImage = { ...image, state: 'uploading', uploadProgress: progress / 100 }
       return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageUploadComplete): {
