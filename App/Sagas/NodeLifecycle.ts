@@ -72,7 +72,7 @@ function * createAndStartNode () {
   yield put(TextileNodeActions.startingNode())
   yield call(TextileNode.start)
   const threads: Threads = yield call(TextileNode.threads)
-  const defaultThread = threads.items.find(thread => thread.name === 'default')
+  const defaultThread = threads.items.find((thread) => thread.name === 'default')
   if (!defaultThread) {
     yield call(TextileNode.addThread, 'default' as ThreadName)
   }
