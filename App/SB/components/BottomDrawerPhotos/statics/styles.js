@@ -24,8 +24,7 @@ export default StyleSheet.create({
   title: {
     fontFamily: 'BentonSans',
     fontSize: 14,
-    // color: '#9b9b9b'
-    color: 'black'
+    color: '#9b9b9b'
   },
   closeButtonWrapper: {
     paddingVertical: 4,
