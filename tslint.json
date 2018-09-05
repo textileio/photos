@@ -8,7 +8,6 @@
       "exclude": [
         "node_modules/**",
         "typings/**",
-        "App/Sagas/**/*",
         "App/Navigation/**/*",
         "App/Models/**/*",
         "App/SB/**/*",
