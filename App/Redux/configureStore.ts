@@ -16,10 +16,10 @@ export default () => {
   const sagaMiddleware = createSagaMiddleware({ sagaMonitor })
 
   const createAppropriateStore = DebugConfig.useReactotron ? Reactotron.createStore : createStore
-  let store = createAppropriateStore(persistedReducer, applyMiddleware(sagaMiddleware))
-  
+  const store = createAppropriateStore(persistedReducer, applyMiddleware(sagaMiddleware))
+
   const bootstrappedCallback = () => store.dispatch(StartupActions.startup())
-  let persistor = persistStore(store, undefined, bootstrappedCallback)
+  const persistor = persistStore(store, undefined, bootstrappedCallback)
 
   sagaMiddleware.run(rootSaga)
 

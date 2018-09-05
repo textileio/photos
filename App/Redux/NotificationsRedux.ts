@@ -3,41 +3,41 @@ import { Notification, NotificationEngagement } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 const actions = {
-  readAllNotificationsRequest: createAction('CLEAR_ALL_NOTIFICATIONS_REQUEST', resolve => {
+  readAllNotificationsRequest: createAction('CLEAR_ALL_NOTIFICATIONS_REQUEST', (resolve) => {
     return () => resolve()
   }),
-  refreshNotificationsRequest: createAction('REFRESH_NOTIFICATIONS_REQUEST', resolve => {
+  refreshNotificationsRequest: createAction('REFRESH_NOTIFICATIONS_REQUEST', (resolve) => {
     return () => resolve()
   }),
-  refreshNotificationsStart: createAction('REFRESH_NOTIFICATIONS_IN_PROGRESS', resolve => {
+  refreshNotificationsStart: createAction('REFRESH_NOTIFICATIONS_IN_PROGRESS', (resolve) => {
     return () => resolve()
   }),
-  refreshNotificationsSuccess: createAction('REFRESH_NOTIFICATIONS_SUCCESS', resolve => {
+  refreshNotificationsSuccess: createAction('REFRESH_NOTIFICATIONS_SUCCESS', (resolve) => {
     return (notifications: Notification[]) => resolve({notifications})
   }),
-  refreshNotificationsFailure: createAction('REFRESH_NOTIFICATIONS_FAILURE', resolve => {
+  refreshNotificationsFailure: createAction('REFRESH_NOTIFICATIONS_FAILURE', (resolve) => {
     return () => resolve()
   }),
-  newNotificationRequest: createAction('NEW_NOTIFICATION_REQUEST', resolve => {
+  newNotificationRequest: createAction('NEW_NOTIFICATION_REQUEST', (resolve) => {
     return (notification: Notification) => resolve({notification})
   }),
-  notificationEngagement: createAction('NOTIFICATION_ENGAGEMENT', resolve => {
-    return (engagement: NotificationEngagement) => resolve({ engagement: engagement })
+  notificationEngagement: createAction('NOTIFICATION_ENGAGEMENT', (resolve) => {
+    return (engagement: NotificationEngagement) => resolve({ engagement })
   }),
-  notificationSuccess: createAction('NOTIFICATION_SUCCESS', resolve => {
+  notificationSuccess: createAction('NOTIFICATION_SUCCESS', (resolve) => {
     return (notification: Notification) => resolve({ notification })
   }),
-  notificationFailure: createAction('NOTIFICATION_FAILURE', resolve => {
+  notificationFailure: createAction('NOTIFICATION_FAILURE', (resolve) => {
     return (notification: Notification) => resolve({ notification })
   }),
-  reviewNotificationThreadInvite: createAction('REVIEW_NOTIFICATION_THREAD_INVITE', resolve => {
+  reviewNotificationThreadInvite: createAction('REVIEW_NOTIFICATION_THREAD_INVITE', (resolve) => {
     return (notification: Notification) => resolve({ notification })
   })
 }
 
 export type NotificationsAction = ActionType<typeof actions>
 
-export type NotificationsState = {
+export interface NotificationsState {
   readonly notifications: ReadonlyArray<Notification>,
   refreshing: boolean
 }

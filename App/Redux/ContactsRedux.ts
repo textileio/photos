@@ -3,17 +3,17 @@ import { RootState } from '../Redux/Types'
 import { Contact } from '../Models/TextileTypes'
 
 const actions = {
-  getContactsSuccess: createAction('GET_CONTACT_SUCCESS', resolve => {
+  getContactsSuccess: createAction('GET_CONTACT_SUCCESS', (resolve) => {
     return (contacts: Contact[]) => resolve({contacts})
   }),
-  getUsernameSuccess: createAction('GET_USERNAME_SUCCESS', resolve => {
+  getUsernameSuccess: createAction('GET_USERNAME_SUCCESS', (resolve) => {
     return (contact: Contact, username: string) => resolve({contact, username})
   })
 }
 
 export type ContactsAction = ActionType<typeof actions>
 
-export type ContactsState = {
+export interface ContactsState {
   readonly contacts: ReadonlyArray<Contact>
 }
 
@@ -37,9 +37,9 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
       // Bandaid until we put username responsibility into Go
       const keepers = state.contacts
         .filter((c) => c.username !== undefined)
-        .reduce(function(map, obj) {
+        .reduce((map, obj) => {
           map[obj.id] = obj
-          return map;
+          return map
         }, {} as {[index: string]: Contact})
 
       const contacts = action.payload.contacts.map((c) => {

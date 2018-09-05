@@ -9,74 +9,74 @@ import {
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
-  chooseProfilePhotoSuccess: createAction('CHOOSE_PROFILE_PHOTO_SUCCESS', resolve => {
+  chooseProfilePhotoSuccess: createAction('CHOOSE_PROFILE_PHOTO_SUCCESS', (resolve) => {
     return (uri: string, data: string) => resolve({ uri, data })
   }),
-  chooseProfilePhotoError: createAction('CHOOSE_PROFILE_PHOTO_ERROR', resolve => {
+  chooseProfilePhotoError: createAction('CHOOSE_PROFILE_PHOTO_ERROR', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
-  selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', resolve => {
+  selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', (resolve) => {
     return (uri: string) => resolve({ uri })
   }),
-  updateProfilePicture: createAction('UPDATE_PROFILE_PICTURE', resolve => {
+  updateProfilePicture: createAction('UPDATE_PROFILE_PICTURE', (resolve) => {
     return (uri: string) => resolve({ uri })
   }),
-  cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', resolve => {
+  cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', (resolve) => {
     return () => resolve()
   }),
-  updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', resolve => {
+  updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
     return (image: SharedImage | string) => resolve({ image })
   }),
-  updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', resolve => {
+  updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', (resolve) => {
     return (threadId: ThreadId) => resolve({ threadId })
   }),
-  updateSharingPhotoComment: createAction('UPDATE_SHARING_PHOTO_COMMENT', resolve => {
+  updateSharingPhotoComment: createAction('UPDATE_SHARING_PHOTO_COMMENT', (resolve) => {
     return (comment: string) => resolve({ comment })
   }),
-  sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
+  sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', (resolve) => {
     return (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => resolve({ image, threadId, comment })
   }),
-  sharePhotoToNewThreadRequest: createAction('SHARE_PHOTO_TO_NEW_THREAD_REQUEST', resolve => {
+  sharePhotoToNewThreadRequest: createAction('SHARE_PHOTO_TO_NEW_THREAD_REQUEST', (resolve) => {
     return (imageId: PhotoId, threadName: ThreadName, comment?: string) => resolve({ imageId, threadName, comment })
   }),
-  cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', resolve => {
+  cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', (resolve) => {
     return () => resolve()
   }),
-  imageSharingError: createAction('IMAGE_SHARING_ERROR', resolve => {
+  imageSharingError: createAction('IMAGE_SHARING_ERROR', (resolve) => {
     return (error: Error) => resolve(error)
   }),
-  getPublicLink: createAction('GET_PUBLIC_LINK', resolve => {
+  getPublicLink: createAction('GET_PUBLIC_LINK', (resolve) => {
     return (photoId: PhotoId) => resolve({ photoId })
   }),
-  showImagePicker: createAction('SHOW_IMAGE_PICKER', resolve => {
+  showImagePicker: createAction('SHOW_IMAGE_PICKER', (resolve) => {
     return (threadId: ThreadId) => resolve({ threadId })
   }),
-  newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', resolve => {
+  newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', (resolve) => {
     return (threadId: ThreadId) => resolve({ threadId })
   }),
-  newImagePickerError: createAction('NEW_IMAGE_PICKER_ERROR', resolve => {
+  newImagePickerError: createAction('NEW_IMAGE_PICKER_ERROR', (resolve) => {
     return (error: Error, message?: string) => resolve({ error, message })
   }),
-  dismissImagePickerError: createAction('DISMISS_IMAGE_PICKER_ERROR', resolve => {
+  dismissImagePickerError: createAction('DISMISS_IMAGE_PICKER_ERROR', (resolve) => {
     return () => resolve()
   }),
-  routeDeepLinkRequest: createAction('ROUTE_DEEP_LINK_REQUEST', resolve => {
+  routeDeepLinkRequest: createAction('ROUTE_DEEP_LINK_REQUEST', (resolve) => {
     return (url: string) => resolve({url})
   }),
-  addFriendRequest: createAction('ADD_FRIEND_REQUEST', resolve => {
+  addFriendRequest: createAction('ADD_FRIEND_REQUEST', (resolve) => {
     return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
   }),
-  addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
+  addLikeRequest: createAction('ADD_LIKE_REQUEST', (resolve) => {
     return (blockId: BlockId) => resolve({blockId})
   }),
-  navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', resolve => {
+  navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', (resolve) => {
     return (threadId: ThreadId, threadName: string) => resolve({ threadId, threadName })
   })
 }
 
 export type UIAction = ActionType<typeof actions>
 
-export type UIState = {
+export interface UIState {
   readonly chosenProfilePhoto: {
     readonly uri?: string,
     readonly data?: string
@@ -91,7 +91,7 @@ export type UIState = {
 }
 
 export const initialState: UIState = {
-  chosenProfilePhoto: {},
+  chosenProfilePhoto: {}
 }
 
 export function reducer (state: UIState = initialState, action: UIAction): UIState {

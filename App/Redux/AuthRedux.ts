@@ -3,61 +3,61 @@ import { CafeTokens, UserName } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 const actions = {
-  updateReferralCode: createAction('UPDATE_REFERRAL_CODE', resolve => {
+  updateReferralCode: createAction('UPDATE_REFERRAL_CODE', (resolve) => {
     return (referralCode: string) => resolve({ referralCode })
   }),
-  updateEmail: createAction('UPDATE_EMAIL', resolve => {
+  updateEmail: createAction('UPDATE_EMAIL', (resolve) => {
     return (email: string) => resolve({ email })
   }),
-  updateUsername: createAction('UPDATE_USERNAME', resolve => {
+  updateUsername: createAction('UPDATE_USERNAME', (resolve) => {
     return (username: UserName) => resolve({ username })
   }),
-  updatePassword: createAction('UPDATE_PASSWORD', resolve => {
+  updatePassword: createAction('UPDATE_PASSWORD', (resolve) => {
     return (password: string) => resolve({ password })
   }),
-  signUpRequest: createAction('SIGN_UP_REQUEST', resolve => {
+  signUpRequest: createAction('SIGN_UP_REQUEST', (resolve) => {
     return (referralCode: string, email: string, username: UserName, password: string) => resolve({ referralCode, email, username, password })
   }),
-  logInRequest: createAction('LOG_IN_REQUEST', resolve => {
+  logInRequest: createAction('LOG_IN_REQUEST', (resolve) => {
     return (username: UserName, password: string) => resolve({ username, password })
   }),
-  logOutRequest: createAction('LOG_OUT_REQUEST', resolve => {
+  logOutRequest: createAction('LOG_OUT_REQUEST', (resolve) => {
     return () => resolve()
   }),
-  recoverPasswordRequest: createAction('RECOVER_PASSWORD_REQUEST', resolve => {
+  recoverPasswordRequest: createAction('RECOVER_PASSWORD_REQUEST', (resolve) => {
     return (data: any) => resolve({ data })
   }),
-  signUpSuccess: createAction('SIGN_UP_SUCCESS', resolve => {
+  signUpSuccess: createAction('SIGN_UP_SUCCESS', (resolve) => {
     return () => resolve()
   }),
-  logInSuccess: createAction('LOG_IN_SUCCESS', resolve => {
+  logInSuccess: createAction('LOG_IN_SUCCESS', (resolve) => {
     return () => resolve()
   }),
-  getTokensSuccess: createAction('GET_TOKENS_SUCCESS', resolve => {
+  getTokensSuccess: createAction('GET_TOKENS_SUCCESS', (resolve) => {
     return (tokens: CafeTokens) => resolve({ tokens })
   }),
-  recoverPasswordSuccess: createAction('RECOVER_PASSWORD_SUCCESS', resolve => {
+  recoverPasswordSuccess: createAction('RECOVER_PASSWORD_SUCCESS', (resolve) => {
     return () => resolve()
   }),
-  signUpFailure: createAction('SIGN_UP_FAILURE', resolve => {
+  signUpFailure: createAction('SIGN_UP_FAILURE', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
-  logInFailure: createAction('LOG_IN_FAILURE', resolve => {
+  logInFailure: createAction('LOG_IN_FAILURE', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
-  logOutFailure: createAction('LOG_OUT_FAILURE', resolve => {
+  logOutFailure: createAction('LOG_OUT_FAILURE', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
-  recoverPasswordFailure: createAction('RECOVER_PASSWORD_FAILURE', resolve => {
+  recoverPasswordFailure: createAction('RECOVER_PASSWORD_FAILURE', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
-  dismissError: createAction('DISMISS_ERROR', resolve => {
+  dismissError: createAction('DISMISS_ERROR', (resolve) => {
     return () => resolve()
   }),
-  requestCameraPermissions: createAction('REQUEST_CAMERA_PERMISSIONS', resolve => {
+  requestCameraPermissions: createAction('REQUEST_CAMERA_PERMISSIONS', (resolve) => {
     return () => resolve()
   }),
-  onboardWithInviteRequest: createAction('ONBOARD_WITH_INVITE_REQUEST', resolve => {
+  onboardWithInviteRequest: createAction('ONBOARD_WITH_INVITE_REQUEST', (resolve) => {
     return (url: string, hash: string, referral: string ) => resolve( { url, hash, referral } )
   })
 }
@@ -67,7 +67,7 @@ export type AuthAction = ActionType<typeof actions>
 // An email verification regexp when we need it
 // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-export type AuthState = {
+export interface AuthState {
   readonly processing: boolean
   readonly error?: string
   readonly tokens?: CafeTokens
