@@ -5,7 +5,6 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions, {NodeState, TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 
-
 export function * onNodeCreated () {
   while (yield take(getType(TextileNodeActions.createNodeSuccess))) {
     try {

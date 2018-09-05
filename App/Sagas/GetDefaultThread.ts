@@ -7,7 +7,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 
 export default function * getDefaultThread () {
   const threads: Threads = yield call(TextileNode.threads)
-  let defaultThread: Thread | undefined = threads.items.find(thread => thread.name === 'default')
+  let defaultThread: Thread | undefined = threads.items.find((thread) => thread.name === 'default')
   if (!defaultThread) {
     yield put(PhotoViewingActions.addThreadRequest('default' as ThreadName))
     while (!defaultThread) {
