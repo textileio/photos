@@ -12,9 +12,7 @@
 import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select, take, fork } from 'redux-saga/effects'
-import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
-import BackgroundTask from 'react-native-background-task'
 import Config from 'react-native-config'
 import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
@@ -29,7 +27,6 @@ import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRe
 import AuthActions from '../Redux/AuthRedux'
 import ContactsActions from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
-import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TT from '../Models/TextileTypes'
@@ -37,7 +34,6 @@ import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
-import { Thread } from '../Models/TextileTypes'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
