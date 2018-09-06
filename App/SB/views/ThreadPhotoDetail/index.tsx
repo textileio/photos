@@ -55,10 +55,25 @@ class ThreadPhotoDetail extends Component<Props, State> {
     }
   }
 
+  scrollView?: ScrollView
+
   constructor (props: Props) {
     super(props)
     this.state = {
       drawer: false
+    }
+  }
+
+  scrollToEnd = () => {
+    if (this.scrollView) {
+      this.scrollView.scrollToEnd()
+    }
+  }
+
+  componentDidUpdate (previousProps: Props, previousState: State) {
+    if (this.props.commentCardProps.length > previousProps.commentCardProps.length) {
+      // New comment added, scroll down, need timeout to allow rendering
+      setTimeout(this.scrollToEnd, 100)
     }
   }
 
@@ -78,7 +93,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
   render () {
     return (
       <KeyboardResponsiveContainer style={styles.container} >
-        <ScrollView style={styles.contentContainer}>
+        <ScrollView ref={(ref) => this.scrollView = ref ? ref : undefined} style={styles.contentContainer}>
           {this.renderImage()}
           <View style={styles.commentsContainer}>
             {this.props.commentCardProps.map((commentCardProps, i) => (
