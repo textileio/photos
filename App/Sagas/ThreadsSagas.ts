@@ -50,7 +50,7 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
 
 export async function getDefaultThread (): Promise<Thread> {
   const threads = await TextileNode.threads()
-  return threads.items.find(thread => thread.name === 'default')!
+  return threads.items.find((thread) => thread.name === 'default')!
 }
 
 export function * pendingInvitesTask () {

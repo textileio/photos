@@ -12,9 +12,7 @@
 import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select, take, fork } from 'redux-saga/effects'
-import BackgroundTimer from 'react-native-background-timer'
 import RNFS from 'react-native-fs'
-import BackgroundTask from 'react-native-background-task'
 import Config from 'react-native-config'
 import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
@@ -25,12 +23,10 @@ import { getDefaultThread } from './ThreadsSagas'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import AuthActions  from '../Redux/AuthRedux'
-import ContactsActions  from '../Redux/ContactsRedux'
+import AuthActions from '../Redux/AuthRedux'
+import ContactsActions from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
-import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TT from '../Models/TextileTypes'
@@ -38,7 +34,6 @@ import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
-import { Thread } from '../Models/TextileTypes'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -101,14 +96,14 @@ export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions
   yield call(NavigationService.navigate, 'PrimaryNavigation')
 
   // PreferencesActions.onboardedSuccess will setup the node/default thread, so wait for those
-  let defaultThread: TT.Thread = yield call(getDefaultThread)
+  const defaultThread: TT.Thread = yield call(getDefaultThread)
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
 
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
   yield call(NavigationService.navigate, 'TabNavigator')
 
-  let defaultThread: TT.Thread = yield call(getDefaultThread)
+  const defaultThread: TT.Thread = yield call(getDefaultThread)
   yield * processAvatarImage(action.payload.uri, defaultThread)
 }
 
@@ -158,7 +153,7 @@ export function * navigateToThread ( action: ActionType<typeof UIActions.navigat
 
 export function * getUsername (contact: TT.Contact) {
   try {
-    if (contact.username !== undefined) return
+    if (contact.username !== undefined) { return }
     const uri = contact.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username' : undefined
     const response = yield call(fetch, uri)
     const username = yield call([response, response.text])
@@ -174,7 +169,7 @@ export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequ
     const contactResult = yield call(TextileNode.getContacts)
     const contacts = contactResult.items
     yield put(ContactsActions.getContactsSuccess(contacts))
-    for (let contact of contacts) {
+    for (const contact of contacts) {
       yield fork(getUsername, contact)
     }
   } finally {
@@ -191,7 +186,7 @@ export function * initializeAppState () {
       const currentAppState = yield call(() => AppState.currentState)
       queriedAppState = currentAppState || 'unknown'
     }
-  yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
+    yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
 
 export function * refreshMessages () {
@@ -256,10 +251,10 @@ export function * synchronizeNativeUploads() {
     const reactUploads: string[] = yield select(UploadingImagesSelectors.uploadingImageIds)
     // Check that each upload ID from the react layer exists in the array from the native layer
     // If not, register an image upload error so a retry can happen if necessary
-    for (let uploadId of reactUploads) {
+    for (const uploadId of reactUploads) {
       if (!nativeUploads.includes(uploadId)) {
         // Register the error with a normal image action upload error
-        yield put(UploadingImagesActions.imageUploadError(uploadId, "Upload not found in native upload queue."))
+        yield put(UploadingImagesActions.imageUploadError(uploadId, 'Upload not found in native upload queue.'))
       }
     }
   } catch (error) {
@@ -282,7 +277,7 @@ export function * photosTask () {
     // will run before the next startNodeSuccess is received and photoTask run again
     yield take(getType(TextileNodeActions.startNodeSuccess))
 
-    let defaultThread: TT.Thread = yield call(getDefaultThread)
+    const defaultThread: TT.Thread = yield call(getDefaultThread)
 
     const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
     if (!queriredPhotosInitialized) {
@@ -299,10 +294,10 @@ export function * photosTask () {
 
     const previouslyQueriedPhotos: QueriedPhotosMap = yield select(cameraRollSelectors.queriedPhotos)
 
-    const urisToProcess = uris.filter(uri => !previouslyQueriedPhotos[uri]).reverse()
+    const urisToProcess = uris.filter((uri) => !previouslyQueriedPhotos[uri]).reverse()
     yield put(CameraRollActions.trackPhotos(urisToProcess))
 
-    let addedPhotosData: { uri: string, addResult: TT.AddResult, blockId: string }[] = []
+    const addedPhotosData: Array<{ uri: string, addResult: TT.AddResult, blockId: string }> = []
 
     for (const uri of urisToProcess) {
       let photoPath = ''
@@ -409,7 +404,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
   } else if (pickerResponse.error) {
-    //pickerResponse.error is a string... i think all the time
+    // pickerResponse.error is a string... i think all the time
     const error = new Error('Image picker error')
     yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
   } else if (pickerResponse.customButton) {
@@ -439,7 +434,7 @@ export function * presentPublicLinkInterface(action: ActionType<typeof UIActions
   const { photoId } = action.payload
   try {
     const key = yield call(TextileNode.getPhotoKey, photoId)
-    const link = Config.TEXTILE_CAFE_URI + "/ipfs/" + photoId + "/photo?key=" + key
+    const link = Config.TEXTILE_CAFE_URI + '/ipfs/' + photoId + '/photo?key=' + key
     yield call(Share.share, {title: '', message: link})
   } catch (error) {}
 }
@@ -451,9 +446,9 @@ export function * updateServices (action: ActionType<typeof PreferencesActions.t
     const service = yield select(PreferencesSelectors.service, name)
     currentStatus = !service ? false : service.status
   }
-  if (name === 'backgroundLocation' && currentStatus===true) {
+  if (name === 'backgroundLocation' && currentStatus === true) {
     yield * backgroundLocationPermissionsTrigger()
-  } else if (name === 'notifications' && currentStatus===true){
+  } else if (name === 'notifications' && currentStatus === true) {
     yield call(NotificationsSagas.enable)
   }
 }

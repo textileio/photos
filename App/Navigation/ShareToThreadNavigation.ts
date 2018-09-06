@@ -9,18 +9,18 @@ const nav = createStackNavigator(
     ShareToThreadList: {
       screen: BottomDrawerPhotos,
       navigationOptions: {
-        header: null
+        header: undefined
       }
     }
   },
   {
-    headerMode: 'float',
+    headerMode: 'none',
     initialRouteName: 'ShareToThreadList',
     navigationOptions: {
       gesturesEnabled: false,
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerTintColor: headerTintColor
+      headerTintColor
     }
   }
 )

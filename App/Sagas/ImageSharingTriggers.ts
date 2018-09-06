@@ -48,7 +48,7 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
     yield call(addToWallet, uuid)
   } else if (processingImage.state === 'added' || processingImage.state === 'uploading') {
     yield call(uploadArchive, uuid)
-  } else if (processingImage.state === 'pending' || processingImage.state ==='adding') {
+  } else if (processingImage.state === 'pending' || processingImage.state === 'adding') {
     yield call(addToIpfs, uuid)
   }
 }
@@ -63,7 +63,6 @@ export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingIma
     yield put(ProcessingImagesActions.error(uuid, 'Failed refresh tokens'))
   }
 }
-
 
 export function * cancelImageShare (action: ActionType<typeof ProcessingImagesActions.cancelRequest>) {
   const { uuid } = action.payload

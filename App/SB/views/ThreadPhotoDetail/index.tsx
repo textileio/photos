@@ -6,7 +6,6 @@ import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
-import Toolbar from '../../components/Toolbar'
 import KeyboardResponsiveContainer from '../../../Components/KeyboardResponsiveContainer'
 import BottomDrawerList from '../../components/BottomDrawerList'
 import CommentCard, { Props as CommentCardProps } from '../../components/CommentCard'
@@ -21,7 +20,7 @@ import { BlockId, PhotoId } from '../../../Models/TextileTypes'
 
 const { width } = Dimensions.get('window')
 
-type StateProps = {
+interface StateProps {
   photoId: PhotoId
   blockId: BlockId
   size?: {
@@ -32,28 +31,22 @@ type StateProps = {
   commentValue: string | undefined
 }
 
-type DispatchProps = {
+interface DispatchProps {
   updateComment: (comment: string) => void
   submitComment: () => void
 }
 
-type State = {
+interface State {
   drawer: boolean
 }
 
 type Props = StateProps & DispatchProps
 
 class ThreadPhotoDetail extends Component<Props, State> {
-  constructor (props: Props) {
-    super(props)
-    this.state = {
-      drawer: false
-    }
-  }
-
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
-      <TextileHeaderButtons left>
+      <TextileHeaderButtons left={true}>
+        {/* tslint:disable-next-line jsx-no-lambda */}
         <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
       </TextileHeaderButtons>
     )
@@ -62,15 +55,24 @@ class ThreadPhotoDetail extends Component<Props, State> {
     }
   }
 
+  constructor (props: Props) {
+    super(props)
+    this.state = {
+      drawer: false
+    }
+  }
+
   renderImage () {
     const height = this.props.size ? (this.props.size.height / this.props.size.width) * width : width
-    return (<ProgressiveImage
-      imageId={this.props.photoId}
-      previewPath={'small'}
-      path={'photo'}
-      style={[styles.mainPhoto, { height }]}
-      resizeMode={'cover'}
-    />)
+    return (
+      <ProgressiveImage
+        imageId={this.props.photoId}
+        previewPath={'small'}
+        path={'photo'}
+        style={[styles.mainPhoto, { height }]}
+        resizeMode={'cover'}
+      />
+    )
   }
 
   render () {
@@ -94,7 +96,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
 const mapStateToProps = (state: RootState): StateProps  => {
   const { viewingPhoto } = state.photoViewing
   if (!viewingPhoto) {
-    throw 'no viewing thread or photo'
+    throw new Error('no viewing thread or photo')
   }
 
   let size: { height: number, width: number} | undefined
@@ -114,7 +116,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
   }
   // TODO: comments should always be defined: https://github.com/textileio/textile-go/issues/270
   const comments = viewingPhoto.comments || []
-  const commentCardProps = comments.slice().reverse().map(comment => {
+  const commentCardProps = comments.slice().reverse().map((comment) => {
     const props: CommentCardProps = {
       username: comment.username || 'unknown',
       peerId: comment.author_id,

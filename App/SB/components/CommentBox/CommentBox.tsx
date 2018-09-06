@@ -5,7 +5,7 @@ import Icons from '../../../Components/Icons'
 
 import styles from './statics/styles'
 
-type Props = {
+interface Props {
   value: string | undefined
   onUpdate: (text: string) => void
   onSubmit: () => void

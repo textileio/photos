@@ -19,7 +19,6 @@ import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import AuthActions, {AuthSelectors} from '../Redux/AuthRedux'
 import StartupActions, {startupSelectors} from '../Redux/StartupRedux'
 
-
 export function * inviteAfterOnboard () {
   const invite = yield select(AuthSelectors.invite)
   if (invite) {
@@ -49,7 +48,7 @@ export function * routeThreadInvite(url: string, hash: string ) {
 
 export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLinkRequest>) {
   const { url } = action.payload
-  if (!url) return
+  if (!url) { return }
   try {
     const data = DeepLink.getData(url)
     if (data) {
@@ -61,6 +60,5 @@ export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLi
       }
     }
   } catch (error) {
-    console.log('deeplink error', error)
   }
 }

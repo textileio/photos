@@ -1,2 +1,2 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file('textilego.aar'))
+artifacts.add("default", file('../../node_modules/@textile/go-mobile/android/textilego.aar'))

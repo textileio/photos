@@ -7,6 +7,7 @@ import Modal from 'react-native-modal'
 
 import UIActions from '../../../Redux/UIRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
+import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { getThreads, defaultThreadData } from '../../../Redux/PhotoViewingSelectors'
 import { RootState } from '../../../Redux/Types'
 
@@ -116,17 +117,18 @@ class PhotoDetail extends Component {
     this.setState({ drawer: false })
     const thread = this.props.threadsNotIn[i]
     this.props.shareToThread(thread.id)
-    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PhotoViewer' })
+    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PrivatePhotoDetail' })
   }
 
   // For when the user wants to share it into a selected thread
   shareIntoNewThread () {
     this.setState({ drawer: false })
-    this.props.navigation.navigate('CreateThreadScreen', { backTo: 'PhotoViewer', withPhoto: this.props.photo })
+    this.props.navigation.navigate('CreateThreadScreen', { backTo: 'PrivatePhotoDetail', withPhoto: this.props.photo })
   }
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
   viewThread (thread) {
+    this.props.viewThread(thread.id)
     this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
   }
 
@@ -192,6 +194,7 @@ class PhotoDetail extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
     shareImage: (imageId) => { dispatch(UIActions.updateSharingPhotoImage(imageId)) },
     shareToThread: (threadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) },
     getPublicLink: (imageId) => { dispatch(UIActions.getPublicLink(imageId)) },
