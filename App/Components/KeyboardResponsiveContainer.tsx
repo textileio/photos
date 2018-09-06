@@ -1,5 +1,5 @@
 import React from 'react'
-import { Keyboard, EmitterSubscription, View, ViewStyle, LayoutAnimation, LayoutAnimationStatic, Dimensions } from 'react-native'
+import { Keyboard, EmitterSubscription, View, ViewStyle, LayoutAnimation } from 'react-native'
 
 interface Props {
   style?: ViewStyle
@@ -12,7 +12,7 @@ interface State {
 export default class KeyboardResponsiveContainer extends React.Component<Props, State> {
 
   initialized = false
-  bottomGap = 0
+  bottomViewY = 0
   bottomView?: View
   keyboardWillShowSub?: EmitterSubscription
   keyboardWillHideSub?: EmitterSubscription
@@ -25,30 +25,27 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     }
   }
 
-  keyboardWillChangeFrame = (e) => {
-    console.log('CHANGE', e)
-    LayoutAnimation.configureNext(LayoutAnimation.create(
-      e.duration,
-      LayoutAnimation.Types[e.easing]
-    ))
-    this.setState({
-        height: e.endCoordinates.height - this.bottomGap
-    })
-  }
-
-  keyboardWillAppear = (event) => {
-    console.log('APPEAR', event)
+  keyboardWillChangeFrame = (event: any) => {
     LayoutAnimation.configureNext(LayoutAnimation.create(
       event.duration,
       LayoutAnimation.Types[event.easing]
     ))
     this.setState({
-        height: event.endCoordinates.height - this.bottomGap
+        height: this.bottomViewY - event.endCoordinates.screenY
     })
   }
 
-  keyboardWillHide = (event) => {
-    console.log('HIDE', event)
+  keyboardWillAppear = (event: any) => {
+    LayoutAnimation.configureNext(LayoutAnimation.create(
+      event.duration,
+      LayoutAnimation.Types[event.easing]
+    ))
+    this.setState({
+        height: this.bottomViewY - event.endCoordinates.screenY
+    })
+  }
+
+  keyboardWillHide = (event: any) => {
     LayoutAnimation.configureNext(LayoutAnimation.create(
       event.duration,
       LayoutAnimation.Types[event.easing]
@@ -62,7 +59,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     if (!this.initialized && this.bottomView) {
       this.initialized = true
       this.bottomView.measure((x, y, width, height, pageX, pageY) => {
-        this.bottomGap = Dimensions.get('screen').height - pageY
+        this.bottomViewY = pageY
       })
     }
   }
@@ -95,7 +92,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
         <View
           onLayout={this.onLayout}
           ref={(view) => { this.bottomView = view ? view : undefined }}
-          style={{ position: 'relative', bottom: 0, width: '100%', height: this.state.height, backgroundColor: 'blue' }}
+          style={{ position: 'relative', bottom: 0, width: '100%', height: this.state.height, backgroundColor: style ? style.backgroundColor : 'transparent' }}
         />
       </View>
     )

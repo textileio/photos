@@ -77,7 +77,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
 
   render () {
     return (
-      <KeyboardResponsiveContainer>
+      <KeyboardResponsiveContainer style={styles.container} >
         <ScrollView style={styles.contentContainer}>
           {this.renderImage()}
           <View style={styles.commentsContainer}>
