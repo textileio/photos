@@ -6,9 +6,10 @@ import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
+import KeyboardResponsiveContainer from '../../../Components/KeyboardResponsiveContainer'
 import BottomDrawerList from '../../components/BottomDrawerList'
 import CommentCard, { Props as CommentCardProps } from '../../components/CommentCard'
-import CommentBox from '../../components/CommentBox/CommentBoxContainer'
+import CommentBox from '../../components/CommentBox/CommentBox'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
@@ -54,10 +55,25 @@ class ThreadPhotoDetail extends Component<Props, State> {
     }
   }
 
+  scrollView?: ScrollView
+
   constructor (props: Props) {
     super(props)
     this.state = {
       drawer: false
+    }
+  }
+
+  scrollToEnd = () => {
+    if (this.scrollView) {
+      this.scrollView.scrollToEnd()
+    }
+  }
+
+  componentDidUpdate (previousProps: Props, previousState: State) {
+    if (this.props.commentCardProps.length > previousProps.commentCardProps.length) {
+      // New comment added, scroll down, need timeout to allow rendering
+      setTimeout(this.scrollToEnd, 100)
     }
   }
 
@@ -76,10 +92,9 @@ class ThreadPhotoDetail extends Component<Props, State> {
 
   render () {
     return (
-      <View style={styles.container}>
-        <ScrollView style={styles.contentContainer}>
+      <KeyboardResponsiveContainer style={styles.container} >
+        <ScrollView ref={(ref) => this.scrollView = ref ? ref : undefined} style={styles.contentContainer}>
           {this.renderImage()}
-          {/*<ImageSc style={styles.mainPhoto} width={width} source={require('./statics/photo2.png')}/>*/}
           <View style={styles.commentsContainer}>
             {this.props.commentCardProps.map((commentCardProps, i) => (
               <CommentCard key={i} {...commentCardProps} />
@@ -88,7 +103,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
         </ScrollView>
         <CommentBox onUpdate={this.props.updateComment} onSubmit={this.props.submitComment} value={this.props.commentValue} />
         {this.state.drawer && <BottomDrawerList/>}
-      </View>
+      </KeyboardResponsiveContainer>
     )
   }
 }

@@ -12,6 +12,7 @@ export default StyleSheet.create({
     borderColor: '#EDEDEE',
     paddingHorizontal: 20,
     position: 'absolute',
+    bottom: 0,
     width: '100%'
   },
   textInput: {
