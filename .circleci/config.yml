@@ -7,11 +7,16 @@ jobs:
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
-                    - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v1-{{ arch }}-{{ .Branch }}-
-                    - source-v1-{{ arch }}-
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
 
             - checkout
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -54,11 +59,16 @@ jobs:
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
-                    - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v1-{{ arch }}-{{ .Branch }}-
-                    - source-v1-{{ arch }}-
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
 
             - checkout
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -93,12 +103,17 @@ jobs:
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
-                    - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v1-{{ arch }}-{{ .Branch }}-
-                    - source-v1-{{ arch }}-
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
 
             - checkout:
                 path: ~/textile-mobile
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -145,12 +160,17 @@ jobs:
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
-                    - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v1-{{ arch }}-{{ .Branch }}-
-                    - source-v1-{{ arch }}-
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
 
             - checkout:
                 path: ~/textile-mobile
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -187,11 +207,6 @@ jobs:
                 command: bundle exec fastlane beta
                 working_directory: android
 
-            # create a linux cache entry which will avoid checking out all 5GB of subsequent builds
-            - save_cache:
-                key: source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
     ios:
         macos:
             xcode: "9.4.0"
@@ -206,11 +221,16 @@ jobs:
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
-                    - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v1-{{ arch }}-{{ .Branch }}-
-                    - source-v1-{{ arch }}-
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
 
             - checkout
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
 
             - run:
                 name: set Ruby version
@@ -285,11 +305,16 @@ jobs:
 
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
-                    - source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v1-{{ arch }}-{{ .Branch }}-
-                    - source-v1-{{ arch }}-
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
 
             - checkout
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
 
             - run: git config --global user.name $CIRCLE_USERNAME
             - run: git config --global user.email "ops@textile.io" # TODO: Use a variable here
@@ -339,12 +364,6 @@ jobs:
 
             - store_artifacts:
                 path: ./ios/TextilePhotos.ipa
-
-            # create a macos cache entry which will avoid checking out all 5GB of subsequent builds
-            - save_cache:
-                key: source-v1-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
 
 workflows:
     version: 2
