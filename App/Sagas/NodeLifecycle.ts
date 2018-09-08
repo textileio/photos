@@ -7,6 +7,7 @@ import BackgroundTimer from 'react-native-background-timer'
 import PushNotification from 'react-native-push-notification'
 
 import TextileNodeActions, { NodeState, TextileNodeSelectors } from '../Redux/TextileNodeRedux'
+import ProcessingImagesActions, {ProcessingImagesSelectors} from "../Redux/ProcessingImagesRedux";
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
@@ -71,6 +72,23 @@ function * createAndStartNode () {
   yield put(TextileNodeActions.createNodeSuccess())
   yield put(TextileNodeActions.startingNode())
   yield call(TextileNode.start)
+
+  try {
+    let autoPinEnabled = yield select(PreferencesSelectors.autoPinStatus)
+    console.log('autoPinEnabled', autoPinEnabled)
+    if (autoPinEnabled) {
+      const currentRefresh = (new Date()).getTime()
+      // get time last checked
+      const lastRefresh = yield select(ProcessingImagesSelectors.lastPhotoRefresh)
+      // update last time checked to now
+      yield put(ProcessingImagesActions.localPhotoRefreshRequest(currentRefresh))
+      // scan for images
+      yield call(TextileNode.requestLocalPhotos, lastRefresh)
+    }
+  } catch (error) {
+    console.log("msg")
+    console.log(error)
+  }
   const threads: Threads = yield call(TextileNode.threads)
   const defaultThread = threads.items.find((thread) => thread.name === 'default')
   if (!defaultThread) {

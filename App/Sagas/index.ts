@@ -24,6 +24,7 @@ import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
 
 import {
+  newLocalPhoto,
   handleSharePhotoRequest,
   handleImageUploadComplete,
   retryImageShare,
@@ -153,6 +154,7 @@ export default function * root () {
     takeEvery(getType(ProcessingImagesActions.retry), retryImageShare),
     takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
     takeEvery(getType(ProcessingImagesActions.expiredTokenError), retryWithTokenRefresh),
+    takeEvery(getType(ProcessingImagesActions.newLocalPhoto), newLocalPhoto),
 
     takeEvery(getType(UIActions.sharePhotoToNewThreadRequest), handlePhotoToNewThreadRequest),
 
