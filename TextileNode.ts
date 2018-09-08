@@ -9,6 +9,20 @@ import * as TT from './App/Models/TextileTypes'
 const { TextileNode, Events } = NativeModules
 
 export default {
+  // async getLocalPhotos (afterDate?: number): Promise<TT.GetLocalPhotosResult | undefined> {
+  //
+  //   console.log(afterDate)
+  //   const jsonString = await TextileNode.getLocalPhotos(afterDate)
+  //   if (jsonString === '') {
+  //     return undefined
+  //   }
+  //   return JSON.parse(jsonString) as TT.GetLocalPhotosResult
+  // },
+  async requestLocalPhotos (afterDate: number): Promise<void> {
+    const epochAsSeconds = afterDate / 1000
+    await TextileNode.requestLocalPhotos(epochAsSeconds)
+  },
+
   async create (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): Promise<void> {
     // console.log(dataDir)
     return await TextileNode.create(dataDir, apiUrl, logLevel, logFiles)

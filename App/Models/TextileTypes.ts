@@ -2,6 +2,8 @@
 
 // private enums to enforce strict id types
 // read here: https://basarat.gitbooks.io/typescript/docs/tips/nominalTyping.html#using-enums
+import {Service, ServiceType} from "../Redux/PreferencesRedux";
+
 enum TextileIdBase {}
 enum BlockIdBase {}
 enum ThreadIdBase {}
@@ -214,6 +216,12 @@ export interface NotificationEngagement {
   userInteraction: boolean,
   data?: any,
   finish?: () => void
+}
+
+export interface LocalPhotoResult {
+  assetId: string,
+  localDate: string,
+  path: string
 }
 
 export enum BlockType {

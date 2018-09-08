@@ -1,8 +1,14 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { ThreadId, SharedImage, AddResult, BlockId } from '../Models/TextileTypes'
+import {ThreadId, SharedImage, AddResult, BlockId, LocalPhotoResult} from '../Models/TextileTypes'
 import { RootState } from './Types'
 
 const actions = {
+  newLocalPhoto: createAction('processingImages/NEW_LOCAL_PHoto', (resolve) => {
+    return (photo: LocalPhotoResult) => resolve({ photo })
+  }),
+  localPhotoRefreshRequest: createAction('processingImages/LOCAL_PHOTO_REFRESH_REQUEST', (resolve) => {
+    return (epoch: number) => resolve({ epoch })
+  }),
   insertImage: createAction('processingImages/INSERT_IMAGE', (resolve) => {
     return (uuid: string, sharedImage: SharedImage, destinationThreadId: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
     return (uuid: string, sharedImage: SharedImage, destinationThreadId: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
@@ -80,14 +86,17 @@ export interface ProcessingImage {
 }
 
 export interface ProcessingImagesState {
-  readonly images: ProcessingImage[]
+  readonly images: ProcessingImage[],
+  readonly lastPhotoRefresh: number // epoch in seconds
 }
 
 export const initialState: ProcessingImagesState = {
-  images: []
+  images: [],
+  lastPhotoRefresh: (new Date()).getDate()
 }
 
 export const ProcessingImagesSelectors = {
+  lastPhotoRefresh: (state: RootState) => state.processingImages.lastPhotoRefresh,
   processingImageByUuid: (state: RootState, uuid: string) => {
     const image = state.processingImages.images.find((image) => {
       return image.uuid === uuid
@@ -98,6 +107,9 @@ export const ProcessingImagesSelectors = {
 
 export function reducer(state: ProcessingImagesState = initialState, action: ProcessingImagesAction): ProcessingImagesState {
   switch (action.type) {
+    case getType(actions.localPhotoRefreshRequest): {
+      return { ...state, lastPhotoRefresh: action.payload.epoch}
+    }
     case getType(actions.insertImage): {
       const processingImage: ProcessingImage = { ...action.payload, state: 'pending' }
       return { ...state, images: [...state.images, processingImage]}
