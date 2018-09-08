@@ -8,6 +8,7 @@ import configureStore from '../Redux/configureStore'
 import AppStateEventHander from '../Services/EventHandlers/AppStateEventHandler'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
+import CameraRollEventHandler from '../Services/EventHandlers/CameraRollEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
 import BackgroundTaskEventHandler from '../Services/EventHandlers/BackgroundTaskEventHandler'
 import NotificationEventHandler from '../Services/EventHandlers/NotificationEventHandler'
@@ -22,6 +23,7 @@ class App extends Component {
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
+  cameraRollEventHandler = new CameraRollEventHandler(store)
   deepLinkEventHandler = new DeepLinkEventHandler(store)
 
   render () {
@@ -46,6 +48,7 @@ class App extends Component {
     this.notificationEventHandler.tearDown()
     this.textileNodeEventHandler.tearDown()
     this.uploadEventHandler.tearDown()
+    this.cameraRollEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
     backgroundTaskEventHandler.tearDown()
   }
