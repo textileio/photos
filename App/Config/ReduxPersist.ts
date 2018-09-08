@@ -147,13 +147,39 @@ const migrations: MigrationManifest = {
         }
       }
     }
+  },
+  10: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        storage: {
+          autoPinPhotos: {
+            status: false
+          },
+          storeHighRes: {
+            status: false
+          },
+          deleteDeviceCopy: {
+            status: false
+          },
+          enablePhotoBackup: {
+            status: false
+          },
+          enableWalletBackup: {
+            status: false
+          }
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 8,
+  version: 10,
   whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll'],
   migrate: createMigrate(migrations, { debug: false })
 }

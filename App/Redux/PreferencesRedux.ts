@@ -29,6 +29,9 @@ const actions = {
   }),
   toggleServicesRequest: createAction('TOGGLE_SERVICES_REQUEST', (resolve) => {
     return (name: ServiceType, status?: boolean) => resolve({ name, status })
+  }),
+  toggleStorageRequest: createAction('TOGGLE_STORAGE_REQUEST', (resolve) => {
+    return (name: StorageType, status?: boolean) => resolve({ name, status })
   })
 }
 
@@ -44,6 +47,11 @@ export type ServiceType = 'backgroundLocation' |
   'likeAddedNotification' |
   'peerJoinedNotification' |
   'peerLeftNotification'
+export type StorageType = 'autoPinPhotos' |
+  'storeHighRes' |
+  'deleteDeviceCopy' |
+  'enablePhotoBackup' |
+  'enableWalletBackup'
 export interface Service {
   status: boolean,
 }
@@ -55,6 +63,7 @@ export interface PreferencesState {
   profile?: Profile
   pending?: PhotoId
   readonly services: {[k in ServiceType]: Service}
+  readonly storage: {[k in StorageType]: Service}
   readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need
 }
 
@@ -95,6 +104,23 @@ export const initialState: PreferencesState = {
     backgroundLocation: {
       status: false
     }
+  },
+  storage: {
+    autoPinPhotos: {
+      status: false
+    },
+    storeHighRes: {
+      status: false
+    },
+    deleteDeviceCopy: {
+      status: false
+    },
+    enablePhotoBackup: {
+      status: false
+    },
+    enableWalletBackup: {
+      status: false
+    }
   }
 }
 
@@ -124,6 +150,12 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       if (!service) { return state }
       service.status = action.payload.status === undefined ? !service.status : action.payload.status
       return {...state, services: {...state.services, [action.payload.name]: service}}
+    }
+    case getType(actions.toggleStorageRequest): {
+      const storageType = state.storage[action.payload.name]
+      if (!storageType) { return state }
+      storageType.status = action.payload.status === undefined ? !storageType.status : action.payload.status
+      return {...state, storage: {...state.storage, [action.payload.name]: storageType}}
     }
     default:
       return state

@@ -31,7 +31,7 @@ class ThreadsList extends React.PureComponent {
             <Avatar
               width={24}
               height={24}
-              defaultSource={require('../SB/views/Settings/statics/main-image.png')}
+              defaultSource={require('../SB/views/Notifications/statics/main-image.png')}
               owner
             />
           }

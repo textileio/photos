@@ -94,7 +94,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const username = photo.username ? photo.username : photo.author_id.substring(0, 8)
 
-  const defaultSource = require('../../views/Settings/statics/main-image.png')
+  const defaultSource = require('../../views/Notifications/statics/main-image.png')
 
   const totalLikes = photo.likes ? photo.likes.length : 0
   const isLiked = photo.likes && photo.likes.length > 0

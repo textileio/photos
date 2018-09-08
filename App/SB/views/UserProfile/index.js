@@ -40,7 +40,7 @@ class UserProfile extends React.PureComponent {
               <Avatar
                 width={32}
                 height={32}
-                defaultSource={require('../Settings/statics/main-image.png')}
+                defaultSource={require('../Notifications/statics/main-image.png')}
                 owner
               />
             }
@@ -50,10 +50,11 @@ class UserProfile extends React.PureComponent {
     }
   }
 
-  _settings () {
-    this.props.navigation.navigate('Settings', {
-      username: this.props.navigation.state.params.username
-    })
+  _notifications () {
+    this.props.navigation.navigate('Notifications')
+  }
+  _storage () {
+    this.props.navigation.navigate('Storage')
   }
   _changeAvatar () {
     const payload = {
@@ -105,8 +106,11 @@ class UserProfile extends React.PureComponent {
             <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
           </View>
           {this.connectivity()}
-          <TouchableOpacity style={styles.listItemFirst} onPress={this._settings.bind(this)}>
-            <Text style={styles.listText}>Settings</Text>
+          <TouchableOpacity style={styles.listItemFirst} onPress={this._storage.bind(this)}>
+            <Text style={styles.listText}>Storage</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.listItem} onPress={this._notifications.bind(this)}>
+            <Text style={styles.listText}>Notifications</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
