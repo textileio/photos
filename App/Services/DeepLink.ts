@@ -4,7 +4,7 @@ import { ExternalInvite, DeepLinkData } from '../Models/TextileTypes'
 
 function getParams (hash: string): { [key: string]: (string | string[]) } {
   const query = hash.replace('#', '')
-  const vars = query.split('&')
+  const vars = query.split('&').map((expression) => expression.split('='))
   const queryString: { [key: string]: (string | string[]) } = {}
   for (const pair of vars) {
     // If first entry with this name
