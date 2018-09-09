@@ -10,8 +10,7 @@ const { TextileNode, Events } = NativeModules
 
 export default {
   async requestLocalPhotos (minEpoch: number): Promise<void> {
-    const epochAsSeconds = minEpoch / 1000
-    await TextileNode.requestLocalPhotos(Math.round(epochAsSeconds))
+    await TextileNode.requestLocalPhotos(Math.round(minEpoch / 1000))
   },
 
   async create (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): Promise<void> {

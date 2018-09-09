@@ -5,22 +5,9 @@ import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
 import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
-import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId, ILocalPhotoResult} from '../Models/TextileTypes'
+import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId} from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
-
-export function * savePhotoToWallet (photo: ILocalPhotoResult) {
-  try {
-    const addResult = yield call(TextileNode.addPhoto, photo.path)
-    const defaultThread: Thread = yield* getDefaultThread()
-    const blockId: BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-
-    // Issue: if the user doesn't want to store private files on remote IPFS, we need to record that these are
-    // only available locally in case the user then shares
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: string) {
   try {
@@ -104,8 +91,6 @@ export function * shareToThread (uuid: string) {
 }
 
 async function addImage (image: SharedImage, threadId: ThreadId, comment?: string): Promise<AddResult> {
-  console.log('image')
-  console.log(image)
   const addResult = await TextileNode.addPhoto(image.path)
   try {
     const exists = await RNFS.exists(image.path)

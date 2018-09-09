@@ -2,7 +2,6 @@
 
 // private enums to enforce strict id types
 // read here: https://basarat.gitbooks.io/typescript/docs/tips/nominalTyping.html#using-enums
-import {Service, ServiceType} from "../Redux/PreferencesRedux";
 
 enum TextileIdBase {}
 enum BlockIdBase {}

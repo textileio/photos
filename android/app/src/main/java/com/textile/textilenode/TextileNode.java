@@ -78,7 +78,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
                             MediaStore.Images.Media.DATE_ADDED,
                             MediaStore.Images.Media.ORIENTATION
                     };
-                    // Setup the query
+                    // Setup the query. In our Bucket and with min date
                     final String selection = MediaStore.Images.Media.BUCKET_ID
                             + " = ? AND "
                             + MediaStore.Images.Media.DATE_MODIFIED
@@ -117,7 +117,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
                                 payload.putString((String) "modificationDate", modified);
                                 payload.putInt((String) "orientation", Integer.parseInt(orientation));
 
-                                // Q: is emitDeviceEvent safe here?
+                                // This works, but is emitDeviceEvent safe here?
                                 emitDeviceEvent("newLocalPhoto", payload);
                             } catch (Exception e) {
                                 //

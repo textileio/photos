@@ -4,6 +4,7 @@ import { getType } from 'typesafe-actions'
 /* ------------- Types ------------- */
 
 import StartupActions from '../Redux/StartupRedux'
+import StorageActions from '../Redux/StorageRedux'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
@@ -24,7 +25,6 @@ import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
 
 import {
-  newLocalPhoto,
   handleSharePhotoRequest,
   handleImageUploadComplete,
   retryImageShare,
@@ -55,6 +55,8 @@ import {
 } from './PhotoViewingSagas'
 
 import {
+  newLocalPhoto,
+  refreshLocalImages,
   toggleStorage
 } from './StorageSagas'
 
@@ -133,6 +135,8 @@ export default function * root () {
     takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
 
     call(refreshMessages),
+    // check for new images on camera roll
+    call(refreshLocalImages),
 
     // If the user clicked any invites before creating an account, this will now flush them...
     takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
@@ -159,7 +163,7 @@ export default function * root () {
     takeEvery(getType(ProcessingImagesActions.retry), retryImageShare),
     takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
     takeEvery(getType(ProcessingImagesActions.expiredTokenError), retryWithTokenRefresh),
-    takeEvery(getType(ProcessingImagesActions.newLocalPhoto), newLocalPhoto),
+    takeEvery(getType(StorageActions.newLocalPhoto), newLocalPhoto),
 
     takeEvery(getType(UIActions.sharePhotoToNewThreadRequest), handlePhotoToNewThreadRequest),
 

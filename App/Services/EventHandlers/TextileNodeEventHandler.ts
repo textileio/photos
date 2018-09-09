@@ -7,7 +7,7 @@ import { RootState } from '../../Redux/Types'
 import TextileNodeActions from '../../Redux/TextileNodeRedux'
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
-import ProcessingImagesActions from "../../Redux/ProcessingImagesRedux";
+import StorageActions from '../../Redux/StorageRedux'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
@@ -19,9 +19,7 @@ export default class TextileNodeEventHandler {
 
   setup () {
     TextileNode.eventEmitter.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
-      console.log('photo')
-      console.log(localPhoto)
-      // this.store.dispatch(ProcessingImagesActions.newLocalPhoto(localPhoto))
+      this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
     })
     TextileNode.eventEmitter.addListener('onOnline', () => {
       this.store.dispatch(TextileNodeActions.nodeOnline())
