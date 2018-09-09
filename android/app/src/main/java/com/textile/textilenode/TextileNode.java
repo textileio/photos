@@ -2,9 +2,13 @@
 
 package com.textile.textilenode;
 
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -14,6 +18,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +56,47 @@ public class TextileNode extends ReactContextBaseJavaModule {
         constants.put("EXAMPLE_CONSTANT", TextileNode.REACT_CLASS);
         return constants;
     }
+
+    @ReactMethod
+    public void requestLocalPhotos (Integer minEpochSeconds, Promise promise) {
+        try {
+            final String CAMERA_IMAGE_BUCKET_NAME = Environment.getExternalStorageDirectory().toString()
+                            + "/DCIM/Camera";
+            final String CAMERA_IMAGE_BUCKET_ID = String.valueOf(CAMERA_IMAGE_BUCKET_NAME.toLowerCase().hashCode());
+            final String[] projection = { MediaStore.Images.Media.DATA };
+            final String selection = MediaStore.Images.Media.BUCKET_ID + " = ?";
+            final String[] selectionArgs = { CAMERA_IMAGE_BUCKET_ID };
+            final Cursor cursor = reactContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null);
+            ArrayList<String> result = new ArrayList<String>(cursor.getCount());
+            if (cursor.moveToFirst()) {
+                final int dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                do {
+                    final String data = cursor.getString(dataColumn);
+
+                    try {
+                        WritableMap payload = Arguments.createMap();
+                        payload.putString((String) "assetId", data);
+                        payload.putString((String) "path", data);
+                        TextileNode.emitDeviceEvent("newLocalPhoto", payload);
+                    }
+                    catch (Exception e) {
+                        //
+                    }
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+            promise.resolve(null);
+        }
+        catch (Exception e) {
+            promise.reject("START ERROR", e);
+        }
+    }
+
 
     @ReactMethod
     public void create (String dataDir, String cafeUrl, String logLevel, Boolean logFiles, Promise promise) {
