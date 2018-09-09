@@ -220,10 +220,10 @@ export interface NotificationEngagement {
 
 export interface ILocalPhotoResult {
   assetId: string,
-  path: string,
-  creationDate?: string,
-  modificationDate?: string,
-  orientation?: number
+  creationDate: string,
+  modificationDate: string,
+  orientation: number,
+  path: string
 }
 
 export enum BlockType {

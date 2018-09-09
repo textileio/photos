@@ -50,8 +50,8 @@ RCT_EXPORT_MODULE();
 
 // Export method for local photo selection
 
-RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpochSeconds resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSTimeInterval seconds = minEpochSeconds;
+RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSTimeInterval seconds = minEpoch;
   NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
 
   PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];

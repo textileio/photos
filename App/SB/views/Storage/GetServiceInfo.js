@@ -2,7 +2,7 @@ export default function (service: string): {[index: string]: string} | undefined
   switch (service) {
     case 'autoPinPhotos':
       return {
-        title: 'Auto pin photos',
+        title: 'Auto pin new photos',
         subtitle: 'Add all new photos to your wallet',
         details: 'Automatically sync files from your local camera roll to your Textile wallet. This allows you to quickly select photos to share directly from your wallet, cleanup files from your device to save space, and sync to other devices such as your desktop through Textile.'
       }
