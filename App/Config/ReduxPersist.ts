@@ -180,7 +180,7 @@ const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
   version: 10,
-  whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll'],
+  whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'storage'],
   migrate: createMigrate(migrations, { debug: false })
 }
 

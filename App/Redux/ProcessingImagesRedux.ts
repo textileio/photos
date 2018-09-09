@@ -3,12 +3,6 @@ import {ThreadId, SharedImage, AddResult, BlockId, ILocalPhotoResult} from '../M
 import { RootState } from './Types'
 
 const actions = {
-  newLocalPhoto: createAction('processingImages/NEW_LOCAL_PHoto', (resolve) => {
-    return (photo: ILocalPhotoResult) => resolve({ photo })
-  }),
-  setLocalPhotoRefreshEpoch: createAction('processingImages/SET_LOCAL_PHOTO_UPDATE_EPOCH', (resolve) => {
-    return (epoch: number) => resolve({ epoch })
-  }),
   insertImage: createAction('processingImages/INSERT_IMAGE', (resolve) => {
     return (uuid: string, sharedImage: SharedImage, destinationThreadId: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
     return (uuid: string, sharedImage: SharedImage, destinationThreadId: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
@@ -86,17 +80,14 @@ export interface ProcessingImage {
 }
 
 export interface ProcessingImagesState {
-  readonly images: ProcessingImage[],
-  readonly lastPhotoRefresh: number // epoch in seconds
+  readonly images: ProcessingImage[]
 }
 
 export const initialState: ProcessingImagesState = {
-  images: [],
-  lastPhotoRefresh: (new Date()).getDate()
+  images: []
 }
 
 export const ProcessingImagesSelectors = {
-  lastPhotoRefresh: (state: RootState) => state.processingImages.lastPhotoRefresh,
   processingImageByUuid: (state: RootState, uuid: string) => {
     const image = state.processingImages.images.find((image) => {
       return image.uuid === uuid
@@ -107,9 +98,6 @@ export const ProcessingImagesSelectors = {
 
 export function reducer(state: ProcessingImagesState = initialState, action: ProcessingImagesAction): ProcessingImagesState {
   switch (action.type) {
-    case getType(actions.setLocalPhotoRefreshEpoch): {
-      return { ...state, lastPhotoRefresh: action.payload.epoch}
-    }
     case getType(actions.insertImage): {
       const processingImage: ProcessingImage = { ...action.payload, state: 'pending' }
       return { ...state, images: [...state.images, processingImage]}

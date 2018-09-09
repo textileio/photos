@@ -7,12 +7,10 @@ import BackgroundTimer from 'react-native-background-timer'
 import PushNotification from 'react-native-push-notification'
 
 import TextileNodeActions, { NodeState, TextileNodeSelectors } from '../Redux/TextileNodeRedux'
-import ProcessingImagesActions, {ProcessingImagesSelectors} from "../Redux/ProcessingImagesRedux";
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
 import { Threads, ThreadName } from '../Models/TextileTypes'
-import {requestNewLocalImages} from "./StorageSagas";
 
 export function * manageNode () {
   while (true) {
@@ -73,11 +71,6 @@ function * createAndStartNode () {
   yield put(TextileNodeActions.createNodeSuccess())
   yield put(TextileNodeActions.startingNode())
   yield call(TextileNode.start)
-
-  // TODO: Move this to the proper location
-  yield call(requestNewLocalImages)
-  console.log('Done request')
-
   const threads: Threads = yield call(TextileNode.threads)
   const defaultThread = threads.items.find((thread) => thread.name === 'default')
   if (!defaultThread) {

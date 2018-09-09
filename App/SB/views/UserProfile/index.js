@@ -106,12 +106,13 @@ class UserProfile extends React.PureComponent {
             <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
           </View>
           {this.connectivity()}
-          <TouchableOpacity style={styles.listItemFirst} onPress={this._storage.bind(this)}>
-            <Text style={styles.listText}>Storage</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={this._notifications.bind(this)}>
+
+          <TouchableOpacity style={styles.listItemFirst} onPress={this._notifications.bind(this)}>
             <Text style={styles.listText}>Notifications</Text>
           </TouchableOpacity>
+          {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._storage.bind(this)}>
+            <Text style={styles.listText}>Storage</Text>
+          </TouchableOpacity>}
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
           </TouchableOpacity>
@@ -152,6 +153,7 @@ const mapStateToProps = (state) => {
   const nodeRunning = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
 
   return {
+    verboseUi: state.preferences.verboseUi,
     mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
     online,
