@@ -215,6 +215,7 @@ const mapStateToProps = (state) => {
     })
     .sort((a, b) => a.updated < b.updated)
 
+  console.log(state.storage)
   return {
     profile,
     threads,

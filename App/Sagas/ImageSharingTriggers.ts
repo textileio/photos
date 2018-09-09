@@ -3,12 +3,14 @@ import { ActionType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Upload from 'react-native-background-upload'
 
-import { PhotoId } from '../Models/TextileTypes'
+import {PhotoId} from '../Models/TextileTypes'
 
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
-import {insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread} from './ImageSharingSagas'
+import {insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread, uploadWalletImage} from './ImageSharingSagas'
 import { refreshTokens } from './NodeCreated'
+import {StorageSelectors} from "../Redux/StorageRedux";
+import StorageActions from "../Redux/StorageRedux";
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -16,7 +18,16 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
     return
   }
   if (typeof image === 'string') {
-    yield call(shareWalletImage, image as PhotoId, threadId, comment)
+    const localPin = yield select(StorageSelectors.pinnedPhoto, image as PhotoId)
+    // if pinnedPhoto doesn't exist, it was added through a share, so known to be Remote
+    // we can clean this up later by storing a bit of metadata in go for every photo, remote=boolean
+    if (localPin) {
+      // First, let's distrbute on IPFS
+      yield call(uploadWalletImage, localPin, image as PhotoId, threadId, comment)
+    } else {
+      // Already distributed, so let's fire the Share
+      yield call(shareWalletImage, image as PhotoId, threadId, comment)
+    }
   } else {
     yield call(insertImage, image, threadId, comment)
   }
@@ -27,6 +38,12 @@ export function * handleImageUploadComplete (action: ActionType<typeof Processin
   yield call(addToWallet, uuid)
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
+
+    // If it was a local pin, mark it as remote now
+    if (processingImage && processingImage.addData) {
+      yield put(StorageActions.remotePinSuccess(processingImage.addData.addResult))
+    }
+
     if (processingImage && processingImage.addData && processingImage.addData.addResult.archive) {
       const exists: boolean = yield call(RNFS.exists, processingImage.addData.addResult.archive.path)
       if (exists) {

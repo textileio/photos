@@ -24,6 +24,24 @@ export function * insertImage (image: SharedImage, threadId: ThreadId, comment?:
   yield call(addToIpfs, id)
 }
 
+export function * uploadWalletImage (pinnedPhoto: AddResult, photoId: PhotoId, threadId: ThreadId, comment?: string) {
+  const id = uuid()
+  const path = pinnedPhoto.archive && pinnedPhoto.archive.path ? pinnedPhoto.archive.path : ''
+  const image: SharedImage = {
+    uri: path,
+    path: path,
+    canDelete: false,
+    height: -1,
+    width: -1,
+    isVertical: true
+  }
+  // step through the normal flow
+  yield put(ProcessingImagesActions.insertImage(id, image, threadId, comment))
+  yield put(ProcessingImagesActions.addingImage(id))
+  yield put(ProcessingImagesActions.imageAdded(id, pinnedPhoto))
+  yield call(uploadArchive, id)
+}
+
 export function * addToIpfs (uuid: string) {
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
