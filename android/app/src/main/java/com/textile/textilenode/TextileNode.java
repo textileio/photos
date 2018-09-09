@@ -61,64 +61,74 @@ public class TextileNode extends ReactContextBaseJavaModule {
     @ReactMethod
     public void requestLocalPhotos (int minEpoch, Promise promise) {
         try {
-            // Get our camera bucket
-            final String CAMERA_IMAGE_BUCKET_NAME = Environment.getExternalStorageDirectory().toString()
+            // Create a thread to do the lookup on and return results over asyn Events
+            class PhotoLookup implements Runnable {
+                int minEpoch;
+                PhotoLookup(int ep) { minEpoch = ep; }
+                public void run() {
+                    // Get our camera bucket
+                    final String CAMERA_IMAGE_BUCKET_NAME = Environment.getExternalStorageDirectory().toString()
                             + "/DCIM/Camera";
-            // Get our bucket ID
-            final String CAMERA_IMAGE_BUCKET_ID = String.valueOf(CAMERA_IMAGE_BUCKET_NAME.toLowerCase().hashCode());
-            // Get the fields we want
-            final String[] projection = {
-                    MediaStore.Images.Media.DATA,
-                    MediaStore.Images.Media.DATE_MODIFIED,
-                    MediaStore.Images.Media.DATE_ADDED,
-                    MediaStore.Images.Media.ORIENTATION
-            };
-            // Setup the query
-            final String selection = MediaStore.Images.Media.BUCKET_ID
-                    + " = ? AND "
-                    + MediaStore.Images.Media.DATE_MODIFIED
-                    + " > ?";
+                    // Get our bucket ID
+                    final String CAMERA_IMAGE_BUCKET_ID = String.valueOf(CAMERA_IMAGE_BUCKET_NAME.toLowerCase().hashCode());
+                    // Get the fields we want
+                    final String[] projection = {
+                            MediaStore.Images.Media.DATA,
+                            MediaStore.Images.Media.DATE_MODIFIED,
+                            MediaStore.Images.Media.DATE_ADDED,
+                            MediaStore.Images.Media.ORIENTATION
+                    };
+                    // Setup the query
+                    final String selection = MediaStore.Images.Media.BUCKET_ID
+                            + " = ? AND "
+                            + MediaStore.Images.Media.DATE_MODIFIED
+                            + " > ?";
 
-            final String[] selectionArgs = { CAMERA_IMAGE_BUCKET_ID, Integer.toString(minEpoch) };
+                    final String[] selectionArgs = {CAMERA_IMAGE_BUCKET_ID, Integer.toString(minEpoch)};
 
-            // Query
-            final Cursor cursor = reactContext.getContentResolver().query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    projection,
-                    selection,
-                    selectionArgs,
-                    null);
+                    // Query
+                    final Cursor cursor = reactContext.getContentResolver().query(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null);
 
-            ArrayList<String> result = new ArrayList<String>(cursor.getCount());
-            if (cursor.moveToFirst()) {
-                final int pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                final int modifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED);
-                final int createdColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED);
-                final int orientationColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
+                    ArrayList<String> result = new ArrayList<String>(cursor.getCount());
+                    if (cursor.moveToFirst()) {
+                        final int pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        final int modifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED);
+                        final int createdColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED);
+                        final int orientationColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
 
-                do {
-                    // Grab the values out of the result row
-                    final String path = cursor.getString(pathColumn);
-                    final String modified = cursor.getString(modifiedColumn);
-                    final String created = cursor.getString(createdColumn);
-                    final String orientation = cursor.getString(orientationColumn);
+                        do {
+                            // Grab the values out of the result row
+                            final String path = cursor.getString(pathColumn);
+                            final String modified = cursor.getString(modifiedColumn);
+                            final String created = cursor.getString(createdColumn);
+                            final String orientation = cursor.getString(orientationColumn);
 
-                    // Send a new event, newLocalPhoto
-                    try {
-                        WritableMap payload = Arguments.createMap();
-                        payload.putString((String) "assetId", path);
-                        payload.putString((String) "path", path);
-                        payload.putString((String) "creationDate", created);
-                        payload.putString((String) "modificationDate", modified);
-                        payload.putInt((String) "orientation", Integer.parseInt(orientation));
-                        TextileNode.emitDeviceEvent("newLocalPhoto", payload);
+                            // Send a new event, newLocalPhoto
+                            try {
+                                WritableMap payload = Arguments.createMap();
+                                payload.putString((String) "assetId", path);
+                                payload.putString((String) "path", path);
+                                payload.putString((String) "creationDate", created);
+                                payload.putString((String) "modificationDate", modified);
+                                payload.putInt((String) "orientation", Integer.parseInt(orientation));
+
+                                // Q: is emitDeviceEvent safe here?
+                                emitDeviceEvent("newLocalPhoto", payload);
+                            } catch (Exception e) {
+                                //
+                            }
+                        } while (cursor.moveToNext());
                     }
-                    catch (Exception e) {
-                        //
-                    }
-                } while (cursor.moveToNext());
+                    cursor.close();
+                }
             }
-            cursor.close();
+            Thread t = new Thread(new PhotoLookup(minEpoch));
+            t.start();
 
             // Close the promise, results handled as events
             promise.resolve(null);
