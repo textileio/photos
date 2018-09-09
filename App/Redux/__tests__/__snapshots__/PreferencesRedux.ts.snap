@@ -32,6 +32,23 @@ Object {
       "status": true,
     },
   },
+  "storage": Object {
+    "autoPinPhotos": Object {
+      "status": false,
+    },
+    "deleteDeviceCopy": Object {
+      "status": false,
+    },
+    "enablePhotoBackup": Object {
+      "status": false,
+    },
+    "enableWalletBackup": Object {
+      "status": false,
+    },
+    "storeHighRes": Object {
+      "status": false,
+    },
+  },
   "tourScreens": Object {
     "feed": true,
     "notifications": true,
