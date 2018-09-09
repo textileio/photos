@@ -55,6 +55,10 @@ import {
 } from './PhotoViewingSagas'
 
 import {
+  toggleStorage
+} from './StorageSagas'
+
+import {
   addExternalInvite,
   presentShareInterface,
   acceptExternalInvite,
@@ -107,6 +111,7 @@ export default function * root () {
     // permissions request events
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
     takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
+    takeLatest(getType(PreferencesActions.toggleStorageRequest), toggleStorage),
 
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),

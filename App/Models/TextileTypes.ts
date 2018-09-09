@@ -218,9 +218,11 @@ export interface NotificationEngagement {
   finish?: () => void
 }
 
-export interface LocalPhotoResult {
+export interface ILocalPhotoResult {
   assetId: string,
-  localDate: string,
+  creationDate: string,
+  modificationDate: string,
+  orientation: number,
   path: string
 }
 

@@ -12,6 +12,7 @@ import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
 import { Threads, ThreadName } from '../Models/TextileTypes'
+import {requestNewLocalImages} from "./StorageSagas";
 
 export function * manageNode () {
   while (true) {
@@ -73,22 +74,9 @@ function * createAndStartNode () {
   yield put(TextileNodeActions.startingNode())
   yield call(TextileNode.start)
 
-  try {
-    let autoPinEnabled = yield select(PreferencesSelectors.autoPinStatus)
-    console.log('autoPinEnabled', autoPinEnabled)
-    if (autoPinEnabled) {
-      const currentRefresh = (new Date()).getTime()
-      // get time last checked
-      const lastRefresh = yield select(ProcessingImagesSelectors.lastPhotoRefresh)
-      // update last time checked to now
-      yield put(ProcessingImagesActions.localPhotoRefreshRequest(currentRefresh))
-      // scan for images
-      yield call(TextileNode.requestLocalPhotos, lastRefresh)
-    }
-  } catch (error) {
-    console.log("msg")
-    console.log(error)
-  }
+  // TODO: Move this to the proper location
+  yield call(requestNewLocalImages)
+
   const threads: Threads = yield call(TextileNode.threads)
   const defaultThread = threads.items.find((thread) => thread.name === 'default')
   if (!defaultThread) {
