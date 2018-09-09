@@ -19,6 +19,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,29 +59,58 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void requestLocalPhotos (Integer minEpochSeconds, Promise promise) {
+    public void requestLocalPhotos (int minEpoch, Promise promise) {
         try {
+            // Get our camera bucket
             final String CAMERA_IMAGE_BUCKET_NAME = Environment.getExternalStorageDirectory().toString()
                             + "/DCIM/Camera";
+            // Get our bucket ID
             final String CAMERA_IMAGE_BUCKET_ID = String.valueOf(CAMERA_IMAGE_BUCKET_NAME.toLowerCase().hashCode());
-            final String[] projection = { MediaStore.Images.Media.DATA };
-            final String selection = MediaStore.Images.Media.BUCKET_ID + " = ?";
-            final String[] selectionArgs = { CAMERA_IMAGE_BUCKET_ID };
-            final Cursor cursor = reactContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            // Get the fields we want
+            final String[] projection = {
+                    MediaStore.Images.Media.DATA,
+                    MediaStore.Images.Media.DATE_MODIFIED,
+                    MediaStore.Images.Media.DATE_ADDED,
+                    MediaStore.Images.Media.ORIENTATION
+            };
+            // Setup the query
+            final String selection = MediaStore.Images.Media.BUCKET_ID
+                    + " = ? AND "
+                    + MediaStore.Images.Media.DATE_MODIFIED
+                    + " > ?";
+
+            final String[] selectionArgs = { CAMERA_IMAGE_BUCKET_ID, Integer.toString(minEpoch) };
+
+            // Query
+            final Cursor cursor = reactContext.getContentResolver().query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     projection,
                     selection,
                     selectionArgs,
                     null);
+
             ArrayList<String> result = new ArrayList<String>(cursor.getCount());
             if (cursor.moveToFirst()) {
-                final int dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                do {
-                    final String data = cursor.getString(dataColumn);
+                final int pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                final int modifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED);
+                final int createdColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED);
+                final int orientationColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
 
+                do {
+                    // Grab the values out of the result row
+                    final String path = cursor.getString(pathColumn);
+                    final String modified = cursor.getString(modifiedColumn);
+                    final String created = cursor.getString(createdColumn);
+                    final String orientation = cursor.getString(orientationColumn);
+
+                    // Send a new event, newLocalPhoto
                     try {
                         WritableMap payload = Arguments.createMap();
-                        payload.putString((String) "assetId", data);
-                        payload.putString((String) "path", data);
+                        payload.putString((String) "assetId", path);
+                        payload.putString((String) "path", path);
+                        payload.putString((String) "creationDate", created);
+                        payload.putString((String) "modificationDate", modified);
+                        payload.putInt((String) "orientation", Integer.parseInt(orientation));
                         TextileNode.emitDeviceEvent("newLocalPhoto", payload);
                     }
                     catch (Exception e) {
@@ -90,6 +120,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
             }
             cursor.close();
 
+            // Close the promise, results handled as events
             promise.resolve(null);
         }
         catch (Exception e) {
