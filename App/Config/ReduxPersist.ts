@@ -152,6 +152,9 @@ const migrations: MigrationManifest = {
     const state = persistedState as any
     return {
       ...state,
+      storage: {
+        pinnedPhotos: []
+      },
       preferences: {
         ...state.preferences,
         storage: {
