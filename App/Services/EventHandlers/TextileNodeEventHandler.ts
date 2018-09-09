@@ -21,7 +21,7 @@ export default class TextileNodeEventHandler {
     TextileNode.eventEmitter.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
       console.log('photo')
       console.log(localPhoto)
-      this.store.dispatch(ProcessingImagesActions.newLocalPhoto(localPhoto))
+      // this.store.dispatch(ProcessingImagesActions.newLocalPhoto(localPhoto))
     })
     TextileNode.eventEmitter.addListener('onOnline', () => {
       this.store.dispatch(TextileNodeActions.nodeOnline())

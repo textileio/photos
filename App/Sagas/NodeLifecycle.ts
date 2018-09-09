@@ -76,6 +76,7 @@ function * createAndStartNode () {
 
   // TODO: Move this to the proper location
   yield call(requestNewLocalImages)
+  console.log('Done request')
 
   const threads: Threads = yield call(TextileNode.threads)
   const defaultThread = threads.items.find((thread) => thread.name === 'default')

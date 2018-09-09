@@ -9,9 +9,8 @@ import * as TT from './App/Models/TextileTypes'
 const { TextileNode, Events } = NativeModules
 
 export default {
-  async requestLocalPhotos (afterDate: number): Promise<void> {
-    const epochAsSeconds = (afterDate / 1000) - (3600 * 24)
-    console.log('epochAsSeconds', epochAsSeconds)
+  async requestLocalPhotos (minEpoch: number): Promise<void> {
+    const epochAsSeconds = minEpoch / 1000
     await TextileNode.requestLocalPhotos(Math.round(epochAsSeconds))
   },
 
