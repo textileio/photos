@@ -10,7 +10,6 @@ import UIActions from '../Redux/UIRedux'
 import {insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread, savePhotoToWallet} from './ImageSharingSagas'
 import { refreshTokens } from './NodeCreated'
 
-
 export function * newLocalPhoto (action: ActionType<typeof ProcessingImagesActions.newLocalPhoto>) {
   const { photo } = action.payload
   yield call(savePhotoToWallet, photo)

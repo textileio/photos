@@ -5,13 +5,11 @@ import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
 import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
-import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId, LocalPhotoResult} from '../Models/TextileTypes'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId, ILocalPhotoResult} from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
-import {ActionType} from 'typesafe-actions'
 
-export function * savePhotoToWallet (photo: LocalPhotoResult) {
+export function * savePhotoToWallet (photo: ILocalPhotoResult) {
   try {
     const addResult = yield call(TextileNode.addPhoto, photo.path)
     const defaultThread: Thread = yield* getDefaultThread()

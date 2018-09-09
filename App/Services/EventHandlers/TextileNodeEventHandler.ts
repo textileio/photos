@@ -1,6 +1,6 @@
 import { Store } from 'redux'
 
-import {Update, BlockType, LocalPhotoResult} from '../../Models/TextileTypes'
+import {Update, BlockType, ILocalPhotoResult} from '../../Models/TextileTypes'
 import TextileNode from '../../../TextileNode'
 import { RootState } from '../../Redux/Types'
 
@@ -18,7 +18,7 @@ export default class TextileNodeEventHandler {
   }
 
   setup () {
-    TextileNode.eventEmitter.addListener('newLocalPhoto', (localPhoto: LocalPhotoResult) => {
+    TextileNode.eventEmitter.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
       console.log('photo')
       console.log(localPhoto)
       this.store.dispatch(ProcessingImagesActions.newLocalPhoto(localPhoto))

@@ -34,6 +34,7 @@ import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
+import ProcessingImagesActions, {ProcessingImagesSelectors} from "../Redux/ProcessingImagesRedux";
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload

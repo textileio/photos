@@ -87,18 +87,22 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpochSeconds resolver:(RCTPromiseRe
 
         // Get our path right away while we are in Obj-c
         [asset requestContentEditingInputWithOptions:nil completionHandler:^(PHContentEditingInput * _Nullable contentEditingInput, NSDictionary * _Nonnull info) {
-          NSLog(@"URL:%@",  contentEditingInput.fullSizeImageURL.absoluteString);
-          NSString* path = [contentEditingInput.fullSizeImageURL.absoluteString substringFromIndex:7];//screw all the crap of file://
+
+          // get rid of file://
+          NSString *path = [contentEditingInput.fullSizeImageURL.absoluteString substringFromIndex:7];
+          NSNumber *orientation = contentEditingInput.fullSizeImageOrientation ? [NSNumber numberWithInt:contentEditingInput.fullSizeImageOrientation] : [NSNumber numberWithInt:1];
           NSFileManager *fileManager = [NSFileManager defaultManager];
           BOOL isExist = [fileManager fileExistsAtPath:path];
           if (isExist) {
             // creationDate is also available, but seems to be pure exif date
             NSDate *newDate = asset.modificationDate;
+            NSDate *creationDate = asset.creationDate;
             // dataWithJSONObject cannot include NSDate
             NSString *dateString = [dateFormatter stringFromDate:newDate];
+            NSString *creationDateString = [dateFormatter stringFromDate:creationDate];
 
             // Create an event paylod
-            NSDictionary *payload = @{ @"path": path, @"localDate": dateString, @"assetId": asset.localIdentifier};
+            NSDictionary *payload = @{ @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation};
             NSError *serializationError;
             NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:NSJSONWritingPrettyPrinted error:&serializationError];
             if(!serializationError) {

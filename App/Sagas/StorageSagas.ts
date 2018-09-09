@@ -5,7 +5,7 @@ import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
 import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
-import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId, LocalPhotoResult} from '../Models/TextileTypes'
+import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId, ILocalPhotoResult} from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
 import {ActionType} from "typesafe-actions";
@@ -22,7 +22,7 @@ export function * toggleStorage (action: ActionType<typeof PreferencesActions.to
   }
 }
 
-export function * refreshLocalImages () {
+export function * requestNewLocalImages () {
   try {
     let autoPinEnabled = yield select(PreferencesSelectors.autoPinStatus)
     console.log('autoPinEnabled', autoPinEnabled)

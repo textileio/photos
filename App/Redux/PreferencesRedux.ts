@@ -168,6 +168,7 @@ export const PreferencesSelectors = {
   pending: (state: RootState) => state.preferences.pending,
   profile: (state: RootState) => state.preferences.profile,
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
+  storage: (state: RootState, name: StorageType) => state.preferences.storage[name],
   verboseUi: (state: RootState) => state.preferences.verboseUi,
   autoPinStatus: (state: RootState) => state.preferences.storage.autoPinPhotos.status
 }

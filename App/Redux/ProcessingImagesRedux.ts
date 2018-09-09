@@ -1,12 +1,12 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import {ThreadId, SharedImage, AddResult, BlockId, LocalPhotoResult} from '../Models/TextileTypes'
+import {ThreadId, SharedImage, AddResult, BlockId, ILocalPhotoResult} from '../Models/TextileTypes'
 import { RootState } from './Types'
 
 const actions = {
   newLocalPhoto: createAction('processingImages/NEW_LOCAL_PHoto', (resolve) => {
-    return (photo: LocalPhotoResult) => resolve({ photo })
+    return (photo: ILocalPhotoResult) => resolve({ photo })
   }),
-  localPhotoRefreshRequest: createAction('processingImages/LOCAL_PHOTO_REFRESH_REQUEST', (resolve) => {
+  setLocalPhotoRefreshEpoch: createAction('processingImages/SET_LOCAL_PHOTO_UPDATE_EPOCH', (resolve) => {
     return (epoch: number) => resolve({ epoch })
   }),
   insertImage: createAction('processingImages/INSERT_IMAGE', (resolve) => {
@@ -107,7 +107,7 @@ export const ProcessingImagesSelectors = {
 
 export function reducer(state: ProcessingImagesState = initialState, action: ProcessingImagesAction): ProcessingImagesState {
   switch (action.type) {
-    case getType(actions.localPhotoRefreshRequest): {
+    case getType(actions.setLocalPhotoRefreshEpoch): {
       return { ...state, lastPhotoRefresh: action.payload.epoch}
     }
     case getType(actions.insertImage): {
