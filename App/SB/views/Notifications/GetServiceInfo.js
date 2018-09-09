@@ -34,7 +34,7 @@ export default function (service: string): {[index: string]: string} | undefined
       return {
         title: 'New Photo Comment',
         subtitle: 'Someone shares a photo with you',
-              dependsOn: 'notifications'
+        dependsOn: 'notifications'
       }
     case 'likeAddedNotification':
       return {
