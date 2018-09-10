@@ -62,9 +62,9 @@ export interface PreferencesState {
   publicKey?: PublicKey
   profile?: Profile
   pending?: PhotoId
-  readonly services: {[k in ServiceType]: Service}
-  readonly storage: {[k in StorageType]: Service}
-  readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need
+  readonly services: {readonly [k in ServiceType]: Service}
+  readonly storage: {readonly [k in StorageType]: Service}
+  readonly tourScreens: {readonly [k in TourScreens]: boolean} // true = still need to show, false = no need
 }
 
 export const initialState: PreferencesState = {
@@ -141,19 +141,14 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
     case getType(actions.getPublicKeySuccess):
       return { ...state, publicKey: action.payload.publicKey }
     case getType(actions.completeTourSuccess):
-      const tours = state.tourScreens
-      if (!tours.hasOwnProperty(action.payload.tourKey)) { return state }
-      tours[action.payload.tourKey] = false
-      return { ...state, tourScreens: tours }
+      return { ...state, tourScreens: { ...state.tourScreens, [action.payload.tourKey]: false } }
     case getType(actions.toggleServicesRequest): {
       const service = state.services[action.payload.name]
-      if (!service) { return state }
       service.status = action.payload.status === undefined ? !service.status : action.payload.status
       return {...state, services: {...state.services, [action.payload.name]: service}}
     }
     case getType(actions.toggleStorageRequest): {
       const storageType = state.storage[action.payload.name]
-      if (!storageType) { return state }
       storageType.status = action.payload.status === undefined ? !storageType.status : action.payload.status
       return {...state, storage: {...state.storage, [action.payload.name]: storageType}}
     }

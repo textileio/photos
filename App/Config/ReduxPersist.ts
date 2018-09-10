@@ -148,7 +148,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  10: (persistedState) => {
+  9: (persistedState) => {
     const state = persistedState as any
     return {
       ...state,
@@ -179,7 +179,7 @@ const migrations: MigrationManifest = {
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 10,
+  version: 9,
   whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'storage'],
   migrate: createMigrate(migrations, { debug: false })
 }
