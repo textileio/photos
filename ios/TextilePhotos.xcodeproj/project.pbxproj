@@ -54,7 +54,6 @@
 		932E4DC520B8D7E100358ED3 /* Biotif-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB520B8D7E000358ED3 /* Biotif-SemiBoldItalic.ttf */; };
 		932E4DC620B8D7E100358ED3 /* Biotif-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */; };
 		932E4DC720B8D7E100358ED3 /* Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */; };
-		9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9339E9A6205C3B8700BCA4CF /* Mobile.framework */; };
 		9345CEA92102B24E0061EFD6 /* BentonSans.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEA62102B24D0061EFD6 /* BentonSans.otf */; };
 		9345CEAD2102B68A0061EFD6 /* BentonSans-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEAB2102B68A0061EFD6 /* BentonSans-Light.otf */; };
 		9345CEAE2102B68A0061EFD6 /* BentonSans-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEAC2102B68A0061EFD6 /* BentonSans-Bold.otf */; };
@@ -62,6 +61,7 @@
 		937C35AE2081797700F06ADB /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937C35A62081794C00F06ADB /* libRNDeviceInfo.a */; };
 		937FC5412061B7A700357ED5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937FC51E2061B79100357ED5 /* libRCTCameraRoll.a */; };
 		9382834320DAE2E1002C2FE2 /* TextileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9382830520DAE2E1002C2FE2 /* TextileNode.m */; };
+		93A9BDD321471BDC00BE4CE2 /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A9BDD221471BDC00BE4CE2 /* Mobile.framework */; };
 		93B0F54F2119075100151B63 /* libSMXCrashlytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B0F54B2119072900151B63 /* libSMXCrashlytics.a */; };
 		93E3D64B210E6800000EB402 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E3D646210E67E7000EB402 /* libRNImagePicker.a */; };
 		94CF1FA5842247DA9BEB5C93 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8019A17A4A6F4FFB9C1C191F /* Ionicons.ttf */; };
@@ -592,7 +592,6 @@
 		932E4DB520B8D7E000358ED3 /* Biotif-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-SemiBoldItalic.ttf"; path = "../App/Fonts/Biotif-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Light.ttf"; path = "../App/Fonts/Biotif-Light.ttf"; sourceTree = "<group>"; };
 		932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-BookItalic.ttf"; path = "../App/Fonts/Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
-		9339E9A6205C3B8700BCA4CF /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mobile.framework; sourceTree = "<group>"; };
 		9345CEA62102B24D0061EFD6 /* BentonSans.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = BentonSans.otf; path = ../App/Fonts/BentonSans.otf; sourceTree = "<group>"; };
 		9345CEAB2102B68A0061EFD6 /* BentonSans-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BentonSans-Light.otf"; path = "../App/Fonts/BentonSans-Light.otf"; sourceTree = "<group>"; };
 		9345CEAC2102B68A0061EFD6 /* BentonSans-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BentonSans-Bold.otf"; path = "../App/Fonts/BentonSans-Bold.otf"; sourceTree = "<group>"; };
@@ -601,6 +600,7 @@
 		937FC5142061B79100357ED5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		9382830520DAE2E1002C2FE2 /* TextileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileNode.m; sourceTree = "<group>"; };
 		9382834220DAE2E1002C2FE2 /* TextileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileNode.h; sourceTree = "<group>"; };
+		93A9BDD221471BDC00BE4CE2 /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mobile.framework; path = "../node_modules/@textile/go-mobile/ios/Mobile.framework"; sourceTree = "<group>"; };
 		93B0F50A2119072900151B63 /* SMXCrashlytics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SMXCrashlytics.xcodeproj; path = "../node_modules/react-native-fabric/ios/SMXCrashlytics.xcodeproj"; sourceTree = "<group>"; };
 		93E3D607210E67E7000EB402 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		98E68F90DAB045288BB8D857 /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundFetch.a; sourceTree = "<group>"; };
@@ -643,6 +643,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93A9BDD321471BDC00BE4CE2 /* Mobile.framework in Frameworks */,
 				A209E2322127748D0017E147 /* libRCTPushNotification.a in Frameworks */,
 				93B0F54F2119075100151B63 /* libSMXCrashlytics.a in Frameworks */,
 				93E3D64B210E6800000EB402 /* libRNImagePicker.a in Frameworks */,
@@ -658,7 +659,6 @@
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
-				9339E9A7205C3B8700BCA4CF /* Mobile.framework in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
@@ -808,6 +808,7 @@
 		5480F3225F6AB7DEA9EE41D3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				93A9BDD221471BDC00BE4CE2 /* Mobile.framework */,
 				5E91A5EF4C7A428FB9778EEA /* TSBackgroundFetch.framework */,
 				1A909B6FDD3341088B187569 /* libRNFS.a */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
@@ -924,7 +925,6 @@
 			children = (
 				C54837AD20DAFE3100DAE9D7 /* NativeViews */,
 				FC34450520993A71007196E0 /* RCTHTTPRequestHandler+SelfSigned.m */,
-				9339E9A6205C3B8700BCA4CF /* Mobile.framework */,
 				9339E99E205C381700BCA4CF /* NativeModules */,
 				13B07FAE1A68108700A75B9A /* TextilePhotos */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -2002,6 +2002,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+					"$(PROJECT_DIR)/../node_modules/@textile/go-mobile/ios/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2016,6 +2017,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
 					"$(SRCROOT)/../node_modules/react-native-image-gallery/Demo/ios/Demo",
 					"$(SRCROOT)/../node_modules/react-native-notifications/RNNotifications",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
@@ -2052,6 +2054,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+					"$(PROJECT_DIR)/../node_modules/@textile/go-mobile/ios/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2066,6 +2069,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/Network/**",
 					"$(SRCROOT)/../node_modules/react-native-image-gallery/Demo/ios/Demo",
 					"$(SRCROOT)/../node_modules/react-native-notifications/RNNotifications",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
 				);
 				INFOPLIST_FILE = TextilePhotos/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
