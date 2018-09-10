@@ -35,6 +35,21 @@ class Avatar extends React.PureComponent<IAvatarProps> {
   renderSelf () {
     const { height, width, defaultSource, style } = this.props
     const photoId = this.photoIdFromAvatar()
+    if (!photoId) {
+      return (
+        <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
+          <View style={styles.stretch}>
+            <ImageSc
+              source={defaultSource}
+              style={{ width, height }}
+              width={width}
+              height={height}
+              resizeMode={'cover'}
+            />
+          </View>
+        </View>
+      )
+    }
     return (
       <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
         <View style={styles.stretch}>
