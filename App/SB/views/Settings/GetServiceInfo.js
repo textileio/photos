@@ -30,12 +30,12 @@ export default function (service: string): {[index: string]: string} | undefined
         subtitle: 'Someone shares a photo with you',
         dependsOn: 'notifications'
       }
-    // case 'commentAddedNotification':
-    //   return {
-    //     title: 'New Photo Comment',
-    //     subtitle: 'Someone shares a photo with you',
-    //           dependsOn: 'notifications'
-    //   }
+    case 'commentAddedNotification':
+      return {
+        title: 'New Photo Comment',
+        subtitle: 'Someone shares a photo with you',
+        dependsOn: 'notifications'
+      }
     case 'likeAddedNotification':
       return {
         title: 'New Photo Like',
