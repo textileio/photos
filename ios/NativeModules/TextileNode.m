@@ -89,7 +89,8 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
         [asset requestContentEditingInputWithOptions:nil completionHandler:^(PHContentEditingInput * _Nullable contentEditingInput, NSDictionary * _Nonnull info) {
 
           // get rid of file://
-          NSString *path = [contentEditingInput.fullSizeImageURL.absoluteString substringFromIndex:7];
+          NSString *uri = contentEditingInput.fullSizeImageURL.absoluteString;
+          NSString *path = [uri substringFromIndex:7];
           NSNumber *orientation = contentEditingInput.fullSizeImageOrientation ? [NSNumber numberWithInt:contentEditingInput.fullSizeImageOrientation] : [NSNumber numberWithInt:1];
           NSFileManager *fileManager = [NSFileManager defaultManager];
           BOOL isExist = [fileManager fileExistsAtPath:path];
@@ -102,7 +103,7 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
             NSString *creationDateString = [dateFormatter stringFromDate:creationDate];
 
             // Create an event paylod
-            NSDictionary *payload = @{ @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation};
+            NSDictionary *payload = @{ @"uri": uri, @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation};
             NSError *serializationError;
             NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:NSJSONWritingPrettyPrinted error:&serializationError];
             if(!serializationError) {

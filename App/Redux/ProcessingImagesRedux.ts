@@ -4,8 +4,7 @@ import { RootState } from './Types'
 
 const actions = {
   insertImage: createAction('processingImages/INSERT_IMAGE', (resolve) => {
-    return (uuid: string, sharedImage: SharedImage, destinationThreadId: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
-    return (uuid: string, sharedImage: SharedImage, destinationThreadId: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
+    return (uuid: string, sharedImage: SharedImage, destinationThreadId?: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
   }),
   addingImage: createAction('processingImages/ADDING_IMAGE', (resolve) => {
     return (uuid: string) => resolve({ uuid })
@@ -59,7 +58,7 @@ export type ProcessingImagesAction = ActionType<typeof actions>
 export interface ProcessingImage {
   readonly uuid: string,
   readonly sharedImage: SharedImage
-  readonly destinationThreadId: ThreadId
+  readonly destinationThreadId?: ThreadId
   readonly comment?: string
   readonly state: 'pending' | 'adding' | 'added' | 'uploading' | 'uploaded' | 'addingToWallet' | 'addedToWallet' | 'sharing' | 'shared'
   readonly error?: string

@@ -12,13 +12,14 @@ import { refreshTokens } from './NodeCreated'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
-  if (!image || !threadId) {
-    return
-  }
   if (typeof image === 'string') {
-    yield call(shareWalletImage, image as PhotoId, threadId, comment)
+    if (image && threadId) {
+      yield call(shareWalletImage, image as PhotoId, threadId, comment)
+    }
   } else {
-    yield call(insertImage, image, threadId, comment)
+    if (image) {
+      yield call(insertImage, image, threadId, comment)
+    }
   }
 }
 

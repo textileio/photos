@@ -36,6 +36,7 @@ export function reducer(state: StorageState = initialState, action: StorageActio
       return { ...state, lastPhotoRefresh: action.payload.epoch, refreshingImages: false}
     }
     case getType(actions.refreshLocalImagesRequest):
+      // TODO: There is not success action that sets this back to false
       return { ...state, refreshingImages: true }
     default:
       return state

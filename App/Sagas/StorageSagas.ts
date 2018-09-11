@@ -2,16 +2,23 @@ import {call, put, select, take} from 'redux-saga/effects'
 
 import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
-import {BlockId, Thread, ILocalPhotoResult} from '../Models/TextileTypes'
+import {BlockId, Thread, ILocalPhotoResult, SharedImage} from '../Models/TextileTypes'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
 import {ActionType, getType} from 'typesafe-actions'
 import PreferencesActions, {PreferencesSelectors} from '../Redux/PreferencesRedux'
+import UIActions from '../Redux/UIRedux'
 
 export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLocalPhoto>) {
   const { photo } = action.payload
-  yield call(savePhotoToWallet, photo)
+  const sharedImage: SharedImage = {
+    uri: photo.uri,
+    path: photo.path,
+    canDelete: false
+  }
+  yield put(UIActions.sharePhotoRequest(sharedImage))
 }
 
+// TODO: Not used for now. Revisit if needed
 export function * savePhotoToWallet (photo: ILocalPhotoResult) {
   try {
     const addResult = yield call(TextileNode.addPhoto, photo.path)

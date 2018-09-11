@@ -189,10 +189,7 @@ export interface SharedImage {
   origURL?: string,
   uri: string,
   path: string,
-  canDelete: boolean,
-  height: number,
-  width: number,
-  isVertical: boolean
+  canDelete: boolean
 }
 
 export interface DeepLinkData {
@@ -222,7 +219,8 @@ export interface ILocalPhotoResult {
   creationDate: string,
   modificationDate: string,
   orientation: number,
-  path: string
+  path: string,
+  uri: string
 }
 
 export enum BlockType {
