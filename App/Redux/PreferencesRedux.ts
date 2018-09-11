@@ -29,6 +29,9 @@ const actions = {
   }),
   toggleServicesRequest: createAction('TOGGLE_SERVICES_REQUEST', (resolve) => {
     return (name: ServiceType, status?: boolean) => resolve({ name, status })
+  }),
+  toggleStorageRequest: createAction('TOGGLE_STORAGE_REQUEST', (resolve) => {
+    return (name: StorageType, status?: boolean) => resolve({ name, status })
   })
 }
 
@@ -44,6 +47,11 @@ export type ServiceType = 'backgroundLocation' |
   'likeAddedNotification' |
   'peerJoinedNotification' |
   'peerLeftNotification'
+export type StorageType = 'autoPinPhotos' |
+  'storeHighRes' |
+  'deleteDeviceCopy' |
+  'enablePhotoBackup' |
+  'enableWalletBackup'
 export interface Service {
   status: boolean,
 }
@@ -55,6 +63,7 @@ export interface PreferencesState {
   profile?: Profile
   pending?: PhotoId
   readonly services: {[k in ServiceType]: Service}
+  readonly storage: {[k in StorageType]: Service}
   readonly tourScreens: {[k in TourScreens]: boolean} // true = still need to show, false = no need
 }
 
@@ -95,6 +104,23 @@ export const initialState: PreferencesState = {
     backgroundLocation: {
       status: false
     }
+  },
+  storage: {
+    autoPinPhotos: {
+      status: false
+    },
+    storeHighRes: {
+      status: false
+    },
+    deleteDeviceCopy: {
+      status: false
+    },
+    enablePhotoBackup: {
+      status: false
+    },
+    enableWalletBackup: {
+      status: false
+    }
   }
 }
 
@@ -125,6 +151,12 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       service.status = action.payload.status === undefined ? !service.status : action.payload.status
       return {...state, services: {...state.services, [action.payload.name]: service}}
     }
+    case getType(actions.toggleStorageRequest): {
+      const storageType = state.storage[action.payload.name]
+      if (!storageType) { return state }
+      storageType.status = action.payload.status === undefined ? !storageType.status : action.payload.status
+      return {...state, storage: {...state.storage, [action.payload.name]: storageType}}
+    }
     default:
       return state
   }
@@ -136,7 +168,9 @@ export const PreferencesSelectors = {
   pending: (state: RootState) => state.preferences.pending,
   profile: (state: RootState) => state.preferences.profile,
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
-  verboseUi: (state: RootState) => state.preferences.verboseUi
+  storage: (state: RootState, name: StorageType) => state.preferences.storage[name],
+  verboseUi: (state: RootState) => state.preferences.verboseUi,
+  autoPinStatus: (state: RootState) => state.preferences.storage.autoPinPhotos.status
 }
 
 export default actions

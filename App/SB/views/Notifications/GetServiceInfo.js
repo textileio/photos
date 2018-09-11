@@ -2,8 +2,8 @@ export default function (service: string): {[index: string]: string} | undefined
   switch (service) {
     case 'backgroundLocation':
       return {
-        title: 'Always allow location',
-        subtitle: 'Better background updates',
+        title: 'Wake with location',
+        subtitle: 'More timely notifications',
         details: 'Background location allows Textile to wake up periodically to check for updates on your peer-to-peer network. Without background location the app will never get any new information, it will be a pretty boring place. We never keep, store, process, or share your location data with anyone or any device.'
       }
     case 'notifications':

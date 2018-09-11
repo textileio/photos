@@ -2,6 +2,7 @@
 
 // private enums to enforce strict id types
 // read here: https://basarat.gitbooks.io/typescript/docs/tips/nominalTyping.html#using-enums
+
 enum TextileIdBase {}
 enum BlockIdBase {}
 enum ThreadIdBase {}
@@ -214,6 +215,14 @@ export interface NotificationEngagement {
   userInteraction: boolean,
   data?: any,
   finish?: () => void
+}
+
+export interface ILocalPhotoResult {
+  assetId: string,
+  creationDate: string,
+  modificationDate: string,
+  orientation: number,
+  path: string
 }
 
 export enum BlockType {
