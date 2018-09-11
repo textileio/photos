@@ -47,7 +47,7 @@ platform :ios do
       build_number: newBuildNumber,
       xcodeproj: "TextilePhotos.xcodeproj"
     )
-    gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
+    gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos", include_symbols: false)
     # changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: true)
     upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
