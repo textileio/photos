@@ -13,6 +13,7 @@ import { RootAction } from '../Redux/Types'
 import { Threads, ThreadName } from '../Models/TextileTypes'
 
 export function * manageNode () {
+  console.log('GETTING SET UP HERE')
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -20,6 +21,8 @@ export function * manageNode () {
         yield take((action: RootAction) =>
           action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
         )
+
+      console.log('APP STATE CHANGE:', action.payload.newState)
 
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
@@ -44,6 +47,7 @@ export function * manageNode () {
       // to stop the node, cancel the stop and let it keep running
       if (action.payload.newState === 'background') {
         BackgroundTimer.start()
+        console.log('GOT BG HERE!!!!!')
         // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
         yield race({
           delayAndStopNode: call(stopNodeAfterDelay, 20000),
@@ -81,22 +85,27 @@ function * createAndStartNode () {
 
 function * stopNodeAfterDelay (ms: number) {
   try {
+    console.log('Running the node for 20 sec. in the background')
     if (yield select(PreferencesSelectors.verboseUi)) {
       yield call(displayNotification, 'Running the node for 20 sec. in the background')
     }
     yield delay(ms)
   } finally {
+    console.log('IN FINALLY')
     if (yield cancelled()) {
       // Let it keep running
+      console.log('Delayed stop of node canceled because of foreground event')
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Delayed stop of node canceled because of foreground event')
       }
     } else {
+      console.log('Stopping node')
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Stopping node')
       }
       yield put(TextileNodeActions.stoppingNode())
       yield call(TextileNode.stop)
+      console.log('Node stopped')
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Node stopped')
       }
