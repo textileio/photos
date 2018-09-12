@@ -127,6 +127,11 @@ class UserProfile extends React.PureComponent {
           }}>
             <Text style={styles.listText}>Privacy</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.listItem} onPress={() => {
+            Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/TERMS.md')
+          }}>
+            <Text style={styles.listText}>Terms</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._contact.bind(this)}>
             <Text style={styles.listText}>Contact</Text>
           </TouchableOpacity>
