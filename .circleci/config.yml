@@ -197,6 +197,20 @@ jobs:
                     - vendor/bundle
 
             - run:
+                name: fastlane tests
+                working_directory: android
+                command: |
+                    mkdir -p test-results/fastlane
+                    bundle exec fastlane test
+                    mv fastlane/report.xml test-results/fastlane
+
+            - store_test_results:
+                path: android/test-results
+
+            - store_artifacts:
+                path: android/test-results
+
+            - run:
                 command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
                 working_directory: android
 
@@ -353,6 +367,25 @@ jobs:
                     - vendor/bundle
 
             - run:
+                command: bundle exec fastlane test
+                working_directory: ios
+
+            - run:
+                name: set up test results
+                working_directory: ios
+                when: always
+                command: |
+                    mkdir -p test-results/fastlane test-results/xcode
+                    mv fastlane/report.xml test-results/fastlane
+                    mv fastlane/test_output/report.junit test-results/xcode/junit.xml
+
+            - store_test_results:
+                path: ios/test-results
+
+            - store_artifacts:
+                path: ios/test-results
+
+            - run:
                 command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
@@ -375,20 +408,30 @@ workflows:
                 requires:
                     - lint
                     - tests
+                filters:
+                    branches:
+                        ignore:
+                            - master
             - ios:
                 requires:
                     - lint
                     - tests
+                filters:
+                    branches:
+                        ignore:
+                            - master
             - ios-beta:
                 requires:
-                    - ios
+                    - lint
+                    - tests
                 filters:
                     branches:
                         only:
                             - master
             - android-beta:
                 requires:
-                    - android
+                    - lint
+                    - tests
                 filters:
                     branches:
                         only:
