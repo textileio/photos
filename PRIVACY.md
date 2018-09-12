@@ -49,4 +49,4 @@ Please contact us with any questions at contact@textile.io
 
 # Changelog
 
-09.12.18: Clarified the introduction, specifically what information is passing through IPFS and where it may be hosted. Clarified the collection of crash and bug reporting. Clarified the future opt-in for backup services.
+09.12.18: Clarified the introduction, specifically what information is passing through IPFS and where it may be hosted. Clarified the collection of crash and bug reporting. Clarified the future opt-in for backup services. Minor typo fixes.
