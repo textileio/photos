@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Share, View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, { DURATION } from 'react-native-easy-toast'
