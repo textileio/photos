@@ -9,6 +9,10 @@ import * as TT from './App/Models/TextileTypes'
 const { TextileNode, Events } = NativeModules
 
 export default {
+  async requestLocalPhotos (minEpoch: number): Promise<void> {
+    await TextileNode.requestLocalPhotos(Math.round(minEpoch / 1000))
+  },
+
   async create (dataDir: string, apiUrl: string, logLevel: string, logFiles: boolean): Promise<void> {
     // console.log(dataDir)
     return await TextileNode.create(dataDir, apiUrl, logLevel, logFiles)

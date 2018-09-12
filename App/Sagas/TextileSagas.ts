@@ -416,10 +416,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
         origURL: pickerResponse.origURL,
         uri: pickerResponse.uri,
         path: pickerResponse.path,
-        canDelete: pickerResponse.canDelete,
-        height: pickerResponse.height,
-        width: pickerResponse.width,
-        isVertical: pickerResponse.isVertical
+        canDelete: pickerResponse.canDelete
       }
       yield put(UIActions.updateSharingPhotoThread(threadId))
       yield put(UIActions.updateSharingPhotoImage(image))
