@@ -388,11 +388,17 @@ workflows:
                         ignore:
                             - master
             - ios-beta:
+                requires:
+                    - lint
+                    - tests
                 filters:
                     branches:
                         only:
                             - master
             - android-beta:
+                requires:
+                    - lint
+                    - tests
                 filters:
                     branches:
                         only:
