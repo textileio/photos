@@ -369,8 +369,16 @@ workflows:
     version: 2
     lint-tests-android-ios:
         jobs:
-            - lint
-            - tests
+            - lint:
+                filters:
+                    branches:
+                        ignore:
+                            - master
+            - tests:
+                filters:
+                    branches:
+                        ignore:
+                            - master
             - android:
                 requires:
                     - lint
