@@ -135,14 +135,6 @@ class UserProfile extends React.PureComponent {
           <TouchableOpacity style={styles.listItem} onPress={this._contact.bind(this)}>
             <Text style={styles.listText}>Contact</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={() => {
-            Share.share({
-              title: 'Check out Textile Photos!',
-              url: 'https://textile.photos/'
-            })
-          }}>
-            <Text style={styles.listText}>Invite Friends!</Text>
-          </TouchableOpacity>
         </View>
 
         <ContactModal height={200} width={WIDTH} onClose={this._contact.bind(this)} isVisible={this.state.contactModal} />
