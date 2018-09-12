@@ -1,6 +1,6 @@
 # Textile Terms of Service
 
-_Last updated: 4/21/18_
+_Last updated: 09/12/18_
 
 Welcome to Textile. Please read these terms of service (these “**Terms**”) carefully as they form a contract between you and We Are Set, Inc, a Delaware corporation (**Textile**, “**we**”, “**us**”, or “**our**”), that governs your access and use of (i) the web verification and encryption solution software provided by Textile (the “**Software**”); (ii) the Textile websites at textile.io and textile.photos (the “**Site**”); and (iii) any written or electronic use or features guides or other documentation provided or made available by Textile (the “**User Guides**”) (collectively the “**Service(s)**”).
 
