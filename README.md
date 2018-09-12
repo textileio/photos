@@ -1,6 +1,6 @@
 #  Textile Mobile
 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
+[![Throughput Graph](https://graphs.waffle.io/textileio/textile-mobile/throughput.svg)](https://waffle.io/textileio/textile-mobile/metrics/throughput) 
 
 ## Where can I get it?
 
