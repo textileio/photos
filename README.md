@@ -1,5 +1,9 @@
 #  Textile Mobile
 
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+
+## Status
+
 [![Throughput Graph](https://graphs.waffle.io/textileio/textile-mobile/throughput.svg)](https://waffle.io/textileio/textile-mobile/metrics/throughput) 
 
 ## Where can I get it?
