@@ -41,18 +41,11 @@ platform :android do
     supply(
       track: "internal"
     )
-    sh("git", "stash")
-    git_pull
-    sh("git", "stash", "pop")
     versionName = get_version_name(
       gradle_file_path: "app/build.gradle"
     )
     versionCode = get_version_code(
       gradle_file_path:"app/build.gradle"
-    )
-    git_commit(
-      path: "./app/build.gradle",
-      message: "Build number bump to " + versionCode.to_s + " [skip ci]"
     )
     add_git_tag(
       tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")"

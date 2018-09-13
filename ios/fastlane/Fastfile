@@ -51,14 +51,6 @@ platform :ios do
     # changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: true)
     upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
-    sh("git", "stash")
-    git_pull
-    sh("git", "stash", "pop")
-    commit_version_bump(
-      message: "Build number bump to " + newBuildNumber.to_s + " [skip ci]",
-      xcodeproj: "TextilePhotos.xcodeproj",
-      force: true
-    )
     add_git_tag(tag: "builds/iosbeta/" + versionNumber.to_s + "(" + newBuildNumber.to_s + ")")
     push_to_git_remote
   end
