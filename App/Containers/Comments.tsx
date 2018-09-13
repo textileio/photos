@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, ScrollView, Dimensions } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
@@ -15,17 +15,8 @@ import ProgressiveImage from '../Components/ProgressiveImage'
 import styles from './Styles/CommentsStyle'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
-import { BlockId, PhotoId } from '../Models/TextileTypes'
-
-const { width } = Dimensions.get('window')
 
 interface StateProps {
-  photoId: PhotoId
-  blockId: BlockId
-  size?: {
-    height: number
-    width: number
-  }
   captionCommentCardProps?: CommentCardProps
   commentCardProps: CommentCardProps[]
   commentValue: string | undefined
@@ -79,19 +70,6 @@ class Comments extends Component<Props, State> {
     }
   }
 
-  renderImage () {
-    const height = this.props.size ? (this.props.size.height / this.props.size.width) * width : width
-    return (
-      <ProgressiveImage
-        imageId={this.props.photoId}
-        previewPath={'small'}
-        path={'photo'}
-        style={[styles.mainPhoto, { height }]}
-        resizeMode={'cover'}
-      />
-    )
-  }
-
   render () {
     return (
       <KeyboardResponsiveContainer style={styles.container} >
@@ -117,11 +95,6 @@ const mapStateToProps = (state: RootState): StateProps  => {
     throw new Error('no viewing thread or photo')
   }
 
-  let size: { height: number, width: number} | undefined
-  if (viewingPhoto.metadata) {
-    size = { height: viewingPhoto.metadata.height, width: viewingPhoto.metadata.width }
-  }
-
   let captionCommentCardProps: CommentCardProps | undefined
   if (viewingPhoto.caption) {
     captionCommentCardProps = {
@@ -145,9 +118,6 @@ const mapStateToProps = (state: RootState): StateProps  => {
     return props
   })
   return {
-    photoId: viewingPhoto.id,
-    blockId: viewingPhoto.block_id,
-    size,
     captionCommentCardProps,
     commentCardProps,
     commentValue : state.photoViewing.authoringComment
