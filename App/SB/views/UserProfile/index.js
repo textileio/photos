@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Share, View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, { DURATION } from 'react-native-easy-toast'
@@ -40,7 +40,7 @@ class UserProfile extends React.PureComponent {
               <Avatar
                 width={32}
                 height={32}
-                defaultSource={require('../Settings/statics/main-image.png')}
+                defaultSource={require('../Notifications/statics/main-image.png')}
                 owner
               />
             }
@@ -50,10 +50,11 @@ class UserProfile extends React.PureComponent {
     }
   }
 
-  _settings () {
-    this.props.navigation.navigate('Settings', {
-      username: this.props.navigation.state.params.username
-    })
+  _notifications () {
+    this.props.navigation.navigate('Notifications')
+  }
+  _storage () {
+    this.props.navigation.navigate('Storage')
   }
   _changeAvatar () {
     const payload = {
@@ -105,9 +106,13 @@ class UserProfile extends React.PureComponent {
             <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
           </View>
           {this.connectivity()}
-          <TouchableOpacity style={styles.listItemFirst} onPress={this._settings.bind(this)}>
-            <Text style={styles.listText}>Settings</Text>
+
+          <TouchableOpacity style={styles.listItemFirst} onPress={this._notifications.bind(this)}>
+            <Text style={styles.listText}>Notifications</Text>
           </TouchableOpacity>
+          {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._storage.bind(this)}>
+            <Text style={styles.listText}>Storage</Text>
+          </TouchableOpacity>}
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
           </TouchableOpacity>
@@ -122,16 +127,13 @@ class UserProfile extends React.PureComponent {
           }}>
             <Text style={styles.listText}>Privacy</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.listItem} onPress={() => {
+            Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/TERMS.md')
+          }}>
+            <Text style={styles.listText}>Terms</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._contact.bind(this)}>
             <Text style={styles.listText}>Contact</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={() => {
-            Share.share({
-              title: 'Check out Textile Photos!',
-              url: 'https://textile.photos/'
-            })
-          }}>
-            <Text style={styles.listText}>Invite Friends!</Text>
           </TouchableOpacity>
         </View>
 
@@ -148,6 +150,7 @@ const mapStateToProps = (state) => {
   const nodeRunning = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
 
   return {
+    verboseUi: state.preferences.verboseUi,
     mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
     online,

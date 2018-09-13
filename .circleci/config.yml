@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
     lint:
         working_directory: ~/textile-mobile
@@ -369,26 +369,38 @@ workflows:
     version: 2
     lint-tests-android-ios:
         jobs:
-            - lint
-            - tests
+            - lint:
+                filters:
+                    branches:
+                        ignore:
+                            - master
+            - tests:
+                filters:
+                    branches:
+                        ignore:
+                            - master
             - android:
                 requires:
                     - lint
                     - tests
+                filters:
+                    branches:
+                        ignore:
+                            - master
             - ios:
                 requires:
                     - lint
                     - tests
+                filters:
+                    branches:
+                        ignore:
+                            - master
             - ios-beta:
-                requires:
-                    - ios
                 filters:
                     branches:
                         only:
                             - master
             - android-beta:
-                requires:
-                    - android
                 filters:
                     branches:
                         only:

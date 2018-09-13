@@ -5,11 +5,9 @@ import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
 import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
-import { AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId } from '../Models/TextileTypes'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId} from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
-import {ActionType} from 'typesafe-actions'
 
 export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: string) {
   try {
@@ -20,7 +18,7 @@ export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: s
   }
 }
 
-export function * insertImage (image: SharedImage, threadId: ThreadId, comment?: string) {
+export function * insertImage (image: SharedImage, threadId?: ThreadId, comment?: string) {
   const id = uuid()
   yield put(ProcessingImagesActions.insertImage(id, image, threadId, comment))
   yield call(addToIpfs, id)
@@ -33,8 +31,8 @@ export function * addToIpfs (uuid: string) {
       throw new Error('no ProcessingImage found')
     }
     yield put(ProcessingImagesActions.addingImage(uuid))
-    const { sharedImage, destinationThreadId, comment } = processingImage
-    const addResult: AddResult = yield call(addImage, sharedImage, destinationThreadId, comment)
+    const { sharedImage } = processingImage
+    const addResult: AddResult = yield call(addImage, sharedImage)
     yield put(ProcessingImagesActions.imageAdded(uuid, addResult))
     yield call(uploadArchive, uuid)
   } catch (error) {
@@ -69,7 +67,12 @@ export function * addToWallet (uuid: string) {
     const defaultThread: Thread = yield * getDefaultThread()
     const blockId: BlockId = yield call(TextileNode.addPhotoToThread, id, key, defaultThread.id)
     yield put(ProcessingImagesActions.addedToWallet(uuid, blockId))
-    yield call(shareToThread, uuid)
+    if (processingImage.destinationThreadId) {
+      yield call(shareToThread, uuid)
+    } else {
+      // If there is no destinationThreadId, just complete after adding to wallet
+      yield put(ProcessingImagesActions.complete(uuid))
+    }
   } catch (error) {
     yield put(ProcessingImagesActions.error(uuid, error))
   }
@@ -92,7 +95,7 @@ export function * shareToThread (uuid: string) {
   }
 }
 
-async function addImage (image: SharedImage, threadId: ThreadId, comment?: string): Promise<AddResult> {
+async function addImage (image: SharedImage): Promise<AddResult> {
   const addResult = await TextileNode.addPhoto(image.path)
   try {
     const exists = await RNFS.exists(image.path)

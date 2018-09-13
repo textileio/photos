@@ -37,6 +37,16 @@ class ThreadDetailCard extends React.PureComponent {
     } = this.props
     const photo = item.photo
     const likeRow = this.renderLikes(isLiked, didLike, photo)
+    let caption
+    if (photo.caption && photo.caption.length > 0) {
+      caption = <Text style={[styles.captionText]}>
+        <Text style={[styles.profileName]}>{username}</Text>
+        {' '}
+        {photo.caption}
+      </Text>
+    } else {
+      caption = <Text>{''}</Text>
+    }
     return (
       <TouchableWithoutFeedback onPress={onSelect}>
         <View style={styles.card}>
@@ -70,11 +80,7 @@ class ThreadDetailCard extends React.PureComponent {
             </View>
             {isLiked && likeRow
             }
-            <Text style={[styles.captionText]}>
-              <Text style={[styles.profileName]}>{username}</Text>
-              {' '}
-              {photo.caption}
-            </Text>
+            {caption}
             <View style={styles.cardFooterBottom} >
               <Text style={styles.detailUpdateTime}>{dateString.toUpperCase()}</Text>
             </View>
@@ -94,7 +100,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const username = photo.username ? photo.username : photo.author_id.substring(0, 8)
 
-  const defaultSource = require('../../views/Settings/statics/main-image.png')
+  const defaultSource = require('../../views/Notifications/statics/main-image.png')
 
   const totalLikes = photo.likes ? photo.likes.length : 0
   const isLiked = photo.likes && photo.likes.length > 0

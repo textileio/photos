@@ -17,7 +17,7 @@ export interface Props {
 const CommentCard = (props: Props) => {
   const { username, peerId, comment, date, isCaption } = props
   const dateString = moment.utc(date).fromNow()
-  const defaultSource = require('../../views/Settings/statics/main-image.png')
+  const defaultSource = require('../../views/Notifications/statics/main-image.png')
   return (
     <View style={[styles.comment, isCaption ? styles.withDivider : {} ]}>
       <Avatar style={{marginRight: 11}} width={38} height={38} peerId={peerId} defaultSource={defaultSource} />

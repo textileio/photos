@@ -30,7 +30,7 @@ class Mnemonic extends React.PureComponent {
               <Avatar
                 width={32}
                 height={32}
-                defaultSource={require('../Settings/statics/main-image.png')}
+                defaultSource={require('../Notifications/statics/main-image.png')}
                 owner
               />
             }

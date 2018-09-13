@@ -2,7 +2,8 @@ import { createStackNavigator } from 'react-navigation'
 
 import Account from '../../../../SB/views/UserProfile'
 import Mnemonic from '../../../../SB/views/UserProfile/Mnemonic'
-import Settings from '../../../../SB/views/Settings'
+import Notifications from '../../../../SB/views/Notifications'
+import Storage from '../../../../SB/views/Storage'
 import UpdateAvatar from '../../../../SB/views/UserOnBoarding/UpdateAvatar'
 
 import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
@@ -10,7 +11,8 @@ import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
 const nav = createStackNavigator(
   {
     About: Account,
-    Settings,
+    Notifications,
+    Storage,
     Mnemonic,
     ChangeAvatar: UpdateAvatar
   },

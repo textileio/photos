@@ -4,7 +4,7 @@ import { View, Text, ScrollView, Platform } from 'react-native'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import SettingsRow from './SettingsRow'
+import SettingsRow from '../../components/SettingsRow'
 import GetServiceInfo from './GetServiceInfo'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
@@ -13,7 +13,7 @@ import styles from './statics/styles'
 import Avatar from '../../../Components/Avatar'
 import { NavigationActions } from 'react-navigation'
 
-class AccountSettings extends React.PureComponent {
+class Notifications extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -28,7 +28,7 @@ class AccountSettings extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: 'Settings',
+      headerTitle: 'Notifications',
       headerLeft: (
         <TextileHeaderButtons left>
           <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
@@ -43,7 +43,7 @@ class AccountSettings extends React.PureComponent {
               <Avatar
                 width={32}
                 height={32}
-                defaultSource={require('../Settings/statics/main-image.png')}
+                defaultSource={require('./statics/main-image.png')}
                 owner
               />
             }
@@ -145,4 +145,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountSettings)
+export default connect(mapStateToProps, mapDispatchToProps)(Notifications)

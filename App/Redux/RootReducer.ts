@@ -12,6 +12,7 @@ import { reducer as threadsReducer } from './ThreadsRedux'
 import { reducer as uiReducer } from './UIRedux'
 import { reducer as uploadingImagesReducer } from './UploadingImagesRedux'
 import { reducer as processingImagesReducer } from './ProcessingImagesRedux'
+import { reducer as storageReducer } from './StorageRedux'
 import { reducer as startupReducer } from './StartupRedux'
 
 export default combineReducers({
@@ -27,5 +28,6 @@ export default combineReducers({
   ui: uiReducer,
   uploadingImages: uploadingImagesReducer,
   processingImages: processingImagesReducer,
+  storage: storageReducer,
   startup: startupReducer
 })

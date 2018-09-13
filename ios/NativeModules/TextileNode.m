@@ -3,6 +3,7 @@
 #import "TextileNode.h"
 #import "Events.h"
 #import <Mobile/Mobile.h>
+#import <Photos/Photos.h>
 
 // import RCTBridge
 #if __has_include(<React/RCTBridge.h>)
@@ -45,6 +46,78 @@ RCT_EXPORT_MODULE();
 
 - (dispatch_queue_t)methodQueue {
   return dispatch_queue_create("io.textile.TextileNodeQueue", DISPATCH_QUEUE_SERIAL);
+}
+
+// Export method for local photo selection
+
+RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSTimeInterval seconds = minEpoch;
+  NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
+
+  PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+  if (status == PHAuthorizationStatusAuthorized)
+  {
+    // Setup date-string conversion
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    // Ensure date string is always in UTC
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
+
+    //initialize empty local state
+    @autoreleasepool
+    {
+      //fetch all the albums
+      PHFetchOptions *onlyImagesOptions = [PHFetchOptions new];
+
+      // Limit to only photo media types
+      // NSPredicate *mediaPhotos = [NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeImage];
+      // Limit to only photos modified later than or equal to our specified date
+      NSPredicate *minDate = [NSPredicate predicateWithFormat:@"modificationDate > %@", epochNSDate];
+      // Limit to camera roll?
+      // NSPredicate *cameraRoll = [NSPredicate predicateWithFormat:@"modificationDate > %@", epochNSDate];
+      onlyImagesOptions.predicate = minDate;
+      // Combine the multiple predicates (didn't seem to work combining them like this)
+      // [NSCompoundPredicate orPredicateWithSubpredicates:@[mediaPhotos, minDate]];
+      // Not sure we really need to do the sort... but here it is
+      onlyImagesOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:YES]];
+
+
+      PHFetchResult *allPhotosResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:onlyImagesOptions];
+      [allPhotosResult enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
+
+        // Get our path right away while we are in Obj-c
+        [asset requestContentEditingInputWithOptions:nil completionHandler:^(PHContentEditingInput * _Nullable contentEditingInput, NSDictionary * _Nonnull info) {
+
+          // get rid of file://
+          NSString *uri = contentEditingInput.fullSizeImageURL.absoluteString;
+          NSString *path = [uri substringFromIndex:7];
+          NSNumber *orientation = contentEditingInput.fullSizeImageOrientation ? [NSNumber numberWithInt:contentEditingInput.fullSizeImageOrientation] : [NSNumber numberWithInt:1];
+          NSFileManager *fileManager = [NSFileManager defaultManager];
+          BOOL isExist = [fileManager fileExistsAtPath:path];
+          if (isExist) {
+            // creationDate is also available, but seems to be pure exif date
+            NSDate *newDate = asset.modificationDate;
+            NSDate *creationDate = asset.creationDate;
+            // dataWithJSONObject cannot include NSDate
+            NSString *dateString = [dateFormatter stringFromDate:newDate];
+            NSString *creationDateString = [dateFormatter stringFromDate:creationDate];
+
+            // Create an event paylod
+            NSDictionary *payload = @{ @"uri": uri, @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation};
+            NSError *serializationError;
+            NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:NSJSONWritingPrettyPrinted error:&serializationError];
+            if(!serializationError) {
+              NSString* jsonStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+              // Send our event back to RN
+              [Events emitEventWithName:@"newLocalPhoto" andPayload:jsonStr];
+            }
+          }
+        }];
+
+      }];
+    }
+  }
+  resolve(@YES);
 }
 
 // Export methods to a native module
