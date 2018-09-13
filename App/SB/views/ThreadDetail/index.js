@@ -50,6 +50,7 @@ class ThreadDetail extends React.PureComponent {
     )
     return {
       // TODO: no current menu needed for Wallet view
+      headerTitle: params.threadName,
       headerRight,
       headerLeft,
       tabBarVisible: false
@@ -110,7 +111,7 @@ class ThreadDetail extends React.PureComponent {
   _onPhotoSelect = (photo: Photo) => {
     return () => {
       this.props.viewPhoto(photo.id)
-      this.props.navigation.navigate('PhotoViewer')
+      this.props.navigation.navigate('Comments')
     }
   }
 
@@ -254,13 +255,6 @@ const mapStateToProps = (state: RootState) => {
 
   // add processing items to the beginning of the list
   items.unshift(...processingItems)
-
-  // add the title to the top of the flatlist
-  items.unshift({
-    type: 'title',
-    name: threadName,
-    id: threadName + '_title'
-  })
 
   return {
     threadId,

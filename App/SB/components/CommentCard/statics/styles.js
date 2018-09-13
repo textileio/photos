@@ -6,12 +6,13 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#e1e1e1'
   },
-  comment: {
+  container: {
     flexDirection: 'row',
-    marginRight: 12,
-    paddingBottom: 23,
-    paddingTop: 15,
     width: '100%'
+  },
+  content: {
+    flexDirection: 'row',
+    margin: 12
   },
   commentProfileImage: {
     width: 38,
