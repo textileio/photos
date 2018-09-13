@@ -12,7 +12,8 @@ export default StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
-    margin: 12
+    width: '100%',
+    padding: 12
   },
   commentProfileImage: {
     width: 38,
