@@ -20,6 +20,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 11,
+    marginTop: 8,
     marginBottom: 8
   },
   cardAvatar: {},

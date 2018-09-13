@@ -5,6 +5,7 @@ import AddThreadScreen from '../../../../../Containers/AddThreadScreen'
 import ThreadDetail from '../../../../../SB/views/ThreadDetail'
 import ThreadPhotoDetail from '../../../../../SB/views/ThreadPhotoDetail'
 import ThreadsEditFriends from '../../../../../SB/views/ThreadsEditFriends'
+import Comments from '../../../../../Containers/Comments'
 import AddCaptionScreen from '../../../../../Containers/AddCaptionScreen'
 import WalletPicker from '../../../../../Containers/WalletPicker'
 
@@ -16,7 +17,7 @@ const nav = createStackNavigator(
     AddThread: AddThreadScreen,
     AddFriends: ThreadsEditFriends,
     ViewThread: ThreadDetail,
-    PhotoViewer: ThreadPhotoDetail,
+    Comments,
     ThreadSharePhoto: AddCaptionScreen,
     WalletPicker
   },
@@ -29,5 +30,15 @@ const nav = createStackNavigator(
     }
   }
 )
+
+nav.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true
+  if (navigation.state.index > 0) {
+    tabBarVisible = false
+  }
+  return {
+    tabBarVisible
+  }
+}
 
 export default nav
