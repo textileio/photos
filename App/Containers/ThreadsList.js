@@ -1,4 +1,5 @@
 import React from 'react'
+import Icons from '../Components/Icons'
 import { connect } from 'react-redux'
 import { View, Text, Image, FlatList, Alert, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
@@ -138,6 +139,42 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
+  _renderList () {
+    if (this.props.threads.length !== 0 && this.props.tourScreen !== true) {
+      return (
+        // FIXME: This should be a FlatList for sure
+        <View style={styles.contentContainer} >
+          <FlatList
+            data={this.props.threads}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderItem}
+            refreshing={this.props.refreshing}
+            onRefresh={this._onRefresh}
+            initialNumToRender={4}
+          />
+        </View>
+      )
+    }
+    return null
+  }
+
+  _renderPlaceholder () {
+    if (this.props.threads.length === 0 && this.props.tourScreen !== true) {
+      return (
+        <View style={styles.emptyStateContainer}>
+            <Image
+              style={styles.emptyStateImage}
+              source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
+            <Text style={styles.emptyStateText}>
+              Nothing to see here yet... Start sharing your memories with friends and family with threads.
+              Create one using the <Icons name="add-thread" size={16} color="black" /> up top!
+            </Text>
+        </View>
+      )
+    }
+    return null
+  }
+
   _renderTour () {
     if (this.props.tourScreen === true) {
       return (
@@ -169,19 +206,8 @@ class ThreadsList extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this._renderTour()}
-        {this.props.threads.length !== 0 && (
-          // FIXME: This should be a FlatList for sure
-          <View style={styles.contentContainer} >
-            <FlatList
-              data={this.props.threads}
-              keyExtractor={this._keyExtractor}
-              renderItem={this._renderItem}
-              refreshing={this.props.refreshing}
-              onRefresh={this._onRefresh}
-              initialNumToRender={4}
-            />
-          </View>
-        )}
+        {this._renderPlaceholder()}
+        {this._renderList()}
       </View>
     )
   }

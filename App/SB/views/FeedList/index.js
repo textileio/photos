@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
+import Icons from '../../../Components/Icons'
 
 import FeedItem from '../../components/FeedItem'
 import Button from '../../components/Button'
@@ -50,7 +51,7 @@ class Notifications extends React.PureComponent {
     }
   }
 
-  // gets called every time  the user enters this tab
+  // gets called every time the user enters this tab
   _onFocus () {
     // refresh the messages for the user
     this.props.refreshNotifications() // < will get called on the very first entry too
@@ -110,6 +111,23 @@ class Notifications extends React.PureComponent {
     )
   }
 
+  _renderPlaceholder() {
+    if (this.props.notifications.length === 0 && this.props.showTourScreen !== true) {
+      return (
+        <View style={styles.emptyStateContainer}>
+          <Image
+            style={styles.emptyStateImage}
+            source={require('../../views/ThreadsList/statics/thread-empty-state.png')} />
+          <Text style={styles.emptyStateText}>
+            Nothing to see here yet... Start sharing your memories with friends and family with threads.
+            Create one on the <Icons name="threads" size={16} color="black" /> tab below!
+            </Text>
+        </View>
+      )
+    }
+    return null
+  }
+
   _renderTour () {
     return (
       <View style={styles.emptyStateContainer}>
@@ -134,6 +152,7 @@ class Notifications extends React.PureComponent {
       <View style={styles.container}>
         {/* <FeedItemUpdate /> */}
         {this.props.showTourScreen && this._renderTour()}
+        {this._renderPlaceholder()}
         <View style={styles.contentContainer}>
           <FlatList
             data={this.props.notifications}
@@ -168,7 +187,7 @@ const mapDispatchToProps = (dispatch) => {
     refreshNotifications: () => dispatch(NotificationsActions.refreshNotificationsRequest()),
     readAllNotifications: () => dispatch(NotificationsActions.readAllNotificationsRequest()),
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
-    clickNotification: (notification: Notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
+    clickNotification: (notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) }
   }
 }
