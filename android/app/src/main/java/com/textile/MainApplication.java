@@ -8,7 +8,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.imagepicker.ImagePickerPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -46,7 +45,6 @@ public class MainApplication extends Application implements ReactApplication {
         new BackgroundTimerPackage(),
         new BackgroundTaskPackage(),
         new RNFSPackage(),
-        new ReactNativeI18n(),
         new VectorIconsPackage(),
         new TextileNodePackage()
       );
