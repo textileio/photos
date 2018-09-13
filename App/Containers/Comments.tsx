@@ -27,13 +27,9 @@ interface DispatchProps {
   submitComment: () => void
 }
 
-interface State {
-  drawer: boolean
-}
-
 type Props = StateProps & DispatchProps
 
-class Comments extends Component<Props, State> {
+class Comments extends Component<Props> {
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>
@@ -49,13 +45,6 @@ class Comments extends Component<Props, State> {
   }
 
   scrollView?: ScrollView
-
-  constructor (props: Props) {
-    super(props)
-    this.state = {
-      drawer: false
-    }
-  }
 
   scrollToEnd = () => {
     if (this.scrollView) {
