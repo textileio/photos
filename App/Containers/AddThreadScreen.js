@@ -4,7 +4,6 @@ import { View, ScrollView } from 'react-native'
 import Input from '../SB/components/Input'
 import { NavigationActions } from 'react-navigation'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
-// import styles from './Styles/AddThreadStyle'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 
