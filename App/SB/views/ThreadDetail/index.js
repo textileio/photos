@@ -1,7 +1,6 @@
 import React from 'react'
-import Icons from '../../../Components/Icons'
 import { connect } from 'react-redux'
-import { View, FlatList, Text, Image } from 'react-native'
+import { View, FlatList, Text } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'

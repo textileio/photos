@@ -8,7 +8,6 @@ import FeedItem from '../../components/FeedItem'
 import Button from '../../components/Button'
 import Avatar from '../../../Components/Avatar'
 
-import { Notification } from '../../../Models/TextileTypes'
 import NotificationsActions from '../../../Redux/NotificationsRedux'
 
 import styles from './statics/styles'
@@ -111,7 +110,7 @@ class Notifications extends React.PureComponent {
     )
   }
 
-  _renderPlaceholder() {
+  _renderPlaceholder () {
     if (this.props.notifications.length === 0 && this.props.showTourScreen !== true) {
       return (
         <View style={styles.emptyStateContainer}>
@@ -120,7 +119,7 @@ class Notifications extends React.PureComponent {
             source={require('../../views/ThreadsList/statics/thread-empty-state.png')} />
           <Text style={styles.emptyStateText}>
             Nothing to see here yet... Start sharing your memories with friends and family with threads.
-            Create one on the <Icons name="threads" size={16} color="black" /> tab below!
+            Create one on the <Icons name='threads' size={16} color='black' /> tab below!
             </Text>
         </View>
       )

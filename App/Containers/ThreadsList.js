@@ -18,8 +18,8 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 
-function isEmpty(obj) {
-  for (const x of obj) {
+function isEmpty (obj) {
+  for (const _ of obj) {
     return false
   }
   return true
@@ -95,7 +95,7 @@ class ThreadsList extends React.PureComponent {
     }
     if (
       this.props.threads &&
-      prevProps.threads && 
+      prevProps.threads &&
       this.props.threads.length !== prevProps.threads.length
     ) {
       this._notificationPrompt()
@@ -179,18 +179,18 @@ class ThreadsList extends React.PureComponent {
   _renderPlaceholder () {
     if (
       this.props.threads &&
-      this.props.threads.length === 0 && 
+      this.props.threads.length === 0 &&
       this.props.tourScreen !== true
       ) {
       return (
         <View style={styles.emptyStateContainer}>
-            <Image
-              style={styles.emptyStateImage}
-              source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
-            <Text style={styles.emptyStateText}>
-              Nothing to see here yet... Start sharing your memories with friends and family with threads.
-              Create one using the <Icons name="add-thread" size={16} color="black" /> up top!
-            </Text>
+          <Image
+          style={styles.emptyStateImage}
+            source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
+          <Text style={styles.emptyStateText}>
+            Nothing to see here yet... Start sharing your memories with friends and family with threads.
+            Create one using the <Icons name='add-thread' size={16} color='black' /> up top!
+          </Text>
         </View>
       )
     }
@@ -238,7 +238,7 @@ class ThreadsList extends React.PureComponent {
 const mapStateToProps = (state) => {
   const profile = state.preferences.profile
   const allThreads = getThreads(state)
-  let threads = undefined
+  let threads
   if (!isEmpty(allThreads)) {
     threads = allThreads
       .filter(thread => thread.name !== 'default')
