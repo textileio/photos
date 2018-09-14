@@ -50,6 +50,9 @@ export default StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start'
   },
+  cardFooterTopItem: {
+    marginLeft: 11
+  },
   profileName: {
     fontFamily: 'BentonSans',
     fontSize: 14,
