@@ -125,7 +125,7 @@ export interface Photo {
   username?: string
   metadata?: PhotoMetadata
   comments: UserComment[]
-  Likes: UserLike[]
+  likes: UserLike[]
 }
 
 export interface ExternalInvite {
