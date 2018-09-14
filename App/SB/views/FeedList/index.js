@@ -42,7 +42,7 @@ class Notifications extends React.PureComponent {
         />
       </HeaderButtons>
     )
-    const headerTitle = 'Feed'
+    const headerTitle = 'Notifications'
 
     return {
       headerLeft,
