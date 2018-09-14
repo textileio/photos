@@ -111,20 +111,17 @@ class Notifications extends React.PureComponent {
   }
 
   _renderPlaceholder () {
-    if (this.props.notifications.length === 0 && this.props.showTourScreen !== true) {
-      return (
-        <View style={styles.emptyStateContainer}>
-          <Image
-            style={styles.emptyStateImage}
-            source={require('../../views/ThreadsList/statics/thread-empty-state.png')} />
-          <Text style={styles.emptyStateText}>
-            Nothing to see here yet... Start sharing your memories with friends and family with threads.
-            Create one on the <Icons name='threads' size={16} color='black' /> tab below!
-            </Text>
-        </View>
-      )
-    }
-    return null
+    return (
+      <View style={styles.emptyStateContainer}>
+        <Image
+          style={styles.emptyStateImage}
+          source={require('../../views/ThreadsList/statics/thread-empty-state.png')} />
+        <Text style={styles.emptyStateText}>
+          Nothing to see here yet... Start sharing your memories with friends and family with threads.
+          Create one on the <Icons name='threads' size={16} color='black' /> tab below!
+          </Text>
+      </View>
+    )
   }
 
   _renderTour () {
@@ -146,22 +143,27 @@ class Notifications extends React.PureComponent {
     )
   }
 
+  _renderItems () {
+    return (
+      <View style={styles.contentContainer}>
+        <FlatList
+          data={this.props.notifications}
+          keyExtractor={this._keyExtractor.bind(this)}
+          renderItem={this._renderItem.bind(this)}
+          refreshing={false}
+          onRefresh={this.props.refreshMessages}
+          initialNumToRender={20}
+        />
+      </View >
+    )
+  }
+
   render () {
     return (
       <View style={styles.container}>
-        {/* <FeedItemUpdate /> */}
         {this.props.showTourScreen && this._renderTour()}
-        {this._renderPlaceholder()}
-        <View style={styles.contentContainer}>
-          <FlatList
-            data={this.props.notifications}
-            keyExtractor={this._keyExtractor.bind(this)}
-            renderItem={this._renderItem.bind(this)}
-            refreshing={false}
-            onRefresh={this.props.refreshMessages}
-            initialNumToRender={20}
-          />
-        </View>
+        {this.props.showPlaceholder && this._renderPlaceholder()}
+        {!this.props.showPlaceholder && !this.props.showTourScreen && this._renderItems()}
         {/* <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} /> */}
       </View>
     )
@@ -174,10 +176,12 @@ const mapStateToProps = (state) => {
       if (n.type === 1) return true // a device notification
       return n.actor_username !== undefined && n.actor_username !== ''
     })
+  const tourScreenFeed = state.preferences.tourScreens.feed === true
   return {
     notifications,
     profile: state.preferences.profile,
-    showTourScreen: state.preferences.tourScreens.feed === true
+    showTourScreen: tourScreenFeed,
+    showPlaceholder: notifications.length === 0 && !tourScreenFeed
   }
 }
 

@@ -18,13 +18,6 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 
-function isEmpty (obj) {
-  for (const _ in obj) {
-    return false
-  }
-  return true
-}
-
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
@@ -76,7 +69,7 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile,
       online: this.props.online,
-      onTour: this.props.tourScreen === true,
+      onTour: this.props.showTourScreen === true,
       toggleVerboseUi: this.props.toggleVerboseUi
     })
   }
@@ -84,18 +77,19 @@ class ThreadsList extends React.PureComponent {
   componentDidUpdate (prevProps, prevState, ss) {
     if (
       this.props.profile !== prevProps.profile ||
-      this.props.tourScreen !== prevProps.tourScreen ||
+      this.props.showTourScreen !== prevProps.showTourScreen ||
       this.props.online !== prevProps.online
     ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
         online: this.props.online,
-        onTour: this.props.tourScreen === true
+        onTour: this.props.showTourScreen === true
       })
     }
     if (
-      this.props.threads &&
-      prevProps.threads &&
+      this.props.showNotificationsPrompt &&
+      !this.props.showTourScreen &&
+      !this.props.showPlaceholder &&
       this.props.threads.length !== prevProps.threads.length
     ) {
       this._notificationPrompt()
@@ -103,36 +97,29 @@ class ThreadsList extends React.PureComponent {
   }
 
   _notificationPrompt () {
-    if (
-      this.props.notificationsPrompt &&
-      !this.props.tourScreen &&
-      this.props.threads &&
-      this.props.threads.length > 0
-    ) {
-      // never show it again
-      this.props.completeScreen('notifications')
-      // give the user a prompt
-      Alert.alert(
-        'Notifications',
-        'Want to receive notifications when you receive new photos or invites?',
-        [
-          {
-            text: 'Yes please',
-            onPress: () => {
-              this.props.enableNotifications()
-            }
-          },
-          { text: 'Not now', style: 'cancel' },
-          {
-            text: 'Show all options',
-            onPress: () => {
-              this.props.navigation.navigate('Settings')
-            }
+    // never show it again
+    this.props.completeScreen('notifications')
+    // give the user a prompt
+    Alert.alert(
+      'Notifications',
+      'Want to receive notifications when you receive new photos or invites?',
+      [
+        {
+          text: 'Yes please',
+          onPress: () => {
+            this.props.enableNotifications()
           }
-        ],
-        { cancelable: false }
-      )
-    }
+        },
+        { text: 'Not now', style: 'cancel' },
+        {
+          text: 'Show all options',
+          onPress: () => {
+            this.props.navigation.navigate('Settings')
+          }
+        }
+      ],
+      { cancelable: false }
+    )
   }
 
   _onPressItem = (photo) => {
@@ -154,82 +141,65 @@ class ThreadsList extends React.PureComponent {
   }
 
   _renderList () {
-    if (
-      this.props.threads &&
-      this.props.threads.length !== 0 &&
-      this.props.tourScreen !== true
-      ) {
-      return (
-        // FIXME: This should be a FlatList for sure
-        <View style={styles.contentContainer} >
-          <FlatList
-            data={this.props.threads}
-            keyExtractor={this._keyExtractor}
-            renderItem={this._renderItem}
-            refreshing={this.props.refreshing}
-            onRefresh={this._onRefresh}
-            initialNumToRender={4}
-          />
-        </View>
-      )
-    }
-    return null
+    return (
+      // FIXME: This should be a FlatList for sure
+      <View style={styles.contentContainer} >
+        <FlatList
+          data={this.props.threads}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderItem}
+          refreshing={this.props.refreshing}
+          onRefresh={this._onRefresh}
+          initialNumToRender={4}
+        />
+      </View>
+    )
   }
 
   _renderPlaceholder () {
-    if (
-      this.props.threads &&
-      this.props.threads.length === 0 &&
-      this.props.tourScreen !== true
-      ) {
-      return (
-        <View style={styles.emptyStateContainer}>
-          <Image
-            style={styles.emptyStateImage}
-            source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
-          <Text style={styles.emptyStateText}>
-            Nothing to see here yet... Start sharing your memories with friends and family with threads.
+    return (
+      <View style={styles.emptyStateContainer}>
+        <Image
+          style={styles.emptyStateImage}
+          source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
+        <Text style={styles.emptyStateText}>
+          Nothing to see here yet... Start sharing your memories with friends and family with threads.
             Create one using the <Icons name='add-thread' size={16} color='black' /> up top!
           </Text>
-        </View>
-      )
-    }
-    return null
+      </View>
+    )
   }
 
   _renderTour () {
-    if (this.props.tourScreen === true) {
-      return (
-        <View style={styles.emptyStateContainer}>
-          <Image
-            style={styles.emptyStateImage}
-            source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
-          <Text style={styles.emptyStateText}>
-            This is where you can create shared
-            Threads. Invite only groups to share
-            photos with your friends and family.
+    return (
+      <View style={styles.emptyStateContainer}>
+        <Image
+          style={styles.emptyStateImage}
+          source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
+        <Text style={styles.emptyStateText}>
+          This is where you can create shared
+          Threads. Invite only groups to share
+          photos with your friends and family.
           </Text>
-          <View style={styles.tourButtons}>
-            <Button primary text='Create a thread' onPress={() => {
-              this.props.completeScreen('threads')
-              this.props.navigation.navigate('AddThread')
-            }} />
-            <TouchableOpacity style={styles.skipButton} onPress={() => { this.props.completeScreen('threads') }} >
-              <Text style={styles.skipButtonText}>Skip</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.tourButtons}>
+          <Button primary text='Create a thread' onPress={() => {
+            this.props.completeScreen('threads')
+            this.props.navigation.navigate('AddThread')
+          }} />
+          <TouchableOpacity style={styles.skipButton} onPress={() => { this.props.completeScreen('threads') }} >
+            <Text style={styles.skipButtonText}>Skip</Text>
+          </TouchableOpacity>
         </View>
-      )
-    }
-    return null
+      </View>
+    )
   }
 
   render () {
     return (
       <View style={styles.container}>
-        {this._renderTour()}
-        {this._renderPlaceholder()}
-        {this._renderList()}
+        {this.props.showTourScreen && this._renderTour()}
+        {this.props.showPlaceholder && this._renderPlaceholder()}
+        {!this.props.showPlaceholder && !this.props.showTourScreen && this._renderList()}
       </View>
     )
   }
@@ -239,7 +209,7 @@ const mapStateToProps = (state) => {
   const profile = state.preferences.profile
   const allThreads = getThreads(state)
   let threads
-  if (!isEmpty(allThreads)) {
+  if (allThreads.length > 0) {
     threads = allThreads
       .filter(thread => thread.name !== 'default')
       .map(thread => {
@@ -270,9 +240,10 @@ const mapStateToProps = (state) => {
     profile,
     threads,
     refreshing: !!state.ui.refreshingMessages,
-    notificationsPrompt: state.preferences.tourScreens.notifications,
+    showNotificationsPrompt: state.preferences.tourScreens.notifications && threads,
     services: state.preferences.services,
-    tourScreen: state.preferences.tourScreens.threads // <- default off so users don't see a screen flash,
+    showTourScreen: state.preferences.tourScreens.threads && threads, // <- default off so users don't see a screen flash,
+    showPlaceholder: !state.preferences.tourScreens.threads && threads && threads.length === 0
   }
 }
 
