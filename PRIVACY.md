@@ -1,8 +1,8 @@
 # Privacy Policy
 
-Textile provides exchange and storage of encrypted personal data. We cannot decrypt or otherwise access the data you privately store or share with your contacts. You can choose to share your data such as photos in public forums whereby anyone can view the data contents. Textile provides remote data storage for users on the IPFS network (see https://ipfs.io/). The IPFS protocol has no mechanisms for deletion of data once posted, instead we make data can be revoked, where all servers in the IPFS network run through Textile (including those in the mobile app) will discontinue the hosting and displaying of that data. 
+Textile provides exchange and storage of encrypted personal data. We cannot decrypt or otherwise access the data you privately store or share with your contacts. You can choose to share your data such as photos in public forums whereby anyone can view the data contents. Textile provides remote data storage for users on the IPFS network (see https://ipfs.io/). The IPFS protocol has no mechanisms for deletion of data once added, so instead, we allow users to 'revoke' their data, such that all servers in the IPFS network run through Textile (including those in the mobile app) will discontinue the hosting and displaying of said data. 
 
-When you you share photos in group forums ("Threads"), the encryption keys for the data (full res photo, lower resolution copies, and basic metadata) are shared with Thread members and so are visible to anyone with the keys to that Thread. Keys are distributed whenever you, or another Thread member invite new members to the Thread. The encrypted data shared in Threads are distributed over a network of voluntary IPFS servers that no single member or the Textile organization controls. Read more about public-key cryptography and the IPFS protocol if you are interested in how this works. 
+When you share photos in group forums ("Threads"), the encryption keys for the data (full resolution photo, lower resolution copies, and basic metadata) are shared with Thread members and are visible to anyone with the keys to that Thread. Keys are distributed whenever you, or another Thread member, invite new members to the Thread. The encrypted data shared in Threads are distributed over a network of voluntary IPFS servers that no single member, or the Textile organization, controls. Read more about public-key cryptography and the IPFS protocol if you are interested in how this works. 
 
 ## Information We Have
 
@@ -49,4 +49,4 @@ Please contact us with any questions at contact@textile.io
 
 # Changelog
 
-09.12.18: Clarified the introduction, specifically what information is passing through IPFS and where it may be hosted. Clarified the collection of crash and bug reporting. Clarified the future opt-in for backup services.
+09.12.18: Clarified the introduction, specifically what information is passing through IPFS and where it may be hosted. Clarified the collection of crash and bug reporting. Clarified the future opt-in for backup services. Minor typo fixes.
