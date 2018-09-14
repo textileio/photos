@@ -156,10 +156,7 @@ class ThreadDetail extends React.PureComponent {
       case 'photo': {
         return (
           <ThreadDetailCard
-            id={item.id + '_card'}
-            item={item}
-            profile={this.props.profile}
-            contacts={this.props.contacts}
+            photo={item.photo}
             onSelect={this._onPhotoSelect(item.photo)}
           />
         )
@@ -241,18 +238,6 @@ const mapStateToProps = (state: RootState) => {
 
   const threadName = viewingThread ? viewingThread.name : undefined
 
-  const nodeStatus = state.textileNode.nodeState.error
-    ? 'Error - ' + state.textileNode.nodeState.error.message
-    : state.textileNode.nodeState.state
-
-  const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
-
-  const placeholderText = state.textileNode.nodeState.state !== 'started'
-    ? 'Wallet Status:\n' + nodeStatus
-    : (threadName === 'default'
-      ? 'Any new photos you take will be added to your Textile wallet.'
-      : 'Share your first photo to the ' + threadName + ' thread.')
-
   // add processing items to the beginning of the list
   items.unshift(...processingItems)
 
@@ -261,13 +246,7 @@ const mapStateToProps = (state: RootState) => {
     threadName,
     items,
     displayImages: state.textileNode.nodeState.state === 'started',
-    placeholderText,
-    nodeStatus,
-    queryingCameraRollStatus,
-    verboseUi: state.preferences.verboseUi,
     profile: state.preferences.profile,
-    profiles: state.contacts.profiles,
-    contacts: state.contacts.profiles,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
     displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined
