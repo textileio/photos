@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Share, View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, { DURATION } from 'react-native-easy-toast'
@@ -127,16 +127,13 @@ class UserProfile extends React.PureComponent {
           }}>
             <Text style={styles.listText}>Privacy</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.listItem} onPress={() => {
+            Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/TERMS.md')
+          }}>
+            <Text style={styles.listText}>Terms</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._contact.bind(this)}>
             <Text style={styles.listText}>Contact</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={() => {
-            Share.share({
-              title: 'Check out Textile Photos!',
-              url: 'https://textile.photos/'
-            })
-          }}>
-            <Text style={styles.listText}>Invite Friends!</Text>
           </TouchableOpacity>
         </View>
 
