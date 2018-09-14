@@ -173,7 +173,7 @@ class ThreadDetail extends React.PureComponent {
         return (
           <ThreadDetailCard
             photo={item.photo}
-            onSelect={this._onPhotoSelect(item.photo)}
+            onComment={this._onPhotoSelect(item.photo)}
           />
         )
       }

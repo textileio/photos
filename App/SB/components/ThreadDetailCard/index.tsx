@@ -1,8 +1,7 @@
 import React from 'react'
 import Redux, { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ImageURISource } from 'react-native'
-import ImageSc from 'react-native-scalable-image'
+import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-native'
 import moment from 'moment'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 import { getHeight } from '../../../Services/PhotoUtils'
@@ -10,6 +9,8 @@ import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
+import Icons from '../../../Components/Icons'
+import Colors from '../../../Themes/Colors'
 import { Photo, BlockId } from '../../../Models/TextileTypes'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
@@ -18,7 +19,7 @@ const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
   photo: Photo
-  onSelect: () => void
+  onComment: () => void
 }
 
 interface StateProps {
@@ -66,7 +67,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       imageWidth,
       username,
       photoUsername,
-      onSelect
+      onComment
     } = this.props
 
     const likeRow = this.renderLikes(isLiked, didLike, photo)
@@ -78,56 +79,61 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       caption = <Text>{''}</Text>
     }
 
-    const recentComments = photo.comments.slice(0, 2).map((comment, index) => {
+    const recentComments = photo.comments.slice(0, 2).reverse().map((comment, index) => {
       const username = comment.username || 'unknown'
       return <KeyValueText key={index} keyString={username} value={comment.body} numberOfLines={1} />
     })
 
     let commentCountDescription
     if (photo.comments.length > 2) {
-      commentCountDescription = <Text style={styles.commentCount}>See all {photo.comments.length} comments...</Text>
+      commentCountDescription = (
+        <TouchableOpacity onPress={onComment} >
+          <Text style={styles.commentCount}>See all {photo.comments.length} comments...</Text>
+        </TouchableOpacity>
+      )
     }
 
     return (
-      <TouchableWithoutFeedback onPress={onSelect}>
-        <View style={styles.card}>
-          <View style={styles.cardHeader} >
-            <Avatar style={styles.cardAvatar} width={18} height={18} peerId={peerId} defaultSource={defaultSource} />
-            <Text style={styles.cardAction}><Text style={styles.cardActionName}>
-              {photoUsername === username ? 'You' : photoUsername}
-            </Text> added a photo</Text>
-          </View>
-          <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
-            <View style={styles.imageStretch}>
-              <ProgressiveImage
-                imageId={photo.id}
-                previewPath={'small'}
-                path={'medium'}
-                style={[styles.image, {width: imageWidth, height: imageHeight}]}
-                resizeMode={'cover'}
-              />
-            </View>
-          </View>
-          <View style={styles.cardFooter} >
-            <View style={styles.cardFooterTop} >
-              {didLike && <ImageSc width={32} source={require('../../../Images/v2/hearted.png')} />}
-              {!didLike &&
-                <TouchableOpacity onPress={this.onLikePress} >
-                  <ImageSc width={32} source={require('../../../Images/v2/heart.png')} />
-                </TouchableOpacity>
-              }
-            </View>
-            {isLiked && likeRow
-            }
-            {caption}
-            {recentComments}
-            {commentCountDescription}
-            <View style={styles.cardFooterBottom} >
-              <Text style={styles.detailUpdateTime}>{dateString.toUpperCase()}</Text>
-            </View>
+      <View style={styles.card}>
+        <View style={styles.cardHeader} >
+          <Avatar style={styles.cardAvatar} width={18} height={18} peerId={peerId} defaultSource={defaultSource} />
+          <Text style={styles.cardAction}><Text style={styles.cardActionName}>
+            {photoUsername === username ? 'You' : photoUsername}
+          </Text> added a photo</Text>
+        </View>
+        <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
+          <View style={styles.imageStretch}>
+            <ProgressiveImage
+              imageId={photo.id}
+              previewPath={'small'}
+              path={'medium'}
+              style={[styles.image, {width: imageWidth, height: imageHeight}]}
+              resizeMode={'cover'}
+            />
           </View>
         </View>
-      </TouchableWithoutFeedback>
+        <View style={styles.cardFooter} >
+          <View style={styles.cardFooterTop} >
+            {didLike && <Icons name='heart-filled' size={24} style={{ color: Colors.brandPink }} />}
+            {!didLike &&
+              <TouchableOpacity onPress={this.onLikePress} >
+                <Icons name='heart' size={24} />
+              </TouchableOpacity>
+            }
+            <TouchableOpacity onPress={onComment} style={styles.cardFooterTopItem} >
+              <Icons name='comment' size={24} />
+            </TouchableOpacity>
+          </View>
+          {isLiked && likeRow
+          }
+          {caption}
+          {commentCountDescription}
+          {recentComments}
+          <View style={styles.cardFooterBottom} >
+            <Text style={styles.detailUpdateTime}>{dateString.toUpperCase()}</Text>
+          </View>
+        </View>
+      </View>
     )
   }
 }
