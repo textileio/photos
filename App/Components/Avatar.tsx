@@ -15,11 +15,11 @@ interface IPropsFromState {
 }
 
 export interface IAvatarProps extends IPropsFromState {
-  height: number,
-  width: number,
-  owner?: boolean, // flags if it is known already to be the local user's profile
-  peerId?: string, // will auto check to see if it is the same as the local user's
-  defaultSource?: number | ImageURISource | undefined,
+  height: number
+  width: number
+  owner?: boolean // flags if it is known already to be the local user's profile
+  peerId?: string // will auto check to see if it is the same as the local user's
+  defaultSource?: number | ImageURISource
   style?: StyleProp<ViewStyle>
 }
 
@@ -58,9 +58,6 @@ class Avatar extends React.PureComponent<IAvatarProps> {
             path={'small'}
             style={{ width, height }}
             resizeMode={'cover'}
-            width={width}
-            height={height}
-            defaultSource={defaultSource}
           />
         </View>
       </View>

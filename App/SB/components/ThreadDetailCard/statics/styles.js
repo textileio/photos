@@ -20,6 +20,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 11,
+    marginTop: 8,
     marginBottom: 8
   },
   cardAvatar: {},
@@ -54,6 +55,14 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 16
   },
+  commentCount: {
+    fontFamily: 'BentonSans',
+    fontSize: 14,
+    color: '#9b9b9b',
+    lineHeight: 16,
+    paddingTop: 6,
+    paddingBottom: 8
+  },
   likedText: {
     flex: 1,
     flexDirection: 'row',
@@ -64,17 +73,6 @@ export default StyleSheet.create({
     overflow: 'visible',
     paddingTop: 6,
     paddingBottom: 2
-  },
-  captionText: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    fontFamily: 'BentonSans-Light',
-    fontSize: 14,
-    lineHeight: 16,
-    overflow: 'visible',
-    paddingTop: 6,
-    paddingBottom: 8
   },
   cardFooterBottom: {
     flex: 1,

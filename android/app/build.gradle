@@ -181,7 +181,6 @@ dependencies {
     compile project(':react-native-background-timer')
     compile project(':react-native-background-task')
     compile project(':react-native-fs')
-    compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')
     compile project(':textilego')
     compile fileTree(include: ['*.jar'], dir: 'libs')

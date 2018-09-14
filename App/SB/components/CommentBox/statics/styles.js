@@ -11,7 +11,7 @@ export default StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#EDEDEE',
     paddingHorizontal: 20,
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,
     width: '100%'
   },

@@ -19,12 +19,14 @@ const CommentCard = (props: Props) => {
   const dateString = moment.utc(date).fromNow()
   const defaultSource = require('../../views/Notifications/statics/main-image.png')
   return (
-    <View style={[styles.comment, isCaption ? styles.withDivider : {} ]}>
-      <Avatar style={{marginRight: 11}} width={38} height={38} peerId={peerId} defaultSource={defaultSource} />
-      <View style={styles.commentTexts}>
-        <Text style={styles.commentUser}>{username}</Text>
-        <View style={styles.commentTextWrapper}><Text style={styles.commentText}>{comment}</Text></View>
-        <Text style={styles.commentDate}>{dateString}</Text>
+    <View style={[styles.container, isCaption ? styles.withDivider : {} ]}>
+      <View style={styles.content} >
+        <Avatar style={{marginRight: 11}} width={38} height={38} peerId={peerId} defaultSource={defaultSource} />
+        <View style={styles.commentTexts}>
+          <Text style={styles.commentUser}>{username}</Text>
+          <View style={styles.commentTextWrapper}><Text style={styles.commentText}>{comment}</Text></View>
+          <Text style={styles.commentDate}>{dateString}</Text>
+        </View>
       </View>
     </View>
   )
