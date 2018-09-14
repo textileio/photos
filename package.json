@@ -31,7 +31,7 @@
     "tslint": "tslint -c tslint.json --project ."
   },
   "dependencies": {
-    "@textile/go-mobile": "^0.1.9",
+    "@textile/go-mobile": "0.1.9",
     "apisauce": "^0.14.2",
     "format-json": "^1.0.3",
     "identity-obj-proxy": "^3.0.0",
