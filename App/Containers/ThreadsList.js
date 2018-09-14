@@ -19,7 +19,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 function isEmpty (obj) {
-  for (const _ of obj) {
+  for (const _ in obj) {
     return false
   }
   return true
@@ -185,7 +185,7 @@ class ThreadsList extends React.PureComponent {
       return (
         <View style={styles.emptyStateContainer}>
           <Image
-          style={styles.emptyStateImage}
+            style={styles.emptyStateImage}
             source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
           <Text style={styles.emptyStateText}>
             Nothing to see here yet... Start sharing your memories with friends and family with threads.
