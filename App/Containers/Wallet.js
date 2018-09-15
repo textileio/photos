@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import Config from 'react-native-config'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
+import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { Photo } from '../Models/TextileTypes'
 import style from './Styles/TextilePhotosStyle'
@@ -66,7 +67,7 @@ class Wallet extends React.PureComponent {
   }
 
   onRefresh () {
-    this.props.refresh(this.props.threadId)
+    this.props.refresh()
     this.props.updateOverview()
   }
 
@@ -109,7 +110,7 @@ class Wallet extends React.PureComponent {
             progressData={this.props.progressData}
             onSelect={this.onSelect}
             onRefresh={this.onRefresh.bind(this)}
-            refreshing={this.props.refreshing}
+            refreshing={false}
             placeholderText={this.props.placeholderText}
             displayImages={this.props.displayImages}
             verboseUi={this.props.verboseUi}
@@ -132,7 +133,6 @@ const mapStateToProps = (state: RootState) => {
   const defaultData = defaultThreadData(state)
   const threadId = defaultData ? defaultData.thread.id : undefined
   const photos: Photo[] = defaultData ? defaultData.photos : []
-  const refreshing = defaultData ? defaultData.querying : false
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error
@@ -156,7 +156,6 @@ const mapStateToProps = (state: RootState) => {
     threadId,
     photos,
     progressData: state.processingImages.images,
-    refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
     verboseUi: state.preferences.verboseUi,
@@ -171,7 +170,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewWalletPhoto: (photoId) => { dispatch(PhotoViewingActions.viewWalletPhoto(photoId)) },
-    refresh: (threadId: string) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
+    refresh: () => { dispatch(StorageActions.refreshLocalImagesRequest()) },
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },
     updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) }
   }

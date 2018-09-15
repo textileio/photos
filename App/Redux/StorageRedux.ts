@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import {ThreadId, SharedImage, AddResult, BlockId, ILocalPhotoResult} from '../Models/TextileTypes'
+import {ILocalPhotoResult} from '../Models/TextileTypes'
 import { RootState } from './Types'
 
 const actions = {

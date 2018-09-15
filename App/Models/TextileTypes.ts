@@ -220,7 +220,8 @@ export interface ILocalPhotoResult {
   modificationDate: string,
   orientation: number,
   path: string,
-  uri: string
+  uri: string,
+  canDelete: boolean
 }
 
 export enum BlockType {
