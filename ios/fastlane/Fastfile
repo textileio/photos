@@ -54,7 +54,8 @@ platform :ios do
     )
     crashlytics(
       api_token: ENV['FABRIC_API_TOKEN'],
-      build_secret: ENV['FABRIC_BUILD_SECRET']
+      build_secret: ENV['FABRIC_BUILD_SECRET'],
+      groups: 'textile-internal'
     )
     upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
   end

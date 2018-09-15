@@ -272,20 +272,20 @@ jobs:
                 command: bundle exec fastlane adhoc
                 working_directory: ios
 
-            - run:
-                name: set up test results
-                working_directory: ios
-                when: always
-                command: |
-                    mkdir -p test-results/fastlane test-results/xcode
-                    mv fastlane/report.xml test-results/fastlane
-                    mv fastlane/test_output/report.junit test-results/xcode/junit.xml
+            # - run:
+            #     name: set up test results
+            #     working_directory: ios
+            #     when: always
+            #     command: |
+            #         mkdir -p test-results/fastlane test-results/xcode
+            #         mv fastlane/report.xml test-results/fastlane
+            #         mv fastlane/test_output/report.junit test-results/xcode/junit.xml
 
-            - store_test_results:
-                path: ios/test-results
+            # - store_test_results:
+            #     path: ios/test-results
 
-            - store_artifacts:
-                path: ios/test-results
+            # - store_artifacts:
+            #     path: ios/test-results
 
     ios-beta:
         macos:
