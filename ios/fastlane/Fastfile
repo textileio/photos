@@ -106,7 +106,7 @@ platform :ios do
     deliver(
       force: true,
       app_version: versionNumber,
-      skip_app_version_update: true
+      skip_app_version_update: false
     )
   end
 
