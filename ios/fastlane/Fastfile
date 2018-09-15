@@ -29,6 +29,13 @@ platform :ios do
 
   desc "Push internal test build to Fabric"
   lane :adhoc do
+    APP_ID = "io.textile.Wallet"
+    PROFILE = "match AdHoc io.textile.Wallet"
+
+    settings_to_override = {
+      :PROVISIONING_PROFILE_SPECIFIER => PROFILE
+    }
+
     match(type: "adhoc")
     hash = ENV['CIRCLE_SHA1']
     build = hash[0...5]
@@ -39,7 +46,13 @@ platform :ios do
     gym(
       workspace: "TextilePhotos.xcworkspace",
       scheme: "TextilePhotos",
-      export_method: "ad-hoc"
+      xcargs: settings_to_override,
+      export_method: "ad-hoc",
+      export_options: {
+        provisioningProfiles: {
+            APP_ID => PROFILE
+        }
+      }
     )
     crashlytics(
       api_token: ENV['FABRIC_API_TOKEN'],
