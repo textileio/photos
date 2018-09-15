@@ -54,6 +54,7 @@
 		932E4DC520B8D7E100358ED3 /* Biotif-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB520B8D7E000358ED3 /* Biotif-SemiBoldItalic.ttf */; };
 		932E4DC620B8D7E100358ED3 /* Biotif-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */; };
 		932E4DC720B8D7E100358ED3 /* Biotif-BookItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */; };
+		9331F517214D890B00E37A58 /* libRNVersionNumber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9331F514214D88F300E37A58 /* libRNVersionNumber.a */; };
 		9345CEA92102B24E0061EFD6 /* BentonSans.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEA62102B24D0061EFD6 /* BentonSans.otf */; };
 		9345CEAD2102B68A0061EFD6 /* BentonSans-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEAB2102B68A0061EFD6 /* BentonSans-Light.otf */; };
 		9345CEAE2102B68A0061EFD6 /* BentonSans-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9345CEAC2102B68A0061EFD6 /* BentonSans-Bold.otf */; };
@@ -275,6 +276,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
+		};
+		9331F513214D88F300E37A58 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9331F50E214D88F300E37A58 /* RNVersionNumber.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNVersionNumber;
+		};
+		9331F515214D88F300E37A58 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9331F50E214D88F300E37A58 /* RNVersionNumber.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2858ECD01F8B91B400610575;
+			remoteInfo = "RNVersionNumber-tvOS";
 		};
 		935215C4207E966C00D46B81 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -578,6 +593,7 @@
 		932E4DB520B8D7E000358ED3 /* Biotif-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-SemiBoldItalic.ttf"; path = "../App/Fonts/Biotif-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		932E4DB620B8D7E100358ED3 /* Biotif-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Light.ttf"; path = "../App/Fonts/Biotif-Light.ttf"; sourceTree = "<group>"; };
 		932E4DB720B8D7E100358ED3 /* Biotif-BookItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-BookItalic.ttf"; path = "../App/Fonts/Biotif-BookItalic.ttf"; sourceTree = "<group>"; };
+		9331F50E214D88F300E37A58 /* RNVersionNumber.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVersionNumber.xcodeproj; path = "../node_modules/react-native-version-number/ios/RNVersionNumber.xcodeproj"; sourceTree = "<group>"; };
 		9345CEA62102B24D0061EFD6 /* BentonSans.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = BentonSans.otf; path = ../App/Fonts/BentonSans.otf; sourceTree = "<group>"; };
 		9345CEAB2102B68A0061EFD6 /* BentonSans-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BentonSans-Light.otf"; path = "../App/Fonts/BentonSans-Light.otf"; sourceTree = "<group>"; };
 		9345CEAC2102B68A0061EFD6 /* BentonSans-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BentonSans-Bold.otf"; path = "../App/Fonts/BentonSans-Bold.otf"; sourceTree = "<group>"; };
@@ -628,6 +644,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9331F517214D890B00E37A58 /* libRNVersionNumber.a in Frameworks */,
 				93A9BDD321471BDC00BE4CE2 /* Mobile.framework in Frameworks */,
 				A209E2322127748D0017E147 /* libRCTPushNotification.a in Frameworks */,
 				93B0F54F2119075100151B63 /* libSMXCrashlytics.a in Frameworks */,
@@ -866,6 +883,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				9331F50E214D88F300E37A58 /* RNVersionNumber.xcodeproj */,
 				A209E2292127747E0017E147 /* RCTPushNotification.xcodeproj */,
 				93B0F50A2119072900151B63 /* SMXCrashlytics.xcodeproj */,
 				93E3D607210E67E7000EB402 /* RNImagePicker.xcodeproj */,
@@ -929,6 +947,15 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* TextilePhotos.app */,
 				00E356EE1AD99517003FC87E /* TextilePhotosTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9331F50F214D88F300E37A58 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9331F514214D88F300E37A58 /* libRNVersionNumber.a */,
+				9331F516214D88F300E37A58 /* libRNVersionNumber-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1268,6 +1295,10 @@
 					ProjectRef = BCE1D0D0A2DC49468796E22E /* RNVectorIcons.xcodeproj */;
 				},
 				{
+					ProductGroup = 9331F50F214D88F300E37A58 /* Products */;
+					ProjectRef = 9331F50E214D88F300E37A58 /* RNVersionNumber.xcodeproj */;
+				},
+				{
 					ProductGroup = 93B0F50B2119072900151B63 /* Products */;
 					ProjectRef = 93B0F50A2119072900151B63 /* SMXCrashlytics.xcodeproj */;
 				},
@@ -1472,6 +1503,20 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9331F514214D88F300E37A58 /* libRNVersionNumber.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNVersionNumber.a;
+			remoteRef = 9331F513214D88F300E37A58 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9331F516214D88F300E37A58 /* libRNVersionNumber-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNVersionNumber-tvOS.a";
+			remoteRef = 9331F515214D88F300E37A58 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		935215C5207E966C00D46B81 /* libART.a */ = {

@@ -65,6 +65,7 @@
     "react-native-push-notification": "^3.1.1",
     "react-native-scalable-image": "^0.4.0",
     "react-native-vector-icons": "^4.6.0",
+    "react-native-version-number": "^0.3.4",
     "react-navigation": "^2.11.2",
     "react-navigation-header-buttons": "^2.1.0",
     "react-redux": "^5.0.7",

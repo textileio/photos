@@ -31,11 +31,9 @@ platform :ios do
   lane :adhoc do
     APP_ID = "io.textile.Wallet"
     PROFILE = "match AdHoc io.textile.Wallet"
-
     settings_to_override = {
       :PROVISIONING_PROFILE_SPECIFIER => PROFILE
     }
-
     match(type: "adhoc")
     increment_build_number(
       build_number: ENV['CIRCLE_BUILD_NUM'],

@@ -76,6 +76,7 @@ export default StyleSheet.create({
     paddingVertical: 25
   },
   serversText: {
+    fontFamily: 'BentonSans',
     color: '#4A4A4A'
   },
   activeIcon: {
@@ -102,6 +103,12 @@ export default StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     marginTop: 30
+  },
+  versionDescription: {
+    fontFamily: 'BentonSans',
+    fontSize: 12,
+    marginTop: 8,
+    color: 'rgb(200,200,200)'
   },
   subScreen: {
     backgroundColor: '#FAFCFE',
