@@ -27,6 +27,23 @@ platform :ios do
     )
   end
 
+  desc "Push internal test build to Fabric"
+  lane :adhoc do
+    match(type: "adhoc")
+    hash = ENV['CIRCLE_SHA1']
+    build = hash[0...5]
+    increment_build_number(
+      build_number: build,
+      xcodeproj: "TextilePhotos.xcodeproj"
+    )
+    gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
+    crashlytics(
+      api_token: ENV['FABRIC_API_TOKEN'],
+      build_secret: ENV['FABRIC_BUILD_SECRET']
+    )
+    upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
+  end
+
   desc "Push a new beta build to TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do

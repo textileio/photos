@@ -269,7 +269,7 @@ jobs:
                     - vendor/bundle
 
             - run:
-                command: bundle exec fastlane test
+                command: bundle exec fastlane adhoc
                 working_directory: ios
 
             - run:
