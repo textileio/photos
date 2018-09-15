@@ -119,39 +119,6 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
             }
           }
         }];
-
-//
-//        // Get our path right away while we are in Obj-c
-//        [asset requestContentEditingInputWithOptions:nil completionHandler:^(PHContentEditingInput * _Nullable contentEditingInput, NSDictionary * _Nonnull info) {
-//
-//
-//
-//          // get rid of file://
-//          NSString *uri = contentEditingInput.fullSizeImageURL.absoluteString;
-//          NSString *path = [uri substringFromIndex:7];
-//          NSNumber *orientation = contentEditingInput.fullSizeImageOrientation ? [NSNumber numberWithInt:contentEditingInput.fullSizeImageOrientation] : [NSNumber numberWithInt:1];
-//          NSFileManager *fileManager = [NSFileManager defaultManager];
-//          BOOL isExist = [fileManager fileExistsAtPath:path];
-//          if (isExist) {
-//            // creationDate is also available, but seems to be pure exif date
-//            NSDate *newDate = asset.modificationDate;
-//            NSDate *creationDate = asset.creationDate;
-//            // dataWithJSONObject cannot include NSDate
-//            NSString *dateString = [dateFormatter stringFromDate:newDate];
-//            NSString *creationDateString = [dateFormatter stringFromDate:creationDate];
-//
-//            // Create an event paylod
-//            NSDictionary *payload = @{ @"uri": uri, @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation};
-//            NSError *serializationError;
-//            NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:NSJSONWritingPrettyPrinted error:&serializationError];
-//            if(!serializationError) {
-//              NSString* jsonStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//              // Send our event back to RN
-//              [Events emitEventWithName:@"newLocalPhoto" andPayload:jsonStr];
-//            }
-//          }
-//        }];
-
       }];
     }
   }
