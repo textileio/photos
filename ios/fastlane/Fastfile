@@ -37,10 +37,9 @@ platform :ios do
     }
 
     match(type: "adhoc")
-    hash = ENV['CIRCLE_SHA1']
-    build = hash[0...5]
+    time = Time.new()
     increment_build_number(
-      build_number: build,
+      build_number: time.to_i,
       xcodeproj: "TextilePhotos.xcodeproj"
     )
     gym(
