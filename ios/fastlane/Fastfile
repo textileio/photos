@@ -36,7 +36,11 @@ platform :ios do
       build_number: build,
       xcodeproj: "TextilePhotos.xcodeproj"
     )
-    gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
+    gym(
+      workspace: "TextilePhotos.xcworkspace",
+      scheme: "TextilePhotos",
+      export_method: "ad-hoc"
+    )
     crashlytics(
       api_token: ENV['FABRIC_API_TOKEN'],
       build_secret: ENV['FABRIC_BUILD_SECRET']
