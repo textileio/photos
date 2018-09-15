@@ -92,20 +92,17 @@ platform :ios do
     tag = ENV['CIRCLE_TAG'] # looks like ios_1.2.3_456
     parts = tag.split('_')
     increment_version_number(
-      build_number: parts[1],
+      # version_number: parts[1],
+      version_number: "0.4.9",
       xcodeproj: "TextilePhotos.xcodeproj"
     )
     increment_build_number(
-      build_number: parts[2],
+      # build_number: parts[2],
+      build_number: 1,
       xcodeproj: "TextilePhotos.xcodeproj"
     )
     gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
     deliver(force: true)
-    # changelog_from_git_commits
-    upload_to_testflight(skip_waiting_for_build_processing: true)
-    upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
-    add_git_tag(tag: "builds/iosbeta/" + versionNumber.to_s + "(" + newBuildNumber.to_s + ")")
-    push_to_git_remote
   end
 
   after_all do |lane|
