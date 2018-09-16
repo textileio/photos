@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { Notification, NotificationEngagement } from '../Models/TextileTypes'
+import { Notification } from '../Models/TextileTypes'
+import { PushNotification } from 'react-native-push-notification'
 import { RootState } from '../Redux/Types'
 
 const actions = {
@@ -22,7 +23,7 @@ const actions = {
     return (notification: Notification) => resolve({notification})
   }),
   notificationEngagement: createAction('NOTIFICATION_ENGAGEMENT', (resolve) => {
-    return (engagement: NotificationEngagement) => resolve({ engagement })
+    return (engagement: PushNotification) => resolve({ engagement })
   }),
   notificationSuccess: createAction('NOTIFICATION_SUCCESS', (resolve) => {
     return (notification: Notification) => resolve({ notification })

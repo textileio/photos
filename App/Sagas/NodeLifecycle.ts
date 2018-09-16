@@ -4,13 +4,13 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
-import PushNotification from 'react-native-push-notification'
+import RNPushNotification from 'react-native-push-notification'
 
 import TextileNodeActions, { NodeState, TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
-import { Threads, ThreadName } from '../Models/TextileTypes'
+import {Threads, ThreadName} from '../Models/TextileTypes'
 
 export function * manageNode () {
   while (true) {
@@ -22,7 +22,7 @@ export function * manageNode () {
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
-        yield call(displayNotification, 'App State Change: ' + action.payload.newState)
+        // yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
 
       // Get our current node state and create/start the node if it isn't started
@@ -107,7 +107,7 @@ function * stopNodeAfterDelay (ms: number) {
 }
 
 function displayNotification (message: string, title?: string) {
-  PushNotification.localNotification({
+  RNPushNotification.localNotification({
     title,
     message,
     playSound: false,
