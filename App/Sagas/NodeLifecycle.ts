@@ -4,13 +4,13 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
-import PushNotification from 'react-native-push-notification'
+import RNPushNotification from 'react-native-push-notification'
 
 import TextileNodeActions, { NodeState, TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
-import { Threads, ThreadName } from '../Models/TextileTypes'
+import {Threads, ThreadName} from '../Models/TextileTypes'
 
 export function * manageNode () {
   while (true) {
@@ -107,7 +107,7 @@ function * stopNodeAfterDelay (ms: number) {
 }
 
 function displayNotification (message: string, title?: string) {
-  PushNotification.localNotification({
+  RNPushNotification.localNotification({
     title,
     message,
     playSound: false,
