@@ -203,17 +203,6 @@ export interface DeepLinkData {
   readonly hash: string
 }
 
-export interface NotificationEngagement {
-  alert: string,
-  badge: number,
-  foreground: boolean,
-  message: string,
-  sound: string,
-  userInteraction: boolean,
-  data?: any,
-  finish?: () => void
-}
-
 export interface ILocalPhotoResult {
   assetId: string,
   creationDate: string,
