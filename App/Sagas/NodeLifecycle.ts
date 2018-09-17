@@ -22,7 +22,7 @@ export function * manageNode () {
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
-        // yield call(displayNotification, 'App State Change: ' + action.payload.newState)
+        yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
 
       // Get our current node state and create/start the node if it isn't started
