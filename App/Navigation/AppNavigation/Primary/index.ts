@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation'
 
 import TabNavigator from './TabNavigator'
-import Account from './Account'
+import Account from '../../../SB/views/UserProfile'
 
 const nav = createStackNavigator(
   {
