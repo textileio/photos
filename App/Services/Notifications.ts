@@ -1,5 +1,5 @@
-import PushNotification from 'react-native-push-notification'
-import { Notification, NotificationEngagement, NotificationType } from '../Models/TextileTypes'
+import { Notification, NotificationType } from '../Models/TextileTypes'
+import RNPushNotification, { PushNotification } from 'react-native-push-notification'
 import { Alert, Platform } from 'react-native'
 
 export interface INotificationsPayload {
@@ -80,7 +80,7 @@ export function toPayload(notification: Notification): INotificationsPayload | u
   }
 }
 
-export function getData(engagement: NotificationEngagement): any {
+export function getData(engagement: PushNotification): any {
   if (Platform.OS !== 'ios') {
     const { data } = engagement
     return data
@@ -94,7 +94,7 @@ export async function createNew(notification: Notification): Promise<void> {
       if (!payload) {
         return
       }
-      PushNotification.localNotification({
+      RNPushNotification.localNotification({
         title: payload.title,
         message: `${payload.message}.`,
         /* Android Only Property */
@@ -127,7 +127,7 @@ export async function createNew(notification: Notification): Promise<void> {
 export async function enable(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
-      PushNotification.requestPermissions()
+      RNPushNotification.requestPermissions()
       resolve()
     } catch (error) {
       reject(error)

@@ -1,10 +1,9 @@
 import { Store } from 'redux'
 import { PushNotificationIOS, Platform } from 'react-native'
-import PushNotification from 'react-native-push-notification'
+import RNPushNotification, { PushNotification } from 'react-native-push-notification'
 
 import { RootState } from '../../Redux/Types'
 import NotificationsActions from '../../Redux/NotificationsRedux'
-import { NotificationEngagement } from '../../Models/TextileTypes'
 
 export default class NotificationEventHandler {
   store: Store<RootState>
@@ -14,7 +13,7 @@ export default class NotificationEventHandler {
     this.setup()
   }
 
-  onNotification (notification: NotificationEngagement) {
+  onNotification (notification: PushNotification) {
     if (notification.userInteraction) {
       this.store.dispatch(NotificationsActions.notificationEngagement(notification))
     }
@@ -24,7 +23,7 @@ export default class NotificationEventHandler {
   }
 
   setup () {
-    PushNotification.configure({
+    RNPushNotification.configure({
       // (required) Called when a remote or local notification is opened or received
       onNotification: this.onNotification.bind(this),
       // Should the initial notification be popped automatically
