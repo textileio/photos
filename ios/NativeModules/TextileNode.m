@@ -85,25 +85,31 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
       PHFetchResult *allPhotosResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:onlyImagesOptions];
       [allPhotosResult enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
 
-        // Get our path right away while we are in Obj-c
-        [asset requestContentEditingInputWithOptions:nil completionHandler:^(PHContentEditingInput * _Nullable contentEditingInput, NSDictionary * _Nonnull info) {
+        // Get the image data for copying
+        [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation imageOrientation, NSDictionary * _Nullable info) {
 
-          // get rid of file://
-          NSString *uri = contentEditingInput.fullSizeImageURL.absoluteString;
-          NSString *path = [uri substringFromIndex:7];
-          NSNumber *orientation = contentEditingInput.fullSizeImageOrientation ? [NSNumber numberWithInt:contentEditingInput.fullSizeImageOrientation] : [NSNumber numberWithInt:1];
-          NSFileManager *fileManager = [NSFileManager defaultManager];
-          BOOL isExist = [fileManager fileExistsAtPath:path];
-          if (isExist) {
+          if (imageData) {
+            // Get the original filename to keep it straight on the system.
+            // Alternatively could probably just use timestamp, but this doesn't seem to have any lag
+            NSArray *resources = [PHAssetResource assetResourcesForAsset:asset];
+            NSString *orgFilename = ((PHAssetResource*)resources[0]).originalFilename;
+
+            // Get our path in the tmp directory
+            NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:orgFilename];
+
+            // Write the data to the temp file
+            [imageData writeToFile:path atomically:YES];
+
             // creationDate is also available, but seems to be pure exif date
             NSDate *newDate = asset.modificationDate;
             NSDate *creationDate = asset.creationDate;
             // dataWithJSONObject cannot include NSDate
             NSString *dateString = [dateFormatter stringFromDate:newDate];
             NSString *creationDateString = [dateFormatter stringFromDate:creationDate];
+            // get an int
+            NSNumber *orientation = imageOrientation ? [NSNumber numberWithInt:imageOrientation] : [NSNumber numberWithInt:1];
 
-            // Create an event paylod
-            NSDictionary *payload = @{ @"uri": uri, @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation};
+            NSDictionary *payload = @{ @"uri": path, @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation, @"canDelete": @true};
             NSError *serializationError;
             NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:NSJSONWritingPrettyPrinted error:&serializationError];
             if(!serializationError) {
@@ -113,7 +119,6 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
             }
           }
         }];
-
       }];
     }
   }
