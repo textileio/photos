@@ -1,5 +1,4 @@
 import {call, put, select, take} from 'redux-saga/effects'
-
 import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
 import {BlockId, Thread, ILocalPhotoResult, SharedImage} from '../Models/TextileTypes'
@@ -13,7 +12,7 @@ export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLoc
   const sharedImage: SharedImage = {
     uri: photo.uri,
     path: photo.path,
-    canDelete: false
+    canDelete: photo.canDelete // <- allow the native layer to dictate if it's a duplicate or not
   }
   yield put(UIActions.sharePhotoRequest(sharedImage))
 }
