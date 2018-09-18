@@ -81,8 +81,6 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.thread.id))
           yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
-          yield call(
-            NavigationService.navigate, 'ViewThread', { id: threadData.thread.id, name: threadData.thread.name })
           yield call(NavigationService.navigate, 'Comments')
         }
         break
