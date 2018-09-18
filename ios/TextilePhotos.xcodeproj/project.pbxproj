@@ -1984,7 +1984,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet;
+				PRODUCT_BUNDLE_IDENTIFIER = io.textile.WalletDev;
 				PRODUCT_NAME = TextilePhotos;
 				PROVISIONING_PROFILE = "2db150d1-101b-4ac0-b886-3e69f53beb8a";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development io.textile.Wallet";
