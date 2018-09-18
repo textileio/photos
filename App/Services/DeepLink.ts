@@ -2,6 +2,8 @@ import NavigationService from './NavigationService'
 import Config from 'react-native-config'
 import { ExternalInvite, DeepLinkData } from '../Models/TextileTypes'
 
+const DEBUG_PATH_PREFIX = '/debug'
+
 function getParams (hash: string): { [key: string]: (string | string[]) } {
   const query = hash.replace('#', '')
   const vars = query.split('&').map((expression) => expression.split('='))
@@ -39,7 +41,7 @@ function getData (href: string): DeepLinkData | undefined {
     host: match[2],
     hostname: match[3],
     port: match[4],
-    path: match[5].replace('/debug', ''),
+    path: match[5].replace(DEBUG_PATH_PREFIX, ''),
     search: match[6],
     hash: match[7]
   }
