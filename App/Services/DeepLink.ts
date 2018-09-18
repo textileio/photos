@@ -2,6 +2,7 @@ import NavigationService from './NavigationService'
 import Config from 'react-native-config'
 import { ExternalInvite, DeepLinkData } from '../Models/TextileTypes'
 
+
 function getParams (hash: string): { [key: string]: (string | string[]) } {
   const query = hash.replace('#', '')
   const vars = query.split('&').map((expression) => expression.split('='))
@@ -39,7 +40,7 @@ function getData (href: string): DeepLinkData | undefined {
     host: match[2],
     hostname: match[3],
     port: match[4],
-    path: match[5],
+    path: match[5].replace('/debug', ''),
     search: match[6],
     hash: match[7]
   }
@@ -53,6 +54,9 @@ function createInviteLink (invite: ExternalInvite, threadName: string): string {
   hash.push(`name=${encodeURIComponent(threadName)}`)
   if (Config.TEMPORARY_REFERRAL) {
     hash.push(`referral=${encodeURIComponent(Config.TEMPORARY_REFERRAL)}`)
+  }
+  if (__DEV__) {
+    return `https://www.textile.photos/debug/invites/new#${hash.join('&')}`
   }
   return `https://www.textile.photos/invites/new#${hash.join('&')}`
 }
