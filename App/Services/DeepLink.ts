@@ -2,7 +2,6 @@ import NavigationService from './NavigationService'
 import Config from 'react-native-config'
 import { ExternalInvite, DeepLinkData } from '../Models/TextileTypes'
 
-
 function getParams (hash: string): { [key: string]: (string | string[]) } {
   const query = hash.replace('#', '')
   const vars = query.split('&').map((expression) => expression.split('='))
