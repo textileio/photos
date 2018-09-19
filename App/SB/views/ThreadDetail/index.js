@@ -174,6 +174,8 @@ class ThreadDetail extends React.PureComponent {
           <ThreadDetailCard
             photo={item.photo}
             onComment={this._onPhotoSelect(item.photo)}
+            recentCommentsCount={2}
+            maxLinesPerComment={1}
           />
         )
       }
