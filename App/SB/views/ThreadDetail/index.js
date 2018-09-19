@@ -129,6 +129,22 @@ class ThreadDetail extends React.PureComponent {
 
   _keyExtractor = (item, index) => item.id + '_' + index
 
+  _renderItems = () => {
+    return (
+      <View style={styles.threadDetail} >
+        <View style={styles.imageList}>
+          <FlatList
+            data={this.props.items}
+            keyExtractor={this._keyExtractor.bind(this)}
+            renderItem={this._renderItem.bind(this)}
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+          />
+        </View>
+      </View>
+    )
+  }
+
   _renderItem = ({ item }) => {
     switch (item.type) {
       case 'title': {
@@ -170,17 +186,7 @@ class ThreadDetail extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <View style={styles.threadDetail} >
-          <View style={styles.imageList}>
-            <FlatList
-              data={this.props.items}
-              keyExtractor={this._keyExtractor.bind(this)}
-              renderItem={this._renderItem.bind(this)}
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh}
-            />
-          </View>
-        </View>
+        {this._renderItems()}
         {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet
