@@ -14,6 +14,7 @@ import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
 import styles from '../SB/views/ThreadsList/statics/styles'
+import onboardingStyles from './Styles/OnboardingStyle'
 import { RootState } from '../Redux/Types'
 
 class Wallet extends React.PureComponent {
@@ -74,11 +75,11 @@ class Wallet extends React.PureComponent {
   renderTour () {
     return (
       <View style={style.container}>
-        <View style={styles.emptyStateContainer}>
+        <View style={onboardingStyles.emptyStateContainer}>
           <Image
-            style={styles.emptyStateImage}
+            style={onboardingStyles.emptyStateImage}
             source={require('../Images/v2/permissions.png')} />
-          <Text style={styles.emptyStateText}>
+          <Text style={onboardingStyles.emptyStateText}>
             This is the Textile wallet, a private
             space where you can manage the data
             you create while using the app.
