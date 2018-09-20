@@ -26,7 +26,7 @@ import styles from './statics/styles'
 import cardStyles from '../../components/ThreadDetailCard/statics/styles'
 
 class ThreadDetail extends React.PureComponent {
-  constructor (props) {
+    constructor (props) {
     super(props)
     this.state = {
       showDrawer: false,
@@ -192,10 +192,16 @@ class ThreadDetail extends React.PureComponent {
     }
   }
 
+  _renderOnboarding () {
+      return (
+        <View></View>
+      )
+  }
   render () {
     return (
       <View style={styles.container}>
-        {this._renderItems()}
+        {this.props.showOnboarding && this._renderOnboarding()}
+        {!this.props.showOnboarding && this._renderItems()}
         {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet
@@ -264,7 +270,8 @@ const mapStateToProps = (state: RootState) => {
     profile: state.preferences.profile,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
-    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined
+    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,
+    showOnboarding: true
   }
 }
 
