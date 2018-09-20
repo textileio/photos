@@ -53,6 +53,7 @@ Object {
     "feed": true,
     "notifications": true,
     "threads": true,
+    "threadView": true,
     "wallet": true,
   },
   "verboseUi": false,
