@@ -64,19 +64,23 @@ export function * manageNode () {
 }
 
 function * createAndStartNode () {
-  const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-  const logFiles = !__DEV__
-  yield put(TextileNodeActions.creatingNode())
-  yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
-  yield put(TextileNodeActions.createNodeSuccess())
-  yield put(TextileNodeActions.startingNode())
-  yield call(TextileNode.start)
-  const threads: Threads = yield call(TextileNode.threads)
-  const defaultThread = threads.items.find((thread) => thread.name === 'default')
-  if (!defaultThread) {
-    yield call(TextileNode.addThread, 'default' as ThreadName)
+  try {
+    const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
+    const logFiles = !__DEV__
+    yield put(TextileNodeActions.creatingNode())
+    yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
+    yield put(TextileNodeActions.createNodeSuccess())
+    yield put(TextileNodeActions.startingNode())
+    yield call(TextileNode.start)
+    const threads: Threads = yield call(TextileNode.threads)
+    const defaultThread = threads.items.find((thread) => thread.name === 'default')
+    if (!defaultThread) {
+      yield call(TextileNode.addThread, 'default' as ThreadName)
+    }
+    yield put(TextileNodeActions.startNodeSuccess())
+  } catch (error) {
+    yield put(TextileNodeActions.nodeError(error))
   }
-  yield put(TextileNodeActions.startNodeSuccess())
 }
 
 function * stopNodeAfterDelay (ms: number) {
