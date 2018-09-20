@@ -39,9 +39,15 @@ class ThreadsList extends React.PureComponent {
         />
       </HeaderButtons>
     )
-    const headerRight = params.onTour ? undefined : (
+    const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
+        <Item title='Add Thread' iconName='add-thread' onPress={() => {
+          if (params.onTour) {
+            // We don't want to show that tour screen to them ever again...
+            params.completeTour()
+          }
+          navigation.navigate('AddThread')
+        }} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
@@ -69,27 +75,29 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile,
       online: this.props.online,
-      onTour: this.props.showTourScreen === true,
-      toggleVerboseUi: this.props.toggleVerboseUi
+      onTour: this.props.showOnboarding === true,
+      toggleVerboseUi: this.props.toggleVerboseUi,
+      completeTour: () => {
+        console.log('clearing threads')
+        this.props.completeScreen('threads') }
     })
   }
 
   componentDidUpdate (prevProps, prevState, ss) {
     if (
       this.props.profile !== prevProps.profile ||
-      this.props.showTourScreen !== prevProps.showTourScreen ||
+      this.props.showOnboarding !== prevProps.showOnboarding ||
       this.props.online !== prevProps.online
     ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
         online: this.props.online,
-        onTour: this.props.showTourScreen === true
+        onTour: this.props.showOnboarding === true
       })
     }
     if (
       this.props.showNotificationsPrompt &&
-      !this.props.showTourScreen &&
-      !this.props.showPlaceholder &&
+      !this.props.showOnboarding &&
       this.props.threads.length !== prevProps.threads.length
     ) {
       this._notificationPrompt()
@@ -163,9 +171,14 @@ class ThreadsList extends React.PureComponent {
           style={styles.emptyStateImage}
           source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
         <Text style={styles.emptyStateText}>
-          Nothing to see here yet... Start sharing your memories with friends and family with threads.
-            Create one using the <Icons name='add-thread' size={16} color='black' /> up top!
-          </Text>
+          This is where you can view and create
+          new shared Threads - invite
+          only groups to privately share photos
+          with your friends and family..
+        </Text>
+        <Text style={styles.emptyStateText}>
+          Click the <Icons name='add-thread' size={24} color='black' /> button above to create your first Thread.
+        </Text>
       </View>
     )
   }
@@ -197,9 +210,8 @@ class ThreadsList extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {this.props.showTourScreen && this._renderTour()}
-        {this.props.showPlaceholder && this._renderPlaceholder()}
-        {!this.props.showPlaceholder && !this.props.showTourScreen && this._renderList()}
+        {this.props.showOnboarding && this._renderPlaceholder()}
+        {!this.props.showOnboarding && this._renderList()}
       </View>
     )
   }
@@ -236,14 +248,14 @@ const mapStateToProps = (state) => {
       .sort((a, b) => a.updated < b.updated)
   }
 
+  console.log(state.preferences.tourScreens.threads)
   return {
     profile,
     threads,
     refreshing: !!state.ui.refreshingMessages,
     showNotificationsPrompt: state.preferences.tourScreens.notifications && threads,
     services: state.preferences.services,
-    showTourScreen: state.preferences.tourScreens.threads && threads, // <- default off so users don't see a screen flash,
-    showPlaceholder: !state.preferences.tourScreens.threads && threads && threads.length === 0
+    showOnboarding: state.preferences.tourScreens.threads && threads && threads.length === 0
   }
 }
 
