@@ -18,7 +18,9 @@ import { RootState, RootAction } from '../../../Redux/Types'
 const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
-  photo: Photo
+  photo: Photo,
+  recentCommentsCount: number,
+  maxLinesPerComment: number,
   onComment: () => void
   onLikes: () => void
 }
@@ -80,13 +82,13 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       caption = <Text>{''}</Text>
     }
 
-    const recentComments = photo.comments.slice(0, 2).reverse().map((comment, index) => {
+    const recentComments = photo.comments.slice(0, this.props.recentCommentsCount).reverse().map((comment, index) => {
       const username = comment.username || 'unknown'
-      return <KeyValueText key={index} keyString={username} value={comment.body} numberOfLines={1} />
+      return <KeyValueText key={index} keyString={username} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
     })
 
     let commentCountDescription
-    if (photo.comments.length > 2) {
+    if (photo.comments.length > this.props.recentCommentsCount) {
       commentCountDescription = (
         <TouchableOpacity onPress={onComment} >
           <Text style={styles.commentCount}>See all {photo.comments.length} comments...</Text>

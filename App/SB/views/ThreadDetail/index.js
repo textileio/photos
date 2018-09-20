@@ -181,6 +181,8 @@ class ThreadDetail extends React.PureComponent {
             photo={item.photo}
             onComment={this._onPhotoSelect(item.photo)}
             onLikes={this.onLikes(item.photo)}
+            recentCommentsCount={2}
+            maxLinesPerComment={1}
           />
         )
       }

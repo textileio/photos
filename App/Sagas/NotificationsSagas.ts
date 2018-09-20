@@ -85,9 +85,18 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         }
         break
       }
-      case NotificationType.deviceAddedNotification:
       case NotificationType.photoAddedNotification:
-      case NotificationType.likeAddedNotification:
+      case NotificationType.likeAddedNotification: {
+        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
+        yield call(TextileNode.readNotification, notification.id)
+        if (threadData) {
+          yield put(PhotoViewingAction.viewThread(threadData.thread.id))
+          yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
+          yield call(NavigationService.navigate, 'PhotoScreen')
+        }
+        break
+      }
+      case NotificationType.deviceAddedNotification:
       case NotificationType.peerJoinedNotification:
       case NotificationType.peerLeftNotification:
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
