@@ -169,7 +169,7 @@ class ThreadsList extends React.PureComponent {
       <View style={onboardingStyles.emptyStateContainer}>
         <Image
           style={onboardingStyles.emptyStateImage}
-          source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
+          source={require('../Images/v2/thread-empty-state.png')} />
         <Text style={onboardingStyles.emptyStateText}>
           This is where you can view and create
           new shared Threads - invite

@@ -37,7 +37,7 @@ const actions = {
 
 export type PreferencesAction = ActionType<typeof actions>
 
-export type TourScreens = 'wallet' | 'threads' | 'notifications' | 'feed'
+export type TourScreens = 'wallet' | 'threads' | 'threadView' | 'notifications' | 'feed'
 export type ServiceType = 'backgroundLocation' |
   'notifications' |
   'photoAddedNotification' |
@@ -73,6 +73,7 @@ export const initialState: PreferencesState = {
   tourScreens: {
     wallet: true,
     threads: true,
+    threadView: true,
     notifications: true,
     feed: true
   },
