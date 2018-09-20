@@ -17,12 +17,6 @@ class DevicePairing extends React.PureComponent {
     }
   }
 
-  static navigationOptions = () => {
-    return {
-      tabBarVisible: false
-    }
-  }
-
   componentDidUpdate (prevProps, prevState, snapShot) {
     // once the view is rendered and the node is online, submit the request
     // mirror the device state changes => status

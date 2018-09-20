@@ -51,7 +51,7 @@ class UserProfile extends React.PureComponent {
   }
 
   _notifications () {
-    this.props.navigation.navigate('Notifications')
+    this.props.navigation.navigate('NotificationSettings')
   }
   _storage () {
     this.props.navigation.navigate('Storage')

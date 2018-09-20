@@ -52,8 +52,7 @@ class ThreadDetail extends React.PureComponent {
       // TODO: no current menu needed for Wallet view
       headerTitle: params.threadName,
       headerRight,
-      headerLeft,
-      tabBarVisible: false
+      headerLeft
     }
   }
 
@@ -112,6 +111,13 @@ class ThreadDetail extends React.PureComponent {
     return () => {
       this.props.viewPhoto(photo.id)
       this.props.navigation.navigate('Comments')
+    }
+  }
+
+  onLikes = (photo: Photo) => {
+    return () => {
+      this.props.viewPhoto(photo.id)
+      this.props.navigation.navigate('LikesScreen')
     }
   }
 
@@ -174,6 +180,9 @@ class ThreadDetail extends React.PureComponent {
           <ThreadDetailCard
             photo={item.photo}
             onComment={this._onPhotoSelect(item.photo)}
+            onLikes={this.onLikes(item.photo)}
+            recentCommentsCount={2}
+            maxLinesPerComment={1}
           />
         )
       }
