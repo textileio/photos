@@ -88,7 +88,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     ? 'Error - ' + state.textileNode.nodeState.error
     : state.textileNode.nodeState.state
   const appState = state.textileNode.appState
-  const overlayMessage = appState + ' | ' + nodeStatus
+  const overlayMessage = state.textileNode.appStateUpdate + ': ' + appState + ' | ' + nodeStatus
 
   return {
     showOverlay: state.auth.processing,
