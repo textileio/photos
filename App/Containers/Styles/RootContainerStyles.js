@@ -26,8 +26,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     width: '100%',
-    bottom: 0,
-    height: 20,
+    bottom: 85,
+    height: 22,
+    paddingTop: 4,
     paddingHorizontal: 16,
     backgroundColor: 'rgba(0,0,0,0.5)'
   },
