@@ -32,17 +32,6 @@ class TextileWalletPicker extends React.PureComponent {
     }
   }
 
-  componentDidUpdate (prevProps, prevState, ss) {
-    if (
-      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi
-    ) {
-      this.props.navigation.setParams({
-        toggleVerboseUi: this.props.toggleVerboseUi,
-        threadName: this.props.threadName
-      })
-    }
-  }
-
   componentDidMount () {
     this.props.navigation.setParams({
       cancelSharingPhoto: this.props.cancelSharingPhoto
@@ -73,12 +62,6 @@ class TextileWalletPicker extends React.PureComponent {
           displayImages={this.props.displayImages}
           verboseUi={this.props.verboseUi}
         />
-
-        {this.props.verboseUi &&
-          <View style={style.bottomOverlay} >
-            <Text style={style.overlayText}>{this.props.nodeStatus + ' | ' + this.props.queryingCameraRollStatus}</Text>
-          </View>
-        }
       </View>
     )
   }
@@ -90,13 +73,9 @@ const mapStateToProps = (state) => {
   const photos: Photo[] = defaultData ? defaultData.photos : []
   const refreshing = defaultData ? defaultData.querying : false
 
-  const threadName = defaultData ? defaultData.thread.name : undefined
-
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error.message
     : state.textileNode.nodeState.state
-
-  const queryingCameraRollStatus = state.cameraRoll.querying ? 'querying' : 'idle'
 
   const placeholderText = state.textileNode.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
@@ -104,14 +83,11 @@ const mapStateToProps = (state) => {
 
   return {
     threadId,
-    threadName,
     photos,
     progressData: state.uploadingImages.images,
     refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
-    nodeStatus,
-    queryingCameraRollStatus,
     verboseUi: state.preferences.verboseUi
   }
 }
