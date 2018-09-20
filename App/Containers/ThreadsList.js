@@ -78,8 +78,8 @@ class ThreadsList extends React.PureComponent {
       onTour: this.props.showOnboarding === true,
       toggleVerboseUi: this.props.toggleVerboseUi,
       completeTour: () => {
-        console.log('clearing threads')
-        this.props.completeScreen('threads') }
+        this.props.completeScreen('threads')
+      }
     })
   }
 
@@ -248,7 +248,6 @@ const mapStateToProps = (state) => {
       .sort((a, b) => a.updated < b.updated)
   }
 
-  console.log(state.preferences.tourScreens.threads)
   return {
     profile,
     threads,
