@@ -15,10 +15,6 @@ import PreferencesActions from '../../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
 
 class Notifications extends React.PureComponent {
-  state = {
-    readAllOnExit: false
-  }
-
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
@@ -54,23 +50,12 @@ class Notifications extends React.PureComponent {
   _onFocus () {
     // refresh the messages for the user
     this.props.refreshNotifications() // < will get called on the very first entry too
-    // reset our readAll flag to re-time
-    this.setState({ readAllOnExit: false })
-    // set a timer to clear all unread messages
-    this._setReadAllTimer()
   }
 
   // gets called every time the user exists the tab
   _onBlur () {
-    // will be 0 if already run
-    if (this.readAllHandle) {
-      clearTimeout(this.readAllHandle)
-      this.readAllHandle = 0
-    }
     // if the user was on the page long enough, we'll just clear all unread
-    if (this.state.readAllOnExit) {
-      this.props.readAllNotifications()
-    }
+    this.props.readAllNotifications()
   }
 
   componentDidMount () {
@@ -86,16 +71,6 @@ class Notifications extends React.PureComponent {
     // remove the listeners for enter / exit the tab
     this.props.navigation.removeListener('blur', this._onBlur.bind(this))
     this.props.navigation.removeListener('onFocus', this._onFocus.bind(this))
-  }
-
-  _readAll () {
-    this.setState({ readAllOnExit: true })
-    this.readAllHandle = 0
-  }
-  _setReadAllTimer = () => {
-    if (this.readAllHandle) return
-    // After the user has been on the screen for 6 seconds, mark all as unread next time the user unmounts
-    this.readAllHandle = setTimeout(this._readAll.bind(this), 6000)
   }
 
   _onClick (notification) {
