@@ -1,17 +1,17 @@
 import React from 'react'
 import Icons from '../Components/Icons'
 import { connect } from 'react-redux'
-import { View, Text, Image, FlatList, Alert, TouchableWithoutFeedback, TouchableOpacity } from 'react-native'
+import { View, Text, Image, FlatList, Alert, TouchableWithoutFeedback } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
-import Button from '../SB/components/Button'
 import ThreadCard from '../SB/components/ThreadListCard'
 
 import Avatar from '../Components/Avatar'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
+import onboardingStyles from './Styles/OnboardingStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
@@ -164,45 +164,21 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
-  _renderPlaceholder () {
+  _renderOnboarding () {
     return (
-      <View style={styles.emptyStateContainer}>
+      <View style={onboardingStyles.emptyStateContainer}>
         <Image
-          style={styles.emptyStateImage}
-          source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
-        <Text style={styles.emptyStateText}>
+          style={onboardingStyles.emptyStateImage}
+          source={require('../Images/v2/thread-empty-state.png')} />
+        <Text style={onboardingStyles.emptyStateText}>
           This is where you can view and create
           new shared Threads - invite
           only groups to privately share photos
           with your friends and family..
         </Text>
-        <Text style={styles.emptyStateText}>
+        <Text style={onboardingStyles.emptyStateText}>
           Click the <Icons name='add-thread' size={24} color='black' /> button above to create your first Thread.
         </Text>
-      </View>
-    )
-  }
-
-  _renderTour () {
-    return (
-      <View style={styles.emptyStateContainer}>
-        <Image
-          style={styles.emptyStateImage}
-          source={require('../SB/views/ThreadsList/statics/thread-empty-state.png')} />
-        <Text style={styles.emptyStateText}>
-          This is where you can create shared
-          Threads. Invite only groups to share
-          photos with your friends and family.
-          </Text>
-        <View style={styles.tourButtons}>
-          <Button primary text='Create a thread' onPress={() => {
-            this.props.completeScreen('threads')
-            this.props.navigation.navigate('AddThread')
-          }} />
-          <TouchableOpacity style={styles.skipButton} onPress={() => { this.props.completeScreen('threads') }} >
-            <Text style={styles.skipButtonText}>Skip</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     )
   }
@@ -210,7 +186,7 @@ class ThreadsList extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {this.props.showOnboarding && this._renderPlaceholder()}
+        {this.props.showOnboarding && this._renderOnboarding()}
         {!this.props.showOnboarding && this._renderList()}
       </View>
     )

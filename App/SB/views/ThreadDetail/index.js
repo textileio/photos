@@ -1,9 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, FlatList, Text } from 'react-native'
+import { View, FlatList, Text, Image } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
+import Icons from '../../../Components/Icons'
 
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
@@ -23,6 +24,7 @@ import { RootState } from '../../../Redux/Types'
 import ProcessingImageCard, { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
 import styles from './statics/styles'
+import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 import cardStyles from '../../components/ThreadDetailCard/statics/styles'
 
 class ThreadDetail extends React.PureComponent {
@@ -102,8 +104,18 @@ class ThreadDetail extends React.PureComponent {
       profile: this.props.profile,
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName,
-      showActionSheet: this.showActionSheet.bind(this),
-      showImagePicker: this.showImagePicker.bind(this)
+      showActionSheet: () => {
+        if (this.props.showOnboarding === true) {
+          this.props.completeScreen('threadView')
+        }
+        this.showActionSheet()
+      },
+      showImagePicker: () => {
+        if (this.props.showOnboarding === true) {
+          this.props.completeScreen('threadView')
+        }
+        this.showImagePicker()
+      }
     })
   }
 
@@ -192,10 +204,28 @@ class ThreadDetail extends React.PureComponent {
     }
   }
 
+  _renderOnboarding () {
+    return (
+      <View style={onboardingStyles.emptyStateContainer}>
+        <Image
+          style={onboardingStyles.emptyStateImage2}
+          source={require('../../../Images/v2/invite_friends.png')} />
+        <Text style={onboardingStyles.emptyStateText}>
+          Time to share some photos. Anyone you invite to the Thread will be able to send photos, view other members photos, and invite new friends.
+        </Text>
+        <Text style={onboardingStyles.emptyStateText}>
+          Click the <Icons style={{ margin: 10 }} name='add-photo' size={24} color='black' /> button to add your first photo.
+          Or click the <Icons name='more' size={24} color='black' /> button to start inviting friends.
+        </Text>
+      </View>
+    )
+  }
+
   render () {
     return (
       <View style={styles.container}>
-        {this._renderItems()}
+        {this.props.showOnboarding && this._renderOnboarding()}
+        {!this.props.showOnboarding && this._renderItems()}
         {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet
@@ -264,7 +294,8 @@ const mapStateToProps = (state: RootState) => {
     profile: state.preferences.profile,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
-    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined
+    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,
+    showOnboarding: state.preferences.tourScreens.threadView && items && items.length === 0
   }
 }
 
@@ -278,7 +309,8 @@ const mapDispatchToProps = (dispatch) => {
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
-    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) }
+    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
+    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) }
   }
 }
 
