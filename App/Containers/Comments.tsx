@@ -39,8 +39,7 @@ class Comments extends Component<Props> {
     )
     return {
       headerLeft,
-      headerTitle: 'Comments',
-      tabBarVisible: false
+      headerTitle: 'Comments'
     }
   }
 
