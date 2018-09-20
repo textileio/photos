@@ -26,12 +26,17 @@ class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>
     this.props.navigation.navigate('Comments')
   }
 
+  onLikes = () => {
+    this.props.navigation.navigate('LikesScreen')
+  }
+
   render () {
     return (
       <ScrollView style={CONTAINER}>
         <ThreadDetailCard
           photo={this.props.photo}
           onComment={this.onComment}
+          onLikes={this.onLikes}
           recentCommentsCount={5}
           maxLinesPerComment={5}
         />

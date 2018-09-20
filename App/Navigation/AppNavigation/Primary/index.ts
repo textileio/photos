@@ -12,6 +12,7 @@ import ThreadDetail from '../../../SB/views/ThreadDetail'
 import ThreadsEditFriends from '../../../SB/views/ThreadsEditFriends'
 import PhotoScreen from '../../../Containers/PhotoScreen'
 import Comments from '../../../Containers/Comments'
+import LikesScreen from '../../../Containers/LikesScreen'
 import AddCaptionScreen from '../../../Containers/AddCaptionScreen'
 import WalletPicker from '../../../Containers/WalletPicker'
 
@@ -31,6 +32,7 @@ const nav = createStackNavigator(
     ViewThread: ThreadDetail,
     PhotoScreen,
     Comments,
+    LikesScreen,
     ThreadSharePhoto: AddCaptionScreen,
     WalletPicker
   },

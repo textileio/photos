@@ -22,6 +22,7 @@ interface OwnProps {
   recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void
+  onLikes: () => void
 }
 
 interface StateProps {
@@ -51,9 +52,9 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     // you are the only like or there are no likes, return ''
     return !isLiked || (didLike && photo.likes.length === 1) ? undefined :
       (
-        <Text style={[styles.likedText]}>
-          <Text style={[styles.profileName]}>{photo.likes.length.toString() + (photo.likes.length > 1 ? ' likes' : ' like')}</Text>
-        </Text>
+        <TouchableOpacity onPress={this.props.onLikes}>
+          <Text style={styles.likedText}>{photo.likes.length.toString() + (photo.likes.length > 1 ? ' likes' : ' like')}</Text>
+        </TouchableOpacity>
       )
   }
 
