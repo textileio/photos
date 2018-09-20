@@ -67,13 +67,9 @@ export default StyleSheet.create({
     paddingBottom: 8
   },
   likedText: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    fontFamily: 'BentonSans-Light',
+    fontFamily: 'BentonSans',
     fontSize: 14,
     lineHeight: 16,
-    overflow: 'visible',
     paddingTop: 6,
     paddingBottom: 2
   },
