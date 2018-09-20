@@ -28,7 +28,7 @@ import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 import cardStyles from '../../components/ThreadDetailCard/statics/styles'
 
 class ThreadDetail extends React.PureComponent {
-    constructor (props) {
+  constructor (props) {
     super(props)
     this.state = {
       showDrawer: false,
@@ -310,7 +310,7 @@ const mapDispatchToProps = (dispatch) => {
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
     addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
-    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
+    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) }
   }
 }
 
