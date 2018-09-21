@@ -22,6 +22,11 @@ export default StyleSheet.create({
     height: 201,
     marginBottom: 16
   },
+  emptyStateImage3: {
+    width: 300,
+    height: 212,
+    marginBottom: 16
+  },
   emptyStateText: {
     fontFamily: 'BentonSans',
     fontSize: 16,
