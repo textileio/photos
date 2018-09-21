@@ -19,7 +19,7 @@ const actions = {
   removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', (resolve) => {
     return (id: ThreadId) => resolve({ id })
   }),
-  removeThreadSuccess: createAction('REMOVE_THREAD_SUCCESS', (resolve) => {
+  threadRemoved: createAction('THREAD_REMOVED', (resolve) => {
     return (id: ThreadId) => resolve({ id })
   }),
   removeThreadError: createAction('REMOVE_THREAD_ERROR', (resolve) => {
@@ -133,7 +133,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       const { id } = action.payload
       return { ...state, removingThread: { id } }
     }
-    case getType(actions.removeThreadSuccess): {
+    case getType(actions.threadRemoved): {
       const { id } = action.payload
       const { [id]: removed, ...threads } = state.threads
       return { ...state, threads, removingThread: undefined }

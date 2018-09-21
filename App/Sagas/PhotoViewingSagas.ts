@@ -40,9 +40,7 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
 export function * removeThread (action: ActionType<typeof PhotoViewingActions.removeThreadRequest>) {
   const { id } = action.payload
   try {
-    // TODO: something with this blockId
-    const blockId: BlockId = yield call(TextileNode.removeThread, id)
-    yield put(PhotoViewingActions.removeThreadSuccess(id))
+    yield call(TextileNode.removeThread, id)
     yield call(NavigationService.navigate, 'SharedPhotos')
   } catch (error) {
     yield put(PhotoViewingActions.removeThreadError(error))
