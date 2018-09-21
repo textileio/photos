@@ -51,7 +51,8 @@ import {
   refreshThread,
   addThread,
   removeThread,
-  addPhotoComment
+  addPhotoComment,
+  monitorNewThreadNavigation
 } from './PhotoViewingSagas'
 
 import {
@@ -101,6 +102,7 @@ export default function * root () {
     call(onNodeCreated),
     call(onNodeStarted),
     call(onNodeOnline),
+    call(monitorNewThreadNavigation),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),

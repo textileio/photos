@@ -68,7 +68,6 @@ class AddThreadScreen extends React.Component {
 
   _submit () {
     this.props.submit(this.state.value)
-    // Todo: Should nav to the newly created thread
     this.props.navigation.goBack()
   }
 

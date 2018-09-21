@@ -4,17 +4,19 @@ import { ThreadId, Photo, PhotoId, Thread, ThreadName, Mnemonic } from '../Model
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
-    return (id: string, name: string) => resolve({ id, name })
+    return (id: ThreadId, name: string) => resolve({ id, name })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
     return (name: string) => resolve({ name })
   }),
-  addThreadSuccess: createAction('ADD_THREAD_SUCCESS', (resolve) => {
-    return (id: string, name: string) => resolve({ id, name })
+  threadAdded: createAction('THREAD_ADDED', (resolve) => {
+    return (id: ThreadId, name: string) => resolve({ id, name })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
   }),
+  requestNavToNewThread: createAction('REQUEST_NAV_TO_NEW_THREAD'),
+  clearNavToNewThreadRequest: createAction('CLEAR_NAV_TO_NEW_THREAD'),
   removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', (resolve) => {
     return (id: ThreadId) => resolve({ id })
   }),
@@ -56,7 +58,7 @@ const actions = {
 export type PhotoViewingAction = ActionType<typeof actions>
 
 export interface ThreadData {
-  readonly id: string
+  readonly id: ThreadId
   readonly name: string
   readonly querying: boolean
   readonly photos: ReadonlyArray<Photo>
@@ -68,23 +70,25 @@ interface ThreadMap {
 }
 
 interface PhotoViewingState {
-  readonly threads: ThreadMap,
+  readonly navigateToNewThread: boolean
+  readonly threads: ThreadMap
   readonly threadsError?: string
   readonly addingThread?: {
-    readonly name: string,
+    readonly name: string
     readonly error?: string
   }
   readonly removingThread?: {
     readonly id: ThreadId
     readonly error?: string
   }
-  readonly viewingWalletPhoto?: Photo,
-  readonly viewingThreadId?: string,
-  readonly viewingPhoto?: Photo,
+  readonly viewingWalletPhoto?: Photo
+  readonly viewingThreadId?: string
+  readonly viewingPhoto?: Photo
   readonly authoringComment?: string
 }
 
 const initialState: PhotoViewingState = {
+  navigateToNewThread: false,
   threads: {}
 }
 
@@ -101,7 +105,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       const { name } = action.payload
       return { ...state, addingThread: { name }}
     }
-    case getType(actions.addThreadSuccess): {
+    case getType(actions.threadAdded): {
       const { id, name } = action.payload
       if (state.threads[id]) {
         return state
@@ -115,6 +119,12 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       }
       const addingError = (error.message as string) || (error as string) || 'unknown'
       return { ...state, addingThread: { ...state.addingThread, error: addingError } }
+    }
+    case getType(actions.requestNavToNewThread): {
+      return { ...state, navigateToNewThread: true }
+    }
+    case getType(actions.clearNavToNewThreadRequest): {
+      return { ...state, navigateToNewThread: false }
     }
     case getType(actions.removeThreadRequest): {
       const { id } = action.payload

@@ -88,6 +88,6 @@ export function * handlePhotoToNewThreadRequest (action: ActionType<typeof UIAct
   const { imageId, threadName, comment } = action.payload
   const thread: Thread = yield call(TextileNode.addThread, threadName)
   // TODO: Remove this
-  yield put(PhotoViewingActions.addThreadSuccess(thread.id, thread.name))
+  yield put(PhotoViewingActions.threadAdded(thread.id, thread.name))
   yield call(shareWalletImage, imageId, thread.id, comment)
 }

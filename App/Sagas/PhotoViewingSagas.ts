@@ -1,22 +1,31 @@
-import { call, put, select } from 'redux-saga/effects'
-import { ActionType } from 'typesafe-actions'
+import { delay } from 'redux-saga'
+import { call, put, select, take } from 'redux-saga/effects'
+import { ActionType, getType } from 'typesafe-actions'
 
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
-import { photoAndComment } from '../Redux/PhotoViewingSelectors'
-import UIActions from '../Redux/UIRedux'
+import { photoAndComment, shouldNavigateToNewThread } from '../Redux/PhotoViewingSelectors'
 import TextileNode from '../../TextileNode'
-import { Threads, Thread, Photo, BlockId } from '../Models/TextileTypes'
+import { Threads, Photo, BlockId } from '../Models/TextileTypes'
 import NavigationService from '../Services/NavigationService'
+
+export function * monitorNewThreadNavigation () {
+  while (true) {
+    const action: ActionType<typeof PhotoViewingActions.threadAdded> = yield take(getType(PhotoViewingActions.threadAdded))
+    const shouldNav: boolean = yield select(shouldNavigateToNewThread)
+    if (shouldNav) {
+      yield put(PhotoViewingActions.viewThread(action.payload.id))
+      yield put(PhotoViewingActions.clearNavToNewThreadRequest())
+      yield delay(700)
+      yield call(NavigationService.navigate, 'ViewThread')
+    }
+  }
+}
 
 export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
   const { name } = action.payload
   try {
-    const thread: Thread = yield call(TextileNode.addThread, name)
-    // TODO: Remove this
-    yield put(PhotoViewingActions.addThreadSuccess(thread.name, thread.name))
-    // TODO: Create some sort of pending thread navigation state
-    yield put(PhotoViewingActions.viewThread(thread.id))
-    yield put(UIActions.navigateToThreadRequest(thread.id, thread.name))
+    yield put(PhotoViewingActions.requestNavToNewThread())
+    yield call(TextileNode.addThread, name)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
   }

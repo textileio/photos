@@ -11,8 +11,8 @@ export default function * getDefaultThread () {
   if (!defaultThread) {
     yield put(PhotoViewingActions.addThreadRequest('default' as ThreadName))
     while (!defaultThread) {
-      const action: ActionType<typeof PhotoViewingActions.addThreadSuccess> = yield take(getType(PhotoViewingActions.addThreadSuccess))
-      if (action.payload.thread.name === 'default') {
+      const action: ActionType<typeof PhotoViewingActions.threadAdded> = yield take(getType(PhotoViewingActions.threadAdded))
+      if (action.payload.name === 'default') {
         defaultThread = action.payload.thread
       }
     }

@@ -2,6 +2,7 @@
 
 exports[`photo viewing stories initial state should match snapshot 1`] = `
 Object {
+  "navigateToNewThread": false,
   "threads": Object {},
 }
 `;
