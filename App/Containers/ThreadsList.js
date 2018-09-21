@@ -201,25 +201,20 @@ const mapStateToProps = (state) => {
     threads = allThreads
       .filter(thread => thread.name !== 'default')
       .map(thread => {
-        const nodeThread = state.photoViewing.threads[thread.id]
-        // Todo: we'll want to get all this from a better source
-        thread.photos = []
-        thread.updated = 0 // TODO: could use a thread created timestamp...
-        if (nodeThread && nodeThread.photos) {
-          const photos = nodeThread.photos
+        return {
+          id: thread.id,
+          name: thread.name,
           // total number of images in the thread
-          thread.size = nodeThread.photos.length
+          size: thread.photos.length,
           // just keep the top 2
-          thread.photos = photos.slice(0, 3)
-
+          photos: thread.photos.slice(0, 3),
           // get a rough count of distinct users
-          thread.userCount = thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1
+          userCount: thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1,
           // latest update based on the latest item
-          thread.updated = thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0
+          updated: thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0,
           // latest peer to push to the thread
-          thread.latestPeerId = thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
+          latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
         }
-        return thread
       })
       .sort((a, b) => a.updated < b.updated)
   }

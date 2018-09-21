@@ -102,7 +102,7 @@ export default {
     return overview
   },
 
-  async addThread (name: TT.ThreadName): Promise<TT.Thread> {
+  async addThread (name: string): Promise<TT.Thread> {
     const jsonString = await TextileNode.addThread(name)
     const thread = JSON.parse(jsonString) as TT.Thread
     return thread

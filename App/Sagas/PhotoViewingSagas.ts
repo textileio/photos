@@ -12,7 +12,9 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
   const { name } = action.payload
   try {
     const thread: Thread = yield call(TextileNode.addThread, name)
-    yield put(PhotoViewingActions.addThreadSuccess(thread))
+    // TODO: Remove this
+    yield put(PhotoViewingActions.addThreadSuccess(thread.name, thread.name))
+    // TODO: Create some sort of pending thread navigation state
     yield put(PhotoViewingActions.viewThread(thread.id))
     yield put(UIActions.navigateToThreadRequest(thread.id, thread.name))
   } catch (error) {
@@ -36,7 +38,7 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
   try {
     const threads: Threads = yield call(TextileNode.threads)
     for (const thread of threads.items) {
-      yield put(PhotoViewingActions.insertThread(thread))
+      yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
       yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
   } catch (error) {
@@ -48,7 +50,7 @@ export function * refreshThread (action: ActionType<typeof PhotoViewingActions.r
   const { threadId } = action.payload
   try {
     const photos: Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
-    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photos))
+    yield put(PhotoViewingActions.refreshThreadSuccess(threadId as string, photos))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
   }

@@ -148,6 +148,7 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.{js,jsx,ts,tsx}",
+      "!**/typings/**",
       "!**/node_modules/**",
       "!**/vendor/**"
     ]

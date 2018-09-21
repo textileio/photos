@@ -131,7 +131,7 @@ class Wallet extends React.PureComponent {
 
 const mapStateToProps = (state: RootState) => {
   const defaultData = defaultThreadData(state)
-  const threadId = defaultData ? defaultData.thread.id : undefined
+  const threadId = defaultData ? defaultData.id : undefined
   const photos: Photo[] = defaultData ? defaultData.photos : []
 
   const nodeStatus = state.textileNode.nodeState.error

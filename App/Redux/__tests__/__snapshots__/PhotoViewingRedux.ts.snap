@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`photo viewing stories initial state should match snapshot 1`] = `
+Object {
+  "threads": Object {},
+}
+`;
