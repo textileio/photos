@@ -3,18 +3,25 @@ import { call, put, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
-import { photoAndComment, shouldNavigateToNewThread } from '../Redux/PhotoViewingSelectors'
+import { photoAndComment, shouldNavigateToNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
 import TextileNode from '../../TextileNode'
-import { Threads, Photo, BlockId } from '../Models/TextileTypes'
+import { Threads, Photo, BlockId, PhotoId } from '../Models/TextileTypes'
 import NavigationService from '../Services/NavigationService'
+import { shareWalletImage } from './ImageSharingSagas'
 
-export function * monitorNewThreadNavigation () {
+export function * monitorNewThreadActions () {
   while (true) {
     const action: ActionType<typeof PhotoViewingActions.threadAdded> = yield take(getType(PhotoViewingActions.threadAdded))
     const shouldNav: boolean = yield select(shouldNavigateToNewThread)
+    const photoToShare: { threadName: string, imageId: PhotoId, comment?: string} | undefined = yield select(photoToShareToNewThread)
+    yield put(PhotoViewingActions.clearNewThreadActions())
+    const { id, name } = action.payload
+    if (photoToShare && photoToShare.threadName === name) {
+      const { imageId, comment } = photoToShare
+      yield call(shareWalletImage, imageId, id, comment)
+    }
     if (shouldNav) {
       yield put(PhotoViewingActions.viewThread(action.payload.id))
-      yield put(PhotoViewingActions.clearNavToNewThreadRequest())
       yield delay(700)
       yield call(NavigationService.navigate, 'ViewThread')
     }
@@ -24,7 +31,6 @@ export function * monitorNewThreadNavigation () {
 export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
   const { name } = action.payload
   try {
-    yield put(PhotoViewingActions.requestNavToNewThread())
     yield call(TextileNode.addThread, name)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))

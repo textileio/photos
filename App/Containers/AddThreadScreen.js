@@ -88,7 +88,7 @@ class AddThreadScreen extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    submit: (name: string) => { dispatch(PhotoViewingActions.addThreadRequest(name)) }
+    submit: (name: string) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate: true })) }
   }
 }
 

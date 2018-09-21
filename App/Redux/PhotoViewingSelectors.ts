@@ -24,6 +24,10 @@ export function getThreads (state: RootState): ReadonlyArray<ThreadData> {
     .map((key) => state.photoViewing.threads[key]!)
 }
 
-export function shouldNavigateToNewThread (state: RootState): boolean {
+export function shouldNavigateToNewThread (state: RootState) {
   return state.photoViewing.navigateToNewThread
+}
+
+export function photoToShareToNewThread (state: RootState) {
+  return state.photoViewing.shareToNewThread
 }

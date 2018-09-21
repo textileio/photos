@@ -36,9 +36,6 @@ const actions = {
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', (resolve) => {
     return (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => resolve({ image, threadId, comment })
   }),
-  sharePhotoToNewThreadRequest: createAction('SHARE_PHOTO_TO_NEW_THREAD_REQUEST', (resolve) => {
-    return (imageId: PhotoId, threadName: ThreadName, comment?: string) => resolve({ imageId, threadName, comment })
-  }),
   cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', (resolve) => {
     return () => resolve()
   }),
@@ -78,13 +75,13 @@ export type UIAction = ActionType<typeof actions>
 
 export interface UIState {
   readonly chosenProfilePhoto: {
-    readonly uri?: string,
+    readonly uri?: string
     readonly data?: string
     readonly error?: Error
   }
   readonly sharingPhoto?: {
-    readonly image?: SharedImage | string,
-    readonly threadId?: ThreadId,
+    readonly image?: SharedImage | string
+    readonly threadId?: ThreadId
     readonly comment?: string
   },
   readonly imagePickerError?: string // used to notify the user of any error during photo picking
@@ -112,7 +109,6 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
     case getType(actions.updateSharingPhotoComment):
       const { comment } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment } }
-    case getType(actions.sharePhotoToNewThreadRequest):
     case getType(actions.sharePhotoRequest):
     case getType(actions.cancelSharingPhoto):
       return { ... state, sharingPhoto: undefined }

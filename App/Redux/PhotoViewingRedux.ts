@@ -7,7 +7,7 @@ const actions = {
     return (id: ThreadId, name: string) => resolve({ id, name })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
-    return (name: string) => resolve({ name })
+    return (name: string, options?: { navigate?: boolean, sharePhoto?: { imageId: PhotoId, comment?: string } }) => resolve({ name }, options)
   }),
   threadAdded: createAction('THREAD_ADDED', (resolve) => {
     return (id: ThreadId, name: string) => resolve({ id, name })
@@ -15,8 +15,7 @@ const actions = {
   addThreadError: createAction('ADD_THREAD_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
   }),
-  requestNavToNewThread: createAction('REQUEST_NAV_TO_NEW_THREAD'),
-  clearNavToNewThreadRequest: createAction('CLEAR_NAV_TO_NEW_THREAD'),
+  clearNewThreadActions: createAction('CLEAR_NEW_THREAD_ACTIONS'),
   removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', (resolve) => {
     return (id: ThreadId) => resolve({ id })
   }),
@@ -71,6 +70,11 @@ interface ThreadMap {
 
 interface PhotoViewingState {
   readonly navigateToNewThread: boolean
+  readonly shareToNewThread?: {
+    threadName: string
+    imageId: PhotoId
+    comment?: string
+  }
   readonly threads: ThreadMap
   readonly threadsError?: string
   readonly addingThread?: {
@@ -103,7 +107,9 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.addThreadRequest): {
       const { name } = action.payload
-      return { ...state, addingThread: { name }}
+      const { navigate, sharePhoto } = action.meta
+      const shareToNewThread = sharePhoto ? { ...sharePhoto, threadName: name } : undefined
+      return { ...state, navigateToNewThread: navigate || false, shareToNewThread, addingThread: { name }}
     }
     case getType(actions.threadAdded): {
       const { id, name } = action.payload
@@ -120,11 +126,8 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       const addingError = (error.message as string) || (error as string) || 'unknown'
       return { ...state, addingThread: { ...state.addingThread, error: addingError } }
     }
-    case getType(actions.requestNavToNewThread): {
-      return { ...state, navigateToNewThread: true }
-    }
-    case getType(actions.clearNavToNewThreadRequest): {
-      return { ...state, navigateToNewThread: false }
+    case getType(actions.clearNewThreadActions): {
+      return { ...state, navigateToNewThread: false, shareToNewThread: undefined }
     }
     case getType(actions.removeThreadRequest): {
       const { id } = action.payload
