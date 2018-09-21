@@ -24,7 +24,7 @@ export default StyleSheet.create({
   },
   emptyStateImage3: {
     width: 300,
-    height: 212,
+    height: 222,
     marginBottom: 16
   },
   emptyStateText: {

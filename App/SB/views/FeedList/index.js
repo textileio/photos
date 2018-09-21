@@ -140,12 +140,12 @@ const mapStateToProps = (state) => {
       if (n.type === 1) return true // a device notification
       return n.actor_username !== undefined && n.actor_username !== ''
     })
-  const tourScreenFeed = state.preferences.tourScreens.feed === true
+  const showOnboarding = state.preferences.tourScreens.feed === true
 
   return {
     notifications,
     profile: state.preferences.profile,
-    showOnboarding: notifications.length === 0 && tourScreenFeed
+    showOnboarding
   }
 }
 
