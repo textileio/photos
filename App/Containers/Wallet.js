@@ -13,7 +13,6 @@ import WalletHeader from '../Components/WalletHeader'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
-import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
 import { RootState } from '../Redux/Types'
 
