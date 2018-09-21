@@ -47,11 +47,6 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   }
 }
 
-export async function getDefaultThread (): Promise<Thread> {
-  const threads = await TextileNode.threads()
-  return threads.items.find((thread) => thread.name === 'default')!
-}
-
 export function * pendingInvitesTask () {
   // Process any pending external invites created while user wasn't logged in
   const pendingInviteLink: string | undefined = yield select(ThreadsSelectors.pendingInviteLink)
