@@ -21,6 +21,8 @@ export function * manageNode () {
           action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
         )
 
+      BackgroundTimer.start()
+
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
@@ -43,7 +45,6 @@ export function * manageNode () {
       // Using the race effect, if we get a foreground event while we're waiting
       // to stop the node, cancel the stop and let it keep running
       if (action.payload.newState === 'background') {
-        BackgroundTimer.start()
         // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
         yield race({
           delayAndStopNode: call(stopNodeAfterDelay, 20000),
@@ -52,13 +53,15 @@ export function * manageNode () {
               action.type === getType(TextileNodeActions.appStateChange) && action.payload.newState === 'active'
           )
         })
-        BackgroundTimer.stop()
       }
+
+      BackgroundTimer.stop()
     } catch (error) {
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, error, 'Error')
       }
       yield put(TextileNodeActions.nodeError(error))
+      BackgroundTimer.stop()
     }
   }
 }
