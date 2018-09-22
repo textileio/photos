@@ -2,15 +2,14 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import Icons from '../../../Components/Icons'
 
 import FeedItem from '../../components/FeedItem'
-import Button from '../../components/Button'
 import Avatar from '../../../Components/Avatar'
 
 import NotificationsActions from '../../../Redux/NotificationsRedux'
 
 import styles from './statics/styles'
+import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
 
@@ -67,6 +66,13 @@ class Notifications extends React.PureComponent {
     })
   }
 
+  componentDidUpdate (prevProps, prevState, snapShot) {
+    // Will clear the onboarding only after the first feed item appears
+    if (this.props.showOnboarding && this.props.notifications !== prevProps.notifications && this.props.notifications.length > 0) {
+      this.props.completeTourScreen()
+    }
+  }
+
   componentWillUnmount () {
     // remove the listeners for enter / exit the tab
     this.props.navigation.removeListener('blur', this._onBlur.bind(this))
@@ -85,35 +91,19 @@ class Notifications extends React.PureComponent {
     )
   }
 
-  _renderPlaceholder () {
+  _renderOnboarding () {
     return (
-      <View style={styles.emptyStateContainer}>
+      <View style={onboardingStyles.emptyStateContainer}>
         <Image
-          style={styles.emptyStateImage}
-          source={require('../../views/ThreadsList/statics/thread-empty-state.png')} />
-        <Text style={styles.emptyStateText}>
-          Nothing to see here yet... Start sharing your memories with friends and family with threads.
-          Create one on the <Icons name='threads' size={16} color='black' /> tab below!
+          style={onboardingStyles.emptyStateImage3}
+          source={require('../../../Images/v2/notifications.png')} />
+        <Text style={onboardingStyles.emptyStateText}>
+          This is your notification feed where
+          you'll be able to quickly view all
+          activity in your threads, such as likes,
+          comments, and new photo shares. There's
+          nothing here yet, so go invite some friends!
           </Text>
-      </View>
-    )
-  }
-
-  _renderTour () {
-    return (
-      <View style={styles.emptyStateContainer}>
-        <Image
-          resizeMode={'contain'}
-          style={styles.emptyStateImage}
-          source={require('../../../Images/v2/invite_friends.png')} />
-        <Text style={styles.emptyStateText}>
-          This is where your activities and
-          engagements are listed for easy
-          browsing. Go share a photo!
-        </Text>
-        <Button primary text='Cool!' onPress={() => {
-          this.props.completeTourScreen()
-        }} />
       </View>
     )
   }
@@ -136,9 +126,8 @@ class Notifications extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {this.props.showTourScreen && this._renderTour()}
-        {this.props.showPlaceholder && this._renderPlaceholder()}
-        {!this.props.showPlaceholder && !this.props.showTourScreen && this._renderItems()}
+        {this.props.showOnboarding && this._renderOnboarding()}
+        {!this.props.showOnboarding && this._renderItems()}
         {/* <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} /> */}
       </View>
     )
@@ -151,12 +140,12 @@ const mapStateToProps = (state) => {
       if (n.type === 1) return true // a device notification
       return n.actor_username !== undefined && n.actor_username !== ''
     })
-  const tourScreenFeed = state.preferences.tourScreens.feed === true
+  const showOnboarding = state.preferences.tourScreens.feed === true
+
   return {
     notifications,
     profile: state.preferences.profile,
-    showTourScreen: tourScreenFeed,
-    showPlaceholder: notifications.length === 0 && !tourScreenFeed
+    showOnboarding
   }
 }
 
