@@ -42,7 +42,7 @@ platform :ios do
     # Config that came with fastlane init
     # ----------------------------------------------------------------------------
     versionNumber = get_version_number
-    newBuildNumber = app_store_build_number(version: versionNumber) + 1
+    newBuildNumber = app_store_build_number(live: false, version: versionNumber) + 1
     increment_build_number(
       build_number: newBuildNumber,
       xcodeproj: "TextilePhotos.xcodeproj"
