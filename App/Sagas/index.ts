@@ -51,7 +51,8 @@ import {
   refreshThread,
   addThread,
   removeThread,
-  addPhotoComment
+  addPhotoComment,
+  monitorNewThreadActions
 } from './PhotoViewingSagas'
 
 import {
@@ -66,8 +67,7 @@ import {
   acceptExternalInvite,
   addInternalInvites,
   pendingInvitesTask,
-  acceptInvite,
-  handlePhotoToNewThreadRequest
+  acceptInvite
 } from './ThreadsSagas'
 
 import {
@@ -101,6 +101,7 @@ export default function * root () {
     call(onNodeCreated),
     call(onNodeStarted),
     call(onNodeOnline),
+    call(monitorNewThreadActions),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
@@ -164,8 +165,6 @@ export default function * root () {
     takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
     takeEvery(getType(ProcessingImagesActions.expiredTokenError), retryWithTokenRefresh),
     takeEvery(getType(StorageActions.newLocalPhoto), newLocalPhoto),
-
-    takeEvery(getType(UIActions.sharePhotoToNewThreadRequest), handlePhotoToNewThreadRequest),
 
     // Notifications
     takeEvery(getType(NotificationsActions.newNotificationRequest), handleNewNotification),

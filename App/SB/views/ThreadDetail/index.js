@@ -243,19 +243,19 @@ class ThreadDetail extends React.PureComponent {
 }
 
 const mapStateToProps = (state: RootState) => {
-  const viewingThread = state.photoViewing.viewingThread
+  const viewingThreadId = state.photoViewing.viewingThreadId
 
-  const threadId = viewingThread.id
   var items: [{type: string, photo: Photo}] = []
   var processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
+  var threadName
 
-  if (viewingThread) {
-    const threadData: ThreadData = threadDataByThreadId(state, viewingThread.id) || { querying: false, photos: [] }
+  if (viewingThreadId) {
+    const threadData: ThreadData = threadDataByThreadId(state, viewingThreadId) || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
       return { type: 'photo', photo, id: photo.id }
     })
     processingItems = state.processingImages.images
-      .filter(image => image.destinationThreadId === threadId)
+      .filter(image => image.destinationThreadId === viewingThreadId)
       .map(image => {
         let progress = 0
         if (image.shareToThreadData) {
@@ -279,15 +279,14 @@ const mapStateToProps = (state: RootState) => {
           }
         }
       })
+    threadName = threadData.name
   }
-
-  const threadName = viewingThread ? viewingThread.name : undefined
 
   // add processing items to the beginning of the list
   items.unshift(...processingItems)
 
   return {
-    threadId,
+    threadId: viewingThreadId,
     threadName,
     items,
     displayImages: state.textileNode.nodeState.state === 'started',

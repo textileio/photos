@@ -19,7 +19,6 @@ import DeepLink from '../Services/DeepLink'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
-import { shareWalletImage } from './ImageSharingSagas'
 
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
@@ -46,11 +45,6 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
   }
-}
-
-export async function getDefaultThread (): Promise<Thread> {
-  const threads = await TextileNode.threads()
-  return threads.items.find((thread) => thread.name === 'default')!
 }
 
 export function * pendingInvitesTask () {
@@ -82,11 +76,4 @@ export function * addInternalInvites (action: ActionType<typeof ThreadsActions.a
     }
   } catch (error) {
   }
-}
-
-export function * handlePhotoToNewThreadRequest (action: ActionType<typeof UIActions.sharePhotoToNewThreadRequest>) {
-  const { imageId, threadName, comment } = action.payload
-  const thread: Thread = yield call(TextileNode.addThread, threadName)
-  yield put(PhotoViewingActions.addThreadSuccess(thread))
-  yield call(shareWalletImage, imageId, thread.id, comment)
 }

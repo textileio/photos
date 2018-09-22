@@ -17,9 +17,7 @@ import Config from 'react-native-config'
 import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
 import { getPhotos } from '../Services/CameraRoll'
-import { getAllPhotos, getPhotoPath, getPage } from '../Services/PhotoUtils'
 import * as NotificationsSagas from './NotificationsSagas'
-import { getDefaultThread } from './ThreadsSagas'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
@@ -28,12 +26,14 @@ import AuthActions from '../Redux/AuthRedux'
 import ContactsActions from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import DevicesActions from '../Redux/DevicesRedux'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType, getType } from 'typesafe-actions'
 import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
+import { ThreadData } from '../Redux/PhotoViewingRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -94,25 +94,24 @@ export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActi
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield put(PreferencesActions.onboardedSuccess())
   yield call(NavigationService.navigate, 'PrimaryNavigation')
-
-  // PreferencesActions.onboardedSuccess will setup the node/default thread, so wait for those
-  const defaultThread: TT.Thread = yield call(getDefaultThread)
-  yield * processAvatarImage(action.payload.uri, defaultThread)
+  yield * processAvatarImage(action.payload.uri)
 }
 
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
   yield call(NavigationService.navigate, 'TabNavigator')
-
-  const defaultThread: TT.Thread = yield call(getDefaultThread)
-  yield * processAvatarImage(action.payload.uri, defaultThread)
+  yield * processAvatarImage(action.payload.uri)
 }
 
-function * processAvatarImage(uri: string, defaultThread: TT.Thread) {
+function * processAvatarImage(uri: string) {
   const photoPath = uri.replace('file://', '')
   try {
     const addResult: TT.AddResult = yield call(TextileNode.addPhoto, photoPath)
     if (!addResult.archive) {
       throw new Error('no archive returned')
+    }
+    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
+    if (!defaultThread) {
+      throw new Error('no default thread')
     }
     yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
@@ -277,7 +276,10 @@ export function * photosTask () {
     // will run before the next startNodeSuccess is received and photoTask run again
     yield take(getType(TextileNodeActions.startNodeSuccess))
 
-    const defaultThread: TT.Thread = yield call(getDefaultThread)
+    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
+    if (!defaultThread) {
+      continue
+    }
 
     const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
     if (!queriredPhotosInitialized) {

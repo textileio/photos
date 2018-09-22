@@ -3,11 +3,12 @@ import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 
 import { uploadFile } from './UploadFile'
-import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
 import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId} from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
+import { ThreadData } from '../Redux/PhotoViewingRedux'
 
 export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: string) {
   try {
@@ -64,7 +65,10 @@ export function * addToWallet (uuid: string) {
     }
     const { id, key } = processingImage.addData.addResult
     yield put(ProcessingImagesActions.addingToWallet(uuid))
-    const defaultThread: Thread = yield * getDefaultThread()
+    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
+    if (!defaultThread) {
+      throw new Error('no default thread')
+    }
     const blockId: BlockId = yield call(TextileNode.addPhotoToThread, id, key, defaultThread.id)
     yield put(ProcessingImagesActions.addedToWallet(uuid, blockId))
     if (processingImage.destinationThreadId) {

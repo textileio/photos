@@ -79,7 +79,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.thread.id))
+          yield put(PhotoViewingAction.viewThread(threadData.id))
           yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
           yield call(NavigationService.navigate, 'Comments')
         }
@@ -90,7 +90,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.thread.id))
+          yield put(PhotoViewingAction.viewThread(threadData.id))
           yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
           yield call(NavigationService.navigate, 'PhotoScreen')
         }
@@ -102,9 +102,9 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.thread.id))
+          yield put(PhotoViewingAction.viewThread(threadData.id))
           yield call(
-            NavigationService.navigate, 'ViewThread', { id: threadData.thread.id, name: threadData.thread.name })
+            NavigationService.navigate, 'ViewThread', { id: threadData.id, name: threadData.name })
         }
     }
   } catch (error) {

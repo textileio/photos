@@ -68,7 +68,6 @@ class AddThreadScreen extends React.Component {
 
   _submit () {
     this.props.submit(this.state.value)
-    // Todo: Should nav to the newly created thread
     this.props.navigation.goBack()
   }
 
@@ -89,7 +88,7 @@ class AddThreadScreen extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    submit: (name: string) => { dispatch(PhotoViewingActions.addThreadRequest(name)) }
+    submit: (name: string) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate: true })) }
   }
 }
 
