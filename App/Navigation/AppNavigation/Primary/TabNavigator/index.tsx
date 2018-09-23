@@ -41,4 +41,10 @@ const nav = createBottomTabNavigator(
   }
 )
 
+nav.navigationOptions = {
+  // Hide the header from AppNavigator stack
+  // tslint:disable-next-line:no-null-keyword
+  header: null
+}
+
 export default nav

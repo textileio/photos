@@ -239,7 +239,7 @@ const mapStateToProps = (state: RootState) => {
     // TODO: real dimensions are in the metadata alread now
     dimensions: { width: 150, height: 150 },
     displayImages: state.textileNode.nodeState.state === 'started',
-    threadId: defaultData.thread.id,
+    threadId: defaultData.id,
     threadsIn: threads.filter(t => containingThreads.indexOf(t.id) > -1 && t.name !== 'default'),
     threadsNotIn,
     thumbs,

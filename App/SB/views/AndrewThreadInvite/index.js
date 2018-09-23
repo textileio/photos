@@ -21,11 +21,6 @@ class ThreadInvite extends React.PureComponent {
       status: 'init'
     }
   }
-  static navigationOptions = () => {
-    return {
-      tabBarVisible: false
-    }
-  }
 
   _isValid = (request) => {
     return request.inviter && request.inviter !== '' &&

@@ -4,22 +4,30 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
-import PushNotification from 'react-native-push-notification'
+import RNPushNotification from 'react-native-push-notification'
 
 import TextileNodeActions, { NodeState, TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
-import { Threads, ThreadName } from '../Models/TextileTypes'
+import {Threads, ThreadName} from '../Models/TextileTypes'
 
 export function * manageNode () {
   while (true) {
     try {
       // Block until we get an active or background app state
       const action: ActionType<typeof TextileNodeActions.appStateChange> =
-        yield take((action: RootAction) =>
-          action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
-        )
+        yield take((action: RootAction) => {
+          if (action.type !== getType(TextileNodeActions.appStateChange)) {
+            return false
+          }
+          const { previousState, newState } = action.payload
+          const isBackground = previousState === 'active' && (newState === 'inactive' || newState === 'background')
+          const isForeground = (previousState === 'background' || previousState === 'inactive' || previousState === 'unknown') && newState === 'active'
+          return isBackground || isForeground
+        })
+
+      BackgroundTimer.start()
 
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
@@ -42,8 +50,7 @@ export function * manageNode () {
       //
       // Using the race effect, if we get a foreground event while we're waiting
       // to stop the node, cancel the stop and let it keep running
-      if (action.payload.newState === 'background') {
-        BackgroundTimer.start()
+      if (action.payload.newState === 'background' || action.payload.newState === 'inactive') {
         // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
         yield race({
           delayAndStopNode: call(stopNodeAfterDelay, 20000),
@@ -52,31 +59,37 @@ export function * manageNode () {
               action.type === getType(TextileNodeActions.appStateChange) && action.payload.newState === 'active'
           )
         })
-        BackgroundTimer.stop()
       }
+
+      BackgroundTimer.stop()
     } catch (error) {
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, error, 'Error')
       }
       yield put(TextileNodeActions.nodeError(error))
+      BackgroundTimer.stop()
     }
   }
 }
 
 function * createAndStartNode () {
-  const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-  const logFiles = !__DEV__
-  yield put(TextileNodeActions.creatingNode())
-  yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
-  yield put(TextileNodeActions.createNodeSuccess())
-  yield put(TextileNodeActions.startingNode())
-  yield call(TextileNode.start)
-  const threads: Threads = yield call(TextileNode.threads)
-  const defaultThread = threads.items.find((thread) => thread.name === 'default')
-  if (!defaultThread) {
-    yield call(TextileNode.addThread, 'default' as ThreadName)
+  try {
+    const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
+    const logFiles = !__DEV__
+    yield put(TextileNodeActions.creatingNode())
+    yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
+    yield put(TextileNodeActions.createNodeSuccess())
+    yield put(TextileNodeActions.startingNode())
+    yield call(TextileNode.start)
+    const threads: Threads = yield call(TextileNode.threads)
+    const defaultThread = threads.items.find((thread) => thread.name === 'default')
+    if (!defaultThread) {
+      yield call(TextileNode.addThread, 'default' as ThreadName)
+    }
+    yield put(TextileNodeActions.startNodeSuccess())
+  } catch (error) {
+    yield put(TextileNodeActions.nodeError(error))
   }
-  yield put(TextileNodeActions.startNodeSuccess())
 }
 
 function * stopNodeAfterDelay (ms: number) {
@@ -107,7 +120,7 @@ function * stopNodeAfterDelay (ms: number) {
 }
 
 function displayNotification (message: string, title?: string) {
-  PushNotification.localNotification({
+  RNPushNotification.localNotification({
     title,
     message,
     playSound: false,

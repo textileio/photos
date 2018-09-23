@@ -1,9 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, FlatList, Text } from 'react-native'
+import { View, FlatList, Text, Image } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
+import Icons from '../../../Components/Icons'
 
 import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
@@ -23,6 +24,7 @@ import { RootState } from '../../../Redux/Types'
 import ProcessingImageCard, { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
 import styles from './statics/styles'
+import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 import cardStyles from '../../components/ThreadDetailCard/statics/styles'
 
 class ThreadDetail extends React.PureComponent {
@@ -52,8 +54,7 @@ class ThreadDetail extends React.PureComponent {
       // TODO: no current menu needed for Wallet view
       headerTitle: params.threadName,
       headerRight,
-      headerLeft,
-      tabBarVisible: false
+      headerLeft
     }
   }
 
@@ -103,8 +104,18 @@ class ThreadDetail extends React.PureComponent {
       profile: this.props.profile,
       toggleVerboseUi: this.props.toggleVerboseUi,
       threadName: this.props.threadName,
-      showActionSheet: this.showActionSheet.bind(this),
-      showImagePicker: this.showImagePicker.bind(this)
+      showActionSheet: () => {
+        if (this.props.showOnboarding === true) {
+          this.props.completeScreen('threadView')
+        }
+        this.showActionSheet()
+      },
+      showImagePicker: () => {
+        if (this.props.showOnboarding === true) {
+          this.props.completeScreen('threadView')
+        }
+        this.showImagePicker()
+      }
     })
   }
 
@@ -112,6 +123,13 @@ class ThreadDetail extends React.PureComponent {
     return () => {
       this.props.viewPhoto(photo.id)
       this.props.navigation.navigate('Comments')
+    }
+  }
+
+  onLikes = (photo: Photo) => {
+    return () => {
+      this.props.viewPhoto(photo.id)
+      this.props.navigation.navigate('LikesScreen')
     }
   }
 
@@ -128,6 +146,22 @@ class ThreadDetail extends React.PureComponent {
   }
 
   _keyExtractor = (item, index) => item.id + '_' + index
+
+  _renderItems = () => {
+    return (
+      <View style={styles.threadDetail} >
+        <View style={styles.imageList}>
+          <FlatList
+            data={this.props.items}
+            keyExtractor={this._keyExtractor.bind(this)}
+            renderItem={this._renderItem.bind(this)}
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+          />
+        </View>
+      </View>
+    )
+  }
 
   _renderItem = ({ item }) => {
     switch (item.type) {
@@ -158,6 +192,9 @@ class ThreadDetail extends React.PureComponent {
           <ThreadDetailCard
             photo={item.photo}
             onComment={this._onPhotoSelect(item.photo)}
+            onLikes={this.onLikes(item.photo)}
+            recentCommentsCount={2}
+            maxLinesPerComment={1}
           />
         )
       }
@@ -167,20 +204,28 @@ class ThreadDetail extends React.PureComponent {
     }
   }
 
+  _renderOnboarding () {
+    return (
+      <View style={onboardingStyles.emptyStateContainer}>
+        <Image
+          style={onboardingStyles.emptyStateImage2}
+          source={require('../../../Images/v2/invite_friends.png')} />
+        <Text style={onboardingStyles.emptyStateText}>
+          Time to share some photos. Anyone you invite to the Thread will be able to send photos, view other members photos, and invite new friends.
+        </Text>
+        <Text style={onboardingStyles.emptyStateText}>
+          Click the <Icons style={{ margin: 10 }} name='add-photo' size={24} color='black' /> button to add your first photo.
+          Or click the <Icons name='more' size={24} color='black' /> button to start inviting friends.
+        </Text>
+      </View>
+    )
+  }
+
   render () {
     return (
       <View style={styles.container}>
-        <View style={styles.threadDetail} >
-          <View style={styles.imageList}>
-            <FlatList
-              data={this.props.items}
-              keyExtractor={this._keyExtractor.bind(this)}
-              renderItem={this._renderItem.bind(this)}
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh}
-            />
-          </View>
-        </View>
+        {this.props.showOnboarding && this._renderOnboarding()}
+        {!this.props.showOnboarding && this._renderItems()}
         {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet
@@ -198,19 +243,19 @@ class ThreadDetail extends React.PureComponent {
 }
 
 const mapStateToProps = (state: RootState) => {
-  const viewingThread = state.photoViewing.viewingThread
+  const viewingThreadId = state.photoViewing.viewingThreadId
 
-  const threadId = viewingThread.id
   var items: [{type: string, photo: Photo}] = []
   var processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
+  var threadName
 
-  if (viewingThread) {
-    const threadData: ThreadData = threadDataByThreadId(state, viewingThread.id) || { querying: false, photos: [] }
+  if (viewingThreadId) {
+    const threadData: ThreadData = threadDataByThreadId(state, viewingThreadId) || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
       return { type: 'photo', photo, id: photo.id }
     })
     processingItems = state.processingImages.images
-      .filter(image => image.destinationThreadId === threadId)
+      .filter(image => image.destinationThreadId === viewingThreadId)
       .map(image => {
         let progress = 0
         if (image.shareToThreadData) {
@@ -234,22 +279,22 @@ const mapStateToProps = (state: RootState) => {
           }
         }
       })
+    threadName = threadData.name
   }
-
-  const threadName = viewingThread ? viewingThread.name : undefined
 
   // add processing items to the beginning of the list
   items.unshift(...processingItems)
 
   return {
-    threadId,
+    threadId: viewingThreadId,
     threadName,
     items,
     displayImages: state.textileNode.nodeState.state === 'started',
     profile: state.preferences.profile,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
-    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined
+    displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,
+    showOnboarding: state.preferences.tourScreens.threadView && items && items.length === 0
   }
 }
 
@@ -263,7 +308,8 @@ const mapDispatchToProps = (dispatch) => {
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
-    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) }
+    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
+    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) }
   }
 }
 

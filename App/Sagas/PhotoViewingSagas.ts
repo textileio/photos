@@ -1,20 +1,37 @@
-import { call, put, select } from 'redux-saga/effects'
-import { ActionType } from 'typesafe-actions'
+import { delay } from 'redux-saga'
+import { call, put, select, take } from 'redux-saga/effects'
+import { ActionType, getType } from 'typesafe-actions'
 
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
-import { photoAndComment } from '../Redux/PhotoViewingSelectors'
-import UIActions from '../Redux/UIRedux'
+import { photoAndComment, shouldNavigateToNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
 import TextileNode from '../../TextileNode'
-import { Threads, Thread, Photo, BlockId } from '../Models/TextileTypes'
+import { Threads, Photo, BlockId, PhotoId } from '../Models/TextileTypes'
 import NavigationService from '../Services/NavigationService'
+import { shareWalletImage } from './ImageSharingSagas'
+
+export function * monitorNewThreadActions () {
+  while (true) {
+    const action: ActionType<typeof PhotoViewingActions.threadAdded> = yield take(getType(PhotoViewingActions.threadAdded))
+    const shouldNav: boolean = yield select(shouldNavigateToNewThread)
+    const photoToShare: { threadName: string, imageId: PhotoId, comment?: string} | undefined = yield select(photoToShareToNewThread)
+    yield put(PhotoViewingActions.clearNewThreadActions())
+    const { id, name } = action.payload
+    if (photoToShare && photoToShare.threadName === name) {
+      const { imageId, comment } = photoToShare
+      yield call(shareWalletImage, imageId, id, comment)
+    }
+    if (shouldNav) {
+      yield put(PhotoViewingActions.viewThread(action.payload.id))
+      yield delay(700)
+      yield call(NavigationService.navigate, 'ViewThread')
+    }
+  }
+}
 
 export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
   const { name } = action.payload
   try {
-    const thread: Thread = yield call(TextileNode.addThread, name)
-    yield put(PhotoViewingActions.addThreadSuccess(thread))
-    yield put(PhotoViewingActions.viewThread(thread.id))
-    yield put(UIActions.navigateToThreadRequest(thread.id, thread.name))
+    yield call(TextileNode.addThread, name)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
   }
@@ -23,9 +40,7 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
 export function * removeThread (action: ActionType<typeof PhotoViewingActions.removeThreadRequest>) {
   const { id } = action.payload
   try {
-    // TODO: something with this blockId
-    const blockId: BlockId = yield call(TextileNode.removeThread, id)
-    yield put(PhotoViewingActions.removeThreadSuccess(id))
+    yield call(TextileNode.removeThread, id)
     yield call(NavigationService.navigate, 'SharedPhotos')
   } catch (error) {
     yield put(PhotoViewingActions.removeThreadError(error))
@@ -36,7 +51,7 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
   try {
     const threads: Threads = yield call(TextileNode.threads)
     for (const thread of threads.items) {
-      yield put(PhotoViewingActions.insertThread(thread))
+      yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
       yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
   } catch (error) {
@@ -48,7 +63,7 @@ export function * refreshThread (action: ActionType<typeof PhotoViewingActions.r
   const { threadId } = action.payload
   try {
     const photos: Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
-    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photos))
+    yield put(PhotoViewingActions.refreshThreadSuccess(threadId as string, photos))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
   }

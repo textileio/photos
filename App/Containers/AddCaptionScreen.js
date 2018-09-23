@@ -6,6 +6,7 @@ import Input from '../SB/components/Input'
 import { NavigationActions } from 'react-navigation'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import UIActions from '../Redux/UIRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../../TextileImage'
 
 class AddCaptionScreen extends React.Component {
@@ -121,7 +122,7 @@ const mapDispatchToProps = (dispatch) => {
     updateComment: (text) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
     share: (image, threadId, comment) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    shareNewThread: (imageId, threadName, comment) => { dispatch(UIActions.sharePhotoToNewThreadRequest(imageId, threadName, comment)) }
+    shareNewThread: (imageId, threadName, comment) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
   }
 }
 

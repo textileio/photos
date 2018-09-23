@@ -116,6 +116,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
                                 payload.putString((String) "creationDate", created);
                                 payload.putString((String) "modificationDate", modified);
                                 payload.putInt((String) "orientation", Integer.parseInt(orientation));
+                                payload.putBoolean((String) "canDelete", false);
 
                                 // This works, but is emitDeviceEvent safe here?
                                 emitDeviceEvent("newLocalPhoto", payload);

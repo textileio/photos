@@ -28,6 +28,11 @@ export default StyleSheet.create({
     color: '#000000',
     marginBottom: 16
   },
+  errorMessage: {
+    textAlign: 'center',
+    marginTop: 22,
+    color: 'red'
+  },
   link: {
     color: '#2625ff'
   },

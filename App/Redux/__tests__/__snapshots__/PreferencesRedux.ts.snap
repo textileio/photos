@@ -52,6 +52,7 @@ Object {
   "tourScreens": Object {
     "feed": true,
     "notifications": true,
+    "threadView": true,
     "threads": true,
     "wallet": true,
   },

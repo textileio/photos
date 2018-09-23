@@ -1,19 +1,19 @@
 import {call, put, select, take} from 'redux-saga/effects'
-
-import getDefaultThread from './GetDefaultThread'
 import TextileNode from '../../TextileNode'
 import {BlockId, Thread, ILocalPhotoResult, SharedImage} from '../Models/TextileTypes'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
 import {ActionType, getType} from 'typesafe-actions'
 import PreferencesActions, {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
+import { ThreadData } from '../Redux/PhotoViewingRedux'
 
 export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLocalPhoto>) {
   const { photo } = action.payload
   const sharedImage: SharedImage = {
     uri: photo.uri,
     path: photo.path,
-    canDelete: false
+    canDelete: photo.canDelete // <- allow the native layer to dictate if it's a duplicate or not
   }
   yield put(UIActions.sharePhotoRequest(sharedImage))
 }
@@ -22,7 +22,10 @@ export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLoc
 export function * savePhotoToWallet (photo: ILocalPhotoResult) {
   try {
     const addResult = yield call(TextileNode.addPhoto, photo.path)
-    const defaultThread: Thread = yield* getDefaultThread()
+    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
+    if (!defaultThread) {
+      throw new Error('no default thread')
+    }
     const blockId: BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     // Issue: if the user doesn't want to store private files on remote IPFS, we need to record that these are
     // only available locally in case the user then shares

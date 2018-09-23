@@ -31,7 +31,7 @@
     "tslint": "tslint -c tslint.json --project ."
   },
   "dependencies": {
-    "@textile/go-mobile": "^0.1.9",
+    "@textile/go-mobile": "0.1.9",
     "apisauce": "^0.14.2",
     "format-json": "^1.0.3",
     "identity-obj-proxy": "^3.0.0",
@@ -86,6 +86,7 @@
     "@types/react-native": "^0.55.26",
     "@types/react-native-fabric": "^0.5.0",
     "@types/react-native-fs": "^2.8.1",
+    "@types/react-native-push-notification": "^3.0.2",
     "@types/react-native-vector-icons": "^4.6.2",
     "@types/react-navigation": "^2.0.15",
     "@types/react-redux": "^6.0.3",
@@ -148,6 +149,7 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.{js,jsx,ts,tsx}",
+      "!**/typings/**",
       "!**/node_modules/**",
       "!**/vendor/**"
     ]

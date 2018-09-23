@@ -57,7 +57,7 @@ export function * handleEngagement (action: ActionType<typeof NotificationsActio
   // Deals with the Engagement response from clicking a native notification
   const { data } = action.payload.engagement
   try {
-    if (!data || !data.notification) { return }
+    if (!data || !data.hasOwnProperty('notification')) { return }
     yield put(NotificationsActions.notificationSuccess(data.notification))
   } catch (error) {
     // Nothing to do
@@ -75,20 +75,36 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         yield call(TextileNode.readNotification, notification.id)
         yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
         break
-      case NotificationType.deviceAddedNotification:
+      case NotificationType.commentAddedNotification: {
+        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
+        yield call(TextileNode.readNotification, notification.id)
+        if (threadData) {
+          yield put(PhotoViewingAction.viewThread(threadData.id))
+          yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
+          yield call(NavigationService.navigate, 'Comments')
+        }
+        break
+      }
       case NotificationType.photoAddedNotification:
-      case NotificationType.commentAddedNotification:
-      case NotificationType.likeAddedNotification:
+      case NotificationType.likeAddedNotification: {
+        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
+        yield call(TextileNode.readNotification, notification.id)
+        if (threadData) {
+          yield put(PhotoViewingAction.viewThread(threadData.id))
+          yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
+          yield call(NavigationService.navigate, 'PhotoScreen')
+        }
+        break
+      }
+      case NotificationType.deviceAddedNotification:
       case NotificationType.peerJoinedNotification:
       case NotificationType.peerLeftNotification:
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
         yield call(TextileNode.readNotification, notification.id)
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.thread.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
+          yield put(PhotoViewingAction.viewThread(threadData.id))
           yield call(
-            NavigationService.navigate, 'ViewThread', { id: threadData.thread.id, name: threadData.thread.name })
-          yield call(NavigationService.navigate, 'PhotoViewer')
+            NavigationService.navigate, 'ViewThread', { id: threadData.id, name: threadData.name })
         }
     }
   } catch (error) {

@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import Config from 'react-native-config'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
+import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { Photo } from '../Models/TextileTypes'
 import style from './Styles/TextilePhotosStyle'
@@ -12,7 +13,7 @@ import WalletHeader from '../Components/WalletHeader'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
-import styles from '../SB/views/ThreadsList/statics/styles'
+import onboardingStyles from './Styles/OnboardingStyle'
 import { RootState } from '../Redux/Types'
 
 class Wallet extends React.PureComponent {
@@ -66,18 +67,18 @@ class Wallet extends React.PureComponent {
   }
 
   onRefresh () {
-    this.props.refresh(this.props.threadId)
+    this.props.refresh()
     this.props.updateOverview()
   }
 
   renderTour () {
     return (
       <View style={style.container}>
-        <View style={styles.emptyStateContainer}>
+        <View style={onboardingStyles.emptyStateContainer}>
           <Image
-            style={styles.emptyStateImage}
+            style={onboardingStyles.emptyStateImage}
             source={require('../Images/v2/permissions.png')} />
-          <Text style={styles.emptyStateText}>
+          <Text style={onboardingStyles.emptyStateText}>
             This is the Textile wallet, a private
             space where you can manage the data
             you create while using the app.
@@ -109,7 +110,7 @@ class Wallet extends React.PureComponent {
             progressData={this.props.progressData}
             onSelect={this.onSelect}
             onRefresh={this.onRefresh.bind(this)}
-            refreshing={this.props.refreshing}
+            refreshing={false}
             placeholderText={this.props.placeholderText}
             displayImages={this.props.displayImages}
             verboseUi={this.props.verboseUi}
@@ -130,9 +131,8 @@ class Wallet extends React.PureComponent {
 
 const mapStateToProps = (state: RootState) => {
   const defaultData = defaultThreadData(state)
-  const threadId = defaultData ? defaultData.thread.id : undefined
+  const threadId = defaultData ? defaultData.id : undefined
   const photos: Photo[] = defaultData ? defaultData.photos : []
-  const refreshing = defaultData ? defaultData.querying : false
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error
@@ -156,7 +156,6 @@ const mapStateToProps = (state: RootState) => {
     threadId,
     photos,
     progressData: state.processingImages.images,
-    refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
     verboseUi: state.preferences.verboseUi,
@@ -171,7 +170,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewWalletPhoto: (photoId) => { dispatch(PhotoViewingActions.viewWalletPhoto(photoId)) },
-    refresh: (threadId: string) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
+    refresh: () => { dispatch(StorageActions.refreshLocalImagesRequest()) },
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },
     updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) }
   }

@@ -4,21 +4,16 @@ import { View, Text, FlatList, Image } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import FeedItem from '../../components/FeedItem'
-import Button from '../../components/Button'
 import Avatar from '../../../Components/Avatar'
 
-import { Notification } from '../../../Models/TextileTypes'
 import NotificationsActions from '../../../Redux/NotificationsRedux'
 
 import styles from './statics/styles'
+import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
 
 class Notifications extends React.PureComponent {
-  state = {
-    readAllOnExit: false
-  }
-
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
@@ -41,7 +36,7 @@ class Notifications extends React.PureComponent {
         />
       </HeaderButtons>
     )
-    const headerTitle = 'Feed'
+    const headerTitle = 'Notifications'
 
     return {
       headerLeft,
@@ -50,27 +45,16 @@ class Notifications extends React.PureComponent {
     }
   }
 
-  // gets called every time  the user enters this tab
+  // gets called every time the user enters this tab
   _onFocus () {
     // refresh the messages for the user
     this.props.refreshNotifications() // < will get called on the very first entry too
-    // reset our readAll flag to re-time
-    this.setState({ readAllOnExit: false })
-    // set a timer to clear all unread messages
-    this._setReadAllTimer()
   }
 
   // gets called every time the user exists the tab
   _onBlur () {
-    // will be 0 if already run
-    if (this.readAllHandle) {
-      clearTimeout(this.readAllHandle)
-      this.readAllHandle = 0
-    }
     // if the user was on the page long enough, we'll just clear all unread
-    if (this.state.readAllOnExit) {
-      this.props.readAllNotifications()
-    }
+    this.props.readAllNotifications()
   }
 
   componentDidMount () {
@@ -82,20 +66,17 @@ class Notifications extends React.PureComponent {
     })
   }
 
+  componentDidUpdate (prevProps, prevState, snapShot) {
+    // Will clear the onboarding only after the first feed item appears
+    if (this.props.showOnboarding && this.props.notifications !== prevProps.notifications && this.props.notifications.length > 0) {
+      this.props.completeTourScreen()
+    }
+  }
+
   componentWillUnmount () {
     // remove the listeners for enter / exit the tab
     this.props.navigation.removeListener('blur', this._onBlur.bind(this))
     this.props.navigation.removeListener('onFocus', this._onFocus.bind(this))
-  }
-
-  _readAll () {
-    this.setState({ readAllOnExit: true })
-    this.readAllHandle = 0
-  }
-  _setReadAllTimer = () => {
-    if (this.readAllHandle) return
-    // After the user has been on the screen for 6 seconds, mark all as unread next time the user unmounts
-    this.readAllHandle = setTimeout(this._readAll.bind(this), 6000)
   }
 
   _onClick (notification) {
@@ -110,40 +91,43 @@ class Notifications extends React.PureComponent {
     )
   }
 
-  _renderTour () {
+  _renderOnboarding () {
     return (
-      <View style={styles.emptyStateContainer}>
+      <View style={onboardingStyles.emptyStateContainer}>
         <Image
-          resizeMode={'contain'}
-          style={styles.emptyStateImage}
-          source={require('../../../Images/v2/invite_friends.png')} />
-        <Text style={styles.emptyStateText}>
-          This is where your activities and
-          engagements are listed for easy
-          browsing. Go share a photo!
-        </Text>
-        <Button primary text='Cool!' onPress={() => {
-          this.props.completeTourScreen()
-        }} />
+          style={onboardingStyles.emptyStateImage3}
+          source={require('../../../Images/v2/notifications.png')} />
+        <Text style={onboardingStyles.emptyStateText}>
+          This is your notification feed where
+          you'll be able to quickly view all
+          activity in your threads, such as likes,
+          comments, and new photo shares. There's
+          nothing here yet, so go invite some friends!
+          </Text>
       </View>
+    )
+  }
+
+  _renderItems () {
+    return (
+      <View style={styles.contentContainer}>
+        <FlatList
+          data={this.props.notifications}
+          keyExtractor={this._keyExtractor.bind(this)}
+          renderItem={this._renderItem.bind(this)}
+          refreshing={false}
+          onRefresh={this.props.refreshMessages}
+          initialNumToRender={20}
+        />
+      </View >
     )
   }
 
   render () {
     return (
       <View style={styles.container}>
-        {/* <FeedItemUpdate /> */}
-        {this.props.showTourScreen && this._renderTour()}
-        <View style={styles.contentContainer}>
-          <FlatList
-            data={this.props.notifications}
-            keyExtractor={this._keyExtractor.bind(this)}
-            renderItem={this._renderItem.bind(this)}
-            refreshing={false}
-            onRefresh={this.props.refreshMessages}
-            initialNumToRender={20}
-          />
-        </View>
+        {this.props.showOnboarding && this._renderOnboarding()}
+        {!this.props.showOnboarding && this._renderItems()}
         {/* <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} /> */}
       </View>
     )
@@ -156,10 +140,12 @@ const mapStateToProps = (state) => {
       if (n.type === 1) return true // a device notification
       return n.actor_username !== undefined && n.actor_username !== ''
     })
+  const showOnboarding = state.preferences.tourScreens.feed === true
+
   return {
     notifications,
     profile: state.preferences.profile,
-    showTourScreen: state.preferences.tourScreens.feed === true
+    showOnboarding
   }
 }
 
@@ -168,7 +154,7 @@ const mapDispatchToProps = (dispatch) => {
     refreshNotifications: () => dispatch(NotificationsActions.refreshNotificationsRequest()),
     readAllNotifications: () => dispatch(NotificationsActions.readAllNotificationsRequest()),
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
-    clickNotification: (notification: Notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
+    clickNotification: (notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) }
   }
 }

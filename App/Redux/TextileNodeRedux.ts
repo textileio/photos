@@ -59,6 +59,7 @@ export enum NodeState {
 
 interface TextileNodeState {
   readonly appState: TextileAppStateStatus
+  readonly appStateUpdate: string
   readonly online: boolean
   readonly nodeState: {
     readonly state: NodeState
@@ -68,8 +69,17 @@ interface TextileNodeState {
   readonly overview?: NodeOverview
 }
 
+function getHMS() {
+  const now = new Date()
+  return [
+    now.getHours().toString().padStart(2, '0'),
+    now.getMinutes().toString().padStart(2, '0'),
+    now.getSeconds().toString().padStart(2, '0')
+  ].join(':')
+}
 export const initialState: TextileNodeState = {
   appState: 'unknown',
+  appStateUpdate: getHMS(),
   online: false,
   nodeState: {
     state: NodeState.nonexistent
@@ -80,7 +90,7 @@ export const initialState: TextileNodeState = {
 export function reducer (state: TextileNodeState = initialState, action: TextileNodeAction): TextileNodeState {
   switch (action.type) {
     case getType(actions.appStateChange):
-      return { ...state, appState: action.payload.newState }
+      return { ...state, appState: action.payload.newState, appStateUpdate: getHMS() }
     case getType(actions.creatingNode):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.creating } }
     case getType(actions.createNodeSuccess):
