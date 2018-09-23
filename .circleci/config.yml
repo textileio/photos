@@ -287,7 +287,7 @@ jobs:
             # - store_artifacts:
             #     path: ios/test-results
 
-    ios-beta:
+    ios-adhoc:
         macos:
             xcode: "9.4.0"
         environment:
@@ -356,7 +356,81 @@ jobs:
                 command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
-                command: bundle exec fastlane beta
+                command: bundle exec fastlane adhoc
+                working_directory: ios
+
+            - store_artifacts:
+                path: ./ios/TextilePhotos.app.dSYM.zip
+
+            - store_artifacts:
+                path: ./ios/TextilePhotos.ipa
+
+    ios-release:
+        macos:
+            xcode: "9.4.0"
+        environment:
+            LC_ALL: en_US.UTF-8
+            LANG: en_US.UTF-8
+        working_directory: ~/textile-mobile
+
+        # use a --login shell so our "set Ruby version" command gets picked up for later steps
+        shell: /bin/bash --login -o pipefail
+
+        steps:
+            - run:
+                name: set Ruby version
+                command:  echo "ruby-2.4" > ~/.ruby-version
+
+            - restore_cache: # If any cache exists, it'll way speedup these checkouts
+                keys:
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
+
+            - checkout
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
+
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+            # not using a workspace here as Node and Yarn versions
+            # differ between our macOS executor image and the Docker containers above
+            - run: yarn install --ignore-engines
+
+            - save_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+                paths:
+                    - ~/.cache/yarn
+
+            - save_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+                paths:
+                    - node_modules
+
+            - restore_cache:
+                key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+
+            - run:
+                command: bundle install
+                working_directory: ios
+
+            - save_cache:
+                key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+                paths:
+                    - vendor/bundle
+
+            - run:
+                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+
+            - run:
+                command: bundle exec fastlane release
                 working_directory: ios
 
             - store_artifacts:
@@ -395,7 +469,7 @@ workflows:
                     branches:
                         ignore:
                             - master
-            - ios-beta:
+            - ios-adhoc:
                 filters:
                     branches:
                         only:
@@ -405,3 +479,9 @@ workflows:
                     branches:
                         only:
                             - master
+            - ios-release:
+                filters:
+                    tags:
+                        only: /^ios_[0-9.]+_[0-9]+/
+                    branches:
+                        ignore: /.*/
