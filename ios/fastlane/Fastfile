@@ -90,7 +90,7 @@ platform :ios do
   lane :release do
     match(type: "appstore") # more information: https://codesigning.guide
     tag = ENV['CIRCLE_TAG'] # looks like ios_1.2.3_456
-    parts = tag.split('_')
+    parts = tag.split("_")
     increment_version_number(
       version_number: parts[1],
       xcodeproj: "TextilePhotos.xcodeproj"
