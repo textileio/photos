@@ -381,18 +381,7 @@ jobs:
                 name: set Ruby version
                 command:  echo "ruby-2.4" > ~/.ruby-version
 
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                keys:
-                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v2-{{ arch }}-{{ .Branch }}-
-                    - source-v2-{{ arch }}-
-
             - checkout
-
-            - save_cache:
-                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
 
             - restore_cache:
                 key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
