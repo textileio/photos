@@ -102,7 +102,7 @@ platform :ios do
     gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
     deliver(
       force: true,
-      app_version: versionNumber,
+      app_version: parts[1],
       skip_app_version_update: false
     )
   end
