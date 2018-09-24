@@ -53,7 +53,6 @@ export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLi
     // convert url scheme to standard url for parsing
     const standardUrl = url.replace('textile://', 'https://textile.photos/')
     const data = DeepLink.getData(standardUrl)
-    console.log(data)
     if (data) {
       if (data.path === '/invites/device' && data.hash !== '') {
         // start pairing the new device
