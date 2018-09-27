@@ -96,6 +96,8 @@ class ThreadsList extends React.PureComponent {
       })
     }
     if (
+      this.props.threads &&
+      prevProps.threads &&
       this.props.showNotificationsPrompt &&
       !this.props.showOnboarding &&
       this.props.threads.length !== prevProps.threads.length
