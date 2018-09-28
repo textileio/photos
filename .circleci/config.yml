@@ -207,6 +207,9 @@ jobs:
                 command: bundle exec fastlane beta
                 working_directory: android
 
+            - store_artifacts:
+                path: ./android/sourcemap.js
+
     ios:
         macos:
             xcode: "9.4.0"
@@ -364,6 +367,9 @@ jobs:
 
             - store_artifacts:
                 path: ./ios/TextilePhotos.ipa
+
+            - store_artifacts:
+                path: ./ios/sourcemap.js
 
 workflows:
     version: 2
