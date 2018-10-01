@@ -8,8 +8,7 @@ export default StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 19,
-    paddingTop: 24,
-    paddingBottom: 400 // <-hides a grey bar
+    paddingTop: '25%'
   },
   toolbarLeft: {
     height: 16,
