@@ -31,6 +31,11 @@ Push internal test build to Fabric
 fastlane android beta
 ```
 Submit a new Beta Build to Crashlytics Beta
+### android release
+```
+fastlane android release
+```
+Submit a new release to Google Play Store
 ### android deploy
 ```
 fastlane android deploy

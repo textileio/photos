@@ -203,6 +203,49 @@ jobs:
                 command: bundle exec fastlane adhoc
                 working_directory: android
 
+    android-release:
+        environment:
+            LC_ALL: en_US.UTF-8
+            LANG: en_US.UTF-8
+        working_directory: ~/textile-mobile
+        docker:
+            - image: circleci/android:api-26-node8-alpha
+        resource_class: large
+        steps:
+            - checkout:
+                path: ~/textile-mobile
+
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+            - run: yarn install
+
+            - restore_cache:
+                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+
+            - run:
+                command: bundle install
+                working_directory: android
+
+            - save_cache:
+                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+                paths:
+                    - vendor/bundle
+
+            - run:
+                command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
+                working_directory: android
+
+            - run:
+                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+
+            - run:
+                command: bundle exec fastlane release
+                working_directory: android
+
     ios:
         macos:
             xcode: "9.4.0"
@@ -463,10 +506,16 @@ workflows:
                 filters:
                     branches:
                         only:
-                            - asutula/new-builds
+                            - master
             - ios-release:
                 filters:
                     tags:
                         only: /^ios_[0-9.]+_[0-9]+/
+                    branches:
+                        ignore: /.*/
+            - android-release:
+                filters:
+                    tags:
+                        only: /^android_[0-9.]+_[0-9]+/
                     branches:
                         ignore: /.*/
