@@ -75,7 +75,7 @@ platform :android do
     )
     # changelog_from_git_commits
     supply(
-      track: "beta"
+      track: "internal"
     )
   end
 
