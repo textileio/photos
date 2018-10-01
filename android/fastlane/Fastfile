@@ -73,9 +73,8 @@ platform :android do
       task: "clean assembleRelease",
       flags: "--init-script init.gradle"
     )
-    # changelog_from_git_commits
     supply(
-      track: "internal"
+      track: "beta"
     )
   end
 
