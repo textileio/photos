@@ -149,7 +149,7 @@ jobs:
             - store_artifacts:
                 path: android/test-results
 
-    android-beta:
+    android-adhoc:
         environment:
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -180,10 +180,6 @@ jobs:
 
             - run: yarn install
 
-            - run: git config --global user.name $CIRCLE_USERNAME
-            - run: git config --global user.email "ops@textile.io" # TODO: Use a variable here
-            - run: git branch --set-upstream-to=origin/$CIRCLE_BRANCH $CIRCLE_BRANCH
-
             - restore_cache:
                 key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
 
@@ -204,7 +200,7 @@ jobs:
                 command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
-                command: bundle exec fastlane beta
+                command: bundle exec fastlane adhoc
                 working_directory: android
 
     ios:
@@ -463,11 +459,11 @@ workflows:
                     branches:
                         only:
                             - master
-            - android-beta:
-                filters:
-                    branches:
-                        only:
-                            - master
+            - android-adhoc:
+                # filters:
+                #     branches:
+                #         only:
+                #             - master
             - ios-release:
                 filters:
                     tags:

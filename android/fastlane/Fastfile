@@ -29,6 +29,20 @@ platform :android do
     )
   end
 
+  desc "Push internal test build to Fabric"
+  lane :adhoc do
+    set_version_code(version: ENV['CIRCLE_BUILD_NUM'])
+    gradle(
+      task: "clean assembleRelease",
+      flags: "--init-script init.gradle"
+    )
+    crashlytics(
+      api_token: ENV['FABRIC_API_TOKEN'],
+      build_secret: ENV['FABRIC_BUILD_SECRET'],
+      groups: 'textile-internal'
+    )
+  end
+
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     versionCodes = google_play_track_version_codes(track: "internal")
