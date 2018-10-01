@@ -24,7 +24,6 @@ class ThreadInvite extends React.PureComponent {
   }
 
   static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
     const headerLeft = (
       <TextileHeaderButtons left>
         <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
