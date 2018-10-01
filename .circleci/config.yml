@@ -460,10 +460,10 @@ workflows:
                         only:
                             - master
             - android-adhoc:
-                # filters:
-                #     branches:
-                #         only:
-                #             - master
+                filters:
+                    branches:
+                        only:
+                            - asutula/new-builds
             - ios-release:
                 filters:
                     tags:
