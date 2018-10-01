@@ -203,6 +203,9 @@ jobs:
                 command: bundle exec fastlane adhoc
                 working_directory: android
 
+            - store_artifacts:
+                path: ./android/sourcemap.js
+
     android-release:
         environment:
             LC_ALL: en_US.UTF-8
@@ -406,6 +409,9 @@ jobs:
 
             - store_artifacts:
                 path: ./ios/TextilePhotos.ipa
+
+            - store_artifacts:
+                path: ./ios/sourcemap.js
 
     ios-release:
         macos:
