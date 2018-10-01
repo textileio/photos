@@ -21,11 +21,21 @@ or alternatively using `brew cask install fastlane`
 fastlane android test
 ```
 Runs all the tests
+### android adhoc
+```
+fastlane android adhoc
+```
+Push internal test build to Fabric
 ### android beta
 ```
 fastlane android beta
 ```
 Submit a new Beta Build to Crashlytics Beta
+### android release
+```
+fastlane android release
+```
+Submit a new release to Google Play Store
 ### android deploy
 ```
 fastlane android deploy

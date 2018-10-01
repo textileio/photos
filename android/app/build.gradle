@@ -127,8 +127,8 @@ android {
         }
         vectorDrawables.useSupportLibrary = true
 
-        versionName "1.6.10"
-        versionCode 214
+        versionName "0"
+        versionCode 0
     }
 
     splits {
@@ -172,6 +172,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-version-number')
     compile project(':react-native-push-notification')
     compile project(':react-native-fabric')
     compile project(':react-native-image-picker')

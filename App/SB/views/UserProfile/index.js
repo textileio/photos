@@ -5,6 +5,7 @@ import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, { DURATION } from 'react-native-easy-toast'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
+import VersionNumber from 'react-native-version-number'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
@@ -104,9 +105,9 @@ class UserProfile extends React.PureComponent {
         <View style={styles.contentContainer}>
           <View style={styles.logoContainer}>
             <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
+            <Text style={styles.versionDescription}>{VersionNumber.appVersion} ({VersionNumber.buildVersion})</Text>
           </View>
           {this.connectivity()}
-
           <TouchableOpacity style={styles.listItemFirst} onPress={this._notifications.bind(this)}>
             <Text style={styles.listText}>Notifications</Text>
           </TouchableOpacity>

@@ -19,6 +19,7 @@ import com.smixx.fabric.FabricPackage;
 import com.textile.textilenode.TextileNodePackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
+import com.apsl.versionnumber.RNVersionNumberPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
         new FabricPackage(),
         new MainReactPackage(),
+        new RNVersionNumberPackage(),
         new ReactNativePushNotificationPackage(),
         new UploaderReactPackage(),
         new ImagePickerPackage(),

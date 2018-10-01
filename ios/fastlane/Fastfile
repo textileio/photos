@@ -27,6 +27,37 @@ platform :ios do
     )
   end
 
+  desc "Push internal test build to Fabric"
+  lane :adhoc do
+    APP_ID = "io.textile.Wallet"
+    PROFILE = "match AdHoc io.textile.Wallet"
+    settings_to_override = {
+      :PROVISIONING_PROFILE_SPECIFIER => PROFILE
+    }
+    match(type: "adhoc")
+    increment_build_number(
+      build_number: ENV['CIRCLE_BUILD_NUM'],
+      xcodeproj: "TextilePhotos.xcodeproj"
+    )
+    gym(
+      workspace: "TextilePhotos.xcworkspace",
+      scheme: "TextilePhotos",
+      xcargs: settings_to_override,
+      export_method: "ad-hoc",
+      export_options: {
+        provisioningProfiles: {
+            APP_ID => PROFILE
+        }
+      }
+    )
+    crashlytics(
+      api_token: ENV['FABRIC_API_TOKEN'],
+      build_secret: ENV['FABRIC_BUILD_SECRET'],
+      groups: 'textile-internal'
+    )
+    upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
+  end
+
   desc "Push a new beta build to TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
@@ -57,11 +88,23 @@ platform :ios do
 
   desc "Deploy a new version to the App Store"
   lane :release do
-    match(type: "appstore")
-    # snapshot
-    gym # Build your app - more options available
-    deliver(force: true)
-    # frameit
+    match(type: "appstore") # more information: https://codesigning.guide
+    tag = ENV['CIRCLE_TAG'] # looks like ios_1.2.3_456
+    parts = tag.split("_")
+    increment_version_number(
+      version_number: parts[1],
+      xcodeproj: "TextilePhotos.xcodeproj"
+    )
+    increment_build_number(
+      build_number: parts[2],
+      xcodeproj: "TextilePhotos.xcodeproj"
+    )
+    gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
+    deliver(
+      force: true,
+      app_version: parts[1],
+      skip_app_version_update: false
+    )
   end
 
   desc "Register new device"
