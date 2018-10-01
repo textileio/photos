@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/cball/fastlane-plugin-android_versioning.git
+  revision: 4fe9f3dd3109d58dc5870c417d7b17b016585a8d
+  ref: support-blank-id-suffix
+  specs:
+    fastlane-plugin-android_versioning (0.3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -18,7 +25,7 @@ GEM
     dotenv (2.5.0)
     emoji_regex (0.1.1)
     excon (0.62.0)
-    faraday (0.15.2)
+    faraday (0.15.3)
       multipart-post (>= 1.2, < 3)
     faraday-cookie_jar (0.0.6)
       faraday (>= 0.7.4)
@@ -26,7 +33,7 @@ GEM
     faraday_middleware (0.12.2)
       faraday (>= 0.7.4, < 1.0)
     fastimage (2.1.4)
-    fastlane (2.104.0)
+    fastlane (2.105.2)
       CFPropertyList (>= 2.3, < 4.0.0)
       addressable (>= 2.3, < 3.0.0)
       babosa (>= 1.0.2, < 2.0.0)
@@ -62,9 +69,6 @@ GEM
       xcodeproj (>= 1.6.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-get_version_code (0.2.0)
-    fastlane-plugin-get_version_name (0.2.2)
-    fastlane-plugin-increment_version_code (0.4.3)
     gh_inspector (1.1.3)
     google-api-client (0.23.9)
       addressable (~> 2.5, >= 2.5.1)
@@ -108,7 +112,7 @@ GEM
     rouge (2.0.7)
     rubyzip (1.2.2)
     security (0.1.3)
-    signet (0.9.1)
+    signet (0.10.0)
       addressable (~> 2.3)
       faraday (~> 0.9)
       jwt (>= 1.5, < 3.0)
@@ -147,9 +151,7 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   fastlane
-  fastlane-plugin-get_version_code
-  fastlane-plugin-get_version_name
-  fastlane-plugin-increment_version_code
+  fastlane-plugin-android_versioning!
 
 BUNDLED WITH
    1.16.2
