@@ -11,6 +11,7 @@ import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
 import BackgroundTaskEventHandler from '../Services/EventHandlers/BackgroundTaskEventHandler'
 import NotificationEventHandler from '../Services/EventHandlers/NotificationEventHandler'
+import { errorHandler } from '../Services/ErrorHandler'
 
 const { store, persistor } = configureStore()
 
@@ -48,6 +49,11 @@ class App extends Component {
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
     backgroundTaskEventHandler.tearDown()
+  }
+
+  componentDidCatch(error: any, info: any) {
+    // TODO: Render some UI
+    errorHandler(error, false)
   }
 }
 

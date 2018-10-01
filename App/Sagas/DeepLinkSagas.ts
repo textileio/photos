@@ -50,13 +50,15 @@ export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLi
   const { url } = action.payload
   if (!url) { return }
   try {
-    const data = DeepLink.getData(url)
+    // convert url scheme to standard url for parsing
+    const standardUrl = url.replace('textile://textile.photos/', 'https://textile.photos/')
+    const data = DeepLink.getData(standardUrl)
     if (data) {
       if (data.path === '/invites/device' && data.hash !== '') {
         // start pairing the new device
         NavigationService.navigate('PairingView', { request: DeepLink.getParams(data.hash) })
       } else if (data.path === '/invites/new' && data.hash !== '') {
-        yield call(routeThreadInvite, url, data.hash)
+        yield call(routeThreadInvite, standardUrl, data.hash)
       }
     }
   } catch (error) {

@@ -17,57 +17,30 @@ export function * manageNode () {
     try {
       // Block until we get an active or background app state
       const action: ActionType<typeof TextileNodeActions.appStateChange> =
-        yield take((action: RootAction) => {
-          if (action.type !== getType(TextileNodeActions.appStateChange)) {
-            return false
-          }
-          const { previousState, newState } = action.payload
-          const isBackground = previousState === 'active' && (newState === 'inactive' || newState === 'background')
-          const isForeground = (previousState === 'background' || previousState === 'inactive' || previousState === 'unknown') && newState === 'active'
-          return isBackground || isForeground
-        })
-
-      BackgroundTimer.start()
+        yield take((action: RootAction) =>
+          action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
+        )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
 
-      // Get our current node state and create/start the node if it isn't started
+      // Create and start the node no matter what, even if it's already created and/or started it should be fine to call again
       // Use fork so we don't block listening for the next app state change while the node is created and started
-      const nodeState: NodeState = yield select(TextileNodeSelectors.nodeState)
-      if (nodeState !== NodeState.started) {
-        if (yield select(PreferencesSelectors.verboseUi)) {
-          yield call(displayNotification, 'Starting node')
-        }
-        yield fork(createAndStartNode)
-      }
+      yield fork(createAndStartNode)
 
       // If we got a background app state, start a background task and schedule the node to be stopped in 20 seconds
       //
       // This background state can come from a active > background transition
       // or by launching into the background because of a trigger.
-      //
-      // Using the race effect, if we get a foreground event while we're waiting
-      // to stop the node, cancel the stop and let it keep running
-      if (action.payload.newState === 'background' || action.payload.newState === 'inactive') {
-        // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
-        yield race({
-          delayAndStopNode: call(stopNodeAfterDelay, 20000),
-          foregroundEvent: take(
-            (action: RootAction) =>
-              action.type === getType(TextileNodeActions.appStateChange) && action.payload.newState === 'active'
-          )
-        })
+      if (action.payload.newState === 'background') {
+        yield fork(backgroundTaskRace)
       }
-
-      BackgroundTimer.stop()
     } catch (error) {
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, error, 'Error')
       }
       yield put(TextileNodeActions.nodeError(error))
-      BackgroundTimer.stop()
     }
   }
 }
@@ -90,6 +63,22 @@ function * createAndStartNode () {
   } catch (error) {
     yield put(TextileNodeActions.nodeError(error))
   }
+}
+
+function * backgroundTaskRace () {
+  // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
+  //
+  // Using the race effect, if we get a foreground event while we're waiting
+  // to stop the node, cancel the stop and let it keep running
+  BackgroundTimer.start()
+  yield race({
+    delayAndStopNode: call(stopNodeAfterDelay, 20000),
+    foregroundEvent: take(
+      (action: RootAction) =>
+        action.type === getType(TextileNodeActions.appStateChange) && action.payload.newState === 'active'
+    )
+  })
+  BackgroundTimer.stop()
 }
 
 function * stopNodeAfterDelay (ms: number) {

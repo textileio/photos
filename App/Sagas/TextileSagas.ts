@@ -38,7 +38,7 @@ import { ThreadData } from '../Redux/PhotoViewingRedux'
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
   try {
-    yield call(TextileNode.signUpWithEmail, email, username, password, referralCode)
+    yield call(TextileNode.signUpWithEmail, email, username, password, referralCode.replace(' ', ''))
     const tokens = yield call(TextileNode.getTokens)
     yield put(AuthActions.getTokensSuccess(tokens))
     // TODO: Put username into textile-go for addition to metadata model

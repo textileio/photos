@@ -107,6 +107,16 @@ platform :ios do
     )
   end
 
+  desc "Register new device"
+  lane :register_new_device do  |options|
+    device_name = prompt(text: "Enter the device name: ")
+    device_udid = prompt(text: "Enter the device UDID: ")
+    device_hash = {}
+    device_hash[device_name] = device_udid
+    register_devices(devices: device_hash)
+    match(type: "adhoc", force_for_new_devices: true)
+  end
+
   after_all do |lane|
     # This block is called, only if the executed lane was successful
 

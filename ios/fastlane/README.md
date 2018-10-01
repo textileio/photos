@@ -33,6 +33,11 @@ This will also make sure the profile is up to date
 fastlane ios release
 ```
 Deploy a new version to the App Store
+### ios register_new_device
+```
+fastlane ios register_new_device
+```
+Register new device
 
 ----
 
