@@ -67,8 +67,8 @@ platform :android do
   lane :release do
     tag = ENV['CIRCLE_TAG'] # looks like android_1.2.3_456
     parts = tag.split("_")
-    increment_version_name(version_name: parts[1])
-    increment_version_code(version_code: parts[2])
+    increment_version_name(app_project_dir: "../app", version_name: parts[1])
+    increment_version_code(app_project_dir: "../app", version_code: parts[2])
     gradle(
       task: "clean assembleRelease",
       flags: "--init-script init.gradle"
