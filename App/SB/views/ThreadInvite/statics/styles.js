@@ -3,7 +3,6 @@ import { Colors } from '../../../../Themes'
 
 export default StyleSheet.create({
   container: {
-    marginTop: 20,
     backgroundColor: '#FAFCFE',
     flex: 1
   },
@@ -28,6 +27,12 @@ export default StyleSheet.create({
   deviceId: {
     fontFamily: 'BentonSans',
     fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 38
+  },
+  success: {
+    fontFamily: 'BentonSans',
+    fontSize: 32,
     textAlign: 'center',
     marginBottom: 38
   },
