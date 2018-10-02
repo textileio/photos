@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, ScrollView, FlatList, Clipboard } from 'react-native'
+import { View, Text, FlatList, Clipboard } from 'react-native'
 import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
@@ -81,15 +81,13 @@ class DeviceLogs extends React.PureComponent {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           {this.renderHeader()}
-          <ScrollView>
-            <FlatList
-              data={this.props.logs}
-              renderItem={this.renderRow}
-              numColumns={1}
-              keyExtractor={(item, index) => index.toString() + item.time}
-              initialNumToRender={100}
-            />
-          </ScrollView>
+          <FlatList
+            data={this.props.logs}
+            renderItem={this.renderRow}
+            numColumns={1}
+            keyExtractor={(item, index) => index.toString() + item.time}
+            initialNumToRender={100}
+          />
         </View>
       </View>
     )

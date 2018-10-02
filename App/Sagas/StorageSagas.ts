@@ -17,7 +17,7 @@ export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLoc
     canDelete: photo.canDelete // <- allow the native layer to dictate if it's a duplicate or not
   }
   yield put(UIActions.sharePhotoRequest(sharedImage))
-  yield call(logNewEvent, new Date().getTime(), 'newLocalPhoto', photo.path)
+  yield call(logNewEvent, 'newLocalPhoto', photo.path)
 }
 
 // TODO: Not used for now. Revisit if needed
@@ -68,9 +68,9 @@ export function * refreshLocalImages () {
         // update last time checked to now
         yield put(StorageActions.setLocalPhotoRefreshEpoch(currentRefresh))
       }
-      yield call(logNewEvent, new Date().getTime(), 'refreshLocalImages', 'success')
+      yield call(logNewEvent, 'refreshLocalImages', 'success')
     } catch (error) {
-      yield call(logNewEvent, new Date().getTime(), 'refreshLocalImages', error.message, true)
+      yield call(logNewEvent, 'refreshLocalImages', error.message, true)
     }
   }
 }
