@@ -5,6 +5,7 @@ import TabNavigator from './TabNavigator'
 import Account from '../../../SB/views/UserProfile'
 import NotificationSettings from '../../../SB/views/Notifications'
 import Storage from '../../../SB/views/Storage'
+import DeviceLogs from '../../../SB/views/DeviceLogs'
 import Mnemonic from '../../../SB/views/UserProfile/Mnemonic'
 import UpdateAvatar from '../../../SB/views/UserOnBoarding/UpdateAvatar'
 
@@ -34,7 +35,9 @@ const nav = createStackNavigator(
     Comments,
     LikesScreen,
     ThreadSharePhoto: AddCaptionScreen,
-    WalletPicker
+    WalletPicker,
+
+    DeviceLogs
   },
   {
     navigationOptions: {

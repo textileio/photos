@@ -57,6 +57,9 @@ class UserProfile extends React.PureComponent {
   _storage () {
     this.props.navigation.navigate('Storage')
   }
+  _deviceLogs () {
+    this.props.navigation.navigate('DeviceLogs')
+  }
   _changeAvatar () {
     const payload = {
       username: this.props.navigation.state.params.username
@@ -113,6 +116,9 @@ class UserProfile extends React.PureComponent {
           </TouchableOpacity>
           {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._storage.bind(this)}>
             <Text style={styles.listText}>Storage</Text>
+          </TouchableOpacity>}
+          {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._deviceLogs.bind(this)}>
+            <Text style={styles.listText}>Device Logs</Text>
           </TouchableOpacity>}
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
