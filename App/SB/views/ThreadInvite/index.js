@@ -1,9 +1,10 @@
 import React from 'react'
-import { Image, View, Text, Button, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { View, Text, Button, ScrollView, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
+import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 
-import Toolbar from '../../components/Toolbar'
+import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
 import ThreadsAction from '../../../Redux/ThreadsRedux'
@@ -19,6 +20,19 @@ class ThreadInvite extends React.PureComponent {
       name: this.props.navigation.state.params.request.name,
       valid: this._isValid(this.props.navigation.state.params.request),
       status: 'init'
+    }
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    const headerLeft = (
+      <TextileHeaderButtons left>
+        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+      </TextileHeaderButtons>
+    )
+
+    return {
+      headerTitle: 'Thread Invite',
+      headerLeft
     }
   }
 
@@ -99,21 +113,22 @@ class ThreadInvite extends React.PureComponent {
     )
   }
 
-  renderStatus (message, cont) {
+  renderStatus (message, success) {
     return (
       <View style={styles.contentContainer}>
         <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')} />
-        <Text style={styles.deviceId}>{message}</Text>
+        {success && <Text style={styles.success}>Success!</Text>}
+        {!success && <Text style={styles.deviceId}>{message}</Text>}
         <View style={styles.buttonSingle}>
           <Button
             style={styles.button}
-            title={cont ? 'Continue' : 'Wait'}
+            title='Wait'
             accessibilityLabel='Continue'
             onPress={this.cancel}
-            disabled={!cont}
+            disabled={!success}
           />
         </View>
-        {!cont && <ActivityIndicator style={{ marginTop: 10, flex: 1 }} size='large' color='#000000' animating={this.state.status !== 'success'} />
+        {!success && <ActivityIndicator style={{ marginTop: 10, flex: 1 }} size='large' color='#000000' animating={this.state.status !== 'success'} />
         }
       </View>
     )
@@ -141,17 +156,7 @@ class ThreadInvite extends React.PureComponent {
   render () {
     return (
       <ScrollView style={styles.container}>
-        <Toolbar
-          style={styles.toolbar}
-          left={<TouchableOpacity onPress={() => { this.cancel() }}>
-            <Image
-              style={styles.toolbarLeft}
-              source={require('./statics/icon-arrow-left.png')}
-            />
-          </TouchableOpacity>}>
-          <Text style={styles.toolbarTitle}>Thread Invite</Text>
-          {this.renderBody()}
-        </Toolbar>
+        {this.renderBody()}
       </ScrollView>
     )
   }

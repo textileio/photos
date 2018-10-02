@@ -17,6 +17,9 @@ import LikesScreen from '../../../Containers/LikesScreen'
 import AddCaptionScreen from '../../../Containers/AddCaptionScreen'
 import WalletPicker from '../../../Containers/WalletPicker'
 
+import PairingView from '../../../SB/views/DevicePairingView'
+import ThreadInvite from '../../../SB/views/ThreadInvite'
+
 import styles, { headerTintColor } from '../../Styles/NavigationStyles'
 
 const nav = createStackNavigator(
@@ -36,6 +39,9 @@ const nav = createStackNavigator(
     LikesScreen,
     ThreadSharePhoto: AddCaptionScreen,
     WalletPicker,
+
+    PairingView,
+    ThreadInvite,
 
     DeviceLogs
   },

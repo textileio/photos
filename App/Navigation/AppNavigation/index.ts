@@ -4,16 +4,12 @@ import OnboardingNavigation from './Onboarding'
 import PrimaryNavigation from './Primary'
 
 import OnboardingCheck from '../../Containers/OnboardingCheck'
-import AndrewPairingInvite from '../../SB/views/AndrewDeviceInvite'
-import AndrewThreadInvite from '../../SB/views/AndrewThreadInvite'
 
 const nav = createSwitchNavigator(
   {
     OnboardingCheck,
     OnboardingNavigation,
-    PrimaryNavigation,
-    PairingView: AndrewPairingInvite,
-    ThreadInvite: AndrewThreadInvite
+    PrimaryNavigation
   },
   {
     initialRouteName: 'OnboardingCheck'
