@@ -30,7 +30,7 @@ export function reducer (state: DeviceLogsState = initialState, action: DeviceLo
         time: action.payload.time,
         event: action.payload.event,
         message: action.payload.message,
-        error: action.payload.error,
+        error: action.payload.error
       }
       const logs = [
         logRow,

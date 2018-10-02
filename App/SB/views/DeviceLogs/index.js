@@ -20,7 +20,7 @@ class DeviceLogs extends React.PureComponent {
       ),
       headerRight: (
         <TextileHeaderButtons right>
-          <TextileItem title="copy" onPress={params.copy} />
+          <TextileItem title='Copy' onPress={params.copy} />
         </TextileHeaderButtons>
       )
     }
@@ -44,7 +44,7 @@ class DeviceLogs extends React.PureComponent {
     Clipboard.setString(stringified)
   }
 
-  renderHeader() {
+  renderHeader () {
     return (
       <View style={styles.headerRow}>
         <View style={styles.timeCell} >
@@ -60,7 +60,7 @@ class DeviceLogs extends React.PureComponent {
     )
   }
 
-  renderRow({ item }) {
+  renderRow ({ item }) {
     return (
       <View style={styles.row}>
         <View style={styles.timeCell} >
@@ -80,7 +80,7 @@ class DeviceLogs extends React.PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-            {this.renderHeader()}
+          {this.renderHeader()}
           <ScrollView>
             <FlatList
               data={this.props.logs}

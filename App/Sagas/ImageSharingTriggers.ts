@@ -9,7 +9,7 @@ import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } f
 import UIActions from '../Redux/UIRedux'
 import {insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread} from './ImageSharingSagas'
 import { refreshTokens } from './NodeCreated'
-import { logNewEvent } from "./DeviceLogs"
+import { logNewEvent } from './DeviceLogs'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -100,7 +100,13 @@ export function * cancelImageShare (action: ActionType<typeof ProcessingImagesAc
   yield put(ProcessingImagesActions.cancelComplete(uuid))
 }
 
-
 export function * handleImageUploadError (action: ActionType<typeof ProcessingImagesActions.error>) {
-  yield call(logNewEvent, new Date().getTime(), 'Upload Error', action.payload.error, true)
+  const { error } = action.payload
+  let message = 'handleImageUploadError'
+  if (typeof error === 'string') {
+    message = error
+  } else if (error.message) {
+    message = error.message
+  }
+  yield call(logNewEvent, new Date().getTime(), 'Upload Error', message, true)
 }

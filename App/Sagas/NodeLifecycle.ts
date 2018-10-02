@@ -11,7 +11,7 @@ import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
 import {Threads, ThreadName} from '../Models/TextileTypes'
-import {logNewEvent} from "./DeviceLogs";
+import {logNewEvent} from './DeviceLogs'
 
 export function * manageNode () {
   while (true) {
@@ -109,7 +109,6 @@ function * stopNodeAfterDelay (ms: number) {
     }
   }
 }
-
 
 export function * backgroundTask () {
   yield call(logNewEvent, new Date().getTime(), 'Trigger', 'Background Task')
