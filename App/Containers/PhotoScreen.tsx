@@ -13,7 +13,7 @@ const CONTAINER: ViewStyle = {
 }
 
 interface StateProps {
-  photo: Photo
+  photo?: Photo
 }
 
 class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>> {
@@ -33,6 +33,7 @@ class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>
   render () {
     return (
       <ScrollView style={CONTAINER}>
+      {this.props.photo &&
         <ThreadDetailCard
           photo={this.props.photo}
           onComment={this.onComment}
@@ -40,15 +41,13 @@ class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>
           recentCommentsCount={5}
           maxLinesPerComment={5}
         />
+      }
       </ScrollView>
     )
   }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  if (!state.photoViewing.viewingPhoto) {
-    throw Error('No viewing photo')
-  }
   return {
     photo: state.photoViewing.viewingPhoto
   }

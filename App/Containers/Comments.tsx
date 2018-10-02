@@ -19,7 +19,7 @@ import { RootState, RootAction } from '../Redux/Types'
 interface StateProps {
   captionCommentCardProps?: CommentCardProps
   commentCardProps: CommentCardProps[]
-  commentValue: string | undefined
+  commentValue?: string
 }
 
 interface DispatchProps {
@@ -79,12 +79,9 @@ class Comments extends Component<Props> {
 
 const mapStateToProps = (state: RootState): StateProps  => {
   const { viewingPhoto } = state.photoViewing
-  if (!viewingPhoto) {
-    throw new Error('no viewing thread or photo')
-  }
 
   let captionCommentCardProps: CommentCardProps | undefined
-  if (viewingPhoto.caption) {
+  if (viewingPhoto && viewingPhoto.caption) {
     captionCommentCardProps = {
       username: viewingPhoto.username || viewingPhoto.author_id,
       peerId: viewingPhoto.author_id,
@@ -94,7 +91,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
     }
   }
   // TODO: comments should always be defined: https://github.com/textileio/textile-go/issues/270
-  const comments = viewingPhoto.comments || []
+  const comments = viewingPhoto ? viewingPhoto.comments : []
   const commentCardProps = comments.slice().reverse().map((comment) => {
     const props: CommentCardProps = {
       username: comment.username || 'unknown',
