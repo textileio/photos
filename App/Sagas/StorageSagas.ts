@@ -7,6 +7,7 @@ import PreferencesActions, {PreferencesSelectors} from '../Redux/PreferencesRedu
 import UIActions from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
+import { logNewEvent } from './DeviceLogs'
 
 export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLocalPhoto>) {
   const { photo } = action.payload
@@ -16,6 +17,7 @@ export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLoc
     canDelete: photo.canDelete // <- allow the native layer to dictate if it's a duplicate or not
   }
   yield put(UIActions.sharePhotoRequest(sharedImage))
+  yield call(logNewEvent, 'newLocalPhoto', photo.path)
 }
 
 // TODO: Not used for now. Revisit if needed
@@ -66,8 +68,9 @@ export function * refreshLocalImages () {
         // update last time checked to now
         yield put(StorageActions.setLocalPhotoRefreshEpoch(currentRefresh))
       }
+      yield call(logNewEvent, 'refreshLocalImages', 'success')
     } catch (error) {
-      // ignore
+      yield call(logNewEvent, 'refreshLocalImages', error.message, true)
     }
   }
 }

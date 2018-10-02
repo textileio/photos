@@ -9,6 +9,7 @@ import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } f
 import UIActions from '../Redux/UIRedux'
 import {insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread} from './ImageSharingSagas'
 import { refreshTokens } from './NodeCreated'
+import { logNewEvent } from './DeviceLogs'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -25,6 +26,7 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
 
 export function * handleImageUploadComplete (action: ActionType<typeof ProcessingImagesActions.imageUploadComplete>) {
   const { uuid } = action.payload
+  yield call(logNewEvent, 'uploadComplete', uuid)
   yield call(addToWallet, uuid)
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
@@ -39,6 +41,7 @@ export function * handleImageUploadComplete (action: ActionType<typeof Processin
 
 export function * retryImageShare (action: ActionType<typeof ProcessingImagesActions.retry>) {
   const { uuid } = action.payload
+  yield call(logNewEvent, 'retryImageShare', uuid)
   const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
   if (!processingImage) {
     return
@@ -95,4 +98,15 @@ export function * cancelImageShare (action: ActionType<typeof ProcessingImagesAc
 
   } catch (e) {}
   yield put(ProcessingImagesActions.cancelComplete(uuid))
+}
+
+export function * handleImageUploadError (action: ActionType<typeof ProcessingImagesActions.error>) {
+  const { error } = action.payload
+  let message = 'handleImageUploadError'
+  if (typeof error === 'string') {
+    message = error
+  } else if (error.message) {
+    message = error.message
+  }
+  yield call(logNewEvent, 'Upload Error', message, true)
 }

@@ -14,12 +14,13 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import DevicesActions from '../Redux/DevicesRedux'
+import TriggersActions from '../Redux/TriggersRedux'
 
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
 
-import { manageNode } from './NodeLifecycle'
+import { manageNode, backgroundTask, locationUpdate } from './NodeLifecycle'
 import { onNodeCreated } from './NodeCreated'
 import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
@@ -29,7 +30,8 @@ import {
   handleImageUploadComplete,
   retryImageShare,
   cancelImageShare,
-  retryWithTokenRefresh
+  retryWithTokenRefresh,
+  handleImageUploadError
 } from './ImageSharingTriggers'
 
 import {
@@ -105,6 +107,11 @@ export default function * root () {
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
+
+    // just for logging purposes
+    takeLatest(getType(TriggersActions.backgroundTask), backgroundTask),
+    takeLatest(getType(TriggersActions.locationUpdate), locationUpdate),
+    takeEvery(getType(ProcessingImagesActions.error), handleImageUploadError),
 
     // profile photo
     takeEvery(getType(UIActions.chooseProfilePhotoRequest), chooseProfilePhoto),

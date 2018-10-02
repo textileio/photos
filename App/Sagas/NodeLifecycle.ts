@@ -6,11 +6,12 @@ import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
 import RNPushNotification from 'react-native-push-notification'
 
-import TextileNodeActions, { NodeState, TextileNodeSelectors } from '../Redux/TextileNodeRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
 import { RootAction } from '../Redux/Types'
 import {Threads, ThreadName} from '../Models/TextileTypes'
+import {logNewEvent} from './DeviceLogs'
 
 export function * manageNode () {
   while (true) {
@@ -24,6 +25,7 @@ export function * manageNode () {
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
+      yield call(logNewEvent, 'App State Change', action.payload.newState)
 
       // Create and start the node no matter what, even if it's already created and/or started it should be fine to call again
       // Use fork so we don't block listening for the next app state change while the node is created and started
@@ -106,6 +108,14 @@ function * stopNodeAfterDelay (ms: number) {
       yield delay(500)
     }
   }
+}
+
+export function * backgroundTask () {
+  yield call(logNewEvent, 'Trigger', 'Background Task')
+}
+
+export function * locationUpdate () {
+  yield call(logNewEvent, 'Trigger', 'Location Update')
 }
 
 function displayNotification (message: string, title?: string) {
