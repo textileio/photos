@@ -26,7 +26,7 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
 
 export function * handleImageUploadComplete (action: ActionType<typeof ProcessingImagesActions.imageUploadComplete>) {
   const { uuid } = action.payload
-  yield call(logNewEvent, new Date().getTime(), 'uploadComplete', uuid)
+  yield call(logNewEvent, 'uploadComplete', uuid)
   yield call(addToWallet, uuid)
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
@@ -41,7 +41,7 @@ export function * handleImageUploadComplete (action: ActionType<typeof Processin
 
 export function * retryImageShare (action: ActionType<typeof ProcessingImagesActions.retry>) {
   const { uuid } = action.payload
-  yield call(logNewEvent, new Date().getTime(), 'retryImageShare', uuid)
+  yield call(logNewEvent, 'retryImageShare', uuid)
   const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
   if (!processingImage) {
     return
@@ -108,5 +108,5 @@ export function * handleImageUploadError (action: ActionType<typeof ProcessingIm
   } else if (error.message) {
     message = error.message
   }
-  yield call(logNewEvent, new Date().getTime(), 'Upload Error', message, true)
+  yield call(logNewEvent, 'Upload Error', message, true)
 }
