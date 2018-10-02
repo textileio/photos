@@ -57,18 +57,11 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
   PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
   if (status == PHAuthorizationStatusAuthorized)
   {
-    // Setup date-string conversion
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    // Ensure date string is always in UTC
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
-
     //initialize empty local state
     @autoreleasepool
     {
       //fetch all the albums
       PHFetchOptions *onlyImagesOptions = [PHFetchOptions new];
-
       // Limit to only photo media types
       // NSPredicate *mediaPhotos = [NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeImage];
       // Limit to only photos modified later than or equal to our specified date
@@ -82,43 +75,57 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
       onlyImagesOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:YES]];
 
 
+
+
+
       PHFetchResult *allPhotosResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:onlyImagesOptions];
       [allPhotosResult enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
 
-        // Get the image data for copying
-        [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation imageOrientation, NSDictionary * _Nullable info) {
+        // Get the original filename to keep it straight on the system.
+        // Alternatively could probably just use timestamp, but this doesn't seem to have any lag
+        NSArray *resources = [PHAssetResource assetResourcesForAsset:asset];
+        NSString *orgFilename = ((PHAssetResource*)resources[0]).originalFilename;
+        NSString *extension = [orgFilename pathExtension];
 
-          if (imageData) {
-            // Get the original filename to keep it straight on the system.
-            // Alternatively could probably just use timestamp, but this doesn't seem to have any lag
-            NSArray *resources = [PHAssetResource assetResourcesForAsset:asset];
-            NSString *orgFilename = ((PHAssetResource*)resources[0]).originalFilename;
+        if( [extension caseInsensitiveCompare:@"heic"] == NSOrderedSame ) {
+          // If the file is HEIC, first we need to get the real UIImage, then conver to JPG
+          PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
+          requestOptions.resizeMode   = PHImageRequestOptionsResizeModeExact;
+          requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+          // Optional way later to get rid of the Event based returns with RN
+          // requestOptions.synchronous = @TRUE;
+          // Make the request for the UIImage
+          [[PHImageManager defaultManager] requestImageForAsset:asset
+                                                     targetSize:PHImageManagerMaximumSize
+                                                    contentMode:PHImageContentModeDefault
+                                                        options:requestOptions
+                                                  resultHandler:^void(UIImage *image, NSDictionary *info) {
+                                                    // Force the HEIC to JPEG, no loss
+                                                    NSData *jpegData = UIImageJPEGRepresentation(image, 1.0);
+                                                    NSString *jpgFilename = [NSString stringWithFormat:@"%@.%@", [orgFilename stringByDeletingPathExtension], @"jpg"];
 
-            // Get our path in the tmp directory
-            NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:orgFilename];
+                                                    // Get our path in the tmp directory
+                                                    NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:jpgFilename];
 
-            // Write the data to the temp file
-            [imageData writeToFile:path atomically:YES];
+                                                    // Write the data to the temp file
+                                                    [jpegData writeToFile:path atomically:YES];
+                                                    [self _processImage:asset imageOrientation:1 path:path ];
+                                                  }];
+        } else {
+          // Get the image data for copying
+          [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation imageOrientation, NSDictionary * _Nullable info) {
 
-            // creationDate is also available, but seems to be pure exif date
-            NSDate *newDate = asset.modificationDate;
-            NSDate *creationDate = asset.creationDate;
-            // dataWithJSONObject cannot include NSDate
-            NSString *dateString = [dateFormatter stringFromDate:newDate];
-            NSString *creationDateString = [dateFormatter stringFromDate:creationDate];
-            // get an int
-            NSNumber *orientation = imageOrientation ? [NSNumber numberWithInt:imageOrientation] : [NSNumber numberWithInt:1];
+            if (imageData) {
+              // If the file isn't a HEIC, just write it to temp and move along.
+              // Get our path in the tmp directory
+              NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:orgFilename];
 
-            NSDictionary *payload = @{ @"uri": path, @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation, @"canDelete": @true};
-            NSError *serializationError;
-            NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:NSJSONWritingPrettyPrinted error:&serializationError];
-            if(!serializationError) {
-              NSString* jsonStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-              // Send our event back to RN
-              [Events emitEventWithName:@"newLocalPhoto" andPayload:jsonStr];
+              // Write the data to the temp file
+              [orgFilename writeToFile:path atomically:YES];
+              [self _processImage:asset imageOrientation:imageOrientation path:path ];
             }
-          }
-        }];
+          }];
+        }
       }];
     }
   }
@@ -762,6 +769,32 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (void)_refreshMessages:(NSError**)error {
   [self.node refreshMessages:error];
+}
+
+- (void)_processImage:(PHAsset *)asset imageOrientation:(NSInteger)imageOrientation path:(NSString *)path {
+  // Setup date-string conversion
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  // Ensure date string is always in UTC
+  [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+  [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
+
+  // creationDate is also available, but seems to be pure exif date
+  NSDate *newDate = asset.modificationDate;
+  NSDate *creationDate = asset.creationDate;
+  // dataWithJSONObject cannot include NSDate
+  NSString *dateString = [dateFormatter stringFromDate:newDate];
+  NSString *creationDateString = [dateFormatter stringFromDate:creationDate];
+  // get an int
+  NSNumber *orientation = imageOrientation ? [NSNumber numberWithInt:imageOrientation] : [NSNumber numberWithInt:1];
+
+  NSDictionary *payload = @{ @"uri": path, @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation, @"canDelete": @true};
+  NSError *serializationError;
+  NSData *data = [NSJSONSerialization dataWithJSONObject:payload options:NSJSONWritingPrettyPrinted error:&serializationError];
+  if(!serializationError) {
+    NSString* jsonStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    // Send our event back to RN
+    [Events emitEventWithName:@"newLocalPhoto" andPayload:jsonStr];
+  }
 }
 
 @end
