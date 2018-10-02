@@ -81,15 +81,13 @@ class DeviceLogs extends React.PureComponent {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           {this.renderHeader()}
-          <ScrollView>
-            <FlatList
-              data={this.props.logs}
-              renderItem={this.renderRow}
-              numColumns={1}
-              keyExtractor={(item, index) => index.toString() + item.time}
-              initialNumToRender={100}
-            />
-          </ScrollView>
+          <FlatList
+            data={this.props.logs}
+            renderItem={this.renderRow}
+            numColumns={1}
+            keyExtractor={(item, index) => index.toString() + item.time}
+            initialNumToRender={100}
+          />
         </View>
       </View>
     )
