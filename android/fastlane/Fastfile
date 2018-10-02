@@ -17,10 +17,6 @@ default_platform(:android)
 
 platform :android do
 
-  def set_version_code(gradle_build: 'app/build.gradle', version: 0)
-    sh %Q{cd ../ && echo "$(awk '{sub(/versionCode [0-9]+$/,"versionCode "#{version})}1' #{gradle_build})" > #{gradle_build}.tmp && mv #{gradle_build}.tmp #{gradle_build} && cd -}
-  end
-
   desc "Runs all the tests"
   lane :test do
     gradle(
@@ -29,10 +25,24 @@ platform :android do
     )
   end
 
+  desc "Push internal test build to Fabric"
+  lane :adhoc do
+    increment_version_code(version_code: ENV['CIRCLE_BUILD_NUM'])
+    gradle(
+      task: "clean assembleRelease",
+      flags: "--init-script init.gradle"
+    )
+    crashlytics(
+      api_token: ENV['FABRIC_API_TOKEN'],
+      build_secret: ENV['FABRIC_BUILD_SECRET'],
+      groups: 'textile-internal'
+    )
+  end
+
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     versionCodes = google_play_track_version_codes(track: "internal")
-    set_version_code(version: versionCodes[0] + 1)
+    increment_version_code(version_code: versionCodes[0] + 1)
     gradle(
       task: "clean assembleRelease",
       flags: "--init-script init.gradle"
@@ -51,6 +61,21 @@ platform :android do
       tag: "builds/androidbeta/" + versionName.to_s + "(" + versionCode.to_s + ")"
     )
     push_to_git_remote
+  end
+
+  desc "Submit a new release to Google Play Store"
+  lane :release do
+    tag = ENV['CIRCLE_TAG'] # looks like android_1.2.3_456
+    parts = tag.split("_")
+    increment_version_name(app_project_dir: "./app", version_name: parts[1])
+    increment_version_code(app_project_dir: "./app", version_code: parts[2])
+    gradle(
+      task: "clean assembleRelease",
+      flags: "--init-script init.gradle"
+    )
+    supply(
+      track: "beta"
+    )
   end
 
   desc "Deploy a new version to the Google Play"

@@ -21,6 +21,11 @@ or alternatively using `brew cask install fastlane`
 fastlane ios test
 ```
 Runs all the tests
+### ios adhoc
+```
+fastlane ios adhoc
+```
+Push internal test build to Fabric
 ### ios beta
 ```
 fastlane ios beta

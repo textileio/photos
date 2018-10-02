@@ -2,6 +2,4 @@
 #
 # Ensure this file is checked in to source control!
 
-gem 'fastlane-plugin-increment_version_code'
-gem 'fastlane-plugin-get_version_code'
-gem 'fastlane-plugin-get_version_name'
+gem 'fastlane-plugin-android_versioning', github: "cball/fastlane-plugin-android_versioning", ref: "support-blank-id-suffix"
