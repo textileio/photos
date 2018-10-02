@@ -3,14 +3,12 @@ import { Colors } from '../../../../Themes'
 
 export default StyleSheet.create({
   container: {
-    marginTop: 20,
     backgroundColor: '#FAFCFE',
     flex: 1
   },
   contentContainer: {
     paddingHorizontal: 19,
-    paddingTop: 24,
-    paddingBottom: 400 // <-hides a grey bar
+    paddingTop: '25%'
   },
   toolbarLeft: {
     height: 16,
@@ -28,6 +26,12 @@ export default StyleSheet.create({
   deviceId: {
     fontFamily: 'BentonSans',
     fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 38
+  },
+  success: {
+    fontFamily: 'BentonSans',
+    fontSize: 32,
     textAlign: 'center',
     marginBottom: 38
   },
