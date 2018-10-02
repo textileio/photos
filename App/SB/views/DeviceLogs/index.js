@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, ScrollView, FlatList, Clipboard } from 'react-native'
+import { View, Text, FlatList, Clipboard } from 'react-native'
 import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
