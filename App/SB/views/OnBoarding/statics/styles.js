@@ -2,6 +2,13 @@ import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
+  safeContainerTop: {
+    backgroundColor: '#FAFCFE'
+  },
+  safeContainerBottom: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
   onBoardingContainer: {
     paddingTop: 115,
     paddingHorizontal: 20,

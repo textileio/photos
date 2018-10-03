@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, ScrollView } from 'react-native'
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
@@ -60,19 +60,21 @@ class Comments extends Component<Props> {
 
   render () {
     return (
-      <KeyboardResponsiveContainer style={styles.container} >
-        {this.props.captionCommentCardProps &&
-          <CommentCard {...this.props.captionCommentCardProps} />
-        }
-        <ScrollView ref={(ref) => this.scrollView = ref ? ref : undefined} style={styles.contentContainer}>
-          <View>
-            {this.props.commentCardProps.map((commentCardProps, i) => (
-              <CommentCard key={i} {...commentCardProps} />
-            ))}
-          </View>
-        </ScrollView>
-        <CommentBox onUpdate={this.props.updateComment} onSubmit={this.props.submitComment} value={this.props.commentValue} />
-      </KeyboardResponsiveContainer>
+      <SafeAreaView style={styles.safeContainer}>
+        <KeyboardResponsiveContainer style={styles.container}>
+          {this.props.captionCommentCardProps &&
+            <CommentCard {...this.props.captionCommentCardProps} />
+          }
+          <ScrollView ref={(ref) => this.scrollView = ref ? ref : undefined} style={styles.contentContainer}>
+            <View>
+              {this.props.commentCardProps.map((commentCardProps, i) => (
+                <CommentCard key={i} {...commentCardProps} />
+              ))}
+            </View>
+          </ScrollView>
+          <CommentBox onUpdate={this.props.updateComment} onSubmit={this.props.submitComment} value={this.props.commentValue} />
+        </KeyboardResponsiveContainer>
+      </SafeAreaView>
     )
   }
 }

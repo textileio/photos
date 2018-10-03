@@ -10,7 +10,7 @@ export default StyleSheet.create({
     fontSize: 18
   },
   container: {
-    backgroundColor: '#FAFCFE',
+    backgroundColor: 'white',
     flex: 1
   },
   contentContainer: {

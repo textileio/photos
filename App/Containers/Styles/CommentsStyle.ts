@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
+  safeContainer: {
+    backgroundColor: '#FFFFFF',
+    flex: 1
+  },
   container: {
     marginTop: 0, // <- Removed until header gets reworked, orig = 20
     backgroundColor: '#FAFCFE',
