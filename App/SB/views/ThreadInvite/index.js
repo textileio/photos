@@ -170,7 +170,6 @@ const mapStateToProps = (state, ownProps) => {
   const navParams = ownProps.navigation.state.params || {}
   const inviteId = navParams.request.id || undefined
 
-  console.log('axh status', state.textileNode.nodeState.state, online)
   return {
     invite: state.threads.inboundInvites.find(invite => invite.inviteId === inviteId),
     online: nodeState && online
