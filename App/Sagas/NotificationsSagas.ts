@@ -55,9 +55,10 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
 
 export function * handleEngagement (action: ActionType<typeof NotificationsActions.notificationEngagement>) {
   // Deals with the Engagement response from clicking a native notification
-  const { data } = action.payload.engagement
+  const data: any = action.payload.engagement.data
   try {
     if (!data || !data.hasOwnProperty('notification')) { return }
+    yield call(delay, 250)
     yield put(NotificationsActions.notificationSuccess(data.notification))
   } catch (error) {
     // Nothing to do
