@@ -58,7 +58,7 @@ export function * handleEngagement (action: ActionType<typeof NotificationsActio
   const data: any = action.payload.engagement.data
   try {
     if (!data || !data.hasOwnProperty('notification')) { return }
-    yield call(delay, 250)
+    yield call(delay, 350)
     yield put(NotificationsActions.notificationSuccess(data.notification))
   } catch (error) {
     // Nothing to do
