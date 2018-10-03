@@ -22,9 +22,8 @@ export default class DeepLinkEventHandler {
   }
 
   setup () {
-    if (Platform.OS === 'ios') {
-      Linking.addEventListener('url', this.handleIOS.bind(this))
-    }
+    Linking.addEventListener('url', this.handleIOS.bind(this))
+    Linking.getInitialURL().then(this.handleUrl.bind(this))
   }
 
   tearDown () {

@@ -32,7 +32,8 @@ class ThreadInvite extends React.PureComponent {
 
     return {
       headerTitle: 'Thread Invite',
-      headerLeft
+      headerLeft,
+      headerRight: (<View />)
     }
   }
 
