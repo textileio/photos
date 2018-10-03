@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, SafeAreaView } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 
 import ContactSelect from '../../components/ContactSelect'
@@ -97,7 +97,7 @@ class ThreadsEditFriends extends React.PureComponent {
 
   render () {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ContactSelect
           getPublicLink={this._getPublicLink.bind(this)}
           contacts={this.props.contacts}
@@ -107,7 +107,7 @@ class ThreadsEditFriends extends React.PureComponent {
           notInThread={this.props.notInThread}
         />
         <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />
-      </View>
+      </SafeAreaView>
     )
   }
 }
