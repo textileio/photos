@@ -26,30 +26,36 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
   }
 
   keyboardWillChangeFrame = (event: any) => {
-    LayoutAnimation.configureNext(LayoutAnimation.create(
-      event.duration,
-      LayoutAnimation.Types[event.easing]
-    ))
+    LayoutAnimation.configureNext({
+      duration: event.duration,
+      update: {
+        type: LayoutAnimation.Types[event.easing]
+      }
+    })
     this.setState({
         height: this.bottomViewY - event.endCoordinates.screenY
     })
   }
 
   keyboardWillAppear = (event: any) => {
-    LayoutAnimation.configureNext(LayoutAnimation.create(
-      event.duration,
-      LayoutAnimation.Types[event.easing]
-    ))
+    LayoutAnimation.configureNext({
+      duration: event.duration,
+      update: {
+        type: LayoutAnimation.Types[event.easing]
+      }
+    })
     this.setState({
         height: this.bottomViewY - event.endCoordinates.screenY
     })
   }
 
   keyboardWillHide = (event: any) => {
-    LayoutAnimation.configureNext(LayoutAnimation.create(
-      event.duration,
-      LayoutAnimation.Types[event.easing]
-    ))
+    LayoutAnimation.configureNext({
+      duration: event.duration,
+      update: {
+        type: LayoutAnimation.Types[event.easing]
+      }
+    })
     this.setState({
         height: 0
     })
