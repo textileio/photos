@@ -64,18 +64,9 @@ coverage/
 # For more information about the recommended setup visit:
 # https://docs.fastlane.tools/best-practices/source-control/
 
-# fastlane specific
-**/fastlane/report.xml
-ios/.env.default
-android/.env.default
-
-# deliver temporary files
-**/fastlane/Preview.html
-
-# snapshot generated screenshots
-**/fastlane/screenshots
-
-# scan temporary files
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
 **/fastlane/test_output
 
 # Bundle artifact
@@ -83,6 +74,8 @@ android/.env.default
 
 # React Native Config
 .env.production
+ios/.env.default
+android/.env.default
 
 # expo
 .expo

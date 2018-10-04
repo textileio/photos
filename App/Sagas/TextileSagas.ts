@@ -427,7 +427,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
       yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
     }
   }
-​}
+}
 
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
   const { photoId } = action.payload
