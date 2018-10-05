@@ -20,7 +20,7 @@ Object {
       "status": false,
     },
     "peerJoinedNotification": Object {
-      "status": false,
+      "status": true,
     },
     "peerLeftNotification": Object {
       "status": false,
@@ -51,6 +51,7 @@ Object {
   },
   "tourScreens": Object {
     "feed": true,
+    "location": true,
     "notifications": true,
     "threadView": true,
     "threads": true,
