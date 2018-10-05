@@ -123,7 +123,7 @@ class ThreadInvite extends React.PureComponent {
         <View style={styles.buttonSingle}>
           <Button
             style={styles.button}
-            title='Wait'
+            title={!success ? 'Wait' : 'Continue'}
             accessibilityLabel='Continue'
             onPress={this.cancel}
             disabled={!success}

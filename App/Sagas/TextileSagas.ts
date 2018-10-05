@@ -34,6 +34,7 @@ import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Red
 import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
+import {logNewEvent} from './DeviceLogs'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -193,7 +194,9 @@ export function * refreshMessages () {
     try {
       yield call(TextileNode.refreshMessages)
       yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
+      yield call(logNewEvent, 'Refresh messages', 'Checked offline messages')
     } catch (error) {
+      yield call(logNewEvent, 'Refresh messages', error.message, true)
       yield put(TextileNodeActions.refreshMessagesFailure(error))
     }
   }
