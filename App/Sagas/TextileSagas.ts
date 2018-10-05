@@ -192,9 +192,9 @@ export function * initializeAppState () {
 export function * refreshMessages () {
   while (yield take(getType(TextileNodeActions.refreshMessagesRequest))) {
     try {
-      yield call(logNewEvent, 'Refresh messages', 'Checking missed p2p messages')
       yield call(TextileNode.refreshMessages)
       yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
+      yield call(logNewEvent, 'Refresh messages', 'Checked offline messages')
     } catch (error) {
       yield call(logNewEvent, 'Refresh messages', error.message, true)
       yield put(TextileNodeActions.refreshMessagesFailure(error))
