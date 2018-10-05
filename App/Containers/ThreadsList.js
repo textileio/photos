@@ -152,7 +152,6 @@ class ThreadsList extends React.PureComponent {
 
   _renderList () {
     return (
-      // FIXME: This should be a FlatList for sure
       <View style={styles.contentContainer} >
         <FlatList
           data={this.props.threads}
