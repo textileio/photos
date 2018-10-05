@@ -6,7 +6,7 @@ import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
-import ThreadSelector from './ThreadSelector'
+import ThreadSelector from '../Components/ThreadSelector'
 
 import Avatar from '../Components/Avatar'
 
