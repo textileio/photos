@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
-import { ThreadId, Photo, PhotoId, Thread, ThreadName, Mnemonic } from '../Models/TextileTypes'
+import { ThreadId, Photo, PhotoId } from '../Models/TextileTypes'
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {

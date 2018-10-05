@@ -1,13 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Alert, View, FlatList, Text, Image } from 'react-native'
+import { Alert, View, Text, Image } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 import Icons from '../../../Components/Icons'
 
-import ThreadDetailCard from '../../components/ThreadDetailCard'
 import BottomDrawerList from '../../components/BottomDrawerList'
+import PhotoStream from '../../../Components/PhotoStream'
 
 import UIActions from '../../../Redux/UIRedux'
 import TextileNodeActions, { ThreadData } from '../../../Redux/TextileNodeRedux'
@@ -21,11 +21,10 @@ import ActionSheet from 'react-native-actionsheet'
 import AlertComponent from '../../../SB/components/Alert'
 
 import { RootState } from '../../../Redux/Types'
-import ProcessingImageCard, { IProcessingImageProps } from '../../../Components/ProcessingImage'
+import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
 import styles from './statics/styles'
 import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
-import cardStyles from '../../components/ThreadDetailCard/statics/styles'
 
 class ThreadDetail extends React.PureComponent {
   constructor (props) {
@@ -143,91 +142,6 @@ class ThreadDetail extends React.PureComponent {
     })
   }
 
-  _onPhotoSelect = (photo: Photo) => {
-    return () => {
-      this.props.viewPhoto(photo.id)
-      this.props.navigation.navigate('Comments')
-    }
-  }
-
-  onLikes = (photo: Photo) => {
-    return () => {
-      this.props.viewPhoto(photo.id)
-      this.props.navigation.navigate('LikesScreen')
-    }
-  }
-
-  _onRefresh = () => {
-    this.props.refreshMessages()
-  }
-
-  _progressStyle = (fillBar) => {
-    if (fillBar) {
-      return { height: 1, backgroundColor: '#2935ff', flex: this.props.progress }
-    } else {
-      return { height: 1, backgroundColor: 'transparent', flex: 1.0 - this.props.progress }
-    }
-  }
-
-  _keyExtractor = (item, index) => item.id + '_' + index
-
-  _renderItems = () => {
-    return (
-      <View style={styles.threadDetail} >
-        <View style={styles.imageList}>
-          <FlatList
-            data={this.props.items}
-            keyExtractor={this._keyExtractor.bind(this)}
-            renderItem={this._renderItem.bind(this)}
-            refreshing={this.state.refreshing}
-            onRefresh={this._onRefresh}
-          />
-        </View>
-      </View>
-    )
-  }
-
-  _renderItem = ({ item }) => {
-    switch (item.type) {
-      case 'title': {
-        // TODO: We should do this with Navbar integration later
-        return (
-          <View>
-            <Text style={cardStyles.titleCard}>{item.name}</Text>
-            {item === this.props.items[this.props.items.length - 1] &&
-            <View style={cardStyles.cardFooter}>
-              <View style={cardStyles.cardFooterBottom}>
-                <Text style={cardStyles.detailUpdateTime}>0 photos</Text>
-              </View>
-            </View>
-            }
-          </View>
-        )
-      }
-      case 'processingItem': {
-        return <ProcessingImageCard
-          {...item.props}
-          retry={() => { this.props.retryShare(item.id) }}
-          cancel={() => { this.props.cancelShare(item.id) }}
-        />
-      }
-      case 'photo': {
-        return (
-          <ThreadDetailCard
-            photo={item.photo}
-            onComment={this._onPhotoSelect(item.photo)}
-            onLikes={this.onLikes(item.photo)}
-            recentCommentsCount={2}
-            maxLinesPerComment={1}
-          />
-        )
-      }
-      default: {
-        return (<View />)
-      }
-    }
-  }
-
   _renderOnboarding () {
     return (
       <View style={onboardingStyles.emptyStateContainer}>
@@ -249,7 +163,7 @@ class ThreadDetail extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && this._renderItems()}
+        {!this.props.showOnboarding && <PhotoStream items={this.props.items} />}
         {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet

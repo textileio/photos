@@ -68,6 +68,12 @@ const actions = {
   }),
   navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', (resolve) => {
     return (threadId: ThreadId, threadName: string) => resolve({ threadId, threadName })
+  }),
+  navigateToCommentsRequest: createAction('NAVIGATE_TO_COMMENTS_REQUEST', (resolve) => {
+    return (photoId: PhotoId) => resolve({ photoId })
+  }),
+  navigateToLikesRequest: createAction('NAVIGATE_TO_LIKES_REQUEST', (resolve) => {
+    return (photoId: PhotoId) => resolve({ photoId })
   })
 }
 

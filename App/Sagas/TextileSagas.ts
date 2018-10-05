@@ -35,6 +35,8 @@ import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
 import {logNewEvent} from './DeviceLogs'
+import {PhotoId} from "../Models/TextileTypes";
+import PhotoViewingActions from "../Redux/PhotoViewingRedux";
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -149,6 +151,18 @@ function * processAvatarImage(uri: string) {
 
 export function * navigateToThread ( action: ActionType<typeof UIActions.navigateToThreadRequest> ) {
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
+}
+
+export function * navigateToComments ( action: ActionType<typeof UIActions.navigateToCommentsRequest> ) {
+  const { photoId } = action.payload
+  yield put(PhotoViewingActions.viewPhoto(photoId))
+  yield call(NavigationService.navigate, 'Comments')
+}
+
+export function * navigateToLikes ( action: ActionType<typeof UIActions.navigateToLikesRequest> ) {
+  const { photoId } = action.payload
+  yield put(PhotoViewingActions.viewPhoto(photoId))
+  yield call(NavigationService.navigate, 'LikesScreen')
 }
 
 export function * getUsername (contact: TT.Contact) {

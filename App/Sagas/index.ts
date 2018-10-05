@@ -79,6 +79,8 @@ import {
   updateNodeOverview,
   recoverPassword,
   navigateToThread,
+  navigateToComments,
+  navigateToLikes,
   addFriends,
   addPhotoLike,
   initializeAppState,
@@ -124,6 +126,8 @@ export default function * root () {
     takeLatest(getType(PreferencesActions.toggleStorageRequest), toggleStorage),
 
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
+    takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
+    takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
 

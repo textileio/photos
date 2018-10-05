@@ -95,7 +95,7 @@ export const ProcessingImagesSelectors = {
   }
 }
 
-export function reducer(state: ProcessingImagesState = initialState, action: ProcessingImagesAction): ProcessingImagesState {
+export function reducer (state: ProcessingImagesState = initialState, action: ProcessingImagesAction): ProcessingImagesState {
   switch (action.type) {
     case getType(actions.insertImage): {
       const processingImage: ProcessingImage = { ...action.payload, state: 'pending' }
