@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, FlatList, Text, Image } from 'react-native'
+import { Alert, View, FlatList, Text, Image } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -18,7 +18,7 @@ import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
 import { Photo } from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
-import Alert from '../../../SB/components/Alert'
+import AlertComponent from '../../../SB/components/Alert'
 
 import { RootState } from '../../../Redux/Types'
 import ProcessingImageCard, { IProcessingImageProps } from '../../../Components/ProcessingImage'
@@ -70,6 +70,12 @@ class ThreadDetail extends React.PureComponent {
     if (this.props.displayError) {
       setTimeout(this.props.dismissError, 2500)
     }
+
+    if (
+      this.props.showLocationPrompt
+    ) {
+      this._locationPrompt()
+    }
   }
 
   componentWillMount () {
@@ -79,6 +85,24 @@ class ThreadDetail extends React.PureComponent {
 
   componentDidMount () {
     this._setHeaderParams()
+  }
+
+  _locationPrompt () {
+    this.props.completeScreen('location')
+    Alert.alert(
+      'Background Location',
+      'Even snappier sharing is possible. Enabling background location allows Textile to occasionally get woken up and check the network for photos you may have missed. We never collect or store your location data. Want in?',
+      [
+        {
+          text: 'Yes please',
+          onPress: () => {
+            this.props.enableLocation()
+          }
+        },
+        { text: 'Not now', style: 'cancel' }
+      ],
+      { cancelable: false }
+    )
   }
 
   showActionSheet () {
@@ -236,7 +260,7 @@ class ThreadDetail extends React.PureComponent {
           onPress={this.handleActionSheetResponse.bind(this)}
         />
 
-        <Alert display={this.props.displayError} bottom msg={'Error: ' + this.props.errorMessage} />
+        <AlertComponent display={this.props.displayError} bottom msg={'Error: ' + this.props.errorMessage} />
       </View>
     )
   }
@@ -245,9 +269,9 @@ class ThreadDetail extends React.PureComponent {
 const mapStateToProps = (state: RootState) => {
   const viewingThreadId = state.photoViewing.viewingThreadId
 
-  var items: [{type: string, photo: Photo}] = []
-  var processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
-  var threadName
+  let items: [{type: string, photo: Photo}] = []
+  let processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
+  let threadName
 
   if (viewingThreadId) {
     const threadData: ThreadData = threadDataByThreadId(state, viewingThreadId) || { querying: false, photos: [] }
@@ -282,6 +306,17 @@ const mapStateToProps = (state: RootState) => {
     threadName = threadData.name
   }
 
+  const displayImages = state.textileNode.nodeState.state === 'started'
+
+  const showLocationPrompt = displayImages &&
+    state.preferences.tourScreens.location &&
+    // it's not already enabled...
+    !state.preferences.services.backgroundLocation.status &&
+    // only show the location prompt after a few photos exists in a thread
+    items.length > 2 &&
+    // only show location prompt if notifications are enabled
+    state.preferences.services.notifications.status
+
   // add processing items to the beginning of the list
   items.unshift(...processingItems)
 
@@ -289,12 +324,13 @@ const mapStateToProps = (state: RootState) => {
     threadId: viewingThreadId,
     threadName,
     items,
-    displayImages: state.textileNode.nodeState.state === 'started',
+    displayImages,
     profile: state.preferences.profile,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
     displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,
-    showOnboarding: state.preferences.tourScreens.threadView && items && items.length === 0
+    showOnboarding: state.preferences.tourScreens.threadView && items && items.length === 0,
+    showLocationPrompt
   }
 }
 
@@ -309,7 +345,8 @@ const mapDispatchToProps = (dispatch) => {
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
     addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
-    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) }
+    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
+    enableLocation: () => { dispatch(PreferencesActions.toggleServicesRequest('backgroundLocation', true)) }
   }
 }
 

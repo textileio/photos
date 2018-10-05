@@ -37,7 +37,7 @@ const actions = {
 
 export type PreferencesAction = ActionType<typeof actions>
 
-export type TourScreens = 'wallet' | 'threads' | 'threadView' | 'notifications' | 'feed'
+export type TourScreens = 'wallet' | 'threads' | 'threadView' | 'notifications' | 'feed' | 'location'
 export type ServiceType = 'backgroundLocation' |
   'notifications' |
   'photoAddedNotification' |
@@ -75,7 +75,8 @@ export const initialState: PreferencesState = {
     threads: true,
     threadView: true,
     notifications: true,
-    feed: true
+    feed: true,
+    location: true
   },
   services: {
     notifications: {
@@ -97,7 +98,7 @@ export const initialState: PreferencesState = {
       status: true
     },
     peerJoinedNotification: {
-      status: false
+      status: true
     },
     peerLeftNotification: {
       status: false
