@@ -20,7 +20,7 @@ Object {
       "status": false,
     },
     "peerJoinedNotification": Object {
-      "status": false,
+      "status": true,
     },
     "peerLeftNotification": Object {
       "status": false,
