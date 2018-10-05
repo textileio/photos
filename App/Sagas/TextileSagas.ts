@@ -35,8 +35,7 @@ import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
 import {logNewEvent} from './DeviceLogs'
-import {PhotoId} from "../Models/TextileTypes";
-import PhotoViewingActions from "../Redux/PhotoViewingRedux";
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload

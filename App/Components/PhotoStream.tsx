@@ -55,17 +55,21 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
     const item = rowData.item
     switch (item.type) {
       case 'processingItem': {
-        return <ProcessingImageCard
-          {...item.props}
-          retry={() => { this.props.retryShare(item.id) }}
-          cancel={() => { this.props.cancelShare(item.id) }}
-        />
+        return (
+          <ProcessingImageCard
+            {...item.props}
+            retry={() => {this.props.retryShare(item.id)}}
+            cancel={() => {this.props.cancelShare(item.id)}}
+          />
+        )
       }
       case 'photo': {
         return (
           <ThreadDetailCard
             photo={item.photo}
+            /* tslint:disable-next-line */
             onComment={this._onPhotoSelect(item.photo)}
+            /* tslint:disable-next-line */
             onLikes={this.onLikes(item.photo)}
             recentCommentsCount={2}
             maxLinesPerComment={1}
@@ -84,7 +88,9 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
         <View style={styles.imageList}>
           <FlatList
             data={this.props.items}
-            keyExtractor={this._keyExtractor.bind(this)}
+            /* tslint:disable-next-line */
+            keyExtractor={this._renderItem.bind(this)}
+            /* tslint:disable-next-line */
             renderItem={this._renderItem.bind(this)}
             refreshing={false}
             onRefresh={this._onRefresh}
