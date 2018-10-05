@@ -34,6 +34,7 @@ import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Red
 import { uploadFile } from './UploadFile'
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
+import {logNewEvent} from './DeviceLogs'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -191,9 +192,11 @@ export function * initializeAppState () {
 export function * refreshMessages () {
   while (yield take(getType(TextileNodeActions.refreshMessagesRequest))) {
     try {
+      yield call(logNewEvent, 'Refresh messages', 'Checking missed p2p messages')
       yield call(TextileNode.refreshMessages)
       yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
     } catch (error) {
+      yield call(logNewEvent, 'Refresh messages', error.message, true)
       yield put(TextileNodeActions.refreshMessagesFailure(error))
     }
   }
