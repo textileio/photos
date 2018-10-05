@@ -1,58 +1,79 @@
 import React from 'react'
+import {Dispatch} from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { ScrollView, ViewStyle } from 'react-native'
+import { FlatList, View } from 'react-native'
 
-import { Photo } from '../Models/TextileTypes'
-import { RootState, RootAction } from '../Redux/Types'
+import {Profile, ThreadId, ThreadName} from '../Models/TextileTypes'
+import {RootAction} from '../Redux/Types'
 
-import ThreadDetailCard from '../SB/components/ThreadDetailCard'
+import PhotoViewingActions, {ThreadData} from '../Redux/PhotoViewingRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
+import UIActions from '../Redux/UIRedux'
 
-import styles from 'Styles/ThreadSelector'
+import ThreadCard from '../SB/components/ThreadListCard'
+import styles from './Styles/ThreadSelectorStyles'
 
-const CONTAINER: ViewStyle = {
-  backgroundColor: '#FAFCFE'
+interface ScreenProps {
+  profile: Profile
+  threads: ReadonlyArray<ThreadData>
 }
 
-interface StateProps {
-  photo?: Photo
-}
+class ThreadSelector extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
 
-class ThreadSelector extends React.Component<StateProps & NavigationScreenProps<{}>> {
-
-  static navigationOptions = {
-    title: 'Photo'
+  _onPressItem = (threadCardProps: any) => {
+    const { id, name } = threadCardProps
+    this.props.viewThread(id as ThreadId)
+    this.props.navigateToThread(id as ThreadId, name as ThreadName)
   }
 
-  onComment = () => {
-    this.props.navigation.navigate('Comments')
+  _renderItem = (rowData: any) => {
+    const item: ThreadData = rowData.item
+    return (
+      <ThreadCard id={item.id} {...item} profile={this.props.profile} onPress={this._onPressItem} />
+    )
   }
 
-  onLikes = () => {
-    this.props.navigation.navigate('LikesScreen')
+  _onRefresh = () => {
+    this.props.refreshMessages()
   }
+
+  _keyExtractor = (item: ThreadData) => item.id
 
   render () {
     return (
-      <ScrollView style={CONTAINER}>
-      {this.props.photo &&
-        <ThreadDetailCard
-          photo={this.props.photo}
-          onComment={this.onComment}
-          onLikes={this.onLikes}
-          recentCommentsCount={5}
-          maxLinesPerComment={5}
+      <View style={styles.contentContainer} >
+        <FlatList
+          data={this.props.threads}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderItem}
+          refreshing={false}
+          onRefresh={this._onRefresh}
+          initialNumToRender={4}
         />
-      }
-      </ScrollView>
+      </View>
     )
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+interface DispatchProps {
+  viewThread: (threadId: ThreadId) => void
+  refreshMessages: () => void
+  navigateToThread: (id: ThreadId, name: ThreadName) => void
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    photo: state.photoViewing.viewingPhoto
+    viewThread: (threadId: ThreadId) => {
+      dispatch(PhotoViewingActions.viewThread(threadId))
+    },
+    refreshMessages: () => {
+      dispatch(TextileNodeActions.refreshMessagesRequest())
+    },
+    navigateToThread: (id: ThreadId, name: ThreadName) => {
+      dispatch(UIActions.navigateToThreadRequest(id, name))
+    }
   }
 }
 
-export default connect(mapStateToProps)(PhotoScreen)
+export default connect(null, mapDispatchToProps)(ThreadSelector)

@@ -1,12 +1,12 @@
 import React from 'react'
 import Icons from '../Components/Icons'
 import { connect } from 'react-redux'
-import { View, Text, Image, FlatList, Alert, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, Image, Alert, TouchableWithoutFeedback } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
-import ThreadCard from '../SB/components/ThreadListCard'
+import ThreadSelector from './ThreadSelector'
 
 import Avatar from '../Components/Avatar'
 
@@ -132,39 +132,6 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
-  _onPressItem = (photo) => {
-    const { id } = photo
-    this.props.viewThread(id)
-    this.props.navigation.navigate('ViewThread')
-  }
-
-  _onRefresh = () => {
-    this.props.refreshMessages()
-  }
-
-  _keyExtractor = (item, index) => item.id
-
-  _renderItem = ({ item }) => {
-    return (
-      <ThreadCard id={item.id} {...item} profile={this.props.profile} onPress={this._onPressItem} />
-    )
-  }
-
-  _renderList () {
-    return (
-      <View style={styles.contentContainer} >
-        <FlatList
-          data={this.props.threads}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
-          refreshing={this.props.refreshing}
-          onRefresh={this._onRefresh}
-          initialNumToRender={4}
-        />
-      </View>
-    )
-  }
-
   _renderOnboarding () {
     return (
       <View style={onboardingStyles.emptyStateContainer}>
@@ -188,7 +155,7 @@ class ThreadsList extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && this._renderList()}
+        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} proflie={this.props.profile} />}
       </View>
     )
   }
@@ -223,7 +190,6 @@ const mapStateToProps = (state) => {
   return {
     profile,
     threads,
-    refreshing: !!state.ui.refreshingMessages,
     showNotificationsPrompt: state.preferences.tourScreens.notifications && threads,
     services: state.preferences.services,
     showOnboarding: state.preferences.tourScreens.threads && threads && threads.length === 0
