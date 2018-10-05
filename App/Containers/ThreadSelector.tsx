@@ -76,4 +76,4 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(ThreadSelector)
+export default connect(undefined, mapDispatchToProps)(ThreadSelector)
