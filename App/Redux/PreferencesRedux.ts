@@ -9,9 +9,6 @@ const actions = {
   toggleVerboseUi: createAction('TOGGLE_VERBOSE_UI', (resolve) => {
     return () => resolve()
   }),
-  toggleThreadsLayout: createAction('TOGGLE_THREADS_LAYOUT', (resolve) => {
-    return () => resolve()
-  }),
   updatecMnemonic: createAction('UPDATE_MNEMONIC', (resolve) => {
     return (mnemonic: Mnemonic) => resolve({ mnemonic })
   }),
@@ -61,7 +58,6 @@ export interface Service {
 export interface PreferencesState {
   onboarded: boolean
   verboseUi: boolean
-  flatThreadsLayout: boolean
   mnemonic?: Mnemonic
   publicKey?: PublicKey
   profile?: Profile
@@ -74,7 +70,6 @@ export interface PreferencesState {
 export const initialState: PreferencesState = {
   onboarded: false,
   verboseUi: false,
-  flatThreadsLayout: false,
   tourScreens: {
     wallet: true,
     threads: true,
@@ -137,8 +132,6 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, onboarded: true }
     case getType(actions.toggleVerboseUi):
       return { ...state, verboseUi: !state.verboseUi }
-    case getType(actions.toggleThreadsLayout):
-      return { ...state, flatThreadsLayout: !state.flatThreadsLayout }
     case getType(actions.updatecMnemonic):
       const mnemonic = action.payload.mnemonic
       return { ...state, mnemonic }

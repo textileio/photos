@@ -3,10 +3,10 @@ import Icons from '../Components/Icons'
 import { connect } from 'react-redux'
 import { View, Text, Image, Alert, TouchableWithoutFeedback } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
+import ActionSheet from 'react-native-actionsheet'
 
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
-import ThreadSelector from '../Components/ThreadSelector'
 import PhotoStream from '../Components/PhotoStream'
 
 import Avatar from '../Components/Avatar'
@@ -43,16 +43,7 @@ class ThreadsList extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='add-thread' onPress={() => {
-          if (params.onTour) {
-            // We don't want to show that tour screen to them ever again...
-            params.completeTour()
-          }
-          navigation.navigate('AddThread')
-        }} />
-        <Item title='More' iconName='menu' onPress={() => {
-          params.toggleLayout()
-        }} />
+        <Item title='Options' iconName='more' onPress={params.showActionSheet} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
@@ -80,33 +71,29 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile,
       online: this.props.online,
-      onTour: this.props.showOnboarding === true,
       toggleVerboseUi: this.props.toggleVerboseUi,
-      completeTour: () => {
-        this.props.completeScreen('threads')
-      },
-      toggleLayout: this.props.toggleThreadsLayout
+      showActionSheet: () => {
+        this.showActionSheet()
+      }
     })
   }
 
   componentDidUpdate (prevProps, prevState, ss) {
     if (
       this.props.profile !== prevProps.profile ||
-      this.props.showOnboarding !== prevProps.showOnboarding ||
       this.props.online !== prevProps.online
     ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
-        online: this.props.online,
-        onTour: this.props.showOnboarding === true
+        online: this.props.online
       })
     }
     if (
-      this.props.threads &&
-      prevProps.threads &&
+      this.props.items &&
+      prevProps.items &&
       this.props.showNotificationsPrompt &&
       !this.props.showOnboarding &&
-      this.props.threads.length !== prevProps.threads.length
+      this.props.items.length !== prevProps.items.length
     ) {
       this._notificationPrompt()
     }
@@ -157,13 +144,35 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
+  showActionSheet () {
+    this.actionSheet.show()
+  }
+
+  handleActionSheetResponse (index: number) {
+    if (index === 0) {
+      if (this.props.showOnboarding === true) {
+        this.props.completeScreen('threads')
+      }
+      this.props.navigation.navigate('AddThread')
+    } else if (index === 1) {
+      this.props.navigation.navigate('ThreadsManager')
+    }
+  }
+
   render () {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && !this.props.flatten && <ThreadSelector threads={this.props.threads} proflie={this.props.profile} />}
+        {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items} />}
 
-        {!this.props.showOnboarding && this.props.flatten && <PhotoStream displayThread items={this.props.items} />}
+        <ActionSheet
+          ref={o => { this.actionSheet = o }}
+          title={'Threads'}
+          options={['Create Thread', 'Manage Threads', 'Cancel']}
+          cancelButtonIndex={2}
+          onPress={this.handleActionSheetResponse.bind(this)}
+        />
+
       </View>
     )
   }
@@ -206,7 +215,6 @@ const mapStateToProps = (state) => {
     .sort((a, b) => Date.parse(a.photo.date) < Date.parse(b.photo.date))
 
   return {
-    flatten: state.preferences.flatThreadsLayout,
     profile,
     threads,
     items,
