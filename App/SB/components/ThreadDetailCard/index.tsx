@@ -114,7 +114,12 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
               {photoUsername === username ? 'You' : photoUsername}
             </Text> added a photo
           </Text>
-          {this.props.displayThread && <TouchableOpacity activeOpacity={0.8} onPress={() => this._threadSelect(item.threadId, item.threadName)}><Text style={styles.cardAction}>in {item.threadName}</Text></TouchableOpacity>}
+          {
+            this.props.displayThread &&
+            /* tslint:disable-next-line */
+            <TouchableOpacity activeOpacity={0.8} onPress={() => this._threadSelect(item.threadId, item.threadName)}>
+              <Text style={styles.cardAction}>in {item.threadName}</Text>
+            </TouchableOpacity>}
         </View>
         <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
           <View style={styles.imageStretch}>

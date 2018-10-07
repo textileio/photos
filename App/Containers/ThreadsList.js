@@ -199,7 +199,7 @@ const mapStateToProps = (state) => {
     .filter((id) => state.photoViewing.threads[id].name !== 'default')
     .map((id) => state.photoViewing.threads[id].photos
       .map((photo) => {
-        return { type: 'photo', photo, id: photo.id, threadId: id, threadName:  state.photoViewing.threads[id].name}
+        return { type: 'photo', photo, id: photo.id, threadId: id, threadName: state.photoViewing.threads[id].name }
       })
     )
     .flatMap(val => val)
