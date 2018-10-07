@@ -149,6 +149,7 @@ function * processAvatarImage(uri: string) {
 }
 
 export function * navigateToThread ( action: ActionType<typeof UIActions.navigateToThreadRequest> ) {
+  yield put(PhotoViewingActions.viewThread(action.payload.threadId))
   yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 

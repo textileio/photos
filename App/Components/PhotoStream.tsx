@@ -29,6 +29,7 @@ interface ProcessingItem {
 
 interface ScreenProps {
   items: ReadonlyArray<PhotoItem | ProcessingItem>
+  displayThread?: boolean
 }
 
 class PhotoStream extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
@@ -68,7 +69,8 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
       case 'photo': {
         return (
           <ThreadDetailCard
-            photo={item.photo}
+            displayThread={this.props.displayThread}
+            item={item}
             onComment={this._onPhotoSelect(item.photo)}
             onLikes={this.onLikes(item.photo)}
             recentCommentsCount={2}

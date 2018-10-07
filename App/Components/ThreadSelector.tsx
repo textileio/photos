@@ -23,7 +23,6 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
 
   _onPressItem = (threadCardProps: any) => {
     const { id, name } = threadCardProps
-    this.props.viewThread(id as ThreadId)
     this.props.navigateToThread(id as ThreadId, name as ThreadName)
   }
 
@@ -57,16 +56,12 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
 }
 
 interface DispatchProps {
-  viewThread: (threadId: ThreadId) => void
   refreshMessages: () => void
   navigateToThread: (id: ThreadId, name: ThreadName) => void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    viewThread: (threadId: ThreadId) => {
-      dispatch(PhotoViewingActions.viewThread(threadId))
-    },
     refreshMessages: () => {
       dispatch(TextileNodeActions.refreshMessagesRequest())
     },

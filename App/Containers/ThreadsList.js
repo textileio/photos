@@ -7,6 +7,7 @@ import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
 import ThreadSelector from '../Components/ThreadSelector'
+import PhotoStream from '../Components/PhotoStream'
 
 import Avatar from '../Components/Avatar'
 
@@ -17,6 +18,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { Photo, PhotoId, ThreadId, ThreadName } from '../Models/TextileTypes'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -47,6 +49,9 @@ class ThreadsList extends React.PureComponent {
             params.completeTour()
           }
           navigation.navigate('AddThread')
+        }} />
+        <Item title='More' iconName='menu' onPress={() => {
+          params.toggleLayout()
         }} />
       </TextileHeaderButtons>
     )
@@ -79,7 +84,8 @@ class ThreadsList extends React.PureComponent {
       toggleVerboseUi: this.props.toggleVerboseUi,
       completeTour: () => {
         this.props.completeScreen('threads')
-      }
+      },
+      toggleLayout: this.props.toggleThreadsLayout
     })
   }
 
@@ -155,7 +161,9 @@ class ThreadsList extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} proflie={this.props.profile} />}
+        {!this.props.showOnboarding && !this.props.flatten && <ThreadSelector threads={this.props.threads} proflie={this.props.profile} />}
+
+        {!this.props.showOnboarding && this.props.flatten && <PhotoStream displayThread items={this.props.items} />}
       </View>
     )
   }
@@ -187,9 +195,21 @@ const mapStateToProps = (state) => {
       .sort((a, b) => a.updated < b.updated)
   }
 
+  const items: [{type: string, photo: Photo, id: PhotoId, threadId: ThreadId, threadName: ThreadName}] = Object.keys(state.photoViewing.threads)
+    .filter((id) => state.photoViewing.threads[id].name !== 'default')
+    .map((id) => state.photoViewing.threads[id].photos
+      .map((photo) => {
+        return { type: 'photo', photo, id: photo.id, threadId: id, threadName:  state.photoViewing.threads[id].name}
+      })
+    )
+    .flatMap(val => val)
+    .sort((a, b) => Date.parse(a.photo.date) < Date.parse(b.photo.date))
+
   return {
+    flatten: state.preferences.flatThreadsLayout,
     profile,
     threads,
+    items,
     showNotificationsPrompt: state.preferences.tourScreens.notifications && threads,
     services: state.preferences.services,
     showOnboarding: state.preferences.tourScreens.threads && threads && threads.length === 0
@@ -202,7 +222,8 @@ const mapDispatchToProps = (dispatch) => {
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },
-    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
+    toggleThreadsLayout: () => { dispatch(PreferencesActions.toggleThreadsLayout()) }
   }
 }
 
