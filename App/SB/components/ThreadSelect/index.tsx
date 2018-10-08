@@ -74,15 +74,6 @@ const mapStateToProps = (state: RootState): StateProps  => {
   if (allThreads.length > 0) {
     threads = allThreads
       .filter((thread) => thread.name !== 'default')
-      .sort((a, b) => {
-        if (a.id === selectedThreadId) {
-          return 0
-        } else if (b.id === selectedThreadId || a.photos.length < b.photos.length) {
-          return 1
-        } else {
-          return 0
-        }
-      })
   }
 
   return {
