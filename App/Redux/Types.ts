@@ -8,6 +8,7 @@ import { ContactsAction } from './ContactsRedux'
 import { DevicesAction } from './DevicesRedux'
 import { PhotoViewingAction } from './PhotoViewingRedux'
 import { PreferencesAction } from './PreferencesRedux'
+import { ProcessingImagesAction } from './ProcessingImagesRedux'
 import { NotificationsAction } from './NotificationsRedux'
 import { TextileNodeAction } from './TextileNodeRedux'
 import { ThreadsAction } from './ThreadsRedux'
@@ -24,6 +25,7 @@ export type RootAction =
   DevicesAction |
   PhotoViewingAction |
   PreferencesAction |
+  ProcessingImagesAction |
   NotificationsAction |
   TextileNodeAction |
   ThreadsAction |

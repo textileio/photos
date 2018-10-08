@@ -2,8 +2,9 @@ import { delay } from 'redux-saga'
 import { call, put, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 
-import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
-import { photoAndComment, shouldNavigateToNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import UIActions from '../Redux/UIRedux'
+import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
 import TextileNode from '../../TextileNode'
 import { Threads, Photo, BlockId, PhotoId } from '../Models/TextileTypes'
 import NavigationService from '../Services/NavigationService'
@@ -13,6 +14,7 @@ export function * monitorNewThreadActions () {
   while (true) {
     const action: ActionType<typeof PhotoViewingActions.threadAdded> = yield take(getType(PhotoViewingActions.threadAdded))
     const shouldNav: boolean = yield select(shouldNavigateToNewThread)
+    const shouldSelect: boolean = yield select(shouldSelectNewThread)
     const photoToShare: { threadName: string, imageId: PhotoId, comment?: string} | undefined = yield select(photoToShareToNewThread)
     yield put(PhotoViewingActions.clearNewThreadActions())
     const { id, name } = action.payload
@@ -24,6 +26,9 @@ export function * monitorNewThreadActions () {
       yield put(PhotoViewingActions.viewThread(action.payload.id))
       yield delay(700)
       yield call(NavigationService.navigate, 'ViewThread')
+    }
+    if (shouldSelect) {
+      yield put(UIActions.updateSharingPhotoThread(action.payload.id))
     }
   }
 }

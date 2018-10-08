@@ -199,13 +199,26 @@ const migrations: MigrationManifest = {
         }
       }
     }
+  },
+  12: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        tourScreens: {
+          ...state.preferences.tourScreens,
+          threadsManager: true
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 11,
+  version: 12,
   whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'storage', 'deviceLogs'],
   migrate: createMigrate(migrations, { debug: false })
 }

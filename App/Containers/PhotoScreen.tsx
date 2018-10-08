@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { ScrollView, ViewStyle } from 'react-native'
 
 import { Photo } from '../Models/TextileTypes'
-import { RootState, RootAction } from '../Redux/Types'
+import { RootState } from '../Redux/Types'
 
 import ThreadDetailCard from '../SB/components/ThreadDetailCard'
 
@@ -35,7 +35,7 @@ class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>
       <ScrollView style={CONTAINER}>
       {this.props.photo &&
         <ThreadDetailCard
-          photo={this.props.photo}
+          item={this.props.photo}
           onComment={this.onComment}
           onLikes={this.onLikes}
           recentCommentsCount={5}

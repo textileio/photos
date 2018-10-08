@@ -6,9 +6,65 @@ import { uploadFile } from './UploadFile'
 import TextileNode from '../../TextileNode'
 import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId} from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
-import UIActions from '../Redux/UIRedux'
+import UIActions, {UISelectors} from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
+import {ActionType} from 'typesafe-actions'
+import NavigationService from '../Services/NavigationService'
+import * as CameraRoll from '../Services/CameraRoll'
+import * as TT from '../Models/TextileTypes'
+
+// Called whenever someone clicks the share button
+export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
+  const { threadId } = action.payload
+  // Present image picker
+  const pickerResponse: CameraRoll.IPickerImage = yield CameraRoll.choosePhoto()
+  if (pickerResponse.didCancel) {
+    // Detect cancel of image picker
+  } else if (pickerResponse.error) {
+    // pickerResponse.error is a string... i think all the time
+    const error = new Error('Image picker error')
+    yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
+  } else if (pickerResponse.customButton) {
+    if (threadId) {
+      // only set if shared directly to a thread
+      yield put(UIActions.updateSharingPhotoThread(threadId))
+    }
+    yield call(NavigationService.navigate, 'WalletPicker')
+  } else {
+    try {
+      const image: TT.SharedImage = {
+        origURL: pickerResponse.origURL,
+        uri: pickerResponse.uri,
+        path: pickerResponse.path,
+        canDelete: pickerResponse.canDelete
+      }
+      yield put(UIActions.updateSharingPhotoImage(image))
+
+      if (threadId) {
+        // only set if shared directly to a thread
+        yield put(UIActions.updateSharingPhotoThread(threadId))
+        yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
+      } else {
+        yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'SharedPhotos' })
+      }
+    } catch (error) {
+      yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
+    }
+  }
+​}
+
+// Called whenever someone selects to share from the wallet and then picks a photo
+export function * walletPickerSuccess(action: ActionType<typeof UIActions.walletPickerSuccess>) {
+  yield put(UIActions.updateSharingPhotoImage(action.payload.photoId))
+  // indicates if request was made from merged main feed or from a specific thread
+  const threadId = yield select(UISelectors.sharingPhotoThread)
+  if (threadId) {
+    yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
+  } else {
+    yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'SharedPhotos' })
+  }
+}
 
 export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: string) {
   try {

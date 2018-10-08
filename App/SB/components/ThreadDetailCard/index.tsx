@@ -1,5 +1,5 @@
 import React from 'react'
-import Redux, { Dispatch } from 'redux'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-native'
 import moment from 'moment'
@@ -11,18 +11,19 @@ import UIActions from '../../../Redux/UIRedux'
 import styles from './statics/styles'
 import Icons from '../../../Components/Icons'
 import Colors from '../../../Themes/Colors'
-import { Photo, BlockId } from '../../../Models/TextileTypes'
+import {Photo, BlockId, ThreadName, ThreadId} from '../../../Models/TextileTypes'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
 
 const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
-  photo: Photo,
+  item: any, // TODO make proper type now
   recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void
   onLikes: () => void
+  displayThread?: boolean
 }
 
 interface StateProps {
@@ -36,13 +37,19 @@ interface StateProps {
   imageWidth: number
   username: string,
   photoUsername: string
+  photo?: Photo
 }
 
 interface DispatchProps {
   addPhotoLike: (photoBlockId: BlockId) => void
+  navigateToThread: (threadId: ThreadId, threadName: ThreadName) => void
 }
 
 class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & DispatchProps> {
+
+  _threadSelect = (id: ThreadId, name: ThreadName) => {
+    this.props.navigateToThread(id as ThreadId, name as ThreadName)
+  }
 
   onLikePress = () => {
     this.props.addPhotoLike(this.props.photo.block_id)
@@ -60,6 +67,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
 
   render () {
     const {
+      item,
       photo,
       peerId,
       dateString,
@@ -100,9 +108,18 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       <View style={styles.card}>
         <View style={styles.cardHeader} >
           <Avatar style={styles.cardAvatar} width={18} height={18} peerId={peerId} defaultSource={defaultSource} />
-          <Text style={styles.cardAction}><Text style={styles.cardActionName}>
-            {photoUsername === username ? 'You' : photoUsername}
-          </Text> added a photo</Text>
+
+          <Text style={styles.cardAction}>
+            <Text style={styles.cardActionName}>
+              {photoUsername === username ? 'You' : photoUsername}
+            </Text> added a photo
+          </Text>
+          {
+            this.props.displayThread &&
+            /* tslint:disable-next-line */
+            <TouchableOpacity activeOpacity={0.8} onPress={() => this._threadSelect(item.threadId, item.threadName)}>
+              <Text style={styles.cardAction}>in {item.threadName}</Text>
+            </TouchableOpacity>}
         </View>
         <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
           <View style={styles.imageStretch}>
@@ -143,7 +160,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const { profile } = state.preferences
-  const { photo } = ownProps
+  const { photo } = ownProps.item
   const date = moment(photo.date)
   const dateString = date.fromNow()
   const selfId = profile && profile.id
@@ -172,13 +189,17 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     imageHeight,
     imageWidth,
     username,
-    photoUsername
+    photoUsername,
+    photo
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    addPhotoLike: (photoBlockId: BlockId) => { dispatch(UIActions.addLikeRequest(photoBlockId)) }
+    addPhotoLike: (photoBlockId: BlockId) => { dispatch(UIActions.addLikeRequest(photoBlockId)) },
+    navigateToThread: (id: ThreadId, name: ThreadName) => {
+     dispatch(UIActions.navigateToThreadRequest(id, name))
+   }
   }
 }
 

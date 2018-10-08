@@ -6,6 +6,7 @@ import {
   ThreadId,
   ThreadName
 } from '../Models/TextileTypes'
+import {RootState} from './Types'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
@@ -46,7 +47,10 @@ const actions = {
     return (photoId: PhotoId) => resolve({ photoId })
   }),
   showImagePicker: createAction('SHOW_IMAGE_PICKER', (resolve) => {
-    return (threadId: ThreadId) => resolve({ threadId })
+    return (threadId?: ThreadId) => resolve({ threadId })
+  }),
+  walletPickerSuccess: createAction('WALLET_PICKER_SUCCESS', (resolve) => {
+    return (photoId: PhotoId) => resolve({ photoId })
   }),
   newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', (resolve) => {
     return (threadId: ThreadId) => resolve({ threadId })
@@ -68,6 +72,12 @@ const actions = {
   }),
   navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', (resolve) => {
     return (threadId: ThreadId, threadName: string) => resolve({ threadId, threadName })
+  }),
+  navigateToCommentsRequest: createAction('NAVIGATE_TO_COMMENTS_REQUEST', (resolve) => {
+    return (photoId: PhotoId) => resolve({ photoId })
+  }),
+  navigateToLikesRequest: createAction('NAVIGATE_TO_LIKES_REQUEST', (resolve) => {
+    return (photoId: PhotoId) => resolve({ photoId })
   })
 }
 
@@ -119,6 +129,16 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
       return { ...state, imagePickerError: undefined }
     default:
       return state
+  }
+}
+
+export const UISelectors = {
+  sharingPhoto: (state: RootState) => state.ui.sharingPhoto,
+  sharingPhotoThread: (state: RootState) => {
+    if (state.ui.sharingPhoto) {
+      return state.ui.sharingPhoto.threadId
+    }
+    return
   }
 }
 

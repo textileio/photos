@@ -9,7 +9,7 @@ import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
-import { Photo } from '../Models/TextileTypes'
+import { Photo, PhotoId } from '../Models/TextileTypes'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 class TextileWalletPicker extends React.PureComponent {
@@ -40,8 +40,7 @@ class TextileWalletPicker extends React.PureComponent {
 
   onSelect = (row) => {
     return () => {
-      this.props.sharePhoto(row.item.id)
-      this.props.navigation.navigate('ThreadSharePhoto', { backTo: 'ViewThread' })
+      this.props.success(row.item.id)
     }
   }
 
@@ -94,7 +93,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    sharePhoto: (photoId: string) => { dispatch(UIActions.updateSharingPhotoImage(photoId)) },
+    success: (photoId: PhotoId) => { dispatch(UIActions.walletPickerSuccess(photoId)) },
     cancelSharingPhoto: () => { dispatch(UIActions.cancelSharingPhoto()) },
     refresh: (threadId: string) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }

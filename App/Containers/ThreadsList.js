@@ -1,22 +1,25 @@
 import React from 'react'
 import Icons from '../Components/Icons'
 import { connect } from 'react-redux'
-import { View, Text, Image, FlatList, Alert, TouchableWithoutFeedback } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
-import ThreadCard from '../SB/components/ThreadListCard'
-
+import { View, Text, Image, Alert, TouchableWithoutFeedback } from 'react-native'
+import ActionSheet from 'react-native-actionsheet'
+import PhotoStream from '../Components/PhotoStream'
 import Avatar from '../Components/Avatar'
+
+import { Photo, PhotoId, ThreadId, ThreadName } from '../Models/TextileTypes'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import PreferencesActions from '../Redux/PreferencesRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
+import UIActions from '../Redux/UIRedux'
+import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
-import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { IProcessingImageProps } from '../Components/ProcessingImage'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -41,13 +44,8 @@ class ThreadsList extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='add-thread' onPress={() => {
-          if (params.onTour) {
-            // We don't want to show that tour screen to them ever again...
-            params.completeTour()
-          }
-          navigation.navigate('AddThread')
-        }} />
+        <Item title='Add Photo' iconName='add-photo' onPress={params.showImagePicker} />
+        <Item title='Options' iconName='more' onPress={params.showActionSheet} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
@@ -75,35 +73,37 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile,
       online: this.props.online,
-      onTour: this.props.showOnboarding === true,
       toggleVerboseUi: this.props.toggleVerboseUi,
-      completeTour: () => {
-        this.props.completeScreen('threads')
-      }
+      showActionSheet: () => {
+        this.showActionSheet()
+      },
+      showImagePicker: this._showImagePicker.bind(this)
     })
   }
 
   componentDidUpdate (prevProps, prevState, ss) {
     if (
       this.props.profile !== prevProps.profile ||
-      this.props.showOnboarding !== prevProps.showOnboarding ||
       this.props.online !== prevProps.online
     ) {
       this.props.navigation.setParams({
         profile: this.props.profile,
-        online: this.props.online,
-        onTour: this.props.showOnboarding === true
+        online: this.props.online
       })
     }
     if (
-      this.props.threads &&
-      prevProps.threads &&
+      this.props.items &&
+      prevProps.items &&
       this.props.showNotificationsPrompt &&
       !this.props.showOnboarding &&
-      this.props.threads.length !== prevProps.threads.length
+      this.props.items.length !== prevProps.items.length
     ) {
       this._notificationPrompt()
     }
+  }
+
+  _showImagePicker () {
+    this.props.showImagePicker()
   }
 
   _notificationPrompt () {
@@ -132,40 +132,6 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
-  _onPressItem = (photo) => {
-    const { id } = photo
-    this.props.viewThread(id)
-    this.props.navigation.navigate('ViewThread')
-  }
-
-  _onRefresh = () => {
-    this.props.refreshMessages()
-  }
-
-  _keyExtractor = (item, index) => item.id
-
-  _renderItem = ({ item }) => {
-    return (
-      <ThreadCard id={item.id} {...item} profile={this.props.profile} onPress={this._onPressItem} />
-    )
-  }
-
-  _renderList () {
-    return (
-      // FIXME: This should be a FlatList for sure
-      <View style={styles.contentContainer} >
-        <FlatList
-          data={this.props.threads}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
-          refreshing={this.props.refreshing}
-          onRefresh={this._onRefresh}
-          initialNumToRender={4}
-        />
-      </View>
-    )
-  }
-
   _renderOnboarding () {
     return (
       <View style={onboardingStyles.emptyStateContainer}>
@@ -173,23 +139,47 @@ class ThreadsList extends React.PureComponent {
           style={onboardingStyles.emptyStateImage}
           source={require('../Images/v2/thread-empty-state.png')} />
         <Text style={onboardingStyles.emptyStateText}>
-          This is where you can view and create
-          new shared Threads - invite
-          only groups to privately share photos
-          with your friends and family..
+          This is your shared photo stream,
+          where you can come to see the latest
+          photos shared to you in any of your
+          private Threads or post a new photo.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons name='add-thread' size={24} color='black' /> button above to create your first Thread.
+          Click the <Icons name='more' size={28} color='black' /> button above and create your first Thread.
         </Text>
       </View>
     )
+  }
+
+  showActionSheet () {
+    this.actionSheet.show()
+  }
+
+  handleActionSheetResponse (index: number) {
+    if (index === 0) {
+      if (this.props.showOnboarding === true) {
+        this.props.completeScreen('threads')
+      }
+      this.props.navigation.navigate('AddThread')
+    } else if (index === 1) {
+      this.props.navigation.navigate('ThreadsManager')
+    }
   }
 
   render () {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && this._renderList()}
+        {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items} />}
+
+        <ActionSheet
+          ref={o => { this.actionSheet = o }}
+          title={'Threads'}
+          options={['Create Thread', 'Manage Threads', 'Cancel']}
+          cancelButtonIndex={2}
+          onPress={this.handleActionSheetResponse.bind(this)}
+        />
+
       </View>
     )
   }
@@ -221,10 +211,48 @@ const mapStateToProps = (state) => {
       .sort((a, b) => a.updated < b.updated)
   }
 
+  const items: [{type: string, photo: Photo, id: PhotoId, threadId: ThreadId, threadName: ThreadName}] = Object.keys(state.photoViewing.threads)
+    .filter((id) => state.photoViewing.threads[id].name !== 'default')
+    .map((id) => state.photoViewing.threads[id].photos
+      .map((photo) => {
+        return { type: 'photo', photo, id: photo.id, threadId: id, threadName: state.photoViewing.threads[id].name }
+      })
+    )
+    .flatMap(val => val)
+    .sort((a, b) => Date.parse(a.photo.date) < Date.parse(b.photo.date))
+
+  const processingItems: { type: 'processingItem', props: IProcessingImageProps, id: string}[] = state.processingImages.images
+    .map(image => {
+      let progress = 0
+      if (image.shareToThreadData) {
+        progress = 1
+      } else if (image.addToWalletData) {
+        progress = 0.95
+      } else if (image.uploadData) {
+        progress = 0.1 + (image.uploadData.uploadProgress * 0.8)
+      } else if (image.addData) {
+        progress = 0.1
+      }
+      const message = image.state
+      return {
+        id: image.uuid,
+        type: 'processingItem',
+        props: {
+          imageUri: image.sharedImage.origURL || image.sharedImage.uri, // TODO: Check this on Android
+          progress,
+          message,
+          errorMessage: image.error
+        }
+      }
+    })
+
+  // add processing items to the beginning of the list
+  items.unshift(...processingItems)
+
   return {
     profile,
     threads,
-    refreshing: !!state.ui.refreshingMessages,
+    items,
     showNotificationsPrompt: state.preferences.tourScreens.notifications && threads,
     services: state.preferences.services,
     showOnboarding: state.preferences.tourScreens.threads && threads && threads.length === 0
@@ -233,11 +261,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
-    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },
-    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
+    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
+    showImagePicker: () => { dispatch(UIActions.showImagePicker()) },
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
+    toggleThreadsLayout: () => { dispatch(PreferencesActions.toggleThreadsLayout()) },
+    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) }
   }
 }
 

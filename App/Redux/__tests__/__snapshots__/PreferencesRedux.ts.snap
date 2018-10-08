@@ -55,6 +55,7 @@ Object {
     "notifications": true,
     "threadView": true,
     "threads": true,
+    "threadsManager": true,
     "wallet": true,
   },
   "verboseUi": false,

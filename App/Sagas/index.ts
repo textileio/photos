@@ -26,6 +26,11 @@ import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
 
 import {
+  showImagePicker,
+  walletPickerSuccess
+} from './ImageSharingSagas'
+
+import {
   handleSharePhotoRequest,
   handleImageUploadComplete,
   retryImageShare,
@@ -79,6 +84,8 @@ import {
   updateNodeOverview,
   recoverPassword,
   navigateToThread,
+  navigateToComments,
+  navigateToLikes,
   addFriends,
   addPhotoLike,
   initializeAppState,
@@ -90,7 +97,6 @@ import {
   handleProfilePhotoSelected,
   handleProfilePhotoUpdated,
   presentPublicLinkInterface,
-  showImagePicker,
   nodeOnlineSaga,
   updateServices
 } from './TextileSagas'
@@ -124,6 +130,8 @@ export default function * root () {
     takeLatest(getType(PreferencesActions.toggleStorageRequest), toggleStorage),
 
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
+    takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
+    takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
 
@@ -165,6 +173,7 @@ export default function * root () {
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
 
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
+    takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
     takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),

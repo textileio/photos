@@ -5,11 +5,13 @@ export default StyleSheet.create({
   container: {
     marginTop: 20,
     backgroundColor: '#FAFCFE',
-    flex: 1
+    flex: 1,
+    flexDirection: 'row'
   },
   contentContainer: {
     paddingTop: 19,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    flex: 1
   },
   topRow: {
     flexDirection: 'row'
