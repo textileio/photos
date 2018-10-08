@@ -19,6 +19,7 @@ import { getThreads } from '../Redux/PhotoViewingSelectors'
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
+import { IProcessingImageProps } from '../Components/ProcessingImage'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -219,6 +220,34 @@ const mapStateToProps = (state) => {
     )
     .flatMap(val => val)
     .sort((a, b) => Date.parse(a.photo.date) < Date.parse(b.photo.date))
+
+  const processingItems: { type: 'processingItem', props: IProcessingImageProps, id: string}[] = state.processingImages.images
+    .map(image => {
+      let progress = 0
+      if (image.shareToThreadData) {
+        progress = 1
+      } else if (image.addToWalletData) {
+        progress = 0.95
+      } else if (image.uploadData) {
+        progress = 0.1 + (image.uploadData.uploadProgress * 0.8)
+      } else if (image.addData) {
+        progress = 0.1
+      }
+      const message = image.state
+      return {
+        id: image.uuid,
+        type: 'processingItem',
+        props: {
+          imageUri: image.sharedImage.origURL || image.sharedImage.uri, // TODO: Check this on Android
+          progress,
+          message,
+          errorMessage: image.error
+        }
+      }
+    })
+
+  // add processing items to the beginning of the list
+  items.unshift(...processingItems)
 
   return {
     profile,

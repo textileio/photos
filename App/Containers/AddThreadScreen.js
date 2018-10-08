@@ -16,6 +16,9 @@ class AddThreadScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const title = params.withPhoto ? 'Next' : 'Create'
+    // default to true
+    const selectForShare = !!params.selectForShare
+    console.log('selectForShare', selectForShare)
     return {
       headerTitle: 'New Thread',
       headerLeft: (
@@ -36,7 +39,7 @@ class AddThreadScreen extends React.Component {
               // With photo indicates that we are creating the thread already having a photo to share to it
               params.submitWithPhoto(params.withPhoto)
             } else {
-              params.submit()
+              params.submit(selectForShare)
             }
           }} />
         </TextileHeaderButtons>
@@ -47,14 +50,13 @@ class AddThreadScreen extends React.Component {
   handleNewText = (text: string) => {
     this.setState({ value: text })
     this.props.navigation.setParams({
-      submit: () => { this._submit() },
       submitEnabled: (text.length > 0)
     })
   }
 
   componentWillMount () {
     this.props.navigation.setParams({
-      submit: () => { this.props.submit(this.state.value) },
+      submit: this._submit.bind(this),
       submitEnabled: false,
       submitWithPhoto: this._submitWithPhoto.bind(this)
     })
@@ -66,9 +68,14 @@ class AddThreadScreen extends React.Component {
     this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PrivatePhotoDetail', withPhoto, withThreadName })
   }
 
-  _submit () {
-    this.props.submit(this.state.value)
-    this.props.navigation.goBack()
+  _submit (selectForShare) {
+    if (selectForShare) {
+      this.props.submit(this.state.value, false, true)
+      this.props.navigation.navigate('ThreadSharePhoto', {backTo: 'SharedPhotos'})
+    } else {
+      this.props.submit(this.state.value, true, false)
+      this.props.navigation.goBack()
+    }
   }
 
   render () {
@@ -88,7 +95,7 @@ class AddThreadScreen extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    submit: (name: string) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate: true })) }
+    submit: (name: string, navigate: boolean, selectToShare: boolean) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
   }
 }
 

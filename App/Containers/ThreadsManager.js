@@ -52,7 +52,7 @@ class ThreadsManager extends React.PureComponent {
       online: this.props.online,
       onTour: this.props.showOnboarding,
       completeTour: () => {
-        this.props.completeScreen('threads')
+        this.props.completeScreen('threadsManager')
       }
     })
   }

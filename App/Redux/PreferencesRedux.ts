@@ -144,9 +144,7 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
     case getType(actions.getPublicKeySuccess):
       return { ...state, publicKey: action.payload.publicKey }
     case getType(actions.completeTourSuccess):
-      // TODO FIX FALSE
-      console.log('COMPLETE')
-      return { ...state, tourScreens: { ...state.tourScreens, [action.payload.tourKey]: true } }
+      return { ...state, tourScreens: { ...state.tourScreens, [action.payload.tourKey]: false } }
     case getType(actions.toggleServicesRequest): {
       const service = state.services[action.payload.name]
       service.status = action.payload.status === undefined ? !service.status : action.payload.status

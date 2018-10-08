@@ -18,8 +18,8 @@ export default StyleSheet.create({
     marginBottom: 16
   },
   emptyStateImage2: {
-    width: 307,
-    height: 201,
+    width: 230,
+    height: 151,
     marginBottom: 16
   },
   emptyStateImage3: {

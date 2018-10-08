@@ -7,7 +7,7 @@ const actions = {
     return (id: ThreadId, name: string) => resolve({ id, name })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
-    return (name: string, options?: { navigate?: boolean, sharePhoto?: { imageId: PhotoId, comment?: string } }) => resolve({ name }, options)
+    return (name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: PhotoId, comment?: string } }) => resolve({ name }, options)
   }),
   threadAdded: createAction('THREAD_ADDED', (resolve) => {
     return (id: ThreadId, name: string) => resolve({ id, name })
@@ -70,6 +70,7 @@ interface ThreadMap {
 
 interface PhotoViewingState {
   readonly navigateToNewThread: boolean
+  readonly selectToShare: boolean // if thread create should result in selecting it as share endpoint
   readonly shareToNewThread?: {
     threadName: string
     imageId: PhotoId
@@ -93,6 +94,7 @@ interface PhotoViewingState {
 
 const initialState: PhotoViewingState = {
   navigateToNewThread: false,
+  selectToShare: false,
   threads: {}
 }
 
@@ -107,9 +109,9 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.addThreadRequest): {
       const { name } = action.payload
-      const { navigate, sharePhoto } = action.meta
+      const { navigate, sharePhoto, selectToShare } = action.meta
       const shareToNewThread = sharePhoto ? { ...sharePhoto, threadName: name } : undefined
-      return { ...state, navigateToNewThread: navigate || false, shareToNewThread, addingThread: { name }}
+      return { ...state, navigateToNewThread: navigate || false, selectToShare: selectToShare || false, shareToNewThread, addingThread: { name }}
     }
     case getType(actions.threadAdded): {
       const { id, name } = action.payload

@@ -10,26 +10,27 @@ import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../../TextileImage'
 import {Photo, PhotoId, SharedImage, ThreadId, ThreadName} from '../Models/TextileTypes'
-import {RootAction} from '../Redux/Types'
+import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
 interface StateProps {
-  image: SharedImage,
-  threadId: ThreadId,
-  comment: string,
+  image?: SharedImage | string,
+  threadId?: ThreadId,
+  comment?: string,
   selectedThreadId?: ThreadId
 }
+
 interface DispatchProps {
   updateComment: (text: string) => void
   cancelShare: () => void
-  share: (image: SharedImage, threadId: ThreadId, comment: string) => void
-  shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment: string) => void
+  share: (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => void
+  shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment?: string) => void
 }
 
-type Props = DispatchProps & StateProps & NavigationScreenProps<{}>
+type Props = DispatchProps & StateProps & NavigationScreenProps
 
 class AddCaptionScreen extends React.Component<Props> {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = ({navigation}: NavigationScreenProps) => {
     const params = navigation.state.params || {}
     return {
       headerTitle: 'Photo Caption',
@@ -75,7 +76,13 @@ class AddCaptionScreen extends React.Component<Props> {
     this.props.navigation.setParams({
       disableShare: this.props.selectedThreadId === undefined,
       cancelShare: () => { this.props.cancelShare() },
-      share: () => { this.props.share(this.props.image, this.props.threadId, this.props.comment) },
+      share: () => {
+        if (typeof this.props.image === 'string') {
+          this.props.share(this.props.image as PhotoId, this.props.threadId, this.props.comment)
+        } else if (this.props.image) {
+          this.props.share(this.props.image, this.props.threadId, this.props.comment)
+        }
+      },
       shareToNewThread: this._shareToNewThread.bind(this)
     })
   }
@@ -91,37 +98,35 @@ class AddCaptionScreen extends React.Component<Props> {
     this.props.shareNewThread(withPhoto.id, withThreadName, this.props.comment)
   }
 
-  _renderTextileImage () {
-    return (
-      <TextileImage
-        imageId={this.props.image}
-        path={'small'}
-        height={70}
-        width={70}
-        resizeMode={'cover'}
-        style={styles.image}
-      />
-    )
-  }
-
-  _renderAsset () {
-    const sourceUri = this.props.image.origURL && this.props.image.origURL !== ''
-      ? this.props.image.origURL
-      : this.props.image.uri
-    return (
-      <Image
-        source={{ uri: sourceUri, isStatic: true }}
-        resizeMode={'cover'}
-        style={styles.image}
-      />
-    )
+  _createNewThread () {
+    this.props.navigation.navigate('AddThread', {selectForShare: true, backTo: 'ThreadSharePhoto'})
   }
 
   _renderImage () {
     if (typeof this.props.image === 'string') {
-      return this._renderTextileImage()
+      return (
+        <TextileImage
+          imageId={this.props.image}
+          path={'small'}
+          height={70}
+          width={70}
+          resizeMode={'cover'}
+          style={styles.image}
+        />
+      )
     } else if (this.props.image) {
-      return this._renderAsset()
+      const image: SharedImage = this.props.image
+      const sourceUri = image.origURL
+      && image.origURL !== ''
+        ? image.origURL
+        : image.uri
+      return (
+        <Image
+          source={{ uri: sourceUri, isStatic: true }}
+          resizeMode={'cover'}
+          style={styles.image}
+        />
+      )
     }
   }
 
@@ -144,13 +149,16 @@ class AddCaptionScreen extends React.Component<Props> {
             />
           </View>
         </View>
-        <ThreadSelect />
+        <ThreadSelect
+          /* tslint:disable-next-line */
+          createNew={this._createNewThread.bind(this)}
+        />
       </View>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState): StateProps => {
   const sharingPhoto = state.ui.sharingPhoto || {}
   return {
     image: sharingPhoto.image,
@@ -163,9 +171,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     updateComment: (text: string) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
-    share: (image: SharedImage, threadId: ThreadId, comment: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
+    share: (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
+    shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
   }
 }
 

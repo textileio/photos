@@ -12,7 +12,7 @@ import RadioButton from '../../components/RadioButton'
 import styles from './statics/styles'
 
 interface StateProps {
-  thumb: Photo
+  thumb?: Photo
 }
 
 interface ScreenProps {
@@ -45,7 +45,8 @@ class ThreadSelectCard extends Component<Props> {
 
 const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  => {
   const t = ownProps.thread.id
-  const thumb = state.photoViewing.threads[t].photos.length > 0 ? state.photoViewing.threads[t].photos[0] : undefined
+  const thread = state.photoViewing.threads[t]
+  const thumb =  thread && thread.photos && thread.photos.length > 0 ? thread.photos[0] : undefined
   return {
     thumb
   }
