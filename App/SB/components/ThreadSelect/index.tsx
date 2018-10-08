@@ -2,17 +2,16 @@ import React, {Component} from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
-import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
-import ImageSc from 'react-native-scalable-image'
+import { View, Text, FlatList } from 'react-native'
+
+import { RootState, RootAction } from '../../../Redux/Types'
 import ThreadSelectCard from './ThreadSelectCard'
+import {getThreads} from '../../../Redux/PhotoViewingSelectors'
+import {ThreadData} from '../../../Redux/PhotoViewingRedux'
+import {ThreadId} from '../../../Models/TextileTypes'
+import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
-
-import { RootState, RootAction } from '../Redux/Types'
-import {getThreads} from "../../../Redux/PhotoViewingSelectors";
-import {ThreadData} from "../../../Redux/PhotoViewingRedux";
-import {ThreadId} from "../../../Models/TextileTypes";
-import UIActions from "../../../Redux/UIRedux";
 
 interface StateProps {
   threads: ReadonlyArray<ThreadData>
@@ -36,11 +35,11 @@ class ThreadSelect extends Component<Props> {
         </View>
         <View style={styles.body}>
           <View style={styles.searchBoxPlaceholder} />
-
           <FlatList
             data={this.props.threads}
+            /* tslint:disable-next-line */
             keyExtractor={(item: ThreadData) => item.id}
-            // extraData={selected}
+            /* tslint:disable-next-line */
             renderItem={(data: any) => {
               const thread: ThreadData = data.item
               return (
@@ -59,7 +58,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
   let threads: ThreadData[] = []
   if (allThreads.length > 0) {
     threads = allThreads
-      .filter(thread => thread.name !== 'default')
+      .filter((thread) => thread.name !== 'default')
   }
   const selectedThreadId = state.ui.sharingPhoto ? state.ui.sharingPhoto.threadId : undefined
   return {

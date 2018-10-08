@@ -9,10 +9,10 @@ import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } f
 import UIActions, {UISelectors} from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
-import {ActionType} from "typesafe-actions";
-import NavigationService from "../Services/NavigationService";
-import * as CameraRoll from "../Services/CameraRoll";
-import * as TT from "../Models/TextileTypes";
+import {ActionType} from 'typesafe-actions'
+import NavigationService from '../Services/NavigationService'
+import * as CameraRoll from '../Services/CameraRoll'
+import * as TT from '../Models/TextileTypes'
 
 // Called whenever someone clicks the share button
 export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
@@ -65,7 +65,6 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
     yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'SharedPhotos' })
   }
 }
-
 
 export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: string) {
   try {
