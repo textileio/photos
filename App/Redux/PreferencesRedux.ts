@@ -37,7 +37,7 @@ const actions = {
 
 export type PreferencesAction = ActionType<typeof actions>
 
-export type TourScreens = 'wallet' | 'threads' | 'threadView' | 'notifications' | 'feed' | 'location'
+export type TourScreens = 'wallet' | 'threads' | 'threadView' | 'threadsManager' | 'notifications' | 'feed' | 'location'
 export type ServiceType = 'backgroundLocation' |
   'notifications' |
   'photoAddedNotification' |
@@ -74,6 +74,7 @@ export const initialState: PreferencesState = {
     wallet: true,
     threads: true,
     threadView: true,
+    threadsManager: true,
     notifications: true,
     feed: true,
     location: true
@@ -143,7 +144,9 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
     case getType(actions.getPublicKeySuccess):
       return { ...state, publicKey: action.payload.publicKey }
     case getType(actions.completeTourSuccess):
-      return { ...state, tourScreens: { ...state.tourScreens, [action.payload.tourKey]: false } }
+      // TODO FIX FALSE
+      console.log('COMPLETE')
+      return { ...state, tourScreens: { ...state.tourScreens, [action.payload.tourKey]: true } }
     case getType(actions.toggleServicesRequest): {
       const service = state.services[action.payload.name]
       service.status = action.payload.status === undefined ? !service.status : action.payload.status

@@ -1,18 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import { View } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import { Item } from 'react-navigation-header-buttons'
 
+import Icons from '../Components/Icons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
 import ThreadSelector from '../Components/ThreadSelector'
-
-import styles from '../SB/views/ThreadsList/statics/styles'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
+
+import styles from '../SB/views/ThreadsList/statics/styles'
+import onboardingStyles from './Styles/OnboardingStyle'
 
 class ThreadsManager extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -48,6 +50,7 @@ class ThreadsManager extends React.PureComponent {
   componentDidMount () {
     this.props.navigation.setParams({
       online: this.props.online,
+      onTour: this.props.showOnboarding,
       completeTour: () => {
         this.props.completeScreen('threads')
       }
@@ -64,10 +67,30 @@ class ThreadsManager extends React.PureComponent {
     }
   }
 
+  _renderOnboarding () {
+    return (
+      <View style={onboardingStyles.emptyStateContainer}>
+        <Image
+          style={onboardingStyles.emptyStateImage}
+          source={require('../Images/v2/party.png')} />
+        <Text style={onboardingStyles.emptyStateText}>
+          This is where you can manage
+          your Threads - private groups
+          where you can share photos with your
+          friends and family.
+        </Text>
+        <Text style={onboardingStyles.emptyStateText}>
+          Click the <Icons name='add-thread' size={24} color='black' /> button above to create your first Thread.
+        </Text>
+      </View>
+    )
+  }
+
   render () {
     return (
       <View style={styles.container}>
-        <ThreadSelector threads={this.props.threads} proflie={this.props.profile} />
+        {this.props.showOnboarding && this._renderOnboarding()}
+        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} proflie={this.props.profile} />}
       </View>
     )
   }
@@ -99,7 +122,8 @@ const mapStateToProps = (state) => {
   }
 
   return {
-    threads
+    threads,
+    showOnboarding: state.preferences.tourScreens.threadsManager && threads && threads.length === 0
   }
 }
 

@@ -19,7 +19,6 @@ const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
   item: any, // TODO make proper type now
-  photo: Photo,
   recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void

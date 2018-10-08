@@ -53,6 +53,7 @@ Object {
     "feed": true,
     "location": true,
     "notifications": true,
+    "threadManager": true,
     "threadView": true,
     "threads": true,
     "wallet": true,

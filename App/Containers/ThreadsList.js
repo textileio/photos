@@ -1,25 +1,24 @@
 import React from 'react'
 import Icons from '../Components/Icons'
 import { connect } from 'react-redux'
-import { View, Text, Image, Alert, TouchableWithoutFeedback } from 'react-native'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
-import ActionSheet from 'react-native-actionsheet'
-
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
+import { View, Text, Image, Alert, TouchableWithoutFeedback } from 'react-native'
+import ActionSheet from 'react-native-actionsheet'
 import PhotoStream from '../Components/PhotoStream'
-
 import Avatar from '../Components/Avatar'
+
+import { Photo, PhotoId, ThreadId, ThreadName } from '../Models/TextileTypes'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import PreferencesActions from '../Redux/PreferencesRedux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
+import UIActions from '../Redux/UIRedux'
+import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
-import { getThreads } from '../Redux/PhotoViewingSelectors'
-import { Photo, PhotoId, ThreadId, ThreadName } from '../Models/TextileTypes'
-import UIActions from '../Redux/UIRedux'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -139,13 +138,13 @@ class ThreadsList extends React.PureComponent {
           style={onboardingStyles.emptyStateImage}
           source={require('../Images/v2/thread-empty-state.png')} />
         <Text style={onboardingStyles.emptyStateText}>
-          This is where you can view and create
-          new shared Threads - invite
-          only groups to privately share photos
-          with your friends and family..
+          This is your shared photo stream,
+          where you can come to see the latest
+          photos shared to you in any of your
+          private Threads or post a new photo.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons name='add-thread' size={24} color='black' /> button above to create your first Thread.
+          Click the <Icons name='more' size={28} color='black' /> button above and create your first Thread.
         </Text>
       </View>
     )
