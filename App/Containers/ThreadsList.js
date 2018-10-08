@@ -221,12 +221,11 @@ const mapStateToProps = (state) => {
     .flatMap(val => val)
     .sort((a, b) => Date.parse(a.photo.date) < Date.parse(b.photo.date))
 
-
   const defaultData = defaultThreadData(state)
   const defaultThreadId = defaultData ? defaultData.id : undefined
 
   const processingItems: { type: 'processingItem', props: IProcessingImageProps, id: string}[] = state.processingImages.images
-    .filter(image => image.destinationThreadId && image.destinationThreadId !== defaultThreadId )
+    .filter(image => image.destinationThreadId && image.destinationThreadId !== defaultThreadId)
     .map(image => {
       let progress = 0
       if (image.shareToThreadData) {
