@@ -19,6 +19,7 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 import { Photo, PhotoId, ThreadId, ThreadName } from '../Models/TextileTypes'
+import UIActions from '../Redux/UIRedux'
 
 class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -43,6 +44,7 @@ class ThreadsList extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
+        <Item title='Add Photo' iconName='add-photo' onPress={params.showImagePicker} />
         <Item title='Options' iconName='more' onPress={params.showActionSheet} />
       </TextileHeaderButtons>
     )
@@ -74,7 +76,8 @@ class ThreadsList extends React.PureComponent {
       toggleVerboseUi: this.props.toggleVerboseUi,
       showActionSheet: () => {
         this.showActionSheet()
-      }
+      },
+      showImagePicker: this._showImagePicker.bind(this)
     })
   }
 
@@ -97,6 +100,10 @@ class ThreadsList extends React.PureComponent {
     ) {
       this._notificationPrompt()
     }
+  }
+
+  _showImagePicker () {
+    this.props.showImagePicker()
   }
 
   _notificationPrompt () {
@@ -226,12 +233,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
-    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },
+    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
+    showImagePicker: () => { dispatch(UIActions.showImagePicker()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    toggleThreadsLayout: () => { dispatch(PreferencesActions.toggleThreadsLayout()) }
+    toggleThreadsLayout: () => { dispatch(PreferencesActions.toggleThreadsLayout()) },
+    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) }
   }
 }
 

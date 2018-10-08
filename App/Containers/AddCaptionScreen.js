@@ -5,6 +5,7 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import Input from '../SB/components/Input'
 import { NavigationActions } from 'react-navigation'
 import styles from '../SB/views/ThreadCreate/statics/styles'
+import ThreadSelect from '../SB/components/ThreadSelect'
 import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../../TextileImage'
@@ -25,6 +26,7 @@ class AddCaptionScreen extends React.Component {
       headerRight: (
         <TextileHeaderButtons>
           <Item title='Share' onPress={() => {
+            if (params.disableShare) return
             if (params.withPhoto && params.withThreadName) {
               params.shareToNewThread(params.withPhoto, params.withThreadName)
               navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
@@ -44,10 +46,18 @@ class AddCaptionScreen extends React.Component {
 
   componentWillMount () {
     this.props.navigation.setParams({
+      disableShare: this.props.selectedThreadId === undefined,
       cancelShare: () => { this.props.cancelShare() },
       share: () => { this.props.share(this.props.image, this.props.threadId, this.props.comment) },
       shareToNewThread: this._shareToNewThread.bind(this)
     })
+  }
+  componentDidUpdate (prevProps, prevState, ss) {
+    if (prevProps.selectedThreadId !== this.props.selectedThreadId) {
+      this.props.navigation.setParams({
+        disableShare: this.props.selectedThreadId === undefined
+      })
+    }
   }
 
   _shareToNewThread (withPhoto, withThreadName) {
@@ -103,6 +113,7 @@ class AddCaptionScreen extends React.Component {
             />
           </View>
         </View>
+        <ThreadSelect />
       </View>
     )
   }
@@ -113,7 +124,8 @@ const mapStateToProps = (state) => {
   return {
     image: sharingPhoto.image,
     threadId: sharingPhoto.threadId,
-    comment: sharingPhoto.comment
+    comment: sharingPhoto.comment,
+    selectedThreadId: state.ui.sharingPhoto ? state.ui.sharingPhoto.threadId : undefined
   }
 }
 

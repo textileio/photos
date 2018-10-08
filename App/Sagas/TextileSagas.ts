@@ -24,7 +24,7 @@ import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRe
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ContactsActions from '../Redux/ContactsRedux'
-import UIActions from '../Redux/UIRedux'
+import UIActions, { UISelectors } from '../Redux/UIRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType, getType } from 'typesafe-actions'
@@ -414,37 +414,6 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
     // yield put(UploadingImagesActions.imageRemovalComplete(dataId))
   }
 }
-
-export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
-  const { threadId } = action.payload
-
-  // Present image picker
-  const pickerResponse: CameraRoll.IPickerImage = yield CameraRoll.choosePhoto()
-  if (pickerResponse.didCancel) {
-    // Detect cancel of image picker
-  } else if (pickerResponse.error) {
-    // pickerResponse.error is a string... i think all the time
-    const error = new Error('Image picker error')
-    yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
-  } else if (pickerResponse.customButton) {
-    yield put(UIActions.updateSharingPhotoThread(threadId))
-    yield call(NavigationService.navigate, 'WalletPicker')
-  } else {
-    try {
-      const image: TT.SharedImage = {
-        origURL: pickerResponse.origURL,
-        uri: pickerResponse.uri,
-        path: pickerResponse.path,
-        canDelete: pickerResponse.canDelete
-      }
-      yield put(UIActions.updateSharingPhotoThread(threadId))
-      yield put(UIActions.updateSharingPhotoImage(image))
-      yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
-    } catch (error) {
-      yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
-    }
-  }
-​}
 
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
   const { photoId } = action.payload
