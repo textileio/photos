@@ -1,5 +1,5 @@
 import React from 'react'
-import Redux, { Dispatch } from 'redux'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-native'
 import moment from 'moment'
@@ -38,6 +38,7 @@ interface StateProps {
   imageWidth: number
   username: string,
   photoUsername: string
+  photo?: Photo
 }
 
 interface DispatchProps {

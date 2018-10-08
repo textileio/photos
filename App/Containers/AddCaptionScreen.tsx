@@ -3,38 +3,65 @@ import { connect } from 'react-redux'
 import { Image, View } from 'react-native'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import Input from '../SB/components/Input'
-import { NavigationActions } from 'react-navigation'
+import {NavigationActions, NavigationScreenProps} from 'react-navigation'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import ThreadSelect from '../SB/components/ThreadSelect'
 import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../../TextileImage'
+import {Photo, PhotoId, SharedImage, ThreadId, ThreadName} from '../Models/TextileTypes'
+import {RootAction} from '../Redux/Types'
+import {Dispatch} from 'redux'
 
-class AddCaptionScreen extends React.Component {
+interface StateProps {
+  image: SharedImage,
+  threadId: ThreadId,
+  comment: string,
+  selectedThreadId?: ThreadId
+}
+interface DispatchProps {
+  updateComment: (text: string) => void
+  cancelShare: () => void
+  share: (image: SharedImage, threadId: ThreadId, comment: string) => void
+  shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment: string) => void
+}
+
+type Props = DispatchProps & StateProps & NavigationScreenProps<{}>
+
+class AddCaptionScreen extends React.Component<Props> {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
       headerTitle: 'Photo Caption',
       headerLeft: (
-        <TextileHeaderButtons left>
-          <Item title='Back' iconName='arrow-left' onPress={() => {
-            params.cancelShare()
-            navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
-          }} />
+        <TextileHeaderButtons left={true}>
+          <Item
+            title='Back'
+            iconName='arrow-left'
+            /* tslint:disable-next-line */
+            onPress={() => {
+              params.cancelShare()
+              navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+            }}
+          />
         </TextileHeaderButtons>
       ),
       headerRight: (
         <TextileHeaderButtons>
-          <Item title='Share' onPress={() => {
-            if (params.disableShare) return
-            if (params.withPhoto && params.withThreadName) {
-              params.shareToNewThread(params.withPhoto, params.withThreadName)
-              navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
-            } else {
-              params.share()
-              navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
-            }
-          }} />
+          <Item
+            title='Share'
+            /* tslint:disable-next-line */
+            onPress={() => {
+              if (params.disableShare) { return }
+              if (params.withPhoto && params.withThreadName) {
+                params.shareToNewThread(params.withPhoto, params.withThreadName)
+                navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+              } else {
+                params.share()
+                navigation.dispatch(NavigationActions.navigate({ routeName: params.backTo }))
+              }
+            }}
+          />
         </TextileHeaderButtons>
       )
     }
@@ -52,7 +79,7 @@ class AddCaptionScreen extends React.Component {
       shareToNewThread: this._shareToNewThread.bind(this)
     })
   }
-  componentDidUpdate (prevProps, prevState, ss) {
+  componentDidUpdate (prevProps: Props) {
     if (prevProps.selectedThreadId !== this.props.selectedThreadId) {
       this.props.navigation.setParams({
         disableShare: this.props.selectedThreadId === undefined
@@ -60,19 +87,21 @@ class AddCaptionScreen extends React.Component {
     }
   }
 
-  _shareToNewThread (withPhoto, withThreadName) {
+  _shareToNewThread (withPhoto: Photo, withThreadName: ThreadName) {
     this.props.shareNewThread(withPhoto.id, withThreadName, this.props.comment)
   }
 
   _renderTextileImage () {
-    return (<TextileImage
-      imageId={this.props.image}
-      path={'small'}
-      height={70}
-      width={70}
-      resizeMode={'cover'}
-      style={styles.image}
-    />)
+    return (
+      <TextileImage
+        imageId={this.props.image}
+        path={'small'}
+        height={70}
+        width={70}
+        resizeMode={'cover'}
+        style={styles.image}
+      />
+    )
   }
 
   _renderAsset () {
@@ -83,7 +112,8 @@ class AddCaptionScreen extends React.Component {
       <Image
         source={{ uri: sourceUri, isStatic: true }}
         resizeMode={'cover'}
-        style={styles.image} />
+        style={styles.image}
+      />
     )
   }
 
@@ -100,7 +130,7 @@ class AddCaptionScreen extends React.Component {
       <View style={styles.contentContainer}>
         <View style={styles.topRow}>
           <View style={styles.imagePreviewRow}>
-            { this._renderImage() }
+            {this._renderImage()}
           </View>
           <View style={styles.commentRow}>
             <Input
@@ -108,7 +138,8 @@ class AddCaptionScreen extends React.Component {
               value={this.props.comment}
               label='Add a caption...'
               numberOfLines={10}
-              multiline
+              multiline={true}
+              /* tslint:disable-next-line */
               onChangeText={this.handleNewText.bind(this)}
             />
           </View>
@@ -129,12 +160,12 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    updateComment: (text) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
-    share: (image, threadId, comment) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
+    updateComment: (text: string) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
+    share: (image: SharedImage, threadId: ThreadId, comment: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    shareNewThread: (imageId, threadName, comment) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
+    shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
   }
 }
 
