@@ -128,8 +128,8 @@ android {
         applicationId "com.textile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 0
+        versionName "0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -172,10 +172,6 @@ android {
             }
         }
     }
-}
-
-configurations.all {
-    resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' // required by react-native-background-upload until React Native supports okhttp >= okhttp 3.5
 }
 
 dependencies {
