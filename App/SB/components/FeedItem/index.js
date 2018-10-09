@@ -13,7 +13,9 @@ const FeedItem = props => {
   const date = moment(notification.date).fromNow()
   const payload = NotificationServices.toPayload(notification)
 
-  if (!payload) return (<View />)
+  if (!payload) {
+    return (<View />)
+  }
 
   const isPhotoType = NotificationServices.isPhoto(notification)
 

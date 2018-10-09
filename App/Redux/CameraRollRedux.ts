@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { RootState } from '../Redux/Types'
+import { RootState } from './Types'
 
 const actions = {
   initialzePhotos: createAction('INITIALIZE_PHOTOS', (resolve) => {

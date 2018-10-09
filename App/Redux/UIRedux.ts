@@ -6,7 +6,7 @@ import {
   ThreadId,
   ThreadName
 } from '../Models/TextileTypes'
-import {RootState} from './Types'
+import { RootState } from './Types'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),

@@ -23,7 +23,7 @@ platform :ios do
   desc "Runs all the tests"
   lane :test do
     scan(
-      scheme: "TextilePhotos"
+      scheme: "Textile"
     )
   end
 
@@ -37,11 +37,11 @@ platform :ios do
     match(type: "adhoc")
     increment_build_number(
       build_number: ENV['CIRCLE_BUILD_NUM'],
-      xcodeproj: "TextilePhotos.xcodeproj"
+      xcodeproj: "Textile.xcodeproj"
     )
     gym(
-      workspace: "TextilePhotos.xcworkspace",
-      scheme: "TextilePhotos",
+      project: "Textile.xcodeproj",
+      scheme: "Textile",
       xcargs: settings_to_override,
       export_method: "ad-hoc",
       export_options: {
@@ -55,7 +55,7 @@ platform :ios do
       build_secret: ENV['FABRIC_BUILD_SECRET'],
       groups: 'textile-internal'
     )
-    upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
+    upload_symbols_to_crashlytics(dsym_path: "./Textile.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
   end
 
   desc "Push a new beta build to TestFlight"
@@ -76,12 +76,12 @@ platform :ios do
     newBuildNumber = app_store_build_number(live: false, version: versionNumber) + 1
     increment_build_number(
       build_number: newBuildNumber,
-      xcodeproj: "TextilePhotos.xcodeproj"
+      xcodeproj: "Textile.xcodeproj"
     )
-    gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
+    gym(project: "Textile.xcodeproj", scheme: "Textile")
     # changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: true)
-    upload_symbols_to_crashlytics(dsym_path: "./TextilePhotos.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
+    upload_symbols_to_crashlytics(dsym_path: "./Textile.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
     add_git_tag(tag: "builds/iosbeta/" + versionNumber.to_s + "(" + newBuildNumber.to_s + ")")
     push_to_git_remote
   end
@@ -93,13 +93,13 @@ platform :ios do
     parts = tag.split("_")
     increment_version_number(
       version_number: parts[1],
-      xcodeproj: "TextilePhotos.xcodeproj"
+      xcodeproj: "Textile.xcodeproj"
     )
     increment_build_number(
       build_number: parts[2],
-      xcodeproj: "TextilePhotos.xcodeproj"
+      xcodeproj: "Textile.xcodeproj"
     )
-    gym(workspace: "TextilePhotos.xcworkspace", scheme: "TextilePhotos")
+    gym(project: "Textile.xcodeproj", scheme: "Textile")
     deliver(
       force: true,
       app_version: parts[1],

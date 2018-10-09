@@ -51,7 +51,7 @@ class Comments extends Component<Props> {
     }
   }
 
-  componentDidUpdate (previousProps: Props, previousState: State) {
+  componentDidUpdate (previousProps: Props, previousState: {}) {
     if (this.props.commentCardProps.length > previousProps.commentCardProps.length) {
       // New comment added, scroll down, need timeout to allow rendering
       setTimeout(this.scrollToEnd, 100)

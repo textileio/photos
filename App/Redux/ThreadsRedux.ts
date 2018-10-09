@@ -9,7 +9,7 @@ import {
   ThreadName,
   UserName
 } from '../Models/TextileTypes'
-import { RootState } from '../Redux/Types'
+import { RootState } from './Types'
 
 const actions = {
   addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', (resolve) => {

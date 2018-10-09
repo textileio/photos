@@ -1,6 +1,5 @@
 import actions, { reducer } from '../UIRedux'
 import { SharedImage, ThreadId } from '../../Models/TextileTypes'
-import { hash } from 'react-native-fs'
 
 const initialState = reducer(undefined, {} as any)
 const threadId = 'threadId' as ThreadId
@@ -9,10 +8,7 @@ const sharedImage: SharedImage = {
   origURL: 'origURL',
   uri: 'uri',
   path: '/here',
-  canDelete: false,
-  height: 20,
-  isVertical: true,
-  width: 20
+  canDelete: false
 }
 
 const sharedHash = 'hash'
