@@ -219,13 +219,7 @@ const mapStateToProps = (state) => {
       })
     )
     .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
-    .sort((a, b) => {
-      if (!a.photo || Date.parse(a.photo.date) < Date.parse(b.photo.date)) {
-        return 1
-      } else {
-        return 0
-      }
-    })
+    .sort((a, b) => Date.parse(a.photo.date) < Date.parse(b.photo.date))
 
   const defaultData = defaultThreadData(state)
   const defaultThreadId = defaultData ? defaultData.id : undefined

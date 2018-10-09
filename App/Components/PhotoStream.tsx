@@ -4,7 +4,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { FlatList, View } from 'react-native'
 
-import {Photo, PhotoId} from '../Models/TextileTypes'
+import {Photo, PhotoId, ThreadId} from '../Models/TextileTypes'
 import {RootAction} from '../Redux/Types'
 
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
@@ -34,9 +34,9 @@ interface ScreenProps {
 
 class PhotoStream extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
 
-  _onPhotoSelect = (photo: Photo) => {
+  _onCommentSelect = (photo: Photo, threadId: ThreadId) => {
     return () => {
-      this.props.navigateToComments(photo.id as PhotoId)
+      this.props.navigateToComments(photo.id as PhotoId, threadId)
     }
   }
 
@@ -72,9 +72,9 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
             displayThread={this.props.displayThread}
             item={item}
             /* tslint:disable-next-line */
-            onComment={()=>{this._onPhotoSelect(item.photo)}}
+            onComment={this._onCommentSelect(item.photo, item.threadId)}
             /* tslint:disable-next-line */
-            onLikes={()=>{this.onLikes(item.photo)}}
+            onLikes={this.onLikes(item.photo)}
             recentCommentsCount={2}
             maxLinesPerComment={1}
           />
@@ -107,7 +107,7 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
 
 interface DispatchProps {
   refreshMessages: () => void
-  navigateToComments: (photoId: PhotoId) => void
+  navigateToComments: (photoId: PhotoId, threadId: ThreadId) => void
   navigateToLikes: (photoId: PhotoId) => void
   retryShare: (uuid: string) => void
   cancelShare: (uuid: string) => void
@@ -116,8 +116,8 @@ interface DispatchProps {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
-    navigateToComments: (id: PhotoId) => {
-      dispatch(UIActions.navigateToCommentsRequest(id))
+    navigateToComments: (id: PhotoId, threadId: ThreadId) => {
+      dispatch(UIActions.navigateToCommentsRequest(id, threadId))
     },
     navigateToLikes: (id: PhotoId) => {
       dispatch(UIActions.navigateToLikesRequest(id))

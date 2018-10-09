@@ -3,17 +3,20 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle } from 'react-native'
 
-import { Photo } from '../Models/TextileTypes'
+import {Photo, ThreadId, ThreadName} from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 import ThreadDetailCard from '../SB/components/ThreadDetailCard'
+import {threadDataByThreadId} from '../Redux/PhotoViewingSelectors'
 
 const CONTAINER: ViewStyle = {
   backgroundColor: '#FAFCFE'
 }
 
 interface StateProps {
-  photo?: Photo
+  photo?: Photo,
+  threadName?: ThreadName,
+  threadId?: ThreadId
 }
 
 class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>> {
@@ -35,7 +38,7 @@ class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>
       <ScrollView style={CONTAINER}>
       {this.props.photo &&
         <ThreadDetailCard
-          item={this.props.photo}
+          item={{type: 'photo', photo: this.props.photo, threadId: this.props.threadId, threadName: this.props.threadName}}
           onComment={this.onComment}
           onLikes={this.onLikes}
           recentCommentsCount={5}
@@ -48,8 +51,18 @@ class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  const viewingThreadId = state.photoViewing.viewingThreadId
+  let threadName
+  let threadId
+  if (viewingThreadId) {
+    const threadData = threadDataByThreadId(state, viewingThreadId) || {querying: false, photos: [], name: undefined}
+    threadName = threadData.name as ThreadName
+    threadId = viewingThreadId as ThreadId
+  }
   return {
-    photo: state.photoViewing.viewingPhoto
+    photo: state.photoViewing.viewingPhoto,
+    threadName,
+    threadId
   }
 }
 
