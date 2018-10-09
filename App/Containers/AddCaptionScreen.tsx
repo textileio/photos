@@ -50,6 +50,7 @@ class AddCaptionScreen extends React.Component<Props> {
       headerRight: (
         <TextileHeaderButtons>
           <Item
+            textColor={params.disableShare ? '#99c0ef' : 'blue'}
             title='Share'
             /* tslint:disable-next-line */
             onPress={() => {
