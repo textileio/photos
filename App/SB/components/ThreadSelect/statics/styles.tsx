@@ -20,7 +20,7 @@ export default StyleSheet.create({
   },
   title: {
     fontFamily: 'BentonSans',
-    fontSize: 16
+    fontSize: 18
   },
   body: {
     flex: 1
@@ -43,5 +43,19 @@ export default StyleSheet.create({
   threadSelectRadio: {
     position: 'absolute',
     right: 0
+  },
+  missingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 9
+  },
+  missingText: {
+    height: 50,
+    opacity: 0.8,
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontFamily: 'BentonSans',
+    fontSize: 14,
+    flex: 1,
   }
 })

@@ -18,7 +18,8 @@ interface StateProps {
 interface ScreenProps {
   thread: ThreadData
   selected: boolean
-  onSelect: (threadId: ThreadId) => void
+  disabled?: boolean
+  onSelect?: (threadId: ThreadId) => void
 }
 
 type Props = StateProps & ScreenProps
@@ -27,16 +28,16 @@ class ThreadSelectCard extends Component<Props> {
   render () {
     return (
       <TouchableOpacity
-        activeOpacity={0.6}
+        activeOpacity={!this.props.onSelect ? 1.0 : 0.6}
         style={styles.threadItem}
         /* tslint:disable-next-line */
         onPress={() => {
-          this.props.onSelect(this.props.thread.id)
+          this.props.onSelect && this.props.onSelect(this.props.thread.id)
         }}
       >
         <PhotoWithTextBox text={this.props.thread.name} photo={this.props.thumb} />
         <View style={styles.threadSelectRadio}>
-          <RadioButton selected={this.props.selected} />
+          <RadioButton selected={this.props.selected} disabled={this.props.disabled}/>
         </View>
       </TouchableOpacity>
     )

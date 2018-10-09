@@ -31,9 +31,26 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps
 
 class ThreadSelect extends React.Component<ScreenProps & Props> {
-  _renderCreateThread = () => {
+  renderCreateThread = () => {
     return (
       <ThreadCreateCard onSelect={this.props.createNew} />
+    )
+  }
+  renderHeader = () => {
+    if (this.props.selectedThreadId) {
+      const thread = this.props.threads.find((t) => t.id === this.props.selectedThreadId)
+      if (thread) {
+        return (
+          <ThreadSelectCard thread={thread} selected={true} />
+        )
+      }
+    }
+    return (
+      <View style={styles.threadItem}>
+        <View style={styles.missingItem}>
+          <Text style={styles.missingText}>None selected</Text>
+        </View>
+      </View>
     )
   }
   render () {
@@ -45,17 +62,18 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
           </View>
         </View>
         <View style={styles.body}>
+          {this.renderHeader()}
           <View style={styles.searchBoxPlaceholder} />
           <FlatList
             data={this.props.threads}
-            ListFooterComponent={this._renderCreateThread}
+            ListFooterComponent={this.renderCreateThread}
             /* tslint:disable-next-line */
             keyExtractor={(item: ThreadData) => item.id}
             /* tslint:disable-next-line */
             renderItem={(data: any) => {
               const thread: ThreadData = data.item
               return (
-                <ThreadSelectCard thread={thread} selected={this.props.selectedThreadId === thread.id} onSelect={this.props.selectThread} />
+                <ThreadSelectCard thread={thread} selected={this.props.selectedThreadId === thread.id} disabled={this.props.selectedThreadId === thread.id} onSelect={this.props.selectThread} />
               )
             }}
           />
