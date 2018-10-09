@@ -6,6 +6,7 @@ import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
 import RNPushNotification from 'react-native-push-notification'
 
+import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../../TextileNode'
@@ -37,6 +38,9 @@ export function * manageNode () {
       // or by launching into the background because of a trigger.
       if (action.payload.newState === 'background') {
         yield fork(backgroundTaskRace)
+      } else {
+        // Check for new photos on every Foreground event
+        yield put(StorageActions.refreshLocalImagesRequest())
       }
     } catch (error) {
       if (yield select(PreferencesSelectors.verboseUi)) {
@@ -111,10 +115,14 @@ function * stopNodeAfterDelay (ms: number) {
 }
 
 export function * backgroundTask () {
+  // Check for new photos on every background task event
+  yield put(StorageActions.refreshLocalImagesRequest())
   yield call(logNewEvent, 'Background trigger', 'Check new content')
 }
 
 export function * locationUpdate () {
+  // Check for new photos on every background task event
+  yield put(StorageActions.refreshLocalImagesRequest())
   yield call(logNewEvent, 'Location trigger', 'Check new content')
 }
 
