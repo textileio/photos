@@ -10,18 +10,16 @@ import {
 import { NavigationScreenProps } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 
-
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import {IPhotoGridType, Photo} from '../Models/TextileTypes'
 import {IProcessingImageProps} from './ProcessingImage'
 import ProgressiveImage from './ProgressiveImage'
-import ProcessingWalletImageCard  from './ProcessingWalletImage'
+import ProcessingWalletImageCard from './ProcessingWalletImage'
 
 // Styles
 import { Colors } from '../Themes'
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PhotoGridStyles'
-
 
 interface DispatchProps {
   retryShare: (uuid: string) => void
@@ -30,7 +28,7 @@ interface DispatchProps {
 
 interface ScreenProps {
   items: IPhotoGridType[]
-  onSelect: (photo: Photo) => void
+  onSelect: (photo: Photo) => () => void
   onRefresh: () => void
   refreshing: boolean
   placeholderText: string
@@ -39,16 +37,16 @@ interface ScreenProps {
 }
 
 class PhotoGrid extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
+  // How many items should be kept im memory as we scroll?
+  oneScreensWorth = 20
+
   _getOverlay (item: IPhotoGridType) {
     const processing = item.photo as IProcessingImageProps
     return (
       <ProcessingWalletImageCard
         {...processing}
         /* tslint:disable-next-line */
-        retry={() => {
-          console.log('send retry', item.id)
-          this.props.retryShare(item.id)
-        }}
+        retry={() => { this.props.retryShare(item.id) }}
         /* tslint:disable-next-line */
         cancel={() => { this.props.cancelShare(item.id) }}
         /* tslint:disable-next-line */
@@ -74,7 +72,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
         return (
           <TouchableOpacity
             style={styles.item}
-            onPress={()=>{this.props.onSelect(row.item.photo as Photo)}}
+            /* tslint:disable-next-line */
+            onPress={this.props.onSelect(row.item.photo as Photo)}
           >
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
@@ -93,16 +92,13 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
       case 'processingItem':
         return (
           <View style={styles.item}>
-            { this._getOverlay(item) }
+            {this._getOverlay(item)}
           </View>
         )
       default:
         return (
-          <View
-            style={styles.item}
-          >
-            <View style={styles.itemBackgroundContainer}>
-            </View>
+          <View style={styles.item} >
+            <View style={styles.itemBackgroundContainer} />
           </View>
         )
     }
@@ -121,9 +117,6 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
   keyExtractor = (item) => item.id
-
-  // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 20
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -147,6 +140,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
               style={styles.listContainer}
               data={this.props.items}
               keyExtractor={this.keyExtractor}
+              /* tslint:disable-next-line */
               renderItem={this.renderRow.bind(this)}
               getItemLayout={this._getItemLayout}
               numColumns={numColumns}
@@ -162,7 +156,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
             </View>
           )
         }
-        <Toast ref='toast' position='center' />
+        <Toast ref={() => 'toast'} position='center' />
       </View>
     )
   }

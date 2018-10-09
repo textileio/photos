@@ -9,7 +9,7 @@ import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
-import { IPhotoGridType, Photo, PhotoId } from '../Models/TextileTypes'
+import { IPhotoGridType, PhotoId } from '../Models/TextileTypes'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 class TextileWalletPicker extends React.PureComponent {

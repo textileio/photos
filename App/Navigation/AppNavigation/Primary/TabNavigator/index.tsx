@@ -27,7 +27,6 @@ const nav = createBottomTabNavigator(
             icon = 'notifications'
           }
           const tint = tintColor || undefined
-          console.log('fix default')
           return <Icons name={icon} size={25} color={tint} />
         }
       }
@@ -38,7 +37,7 @@ const nav = createBottomTabNavigator(
     },
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: 'Wallet'
+    initialRouteName: 'Threads'
   }
 )
 

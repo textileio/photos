@@ -7,7 +7,7 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { IPhotoGridType, Photo, PhotoId, ThreadId, ThreadName } from '../Models/TextileTypes'
+import { IPhotoGridType, Photo } from '../Models/TextileTypes'
 import style from './Styles/TextilePhotosStyle'
 import WalletHeader from '../Components/WalletHeader'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
@@ -15,7 +15,6 @@ import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import Button from '../SB/components/Button'
 import onboardingStyles from './Styles/OnboardingStyle'
 import { RootState } from '../Redux/Types'
-import { IProcessingImageProps } from '../Components/ProcessingImage'
 
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -141,7 +140,7 @@ const mapStateToProps = (state: RootState) => {
   // We only are showing wallet upload status in verbose for now
   if (state.preferences.verboseUi) {
     const processingItems: IPhotoGridType[] = state.processingImages.images
-      .filter(image => !image.destinationThreadId || image.destinationThreadId !== defaultThreadId)
+      .filter(image => !image.destinationThreadId || image.destinationThreadId !== threadId)
       .map(image => {
         let progress = 0
         if (image.shareToThreadData) {
@@ -168,7 +167,6 @@ const mapStateToProps = (state: RootState) => {
 
     items.unshift(...processingItems)
   }
-
 
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error

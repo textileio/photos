@@ -65,7 +65,12 @@ const ProcessingWalletImage = (props: IProcessingWalletImageProps) => {
   if (errorMessage) {
     content = (
       <View style={STACK}>
-        {displayError && <TouchableOpacity onPress={()=>{displayError && displayError(errorMessage)}}><Text style={BUTTON}>error</Text></TouchableOpacity>}
+        {displayError && <TouchableOpacity
+          /* tslint:disable-next-line */
+          onPress={() => {displayError(errorMessage)}}
+        >
+          <Text style={BUTTON}>error</Text>
+        </TouchableOpacity>}
         {cancel && <TouchableOpacity onPress={cancel}><Text style={BUTTON}>cancel</Text></TouchableOpacity>}
       </View>
     )
