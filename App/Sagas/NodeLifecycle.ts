@@ -38,9 +38,6 @@ export function * manageNode () {
       // or by launching into the background because of a trigger.
       if (action.payload.newState === 'background') {
         yield fork(backgroundTaskRace)
-      } else {
-        // Check for new photos on every Foreground event
-        yield put(StorageActions.refreshLocalImagesRequest())
       }
     } catch (error) {
       if (yield select(PreferencesSelectors.verboseUi)) {
@@ -99,6 +96,8 @@ function * stopNodeAfterDelay (ms: number) {
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Delayed stop of node canceled because of foreground event')
       }
+      // Check for new photos in case user left app and came back after taking one
+      yield put(StorageActions.refreshLocalImagesRequest())
     } else {
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Stopping node')
@@ -115,14 +114,10 @@ function * stopNodeAfterDelay (ms: number) {
 }
 
 export function * backgroundTask () {
-  // Check for new photos on every background task event
-  yield put(StorageActions.refreshLocalImagesRequest())
   yield call(logNewEvent, 'Background trigger', 'Check new content')
 }
 
 export function * locationUpdate () {
-  // Check for new photos on every background task event
-  yield put(StorageActions.refreshLocalImagesRequest())
   yield call(logNewEvent, 'Location trigger', 'Check new content')
 }
 

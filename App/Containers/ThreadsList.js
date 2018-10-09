@@ -218,8 +218,14 @@ const mapStateToProps = (state) => {
         return { type: 'photo', photo, id: photo.id, threadId: id, threadName: state.photoViewing.threads[id].name }
       })
     )
-    .flatMap(val => val)
-    .sort((a, b) => Date.parse(a.photo.date) < Date.parse(b.photo.date))
+    .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
+    .sort((a, b) => {
+      if (!a.photo || Date.parse(a.photo.date) < Date.parse(b.photo.date)) {
+        return 1
+      } else {
+        return 0
+      }
+    })
 
   const defaultData = defaultThreadData(state)
   const defaultThreadId = defaultData ? defaultData.id : undefined
