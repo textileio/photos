@@ -3,6 +3,8 @@
 // private enums to enforce strict id types
 // read here: https://basarat.gitbooks.io/typescript/docs/tips/nominalTyping.html#using-enums
 
+import {IProcessingImageProps} from '../Components/ProcessingImage'
+
 enum TextileIdBase {}
 enum BlockIdBase {}
 enum ThreadIdBase {}
@@ -145,6 +147,12 @@ export interface NodeOverview {
   readonly thread_count: number
   readonly photo_count: number
   readonly contact_count: number
+}
+
+export interface IPhotoGridType {
+  type: 'photo' | 'processingItem'
+  photo: Photo | IProcessingImageProps
+  id: PhotoId | string
 }
 
 export interface AddResult {

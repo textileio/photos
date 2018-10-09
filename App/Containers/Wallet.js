@@ -7,7 +7,7 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { Photo } from '../Models/TextileTypes'
+import { IPhotoGridType, Photo } from '../Models/TextileTypes'
 import style from './Styles/TextilePhotosStyle'
 import WalletHeader from '../Components/WalletHeader'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
@@ -59,9 +59,9 @@ class Wallet extends React.PureComponent {
     this.props.updateOverview()
   }
 
-  onSelect = (row) => {
+  onSelect = (photo) => {
     return () => {
-      this.props.viewWalletPhoto(row.item.id)
+      this.props.viewWalletPhoto(photo.id)
       this.props.navigation.navigate('PrivatePhotoDetail')
     }
   }
@@ -106,8 +106,7 @@ class Wallet extends React.PureComponent {
         />
         <View style={style.gridContainer}>
           <PhotoGrid
-            photos={this.props.photos}
-            progressData={this.props.progressData}
+            items={this.props.items}
             onSelect={this.onSelect}
             onRefresh={this.onRefresh.bind(this)}
             refreshing={false}
@@ -134,6 +133,41 @@ const mapStateToProps = (state: RootState) => {
   const threadId = defaultData ? defaultData.id : undefined
   const photos: Photo[] = defaultData ? defaultData.photos : []
 
+  const items: IPhotoGridType[] = !defaultData ? [] : defaultData.photos.map((photo) => {
+    return {type: 'photo', photo, id: photo.id}
+  })
+
+  // We only are showing wallet upload status in verbose for now
+  if (state.preferences.verboseUi) {
+    const processingItems: IPhotoGridType[] = state.processingImages.images
+      .filter(image => !image.destinationThreadId || image.destinationThreadId !== threadId)
+      .map(image => {
+        let progress = 0
+        if (image.shareToThreadData) {
+          progress = 1
+        } else if (image.addToWalletData) {
+          progress = 0.95
+        } else if (image.uploadData) {
+          progress = 0.1 + (image.uploadData.uploadProgress * 0.8)
+        } else if (image.addData) {
+          progress = 0.1
+        }
+        const message = image.state
+        return {
+          id: image.uuid,
+          type: 'processingItem',
+          photo: {
+            imageUri: image.sharedImage.origURL || image.sharedImage.uri, // TODO: Check this on Android
+            progress,
+            message,
+            errorMessage: image.error
+          }
+        }
+      })
+
+    items.unshift(...processingItems)
+  }
+
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error
     : state.textileNode.nodeState.state
@@ -155,7 +189,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     threadId,
     photos,
-    progressData: state.processingImages.images,
+    items,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
     verboseUi: state.preferences.verboseUi,
