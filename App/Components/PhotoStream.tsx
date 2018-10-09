@@ -71,8 +71,10 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
           <ThreadDetailCard
             displayThread={this.props.displayThread}
             item={item}
-            onComment={this._onPhotoSelect(item.photo)}
-            onLikes={this.onLikes(item.photo)}
+            /* tslint:disable-next-line */
+            onComment={()=>{this._onPhotoSelect(item.photo)}}
+            /* tslint:disable-next-line */
+            onLikes={()=>{this.onLikes(item.photo)}}
             recentCommentsCount={2}
             maxLinesPerComment={1}
           />
