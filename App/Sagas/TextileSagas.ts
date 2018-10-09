@@ -36,6 +36,7 @@ import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
 import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -154,7 +155,10 @@ export function * navigateToThread ( action: ActionType<typeof UIActions.navigat
 }
 
 export function * navigateToComments ( action: ActionType<typeof UIActions.navigateToCommentsRequest> ) {
-  const { photoId } = action.payload
+  const { photoId, threadId } = action.payload
+  if (threadId) {
+    yield put(PhotoViewingAction.viewThread(threadId))
+  }
   yield put(PhotoViewingActions.viewPhoto(photoId))
   yield call(NavigationService.navigate, 'Comments')
 }

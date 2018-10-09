@@ -15,7 +15,7 @@ import PreferencesActions from '../../../Redux/PreferencesRedux'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { threadDataByThreadId } from '../../../Redux/PhotoViewingSelectors'
 import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
-import { Photo } from '../../../Models/TextileTypes'
+import { Photo, ThreadId, ThreadName } from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
 import AlertComponent from '../../../SB/components/Alert'
@@ -183,14 +183,16 @@ class ThreadDetail extends React.PureComponent {
 const mapStateToProps = (state: RootState) => {
   const viewingThreadId = state.photoViewing.viewingThreadId
 
-  let items: [{type: string, photo: Photo}] = []
+  let items: [{type: string, photo: Photo, threadId: ThreadId, threadName: ThreadName}] = []
   let processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
   let threadName
 
   if (viewingThreadId) {
     const threadData: ThreadData = threadDataByThreadId(state, viewingThreadId) || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
-      return { type: 'photo', photo, id: photo.id }
+      const threadId = viewingThreadId
+      const threadName = threadData.name
+      return { type: 'photo', photo, threadId, threadName }
     })
     processingItems = state.processingImages.images
       .filter(image => image.destinationThreadId === viewingThreadId)

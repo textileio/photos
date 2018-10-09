@@ -18,7 +18,7 @@ import { RootState, RootAction } from '../../../Redux/Types'
 const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
-  item: any, // TODO make proper type now
+  item: {type: string, photo: Photo, threadId?: ThreadId, threadName?: ThreadName}, // TODO make proper type now
   recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void
@@ -37,7 +37,6 @@ interface StateProps {
   imageWidth: number
   username: string,
   photoUsername: string
-  photo?: Photo
 }
 
 interface DispatchProps {
@@ -52,7 +51,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
   }
 
   onLikePress = () => {
-    this.props.addPhotoLike(this.props.photo.block_id)
+    this.props.addPhotoLike(this.props.item.photo.block_id)
   }
 
   renderLikes (isLiked: boolean, didLike: boolean, photo: Photo) {
@@ -68,7 +67,6 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
   render () {
     const {
       item,
-      photo,
       peerId,
       dateString,
       defaultSource,
@@ -78,8 +76,11 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       imageWidth,
       username,
       photoUsername,
-      onComment
+      onComment,
+      onLike
     } = this.props
+
+    const { photo } = item
 
     const likeRow = this.renderLikes(isLiked, didLike, photo)
 
@@ -114,10 +115,17 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
               {photoUsername === username ? 'You' : photoUsername}
             </Text> added a photo
           </Text>
-          {
-            this.props.displayThread &&
-            /* tslint:disable-next-line */
-            <TouchableOpacity activeOpacity={0.8} onPress={() => this._threadSelect(item.threadId, item.threadName)}>
+          {this.props.displayThread &&
+            <TouchableOpacity
+              activeOpacity={0.8}
+              /* tslint:disable-next-line */
+              onPress={() => {
+                const { threadId, threadName } = item
+                if (threadId && threadName) {
+                  this._threadSelect(threadId, threadName)
+                }
+              }}
+            >
               <Text style={styles.cardAction}>in {item.threadName}</Text>
             </TouchableOpacity>}
         </View>
@@ -136,7 +144,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
           <View style={styles.cardFooterTop} >
             {didLike && <Icons name='heart-filled' size={24} style={{ color: Colors.brandPink }} />}
             {!didLike &&
-              <TouchableOpacity onPress={this.onLikePress} >
+              <TouchableOpacity onPress={onLike} >
                 <Icons name='heart' size={24} />
               </TouchableOpacity>
             }
@@ -189,8 +197,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     imageHeight,
     imageWidth,
     username,
-    photoUsername,
-    photo
+    photoUsername
   }
 }
 
