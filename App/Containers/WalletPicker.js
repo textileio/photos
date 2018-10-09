@@ -9,7 +9,7 @@ import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
-import { Photo, PhotoId } from '../Models/TextileTypes'
+import { IPhotoGridType, Photo, PhotoId } from '../Models/TextileTypes'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
 class TextileWalletPicker extends React.PureComponent {
@@ -38,9 +38,9 @@ class TextileWalletPicker extends React.PureComponent {
     })
   }
 
-  onSelect = (row) => {
+  onSelect = (photo) => {
     return () => {
-      this.props.success(row.item.id)
+      this.props.success(photo.id)
     }
   }
 
@@ -52,8 +52,7 @@ class TextileWalletPicker extends React.PureComponent {
     return (
       <View style={style.container}>
         <PhotoGrid
-          photos={this.props.photos}
-          progressData={this.props.progressData}
+          items={this.props.items}
           onSelect={this.onSelect}
           onRefresh={this.onRefresh.bind(this)}
           refreshing={this.props.refreshing}
@@ -69,7 +68,10 @@ class TextileWalletPicker extends React.PureComponent {
 const mapStateToProps = (state) => {
   const defaultData = defaultThreadData(state)
   const threadId = defaultData ? defaultData.id : undefined
-  const photos: Photo[] = defaultData ? defaultData.photos : []
+  const items: IPhotoGridType[] = !defaultData ? [] : defaultData.photos.map((photo) => {
+    return {type: 'photo', photo, id: photo.id}
+  })
+
   const refreshing = defaultData ? defaultData.querying : false
 
   const nodeStatus = state.textileNode.nodeState.error
@@ -82,8 +84,7 @@ const mapStateToProps = (state) => {
 
   return {
     threadId,
-    photos,
-    progressData: state.uploadingImages.images,
+    items,
     refreshing,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
