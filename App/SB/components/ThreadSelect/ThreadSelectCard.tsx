@@ -32,7 +32,9 @@ class ThreadSelectCard extends Component<Props> {
         style={styles.threadItem}
         /* tslint:disable-next-line */
         onPress={() => {
-          this.props.onSelect && this.props.onSelect(this.props.thread.id)
+          if (this.props.onSelect) {
+            this.props.onSelect(this.props.thread.id)
+          }
         }}
       >
         <PhotoWithTextBox text={this.props.thread.name} photo={this.props.thumb} />

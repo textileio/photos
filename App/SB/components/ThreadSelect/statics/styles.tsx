@@ -56,6 +56,6 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'BentonSans',
     fontSize: 14,
-    flex: 1,
+    flex: 1
   }
 })
