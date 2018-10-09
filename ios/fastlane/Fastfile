@@ -23,7 +23,8 @@ platform :ios do
   desc "Runs all the tests"
   lane :test do
     scan(
-      scheme: "Textile"
+      scheme: "Textile",
+      xcargs: "-UseModernBuildSystem=NO"
     )
   end
 
@@ -32,7 +33,8 @@ platform :ios do
     APP_ID = "io.textile.Wallet"
     PROFILE = "match AdHoc io.textile.Wallet"
     settings_to_override = {
-      :PROVISIONING_PROFILE_SPECIFIER => PROFILE
+      :PROVISIONING_PROFILE_SPECIFIER => PROFILE,
+      "-UseModernBuildSystem" => "NO"
     }
     match(type: "adhoc")
     increment_build_number(
@@ -78,7 +80,7 @@ platform :ios do
       build_number: newBuildNumber,
       xcodeproj: "Textile.xcodeproj"
     )
-    gym(project: "Textile.xcodeproj", scheme: "Textile")
+    gym(project: "Textile.xcodeproj", scheme: "Textile", xcargs: "-UseModernBuildSystem=NO")
     # changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: true)
     upload_symbols_to_crashlytics(dsym_path: "./Textile.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
@@ -99,7 +101,11 @@ platform :ios do
       build_number: parts[2],
       xcodeproj: "Textile.xcodeproj"
     )
-    gym(project: "Textile.xcodeproj", scheme: "Textile")
+    gym(
+      project: "Textile.xcodeproj",
+      scheme: "Textile",
+      xcargs: "-UseModernBuildSystem=NO"
+    )
     deliver(
       force: true,
       app_version: parts[1],
