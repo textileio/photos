@@ -88,7 +88,16 @@ class Storage extends React.PureComponent {
                   <View key={i} >
                     <SettingsRow service={option} info={this.props.mainOptions[option].info} value={value} infoPress={this.showInfo.bind(this)} onChange={this.toggleOption.bind(this)} />
                     {children && Object.keys(children).map((child, i) =>
-                      <SettingsRow key={i * 33} child service={child} info={this.props.children[child].info} disabled={!value} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleOption.bind(this)} />
+                      <SettingsRow
+                        key={i * 33}
+                        child
+                        service={child}
+                        info={this.props.children[child].info}
+                        disabled={!value}
+                        value={!!this.props.children[child].status}
+                        infoPress={this.showInfo.bind(this)}
+                        onChange={this.toggleOption.bind(this)}
+                      />
                     )}
                   </View>
                 )

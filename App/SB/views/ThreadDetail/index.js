@@ -90,7 +90,9 @@ class ThreadDetail extends React.PureComponent {
     this.props.completeScreen('location')
     Alert.alert(
       'Background Location',
-      'Even snappier sharing is possible. Enabling background location allows Textile to occasionally get woken up and check the network for photos you may have missed. We never collect or store your location data. Want in?',
+      'Even snappier sharing is possible. Enabling background location allows Textile '
+        + 'to occasionally get woken up and check the network for photos you may have missed. '
+        + 'We never collect or store your location data. Want in?',
       [
         {
           text: 'Yes please',

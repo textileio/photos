@@ -27,7 +27,7 @@ class TextField extends Component {
     wrapperStyle: PropTypes.object,
     labelStyle: PropTypes.object,
     disabled: PropTypes.bool
-  };
+  }
 
   static defaultProps = {
     duration: 200,
@@ -39,7 +39,7 @@ class TextField extends Component {
     dense: false,
     disabled: false,
     underlineColorAndroid: 'rgba(0,0,0,0)'
-  };
+  }
 
   constructor (props, context) {
     super(props, context)
@@ -108,17 +108,25 @@ class TextField extends Component {
             this.setState({ isFocused: true })
             this.refs.floatingLabel.floatLabel()
             this.refs.underline.expandLine()
-            onFocus && onFocus()
+            if (onFocus) {
+              onFocus()
+            }
           }}
           onBlur={() => {
             this.setState({ isFocused: false })
-            !this.state.text.length && this.refs.floatingLabel.sinkLabel()
+            if (!this.state.text.length) {
+              this.refs.floatingLabel.sinkLabel()
+            }
             this.refs.underline.shrinkLine()
-            onBlur && onBlur()
+            if (onBlur) {
+              onBlur()
+            }
           }}
           onChangeText={text => {
             this.setState({ text })
-            onChangeText && onChangeText(text)
+            if (onChangeText) {
+              onChangeText(text)
+            }
           }}
           editable={!disabled}
           ref='input'

@@ -35,7 +35,9 @@ const ContactSelect = (props) => {
         {showSuggested && <View style={styles.selectedContactList}>
           {topFive.map((item) => {
             // const item = contacts.find(c => c.id === id)
-            if (!item) return (<View />)
+            if (!item) {
+              return (<View />)
+            }
 
             const defaultSource = require('../../../Images/v2/main-image.png')
 

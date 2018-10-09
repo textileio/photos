@@ -24,7 +24,7 @@ export async function getPage (pageSize, cursor) {
 export async function getAllPhotos (limit) {
   let data = []
   let hasNextPage = true
-  let cursor = null
+  let cursor = undefined
   let page = 0 // I wanted to limit the total size of a return array
   let pageSize = 25
   let lessThanLimit = limit === -1 || page < limit / pageSize

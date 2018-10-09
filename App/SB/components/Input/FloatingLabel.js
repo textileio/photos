@@ -12,7 +12,7 @@ class FloatingLabel extends Component {
     highlightColor: PropTypes.string,
     dense: PropTypes.bool,
     style: PropTypes.object
-  };
+  }
 
   constructor (props) {
     super(props)
