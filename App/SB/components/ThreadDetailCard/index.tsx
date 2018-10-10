@@ -46,12 +46,18 @@ interface DispatchProps {
 
 class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & DispatchProps> {
 
-  _threadSelect = (id: ThreadId, name: ThreadName) => {
-    this.props.navigateToThread(id as ThreadId, name as ThreadName)
+  _threadSelect = (id?: ThreadId, name?: ThreadName) => {
+    return () => {
+      if (id && name) {
+        this.props.navigateToThread(id as ThreadId, name as ThreadName)
+      }
+    }
   }
 
-  onLikePress = () => {
-    this.props.addPhotoLike(this.props.item.photo.block_id)
+  _onLikePress = (photo: Photo) => {
+    return () => {
+      this.props.addPhotoLike(photo.block_id)
+    }
   }
 
   renderLikes (isLiked: boolean, didLike: boolean, photo: Photo) {
@@ -117,13 +123,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
           {this.props.displayThread &&
             <TouchableOpacity
               activeOpacity={0.8}
-              /* tslint:disable-next-line */
-              onPress={() => {
-                const { threadId, threadName } = item
-                if (threadId && threadName) {
-                  this._threadSelect(threadId, threadName)
-                }
-              }}
+              onPress={this._threadSelect(item.threadId, item.threadName)}
             >
               <Text style={styles.cardAction}>in {item.threadName}</Text>
             </TouchableOpacity>}
@@ -143,7 +143,9 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
           <View style={styles.cardFooterTop} >
             {didLike && <Icons name='heart-filled' size={24} style={{ color: Colors.brandPink }} />}
             {!didLike &&
-              <TouchableOpacity onPress={this.onLikePress} >
+              <TouchableOpacity
+                onPress={this._onLikePress(this.props.item.photo)}
+              >
                 <Icons name='heart' size={24} />
               </TouchableOpacity>
             }
