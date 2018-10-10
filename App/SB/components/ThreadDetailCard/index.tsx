@@ -123,9 +123,10 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
           {this.props.displayThread &&
             <TouchableOpacity
               activeOpacity={0.8}
+              style={styles.cardTargetTouch}
               onPress={this._threadSelect(item.threadId, item.threadName)}
             >
-              <Text style={styles.cardAction}>in {item.threadName}</Text>
+              <Text numberOfLines={1} style={styles.cardTarget}> in {item.threadName}</Text>
             </TouchableOpacity>}
         </View>
         <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>

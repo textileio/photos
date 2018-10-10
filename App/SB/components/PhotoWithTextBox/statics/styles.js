@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   itemContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 9
@@ -21,6 +22,8 @@ export default StyleSheet.create({
     right: 0
   },
   itemText: {
+    flex: 1,
+    paddingRight: 24,
     fontFamily: 'BentonSans',
     fontSize: 14
   },
