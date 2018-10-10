@@ -124,7 +124,7 @@ function * processAvatarImage(uri: string) {
 
     try {
       yield * uploadFile(
-        addResult.id,
+        addResult.id as any,
         addResult.archive.path
       )
     } catch (error) {
@@ -177,7 +177,7 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
 export function * getUsername (contact: TT.Contact) {
   try {
     if (contact.username !== undefined) { return }
-    const uri = contact.id ? Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username' : undefined
+    const uri = Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username'
     const response = yield call(fetch, uri)
     const username = yield call([response, response.text])
     yield put(ContactsActions.getUsernameSuccess(contact, username))
@@ -273,7 +273,7 @@ export function * synchronizeNativeUploads() {
     // Grab all the upload Ids from the native layer
     const nativeUploads = yield call(Upload.activeUploads)
     // Grab all the upload Ids from the react native layer
-    const reactUploads: string[] = yield select(UploadingImagesSelectors.uploadingImageIds)
+    const reactUploads: TT.PhotoId[] = yield select(UploadingImagesSelectors.uploadingImageIds)
     // Check that each upload ID from the react layer exists in the array from the native layer
     // If not, register an image upload error so a retry can happen if necessary
     for (const uploadId of reactUploads) {
@@ -325,7 +325,7 @@ export function * photosTask () {
     const urisToProcess = uris.filter((uri) => !previouslyQueriedPhotos[uri]).reverse()
     yield put(CameraRollActions.trackPhotos(urisToProcess))
 
-    const addedPhotosData: Array<{ uri: string, addResult: TT.AddResult, blockId: string }> = []
+    const addedPhotosData: Array<{ uri: string, addResult: TT.AddResult, blockId: TT.BlockId }> = []
 
     for (const uri of urisToProcess) {
       let photoPath = ''
@@ -354,7 +354,7 @@ export function * photosTask () {
           throw new Error('no archive to upload')
         }
         yield * uploadFile(
-          addedPhotoData.addResult.id,
+          addedPhotoData.addResult.id as any,
           addedPhotoData.addResult.archive.path
         )
       } catch (error) {
@@ -381,7 +381,7 @@ export function * photosTask () {
     const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
     for (const imageToRetry of imagesToRetry) {
       try {
-        yield * uploadFile(imageToRetry.dataId, imageToRetry.path)
+        yield * uploadFile(imageToRetry.dataId as any, imageToRetry.path)
       } catch (error) {
         let message = ''
         if (!error) {

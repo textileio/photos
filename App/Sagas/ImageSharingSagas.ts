@@ -147,9 +147,11 @@ export function * shareToThread (uuid: string) {
     const { id } = processingImage.addData.addResult
     yield put(ProcessingImagesActions.sharingToThread(uuid))
     const { destinationThreadId, comment } = processingImage
-    const shareBlockId: BlockId = yield call(TextileNode.sharePhotoToThread, id, destinationThreadId, comment)
-    yield put(ProcessingImagesActions.sharedToThread(uuid, shareBlockId))
-    yield put(ProcessingImagesActions.complete(uuid))
+    if (destinationThreadId) {
+      const shareBlockId: BlockId = yield call(TextileNode.sharePhotoToThread, id, destinationThreadId, comment)
+      yield put(ProcessingImagesActions.sharedToThread(uuid, shareBlockId))
+      yield put(ProcessingImagesActions.complete(uuid))
+    }
   } catch (error) {
     yield put(ProcessingImagesActions.error(uuid, error))
   }

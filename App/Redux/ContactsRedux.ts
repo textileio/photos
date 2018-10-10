@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from '../Redux/Types'
-import { Contact } from '../Models/TextileTypes'
+import { Contact, PeerId } from '../Models/TextileTypes'
 
 const actions = {
   getContactsSuccess: createAction('GET_CONTACT_SUCCESS', (resolve) => {
@@ -38,12 +38,12 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
       const keepers = state.contacts
         .filter((c) => c.username !== undefined)
         .reduce((map, obj) => {
-          map[obj.id] = obj
+          map[obj.id as any] = obj
           return map
         }, {} as {[index: string]: Contact})
 
       const contacts = action.payload.contacts.map((c) => {
-        c.username = keepers[c.id] ? keepers[c.id].username : undefined
+        c.username = keepers[c.id as any] ? keepers[c.id as any].username : undefined
         return c
       })
       return { ...state, contacts }
@@ -53,7 +53,7 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
 }
 
 export const ContactsSelectors = {
-  isKnown: (state: RootState, id: string) => state.contacts.contacts.some((p) => p.id === id)
+  isKnown: (state: RootState, id: PeerId) => state.contacts.contacts.some((p) => p.id === id)
 }
 
 export default actions

@@ -5,35 +5,49 @@
 
 import {IProcessingImageProps} from '../Components/ProcessingImage'
 
-enum TextileIdBase {}
-enum BlockIdBase {}
-enum ThreadIdBase {}
-enum PhotoIdBase {}
-enum PeerIdBase {}
-enum DeviceIdBase {}
-enum ProfileAvatarIdBase {}
-enum NotificationIdBase {}
-export type TextileId = TextileIdBase & string & undefined
-export type BlockId = BlockIdBase & string & undefined
-export type ThreadId = ThreadIdBase & string & undefined
-export type PhotoId = PhotoIdBase & string & undefined
-export type PeerId = PeerIdBase & string & undefined
-export type DeviceId = DeviceIdBase & string & undefined
-export type ProfileAvatarId = ProfileAvatarIdBase & string & undefined
-export type NotificationId = NotificationIdBase & string & undefined
+export interface TextileId extends String {
+  _textileIdBrand: string
+}
+export interface BlockId extends String {
+  _blockIdBrand: string
+}
+export interface ThreadId extends String {
+  _threadIdBrand: string
+}
+export interface PhotoId extends String {
+  _photoIdBrand: string
+}
+export interface PeerId extends String {
+  _peerIdBrand: string
+}
+export interface DeviceId extends String {
+  _deviceIdBrand: string
+}
+export interface ProfileAvatarId extends String {
+  _profileAvatarIdBrand: string
+}
+export interface NotificationId extends String {
+  _notificationIdBrand: string
+}
 
-enum UserNameBase {}
-enum ThreadNameBase {}
-enum DeviceNameBase {}
-enum PublicKeyBase {}
-enum PrivateKeyBase {}
-enum MnemonicBase {}
-export type UserName = UserNameBase & string & undefined
-export type ThreadName = ThreadNameBase & string & undefined
-export type DeviceName = DeviceNameBase & string & undefined
-export type PublicKey = PublicKeyBase & string & undefined
-export type PrivateKey = PrivateKeyBase & string & undefined
-export type Mnemonic = MnemonicBase & string & undefined
+export interface UserName extends String {
+  _userNameBrand: string
+}
+export interface ThreadName extends String {
+  _threadNameBrand: string
+}
+export interface DeviceName extends String {
+  _deviceNameBrand: string
+}
+export interface PublicKey extends String {
+  _publicKeyBrand: string
+}
+export interface PrivateKey extends String {
+  _privateKeyBrand: string
+}
+export interface Mnemonic extends String {
+  _mnemonicBrand: string
+}
 
 export enum NotificationType {
   receivedInviteNotification,

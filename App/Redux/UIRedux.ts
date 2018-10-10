@@ -26,7 +26,7 @@ const actions = {
     return () => resolve()
   }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
-    return (image: SharedImage | string) => resolve({ image })
+    return (image: SharedImage | PhotoId) => resolve({ image })
   }),
   updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', (resolve) => {
     return (threadId: ThreadId) => resolve({ threadId })
@@ -90,7 +90,7 @@ export interface UIState {
     readonly error?: Error
   }
   readonly sharingPhoto?: {
-    readonly image?: SharedImage | string
+    readonly image?: SharedImage | PhotoId
     readonly threadId?: ThreadId
     readonly comment?: string
   },

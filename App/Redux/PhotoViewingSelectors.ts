@@ -1,5 +1,6 @@
 import { RootState } from './Types'
 import { ThreadData } from './PhotoViewingRedux'
+import { ThreadId } from '../Models/TextileTypes'
 
 export function defaultThreadData (state: RootState): ThreadData | undefined {
   return Object.keys(state.photoViewing.threads)
@@ -7,8 +8,8 @@ export function defaultThreadData (state: RootState): ThreadData | undefined {
     .find((threadData) => threadData.name === 'default')
 }
 
-export function threadDataByThreadId (state: RootState, id: string): ThreadData | undefined {
-  const threadData = state.photoViewing.threads[id]
+export function threadDataByThreadId (state: RootState, id: ThreadId): ThreadData | undefined {
+  const threadData = state.photoViewing.threads[id as any]
   return threadData
 }
 
