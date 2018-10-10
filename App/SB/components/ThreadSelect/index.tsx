@@ -37,7 +37,10 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
     )
   }
   renderHeader = () => {
-    if (this.props.selectedThreadId) {
+    if (this.props.threads.length < 4) {
+      // Only freeze a top row if the list is on the longer side
+      return (<View/>)
+    } else if (this.props.selectedThreadId) {
       const thread = this.props.threads.find((t) => t.id === this.props.selectedThreadId)
       if (thread) {
         return (
@@ -73,7 +76,11 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
             renderItem={(data: any) => {
               const thread: ThreadData = data.item
               return (
-                <ThreadSelectCard thread={thread} selected={this.props.selectedThreadId === thread.id} disabled={this.props.selectedThreadId === thread.id} onSelect={this.props.selectThread} />
+                <ThreadSelectCard
+                  thread={thread}
+                  selected={this.props.selectedThreadId === thread.id}
+                  disabled={this.props.threads.length >= 4 && this.props.selectedThreadId === thread.id} onSelect={this.props.selectThread}
+                />
               )
             }}
           />

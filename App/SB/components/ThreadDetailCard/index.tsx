@@ -185,7 +185,6 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const imageWidth = WIDTH
   const heightProperties = getHeight(photo.metadata, imageWidth)
   const imageHeight = heightProperties.height
-
   return {
     peerId: photo.author_id,
     dateString,
