@@ -53,7 +53,7 @@ export interface IProcessingWalletImageProps {
   errorMessage?: string,
   retry?: () => void,
   cancel?: () => void,
-  displayError?: (errorMessage: string) => void
+  displayError?: () => void
   height: number
   width: number
 }
@@ -67,7 +67,7 @@ const ProcessingWalletImage = (props: IProcessingWalletImageProps) => {
       <View style={STACK}>
         {displayError && <TouchableOpacity
           /* tslint:disable-next-line */
-          onPress={() => {displayError(errorMessage)}}
+          onPress={displayError}
         >
           <Text style={BUTTON}>error</Text>
         </TouchableOpacity>}
