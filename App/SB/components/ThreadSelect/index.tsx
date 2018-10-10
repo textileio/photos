@@ -79,7 +79,8 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
                 <ThreadSelectCard
                   thread={thread}
                   selected={this.props.selectedThreadId === thread.id}
-                  disabled={this.props.threads.length >= 4 && this.props.selectedThreadId === thread.id} onSelect={this.props.selectThread}
+                  disabled={this.props.threads.length >= 4 && this.props.selectedThreadId === thread.id}
+                  onSelect={this.props.selectThread}
                 />
               )
             }}
