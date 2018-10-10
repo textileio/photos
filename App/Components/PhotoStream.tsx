@@ -40,9 +40,9 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
     }
   }
 
-  onLikes = (photo: Photo) => {
+  onLikes = (photo: Photo, threadId: ThreadId) => {
     return () => {
-      this.props.navigateToLikes(photo.id as PhotoId)
+      this.props.navigateToLikes(photo.id as PhotoId, threadId)
     }
   }
 
@@ -74,7 +74,7 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
             /* tslint:disable-next-line */
             onComment={this._onCommentSelect(item.photo, item.threadId)}
             /* tslint:disable-next-line */
-            onLikes={this.onLikes(item.photo)}
+            onLikes={this.onLikes(item.photo, item.threadId)}
             recentCommentsCount={2}
             maxLinesPerComment={1}
           />
@@ -108,7 +108,7 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
 interface DispatchProps {
   refreshMessages: () => void
   navigateToComments: (photoId: PhotoId, threadId: ThreadId) => void
-  navigateToLikes: (photoId: PhotoId) => void
+  navigateToLikes: (photoId: PhotoId, threadId: ThreadId) => void
   retryShare: (uuid: string) => void
   cancelShare: (uuid: string) => void
 }
@@ -119,8 +119,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     navigateToComments: (id: PhotoId, threadId: ThreadId) => {
       dispatch(UIActions.navigateToCommentsRequest(id, threadId))
     },
-    navigateToLikes: (id: PhotoId) => {
-      dispatch(UIActions.navigateToLikesRequest(id))
+    navigateToLikes: (id: PhotoId, threadId: ThreadId) => {
+      dispatch(UIActions.navigateToLikesRequest(id, threadId))
     },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry( uuid )) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest( uuid )) }
