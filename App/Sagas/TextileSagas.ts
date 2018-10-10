@@ -157,6 +157,7 @@ export function * navigateToThread ( action: ActionType<typeof UIActions.navigat
 export function * navigateToComments ( action: ActionType<typeof UIActions.navigateToCommentsRequest> ) {
   const { photoId, threadId } = action.payload
   if (threadId) {
+    // Required to navigate to a thread photo's comments from the all threads screen
     yield put(PhotoViewingAction.viewThread(threadId))
   }
   yield put(PhotoViewingActions.viewPhoto(photoId))
@@ -164,7 +165,11 @@ export function * navigateToComments ( action: ActionType<typeof UIActions.navig
 }
 
 export function * navigateToLikes ( action: ActionType<typeof UIActions.navigateToLikesRequest> ) {
-  const { photoId } = action.payload
+  const { photoId, threadId } = action.payload
+  if (threadId) {
+    // Required to navigate to a thread photo's likes from the all threads screen
+    yield put(PhotoViewingAction.viewThread(threadId))
+  }
   yield put(PhotoViewingActions.viewPhoto(photoId))
   yield call(NavigationService.navigate, 'LikesScreen')
 }

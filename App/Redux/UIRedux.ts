@@ -77,7 +77,7 @@ const actions = {
     return (photoId: PhotoId, threadId?: ThreadId) => resolve({ photoId, threadId })
   }),
   navigateToLikesRequest: createAction('NAVIGATE_TO_LIKES_REQUEST', (resolve) => {
-    return (photoId: PhotoId) => resolve({ photoId })
+    return (photoId: PhotoId, threadId?: ThreadId) => resolve({ photoId, threadId })
   })
 }
 

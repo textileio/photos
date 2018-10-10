@@ -76,8 +76,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       imageWidth,
       username,
       photoUsername,
-      onComment,
-      onLike
+      onComment
     } = this.props
 
     const { photo } = item
@@ -144,7 +143,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
           <View style={styles.cardFooterTop} >
             {didLike && <Icons name='heart-filled' size={24} style={{ color: Colors.brandPink }} />}
             {!didLike &&
-              <TouchableOpacity onPress={onLike} >
+              <TouchableOpacity onPress={this.onLikePress} >
                 <Icons name='heart' size={24} />
               </TouchableOpacity>
             }
