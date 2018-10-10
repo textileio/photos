@@ -208,7 +208,6 @@ const mapStateToProps = (state) => {
           latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
         }
       })
-      .sort((a, b) => a.updated < b.updated)
   }
 
   const items: [{type: string, photo: Photo, id: PhotoId, threadId: ThreadId, threadName: ThreadName}] = Object.keys(state.photoViewing.threads)
@@ -219,13 +218,7 @@ const mapStateToProps = (state) => {
       })
     )
     .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
-    .sort((a, b) => {
-      if (!a.photo || Date.parse(a.photo.date) < Date.parse(b.photo.date)) {
-        return 1
-      } else {
-        return 0
-      }
-    })
+    .sort((a, b) => new Date(b.photo.date) - new Date(a.photo.date))
 
   const defaultData = defaultThreadData(state)
   const defaultThreadId = defaultData ? defaultData.id : undefined
@@ -261,7 +254,6 @@ const mapStateToProps = (state) => {
 
   return {
     profile,
-    threads,
     items,
     showNotificationsPrompt: state.preferences.tourScreens.notifications && threads,
     services: state.preferences.services,

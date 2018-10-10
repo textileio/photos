@@ -40,6 +40,13 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 20
 
+  _getToast (errorMessage?: string) {
+    return () => {
+      if (errorMessage) {
+        this.refs.toast.show(errorMessage, 2000)
+      }
+    }
+  }
   _getOverlay (item: IPhotoGridType) {
     const processing = item.photo as IProcessingImageProps
     return (
@@ -50,9 +57,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
         /* tslint:disable-next-line */
         cancel={() => { this.props.cancelShare(item.id) }}
         /* tslint:disable-next-line */
-        displayError={(errorMessage) => {
-          this.refs.toast.show(errorMessage, 2000)
-        }}
+        displayError={this._getToast(processing.errorMessage)}
         height={PRODUCT_ITEM_HEIGHT}
         width={PRODUCT_ITEM_HEIGHT}
       />
@@ -116,7 +121,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item) => item.id
+  keyExtractor = (item: IPhotoGridType) => item.id
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -156,7 +161,11 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
             </View>
           )
         }
-        <Toast ref={() => 'toast'} position='center' />
+        <Toast
+          /* tslint:disable-next-line */
+          ref='toast'
+          position='center'
+        />
       </View>
     )
   }

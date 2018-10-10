@@ -126,7 +126,7 @@ const mapStateToProps = (state, ownProps) => {
     .filter(c => c.username !== '' && c.username !== undefined)
 
   const notInThread = contacts.filter(c => !c.included)
-  const popularity = notInThread.sort((a, b) => a.thread_ids.length < b.thread_ids.length)
+  const popularity = notInThread.sort((a, b) => b.thread_ids.length - a.thread_ids.length)
   const topFive = popularity.slice(0, 5)
   const sortedContacts = contacts.sort((a, b) => {
     if (a.username === null || a.username === '') {

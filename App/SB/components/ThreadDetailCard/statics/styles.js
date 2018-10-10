@@ -16,6 +16,7 @@ export default StyleSheet.create({
     marginBottom: 9
   },
   cardHeader: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -23,12 +24,24 @@ export default StyleSheet.create({
     marginTop: 8,
     marginBottom: 8
   },
-  cardAvatar: {},
+  cardAvatar: {
+    justifyContent: 'center'
+  },
   cardAction: {
     fontFamily: 'BentonSans',
     fontSize: 14,
     lineHeight: 14,
     paddingLeft: 4,
+    paddingTop: 4
+  },
+  cardTargetTouch: {
+    flex: 1
+  },
+  cardTarget: {
+    flex: 1,
+    fontFamily: 'BentonSans',
+    fontSize: 14,
+    lineHeight: 14,
     paddingTop: 4
   },
   cardActionName: {
