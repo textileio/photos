@@ -493,32 +493,6 @@ jobs:
             - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                keys:
-                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v2-{{ arch }}-{{ .Branch }}-
-                    - source-v2-{{ arch }}-
-
-            - checkout:
-                path: ~/textile-mobile
-
-            - save_cache:
-                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            - run: yarn install
-
-            - restore_cache:
-                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
-
-
             - restore_cache:
                 key: apk-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
 
@@ -528,13 +502,12 @@ jobs:
                     - android/app/build/outputs/apk
 
     apkrelease:
+        working_directory: ~/textile-mobile
         docker:
             - image: cibuilds/github:0.10
         steps:
             - attach_workspace:
                 at: ~/textile-mobile
-            - checkout:
-                path: ~/textile-mobile
             - deploy:
                 name: release apk
                 command: |
