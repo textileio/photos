@@ -538,6 +538,9 @@ jobs:
                 command: bundle exec fastlane adhoc
                 working_directory: android
 
+            - run:
+                command: mkdir -p ~/dist
+
             - persist_to_workspace:
                 root: ~/dist
                 paths:
