@@ -555,7 +555,7 @@ jobs:
                 name: release apk
                 command: |
                     mkdir -p ~/dist
-                    mv ~/apks/* ~/dist/
+                    mv ~/apk/* ~/dist/
                     ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk ~/dist/
 
 workflows:
