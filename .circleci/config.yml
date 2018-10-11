@@ -1,4 +1,9 @@
 version: 2.1
+
+checkout-linux: &checkout-linux
+  attach_workspace:
+at: /root
+
 jobs:
     lint:
         working_directory: ~/textile-mobile
