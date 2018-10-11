@@ -27,6 +27,7 @@ export function getThreads (state: RootState): ReadonlyArray<ThreadData> {
 export function shouldNavigateToNewThread (state: RootState) {
   return state.photoViewing.navigateToNewThread
 }
+
 export function shouldSelectNewThread (state: RootState) {
   return state.photoViewing.selectToShare
 }

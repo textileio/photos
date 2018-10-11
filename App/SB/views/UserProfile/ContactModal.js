@@ -8,7 +8,15 @@ import { buttonColor1, buttonColor2, buttonColor4 } from '../../../Containers/St
 const ContactModal = (props) => {
   const { width, height, isVisible, onClose } = props
   return (
-    <Modal isVisible={isVisible} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{ width, height, margin: 0, padding: 0, justifyContent: 'flex-end' }}>
+    <Modal
+      isVisible={isVisible}
+      animationIn={'fadeInUp'}
+      animationOut={'fadeOutDown'}
+      avoidKeyboard
+      backdropColor={'#E1E1E1'}
+      backdropOpacity={0.5}
+      style={{ width, height, margin: 0, padding: 0, justifyContent: 'flex-end' }}
+    >
       <View style={[styles.container, { height }]} >
         <View style={styles.header}>
           <Text style={styles.title}>Contact Textile:</Text>

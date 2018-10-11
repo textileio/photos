@@ -173,7 +173,14 @@ class PhotoDetail extends Component {
             <PhotoBoxEmpty style={{ marginBottom: 9, marginTop: 0 }} title='Share in another thread' />
           </TouchableOpacity> }
         </ScrollView>
-        <Modal isVisible={this.state.drawer} animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: 'flex-end' }}>
+        <Modal
+          isVisible={this.state.drawer}
+          animationIn={'fadeInUp'}
+          animationOut={'fadeOutDown'}
+          avoidKeyboard backdropColor={'#E1E1E1'}
+          backdropOpacity={0.5}
+          style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: 'flex-end' }}
+        >
           <ShareToThread
             selector={this.shareIntoThread.bind(this)}
             newThread={this.shareIntoNewThread.bind(this)}

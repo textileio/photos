@@ -46,20 +46,27 @@ class SyncPermissions extends React.Component {
       case 'alwaysAllow':
         info = {
           title: 'Choose, Always Allow',
-          details: 'In the location permission, please select, "Always Allow". It is needed by the app to periodically wake up and ensure you are getting updates to and from your peer network. Without it, the app will provide a lonely experience. We never collect, store, or share your location data.'
+          details: 'In the location permission, please select, "Always Allow". '
+            + 'It is needed by the app to periodically wake up and ensure you are getting updates to and from your peer network. '
+            + 'Without it, the app will provide a lonely experience. We never collect, store, or share your location data.'
         }
         break
       case 'camera':
         info = {
           title: 'Camera Roll',
-          details: 'Textile accesses your camera roll to import any new photos you take after you install the app. Without access to your camera roll, you will have no photos to view or share in the app. Photos added to Textile are privately encrypted - only visible to you ever - and hosted on IPFS. The only time they will ever be visible to anyone else is if you share them with your friends via our shared Threads feature.'
+          details: 'Textile accesses your camera roll to import any new photos you take after you install the app. '
+            + 'Without access to your camera roll, you will have no photos to view or share in the app. '
+            + 'Photos added to Textile are privately encrypted - only visible to you ever - and hosted on IPFS. '
+            + 'The only time they will ever be visible to anyone else is if you share them with your friends via our shared Threads feature.'
         }
         break
       case 'background':
       default:
         info = {
           title: 'Background location',
-          details: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network. Without background location the app will never get any new information, it will be a pretty boring place. We never keep, store, process, or share your location data with anyone or any device.'
+          details: 'Background location allows Textile to wake up periodically to check for updates to your camera roll '
+            + 'and to check for updates on your peer-to-peer network. Without background location the app will never get '
+            + 'any new information, it will be a pretty boring place. We never keep, store, process, or share your location data with anyone or any device.'
         }
     }
     this.setState({ infoVisible: true, info })
@@ -96,7 +103,12 @@ class SyncPermissions extends React.Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <Button disabled={!this.state.cameraRoll || this.state.locationBackground} title={this.state.locationBackground || !this.state.cameraRoll ? '' : 'ok'} color={'#4a4a4a'} buttonStyle={styles.permissionsButtonStyle} onPress={this.toggleBackground.bind(this)} />
+              <Button
+                disabled={!this.state.cameraRoll || this.state.locationBackground}
+                title={this.state.locationBackground || !this.state.cameraRoll ? '' : 'ok'}
+                color={'#4a4a4a'} buttonStyle={styles.permissionsButtonStyle}
+                onPress={this.toggleBackground.bind(this)}
+              />
             </View>
           </View>
         </ScrollView>

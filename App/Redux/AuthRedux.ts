@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { CafeTokens, UserName } from '../Models/TextileTypes'
-import { RootState } from '../Redux/Types'
+import { RootState } from './Types'
 
 const actions = {
   updateReferralCode: createAction('UPDATE_REFERRAL_CODE', (resolve) => {

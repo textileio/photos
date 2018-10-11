@@ -71,7 +71,9 @@ class ThreadsEditFriends extends React.PureComponent {
 
   _select (contact, included) {
     // Toggle the id's selected state in state
-    if (included) return // if the user is already part of the thread
+    if (included) {
+      return // if the user is already part of the thread
+    }
     const state = !this.state.selected[contact.id]
     this.setState({
       selected: { ...this.state.selected, [contact.id]: state }

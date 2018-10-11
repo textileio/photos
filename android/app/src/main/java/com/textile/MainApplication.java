@@ -3,26 +3,27 @@ package com.textile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+
+import java.util.Arrays;
+import java.util.List;
+
+import com.apsl.versionnumber.RNVersionNumberPackage;
+import com.crashlytics.android.Crashlytics;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import io.fabric.sdk.android.Fabric;
 import com.imagepicker.ImagePickerPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
 import com.smixx.fabric.FabricPackage;
 import com.textile.textilenode.TextileNodePackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
-import com.apsl.versionnumber.RNVersionNumberPackage;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -35,20 +36,18 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-        new FabricPackage(),
-        new MainReactPackage(),
-        new RNVersionNumberPackage(),
-        new ReactNativePushNotificationPackage(),
-        new UploaderReactPackage(),
-        new ImagePickerPackage(),
-        new RNBackgroundFetchPackage(),
-        new RNDeviceInfo(),
-        new ReactNativeConfigPackage(),
-        new BackgroundTimerPackage(),
-        new BackgroundTaskPackage(),
-        new RNFSPackage(),
-        new VectorIconsPackage(),
-        new TextileNodePackage()
+          new MainReactPackage(),
+          new RNBackgroundFetchPackage(),
+          new BackgroundTaskPackage(),
+          new ReactNativePushNotificationPackage(),
+          new UploaderReactPackage(),
+          new RNFSPackage(),
+          new ImagePickerPackage(),
+          new ReactNativeConfigPackage(),
+          new FabricPackage(),
+          new BackgroundTimerPackage(),
+          new RNVersionNumberPackage(),
+          new TextileNodePackage()
       );
     }
 
@@ -67,6 +66,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    Fabric.with(this, new Crashlytics());
     BackgroundTaskPackage.useContext(this);
   }
 }

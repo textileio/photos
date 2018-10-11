@@ -18,7 +18,6 @@ class AddThreadScreen extends React.Component {
     const title = params.withPhoto ? 'Next' : 'Create'
     // default to true
     const selectForShare = !!params.selectForShare
-    console.log('selectForShare', selectForShare)
     return {
       headerTitle: 'New Thread',
       headerLeft: (
