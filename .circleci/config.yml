@@ -533,6 +533,8 @@ jobs:
         steps:
             - attach_workspace:
                 at: ~/textile-mobile
+            - checkout:
+                path: ~/textile-mobile
             - deploy:
                 name: release apk
                 command: |
