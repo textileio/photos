@@ -544,7 +544,7 @@ jobs:
             - persist_to_workspace:
                 root: ~/dist
                 paths:
-                    - app/build/outputs/apk
+                    - android/app/build/outputs/apk
 
     apkrelease:
         docker:
