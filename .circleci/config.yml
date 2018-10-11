@@ -539,12 +539,12 @@ jobs:
                 working_directory: android
 
             - save_cache:
-                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+                key: apk-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
                 paths:
                     - android/app/build/outputs/apk
 
             - persist_to_workspace:
-                root: /apks
+                root: ~/textile-mobile
                 paths:
                     - android/app/build/outputs/apk
 
@@ -553,7 +553,7 @@ jobs:
             - image: cibuilds/github:0.10
         steps:
             - attach_workspace:
-                at: /apks
+                at: ~/textile-mobile
             - deploy:
                 name: release apk
                 command: |
