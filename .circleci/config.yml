@@ -539,12 +539,9 @@ jobs:
                 working_directory: android
 
             - run:
-                command: mkdir -p ~/dist
+                command: ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk android/app/build/outputs/apk/
 
-            - persist_to_workspace:
-                root: ~/dist
-                paths:
-                    - android/app/build/outputs/apk
+
 
     apkrelease:
         docker:
