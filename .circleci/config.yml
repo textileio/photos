@@ -538,8 +538,13 @@ jobs:
                 command: bundle exec fastlane adhoc
                 working_directory: android
 
+            - save_cache:
+                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+                paths:
+                    - android/app/build/outputs/apk
+
             - persist_to_workspace:
-                root: apks
+                root: /apks
                 paths:
                     - android/app/build/outputs/apk
 
