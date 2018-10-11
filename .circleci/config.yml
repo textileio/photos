@@ -1,8 +1,8 @@
 version: 2.1
 
 checkout-linux: &checkout-linux
-  attach_workspace:
-at: /root
+    attach_workspace:
+        at: /root
 
 jobs:
     lint:
@@ -541,19 +541,19 @@ jobs:
             - persist_to_workspace:
                 root: ~/dist
                 paths:
-                - app/build/outputs/apk
+                    - app/build/outputs/apk
 
-    apk-release:
+    apkrelease:
         docker:
-        - image: cibuilds/github:0.10
+            - image: cibuilds/github:0.10
         steps:
-        - *checkout-linux
-        - deploy:
-            name: release apk
-            command: |
-                mkdir -p ~/dist
-                mv ~/apks/* ~/dist/
-                ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk ~/dist/
+            - *checkout-linux
+            - deploy:
+                name: release apk
+                command: |
+                    mkdir -p ~/dist
+                    mv ~/apks/* ~/dist/
+                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk ~/dist/
 
 workflows:
     version: 2
@@ -577,6 +577,6 @@ workflows:
                     branches:
                         ignore:
                             - master
-            - apk-release:
+            - apkrelease:
                 requires:
                     - android-deploy-test
