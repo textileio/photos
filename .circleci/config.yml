@@ -479,6 +479,79 @@ jobs:
             - store_artifacts:
                 path: ./ios/sourcemap.js
 
+    android-deploy-test:
+        environment:
+            LC_ALL: en_US.UTF-8
+            LANG: en_US.UTF-8
+        working_directory: ~/textile-mobile
+        docker:
+            - image: circleci/android:api-26-node8-alpha
+        resource_class: large
+        steps:
+            - restore_cache: # If any cache exists, it'll way speedup these checkouts
+                keys:
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
+
+            - checkout:
+                path: ~/textile-mobile
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
+
+            - restore_cache:
+                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+            - restore_cache:
+                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+            - run: yarn install
+
+            - restore_cache:
+                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+
+            - run:
+                command: bundle install
+                working_directory: android
+
+            - save_cache:
+                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+                paths:
+                    - vendor/bundle
+
+            - run:
+                command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
+                working_directory: android
+
+            - run:
+                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+
+            - run:
+                command: bundle exec fastlane adhoc
+                working_directory: android
+
+            - persist_to_workspace:
+                root: ~/dist
+                paths:
+                - apks
+            - store_artifacts:
+                path: ~/dist/apks
+
+    apk-release:
+        docker:
+        - image: cibuilds/github:0.10
+        steps:
+        - *checkout-linux
+        - deploy:
+            name: release apk
+            command: |
+                mkdir -p ~/dist
+                mv ~/android_aar/* ~/dist/
+                ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete android_1.6.12_260 ~/apks/
+
 workflows:
     version: 2
     lint-tests-android-ios:
