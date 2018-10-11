@@ -548,13 +548,13 @@ jobs:
             - image: cibuilds/github:0.10
         steps:
             - attach_workspace:
-                at: /tmp/
+                at: /apks
             - deploy:
                 name: release apk
                 command: |
                     mkdir -p ~/dist
                     mv ~/apk/* ~/dist/
-                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk apks
+                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk android/app/build/outputs/apk
 
 workflows:
     version: 2
