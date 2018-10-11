@@ -51,13 +51,11 @@ class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const viewingThreadId = state.photoViewing.viewingThreadId
+  const threadId = state.photoViewing.viewingThreadId
   let threadName
-  let threadId
-  if (viewingThreadId) {
-    const threadData = threadDataByThreadId(state, viewingThreadId) || {querying: false, photos: [], name: undefined}
-    threadName = threadData.name as ThreadName
-    threadId = viewingThreadId as ThreadId
+  if (threadId) {
+    const threadData = threadDataByThreadId(state, threadId)
+    threadName = threadData ? threadData.name : undefined
   }
   return {
     photo: state.photoViewing.viewingPhoto,

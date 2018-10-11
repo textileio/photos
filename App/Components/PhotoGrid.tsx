@@ -12,7 +12,7 @@ import Toast from 'react-native-easy-toast'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
-import {IPhotoGridType, Photo} from '../Models/TextileTypes'
+import {IPhotoGridType, Photo, PhotoId} from '../Models/TextileTypes'
 import {IProcessingImageProps} from './ProcessingImage'
 import ProgressiveImage from './ProgressiveImage'
 import ProcessingWalletImageCard from './ProcessingWalletImage'
@@ -22,8 +22,8 @@ import { Colors } from '../Themes'
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PhotoGridStyles'
 
 interface DispatchProps {
-  retryShare: (uuid: string) => void
-  cancelShare: (uuid: string) => void
+  retryShare: (uuid: PhotoId) => void
+  cancelShare: (uuid: PhotoId) => void
 }
 
 interface ScreenProps {
@@ -173,8 +173,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry( uuid )) },
-    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest( uuid )) }
+    retryShare: (uuid: PhotoId) => { dispatch(ProcessingImagesActions.retry( uuid )) },
+    cancelShare: (uuid: PhotoId) => { dispatch(ProcessingImagesActions.cancelRequest( uuid )) }
   }
 }
 

@@ -6,6 +6,7 @@ import { FlatList, ViewStyle, View, ListRenderItemInfo, Text, TextStyle } from '
 import { RootState } from '../Redux/Types'
 import Avatar from '../Components/Avatar'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import { PeerId, UserName } from '../Models/TextileTypes'
 
 const CONTAINER: ViewStyle = {
   backgroundColor: '#FAFCFE'
@@ -24,8 +25,8 @@ const LIKE_TEXT: TextStyle = {
 
 interface StateProps {
   likes: ReadonlyArray<{
-    peerId: string,
-    username: string
+    peerId: PeerId,
+    username: UserName
   }>
 }
 
@@ -44,11 +45,11 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
     }
   }
 
-  keyExtractor = (item: { peerId: string; username: string }, index: number) => {
-    return item.username + index
+  keyExtractor = (item: { peerId: PeerId; username: UserName }, index: number) => {
+    return item.username as any + index
   }
 
-  renderItem = (info: ListRenderItemInfo<{ peerId: string; username: string }>) => {
+  renderItem = (info: ListRenderItemInfo<{ peerId: PeerId; username: UserName }>) => {
     const { peerId, username } = info.item
     const defaultSource = require('../SB/views/Notifications/statics/main-image.png')
     return (
@@ -76,9 +77,10 @@ const mapStateToProps = (state: RootState): StateProps => {
     throw Error('No viewing photo')
   }
   const likes = state.photoViewing.viewingPhoto.likes.map((like) => {
+    const username: UserName = like.username || 'unknown' as any
     return {
       peerId: like.author_id,
-      username: like.username || 'unknown'
+      username
     }
   })
   return {

@@ -37,7 +37,7 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
     this.props.refreshMessages()
   }
 
-  _keyExtractor = (item: ThreadData) => item.id
+  _keyExtractor = (item: ThreadData) => item.id as any
 
   render () {
     return (

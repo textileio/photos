@@ -14,7 +14,7 @@ import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
 interface StateProps {
-  image?: SharedImage | string,
+  image?: SharedImage | PhotoId,
   threadId?: ThreadId,
   comment?: string,
   selectedThreadId?: ThreadId
@@ -24,7 +24,7 @@ interface DispatchProps {
   updateComment: (text: string) => void
   cancelShare: () => void
   share: (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => void
-  shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment?: string) => void
+  shareNewThread: (imageId: PhotoId, threadName: string, comment?: string) => void
 }
 
 type Props = DispatchProps & StateProps & NavigationScreenProps
@@ -95,7 +95,7 @@ class AddCaptionScreen extends React.Component<Props> {
     }
   }
 
-  _shareToNewThread (withPhoto: Photo, withThreadName: ThreadName) {
+  _shareToNewThread (withPhoto: Photo, withThreadName: string) {
     this.props.shareNewThread(withPhoto.id, withThreadName, this.props.comment)
   }
 
@@ -174,7 +174,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     updateComment: (text: string) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
     share: (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
+    shareNewThread: (imageId: PhotoId, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
   }
 }
 

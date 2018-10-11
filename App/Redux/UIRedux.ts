@@ -71,7 +71,7 @@ const actions = {
     return (blockId: BlockId) => resolve({blockId})
   }),
   navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', (resolve) => {
-    return (threadId: ThreadId, threadName: string) => resolve({ threadId, threadName })
+    return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
   }),
   navigateToCommentsRequest: createAction('NAVIGATE_TO_COMMENTS_REQUEST', (resolve) => {
     return (photoId: PhotoId, threadId?: ThreadId) => resolve({ photoId, threadId })

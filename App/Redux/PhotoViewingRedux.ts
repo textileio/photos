@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
-import { ThreadId, Photo, PhotoId } from '../Models/TextileTypes'
+import { ThreadId, Photo, PhotoId, ThreadName } from '../Models/TextileTypes'
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
@@ -10,7 +10,7 @@ const actions = {
     return (name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: PhotoId, comment?: string } }) => resolve({ name }, options)
   }),
   threadAdded: createAction('THREAD_ADDED', (resolve) => {
-    return (id: ThreadId, name: string) => resolve({ id, name })
+    return (id: ThreadId, name: ThreadName) => resolve({ id, name })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -58,7 +58,7 @@ export type PhotoViewingAction = ActionType<typeof actions>
 
 export interface ThreadData {
   readonly id: ThreadId
-  readonly name: string
+  readonly name: ThreadName
   readonly querying: boolean
   readonly photos: ReadonlyArray<Photo>
   readonly error?: Error
@@ -118,7 +118,8 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       if (state.threads[id as any]) {
         return state
       }
-      return { ...state, addingThread: undefined, threads: { ...state.threads, [id as any]: { id, name, querying: false, photos: [] } } }
+      const newThreadData: ThreadData = { id, name, querying: false, photos: [] }
+      return { ...state, addingThread: undefined, threads: { ...state.threads, [id as any]: newThreadData } }
     }
     case getType(actions.addThreadError): {
       const { error } = action.payload
@@ -192,9 +193,10 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.viewWalletPhoto): {
       const { photoId } = action.payload
+      const defaultThreadName: ThreadName = 'default' as any
       const defaultThreadData = Object.keys(state.threads)
         .map((key) => state.threads[key]! )
-        .find((threadData) => threadData.name === 'default')
+        .find((threadData) => threadData.name === defaultThreadName)
       if (!defaultThreadData) {
         return state
       }
