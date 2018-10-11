@@ -552,7 +552,7 @@ jobs:
             - deploy:
                 name: release apk
                 command: |
-                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk android/app/build/outputs/apk
+                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk android/app/build/outputs/apk/*.apk
 
 workflows:
     version: 2
