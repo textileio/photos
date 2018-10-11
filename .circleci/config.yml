@@ -493,6 +493,20 @@ jobs:
             - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
+            - restore_cache: # If any cache exists, it'll way speedup these checkouts
+                keys:
+                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                    - source-v2-{{ arch }}-{{ .Branch }}-
+                    - source-v2-{{ arch }}-
+
+            - checkout:
+                path: ~/textile-mobile
+
+            - save_cache:
+                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+                paths:
+                    - ".git"
+
             - restore_cache:
                 key: apk-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
 
