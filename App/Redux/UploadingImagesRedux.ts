@@ -7,7 +7,7 @@ const actions = {
     return (path: string, dataId: PhotoId, attempts: number) => resolve({ path, dataId, attempts })
   }),
   imageUploadProgress: createAction('IMAGE_UPLOAD_PROGRESS', (resolve) => {
-    return (dataId: string, progress: number) => resolve({ dataId, progress })
+    return (dataId: PhotoId, progress: number) => resolve({ dataId, progress })
   }),
   imageUploadComplete: createAction('IMAGE_UPLOAD_COMPLETE', (resolve) => {
     return (dataId: PhotoId, responseCode: string, responseBody: string) => resolve({ dataId, responseCode, responseBody })
@@ -16,7 +16,7 @@ const actions = {
     return (dataId: PhotoId, errorMessage: string) => resolve({ dataId, errorMessage })
   }),
   imageUploadRetried: createAction('IMAGE_UPLOAD_RETRIED', (resolve) => {
-    return (dataId: string) => resolve({ dataId })
+    return (dataId: PhotoId) => resolve({ dataId })
   }),
   imageRemovalComplete: createAction('IMAGE_REMOVAL_COMPLETE', (resolve) => {
     return (dataId: PhotoId) => resolve({ dataId })

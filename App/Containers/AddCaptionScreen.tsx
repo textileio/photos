@@ -12,7 +12,7 @@ import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 // @ts-ignore
 import TextileImage from '../../TextileImage'
-import {Photo, PhotoId, SharedImage, ThreadId, ThreadName} from '../Models/TextileTypes'
+import {Photo, PhotoId, SharedImage, ThreadId, ThreadName, descriminators} from '../Models/TextileTypes'
 import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
@@ -107,10 +107,11 @@ class AddCaptionScreen extends React.Component<Props> {
   }
 
   _renderImage () {
-    if (typeof this.props.image === 'string') {
+    const { image } = this.props
+    if (image && descriminators.isPhotoId(image)) {
       return (
         <TextileImage
-          imageId={this.props.image}
+          imageId={image}
           path={'small'}
           height={70}
           width={70}
@@ -118,8 +119,7 @@ class AddCaptionScreen extends React.Component<Props> {
           style={styles.image}
         />
       )
-    } else if (this.props.image) {
-      const image: SharedImage = this.props.image
+    } else if (image && descriminators.isSharedImage(image)) {
       const sourceUri = image.origURL
       && image.origURL !== ''
         ? image.origURL

@@ -12,30 +12,30 @@ import {
 const initialState = reducer(undefined, {} as any)
 
 const notification1: Notification = {
-  actor_id: 'PeerId' as PeerId,
-  actor_username: 'UserName' as UserName,
-  block_id: 'BlockId' as BlockId,
+  actor_id: 'PeerId' as any,
+  actor_username: 'UserName' as any,
+  block_id: 'BlockId' as any,
   body: 'some photo',
-  data_id: 'TextileId' as TextileId,
+  data_id: 'TextileId' as any,
   date: '1999-01-01T00:00:00Z',
-  id: 'NotificationId' as NotificationId,
+  id: 'NotificationId' as any,
   read: false,
   subject: 'a notification',
-  subject_id: 'TextileId' as TextileId,
+  subject_id: 'TextileId' as any,
   type: 2
 }
 
 const notification2: Notification = {
-  actor_id: 'abc' as PeerId,
-  actor_username: 'UserName' as UserName,
-  block_id: 'BlockId' as BlockId,
+  actor_id: 'abc' as any,
+  actor_username: 'UserName' as any,
+  block_id: 'BlockId' as any,
   body: 'some other photo',
-  data_id: 'TextileId' as TextileId,
+  data_id: 'TextileId' as any,
   date: '1999-01-02T00:00:00Z',
-  id: 'NotificationId' as NotificationId,
+  id: 'NotificationId' as any,
   read: false,
   subject: 'a notification',
-  subject_id: 'TextileId' as TextileId,
+  subject_id: 'TextileId' as any,
   type: 2
 }
 

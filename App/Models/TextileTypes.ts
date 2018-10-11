@@ -5,8 +5,26 @@
 
 import {IProcessingImageProps} from '../Components/ProcessingImage'
 
-export interface TextileId extends String {
-  _textileIdBrand: string
+export const descriminators = {
+  isTextileId: (object: any): object is TextileId => '_textileIdBrand' in object,
+  isBlockId: (object: any): object is BlockId => '_blockIdBrand' in object,
+  isThreadId: (object: any): object is ThreadId => ' _threadIdBrand' in object,
+  isPhotoId: (object: any): object is PhotoId => '_photoIdBrand' in object,
+  isPeerId: (object: any): object is PeerId => '_peerIdBrand' in object,
+  isDeviceId: (object: any): object is DeviceId => '_deviceIdBrand' in object,
+  isProfileAvatarId: (object: any): object is ProfileAvatarId => '_profileAvatarIdBrand' in object,
+  isNotificationId: (object: any): object is NotificationId => '_notificationIdBrand' in object,
+  isUserName: (object: any): object is UserName => '_userNameBrand' in object,
+  isThreadName: (object: any): object is ThreadName => '_threadNameBrand' in object,
+  isDeviceName: (object: any): object is DeviceName => '_deviceNameBrand' in object,
+  isPublicKey: (object: any): object is PublicKey => '_publicKeyBrand' in object,
+  isPrivateKey: (object: any): object is PrivateKey => '_privateKeyBrand' in object,
+  isMnemonic: (object: any): object is Mnemonic => '_mnemonicBrand' in object,
+  isSharedImage: (object: any): object is SharedImage => 'uri' in object && 'path' in object && 'canDelete' in object
+}
+
+export type TextileId = string & {
+  _textileIdBrand: void
 }
 export interface BlockId extends String {
   _blockIdBrand: string
