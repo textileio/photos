@@ -538,6 +538,7 @@ workflows:
                     tags:
                         only: /^android_[0-9.]+_[0-9]+/
                     branches:
+                        ignore: /.*/
             - android-apk-release:
                 requires:
                     - android-release
@@ -545,4 +546,4 @@ workflows:
                     tags:
                         only: /^android_[0-9.]+_[0-9]+/
                     branches:
-ignore: /.*/
+                        ignore: /.*/
