@@ -10,6 +10,7 @@ import { RootState, RootAction } from '../Redux/Types'
 import TriggersActions from '../Redux/TriggersRedux'
 
 // Styles
+// @ts-ignore
 import styles from './Styles/RootContainerStyles'
 
 interface StateProps {
@@ -49,6 +50,7 @@ class RootContainer extends Component<StateProps & DispatchProps> {
   watchPosition () {
     // Only watchPosition if the user has enabled it in settings
     if (this.props.monitorLocation) {
+      // @ts-ignore
       navigator.geolocation.watchPosition(this.handleNewPosition.bind(this), undefined, { useSignificantChanges: true })
     }
   }

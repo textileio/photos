@@ -13,6 +13,7 @@ import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select, take, fork } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
+// @ts-ignore
 import Config from 'react-native-config'
 import NavigationService from '../Services/NavigationService'
 import TextileNode from '../../TextileNode'
@@ -32,6 +33,7 @@ import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
+// @ts-ignore
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
 import {logNewEvent} from './DeviceLogs'
@@ -466,6 +468,7 @@ export function * backgroundLocationPermissionsTrigger () {
       message: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.'
     })
   } else {
+    // @ts-ignore
     yield call(navigator.geolocation.requestAuthorization)
   }
 }

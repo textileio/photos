@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import { View } from 'react-native'
 import { StyleProp, ImageStyle, Platform } from 'react-native'
+// @ts-ignore
 import TextileImage from '../../TextileImage'
 
 export interface IProgressiveImageProps {

@@ -30,6 +30,7 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps
 
 class Comments extends Component<Props> {
+  // @ts-ignore
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>

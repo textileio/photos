@@ -7,12 +7,14 @@ import { NavigationActions } from 'react-navigation'
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import KeyboardResponsiveContainer from '../../../Components/KeyboardResponsiveContainer'
+// @ts-ignore
 import BottomDrawerList from '../../components/BottomDrawerList'
 import CommentCard, { Props as CommentCardProps } from '../../components/CommentCard'
 import CommentBox from '../../components/CommentBox/CommentBox'
 
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 
+// @ts-ignore
 import styles from './statics/styles'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
@@ -43,6 +45,7 @@ interface State {
 type Props = StateProps & DispatchProps
 
 class ThreadPhotoDetail extends Component<Props, State> {
+  // @ts-ignore
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>

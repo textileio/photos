@@ -6,7 +6,9 @@ import { RootState } from '../../../Redux/Types'
 
 import {ThreadData} from '../../../Redux/PhotoViewingRedux'
 import {Photo, ThreadId} from '../../../Models/TextileTypes'
+// @ts-ignore
 import PhotoWithTextBox from '../PhotoWithTextBox'
+// @ts-ignore
 import RadioButton from '../../components/RadioButton'
 
 import styles from './statics/styles'
