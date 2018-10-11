@@ -536,9 +536,7 @@ jobs:
             - persist_to_workspace:
                 root: ~/dist
                 paths:
-                - apks
-            - store_artifacts:
-                path: ~/dist/apks
+                - app/build/outputs/apk
 
     apk-release:
         docker:
@@ -549,8 +547,8 @@ jobs:
             name: release apk
             command: |
                 mkdir -p ~/dist
-                mv ~/android_aar/* ~/dist/
-                ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete android_1.6.12_260 ~/apks/
+                mv ~/apks/* ~/dist/
+                ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete test_apk ~/dist/
 
 workflows:
     version: 2
@@ -566,7 +564,7 @@ workflows:
                     branches:
                         ignore:
                             - master
-            - android:
+            - android-deploy-test:
                 requires:
                     - lint
                     - tests
@@ -574,33 +572,6 @@ workflows:
                     branches:
                         ignore:
                             - master
-            - ios:
+            - apk-release:
                 requires:
-                    - lint
-                    - tests
-                filters:
-                    branches:
-                        ignore:
-                            - master
-            - ios-adhoc:
-                filters:
-                    branches:
-                        only:
-                            - master
-            - android-adhoc:
-                filters:
-                    branches:
-                        only:
-                            - master
-            - ios-release:
-                filters:
-                    tags:
-                        only: /^ios_[0-9.]+_[0-9]+/
-                    branches:
-                        ignore: /.*/
-            - android-release:
-                filters:
-                    tags:
-                        only: /^android_[0-9.]+_[0-9]+/
-                    branches:
-                        ignore: /.*/
+                    - android-deploy-test
