@@ -132,7 +132,6 @@ jobs:
                     mkdir -p test-results/fastlane
                     bundle exec fastlane test
                     mv fastlane/report.xml test-results/fastlane
-
             - store_test_results:
                 path: android/test-results
 
@@ -242,6 +241,23 @@ jobs:
             - store_artifacts:
                 path: ./android/sourcemap.js
 
+            - persist_to_workspace:
+                root: ~/textile-mobile
+                paths:
+                    - android/app/build/outputs/apk
+
+    android-apk-release:
+        working_directory: ~/textile-mobile
+        docker:
+            - image: cibuilds/github:0.10
+        steps:
+            - attach_workspace:
+                at: ~/textile-mobile
+            - deploy:
+                name: release apk
+                command: |
+                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/*.apk
+
     ios:
         macos:
             xcode: "10.0.0"
@@ -318,7 +334,6 @@ jobs:
                     mkdir -p test-results/fastlane test-results/xcode
                     mv fastlane/report.xml test-results/fastlane
                     mv fastlane/test_output/report.junit test-results/xcode/junit.xml
-
             - store_test_results:
                 path: ios/test-results
 
@@ -519,6 +534,14 @@ workflows:
                     branches:
                         ignore: /.*/
             - android-release:
+                filters:
+                    tags:
+                        only: /^android_[0-9.]+_[0-9]+/
+                    branches:
+                        ignore: /.*/
+            - android-apk-release:
+                requires:
+                    - android-release
                 filters:
                     tags:
                         only: /^android_[0-9.]+_[0-9]+/
