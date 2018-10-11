@@ -37,9 +37,9 @@ build/
 local.properties
 *.iml
 
-# VSCode
+# Visual Studio Code
 #
-.vscode
+.vscode/
 
 # node.js
 #
@@ -52,11 +52,6 @@ buck-out/
 \.buckd/
 *.keystore
 
-# Jest
-#
-.jest/
-coverage/
-
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
@@ -64,25 +59,18 @@ coverage/
 # For more information about the recommended setup visit:
 # https://docs.fastlane.tools/best-practices/source-control/
 
-# fastlane specific
-**/fastlane/report.xml
-ios/.env.default
-android/.env.default
-
-# deliver temporary files
-**/fastlane/Preview.html
-
-# snapshot generated screenshots
-**/fastlane/screenshots
-
-# scan temporary files
-**/fastlane/test_output
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
+*/fastlane/test_output
 
 # Bundle artifact
 *.jsbundle
 
+# Jest
+#
+.jest/
+coverage/
+
 # React Native Config
 .env.production
-
-# expo
-.expo

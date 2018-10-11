@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`device logs stories initial state should match initial state 1`] = `
+Object {
+  "logs": Array [],
+}
+`;

@@ -22,7 +22,13 @@ class PermissionsInfo extends Component {
 
   render () {
     return (
-      <Modal isVisible animationIn={'fadeInUp'} animationOut={'fadeOutDown'} avoidKeyboard backdropColor={'#E1E1E1'} backdropOpacity={0.5} style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }}>
+      <Modal
+        isVisible
+        animationIn={'fadeInUp'}
+        animationOut={'fadeOutDown'}
+        avoidKeyboard backdropColor={'#E1E1E1'}
+        backdropOpacity={0.5} style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }}
+      >
         <View style={styles.container} >
           <View style={styles.header}>
             <Text style={styles.title}>{this.props.info.title}</Text>

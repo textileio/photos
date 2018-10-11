@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { Notification } from '../Models/TextileTypes'
 import { PushNotification } from 'react-native-push-notification'
-import { RootState } from '../Redux/Types'
+import { RootState } from './Types'
 
 const actions = {
   readAllNotificationsRequest: createAction('CLEAR_ALL_NOTIFICATIONS_REQUEST', (resolve) => {

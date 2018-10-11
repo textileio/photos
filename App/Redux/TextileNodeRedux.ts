@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
 import { ThreadId, BlockId, Photo, PhotoId, PhotoMetadata, NodeOverview } from '../Models/TextileTypes'
-import {RootState} from './Types'
+import { RootState } from './Types'
 
 const actions = {
   appStateChange: createAction('APP_STATE_CHANGE', (resolve) => {

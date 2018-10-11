@@ -9,7 +9,7 @@ class Underline extends Component {
     duration: PropTypes.number,
     highlightColor: PropTypes.string,
     borderColor: PropTypes.string
-  };
+  }
 
   constructor (props) {
     super(props)

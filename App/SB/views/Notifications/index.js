@@ -92,7 +92,16 @@ class Notifications extends React.PureComponent {
                   <View key={i} >
                     <SettingsRow service={service} info={this.props.services[service].info} value={value} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
                     {children && Object.keys(children).map((child, i) =>
-                      <SettingsRow key={i * 33} child service={child} info={this.props.children[child].info} disabled={!value} value={!!this.props.children[child].status} infoPress={this.showInfo.bind(this)} onChange={this.toggleService.bind(this)} />
+                      <SettingsRow
+                        key={i * 33}
+                        child
+                        service={child}
+                        info={this.props.children[child].info}
+                        disabled={!value}
+                        value={!!this.props.children[child].status}
+                        infoPress={this.showInfo.bind(this)}
+                        onChange={this.toggleService.bind(this)}
+                      />
                     )}
                   </View>
                 )

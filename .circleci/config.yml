@@ -27,19 +27,9 @@ jobs:
             - run: yarn install
 
             - run:
-                name: js lint
+                name: lint
                 command: |
-                    mkdir -p lint-results/junit
-                    yarn lint -- --format junit -o reports/junit/js-lint-results.xml
-            - store_test_results:
-                path: lint-results/junit
-            - store_artifacts:
-                path: lint-results/junit
-
-            - run:
-                name: ts lint
-                command: |
-                    yarn tslint
+                    yarn lint
 
             # cache our yarn cache
             - save_cache:
@@ -312,6 +302,9 @@ jobs:
                 key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
                 paths:
                     - vendor/bundle
+
+            - run:
+                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
                 command: bundle exec fastlane test
