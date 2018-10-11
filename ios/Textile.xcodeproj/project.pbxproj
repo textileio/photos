@@ -1595,6 +1595,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
+				ENABLE_BITCODE = NO;
 				EXTRA_PACKAGER_ARGS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
@@ -1626,6 +1627,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5VHA5U5FY8;
+				ENABLE_BITCODE = NO;
 				EXTRA_PACKAGER_ARGS = "--sourcemap-output $(PROJECT_DIR)/sourcemap.js";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
