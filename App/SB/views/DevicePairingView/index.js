@@ -71,7 +71,13 @@ class DevicePairing extends React.PureComponent {
     return (
       <View style={styles.contentContainer}>
         <ImageSc style={styles.mainImage} width={125} source={require('./statics/image.png')} />
-        <Text style={styles.deviceId}>There was an issue pairing with your new device. This may be caused by network connectivity or other issues. Please try again. If it continues, please report the issue with Textile.</Text>
+        <Text style={styles.deviceId}>
+          {
+            'There was an issue pairing with your new device. '
+            + 'This may be caused by network connectivity or other issues. '
+            + 'Please try again. If it continues, please report the issue with Textile.'
+          }
+        </Text>
         <Button
           style={styles.button}
           title='Exit'

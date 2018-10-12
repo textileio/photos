@@ -52,7 +52,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
       yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
     }
   }
-​}
+}
 
 // Called whenever someone selects to share from the wallet and then picks a photo
 export function * walletPickerSuccess(action: ActionType<typeof UIActions.walletPickerSuccess>) {

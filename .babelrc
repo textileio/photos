@@ -1,8 +1,3 @@
 {
-  "presets": ["react-native"],
-  "env": {
-    "production": {
-      "plugins": ["ignite-ignore-reactotron"]
-    }
-  }
+  "presets": ["module:metro-react-native-babel-preset"]
 }

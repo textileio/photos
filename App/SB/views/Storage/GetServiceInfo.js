@@ -4,7 +4,9 @@ export default function (service: string): {[index: string]: string} | undefined
       return {
         title: 'Auto pin new photos',
         subtitle: 'Add all new photos to your wallet',
-        details: 'Automatically sync files from your local camera roll to your Textile wallet. This allows you to quickly select photos to share directly from your wallet, cleanup files from your device to save space, and sync to other devices such as your desktop through Textile.'
+        details: 'Automatically sync files from your local camera roll to your Textile wallet. '
+          + 'This allows you to quickly select photos to share directly from your wallet, '
+          + 'cleanup files from your device to save space, and sync to other devices such as your desktop through Textile.'
       }
     // case 'deleteDeviceCopy':
     //   return {
