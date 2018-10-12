@@ -9,17 +9,16 @@ import AppStateEventHander from '../Services/EventHandlers/AppStateEventHandler'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
-import BackgroundTaskEventHandler from '../Services/EventHandlers/BackgroundTaskEventHandler'
+import BackgroundFetchEventHandler from '../Services/EventHandlers/BackgroundFetchEventHandler'
 import NotificationEventHandler from '../Services/EventHandlers/NotificationEventHandler'
 import { errorHandler } from '../Services/ErrorHandler'
 
 const { store, persistor } = configureStore()
 
-const backgroundTaskEventHandler = new BackgroundTaskEventHandler(store)
-
 class App extends Component {
 
   appStateEventHander = new AppStateEventHander(store)
+  backgroundFetchEventHandler = new BackgroundFetchEventHandler(store)
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
@@ -35,10 +34,6 @@ class App extends Component {
     )
   }
 
-  componentDidMount () {
-    backgroundTaskEventHandler.schedule()
-  }
-
   componentWillUnmount () {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
@@ -48,7 +43,7 @@ class App extends Component {
     this.textileNodeEventHandler.tearDown()
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
-    backgroundTaskEventHandler.tearDown()
+    this.backgroundFetchEventHandler.tearDown()
   }
 
   componentDidCatch(error: any, info: any) {

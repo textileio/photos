@@ -20,7 +20,7 @@ import TriggersActions from '../Redux/TriggersRedux'
 
 import { startup } from './StartupSagas'
 
-import { manageNode, backgroundTask, locationUpdate } from './NodeLifecycle'
+import { manageNode, backgroundFetch, locationUpdate } from './NodeLifecycle'
 import { onNodeCreated } from './NodeCreated'
 import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
@@ -115,7 +115,7 @@ export default function * root () {
     takeLatest(getType(StartupActions.startup), startup),
 
     // just for logging purposes
-    takeLatest(getType(TriggersActions.backgroundTask), backgroundTask),
+    takeLatest(getType(TriggersActions.backgroundFetch), backgroundFetch),
     takeLatest(getType(TriggersActions.locationUpdate), locationUpdate),
     takeEvery(getType(ProcessingImagesActions.error), handleImageUploadError),
 

@@ -16,7 +16,6 @@ import com.crashlytics.android.Crashlytics;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import io.fabric.sdk.android.Fabric;
 import com.imagepicker.ImagePickerPackage;
-import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
@@ -38,7 +37,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
           new RNBackgroundFetchPackage(),
-          new BackgroundTaskPackage(),
           new ReactNativePushNotificationPackage(),
           new UploaderReactPackage(),
           new RNFSPackage(),
@@ -67,6 +65,5 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     Fabric.with(this, new Crashlytics());
-    BackgroundTaskPackage.useContext(this);
   }
 }
