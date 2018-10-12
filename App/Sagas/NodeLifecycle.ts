@@ -4,6 +4,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
+import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
 
 import StorageActions from '../Redux/StorageRedux'
@@ -82,6 +83,7 @@ function * backgroundTaskRace () {
     )
   })
   BackgroundTimer.stop()
+  BackgroundFetch.finish(BackgroundFetch.FetchResult.FETCH_RESULT_NEW_DATA)
 }
 
 function * stopNodeAfterDelay (ms: number) {
@@ -113,8 +115,8 @@ function * stopNodeAfterDelay (ms: number) {
   }
 }
 
-export function * backgroundTask () {
-  yield call(logNewEvent, 'Background trigger', 'Check new content')
+export function * backgroundFetch () {
+  yield call(logNewEvent, 'Background fetch trigger', 'Check new content')
 }
 
 export function * locationUpdate () {
