@@ -11,7 +11,6 @@ import { logNewEvent } from './DeviceLogs'
 
 export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLocalPhoto>) {
   const { photo } = action.payload
-  console.log(action.payload)
   const sharedImage: SharedImage = {
     uri: photo.uri,
     path: photo.path,
@@ -64,9 +63,9 @@ export function * refreshLocalImages () {
         // get time last checked
         const lastRefresh = yield select(StorageSelectors.lastPhotoRefresh)
         // scan for images
-        yield call(TextileNode.requestLocalPhotos, lastRefresh)
         // update last time checked to now
         const currentRefresh = (new Date()).getTime()
+        yield call(TextileNode.requestLocalPhotos, lastRefresh)
         yield put(StorageActions.setLocalPhotoRefreshEpoch(currentRefresh))
       }
       yield call(logNewEvent, 'refreshLocalImages', 'success')
