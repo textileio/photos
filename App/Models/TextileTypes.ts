@@ -5,67 +5,21 @@
 
 import {IProcessingImageProps} from '../Components/ProcessingImage'
 
-export const descriminators = {
-  isTextileId: (object: any): object is TextileId => '_textileIdBrand' in object,
-  isBlockId: (object: any): object is BlockId => '_blockIdBrand' in object,
-  isThreadId: (object: any): object is ThreadId => ' _threadIdBrand' in object,
-  isPhotoId: (object: any): object is PhotoId => '_photoIdBrand' in object,
-  isPeerId: (object: any): object is PeerId => '_peerIdBrand' in object,
-  isDeviceId: (object: any): object is DeviceId => '_deviceIdBrand' in object,
-  isProfileAvatarId: (object: any): object is ProfileAvatarId => '_profileAvatarIdBrand' in object,
-  isNotificationId: (object: any): object is NotificationId => '_notificationIdBrand' in object,
-  isUserName: (object: any): object is UserName => '_userNameBrand' in object,
-  isThreadName: (object: any): object is ThreadName => '_threadNameBrand' in object,
-  isDeviceName: (object: any): object is DeviceName => '_deviceNameBrand' in object,
-  isPublicKey: (object: any): object is PublicKey => '_publicKeyBrand' in object,
-  isPrivateKey: (object: any): object is PrivateKey => '_privateKeyBrand' in object,
-  isMnemonic: (object: any): object is Mnemonic => '_mnemonicBrand' in object,
-  isSharedImage: (object: any): object is SharedImage => 'uri' in object && 'path' in object && 'canDelete' in object
-}
+export type TextileId = string & { _textileIdBrand: void }
+export type BlockId = string & { _blockIdBrand: void }
+export type ThreadId = string & { _threadIdBrand: void }
+export type PhotoId = string & { _photoIdBrand: void }
+export type PeerId = string & { _peerIdBrand: void }
+export type DeviceId = string & { _deviceIdBrand: void }
+export type ProfileAvatarId = string & { _profileAvatarIdBrand: void }
+export type NotificationId = string & { _notificationIdBrand: void }
 
-export type TextileId = string & {
-  _textileIdBrand: void
-}
-export interface BlockId extends String {
-  _blockIdBrand: string
-}
-export interface ThreadId extends String {
-  _threadIdBrand: string
-}
-export interface PhotoId extends String {
-  _photoIdBrand: string
-}
-export interface PeerId extends String {
-  _peerIdBrand: string
-}
-export interface DeviceId extends String {
-  _deviceIdBrand: string
-}
-export interface ProfileAvatarId extends String {
-  _profileAvatarIdBrand: string
-}
-export interface NotificationId extends String {
-  _notificationIdBrand: string
-}
-
-export interface UserName extends String {
-  _userNameBrand: string
-}
-export interface ThreadName extends String {
-  _threadNameBrand: string
-}
-export interface DeviceName extends String {
-  _deviceNameBrand: string
-}
-export interface PublicKey extends String {
-  _publicKeyBrand: string
-}
-export interface PrivateKey extends String {
-  _privateKeyBrand: string
-}
-export interface Mnemonic extends String {
-  _mnemonicBrand: string
-}
+export type UserName = string & { _userNameBrand: void }
+export type ThreadName = string & { _threadNameBrand: void }
+export type DeviceName = string & { _deviceNameBrand: void }
+export type PublicKey = string & { _publicKeyBrand: void }
+export type PrivateKey = string & { _privateKeyBrand: void }
+export type Mnemonic = string & { _mnemonicBrand: void }
 
 export enum NotificationType {
   receivedInviteNotification,

@@ -12,7 +12,7 @@ import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 // @ts-ignore
 import TextileImage from '../../TextileImage'
-import {Photo, PhotoId, SharedImage, ThreadId, ThreadName, descriminators} from '../Models/TextileTypes'
+import {Photo, PhotoId, SharedImage, ThreadId, ThreadName} from '../Models/TextileTypes'
 import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
@@ -108,26 +108,24 @@ class AddCaptionScreen extends React.Component<Props> {
 
   _renderImage () {
     const { image } = this.props
-    if (image && descriminators.isPhotoId(image)) {
+    if (image && (image as SharedImage).origURL) {
+      const sharedImage = image as SharedImage
+      const sourceUri = sharedImage.origURL && sharedImage.origURL !== '' ? sharedImage.origURL : sharedImage.uri
+      return (
+        <Image
+          // @ts-ignore
+          source={{ uri: sourceUri, isStatic: true }}
+          resizeMode={'cover'}
+          style={styles.image}
+        />
+      )
+    } else if (image && typeof image === 'string') {
       return (
         <TextileImage
           imageId={image}
           path={'small'}
           height={70}
           width={70}
-          resizeMode={'cover'}
-          style={styles.image}
-        />
-      )
-    } else if (image && descriminators.isSharedImage(image)) {
-      const sourceUri = image.origURL
-      && image.origURL !== ''
-        ? image.origURL
-        : image.uri
-      return (
-        <Image
-          // @ts-ignore
-          source={{ uri: sourceUri, isStatic: true }}
           resizeMode={'cover'}
           style={styles.image}
         />
