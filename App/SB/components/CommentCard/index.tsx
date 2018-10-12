@@ -6,10 +6,11 @@ import Avatar from '../../../Components/Avatar'
 
 // @ts-ignore
 import styles from './statics/styles'
+import { PeerId } from '../../../Models/TextileTypes'
 
 export interface Props {
   username: string
-  peerId?: string,
+  peerId?: PeerId,
   comment: string
   date: string
   isCaption: boolean

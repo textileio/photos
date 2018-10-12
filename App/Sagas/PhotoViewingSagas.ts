@@ -18,7 +18,7 @@ export function * monitorNewThreadActions () {
     const photoToShare: { threadName: string, imageId: PhotoId, comment?: string} | undefined = yield select(photoToShareToNewThread)
     yield put(PhotoViewingActions.clearNewThreadActions())
     const { id, name } = action.payload
-    if (photoToShare && photoToShare.threadName === name) {
+    if (photoToShare && photoToShare.threadName === name as any) {
       const { imageId, comment } = photoToShare
       yield call(shareWalletImage, imageId, id, comment)
     }
@@ -68,7 +68,7 @@ export function * refreshThread (action: ActionType<typeof PhotoViewingActions.r
   const { threadId } = action.payload
   try {
     const photos: Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
-    yield put(PhotoViewingActions.refreshThreadSuccess(threadId as string, photos))
+    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photos))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
   }

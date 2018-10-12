@@ -4,7 +4,7 @@ import { ThreadId, Photo, PhotoId, ThreadName } from '../Models/TextileTypes'
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
-    return (id: ThreadId, name: string) => resolve({ id, name })
+    return (id: ThreadId, name: ThreadName) => resolve({ id, name })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
     return (name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: PhotoId, comment?: string } }) => resolve({ name }, options)

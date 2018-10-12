@@ -108,7 +108,7 @@ class AddCaptionScreen extends React.Component<Props> {
 
   _renderImage () {
     const { image } = this.props
-    if (image && (image as SharedImage).origURL) {
+    if ((image as SharedImage).uri) {
       const sharedImage = image as SharedImage
       const sourceUri = sharedImage.origURL && sharedImage.origURL !== '' ? sharedImage.origURL : sharedImage.uri
       return (

@@ -71,7 +71,7 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
             data={this.props.threads}
             ListFooterComponent={this.renderCreateThread}
             /* tslint:disable-next-line */
-            keyExtractor={(item: ThreadData) => item.id}
+            keyExtractor={(item: ThreadData) => item.id as any}
             /* tslint:disable-next-line */
             renderItem={(data: any) => {
               const thread: ThreadData = data.item
@@ -97,9 +97,10 @@ const mapStateToProps = (state: RootState): StateProps  => {
 
   const allThreads = getThreads(state)
   let threads: ThreadData[] = []
+  const defaultThreadName: ThreadName = 'default' as any
   if (allThreads.length > 0) {
     threads = allThreads
-      .filter((thread) => thread.name !== 'default')
+      .filter((thread) => thread.name !== defaultThreadName)
   }
 
   return {

@@ -25,8 +25,8 @@ import { Colors } from '../Themes'
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PhotoGridStyles'
 
 interface DispatchProps {
-  retryShare: (uuid: PhotoId) => void
-  cancelShare: (uuid: PhotoId) => void
+  retryShare: (uuid: string) => void
+  cancelShare: (uuid: string) => void
 }
 
 interface ScreenProps {
@@ -53,13 +53,14 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   }
   _getOverlay (item: IPhotoGridType) {
     const processing = item.photo as IProcessingImageProps
+    const id = item.id as string // We know this is a processing image so the id is a string
     return (
       <ProcessingWalletImageCard
         {...processing}
         /* tslint:disable-next-line */
-        retry={() => { this.props.retryShare(item.id) }}
+        retry={() => { this.props.retryShare(id) }}
         /* tslint:disable-next-line */
-        cancel={() => { this.props.cancelShare(item.id) }}
+        cancel={() => { this.props.cancelShare(id) }}
         /* tslint:disable-next-line */
         displayError={this._getToast(processing.errorMessage)}
         height={PRODUCT_ITEM_HEIGHT}
@@ -86,7 +87,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
           >
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
-                imageId={row.item.id}
+                imageId={row.item.id as PhotoId}
                 path={'small'}
                 previewPath={'thumb'}
                 style={styles.itemImage}
@@ -125,7 +126,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item: IPhotoGridType) => item.id
+  keyExtractor = (item: IPhotoGridType) => item.id as string
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -177,8 +178,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    retryShare: (uuid: PhotoId) => { dispatch(ProcessingImagesActions.retry( uuid )) },
-    cancelShare: (uuid: PhotoId) => { dispatch(ProcessingImagesActions.cancelRequest( uuid )) }
+    retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
+    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) }
   }
 }
 

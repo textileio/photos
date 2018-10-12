@@ -13,7 +13,7 @@ import UIActions from '../../../Redux/UIRedux'
 import styles from './statics/styles'
 import Icons from '../../../Components/Icons'
 import Colors from '../../../Themes/Colors'
-import {Photo, BlockId, ThreadName, ThreadId} from '../../../Models/TextileTypes'
+import {Photo, BlockId, ThreadName, ThreadId, PeerId} from '../../../Models/TextileTypes'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
 
@@ -29,7 +29,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  peerId: string
+  peerId: PeerId
   dateString: string
   defaultSource?: number | ImageURISource
   didLike: boolean
@@ -100,7 +100,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
 
     const recentComments = photo.comments.slice(0, this.props.recentCommentsCount).reverse().map((comment, index) => {
       const username = comment.username || 'unknown'
-      return <KeyValueText key={index} keyString={username} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
+      return <KeyValueText key={index} keyString={username as string} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
     })
 
     let commentCountDescription
@@ -177,7 +177,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const dateString = date.fromNow()
   const selfId = profile && profile.id
 
-  const username = profile ? (profile.username || 'unknown') : 'unknown'
+  const username = profile ? (profile.username as any || 'unknown') : 'unknown'
   const photoUsername = photo.username ? photo.username : photo.author_id.substring(0, 8)
 
   const defaultSource = require('../../views/Notifications/statics/main-image.png')

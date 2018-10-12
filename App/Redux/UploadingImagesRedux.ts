@@ -92,9 +92,9 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
     }
     case getType(actions.imageUploadProgress): {
       const { dataId, progress } = action.payload
-      const image = state.images[dataId]
+      const image = state.images[dataId as any]
       const updated: UploadingImage = { ...image, state: 'uploading', uploadProgress: progress / 100 }
-      return { ...state, images: { ...state.images, [dataId]: updated } }
+      return { ...state, images: { ...state.images, [dataId as any]: updated } }
     }
     case getType(actions.imageUploadComplete): {
       const { dataId, responseCode, responseBody } = action.payload
@@ -115,14 +115,14 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
     }
     case getType(actions.imageUploadRetried): {
       const { dataId } = action.payload
-      const image = state.images[dataId]
+      const image = state.images[dataId as any]
       const updated: UploadingImage = {
         ...image,
         state: 'pending',
         uploadProgress: 0,
         errorMessage: undefined
       }
-      return { ...state, images: { ...state.images, [dataId]: updated } }
+      return { ...state, images: { ...state.images, [dataId as any]: updated } }
     }
     case getType(actions.imageRemovalComplete): {
       const { dataId } = action.payload

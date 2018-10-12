@@ -3,9 +3,10 @@ import { View } from 'react-native'
 import { StyleProp, ImageStyle, Platform } from 'react-native'
 // @ts-ignore
 import TextileImage from '../../TextileImage'
+import { PhotoId } from '../Models/TextileTypes'
 
 export interface IProgressiveImageProps {
-  imageId: string,
+  imageId: PhotoId,
   path: string,
   previewPath?: string,
   isVisible?: boolean,
