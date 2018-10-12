@@ -60,12 +60,12 @@ export function * refreshLocalImages () {
     try {
       const autoPinEnabled = yield select(PreferencesSelectors.autoPinStatus)
       if (autoPinEnabled) {
-        const currentRefresh = (new Date()).getTime()
         // get time last checked
         const lastRefresh = yield select(StorageSelectors.lastPhotoRefresh)
-        // scan for images
-        yield call(TextileNode.requestLocalPhotos, lastRefresh)
         // update last time checked to now
+        const currentRefresh = (new Date()).getTime()
+        yield call(TextileNode.requestLocalPhotos, lastRefresh)
+          // scan for images
         yield put(StorageActions.setLocalPhotoRefreshEpoch(currentRefresh))
       }
       yield call(logNewEvent, 'refreshLocalImages', 'success')

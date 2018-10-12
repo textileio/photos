@@ -84,10 +84,16 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
         // Get the original filename to keep it straight on the system.
         // Alternatively could probably just use timestamp, but this doesn't seem to have any lag
         NSArray *resources = [PHAssetResource assetResourcesForAsset:asset];
+
+
         NSString *orgFilename = ((PHAssetResource*)resources[0]).originalFilename;
         NSString *extension = [orgFilename pathExtension];
 
-        if( [extension caseInsensitiveCompare:@"heic"] == NSOrderedSame ) {
+        // Check that this isn't a metadata edit only. adjustmentTimestamp should be pixel changes
+        NSDate *adjDate = [asset valueForKey:@"adjustmentTimestamp"];
+        if (adjDate != nil && [epochNSDate timeIntervalSinceDate:adjDate] > 0 ) {
+          return;
+        } else if ( [extension caseInsensitiveCompare:@"heic"] == NSOrderedSame ) {
           // If the file is HEIC, first we need to get the real UIImage, then conver to JPG
           PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
           requestOptions.resizeMode   = PHImageRequestOptionsResizeModeExact;
