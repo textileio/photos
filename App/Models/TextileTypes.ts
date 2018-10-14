@@ -31,7 +31,7 @@ export enum NotificationType {
   peerLeftNotification
 }
 
-export interface Notification {
+export interface NotificationData {
   actor_id: PeerId
   actor_username: UserName
   block_id?: BlockId
@@ -45,8 +45,27 @@ export interface Notification {
   type: NotificationType
 }
 
+abstract class Notification {
+  actor_id!: PeerId
+  actor_username!: UserName
+  block_id?: BlockId
+  body!: string
+  date!: string
+  id!: NotificationId
+  read!: boolean
+  subject!: string
+}
+
+export class ThreadNotification extends Notification {
+  threadId!: ThreadId
+}
+
+export class PhotoNotification extends ThreadNotification {
+  photoId!: PhotoId
+}
+
 export interface GetNotificationsResult {
-  items: Notification[]
+  items: NotificationData[]
 }
 
 export interface Thread {

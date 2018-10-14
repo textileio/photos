@@ -15,7 +15,7 @@ import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
 import TextileNode from '../../TextileNode'
-import { NotificationType, PhotoId, ThreadName } from '../Models/TextileTypes'
+import { NotificationType, PhotoId, ThreadName, GetNotificationsResult } from '../Models/TextileTypes'
 import NavigationService from '../Services/NavigationService'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
@@ -120,7 +120,7 @@ export function * refreshNotifications () {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse = yield call(TextileNode.getNotifications, 99)
+    const notificationResponse: GetNotificationsResult = yield call(TextileNode.getNotifications, 99)
     yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.items))
   } catch (error) {
     yield put(NotificationsActions.refreshNotificationsFailure())
