@@ -4763,17 +4763,17 @@ react-native-background-fetch@^2.4.3:
     plist "^2.0.1"
     xcode "^0.9.1"
 
-react-native-background-timer@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-background-timer/-/react-native-background-timer-2.0.1.tgz#ef714a4bfd28fc47cbbd335631b581cf915604a2"
+react-native-background-timer@2.1.0-alpha.6:
+  version "2.1.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/react-native-background-timer/-/react-native-background-timer-2.1.0-alpha.6.tgz#f8495a9c44d80295c088b09c59d88fdf0a8d6ecd"
 
-"react-native-background-upload@https://github.com/textileio/react-native-background-upload#845926d849b29f808da6a7110f50dc14a2f06dfe":
-  version "4.4.0"
-  resolved "https://github.com/textileio/react-native-background-upload#845926d849b29f808da6a7110f50dc14a2f06dfe"
+"react-native-background-upload@https://github.com/textileio/react-native-background-upload#c0b7937bd249e03b0d69b3d9f57fb1d18d305153":
+  version "5.0.0"
+  resolved "https://github.com/textileio/react-native-background-upload#c0b7937bd249e03b0d69b3d9f57fb1d18d305153"
 
-react-native-config@^0.11.5:
+"react-native-config@https://github.com/textileio/react-native-config#bd7d8bd2a431593fdc735df75ceeb863dfdf5823":
   version "0.11.5"
-  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.11.5.tgz#516cb7b6ec437c7739236ca075971db3aabdcb95"
+  resolved "https://github.com/textileio/react-native-config#bd7d8bd2a431593fdc735df75ceeb863dfdf5823"
 
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
@@ -4877,9 +4877,9 @@ react-native-vector-icons@^6.0.2:
     prop-types "^15.6.2"
     yargs "^8.0.2"
 
-react-native-version-number@^0.3.4:
+"react-native-version-number@https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f":
   version "0.3.4"
-  resolved "https://registry.yarnpkg.com/react-native-version-number/-/react-native-version-number-0.3.4.tgz#4850e1a40ea719ee43092812d0693f9dc3be5f40"
+  resolved "https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f"
 
 react-native@0.57.2:
   version "0.57.2"
