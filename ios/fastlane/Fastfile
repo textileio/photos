@@ -57,7 +57,11 @@ platform :ios do
       build_secret: ENV['FABRIC_BUILD_SECRET'],
       groups: 'textile-internal'
     )
-    upload_symbols_to_crashlytics(dsym_path: "./Textile.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
+    upload_symbols_to_crashlytics(
+      binary_path: "./Fabric.framework/uploadDSYM",
+      dsym_path: "./Textile.app.dSYM.zip",
+      api_token: ENV['FABRIC_API_TOKEN']
+    )
   end
 
   desc "Push a new beta build to TestFlight"
