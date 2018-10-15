@@ -25,6 +25,7 @@ import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors } from '../Redux/NotificationsRedux'
 import * as NotificationsServices from '../Services/Notifications'
+import {logNewEvent} from './DeviceLogs'
 
 export function * enable () {
   yield call(NotificationsServices.enable)
@@ -35,6 +36,7 @@ export function * readAllNotifications (action: ActionType<typeof NotificationsA
 }
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
+  yield call(logNewEvent, 'Notifications', 'new request')
   const service = yield select(PreferencesSelectors.service, 'notifications')
   // if No notifications enabled, return
   if (!service || service.status !== true) { return }
@@ -49,6 +51,7 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
   const queriedAppState = yield select(TextileNodeSelectors.appState)
   if (Platform.OS === 'ios' || queriedAppState.match(/background/)) {
     // fire the notification
+    yield call(logNewEvent, 'Notifications', 'creating local')
     yield call(NotificationsServices.createNew, notification)
   }
 }
