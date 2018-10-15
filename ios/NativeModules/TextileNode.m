@@ -94,43 +94,9 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
         if (adjDate != nil && [epochNSDate timeIntervalSinceDate:adjDate] > 0 ) {
           return;
         } else if ( [extension caseInsensitiveCompare:@"heic"] == NSOrderedSame ) {
-          // If the file is HEIC, first we need to get the real UIImage, then conver to JPG
-          PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
-          requestOptions.resizeMode   = PHImageRequestOptionsResizeModeExact;
-          requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-          // Optional way later to get rid of the Event based returns with RN
-          // requestOptions.synchronous = @TRUE;
-          // Make the request for the UIImage
-          [[PHImageManager defaultManager] requestImageForAsset:asset
-                                                     targetSize:PHImageManagerMaximumSize
-                                                    contentMode:PHImageContentModeDefault
-                                                        options:requestOptions
-                                                  resultHandler:^void(UIImage *image, NSDictionary *info) {
-                                                    // Force the HEIC to JPEG, no loss
-                                                    NSData *jpegData = UIImageJPEGRepresentation(image, 1.0);
-                                                    NSString *jpgFilename = [NSString stringWithFormat:@"%@.%@", [orgFilename stringByDeletingPathExtension], @"jpg"];
-
-                                                    // Get our path in the tmp directory
-                                                    NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:jpgFilename];
-
-                                                    // Write the data to the temp file
-                                                    [jpegData writeToFile:path atomically:YES];
-                                                    [self _processImage:asset imageOrientation:1 path:path ];
-                                                  }];
+          [self _processHEIC:asset orgFilename:orgFilename];
         } else {
-          // Get the image data for copying
-          [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation imageOrientation, NSDictionary * _Nullable info) {
-
-            if (imageData) {
-              // If the file isn't a HEIC, just write it to temp and move along.
-              // Get our path in the tmp directory
-              NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:orgFilename];
-
-              // Write the data to the temp file
-              [orgFilename writeToFile:path atomically:YES];
-              [self _processImage:asset imageOrientation:imageOrientation path:path ];
-            }
-          }];
+          [self _processJPG:asset orgFilename:orgFilename];
         }
       }];
     }
@@ -775,6 +741,49 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (void)_refreshMessages:(NSError**)error {
   [self.node refreshMessages:error];
+}
+
+- (void)_processJPG:(PHAsset *)asset orgFilename:(NSString *)orgFilename  {
+  // If the file isn't a HEIC, just write it to temp and move along.
+  [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation imageOrientation, NSDictionary * _Nullable info) {
+    // Got the image data for copying
+    if (imageData) {
+      // Get our path in the tmp directory
+      NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:orgFilename];
+
+      // Write the data to the temp file
+      BOOL *success = [imageData writeToFile:path atomically:YES];
+      if (success) {
+        [self _processImage:asset imageOrientation:imageOrientation path:path ];
+      }
+    }
+  }];
+}
+
+- (void)_processHEIC:(PHAsset *)asset orgFilename:(NSString *)orgFilename {
+  // If the file is HEIC, first we need to get the real UIImage, then conver to JPG
+  PHImageRequestOptions *requestOptions = [[PHImageRequestOptions alloc] init];
+  requestOptions.resizeMode   = PHImageRequestOptionsResizeModeExact;
+  requestOptions.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+  // Optional way later to get rid of the Event based returns with RN
+  // requestOptions.synchronous = @TRUE;
+  // Make the request for the UIImage
+  [[PHImageManager defaultManager] requestImageForAsset:asset
+                                             targetSize:PHImageManagerMaximumSize
+                                            contentMode:PHImageContentModeDefault
+                                                options:requestOptions
+                                          resultHandler:^void(UIImage *image, NSDictionary *info) {
+                                            // Force the HEIC to JPEG, no loss
+                                            NSData *jpegData = UIImageJPEGRepresentation(image, 1.0);
+                                            NSString *jpgFilename = [NSString stringWithFormat:@"%@.%@", [orgFilename stringByDeletingPathExtension], @"jpg"];
+
+                                            // Get our path in the tmp directory
+                                            NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:jpgFilename];
+
+                                            // Write the data to the temp file
+                                            [jpegData writeToFile:path atomically:YES];
+                                            [self _processImage:asset imageOrientation:1 path:path ];
+                                          }];
 }
 
 - (void)_processImage:(PHAsset *)asset imageOrientation:(NSInteger)imageOrientation path:(NSString *)path {
