@@ -1,11 +1,11 @@
 import { Store } from 'redux'
-import BackgroundTask from 'react-native-background-task'
+import BackgroundFetch from 'react-native-background-fetch'
 
 import { RootState } from '../../Redux/Types'
 
 import TriggersActions from '../../Redux/TriggersRedux'
 
-export default class BackgroundTaskEventHandler {
+export default class BackgroundFetchEventHandler {
   store: Store<RootState>
 
   constructor(store: Store<RootState>) {
@@ -13,13 +13,10 @@ export default class BackgroundTaskEventHandler {
     this.setup()
   }
 
-  schedule () {
-    BackgroundTask.schedule({})
-  }
-
   setup () {
-    BackgroundTask.define(() => {
-      this.store.dispatch(TriggersActions.backgroundTask())
+    BackgroundFetch.configure({}, () => {
+      this.store.dispatch(TriggersActions.backgroundFetch())
+    }, (error) => {
     })
   }
 

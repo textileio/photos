@@ -179,7 +179,6 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-background-fetch')
-    compile project(':react-native-background-task')
     compile project(':react-native-push-notification')
     compile project(':react-native-background-upload')
     compile project(':react-native-fs')

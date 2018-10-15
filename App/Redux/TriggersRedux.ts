@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
 const actions = {
-  backgroundTask: createAction('BACKGROUND_TASK'),
+  backgroundFetch: createAction('BACKGROUND_FETCH'),
   locationUpdate: createAction('LOCATION_UPDATE')
 }
 
