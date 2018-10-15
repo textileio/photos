@@ -74,10 +74,6 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
       // Not sure we really need to do the sort... but here it is
       onlyImagesOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:YES]];
 
-
-
-
-
       PHFetchResult *allPhotosResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:onlyImagesOptions];
       [allPhotosResult enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
 
@@ -91,7 +87,13 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
 
         // Check that this isn't a metadata edit only. adjustmentTimestamp should be pixel changes
         NSDate *adjDate = [asset valueForKey:@"adjustmentTimestamp"];
+        // Grab the first creation date for the photo file
+        NSDate *creDate = [asset valueForKey:@"creationDate"];
         if (adjDate != nil && [epochNSDate timeIntervalSinceDate:adjDate] > 0 ) {
+          // if adjustmentTimestamp is less than our filter, we should return
+          return;
+        } else if (adjDate == nil && [epochNSDate timeIntervalSinceDate:creDate] > 0) {
+          // if creation timestamp is less than our filter and the image has never been modified, return
           return;
         } else if ( [extension caseInsensitiveCompare:@"heic"] == NSOrderedSame ) {
           [self _processHEIC:asset orgFilename:orgFilename];
@@ -752,7 +754,7 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
       NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:orgFilename];
 
       // Write the data to the temp file
-      BOOL *success = [imageData writeToFile:path atomically:YES];
+      BOOL success = [imageData writeToFile:path atomically:YES];
       if (success) {
         [self _processImage:asset imageOrientation:imageOrientation path:path ];
       }
@@ -781,8 +783,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
                                             NSString *path = [[NSTemporaryDirectory()stringByStandardizingPath] stringByAppendingPathComponent:jpgFilename];
 
                                             // Write the data to the temp file
-                                            [jpegData writeToFile:path atomically:YES];
-                                            [self _processImage:asset imageOrientation:1 path:path ];
+                                            BOOL success = [jpegData writeToFile:path atomically:YES];
+                                            if (success) {
+                                              [self _processImage:asset imageOrientation:1 path:path ];
+                                            }
                                           }];
 }
 
