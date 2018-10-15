@@ -15,7 +15,17 @@ import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
 import TextileNode from '../../TextileNode'
-import { NotificationType, PhotoId, ThreadName, GetNotificationsResult } from '../Models/TextileTypes'
+import {
+  NotificationType,
+  GetNotificationsResult,
+  ReceivedInviteNotification,
+  PeerJoinedNotification,
+  PeerLeftNotification,
+  DeviceAddedNotification,
+  PhotoAddedNotification,
+  LikeAddedNotification,
+  CommentAddedNotification
+} from '../Models/TextileTypes'
 import NavigationService from '../Services/NavigationService'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
@@ -70,43 +80,32 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
   try {
-    switch (notification.type) {
-      case NotificationType.receivedInviteNotification:
-        yield * waitUntilOnline(1000)
-        yield call(TextileNode.readNotification, notification.id)
-        yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
-        break
-      case NotificationType.commentAddedNotification: {
-        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
-        yield call(TextileNode.readNotification, notification.id)
-        if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
-          yield call(NavigationService.navigate, 'Comments')
-        }
-        break
+    yield call(TextileNode.readNotification, notification.id)
+    if (notification instanceof ReceivedInviteNotification) {
+      yield * waitUntilOnline(1000)
+      yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
+    } else if (notification instanceof DeviceAddedNotification) {
+      // Nothing to do in this case
+    } else if (notification instanceof PhotoAddedNotification || notification instanceof LikeAddedNotification) {
+      const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
+      if (threadData) {
+        yield put(PhotoViewingAction.viewThread(threadData.id))
+        yield put(PhotoViewingAction.viewPhoto(notification.photoId))
+        yield call(NavigationService.navigate, 'PhotoScreen')
       }
-      case NotificationType.photoAddedNotification:
-      case NotificationType.likeAddedNotification: {
-        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
-        yield call(TextileNode.readNotification, notification.id)
-        if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.data_id as PhotoId))
-          yield call(NavigationService.navigate, 'PhotoScreen')
-        }
-        break
+    } else if (notification instanceof CommentAddedNotification) {
+      const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
+      if (threadData) {
+        yield put(PhotoViewingAction.viewThread(threadData.id))
+        yield put(PhotoViewingAction.viewPhoto(notification.photoId))
+        yield call(NavigationService.navigate, 'Comments')
       }
-      case NotificationType.deviceAddedNotification:
-      case NotificationType.peerJoinedNotification:
-      case NotificationType.peerLeftNotification:
-        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.subject_id)
-        yield call(TextileNode.readNotification, notification.id)
-        if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield call(
-            NavigationService.navigate, 'ViewThread', { id: threadData.id, name: threadData.name })
-        }
+    } else if (notification instanceof PeerJoinedNotification || notification instanceof PeerLeftNotification) {
+      const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
+      if (threadData) {
+        yield put(PhotoViewingAction.viewThread(threadData.id))
+        yield call(NavigationService.navigate, 'ViewThread', { id: threadData.id, name: threadData.name })
+      }
     }
   } catch (error) {
     yield put(NotificationsActions.notificationFailure(notification))
@@ -128,12 +127,12 @@ export function * refreshNotifications () {
 }
 
 export function * reviewThreadInvite (action: ActionType<typeof NotificationsActions.reviewNotificationThreadInvite>) {
-  const {notification} = action.payload
+  const { notification } = action.payload
   try {
     const payload = NotificationsServices.toPayload(notification)
     if (!payload) { return }
     yield call(NotificationsServices.displayInviteAlert, payload.message)
-    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.subject as ThreadName))
+    yield put(ThreadsActions.acceptInviteRequest(notification.id, notification.threadName))
   } catch (error) {
     // Ignore invite
   }

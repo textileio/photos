@@ -32,45 +32,110 @@ export enum NotificationType {
 }
 
 export interface NotificationData {
-  actor_id: PeerId
-  actor_username: UserName
-  block_id?: BlockId
+  actor_id: string
+  actor_username: string
+  block_id?: string
   body: string
-  data_id?: TextileId
+  data_id?: string
   date: string
-  id: NotificationId
+  id: string
   read: boolean
   subject: string
-  subject_id: TextileId
+  subject_id: string
   type: NotificationType
 }
 
 export abstract class Notification {
-  actor_id!: PeerId
-  actor_username!: UserName
+  actor_id: PeerId
+  actor_username: UserName
   block_id?: BlockId
-  body!: string
-  date!: string
-  id!: NotificationId
-  read!: boolean
-  subject!: string
+  body: string
+  date: string
+  id: NotificationId
+  read: boolean
+
+  constructor(notificationData: NotificationData) {
+    this.actor_id = notificationData.actor_id as any
+    this.actor_username = notificationData.actor_username as any
+    this.block_id = notificationData.block_id as any
+    this.body = notificationData.body
+    this.date = notificationData.date
+    this.id = notificationData.id as any
+    this.read = notificationData.read
+  }
 }
 
-export class GeneralNotification extends Notification {
+export class ReceivedInviteNotification extends Notification {
+  threadName: ThreadName
 
+  constructor(notificationData: NotificationData) {
+    super(notificationData)
+    this.threadName = notificationData.subject as any
+  }
 }
 
-export class ThreadInviteNotification extends Notification {
-  threadName!: ThreadName
+export class DeviceAddedNotification extends Notification {
 }
 
-export class ThreadNotification extends Notification {
-  threadId!: ThreadId
+export class PhotoAddedNotification extends Notification {
+  threadId: ThreadId
+  threadName: ThreadName
+  photoId: PhotoId
+
+  constructor(notificationData: NotificationData) {
+    super(notificationData)
+    this.threadId = notificationData.subject_id as any
+    this.threadName = notificationData.subject as any
+    this.photoId = notificationData.data_id as any
+  }
 }
 
-export class PhotoNotification extends Notification {
-  threadId!: ThreadId
-  photoId!: PhotoId
+export class CommentAddedNotification extends Notification {
+  threadId: ThreadId
+  threadName: ThreadName
+  photoId: PhotoId
+
+  constructor(notificationData: NotificationData) {
+    super(notificationData)
+    this.threadId = notificationData.subject_id as any
+    this.threadName = notificationData.subject as any
+    this.photoId = notificationData.data_id as any
+  }
+}
+
+export class LikeAddedNotification extends Notification {
+  threadId: ThreadId
+  threadName: ThreadName
+  photoId: PhotoId
+
+  constructor(notificationData: NotificationData) {
+    super(notificationData)
+    this.threadId = notificationData.subject_id as any
+    this.threadName = notificationData.subject as any
+    this.photoId = notificationData.data_id as any
+  }
+}
+
+export class PeerJoinedNotification extends Notification {
+  threadId: ThreadId
+  threadName: ThreadName
+
+  constructor(notificationData: NotificationData) {
+    super(notificationData)
+    this.threadId = notificationData.subject_id as any
+    this.threadName = notificationData.subject as any
+  }
+}
+
+export class PeerLeftNotification extends Notification {
+  threadId: ThreadId
+  threadName: ThreadName
+
+  constructor(notificationData: NotificationData) {
+    super(notificationData)
+    this.threadId = notificationData.subject_id as any
+    this.threadName = notificationData.subject as any
+  }
 }
 
 export interface GetNotificationsResult {
