@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { Notification } from '../Models/TextileTypes'
+import { NotificationData, Notification, GeneralNotification, ThreadNotification, PhotoNotification, NotificationType } from '../Models/TextileTypes'
 import { PushNotification } from 'react-native-push-notification'
 import { RootState } from './Types'
 
@@ -14,7 +14,7 @@ const actions = {
     return () => resolve()
   }),
   refreshNotificationsSuccess: createAction('REFRESH_NOTIFICATIONS_SUCCESS', (resolve) => {
-    return (notifications: Notification[]) => resolve({notifications})
+    return (notifications: NotificationData[]) => resolve({notifications})
   }),
   refreshNotificationsFailure: createAction('REFRESH_NOTIFICATIONS_FAILURE', (resolve) => {
     return () => resolve()
@@ -39,7 +39,7 @@ const actions = {
 export type NotificationsAction = ActionType<typeof actions>
 
 export interface NotificationsState {
-  readonly notifications: ReadonlyArray<Notification>,
+  readonly notifications: ReadonlyArray<GeneralNotification | ThreadNotification | PhotoNotification>,
   refreshing: boolean
 }
 
@@ -60,7 +60,12 @@ export function reducer (state: NotificationsState = initialState, action: Notif
       return { ...state, refreshing: true }
     case getType(actions.refreshNotificationsSuccess):
       // Add it to our list for display
-      const notifications = action.payload.notifications
+      const { notifications } = action.payload
+      const mappedNotifications = notifications.map((notificationData) => {
+        switch (notificationData.type) {
+          case NotificationType.
+        }
+      })
       return { ...state, notifications, refreshing: false }
     case getType(actions.refreshNotificationsFailure):
       return { ...state, refreshing: false }

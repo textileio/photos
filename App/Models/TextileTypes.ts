@@ -45,7 +45,7 @@ export interface NotificationData {
   type: NotificationType
 }
 
-abstract class Notification {
+export abstract class Notification {
   actor_id!: PeerId
   actor_username!: UserName
   block_id?: BlockId
@@ -56,11 +56,20 @@ abstract class Notification {
   subject!: string
 }
 
+export class GeneralNotification extends Notification {
+
+}
+
+export class ThreadInviteNotification extends Notification {
+  threadName!: ThreadName
+}
+
 export class ThreadNotification extends Notification {
   threadId!: ThreadId
 }
 
-export class PhotoNotification extends ThreadNotification {
+export class PhotoNotification extends Notification {
+  threadId!: ThreadId
   photoId!: PhotoId
 }
 
