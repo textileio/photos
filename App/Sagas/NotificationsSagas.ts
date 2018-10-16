@@ -37,22 +37,33 @@ export function * readAllNotifications (action: ActionType<typeof NotificationsA
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
   yield call(logNewEvent, 'Notifications', 'new request')
-  const service = yield select(PreferencesSelectors.service, 'notifications')
-  // if No notifications enabled, return
-  if (!service || service.status !== true) { return }
-  const { notification } = action.payload
-  const type = NotificationType[notification.type] as string
+  try {
+    const service = yield select(PreferencesSelectors.service, 'notifications')
+    // if No notifications enabled, return
+    if (!service || service.status !== true) {
+      return
+    }
+    const {notification} = action.payload
+    const type = NotificationType[notification.type] as string
 
-  // if notifications for this type are not enabled, return
-  const preferences = yield select(PreferencesSelectors.service, type as ServiceType)
-  if (!preferences || preferences.status !== true) { return }
+    // if notifications for this type are not enabled, return
+    const preferences = yield select(PreferencesSelectors.service, type as ServiceType)
+    if (!preferences || preferences.status !== true) {
+      return
+    }
 
-  // Ensure we aren't in the foreground (Android only req)
-  const queriedAppState = yield select(TextileNodeSelectors.appState)
-  if (Platform.OS === 'ios' || queriedAppState.match(/background/)) {
-    // fire the notification
-    yield call(logNewEvent, 'Notifications', 'creating local')
-    yield call(NotificationsServices.createNew, notification)
+    // Ensure we aren't in the foreground (Android only req)
+    const queriedAppState = yield select(TextileNodeSelectors.appState)
+    if (Platform.OS === 'ios' || queriedAppState.match(/background/)) {
+      // fire the notification
+      yield call(logNewEvent, 'Notifications', 'creating local')
+      yield call(NotificationsServices.createNew, notification)
+    } else {
+      yield call(logNewEvent, 'Notifications', 'creating local')
+    }
+  } catch (error) {
+    const message = typeof error === 'string' ? error : error.message
+    yield call(logNewEvent, 'Notifications', message, true)
   }
 }
 
