@@ -16,9 +16,7 @@ const PhotoWithTextBox = props => {
           <TextileImage
             imageId={photo.id}
             path={'small'}
-            style={styles.itemPhoto}
-            width={70}
-            height={50}
+            style={{...styles.itemPhoto, width: 70, height: 50}}
             resizeMode={'cover'}
             capInsets={'true'}
           />

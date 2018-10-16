@@ -32,9 +32,9 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
   android (resizeMode: string) {
     const baseStyle: ImageStyle = {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }
     const previewStyle: ImageStyle[] = [{ backgroundColor: 'transparent'}, baseStyle, this.state.androidPreview ? { height: 0 } : {}]
+    // if no previewPath, don't try and render it here
     return (
       <View style={this.props.style} >
-        // if no previewPath, don't try and render it here
         {this.props.previewPath && <TextileImage
           imageId={this.props.imageId}
           path={this.props.previewPath}
