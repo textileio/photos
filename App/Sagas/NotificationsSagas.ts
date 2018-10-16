@@ -17,14 +17,7 @@ import { ActionType } from 'typesafe-actions'
 import TextileNode from '../../TextileNode'
 import {
   NotificationType,
-  GetNotificationsResult,
-  ReceivedInviteNotification,
-  PeerJoinedNotification,
-  PeerLeftNotification,
-  DeviceAddedNotification,
-  PhotoAddedNotification,
-  LikeAddedNotification,
-  CommentAddedNotification
+  GetNotificationsResult
 } from '../Models/TextileTypes'
 import NavigationService from '../Services/NavigationService'
 
@@ -145,7 +138,7 @@ export function * refreshNotifications () {
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
     const notificationResponse: GetNotificationsResult = yield call(TextileNode.getNotifications, 99)
-    yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.items))
+    yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.items.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))))
   } catch (error) {
     yield put(NotificationsActions.refreshNotificationsFailure())
   }

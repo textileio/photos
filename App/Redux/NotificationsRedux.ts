@@ -6,7 +6,6 @@ import {
 } from '../Models/TextileTypes'
 import { PushNotification } from 'react-native-push-notification'
 import { RootState } from './Types'
-import { toTypedNotification } from '../Services/Notifications'
 
 const actions = {
   readAllNotificationsRequest: createAction('CLEAR_ALL_NOTIFICATIONS_REQUEST', (resolve) => {
@@ -19,7 +18,7 @@ const actions = {
     return () => resolve()
   }),
   refreshNotificationsSuccess: createAction('REFRESH_NOTIFICATIONS_SUCCESS', (resolve) => {
-    return (notifications: NotificationData[]) => resolve({notifications})
+    return (notifications: Notification[]) => resolve({notifications})
   }),
   refreshNotificationsFailure: createAction('REFRESH_NOTIFICATIONS_FAILURE', (resolve) => {
     return () => resolve()
@@ -66,8 +65,7 @@ export function reducer (state: NotificationsState = initialState, action: Notif
     case getType(actions.refreshNotificationsSuccess):
       // Add it to our list for display
       const { notifications } = action.payload
-      const typedNotifications = notifications.map((notificationData) => toTypedNotification(notificationData))
-      return { ...state, notifications: typedNotifications, refreshing: false }
+      return { ...state, notifications, refreshing: false }
     case getType(actions.refreshNotificationsFailure):
       return { ...state, refreshing: false }
     default:
