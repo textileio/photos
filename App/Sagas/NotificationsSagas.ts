@@ -81,30 +81,41 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   const { notification } = action.payload
   try {
     yield call(TextileNode.readNotification, notification.id)
-    if (notification instanceof ReceivedInviteNotification) {
-      yield * waitUntilOnline(1000)
-      yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
-    } else if (notification instanceof DeviceAddedNotification) {
-      // Nothing to do in this case
-    } else if (notification instanceof PhotoAddedNotification || notification instanceof LikeAddedNotification) {
-      const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
-      if (threadData) {
-        yield put(PhotoViewingAction.viewThread(threadData.id))
-        yield put(PhotoViewingAction.viewPhoto(notification.photoId))
-        yield call(NavigationService.navigate, 'PhotoScreen')
+    switch (notification.type) {
+      case NotificationType.commentAddedNotification: {
+        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
+        if (threadData) {
+          yield put(PhotoViewingAction.viewThread(threadData.id))
+          yield put(PhotoViewingAction.viewPhoto(notification.photoId))
+          yield call(NavigationService.navigate, 'Comments')
+        }
+        break
       }
-    } else if (notification instanceof CommentAddedNotification) {
-      const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
-      if (threadData) {
-        yield put(PhotoViewingAction.viewThread(threadData.id))
-        yield put(PhotoViewingAction.viewPhoto(notification.photoId))
-        yield call(NavigationService.navigate, 'Comments')
+      case NotificationType.deviceAddedNotification:
+        break
+      case NotificationType.likeAddedNotification:
+      case NotificationType.photoAddedNotification: {
+        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
+        if (threadData) {
+          yield put(PhotoViewingAction.viewThread(threadData.id))
+          yield put(PhotoViewingAction.viewPhoto(notification.photoId))
+          yield call(NavigationService.navigate, 'PhotoScreen')
+        }
+        break
       }
-    } else if (notification instanceof PeerJoinedNotification || notification instanceof PeerLeftNotification) {
-      const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
-      if (threadData) {
-        yield put(PhotoViewingAction.viewThread(threadData.id))
-        yield call(NavigationService.navigate, 'ViewThread', { id: threadData.id, name: threadData.name })
+      case NotificationType.peerJoinedNotification:
+      case NotificationType.peerLeftNotification: {
+        const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
+        if (threadData) {
+          yield put(PhotoViewingAction.viewThread(threadData.id))
+          yield call(NavigationService.navigate, 'ViewThread', { id: threadData.id, name: threadData.name })
+        }
+        break
+      }
+      case NotificationType.receivedInviteNotification: {
+        yield * waitUntilOnline(1000)
+        yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
+        break
       }
     }
   } catch (error) {

@@ -3,16 +3,10 @@ import {
   NotificationData,
   Notification,
   ReceivedInviteNotification,
-  DeviceAddedNotification,
-  PhotoAddedNotification,
-  CommentAddedNotification,
-  LikeAddedNotification,
-  PeerJoinedNotification,
-  PeerLeftNotification,
-  NotificationType
 } from '../Models/TextileTypes'
 import { PushNotification } from 'react-native-push-notification'
 import { RootState } from './Types'
+import { toTypedNotification } from '../Services/Notifications'
 
 const actions = {
   readAllNotificationsRequest: createAction('CLEAR_ALL_NOTIFICATIONS_REQUEST', (resolve) => {
@@ -50,15 +44,7 @@ const actions = {
 export type NotificationsAction = ActionType<typeof actions>
 
 export interface NotificationsState {
-  readonly notifications: ReadonlyArray<
-    ReceivedInviteNotification |
-    DeviceAddedNotification |
-    PhotoAddedNotification |
-    CommentAddedNotification |
-    LikeAddedNotification |
-    PeerJoinedNotification |
-    PeerLeftNotification
-  >,
+  readonly notifications: ReadonlyArray<Notification>,
   refreshing: boolean
 }
 
@@ -80,26 +66,8 @@ export function reducer (state: NotificationsState = initialState, action: Notif
     case getType(actions.refreshNotificationsSuccess):
       // Add it to our list for display
       const { notifications } = action.payload
-      const mappedNotifications = notifications.map((notificationData) => {
-        switch (notificationData.type) {
-          case NotificationType.receivedInviteNotification:
-            return new ReceivedInviteNotification(notificationData)
-          case NotificationType.deviceAddedNotification:
-            return new DeviceAddedNotification(notificationData)
-          case NotificationType.photoAddedNotification:
-           return new PhotoAddedNotification(notificationData)
-          case NotificationType.commentAddedNotification:
-           return new CommentAddedNotification(notificationData)
-          case NotificationType.likeAddedNotification:
-            return new LikeAddedNotification(notificationData)
-          case NotificationType.peerJoinedNotification:
-            return new PeerJoinedNotification(notificationData)
-          case NotificationType.peerLeftNotification: {
-            return new PeerLeftNotification(notificationData)
-          }
-        }
-      })
-      return { ...state, notifications: mappedNotifications, refreshing: false }
+      const typedNotifications = notifications.map((notificationData) => toTypedNotification(notificationData))
+      return { ...state, notifications: typedNotifications, refreshing: false }
     case getType(actions.refreshNotificationsFailure):
       return { ...state, refreshing: false }
     default:

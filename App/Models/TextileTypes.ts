@@ -32,20 +32,20 @@ export enum NotificationType {
 }
 
 export interface NotificationData {
-  actor_id: string
-  actor_username: string
-  block_id?: string
+  actor_id: PeerId
+  actor_username: UserName
+  block_id?: BlockId
   body: string
   data_id?: string
   date: string
-  id: string
+  id: NotificationId
   read: boolean
   subject: string
   subject_id: string
   type: NotificationType
 }
 
-export abstract class Notification {
+interface BaseNotification {
   actor_id: PeerId
   actor_username: UserName
   block_id?: BlockId
@@ -53,90 +53,58 @@ export abstract class Notification {
   date: string
   id: NotificationId
   read: boolean
-
-  constructor(notificationData: NotificationData) {
-    this.actor_id = notificationData.actor_id as any
-    this.actor_username = notificationData.actor_username as any
-    this.block_id = notificationData.block_id as any
-    this.body = notificationData.body
-    this.date = notificationData.date
-    this.id = notificationData.id as any
-    this.read = notificationData.read
-  }
 }
 
-export class ReceivedInviteNotification extends Notification {
+export type ReceivedInviteNotification = BaseNotification & {
   threadName: ThreadName
-
-  constructor(notificationData: NotificationData) {
-    super(notificationData)
-    this.threadName = notificationData.subject as any
-  }
+  type: NotificationType.receivedInviteNotification
 }
 
-export class DeviceAddedNotification extends Notification {
+export type DeviceAddedNotification = BaseNotification & {
+  type: NotificationType.deviceAddedNotification
 }
 
-export class PhotoAddedNotification extends Notification {
+export type PhotoAddedNotification = BaseNotification & {
   threadId: ThreadId
   threadName: ThreadName
   photoId: PhotoId
-
-  constructor(notificationData: NotificationData) {
-    super(notificationData)
-    this.threadId = notificationData.subject_id as any
-    this.threadName = notificationData.subject as any
-    this.photoId = notificationData.data_id as any
-  }
+  type: NotificationType.photoAddedNotification
 }
 
-export class CommentAddedNotification extends Notification {
+export type CommentAddedNotification = BaseNotification & {
   threadId: ThreadId
   threadName: ThreadName
   photoId: PhotoId
-
-  constructor(notificationData: NotificationData) {
-    super(notificationData)
-    this.threadId = notificationData.subject_id as any
-    this.threadName = notificationData.subject as any
-    this.photoId = notificationData.data_id as any
-  }
+  type: NotificationType.commentAddedNotification
 }
 
-export class LikeAddedNotification extends Notification {
+export type LikeAddedNotification = BaseNotification & {
   threadId: ThreadId
   threadName: ThreadName
   photoId: PhotoId
-
-  constructor(notificationData: NotificationData) {
-    super(notificationData)
-    this.threadId = notificationData.subject_id as any
-    this.threadName = notificationData.subject as any
-    this.photoId = notificationData.data_id as any
-  }
+  type: NotificationType.likeAddedNotification
 }
 
-export class PeerJoinedNotification extends Notification {
+export type PeerJoinedNotification = BaseNotification & {
   threadId: ThreadId
   threadName: ThreadName
-
-  constructor(notificationData: NotificationData) {
-    super(notificationData)
-    this.threadId = notificationData.subject_id as any
-    this.threadName = notificationData.subject as any
-  }
+  type: NotificationType.peerJoinedNotification
 }
 
-export class PeerLeftNotification extends Notification {
+export type PeerLeftNotification = BaseNotification & {
   threadId: ThreadId
   threadName: ThreadName
-
-  constructor(notificationData: NotificationData) {
-    super(notificationData)
-    this.threadId = notificationData.subject_id as any
-    this.threadName = notificationData.subject as any
-  }
+  type: NotificationType.peerLeftNotification
 }
+
+export type Notification =
+  ReceivedInviteNotification |
+  DeviceAddedNotification |
+  PhotoAddedNotification |
+  CommentAddedNotification |
+  LikeAddedNotification |
+  PeerJoinedNotification |
+  PeerLeftNotification
 
 export interface GetNotificationsResult {
   items: NotificationData[]
