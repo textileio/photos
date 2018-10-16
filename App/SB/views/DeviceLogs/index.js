@@ -1,12 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Clipboard, Share } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import moment from 'moment'
+
+import DeviceLogsActions from '../../../Redux/DeviceLogsRedux'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
-import { NavigationActions } from 'react-navigation'
+
 
 class DeviceLogs extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -18,32 +21,20 @@ class DeviceLogs extends React.PureComponent {
           <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
         </TextileHeaderButtons>
       ),
-      headerRight: (
+      headerRight: ([
         <TextileHeaderButtons right>
           <TextileItem title='Share' onPress={params.share} />
-          <TextileItem title='Copy' onPress={params.copy} />
-        </TextileHeaderButtons>
-      )
+          <TextileItem title='Clear' onPress={params.clear} />
+        </TextileHeaderButtons>,
+      ])
     }
   }
 
   componentDidMount () {
     this.props.navigation.setParams({
-      copy: () => { this._copy() },
-      share: () => { this._share() }
+      share: () => { this._share() },
+      clear: () => { this.props.clearLogs() }
     })
-  }
-
-  _copy () {
-    const stringified = this.props.logs.map((item) => {
-      return [
-        moment(item.time).format('LTS'),
-        item.event,
-        item.message,
-        item.error
-      ].join(', \t')
-    }).join(' \n')
-    Clipboard.setString(stringified)
   }
 
   _share () {
@@ -115,7 +106,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return { }
+  return {
+    clearLogs: () => { dispatch(DeviceLogsActions.clearLogs()) }
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeviceLogs)
