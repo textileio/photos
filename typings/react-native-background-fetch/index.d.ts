@@ -9,21 +9,17 @@ declare module 'react-native-background-fetch' {
 
   export function configure(config: Configuration, callbackFn: () => void, failureFn: (error: any) => void): void
 
-  export enum Status {
-    STATUS_RESTRICTED = 0,
-    STATUS_DENIED = 1,
-    STATUS_AVAILABLE = 2
-  }
+  export const STATUS_RESTRICTED = 0
+  export const STATUS_DENIED = 1
+  export const STATUS_AVAILABLE = 2
 
-  export function status(callbackFn: (status: Status) => void): void
+  export function status(callbackFn: (status: number) => void): void
 
-  export enum FetchResult {
-    FETCH_RESULT_NEW_DATA = 0,
-    FETCH_RESULT_NO_DATA = 1,
-    FETCH_RESULT_FAILED = 2
-  }
+  export const FETCH_RESULT_NEW_DATA = 0
+  export const FETCH_RESULT_NO_DATA = 1
+  export const FETCH_RESULT_FAILED = 2
 
-  export function finish(fetchResult: FetchResult): void
+  export function finish(fetchResult: number): void
 
   export function start(successFn: () => void, failureFn: () => void): void
 

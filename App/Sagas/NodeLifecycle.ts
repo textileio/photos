@@ -86,7 +86,7 @@ function * backgroundTaskRace () {
     )
   })
   BackgroundTimer.stop()
-  BackgroundFetch.finish(BackgroundFetch.FetchResult.FETCH_RESULT_NEW_DATA)
+  BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
 }
 
 function * stopNodeAfterDelay (ms: number) {
