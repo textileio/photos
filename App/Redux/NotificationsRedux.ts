@@ -2,7 +2,7 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import {
   NotificationData,
   Notification,
-  ReceivedInviteNotification,
+  ReceivedInviteNotification
 } from '../Models/TextileTypes'
 import { PushNotification } from 'react-native-push-notification'
 import { RootState } from './Types'
