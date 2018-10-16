@@ -43,7 +43,7 @@ const FeedItem = props => {
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
         {!notification.read && !isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
         {!notification.read && isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
-        {notification.read && isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} ><View style={styles.readImage} /></TextileImage>}
+        {notification.read && isPhotoType && <TextileImage style={{width: 40, height: 40, opacity: 0.7}} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
       </View>
     </TouchableOpacity>
   )

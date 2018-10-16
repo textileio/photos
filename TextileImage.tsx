@@ -1,7 +1,7 @@
 import React from 'react'
 import { requireNativeComponent, ImageStyle } from 'react-native'
 
-export interface propTypes {
+export interface Props {
   imageId: string,
   path: string,
   resizeMode: string,
@@ -11,7 +11,7 @@ export interface propTypes {
   onError?: (error: string) => void
 }
 
-export default class TextileImage extends React.Component<propTypes> {
+export default class TextileImage extends React.Component<Props> {
   static propTypes = {}
   static defaultProps = {}
   _onLoaded () {
