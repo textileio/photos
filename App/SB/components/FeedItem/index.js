@@ -19,12 +19,15 @@ const FeedItem = props => {
 
   const isPhotoType = NotificationServices.isPhoto(notification)
 
+  const readStyle = notification.read ? {} : {borderWidth: 2, borderColor: '#ded3ff'}
+
   const leftSource = (
     <Avatar
       width={24}
       height={24}
       peerId={notification.actor_id}
       defaultSource={require('../../../Images/v2/main-image.png')}
+      style={readStyle}
     />)
 
   return (
@@ -40,10 +43,9 @@ const FeedItem = props => {
         <Text style={styles.text}>{payload.feed}</Text>
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
-      <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
-        {!notification.read && !isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
-        {!notification.read && isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
-        {notification.read && isPhotoType && <TextileImage style={{width: 40, height: 40, opacity: 0.7}} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
+      <View style={{ width: 40, height: 40, overflow: 'hidden', opacity: 0.5 }}>
+        {!isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
+        {isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
       </View>
     </TouchableOpacity>
   )
