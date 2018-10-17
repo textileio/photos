@@ -8,12 +8,12 @@ import {
   UserName
 } from '../../Models/TextileTypes'
 
-const id = 'id' as ThreadId
-const name = 'myThread' as ThreadName
+const id: ThreadId = 'id' as any
+const name: ThreadName = 'myThread' as any
 const error = new Error('an error')
-const inviteId = 'invite_id' as BlockId
-const inviteKey = 'a_key' as PrivateKey
-const invite: ExternalInvite = {id: inviteId, inviter: 'tests' as UserName, key: inviteKey}
+const inviteId: BlockId = 'invite_id' as any
+const inviteKey: PrivateKey = 'a_key' as any
+const invite: ExternalInvite = {id: inviteId, inviter: 'tests' as any, key: inviteKey}
 
 const initialState = reducer(undefined, {} as any)
 

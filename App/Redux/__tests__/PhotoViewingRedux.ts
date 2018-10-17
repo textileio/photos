@@ -1,12 +1,12 @@
 import actions, { reducer } from '../PhotoViewingRedux'
-import { ThreadId, Photo, PhotoId, BlockId, PeerId } from '../../Models/TextileTypes'
+import { ThreadId, ThreadName, Photo, PhotoId, BlockId, PeerId } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
-const threadId: ThreadId = 'threadId' as ThreadId
-const threadName = 'threadName'
+const threadId: ThreadId = 'threadId' as any
+const threadName: ThreadName = 'threadName' as any
 const photos: Photo[] = [
-  { id: 'id' as PhotoId, author_id: 'author_id' as PeerId, block_id: 'block_id' as BlockId, date: 'now', comments: [], likes: [] }
+  { id: 'id' as any, author_id: 'author_id' as any, block_id: 'block_id' as any, date: 'now', comments: [], likes: [] }
 ]
 
 describe('photo viewing stories', () => {

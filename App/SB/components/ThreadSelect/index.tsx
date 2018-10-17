@@ -97,9 +97,10 @@ const mapStateToProps = (state: RootState): StateProps  => {
 
   const allThreads = getThreads(state)
   let threads: ThreadData[] = []
+  const defaultThreadName: ThreadName = 'default' as any
   if (allThreads.length > 0) {
     threads = allThreads
-      .filter((thread) => thread.name !== 'default')
+      .filter((thread) => thread.name !== defaultThreadName)
   }
 
   return {

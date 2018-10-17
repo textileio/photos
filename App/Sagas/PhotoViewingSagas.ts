@@ -68,7 +68,7 @@ export function * refreshThread (action: ActionType<typeof PhotoViewingActions.r
   const { threadId } = action.payload
   try {
     const photos: Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
-    yield put(PhotoViewingActions.refreshThreadSuccess(threadId as string, photos))
+    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photos))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
   }

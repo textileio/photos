@@ -2,9 +2,10 @@ import React, { Fragment } from 'react'
 import { View } from 'react-native'
 import { ImageStyle, Platform } from 'react-native'
 import TextileImage from '../../TextileImage'
+import { PhotoId } from '../Models/TextileTypes'
 
 export interface IProgressiveImageProps {
-  imageId: string,
+  imageId: PhotoId,
   path: string,
   previewPath?: string,
   isVisible?: boolean,

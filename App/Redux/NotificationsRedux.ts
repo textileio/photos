@@ -1,5 +1,9 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { Notification } from '../Models/TextileTypes'
+import {
+  NotificationData,
+  Notification,
+  ReceivedInviteNotification
+} from '../Models/TextileTypes'
 import { PushNotification } from 'react-native-push-notification'
 import { RootState } from './Types'
 
@@ -32,7 +36,7 @@ const actions = {
     return (notification: Notification) => resolve({ notification })
   }),
   reviewNotificationThreadInvite: createAction('REVIEW_NOTIFICATION_THREAD_INVITE', (resolve) => {
-    return (notification: Notification) => resolve({ notification })
+    return (notification: ReceivedInviteNotification) => resolve({ notification })
   })
 }
 
@@ -60,7 +64,7 @@ export function reducer (state: NotificationsState = initialState, action: Notif
       return { ...state, refreshing: true }
     case getType(actions.refreshNotificationsSuccess):
       // Add it to our list for display
-      const notifications = action.payload.notifications
+      const { notifications } = action.payload
       return { ...state, notifications, refreshing: false }
     case getType(actions.refreshNotificationsFailure):
       return { ...state, refreshing: false }

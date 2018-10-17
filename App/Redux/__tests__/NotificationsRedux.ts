@@ -1,45 +1,38 @@
 import actions, { reducer, NotificationsState } from '../NotificationsRedux'
 import {
-  BlockId,
-  GetNotificationsResult,
-  Notification,
-  NotificationId,
-  PeerId,
-  TextileId,
-  UserName
+  PhotoAddedNotification,
+  NotificationType
 } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
-const notification1: Notification = {
-  actor_id: 'PeerId' as PeerId,
-  actor_username: 'UserName' as UserName,
-  block_id: 'BlockId' as BlockId,
+const notification1: PhotoAddedNotification = {
+  actor_id: 'PeerId' as any,
+  actor_username: 'UserName' as any,
+  block_id: 'BlockId' as any,
   body: 'some photo',
-  data_id: 'TextileId' as TextileId,
   date: '1999-01-01T00:00:00Z',
-  id: 'NotificationId' as NotificationId,
+  id: 'NotificationId1' as any,
   read: false,
-  subject: 'a notification',
-  subject_id: 'TextileId' as TextileId,
-  type: 2
+  type: NotificationType.photoAddedNotification,
+  threadId: 'threadId1' as any,
+  threadName: 'threadName1' as any,
+  photoId: 'photoId1' as any
 }
 
-const notification2: Notification = {
-  actor_id: 'abc' as PeerId,
-  actor_username: 'UserName' as UserName,
-  block_id: 'BlockId' as BlockId,
-  body: 'some other photo',
-  data_id: 'TextileId' as TextileId,
-  date: '1999-01-02T00:00:00Z',
-  id: 'NotificationId' as NotificationId,
+const notification2: PhotoAddedNotification = {
+  actor_id: 'PeerId' as any,
+  actor_username: 'UserName' as any,
+  block_id: 'BlockId' as any,
+  body: 'some photo',
+  date: '1999-01-01T00:00:00Z',
+  id: 'NotificationId2' as any,
   read: false,
-  subject: 'a notification',
-  subject_id: 'TextileId' as TextileId,
-  type: 2
+  type: NotificationType.photoAddedNotification,
+  threadId: 'threadId2' as any,
+  threadName: 'threadName2' as any,
+  photoId: 'photoId2' as any
 }
-
-const getResult: GetNotificationsResult = {items: [notification1]}
 
 describe('notifications stories', () => {
   describe('initial state', () => {
@@ -54,8 +47,8 @@ describe('notifications stories', () => {
       expect(state0).toMatchObject(match0)
     })
     it('should add notifications', () => {
-      state0 = reducer(state0, actions.refreshNotificationsSuccess(getResult.items))
-      const match1: NotificationsState = {refreshing: false, notifications: getResult.items}
+      state0 = reducer(state0, actions.refreshNotificationsSuccess([notification1]))
+      const match1: NotificationsState = {refreshing: false, notifications: [notification1]}
       expect(state0).toMatchObject(match1)
     })
     it('should add single notifications', () => {

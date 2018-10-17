@@ -5,35 +5,21 @@
 
 import {IProcessingImageProps} from '../Components/ProcessingImage'
 
-enum TextileIdBase {}
-enum BlockIdBase {}
-enum ThreadIdBase {}
-enum PhotoIdBase {}
-enum PeerIdBase {}
-enum DeviceIdBase {}
-enum ProfileAvatarIdBase {}
-enum NotificationIdBase {}
-export type TextileId = TextileIdBase & string & undefined
-export type BlockId = BlockIdBase & string & undefined
-export type ThreadId = ThreadIdBase & string & undefined
-export type PhotoId = PhotoIdBase & string & undefined
-export type PeerId = PeerIdBase & string & undefined
-export type DeviceId = DeviceIdBase & string & undefined
-export type ProfileAvatarId = ProfileAvatarIdBase & string & undefined
-export type NotificationId = NotificationIdBase & string & undefined
+export type TextileId = string & { _textileIdBrand: void }
+export type BlockId = string & { _blockIdBrand: void }
+export type ThreadId = string & { _threadIdBrand: void }
+export type PhotoId = string & { _photoIdBrand: void }
+export type PeerId = string & { _peerIdBrand: void }
+export type DeviceId = string & { _deviceIdBrand: void }
+export type ProfileAvatarId = string & { _profileAvatarIdBrand: void }
+export type NotificationId = string & { _notificationIdBrand: void }
 
-enum UserNameBase {}
-enum ThreadNameBase {}
-enum DeviceNameBase {}
-enum PublicKeyBase {}
-enum PrivateKeyBase {}
-enum MnemonicBase {}
-export type UserName = UserNameBase & string & undefined
-export type ThreadName = ThreadNameBase & string & undefined
-export type DeviceName = DeviceNameBase & string & undefined
-export type PublicKey = PublicKeyBase & string & undefined
-export type PrivateKey = PrivateKeyBase & string & undefined
-export type Mnemonic = MnemonicBase & string & undefined
+export type UserName = string & { _userNameBrand: void }
+export type ThreadName = string & { _threadNameBrand: void }
+export type DeviceName = string & { _deviceNameBrand: void }
+export type PublicKey = string & { _publicKeyBrand: void }
+export type PrivateKey = string & { _privateKeyBrand: void }
+export type Mnemonic = string & { _mnemonicBrand: void }
 
 export enum NotificationType {
   receivedInviteNotification,
@@ -45,22 +31,83 @@ export enum NotificationType {
   peerLeftNotification
 }
 
-export interface Notification {
+export interface NotificationData {
   actor_id: PeerId
   actor_username: UserName
   block_id?: BlockId
   body: string
-  data_id?: TextileId
+  data_id?: string
   date: string
   id: NotificationId
   read: boolean
   subject: string
-  subject_id: TextileId
+  subject_id: string
   type: NotificationType
 }
 
+interface BaseNotification {
+  actor_id: PeerId
+  actor_username: UserName
+  block_id?: BlockId
+  body: string
+  date: string
+  id: NotificationId
+  read: boolean
+}
+
+export type ReceivedInviteNotification = BaseNotification & {
+  threadName: ThreadName
+  type: NotificationType.receivedInviteNotification
+}
+
+export type DeviceAddedNotification = BaseNotification & {
+  type: NotificationType.deviceAddedNotification
+}
+
+export type PhotoAddedNotification = BaseNotification & {
+  threadId: ThreadId
+  threadName: ThreadName
+  photoId: PhotoId
+  type: NotificationType.photoAddedNotification
+}
+
+export type CommentAddedNotification = BaseNotification & {
+  threadId: ThreadId
+  threadName: ThreadName
+  photoId: PhotoId
+  type: NotificationType.commentAddedNotification
+}
+
+export type LikeAddedNotification = BaseNotification & {
+  threadId: ThreadId
+  threadName: ThreadName
+  photoId: PhotoId
+  type: NotificationType.likeAddedNotification
+}
+
+export type PeerJoinedNotification = BaseNotification & {
+  threadId: ThreadId
+  threadName: ThreadName
+  type: NotificationType.peerJoinedNotification
+}
+
+export type PeerLeftNotification = BaseNotification & {
+  threadId: ThreadId
+  threadName: ThreadName
+  type: NotificationType.peerLeftNotification
+}
+
+export type Notification =
+  ReceivedInviteNotification |
+  DeviceAddedNotification |
+  PhotoAddedNotification |
+  CommentAddedNotification |
+  LikeAddedNotification |
+  PeerJoinedNotification |
+  PeerLeftNotification
+
 export interface GetNotificationsResult {
-  items: Notification[]
+  items: NotificationData[]
 }
 
 export interface Thread {

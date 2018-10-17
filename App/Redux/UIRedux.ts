@@ -26,7 +26,7 @@ const actions = {
     return () => resolve()
   }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
-    return (image: SharedImage | string) => resolve({ image })
+    return (image: SharedImage | PhotoId) => resolve({ image })
   }),
   updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', (resolve) => {
     return (threadId: ThreadId) => resolve({ threadId })
@@ -71,7 +71,7 @@ const actions = {
     return (blockId: BlockId) => resolve({blockId})
   }),
   navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', (resolve) => {
-    return (threadId: ThreadId, threadName: string) => resolve({ threadId, threadName })
+    return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
   }),
   navigateToCommentsRequest: createAction('NAVIGATE_TO_COMMENTS_REQUEST', (resolve) => {
     return (photoId: PhotoId, threadId?: ThreadId) => resolve({ photoId, threadId })
@@ -90,7 +90,7 @@ export interface UIState {
     readonly error?: Error
   }
   readonly sharingPhoto?: {
-    readonly image?: SharedImage | string
+    readonly image?: SharedImage | PhotoId
     readonly threadId?: ThreadId
     readonly comment?: string
   },

@@ -12,7 +12,7 @@ import Toast from 'react-native-easy-toast'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
-import {IPhotoGridType, Photo} from '../Models/TextileTypes'
+import {IPhotoGridType, Photo, PhotoId} from '../Models/TextileTypes'
 import {IProcessingImageProps} from './ProcessingImage'
 import ProgressiveImage from './ProgressiveImage'
 import ProcessingWalletImageCard from './ProcessingWalletImage'
@@ -49,13 +49,14 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   }
   _getOverlay (item: IPhotoGridType) {
     const processing = item.photo as IProcessingImageProps
+    const id = item.id as string // We know this is a processing image so the id is a string
     return (
       <ProcessingWalletImageCard
         {...processing}
         /* tslint:disable-next-line */
-        retry={() => { this.props.retryShare(item.id) }}
+        retry={() => { this.props.retryShare(id) }}
         /* tslint:disable-next-line */
-        cancel={() => { this.props.cancelShare(item.id) }}
+        cancel={() => { this.props.cancelShare(id) }}
         /* tslint:disable-next-line */
         displayError={this._getToast(processing.errorMessage)}
         height={PRODUCT_ITEM_HEIGHT}
@@ -82,7 +83,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
           >
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
-                imageId={row.item.id}
+                imageId={row.item.id as PhotoId}
                 path={'small'}
                 previewPath={'thumb'}
                 style={styles.itemImage}
@@ -173,8 +174,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry( uuid )) },
-    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest( uuid )) }
+    retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
+    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) }
   }
 }
 

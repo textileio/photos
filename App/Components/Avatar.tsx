@@ -4,7 +4,7 @@ import ImageSc from 'react-native-scalable-image'
 import { connect } from 'react-redux'
 import { View, ImageURISource, StyleProp, ViewStyle } from 'react-native'
 import TextileImage from '../../TextileImage'
-import { Profile } from '../Models/TextileTypes'
+import { Profile, ProfileAvatarId, PeerId, PhotoId } from '../Models/TextileTypes'
 
 import styles from './Styles/AvatarStyles'
 import { RootState } from '../Redux/Types'
@@ -18,19 +18,20 @@ export interface IAvatarProps extends IPropsFromState {
   height: number
   width: number
   owner?: boolean // flags if it is known already to be the local user's profile
-  peerId?: string // will auto check to see if it is the same as the local user's
+  peerId?: PeerId // will auto check to see if it is the same as the local user's
   defaultSource?: number | ImageURISource
   style?: StyleProp<ViewStyle>
 }
 
 class Avatar extends React.PureComponent<IAvatarProps> {
-  getCafeAddress (peerId: string) {
+  getCafeAddress (peerId: PeerId) {
     return `${Config.TEXTILE_CAFE_URI}/ipns/${peerId}/avatar`
   }
-  photoIdFromAvatar () {
+  photoIdFromAvatar (): PhotoId | undefined {
     const { profile } = this.props
-    const avatarId: string = profile && profile.avatar_id || ''
-    return avatarId && avatarId.split('/').length > 1 && avatarId.split('/')[2]
+    const avatarId: ProfileAvatarId = profile && profile.avatar_id || '' as any
+    const parts = avatarId.split('/')
+    return parts.length > 1 ? parts[2] as any : undefined
   }
   renderSelf () {
     const { height, width, defaultSource, style } = this.props
@@ -63,7 +64,7 @@ class Avatar extends React.PureComponent<IAvatarProps> {
       </View>
     )
   }
-  renderCafe (peerId: string) {
+  renderCafe (peerId: PeerId) {
     const { height, width, defaultSource, style } = this.props
     const avatarUri = this.getCafeAddress(peerId)
     return (

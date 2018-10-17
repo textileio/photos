@@ -3,7 +3,7 @@ import { Mnemonic } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
-const mnemonic = 'mnemonic' as Mnemonic
+const mnemonic: Mnemonic = 'mnemonic' as any
 
 describe('preferences stories', () => {
   describe('initial state', () => {

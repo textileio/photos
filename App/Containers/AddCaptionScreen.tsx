@@ -14,7 +14,7 @@ import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
 interface StateProps {
-  image?: SharedImage | string,
+  image?: SharedImage | PhotoId,
   threadId?: ThreadId,
   comment?: string,
   selectedThreadId?: ThreadId
@@ -24,7 +24,7 @@ interface DispatchProps {
   updateComment: (text: string) => void
   cancelShare: () => void
   share: (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => void
-  shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment?: string) => void
+  shareNewThread: (imageId: PhotoId, threadName: string, comment?: string) => void
 }
 
 type Props = DispatchProps & StateProps & NavigationScreenProps
@@ -95,7 +95,7 @@ class AddCaptionScreen extends React.Component<Props> {
     }
   }
 
-  _shareToNewThread (withPhoto: Photo, withThreadName: ThreadName) {
+  _shareToNewThread (withPhoto: Photo, withThreadName: string) {
     this.props.shareNewThread(withPhoto.id, withThreadName, this.props.comment)
   }
 
@@ -104,26 +104,24 @@ class AddCaptionScreen extends React.Component<Props> {
   }
 
   _renderImage () {
-    if (typeof this.props.image === 'string') {
+    const { image } = this.props
+    if (image && (image as SharedImage).uri) {
+      const sharedImage = image as SharedImage
+      const sourceUri = sharedImage.origURL && sharedImage.origURL !== '' ? sharedImage.origURL : sharedImage.uri
       return (
-        <TextileImage
-          imageId={this.props.image}
-          path={'small'}
+        <Image
+          source={{ uri: sourceUri }}
           resizeMode={'cover'}
           style={{...styles.image, width: 70, height: 70}}
         />
       )
-    } else if (this.props.image) {
-      const image: SharedImage = this.props.image
-      const sourceUri = image.origURL
-      && image.origURL !== ''
-        ? image.origURL
-        : image.uri
+    } else if (image && typeof image === 'string') {
       return (
-        <Image
-          source={{ uri: sourceUri, isStatic: true }}
+        <TextileImage
+          imageId={image}
+          path={'small'}
           resizeMode={'cover'}
-          style={styles.image}
+          style={{...styles.image, width: 70, height: 70}}
         />
       )
     }
@@ -172,7 +170,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     updateComment: (text: string) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
     share: (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    shareNewThread: (imageId: PhotoId, threadName: ThreadName, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
+    shareNewThread: (imageId: PhotoId, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
   }
 }
 

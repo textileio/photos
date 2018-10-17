@@ -11,7 +11,7 @@ import UIActions from '../../../Redux/UIRedux'
 import styles from './statics/styles'
 import Icons from '../../../Components/Icons'
 import Colors from '../../../Themes/Colors'
-import {Photo, BlockId, ThreadName, ThreadId} from '../../../Models/TextileTypes'
+import {Photo, BlockId, ThreadName, ThreadId, PeerId} from '../../../Models/TextileTypes'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
 
@@ -27,7 +27,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  peerId: string
+  peerId: PeerId
   dateString: string
   defaultSource?: number | ImageURISource
   didLike: boolean
@@ -98,7 +98,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
 
     const recentComments = photo.comments.slice(0, this.props.recentCommentsCount).reverse().map((comment, index) => {
       const username = comment.username || 'unknown'
-      return <KeyValueText key={index} keyString={username} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
+      return <KeyValueText key={index} keyString={username as string} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
     })
 
     let commentCountDescription
@@ -132,7 +132,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
         <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
           <View style={styles.imageStretch}>
             <ProgressiveImage
-              imageId={photo.id as string}
+              imageId={photo.id}
               previewPath={'small'}
               path={'medium'}
               style={{...styles.image, width: imageWidth, height: imageHeight}}

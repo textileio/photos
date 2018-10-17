@@ -3,8 +3,8 @@ import { DeviceId, DeviceName } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
-const name = 'deviceName' as DeviceName
-const deviceId = 'someid' as DeviceId
+const name: DeviceName = 'deviceName' as any
+const deviceId: DeviceId = 'someid' as any
 const error = new Error('an error')
 
 describe('devices stories', () => {

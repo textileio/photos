@@ -1,8 +1,8 @@
 import actions, { reducer } from '../UIRedux'
-import { SharedImage, ThreadId } from '../../Models/TextileTypes'
+import { SharedImage, ThreadId, PhotoId } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
-const threadId = 'threadId' as ThreadId
+const threadId: ThreadId = 'threadId' as any
 const comment = 'comment'
 const sharedImage: SharedImage = {
   origURL: 'origURL',
@@ -11,7 +11,7 @@ const sharedImage: SharedImage = {
   canDelete: false
 }
 
-const sharedHash = 'hash'
+const sharedHash: PhotoId = 'hash' as any
 
 describe('ui stories', () => {
   describe('initial state', () => {
