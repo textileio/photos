@@ -1,5 +1,5 @@
 import { delay } from 'redux-saga'
-import { take, call, put, fork, cancelled, race, select } from 'redux-saga/effects'
+import { all, take, call, put, fork, cancelled, race, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
@@ -74,7 +74,7 @@ function * backgroundTaskRace () {
   //
   // Using the race effect, if we get a foreground event while we're waiting
   // to stop the node, cancel the stop and let it keep running
-  BackgroundTimer.start()
+  yield call(BackgroundTimer.start)
   yield race({
     delayAndStopNode: call(stopNodeAfterDelay, 20000),
     foregroundEvent: take(
@@ -82,8 +82,11 @@ function * backgroundTaskRace () {
         action.type === getType(TextileNodeActions.appStateChange) && action.payload.newState === 'active'
     )
   })
-  BackgroundTimer.stop()
-  BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
+  yield all([
+    yield call(BackgroundTimer.stop),
+    yield call(BackgroundFetch.finish, BackgroundFetch.FETCH_RESULT_NEW_DATA)
+  ])
+
 }
 
 function * stopNodeAfterDelay (ms: number) {
