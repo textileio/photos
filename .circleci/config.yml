@@ -489,7 +489,7 @@ jobs:
 
 workflows:
     version: 2
-    lint-tests-android-ios:
+    dev:
         jobs:
             - lint:
                 filters:
@@ -517,6 +517,8 @@ workflows:
                     branches:
                         ignore:
                             - master
+    adhoc:
+        jobs:
             - ios-adhoc:
                 filters:
                     branches:
@@ -527,6 +529,8 @@ workflows:
                     branches:
                         only:
                             - master
+    release:
+        jobs:
             - ios-release:
                 filters:
                     tags:
