@@ -1,4 +1,5 @@
 import NavigationService from './NavigationService'
+// @ts-ignore
 import Config from 'react-native-config'
 import { ExternalInvite, DeepLinkData, ThreadName } from '../Models/TextileTypes'
 

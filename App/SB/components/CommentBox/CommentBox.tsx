@@ -3,6 +3,7 @@ import { View, TextInput, Text, TouchableOpacity } from 'react-native'
 
 import Icons from '../../../Components/Icons'
 
+// @ts-ignore
 import styles from './statics/styles'
 
 interface Props {

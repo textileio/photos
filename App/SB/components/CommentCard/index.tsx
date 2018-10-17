@@ -4,6 +4,7 @@ import { View, Text } from 'react-native'
 import moment from 'moment'
 import Avatar from '../../../Components/Avatar'
 
+// @ts-ignore
 import styles from './statics/styles'
 import { PeerId } from '../../../Models/TextileTypes'
 

@@ -5,6 +5,7 @@ import Wallet from './Wallet'
 import Threads from './Threads'
 import Notifications from './Notifications'
 
+// @ts-ignore
 import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
 
 const nav = createBottomTabNavigator(

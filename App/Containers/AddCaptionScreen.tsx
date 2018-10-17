@@ -2,12 +2,15 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Image, View } from 'react-native'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+// @ts-ignore
 import Input from '../SB/components/Input'
 import {NavigationActions, NavigationScreenProps} from 'react-navigation'
+// @ts-ignore
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import ThreadSelect from '../SB/components/ThreadSelect'
 import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+// @ts-ignore
 import TextileImage from '../../TextileImage'
 import {Photo, PhotoId, SharedImage, ThreadId, ThreadName} from '../Models/TextileTypes'
 import {RootAction, RootState} from '../Redux/Types'

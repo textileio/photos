@@ -1,5 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
+// @ts-ignore
 import Upload from 'react-native-background-upload'
+// @ts-ignore
 import Config from 'react-native-config'
 
 import TextileNode from '../../TextileNode'
