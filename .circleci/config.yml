@@ -244,7 +244,7 @@ jobs:
             - persist_to_workspace:
                 root: ~/textile-mobile
                 paths:
-                    - android/app/build/outputs/apk
+                    - ./android/app/build/outputs/apk/release/
 
     android-apk-release:
         working_directory: ~/textile-mobile
@@ -256,7 +256,7 @@ jobs:
             - deploy:
                 name: release apk
                 command: |
-                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/*.apk
+                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/release/*.apk
 
     ios:
         macos:
