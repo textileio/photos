@@ -109,10 +109,8 @@ class AddCaptionScreen extends React.Component<Props> {
         <TextileImage
           imageId={this.props.image}
           path={'small'}
-          height={70}
-          width={70}
           resizeMode={'cover'}
-          style={styles.image}
+          style={{...styles.image, width: 70, height: 70}}
         />
       )
     } else if (this.props.image) {
