@@ -43,7 +43,7 @@ const FeedItem = props => {
         <Text style={styles.text}>{payload.feed}</Text>
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
-      <View style={{ width: 40, height: 40, overflow: 'hidden', opacity: 0.5 }}>
+      <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
         {!isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
         {isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
       </View>
