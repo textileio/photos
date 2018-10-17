@@ -122,7 +122,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item: IPhotoGridType) => item.id as string
+  keyExtractor = (item: IPhotoGridType) => item.id
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
