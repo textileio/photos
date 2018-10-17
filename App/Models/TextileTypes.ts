@@ -5,21 +5,21 @@
 
 import {IProcessingImageProps} from '../Components/ProcessingImage'
 
-export interface TextileId extends String { _textileIdBrand: void }
-export interface BlockId extends String { _blockIdBrand: void }
-export interface ThreadId extends String { _threadIdBrand: void }
-export interface PhotoId extends String { _photoIdBrand: void }
-export interface PeerId extends String { _peerIdBrand: void }
-export interface DeviceId extends String { _deviceIdBrand: void }
-export interface ProfileAvatarId extends String { _profileAvatarIdBrand: void }
-export interface NotificationId extends String { _notificationIdBrand: void }
+export type TextileId = string & { _textileIdBrand: void }
+export type BlockId = string & { _blockIdBrand: void }
+export type ThreadId = string & { _threadIdBrand: void }
+export type PhotoId = string & { _photoIdBrand: void }
+export type PeerId = string & { _peerIdBrand: void }
+export type DeviceId = string & { _deviceIdBrand: void }
+export type ProfileAvatarId = string & { _profileAvatarIdBrand: void }
+export type NotificationId = string & { _notificationIdBrand: void }
 
-export interface UserName extends String { _userNameBrand: void }
-export interface ThreadName extends String { _threadNameBrand: void }
-export interface DeviceName extends String { _deviceNameBrand: void }
-export interface PublicKey extends String { _publicKeyBrand: void }
-export interface PrivateKey extends String { _privateKeyBrand: void }
-export interface Mnemonic extends String { _mnemonicBrand: void }
+export type UserName = string & { _userNameBrand: void }
+export type ThreadName = string & { _threadNameBrand: void }
+export type DeviceName = string & { _deviceNameBrand: void }
+export type PublicKey = string & { _publicKeyBrand: void }
+export type PrivateKey = string & { _privateKeyBrand: void }
+export type Mnemonic = string & { _mnemonicBrand: void }
 
 export enum NotificationType {
   receivedInviteNotification,

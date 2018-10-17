@@ -18,13 +18,13 @@ describe('photo viewing stories', () => {
   describe('refresh thread', () => {
     it('should refresh', () => {
       const state0 = reducer(initialState, actions.insertThread(threadId, threadName))
-      expect(state0.threads[threadId as any]).toBeDefined()
+      expect(state0.threads[threadId]).toBeDefined()
       const state1 = reducer(state0, actions.refreshThreadRequest(threadId))
-      expect(state1.threads[threadId as any]).toBeDefined()
-      expect(state1.threads[threadId as any]!.querying).toBeTruthy()
-      expect(state1.threads[threadId as any]!.photos.length).toEqual(0)
+      expect(state1.threads[threadId]).toBeDefined()
+      expect(state1.threads[threadId]!.querying).toBeTruthy()
+      expect(state1.threads[threadId]!.photos.length).toEqual(0)
       const state2 = reducer(state1, actions.refreshThreadSuccess(threadId, photos))
-      expect(state2.threads[threadId as any]!.photos.length).toEqual(1)
+      expect(state2.threads[threadId]!.photos.length).toEqual(1)
     })
   })
 })

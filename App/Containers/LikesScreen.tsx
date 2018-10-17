@@ -47,7 +47,7 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
   }
 
   keyExtractor = (item: { peerId: PeerId; username: UserName }, index: number) => {
-    return item.username as any + index
+    return item.username + index
   }
 
   renderItem = (info: ListRenderItemInfo<{ peerId: PeerId; username: UserName }>) => {

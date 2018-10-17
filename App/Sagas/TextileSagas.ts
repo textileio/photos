@@ -126,7 +126,7 @@ function * processAvatarImage(uri: string) {
 
     try {
       yield * uploadFile(
-        addResult.id as any,
+        addResult.id,
         addResult.archive.path
       )
     } catch (error) {
@@ -356,7 +356,7 @@ export function * photosTask () {
           throw new Error('no archive to upload')
         }
         yield * uploadFile(
-          addedPhotoData.addResult.id as any,
+          addedPhotoData.addResult.id,
           addedPhotoData.addResult.archive.path
         )
       } catch (error) {
@@ -383,7 +383,7 @@ export function * photosTask () {
     const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
     for (const imageToRetry of imagesToRetry) {
       try {
-        yield * uploadFile(imageToRetry.dataId as any, imageToRetry.path)
+        yield * uploadFile(imageToRetry.dataId, imageToRetry.path)
       } catch (error) {
         let message = ''
         if (!error) {

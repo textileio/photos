@@ -48,10 +48,10 @@ function getData (href: string): DeepLinkData | undefined {
 
 function createInviteLink (invite: ExternalInvite, threadName: ThreadName): string {
   const hash: string[] = []
-  hash.push(`id=${encodeURIComponent(invite.id as any)}`)
-  hash.push(`key=${encodeURIComponent(invite.key as any)}`)
-  hash.push(`inviter=${encodeURIComponent(invite.inviter as any)}`)
-  hash.push(`name=${encodeURIComponent(threadName as any)}`)
+  hash.push(`id=${encodeURIComponent(invite.id)}`)
+  hash.push(`key=${encodeURIComponent(invite.key)}`)
+  hash.push(`inviter=${encodeURIComponent(invite.inviter)}`)
+  hash.push(`name=${encodeURIComponent(threadName)}`)
   if (Config.TEMPORARY_REFERRAL) {
     hash.push(`referral=${encodeURIComponent(Config.TEMPORARY_REFERRAL)}`)
   }

@@ -177,7 +177,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const dateString = date.fromNow()
   const selfId = profile && profile.id
 
-  const username = profile ? (profile.username as any || 'unknown') : 'unknown'
+  const username = profile ? (profile.username || 'unknown') : 'unknown'
   const photoUsername = photo.username ? photo.username : photo.author_id.substring(0, 8)
 
   const defaultSource = require('../../views/Notifications/statics/main-image.png')

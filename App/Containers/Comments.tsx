@@ -86,8 +86,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
   let captionCommentCardProps: CommentCardProps | undefined
   if (viewingPhoto && viewingPhoto.caption) {
     captionCommentCardProps = {
-      username: viewingPhoto.username || viewingPhoto.author_id as any,
-      peerId: viewingPhoto.author_id as any,
+      username: viewingPhoto.username || viewingPhoto.author_id,
+      peerId: viewingPhoto.author_id,
       comment: viewingPhoto.caption,
       date: viewingPhoto.date,
       isCaption: true
@@ -97,8 +97,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
   const comments = viewingPhoto ? viewingPhoto.comments : []
   const commentCardProps = comments.slice().reverse().map((comment) => {
     const props: CommentCardProps = {
-      username: comment.username as any || 'unknown',
-      peerId: comment.author_id as any,
+      username: comment.username || 'unknown',
+      peerId: comment.author_id,
       comment: comment.body,
       date: comment.date,
       isCaption: false

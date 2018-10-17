@@ -52,7 +52,7 @@ export const initialState: UploadingImagesState = {
 }
 
 export const UploadingImagesSelectors = {
-  uploadingImageById: (state: RootState, id: PhotoId) => state.uploadingImages.images[id as any],
+  uploadingImageById: (state: RootState, id: PhotoId) => state.uploadingImages.images[id],
   imagesForRetry: (state: RootState) => {
     return Object.keys(state.uploadingImages.images)
       .map((key) => state.uploadingImages.images[key])
@@ -80,7 +80,7 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
         ...state,
         images: {
           ...state.images,
-          [dataId as any]: {
+          [dataId]: {
             path,
             dataId,
             state: 'pending',
@@ -92,37 +92,37 @@ export function reducer (state: UploadingImagesState = initialState, action: Upl
     }
     case getType(actions.imageUploadProgress): {
       const { dataId, progress } = action.payload
-      const image = state.images[dataId as any]
+      const image = state.images[dataId]
       const updated: UploadingImage = { ...image, state: 'uploading', uploadProgress: progress / 100 }
-      return { ...state, images: { ...state.images, [dataId as any]: updated } }
+      return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageUploadComplete): {
       const { dataId, responseCode, responseBody } = action.payload
-      const image = state.images[dataId as any]
+      const image = state.images[dataId]
       const updated: UploadingImage = { ...image, state: 'complete', responseCode, responseBody }
-      return { ...state, images: { ...state.images, [dataId as any]: updated } }
+      return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageUploadError): {
       const { dataId, errorMessage } = action.payload
-      const image = state.images[dataId as any]
+      const image = state.images[dataId]
       const updated: UploadingImage = {
         ...image,
         state: 'error',
         errorMessage,
         remainingUploadAttempts: image.remainingUploadAttempts - 1
       }
-      return { ...state, images: { ...state.images, [dataId as any]: updated } }
+      return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageUploadRetried): {
       const { dataId } = action.payload
-      const image = state.images[dataId as any]
+      const image = state.images[dataId]
       const updated: UploadingImage = {
         ...image,
         state: 'pending',
         uploadProgress: 0,
         errorMessage: undefined
       }
-      return { ...state, images: { ...state.images, [dataId as any]: updated } }
+      return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageRemovalComplete): {
       const { dataId } = action.payload

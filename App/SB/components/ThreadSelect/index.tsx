@@ -71,7 +71,7 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
             data={this.props.threads}
             ListFooterComponent={this.renderCreateThread}
             /* tslint:disable-next-line */
-            keyExtractor={(item: ThreadData) => item.id as any}
+            keyExtractor={(item: ThreadData) => item.id}
             /* tslint:disable-next-line */
             renderItem={(data: any) => {
               const thread: ThreadData = data.item

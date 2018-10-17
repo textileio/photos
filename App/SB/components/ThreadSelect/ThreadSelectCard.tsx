@@ -50,7 +50,7 @@ class ThreadSelectCard extends Component<Props> {
 
 const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  => {
   const t = ownProps.thread.id
-  const thread = state.photoViewing.threads[t as any]
+  const thread = state.photoViewing.threads[t]
   const thumb =  thread && thread.photos && thread.photos.length > 0 ? thread.photos[0] : undefined
   return {
     thumb

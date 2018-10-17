@@ -86,32 +86,32 @@ export function toPayload(notification: Notification): INotificationsPayload | u
       return { title, message, feed, typeString }
     }
     case(NotificationType.photoAddedNotification): {
-      const title = notification.threadName as any
+      const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.commentAddedNotification): {
-      const title =  notification.threadName as any
+      const title =  notification.threadName
       const message = [actor, notification.body].join(' ')
       const body = notification.body.split(': ')
       const feed = [actor, body[0], 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.likeAddedNotification): {
-      const title = notification.threadName as any
+      const title = notification.threadName
       const message = [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.peerJoinedNotification): {
-      const title = notification.threadName as any
+      const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'thread', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.peerLeftNotification): {
-      const title = notification.threadName as any
+      const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'thread', notification.threadName].join(' ')
       return { title, message, feed, typeString }

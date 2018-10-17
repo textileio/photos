@@ -18,7 +18,7 @@ export function * monitorNewThreadActions () {
     const photoToShare: { threadName: string, imageId: PhotoId, comment?: string} | undefined = yield select(photoToShareToNewThread)
     yield put(PhotoViewingActions.clearNewThreadActions())
     const { id, name } = action.payload
-    if (photoToShare && photoToShare.threadName === name as any) {
+    if (photoToShare && photoToShare.threadName === name) {
       const { imageId, comment } = photoToShare
       yield call(shareWalletImage, imageId, id, comment)
     }

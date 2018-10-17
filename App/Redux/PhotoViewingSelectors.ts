@@ -10,7 +10,7 @@ export function defaultThreadData (state: RootState): ThreadData | undefined {
 }
 
 export function threadDataByThreadId (state: RootState, id: ThreadId): ThreadData | undefined {
-  const threadData = state.photoViewing.threads[id as any]
+  const threadData = state.photoViewing.threads[id]
   return threadData
 }
 

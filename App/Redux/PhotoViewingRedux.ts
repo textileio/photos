@@ -102,10 +102,10 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
   switch (action.type) {
     case getType(actions.insertThread): {
       const { id, name } = action.payload
-      if (state.threads[id as any]) {
+      if (state.threads[id]) {
         return state
       }
-      return { ...state, threads: { ...state.threads, [id as any]: { id, name, querying: false, photos: [] } } }
+      return { ...state, threads: { ...state.threads, [id]: { id, name, querying: false, photos: [] } } }
     }
     case getType(actions.addThreadRequest): {
       const { name } = action.payload
@@ -115,11 +115,11 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.threadAdded): {
       const { id, name } = action.payload
-      if (state.threads[id as any]) {
+      if (state.threads[id]) {
         return state
       }
       const newThreadData: ThreadData = { id, name, querying: false, photos: [] }
-      return { ...state, addingThread: undefined, threads: { ...state.threads, [id as any]: newThreadData } }
+      return { ...state, addingThread: undefined, threads: { ...state.threads, [id]: newThreadData } }
     }
     case getType(actions.addThreadError): {
       const { error } = action.payload
@@ -138,7 +138,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.threadRemoved): {
       const { id } = action.payload
-      const { [id as any as string]: removed, ...threads } = state.threads
+      const { [id]: removed, ...threads } = state.threads
       return { ...state, threads, removingThread: undefined }
     }
     case getType(actions.removeThreadError): {
@@ -156,23 +156,23 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.refreshThreadRequest): {
       const { threadId } = action.payload
-      const threadData = state.threads[threadId as any]
+      const threadData = state.threads[threadId]
       if (!threadData) {
         // We should always have threadData before a refreshThreadRequest, but just make sure.
         return state
       }
-      const threads = { ...state.threads, [threadId as any]: { ...threadData, querying: true } }
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: true } }
       return { ...state, threads }
     }
     case getType(actions.refreshThreadSuccess): {
       const { threadId, photos } = action.payload
-      const threadData = state.threads[threadId as any]
+      const threadData = state.threads[threadId]
       if (!threadData) {
         // We should always have threadData before a refreshThreadSuccess, but just make sure.
         return state
       }
       const obj: ThreadData = { ...threadData, querying: false, photos }
-      const threads: ThreadMap = { ...state.threads, [threadId as any]: obj }
+      const threads: ThreadMap = { ...state.threads, [threadId]: obj }
       let viewingPhoto: Photo | undefined
       if (state.viewingThreadId === threadId && state.viewingPhoto) {
         const currentViewingPhoto = state.viewingPhoto
@@ -182,13 +182,13 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.refreshThreadError): {
       const { threadId, error } = action.payload
-      const threadData = state.threads[threadId as any]
+      const threadData = state.threads[threadId]
       if (!threadData) {
         // We should always have threadData before a refreshThreadError, but just make sure.
         return state
       }
       const threadError = (error.message as string) || (error as string) || 'unknown'
-      const threads = { ...state.threads, [threadId as any]: { ...threadData, querying: false, error: threadError } }
+      const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, error: threadError } }
       return { ...state, threads }
     }
     case getType(actions.viewWalletPhoto): {
@@ -212,7 +212,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       if (!state.viewingThreadId) {
         return state
       }
-      const threadData = state.threads[state.viewingThreadId as any]
+      const threadData = state.threads[state.viewingThreadId]
       const photos = threadData ? threadData.photos : []
       const photo = photos.find((photo) => photo.id === photoId)
       return { ...state, viewingPhoto: photo, authoringComment: undefined }

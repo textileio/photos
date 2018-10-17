@@ -38,12 +38,12 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
       const keepers = state.contacts
         .filter((c) => c.username !== undefined)
         .reduce((map, obj) => {
-          map[obj.id as any] = obj
+          map[obj.id] = obj
           return map
         }, {} as {[index: string]: Contact})
 
       const contacts = action.payload.contacts.map((c) => {
-        c.username = keepers[c.id as any] ? keepers[c.id as any].username : undefined
+        c.username = keepers[c.id] ? keepers[c.id].username : undefined
         return c
       })
       return { ...state, contacts }
