@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, FlatList, Clipboard } from 'react-native'
+import { View, Text, FlatList, Clipboard, Share } from 'react-native'
 import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
@@ -12,7 +12,7 @@ class DeviceLogs extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     return {
-      headerTitle: 'Device Logs',
+      headerTitle: '',
       headerLeft: (
         <TextileHeaderButtons left>
           <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
@@ -20,6 +20,7 @@ class DeviceLogs extends React.PureComponent {
       ),
       headerRight: (
         <TextileHeaderButtons right>
+          <TextileItem title='Share' onPress={params.share} />
           <TextileItem title='Copy' onPress={params.copy} />
         </TextileHeaderButtons>
       )
@@ -28,7 +29,8 @@ class DeviceLogs extends React.PureComponent {
 
   componentDidMount () {
     this.props.navigation.setParams({
-      copy: () => { this._copy() }
+      copy: () => { this._copy() },
+      share: () => { this._share() }
     })
   }
 
@@ -42,6 +44,18 @@ class DeviceLogs extends React.PureComponent {
       ].join(', \t')
     }).join(' \n')
     Clipboard.setString(stringified)
+  }
+
+  _share () {
+    const stringified = "```\n" + this.props.logs.slice(0,60).map((item) => {
+      return [
+        moment(item.time).format('LTS'),
+        item.event,
+        item.message,
+        item.error
+      ].join(', \t')
+    }).join(' \n') + "\n```"
+    Share.share({title: '', message: stringified})
   }
 
   renderHeader () {
