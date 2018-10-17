@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity, ImageURISource, ImageStyle } from 'react-native'
 import moment from 'moment'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 // @ts-ignore
@@ -134,10 +134,10 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
         <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
           <View style={styles.imageStretch}>
             <ProgressiveImage
-              imageId={photo.id}
+              imageId={photo.id as string}
               previewPath={'small'}
               path={'medium'}
-              style={[styles.image, {width: imageWidth, height: imageHeight}]}
+              style={{...styles.image, width: imageWidth, height: imageHeight}}
               resizeMode={'cover'}
             />
           </View>

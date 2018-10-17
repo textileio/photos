@@ -112,11 +112,11 @@ class AddCaptionScreen extends React.Component<Props> {
       const sharedImage = image as SharedImage
       const sourceUri = sharedImage.origURL && sharedImage.origURL !== '' ? sharedImage.origURL : sharedImage.uri
       return (
-        <Image
-          // @ts-ignore
-          source={{ uri: sourceUri, isStatic: true }}
+        <TextileImage
+          imageId={this.props.image}
+          path={'small'}
           resizeMode={'cover'}
-          style={styles.image}
+          style={{...styles.image, width: 70, height: 70}}
         />
       )
     } else if (image && typeof image === 'string') {

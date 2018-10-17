@@ -39,7 +39,7 @@ const ThreadCard = props => {
                     imageId={photo.id}
                     path={'small'}
                     resizeMode={'cover'}
-                    height={imageStyle.height}
+                    style={{height: imageStyle.height}}
                   />
                 </View>
               </View>

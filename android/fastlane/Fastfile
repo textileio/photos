@@ -27,7 +27,7 @@ platform :android do
 
   desc "Push internal test build to Fabric"
   lane :adhoc do
-    increment_version_code(version_code: ENV['CIRCLE_BUILD_NUM'])
+    increment_version_code(app_project_dir: "./app", version_code: ENV['CIRCLE_BUILD_NUM'])
     gradle(
       task: "clean assembleRelease",
       flags: "--init-script init.gradle"
@@ -42,7 +42,7 @@ platform :android do
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     versionCodes = google_play_track_version_codes(track: "internal")
-    increment_version_code(version_code: versionCodes[0] + 1)
+    increment_version_code(app_project_dir: "./app",version_code: versionCodes[0] + 1)
     gradle(
       task: "clean assembleRelease",
       flags: "--init-script init.gradle"

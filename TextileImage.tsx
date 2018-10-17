@@ -1,15 +1,18 @@
 import React from 'react'
-import { requireNativeComponent } from 'react-native'
+import { requireNativeComponent, ImageStyle } from 'react-native'
 
-type Props = {
+export interface Props {
   imageId: string,
   path: string,
   resizeMode: string,
+  capInsets?: string,
+  style?: ImageStyle | ImageStyle[],
   onLoad?: () => void,
-  onError?: (string) => void
+  onError?: (error: string) => void
 }
 
-export default class TextileImage extends React.Component<Props, *> {
+export default class TextileImage extends React.Component<Props> {
+  static propTypes = {}
   static defaultProps = {}
   _onLoaded () {
     if (!this.props.onLoad) {
@@ -18,8 +21,9 @@ export default class TextileImage extends React.Component<Props, *> {
     this.props.onLoad()
   }
 
-  _onError (event) {
-    if (!this.props.onError) {
+  _onError (event: any) {
+    // TODO: need the real type for Event here...
+    if (!this.props.onError || !event.nativeEvent || !event.nativeEvent.message) {
       return
     }
     this.props.onError(event.nativeEvent.message)
