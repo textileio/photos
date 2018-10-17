@@ -87,7 +87,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
         imageId={this.props.photoId}
         previewPath={'small'}
         path={'photo'}
-        style={[styles.mainPhoto, { height }]}
+        style={{ ...styles.mainPhoto, height }}
         resizeMode={'cover'}
       />
     )

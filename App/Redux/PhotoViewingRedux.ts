@@ -61,7 +61,7 @@ export interface ThreadData {
   readonly name: ThreadName
   readonly querying: boolean
   readonly photos: ReadonlyArray<Photo>
-  readonly error?: Error
+  readonly error?: string
 }
 
 interface ThreadMap {

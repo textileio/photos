@@ -112,9 +112,8 @@ class AddCaptionScreen extends React.Component<Props> {
       const sharedImage = image as SharedImage
       const sourceUri = sharedImage.origURL && sharedImage.origURL !== '' ? sharedImage.origURL : sharedImage.uri
       return (
-        <TextileImage
-          imageId={this.props.image}
-          path={'small'}
+        <Image
+          source={{ uri: sourceUri }}
           resizeMode={'cover'}
           style={{...styles.image, width: 70, height: 70}}
         />
@@ -124,10 +123,8 @@ class AddCaptionScreen extends React.Component<Props> {
         <TextileImage
           imageId={image}
           path={'small'}
-          height={70}
-          width={70}
           resizeMode={'cover'}
-          style={styles.image}
+          style={{...styles.image, width: 70, height: 70}}
         />
       )
     }

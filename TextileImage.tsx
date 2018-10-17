@@ -1,8 +1,9 @@
 import React from 'react'
 import { requireNativeComponent, ImageStyle } from 'react-native'
+import { PhotoId } from './App/Models/TextileTypes'
 
 export interface Props {
-  imageId: string,
+  imageId: PhotoId,
   path: string,
   resizeMode: string,
   capInsets?: string,

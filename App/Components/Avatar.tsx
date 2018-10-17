@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { View, ImageURISource, StyleProp, ViewStyle } from 'react-native'
 // @ts-ignore
 import TextileImage from '../../TextileImage'
-import { Profile, ProfileAvatarId, PeerId } from '../Models/TextileTypes'
+import { Profile, ProfileAvatarId, PeerId, PhotoId } from '../Models/TextileTypes'
 
 import styles from './Styles/AvatarStyles'
 import { RootState } from '../Redux/Types'
@@ -30,10 +30,11 @@ class Avatar extends React.PureComponent<IAvatarProps> {
   getCafeAddress (peerId: PeerId) {
     return `${Config.TEXTILE_CAFE_URI}/ipns/${peerId}/avatar`
   }
-  photoIdFromAvatar () {
+  photoIdFromAvatar (): PhotoId | undefined {
     const { profile } = this.props
     const avatarId: ProfileAvatarId = profile && profile.avatar_id || '' as any
-    return avatarId && avatarId.split('/').length > 1 && avatarId.split('/')[2]
+    const parts = avatarId.split('/')
+    return parts.length > 1 ? parts[2] as any : undefined
   }
   renderSelf () {
     const { height, width, defaultSource, style } = this.props
