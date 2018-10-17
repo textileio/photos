@@ -19,16 +19,30 @@ const FeedItem = props => {
 
   const isPhotoType = NotificationServices.isPhoto(notification)
 
-  const readStyle = notification.read ? {} : {borderWidth: 2, borderColor: '#ded3ff'}
+  const readStyle = notification.read ? {
+    width: 29,
+    height: 29,
+    borderRadius: 16
+  } : {
+    width: 29,
+    height: 29,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#dbc5d2'
+  }
 
   const leftSource = (
-    <Avatar
-      width={24}
-      height={24}
-      peerId={notification.actor_id}
-      defaultSource={require('../../../Images/v2/main-image.png')}
-      style={readStyle}
-    />)
+    <View
+      style={{...readStyle, justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}
+    >
+      <Avatar
+        width={24}
+        height={24}
+        peerId={notification.actor_id}
+        defaultSource={require('../../../Images/v2/main-image.png')}
+      />
+    </View>
+  )
 
   return (
     <TouchableOpacity activeOpacity={0.6} style={styles.itemContainer} onPress={() => {
@@ -44,7 +58,6 @@ const FeedItem = props => {
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
-        {!isPhotoType && <ImageSc width={40} source={require('../../../Images/v2/unread.png')} />}
         {isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.data_id} path={'thumb'} resizeMode={'cover'} />}
       </View>
     </TouchableOpacity>
