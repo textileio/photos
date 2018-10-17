@@ -2,9 +2,7 @@ import { delay } from 'redux-saga'
 import { all, take, call, put, fork, cancelled, race, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
-// @ts-ignore
 import Config from 'react-native-config'
-// @ts-ignore
 import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'

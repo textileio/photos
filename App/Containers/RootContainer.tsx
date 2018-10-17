@@ -10,7 +10,6 @@ import { RootState, RootAction } from '../Redux/Types'
 import TriggersActions from '../Redux/TriggersRedux'
 
 // Styles
-// @ts-ignore
 import styles from './Styles/RootContainerStyles'
 
 interface StateProps {

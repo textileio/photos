@@ -1,11 +1,8 @@
 import React from 'react'
-// @ts-ignore
 import Config from 'react-native-config'
-// @ts-ignore
 import ImageSc from 'react-native-scalable-image'
 import { connect } from 'react-redux'
 import { View, ImageURISource, StyleProp, ViewStyle } from 'react-native'
-// @ts-ignore
 import TextileImage from '../../TextileImage'
 import { Profile, ProfileAvatarId, PeerId, PhotoId } from '../Models/TextileTypes'
 

@@ -29,7 +29,6 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     LayoutAnimation.configureNext({
       duration: event.duration,
       update: {
-        // @ts-ignore
         type: LayoutAnimation.Types[event.easing]
       }
     })
@@ -42,7 +41,6 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     LayoutAnimation.configureNext({
       duration: event.duration,
       update: {
-        // @ts-ignore
         type: LayoutAnimation.Types[event.easing]
       }
     })
@@ -55,7 +53,6 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     LayoutAnimation.configureNext({
       duration: event.duration,
       update: {
-        // @ts-ignore
         type: LayoutAnimation.Types[event.easing]
       }
     })

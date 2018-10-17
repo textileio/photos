@@ -8,7 +8,6 @@ import {
   TouchableOpacity, ListRenderItemInfo
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
-// @ts-ignore
 import Toast from 'react-native-easy-toast'
 
 import { RootAction } from '../Redux/Types'
@@ -19,9 +18,7 @@ import ProgressiveImage from './ProgressiveImage'
 import ProcessingWalletImageCard from './ProcessingWalletImage'
 
 // Styles
-// @ts-ignore
 import { Colors } from '../Themes'
-// @ts-ignore
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PhotoGridStyles'
 
 interface DispatchProps {
@@ -46,7 +43,6 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   _getToast (errorMessage?: string) {
     return () => {
       if (errorMessage) {
-        // @ts-ignore
         this.refs.toast.show(errorMessage, 2000)
       }
     }
