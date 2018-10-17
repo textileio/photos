@@ -47,15 +47,15 @@ class DeviceLogs extends React.PureComponent {
   }
 
   _share () {
-    const stringified = "```\n" + this.props.logs.slice(0,60).map((item) => {
+    const stringified = '```\n' + this.props.logs.slice(0, 60).map((item) => {
       return [
         moment(item.time).format('LTS'),
         item.event,
         item.message,
         item.error
       ].join(', \t')
-    }).join(' \n') + "\n```"
-    Share.share({title: '', message: stringified})
+    }).join(' \n') + '\n```'
+    Share.share({ title: '', message: stringified })
   }
 
   renderHeader () {
