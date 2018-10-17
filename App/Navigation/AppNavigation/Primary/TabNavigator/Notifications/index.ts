@@ -1,9 +1,7 @@
 import { createStackNavigator } from 'react-navigation'
 
-// @ts-ignore
 import Notifications from '../../../../../SB/views/FeedList'
 
-// @ts-ignore
 import styles, { headerTintColor } from '../../../../Styles/NavigationStyles'
 
 const nav = createStackNavigator(

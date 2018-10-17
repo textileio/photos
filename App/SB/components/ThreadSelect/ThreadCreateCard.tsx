@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
 import { View, TouchableOpacity } from 'react-native'
 
-// @ts-ignore
 import PhotoBoxEmpty from '../PhotoBoxEmpty'
-// @ts-ignore
 import RadioButton from '../../components/RadioButton'
 
 import styles from './statics/styles'

@@ -1,7 +1,6 @@
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
-// @ts-ignore
 import Upload from 'react-native-background-upload'
 
 import { PhotoId, SharedImage } from '../Models/TextileTypes'

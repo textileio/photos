@@ -4,12 +4,10 @@ import { connect } from 'react-redux'
 import { View, Text, Dimensions, TouchableOpacity, ImageURISource, ImageStyle } from 'react-native'
 import moment from 'moment'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
-// @ts-ignore
 import { getHeight } from '../../../Services/PhotoUtils'
 import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
 
-// @ts-ignore
 import styles from './statics/styles'
 import Icons from '../../../Components/Icons'
 import Colors from '../../../Themes/Colors'

@@ -11,9 +11,7 @@ import PhotoViewingActions, {ThreadData} from '../Redux/PhotoViewingRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 
-// @ts-ignore
 import ThreadCard from '../SB/components/ThreadListCard'
-// @ts-ignore
 import styles from './Styles/ThreadSelectorStyles'
 
 interface ScreenProps {
