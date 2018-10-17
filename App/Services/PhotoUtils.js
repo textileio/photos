@@ -4,7 +4,7 @@ import {
 import RNFS from 'react-native-fs'
 import TextileNode from '../../TextileNode'
 
-export function getHeight (metadata: Object, targetWidth: number) {
+export function getHeight (metadata, targetWidth) {
   const known = !!(metadata && metadata.height && metadata.height > 0 && metadata.width && metadata.width > 0)
   const height = known ? (metadata.height / metadata.width) * targetWidth : targetWidth * 0.6
   return {
