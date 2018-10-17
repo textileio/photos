@@ -10,7 +10,6 @@ import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/H
 
 import styles from './statics/styles'
 
-
 class DeviceLogs extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
@@ -25,7 +24,7 @@ class DeviceLogs extends React.PureComponent {
         <TextileHeaderButtons right>
           <TextileItem title='Share' onPress={params.share} />
           <TextileItem title='Clear' onPress={params.clear} />
-        </TextileHeaderButtons>,
+        </TextileHeaderButtons>
       ])
     }
   }
