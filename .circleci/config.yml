@@ -529,7 +529,7 @@ workflows:
                     branches:
                         only:
                             - master
-    release:
+    release-ios:
         jobs:
             - ios-release:
                 filters:
@@ -537,6 +537,8 @@ workflows:
                         only: /^ios_[0-9.]+_[0-9]+/
                     branches:
                         ignore: /.*/
+    release-android:
+        jobs:
             - android-release:
                 filters:
                     tags:
