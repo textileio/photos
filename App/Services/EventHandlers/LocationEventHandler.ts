@@ -33,7 +33,6 @@ export default class LocationEventHandler {
   }
 
   watchPosition () {
-    // @ts-ignore
     navigator.geolocation.watchPosition(this.handleNewPosition.bind(this), undefined, { useSignificantChanges: true })
   }
 

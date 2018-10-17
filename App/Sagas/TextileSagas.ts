@@ -468,7 +468,6 @@ export function * backgroundLocationPermissionsTrigger () {
       message: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.'
     })
   } else {
-    // @ts-ignore
     yield call(navigator.geolocation.requestAuthorization)
   }
 }

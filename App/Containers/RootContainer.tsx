@@ -50,7 +50,6 @@ class RootContainer extends Component<StateProps & DispatchProps> {
   watchPosition () {
     // Only watchPosition if the user has enabled it in settings
     if (this.props.monitorLocation) {
-      // @ts-ignore
       navigator.geolocation.watchPosition(this.handleNewPosition.bind(this), undefined, { useSignificantChanges: true })
     }
   }
