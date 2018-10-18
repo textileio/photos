@@ -1,5 +1,5 @@
 import {call, put, select, take} from 'redux-saga/effects'
-import TextileNode from '../../TextileNode'
+import TextileNode from '../Services/TextileNode'
 import {BlockId, Thread, ILocalPhotoResult, SharedImage} from '../Models/TextileTypes'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
 import {ActionType, getType} from 'typesafe-actions'

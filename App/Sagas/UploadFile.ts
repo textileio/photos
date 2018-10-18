@@ -3,7 +3,7 @@ import { call, put, select } from 'redux-saga/effects'
 import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 
-import TextileNode from '../../TextileNode'
+import TextileNode from '../Services/TextileNode'
 import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
 import { CafeTokens } from '../Models/TextileTypes'
 

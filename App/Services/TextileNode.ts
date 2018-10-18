@@ -4,7 +4,7 @@ import {
   NativeModules,
   Platform
 } from 'react-native'
-import * as TT from './App/Models/TextileTypes'
+import * as TT from '../Models/TextileTypes'
 
 const { TextileNode, Events } = NativeModules
 
