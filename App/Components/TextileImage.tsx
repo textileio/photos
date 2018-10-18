@@ -1,6 +1,6 @@
 import React from 'react'
 import { requireNativeComponent, ImageStyle } from 'react-native'
-import { PhotoId } from './App/Models/TextileTypes'
+import { PhotoId } from '../Models/TextileTypes'
 
 export interface Props {
   imageId: PhotoId,
