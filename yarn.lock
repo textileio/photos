@@ -600,6 +600,10 @@
   version "15.5.6"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.6.tgz#9c03d3fed70a8d517c191b7734da2879b50ca26c"
 
+"@types/react-native-background-timer@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-background-timer/-/react-native-background-timer-2.0.0.tgz#c44c57f8fbca9d9d5521fdd72a8f55232b79381e"
+
 "@types/react-native-fs@^2.8.2":
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/@types/react-native-fs/-/react-native-fs-2.8.2.tgz#c5c466ea898d433aa9b3a8fc06ee56392ae49e06"
@@ -609,13 +613,6 @@
 "@types/react-native-push-notification@^3.0.3":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/react-native-push-notification/-/react-native-push-notification-3.0.3.tgz#738e64fe38ccff15b3d4957a2bae51780d670e5f"
-
-"@types/react-native-scaled-image@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@types/react-native-scaled-image/-/react-native-scaled-image-0.0.0.tgz#afd9c1415539c706a41be3d216b6a7670d1fd03f"
-  dependencies:
-    "@types/react" "*"
-    "@types/react-native" "*"
 
 "@types/react-native-vector-icons@^4.6.4":
   version "4.6.4"

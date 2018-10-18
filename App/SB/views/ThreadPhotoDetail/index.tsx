@@ -43,6 +43,7 @@ interface State {
 type Props = StateProps & DispatchProps
 
 class ThreadPhotoDetail extends Component<Props, State> {
+  // @ts-ignore
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>

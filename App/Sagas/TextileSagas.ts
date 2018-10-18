@@ -32,6 +32,7 @@ import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
+// @ts-ignore
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
 import {logNewEvent} from './DeviceLogs'
