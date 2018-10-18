@@ -1,7 +1,7 @@
 import { Store } from 'redux'
 
 import {Update, BlockType, ILocalPhotoResult} from '../../Models/TextileTypes'
-import TextileNode from '../../../TextileNode'
+import TextileNode from '../TextileNode'
 import { RootState } from '../../Redux/Types'
 
 import TextileNodeActions from '../../Redux/TextileNodeRedux'

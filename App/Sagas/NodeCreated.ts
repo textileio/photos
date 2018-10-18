@@ -1,6 +1,6 @@
 import { call, put, take, select } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
-import TextileNode from '../../TextileNode'
+import TextileNode from '../Services/TextileNode'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions, {NodeState, TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'

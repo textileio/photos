@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native'
 import moment from 'moment'
-import TextileImage from '../../../../TextileImage'
+import TextileImage from '../../../Components/TextileImage'
 
 import styles, { cardImageContainerStyle, cardImageStyle } from './statics/styles'
 

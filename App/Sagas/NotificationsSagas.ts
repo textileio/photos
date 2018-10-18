@@ -14,7 +14,7 @@ import {delay} from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
-import TextileNode from '../../TextileNode'
+import TextileNode from '../Services/TextileNode'
 import {
   NotificationType,
   GetNotificationsResult

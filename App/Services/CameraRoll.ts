@@ -1,7 +1,7 @@
 import { CameraRoll, Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import ImagePicker from 'react-native-image-picker'
-import TextileNode from '../../TextileNode'
+import TextileNode from './TextileNode'
 
 export interface IPickerImage {
   uri: string

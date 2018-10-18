@@ -1,7 +1,7 @@
 import React from 'react'
 import propTypes from 'prop-types'
 import { View, Image, Text } from 'react-native'
-import TextileImage from '../../../../TextileImage'
+import TextileImage from '../../../Components/TextileImage'
 
 import styles from './statics/styles'
 

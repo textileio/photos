@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import ImageSc from 'react-native-scalable-image'
 import * as NotificationServices from '../../../Services/Notifications'
 import Avatar from '../../../Components/Avatar'
-import TextileImage from '../../../../TextileImage'
+import TextileImage from '../../../Components/TextileImage'
 
 import styles from './statics/styles'
 

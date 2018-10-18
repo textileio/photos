@@ -3,7 +3,7 @@ import Config from 'react-native-config'
 import ImageSc from 'react-native-scalable-image'
 import { connect } from 'react-redux'
 import { View, ImageURISource, StyleProp, ViewStyle } from 'react-native'
-import TextileImage from '../../TextileImage'
+import TextileImage from './TextileImage'
 import { Profile, ProfileAvatarId, PeerId, PhotoId } from '../Models/TextileTypes'
 
 import styles from './Styles/AvatarStyles'

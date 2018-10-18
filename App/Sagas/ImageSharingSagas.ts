@@ -3,7 +3,7 @@ import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 
 import { uploadFile } from './UploadFile'
-import TextileNode from '../../TextileNode'
+import TextileNode from '../Services/TextileNode'
 import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId} from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions, {UISelectors} from '../Redux/UIRedux'
