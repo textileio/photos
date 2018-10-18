@@ -68,7 +68,7 @@ class TextileWalletPicker extends React.PureComponent {
 const mapStateToProps = (state) => {
   const defaultData = defaultThreadData(state)
   const threadId = defaultData ? defaultData.id : undefined
-  const items: IPhotoGridType[] = !defaultData ? [] : defaultData.photos.map((photo) => {
+  const items = !defaultData ? [] : defaultData.photos.map((photo) => {
     return {type: 'photo', photo, id: photo.id}
   })
 
@@ -94,9 +94,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    success: (photoId: PhotoId) => { dispatch(UIActions.walletPickerSuccess(photoId)) },
+    success: (photoId) => { dispatch(UIActions.walletPickerSuccess(photoId)) },
     cancelSharingPhoto: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    refresh: (threadId: string) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
+    refresh: (threadId) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }

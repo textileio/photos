@@ -209,7 +209,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state) => {
   const defaultData = defaultThreadData(state)
   const photo = state.photoViewing.viewingWalletPhoto
 

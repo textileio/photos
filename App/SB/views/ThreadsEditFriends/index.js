@@ -116,7 +116,7 @@ class ThreadsEditFriends extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const contacts = state.contacts.contacts
-    .map((contact): TextileTypes.Contact & {included: boolean, type: string} => {
+    .map((contact) => {
       return {
         ...contact,
         type: 'contact',
@@ -134,8 +134,8 @@ const mapStateToProps = (state, ownProps) => {
     } else if (b.username === null || b.username === '') {
       return -1
     }
-    let A: string = a.username.toString().toUpperCase()
-    let B: string = b.username.toString().toUpperCase()
+    let A = a.username.toString().toUpperCase()
+    let B = b.username.toString().toUpperCase()
     if (A === B) {
       return 0
     } else {
@@ -152,8 +152,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
-    addInternalInvites: (threadId: string, inviteePks: string[]) => { dispatch(ThreadsActions.addInternalInvitesRequest(threadId, inviteePks)) }
+    invite: (threadId, threadName) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
+    addInternalInvites: (threadId, inviteePks) => { dispatch(ThreadsActions.addInternalInvitesRequest(threadId, inviteePks)) }
   }
 }
 

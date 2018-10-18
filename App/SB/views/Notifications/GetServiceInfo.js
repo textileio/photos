@@ -1,4 +1,4 @@
-export default function (service: string): {[index: string]: string} | undefined {
+export default function (service) {
   switch (service) {
     case 'backgroundLocation':
       return {

@@ -128,18 +128,18 @@ class Wallet extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state) => {
   const defaultData = defaultThreadData(state)
   const threadId = defaultData ? defaultData.id : undefined
-  const photos: Photo[] = defaultData ? defaultData.photos : []
+  const photos = defaultData ? defaultData.photos : []
 
-  const items: IPhotoGridType[] = !defaultData ? [] : defaultData.photos.map((photo) => {
+  const items = !defaultData ? [] : defaultData.photos.map((photo) => {
     return {type: 'photo', photo, id: photo.id}
   })
 
   // We only are showing wallet upload status in verbose for now
   if (state.preferences.verboseUi) {
-    const processingItems: IPhotoGridType[] = state.processingImages.images
+    const processingItems = state.processingImages.images
       .filter(image => !image.destinationThreadId || image.destinationThreadId !== threadId)
       .map(image => {
         let progress = 0

@@ -65,7 +65,7 @@ class Notifications extends React.PureComponent {
     this.setState({ infoVisible: false })
   }
 
-  showInfo (service: string) {
+  showInfo (service) {
     const info = GetServiceInfo(service)
     this.setState({ infoVisible: true, info })
   }
@@ -117,7 +117,7 @@ class Notifications extends React.PureComponent {
 
 const mapStateToProps = state => {
   // get all top level services
-  const allServices: {[index: string]: string} = Object.keys(state.preferences.services)
+  const allServices = Object.keys(state.preferences.services)
     .reduce((previous, current) => {
       let basic = state.preferences.services[current]
       basic.info = GetServiceInfo(current)
@@ -125,7 +125,7 @@ const mapStateToProps = state => {
       return previous
     }, {})
 
-  const services: {[index: string]: string} = Object.keys(allServices)
+  const services = Object.keys(allServices)
     .filter((key) => allServices[key].info !== undefined && allServices[key].info.dependsOn === undefined)
     .reduce((previous, current) => {
       previous[current] = allServices[current]

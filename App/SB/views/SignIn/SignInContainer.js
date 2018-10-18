@@ -30,9 +30,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateUsername: (username: string) => dispatch(AuthActions.updateUsername(username)),
-    updatePassword: (password: string) => dispatch(AuthActions.updatePassword(password)),
-    submit: (username: string, password: string) => dispatch(AuthActions.logInRequest(username, password))
+    updateUsername: (username) => dispatch(AuthActions.updateUsername(username)),
+    updatePassword: (password) => dispatch(AuthActions.updatePassword(password)),
+    submit: (username, password) => dispatch(AuthActions.logInRequest(username, password))
   }
 }
 
