@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native'
+import { View, ScrollView, Dimensions, ViewStyle, ImageStyle } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
@@ -85,7 +85,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
         imageId={this.props.photoId}
         previewPath={'small'}
         path={'photo'}
-        style={{ ...styles.mainPhoto, height }}
+        style={{ ...styles.mainPhoto as ImageStyle, height }}
         resizeMode={'cover'}
       />
     )
@@ -93,7 +93,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
 
   render () {
     return (
-      <KeyboardResponsiveContainer style={styles.container} >
+      <KeyboardResponsiveContainer style={styles.container as ViewStyle} >
         <ScrollView ref={(ref) => this.scrollView = ref ? ref : undefined} style={styles.contentContainer}>
           {this.renderImage()}
           <View style={styles.commentsContainer}>

@@ -12,5 +12,7 @@ declare module 'react-native-easy-toast' {
     opacity?: number
   }
 
-  export default class EasyToast extends React.Component<EasyToastProps> {}
+  export default class EasyToast extends React.Component<EasyToastProps> {
+    show(text: string, duration?: number, callback?: () => void): void
+  }
 }

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, ScrollView } from 'react-native'
+import { View, ScrollView, ViewStyle } from 'react-native'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
@@ -62,7 +62,7 @@ class Comments extends Component<Props> {
   render () {
     return (
       <SafeAreaView style={styles.safeContainer}>
-        <KeyboardResponsiveContainer style={styles.container}>
+        <KeyboardResponsiveContainer style={styles.container as ViewStyle}>
           {this.props.captionCommentCardProps &&
             <CommentCard {...this.props.captionCommentCardProps} />
           }
