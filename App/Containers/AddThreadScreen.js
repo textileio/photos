@@ -46,7 +46,7 @@ class AddThreadScreen extends React.Component {
     }
   }
 
-  handleNewText = (text: string) => {
+  handleNewText = (text) => {
     this.setState({ value: text })
     this.props.navigation.setParams({
       submitEnabled: (text.length > 0)
@@ -94,7 +94,7 @@ class AddThreadScreen extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    submit: (name: string, navigate: boolean, selectToShare: boolean) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
+    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
   }
 }
 

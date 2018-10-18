@@ -31,7 +31,7 @@ interface StateProps {
 }
 
 class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>> {
-
+  // @ts-ignore
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>

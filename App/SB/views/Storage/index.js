@@ -61,7 +61,7 @@ class Storage extends React.PureComponent {
     this.setState({ infoVisible: false })
   }
 
-  showInfo (service: string) {
+  showInfo (service) {
     const info = GetServiceInfo(service)
     this.setState({ infoVisible: true, info })
   }
@@ -113,7 +113,7 @@ class Storage extends React.PureComponent {
 
 const mapStateToProps = state => {
   // get all top level options
-  const allOptions: {[index: string]: string} = Object.keys(state.preferences.storage)
+  const allOptions = Object.keys(state.preferences.storage)
     .reduce((previous, current) => {
       let basic = state.preferences.storage[current]
       basic.info = GetServiceInfo(current)
@@ -121,7 +121,7 @@ const mapStateToProps = state => {
       return previous
     }, {})
 
-  const mainOptions: {[index: string]: string} = Object.keys(allOptions)
+  const mainOptions = Object.keys(allOptions)
     .filter((key) => allOptions[key].info !== undefined && allOptions[key].info.dependsOn === undefined)
     .reduce((previous, current) => {
       previous[current] = allOptions[current]

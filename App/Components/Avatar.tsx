@@ -3,7 +3,7 @@ import Config from 'react-native-config'
 import ImageSc from 'react-native-scalable-image'
 import { connect } from 'react-redux'
 import { View, ImageURISource, StyleProp, ViewStyle } from 'react-native'
-import TextileImage from '../../TextileImage'
+import TextileImage from './TextileImage'
 import { Profile, ProfileAvatarId, PeerId, PhotoId } from '../Models/TextileTypes'
 
 import styles from './Styles/AvatarStyles'
@@ -36,7 +36,7 @@ class Avatar extends React.PureComponent<IAvatarProps> {
   renderSelf () {
     const { height, width, defaultSource, style } = this.props
     const photoId = this.photoIdFromAvatar()
-    if (!photoId) {
+    if (!photoId && defaultSource) {
       return (
         <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
           <View style={styles.stretch}>
@@ -50,19 +50,20 @@ class Avatar extends React.PureComponent<IAvatarProps> {
           </View>
         </View>
       )
-    }
-    return (
-      <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
-        <View style={styles.stretch}>
-          <TextileImage
-            imageId={photoId}
-            path={'small'}
-            style={{ width, height }}
-            resizeMode={'cover'}
-          />
+    } else if (photoId) {
+      return (
+        <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
+          <View style={styles.stretch}>
+            <TextileImage
+              imageId={photoId}
+              path={'small'}
+              style={{ width, height }}
+              resizeMode={'cover'}
+            />
+          </View>
         </View>
-      </View>
-    )
+      )
+    }
   }
   renderCafe (peerId: PeerId) {
     const { height, width, defaultSource, style } = this.props

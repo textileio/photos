@@ -110,7 +110,7 @@ class ThreadDetail extends React.PureComponent {
     this.actionSheet.show()
   }
 
-  handleActionSheetResponse (index: number) {
+  handleActionSheetResponse (index) {
     if (index === 0) {
       this.props.addFriendRequest(this.props.threadId, this.props.threadName)
       // this.props.invite(this.props.threadId, this.props.threadName)
@@ -182,15 +182,15 @@ class ThreadDetail extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state) => {
   const viewingThreadId = state.photoViewing.viewingThreadId
 
-  let items: [{type: string, photo: Photo, threadId: ThreadId, threadName: ThreadName}] = []
-  let processingItems: { type: 'processingItem', props: IProcessingImageProps }[] = []
+  let items = []
+  let processingItems = []
   let threadName
 
   if (viewingThreadId) {
-    const threadData: ThreadData = threadDataByThreadId(state, viewingThreadId) || { querying: false, photos: [] }
+    const threadData = threadDataByThreadId(state, viewingThreadId) || { querying: false, photos: [] }
     items = threadData.photos.map((photo) => {
       const threadId = viewingThreadId
       const threadName = threadData.name
@@ -258,11 +258,11 @@ const mapDispatchToProps = (dispatch) => {
     showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    leaveThread: (threadId: string) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) },
+    leaveThread: (threadId) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) },
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
-    retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
-    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
-    addFriendRequest: (threadId: string, threadName: string) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
+    retryShare: (uuid) => { dispatch(ProcessingImagesActions.retry(uuid)) },
+    cancelShare: (uuid) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
+    addFriendRequest: (threadId, threadName) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableLocation: () => { dispatch(PreferencesActions.toggleServicesRequest('backgroundLocation', true)) }
   }

@@ -69,7 +69,7 @@ class SignUpContainer extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const nodeState: NodeState = state.textileNode.nodeState
+  const nodeState = state.textileNode.nodeState
   return {
     ...state.auth.formData,
     displayError: state.auth.error !== undefined,
@@ -81,11 +81,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateReferralCode: (referralCode: string) => dispatch(AuthActions.updateReferralCode(referralCode)),
-    updateEmail: (email: string) => dispatch(AuthActions.updateEmail(email)),
-    updateUsername: (username: string) => dispatch(AuthActions.updateUsername(username)),
-    updatePassword: (password: string) => dispatch(AuthActions.updatePassword(password)),
-    submit: (referralCode: string, email: string, username: string, password: string) => dispatch(AuthActions.signUpRequest(referralCode, email, username, password))
+    updateReferralCode: (referralCode) => dispatch(AuthActions.updateReferralCode(referralCode)),
+    updateEmail: (email) => dispatch(AuthActions.updateEmail(email)),
+    updateUsername: (username) => dispatch(AuthActions.updateUsername(username)),
+    updatePassword: (password) => dispatch(AuthActions.updatePassword(password)),
+    submit: (referralCode, email, username, password) => dispatch(AuthActions.signUpRequest(referralCode, email, username, password))
   }
 }
 

@@ -7,7 +7,7 @@ import ContactSelectCard from './ContactSelectCard'
 
 import styles from './statics/styles'
 
-function getSubTitle (contacts, topFive, notInThread): string {
+function getSubTitle (contacts, topFive, notInThread) {
   if (contacts.length === 0) {
     return 'No peers yet'
   } else if (contacts.length > 0 && notInThread === 0) {

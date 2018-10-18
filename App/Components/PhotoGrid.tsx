@@ -40,10 +40,12 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 20
 
+  toast?: Toast
+
   _getToast (errorMessage?: string) {
     return () => {
-      if (errorMessage) {
-        this.refs.toast.show(errorMessage, 2000)
+      if (errorMessage && this.toast) {
+        this.toast.show(errorMessage, 2000)
       }
     }
   }
@@ -163,8 +165,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
           )
         }
         <Toast
-          /* tslint:disable-next-line */
-          ref='toast'
+          ref={(toast) => { this.toast = toast ? toast : undefined }}
           position='center'
         />
       </View>

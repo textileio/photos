@@ -8,9 +8,9 @@
     "lib": ["es6"],
     "moduleResolution": "node",
     "noEmit": true,
-    "resolveJsonModule": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "coverage"]
 }

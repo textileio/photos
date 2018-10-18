@@ -2,7 +2,7 @@ import {
   CameraRoll
 } from 'react-native'
 import RNFS from 'react-native-fs'
-import TextileNode from '../../TextileNode'
+import TextileNode from './TextileNode'
 
 export function getHeight (metadata, targetWidth) {
   const known = !!(metadata && metadata.height && metadata.height > 0 && metadata.width && metadata.width > 0)

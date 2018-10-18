@@ -155,7 +155,7 @@ class ThreadsList extends React.PureComponent {
     this.actionSheet.show()
   }
 
-  handleActionSheetResponse (index: number) {
+  handleActionSheetResponse (index) {
     if (index === 0) {
       if (this.props.showOnboarding === true) {
         this.props.completeScreen('threads')
@@ -210,7 +210,7 @@ const mapStateToProps = (state) => {
       })
   }
 
-  const items: [{type: string, photo: Photo, id: PhotoId, threadId: ThreadId, threadName: ThreadName}] = Object.keys(state.photoViewing.threads)
+  const items = Object.keys(state.photoViewing.threads)
     .filter((id) => state.photoViewing.threads[id].name !== 'default')
     .map((id) => state.photoViewing.threads[id].photos
       .map((photo) => {
@@ -223,7 +223,7 @@ const mapStateToProps = (state) => {
   const defaultData = defaultThreadData(state)
   const defaultThreadId = defaultData ? defaultData.id : undefined
 
-  const processingItems: { type: 'processingItem', props: IProcessingImageProps, id: string}[] = state.processingImages.images
+  const processingItems = state.processingImages.images
     .filter(image => image.destinationThreadId && image.destinationThreadId !== defaultThreadId)
     .map(image => {
       let progress = 0

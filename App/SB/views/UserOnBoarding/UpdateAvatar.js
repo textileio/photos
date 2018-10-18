@@ -55,7 +55,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     chooseProfilePicture: () => dispatch(UIActions.chooseProfilePhotoRequest()),
-    updateProfilePicture: (uri: string) => dispatch(UIActions.updateProfilePicture(uri)),
+    updateProfilePicture: (uri) => dispatch(UIActions.updateProfilePicture(uri)),
     cancelProfileUpdate: () => dispatch(UIActions.cancelProfileUpdate())
   }
 }

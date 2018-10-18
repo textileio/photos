@@ -28,7 +28,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     chooseProfilePicture: () => dispatch(UIActions.chooseProfilePhotoRequest()),
-    selectProfilePicture: (uri: string) => dispatch(UIActions.selectProfilePicture(uri))
+    selectProfilePicture: (uri) => dispatch(UIActions.selectProfilePicture(uri))
   }
 }
 
