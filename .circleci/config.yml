@@ -27,6 +27,11 @@ jobs:
             - run: yarn install
 
             - run:
+                name: tsc
+                command: |
+                    yarn tsc
+
+            - run:
                 name: lint
                 command: |
                     yarn lint
