@@ -8,6 +8,7 @@ import TextileNodeActions from '../../Redux/TextileNodeRedux'
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import StorageActions from '../../Redux/StorageRedux'
+import { toTypedNotification } from '../Notifications'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
@@ -40,7 +41,7 @@ export default class TextileNodeEventHandler {
       this.store.dispatch(PhotoViewingActions.threadRemoved(payload.id))
     })
     TextileNode.eventEmitter.addListener('onNotification', (payload) => {
-      this.store.dispatch(NotificationActions.newNotificationRequest(payload))
+      this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
   }
 
