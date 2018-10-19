@@ -1,4 +1,4 @@
-import { delay } from 'redux-saga'
+import { delay, Task } from 'redux-saga'
 import { all, take, call, put, fork, cancelled, race, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
@@ -29,9 +29,8 @@ export function * manageNode () {
       }
       yield call(logNewEvent, 'State Change', action.payload.newState)
 
-      // Create and start the node no matter what, even if it's already created and/or started it should be fine to call again
-      // Use fork so we don't block listening for the next app state change while the node is created and started
-      yield fork(createAndStartNode)
+      // Reqest to create and start the node no matter what, createAndStartNode below deals with ignoring simultaneious requests.
+      yield put(TextileNodeActions.createNodeRequest())
 
       // If we got a background app state, start a background task and schedule the node to be stopped in 20 seconds
       //
@@ -46,6 +45,20 @@ export function * manageNode () {
       }
       yield put(TextileNodeActions.nodeError(error))
     }
+  }
+}
+
+export function * handleCreateNodeRequest () {
+  while (true) {
+    // We take a request to create and start the node.
+    // While we're processing that request, any additional requests will be ignored.
+    yield take(getType(TextileNodeActions.createNodeRequest))
+
+    // Fork the call to create and start the node so we don't block upstream saga manageNode
+    const task: Task = yield fork(createAndStartNode)
+
+    // Don't take any other createNodeRequests until the forked task is done
+    yield call(() => task.done)
   }
 }
 

@@ -20,7 +20,7 @@ import TriggersActions from '../Redux/TriggersRedux'
 
 import { startup } from './StartupSagas'
 
-import { manageNode, backgroundFetch, locationUpdate } from './NodeLifecycle'
+import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } from './NodeLifecycle'
 import { onNodeCreated } from './NodeCreated'
 import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
@@ -106,6 +106,7 @@ import {
 export default function * root () {
   yield all([
     call(manageNode),
+    call(handleCreateNodeRequest),
     call(onNodeCreated),
     call(onNodeStarted),
     call(onNodeOnline),
