@@ -7,6 +7,7 @@ const actions = {
   appStateChange: createAction('APP_STATE_CHANGE', (resolve) => {
     return (previousState: TextileAppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
   }),
+  createNodeRequest: createAction('CREATE_NODE_REQUEST'),
   creatingNode: createAction('CREATING_NODE'),
   createNodeSuccess: createAction('CREATE_NODE_SUCCESS'),
   startingNode: createAction('STARTING_NODE'),
