@@ -3,3 +3,4 @@
 # Ensure this file is checked in to source control!
 
 gem 'fastlane-plugin-android_versioning'
+gem 'fastlane-plugin-update_android_strings'
