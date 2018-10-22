@@ -9,9 +9,11 @@ lane :prep_release do
   # alpha, beta, production
   type = ENV['RN_RELEASE_TYPE'] || 'production'
   suffix = ENV['RN_BUNDLE_SUFFIX'] || type
+  suffix = suffix.length > 0 ? ".#{suffix}" : suffix
+
   # assumes identifier is defined in Appfile
   app_id = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
-  new_app_id = "#{app_id}.#{suffix}"
+  new_app_id = "#{app_id}#{suffix}"
 
   # update the app identifier and bundle
   UI.message "\n\nSetting app identifier to: #{new_app_id}"
@@ -27,6 +29,6 @@ lane :prep_release do
   set_value_in_build(
     app_project_dir: "./android/app",
     key: "applicationIdSuffix",
-    value: ".#{suffix}"
+    value: "#{suffix}"
   )
 end
