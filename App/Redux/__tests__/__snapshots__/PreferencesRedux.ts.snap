@@ -59,5 +59,8 @@ Object {
     "wallet": true,
   },
   "verboseUi": false,
+  "viewSettings": {
+    "selectedWalletTab": "Photos",
+  },
 }
 `;

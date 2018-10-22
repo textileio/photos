@@ -151,12 +151,8 @@ function * processAvatarImage(uri: string) {
 }
 
 export function * navigateToThread ( action: ActionType<typeof UIActions.navigateToThreadRequest> ) {
-  if (action.payload.threadName === 'default') {
-    yield call(NavigationService.navigate, 'PrivateThread')
-  } else {
-    yield put(PhotoViewingActions.viewThread(action.payload.threadId))
-    yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })  
-  }
+  yield put(PhotoViewingActions.viewThread(action.payload.threadId))
+  yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
 }
 
 export function * navigateToComments ( action: ActionType<typeof UIActions.navigateToCommentsRequest> ) {

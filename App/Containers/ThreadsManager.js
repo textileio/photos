@@ -67,6 +67,10 @@ class ThreadsManager extends React.PureComponent {
     }
   }
 
+  _createThread = () => {
+    this.props.navigation.navigate('AddThread', {backTo: 'ThreadsManager'})
+  }
+
   _renderOnboarding () {
     return (
       <View style={onboardingStyles.emptyStateContainer}>
@@ -90,7 +94,7 @@ class ThreadsManager extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} />}
+        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} createThread={this._createThread} />}
       </View>
     )
   }

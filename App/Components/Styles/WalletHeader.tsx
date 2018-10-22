@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { Colors } from '../../Themes/'
 
 export default StyleSheet.create({
   walletHeader: {
@@ -17,36 +18,23 @@ export default StyleSheet.create({
     paddingTop: 9,
     paddingHorizontal: 4
   },
-  walletStats: {
+  walletInfo: {
     flex: 1
   },
-  walletStatsTop: {
+  walletTop: {
     flex: 1,
     paddingHorizontal: 10,
     paddingTop: 20,
-    flexDirection: 'row'
+    flexDirection: 'column',
+    alignItems: 'center'
   },
-  walletStatsTopColumn: {
+  walletUsername: {
     flex: 1,
-    justifyContent: 'center'
-  },
-  walletStatsCount: {
     fontFamily: 'BentonSans-Bold',
-    color: 'rgba(20,20,33,0.9)',
-    textAlign: 'center',
-    fontSize: 20,
-    marginBottom: 2
+    fontSize: 23,
+    color: Colors.charcoal
   },
-  statDim: {
-    color: 'rgba(20,20,33,0.2)'
-  },
-  walletStatsTitle: {
-    fontFamily: 'BentonSans',
-    color: 'rgba(20,20,33,0.5)',
-    textAlign: 'center',
-    fontSize: 14
-  },
-  walletStatsBottom: {
+  walletBottom: {
     flex: 0.7,
     paddingHorizontal: 10,
     paddingBottom: 15
