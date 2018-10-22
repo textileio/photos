@@ -1621,9 +1621,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet;
+				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet.dev;
 				PRODUCT_NAME = Textile;
-				PROVISIONING_PROFILE_SPECIFIER = "match Development io.textile.Wallet";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development io.textile.Wallet.dev";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1653,9 +1653,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet;
+				PRODUCT_BUNDLE_IDENTIFIER = io.textile.Wallet.dev;
 				PRODUCT_NAME = Textile;
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore io.textile.Wallet";
+				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc io.textile.Wallet.dev";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
