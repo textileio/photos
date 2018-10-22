@@ -1,0 +1,32 @@
+# this should be the folder name under `ios` for your project
+project_name = 'Textile'
+
+# NOTE: This is meant to be run on CI where it changes everything before building the app.
+# Usage:
+#   `RN_RELEASE_TYPE=beta fastlane prep_release` (on CI these ENV variables should be set via the UI)
+desc "Updates the app identifier, display name for dev, adhoc, and production releases"
+lane :prep_release do
+  # alpha, beta, production
+  type = ENV['RN_RELEASE_TYPE'] || 'production'
+  suffix = ENV['RN_BUNDLE_SUFFIX'] || type
+  # assumes identifier is defined in Appfile
+  app_id = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+  new_app_id = "#{app_id}.#{suffix}"
+
+  # update the app identifier and bundle
+  UI.message "\n\nSetting app identifier to: #{new_app_id}"
+
+  # update ios indentifier
+  update_info_plist(
+    plist_path: "#{project_name}/Info.plist",
+    xcodeproj: "./ios/#{project_name}.xcodeproj",
+    app_identifier: new_app_id
+  )
+
+  # update android suffix
+  set_value_in_build(
+    app_project_dir: "./android/app",
+    key: "applicationIdSuffix",
+    value: ".#{suffix}"
+  )
+end

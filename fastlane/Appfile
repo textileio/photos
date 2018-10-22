@@ -1,0 +1,5 @@
+# iOS Settings
+app_identifier("io.textile.Wallet")
+
+# Android Settings
+package_name("com.textile")
