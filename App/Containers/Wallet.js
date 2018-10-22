@@ -195,7 +195,7 @@ const mapStateToProps = (state) => {
     verboseUi: state.preferences.verboseUi,
     profile,
     showTourScreen: state.preferences.tourScreens.wallet,
-    avatarUrl: profile && profile.avatar_id ? Config.TEXTILE_CAFE_URI + profile.avatar_id : undefined,
+    avatarUrl: profile && profile.avatar_id ? Config.RN_TEXTILE_CAFE_URI + profile.avatar_id : undefined,
     username: profile && profile.username ? profile.username : undefined,
     overview
   }

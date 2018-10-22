@@ -75,4 +75,5 @@ coverage/
 # React Native Config
 .env
 .env.production
+.env.staging
 .env.default

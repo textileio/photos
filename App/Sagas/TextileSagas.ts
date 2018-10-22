@@ -178,7 +178,7 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
 export function * getUsername (contact: TT.Contact) {
   try {
     if (contact.username !== undefined) { return }
-    const uri = Config.TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username'
+    const uri = Config.RN_TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username'
     const response = yield call(fetch, uri)
     const username = yield call([response, response.text])
     yield put(ContactsActions.getUsernameSuccess(contact, username))
@@ -429,7 +429,7 @@ export function * presentPublicLinkInterface(action: ActionType<typeof UIActions
   const { photoId } = action.payload
   try {
     const key = yield call(TextileNode.getPhotoKey, photoId)
-    const link = Config.TEXTILE_CAFE_URI + '/ipfs/' + photoId + '/photo?key=' + key
+    const link = Config.RN_TEXTILE_CAFE_URI + '/ipfs/' + photoId + '/photo?key=' + key
     yield call(Share.share, {title: '', message: link})
   } catch (error) {}
 }

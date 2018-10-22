@@ -25,7 +25,7 @@ export interface IAvatarProps extends IPropsFromState {
 
 class Avatar extends React.PureComponent<IAvatarProps> {
   getCafeAddress (peerId: PeerId) {
-    return `${Config.TEXTILE_CAFE_URI}/ipns/${peerId}/avatar`
+    return `${Config.RN_TEXTILE_CAFE_URI}/ipns/${peerId}/avatar`
   }
   photoIdFromAvatar (): PhotoId | undefined {
     const { profile } = this.props
