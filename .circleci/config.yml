@@ -191,7 +191,8 @@ jobs:
                 working_directory: android
 
             - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
 
             - run:
                 command: bundle exec fastlane adhoc
@@ -237,7 +238,8 @@ jobs:
                 working_directory: android
 
             - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
 
             - run:
                 command: bundle exec fastlane release
@@ -325,7 +327,8 @@ jobs:
                     - vendor/bundle
 
             - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
 
             - run:
                 command: bundle exec fastlane test
@@ -411,7 +414,8 @@ jobs:
                     - vendor/bundle
 
             - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
 
             - run:
                 command: bundle exec fastlane adhoc
@@ -477,7 +481,8 @@ jobs:
                     - vendor/bundle
 
             - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
 
             - run:
                 command: bundle exec fastlane release
@@ -525,11 +530,13 @@ workflows:
     adhoc:
         jobs:
             - ios-adhoc:
+                context: textile-mobile-beta
                 filters:
                     branches:
                         only:
                             - master
             - android-adhoc:
+                context: textile-mobile-beta
                 filters:
                     branches:
                         only:
@@ -537,6 +544,7 @@ workflows:
     release-ios:
         jobs:
             - ios-release:
+                context: textile-mobile-release
                 filters:
                     tags:
                         only: /^ios_[0-9.]+_[0-9]+/
@@ -545,6 +553,7 @@ workflows:
     release-android:
         jobs:
             - android-release:
+                context: textile-mobile-release
                 filters:
                     tags:
                         only: /^android_[0-9.]+_[0-9]+/
