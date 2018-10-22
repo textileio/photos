@@ -13,13 +13,15 @@ const ThreadCard = props => {
   const commentsCount = photos.length
   const status = commentsCount === 0 ? 'Click to add a photo' : 'Updated ' + moment(updated).fromNow()
 
+  const displayName = name === 'default' ? 'Your Textile Photos' : name
+
   return (
     <TouchableOpacity activeOpacity={0.95} style={styles.threadCard} onPress={() => {
       onPress(props)
     }}>
       <View style={styles.threadCardHeader}>
         <View style={styles.threadCardHeaderLeft}>
-          <Text numberOfLines={2} style={styles.threadCardTitle}>{name}</Text>
+          <Text numberOfLines={2} style={styles.threadCardTitle}>{displayName}</Text>
         </View>
       </View>
       <View style={styles.threadCardBody}>
