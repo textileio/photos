@@ -10,7 +10,8 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { IPhotoGridType, Photo } from '../Models/TextileTypes'
 import style from './Styles/TextilePhotosStyle'
 import WalletHeader from '../Components/WalletHeader'
-import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
+import ThreadSelector from '../Components/ThreadSelector'
+import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
 import onboardingStyles from './Styles/OnboardingStyle'
@@ -105,7 +106,8 @@ class Wallet extends React.PureComponent {
           viewThreads={() => this.props.navigation.navigate('Threads')}
         />
         <View style={style.gridContainer}>
-          <PhotoGrid
+          {this.props.viewThreads && <ThreadSelector threads={this.props.threads} />}
+          {!this.props.viewThreads && <PhotoGrid
             items={this.props.items}
             onSelect={this.onSelect}
             onRefresh={this.onRefresh.bind(this)}
@@ -113,7 +115,7 @@ class Wallet extends React.PureComponent {
             placeholderText={this.props.placeholderText}
             displayImages={this.props.displayImages}
             verboseUi={this.props.verboseUi}
-          />
+          />}
         </View>
       </View>
     )
@@ -185,10 +187,35 @@ const mapStateToProps = (state) => {
     peerCount: state.textileNode.overview ? state.textileNode.overview.contact_count.toString() : '-',
     peerTitle: !state.textileNode.overview || state.textileNode.overview.contact_count !== 1 ? 'peers' : 'peer'
   }
+
+  const allThreads = getThreads(state)
+  let threads
+  if (allThreads.length > 0) {
+    threads = allThreads
+      .filter(thread => thread.name !== 'default')
+      .map(thread => {
+        return {
+          id: thread.id,
+          name: thread.name,
+          // total number of images in the thread
+          size: thread.photos.length,
+          // just keep the top 2
+          photos: thread.photos.slice(0, 3),
+          // get a rough count of distinct users
+          userCount: thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1,
+          // latest update based on the latest item
+          updated: thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0,
+          // latest peer to push to the thread
+          latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
+        }
+      })
+      .sort((a, b) => a.updated < b.updated)
+  }
+
   const profile = state.preferences.profile
   return {
     threadId,
-    photos,
+    threads,
     items,
     displayImages: state.textileNode.nodeState.state === 'started',
     placeholderText,
@@ -197,7 +224,8 @@ const mapStateToProps = (state) => {
     showTourScreen: state.preferences.tourScreens.wallet,
     avatarUrl: profile && profile.avatar_id ? Config.RN_TEXTILE_CAFE_URI + profile.avatar_id : undefined,
     username: profile && profile.username ? profile.username : undefined,
-    overview
+    overview,
+    viewThreads: true
   }
 }
 

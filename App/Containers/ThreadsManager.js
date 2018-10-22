@@ -90,7 +90,7 @@ class ThreadsManager extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} proflie={this.props.profile} />}
+        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} />}
       </View>
     )
   }

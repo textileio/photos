@@ -4,7 +4,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { FlatList, View } from 'react-native'
 
-import {Profile, ThreadId, ThreadName} from '../Models/TextileTypes'
+import {ThreadId, ThreadName} from '../Models/TextileTypes'
 import {RootAction} from '../Redux/Types'
 
 import PhotoViewingActions, {ThreadData} from '../Redux/PhotoViewingRedux'
@@ -15,7 +15,6 @@ import ThreadCard from '../SB/components/ThreadListCard'
 import styles from './Styles/ThreadSelectorStyles'
 
 interface ScreenProps {
-  profile: Profile
   threads: ReadonlyArray<ThreadData>
 }
 
@@ -29,7 +28,7 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
   _renderItem = (rowData: any) => {
     const item: ThreadData = rowData.item
     return (
-      <ThreadCard id={item.id} {...item} profile={this.props.profile} onPress={this._onPressItem} />
+      <ThreadCard id={item.id} {...item} onPress={this._onPressItem} />
     )
   }
 
