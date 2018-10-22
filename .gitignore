@@ -73,5 +73,6 @@ buck-out/
 coverage/
 
 # React Native Config
+.env
 .env.production
 .env.default
