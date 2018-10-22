@@ -1,26 +1,24 @@
 import React from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
+import SwitchSelector from 'react-native-switch-selector'
 import Avatar from './Avatar'
 import style from './Styles/WalletHeader'
 
 export interface IWalletHeaderProps {
-  overview: {
-    available: boolean,
-    peerCount: string,
-    peerTitle: string,
-    threadCount: string,
-    threadTitle: string,
-    photoCount: string,
-    photoTitle: string
-  },
+  username: string,
+  selectedTab: string,
   avatarUrl: string,
   changeAvatar: () => void,
-  updateSettings: () => void,
-  viewThreads: () => void
+  onToggle: () => void
 }
 
 const WalletHeader = (props: IWalletHeaderProps) => {
-  const { overview, changeAvatar, updateSettings, viewThreads } = props
+  const { changeAvatar, onToggle, selectedTab } = props
+  const options = [
+    { label: 'Photos', value: 'Photos' },
+    { label: 'Threads', value: 'Threads' }
+  ]
+  const initialTab = selectedTab === 'Threads' ? 1 : 0
   return (
     <View style={style.walletHeader}>
       <TouchableOpacity
@@ -34,43 +32,12 @@ const WalletHeader = (props: IWalletHeaderProps) => {
           owner={true}
         />
       </TouchableOpacity>
-      <View style={style.walletStats}>
-        <View style={style.walletStatsTop}>
-          <View
-            style={style.walletStatsTopColumn}
-          >
-            <Text style={[style.walletStatsCount, !overview.available && style.statDim]}>
-              {overview.photoCount}
-            </Text>
-            <Text style={style.walletStatsTitle}>
-              {overview.photoTitle}
-            </Text>
-          </View>
-          <View
-            style={style.walletStatsTopColumn}
-          >
-            <Text style={[style.walletStatsCount, !overview.available && style.statDim]}>{overview.peerCount}</Text>
-            <Text style={style.walletStatsTitle}>
-              {overview.peerTitle}
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={style.walletStatsTopColumn}
-            onPress={viewThreads}
-          >
-            <Text style={[style.walletStatsCount, !overview.available && style.statDim]}>{overview.threadCount}</Text>
-            <Text style={style.walletStatsTitle}>
-              {overview.threadTitle}
-            </Text>
-          </TouchableOpacity>
+      <View style={style.walletInfo}>
+        <View style={style.walletTop}>
+          <Text style={style.walletUsername}>Hello, bbbbbb</Text>
         </View>
-        <View style={style.walletStatsBottom}>
-          <TouchableOpacity
-            style={style.walletSettingsButton}
-            onPress={updateSettings}
-          >
-            <Text style={style.walletSettingsText}>View Settings</Text>
-          </TouchableOpacity>
+        <View style={style.walletBottom}>
+          <SwitchSelector onPress={onToggle} options={options} initial={initialTab} buttonColor={'#ededed'} selectedColor={'#333333'} textColor={'#777777'} />
         </View>
       </View>
     </View>

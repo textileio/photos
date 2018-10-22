@@ -2,7 +2,7 @@ import React from 'react'
 import {Dispatch} from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, View } from 'react-native'
+import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 
 import {ThreadId, ThreadName} from '../Models/TextileTypes'
 import {RootAction} from '../Redux/Types'
@@ -15,7 +15,8 @@ import ThreadCard from '../SB/components/ThreadListCard'
 import styles from './Styles/ThreadSelectorStyles'
 
 interface ScreenProps {
-  threads: ReadonlyArray<ThreadData>
+  threads: ReadonlyArray<ThreadData>,
+  createThread: () => void
 }
 
 class ThreadSelector extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
@@ -29,6 +30,14 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
     const item: ThreadData = rowData.item
     return (
       <ThreadCard id={item.id} {...item} onPress={this._onPressItem} />
+    )
+  }
+
+  _renderFooter = () => {
+    return (
+      <TouchableOpacity activeOpacity={0.95} style={styles.createThreadBox} onPress={this.props.createThread}>
+        <Text style={styles.createThreadText}>Create New Thread</Text>
+      </TouchableOpacity>
     )
   }
 
@@ -48,6 +57,7 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
           refreshing={false}
           onRefresh={this._onRefresh}
           initialNumToRender={4}
+          ListFooterComponent={this._renderFooter}
         />
       </View>
     )
