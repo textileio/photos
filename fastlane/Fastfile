@@ -6,10 +6,12 @@ project_name = 'Textile'
 #   `RN_RELEASE_TYPE=beta fastlane prep_release` (on CI these ENV variables should be set via the UI)
 desc "Updates the app identifier, display name for dev, adhoc, and production releases"
 lane :prep_release do
-  # alpha, beta, production
+  # beta, production
   type = ENV['RN_RELEASE_TYPE'] || 'production'
+  puts "Type: #{type}"
   suffix = ENV['RN_BUNDLE_SUFFIX'] || type
   suffix = suffix.length > 0 ? ".#{suffix}" : suffix
+  puts "Suffix: #{suffix}"
 
   # assumes identifier is defined in Appfile
   app_id = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
