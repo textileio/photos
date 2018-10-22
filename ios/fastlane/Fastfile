@@ -30,8 +30,8 @@ platform :ios do
 
   desc "Push internal test build to Fabric"
   lane :adhoc do
-    APP_ID = "io.textile.Wallet"
-    PROFILE = "match AdHoc io.textile.Wallet"
+    APP_ID = "io.textile.Wallet.beta"
+    PROFILE = "match AdHoc io.textile.Wallet.beta"
     settings_to_override = {
       :PROVISIONING_PROFILE_SPECIFIER => PROFILE,
       "-UseModernBuildSystem" => "NO"
@@ -94,6 +94,12 @@ platform :ios do
 
   desc "Deploy a new version to the App Store"
   lane :release do
+    APP_ID = "io.textile.Wallet"
+    PROFILE = "match AdHoc io.textile.Wallet"
+    settings_to_override = {
+      :PROVISIONING_PROFILE_SPECIFIER => PROFILE,
+      "-UseModernBuildSystem" => "NO"
+    }
     match(type: "appstore") # more information: https://codesigning.guide
     tag = ENV['CIRCLE_TAG'] # looks like ios_1.2.3_456
     parts = tag.split("_")
@@ -108,7 +114,12 @@ platform :ios do
     gym(
       project: "Textile.xcodeproj",
       scheme: "Textile",
-      xcargs: "-UseModernBuildSystem=NO"
+      xcargs: settings_to_override,
+      export_options: {
+        provisioningProfiles: {
+            APP_ID => PROFILE
+        }
+      }
     )
     deliver(
       force: true,
