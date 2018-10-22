@@ -559,12 +559,14 @@ workflows:
                     branches:
                         only:
                             - master
+                            - asutula/env-based-builds
             - android-adhoc:
                 context: textile-mobile-beta
                 filters:
                     branches:
                         only:
                             - master
+                            - asutula/env-based-builds
     release-ios:
         jobs:
             - ios-release:
