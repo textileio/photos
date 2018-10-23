@@ -23,20 +23,18 @@ class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
 
-
     const HeaderButtonComponent = passMeFurther => (
       <HeaderButton {...passMeFurther} IconComponent={Icon} iconSize={28} />
     )
-
-    // const headerRight = (
-    //   <HeaderButtons HeaderButtonComponent={HeaderButtonComponent}>
-    //     <Item title="search" iconName="ios-settings" onPress={params.updateSettings} color={Colors.charcoal}/>
-    //   </HeaderButtons>
-    // )
+    console.log(params.storage)
+    const accountBackupEnabled = params.storage && params.storage.enableWalletBackup.status
+    const pinEnabled = params.storage && params.storage.autoPinPhotos.status
+    const photoBackupEnabled = params.storage && params.storage.enablePhotoBackup.status
     const headerLeft = (
       <HeaderButtons HeaderButtonComponent={HeaderButtonComponent}>
-        <Item title="search" iconName="ios-infinite" onPress={() => alert('search')} color={Colors.midBlue}/>
-        <Item title="search" style={{borderWidth: 4, borderColor: 'red'}} iconName="ios-cloud-outline" onPress={() => alert('search')} color={Colors.windowTint}/>
+        <Item title="storage" iconName="ios-infinite" onPress={() => params.toggleStorageOption('autoPinPhotos')} color={ pinEnabled ? Colors.midBlue : Colors.windowTint }/>
+        <Item title="backup" iconName="ios-cloud-outline" onPress={() => params.toggleStorageOption('enablePhotoBackup')} color={ photoBackupEnabled ? Colors.midBlue : Colors.windowTint }/>
+        <Item title="account" iconName={'md-key'} onPress={() => params.toggleStorageOption('enableWalletBackup')} color={ accountBackupEnabled ? Colors.midBlue : Colors.windowTint }/>
       </HeaderButtons>
     )
     
@@ -48,8 +46,8 @@ class Wallet extends React.PureComponent {
 
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
-      headerRight,
       headerLeft,
+      headerRight,
       tabBarVisible: true,
       headerStyle: style.navHeader
     }
@@ -58,11 +56,13 @@ class Wallet extends React.PureComponent {
   componentDidUpdate (prevProps, prevState, snapshot) {
     if (
       this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
-      this.props.profile !== prevProps.profile
+      this.props.profile !== prevProps.profile ||
+      this.props.storage !== prevProps.storage
     ) {
       this.props.navigation.setParams({
-        username: this.props.username,
-        toggleVerboseUi: this.props.toggleVerboseUi
+        storage: this.props.storage,
+        toggleVerboseUi: this.props.toggleVerboseUi,
+        username: this.props.username
       })
     }
   }
@@ -70,8 +70,10 @@ class Wallet extends React.PureComponent {
   componentDidMount () {
     // Set params
     this.props.navigation.setParams({
-      username: this.props.username,
+      storage: this.props.storage,
+      toggleStorageOption: this.props.toggleStorageRequest,
       toggleVerboseUi: this.props.toggleVerboseUi,
+      username: this.props.username,
       updateSettings: this.updateSettings()
     })
     // add the listeners for enter tab
@@ -265,6 +267,7 @@ const mapStateToProps = (state) => {
     avatarUrl: profile && profile.avatar_id ? Config.RN_TEXTILE_CAFE_URI + profile.avatar_id : undefined,
     username: profile && profile.username ? profile.username : undefined,
     selectedTab: state.preferences.viewSettings.selectedWalletTab,
+    storage: state.preferences.storage,
     overview
   }
 }
@@ -273,6 +276,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },
     refresh: () => { dispatch(StorageActions.refreshLocalImagesRequest()) },
+    toggleStorageRequest: (name) => { dispatch(PreferencesActions.toggleStorageRequest(name)) },
     toggleTab: (value) => { dispatch(PreferencesActions.updateViewSetting('selectedWalletTab', value)) },
     updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) },
     viewWalletPhoto: (photoId) => { dispatch(PhotoViewingActions.viewWalletPhoto(photoId)) }
