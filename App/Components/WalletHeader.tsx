@@ -1,5 +1,8 @@
 import React from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
+// react-native-switch-selector shouldn't be a long-run module, just a temp 
+// add to start testing out reconfig of the wallet
+// @ts-ignore
 import SwitchSelector from 'react-native-switch-selector'
 import Avatar from './Avatar'
 import style from './Styles/WalletHeader'
