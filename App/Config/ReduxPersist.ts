@@ -212,13 +212,25 @@ const migrations: MigrationManifest = {
         }
       }
     }
+  },
+  13: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        viewSettings: {
+          selectedWalletTab: 'Photos'
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 12,
+  version: 13,
   whitelist: ['preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'storage', 'deviceLogs'],
   migrate: createMigrate(migrations, { debug: false })
 }

@@ -7,23 +7,29 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { IPhotoGridType, Photo } from '../Models/TextileTypes'
 import style from './Styles/TextilePhotosStyle'
+import { TextileHeaderButtons } from '../Components/HeaderButtons'
+import { Item } from 'react-navigation-header-buttons'
 import WalletHeader from '../Components/WalletHeader'
-import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
+import ThreadSelector from '../Components/ThreadSelector'
+import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
 import onboardingStyles from './Styles/OnboardingStyle'
-import { RootState } from '../Redux/Types'
 
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const headerTitle = params.username ? 'Hello, ' + params.username : 'Hi there!'
+
+    const headerRight = (
+      <TextileHeaderButtons>
+        <Item title='Settings' iconName='cog' onPress={params.updateSettings}/>
+      </TextileHeaderButtons>
+    )
 
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
-      headerTitle,
+      headerRight,
       tabBarVisible: true,
       headerStyle: style.navHeader
     }
@@ -45,18 +51,26 @@ class Wallet extends React.PureComponent {
     // Set params
     this.props.navigation.setParams({
       username: this.props.username,
-      toggleVerboseUi: this.props.toggleVerboseUi
+      toggleVerboseUi: this.props.toggleVerboseUi,
+      updateSettings: this.updateSettings()
     })
-    this.props.navigation.addListener('willFocus', this._onFocus.bind(this))
+    // add the listeners for enter tab
+    this.props.navigation.addListener('willFocus', this.onFocus.bind(this))
   }
 
   componentWillUnmount () {
     // remove the listeners for enter tab
-    this.props.navigation.removeListener('onFocus', this._onFocus.bind(this))
+    this.props.navigation.removeListener('onFocus', this.onFocus.bind(this))
   }
 
-  _onFocus () {
+  onFocus () {
     this.props.updateOverview()
+  }
+
+  updateSettings () {
+    return () => {
+      this.props.navigation.navigate('Account', { avatarUrl: this.props.avatarUrl, username: this.props.username })
+    }
   }
 
   onSelect = (photo) => {
@@ -91,21 +105,27 @@ class Wallet extends React.PureComponent {
     )
   }
 
+  _createThread = () => {
+    this.props.navigation.navigate('AddThread', {backTo: 'Wallet'})
+  }
+
   renderWallet () {
     return (
       <View style={style.container}>
         <WalletHeader
-          overview={this.props.overview}
           changeAvatar={() => {
             this.props.navigation.navigate('ChangeAvatar', { avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet' })
           }}
-          updateSettings={() => {
-            this.props.navigation.navigate('Account', { avatarUrl: this.props.avatarUrl, username: this.props.username })
+          onToggle={(newValue) => {
+            this.props.toggleTab(newValue)
           }}
-          viewThreads={() => this.props.navigation.navigate('Threads')}
+          overview={this.props.overview}
+          selectedTab={this.props.selectedTab}
+          username={this.props.profile.username}
         />
         <View style={style.gridContainer}>
-          <PhotoGrid
+          {this.props.selectedTab === 'Threads' && <ThreadSelector threads={this.props.threads} createThread={this._createThread}/>}
+          {this.props.selectedTab === 'Photos' && <PhotoGrid
             items={this.props.items}
             onSelect={this.onSelect}
             onRefresh={this.onRefresh.bind(this)}
@@ -113,7 +133,7 @@ class Wallet extends React.PureComponent {
             placeholderText={this.props.placeholderText}
             displayImages={this.props.displayImages}
             verboseUi={this.props.verboseUi}
-          />
+          />}
         </View>
       </View>
     )
@@ -176,18 +196,45 @@ const mapStateToProps = (state) => {
     ? 'Wallet Status:\n' + nodeStatus
     : 'Any new photos you take will be added to your Textile wallet.'
 
-  const overview = {
-    available: !!state.textileNode.overview,
-    photoCount: state.textileNode.overview ? photos.length.toString() : '-',
-    photoTitle: !state.textileNode.overview || photos.length !== 1 ? 'photos' : 'photo',
-    threadCount: state.textileNode.overview ? (state.textileNode.overview.thread_count - 1).toString() : '-',
-    threadTitle: !state.textileNode.overview || state.textileNode.overview.thread_count - 1 !== 1 ? 'threads' : 'thread',
-    peerCount: state.textileNode.overview ? state.textileNode.overview.contact_count.toString() : '-',
-    peerTitle: !state.textileNode.overview || state.textileNode.overview.contact_count !== 1 ? 'peers' : 'peer'
+  const allThreads = getThreads(state)
+  let threads
+  if (allThreads.length > 0) {
+    threads = allThreads
+      .filter(thread => thread.name !== 'default')
+      .map(thread => {
+        return {
+          id: thread.id,
+          name: thread.name,
+          // total number of images in the thread
+          size: thread.photos.length,
+          // just keep the top 2
+          photos: thread.photos.slice(0, 3),
+          // get a rough count of distinct users
+          userCount: thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1,
+          // latest update based on the latest item
+          updated: thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0,
+          // latest peer to push to the thread
+          latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
+        }
+      })
+      .sort((a, b) => a.updated < b.updated)
   }
+
+  const overview = {
+    available: !!state.storage.overview,
+    photoCount: state.storage.overview ? photos.length.toString() : '·',
+    photoTitle: !state.storage.overview || photos.length !== 1 ? 'photos' : 'photo',
+    threadCount: state.storage.overview ? (state.storage.overview.thread_count - 1).toString() : '·',
+    threadTitle: !state.storage.overview || state.storage.overview.thread_count - 1 !== 1 ? 'threads' : 'thread',
+    peerCount: state.storage.overview ? state.storage.overview.contact_count.toString() : '·',
+    peerTitle: !state.storage.overview || state.storage.overview.contact_count !== 1 ? 'peers' : 'peer'
+  }
+
   const profile = state.preferences.profile
+
   return {
     threadId,
+    threads,
     photos,
     items,
     displayImages: state.textileNode.nodeState.state === 'started',
@@ -197,16 +244,18 @@ const mapStateToProps = (state) => {
     showTourScreen: state.preferences.tourScreens.wallet,
     avatarUrl: profile && profile.avatar_id ? Config.RN_TEXTILE_CAFE_URI + profile.avatar_id : undefined,
     username: profile && profile.username ? profile.username : undefined,
+    selectedTab: state.preferences.viewSettings.selectedWalletTab,
     overview
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    viewWalletPhoto: (photoId) => { dispatch(PhotoViewingActions.viewWalletPhoto(photoId)) },
-    refresh: () => { dispatch(StorageActions.refreshLocalImagesRequest()) },
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },
-    updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) }
+    refresh: () => { dispatch(StorageActions.refreshLocalImagesRequest()) },
+    toggleTab: (value) => { dispatch(PreferencesActions.updateViewSetting('selectedWalletTab', value)) },
+    updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) },
+    viewWalletPhoto: (photoId) => { dispatch(PhotoViewingActions.viewWalletPhoto(photoId)) }
   }
 }
 

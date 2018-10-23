@@ -21,7 +21,7 @@
     "react-native-config": "https://github.com/textileio/react-native-config#bd7d8bd2a431593fdc735df75ceeb863dfdf5823",
     "react-native-easy-toast": "^1.1.0",
     "react-native-elements": "1.0.0-beta5",
-    "react-native-fabric": "^0.5.2",
+    "react-native-fabric": "https://github.com/corymsmith/react-native-fabric#523a4edab3b2bf55ea9eeea2cf0dde82c5c29dd4",
     "react-native-fs": "^2.11.17",
     "react-native-image-picker": "^0.27.1",
     "react-native-modal": "^6.5.0",
