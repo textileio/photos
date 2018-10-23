@@ -27,18 +27,9 @@ class Wallet extends React.PureComponent {
       </TextileHeaderButtons>
     )
 
-    const headerLeft = (
-      <TextileHeaderButtons>
-        <Item title='Add user' iconName='add-user' onPress={params.updateSettings}/>
-        <Item title='Add user' iconName='add-user' onPress={params.updateSettings}/>
-        <Item title='Add user' iconName='add-user' onPress={params.updateSettings}/>
-      </TextileHeaderButtons>
-    )
-
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerRight,
-      headerLeft,
       tabBarVisible: true,
       headerStyle: style.navHeader
     }
