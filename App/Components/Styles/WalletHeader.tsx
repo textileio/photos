@@ -14,19 +14,18 @@ export default StyleSheet.create({
     backgroundColor: 'white'
   },
   walletAvatar: {
-    width: 104,
+    width: 98,
     paddingTop: 9,
     paddingHorizontal: 4
   },
   walletInfo: {
-    flex: 1
+    flex: 1,
+    paddingLeft: 14
   },
   walletTop: {
     flex: 1,
-    paddingHorizontal: 10,
     paddingTop: 20,
-    flexDirection: 'column',
-    alignItems: 'center'
+    flexDirection: 'column'
   },
   walletUsername: {
     flex: 1,
@@ -35,20 +34,28 @@ export default StyleSheet.create({
     color: Colors.charcoal
   },
   walletBottom: {
-    flex: 0.7,
-    paddingHorizontal: 10,
-    paddingBottom: 15
-  },
-  walletSettingsButton: {
     flex: 1,
-    borderColor: 'rgba(20,20,33,0.1)',
-    borderWidth: 2,
-    borderRadius: 2,
+    flexDirection: 'row',
+    paddingBottom: 15,
+    justifyContent: 'flex-end'
+  },
+  walletButton: {
+    flex: 1,
+    flexDirection: 'column',
     alignContent: 'center',
     justifyContent: 'center'
   },
-  walletSettingsText: {
-    color: 'rgba(20,20,33,0.75)',
-    textAlign: 'center'
+  walletButtonNumber: {
+    fontFamily: 'BentonSans-Bold',
+    fontSize: 24,
+    color: Colors.unselect
+  },
+  walletButtonText: {
+    textTransform: 'uppercase',
+    fontSize: 12,
+    color: Colors.unselect
+  },
+  walletSelected: {
+    color: Colors.brandBlue
   }
 })

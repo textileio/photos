@@ -59,7 +59,7 @@ export interface Service {
   status: boolean,
 }
 export interface ViewSettings {
-  selectedWalletTab: 'Photos' | 'Threads',
+  selectedWalletTab: 'Photos' | 'Threads' | 'Peers',
 }
 export interface PreferencesState {
   onboarded: boolean
