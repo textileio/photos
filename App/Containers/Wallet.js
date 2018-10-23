@@ -7,7 +7,6 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { IPhotoGridType, Photo } from '../Models/TextileTypes'
 import style from './Styles/TextilePhotosStyle'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 import { Item } from 'react-navigation-header-buttons'
@@ -17,7 +16,6 @@ import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
 import onboardingStyles from './Styles/OnboardingStyle'
-import { RootState } from '../Redux/Types'
 
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -29,9 +27,18 @@ class Wallet extends React.PureComponent {
       </TextileHeaderButtons>
     )
 
+    const headerLeft = (
+      <TextileHeaderButtons>
+        <Item title='Add user' iconName='add-user' onPress={params.updateSettings}/>
+        <Item title='Add user' iconName='add-user' onPress={params.updateSettings}/>
+        <Item title='Add user' iconName='add-user' onPress={params.updateSettings}/>
+      </TextileHeaderButtons>
+    )
+
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerRight,
+      headerLeft,
       tabBarVisible: true,
       headerStyle: style.navHeader
     }
