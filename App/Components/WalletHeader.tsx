@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
+import SwitchSelector from 'react-native-switch-selector'
 import Avatar from './Avatar'
 import style from './Styles/WalletHeader'
 
@@ -42,6 +43,7 @@ const WalletHeader = (props: IWalletHeaderProps) => {
           <Text style={style.walletUsername}>Hello, bbbbbb</Text>
         </View>
         <View style={style.walletBottom}>
+<<<<<<< HEAD
           <TouchableOpacity style={style.walletButton} onPress={toggle('Photos')}>
             <Text style={[style.walletButtonNumber, selectedTab === 'Photos' && style.walletSelected]}>8</Text>
             <Text style={[style.walletButtonText, selectedTab === 'Photos' && style.walletSelected]}>Photos</Text>
@@ -55,6 +57,9 @@ const WalletHeader = (props: IWalletHeaderProps) => {
             <Text style={[style.walletButtonText, selectedTab === 'Peers' && style.walletSelected]}>Peers</Text>
           </TouchableOpacity>
           {/* <SwitchSelector onPress={onToggle} options={options} initial={initialTab} buttonColor={'#ededed'} selectedColor={'#333333'} textColor={'#777777'} /> */}
+=======
+          <SwitchSelector onPress={onToggle} options={options} initial={initialTab} buttonColor={'#ededed'} selectedColor={'#333333'} textColor={'#777777'} />
+>>>>>>> e0911b1e0891073bedc1ad0aecea4f0d6ffad6eb
         </View>
       </View>
     </View>

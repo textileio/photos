@@ -19,13 +19,22 @@ export default StyleSheet.create({
     paddingHorizontal: 4
   },
   walletInfo: {
+<<<<<<< HEAD
     flex: 1,
     paddingLeft: 14
+=======
+    flex: 1
+>>>>>>> e0911b1e0891073bedc1ad0aecea4f0d6ffad6eb
   },
   walletTop: {
     flex: 1,
     paddingTop: 20,
+<<<<<<< HEAD
     flexDirection: 'column'
+=======
+    flexDirection: 'column',
+    alignItems: 'center'
+>>>>>>> e0911b1e0891073bedc1ad0aecea4f0d6ffad6eb
   },
   walletUsername: {
     flex: 1,
