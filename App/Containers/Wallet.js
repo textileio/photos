@@ -17,7 +17,7 @@ import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 import Button from '../SB/components/Button'
 import onboardingStyles from './Styles/OnboardingStyle'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { Colors } from '../Themes';
+import { Colors } from '../Themes'
 
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -26,29 +26,30 @@ class Wallet extends React.PureComponent {
     const HeaderButtonComponent = passMeFurther => (
       <HeaderButton {...passMeFurther} IconComponent={Icon} iconSize={28} />
     )
-    console.log(params.storage)
+
     const accountBackupEnabled = params.storage && params.storage.enableWalletBackup.status
     const pinEnabled = params.storage && params.storage.autoPinPhotos.status
     const photoBackupEnabled = params.storage && params.storage.enablePhotoBackup.status
+
     const headerLeft = (
       <HeaderButtons HeaderButtonComponent={HeaderButtonComponent}>
-        <Item title="storage" iconName="ios-infinite" onPress={() => params.toggleStorageOption('autoPinPhotos')} color={ pinEnabled ? Colors.midBlue : Colors.windowTint }/>
-        <Item title="account" iconName={'md-key'} onPress={() => params.toggleStorageOption('enableWalletBackup')} color={ accountBackupEnabled ? Colors.midBlue : Colors.windowTint }/>
-        <Item 
-          title="backup" 
-          iconName="ios-cloud-outline" 
+        <Item title={'storage'} iconName={'ios-infinite'} onPress={() => params.toggleStorageOption('autoPinPhotos')} color={ pinEnabled ? Colors.midBlue : Colors.windowTint }/>
+        <Item title={'account'} iconName={'md-key'} onPress={() => params.toggleStorageOption('enableWalletBackup')} color={ accountBackupEnabled ? Colors.midBlue : Colors.windowTint }/>
+        <Item
+          title='backup'
+          iconName='ios-cloud-outline'
           onPress={() => {
             if (!accountBackupEnabled) {
               // only allow photoBackup if accountbackup is enabled...
               return
             }
             params.toggleStorageOption('enablePhotoBackup')
-          }} 
+          }}
           color={ !accountBackupEnabled ? Colors.silver : photoBackupEnabled ? Colors.midBlue : Colors.windowTint }
         />
       </HeaderButtons>
     )
-    
+
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Settings' iconName='cog' onPress={params.updateSettings}/>
