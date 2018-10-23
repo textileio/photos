@@ -4,15 +4,23 @@ import Avatar from './Avatar'
 import style from './Styles/WalletHeader'
 
 export interface IWalletHeaderProps {
-  username: string,
+  overview: {
+    available: boolean,
+    photoCount: string,
+    photoTitle: string,
+    threadCount: string,
+    threadTitle: string,
+    peerCount: string,
+    peerTitle: string
+  },
   selectedTab: string,
-  avatarUrl: string,
+  username: string,
   changeAvatar: () => void,
   onToggle: (value: string) => void
 }
 
 const WalletHeader = (props: IWalletHeaderProps) => {
-  const { changeAvatar, onToggle, selectedTab } = props
+  const { overview, selectedTab, username, changeAvatar, onToggle } = props
   const options = [
     { label: 'Photos', value: 'Photos' },
     { label: 'Threads', value: 'Threads' },
@@ -24,6 +32,15 @@ const WalletHeader = (props: IWalletHeaderProps) => {
       onToggle(value)
     }
   }
+  const statButton = (title: string, count: string, countTitle: string) => {
+    return (
+      <TouchableOpacity style={style.walletButton} onPress={toggle(title)}>
+        <Text style={[style.walletButtonNumber, selectedTab === title && style.walletSelected]}>{count}</Text>
+        <Text style={[style.walletButtonText, selectedTab === title && style.walletSelected]}>{countTitle}</Text>
+      </TouchableOpacity>
+    )
+  }
+
   return (
     <View style={style.walletHeader}>
       <TouchableOpacity
@@ -39,21 +56,12 @@ const WalletHeader = (props: IWalletHeaderProps) => {
       </TouchableOpacity>
       <View style={style.walletInfo}>
         <View style={style.walletTop}>
-          <Text style={style.walletUsername}>Hello, bbbbbb</Text>
+          <Text style={style.walletUsername}>Hello, {username}</Text>
         </View>
         <View style={style.walletBottom}>
-          <TouchableOpacity style={style.walletButton} onPress={toggle('Photos')}>
-            <Text style={[style.walletButtonNumber, selectedTab === 'Photos' && style.walletSelected]}>8</Text>
-            <Text style={[style.walletButtonText, selectedTab === 'Photos' && style.walletSelected]}>Photos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={style.walletButton} onPress={toggle('Threads')}>
-            <Text style={[style.walletButtonNumber, selectedTab === 'Threads' && style.walletSelected]}>8</Text>
-            <Text style={[style.walletButtonText, selectedTab === 'Threads' && style.walletSelected]}>Threads</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={style.walletButton} onPress={toggle('Peers')}>
-            <Text style={[style.walletButtonNumber, selectedTab === 'Peers' && style.walletSelected]}>8</Text>
-            <Text style={[style.walletButtonText, selectedTab === 'Peers' && style.walletSelected]}>Peers</Text>
-          </TouchableOpacity>
+          {statButton('Photos', overview.photoCount, overview.photoTitle)}
+          {statButton('Threads', overview.threadCount, overview.threadTitle)}
+          {statButton('Peers', overview.peerCount, overview.peerTitle)}
         </View>
       </View>
     </View>

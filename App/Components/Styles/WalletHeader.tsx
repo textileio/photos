@@ -4,18 +4,18 @@ import { Colors } from '../../Themes/'
 export default StyleSheet.create({
   walletHeader: {
     position: 'relative',
-    height: 150,
+    height: 142,
     width: '100%',
     flexDirection: 'row',
     padding: 8,
-    paddingBottom: 28,
+    paddingBottom: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ECEDEE',
     backgroundColor: 'white'
   },
   walletAvatar: {
     width: 98,
-    paddingTop: 9,
+    paddingTop: 0,
     paddingHorizontal: 4
   },
   walletInfo: {
@@ -24,7 +24,7 @@ export default StyleSheet.create({
   },
   walletTop: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 8,
     flexDirection: 'column'
   },
   walletUsername: {
