@@ -36,7 +36,7 @@ export default StyleSheet.create({
   walletBottom: {
     flex: 1,
     flexDirection: 'row',
-    paddingBottom: 15,
+    paddingBottom: 24,
     justifyContent: 'flex-end'
   },
   walletButton: {
