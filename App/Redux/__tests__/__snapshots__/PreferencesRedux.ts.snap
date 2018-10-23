@@ -59,7 +59,7 @@ Object {
     "wallet": true,
   },
   "verboseUi": false,
-  "viewSettings": {
+  "viewSettings": Object {
     "selectedWalletTab": "Photos",
   },
 }
