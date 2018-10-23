@@ -33,8 +33,19 @@ class Wallet extends React.PureComponent {
     const headerLeft = (
       <HeaderButtons HeaderButtonComponent={HeaderButtonComponent}>
         <Item title="storage" iconName="ios-infinite" onPress={() => params.toggleStorageOption('autoPinPhotos')} color={ pinEnabled ? Colors.midBlue : Colors.windowTint }/>
-        <Item title="backup" iconName="ios-cloud-outline" onPress={() => params.toggleStorageOption('enablePhotoBackup')} color={ photoBackupEnabled ? Colors.midBlue : Colors.windowTint }/>
         <Item title="account" iconName={'md-key'} onPress={() => params.toggleStorageOption('enableWalletBackup')} color={ accountBackupEnabled ? Colors.midBlue : Colors.windowTint }/>
+        <Item 
+          title="backup" 
+          iconName="ios-cloud-outline" 
+          onPress={() => {
+            if (!accountBackupEnabled) {
+              // only allow photoBackup if accountbackup is enabled...
+              return
+            }
+            params.toggleStorageOption('enablePhotoBackup')
+          }} 
+          color={ !accountBackupEnabled ? Colors.silver : photoBackupEnabled ? Colors.midBlue : Colors.windowTint }
+        />
       </HeaderButtons>
     )
     
