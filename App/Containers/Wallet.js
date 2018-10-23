@@ -51,7 +51,6 @@ class Wallet extends React.PureComponent {
   }
 
   componentWillUnmount () {
-    // remove the listeners for enter tab
     this.props.navigation.removeListener('onFocus', this._onFocus.bind(this))
   }
 
