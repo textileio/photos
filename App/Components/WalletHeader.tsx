@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
-import SwitchSelector from 'react-native-switch-selector'
 import Avatar from './Avatar'
 import style from './Styles/WalletHeader'
 
