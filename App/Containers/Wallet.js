@@ -9,18 +9,37 @@ import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import style from './Styles/TextilePhotosStyle'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
-import { Item } from 'react-navigation-header-buttons'
+import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons'
 import WalletHeader from '../Components/WalletHeader'
 import ThreadSelector from '../Components/ThreadSelector'
 import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
 import onboardingStyles from './Styles/OnboardingStyle'
+import Icon from 'react-native-vector-icons/Ionicons'
+import { Colors } from '../Themes';
 
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
 
+
+    const HeaderButtonComponent = passMeFurther => (
+      <HeaderButton {...passMeFurther} IconComponent={Icon} iconSize={28} />
+    )
+
+    // const headerRight = (
+    //   <HeaderButtons HeaderButtonComponent={HeaderButtonComponent}>
+    //     <Item title="search" iconName="ios-settings" onPress={params.updateSettings} color={Colors.charcoal}/>
+    //   </HeaderButtons>
+    // )
+    const headerLeft = (
+      <HeaderButtons HeaderButtonComponent={HeaderButtonComponent}>
+        <Item title="search" iconName="ios-infinite" onPress={() => alert('search')} color={Colors.midBlue}/>
+        <Item title="search" style={{borderWidth: 4, borderColor: 'red'}} iconName="ios-cloud-outline" onPress={() => alert('search')} color={Colors.windowTint}/>
+      </HeaderButtons>
+    )
+    
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Settings' iconName='cog' onPress={params.updateSettings}/>
@@ -30,6 +49,7 @@ class Wallet extends React.PureComponent {
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
       headerRight,
+      headerLeft,
       tabBarVisible: true,
       headerStyle: style.navHeader
     }
