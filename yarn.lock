@@ -4855,10 +4855,6 @@ react-native-screens@^1.0.0-alpha.11:
   version "1.0.0-alpha.14"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.14.tgz#fe3ccdcec7be8e1ada090c34a7f8951337adf653"
 
-react-native-switch-selector@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/react-native-switch-selector/-/react-native-switch-selector-1.1.8.tgz#5e79e14d8b91462ac826427d19a4e85708717312"
-
 react-native-tab-view@^0.0.77:
   version "0.0.77"
   resolved "http://registry.npmjs.org/react-native-tab-view/-/react-native-tab-view-0.0.77.tgz#11ceb8e7c23100d07e628dc151b57797524d00d4"
