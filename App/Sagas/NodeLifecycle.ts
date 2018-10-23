@@ -67,7 +67,7 @@ function * createAndStartNode () {
     const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
     const logFiles = !__DEV__
     yield put(TextileNodeActions.creatingNode())
-    yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.TEXTILE_CAFE_URI, logLevel, logFiles)
+    yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.RN_TEXTILE_CAFE_URI, logLevel, logFiles)
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(TextileNode.start)

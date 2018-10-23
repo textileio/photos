@@ -51,8 +51,8 @@ function createInviteLink (invite: ExternalInvite, threadName: ThreadName): stri
   hash.push(`key=${encodeURIComponent(invite.key)}`)
   hash.push(`inviter=${encodeURIComponent(invite.inviter)}`)
   hash.push(`name=${encodeURIComponent(threadName)}`)
-  if (Config.TEMPORARY_REFERRAL) {
-    hash.push(`referral=${encodeURIComponent(Config.TEMPORARY_REFERRAL)}`)
+  if (Config.RN_TEMPORARY_REFERRAL) {
+    hash.push(`referral=${encodeURIComponent(Config.RN_TEMPORARY_REFERRAL)}`)
   }
   return `https://www.textile.photos/invites/new#${hash.join('&')}`
 }

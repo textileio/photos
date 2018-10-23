@@ -18,7 +18,7 @@ export function * uploadFile (id: string, payloadPath: string) {
     {
       customUploadId: id,
       path: payloadPath,
-      url: Config.TEXTILE_CAFE_URI + Config.TEXTILE_CAFE_PIN_PATH,
+      url: Config.RN_TEXTILE_CAFE_URI + Config.RN_TEXTILE_CAFE_PIN_PATH,
       method: 'POST',
       type: 'raw',
       headers: {

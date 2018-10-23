@@ -174,6 +174,16 @@ jobs:
 
             - run: yarn install
 
+            - run:
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
+
+            - run:
+                command: bundle install
+
+            - run:
+                command: bundle exec fastlane prep_release
+
             - restore_cache:
                 key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
 
@@ -189,9 +199,6 @@ jobs:
             - run:
                 command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
                 working_directory: android
-
-            - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
                 command: bundle exec fastlane adhoc
@@ -220,6 +227,16 @@ jobs:
 
             - run: yarn install
 
+            - run:
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
+
+            - run:
+                command: bundle install
+
+            - run:
+                command: bundle exec fastlane prep_release
+
             - restore_cache:
                 key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
 
@@ -235,9 +252,6 @@ jobs:
             - run:
                 command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
                 working_directory: android
-
-            - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
                 command: bundle exec fastlane release
@@ -312,6 +326,10 @@ jobs:
                 paths:
                     - node_modules
 
+            - run:
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
+
             - restore_cache:
                 key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
 
@@ -323,9 +341,6 @@ jobs:
                 key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
                 paths:
                     - vendor/bundle
-
-            - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
                 command: bundle exec fastlane test
@@ -398,6 +413,16 @@ jobs:
                 paths:
                     - node_modules
 
+            - run:
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
+
+            - run:
+                command: bundle install
+
+            - run:
+                command: bundle exec fastlane prep_release
+
             - restore_cache:
                 key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
 
@@ -409,9 +434,6 @@ jobs:
                 key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
                 paths:
                     - vendor/bundle
-
-            - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
                 command: bundle exec fastlane adhoc
@@ -464,6 +486,16 @@ jobs:
                 paths:
                     - node_modules
 
+            - run:
+                name: Write .env
+                command: ./scripts/create-rn-env.sh
+
+            - run:
+                command: bundle install
+
+            - run:
+                command: bundle exec fastlane prep_release
+
             - restore_cache:
                 key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
 
@@ -475,9 +507,6 @@ jobs:
                 key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
                 paths:
                     - vendor/bundle
-
-            - run:
-                command: echo $TEXTILE_ENV_CONTENTS_BASE64 | base64 --decode > .env.production
 
             - run:
                 command: bundle exec fastlane release
@@ -525,11 +554,13 @@ workflows:
     adhoc:
         jobs:
             - ios-adhoc:
+                context: textile-mobile-beta
                 filters:
                     branches:
                         only:
                             - master
             - android-adhoc:
+                context: textile-mobile-beta
                 filters:
                     branches:
                         only:
@@ -537,6 +568,7 @@ workflows:
     release-ios:
         jobs:
             - ios-release:
+                context: textile-mobile-release
                 filters:
                     tags:
                         only: /^ios_[0-9.]+_[0-9]+/
@@ -545,6 +577,7 @@ workflows:
     release-android:
         jobs:
             - android-release:
+                context: textile-mobile-release
                 filters:
                     tags:
                         only: /^android_[0-9.]+_[0-9]+/
