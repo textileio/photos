@@ -44,7 +44,7 @@ class ThreadsList extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Photo' iconName='add-photo' onPress={params.showImagePicker} />
+        <Item title='Add Photo' iconName='add-photo' onPress={params.showWalletPicker} />
         <Item title='Options' iconName='more' onPress={params.showActionSheet} />
       </TextileHeaderButtons>
     )
@@ -77,7 +77,7 @@ class ThreadsList extends React.PureComponent {
       showActionSheet: () => {
         this.showActionSheet()
       },
-      showImagePicker: this._showImagePicker.bind(this)
+      showWalletPicker: this.props.showWalletPicker
     })
   }
 
@@ -100,10 +100,6 @@ class ThreadsList extends React.PureComponent {
     ) {
       this._notificationPrompt()
     }
-  }
-
-  _showImagePicker () {
-    this.props.showImagePicker()
   }
 
   _notificationPrompt () {
@@ -266,7 +262,7 @@ const mapDispatchToProps = (dispatch) => {
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
-    showImagePicker: () => { dispatch(UIActions.showImagePicker()) },
+    showWalletPicker: () => { dispatch(UIActions.showWalletPicker()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     toggleThreadsLayout: () => { dispatch(PreferencesActions.toggleThreadsLayout()) },
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) }

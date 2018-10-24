@@ -26,15 +26,22 @@ class TextileWalletPicker extends React.PureComponent {
     const headerTitle = (
       <Text style={navStyles.headerTitle}>Choose a Photo</Text>
     )
+    const headerRight = (
+      <TextileHeaderButtons>
+        <Item title='Camera Roll' iconName='camera-picker' onPress={params.showImagePicker} />
+      </TextileHeaderButtons>
+    )
     return {
       headerTitle,
-      headerLeft
+      headerLeft,
+      headerRight
     }
   }
 
   componentDidMount () {
     this.props.navigation.setParams({
-      cancelSharingPhoto: this.props.cancelSharingPhoto
+      cancelSharingPhoto: this.props.cancelSharingPhoto,
+      showImagePicker: this.props.showImagePicker
     })
   }
 
@@ -97,6 +104,7 @@ const mapDispatchToProps = (dispatch) => {
     success: (photoId) => { dispatch(UIActions.walletPickerSuccess(photoId)) },
     cancelSharingPhoto: () => { dispatch(UIActions.cancelSharingPhoto()) },
     refresh: (threadId) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
+    showImagePicker: () => { dispatch(UIActions.showImagePicker()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }

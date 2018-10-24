@@ -90,10 +90,6 @@ export async function choosePhoto (): Promise<IPickerImage> {
       title: 'Select a photo',
       mediaType: 'photo' as 'photo',
       noData: true,
-      customButtons: [{
-        name: 'wallet',
-        title: 'Choose from Textile...'
-      }],
       storageOptions: {
         path: 'images',
         skipBackup: true,

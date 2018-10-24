@@ -45,7 +45,7 @@ class ThreadDetail extends React.PureComponent {
     // <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Photo' iconName='add-photo' onPress={params.showImagePicker} />
+        <Item title='Add Photo' iconName='add-photo' onPress={params.showWalletPicker} />
         <Item title='Share' iconName='more' onPress={params.showActionSheet} />
       </TextileHeaderButtons>
     )
@@ -119,8 +119,8 @@ class ThreadDetail extends React.PureComponent {
     }
   }
 
-  showImagePicker () {
-    this.props.showImagePicker(this.props.threadId)
+  showWalletPicker () {
+    this.props.showWalletPicker(this.props.threadId)
   }
 
   _setHeaderParams () {
@@ -135,11 +135,11 @@ class ThreadDetail extends React.PureComponent {
         }
         this.showActionSheet()
       },
-      showImagePicker: () => {
+      showWalletPicker: () => {
         if (this.props.showOnboarding === true) {
           this.props.completeScreen('threadView')
         }
-        this.showImagePicker()
+        this.showWalletPicker()
       }
     })
   }
@@ -255,7 +255,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewPhoto: (photoId) => { dispatch(PhotoViewingActions.viewPhoto(photoId)) },
-    showImagePicker: (threadId) => { dispatch(UIActions.showImagePicker(threadId)) },
+    showWalletPicker: (threadId) => { dispatch(UIActions.showWalletPicker(threadId)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     leaveThread: (threadId) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) },
