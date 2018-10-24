@@ -16,7 +16,7 @@ import HeaderButtons, { HeaderButton } from 'react-navigation-header-buttons'
 
 const IoniconsHeaderButton = passMeFurther => (
   <HeaderButton {...passMeFurther} IconComponent={Icon} iconSize={28} color='#595959' />
-);
+)
 
 class TextileWalletPicker extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
