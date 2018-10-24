@@ -122,3 +122,81 @@ export async function choosePhoto (): Promise<IPickerImage> {
     })
   })
 }
+
+export async function launchCamera (): Promise<IPickerImage> {
+  return new Promise<IPickerImage>((resolve, reject) => {
+    const options = {
+      title: 'Camera',
+      mediaType: 'photo' as 'photo',
+      noData: true,
+      storageOptions: {
+        path: 'images',
+        skipBackup: true,
+        waitUntilSaved: true
+      }
+    }
+    ImagePicker.launchCamera(options, (response) => {
+      let path: string
+      let canDelete: boolean
+      if (Platform.OS === 'ios') {
+        path = response.uri ? response.uri.replace('file://', '') : ''
+        canDelete = true
+      } else {
+        path = response.path!
+        canDelete = false
+      }
+      const result: IPickerImage = {
+        uri: response.uri,
+        path,
+        canDelete,
+        height: response.height,
+        width: response.width,
+        isVertical: response.isVertical,
+        origURL: response.origURL,
+        didCancel: response.didCancel,
+        customButton: response.customButton,
+        error: response.error
+      }
+      resolve(result)
+    })
+  })
+}
+
+export async function launchImageLibrary (): Promise<IPickerImage> {
+  return new Promise<IPickerImage>((resolve, reject) => {
+    const options = {
+      title: 'Camera',
+      mediaType: 'photo' as 'photo',
+      noData: true,
+      storageOptions: {
+        path: 'images',
+        skipBackup: true,
+        waitUntilSaved: true
+      }
+    }
+    ImagePicker.launchImageLibrary(options, (response) => {
+      let path: string
+      let canDelete: boolean
+      if (Platform.OS === 'ios') {
+        path = response.uri ? response.uri.replace('file://', '') : ''
+        canDelete = true
+      } else {
+        path = response.path!
+        canDelete = false
+      }
+      const result: IPickerImage = {
+        uri: response.uri,
+        path,
+        canDelete,
+        height: response.height,
+        width: response.width,
+        isVertical: response.isVertical,
+        origURL: response.origURL,
+        didCancel: response.didCancel,
+        customButton: response.customButton,
+        error: response.error
+      }
+      resolve(result)
+    })
+  })
+}

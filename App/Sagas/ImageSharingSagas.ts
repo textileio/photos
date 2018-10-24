@@ -25,9 +25,24 @@ export function * showWalletPicker(action: ActionType<typeof UIActions.showWalle
 
 // Called whenever someone clicks the share button
 export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
-  const { threadId } = action.payload
+  const { pickerType } = action.payload
   // Present image picker
-  const pickerResponse: CameraRoll.IPickerImage = yield CameraRoll.choosePhoto()
+  let pickerResponse: CameraRoll.IPickerImage
+
+  switch (pickerType) {
+    case 'camera': {
+      pickerResponse = yield CameraRoll.launchCamera()
+      break
+    }
+    case 'camera-roll': {
+      pickerResponse = yield CameraRoll.launchImageLibrary()
+      break
+    }
+    default:
+      return
+  }
+
+  const threadId = yield select(UISelectors.sharingPhotoThread)
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
   } else if (pickerResponse.error) {

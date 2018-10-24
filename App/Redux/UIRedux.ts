@@ -47,7 +47,7 @@ const actions = {
     return (photoId: PhotoId) => resolve({ photoId })
   }),
   showImagePicker: createAction('SHOW_IMAGE_PICKER', (resolve) => {
-    return (threadId?: ThreadId) => resolve({ threadId })
+    return (pickerType?: string) => resolve({ pickerType })
   }),
   showWalletPicker: createAction('SHOW_WALLET_PICKER', (resolve) => {
     return (threadId?: ThreadId) => resolve({ threadId })
