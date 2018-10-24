@@ -84,23 +84,58 @@ export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}
   })
 }
 
-export async function choosePhoto (): Promise<IPickerImage> {
+export async function launchCamera (): Promise<IPickerImage> {
   return new Promise<IPickerImage>((resolve, reject) => {
     const options = {
-      title: 'Select a photo',
+      title: 'Camera',
       mediaType: 'photo' as 'photo',
       noData: true,
-      customButtons: [{
-        name: 'wallet',
-        title: 'Choose from Textile...'
-      }],
       storageOptions: {
         path: 'images',
         skipBackup: true,
         waitUntilSaved: true
       }
     }
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.launchCamera(options, (response) => {
+      let path: string
+      let canDelete: boolean
+      if (Platform.OS === 'ios') {
+        path = response.uri ? response.uri.replace('file://', '') : ''
+        canDelete = true
+      } else {
+        path = response.path!
+        canDelete = false
+      }
+      const result: IPickerImage = {
+        uri: response.uri,
+        path,
+        canDelete,
+        height: response.height,
+        width: response.width,
+        isVertical: response.isVertical,
+        origURL: response.origURL,
+        didCancel: response.didCancel,
+        customButton: response.customButton,
+        error: response.error
+      }
+      resolve(result)
+    })
+  })
+}
+
+export async function launchImageLibrary (): Promise<IPickerImage> {
+  return new Promise<IPickerImage>((resolve, reject) => {
+    const options = {
+      title: 'Camera',
+      mediaType: 'photo' as 'photo',
+      noData: true,
+      storageOptions: {
+        path: 'images',
+        skipBackup: true,
+        waitUntilSaved: true
+      }
+    }
+    ImagePicker.launchImageLibrary(options, (response) => {
       let path: string
       let canDelete: boolean
       if (Platform.OS === 'ios') {

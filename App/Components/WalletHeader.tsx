@@ -34,7 +34,7 @@ const WalletHeader = (props: IWalletHeaderProps) => {
   }
   const statButton = (title: string, count: string, countTitle: string) => {
     return (
-      <TouchableOpacity style={style.walletButton} onPress={toggle(title)}>
+      <TouchableOpacity style={style.walletButton} onPress={toggle(title)} activeOpacity={0.9}>
         <Text style={[style.walletButtonNumber, selectedTab === title && style.walletSelected]}>{count}</Text>
         <Text style={[style.walletButtonText, selectedTab === title && style.walletSelected]}>{countTitle}</Text>
       </TouchableOpacity>
