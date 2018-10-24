@@ -84,45 +84,6 @@ export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}
   })
 }
 
-export async function choosePhoto (): Promise<IPickerImage> {
-  return new Promise<IPickerImage>((resolve, reject) => {
-    const options = {
-      title: 'Select a photo',
-      mediaType: 'photo' as 'photo',
-      noData: true,
-      storageOptions: {
-        path: 'images',
-        skipBackup: true,
-        waitUntilSaved: true
-      }
-    }
-    ImagePicker.showImagePicker(options, (response) => {
-      let path: string
-      let canDelete: boolean
-      if (Platform.OS === 'ios') {
-        path = response.uri ? response.uri.replace('file://', '') : ''
-        canDelete = true
-      } else {
-        path = response.path!
-        canDelete = false
-      }
-      const result: IPickerImage = {
-        uri: response.uri,
-        path,
-        canDelete,
-        height: response.height,
-        width: response.width,
-        isVertical: response.isVertical,
-        origURL: response.origURL,
-        didCancel: response.didCancel,
-        customButton: response.customButton,
-        error: response.error
-      }
-      resolve(result)
-    })
-  })
-}
-
 export async function launchCamera (): Promise<IPickerImage> {
   return new Promise<IPickerImage>((resolve, reject) => {
     const options = {
