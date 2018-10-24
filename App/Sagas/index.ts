@@ -27,6 +27,7 @@ import { onNodeOnline } from './NodeOnline'
 
 import {
   showImagePicker,
+  showWalletPicker,
   walletPickerSuccess
 } from './ImageSharingSagas'
 
@@ -174,6 +175,7 @@ export default function * root () {
     takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
 
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
+    takeEvery(getType(UIActions.showWalletPicker), showWalletPicker),
     takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
