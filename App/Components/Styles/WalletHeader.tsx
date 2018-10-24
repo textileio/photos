@@ -1,66 +1,61 @@
 import { StyleSheet } from 'react-native'
+import { Colors } from '../../Themes/'
 
 export default StyleSheet.create({
   walletHeader: {
     position: 'relative',
-    height: 150,
+    height: 142,
     width: '100%',
     flexDirection: 'row',
     padding: 8,
-    paddingBottom: 28,
+    paddingBottom: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ECEDEE',
     backgroundColor: 'white'
   },
   walletAvatar: {
-    width: 104,
-    paddingTop: 9,
+    width: 98,
+    paddingTop: 0,
     paddingHorizontal: 4
   },
-  walletStats: {
-    flex: 1
-  },
-  walletStatsTop: {
+  walletInfo: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingTop: 20,
-    flexDirection: 'row'
+    paddingLeft: 14
   },
-  walletStatsTopColumn: {
+  walletTop: {
     flex: 1,
-    justifyContent: 'center'
+    paddingTop: 8,
+    flexDirection: 'column'
   },
-  walletStatsCount: {
+  walletUsername: {
+    flex: 1,
     fontFamily: 'BentonSans-Bold',
-    color: 'rgba(20,20,33,0.9)',
-    textAlign: 'center',
-    fontSize: 20,
-    marginBottom: 2
+    fontSize: 23,
+    color: Colors.charcoal
   },
-  statDim: {
-    color: 'rgba(20,20,33,0.2)'
-  },
-  walletStatsTitle: {
-    fontFamily: 'BentonSans',
-    color: 'rgba(20,20,33,0.5)',
-    textAlign: 'center',
-    fontSize: 14
-  },
-  walletStatsBottom: {
-    flex: 0.7,
-    paddingHorizontal: 10,
-    paddingBottom: 15
-  },
-  walletSettingsButton: {
+  walletBottom: {
     flex: 1,
-    borderColor: 'rgba(20,20,33,0.1)',
-    borderWidth: 2,
-    borderRadius: 2,
+    flexDirection: 'row',
+    paddingBottom: 24,
+    justifyContent: 'flex-end'
+  },
+  walletButton: {
+    flex: 1,
+    flexDirection: 'column',
     alignContent: 'center',
     justifyContent: 'center'
   },
-  walletSettingsText: {
-    color: 'rgba(20,20,33,0.75)',
-    textAlign: 'center'
+  walletButtonNumber: {
+    fontFamily: 'BentonSans-Bold',
+    fontSize: 24,
+    color: Colors.unselect
+  },
+  walletButtonText: {
+    textTransform: 'uppercase',
+    fontSize: 12,
+    color: Colors.unselect
+  },
+  walletSelected: {
+    color: '#3478f6'
   }
 })

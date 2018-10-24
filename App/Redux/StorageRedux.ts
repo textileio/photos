@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import {ILocalPhotoResult} from '../Models/TextileTypes'
+import {ILocalPhotoResult, NodeOverview} from '../Models/TextileTypes'
 import { RootState } from './Types'
 
 const actions = {
@@ -11,6 +11,9 @@ const actions = {
   }),
   refreshLocalImagesRequest: createAction('REFRESH_LOCAL_IMAGES_REQUEST', (resolve) => {
     return () => resolve()
+  }),
+  storeOverview: createAction('STORE_OVERVIEW', (resolve) => {
+    return (overview: NodeOverview) => resolve({ overview })
   })
 }
 
@@ -19,6 +22,7 @@ export type StorageAction = ActionType<typeof actions>
 export interface StorageState {
   readonly lastPhotoRefresh: number // epoch in seconds
   readonly refreshingImages: boolean
+  readonly overview?: NodeOverview
 }
 
 export const initialState: StorageState = {
@@ -38,6 +42,8 @@ export function reducer(state: StorageState = initialState, action: StorageActio
     case getType(actions.refreshLocalImagesRequest):
       // TODO: There is not success action that sets this back to false
       return { ...state, refreshingImages: true }
+      case getType(actions.storeOverview):
+        return { ...state, overview: action.payload.overview }
     default:
       return state
   }

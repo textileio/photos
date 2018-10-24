@@ -38,6 +38,7 @@ import { ThreadData } from '../Redux/PhotoViewingRedux'
 import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
+import StorageActions from '../Redux/StorageRedux'
 
 export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
   const {referralCode, username, email, password} = action.payload
@@ -89,7 +90,7 @@ export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActi
   try {
     yield call(NotificationsSagas.waitUntilOnline, 2500)
     const overview = yield call(TextileNode.getOverview)
-    yield put(TextileNodeActions.updateOverviewSuccess(overview))
+    yield put(StorageActions.storeOverview(overview))
   } catch (error) {
     // do nothing
   }

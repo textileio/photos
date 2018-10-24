@@ -22,5 +22,22 @@ export default StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0
+  },
+  createThreadBox: {
+    borderWidth: 2,
+    borderColor: '#EEE',
+    borderStyle: 'dashed',
+    borderRadius: 10,
+    marginTop: 27,
+    marginBottom: 29,
+    marginHorizontal: 10,
+    height: 150,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center'
+  },
+  createThreadText: {
+    color: '#BBB',
+    fontFamily: 'BentonSans'
   }
 })

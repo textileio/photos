@@ -32,6 +32,9 @@ const actions = {
   }),
   toggleStorageRequest: createAction('TOGGLE_STORAGE_REQUEST', (resolve) => {
     return (name: StorageType, status?: boolean) => resolve({ name, status })
+  }),
+  updateViewSetting: createAction('TOGGLE_VIEW_SETTING', (resolve) => {
+    return (name: string, value: string) => resolve({ name, value })
   })
 }
 
@@ -55,6 +58,9 @@ export type StorageType = 'autoPinPhotos' |
 export interface Service {
   status: boolean,
 }
+export interface ViewSettings {
+  selectedWalletTab: 'Photos' | 'Threads' | 'Peers',
+}
 export interface PreferencesState {
   onboarded: boolean
   verboseUi: boolean
@@ -65,6 +71,7 @@ export interface PreferencesState {
   readonly services: {readonly [k in ServiceType]: Service}
   readonly storage: {readonly [k in StorageType]: Service}
   readonly tourScreens: {readonly [k in TourScreens]: boolean} // true = still need to show, false = no need
+  viewSettings: ViewSettings
 }
 
 export const initialState: PreferencesState = {
@@ -124,6 +131,9 @@ export const initialState: PreferencesState = {
     enableWalletBackup: {
       status: false
     }
+  },
+  viewSettings: {
+    selectedWalletTab: 'Photos'
   }
 }
 
@@ -154,6 +164,9 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       const storageType = state.storage[action.payload.name]
       storageType.status = action.payload.status === undefined ? !storageType.status : action.payload.status
       return {...state, storage: {...state.storage, [action.payload.name]: storageType}}
+    }
+    case getType(actions.updateViewSetting): {
+      return {...state, viewSettings: {...state.viewSettings, [action.payload.name]: action.payload.value}}
     }
     default:
       return state
