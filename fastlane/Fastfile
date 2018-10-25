@@ -8,10 +8,9 @@ desc "Updates the app identifier, display name for dev, adhoc, and production re
 lane :prep_release do
   # beta, production
   type = ENV['RN_RELEASE_TYPE'] || 'production'
-  puts "Type: #{type}"
   suffix = ENV['RN_BUNDLE_SUFFIX'] || type
   suffix = suffix.length > 0 ? ".#{suffix}" : suffix
-  puts "Suffix: #{suffix}"
+  scheme = ENV['RN_URL_SCHEME'] || 'textile'
 
   # assumes identifier is defined in Appfile
   app_id = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
@@ -49,4 +48,16 @@ lane :prep_release do
     }
   )
 
+  # update ios url scheme
+  update_url_schemes(
+    path: "./ios/#{project_name}/Info.plist",
+    url_schemes: ["#{scheme}"]
+  )
+
+  # update android url scheme
+  find_replace_string(
+    path_to_file: "./android/app/src/main/AndroidManifest.xml",
+    old_string: "textile-dev",
+    new_string: "#{scheme}"
+  )
 end
