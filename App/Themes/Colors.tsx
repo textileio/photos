@@ -35,7 +35,8 @@ const colors: {[index: string]: string} = {
   border: '#483F53',
   banner: '#5F3E63',
   text: '#E0D7E5',
-  unselect: '#BBBBBB'
+  unselect: '#BBBBBB',
+  midBlue: '#3478f6'
 }
 
 export default colors

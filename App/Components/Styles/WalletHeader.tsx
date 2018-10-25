@@ -56,6 +56,6 @@ export default StyleSheet.create({
     color: Colors.unselect
   },
   walletSelected: {
-    color: '#3478f6'
+    color: Colors.midBlue
   }
 })
