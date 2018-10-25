@@ -24,11 +24,11 @@ lane :prep_release do
   # update ios indentifier
   update_app_identifier(
     xcodeproj: "./ios/#{project_name}.xcodeproj",
-    plist_path: "./ios/#{project_name}/Info.plist",
+    plist_path: "#{project_name}/Info.plist",
     app_identifier: new_app_id
   )
   update_info_plist(
-    plist_path: "./ios/#{project_name}/Info.plist",
+    plist_path: "#{project_name}/Info.plist",
     xcodeproj: "./ios/#{project_name}.xcodeproj",
     display_name: display_name,
     app_identifier: new_app_id
