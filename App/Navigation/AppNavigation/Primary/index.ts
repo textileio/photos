@@ -18,7 +18,7 @@ import AddCaptionScreen from '../../../Containers/AddCaptionScreen'
 import WalletPicker from '../../../Containers/WalletPicker'
 
 import PairingView from '../../../SB/views/DevicePairingView'
-import ThreadInvite from '../../../SB/views/ThreadInvite'
+import AcceptInviteScreen from '../../../Containers/AcceptInviteScreen'
 
 import styles, { headerTintColor } from '../../Styles/NavigationStyles'
 
@@ -41,7 +41,7 @@ const nav = createStackNavigator(
     WalletPicker,
 
     PairingView,
-    ThreadInvite,
+    ThreadInvite: AcceptInviteScreen,
 
     DeviceLogs
   },
