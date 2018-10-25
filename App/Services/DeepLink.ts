@@ -65,7 +65,7 @@ function route (link: string) {
       NavigationService.navigate('PairingView', { request: getParams(data.hash) })
     } else if (data.path === '/invites/new' && data.hash !== '') {
       // invite the user to the thread
-      NavigationService.navigate('ThreadInvite', { link, request: getParams(data.hash) })
+      NavigationService.navigate('ThreadInvite', { ...getParams(data.hash) })
     }
   }
 }

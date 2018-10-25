@@ -24,7 +24,7 @@ export function * inviteAfterOnboard () {
   if (invite) {
     // ensures this is the last of the knock-on effects of onboarding
     yield call(delay, 250)
-    NavigationService.navigate('ThreadInvite', { url: invite.url, request: DeepLink.getParams(invite.hash) })
+    NavigationService.navigate('ThreadInvite', { ...DeepLink.getParams(invite.hash) })
   }
 }
 
@@ -35,7 +35,7 @@ export function * routeThreadInvite(url: string, hash: string ) {
   }
   const onboarded = yield select(PreferencesSelectors.onboarded)
   if (onboarded) {
-    NavigationService.navigate('ThreadInvite', { url, request: DeepLink.getParams(hash) })
+    NavigationService.navigate('ThreadInvite', { ...DeepLink.getParams(hash) })
   } else {
     // simply store the pending invite information to act on after onboarding success
     const data = DeepLink.getParams(hash)

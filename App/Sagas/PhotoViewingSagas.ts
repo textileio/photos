@@ -3,6 +3,7 @@ import { call, put, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import { ThreadsSelectors, InboundInvite } from '../Redux/ThreadsRedux'
 import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
 import TextileNode from '../Services/TextileNode'
@@ -13,22 +14,28 @@ import { shareWalletImage } from './ImageSharingSagas'
 export function * monitorNewThreadActions () {
   while (true) {
     const action: ActionType<typeof PhotoViewingActions.threadAdded> = yield take(getType(PhotoViewingActions.threadAdded))
+    const { id, name } = action.payload
+    const photoToShare: { threadName: string, imageId: PhotoId, comment?: string} | undefined = yield select(photoToShareToNewThread)
     const shouldNav: boolean = yield select(shouldNavigateToNewThread)
     const shouldSelect: boolean = yield select(shouldSelectNewThread)
-    const photoToShare: { threadName: string, imageId: PhotoId, comment?: string} | undefined = yield select(photoToShareToNewThread)
+    const invite: InboundInvite | undefined = yield select(ThreadsSelectors.inboundInviteByThreadName, name)
+
     yield put(PhotoViewingActions.clearNewThreadActions())
-    const { id, name } = action.payload
+
     if (photoToShare && photoToShare.threadName === name) {
       const { imageId, comment } = photoToShare
       yield call(shareWalletImage, imageId, id, comment)
     }
+
     if (shouldNav) {
-      yield put(PhotoViewingActions.viewThread(action.payload.id))
+      yield put(PhotoViewingActions.viewThread(id))
       yield delay(700)
       yield call(NavigationService.navigate, 'ViewThread')
-    }
-    if (shouldSelect) {
-      yield put(UIActions.updateSharingPhotoThread(action.payload.id))
+    } else if (shouldSelect) {
+      yield put(UIActions.updateSharingPhotoThread(id))
+    } else if (invite) {
+      yield put(PhotoViewingActions.viewThread(id))
+      yield call(NavigationService.navigate, 'ViewThread')
     }
   }
 }

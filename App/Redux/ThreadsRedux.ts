@@ -143,7 +143,9 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
 }
 
 export const ThreadsSelectors = {
-  pendingInviteLink: (state: RootState) => state.threads.pendingInviteLink
+  pendingInviteLink: (state: RootState) => state.threads.pendingInviteLink,
+  inboundInviteByThreadId: (state: RootState, threadId: ThreadId) => state.threads.inboundInvites.find((invite) => invite.id === threadId),
+  inboundInviteByThreadName: (state: RootState, threadName: ThreadName) => state.threads.inboundInvites.find((invite) => invite.name === threadName)
 }
 
 export default actions
