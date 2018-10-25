@@ -21,19 +21,18 @@ export default function (service) {
     //     subtitle: 'Pin original resolution in your wallet',
     //     details: 'Add the original resolution files to your local wallet.'
     //   }
-    // case 'enablePhotoBackup':
-    //   return {
-    //     title: 'Enable remote backup',
-    //     subtitle: 'Backup files using IPFS and Textile',
-    //     details: 'Uses a remote Textile IPFS cluster to backup your privately encrypted photos.'
-    //   }
-    // case 'enableWalletBackup':
-    //   return {
-    //     title: 'Enable Wallet Recovery',
-    //     subtitle: 'Wallet backup with Textile',
-    //     details: 'In the event you lose, wipe, or destroy your device, this enables full wallet recovery using only your private mnemonic.',
-    //     dependsOn: 'enablePhotoBackup'
-    //   }
+    case 'enablePhotoBackup':
+      return {
+        title: 'Enable remote backup',
+        subtitle: 'Backup files using IPFS and Textile',
+        details: 'Uses a remote Textile IPFS cluster to backup your privately encrypted photos.'
+      }
+    case 'enableWalletBackup':
+      return {
+        title: 'Enable Account Recovery',
+        subtitle: 'Wallet backup with Textile',
+        details: 'In the event you lose, wipe, or destroy your device, this enables full wallet recovery using only your private mnemonic.',
+      }
     default:
       return undefined
   }
