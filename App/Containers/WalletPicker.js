@@ -9,8 +9,14 @@ import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
-import { IPhotoGridType, PhotoId } from '../Models/TextileTypes'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
+
+import Icon from 'react-native-vector-icons/Ionicons'
+import HeaderButtons, { HeaderButton } from 'react-navigation-header-buttons'
+
+const IoniconsHeaderButton = passMeFurther => (
+  <HeaderButton {...passMeFurther} IconComponent={Icon} iconSize={28} color='#595959' />
+)
 
 class TextileWalletPicker extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -26,15 +32,23 @@ class TextileWalletPicker extends React.PureComponent {
     const headerTitle = (
       <Text style={navStyles.headerTitle}>Choose a Photo</Text>
     )
+    const headerRight = (
+      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <Item title='camera' iconName='ios-aperture' onPress={() => {params.showImagePicker('camera')}} />
+        <Item title='camera roll' iconName='ios-photos' onPress={() => {params.showImagePicker('camera-roll')}} />
+      </HeaderButtons>
+    )
     return {
       headerTitle,
-      headerLeft
+      headerLeft,
+      headerRight
     }
   }
 
   componentDidMount () {
     this.props.navigation.setParams({
-      cancelSharingPhoto: this.props.cancelSharingPhoto
+      cancelSharingPhoto: this.props.cancelSharingPhoto,
+      showImagePicker: this.props.showImagePicker
     })
   }
 
@@ -97,6 +111,7 @@ const mapDispatchToProps = (dispatch) => {
     success: (photoId) => { dispatch(UIActions.walletPickerSuccess(photoId)) },
     cancelSharingPhoto: () => { dispatch(UIActions.cancelSharingPhoto()) },
     refresh: (threadId) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
+    showImagePicker: (type) => { dispatch(UIActions.showImagePicker(type)) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }

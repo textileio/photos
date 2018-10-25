@@ -14,23 +14,41 @@ import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 import * as TT from '../Models/TextileTypes'
 
+export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
+  const { threadId } = action.payload
+  if (threadId) {
+    // only set if shared directly to a thread
+    yield put(UIActions.updateSharingPhotoThread(threadId))
+  }
+  yield call(NavigationService.navigate, 'WalletPicker')
+}
+
 // Called whenever someone clicks the share button
 export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
-  const { threadId } = action.payload
+  const { pickerType } = action.payload
   // Present image picker
-  const pickerResponse: CameraRoll.IPickerImage = yield CameraRoll.choosePhoto()
+  let pickerResponse: CameraRoll.IPickerImage
+
+  switch (pickerType) {
+    case 'camera': {
+      pickerResponse = yield CameraRoll.launchCamera()
+      break
+    }
+    case 'camera-roll': {
+      pickerResponse = yield CameraRoll.launchImageLibrary()
+      break
+    }
+    default:
+      return
+  }
+
+  const threadId = yield select(UISelectors.sharingPhotoThread)
   if (pickerResponse.didCancel) {
     // Detect cancel of image picker
   } else if (pickerResponse.error) {
     // pickerResponse.error is a string... i think all the time
     const error = new Error('Image picker error')
     yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
-  } else if (pickerResponse.customButton) {
-    if (threadId) {
-      // only set if shared directly to a thread
-      yield put(UIActions.updateSharingPhotoThread(threadId))
-    }
-    yield call(NavigationService.navigate, 'WalletPicker')
   } else {
     try {
       const image: TT.SharedImage = {
