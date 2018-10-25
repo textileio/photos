@@ -4,3 +4,4 @@
 
 gem 'fastlane-plugin-android_versioning'
 gem 'fastlane-plugin-update_android_strings'
+gem 'fastlane-plugin-find_replace_string'

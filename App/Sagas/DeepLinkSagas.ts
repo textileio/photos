@@ -13,6 +13,7 @@ import { call, put, select, take } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import UIActions from '../Redux/UIRedux'
 import { ActionType, getType } from 'typesafe-actions'
+import Config from 'react-native-config'
 import DeepLink from '../Services/DeepLink'
 import NavigationService from '../Services/NavigationService'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
@@ -51,7 +52,8 @@ export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLi
   if (!url) { return }
   try {
     // convert url scheme to standard url for parsing
-    const standardUrl = url.replace('textile://textile.photos/', 'https://textile.photos/')
+    const scheme = Config.RN_URL_SCHEME
+    const standardUrl = url.replace(scheme + '://textile.photos/', 'https://textile.photos/')
     const data = DeepLink.getData(standardUrl)
     if (data) {
       if (data.path === '/invites/device' && data.hash !== '') {
