@@ -7,7 +7,7 @@ import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 import {ThreadId, ThreadName} from '../Models/TextileTypes'
 import {RootAction} from '../Redux/Types'
 
-import PhotoViewingActions, {ThreadData} from '../Redux/PhotoViewingRedux'
+import {ThreadData} from '../Redux/PhotoViewingRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 
@@ -15,8 +15,8 @@ import ThreadCard from '../SB/components/ThreadListCard'
 import styles from './Styles/ThreadSelectorStyles'
 
 interface ScreenProps {
-  threads: ReadonlyArray<ThreadData>,
-  createThread: () => void
+  threads: ReadonlyArray<ThreadData>
+  createNewThread: () => void
 }
 
 class ThreadSelector extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
@@ -35,7 +35,11 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
 
   _renderFooter = () => {
     return (
-      <TouchableOpacity activeOpacity={0.95} style={styles.createThreadBox} onPress={this.props.createThread}>
+      <TouchableOpacity
+        activeOpacity={0.95}
+        style={styles.createThreadBox}
+        onPress={this.props.createNewThread}
+      >
         <Text style={styles.createThreadText}>Create New Thread</Text>
       </TouchableOpacity>
     )

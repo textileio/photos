@@ -3,20 +3,14 @@ import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import { Alert, View, Text, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import Toast from 'react-native-easy-toast'
-import Modal from 'react-native-modal'
 
 import UIActions from '../../../Redux/UIRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { getThreads, defaultThreadData } from '../../../Redux/PhotoViewingSelectors'
-import { RootState } from '../../../Redux/Types'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
-
-import ShareToThread from '../../../Components/ShareToThread'
-
 import ProgressiveImage from '../../../Components/ProgressiveImage'
-
 import PhotoWithTextBox from '../../components/PhotoWithTextBox'
 import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
 
@@ -35,8 +29,7 @@ class PhotoDetail extends Component {
     const metadata = this.props.photo && this.props.photo.metadata
     const heightProperties = getHeight(metadata, WIDTH)
     this.state = {
-      ...heightProperties,
-      drawer: false
+      ...heightProperties
     }
   }
 
@@ -80,8 +73,8 @@ class PhotoDetail extends Component {
   }
 
   sharePressed () {
-    this.setState({ drawer: true })
     this.props.shareImage(this.props.photo.id)
+    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PrivatePhotoDetail', withPhoto: this.props.photo })
   }
 
   removePhoto () {
@@ -106,24 +99,6 @@ class PhotoDetail extends Component {
   getPublicLink () {
     this.refs.toast.show('You are creating a public link for this photo!', 1000)
     this.props.getPublicLink(this.props.photo.id)
-  }
-
-  shareClosed () {
-    this.setState({ drawer: false })
-  }
-
-  // For when the user wants to share it into a selected thread
-  shareIntoThread (i) {
-    this.setState({ drawer: false })
-    const thread = this.props.threadsNotIn[i]
-    this.props.shareToThread(thread.id)
-    this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PrivatePhotoDetail' })
-  }
-
-  // For when the user wants to share it into a selected thread
-  shareIntoNewThread () {
-    this.setState({ drawer: false })
-    this.props.navigation.navigate('CreateThreadScreen', { backTo: 'PrivatePhotoDetail', withPhoto: this.props.photo })
   }
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
@@ -170,25 +145,9 @@ class PhotoDetail extends Component {
           ))}
           { this.props.threadsIn.length > 0 &&
           <TouchableOpacity onPress={this.sharePressed.bind(this)}>
-            <PhotoBoxEmpty style={{ marginBottom: 9, marginTop: 0 }} title='Share in another thread' />
+            <PhotoBoxEmpty style={{ marginBottom: 9, marginTop: 0 }} title='Share now' />
           </TouchableOpacity> }
         </ScrollView>
-        <Modal
-          isVisible={this.state.drawer}
-          animationIn={'fadeInUp'}
-          animationOut={'fadeOutDown'}
-          avoidKeyboard backdropColor={'#E1E1E1'}
-          backdropOpacity={0.5}
-          style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0, justifyContent: 'flex-end' }}
-        >
-          <ShareToThread
-            selector={this.shareIntoThread.bind(this)}
-            newThread={this.shareIntoNewThread.bind(this)}
-            threads={this.props.threadsNotIn}
-            thumbs={this.props.thumbs}
-            onClose={() => this.shareClosed()}
-          />
-        </Modal>
         <Toast
           ref='toast'
           position='top'

@@ -20,9 +20,10 @@ const colors: {[index: string]: string} = {
   steel: '#CCCCCC',
   error: 'rgba(200, 0, 0, 0.8)',
   ricePaper: 'rgba(255,255,255, 0.75)',
+  windowTint: 'rgba(0, 0, 0, 0.4)',
   frost: '#D8D8D8',
   cloud: 'rgba(200,200,200, 0.35)',
-  windowTint: 'rgba(0, 0, 0, 0.4)',
+  storm: '#828282',
   panther: '#161616',
   charcoal: '#595959',
   coal: '#2d2d2d',
@@ -36,7 +37,8 @@ const colors: {[index: string]: string} = {
   banner: '#5F3E63',
   text: '#E0D7E5',
   unselect: '#BBBBBB',
-  midBlue: '#3478f6'
+  midBlue: '#3478f6',
+  modalColor: '#FAFCFE'
 }
 
 export default colors
