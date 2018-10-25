@@ -129,6 +129,8 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        // Added for react-native-config per https://github.com/luggit/react-native-config#advanced-android-setup
+        resValue "string", "build_config_package", "com.textile"
     }
     splits {
         abi {
