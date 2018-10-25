@@ -559,14 +559,12 @@ workflows:
                     branches:
                         only:
                             - master
-                            - asutula/parameterize-url-scheme
             - android-adhoc:
                 context: textile-mobile-beta
                 filters:
                     branches:
                         only:
                             - master
-                            - asutula/parameterize-url-scheme
     release-ios:
         jobs:
             - ios-release:
