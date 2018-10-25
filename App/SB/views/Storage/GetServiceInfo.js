@@ -31,7 +31,7 @@ export default function (service) {
       return {
         title: 'Enable Account Recovery',
         subtitle: 'Wallet backup with Textile',
-        details: 'In the event you lose, wipe, or destroy your device, this enables full wallet recovery using only your private mnemonic.',
+        details: 'In the event you lose, wipe, or destroy your device, this enables full wallet recovery using only your private mnemonic.'
       }
     default:
       return undefined
