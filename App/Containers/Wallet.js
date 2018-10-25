@@ -9,17 +9,42 @@ import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import style from './Styles/TextilePhotosStyle'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
-import { Item } from 'react-navigation-header-buttons'
+import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons'
 import WalletHeader from '../Components/WalletHeader'
 import ThreadSelector from '../Components/ThreadSelector'
 import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
 import Button from '../SB/components/Button'
 import onboardingStyles from './Styles/OnboardingStyle'
+import Icon from 'react-native-vector-icons/Ionicons'
+import { Colors } from '../Themes'
 
 class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
+
+    const HeaderButtonComponent = passMeFurther => (
+      <HeaderButton {...passMeFurther} IconComponent={Icon} iconSize={28} />
+    )
+
+    const accountBackupEnabled = params.storage && params.storage.enableWalletBackup.status
+    const pinEnabled = params.storage && params.storage.autoPinPhotos.status
+    const photoBackupEnabled = params.storage && params.storage.enablePhotoBackup.status
+
+    const headerLeft = (
+      <HeaderButtons HeaderButtonComponent={HeaderButtonComponent}>
+        <Item
+          title='backup'
+          iconName='ios-cloud-outline'
+          onPress={() => {
+            params.toggleStorageOption('enableWalletBackup')
+            params.toggleStorageOption('autoPinPhotos')
+            params.toggleStorageOption('enablePhotoBackup')
+          }}
+          color={ photoBackupEnabled ? Colors.midBlue : Colors.charcoal }
+        />
+      </HeaderButtons>
+    )
 
     const headerRight = (
       <TextileHeaderButtons>
@@ -29,6 +54,7 @@ class Wallet extends React.PureComponent {
 
     return {
       // TODO: headerTitle should exist a row below the nav buttons, need to figure out
+      headerLeft,
       headerRight,
       tabBarVisible: true,
       headerStyle: style.navHeader
@@ -38,11 +64,13 @@ class Wallet extends React.PureComponent {
   componentDidUpdate (prevProps, prevState, snapshot) {
     if (
       this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
-      this.props.profile !== prevProps.profile
+      this.props.profile !== prevProps.profile ||
+      this.props.storage !== prevProps.storage
     ) {
       this.props.navigation.setParams({
-        username: this.props.username,
-        toggleVerboseUi: this.props.toggleVerboseUi
+        storage: this.props.storage,
+        toggleVerboseUi: this.props.toggleVerboseUi,
+        username: this.props.username
       })
     }
   }
@@ -50,8 +78,10 @@ class Wallet extends React.PureComponent {
   componentDidMount () {
     // Set params
     this.props.navigation.setParams({
-      username: this.props.username,
+      storage: this.props.storage,
+      toggleStorageOption: this.props.toggleStorageRequest,
       toggleVerboseUi: this.props.toggleVerboseUi,
+      username: this.props.username,
       updateSettings: this.updateSettings()
     })
     // add the listeners for enter tab
@@ -245,6 +275,7 @@ const mapStateToProps = (state) => {
     avatarUrl: profile && profile.avatar_id ? Config.RN_TEXTILE_CAFE_URI + profile.avatar_id : undefined,
     username: profile && profile.username ? profile.username : undefined,
     selectedTab: state.preferences.viewSettings.selectedWalletTab,
+    storage: state.preferences.storage,
     overview
   }
 }
@@ -253,6 +284,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('wallet')) },
     refresh: () => { dispatch(StorageActions.refreshLocalImagesRequest()) },
+    toggleStorageRequest: (name) => { dispatch(PreferencesActions.toggleStorageRequest(name)) },
     toggleTab: (value) => { dispatch(PreferencesActions.updateViewSetting('selectedWalletTab', value)) },
     updateOverview: () => { dispatch(TextileNodeActions.updateOverviewRequest()) },
     viewWalletPhoto: (photoId) => { dispatch(PhotoViewingActions.viewWalletPhoto(photoId)) }
