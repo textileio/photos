@@ -53,7 +53,8 @@ export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLi
   try {
     // convert url scheme to standard url for parsing
     const scheme = Config.RN_URL_SCHEME
-    const standardUrl = url.replace(scheme + '://textile.photos/', 'https://textile.photos/')
+    const regexp = new RegExp(scheme + '://(www.)?textile.photos/')
+    const standardUrl = url.replace(regexp, 'https://textile.photos/')
     const data = DeepLink.getData(standardUrl)
     if (data) {
       if (data.path === '/invites/device' && data.hash !== '') {
