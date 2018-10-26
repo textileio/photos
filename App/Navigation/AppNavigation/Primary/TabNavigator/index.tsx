@@ -40,7 +40,7 @@ const nav = createBottomTabNavigator(
     },
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: 'Wallet'
+    initialRouteName: 'Threads'
   }
 )
 

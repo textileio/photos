@@ -9,19 +9,23 @@ import ActionSheet from 'react-native-actionsheet'
 import PhotoStream from '../Components/PhotoStream'
 import Avatar from '../Components/Avatar'
 
-import { Photo, PhotoId, ThreadId, ThreadName } from '../Models/TextileTypes'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
+import CreateThreadModal from '../Components/CreateThreadModal'
+
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
-import { IProcessingImageProps } from '../Components/ProcessingImage'
 
 class ThreadsList extends React.PureComponent {
+  state = {
+    showCreateThreadModal: false
+  }
+
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
@@ -147,6 +151,18 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
+  cancelCreateThread () {
+    return () => {
+      this.setState({showCreateThreadModal: false})
+    }
+  }
+
+  completeCreateThread () {
+    return () => {
+      this.setState({showCreateThreadModal: false})
+    }
+  }
+
   showActionSheet () {
     this.actionSheet.show()
   }
@@ -156,7 +172,7 @@ class ThreadsList extends React.PureComponent {
       if (this.props.showOnboarding === true) {
         this.props.completeScreen('threads')
       }
-      this.props.navigation.navigate('AddThread')
+      this.setState({showCreateThreadModal: true})
     } else if (index === 1) {
       this.props.navigation.navigate('ThreadsManager')
     }
@@ -174,6 +190,15 @@ class ThreadsList extends React.PureComponent {
           options={['Create Thread', 'Manage Threads', 'Cancel']}
           cancelButtonIndex={2}
           onPress={this.handleActionSheetResponse.bind(this)}
+        />
+
+        <CreateThreadModal
+          isVisible={this.state.showCreateThreadModal}
+          fullScreen={false}
+          selectToShare={false}
+          navigateTo={true}
+          cancel={this.cancelCreateThread()}
+          complete={this.completeCreateThread()}
         />
 
       </View>

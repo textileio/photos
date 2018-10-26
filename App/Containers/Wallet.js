@@ -1,42 +1,43 @@
 import React from 'react'
-import { View, Text, Image } from 'react-native'
-import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
+import { View, Text, Image } from 'react-native'
 import Config from 'react-native-config'
+import PhotoGrid from '../Components/PhotoGrid'
+import WalletHeader from '../Components/WalletHeader'
+import ThreadSelector from '../Components/ThreadSelector'
+import CreateThreadModal from '../Components/CreateThreadModal'
+import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import Button from '../SB/components/Button'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import style from './Styles/TextilePhotosStyle'
-import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
-import WalletHeader from '../Components/WalletHeader'
-import ThreadSelector from '../Components/ThreadSelector'
 import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
-import Button from '../SB/components/Button'
+import style from './Styles/TextilePhotosStyle'
 import onboardingStyles from './Styles/OnboardingStyle'
-import Icon from 'react-native-vector-icons/Ionicons'
-import { Colors } from '../Themes'
 
 class Wallet extends React.PureComponent {
+
+  state = {
+    showCreateThreadModal: false
+  }
+
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
 
-    const accountBackupEnabled = params.storage && params.storage.enableWalletBackup.status
-    const pinEnabled = params.storage && params.storage.autoPinPhotos.status
     const photoBackupEnabled = params.storage && params.storage.enablePhotoBackup.status
 
     const headerLeft = (
       <TextileHeaderButtons>
         <Item
           title='backup'
-          iconName='cloud'
+          iconName={photoBackupEnabled ? 'cloud-checked' : 'cloud'}
           onPress={() => {
             params.toggleStorageOption('enableWalletBackup')
             params.toggleStorageOption('autoPinPhotos')
             params.toggleStorageOption('enablePhotoBackup')
           }}
-          color={ photoBackupEnabled ? Colors.midBlue : Colors.charcoal }
         />
       </TextileHeaderButtons>
     )
@@ -98,6 +99,24 @@ class Wallet extends React.PureComponent {
     }
   }
 
+  openThreadModal () {
+    return () => {
+      this.setState({showCreateThreadModal: true})
+    }
+  }
+
+  cancelCreateThread () {
+    return () => {
+      this.setState({showCreateThreadModal: false})
+    }
+  }
+
+  completeCreateThread () {
+    return () => {
+      this.setState({showCreateThreadModal: false})
+    }
+  }
+
   onSelect = (photo) => {
     return () => {
       this.props.viewWalletPhoto(photo.id)
@@ -149,7 +168,7 @@ class Wallet extends React.PureComponent {
           username={this.props.profile.username}
         />
         <View style={style.gridContainer}>
-          {this.props.selectedTab === 'Threads' && <ThreadSelector threads={this.props.threads} createThread={this._createThread}/>}
+          {this.props.selectedTab === 'Threads' && <ThreadSelector threads={this.props.threads} createNewThread={this.openThreadModal()}/>}
           {this.props.selectedTab === 'Photos' && <PhotoGrid
             items={this.props.items}
             onSelect={this.onSelect}
@@ -160,6 +179,14 @@ class Wallet extends React.PureComponent {
             verboseUi={this.props.verboseUi}
           />}
         </View>
+        <CreateThreadModal
+          isVisible={this.state.showCreateThreadModal}
+          fullScreen={false}
+          selectToShare={false}
+          navigateTo={true}
+          cancel={this.cancelCreateThread()}
+          complete={this.completeCreateThread()}
+        />
       </View>
     )
   }

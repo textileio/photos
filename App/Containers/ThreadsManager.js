@@ -6,6 +6,7 @@ import { Item } from 'react-navigation-header-buttons'
 
 import Icons from '../Components/Icons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
+import CreateThreadModal from '../Components/CreateThreadModal'
 
 import ThreadSelector from '../Components/ThreadSelector'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
@@ -17,6 +18,11 @@ import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
 
 class ThreadsManager extends React.PureComponent {
+
+  state = {
+    showCreateThreadModal: false
+  }
+
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const headerLeft = (
@@ -26,13 +32,7 @@ class ThreadsManager extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='plus' onPress={() => {
-          if (params.onTour) {
-            // We don't want to show that tour screen to them ever again...
-            params.completeTour()
-          }
-          navigation.navigate('AddThread')
-        }} />
+        <Item title='Add Thread' iconName='plus' onPress={params.openThreadModal} />
       </TextileHeaderButtons>
     )
     return {
@@ -50,10 +50,7 @@ class ThreadsManager extends React.PureComponent {
   componentDidMount () {
     this.props.navigation.setParams({
       online: this.props.online,
-      onTour: this.props.showOnboarding,
-      completeTour: () => {
-        this.props.completeScreen('threadsManager')
-      }
+      openThreadModal: this.openThreadModal()
     })
   }
 
@@ -67,8 +64,22 @@ class ThreadsManager extends React.PureComponent {
     }
   }
 
-  _createThread = () => {
-    this.props.navigation.navigate('AddThread', {backTo: 'ThreadsManager'})
+  openThreadModal () {
+    return () => {
+      this.setState({showCreateThreadModal: true})
+    }
+  }
+
+  cancelCreateThread () {
+    return () => {
+      this.setState({showCreateThreadModal: false})
+    }
+  }
+
+  completeCreateThread () {
+    return () => {
+      this.setState({showCreateThreadModal: false})
+    }
   }
 
   _renderOnboarding () {
@@ -94,7 +105,15 @@ class ThreadsManager extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} createThread={this._createThread} />}
+        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} createNewThread={this.openThreadModal()}/>}
+        <CreateThreadModal
+          isVisible={this.state.showCreateThreadModal}
+          fullScreen={false}
+          selectToShare={false}
+          navigateTo={true}
+          cancel={this.cancelCreateThread()}
+          complete={this.completeCreateThread()}
+        />
       </View>
     )
   }
@@ -126,16 +145,14 @@ const mapStateToProps = (state) => {
   }
 
   return {
-    threads,
-    showOnboarding: state.preferences.tourScreens.threadsManager && threads && threads.length === 0
+    threads
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
-    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
-    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) }
+    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) }
   }
 }
 

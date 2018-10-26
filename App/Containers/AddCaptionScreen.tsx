@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Image, View } from 'react-native'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import CreateThreadModal from '../Components/CreateThreadModal'
 import Input from '../SB/components/Input'
 import {NavigationActions, NavigationScreenProps} from 'react-navigation'
 import styles from '../SB/views/ThreadCreate/statics/styles'
@@ -30,6 +31,11 @@ interface DispatchProps {
 type Props = DispatchProps & StateProps & NavigationScreenProps
 
 class AddCaptionScreen extends React.Component<Props> {
+
+  state = {
+    showCreateThreadModal: false
+  }
+
   static navigationOptions = ({navigation}: NavigationScreenProps) => {
     const params = navigation.state.params || {}
     return {
@@ -103,6 +109,24 @@ class AddCaptionScreen extends React.Component<Props> {
     this.props.navigation.navigate('AddThread', {selectForShare: true, backTo: 'ThreadSharePhoto'})
   }
 
+  openThreadModal () {
+    return () => {
+      this.setState({showCreateThreadModal: true})
+    }
+  }
+
+  cancelCreateThread () {
+    return () => {
+      this.setState({showCreateThreadModal: false})
+    }
+  }
+
+  completeCreateThread () {
+    return () => {
+      this.setState({showCreateThreadModal: false})
+    }
+  }
+
   _renderImage () {
     const { image } = this.props
     if (image && (image as SharedImage).uri) {
@@ -148,7 +172,15 @@ class AddCaptionScreen extends React.Component<Props> {
         </View>
         <ThreadSelect
           /* tslint:disable-next-line */
-          createNew={this._createNewThread.bind(this)}
+          createNew={this.openThreadModal()}
+        />
+        <CreateThreadModal
+          isVisible={this.state.showCreateThreadModal}
+          fullScreen={true}
+          selectToShare={true}
+          navigateTo={false}
+          cancel={this.cancelCreateThread()}
+          complete={this.completeCreateThread()}
         />
       </View>
     )

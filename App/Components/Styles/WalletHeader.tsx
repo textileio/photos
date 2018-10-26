@@ -56,6 +56,6 @@ export default StyleSheet.create({
     color: Colors.unselect
   },
   walletSelected: {
-    color: Colors.midBlue
+    color: Colors.brandBlue
   }
 })
