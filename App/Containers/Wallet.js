@@ -46,7 +46,7 @@ class Wallet extends React.PureComponent {
 
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Settings' iconName='settings' onPress={params.updateSettings}/>
+        <Item title='Settings' iconName='nut' onPress={params.updateSettings}/>
       </TextileHeaderButtons>
     )
 
