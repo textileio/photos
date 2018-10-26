@@ -61,13 +61,13 @@ class Wallet extends React.PureComponent {
 
   componentDidUpdate (prevProps, prevState, snapshot) {
     if (
-      this.props.toggleVerboseUi !== prevProps.toggleVerboseUi ||
+      this.props.verboseUi !== prevProps.verboseUi ||
       this.props.profile !== prevProps.profile ||
       this.props.storage !== prevProps.storage
     ) {
       this.props.navigation.setParams({
         storage: this.props.storage,
-        toggleVerboseUi: this.props.toggleVerboseUi,
+        verboseUi: this.props.verboseUi,
         username: this.props.username
       })
     }
@@ -78,7 +78,7 @@ class Wallet extends React.PureComponent {
     this.props.navigation.setParams({
       storage: this.props.storage,
       toggleStorageOption: this.props.toggleStorageRequest,
-      toggleVerboseUi: this.props.toggleVerboseUi,
+      verboseUi: this.props.verboseUi,
       username: this.props.username,
       updateSettings: this.updateSettings()
     })
