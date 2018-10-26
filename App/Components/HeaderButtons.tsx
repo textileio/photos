@@ -5,7 +5,7 @@ import Colors from '../Themes/Colors'
 
 // define IconComponent, color, sizes and OverflowIcon in one place
 const TextileHeaderButton = (props: any) => {
-  const color = !props.textColor ? !props.iconName ? Colors.brandBlue : Colors.charcoal : props.textColor
+  const color = !props.color ? !props.iconName ? Colors.brandBlue : Colors.charcoal : props.color
   const fontSize = !props.iconName ? 17 : 23
   return (
     <HeaderButton {...props} IconComponent={Icons} buttonStyle={{ fontFamily: 'BentonSans', fontSize }} color={color} />
