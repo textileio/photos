@@ -23,6 +23,7 @@ const colors: {[index: string]: string} = {
   windowTint: 'rgba(0, 0, 0, 0.4)',
   frost: '#D8D8D8',
   cloud: 'rgba(200,200,200, 0.35)',
+  cover: '#9a9a9a',
   storm: '#828282',
   panther: '#161616',
   charcoal: '#595959',

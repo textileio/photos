@@ -46,11 +46,11 @@ export default StyleSheet.create({
     justifyContent: 'center'
   } as ViewStyle,
   headerText: {
-    fontFamily: 'BentonSans-Bold',
-    color: Colors.storm,
-    fontSize: 12,
+    fontFamily: 'BentonSans',
+    color: Colors.cover,
+    fontSize: 14,
     marginTop: 4,
-    textAlign: 'center'
+    textAlign: 'left'
   } as TextStyle,
   topRow: {
     flexDirection: 'row',
