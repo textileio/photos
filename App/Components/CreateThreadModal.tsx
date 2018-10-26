@@ -4,7 +4,8 @@ import { Dispatch } from 'redux/index'
 import {
   View,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native'
 import Modal from 'react-native-modal'
 
@@ -73,39 +74,41 @@ class CreateThreadModal extends React.Component<DispatchProps & ScreenProps> {
         animationOut={'fadeOutDown'}
         avoidKeyboard={true}
         backdropOpacity={0.5}
-        style={[styles.modal, modalStyle]}
+        style={{margin: 0, padding: 0}}
       >
-        <View style={styles.container}>
-          <View style={styles.content}>
-            {this.props.fullScreen && <View style={styles.title}>
-              <Text style={styles.titleText}>Create New Thread</Text>
-            </View>}
-            {!this.props.fullScreen && <View style={styles.header}>
-              <Text style={styles.headerText}>Create New Thread</Text>
-            </View>}
-            <View style={styles.topRow}>
-              <Input
-                style={styles.inputStyle}
-                value={this.state.value}
-                label={this.state.value === '' ? 'Add title...' : ''}
-                onChangeText={this.handleNewText()}
-              />
-            </View>
-            <View style={styles.bottomRow}>
-              <TouchableOpacity
-                onPress={this.props.cancel}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                disabled={submitDisabled}
-                onPress={this.create()}
-              >
-                <Text style={[styles.buttonText, submitDisabled && styles.disabled]}>Submit</Text>
-              </TouchableOpacity>
+      <KeyboardAvoidingView behavior={'height'} style={[styles.modal, modalStyle]}>
+          <View style={styles.container}>
+            <View style={styles.content}>
+              {this.props.fullScreen && <View style={styles.title}>
+                <Text style={styles.titleText}>Create New Thread</Text>
+              </View>}
+              {!this.props.fullScreen && <View style={styles.header}>
+                <Text style={styles.headerText}>Create New Thread</Text>
+              </View>}
+              <View style={styles.topRow}>
+                <Input
+                  style={styles.inputStyle}
+                  value={this.state.value}
+                  label={this.state.value === '' ? 'Add title...' : ''}
+                  onChangeText={this.handleNewText()}
+                />
+              </View>
+              <View style={[styles.bottomRow, !this.props.fullScreen && styles.bottomRowMargin]}>
+                <TouchableOpacity
+                  onPress={this.props.cancel}
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  disabled={submitDisabled}
+                  onPress={this.create()}
+                >
+                  <Text style={[styles.buttonText, submitDisabled && styles.disabled]}>Submit</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     )
   }

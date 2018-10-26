@@ -1,6 +1,8 @@
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native'
+import { StyleSheet, ViewStyle, TextStyle, Dimensions } from 'react-native'
 
 import Colors from '../../Themes/Colors'
+
+const {height, width} = Dimensions.get('window')
 
 export default StyleSheet.create({
   modal: {
@@ -15,7 +17,8 @@ export default StyleSheet.create({
     top: 0
   } as ViewStyle,
   slideModal: {
-    height: 260
+    width,
+    height: 280
   } as ViewStyle,
   container: {
     flex: 1,
@@ -64,13 +67,16 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingTop: 45
+    paddingTop: 45,
   } as ViewStyle,
   buttonText: {
     fontFamily: 'BentonSans',
     color: Colors.midBlue,
     fontSize: 18,
     lineHeight: 26
+  } as TextStyle,
+  bottomRowMargin: {
+    marginBottom: 20
   } as TextStyle,
   disabled: {
     color: Colors.windowTint
