@@ -142,7 +142,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
         </View>
         <View style={styles.cardFooter} >
           <View style={styles.cardFooterTop} >
-            {didLike && <Icons name='heart-filled' size={24} style={{ color: Colors.brandPink }} />}
+            {didLike && <Icons name='heart' size={24} style={{ color: Colors.brandRed }} />}
             {!didLike &&
               <TouchableOpacity
                 onPress={this._onLikePress(this.props.item.photo)}

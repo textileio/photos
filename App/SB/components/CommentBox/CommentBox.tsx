@@ -24,7 +24,7 @@ const CommentBox = (props: Props) => {
         value={value}
       />
       <TouchableOpacity onPress={onSubmit} >
-        <Icons name='add-user' color='black' size={20} />
+        <Icons name='circle-plus' color='black' size={24} />
       </TouchableOpacity>
     </View>
   )

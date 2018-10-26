@@ -45,8 +45,8 @@ class ThreadDetail extends React.PureComponent {
     // <Item title='Add Thread' iconName='add-thread' onPress={() => { navigation.navigate('AddThread') }} />
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Photo' iconName='add-photo' onPress={params.showWalletPicker} />
-        <Item title='Share' iconName='more' onPress={params.showActionSheet} />
+        <Item title='Add Photo' iconName='plus' onPress={params.showWalletPicker} />
+        <Item title='Share' iconName='more-horizontal' onPress={params.showActionSheet} />
       </TextileHeaderButtons>
     )
     return {
@@ -154,8 +154,8 @@ class ThreadDetail extends React.PureComponent {
           Time to share some photos. Anyone you invite to the Thread will be able to send photos, view other members photos, and invite new friends.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons style={{ margin: 10 }} name='add-photo' size={24} color='black' /> button to add your first photo.
-          Or click the <Icons name='more' size={24} color='black' /> button to start inviting friends.
+          Click the <Icons style={{ margin: 10 }} name='plus' size={16} color='black' /> button to add your first photo.
+          Or click the <Icons name='more-horizontal' size={16} color='black' /> button to start inviting friends.
         </Text>
       </View>
     )

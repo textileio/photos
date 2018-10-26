@@ -32,7 +32,7 @@ class ThreadsManager extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='add-thread' onPress={params.openThreadModal} />
+        <Item title='Add Thread' iconName='plus' onPress={params.openThreadModal} />
       </TextileHeaderButtons>
     )
     return {
@@ -95,7 +95,7 @@ class ThreadsManager extends React.PureComponent {
           friends and family.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons name='add-thread' size={24} color='black' /> button above to create your first Thread.
+          Click the <Icons name='plus' size={24} color='black' /> button above to create your first Thread.
         </Text>
       </View>
     )

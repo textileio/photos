@@ -53,9 +53,9 @@ class PhotoDetail extends Component {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add To Thread' iconName='add-user' onPress={params.sharePressed} />
-        <Item title='Share' iconName='share' onPress={params.getPublicLink} />
-        <Item title='Delete' iconName='delete' onPress={params.removePhoto} />
+        <Item title='Add To Thread' iconName='share' onPress={params.sharePressed} />
+        <Item title='Share' iconName='share-arrow' onPress={params.getPublicLink} />
+        <Item title='Delete' iconName='circle-x' onPress={params.removePhoto} />
       </TextileHeaderButtons>
     )
     return {

@@ -4,6 +4,7 @@ import Icons from '../../../../Components/Icons'
 import Wallet from './Wallet'
 import Threads from './Threads'
 import Notifications from './Notifications'
+import Colors from '../../../../Themes/Colors'
 
 import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
 
@@ -20,11 +21,11 @@ const nav = createBottomTabNavigator(
         tabBarIcon: ({focused, tintColor}) => {
           let icon
           if (routeName === 'Wallet') {
-            icon = 'home'
+            icon = 'wallet'
           } else if (routeName === 'Threads') {
-            icon = 'threads'
+            icon = 'grid-slides'
           } else {
-            icon = 'notifications'
+            icon = 'bell'
           }
           const tint = tintColor || undefined
           return <Icons name={icon} size={25} color={tint} />
@@ -33,6 +34,8 @@ const nav = createBottomTabNavigator(
     },
     tabBarOptions: {
       showLabel: false,
+      activeTintColor: Colors.brandBlue,
+      inactiveTintColor: Colors.charcoal,
       style: styles.bottomBar
     },
     animationEnabled: false,
