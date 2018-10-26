@@ -14,8 +14,6 @@ import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
-
-import { Colors } from '../Themes'
 import style from './Styles/TextilePhotosStyle'
 import onboardingStyles from './Styles/OnboardingStyle'
 
@@ -30,7 +28,6 @@ class Wallet extends React.PureComponent {
 
     const photoBackupEnabled = params.storage && params.storage.enablePhotoBackup.status
 
-    console.log('axh', photoBackupEnabled)
     const headerLeft = (
       <TextileHeaderButtons>
         <Item
