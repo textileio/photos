@@ -29,7 +29,7 @@ class Wallet extends React.PureComponent {
 
     const photoBackupEnabled = params.storage && params.storage.enablePhotoBackup.status
 
-    const headerLeft = (
+    const headerLeft = params.verboseUi && (
       <TextileHeaderButtons>
         <Item
           title='backup'
