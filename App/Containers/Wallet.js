@@ -28,21 +28,19 @@ class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
 
-    const accountBackupEnabled = params.storage && params.storage.enableWalletBackup.status
-    const pinEnabled = params.storage && params.storage.autoPinPhotos.status
     const photoBackupEnabled = params.storage && params.storage.enablePhotoBackup.status
 
+    console.log('axh', photoBackupEnabled)
     const headerLeft = (
       <TextileHeaderButtons>
         <Item
           title='backup'
-          iconName='cloud'
+          iconName={photoBackupEnabled ? 'cloud-checked' : 'cloud'}
           onPress={() => {
             params.toggleStorageOption('enableWalletBackup')
             params.toggleStorageOption('autoPinPhotos')
             params.toggleStorageOption('enablePhotoBackup')
           }}
-          color={ photoBackupEnabled ? Colors.midBlue : Colors.charcoal }
         />
       </TextileHeaderButtons>
     )
