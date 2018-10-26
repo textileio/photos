@@ -32,7 +32,7 @@ class ThreadsManager extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='plus' onPress={params.openThreadModal} />
+        <Item title='Add Thread' iconName='player-list-add' onPress={params.openThreadModal} />
       </TextileHeaderButtons>
     )
     return {
