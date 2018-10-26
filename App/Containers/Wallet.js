@@ -13,6 +13,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
+import Colors from '../Themes/Colors'
 
 import style from './Styles/TextilePhotosStyle'
 import onboardingStyles from './Styles/OnboardingStyle'
@@ -33,6 +34,7 @@ class Wallet extends React.PureComponent {
         <Item
           title='backup'
           iconName={photoBackupEnabled ? 'cloud-checked' : 'cloud'}
+          color={photoBackupEnabled ? Colors.brandBlue : undefined}
           onPress={() => {
             params.toggleStorageOption('enableWalletBackup')
             params.toggleStorageOption('autoPinPhotos')
