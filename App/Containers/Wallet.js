@@ -8,8 +8,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import style from './Styles/TextilePhotosStyle'
-import { TextileHeaderButtons } from '../Components/HeaderButtons'
-import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons'
+import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import WalletHeader from '../Components/WalletHeader'
 import ThreadSelector from '../Components/ThreadSelector'
 import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
@@ -23,19 +22,15 @@ class Wallet extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
 
-    const HeaderButtonComponent = passMeFurther => (
-      <HeaderButton {...passMeFurther} IconComponent={Icon} iconSize={28} />
-    )
-
     const accountBackupEnabled = params.storage && params.storage.enableWalletBackup.status
     const pinEnabled = params.storage && params.storage.autoPinPhotos.status
     const photoBackupEnabled = params.storage && params.storage.enablePhotoBackup.status
 
     const headerLeft = (
-      <HeaderButtons HeaderButtonComponent={HeaderButtonComponent}>
+      <TextileHeaderButtons>
         <Item
           title='backup'
-          iconName='ios-cloud-outline'
+          iconName='cloud'
           onPress={() => {
             params.toggleStorageOption('enableWalletBackup')
             params.toggleStorageOption('autoPinPhotos')
@@ -43,12 +38,12 @@ class Wallet extends React.PureComponent {
           }}
           color={ photoBackupEnabled ? Colors.midBlue : Colors.charcoal }
         />
-      </HeaderButtons>
+      </TextileHeaderButtons>
     )
 
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Settings' iconName='cog' onPress={params.updateSettings}/>
+        <Item title='Settings' iconName='settings' onPress={params.updateSettings}/>
       </TextileHeaderButtons>
     )
 

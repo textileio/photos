@@ -11,13 +11,6 @@ import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 
-import Icon from 'react-native-vector-icons/Ionicons'
-import HeaderButtons, { HeaderButton } from 'react-navigation-header-buttons'
-
-const IoniconsHeaderButton = passMeFurther => (
-  <HeaderButton {...passMeFurther} IconComponent={Icon} iconSize={28} color='#595959' />
-)
-
 class TextileWalletPicker extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
@@ -33,10 +26,10 @@ class TextileWalletPicker extends React.PureComponent {
       <Text style={navStyles.headerTitle}>Choose a Photo</Text>
     )
     const headerRight = (
-      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-        <Item title='camera' iconName='ios-aperture' onPress={() => {params.showImagePicker('camera')}} />
-        <Item title='camera roll' iconName='ios-photos' onPress={() => {params.showImagePicker('camera-roll')}} />
-      </HeaderButtons>
+      <TextileHeaderButtons>
+        <Item title='camera' iconName='camera' onPress={() => {params.showImagePicker('camera')}} />
+        <Item title='camera roll' iconName='image' onPress={() => {params.showImagePicker('camera-roll')}} />
+      </TextileHeaderButtons>
     )
     return {
       headerTitle,

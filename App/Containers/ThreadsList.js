@@ -44,8 +44,8 @@ class ThreadsList extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Photo' iconName='add-photo' onPress={params.showWalletPicker} />
-        <Item title='Options' iconName='more' onPress={params.showActionSheet} />
+        <Item title='Add Photo' iconName='plus' onPress={params.showWalletPicker} />
+        <Item title='Options' iconName='more-horizontal' onPress={params.showActionSheet} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
@@ -141,7 +141,7 @@ class ThreadsList extends React.PureComponent {
           private Threads or post a new photo.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons name='more' size={28} color='black' /> button above and create your first Thread.
+          Click the <Icons name='more-horizontal' size={28} color='black' /> button above and create your first Thread.
         </Text>
       </View>
     )

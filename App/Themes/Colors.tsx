@@ -3,7 +3,7 @@ const brandYellow = '#FFCE00'
 const brandRed = '#FF1C3F'
 const brandPink = '#FFB6D5'
 
-const colors: {[index: string]: string} = {
+const colors = {
   brandBlue,
   brandYellow,
   brandRed,
