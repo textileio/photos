@@ -10,6 +10,7 @@ import {
 import { NavigationScreenProps } from 'react-navigation'
 
 import Avatar from './Avatar'
+import ContactModal from './ContactModal'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
@@ -29,13 +30,24 @@ interface ScreenProps {
 }
 
 class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
-  // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 20
+  state = {
+    contactCard: false,
+    selectedPeer: '',
+    selectedUsername: ''
+  }
+
+  oneScreensWorth = 40
   defaultSource = require('../Images/v2/main-image.png')
 
-  selectPeer (peerId: string) {
+  selectPeer (peerId: string, username: string) {
     return () => {
-      // nothing yet
+      this.setState({selectedPeer: peerId, selectedUsername: username, contactCard: true})
+    }
+  }
+
+  closeModal () {
+    return () => {
+      this.setState({contactCard: false})
     }
   }
 
@@ -45,7 +57,7 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
     return (
       <TouchableOpacity
         style={styles.item}
-        onPress={this.selectPeer(item)}
+        onPress={this.selectPeer(item, this.props.peers[item])}
         activeOpacity={0.95}
       >
         <Avatar width={dimension} height={dimension} peerId={item} defaultSource={this.defaultSource} />
@@ -100,6 +112,12 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
             </View>
           )
         }
+        <ContactModal
+          isVisible={this.state.contactCard}
+          peerId={this.state.selectedPeer}
+          username={this.state.selectedUsername}
+          close={this.closeModal()}
+        />
       </View>
     )
   }
