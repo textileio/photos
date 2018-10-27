@@ -14,15 +14,16 @@ import ContactModal from './ContactModal'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
-import {PeerId} from '../Models/TextileTypes'
+import UIActions from '../Redux/UIRedux'
+import {PeerId, ThreadId, ThreadName} from '../Models/TextileTypes'
 
 // Styles
-import { Colors } from '../Themes'
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PeerGridStyles'
 
 interface DispatchProps {
-  retryShare: (uuid: string) => void
   cancelShare: (uuid: string) => void
+  navigateToThread: (id: ThreadId, name: ThreadName) => void
+  retryShare: (uuid: string) => void
 }
 
 interface ScreenProps {
@@ -48,6 +49,13 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
   closeModal () {
     return () => {
       this.setState({contactCard: false})
+    }
+  }
+
+  navigateToThread () {
+    return (id: ThreadId, name: ThreadName) => {
+      this.setState({contactCard: false})
+      this.props.navigateToThread(id, name)
     }
   }
 
@@ -114,8 +122,9 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
         }
         <ContactModal
           isVisible={this.state.contactCard}
-          peerId={this.state.selectedPeer}
+          peerId={this.state.selectedPeer as PeerId}
           username={this.state.selectedUsername}
+          navigateToThread={this.navigateToThread()}
           close={this.closeModal()}
         />
       </View>
@@ -126,7 +135,10 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
-    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) }
+    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
+    navigateToThread: (id: ThreadId, name: ThreadName) => {
+      dispatch(UIActions.navigateToThreadRequest(id, name))
+    }
   }
 }
 
