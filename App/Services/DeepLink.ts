@@ -23,7 +23,7 @@ function getParams (hash: string): { [key: string]: (string | string[]) } {
 
 function getData (href: string): DeepLinkData | undefined {
   const regex = new RegExp([
-    '^(https?:)//',
+    '^(http|https|textile|textile-beta|textile-dev)://',
     '(([^:/?#]*)(?::([0-9]+))?)',
     '(/{0,1}[^?#]*)',
     '(\\?[^#]*|)',

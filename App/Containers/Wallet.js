@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { View, Text, Image } from 'react-native'
 import Config from 'react-native-config'
 import PhotoGrid from '../Components/PhotoGrid'
+import PeerGrid from '../Components/PeerGrid'
 import WalletHeader from '../Components/WalletHeader'
 import ThreadSelector from '../Components/ThreadSelector'
 import CreateThreadModal from '../Components/CreateThreadModal'
@@ -180,6 +181,9 @@ class Wallet extends React.PureComponent {
             displayImages={this.props.displayImages}
             verboseUi={this.props.verboseUi}
           />}
+          {this.props.selectedTab === 'Peers' && <PeerGrid
+            peers={this.props.peers}
+          />}
         </View>
         <CreateThreadModal
           isVisible={this.state.showCreateThreadModal}
@@ -252,10 +256,18 @@ const mapStateToProps = (state) => {
 
   const allThreads = getThreads(state)
   let threads
+  // tmp contact stuff
+  let peers = {}
+  // end
   if (allThreads.length > 0) {
     threads = allThreads
       .filter(thread => thread.name !== 'default')
       .map(thread => {
+        // tmp contact stuff
+        for (let photo of thread.photos) {
+          peers[photo.author_id] = peers[photo.author_id] ? peers[photo.author_id] : photo.username
+        }
+        // end
         return {
           id: thread.id,
           name: thread.name,
@@ -287,6 +299,7 @@ const mapStateToProps = (state) => {
   const profile = state.preferences.profile
 
   return {
+    peers,
     threadId,
     threads,
     photos,
