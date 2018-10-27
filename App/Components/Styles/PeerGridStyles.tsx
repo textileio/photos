@@ -7,7 +7,7 @@ const { width, height } = Dimensions.get('window')
 export const SCREEN_WIDTH = width < height ? width : height
 
 export const isSmallDevice = SCREEN_WIDTH <= 414
-export const numColumns = isSmallDevice ? 3 : 4
+export const numColumns = isSmallDevice ? 4 : 5
 
 export const PRODUCT_ITEM_OFFSET = 0.5
 export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET
