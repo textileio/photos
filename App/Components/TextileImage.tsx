@@ -1,10 +1,10 @@
 import React from 'react'
-import { requireNativeComponent, ImageStyle } from 'react-native'
+import { requireNativeComponent, ImageStyle, PixelRatio } from 'react-native'
 import { PhotoId } from '../Models/TextileTypes'
 
 export interface Props {
   imageId: PhotoId,
-  path: string,
+  minWidth: number,
   resizeMode: string,
   capInsets?: string,
   style?: ImageStyle | ImageStyle[],
@@ -33,6 +33,10 @@ export default class TextileImage extends React.Component<Props> {
   render () {
     const nativeProps = {
       ...this.props,
+      // minWidth: this.props.minWidth,
+      minWidth: Math.floor(this.props.minWidth * 1.2),
+      // minWidth: PixelRatio.getPixelSizeForLayoutSize(this.props.minWidth),
+      // style: {...this.props.style, backgroundColor: 'red' },
       onLoad: this._onLoaded.bind(this),
       onError: this._onError.bind(this)
     }

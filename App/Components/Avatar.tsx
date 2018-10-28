@@ -56,7 +56,7 @@ class Avatar extends React.PureComponent<IAvatarProps> {
           <View style={styles.stretch}>
             <TextileImage
               imageId={photoId}
-              path={'small'}
+              minWidth={width}
               style={{ width, height }}
               resizeMode={'cover'}
             />

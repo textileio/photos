@@ -86,8 +86,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
                 imageId={row.item.id as PhotoId}
-                path={'small'}
-                previewPath={'thumb'}
+                showPreview={true}
+                minWidth={PRODUCT_ITEM_HEIGHT}
                 style={styles.itemImage}
                 resizeMode={'cover'}
               />
