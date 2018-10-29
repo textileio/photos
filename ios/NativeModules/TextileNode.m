@@ -384,6 +384,17 @@ RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId path:(NSString *)path resolve
 }
 
 
+RCT_EXPORT_METHOD(getPhotoDataForMinWidth:(NSString *)photoId minWidth:(int)minWidth resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _getPhotoDataForMinWidth:photoId minWidth:minWidth error:&error];
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+
 RCT_EXPORT_METHOD(getPhotoThreads:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _getPhotoThreads:photoId error:&error];
@@ -675,6 +686,10 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 - (NSString *)_getPhotoData:(NSString *)photoId path:(NSString *)path error:(NSError**)error {
   return [self.node getPhotoData:photoId path:path error:error];
+}
+
+- (NSString *)_getPhotoDataForMinWidth:(NSString *)photoId minWidth:(int)minWidth error:(NSError**)error {
+  return [self.node getPhotoDataForMinWidth:photoId minWidth:minWidth error:error];
 }
 
 - (NSString *)_getPhotoThreads:(NSString *)photoId error:(NSError**)error {

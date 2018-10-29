@@ -110,8 +110,8 @@ class PhotoDetail extends Component {
   renderImage (id) {
     return (<ProgressiveImage
       imageId={id}
-      previewPath={'small'}
-      path={'medium'}
+      showPreview={true}
+      forMinWidth={WIDTH}
       style={{ height: this.state.height, width: WIDTH, marginBottom: 10 }}
       resizeMode={'cover'}
     />)

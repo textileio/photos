@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { View } from 'react-native'
 import { ImageStyle, Platform } from 'react-native'
 import TextileImage from './TextileImage'
@@ -6,8 +6,8 @@ import { PhotoId } from '../Models/TextileTypes'
 
 export interface IProgressiveImageProps {
   imageId: PhotoId,
-  path: string,
-  previewPath?: string,
+  forMinWidth: number,
+  showPreview?: boolean,
   isVisible?: boolean,
   resizeMode?: string,
   capInsets?: string,
@@ -30,22 +30,26 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     this.setState({ androidPreview: false })
   }
 
+  getPreviewWidth = () => {
+    return Math.floor(this.props.forMinWidth / 2)
+  }
+
   android (resizeMode: string) {
     const baseStyle: ImageStyle = {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }
     const previewStyle: ImageStyle[] = [{ backgroundColor: 'transparent'}, baseStyle, this.state.androidPreview ? { height: 0 } : {}]
     // if no previewPath, don't try and render it here
     return (
       <View style={this.props.style} >
-        {this.props.previewPath && <TextileImage
+        {this.props.showPreview && <TextileImage
           imageId={this.props.imageId}
-          path={this.props.previewPath}
+          forMinWidth={this.getPreviewWidth()}
           style={baseStyle}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
         />}
         <TextileImage
           imageId={this.props.imageId}
-          path={this.props.path}
+          forMinWidth={this.props.forMinWidth}
           style={previewStyle}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
@@ -56,18 +60,18 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
   }
 
   ios(resizeMode: string) {
-    if (this.props.previewPath) {
+    if (this.props.showPreview) {
       return (
         <TextileImage
           imageId={this.props.imageId}
-          path={this.props.previewPath}
+          forMinWidth={this.getPreviewWidth()}
           style={this.props.style}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
         >
           <TextileImage
             imageId={this.props.imageId}
-            path={this.props.path}
+            forMinWidth={this.props.forMinWidth}
             style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
             resizeMode={resizeMode}
             capInsets={this.props.capInsets}
@@ -79,7 +83,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     return (
       <TextileImage
         imageId={this.props.imageId}
-        path={this.props.path}
+        forMinWidth={this.props.forMinWidth}
         style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
         resizeMode={resizeMode}
         capInsets={this.props.capInsets}
@@ -90,11 +94,11 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
   render () {
     const isVisible = this.props.isVisible !== undefined ? this.props.isVisible : true
     const resizeMode = this.props.resizeMode || 'center'
-    if (this.props.previewPath === undefined || !isVisible) {
+    if (!this.props.showPreview || !isVisible) {
       return (
         <TextileImage
           imageId={this.props.imageId}
-          path={this.props.path}
+          forMinWidth={this.props.forMinWidth}
           style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}

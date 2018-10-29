@@ -9,7 +9,7 @@
 - (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, strong) NSString *imageId;
-@property (nonatomic, strong) NSString *path;
+@property (nonatomic, assign) int forMinWidth;
 @property (nonatomic, assign) RCTResizeMode resizeMode;
 @property (nonatomic, copy) RCTDirectEventBlock onLoad;
 @property (nonatomic, copy) RCTDirectEventBlock onError;

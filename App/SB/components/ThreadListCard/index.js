@@ -39,7 +39,7 @@ const ThreadCard = props => {
                 <View style={styles.imageStretch}>
                   <TextileImage
                     imageId={photo.id}
-                    path={'small'}
+                    forMinWidth={imageStyle.width}
                     resizeMode={'cover'}
                     style={{height: imageStyle.height}}
                   />

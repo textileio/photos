@@ -30,9 +30,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 }
 
-- (void)setPath:(NSString *)path {
-  if (_path != path) {
-    _path = path;
+- (void)setForMinWidth:(int)forMinWidth {
+  if (_forMinWidth != forMinWidth) {
+    _forMinWidth = forMinWidth;
     self.needsRenderImage = true;
   }
 }
@@ -61,7 +61,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       NSError *error;
       UIImage *image;
       NSString *jsonString;
-      jsonString = [_bridge.textileNode _getPhotoData:self.imageId path:self.path error:&error];
+      jsonString = [_bridge.textileNode _getPhotoDataForMinWidth:self.imageId minWidth:self.forMinWidth error:&error];
       if (jsonString) {
         NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSError *error;
@@ -70,7 +70,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         NSString *urlString = [dict objectForKey:@"url"];
         NSURL *url = [NSURL URLWithString:urlString];
         NSData *imageData = [NSData dataWithContentsOfURL:url];
-        image = [UIImage imageWithData:imageData];
+        image = [UIImage imageWithData:imageData scale:1];
       }
       dispatch_async(dispatch_get_main_queue(), ^{
         if (error) {
