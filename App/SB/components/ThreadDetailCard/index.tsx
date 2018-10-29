@@ -133,10 +133,10 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
           <View style={styles.imageStretch}>
             <ProgressiveImage
               imageId={photo.id}
-              // showPreview={true}
-              minWidth={imageWidth}
+              showPreview={true}
+              forMinWidth={imageWidth}
               style={{...styles.image, width: imageWidth, height: imageHeight}}
-              resizeMode={'contain'}
+              resizeMode={'cover'}
             />
           </View>
         </View>

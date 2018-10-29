@@ -87,7 +87,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
               <ProgressiveImage
                 imageId={row.item.id as PhotoId}
                 showPreview={true}
-                minWidth={PRODUCT_ITEM_HEIGHT}
+                forMinWidth={PRODUCT_ITEM_HEIGHT}
                 style={styles.itemImage}
                 resizeMode={'cover'}
               />

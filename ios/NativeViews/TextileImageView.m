@@ -30,9 +30,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 }
 
-- (void)setMinWidth:(int)minWidth {
-  if (_minWidth != minWidth) {
-    _minWidth = minWidth;
+- (void)setForMinWidth:(int)forMinWidth {
+  if (_forMinWidth != forMinWidth) {
+    _forMinWidth = forMinWidth;
     self.needsRenderImage = true;
   }
 }
@@ -61,7 +61,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       NSError *error;
       UIImage *image;
       NSString *jsonString;
-      jsonString = [_bridge.textileNode _getPhotoDataForMinWidth:self.imageId minWidth:self.minWidth error:&error];
+      jsonString = [_bridge.textileNode _getPhotoDataForMinWidth:self.imageId minWidth:self.forMinWidth error:&error];
       if (jsonString) {
         NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSError *error;

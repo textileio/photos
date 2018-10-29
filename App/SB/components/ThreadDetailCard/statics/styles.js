@@ -144,7 +144,7 @@ export default StyleSheet.create({
   },
   image: {
     alignItems: 'center',
-    padding: 0, 
+    padding: 0,
     margin: 0
   }
 })

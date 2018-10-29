@@ -143,7 +143,7 @@ class AddCaptionScreen extends React.Component<Props> {
       return (
         <TextileImage
           imageId={image}
-          path={'small'}
+          forMinWidth={70}
           resizeMode={'cover'}
           style={{...styles.image, width: 70, height: 70}}
         />

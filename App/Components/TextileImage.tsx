@@ -4,7 +4,7 @@ import { PhotoId } from '../Models/TextileTypes'
 
 export interface Props {
   imageId: PhotoId,
-  minWidth: number,
+  forMinWidth: number,
   resizeMode: string,
   capInsets?: string,
   style?: ImageStyle | ImageStyle[],
@@ -33,9 +33,7 @@ export default class TextileImage extends React.Component<Props> {
   render () {
     const nativeProps = {
       ...this.props,
-      // minWidth: this.props.minWidth,
-      // minWidth: Math.floor(this.props.minWidth * 1.2),
-      minWidth: PixelRatio.getPixelSizeForLayoutSize(this.props.minWidth),
+      forMinWidth: PixelRatio.getPixelSizeForLayoutSize(this.props.forMinWidth),
       onLoad: this._onLoaded.bind(this),
       onError: this._onError.bind(this)
     }

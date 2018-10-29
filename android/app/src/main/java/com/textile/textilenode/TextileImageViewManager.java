@@ -37,9 +37,9 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
         textileImageView.setImageId(imageId);
     }
 
-    @ReactProp(name = "minWidth")
-    public void setMinWdth(TextileImageView textileImageView, int minWidth) {
-        textileImageView.setMinWidth(minWidth);
+    @ReactProp(name = "forMinWidth")
+    public void setMinWdth(TextileImageView textileImageView, int forMinWidth) {
+        textileImageView.setForMinWidth(forMinWidth);
     }
 
     @ReactProp(name = "resizeMode")

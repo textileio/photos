@@ -84,7 +84,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
       <ProgressiveImage
         imageId={this.props.photoId}
         showPreview={true}
-        minWidth={width}
+        forMinWidth={width}
         style={{ ...styles.mainPhoto as ImageStyle, height }}
         resizeMode={'cover'}
       />
