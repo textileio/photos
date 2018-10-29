@@ -95,7 +95,7 @@ platform :ios do
   desc "Deploy a new version to the App Store"
   lane :release do
     APP_ID = "io.textile.Wallet"
-    PROFILE = "match AdHoc io.textile.Wallet"
+    PROFILE = "match AppStore io.textile.Wallet"
     settings_to_override = {
       :PROVISIONING_PROFILE_SPECIFIER => PROFILE,
       "-UseModernBuildSystem" => "NO"
