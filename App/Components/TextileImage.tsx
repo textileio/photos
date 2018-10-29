@@ -34,9 +34,8 @@ export default class TextileImage extends React.Component<Props> {
     const nativeProps = {
       ...this.props,
       // minWidth: this.props.minWidth,
-      minWidth: Math.floor(this.props.minWidth * 1.2),
-      // minWidth: PixelRatio.getPixelSizeForLayoutSize(this.props.minWidth),
-      // style: {...this.props.style, backgroundColor: 'red' },
+      // minWidth: Math.floor(this.props.minWidth * 1.2),
+      minWidth: PixelRatio.getPixelSizeForLayoutSize(this.props.minWidth),
       onLoad: this._onLoaded.bind(this),
       onError: this._onError.bind(this)
     }
