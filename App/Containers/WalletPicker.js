@@ -23,7 +23,7 @@ class TextileWalletPicker extends React.PureComponent {
       </TextileHeaderButtons>
     )
     const headerTitle = (
-      <Text style={navStyles.headerTitle}>Choose a Photo</Text>
+      <Text style={navStyles.headerTitle}>Wallet Photos</Text>
     )
     const headerRight = (
       <TextileHeaderButtons>
