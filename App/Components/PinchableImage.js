@@ -8,8 +8,6 @@ import {
 import ProgressiveImage from './ProgressiveImage'
 import styles from './Styles/PinchableImageStyles'
 
-const USE_NATIVE_DRIVER = true
-
 export class PinchableImage extends React.Component {
   panRef = React.createRef()
   pinchRef = React.createRef()
@@ -21,7 +19,6 @@ export class PinchableImage extends React.Component {
     this._baseScale = new Animated.Value(1)
     this._pinchScale = new Animated.Value(1)
     this._zIndex = 0
-
     /* Final translation */
     this._translateX = new Animated.Value(0)
     this._translateY = new Animated.Value(0)
@@ -30,13 +27,21 @@ export class PinchableImage extends React.Component {
     const maxScale = 2.5
     this._onPinchGestureEvent = event => {
       const newScale = Math.min(Math.max(1, event.nativeEvent.scale), maxScale + 1)
+      this._syncScale = newScale
       this._pinchScale.setValue(newScale)
     }
 
-    this._onPanGestureEvent = event => {
-      this._translateX.setValue(event.nativeEvent.translationX)
-      this._translateY.setValue(event.nativeEvent.translationY)
-    }
+    this._onPanGestureEvent = Animated.event(
+      [
+        {
+          nativeEvent: {
+            translationX: this._translateX,
+            translationY: this._translateY
+          }
+        }
+      ],
+      { useNativeDriver: false }
+    )
   }
 
   _onPinchHandlerStateChange = event => {
@@ -53,30 +58,28 @@ export class PinchableImage extends React.Component {
     if (event.nativeEvent.oldState === State.ACTIVE) {
       this._translateX.setValue(0)
       this._translateY.setValue(0)
-    } 
+    }
   }
 
   render() {
     return (
-
       <PanGestureHandler
-        onGestureEvent={this._onPanGestureEvent}
-        onHandlerStateChange={this._onPanHandlerStateChange}
+        onGestureEvent={this._onPanGestureEvent.bind(this)}
+        onHandlerStateChange={this._onPanHandlerStateChange.bind(this)}
         ref={this.panRef}
         minPointers={2}
-        maxPointers={2}
         minDist={0}
         minDeltaX={0}
-        avgTouches
+        avgTouches={true}
       >
       <PinchGestureHandler
         ref={this.pinchRef}
         simultaneousHandlers={this.rotationRef}
-        onGestureEvent={this._onPinchGestureEvent}
-        onHandlerStateChange={this._onPinchHandlerStateChange}
-        simultaneousHandlers={this.panRef} 
+        onGestureEvent={this._onPinchGestureEvent.bind(this)}
+        onHandlerStateChange={this._onPinchHandlerStateChange.bind(this)}
+        simultaneousHandlers={this.panRef}
       >
-        <Animated.View 
+        <Animated.View
           style={[
             styles.pinchableImage,
             {
@@ -84,9 +87,9 @@ export class PinchableImage extends React.Component {
                 { scale: this._scale },
                 { translateX: this._translateX },
                 { translateY: this._translateY }
-              ],
-            },
-            ]} 
+              ]
+            }
+            ]}
             collapsable={false}
           >
           <ProgressiveImage

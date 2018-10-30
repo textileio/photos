@@ -59,7 +59,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
-    paddingHorizontal: 11,
+    paddingHorizontal: 11
   },
   cardFooterTop: {
     flex: 1,
@@ -68,7 +68,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start'
   },
   cardFooterTopItem: {
-    marginLeft: 11,
+    marginLeft: 11
   },
   profileName: {
     fontFamily: 'BentonSans',

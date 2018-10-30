@@ -47,9 +47,6 @@ interface DispatchProps {
 }
 
 class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & DispatchProps> {
-  
-  panRef = React.createRef()
-
   _threadSelect = (id?: ThreadId, name?: ThreadName) => {
     return () => {
       if (id && name) {
