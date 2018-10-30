@@ -3,7 +3,9 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-native'
 import moment from 'moment'
-import ProgressiveImage from '../../../Components/ProgressiveImage'
+
+import PinchableImage from '../../../Components/PinchableImage'
+
 import { getHeight } from '../../../Services/PhotoUtils'
 import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
@@ -11,7 +13,7 @@ import UIActions from '../../../Redux/UIRedux'
 import styles from './statics/styles'
 import Icons from '../../../Components/Icons'
 import Colors from '../../../Themes/Colors'
-import {Photo, BlockId, ThreadName, ThreadId, PeerId} from '../../../Models/TextileTypes'
+import {Photo, BlockId, ThreadName, ThreadId, PeerId, PhotoId} from '../../../Models/TextileTypes'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
 
@@ -45,6 +47,8 @@ interface DispatchProps {
 }
 
 class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & DispatchProps> {
+  
+  panRef = React.createRef()
 
   _threadSelect = (id?: ThreadId, name?: ThreadName) => {
     return () => {
@@ -68,6 +72,21 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
           <Text style={styles.likedText}>{photo.likes.length.toString() + (photo.likes.length > 1 ? ' likes' : ' like')}</Text>
         </TouchableOpacity>
       )
+  }
+
+  renderImage (id: PhotoId, imageWidth: number, imageHeight: number) {
+    return (
+      <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
+        <View style={styles.imageStretch}>
+          <PinchableImage
+            imageId={id}
+            forMinWidth={imageWidth}
+            imageHeight={imageHeight}
+            style={{width: imageWidth, height: imageHeight}}
+          />
+        </View>
+      </View>
+    )
   }
 
   render () {
@@ -129,17 +148,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
               <Text numberOfLines={1} style={styles.cardTarget}> in {item.threadName}</Text>
             </TouchableOpacity>}
         </View>
-        <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
-          <View style={styles.imageStretch}>
-            <ProgressiveImage
-              imageId={photo.id}
-              showPreview={true}
-              forMinWidth={imageWidth}
-              style={{...styles.image, width: imageWidth, height: imageHeight}}
-              resizeMode={'cover'}
-            />
-          </View>
-        </View>
+        {this.renderImage(photo.id, imageWidth, imageHeight)}
         <View style={styles.cardFooter} >
           <View style={styles.cardFooterTop} >
             {didLike && <Icons name='heart' size={24} style={{ color: Colors.brandRed }} />}
@@ -147,7 +156,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
               <TouchableOpacity
                 onPress={this._onLikePress(this.props.item.photo)}
               >
-                <Icons name='heart' size={24} />
+                <Icons name='heart' size={24} style={{zIndex: 0}}/>
               </TouchableOpacity>
             }
             <TouchableOpacity onPress={onComment} style={styles.cardFooterTopItem} >

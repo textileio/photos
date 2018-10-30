@@ -13,7 +13,8 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     paddingBottom: 25,
-    marginBottom: 9
+    marginBottom: 9,
+    overflow: 'hidden'
   },
   cardHeader: {
     flex: 1,
@@ -32,7 +33,8 @@ export default StyleSheet.create({
     fontSize: 14,
     lineHeight: 14,
     paddingLeft: 4,
-    paddingTop: 4
+    paddingTop: 4,
+    zIndex: 1
   },
   cardTargetTouch: {
     flex: 1
@@ -45,17 +47,19 @@ export default StyleSheet.create({
     paddingTop: 4
   },
   cardActionName: {
-    ...BentonSansBold()
+    ...BentonSansBold(),
+    zIndex: 1
   },
   cardImage: {
     marginBottom: 10,
-    overflow: 'hidden'
+    overflow: 'visible',
+    zIndex: 1
   },
   cardFooter: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'flex-start',
-    paddingHorizontal: 11
+    paddingHorizontal: 11,
   },
   cardFooterTop: {
     flex: 1,
@@ -64,7 +68,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start'
   },
   cardFooterTopItem: {
-    marginLeft: 11
+    marginLeft: 11,
   },
   profileName: {
     fontFamily: 'BentonSans',
@@ -145,6 +149,7 @@ export default StyleSheet.create({
   image: {
     alignItems: 'center',
     padding: 0,
-    margin: 0
+    margin: 0,
+    zIndex: 10
   }
 })

@@ -98,6 +98,7 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
             renderItem={this._renderItem.bind(this)}
             refreshing={false}
             onRefresh={this._onRefresh}
+            style={{zIndex: 0}}
           />
         </View>
       </View>
