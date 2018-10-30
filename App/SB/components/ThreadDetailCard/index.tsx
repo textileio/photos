@@ -1,21 +1,23 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity, ImageURISource, Platform } from 'react-native'
 import moment from 'moment'
 
-import PinchableImage from '../../../Components/PinchableImage'
+import { RootState, RootAction } from '../../../Redux/Types'
+import {Photo, BlockId, ThreadName, ThreadId, PeerId, PhotoId} from '../../../Models/TextileTypes'
 
-import { getHeight } from '../../../Services/PhotoUtils'
-import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
+import { getHeight } from '../../../Services/PhotoUtils'
+
+import PinchableImage from '../../../Components/PinchableImage'
+import ProgressiveImage from '../../../Components/ProgressiveImage'
+import KeyValueText from '../../../Components/KeyValueText'
+import Avatar from '../../../Components/Avatar'
+import Icons from '../../../Components/Icons'
 
 import styles from './statics/styles'
-import Icons from '../../../Components/Icons'
 import Colors from '../../../Themes/Colors'
-import {Photo, BlockId, ThreadName, ThreadId, PeerId, PhotoId} from '../../../Models/TextileTypes'
-import KeyValueText from '../../../Components/KeyValueText'
-import { RootState, RootAction } from '../../../Redux/Types'
 
 const WIDTH = Dimensions.get('window').width
 
@@ -72,17 +74,24 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
   }
 
   renderImage (id: PhotoId, imageWidth: number, imageHeight: number) {
+    if (Platform.OS === 'ios') {
+      return (
+        <PinchableImage
+          imageId={id}
+          forMinWidth={imageWidth}
+          imageHeight={imageHeight}
+          style={{width: imageWidth, height: imageHeight}}
+        />
+      )
+    }
     return (
-      <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
-        <View style={styles.imageStretch}>
-          <PinchableImage
-            imageId={id}
-            forMinWidth={imageWidth}
-            imageHeight={imageHeight}
-            style={{width: imageWidth, height: imageHeight}}
-          />
-        </View>
-      </View>
+      <ProgressiveImage
+        imageId={id}
+        showPreview={true}
+        forMinWidth={imageWidth}
+        resizeMode={'cover'}
+        style={{width: imageWidth, height: imageHeight}}
+      />
     )
   }
 
@@ -145,7 +154,11 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
               <Text numberOfLines={1} style={styles.cardTarget}> in {item.threadName}</Text>
             </TouchableOpacity>}
         </View>
-        {this.renderImage(photo.id, imageWidth, imageHeight)}
+        <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
+          <View style={styles.imageStretch}>
+            {this.renderImage(photo.id, imageWidth, imageHeight)}
+          </View>
+        </View>
         <View style={styles.cardFooter} >
           <View style={styles.cardFooterTop} >
             {didLike && <Icons name='heart' size={24} style={{ color: Colors.brandRed }} />}
