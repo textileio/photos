@@ -1,23 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Dimensions } from 'react-native'
 
 import SignUp from './SignUp'
-import ContactModal from '../UserProfile/ContactModal'
-import Logo from '../../components/Logo'
 
 import AuthActions from '../../../Redux/AuthRedux'
-import { NodeState } from '../../../Redux/TextileNodeRedux'
-import styles from './statics/styles'
-
-const WIDTH = Dimensions.get('window').width
 
 class SignUpContainer extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      step: 0,
-      contactModal: false
+      step: 0
     }
   }
 
@@ -39,32 +31,16 @@ class SignUpContainer extends React.Component {
     })
   }
 
-  _contact () {
-    this.setState({ contactModal: this.state.contactModal === false })
-  }
-
   render () {
-    if (this.props.renderSignUp) {
-      return (
-        <SignUp
-          {...this.props}
-          {...this.state}
-          switchToSignIn={this.switchToSignIn}
-          onNextStep={this.onNextStep}
-          onPreviousStep={this.onPreviousStep}
-        />
-      )
-    } else {
-      return (
-        <View style={{ margin: 11 }}>
-          <Logo>
-            <Text style={styles.headerText}>Oops, something went very wrong!{'\n'}Please <Text style={styles.link} onPress={this._contact.bind(this)}>contact us</Text> and let us know:</Text>
-          </Logo>
-          <Text style={[styles.headerText, styles.errorMessage]}>{this.props.nodeError}</Text>
-          <ContactModal height={200} width={WIDTH} onClose={this._contact.bind(this)} isVisible={this.state.contactModal} />
-        </View>
-      )
-    }
+    return (
+      <SignUp
+        {...this.props}
+        {...this.state}
+        switchToSignIn={this.switchToSignIn}
+        onNextStep={this.onNextStep}
+        onPreviousStep={this.onPreviousStep}
+      />
+    )
   }
 }
 
@@ -73,9 +49,7 @@ const mapStateToProps = state => {
   return {
     ...state.auth.formData,
     displayError: state.auth.error !== undefined,
-    errorMessage: state.auth.error,
-    renderSignUp: nodeState.state !== NodeState.nonexistent && nodeState.state !== NodeState.creating,
-    nodeError: nodeState.error || 'unknown error'
+    errorMessage: state.auth.error
   }
 }
 

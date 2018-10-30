@@ -36,11 +36,11 @@ class DevicePairing extends React.PureComponent {
 
   cancel = () => {
     this.props.removeDeviceRequest(this.state.key)
-    this.props.navigation.navigate('OnboardingCheck')
+    this.props.navigation.navigate('StatusCheck')
   }
 
   continue = () => {
-    this.props.navigation.navigate('OnboardingCheck')
+    this.props.navigation.navigate('StatusCheck')
   }
 
   renderConfirm () {
