@@ -35,6 +35,7 @@
     "redux": "^4.0.0",
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.1",
+    "rn-viewpager": "^1.2.9",
     "stacktrace-js": "^2.0.0",
     "typesafe-actions": "^2.0.4",
     "uuid": "^3.3.2"

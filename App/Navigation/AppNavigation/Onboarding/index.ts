@@ -1,6 +1,6 @@
 import { createStackNavigator } from 'react-navigation'
 
-import OnboardingScreen from '../../../SB/views/OnBoarding'
+import OnboardingScreen from '../../../Containers/OnboardingScreen'
 import MailListSignupSceen from '../../../Containers/MailListSignupScreen'
 import SignUpScreen from '../../../SB/views/SignUp/SignUpContainer'
 import SignInScreen from '../../../SB/views/SignIn/SignInContainer'
@@ -16,7 +16,7 @@ const nav = createStackNavigator(
   },
   {
     headerMode: 'none',
-    initialRouteName: 'MailListSignup',
+    initialRouteName: 'Onboarding',
     navigationOptions: {
       gesturesEnabled: false
     }
