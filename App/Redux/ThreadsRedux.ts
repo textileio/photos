@@ -21,6 +21,12 @@ const actions = {
   addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
     return (id: ThreadId, error: Error) => resolve({ id, error })
   }),
+  threadQRCodeRequest: createAction('THREAD_INVITE_QR_REQUEST', (resolve) => {
+    return (id: ThreadId, name: ThreadName) => resolve({ id, name })
+  }),
+  threadQRCodeSuccess: createAction('THREAD_INVITE_QR_SUCCESS', (resolve) => {
+    return (id: ThreadId, name: ThreadName, link: string) => resolve({ id, name, link })
+  }),
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', (resolve) => {
     return (inviteId: BlockId, key: PrivateKey, name?: ThreadName, inviter?: UserName) => resolve({ inviteId, key, name, inviter })
   }),
@@ -46,6 +52,12 @@ const actions = {
 
 export type ThreadsAction = ActionType<typeof actions>
 
+export interface InviteQRCode {
+  readonly id: ThreadId
+  readonly name: ThreadName
+  readonly link: string
+}
+
 export interface OutboundInvite {
   readonly id: ThreadId
   readonly name: ThreadName
@@ -66,6 +78,7 @@ export interface ThreadsState {
   readonly outboundInvites: ReadonlyArray<OutboundInvite>
   readonly inboundInvites: ReadonlyArray<InboundInvite>
   readonly pendingInviteLink?: string // used to hold an invite if triggered before login
+  readonly qrCodeInvite?: InviteQRCode
 }
 
 export const initialState: ThreadsState = {
@@ -75,6 +88,9 @@ export const initialState: ThreadsState = {
 
 export function reducer (state: ThreadsState = initialState, action: ThreadsAction): ThreadsState {
   switch (action.type) {
+    case getType(actions.threadQRCodeSuccess): {
+      return { ...state, qrCodeInvite: action.payload }
+    }
     case getType(actions.addExternalInviteRequest): {
       const { id, name } = action.payload
       const existing = state.outboundInvites.find((invite) => invite.id === id )
@@ -84,6 +100,14 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       }
       const outboundInvite = { id, name }
       const outboundInvites = state.outboundInvites.filter((inv) => inv.id !== id).concat([outboundInvite])
+      return { ...state, outboundInvites }
+    }
+    case getType(actions.addExternalInviteSuccess): {
+      const { id, invite } = action.payload
+      // update the outbound invite with the new Invite object
+      const outboundInvites = state.outboundInvites.map((outbound) => {
+        return outbound.id === id ? { ...outbound, invite } : outbound
+      })
       return { ...state, outboundInvites }
     }
     case getType(actions.addExternalInviteSuccess): {

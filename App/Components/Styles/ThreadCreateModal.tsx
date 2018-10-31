@@ -42,6 +42,16 @@ export default StyleSheet.create({
     fontSize: 28,
     textAlign: 'center'
   } as TextStyle,
+  subTitle: {
+    justifyContent: 'center',
+    paddingVertical: 40
+  } as ViewStyle,
+  subTitleText: {
+    fontFamily: 'BentonSans',
+    color: Colors.charcoal,
+    fontSize: 12,
+    textAlign: 'center'
+  } as TextStyle,
   header: {
     flexDirection: 'row',
     paddingVertical: 12,
@@ -58,6 +68,12 @@ export default StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     paddingHorizontal: 40
+  } as ViewStyle,
+  qrCode: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    alignSelf: 'center'
   } as ViewStyle,
   inputStyle: {
     height: 40,

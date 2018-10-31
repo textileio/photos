@@ -29,6 +29,17 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
     yield put(ThreadsActions.addExternalInviteError(id, error))
   }
 }
+export function * displayThreadQRCode (action: ActionType<typeof ThreadsActions.threadQRCodeRequest>) {
+  const { id, name } = action.payload
+  try {
+    const invite: ExternalInvite = yield call(TextileNode.addExternalThreadInvite, id)
+    const link = DeepLink.createInviteLink(invite, name)
+    yield put(ThreadsActions.threadQRCodeSuccess(id, name, link))
+    // displayThreadQRCode
+  } catch (error) {
+    yield put(ThreadsActions.addExternalInviteError(id, error))
+  }
+}
 
 export function * presentShareInterface(action: ActionType<typeof ThreadsActions.addExternalInviteSuccess>) {
   const { invite, name } = action.payload

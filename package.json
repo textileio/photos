@@ -26,6 +26,7 @@
     "react-native-image-picker": "^0.27.1",
     "react-native-modal": "^6.5.0",
     "react-native-push-notification": "^3.1.1",
+    "react-native-qrcode": "^0.2.7",
     "react-native-scalable-image": "^0.4.0",
     "react-native-vector-icons": "^6.0.2",
     "react-native-version-number": "https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f",
