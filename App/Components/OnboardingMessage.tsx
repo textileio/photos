@@ -5,7 +5,7 @@ import * as s from '../Themes/Constants'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
-  marginTop: '16%',
+  marginTop: '33%',
   paddingHorizontal: s.MARGIN_STANDARD,
   backgroundColor: s.COLOR_BACKGROUND_PRIMARY
 }

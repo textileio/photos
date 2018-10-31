@@ -1,5 +1,5 @@
 import React from 'react'
-import Icons from '../Components/Icons'
+import Icon from '../Components/Icon'
 import { connect } from 'react-redux'
 import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
@@ -145,7 +145,7 @@ class ThreadsList extends React.PureComponent {
           private Threads or post a new photo.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons name='more-horizontal' size={28} color='black' /> button above and create your first Thread.
+          Click the <Icon name='more-horizontal' size={28} color='black' /> button above and create your first Thread.
         </Text>
       </View>
     )

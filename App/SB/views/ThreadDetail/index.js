@@ -4,7 +4,7 @@ import { Alert, View, Text, Image } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
-import Icons from '../../../Components/Icons'
+import Icon from '../../../Components/Icon'
 
 import BottomDrawerList from '../../components/BottomDrawerList'
 import PhotoStream from '../../../Components/PhotoStream'
@@ -154,8 +154,8 @@ class ThreadDetail extends React.PureComponent {
           Time to share some photos. Anyone you invite to the Thread will be able to send photos, view other members photos, and invite new friends.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons style={{ margin: 10 }} name='plus' size={16} color='black' /> button to add your first photo.
-          Or click the <Icons name='more-horizontal' size={16} color='black' /> button to start inviting friends.
+          Click the <Icon style={{ margin: 10 }} name='plus' size={16} color='black' /> button to add your first photo.
+          Or click the <Icon name='more-horizontal' size={16} color='black' /> button to start inviting friends.
         </Text>
       </View>
     )

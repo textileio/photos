@@ -9,7 +9,7 @@ import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/H
 
 import AuthActions from '../../../Redux/AuthRedux'
 import Avatar from '../../../Components/Avatar'
-import Button from '../../components/Button'
+import Button from '../../../Components/Button'
 
 import styles from './statics/styles'
 

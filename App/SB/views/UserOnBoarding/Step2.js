@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native'
 
 import Logo from '../../components/Logo'
-import Button from '../../components/Button'
+import Button from '../../../Components/Button'
 import ImageSc from 'react-native-scalable-image'
 
 import styles from './statics/styles'

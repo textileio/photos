@@ -6,7 +6,7 @@ import { Dispatch } from 'redux'
 import { RootAction, RootState } from '../../Redux/Types'
 import ThreadsActions from '../../Redux/ThreadsRedux'
 import { BlockId, PrivateKey, UserName, ThreadName } from '../../Models/TextileTypes'
-import Button from '../../SB/components/Button'
+import Button from '../../Components/Button'
 import Colors from '../../Themes/Colors'
 import { TextileHeaderButtons, Item } from '../../Components/HeaderButtons'
 

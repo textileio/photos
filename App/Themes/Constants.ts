@@ -9,6 +9,7 @@ export const COLOR_BRAND_YELLOW = '#FFCE00'
 export const COLOR_BRAND_RED = '#FF1C3F'
 export const COLOR_BRAND_PINK = '#FFB6D5'
 export const COLOR_GREY_LIGHT = '#e5e5e5'
+export const COLOR_GREY_MEDIUM = '#c6c6c6'
 
 export const FONT_FAMILY_LIGHT = 'BentonSans-Light'
 export const FONT_FAMILY_REGULAR = 'BentonSans'
@@ -20,6 +21,7 @@ export const FONT_SIZE_LARGE = 24
 
 export const FONT_LINE_HEIGHT_MEDIUM = 28
 
+export const MARGIN_SMALL = 16
 export const MARGIN_STANDARD = 20
 
 export const ITEM_SPACING_REGULAR = 8

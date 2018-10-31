@@ -9,7 +9,7 @@ import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
-import Icons from '../../../Components/Icons'
+import Icon from '../../../Components/Icon'
 import Colors from '../../../Themes/Colors'
 import {Photo, BlockId, ThreadName, ThreadId, PeerId} from '../../../Models/TextileTypes'
 import KeyValueText from '../../../Components/KeyValueText'
@@ -142,16 +142,16 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
         </View>
         <View style={styles.cardFooter} >
           <View style={styles.cardFooterTop} >
-            {didLike && <Icons name='heart' size={24} style={{ color: Colors.brandRed }} />}
+            {didLike && <Icon name='heart' size={24} style={{ color: Colors.brandRed }} />}
             {!didLike &&
               <TouchableOpacity
                 onPress={this._onLikePress(this.props.item.photo)}
               >
-                <Icons name='heart' size={24} />
+                <Icon name='heart' size={24} />
               </TouchableOpacity>
             }
             <TouchableOpacity onPress={onComment} style={styles.cardFooterTopItem} >
-              <Icons name='comment' size={24} />
+              <Icon name='comment' size={24} />
             </TouchableOpacity>
           </View>
           {isLiked && likeRow

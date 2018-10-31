@@ -6,7 +6,7 @@ import list from './constants'
 
 import Toolbar from '../../components/Toolbar'
 import BottomBar from '../../components/BottomBar'
-import Button from '../../components/Button'
+import Button from '../../../Components/Button'
 import ThreadCard from '../../components/ThreadListCard'
 
 const ThreadsList = () => {

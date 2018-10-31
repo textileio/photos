@@ -4,7 +4,7 @@ import { Text, View, ScrollView } from 'react-native'
 import Input from '../../components/Input'
 import Footer from '../../components/Footer'
 import Logo from '../../components/Logo'
-import Button from '../../components/Button'
+import Button from '../../../Components/Button'
 
 import commonStyles from '../commonStyles'
 import styles from './statics/styles'

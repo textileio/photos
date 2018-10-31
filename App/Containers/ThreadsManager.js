@@ -4,7 +4,7 @@ import { NavigationActions } from 'react-navigation'
 import { View, Text, Image } from 'react-native'
 import { Item } from 'react-navigation-header-buttons'
 
-import Icons from '../Components/Icons'
+import Icon from '../Components/Icon'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 import CreateThreadModal from '../Components/CreateThreadModal'
 
@@ -95,7 +95,7 @@ class ThreadsManager extends React.PureComponent {
           friends and family.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons name='plus' size={24} color='black' /> button above to create your first Thread.
+          Click the <Icon name='plus' size={24} color='black' /> button above to create your first Thread.
         </Text>
       </View>
     )

@@ -1,13 +1,56 @@
 import React from 'react'
-import { KeyboardAvoidingView, Text } from 'react-native'
+import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
 import Config from 'react-native-config'
-import { NavigationScreenProps } from 'react-navigation'
 
 import Input from '../SB/components/Input'
-import Button from '../SB/components/Button'
+import Button from '../Components/Button'
+import * as s from '../Themes/Constants'
 
-interface Props extends NavigationScreenProps<{}> {
+const CONTAINER: ViewStyle = {
+  flex: 1,
+  justifyContent: 'space-evenly',
+  paddingHorizontal: s.MARGIN_STANDARD,
+  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
+}
 
+const IMAGE: ImageStyle = {
+  marginBottom: s.ITEM_SPACING_LARGE
+}
+
+const ITEM: ViewStyle = {
+  marginBottom: s.ITEM_SPACING_LARGE
+}
+
+const TITLE: TextStyle = {
+  ...ITEM,
+  ...s.H2
+}
+
+const SUBTITLE: TextStyle = {
+  ...ITEM,
+  ...s.H1
+}
+
+const TEXT: TextStyle = {
+  fontFamily: s.FONT_FAMILY_REGULAR,
+  fontSize: s.FONT_SIZE_MEDIUM,
+  color: s.COLOR_FONT_DARK_ON_LIGHT_DARK
+}
+
+const LABEL: TextStyle = {
+  fontFamily: s.FONT_FAMILY_REGULAR
+}
+
+const LINK: TextStyle = {
+  fontFamily: s.FONT_FAMILY_REGULAR,
+  fontSize: s.FONT_SIZE_REGULAR,
+  color: s.COLOR_GREY_MEDIUM,
+  textDecorationLine: 'underline',
+  textAlign: 'center'
+}
+
+interface Props {
+  onSuccess?: () => void
 }
 
 interface State {
@@ -15,7 +58,7 @@ interface State {
   emailAddress?: string
   processing: boolean
   error?: string
-  success?: string
+  buttonText: string
 }
 
 export default class MailListSignupScreen extends React.Component<Props, State> {
@@ -23,7 +66,8 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
     super(props)
     this.state = {
       valid: false,
-      processing: false
+      processing: false,
+      buttonText: 'Subscribe'
     }
   }
 
@@ -53,20 +97,31 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
 
   render () {
     return (
-      <KeyboardAvoidingView>
-        <Text>If you'd like to receive periodic updates and information from Textile, enter your email address below.</Text>
-        <Input
-          label={'Email Address'}
-          keyboardType='email-address'
-          autoCapitalize='none'
-          value={this.state.emailAddress}
-          onChangeText={this.updateText}
-        />
-        <Button
-          text='Subscribe'
-          disabled={!this.state.valid}
-          onPress={this.submit}
-        />
+      <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
+          <View>
+            <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/share.png')} />
+            <Text style={TITLE}>Keep in touch!</Text>
+            <Text style={SUBTITLE}>If you'd like to receive periodic updates and information from Textile, enter your email address below.</Text>
+            <Input
+              label={'Email Address'}
+              keyboardType='email-address'
+              autoCapitalize='none'
+              autoCorrect={false}
+              inputStyle={TEXT}
+              labelStyle={LABEL}
+              value={this.state.emailAddress}
+              onChangeText={this.updateText}
+              wrapperStyle={ITEM}
+            />
+            <Button
+              text={this.state.buttonText}
+              disabled={!this.state.valid}
+              processing={this.state.processing}
+              onPress={this.submit}
+              style={ITEM}
+            />
+            <Text style={LINK} onPress={this.props.onSuccess}>No thanks</Text>
+          </View>
       </KeyboardAvoidingView>
     )
   }
@@ -96,8 +151,11 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
       const validStatus = responseJson.status >= 200 && responseJson.status < 300
       const memberExists = !validStatus && responseJson.title === 'Member Exists'
       if (validStatus || memberExists) {
-        this.setState({ success: 'Success!'})
+        this.setState({ buttonText: 'Success!', valid: false })
         // Set a timer and navigate
+        if (this.props.onSuccess) {
+          setTimeout(this.props.onSuccess, 2000)
+        }
       } else {
         this.setState({ error: responseJson.title })
       }

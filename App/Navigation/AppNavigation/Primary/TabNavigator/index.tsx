@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from 'react-navigation'
 import React from 'react'
-import Icons from '../../../../Components/Icons'
+import Icon from '../../../../Components/Icon'
 import Wallet from './Wallet'
 import Threads from './Threads'
 import Notifications from './Notifications'
@@ -28,7 +28,7 @@ const nav = createBottomTabNavigator(
             icon = 'bell'
           }
           const tint = tintColor || undefined
-          return <Icons name={icon} size={25} color={tint} />
+          return <Icon name={icon} size={25} color={tint} />
         }
       }
     },
