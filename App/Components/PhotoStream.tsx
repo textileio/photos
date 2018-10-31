@@ -30,8 +30,6 @@ interface ProcessingItem {
 interface ScreenProps {
   items: ReadonlyArray<PhotoItem | ProcessingItem>
   displayThread?: boolean
-  footerText?: string
-  footerPress?: () => void
 }
 
 class PhotoStream extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
@@ -88,21 +86,6 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
     }
   }
 
-  _renderFooter = () => {
-    if (!this.props.footerText || !this.props.footerPress) {
-      return (<View/>)
-    }
-    return (
-      <TouchableOpacity
-        activeOpacity={0.95}
-        style={styles.createThreadBox}
-        onPress={this.props.footerPress}
-      >
-        <Text style={styles.createThreadText}>{this.props.footerText}</Text>
-      </TouchableOpacity>
-    )
-  }
-
   render () {
     return (
       <View style={styles.threadDetail} >
@@ -115,7 +98,6 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
             renderItem={this._renderItem.bind(this)}
             refreshing={false}
             onRefresh={this._onRefresh}
-            ListFooterComponent={this._renderFooter}
           />
         </View>
       </View>

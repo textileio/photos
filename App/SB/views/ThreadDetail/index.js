@@ -169,8 +169,8 @@ class ThreadDetail extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <PhotoStream items={this.props.items} footerPress={this.addPeerRequest()} footerText={'Add new peers'}/>}
+        {this.props.items.length === 0 && this._renderOnboarding()}
+        {this.props.items.length !== 0 && <PhotoStream items={this.props.items} />}
         {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet

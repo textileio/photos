@@ -188,7 +188,7 @@ class ThreadsList extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items} footerPress={this.createThreadRequest()} footerText={'Create new Thread'}/>}
+        {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items}/>}
 
         <ActionSheet
           ref={o => { this.actionSheet = o }}
