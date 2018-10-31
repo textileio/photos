@@ -110,9 +110,14 @@ class ThreadDetail extends React.PureComponent {
     this.actionSheet.show()
   }
 
+  addPeerRequest () {
+    return () => {
+      this.props.addPeerRequest(this.props.threadId, this.props.threadName)
+    }
+  }
   handleActionSheetResponse (index) {
     if (index === 0) {
-      this.props.addFriendRequest(this.props.threadId, this.props.threadName)
+      this.props.addPeerRequest(this.props.threadId, this.props.threadName)
       // this.props.invite(this.props.threadId, this.props.threadName)
     } else if (index === 1) {
       this.props.leaveThread(this.props.threadId)
@@ -165,7 +170,7 @@ class ThreadDetail extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <PhotoStream items={this.props.items} />}
+        {!this.props.showOnboarding && <PhotoStream items={this.props.items} footerPress={this.addPeerRequest()} footerText={'Add new peer'}/>}
         {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet
@@ -262,7 +267,7 @@ const mapDispatchToProps = (dispatch) => {
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
-    addFriendRequest: (threadId, threadName) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
+    addPeerRequest: (threadId, threadName) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableLocation: () => { dispatch(PreferencesActions.toggleServicesRequest('backgroundLocation', true)) }
   }

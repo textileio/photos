@@ -178,11 +178,17 @@ class ThreadsList extends React.PureComponent {
     }
   }
 
+  createThreadRequest () {
+    return () => {
+      this.setState({showCreateThreadModal: true})
+    }
+  }
+
   render () {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items} />}
+        {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items} footerPress={this.createThreadRequest()} footerText={'Create new Thread'}/>}
 
         <ActionSheet
           ref={o => { this.actionSheet = o }}
