@@ -49,6 +49,7 @@
     "@types/react-native-background-timer": "^2.0.0",
     "@types/react-native-fs": "^2.8.2",
     "@types/react-native-push-notification": "^3.0.3",
+    "@types/react-native-qrcode": "^0.2.2",
     "@types/react-native-vector-icons": "^4.6.4",
     "@types/react-navigation": "^2.0.24",
     "@types/react-redux": "^6.0.9",
