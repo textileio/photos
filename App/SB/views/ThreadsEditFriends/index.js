@@ -6,7 +6,7 @@ import Toast from 'react-native-easy-toast'
 
 import ContactSelect from '../../components/ContactSelect'
 import ThreadsActions from '../../../Redux/ThreadsRedux'
-import * as TextileTypes from '../../../Models/TextileTypes'
+import QRCodeModal from '../../../Components/QRCodeModal'
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
@@ -15,7 +15,8 @@ class ThreadsEditFriends extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      selected: {}
+      selected: {},
+      showQrCode: false
     }
   }
 
@@ -69,6 +70,21 @@ class ThreadsEditFriends extends React.PureComponent {
     )
   }
 
+  _displayThreadQRCode () {
+    // Generate a link dialog
+    this.props.threadQRCodeRequest(
+      this.props.navigation.state.params.threadId,
+      this.props.navigation.state.params.threadName
+    )
+    this.setState({showQrCode: true})
+  }
+
+  _hideQRCode () {
+    return () => {
+      this.setState({showQrCode: false})
+    }
+  }
+
   _select (contact, included) {
     // Toggle the id's selected state in state
     if (included) {
@@ -101,6 +117,7 @@ class ThreadsEditFriends extends React.PureComponent {
     return (
       <SafeAreaView style={styles.container}>
         <ContactSelect
+          displayQRCode={this._displayThreadQRCode.bind(this)}
           getPublicLink={this._getPublicLink.bind(this)}
           contacts={this.props.contacts}
           select={this._select.bind(this)}
@@ -108,6 +125,7 @@ class ThreadsEditFriends extends React.PureComponent {
           topFive={this.props.topFive}
           notInThread={this.props.notInThread}
         />
+        <QRCodeModal isVisible={this.state.showQrCode} invite={this.props.qrCodeInvite} cancel={this._hideQRCode()} />
         <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />
       </SafeAreaView>
     )
@@ -115,12 +133,13 @@ class ThreadsEditFriends extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const threadId = ownProps.navigation.state.params.threadId
   const contacts = state.contacts.contacts
     .map((contact) => {
       return {
         ...contact,
         type: 'contact',
-        included: contact.thread_ids.includes(ownProps.navigation.state.params.threadId)
+        included: contact.thread_ids.includes(threadId)
       }
     })
     .filter(c => c.username !== '' && c.username !== undefined)
@@ -142,17 +161,20 @@ const mapStateToProps = (state, ownProps) => {
       return A < B ? -1 : 1
     }
   })
+
   return {
     topFive,
     // puts a placeholder row in contacts for adding external invite link
     contacts: sortedContacts,
-    notInThread: notInThread.length
+    notInThread: notInThread.length,
+    qrCodeInvite: state.threads.qrCodeInvite && state.threads.qrCodeInvite.id === threadId && state.threads.qrCodeInvite
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     invite: (threadId, threadName) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
+    threadQRCodeRequest: (threadId, threadName) => { dispatch(ThreadsActions.threadQRCodeRequest(threadId, threadName)) },
     addInternalInvites: (threadId, inviteePks) => { dispatch(ThreadsActions.addInternalInvitesRequest(threadId, inviteePks)) }
   }
 }

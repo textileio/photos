@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
 import Avatar from '../../../Components/Avatar'
 import ImageSc from 'react-native-scalable-image'
 
-import ContactSelectCard from './ContactSelectCard'
+import ContactSelectCard, {ContactLinkCard} from './ContactSelectCard'
 
 import styles from './statics/styles'
 
@@ -19,10 +19,28 @@ function getSubTitle (contacts, topFive, notInThread) {
 }
 
 const ContactSelect = (props) => {
-  const { getPublicLink, contacts, select, selected, topFive, notInThread } = props
+  const { getPublicLink, displayQRCode, contacts, select, selected, topFive, notInThread } = props
   const subTitle = getSubTitle(contacts, topFive, notInThread)
   const showSuggested = topFive.length > 0 && topFive.length > notInThread
   const anySelected = Object.keys(selected).find(k => selected[k] === true)
+
+  const renderHeader = () => {
+    return (
+      <Fragment>
+        <ContactLinkCard
+          icon={'external-link'}
+          text={'Share invite by link'}
+          select={getPublicLink}
+        />
+        <ContactLinkCard
+          icon={'qr-code'}
+          text={'Display QR code invite'}
+          select={displayQRCode}
+        />
+      </Fragment>
+    )
+  }
+
   return (
     <View style={styles.contentContainer}>
       <View style={styles.header}>
@@ -65,6 +83,7 @@ const ContactSelect = (props) => {
           data={contacts}
           keyExtractor={(item) => item.pk}
           extraData={selected}
+          ListHeaderComponent={renderHeader()}
           renderItem={(contact) => {
             const { item } = contact
             const selectState = !!selected[item.id] || item.included
@@ -73,16 +92,6 @@ const ContactSelect = (props) => {
             )
           }}
         />
-        <TouchableOpacity activeOpacity={0.4} style={styles.inviteItem} onPress={getPublicLink}>
-          <ImageSc
-            source={require('../../../Images/v2/send.png')}
-            width={20}
-            height={20}
-            resizeMode={'cover'}
-            style={!!anySelected && styles.inviteLessImage}
-          />
-          <Text style={[styles.inviteLink, !!anySelected && styles.inviteLess]}>Invite a new user</Text>
-        </TouchableOpacity>
       </View>
     </View>
   )

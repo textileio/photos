@@ -70,6 +70,7 @@ import {
 } from './StorageSagas'
 
 import {
+  displayThreadQRCode,
   addExternalInvite,
   presentShareInterface,
   acceptExternalInvite,
@@ -165,6 +166,7 @@ export default function * root () {
     // update the node stats
     takeEvery(getType(TextileNodeActions.updateOverviewRequest), updateNodeOverview),
 
+    takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
     takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
