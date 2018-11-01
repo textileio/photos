@@ -38,7 +38,7 @@ const PHRASE: TextStyle = {
   fontFamily: s.FONT_FAMILY_REGULAR,
   fontSize: s.FONT_SIZE_REGULAR,
   lineHeight: s.FONT_LINE_HEIGHT_REGULAR,
-  color: s.COLOR_BRAND_RED,
+  color: s.COLOR_FONT_DARK_ON_LIGHT_LIGHT,
   marginBottom: s.ITEM_SPACING_LARGE,
   height: s.FONT_LINE_HEIGHT_REGULAR * 4
 }

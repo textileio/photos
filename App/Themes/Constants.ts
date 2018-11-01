@@ -2,6 +2,7 @@ import { TextStyle } from 'react-native'
 
 export const COLOR_BACKGROUND_PRIMARY = '#FAFCFE'
 export const COLOR_BACKGROUND_SECONARY = 'white'
+export const COLOR_FONT_DARK_ON_LIGHT_LIGHT = '#9b9b9b'
 export const COLOR_FONT_DARK_ON_LIGHT_MEDIUM = '#4A4A4A'
 export const COLOR_FONT_DARK_ON_LIGHT_DARK = '#1c1c1c'
 export const COLOR_BRAND_BLUE = '#2935FF'
