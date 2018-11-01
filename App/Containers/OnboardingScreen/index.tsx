@@ -14,10 +14,6 @@ const CONTAINER: ViewStyle = {
   backgroundColor: COLOR_BACKGROUND_PRIMARY
 }
 
-const DOT: ViewStyle = {
-  backgroundColor: COLOR_GREY_LIGHT
-}
-
 const ARROW_BACK: ViewStyle = {
   position: 'absolute',
   bottom: MARGIN_SMALL,
