@@ -6,6 +6,7 @@ import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_ST
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import MailListSignupScreen from '../MailListSignupScreen'
 import ShowMnemonic from '../ShowMnemonic'
+import VerifyMnemonic from '../VerifyMnemonic'
 import Icon from '../../Components/Icon'
 
 const CONTAINER: ViewStyle = {
@@ -17,7 +18,13 @@ const DOT: ViewStyle = {
   backgroundColor: COLOR_GREY_LIGHT
 }
 
-const ARROW: ViewStyle = {
+const ARROW_BACK: ViewStyle = {
+  position: 'absolute',
+  bottom: MARGIN_SMALL,
+  left: MARGIN_STANDARD
+}
+
+const ARROW_FORWARD: ViewStyle = {
   position: 'absolute',
   bottom: MARGIN_SMALL,
   right: MARGIN_STANDARD,
@@ -31,7 +38,8 @@ interface State {
 export default class OnboardingScreen extends React.Component<{}, State> {
 
   pages?: Pages
-  noArrowIndexes = [3]
+  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 6]
+  noForwardArrowIndexes: number[] = [3, 5]
 
   constructor(props: {}) {
     super(props)
@@ -43,6 +51,12 @@ export default class OnboardingScreen extends React.Component<{}, State> {
   nextPage = () => {
     if (this.pages && this.pages.props.children.length - 1 > this.state.currentPage) {
       this.pages.scrollToPage(this.state.currentPage + 1)
+    }
+  }
+
+  previousPage = () => {
+    if (this.state.currentPage > 0) {
+      this.pages.scrollToPage(this.state.currentPage - 1)
     }
   }
 
@@ -79,9 +93,20 @@ export default class OnboardingScreen extends React.Component<{}, State> {
           />
           <MailListSignupScreen onSuccess={this.nextPage} />
           <ShowMnemonic />
+          <VerifyMnemonic onSuccess={this.nextPage} />
+          <OnboardingMessage
+            title='All ready!'
+            subtitle="You're all set up. Enjoy using Textile :)"
+            image={require('./statics/sync.png')}
+          />
         </Pages>
-        {this.noArrowIndexes.indexOf(this.state.currentPage) === -1 &&
-          <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW} onPress={this.nextPage}>
+        {this.noBackArrowIndexes.indexOf(this.state.currentPage) === -1 &&
+          <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_BACK} onPress={this.previousPage}>
+            <Icon name={'arrow-left'} size={24} />
+          </TouchableOpacity>
+        }
+        {this.noForwardArrowIndexes.indexOf(this.state.currentPage) === -1 &&
+          <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
             <Icon name={'arrow-right'} size={24} />
           </TouchableOpacity>
         }
