@@ -5,7 +5,7 @@ import { Pages } from 'react-native-pages'
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import MailListSignupScreen from '../MailListSignupScreen'
-import ShowMnemonic from '../../Components/ShowMnemonic'
+import ShowMnemonic from '../ShowMnemonic'
 import Icon from '../../Components/Icon'
 
 const CONTAINER: ViewStyle = {

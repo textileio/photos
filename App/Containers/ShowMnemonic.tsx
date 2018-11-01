@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Image, ViewStyle, TextStyle, ImageStyle, Clipboard } from 'react-native'
 import { connect } from 'react-redux'
 
-import Button from './Button'
+import Button from '../Components/Button'
 
 import * as s from '../Themes/Constants'
 import { RootState } from '../Redux/Types'
