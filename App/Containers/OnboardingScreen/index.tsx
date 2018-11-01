@@ -5,6 +5,7 @@ import { Pages } from 'react-native-pages'
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import MailListSignupScreen from '../MailListSignupScreen'
+import ShowMnemonic from '../../Components/ShowMnemonic'
 import Icon from '../../Components/Icon'
 
 const CONTAINER: ViewStyle = {
@@ -77,6 +78,7 @@ export default class OnboardingScreen extends React.Component<{}, State> {
             image={require('./statics/sync.png')}
           />
           <MailListSignupScreen onSuccess={this.nextPage} />
+          <ShowMnemonic />
         </Pages>
         {this.noArrowIndexes.indexOf(this.state.currentPage) === -1 &&
           <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW} onPress={this.nextPage}>
