@@ -5,7 +5,6 @@ import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
 import { View, Text, Image, Alert, TouchableWithoutFeedback } from 'react-native'
-import ActionSheet from 'react-native-actionsheet'
 import PhotoStream from '../Components/PhotoStream'
 import Avatar from '../Components/Avatar'
 
@@ -49,7 +48,7 @@ class ThreadsList extends React.PureComponent {
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add Photo' iconName='plus' onPress={params.showWalletPicker} />
-        <Item title='Options' iconName='more-horizontal' onPress={params.showActionSheet} />
+        <Item title='Create Thread' iconName='player-list-add' onPress={params.createThreadRequest} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
@@ -78,9 +77,7 @@ class ThreadsList extends React.PureComponent {
       profile: this.props.profile,
       online: this.props.online,
       toggleVerboseUi: this.props.toggleVerboseUi,
-      showActionSheet: () => {
-        this.showActionSheet()
-      },
+      createThreadRequest: this.createThreadRequest(),
       showWalletPicker: this.props.showWalletPicker
     })
   }
@@ -163,23 +160,11 @@ class ThreadsList extends React.PureComponent {
     }
   }
 
-  showActionSheet () {
-    this.actionSheet.show()
-  }
-
-  handleActionSheetResponse (index) {
-    if (index === 0) {
+  createThreadRequest () {
+    return () => {
       if (this.props.showOnboarding === true) {
         this.props.completeScreen('threads')
       }
-      this.setState({showCreateThreadModal: true})
-    } else if (index === 1) {
-      this.props.navigation.navigate('ThreadsManager')
-    }
-  }
-
-  createThreadRequest () {
-    return () => {
       this.setState({showCreateThreadModal: true})
     }
   }
@@ -189,14 +174,6 @@ class ThreadsList extends React.PureComponent {
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
         {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items}/>}
-
-        <ActionSheet
-          ref={o => { this.actionSheet = o }}
-          title={'Threads'}
-          options={['Create Thread', 'Manage Threads', 'Cancel']}
-          cancelButtonIndex={2}
-          onPress={this.handleActionSheetResponse.bind(this)}
-        />
 
         <CreateThreadModal
           isVisible={this.state.showCreateThreadModal}
@@ -295,7 +272,6 @@ const mapDispatchToProps = (dispatch) => {
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     showWalletPicker: () => { dispatch(UIActions.showWalletPicker()) },
     toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
-    toggleThreadsLayout: () => { dispatch(PreferencesActions.toggleThreadsLayout()) },
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) }
   }
 }
