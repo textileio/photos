@@ -154,7 +154,7 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
         this.setState({ buttonText: 'Success!', valid: false })
         // Set a timer and navigate
         if (this.props.onSuccess) {
-          setTimeout(this.props.onSuccess, 2000)
+          setTimeout(this.props.onSuccess, 1000)
         }
       } else {
         this.setState({ error: responseJson.title })
