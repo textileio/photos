@@ -265,6 +265,9 @@ const mapStateToProps = (state) => {
       .map(thread => {
         // tmp contact stuff
         for (let photo of thread.photos) {
+          if (state.preferences.profile && photo.author_id === state.preferences.profile.id) {
+            continue
+          }
           peers[photo.author_id] = peers[photo.author_id] ? peers[photo.author_id] : photo.username
         }
         // end
