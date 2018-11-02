@@ -36,8 +36,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 3,
-    borderBottomWidth: 1,
-    borderColor: '#ECEDEE',
     width: '100%'
   },
   threadSelectRadio: {

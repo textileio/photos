@@ -189,7 +189,7 @@ export function * getUsername (contact: TT.Contact) {
 }
 
 export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
-  const { threadId, threadName } = action.payload
+  // TODO: should just be changed to Update Contacts
   try {
     const contactResult = yield call(TextileNode.getContacts)
     const contacts = contactResult.items
@@ -197,8 +197,8 @@ export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequ
     for (const contact of contacts) {
       yield fork(getUsername, contact)
     }
-  } finally {
-    yield call(NavigationService.navigate, 'AddFriends', { threadId, threadName })
+  } catch (error) {
+    // skip for now
   }
 }
 

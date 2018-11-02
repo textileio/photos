@@ -23,6 +23,8 @@ import AlertComponent from '../../../SB/components/Alert'
 import { RootState } from '../../../Redux/Types'
 import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
+import ThreadsEditFriends from '../../views/ThreadsEditFriends'
+
 import styles from './statics/styles'
 import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 
@@ -31,7 +33,8 @@ class ThreadDetail extends React.PureComponent {
     super(props)
     this.state = {
       showDrawer: false,
-      refreshing: false
+      refreshing: false,
+      addingPeers: false
     }
   }
   static navigationOptions = ({ navigation }) => {
@@ -110,14 +113,15 @@ class ThreadDetail extends React.PureComponent {
     this.actionSheet.show()
   }
 
-  addPeerRequest () {
+  cancelPeerRequest () {
     return () => {
-      this.props.addPeerRequest(this.props.threadId, this.props.threadName)
+      this.setState({addingPeers: false})
     }
   }
   handleActionSheetResponse (index) {
     if (index === 0) {
       this.props.addPeerRequest(this.props.threadId, this.props.threadName)
+      this.setState({addingPeers: true})
       // this.props.invite(this.props.threadId, this.props.threadName)
     } else if (index === 1) {
       this.props.leaveThread(this.props.threadId)
@@ -182,6 +186,12 @@ class ThreadDetail extends React.PureComponent {
         />
 
         <AlertComponent display={this.props.displayError} bottom msg={'Error: ' + this.props.errorMessage} />
+        <ThreadsEditFriends
+          isVisible={this.state.addingPeers}
+          threadName={this.props.threadName}
+          threadId={this.props.threadId}
+          cancel={this.cancelPeerRequest()}
+        />
       </View>
     )
   }

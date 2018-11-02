@@ -27,7 +27,7 @@ class TextileWalletPicker extends React.PureComponent {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='camera' iconName='camera' onPress={() => {params.showImagePicker('camera')}} />
+        <Item title='camera' iconName='camera-create' onPress={() => {params.showImagePicker('camera')}} />
         <Item title='camera roll' iconName='image' onPress={() => {params.showImagePicker('camera-roll')}} />
       </TextileHeaderButtons>
     )

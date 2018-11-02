@@ -1,17 +1,17 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import { connect } from 'react-redux'
-import { NavigationActions, SafeAreaView } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
+import Modal from 'react-native-modal'
 
+import ModalButtons from '../../../Components/ModalButtons'
 import ContactSelect from '../../components/ContactSelect'
-import ThreadsActions from '../../../Redux/ThreadsRedux'
 import QRCodeModal from '../../../Components/QRCodeModal'
-import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
+import ThreadsActions from '../../../Redux/ThreadsRedux'
 
 import styles from './statics/styles'
 
-class ThreadsEditFriends extends React.PureComponent {
+class Component extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -20,61 +20,19 @@ class ThreadsEditFriends extends React.PureComponent {
     }
   }
 
-  static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state
-    const headerLeft = (
-      <TextileHeaderButtons left>
-        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
-      </TextileHeaderButtons>
-    )
-
-    const headerRight = params.updateEnabled ? (
-      <TextileHeaderButtons >
-        <Item title='invite' onPress={() => {
-          params.updateThread()
-        }} />
-      </TextileHeaderButtons>
-    ) : (
-      <View style={styles.headerRight}>
-        <Text style={styles.headerRightText}>Invite</Text>
-      </View>
-    )
-
-    return {
-      headerRight,
-      headerLeft
-    }
-  }
-
-  componentDidMount () {
-    this.props.navigation.setParams({
-      updateThread: this._updateThread.bind(this),
-      updateEnabled: false
-    })
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    if (prevState.selected !== this.state.selected) {
-      const updateEnabled = Object.keys(this.state.selected).find((k) => this.state.selected[k] === true)
-      this.props.navigation.setParams({
-        updateEnabled: !!updateEnabled
-      })
-    }
-  }
-
   _getPublicLink () {
     // Generate a link dialog
     this.props.invite(
-      this.props.navigation.state.params.threadId,
-      this.props.navigation.state.params.threadName
+      this.props.threadId,
+      this.props.threadName
     )
   }
 
   _displayThreadQRCode () {
     // Generate a link dialog
     this.props.threadQRCodeRequest(
-      this.props.navigation.state.params.threadId,
-      this.props.navigation.state.params.threadName
+      this.props.threadId,
+      this.props.threadName
     )
     this.setState({showQrCode: true})
   }
@@ -97,6 +55,9 @@ class ThreadsEditFriends extends React.PureComponent {
   }
 
   _updateThread () {
+    if (this.state.selected.length === 0) {
+      return
+    }
     // grab the Pks from the user Ids
     const inviteePks = Object.keys(this.state.selected).filter((id) => this.state.selected[id] === true).map((id) => {
       const existing = this.props.contacts.find((ctc) => ctc.id === id)
@@ -109,13 +70,13 @@ class ThreadsEditFriends extends React.PureComponent {
     }
 
     this.refs.toast.show('Success! The peer list will not update until your invitees accept.', 2400)
-    this.props.addInternalInvites(this.props.navigation.state.params.threadId, inviteePks)
-    setTimeout(() => { this.props.navigation.dispatch(NavigationActions.back()) }, 2400)
+    this.props.addInternalInvites(this.props.threadId, inviteePks)
+    setTimeout(() => { this.props.cancel() }, 2400)
   }
 
   render () {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <ContactSelect
           displayQRCode={this._displayThreadQRCode.bind(this)}
           getPublicLink={this._getPublicLink.bind(this)}
@@ -124,16 +85,26 @@ class ThreadsEditFriends extends React.PureComponent {
           selected={this.state.selected}
           topFive={this.props.topFive}
           notInThread={this.props.notInThread}
+          threadName={this.props.threadName}
         />
         <QRCodeModal isVisible={this.state.showQrCode} invite={this.props.qrCodeInvite} cancel={this._hideQRCode()} />
         <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />
-      </SafeAreaView>
+        <View style={styles.buttons}>
+          <ModalButtons
+            continueEnabled={this.state.selected.length > 0}
+            continue={this._updateThread}
+            cancel={this.props.cancel}
+            continueText={'Send'}
+            cancelText={'Exit'}
+          />
+        </View>
+      </View>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const threadId = ownProps.navigation.state.params.threadId
+  const threadId = ownProps.threadId
   const contacts = state.contacts.contacts
     .map((contact) => {
       return {
@@ -179,4 +150,21 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadsEditFriends)
+export const ThreadsEditFriendsComponent = connect(mapStateToProps, mapDispatchToProps)(Component)
+
+export default class ThreadsEditFriends extends React.PureComponent {
+  render () {
+    return (
+      <Modal
+        isVisible={this.props.isVisible}
+        animationIn={'fadeInUp'}
+        animationOut={'fadeOutDown'}
+        avoidKeyboard={true}
+        backdropOpacity={0.5}
+        style={{margin: 0, padding: 0}}
+      >
+        <ThreadsEditFriendsComponent {...this.props} />
+      </Modal>
+    )
+  }
+}

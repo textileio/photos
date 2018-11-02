@@ -6,8 +6,6 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 18,
     paddingTop: 25,
-    borderTopColor: '#ECEDEE',
-    borderTopWidth: 1,
     flex: 1,
     flexDirection: 'column'
   },
