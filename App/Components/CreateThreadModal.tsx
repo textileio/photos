@@ -23,8 +23,11 @@ interface DispatchProps {
   submit: (name: string, navigate: boolean, selectToShare: boolean) => void
 }
 
-interface ScreenProps {
+interface ModalProps {
   isVisible: boolean
+}
+
+interface ScreenProps {
   selectToShare?: boolean
   navigateTo?: boolean
   fullScreen?: boolean
@@ -32,7 +35,7 @@ interface ScreenProps {
   complete: () => void
 }
 
-class CreateThreadModal extends React.Component<DispatchProps & ScreenProps> {
+class Component extends React.Component<DispatchProps & ScreenProps> {
   state = {
     value: '',
     submitted: false
@@ -68,14 +71,6 @@ class CreateThreadModal extends React.Component<DispatchProps & ScreenProps> {
     const submitDisabled = !(this.state.value.length > 0)
     const modalStyle = this.props.fullScreen ? styles.fullModal : styles.slideModal
     return (
-      <Modal
-        isVisible={this.props.isVisible}
-        animationIn={'fadeInUp'}
-        animationOut={'fadeOutDown'}
-        avoidKeyboard={true}
-        backdropOpacity={0.5}
-        style={{margin: 0, padding: 0}}
-      >
       <KeyboardAvoidingView behavior={'height'} style={[styles.modal, modalStyle]}>
           <View style={styles.container}>
             <View style={styles.content}>
@@ -109,7 +104,6 @@ class CreateThreadModal extends React.Component<DispatchProps & ScreenProps> {
             </View>
           </View>
         </KeyboardAvoidingView>
-      </Modal>
     )
   }
 }
@@ -121,4 +115,21 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   }
 }
 
-export default connect(undefined, mapDispatchToProps)(CreateThreadModal)
+export const CreateThreadComponent = connect(undefined, mapDispatchToProps)(Component)
+
+export default class CreateThreadModal extends React.Component<DispatchProps & ScreenProps & ModalProps> {
+  render () {
+    return (
+      <Modal
+        isVisible={this.props.isVisible}
+        animationIn={'fadeInUp'}
+        animationOut={'fadeOutDown'}
+        avoidKeyboard={true}
+        backdropOpacity={0.5}
+        style={{margin: 0, padding: 0}}
+      >
+        <CreateThreadComponent {...this.props} />
+      </Modal>
+    )
+  }
+}
