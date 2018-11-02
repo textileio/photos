@@ -48,7 +48,7 @@ class ThreadsList extends React.PureComponent {
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add Photo' iconName='plus' onPress={params.showWalletPicker} />
-        <Item title='Invite Peer' iconName='circle-chevron-top' onPress={params.invitePeerRequest} />
+        <Item title='Invite Peer' iconName='invite' onPress={params.invitePeerRequest} />
       </TextileHeaderButtons>
     )
     const headerTitle = (
