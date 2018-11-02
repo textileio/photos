@@ -111,9 +111,21 @@ RCT_EXPORT_METHOD(address:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRe
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(checkCafeMessages:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(cafeSession:(NSString*)peerId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self.node checkCafeMessages:&error];
+  NSString *result = [self.node cafeSession:peerId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(cafeSessions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node cafeSessions:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(checkCafeMail:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node checkCafeMail:&error];
   [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
 }
 
@@ -168,12 +180,6 @@ RCT_EXPORT_METHOD(ignorePhotoComment:(NSString*)blockId resolver:(RCTPromiseReso
 RCT_EXPORT_METHOD(ignorePhotoLike:(NSString*)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self.node ignorePhotoLike:blockId error:&error];
-  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
-}
-
-RCT_EXPORT_METHOD(listCafeSessions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self.node listCafeSessions:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
@@ -517,7 +523,7 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
   NSString *dateString = [dateFormatter stringFromDate:newDate];
   NSString *creationDateString = [dateFormatter stringFromDate:creationDate];
   // get an int
-  NSNumber *orientation = imageOrientation ? [NSNumber numberWithInt:imageOrientation] : [NSNumber numberWithInt:1];
+  NSNumber *orientation = imageOrientation ? [NSNumber numberWithInteger:imageOrientation] : [NSNumber numberWithInt:1];
 
   NSDictionary *payload = @{ @"uri": path, @"path": path, @"modificationDate": dateString, @"creationDate": creationDateString, @"assetId": asset.localIdentifier, @"orientation": orientation, @"canDelete": @true};
   NSError *serializationError;
