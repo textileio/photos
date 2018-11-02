@@ -5,168 +5,188 @@ import {
   Platform
 } from 'react-native'
 
+import {
+  ExternalInvite,
+  AddDataResult,
+  Thread,
+  Threads,
+  CafeSession,
+  CafeSessions,
+  Contact,
+  Contacts,
+  Notifications,
+  Overview,
+  Profile,
+  ImageData,
+  Photos,
+  ThreadInfo,
+  WalletAccount
+} from './Model'
+
 const { TextileNode, Events } = NativeModules
 
 export async function acceptExternalThreadInvite(id_: string, key: string): Promise<string> {
-  const result = await TextileNode.acceptExternalThreadInvite(id_, key)
-  return result
+  const result = await TextileNode.acceptExternalThreadInvite(id_, key) // returns hash
+  return result as string
 }
 
-export async function acceptThreadInviteViaNotification(id_: string): Promise<void> {
-  const result = await TextileNode.acceptThreadInviteViaNotification(id_)
-  return result
+export async function acceptThreadInviteViaNotification(id_: string): Promise<string> {
+  const result = await TextileNode.acceptThreadInviteViaNotification(id_) // returns addr
+  return result as string
 }
 
-export async function addExternalThreadInvite(threadId: string): Promise<void> {
+export async function addExternalThreadInvite(threadId: string): Promise<ExternalInvite> {
   const result = await TextileNode.addExternalThreadInvite(threadId)
-  return result
+  return JSON.parse(result) as ExternalInvite
 }
 
-export async function addPhoto(path: string): Promise<void> {
+export async function addPhoto(path: string): Promise<AddDataResult> {
   const result = await TextileNode.addPhoto(path)
-  return result
+  return JSON.parse(result) as AddDataResult
 }
 
-export async function addPhotoComment(blockId: string, body: string): Promise<void> {
-  const result = await TextileNode.addPhotoComment(blockId, body)
-  return result
+export async function addPhotoComment(blockId: string, body: string): Promise<string> {
+  const result = await TextileNode.addPhotoComment(blockId, body) // returns hash
+  return result as string
 }
 
-export async function addPhotoLike(blockId: string): Promise<void> {
-  const result = await TextileNode.addPhotoLike(blockId)
-  return result
+export async function addPhotoLike(blockId: string): Promise<string> {
+  const result = await TextileNode.addPhotoLike(blockId) // returns hash
+  return result as string
 }
 
-export async function addPhotoToThread(dataId: string, key: string, threadId: string, caption: string): Promise<void> {
-  const result = await TextileNode.addPhotoToThread(dataId, key, threadId, caption)
-  return result
+export async function addPhotoToThread(dataId: string, key: string, threadId: string, caption: string): Promise<string> {
+  const result = await TextileNode.addPhotoToThread(dataId, key, threadId, caption) // returns hash
+  return result as string
 }
 
-export async function addThread(name: string): Promise<void> {
+export async function addThread(name: string): Promise<Thread> {
   const result = await TextileNode.addThread(name)
-  return result
+  return JSON.parse(result) as Thread
 }
 
-export async function addThreadInvite(threadId: string, inviteeId: string): Promise<void> {
-  const result = await TextileNode.addThreadInvite(threadId, inviteeId)
-  return result
+export async function addThreadInvite(threadId: string, inviteeId: string): Promise<string> {
+  const result = await TextileNode.addThreadInvite(threadId, inviteeId) // returns hash
+  return result as string
 }
 
 export async function address(): Promise<string> {
-  return await TextileNode.address()
+  const result = await TextileNode.address() // TODO: not sure what this returns
+  return result as string
 }
 
-export async function cafeSession(peerId: string): Promise<void> {
+export async function cafeSession(peerId: string): Promise<CafeSession> {
   const result = await TextileNode.cafeSession(peerId)
-  return result
+  return JSON.parse(result) as CafeSession
 }
 
-export async function cafeSessions(): Promise<void> {
+export async function cafeSessions(): Promise<CafeSessions> {
   const result = await TextileNode.cafeSessions()
-  return result
+  return JSON.parse(result) as CafeSessions
 }
 
 export async function checkCafeMail(): Promise<void> {
   return await TextileNode.checkCafeMail()
 }
 
-export async function contact(id_: string): Promise<void> {
+export async function contact(id_: string): Promise<Contact> {
   const result = await TextileNode.contact(id_)
-  return result
+  return JSON.parse(result) as Contact
 }
 
-export async function contactThreads(id_: string): Promise<void> {
+export async function contactThreads(id_: string): Promise<Threads> {
   const result = await TextileNode.contactThreads(id_)
-  return result
+  return JSON.parse(result) as Threads
 }
 
-export async function contactUsername(id_: string): Promise<void> {
+export async function contactUsername(id_: string): Promise<string> {
   const result = await TextileNode.contactUsername(id_)
-  return result
+  return result as string
 }
 
-export async function contacts(): Promise<void> {
+export async function contacts(): Promise<Contacts> {
   const result = await TextileNode.contacts()
-  return result
+  return JSON.parse(result) as Contacts
 }
 
 export async function countUnreadNotifications(): Promise<number> {
   const result = await TextileNode.countUnreadNotifications()
-  return result
+  return result as number
 }
 
 export async function deregisterCafe(peerId: string): Promise<void> {
   return await TextileNode.deregisterCafe(peerId)
 }
 
-export async function ignorePhoto(blockId: string): Promise<void> {
-  const result = await TextileNode.ignorePhoto(blockId)
-  return result
+export async function ignorePhoto(blockId: string): Promise<string> {
+  const result = await TextileNode.ignorePhoto(blockId) // returns hash
+  return result as string
 }
 
-export async function ignorePhotoComment(blockId: string): Promise<void> {
-  const result = await TextileNode.ignorePhotoComment(blockId)
-  return result
+export async function ignorePhotoComment(blockId: string): Promise<string> {
+  const result = await TextileNode.ignorePhotoComment(blockId) // returns hash
+  return result as string
 }
 
-export async function ignorePhotoLike(blockId: string): Promise<void> {
-  const result = await TextileNode.ignorePhotoLike(blockId)
-  return result
+export async function ignorePhotoLike(blockId: string): Promise<string> {
+  const result = await TextileNode.ignorePhotoLike(blockId) // returns hash
+  return result as string
 }
 
-export async function notifications(offset: string, limit: number): Promise<void> {
+export async function notifications(offset: string, limit: number): Promise<Notifications> {
   const result = await TextileNode.notifications(offset, limit)
-  return result
+  return JSON.parse(result) as Notifications
 }
 
-export async function overview(): Promise<void> {
+export async function overview(): Promise<Overview> {
   const result = await TextileNode.overview()
-  return result
+  return JSON.parse(result) as Overview
 }
 
-export async function peerId(): Promise<void> {
+export async function peerId(): Promise<string> {
   const result = await TextileNode.peerId()
-  return result
+  return result as string
 }
 
-export async function peerProfile(peerId: string): Promise<void> {
+export async function peerProfile(peerId: string): Promise<Profile> {
   const result = await TextileNode.peerProfile(peerId)
-  return result
+  return JSON.parse(result) as Profile
 }
 
-export async function photoData(id_: string, path: string): Promise<void> {
+export async function photoData(id_: string, path: string): Promise<ImageData> {
   const result = await TextileNode.photoData(id_, path)
-  return result
+  return JSON.parse(result) as ImageData
 }
 
-export async function photoDataForMinWidth(id_: string, minWidth: number): Promise<void> {
+export async function photoDataForMinWidth(id_: string, minWidth: number): Promise<ImageData> {
   const result = await TextileNode.photoDataForMinWidth(id_, minWidth)
-  return result
+  return JSON.parse(result) as ImageData
 }
 
-export async function photoKey(id_: string): Promise<void> {
-  const result = await TextileNode.photoKey(id_)
-  return result
+export async function photoKey(id_: string): Promise<string> {
+  const result = await TextileNode.photoKey(id_) // returns base58 key
+  return result as string
 }
 
-export async function photoMetadata(id_: string): Promise<void> {
+export async function photoMetadata(id_: string): Promise<any> {
+  // TODO: Figure out what DataMetadata is. Just a string: any map?
   const result = await TextileNode.photoMetadata(id_)
   return result
 }
 
-export async function photoThreads(id_: string): Promise<void> {
+export async function photoThreads(id_: string): Promise<Threads> {
   const result = await TextileNode.photoThreads(id_)
-  return result
+  return JSON.parse(result) as Threads
 }
 
-export async function photos(offset: string, limit: number, threadId: string): Promise<void> {
+export async function photos(offset: string, limit: number, threadId: string): Promise<Photos> {
   const result = await TextileNode.photos(offset, limit, threadId)
-  return result
+  return JSON.parse(result) as Photos
 }
 
-export async function profile(): Promise<void> {
+export async function profile(): Promise<Profile> {
   const result = await TextileNode.profile()
-  return result
+  return JSON.parse(result) as Profile
 }
 
 export async function readAllNotifications(): Promise<void> {
@@ -177,23 +197,23 @@ export async function readNotification(id_: string): Promise<void> {
   return await TextileNode.readNotification(id_)
 }
 
-export async function refreshCafeSession(cafeId: string): Promise<void> {
+export async function refreshCafeSession(cafeId: string): Promise<CafeSession> {
   const result = await TextileNode.refreshCafeSession(cafeId)
-  return result
+  return JSON.parse(result) as CafeSession
 }
 
 export async function registerCafe(peerId: string): Promise<void> {
   return await TextileNode.registerCafe(peerId)
 }
 
-export async function removeThread(id_: string): Promise<void> {
-  const result = await TextileNode.removeThread(id_)
-  return result
+export async function removeThread(id_: string): Promise<string> {
+  const result = await TextileNode.removeThread(id_) // returns hash b58 string
+  return result as string
 }
 
-export async function seed(): Promise<void> {
-  const result = await TextileNode.seed()
-  return result
+export async function seed(): Promise<string> {
+  const result = await TextileNode.seed() // TODO: make sure this is a string
+  return result as string
 }
 
 export async function setAvatar(id_: string): Promise<void> {
@@ -204,9 +224,9 @@ export async function setUsername(username: string): Promise<void> {
   return await TextileNode.setUsername(username)
 }
 
-export async function sharePhotoToThread(dataId: string, threadId: string, caption: string): Promise<void> {
-  const result = await TextileNode.sharePhotoToThread(dataId, threadId, caption)
-  return result
+export async function sharePhotoToThread(dataId: string, threadId: string, caption: string): Promise<string> {
+  const result = await TextileNode.sharePhotoToThread(dataId, threadId, caption) // returns hash b58 string
+  return result as string
 }
 
 export async function start(): Promise<void> {
@@ -217,22 +237,24 @@ export async function stop(): Promise<void> {
   return await TextileNode.stop()
 }
 
-export async function threadInfo(threadId: string): Promise<void> {
+export async function threadInfo(threadId: string): Promise<ThreadInfo> {
   const result = await TextileNode.threadInfo(threadId)
-  return result
+  return JSON.parse(result) as ThreadInfo
 }
 
-export async function threads(): Promise<void> {
+export async function threads(): Promise<Threads> {
   const result = await TextileNode.threads()
-  return result
+  return JSON.parse(result) as Threads
 }
 
-export async function username(): Promise<void> {
-  return await TextileNode.username()
+export async function username(): Promise<string> {
+  const result = await TextileNode.username()
+  return result as string
 }
 
-export async function version(): Promise<void> {
-  return await TextileNode.version()
+export async function version(): Promise<string> {
+  const result = await TextileNode.version()
+  return result as string
 }
 
 // Order of things to init and create the repo:
@@ -254,12 +276,12 @@ export async function newTextile(repoPath: string): Promise<void> {
   return await TextileNode.newTextile(repoPath)
 }
 
-export async function newWallet(wordCount: number): Promise<void> {
+export async function newWallet(wordCount: number): Promise<string> {
   const result = await TextileNode.newWallet(wordCount)
-  return result
+  return result as string
 }
 
-export async function walletAccountAt(phrase: string, index: number, password: string): Promise<void> {
+export async function walletAccountAt(phrase: string, index: number, password: string): Promise<WalletAccount> {
   const result = await TextileNode.walletAccountAt(phrase, index, password) // return seed and address
-  return result
+  return JSON.parse(result) as WalletAccount
 }
