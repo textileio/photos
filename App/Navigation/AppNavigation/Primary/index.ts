@@ -10,7 +10,6 @@ import Mnemonic from '../../../SB/views/UserProfile/Mnemonic'
 import UpdateAvatar from '../../../SB/views/UserOnBoarding/UpdateAvatar'
 
 import ThreadDetail from '../../../SB/views/ThreadDetail'
-import ThreadsEditFriends from '../../../SB/views/ThreadsEditFriends'
 import PhotoScreen from '../../../Containers/PhotoScreen'
 import Comments from '../../../Containers/Comments'
 import LikesScreen from '../../../Containers/LikesScreen'
@@ -32,7 +31,6 @@ const nav = createStackNavigator(
     Mnemonic,
     ChangeAvatar: UpdateAvatar,
 
-    AddFriends: ThreadsEditFriends,
     ViewThread: ThreadDetail,
     PhotoScreen,
     Comments,

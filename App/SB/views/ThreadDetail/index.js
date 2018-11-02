@@ -23,6 +23,8 @@ import AlertComponent from '../../../SB/components/Alert'
 import { RootState } from '../../../Redux/Types'
 import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
+import ThreadsEditFriends from '../../views/ThreadsEditFriends'
+
 import styles from './statics/styles'
 import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 
@@ -31,7 +33,8 @@ class ThreadDetail extends React.PureComponent {
     super(props)
     this.state = {
       showDrawer: false,
-      refreshing: false
+      refreshing: false,
+      addingPeers: false
     }
   }
   static navigationOptions = ({ navigation }) => {
@@ -110,9 +113,15 @@ class ThreadDetail extends React.PureComponent {
     this.actionSheet.show()
   }
 
+  cancelPeerRequest () {
+    return () => {
+      this.setState({addingPeers: false})
+    }
+  }
   handleActionSheetResponse (index) {
     if (index === 0) {
-      this.props.addFriendRequest(this.props.threadId, this.props.threadName)
+      this.props.addPeerRequest(this.props.threadId, this.props.threadName)
+      this.setState({addingPeers: true})
       // this.props.invite(this.props.threadId, this.props.threadName)
     } else if (index === 1) {
       this.props.leaveThread(this.props.threadId)
@@ -164,8 +173,8 @@ class ThreadDetail extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <PhotoStream items={this.props.items} />}
+        {this.props.items.length === 0 && this._renderOnboarding()}
+        {this.props.items.length !== 0 && <PhotoStream items={this.props.items} />}
         {this.state.showDrawer && <BottomDrawerList />}
 
         <ActionSheet
@@ -177,6 +186,12 @@ class ThreadDetail extends React.PureComponent {
         />
 
         <AlertComponent display={this.props.displayError} bottom msg={'Error: ' + this.props.errorMessage} />
+        <ThreadsEditFriends
+          isVisible={this.state.addingPeers}
+          threadName={this.props.threadName}
+          threadId={this.props.threadId}
+          cancel={this.cancelPeerRequest()}
+        />
       </View>
     )
   }
@@ -262,7 +277,7 @@ const mapDispatchToProps = (dispatch) => {
     dismissError: () => { dispatch(UIActions.dismissImagePickerError()) },
     retryShare: (uuid) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
-    addFriendRequest: (threadId, threadName) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
+    addPeerRequest: (threadId, threadName) => { dispatch(UIActions.addFriendRequest(threadId, threadName)) },
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableLocation: () => { dispatch(PreferencesActions.toggleServicesRequest('backgroundLocation', true)) }
   }

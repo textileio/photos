@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
 import Avatar from '../../../Components/Avatar'
-import ImageSc from 'react-native-scalable-image'
 
-import ContactSelectCard from './ContactSelectCard'
+import ContactSelectCard, {ContactLinkCard} from './ContactSelectCard'
 
 import styles from './statics/styles'
 
@@ -19,15 +18,16 @@ function getSubTitle (contacts, topFive, notInThread) {
 }
 
 const ContactSelect = (props) => {
-  const { getPublicLink, contacts, select, selected, topFive, notInThread } = props
+  const { getPublicLink, displayQRCode, contacts, select, selected, topFive, notInThread, threadName } = props
   const subTitle = getSubTitle(contacts, topFive, notInThread)
   const showSuggested = topFive.length > 0 && topFive.length > notInThread
-  const anySelected = Object.keys(selected).find(k => selected[k] === true)
+
+  const title = threadName && threadName !== '' ? `Invite to ${threadName}` : 'Select new peers'
   return (
     <View style={styles.contentContainer}>
       <View style={styles.header}>
         <View style={styles.headerTitle}>
-          <Text style={styles.title}>Select new peers</Text>
+          <Text style={styles.title}>{title}</Text>
         </View>
 
         {subTitle && <Text style={styles.subtitle}> { subTitle } </Text> }
@@ -60,32 +60,53 @@ const ContactSelect = (props) => {
         {/* <TextInput style={styles.searchBoxInput} placeholder='Search' onChangeText={search} /> */}
         {/* </View> */}
         <View style={styles.searchBoxPlaceholder} />
-
-        <FlatList
-          data={contacts}
-          keyExtractor={(item) => item.pk}
-          extraData={selected}
-          renderItem={(contact) => {
-            const { item } = contact
-            const selectState = !!selected[item.id] || item.included
-            return (
-              <ContactSelectCard item={item} select={select} selected={selectState} />
-            )
-          }}
+        <ContactSelectComponent
+          contacts={contacts}
+          selected={selected}
+          onSelect={select}
+          selected={selected}
+          getPublicLink={getPublicLink}
+          displayQRCode={displayQRCode}
         />
-        <TouchableOpacity activeOpacity={0.4} style={styles.inviteItem} onPress={getPublicLink}>
-          <ImageSc
-            source={require('../../../Images/v2/send.png')}
-            width={20}
-            height={20}
-            resizeMode={'cover'}
-            style={!!anySelected && styles.inviteLessImage}
-          />
-          <Text style={[styles.inviteLink, !!anySelected && styles.inviteLess]}>Invite a new user</Text>
-        </TouchableOpacity>
       </View>
     </View>
   )
+}
+
+export class ContactSelectComponent extends React.Component {
+  renderHeader = () => {
+    return (
+      <Fragment>
+        <ContactLinkCard
+          icon={'external-link'}
+          text={'Share invite by link'}
+          select={this.props.getPublicLink}
+        />
+        <ContactLinkCard
+          icon={'qr-code'}
+          text={'Display QR code invite'}
+          select={this.props.displayQRCode}
+        />
+      </Fragment>
+    )
+  }
+  render () {
+    return (
+      <FlatList
+      data={this.props.contacts}
+      keyExtractor={(item) => item.pk}
+      extraData={this.props.selected}
+      ListHeaderComponent={this.renderHeader()}
+      renderItem={(contact) => {
+        const { item } = contact
+        const selectState = !!this.props.selected[item.id] || item.included
+        return (
+          <ContactSelectCard item={item} select={this.props.onSelect} selected={selectState} />
+        )
+      }}
+    />
+    )
+  }
 }
 
 export default ContactSelect

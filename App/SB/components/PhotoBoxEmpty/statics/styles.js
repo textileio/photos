@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { Colors } from '../../../../Themes'
 
 export default StyleSheet.create({
   itemContainer: {
@@ -23,6 +24,6 @@ export default StyleSheet.create({
     fontFamily: 'BentonSans',
     fontSize: 14,
     textDecorationLine: 'underline',
-    color: '#2625ff'
+    color: Colors.midBlue
   }
 })
