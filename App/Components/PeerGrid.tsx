@@ -130,26 +130,18 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
     })
     return (
       <View style={styles.container}>
-        {
-          peerIds.length ? (
-            <FlatList
-              style={styles.listContainer}
-              data={['invite', ...peerIds]}
-              keyExtractor={this.keyExtractor}
-              /* tslint:disable-next-line */
-              renderItem={this.renderRow.bind(this)}
-              getItemLayout={this._getItemLayout}
-              numColumns={numColumns}
-              windowSize={this.oneScreensWorth}
-              initialNumToRender={this.oneScreensWorth}
-              onEndReachedThreshold={0.55}
-            />
-          ) : (
-            <View style={styles.emptyListStyle}>
-              <Text style={styles.noPeers}>{'Oop, no peers yet'}</Text>
-            </View>
-          )
-        }
+        <FlatList
+          style={styles.listContainer}
+          data={['invite', ...peerIds]}
+          keyExtractor={this.keyExtractor}
+          /* tslint:disable-next-line */
+          renderItem={this.renderRow.bind(this)}
+          getItemLayout={this._getItemLayout}
+          numColumns={numColumns}
+          windowSize={this.oneScreensWorth}
+          initialNumToRender={this.oneScreensWorth}
+          onEndReachedThreshold={0.55}
+        />
         <ContactModal
           isVisible={this.state.contactCard}
           peerId={this.state.selectedPeer as PeerId}
