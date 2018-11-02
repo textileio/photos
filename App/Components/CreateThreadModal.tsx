@@ -117,7 +117,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
 
 export const CreateThreadComponent = connect(undefined, mapDispatchToProps)(Component)
 
-export default class CreateThreadModal extends React.Component<DispatchProps & ScreenProps & ModalProps> {
+export default class CreateThreadModal extends React.Component<ScreenProps & ModalProps> {
   render () {
     return (
       <Modal
