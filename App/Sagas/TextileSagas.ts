@@ -188,8 +188,7 @@ export function * getUsername (contact: TT.Contact) {
   }
 }
 
-export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
-  // TODO: should just be changed to Update Contacts
+export function * refreshContacts () {
   try {
     const contactResult = yield call(TextileNode.getContacts)
     const contacts = contactResult.items
@@ -200,6 +199,10 @@ export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequ
   } catch (error) {
     // skip for now
   }
+}
+
+export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
+  yield call(refreshContacts)
 }
 
 export function * initializeAppState () {
