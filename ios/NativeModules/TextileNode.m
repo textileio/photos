@@ -109,9 +109,132 @@ RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBl
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-RCT_EXPORT_METHOD(create:(NSString *)dataDir cafeUrl:(NSString *)cafeUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+
+RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _create:dataDir cafeUrl:cafeUrl logLevel:logLevel logFiles:logFiles error:&error];
+  NSString *result = [self.node ];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString*)id_ key:(NSString*)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node acceptExternalThreadInvite:id_ key:key error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(acceptThreadInviteViaNotification:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node acceptThreadInviteViaNotification:id_ error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node addExternalThreadInvite:threadId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(addPhoto:(NSString*)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node addPhoto:path error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(addPhotoComment:(NSString*)blockId body:(NSString*)body resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node addPhotoComment:blockId body:body error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(addPhotoLike:(NSString*)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node addPhotoLike:blockId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(addPhotoToThread:(NSString*)dataId key:(NSString*)key threadId:(NSString*)threadId caption:(NSString*)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node addPhotoToThread:dataId key:key threadId:threadId caption:caption error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(addThread:(NSString*)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node addThread:name error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(addThreadInvite:(NSString*)threadId inviteeId:(NSString*)inviteeId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node addThreadInvite:threadId inviteeId:inviteeId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(address:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node address:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(checkCafeMessages:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node ];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node ];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node ];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node ];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+
+- (void)fulfillWithResult:(id)result error:(NSError*)error resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject {
+  if (!error) {
+    resolve(result);
+  } else {
+    reject(@(error.code).stringValue, error.localizedDescription, error);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RCT_EXPORT_METHOD(create:(NSString *)dataDir logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self _create:dataDir logLevel:logLevel logFiles:logFiles error:&error];
   if (!error) {
     resolve(nil);
   } else {
@@ -119,15 +242,16 @@ RCT_EXPORT_METHOD(create:(NSString *)dataDir cafeUrl:(NSString *)cafeUrl logLeve
   }
 }
 
-RCT_REMAP_METHOD(mnemonic, mnemonicWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSString *mnemonic = [self _mnemonic];
-  if (mnemonic.length > 0) {
-    resolve(mnemonic);
+RCT_REMAP_METHOD(seed, seedWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *seed = [self _seed:&error];
+  if (!error && seed.length > 0) {
+    resolve(seed);
   } else {
     NSDictionary *userInfo = @{
-                               NSLocalizedDescriptionKey: @"Mnemonic unavailable.",
-                               NSLocalizedFailureReasonErrorKey: @"The mnemonic is only availble immediately after starting the node.",
-                               NSLocalizedRecoverySuggestionErrorKey: @"Only query for mnemonic immediately after starting the node."
+                               NSLocalizedDescriptionKey: @"Seed unavailable.",
+                               NSLocalizedFailureReasonErrorKey: @"The seed is only availble immediately after starting the node.",
+                               NSLocalizedRecoverySuggestionErrorKey: @"Only query for seed immediately after starting the node."
                                };
     NSError *error = [NSError errorWithDomain:@"Textile" code:0 userInfo:userInfo];
     reject(@(error.code).stringValue, error.localizedDescription, error);
@@ -154,47 +278,9 @@ RCT_REMAP_METHOD(stop, stopWithResolver:(RCTPromiseResolveBlock)resolve rejecter
   }
 }
 
-RCT_EXPORT_METHOD(signUpWithEmail:(NSString *)email username:(NSString*)username password:(NSString *)password referral:(NSString*)referral resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(setAvatar:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  [self _signUpWithEmail:email username:username password:password referral:referral error:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(signIn:(NSString *)username password:(NSString *)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _signIn:username password:password error:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(signOut:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _signOut:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(isSignedIn:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  if ([self _isSignedIn]) {
-    resolve(@YES);
-  } else {
-    resolve(@NO);
-  }
-}
-
-RCT_EXPORT_METHOD(setAvatarId:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _setAvatarId:photoId error:&error];
+  [self _setAvatar:photoId error:&error];
   if (!error) {
     resolve(nil);
   } else {
@@ -222,9 +308,9 @@ RCT_EXPORT_METHOD(getPeerProfile:(NSString *)peerId resolver:(RCTPromiseResolveB
   }
 }
 
-RCT_EXPORT_METHOD(getId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getPeerId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *nid = [self _getId:&error];
+  NSString *nid = [self _peerId:&error];
   if (!error) {
     resolve(nid);
   } else {
@@ -232,31 +318,11 @@ RCT_EXPORT_METHOD(getId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseReje
   }
 }
 
-RCT_EXPORT_METHOD(getPubKey:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *pk = [self _getPubKey:&error];
-  if (!error) {
-    resolve(pk);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
 RCT_EXPORT_METHOD(getUsername:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *username = [self _getUsername:&error];
+  NSString *username = [self _username:&error];
   if (!error) {
     resolve(username);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getTokens:(BOOL *)force resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *token = [self _getTokens:force error:&error];
-  if (!error) {
-    resolve(token);
   } else {
     reject(@(error.code).stringValue, error.localizedDescription, error);
   }
@@ -567,19 +633,31 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 
 #pragma mark - Private methods
 
-- (void)_create:(NSString *)dataDir cafeUrl:(NSString *)cafeUrl logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
+- (void)_create:(NSString *)dataDir logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
   if (!self.node) {
-    MobileNodeConfig *config = [[MobileNodeConfig alloc] init];
-    [config setRepoPath:dataDir];
-    [config setCafeAddr:cafeUrl];
-    [config setLogLevel:logLevel];
-    [config setLogFiles:logFiles];
-    self.node = MobileNewNode(config, [[Messenger alloc] init], error);
+
+    MobileNewWallet(<#long wordCount#>, <#NSError *__autoreleasing *error#>) // returns mnemonic
+    MobileWalletAccountAt(<#NSString *phrase#>, <#long index#>, <#NSString *password#>, <#NSError *__autoreleasing *error#>) // return seed and address
+
+    MobileInitConfig *initConfig = [[MobileInitConfig alloc] init];
+    initConfig.logLevel = logLevel;
+    initConfig.repoPath = dataDir;
+    initConfig.logToDisk = logFiles;
+    initConfig.seed = @"";
+    MobileInitRepo(initConfig, error); // only run one time ever
+
+    if (error) {
+      return;
+    }
+
+    MobileRunConfig *runConfig = [[MobileRunConfig alloc] init];
+    runConfig.repoPath = dataDir;
+    self.node = MobileNewTextile(runConfig, [[Messenger alloc] init], error); // Returns the 'needs migration error'
   }
 }
 
-- (NSString *)_mnemonic {
-  return self.node.mnemonic;
+- (NSString *)_seed:(NSError**)error {
+  return [self.node seed:error];
 }
 
 - (void)_start:(NSError**)error {
@@ -590,52 +668,28 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
   [self.node stop:error];
 }
 
-- (void)_signUpWithEmail:(NSString *)email username:(NSString*)username password:(NSString*)password referral:(NSString*)referral error:(NSError**)error {
-  [self.node signUpWithEmail:email username:username password:password referral:referral error:error];
+- (NSString *)_username:(NSError**)error {
+  return [self.node username:error];
 }
 
-- (void)_signIn:(NSString *)username password:(NSString*)password error:(NSError**)error {
-  [self.node signIn:username password:password error:error];
-}
-
-- (void)_signOut:(NSError**)error {
-  [self.node signOut:error];
-}
-
-- (BOOL)_isSignedIn {
-  return [self.node isSignedIn];
-}
-
-- (NSString *)_getUsername:(NSError**)error {
-  return [self.node getUsername:error];
-}
-
-- (NSString *)_getTokens:(BOOL *)force error:(NSError**)error {
-  return [self.node getTokens:force error:error];
-}
-
-- (NSString *)_getId:(NSError**)error {
-  return [self.node getId:error];
+- (NSString *)_peerId:(NSError**)error {
+  return [self.node peerId:error];
 }
 
 - (NSString *)_getOverview:(NSError**)error {
   return [self.node overview:error];
 }
 
-- (NSString *)_getPubKey:(NSError**)error {
-  return [self.node getPubKey:error];
+- (void)_setAvatar:(NSString *)id error:(NSError**)error {
+  [self.node setAvatar:id error:error];
 }
 
-- (void)_setAvatarId:(NSString *)id error:(NSError**)error {
-  [self.node setAvatarId:id error:error];
+- (NSString *)_profile:(NSError**)error {
+  return [self.node profile:error];
 }
 
-- (NSString *)_getProfile:(NSError**)error {
-  return [self.node getProfile:error];
-}
-
-- (NSString *)_getPeerProfile:(NSString *)peerId error:(NSError**)error {
-  return [self.node getPeerProfile:peerId error:error];
+- (NSString *)_peerProfile:(NSString *)peerId error:(NSError**)error {
+  return [self.node peerProfile:peerId error:error];
 }
 
 - (NSString *)_addThread:(NSString *)name error:(NSError**)error {
@@ -647,7 +701,7 @@ RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolve
 }
 
 - (NSString *)_addThreadInvite:(NSString *)threadId inviteePk:(NSString *)inviteePk error:(NSError**)error {
-  return [self.node addThreadInvite:threadId inviteePk:inviteePk error:error];
+  return [self.node addThreadInvite:threadId inviteeId:inviteePk error:error];
 }
 
 - (NSString *)_addExternalThreadInvite:(NSString *)threadId error:(NSError**)error {
