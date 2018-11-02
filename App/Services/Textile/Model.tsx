@@ -175,6 +175,6 @@ export interface ThreadInfo {
 }
 
 export interface WalletAccount {
-  Seed: string // TODO: no json name mappings for these in textile-go
-  Address: string
+  readonly Seed: string // TODO: no json name mappings for these in textile-go
+  readonly Address: string
 }
