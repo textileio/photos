@@ -48,73 +48,8 @@ RCT_EXPORT_MODULE();
   return dispatch_queue_create("io.textile.TextileNodeQueue", DISPATCH_QUEUE_SERIAL);
 }
 
-// Export method for local photo selection
-
-RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSTimeInterval seconds = minEpoch;
-  NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
-
-  PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
-  if (status == PHAuthorizationStatusAuthorized)
-  {
-    //initialize empty local state
-    @autoreleasepool
-    {
-      //fetch all the albums
-      PHFetchOptions *onlyImagesOptions = [PHFetchOptions new];
-      // Limit to only photo media types
-      // NSPredicate *mediaPhotos = [NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeImage];
-      // Limit to only photos modified later than or equal to our specified date
-      NSPredicate *minDate = [NSPredicate predicateWithFormat:@"modificationDate > %@", epochNSDate];
-      // Limit to camera roll?
-      // NSPredicate *cameraRoll = [NSPredicate predicateWithFormat:@"modificationDate > %@", epochNSDate];
-      onlyImagesOptions.predicate = minDate;
-      // Combine the multiple predicates (didn't seem to work combining them like this)
-      // [NSCompoundPredicate orPredicateWithSubpredicates:@[mediaPhotos, minDate]];
-      // Not sure we really need to do the sort... but here it is
-      onlyImagesOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:YES]];
-
-      PHFetchResult *allPhotosResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:onlyImagesOptions];
-      [allPhotosResult enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
-
-        // Get the original filename to keep it straight on the system.
-        // Alternatively could probably just use timestamp, but this doesn't seem to have any lag
-        NSArray *resources = [PHAssetResource assetResourcesForAsset:asset];
-
-
-        NSString *orgFilename = ((PHAssetResource*)resources[0]).originalFilename;
-        NSString *extension = [orgFilename pathExtension];
-
-        // Check that this isn't a metadata edit only. adjustmentTimestamp should be pixel changes
-        NSDate *adjDate = [asset valueForKey:@"adjustmentTimestamp"];
-        // Grab the first creation date for the photo file
-        NSDate *creDate = [asset valueForKey:@"creationDate"];
-        if (adjDate != nil && [epochNSDate timeIntervalSinceDate:adjDate] > 0 ) {
-          // if adjustmentTimestamp is less than our filter, we should return
-          return;
-        } else if (adjDate == nil && [epochNSDate timeIntervalSinceDate:creDate] > 0) {
-          // if creation timestamp is less than our filter and the image has never been modified, return
-          return;
-        } else if ( [extension caseInsensitiveCompare:@"heic"] == NSOrderedSame ) {
-          [self _processHEIC:asset orgFilename:orgFilename];
-        } else {
-          [self _processJPG:asset orgFilename:orgFilename];
-        }
-      }];
-    }
-  }
-  resolve(@YES);
-}
-
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
-
-
-RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self.node ];
-  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
-}
 
 RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString*)id_ key:(NSString*)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
@@ -178,28 +113,272 @@ RCT_EXPORT_METHOD(address:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRe
 
 RCT_EXPORT_METHOD(checkCafeMessages:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self.node ];
-  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+  [self.node checkCafeMessages:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(contact:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self.node ];
+  NSString *result = [self.node contact:id_ error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(contactThreads:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self.node ];
+  NSString *result = [self.node contactThreads:id_ error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(contactUsername:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self.node ];
+  NSString *result = [self.node contactUsername:id_];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
+RCT_EXPORT_METHOD(contacts:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node contacts:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(countUnreadNotifications:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  long result = [self.node countUnreadNotifications];
+  [self fulfillWithResult:[NSNumber numberWithLong:result] error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(deregisterCafe:(NSString*)peerId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node deregisterCafe:peerId error:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(ignorePhoto:(NSString*)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node ignorePhoto:blockId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(ignorePhotoComment:(NSString*)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node ignorePhotoComment:blockId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(ignorePhotoLike:(NSString*)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node ignorePhotoLike:blockId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(listCafeSessions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node listCafeSessions:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(notifications:(NSString*)offset limit:(long)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node notifications:offset limit:limit error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(overview:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node overview:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(peerId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node peerId:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(peerProfile:(NSString*)peerId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node peerProfile:peerId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(photoData:(NSString*)id_ path:(NSString*)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _photoData:id_ path:path error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(photoDataForMinWidth:(NSString*)id_ minWidth:(long)minWidth resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self _photoDataForMinWidth:id_ minWidth:minWidth error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(photoKey:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node photoKey:id_ error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(photoMetadata:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node photoMetadata:id_ error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(photoThreads:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node photoThreads:id_ error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(photos:(NSString*)offset limit:(long)limit threadId:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node photos:offset limit:limit threadId:threadId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(profile:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node profile:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(readAllNotifications:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node readAllNotifications:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(readNotification:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node readNotification:id_ error:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(refreshCafeSession:(NSString*)cafeId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node refreshCafeSession:cafeId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(registerCafe:(NSString*)peerId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node registerCafe:peerId error:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(removeThread:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node removeThread:id_ error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(seed:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node seed:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(setAvatar:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node setAvatar:id_ error:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(setUsername:(NSString*)username resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node setUsername:username error:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(sharePhotoToThread:(NSString*)dataId threadId:(NSString*)threadId caption:(NSString*)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node sharePhotoToThread:dataId threadId:threadId caption:caption error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(start:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node start:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(stop:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  [self.node stop:&error];
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(threadInfo:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node threadInfo:threadId error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(threads:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node threads:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(username:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node username:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(version:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSString *result = [self.node version];
+  [self fulfillWithResult:result error:nil resolver:resolve rejecter:reject];
+}
+
+// Order of things to init and create the repo:
+// MobileNewTextile If error, inspect it and run next steps or migration
+// MobileNewWallet returns mnemonic
+// MobileWalletAccountAt returns seed and address
+// MobileInitRepo only run one time ever
+// MobileNewTextile
+
+RCT_EXPORT_METHOD(initRepo:(NSString*)seed repoPath:(NSString*)repoPath logLevel:(NSString*)logLevel logToDisk:(BOOL)logToDisk resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  MobileInitConfig *config = [[MobileInitConfig alloc] init];
+  config.seed = seed;
+  config.repoPath = repoPath;
+  config.logLevel = logLevel;
+  config.logToDisk = logToDisk;
+  NSError *error;
+  MobileInitRepo(config, &error); // only run one time ever
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(migrateRepo:(NSString*)repoPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  MobileMigrateConfig *config = [[MobileMigrateConfig alloc] init];
+  config.repoPath = repoPath;
+  NSError *error;
+  MobileMigrateRepo(config, &error);
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(newTextile:(NSString*)repoPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  if (!self.node) {
+    MobileRunConfig *config = [[MobileRunConfig alloc] init];
+    config.repoPath = repoPath;
+    self.node = MobileNewTextile(config, [[Messenger alloc] init], &error); // Returns the 'needs migration error'
+  }
+  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(newWallet:(long)wordCount resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = MobileNewWallet(wordCount, &error); // returns mnemonic
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(walletAccountAt:(NSString*)phrase index:(long)index password:(NSString*)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = MobileWalletAccountAt(phrase, index, password, &error); // return seed and address
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
 
 - (void)fulfillWithResult:(id)result error:(NSError*)error resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject {
   if (!error) {
@@ -209,609 +388,74 @@ RCT_EXPORT_METHOD( resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromise
   }
 }
 
+// Couple methods that need to be available from RN and within Obj C
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-RCT_EXPORT_METHOD(create:(NSString *)dataDir logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _create:dataDir logLevel:logLevel logFiles:logFiles error:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
+- (NSString*)_photoData:(NSString*)id_ path:(NSString*)path error:(NSError**)error {
+  NSString *result = [self.node photoData:id_ path:path error:error];
+  return result;
 }
 
-RCT_REMAP_METHOD(seed, seedWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *seed = [self _seed:&error];
-  if (!error && seed.length > 0) {
-    resolve(seed);
-  } else {
-    NSDictionary *userInfo = @{
-                               NSLocalizedDescriptionKey: @"Seed unavailable.",
-                               NSLocalizedFailureReasonErrorKey: @"The seed is only availble immediately after starting the node.",
-                               NSLocalizedRecoverySuggestionErrorKey: @"Only query for seed immediately after starting the node."
-                               };
-    NSError *error = [NSError errorWithDomain:@"Textile" code:0 userInfo:userInfo];
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
+- (NSString*)_photoDataForMinWidth:(NSString*)id_ minWidth:(long)minWidth error:(NSError**)error {
+  NSString *result = [self.node photoDataForMinWidth:id_ minWidth:minWidth error:error];
+  return result;
 }
 
-RCT_REMAP_METHOD(start, startWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _start:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
+// Export method for local photo selection
 
-RCT_REMAP_METHOD(stop, stopWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _stop:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
+RCT_EXPORT_METHOD(requestLocalPhotos:(int)minEpoch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSTimeInterval seconds = minEpoch;
+  NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
 
-RCT_EXPORT_METHOD(setAvatar:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _setAvatar:photoId error:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
+  PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+  if (status == PHAuthorizationStatusAuthorized)
+  {
+    //initialize empty local state
+    @autoreleasepool
+    {
+      //fetch all the albums
+      PHFetchOptions *onlyImagesOptions = [PHFetchOptions new];
+      // Limit to only photo media types
+      // NSPredicate *mediaPhotos = [NSPredicate predicateWithFormat:@"mediaType = %i", PHAssetMediaTypeImage];
+      // Limit to only photos modified later than or equal to our specified date
+      NSPredicate *minDate = [NSPredicate predicateWithFormat:@"modificationDate > %@", epochNSDate];
+      // Limit to camera roll?
+      // NSPredicate *cameraRoll = [NSPredicate predicateWithFormat:@"modificationDate > %@", epochNSDate];
+      onlyImagesOptions.predicate = minDate;
+      // Combine the multiple predicates (didn't seem to work combining them like this)
+      // [NSCompoundPredicate orPredicateWithSubpredicates:@[mediaPhotos, minDate]];
+      // Not sure we really need to do the sort... but here it is
+      onlyImagesOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:YES]];
 
-RCT_EXPORT_METHOD(getProfile:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getProfile:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
+      PHFetchResult *allPhotosResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:onlyImagesOptions];
+      [allPhotosResult enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
 
-RCT_EXPORT_METHOD(getPeerProfile:(NSString *)peerId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getPeerProfile:peerId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getPeerId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *nid = [self _peerId:&error];
-  if (!error) {
-    resolve(nid);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getUsername:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *username = [self _username:&error];
-  if (!error) {
-    resolve(username);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getOverview:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *overview = [self _getOverview:&error];
-  if (!error) {
-    resolve(overview);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(addThread:(NSString *)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _addThread:name error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(removeThread:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *blockId = [self _removeThread:threadId error:&error];
-  if (!error) {
-    resolve(blockId);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_REMAP_METHOD(threads, threadsWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *jsonString = [self _threads:&error];
-  if (!error) {
-    resolve(jsonString);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(addThreadInvite:(NSString *)threadId inviteePk:(NSString *)inviteePk resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _addThreadInvite:threadId inviteePk:inviteePk error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _addExternalThreadInvite:threadId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *blockId = [self _acceptExternalThreadInvite:threadId key:key error:&error];
-  if (!error) {
-    resolve(blockId);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-// Adds a photo to ipfs
-RCT_EXPORT_METHOD(addPhoto:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _addPhoto:path error:&error];
-  if(!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(addPhotoToThread:(NSString *)photoId key:(NSString *)key threadId:(NSString *)threadId caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _addPhotoToThread:photoId key:key threadId:threadId caption:caption error:&error];
-  if(!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(sharePhotoToThread:(NSString *)photoId threadId:(NSString *)threadId caption:(NSString *)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _sharePhotoToThread:photoId threadId:threadId caption:caption error:&error];
-  if(!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getPhotos:(NSString *)offset limit:(int)limit threadId:(NSString *)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *jsonString = [self _getPhotos:offset limit:limit threadId:threadId error:&error];
-  if (!error) {
-    resolve(jsonString);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getPhotoData:(NSString *)photoId path:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getPhotoData:photoId path:path error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
+        // Get the original filename to keep it straight on the system.
+        // Alternatively could probably just use timestamp, but this doesn't seem to have any lag
+        NSArray *resources = [PHAssetResource assetResourcesForAsset:asset];
 
 
-RCT_EXPORT_METHOD(getPhotoDataForMinWidth:(NSString *)photoId minWidth:(int)minWidth resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getPhotoDataForMinWidth:photoId minWidth:minWidth error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
+        NSString *orgFilename = ((PHAssetResource*)resources[0]).originalFilename;
+        NSString *extension = [orgFilename pathExtension];
 
-
-RCT_EXPORT_METHOD(getPhotoThreads:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getPhotoThreads:photoId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getPhotoKey:(NSString *)photoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _getPhotoKey:photoId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-
-RCT_EXPORT_METHOD(ignorePhoto:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _ignorePhoto:blockId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(addPhotoComment:(NSString *)blockId body:(NSString *)body resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _addPhotoComment:blockId body:body error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(ignorePhotoComment:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _ignorePhotoComment:blockId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-
-RCT_EXPORT_METHOD(addPhotoLike:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _addPhotoLike:blockId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(ignorePhotoLike:(NSString *)blockId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self _ignorePhotoLike:blockId error:&error];
-  if (!error) {
-    resolve(result);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(addDevice:(NSString *)name pubKey:(NSString *)pkb64 resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
-  NSError *error;
-  [self _addDevice:name pubKey:pkb64 error:&error];
-  if(!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(removeDevice:(NSString *)deviceId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
-  NSError *error;
-  [self _removeDevice:deviceId error:&error];
-  if(!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getNotifications:(NSString *)offset limit:(int)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *jsonString = [self _getNotifications:offset limit:limit error:&error];
-  if (!error) {
-    resolve(jsonString);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(countUnreadNotifications:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  long count = [self _countUnreadNotifications];
-  NSNumber *num = [NSNumber numberWithLong:count];
-  resolve(num);
-}
-
-RCT_EXPORT_METHOD(readNotification:(NSString *)id resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _readNotification:id error:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(readAllNotifications:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _readAllNotifications:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(acceptThreadInviteViaNotification:(NSString *)id resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *threadId = [self _acceptThreadInviteViaNotification:id error:&error];
-  if (!error) {
-    resolve(threadId);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_EXPORT_METHOD(getContacts:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *jsonString = [self _getContacts:&error];
-  if (!error) {
-    resolve(jsonString);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_REMAP_METHOD(devices, devicesWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *jsonString = [self _devices:&error];
-  if (!error) {
-    resolve(jsonString);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-RCT_REMAP_METHOD(refreshMessages, refreshMessagesWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self _refreshMessages:&error];
-  if (!error) {
-    resolve(nil);
-  } else {
-    reject(@(error.code).stringValue, error.localizedDescription, error);
-  }
-}
-
-#pragma mark - Private methods
-
-- (void)_create:(NSString *)dataDir logLevel:(NSString *)logLevel logFiles:(BOOL *)logFiles error:(NSError**)error {
-  if (!self.node) {
-
-    MobileNewWallet(<#long wordCount#>, <#NSError *__autoreleasing *error#>) // returns mnemonic
-    MobileWalletAccountAt(<#NSString *phrase#>, <#long index#>, <#NSString *password#>, <#NSError *__autoreleasing *error#>) // return seed and address
-
-    MobileInitConfig *initConfig = [[MobileInitConfig alloc] init];
-    initConfig.logLevel = logLevel;
-    initConfig.repoPath = dataDir;
-    initConfig.logToDisk = logFiles;
-    initConfig.seed = @"";
-    MobileInitRepo(initConfig, error); // only run one time ever
-
-    if (error) {
-      return;
+        // Check that this isn't a metadata edit only. adjustmentTimestamp should be pixel changes
+        NSDate *adjDate = [asset valueForKey:@"adjustmentTimestamp"];
+        // Grab the first creation date for the photo file
+        NSDate *creDate = [asset valueForKey:@"creationDate"];
+        if (adjDate != nil && [epochNSDate timeIntervalSinceDate:adjDate] > 0 ) {
+          // if adjustmentTimestamp is less than our filter, we should return
+          return;
+        } else if (adjDate == nil && [epochNSDate timeIntervalSinceDate:creDate] > 0) {
+          // if creation timestamp is less than our filter and the image has never been modified, return
+          return;
+        } else if ( [extension caseInsensitiveCompare:@"heic"] == NSOrderedSame ) {
+          [self _processHEIC:asset orgFilename:orgFilename];
+        } else {
+          [self _processJPG:asset orgFilename:orgFilename];
+        }
+      }];
     }
-
-    MobileRunConfig *runConfig = [[MobileRunConfig alloc] init];
-    runConfig.repoPath = dataDir;
-    self.node = MobileNewTextile(runConfig, [[Messenger alloc] init], error); // Returns the 'needs migration error'
   }
-}
-
-- (NSString *)_seed:(NSError**)error {
-  return [self.node seed:error];
-}
-
-- (void)_start:(NSError**)error {
-  [self.node start:error];
-}
-
-- (void)_stop:(NSError**)error {
-  [self.node stop:error];
-}
-
-- (NSString *)_username:(NSError**)error {
-  return [self.node username:error];
-}
-
-- (NSString *)_peerId:(NSError**)error {
-  return [self.node peerId:error];
-}
-
-- (NSString *)_getOverview:(NSError**)error {
-  return [self.node overview:error];
-}
-
-- (void)_setAvatar:(NSString *)id error:(NSError**)error {
-  [self.node setAvatar:id error:error];
-}
-
-- (NSString *)_profile:(NSError**)error {
-  return [self.node profile:error];
-}
-
-- (NSString *)_peerProfile:(NSString *)peerId error:(NSError**)error {
-  return [self.node peerProfile:peerId error:error];
-}
-
-- (NSString *)_addThread:(NSString *)name error:(NSError**)error {
-  return [self.node addThread:name error:error];
-}
-
-- (NSString *)_threads:(NSError**)error {
-  return [self.node threads:error];
-}
-
-- (NSString *)_addThreadInvite:(NSString *)threadId inviteePk:(NSString *)inviteePk error:(NSError**)error {
-  return [self.node addThreadInvite:threadId inviteeId:inviteePk error:error];
-}
-
-- (NSString *)_addExternalThreadInvite:(NSString *)threadId error:(NSError**)error {
-  return [self.node addExternalThreadInvite:threadId error:error];
-}
-
-- (NSString *)_acceptExternalThreadInvite:(NSString *)threadId key:(NSString *)key error:(NSError**)error {
-  return [self.node acceptExternalThreadInvite:threadId key:key error:error];
-}
-
-- (NSString *)_removeThread:(NSString *)threadId error:(NSError**)error {
-  return [self.node removeThread:threadId error:error];
-}
-
-- (NSString *)_addPhoto:(NSString *)path error:(NSError**)error {
-  return [self.node addPhoto:path error:error];
-}
-
-- (NSString *)_addPhotoToThread:(NSString *)photoId key:key threadId:(NSString *)threadId caption:(NSString *)caption error:(NSError**)error {
-  if (!caption) {
-    caption = @"";
-  }
-  return [self.node addPhotoToThread:photoId key:key threadId:threadId caption:caption error:error];
-}
-
-- (NSString *)_sharePhotoToThread:(NSString *)photoId threadId:(NSString *)threadId caption:(NSString *)caption error:(NSError**)error {
-  if (!caption) {
-    caption = @"";
-  }
-  return [self.node sharePhotoToThread:photoId threadId:threadId caption:caption error:error];
-}
-
-- (NSString *)_getPhotos:(NSString *)offset limit:(long)limit threadId:(NSString *)threadId error:(NSError**)error {
-  return [self.node getPhotos:offset limit:limit threadId:threadId error:error];
-}
-
-- (NSString *)_getPhotoData:(NSString *)photoId path:(NSString *)path error:(NSError**)error {
-  return [self.node getPhotoData:photoId path:path error:error];
-}
-
-- (NSString *)_getPhotoDataForMinWidth:(NSString *)photoId minWidth:(int)minWidth error:(NSError**)error {
-  return [self.node getPhotoDataForMinWidth:photoId minWidth:minWidth error:error];
-}
-
-- (NSString *)_getPhotoThreads:(NSString *)photoId error:(NSError**)error {
-  return [self.node photoThreads:photoId error:error];
-}
-
-- (NSString *)_getPhotoKey:(NSString *)photoId error:(NSError**)error {
-  return [self.node getPhotoKey:photoId error:error];
-}
-
-- (NSString *)_ignorePhoto:(NSString *)blockId error:(NSError**)error {
-  return [self.node ignorePhoto:blockId error:error];
-}
-
-- (NSString *)_addPhotoComment:(NSString *)blockId body:(NSString *)body error:(NSError**)error {
-  return [self.node addPhotoComment:blockId body:body error:error];
-}
-
-- (NSString *)_ignorePhotoComment:(NSString *)blockId error:(NSError**)error {
-  return [self.node ignorePhotoComment:blockId error:error];
-}
-
-- (NSString *)_addPhotoLike:(NSString *)blockId error:(NSError**)error {
-  return [self.node addPhotoLike:blockId error:error];
-}
-
-- (NSString *)_ignorePhotoLike:(NSString *)blockId error:(NSError**)error {
-  return [self.node ignorePhotoLike:blockId error:error];
-}
-
-- (void)_addDevice:(NSString *)name pubKey:(NSString *)pkb64 error:(NSError**)error {
-  [self.node addDevice:name pubKey:pkb64 error:error];
-}
-
-- (void)_removeDevice:(NSString *)deviceId error:(NSError**)error {
-  [self.node removeDevice:deviceId error:error];
-}
-
-- (NSString *)_devices:(NSError**)error {
-  return [self.node devices:error];
-}
-
-- (NSString *)_getNotifications:(NSString *)offset limit:(long)limit error:(NSError**)error {
-  return [self.node getNotifications:offset limit:limit error:error];
-}
-
-- (long)_countUnreadNotifications {
-  return [self.node countUnreadNotifications];
-}
-
-- (void)_readNotification:(NSString *)id error:(NSError**)error {
-  [self.node readNotification:id error:error];
-}
-
-- (void)_readAllNotifications:(NSError**)error {
-  [self.node readAllNotifications:error];
-}
-
-- (NSString *)_acceptThreadInviteViaNotification:(NSString *)id error:(NSError**)error {
-  return [self.node acceptThreadInviteViaNotification:id error:error];
-}
-
-- (NSString *)_getContacts:(NSError**)error {
-  return [self.node contacts:error];
-}
-
-- (void)_refreshMessages:(NSError**)error {
-  [self.node refreshMessages:error];
+  resolve(@YES);
 }
 
 - (void)_processJPG:(PHAsset *)asset orgFilename:(NSString *)orgFilename  {

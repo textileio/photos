@@ -61,7 +61,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       NSError *error;
       UIImage *image;
       NSString *jsonString;
-      jsonString = [_bridge.textileNode _getPhotoDataForMinWidth:self.imageId minWidth:self.forMinWidth error:&error];
+      jsonString = [self->_bridge.textileNode _photoDataForMinWidth:self.imageId minWidth:self.forMinWidth error:&error];
       if (jsonString) {
         NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSError *error;

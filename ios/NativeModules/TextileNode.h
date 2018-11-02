@@ -13,8 +13,8 @@
 
 @interface TextileNode : NSObject <RCTBridgeModule>
   // Define class properties here with @property
-- (NSString *)_getPhotoData:(NSString *)photoId path:(NSString *)photoId error:(NSError**)error;
-- (NSString *)_getPhotoDataForMinWidth:(NSString *)photoId minWidth:(int)minWidth error:(NSError**)error;
+- (NSString *)_photoData:(NSString *)id_ path:(NSString *)path error:(NSError**)error;
+- (NSString *)_photoDataForMinWidth:(NSString*)id_ minWidth:(long)minWidth error:(NSError**)error;
 @end
 
 @interface RCTBridge (TextileNode)
