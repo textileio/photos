@@ -25,6 +25,11 @@ import {
 
 const { TextileNode, Events } = NativeModules
 
+export const eventEmitter = Platform.select({
+  android: DeviceEventEmitter,
+  ios: new NativeEventEmitter(Events)
+})
+
 export async function acceptExternalThreadInvite(id_: string, key: string): Promise<string> {
   const result = await TextileNode.acceptExternalThreadInvite(id_, key) // returns hash
   return result as string
