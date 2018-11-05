@@ -11,12 +11,12 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import Avatar from './Avatar'
 import ContactModal from './ContactModal'
+import InvitePeerModal from './InvitePeerModal'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
 import {PeerId, ThreadId, ThreadName} from '../Models/TextileTypes'
-
 // Styles
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PeerGridStyles'
 
@@ -34,7 +34,8 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
   state = {
     contactCard: false,
     selectedPeer: '',
-    selectedUsername: ''
+    selectedUsername: '',
+    showInvitePeerModal: false
   }
 
   oneScreensWorth = 40
@@ -59,8 +60,25 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
     }
   }
 
+  renderInvite () {
+    const dimension = PRODUCT_ITEM_HEIGHT * 0.5
+    return (
+      <TouchableOpacity
+        style={[styles.item, {width: PRODUCT_ITEM_HEIGHT, height: PRODUCT_ITEM_HEIGHT}]}
+        onPress={this.invitePeerRequest()}
+        activeOpacity={0.95}
+      >
+        <Avatar width={dimension} height={dimension} defaultSource={require('../Images/v2/new-invite.png')} />
+        <Text style={styles.username}>New Invite</Text>
+      </TouchableOpacity>
+    )
+  }
+
   renderRow (row: ListRenderItemInfo<PeerId>) {
     const { item } = row
+    if (item === 'invite') {
+      return this.renderInvite()
+    }
     const dimension = PRODUCT_ITEM_HEIGHT * 0.5
     return (
       <TouchableOpacity
@@ -83,13 +101,25 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
     }
   }
 
+  cancelInvitePeer () {
+    return () => {
+      this.setState({showInvitePeerModal: false})
+    }
+  }
+
+  invitePeerRequest () {
+    return () => {
+      this.setState({showInvitePeerModal: true})
+    }
+  }
+
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
   keyExtractor = (item: string) => item
 
   render () {
-    const peerIds = Object.keys(this.props.peers).sort((a, b) => {
+    const peerIds: string[] = Object.keys(this.props.peers).sort((a, b) => {
       if (!this.props.peers[b] || this.props.peers[a] < this.props.peers[b]) {
         return -1
       }
@@ -100,32 +130,28 @@ class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationS
     })
     return (
       <View style={styles.container}>
-        {
-          peerIds.length ? (
-            <FlatList
-              style={styles.listContainer}
-              data={peerIds}
-              keyExtractor={this.keyExtractor}
-              /* tslint:disable-next-line */
-              renderItem={this.renderRow.bind(this)}
-              getItemLayout={this._getItemLayout}
-              numColumns={numColumns}
-              windowSize={this.oneScreensWorth}
-              initialNumToRender={this.oneScreensWorth}
-              onEndReachedThreshold={0.55}
-            />
-          ) : (
-            <View style={styles.emptyListStyle}>
-              <Text style={styles.noPeers}>{'Oop, no peers yet'}</Text>
-            </View>
-          )
-        }
+        <FlatList
+          style={styles.listContainer}
+          data={['invite', ...peerIds]}
+          keyExtractor={this.keyExtractor}
+          /* tslint:disable-next-line */
+          renderItem={this.renderRow.bind(this)}
+          getItemLayout={this._getItemLayout}
+          numColumns={numColumns}
+          windowSize={this.oneScreensWorth}
+          initialNumToRender={this.oneScreensWorth}
+          onEndReachedThreshold={0.55}
+        />
         <ContactModal
           isVisible={this.state.contactCard}
           peerId={this.state.selectedPeer as PeerId}
           username={this.state.selectedUsername}
           navigateToThread={this.navigateToThread()}
           close={this.closeModal()}
+        />
+        <InvitePeerModal
+          isVisible={this.state.showInvitePeerModal}
+          cancel={this.cancelInvitePeer()}
         />
       </View>
     )

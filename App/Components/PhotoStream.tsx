@@ -2,7 +2,7 @@ import React from 'react'
 import {Dispatch} from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, View } from 'react-native'
+import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 
 import {Photo, PhotoId, ThreadId} from '../Models/TextileTypes'
 import {RootAction} from '../Redux/Types'

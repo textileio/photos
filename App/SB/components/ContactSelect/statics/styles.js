@@ -6,8 +6,6 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 18,
     paddingTop: 25,
-    borderTopColor: '#ECEDEE',
-    borderTopWidth: 1,
     flex: 1,
     flexDirection: 'column'
   },
@@ -130,5 +128,18 @@ export default StyleSheet.create({
   contactSelectRadio: {
     position: 'absolute',
     right: 0
+  },
+  linkIcon: {
+    position: 'relative',
+    height: 20,
+    width: 20,
+    margin: 12,
+    marginRight: 15
+  },
+  linkText: {
+    fontFamily: 'BentonSans',
+    fontSize: 14,
+    paddingTop: 2,
+    color: '#2E8BFE'
   }
 })

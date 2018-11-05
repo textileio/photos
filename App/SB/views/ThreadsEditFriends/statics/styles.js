@@ -2,16 +2,10 @@ import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
-  headerRight: {
-    marginRight: 16
-  },
-  headerRightText: {
-    color: 'rgba(33, 33, 33, 0.4)',
-    fontSize: 18
-  },
   container: {
     backgroundColor: 'white',
-    flex: 1
+    flex: 1,
+    paddingTop: 40
   },
   contentContainer: {
     paddingTop: 18,
@@ -26,13 +20,9 @@ export default StyleSheet.create({
     fontSize: 18,
     padding: 24
   },
-  toolbarLeft: {
-    height: 16,
-    width: 40
-  },
-  toolBarRight: {
-    flexDirection: 'row',
-    alignItems: 'center'
+  buttons: {
+    height: '15%',
+    marginTop: 30
   },
   link: {
     ...BentonSansBold(),

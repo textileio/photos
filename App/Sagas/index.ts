@@ -70,6 +70,7 @@ import {
 } from './StorageSagas'
 
 import {
+  displayThreadQRCode,
   addExternalInvite,
   presentShareInterface,
   acceptExternalInvite,
@@ -87,6 +88,7 @@ import {
   navigateToThread,
   navigateToComments,
   navigateToLikes,
+  refreshContacts,
   addFriends,
   addPhotoLike,
   initializeAppState,
@@ -134,6 +136,7 @@ export default function * root () {
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
+    takeEvery(getType(UIActions.refreshContacts), refreshContacts),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
 
@@ -165,6 +168,7 @@ export default function * root () {
     // update the node stats
     takeEvery(getType(TextileNodeActions.updateOverviewRequest), updateNodeOverview),
 
+    takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
     takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
     takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
