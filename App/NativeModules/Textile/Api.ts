@@ -1,9 +1,4 @@
-import {
-  DeviceEventEmitter,
-  NativeEventEmitter,
-  NativeModules,
-  Platform
-} from 'react-native'
+import { NativeModules } from 'react-native'
 
 import {
   ExternalInvite,
@@ -23,12 +18,7 @@ import {
   WalletAccount
 } from './Model'
 
-const { TextileNode, Events } = NativeModules
-
-export const eventEmitter = Platform.select({
-  android: DeviceEventEmitter,
-  ios: new NativeEventEmitter(Events)
-})
+const { TextileNode } = NativeModules
 
 export async function acceptExternalThreadInvite(id_: string, key: string): Promise<string> {
   const result = await TextileNode.acceptExternalThreadInvite(id_, key) // returns hash
