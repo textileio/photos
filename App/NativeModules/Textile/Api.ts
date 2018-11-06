@@ -9,6 +9,7 @@ import {
   CafeSessions,
   Contact,
   Contacts,
+  Metadata,
   Notifications,
   Overview,
   Profile,
@@ -50,7 +51,7 @@ export async function addPhotoLike(blockId: string): Promise<string> {
   return result as string
 }
 
-export async function addPhotoToThread(dataId: string, key: string, threadId: string, caption: string): Promise<string> {
+export async function addPhotoToThread(dataId: string, key: string, threadId: string, caption?: string): Promise<string> {
   const result = await TextileNode.addPhotoToThread(dataId, key, threadId, caption) // returns hash
   return result as string
 }
@@ -66,7 +67,7 @@ export async function addThreadInvite(threadId: string, inviteeId: string): Prom
 }
 
 export async function address(): Promise<string> {
-  const result = await TextileNode.address() // TODO: not sure what this returns
+  const result = await TextileNode.address()
   return result as string
 }
 
@@ -163,10 +164,9 @@ export async function photoKey(id_: string): Promise<string> {
   return result as string
 }
 
-export async function photoMetadata(id_: string): Promise<any> {
-  // TODO: Figure out what DataMetadata is. Just a string: any map?
+export async function photoMetadata(id_: string): Promise<Metadata> {
   const result = await TextileNode.photoMetadata(id_)
-  return result
+  return JSON.parse(result) as Metadata
 }
 
 export async function photoThreads(id_: string): Promise<Threads> {
@@ -207,7 +207,7 @@ export async function removeThread(id_: string): Promise<string> {
 }
 
 export async function seed(): Promise<string> {
-  const result = await TextileNode.seed() // TODO: make sure this is a string
+  const result = await TextileNode.seed()
   return result as string
 }
 
@@ -219,7 +219,7 @@ export async function setUsername(username: string): Promise<void> {
   return await TextileNode.setUsername(username)
 }
 
-export async function sharePhotoToThread(dataId: string, threadId: string, caption: string): Promise<string> {
+export async function sharePhotoToThread(dataId: string, threadId: string, caption?: string): Promise<string> {
   const result = await TextileNode.sharePhotoToThread(dataId, threadId, caption) // returns hash b58 string
   return result as string
 }

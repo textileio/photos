@@ -178,3 +178,22 @@ export interface WalletAccount {
   readonly Seed: string // TODO: no json name mappings for these in textile-go
   readonly Address: string
 }
+
+export interface ThreadUpdate {
+  block: Block
+  thread_id: string
+  thread_name: string
+}
+
+export enum UpdateType {
+  ThreadAdded,
+  ThreadRemoved,
+  AccountPeerAdded,
+  AccountPeerRemoved
+}
+
+export interface Update {
+  id: string
+  name: string
+  type: UpdateType
+}

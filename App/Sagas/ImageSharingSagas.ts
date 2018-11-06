@@ -3,7 +3,7 @@ import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 
 import { uploadFile } from './UploadFile'
-import TextileNode from '../Services/TextileNode'
+import { sharePhotoToThread, addPhotoToThread, addPhoto, AddDataResult } from '../NativeModules/Textile'
 import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId} from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions, {UISelectors} from '../Redux/UIRedux'
@@ -87,7 +87,7 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
 export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: string) {
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
-    const blockId: BlockId = yield call(TextileNode.sharePhotoToThread, id, threadId, comment)
+    const blockId: BlockId = yield call(sharePhotoToThread, id, threadId, comment)
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
@@ -143,7 +143,7 @@ export function * addToWallet (uuid: string) {
     if (!defaultThread) {
       throw new Error('no default thread')
     }
-    const blockId: BlockId = yield call(TextileNode.addPhotoToThread, id, key, defaultThread.id)
+    const blockId: BlockId = yield call(addPhotoToThread, id, key, defaultThread.id)
     yield put(ProcessingImagesActions.addedToWallet(uuid, blockId))
     if (processingImage.destinationThreadId) {
       yield call(shareToThread, uuid)
@@ -166,7 +166,7 @@ export function * shareToThread (uuid: string) {
     yield put(ProcessingImagesActions.sharingToThread(uuid))
     const { destinationThreadId, comment } = processingImage
     if (destinationThreadId) {
-      const shareBlockId: BlockId = yield call(TextileNode.sharePhotoToThread, id, destinationThreadId, comment)
+      const shareBlockId: BlockId = yield call(sharePhotoToThread, id, destinationThreadId, comment)
       yield put(ProcessingImagesActions.sharedToThread(uuid, shareBlockId))
       yield put(ProcessingImagesActions.complete(uuid))
     }
@@ -175,8 +175,8 @@ export function * shareToThread (uuid: string) {
   }
 }
 
-async function addImage (image: SharedImage): Promise<AddResult> {
-  const addResult = await TextileNode.addPhoto(image.path)
+async function addImage (image: SharedImage): Promise<AddDataResult> {
+  const addResult = await addPhoto(image.path)
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {
