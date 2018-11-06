@@ -100,21 +100,17 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
           <Text style={styles.titleText}>Invite New Peer</Text>
           <Text style={styles.subTitleText}>First select a Thread to share with peer.</Text>
         </View>
-        <View style={{flex: 1}}>
-          <ThreadSelectComponent
-            createNew={this.openThreadModal()}
-            select={this.selectThread()}
-            threads={this.props.threads}
-            selected={this.state.threadId}
-          />
-        </View>
-        <View style={styles.buttons}>
-          <ModalButtons
-            continueEnabled={this.state.threadId !== undefined}
-            continue={this.continue()}
-            cancel={this.cancel()}
-          />
-        </View>
+        <ThreadSelectComponent
+          createNew={this.openThreadModal()}
+          select={this.selectThread()}
+          threads={this.props.threads}
+          selected={this.state.threadId}
+        />
+        <ModalButtons
+          continueEnabled={this.state.threadId !== undefined}
+          continue={this.continue()}
+          cancel={this.cancel()}
+        />
       </View>
     )
   }
