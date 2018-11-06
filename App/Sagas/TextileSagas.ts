@@ -15,7 +15,7 @@ import { call, put, select, take, fork } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import NavigationService from '../Services/NavigationService'
-import TextileNode from '../Services/TextileNode'
+import { AddDataResult, Contact } from '../NativeModules/Textile'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
 import StartupActions from '../Redux/StartupRedux'
@@ -28,7 +28,6 @@ import UIActions, { UISelectors } from '../Redux/UIRedux'
 import DevicesActions from '../Redux/DevicesRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType, getType } from 'typesafe-actions'
-import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
 import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
 import { uploadFile } from './UploadFile'
@@ -110,7 +109,7 @@ export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.
 function * processAvatarImage(uri: string) {
   const photoPath = uri.replace('file://', '')
   try {
-    const addResult: TT.AddResult = yield call(TextileNode.addPhoto, photoPath)
+    const addResult: AddDataResult = yield call(TextileNode.addPhoto, photoPath)
     if (!addResult.archive) {
       throw new Error('no archive returned')
     }
@@ -176,7 +175,7 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
   yield call(NavigationService.navigate, 'LikesScreen')
 }
 
-export function * getUsername (contact: TT.Contact) {
+export function * getUsername (contact: Contact) {
   try {
     if (contact.username !== undefined) { return }
     const uri = Config.RN_TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username'
@@ -244,7 +243,7 @@ export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {
     try {
-      const pending: TT.PhotoId = yield select(PreferencesSelectors.pending)
+      const pending: string = yield select(PreferencesSelectors.pending)
       if (pending) {
         yield call(TextileNode.setAvatarId, pending)
         const profile = yield call(TextileNode.getProfile)
@@ -278,7 +277,7 @@ export function * synchronizeNativeUploads() {
     // Grab all the upload Ids from the native layer
     const nativeUploads = yield call(Upload.activeUploads)
     // Grab all the upload Ids from the react native layer
-    const reactUploads: TT.PhotoId[] = yield select(UploadingImagesSelectors.uploadingImageIds)
+    const reactUploads: string[] = yield select(UploadingImagesSelectors.uploadingImageIds)
     // Check that each upload ID from the react layer exists in the array from the native layer
     // If not, register an image upload error so a retry can happen if necessary
     for (const uploadId of reactUploads) {
@@ -330,17 +329,17 @@ export function * photosTask () {
     const urisToProcess = uris.filter((uri) => !previouslyQueriedPhotos[uri]).reverse()
     yield put(CameraRollActions.trackPhotos(urisToProcess))
 
-    const addedPhotosData: Array<{ uri: string, addResult: TT.AddResult, blockId: TT.BlockId }> = []
+    const addedPhotosData: Array<{ uri: string, addResult: AddDataResult, blockId: string }> = []
 
     for (const uri of urisToProcess) {
       let photoPath = ''
       try {
         photoPath = yield call(CameraRoll.getPhotoPath, uri)
-        const addResult: TT.AddResult = yield call(TextileNode.addPhoto, photoPath)
+        const addResult: AddDataResult = yield call(TextileNode.addPhoto, photoPath)
         if (!addResult.archive) {
           throw new Error('no archive returned')
         }
-        const blockId: TT.BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+        const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
         yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
         addedPhotosData.push({ uri, addResult, blockId })
       } catch (error) {

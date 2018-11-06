@@ -1,16 +1,17 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import {ThreadId, SharedImage, AddResult, BlockId} from '../Models/TextileTypes'
+import { SharedImage } from '../Models/TextileTypes'
+import { AddDataResult } from '../NativeModules/Textile'
 import { RootState } from './Types'
 
 const actions = {
   insertImage: createAction('processingImages/INSERT_IMAGE', (resolve) => {
-    return (uuid: string, sharedImage: SharedImage, destinationThreadId?: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
+    return (uuid: string, sharedImage: SharedImage, destinationThreadId?: string, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
   }),
   addingImage: createAction('processingImages/ADDING_IMAGE', (resolve) => {
     return (uuid: string) => resolve({ uuid })
   }),
   imageAdded: createAction('processingImages/IMAGE_ADDED', (resolve) => {
-    return (uuid: string, addResult: AddResult) => resolve({ uuid, addResult })
+    return (uuid: string, addResult: AddDataResult) => resolve({ uuid, addResult })
   }),
   uploadStarted: createAction('processingImages/UPLOAD_STARTED', (resolve) => {
     return (uuid: string) => resolve({ uuid })
@@ -25,13 +26,13 @@ const actions = {
     return (uuid: string) => resolve({ uuid })
   }),
   addedToWallet: createAction('processingImages/ADDED_TO_WALLET', (resolve) => {
-    return (uuid: string, blockId: BlockId) => resolve({ uuid, blockId })
+    return (uuid: string, blockId: string) => resolve({ uuid, blockId })
   }),
   sharingToThread: createAction('processingImages/SHARING_TO_THREAD', (resolve) => {
     return (uuid: string) => resolve({ uuid })
   }),
   sharedToThread: createAction('processingImages/SHARED_TO_THREAD', (resolve) => {
-    return (uuid: string, blockId: BlockId) => resolve({ uuid, blockId })
+    return (uuid: string, blockId: string) => resolve({ uuid, blockId })
   }),
   complete: createAction('processingImages/COMPLETE', (resolve) => {
     return (uuid: string) => resolve({ uuid })
@@ -58,12 +59,12 @@ export type ProcessingImagesAction = ActionType<typeof actions>
 export interface ProcessingImage {
   readonly uuid: string,
   readonly sharedImage: SharedImage
-  readonly destinationThreadId?: ThreadId
+  readonly destinationThreadId?: string
   readonly comment?: string
   readonly state: 'pending' | 'adding' | 'added' | 'uploading' | 'uploaded' | 'addingToWallet' | 'addedToWallet' | 'sharing' | 'shared'
   readonly error?: string
   readonly addData?: {
-    readonly addResult: AddResult
+    readonly addResult: AddDataResult
   }
   readonly uploadData?: {
     readonly uploadProgress: number
@@ -71,10 +72,10 @@ export interface ProcessingImage {
     readonly responseBody?: string
   }
   readonly addToWalletData?: {
-    readonly blockId: BlockId
+    readonly blockId: string
   }
   readonly shareToThreadData?: {
-    readonly blockId: BlockId
+    readonly blockId: string
   }
 }
 

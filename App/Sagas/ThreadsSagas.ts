@@ -13,7 +13,7 @@ import {Share} from 'react-native'
 import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import { ActionType } from 'typesafe-actions'
-import { BlockId, ExternalInvite, Thread, Threads, ThreadId } from '../Models/TextileTypes'
+import { ExternalInvite, Threads } from '../NativeModules/Textile'
 import TextileNode from '../Services/TextileNode'
 import DeepLink from '../Services/DeepLink'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
@@ -50,7 +50,7 @@ export function * presentShareInterface(action: ActionType<typeof ThreadsActions
 export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const threadId: ThreadId = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
+    const threadId: string = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, threadId))
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {

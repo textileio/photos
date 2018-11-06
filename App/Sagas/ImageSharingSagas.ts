@@ -4,7 +4,7 @@ import uuid from 'uuid/v4'
 
 import { uploadFile } from './UploadFile'
 import { sharePhotoToThread, addPhotoToThread, addPhoto, AddDataResult } from '../NativeModules/Textile'
-import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId} from '../Models/TextileTypes'
+import { SharedImage } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions, {UISelectors} from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
@@ -84,16 +84,16 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
   }
 }
 
-export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: string) {
+export function * shareWalletImage (id: string, threadId: string, comment?: string) {
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
-    const blockId: BlockId = yield call(sharePhotoToThread, id, threadId, comment)
+    const blockId: string = yield call(sharePhotoToThread, id, threadId, comment)
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
 }
 
-export function * insertImage (image: SharedImage, threadId?: ThreadId, comment?: string) {
+export function * insertImage (image: SharedImage, threadId?: string, comment?: string) {
   const id = uuid()
   yield put(ProcessingImagesActions.insertImage(id, image, threadId, comment))
   yield call(addToIpfs, id)
@@ -107,7 +107,7 @@ export function * addToIpfs (uuid: string) {
     }
     yield put(ProcessingImagesActions.addingImage(uuid))
     const { sharedImage } = processingImage
-    const addResult: AddResult = yield call(addImage, sharedImage)
+    const addResult: AddDataResult = yield call(addImage, sharedImage)
     yield put(ProcessingImagesActions.imageAdded(uuid, addResult))
     yield call(uploadArchive, uuid)
   } catch (error) {
@@ -143,7 +143,7 @@ export function * addToWallet (uuid: string) {
     if (!defaultThread) {
       throw new Error('no default thread')
     }
-    const blockId: BlockId = yield call(addPhotoToThread, id, key, defaultThread.id)
+    const blockId: string = yield call(addPhotoToThread, id, key, defaultThread.id)
     yield put(ProcessingImagesActions.addedToWallet(uuid, blockId))
     if (processingImage.destinationThreadId) {
       yield call(shareToThread, uuid)
@@ -166,7 +166,7 @@ export function * shareToThread (uuid: string) {
     yield put(ProcessingImagesActions.sharingToThread(uuid))
     const { destinationThreadId, comment } = processingImage
     if (destinationThreadId) {
-      const shareBlockId: BlockId = yield call(sharePhotoToThread, id, destinationThreadId, comment)
+      const shareBlockId: string = yield call(sharePhotoToThread, id, destinationThreadId, comment)
       yield put(ProcessingImagesActions.sharedToThread(uuid, shareBlockId))
       yield put(ProcessingImagesActions.complete(uuid))
     }

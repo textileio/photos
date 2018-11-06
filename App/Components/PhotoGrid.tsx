@@ -12,7 +12,8 @@ import Toast from 'react-native-easy-toast'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
-import {IPhotoGridType, Photo, PhotoId} from '../Models/TextileTypes'
+import { IPhotoGridType } from '../Models/TextileTypes'
+import { Photo } from '../NativeModules/Textile'
 import {IProcessingImageProps} from './ProcessingImage'
 import ProgressiveImage from './ProgressiveImage'
 import ProcessingWalletImageCard from './ProcessingWalletImage'
@@ -85,7 +86,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
           >
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
-                imageId={row.item.id as PhotoId}
+                imageId={row.item.id}
                 showPreview={true}
                 forMinWidth={PRODUCT_ITEM_HEIGHT}
                 style={styles.itemImage}

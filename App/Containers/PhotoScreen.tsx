@@ -3,7 +3,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle } from 'react-native'
 
-import {Photo, ThreadId, ThreadName} from '../Models/TextileTypes'
+import { Photo } from '../NativeModules/Textile'
 import { RootState } from '../Redux/Types'
 
 import ThreadDetailCard from '../SB/components/ThreadDetailCard'
@@ -15,8 +15,8 @@ const CONTAINER: ViewStyle = {
 
 interface StateProps {
   photo?: Photo,
-  threadName?: ThreadName,
-  threadId?: ThreadId
+  threadName?: string,
+  threadId?: string
 }
 
 class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>> {

@@ -11,7 +11,6 @@ import ModalButtons from './ModalButtons'
 import { CreateThreadComponent } from './CreateThreadModal'
 
 import { RootAction, RootState } from '../Redux/Types'
-import { ThreadId, ThreadName } from '../Models/TextileTypes'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
@@ -62,7 +61,7 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
   }
 
   selectThread () {
-    return (threadId: ThreadId) => {
+    return (threadId: string) => {
       const thread = this.props.threads.find((t) => t.id === threadId)
       const threadName = thread ? thread.name : 'thread'
       this.setState({threadId, threadName})
@@ -174,7 +173,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
 
   const allThreads = getThreads(state)
   let threads: ThreadData[] = []
-  const defaultThreadName: ThreadName = 'default' as any
+  const defaultThreadName: string = 'default' as any
   if (allThreads.length > 0) {
     threads = allThreads
       .filter((thread: ThreadData) => thread.name !== defaultThreadName)

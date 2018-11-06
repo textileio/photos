@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
-import { Mnemonic, PhotoId, Profile, PublicKey } from '../Models/TextileTypes'
+import { Profile } from '../NativeModules/Textile'
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', (resolve) => {
@@ -10,19 +10,19 @@ const actions = {
     return () => resolve()
   }),
   updatecMnemonic: createAction('UPDATE_MNEMONIC', (resolve) => {
-    return (mnemonic: Mnemonic) => resolve({ mnemonic })
+    return (mnemonic: string) => resolve({ mnemonic })
   }),
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', (resolve) => {
     return (profile: Profile) => resolve({ profile })
   }),
   setAvatar: createAction('SET_AVATAR_REQUEST', (resolve) => {
-    return (avatarId: PhotoId) => resolve({ avatarId })
+    return (avatarId: string) => resolve({ avatarId })
   }),
   pendingAvatar: createAction('PENDING_AVATAR_REQUEST', (resolve) => {
-    return (avatarId: PhotoId) => resolve({ avatarId })
+    return (avatarId: string) => resolve({ avatarId })
   }),
   getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', (resolve) => {
-    return (publicKey: PublicKey) => resolve({ publicKey })
+    return (publicKey: string) => resolve({ publicKey })
   }),
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', (resolve) => {
     return (tourKey: TourScreens) => resolve({ tourKey })
@@ -64,10 +64,10 @@ export interface ViewSettings {
 export interface PreferencesState {
   onboarded: boolean
   verboseUi: boolean
-  mnemonic?: Mnemonic
-  publicKey?: PublicKey
+  mnemonic?: string
+  publicKey?: string
   profile?: Profile
-  pending?: PhotoId
+  pending?: string
   readonly services: {readonly [k in ServiceType]: Service}
   readonly storage: {readonly [k in StorageType]: Service}
   readonly tourScreens: {readonly [k in TourScreens]: boolean} // true = still need to show, false = no need

@@ -9,16 +9,15 @@ import ThreadSelectCard from './ThreadSelectCard'
 import ThreadCreateCard from './ThreadCreateCard'
 import {getThreads} from '../../../Redux/PhotoViewingSelectors'
 import {ThreadData} from '../../../Redux/PhotoViewingRedux'
-import {ThreadId, ThreadName} from '../../../Models/TextileTypes'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
 
 interface ComponentProps {
   createNew: () => void
-  select: (threadId: ThreadId) => void
+  select: (threadId: string) => void
   threads: ThreadData[]
-  selected?: ThreadId
+  selected?: string
 }
 
 export class ThreadSelectComponent extends React.Component<ComponentProps> {
@@ -86,11 +85,11 @@ export interface ScreenProps {
 
 interface StateProps {
   threads: ThreadData[]
-  selectedThreadId?: ThreadId
+  selectedThreadId?: string
 }
 
 interface DispatchProps {
-  selectThread: (threadId: ThreadId) => void
+  selectThread: (threadId: string) => void
 }
 
 type Props = StateProps & DispatchProps
@@ -127,7 +126,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
 
   const allThreads = getThreads(state)
   let threads: ThreadData[] = []
-  const defaultThreadName: ThreadName = 'default' as any
+  const defaultThreadName: string = 'default' as any
   if (allThreads.length > 0) {
     threads = allThreads
       .filter((thread) => thread.name !== defaultThreadName)
@@ -154,7 +153,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  selectThread: (threadId: ThreadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) }
+  selectThread: (threadId: string) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThreadSelect)

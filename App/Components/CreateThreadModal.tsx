@@ -12,7 +12,7 @@ import Modal from 'react-native-modal'
 import { RootAction } from '../Redux/Types'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
-import {Photo} from '../Models/TextileTypes'
+import { Photo } from '../NativeModules/Textile'
 import Input from '../SB/components/Input'
 
 // Styles

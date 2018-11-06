@@ -1,24 +1,23 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { DeviceId, Device, Devices, DeviceName } from '../Models/TextileTypes'
 
 const actions = {
   addDeviceRequest: createAction('ADD_DEVICE_REQUEST', (resolve) => {
-    return (name: DeviceName, deviceId: DeviceId) => resolve({ name, deviceId })
+    return (name: string, deviceId: string) => resolve({ name, deviceId })
   }),
   addDeviceSuccess: createAction('ADD_DEVICE_SUCCESS', (resolve) => {
-    return (deviceId: DeviceId) => resolve({ deviceId })
+    return (deviceId: string) => resolve({ deviceId })
   }),
   addDeviceError: createAction('ADD_DEVICE_ERROR', (resolve) => {
-    return (deviceId: DeviceId, error: Error) => resolve({ deviceId, error })
+    return (deviceId: string, error: Error) => resolve({ deviceId, error })
   }),
   removeDeviceRequest: createAction('REMOVE_DEVICE_REQUEST', (resolve) => {
-    return (deviceId: DeviceId) => resolve({ deviceId })
+    return (deviceId: string) => resolve({ deviceId })
   }),
   removeDeviceSuccess: createAction('REMOVE_DEVICE_SUCCESS', (resolve) => {
-    return (deviceId: DeviceId) => resolve({ deviceId })
+    return (deviceId: string) => resolve({ deviceId })
   }),
   removeDeviceError: createAction('REMOVE_DEVICE_ERROR', (resolve) => {
-    return (deviceId: DeviceId, error: Error) => resolve({ deviceId, error })
+    return (deviceId: string, error: Error) => resolve({ deviceId, error })
   }),
   refreshDevicesRequest: createAction('REFRESH_DEVICES_REQUEST', (resolve) => {
     return () => resolve()

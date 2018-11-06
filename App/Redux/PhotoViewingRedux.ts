@@ -1,26 +1,26 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
-import { ThreadId, Photo, PhotoId, ThreadName } from '../Models/TextileTypes'
+import { Photo } from '../NativeModules/Textile'
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
-    return (id: ThreadId, name: ThreadName) => resolve({ id, name })
+    return (id: string, name: string) => resolve({ id, name })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
-    return (name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: PhotoId, comment?: string } }) => resolve({ name }, options)
+    return (name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: string, comment?: string } }) => resolve({ name }, options)
   }),
   threadAdded: createAction('THREAD_ADDED', (resolve) => {
-    return (id: ThreadId, name: ThreadName) => resolve({ id, name })
+    return (id: string, name: string) => resolve({ id, name })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
   }),
   clearNewThreadActions: createAction('CLEAR_NEW_THREAD_ACTIONS'),
   removeThreadRequest: createAction('REMOVE_THREAD_REQUEST', (resolve) => {
-    return (id: ThreadId) => resolve({ id })
+    return (id: string) => resolve({ id })
   }),
   threadRemoved: createAction('THREAD_REMOVED', (resolve) => {
-    return (id: ThreadId) => resolve({ id })
+    return (id: string) => resolve({ id })
   }),
   removeThreadError: createAction('REMOVE_THREAD_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -30,22 +30,22 @@ const actions = {
     return (error: any) => resolve({ error })
   }),
   refreshThreadRequest: createAction('REFRESH_THREAD_REQUEST', (resolve) => {
-    return (threadId: ThreadId) => resolve({ threadId })
+    return (threadId: string) => resolve({ threadId })
   }),
   refreshThreadSuccess: createAction('REFRESH_THREAD_SUCCESS', (resolve) => {
-    return (threadId: ThreadId, photos: Photo[]) => resolve({ threadId, photos })
+    return (threadId: string, photos: Photo[]) => resolve({ threadId, photos })
   }),
   refreshThreadError: createAction('REFRESH_THREAD_ERROR', (resolve) => {
-    return (threadId: ThreadId, error: any) => resolve({ threadId, error })
+    return (threadId: string, error: any) => resolve({ threadId, error })
   }),
   viewWalletPhoto: createAction('VIEW_WALLET_PHOTO', (resolve) => {
-    return (photoId: PhotoId) => resolve({ photoId })
+    return (photoId: string) => resolve({ photoId })
   }),
   viewThread: createAction('VIEW_THREAD', (resolve) => {
-    return (threadId: ThreadId) => resolve({ threadId })
+    return (threadId: string) => resolve({ threadId })
   }),
   viewPhoto: createAction('VIEW_PHOTO', (resolve) => {
-    return (photoId: PhotoId) => resolve({ photoId })
+    return (photoId: string) => resolve({ photoId })
   }),
   updateComment: createAction('UPDATE_COMMENT', (resolve) => {
     return (comment: string) => resolve({ comment })
@@ -57,8 +57,8 @@ const actions = {
 export type PhotoViewingAction = ActionType<typeof actions>
 
 export interface ThreadData {
-  readonly id: ThreadId
-  readonly name: ThreadName
+  readonly id: string
+  readonly name: string
   readonly querying: boolean
   readonly photos: ReadonlyArray<Photo>
   readonly error?: string
@@ -73,7 +73,7 @@ interface PhotoViewingState {
   readonly selectToShare: boolean // if thread create should result in selecting it as share endpoint
   readonly shareToNewThread?: {
     threadName: string
-    imageId: PhotoId
+    imageId: string
     comment?: string
   }
   readonly threads: ThreadMap
@@ -83,11 +83,11 @@ interface PhotoViewingState {
     readonly error?: string
   }
   readonly removingThread?: {
-    readonly id: ThreadId
+    readonly id: string
     readonly error?: string
   }
   readonly viewingWalletPhoto?: Photo
-  readonly viewingThreadId?: ThreadId
+  readonly viewingThreadId?: string
   readonly viewingPhoto?: Photo
   readonly authoringComment?: string
 }
@@ -193,7 +193,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.viewWalletPhoto): {
       const { photoId } = action.payload
-      const defaultThreadName: ThreadName = 'default' as any
+      const defaultThreadName: string = 'default' as any
       const defaultThreadData = Object.keys(state.threads)
         .map((key) => state.threads[key]! )
         .find((threadData) => threadData.name === defaultThreadName)

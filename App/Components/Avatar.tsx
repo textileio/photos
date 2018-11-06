@@ -4,7 +4,7 @@ import ImageSc from 'react-native-scalable-image'
 import { connect } from 'react-redux'
 import { View, ImageURISource, StyleProp, ViewStyle } from 'react-native'
 import TextileImage from './TextileImage'
-import { Profile, ProfileAvatarId, PeerId, PhotoId } from '../Models/TextileTypes'
+import { Profile } from '../NativeModules/Textile'
 
 import styles from './Styles/AvatarStyles'
 import { RootState } from '../Redux/Types'
@@ -18,18 +18,18 @@ export interface IAvatarProps extends IPropsFromState {
   height: number
   width: number
   owner?: boolean // flags if it is known already to be the local user's profile
-  peerId?: PeerId // will auto check to see if it is the same as the local user's
+  peerId?: string // will auto check to see if it is the same as the local user's
   defaultSource?: number | ImageURISource
   style?: StyleProp<ViewStyle>
 }
 
 class Avatar extends React.PureComponent<IAvatarProps> {
-  getCafeAddress (peerId: PeerId) {
+  getCafeAddress (peerId: string) {
     return `${Config.RN_TEXTILE_CAFE_URI}/ipns/${peerId}/avatar`
   }
-  photoIdFromAvatar (): PhotoId | undefined {
+  photoIdFromAvatar (): string | undefined {
     const { profile } = this.props
-    const avatarId: ProfileAvatarId = profile && profile.avatar_id || '' as any
+    const avatarId = profile && profile.avatar_uri || ''
     const parts = avatarId.split('/')
     return parts.length > 1 ? parts[2] as any : undefined
   }
@@ -65,7 +65,7 @@ class Avatar extends React.PureComponent<IAvatarProps> {
       )
     }
   }
-  renderCafe (peerId: PeerId) {
+  renderCafe (peerId: string) {
     const { height, width, defaultSource, style } = this.props
     const avatarUri = this.getCafeAddress(peerId)
     return (
@@ -102,16 +102,16 @@ class Avatar extends React.PureComponent<IAvatarProps> {
 
   render () {
     const { profile, online, owner, peerId } = this.props
-    if (owner && (profile && profile.avatar_id !== undefined)) {
-      if (!online || !profile.avatar_id) {
+    if (owner && (profile && profile.avatar_uri !== undefined)) {
+      if (!online || !profile.avatar_uri) {
         // not online or no url and owner, render cafe
-        return this.renderCafe(profile.id)
+        return this.renderCafe(profile.address)
       }
       // owner, render local
       return this.renderSelf()
     }
     if (peerId) {
-      if (online && profile && profile.id === peerId && profile.avatar_id) {
+      if (online && profile && profile.address === peerId && profile.avatar_uri) {
         // owner, render local
         return this.renderSelf()
       }

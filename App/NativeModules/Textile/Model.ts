@@ -1,3 +1,5 @@
+// export type BlockId = string & { _blockIdBrand: void }
+
 export interface ExternalInvite {
   readonly id: string
   readonly key: string

@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
-import { Contact, PeerId } from '../Models/TextileTypes'
+import { Contact } from '../NativeModules/Textile'
 
 const actions = {
   getContactsSuccess: createAction('GET_CONTACT_SUCCESS', (resolve) => {
@@ -53,7 +53,7 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
 }
 
 export const ContactsSelectors = {
-  isKnown: (state: RootState, id: PeerId) => state.contacts.contacts.some((p) => p.id === id)
+  isKnown: (state: RootState, id: string) => state.contacts.contacts.some((p) => p.id === id)
 }
 
 export default actions

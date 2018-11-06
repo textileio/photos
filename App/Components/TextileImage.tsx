@@ -1,9 +1,8 @@
 import React from 'react'
 import { requireNativeComponent, ImageStyle, PixelRatio } from 'react-native'
-import { PhotoId } from '../Models/TextileTypes'
 
 export interface Props {
-  imageId: PhotoId,
+  imageId: string,
   forMinWidth: number,
   resizeMode: string,
   capInsets?: string,

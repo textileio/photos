@@ -15,7 +15,6 @@ import PreferencesActions from '../../../Redux/PreferencesRedux'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { threadDataByThreadId } from '../../../Redux/PhotoViewingSelectors'
 import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
-import { Photo, ThreadId, ThreadName } from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
 import AlertComponent from '../../../SB/components/Alert'

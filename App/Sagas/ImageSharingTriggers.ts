@@ -4,7 +4,7 @@ import RNFS from 'react-native-fs'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
 
-import { PhotoId, SharedImage } from '../Models/TextileTypes'
+import { SharedImage } from '../Models/TextileTypes'
 
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
@@ -15,7 +15,7 @@ import { logNewEvent } from './DeviceLogs'
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
   if (typeof image === 'string' && threadId) {
-    yield call(shareWalletImage, image as PhotoId, threadId, comment)
+    yield call(shareWalletImage, image, threadId, comment)
   } else if ((image as SharedImage).path) {
       yield call(insertImage, image as SharedImage, threadId, comment)
   }

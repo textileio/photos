@@ -16,13 +16,12 @@ import ProgressiveImage from '../../../Components/ProgressiveImage'
 import styles from './statics/styles'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
-import { BlockId, PhotoId } from '../../../Models/TextileTypes'
 
 const { width } = Dimensions.get('window')
 
 interface StateProps {
-  photoId: PhotoId
-  blockId: BlockId
+  photoId: string
+  blockId: string
   size?: {
     height: number
     width: number

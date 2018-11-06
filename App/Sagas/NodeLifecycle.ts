@@ -12,7 +12,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import TextileNode from '../Services/TextileNode'
 import { RootAction } from '../Redux/Types'
-import {Threads, ThreadName} from '../Models/TextileTypes'
+import { Threads } from '../Models/TextileTypes'
 import {logNewEvent} from './DeviceLogs'
 
 export function * manageNode () {
@@ -72,7 +72,7 @@ function * createAndStartNode () {
     yield put(TextileNodeActions.startingNode())
     yield call(TextileNode.start)
     const threads: Threads = yield call(TextileNode.threads)
-    const defaultThreadName: ThreadName = 'default' as any
+    const defaultThreadName: string = 'default' as any
     const defaultThread = threads.items.find((thread) => thread.name === defaultThreadName)
     if (!defaultThread) {
       yield call(TextileNode.addThread, 'default')

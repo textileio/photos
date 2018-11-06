@@ -1,6 +1,6 @@
 import {call, put, select, take} from 'redux-saga/effects'
 import TextileNode from '../Services/TextileNode'
-import {BlockId, Thread, ILocalPhotoResult, SharedImage} from '../Models/TextileTypes'
+import { Thread, ILocalPhotoResult, SharedImage } from '../Models/TextileTypes'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
 import {ActionType, getType} from 'typesafe-actions'
 import PreferencesActions, {PreferencesSelectors} from '../Redux/PreferencesRedux'
@@ -28,7 +28,7 @@ export function * savePhotoToWallet (photo: ILocalPhotoResult) {
     if (!defaultThread) {
       throw new Error('no default thread')
     }
-    const blockId: BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+    const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     // Issue: if the user doesn't want to store private files on remote IPFS, we need to record that these are
     // only available locally in case the user then shares
     // Idea perhaps...

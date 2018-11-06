@@ -4,7 +4,6 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 
-import {ThreadId, ThreadName} from '../Models/TextileTypes'
 import {RootAction} from '../Redux/Types'
 
 import {ThreadData} from '../Redux/PhotoViewingRedux'
@@ -23,7 +22,7 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
 
   _onPressItem = (threadCardProps: any) => {
     const { id, name } = threadCardProps
-    this.props.navigateToThread(id as ThreadId, name as ThreadName)
+    this.props.navigateToThread(id, name)
   }
 
   _renderItem = (rowData: any) => {
@@ -70,7 +69,7 @@ class ThreadSelector extends React.Component<ScreenProps & DispatchProps & Navig
 
 interface DispatchProps {
   refreshMessages: () => void
-  navigateToThread: (id: ThreadId, name: ThreadName) => void
+  navigateToThread: (id: string, name: string) => void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
@@ -78,7 +77,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     refreshMessages: () => {
       dispatch(TextileNodeActions.refreshMessagesRequest())
     },
-    navigateToThread: (id: ThreadId, name: ThreadName) => {
+    navigateToThread: (id: string, name: string) => {
       dispatch(UIActions.navigateToThreadRequest(id, name))
     }
   }

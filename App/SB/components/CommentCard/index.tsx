@@ -5,11 +5,10 @@ import moment from 'moment'
 import Avatar from '../../../Components/Avatar'
 
 import styles from './statics/styles'
-import { PeerId } from '../../../Models/TextileTypes'
 
 export interface Props {
   username: string
-  peerId?: PeerId,
+  peerId?: string,
   comment: string
   date: string
   isCaption: boolean

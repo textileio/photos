@@ -96,6 +96,7 @@ export async function contactThreads(id_: string): Promise<Threads> {
 }
 
 export async function contactUsername(id_: string): Promise<string> {
+  // TODO: Deal with empty string?
   const result = await TextileNode.contactUsername(id_)
   return result as string
 }
@@ -243,6 +244,7 @@ export async function threads(): Promise<Threads> {
 }
 
 export async function username(): Promise<string> {
+  // TODO: Deal with empty string?
   const result = await TextileNode.username()
   return result as string
 }

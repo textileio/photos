@@ -4,7 +4,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 
-import {Photo, PhotoId, ThreadId} from '../Models/TextileTypes'
+import { Photo } from '../NativeModules/Textile'
 import {RootAction} from '../Redux/Types'
 
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
@@ -34,15 +34,15 @@ interface ScreenProps {
 
 class PhotoStream extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
 
-  _onCommentSelect = (photo: Photo, threadId: ThreadId) => {
+  _onCommentSelect = (photo: Photo, threadId: string) => {
     return () => {
-      this.props.navigateToComments(photo.id as PhotoId, threadId)
+      this.props.navigateToComments(photo.id, threadId)
     }
   }
 
-  onLikes = (photo: Photo, threadId: ThreadId) => {
+  onLikes = (photo: Photo, threadId: string) => {
     return () => {
-      this.props.navigateToLikes(photo.id as PhotoId, threadId)
+      this.props.navigateToLikes(photo.id, threadId)
     }
   }
 
@@ -107,8 +107,8 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
 
 interface DispatchProps {
   refreshMessages: () => void
-  navigateToComments: (photoId: PhotoId, threadId: ThreadId) => void
-  navigateToLikes: (photoId: PhotoId, threadId: ThreadId) => void
+  navigateToComments: (photoId: string, threadId: string) => void
+  navigateToLikes: (photoId: string, threadId: string) => void
   retryShare: (uuid: string) => void
   cancelShare: (uuid: string) => void
 }
@@ -116,10 +116,10 @@ interface DispatchProps {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
-    navigateToComments: (id: PhotoId, threadId: ThreadId) => {
+    navigateToComments: (id: string, threadId: string) => {
       dispatch(UIActions.navigateToCommentsRequest(id, threadId))
     },
-    navigateToLikes: (id: PhotoId, threadId: ThreadId) => {
+    navigateToLikes: (id: string, threadId: string) => {
       dispatch(UIActions.navigateToLikesRequest(id, threadId))
     },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry( uuid )) },

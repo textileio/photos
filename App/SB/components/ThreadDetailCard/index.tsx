@@ -11,14 +11,14 @@ import UIActions from '../../../Redux/UIRedux'
 import styles from './statics/styles'
 import Icon from '../../../Components/Icon'
 import Colors from '../../../Themes/Colors'
-import {Photo, BlockId, ThreadName, ThreadId, PeerId} from '../../../Models/TextileTypes'
+import { Photo } from '../../../NativeModules/Textile'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
 
 const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
-  item: {type: string, photo: Photo, threadId?: ThreadId, threadName?: ThreadName}, // TODO make proper type now
+  item: {type: string, photo: Photo, threadId?: string, threadName?: string}, // TODO make proper type now
   recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void
@@ -27,7 +27,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  peerId: PeerId
+  peerId: string
   dateString: string
   defaultSource?: number | ImageURISource
   didLike: boolean
@@ -40,16 +40,16 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  addPhotoLike: (photoBlockId: BlockId) => void
-  navigateToThread: (threadId: ThreadId, threadName: ThreadName) => void
+  addPhotoLike: (photoBlockId: string) => void
+  navigateToThread: (threadId: string, threadName: string) => void
 }
 
 class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & DispatchProps> {
 
-  _threadSelect = (id?: ThreadId, name?: ThreadName) => {
+  _threadSelect = (id?: string, name?: string) => {
     return () => {
       if (id && name) {
-        this.props.navigateToThread(id as ThreadId, name as ThreadName)
+        this.props.navigateToThread(id, name)
       }
     }
   }
@@ -204,8 +204,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    addPhotoLike: (photoBlockId: BlockId) => { dispatch(UIActions.addLikeRequest(photoBlockId)) },
-    navigateToThread: (id: ThreadId, name: ThreadName) => {
+    addPhotoLike: (photoBlockId: string) => { dispatch(UIActions.addLikeRequest(photoBlockId)) },
+    navigateToThread: (id: string, name: string) => {
      dispatch(UIActions.navigateToThreadRequest(id, name))
    }
   }

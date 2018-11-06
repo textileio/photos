@@ -10,22 +10,23 @@ import ThreadSelect from '../SB/components/ThreadSelect'
 import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../Components/TextileImage'
-import {Photo, PhotoId, SharedImage, ThreadId, ThreadName} from '../Models/TextileTypes'
+import { SharedImage } from '../Models/TextileTypes'
+import { Photo } from '../NativeModules/Textile'
 import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
 interface StateProps {
-  image?: SharedImage | PhotoId,
-  threadId?: ThreadId,
+  image?: SharedImage | string,
+  threadId?: string,
   comment?: string,
-  selectedThreadId?: ThreadId
+  selectedThreadId?: string
 }
 
 interface DispatchProps {
   updateComment: (text: string) => void
   cancelShare: () => void
-  share: (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => void
-  shareNewThread: (imageId: PhotoId, threadName: string, comment?: string) => void
+  share: (image?: SharedImage | string, threadId?: string, comment?: string) => void
+  shareNewThread: (imageId: string, threadName: string, comment?: string) => void
 }
 
 type Props = DispatchProps & StateProps & NavigationScreenProps
@@ -85,7 +86,7 @@ class AddCaptionScreen extends React.Component<Props> {
       cancelShare: () => { this.props.cancelShare() },
       share: () => {
         if (typeof this.props.image === 'string') {
-          this.props.share(this.props.image as PhotoId, this.props.threadId, this.props.comment)
+          this.props.share(this.props.image as string, this.props.threadId, this.props.comment)
         } else if (this.props.image) {
           this.props.share(this.props.image, this.props.threadId, this.props.comment)
         }
@@ -200,9 +201,9 @@ const mapStateToProps = (state: RootState): StateProps => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     updateComment: (text: string) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
-    share: (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
+    share: (image?: SharedImage | string, threadId?: string, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    shareNewThread: (imageId: PhotoId, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
+    shareNewThread: (imageId: string, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
   }
 }
 

@@ -14,25 +14,25 @@ import Avatar from './Avatar'
 import { TextileHeaderButtons, Item } from './HeaderButtons'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { Photo } from '../NativeModules/Textile'
 
 // Styles
 import styles from './Styles/ContactModal'
-import { PeerId, ThreadId, Photo, ThreadName } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
 
 interface ScreenProps {
   isVisible: boolean
-  peerId: PeerId
+  peerId: string
   username: string
   close: () => void
-  navigateToThread: (id: ThreadId, name: ThreadName) => void
+  navigateToThread: (id: string, name: string) => void
 }
 
 class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
 
   defaultSource = require('../Images/v2/main-image.png')
 
-  navigate (id: ThreadId, name: ThreadName) {
+  navigate (id: string, name: string) {
     return () => {
       this.props.navigateToThread(id, name)
     }
@@ -75,7 +75,7 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
 }
 
 interface DispatchStateProps {
-  threads: Array<{id: ThreadId, name: ThreadName, thumb?: Photo}>
+  threads: Array<{id: string, name: string, thumb?: Photo}>
 }
 
 const mapStateToProps = (state: RootState, ownProps: ScreenProps): DispatchStateProps => {

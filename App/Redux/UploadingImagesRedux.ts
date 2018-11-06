@@ -1,25 +1,24 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
-import { PhotoId } from '../Models/TextileTypes'
 
 const actions = {
   addImage: createAction('ADD_IMAGE', (resolve) => {
-    return (path: string, dataId: PhotoId, attempts: number) => resolve({ path, dataId, attempts })
+    return (path: string, dataId: string, attempts: number) => resolve({ path, dataId, attempts })
   }),
   imageUploadProgress: createAction('IMAGE_UPLOAD_PROGRESS', (resolve) => {
-    return (dataId: PhotoId, progress: number) => resolve({ dataId, progress })
+    return (dataId: string, progress: number) => resolve({ dataId, progress })
   }),
   imageUploadComplete: createAction('IMAGE_UPLOAD_COMPLETE', (resolve) => {
-    return (dataId: PhotoId, responseCode: string, responseBody: string) => resolve({ dataId, responseCode, responseBody })
+    return (dataId: string, responseCode: string, responseBody: string) => resolve({ dataId, responseCode, responseBody })
   }),
   imageUploadError: createAction('IMAGE_UPLOAD_ERROR', (resolve) => {
-    return (dataId: PhotoId, errorMessage: string) => resolve({ dataId, errorMessage })
+    return (dataId: string, errorMessage: string) => resolve({ dataId, errorMessage })
   }),
   imageUploadRetried: createAction('IMAGE_UPLOAD_RETRIED', (resolve) => {
-    return (dataId: PhotoId) => resolve({ dataId })
+    return (dataId: string) => resolve({ dataId })
   }),
   imageRemovalComplete: createAction('IMAGE_REMOVAL_COMPLETE', (resolve) => {
-    return (dataId: PhotoId) => resolve({ dataId })
+    return (dataId: string) => resolve({ dataId })
   }),
   synchronizeNativeUploadsError: createAction('SYNCHRONIZE_NATIVE_UPLOADS_ERROR', (resolve) => {
     return (error: Error) => resolve(error)
@@ -30,7 +29,7 @@ export type UploadingImagesAction = ActionType<typeof actions>
 
 export interface UploadingImage {
   readonly path: string
-  readonly dataId: PhotoId
+  readonly dataId: string
   readonly state: 'pending' | 'uploading' | 'complete' | 'error'
   readonly uploadProgress: number
   readonly remainingUploadAttempts: number
@@ -52,14 +51,14 @@ export const initialState: UploadingImagesState = {
 }
 
 export const UploadingImagesSelectors = {
-  uploadingImageById: (state: RootState, id: PhotoId) => state.uploadingImages.images[id],
+  uploadingImageById: (state: RootState, id: string) => state.uploadingImages.images[id],
   imagesForRetry: (state: RootState) => {
     return Object.keys(state.uploadingImages.images)
       .map((key) => state.uploadingImages.images[key])
       .filter((image) => image.state === 'error' && image.remainingUploadAttempts > 0)
   },
   uploadingImageIds: (state: RootState) => {
-    const keys: PhotoId[] = []
+    const keys: string[] = []
     for (const key in state.uploadingImages.images) {
       if (state.uploadingImages.images.hasOwnProperty(key)) {
         const uploadingImage = state.uploadingImages.images[key]

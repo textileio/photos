@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { RootAction, RootState } from '../../Redux/Types'
 import ThreadsActions from '../../Redux/ThreadsRedux'
-import { BlockId, PrivateKey, UserName, ThreadName } from '../../Models/TextileTypes'
 import Button from '../../Components/Button'
 import Colors from '../../Themes/Colors'
 import { TextileHeaderButtons, Item } from '../../Components/HeaderButtons'
@@ -46,10 +45,10 @@ const TEXT_EMPHASIS_2 = {
 }
 
 interface NavProps {
-  id?: BlockId
-  key?: PrivateKey
-  name?: ThreadName
-  inviter?: UserName
+  id?: string
+  key?: string
+  name?: string
+  inviter?: string
 }
 
 interface StateProps {

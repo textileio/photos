@@ -1,6 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
-import { ThreadId, BlockId, Photo, PhotoId, PhotoMetadata } from '../Models/TextileTypes'
 import { RootState } from './Types'
 
 const actions = {
@@ -25,7 +24,7 @@ const actions = {
     return () => resolve()
   }),
   ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', (resolve) => {
-    return (threadId: ThreadId, blockId: BlockId) => resolve({ threadId, blockId })
+    return (threadId: string, blockId: string) => resolve({ threadId, blockId })
   }),
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', (resolve) => {
     return () => resolve()
