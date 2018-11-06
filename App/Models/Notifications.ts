@@ -1,12 +1,11 @@
 import { NotificationType } from '../NativeModules/Textile'
 
 interface BaseNotification {
+  id: string
+  date: string
   actor_id: string
-  actor_username: string
   block_id?: string
   body: string
-  date: string
-  id: string
   read: boolean
 }
 
@@ -15,15 +14,33 @@ export type ReceivedInviteNotification = BaseNotification & {
   type: NotificationType.ReceivedInviteNotification
 }
 
-export type DeviceAddedNotification = BaseNotification & {
-  type: NotificationType.DeviceAddedNotification
+export type AccountPeerAddedNotification = BaseNotification & {
+  type: NotificationType.AccountPeerAddedNotification
 }
 
-export type PhotoAddedNotification = BaseNotification & {
+export type PeerJoinedNotification = BaseNotification & {
   threadId: string
   threadName: string
-  photoId: string
-  type: NotificationType.PhotoAddedNotification
+  type: NotificationType.PeerJoinedNotification
+}
+
+export type PeerLeftNotification = BaseNotification & {
+  threadId: string
+  threadName: string
+  type: NotificationType.PeerLeftNotification
+}
+
+export type FileAddedNotification = BaseNotification & {
+  threadId: string
+  threadName: string
+  hash: string
+  type: NotificationType.FileAddedNotification
+}
+
+export type TextAddedNotification = BaseNotification & {
+  threadId: string
+  threadName: string
+  type: NotificationType.TextAddedNotification
 }
 
 export type CommentAddedNotification = BaseNotification & {
@@ -40,31 +57,12 @@ export type LikeAddedNotification = BaseNotification & {
   type: NotificationType.LikeAddedNotification
 }
 
-export type PeerJoinedNotification = BaseNotification & {
-  threadId: string
-  threadName: string
-  type: NotificationType.PeerJoinedNotification
-}
-
-export type PeerLeftNotification = BaseNotification & {
-  threadId: string
-  threadName: string
-  type: NotificationType.PeerLeftNotification
-}
-
-// TODO: Look into what these properties should be
-export type TextAddedNotification = BaseNotification & {
-  threadId: string
-  threadName: string
-  type: NotificationType.TextAddedNotification
-}
-
 export type Notification =
   ReceivedInviteNotification |
-  DeviceAddedNotification |
-  PhotoAddedNotification |
-  CommentAddedNotification |
-  LikeAddedNotification |
+  AccountPeerAddedNotification |
   PeerJoinedNotification |
   PeerLeftNotification |
-  TextAddedNotification
+  FileAddedNotification |
+  TextAddedNotification |
+  CommentAddedNotification |
+  LikeAddedNotification

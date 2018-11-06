@@ -49,20 +49,19 @@ export interface Contacts {
 
 export enum NotificationType {
   ReceivedInviteNotification,
-  DeviceAddedNotification,
-  PhotoAddedNotification,
-  CommentAddedNotification,
-  LikeAddedNotification,
+  AccountPeerAddedNotification,
   PeerJoinedNotification,
   PeerLeftNotification,
-  TextAddedNotification
+  FileAddedNotification,
+  TextAddedNotification,
+  CommentAddedNotification,
+  LikeAddedNotification
 }
 
 export interface Notification {
   readonly id: string
-  readonly data: string
+  readonly date: string
   readonly actor_id: string
-  readonly actor_username?: string
   readonly subject: string
   readonly subject_id: string
   readonly block_id?: string
