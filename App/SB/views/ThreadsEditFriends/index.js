@@ -77,6 +77,7 @@ class Component extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
+        <View style={{flex: 1}}>
         <ContactSelect
           displayQRCode={this._displayThreadQRCode.bind(this)}
           getPublicLink={this._getPublicLink.bind(this)}
@@ -87,17 +88,17 @@ class Component extends React.PureComponent {
           notInThread={this.props.notInThread}
           threadName={this.props.threadName}
         />
+        </View>
+        <ModalButtons
+          continueEnabled={this.state.selected.length > 0}
+          continue={this._updateThread}
+          cancel={this.props.cancel}
+          continueText={'Send'}
+          cancelText={'Exit'}
+          style={styles.bottomRow}
+        />
         <QRCodeModal isVisible={this.state.showQrCode} invite={this.props.qrCodeInvite} cancel={this._hideQRCode()} />
         <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />
-        <View style={styles.buttons}>
-          <ModalButtons
-            continueEnabled={this.state.selected.length > 0}
-            continue={this._updateThread}
-            cancel={this.props.cancel}
-            continueText={'Send'}
-            cancelText={'Exit'}
-          />
-        </View>
       </View>
     )
   }

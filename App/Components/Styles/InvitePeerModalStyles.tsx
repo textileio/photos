@@ -15,7 +15,7 @@ export default StyleSheet.create({
     flex: 1,
     alignContent: 'flex-start',
     justifyContent: 'center',
-    padding: 16,
+    paddingHorizontal: 16,
     paddingTop: 40
   } as ViewStyle,
   title: {
@@ -36,10 +36,7 @@ export default StyleSheet.create({
     color: '#9b9b9b'
   },
   body: {
-    flex: 1
-  } as ViewStyle,
-  buttons: {
-    height: '15%',
-    marginTop: 30
-  }
+    flex: 1,
+    backgroundColor: 'blue'
+  } as ViewStyle
 })
