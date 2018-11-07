@@ -97,7 +97,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     }
 
     const recentComments = photo.comments.slice(0, this.props.recentCommentsCount).reverse().map((comment, index) => {
-      const username = comment.username || 'unknown'
+      const username = comment.Annotation.username || 'unknown'
       return <KeyValueText key={index} keyString={username as string} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
     })
 
@@ -173,7 +173,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const { photo } = ownProps.item
   const date = moment(photo.date)
   const dateString = date.fromNow()
-  const selfId = profile && profile.id
+  // TODO: Make sure address is what 'id' used to be
+  const selfId = profile && profile.address
 
   const username = profile ? (profile.username || 'unknown') : 'unknown'
   const photoUsername = photo.username ? photo.username : photo.author_id.substring(0, 8)
@@ -182,7 +183,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
 
   const totalLikes = photo.likes ? photo.likes.length : 0
   const isLiked = photo.likes && photo.likes.length > 0
-  const didLike = isLiked && photo.likes.find((like) => like.author_id === selfId) !== undefined
+  const didLike = isLiked && photo.likes.find((like) => like.Annotation.author_id === selfId) !== undefined
 
   // Unsquares the images by maintaining the aspect ratio no matter device size
   const imageWidth = WIDTH

@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
+import { CafeSessions } from '../NativeModules/Textile'
 
 const actions = {
   updateReferralCode: createAction('UPDATE_REFERRAL_CODE', (resolve) => {
@@ -32,8 +33,8 @@ const actions = {
   logInSuccess: createAction('LOG_IN_SUCCESS', (resolve) => {
     return () => resolve()
   }),
-  getTokensSuccess: createAction('GET_TOKENS_SUCCESS', (resolve) => {
-    return (tokens: CafeTokens) => resolve({ tokens })
+  getSessionsSuccess: createAction('GET_SESSIONS_SUCCESS', (resolve) => {
+    return (sessions: CafeSessions) => resolve({ sessions })
   }),
   recoverPasswordSuccess: createAction('RECOVER_PASSWORD_SUCCESS', (resolve) => {
     return () => resolve()
@@ -69,7 +70,7 @@ export type AuthAction = ActionType<typeof actions>
 export interface AuthState {
   readonly processing: boolean
   readonly error?: string
-  readonly tokens?: CafeTokens
+  readonly sessions?: CafeSessions
   readonly formData: {
     readonly referralCode?: string
     readonly email?: string
@@ -106,8 +107,8 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
     case getType(actions.logInRequest):
     case getType(actions.recoverPasswordRequest):
       return { ...state, processing: true }
-    case getType(actions.getTokensSuccess):
-      return { ...state, processing: false, tokens: action.payload.tokens }
+    case getType(actions.getSessionsSuccess):
+      return { ...state, processing: false, sessions: action.payload.sessions }
     case getType(actions.recoverPasswordSuccess):
       return { ...state, processing: false }
     case getType(actions.signUpFailure):
@@ -124,7 +125,7 @@ export function reducer (state: AuthState = initialState, action: AuthAction): A
 }
 
 export const AuthSelectors = {
-  tokens: (state: RootState) => state.auth.tokens,
+  sessions: (state: RootState) => state.auth.sessions,
   invite: (state: RootState) => state.auth.invite
 }
 

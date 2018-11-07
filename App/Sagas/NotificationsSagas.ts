@@ -14,11 +14,11 @@ import {delay} from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
-import TextileNode from '../Services/TextileNode'
+import { readAllNotifications as readAll, readNotification, notifications } from '../NativeModules/Textile'
 import {
   NotificationType,
-  GetNotificationsResult
-} from '../Models/TextileTypes'
+  Notifications
+} from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
@@ -35,7 +35,7 @@ export function * enable () {
 }
 
 export function * readAllNotifications (action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
-  yield call(TextileNode.readAllNotifications)
+  yield call(readAll)
 }
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
@@ -87,31 +87,29 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
   try {
-    yield call(TextileNode.readNotification, notification.id)
+    yield call(readNotification, notification.id)
     switch (notification.type) {
-      case NotificationType.commentAddedNotification: {
+      case NotificationType.CommentAddedNotification: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.photoId))
+          yield put(PhotoViewingAction.viewPhoto(notification.hash))
           yield call(NavigationService.navigate, 'Comments')
         }
         break
       }
-      case NotificationType.deviceAddedNotification:
-        break
-      case NotificationType.likeAddedNotification:
-      case NotificationType.photoAddedNotification: {
+      case NotificationType.LikeAddedNotification:
+      case NotificationType.FileAddedNotification: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.photoId))
+          yield put(PhotoViewingAction.viewPhoto(notification.hash))
           yield call(NavigationService.navigate, 'PhotoScreen')
         }
         break
       }
-      case NotificationType.peerJoinedNotification:
-      case NotificationType.peerLeftNotification: {
+      case NotificationType.PeerJoinedNotification:
+      case NotificationType.PeerLeftNotification: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
@@ -119,7 +117,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         }
         break
       }
-      case NotificationType.receivedInviteNotification: {
+      case NotificationType.ReceivedInviteNotification: {
         yield * waitUntilOnline(1000)
         yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
         break
@@ -137,7 +135,7 @@ export function * refreshNotifications () {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: GetNotificationsResult = yield call(TextileNode.getNotifications, 99)
+    const notificationResponse: Notifications = yield call(notifications, '', 99) // TODO: offset?
     yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.items.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))))
   } catch (error) {
     yield put(NotificationsActions.refreshNotificationsFailure())

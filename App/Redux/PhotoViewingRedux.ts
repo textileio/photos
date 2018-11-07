@@ -33,7 +33,7 @@ const actions = {
     return (threadId: string) => resolve({ threadId })
   }),
   refreshThreadSuccess: createAction('REFRESH_THREAD_SUCCESS', (resolve) => {
-    return (threadId: string, photos: Photo[]) => resolve({ threadId, photos })
+    return (threadId: string, photos: ReadonlyArray<Photo>) => resolve({ threadId, photos })
   }),
   refreshThreadError: createAction('REFRESH_THREAD_ERROR', (resolve) => {
     return (threadId: string, error: any) => resolve({ threadId, error })

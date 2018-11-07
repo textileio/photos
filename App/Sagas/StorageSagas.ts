@@ -1,6 +1,7 @@
 import {call, put, select, take} from 'redux-saga/effects'
-import TextileNode from '../Services/TextileNode'
-import { Thread, ILocalPhotoResult, SharedImage } from '../Models/TextileTypes'
+import { addPhoto, addPhotoToThread} from '../NativeModules/Textile'
+import { requestLocalPhotos } from '../NativeModules/CameraRoll'
+import { ILocalPhotoResult, SharedImage } from '../Models/TextileTypes'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
 import {ActionType, getType} from 'typesafe-actions'
 import PreferencesActions, {PreferencesSelectors} from '../Redux/PreferencesRedux'
@@ -23,12 +24,12 @@ export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLoc
 // TODO: Not used for now. Revisit if needed
 export function * savePhotoToWallet (photo: ILocalPhotoResult) {
   try {
-    const addResult = yield call(TextileNode.addPhoto, photo.path)
+    const addResult = yield call(addPhoto, photo.path)
     const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
     if (!defaultThread) {
       throw new Error('no default thread')
     }
-    const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+    const blockId: string = yield call(addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     // Issue: if the user doesn't want to store private files on remote IPFS, we need to record that these are
     // only available locally in case the user then shares
     // Idea perhaps...
@@ -64,7 +65,7 @@ export function * refreshLocalImages () {
         const lastRefresh = yield select(StorageSelectors.lastPhotoRefresh)
         // update last time checked to now
         const currentRefresh = (new Date()).getTime()
-        yield call(TextileNode.requestLocalPhotos, lastRefresh)
+        yield call(requestLocalPhotos, lastRefresh)
           // scan for images
         yield put(StorageActions.setLocalPhotoRefreshEpoch(currentRefresh))
       }

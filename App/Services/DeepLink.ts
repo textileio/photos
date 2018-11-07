@@ -63,7 +63,10 @@ function route (link: string) {
   if (data) {
     if (data.path === '/invites/device' && data.hash !== '') {
       // start pairing the new device
-      NavigationService.navigate('PairingView', { request: getParams(data.hash) })
+
+      // TODO: re-enable once we support device pairing again
+
+      // NavigationService.navigate('PairingView', { request: getParams(data.hash) })
     } else if (data.path === '/invites/new' && data.hash !== '') {
       // invite the user to the thread
       NavigationService.navigate('ThreadInvite', { ...getParams(data.hash) })

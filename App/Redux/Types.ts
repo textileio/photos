@@ -5,7 +5,6 @@ import RootReducer from './RootReducer'
 import { AuthAction } from './AuthRedux'
 import { CameraRollAction } from './CameraRollRedux'
 import { ContactsAction } from './ContactsRedux'
-import { DevicesAction } from './DevicesRedux'
 import { PhotoViewingAction } from './PhotoViewingRedux'
 import { PreferencesAction } from './PreferencesRedux'
 import { ProcessingImagesAction } from './ProcessingImagesRedux'
@@ -22,7 +21,6 @@ export type RootAction =
   AuthAction |
   CameraRollAction |
   ContactsAction |
-  DevicesAction |
   PhotoViewingAction |
   PreferencesAction |
   ProcessingImagesAction |

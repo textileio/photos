@@ -6,7 +6,14 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { ThreadsSelectors, InboundInvite } from '../Redux/ThreadsRedux'
 import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
-import TextileNode from '../Services/TextileNode'
+import {
+  addThread as add,
+  removeThread as remove,
+  threads,
+  photos,
+  addPhotoComment as addComment,
+  Photos
+} from '../NativeModules/Textile'
 import { Threads, Photo } from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
@@ -43,7 +50,7 @@ export function * monitorNewThreadActions () {
 export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
   const { name } = action.payload
   try {
-    yield call(TextileNode.addThread, name)
+    yield call(add, name)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
   }
@@ -52,7 +59,7 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
 export function * removeThread (action: ActionType<typeof PhotoViewingActions.removeThreadRequest>) {
   const { id } = action.payload
   try {
-    yield call(TextileNode.removeThread, id)
+    yield call(remove, id)
     yield call(NavigationService.navigate, 'SharedPhotos')
   } catch (error) {
     yield put(PhotoViewingActions.removeThreadError(error))
@@ -61,8 +68,8 @@ export function * removeThread (action: ActionType<typeof PhotoViewingActions.re
 
 export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>) {
   try {
-    const threads: Threads = yield call(TextileNode.threads)
-    for (const thread of threads.items) {
+    const threadsResult: Threads = yield call(threads)
+    for (const thread of threadsResult.items) {
       yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
       yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
@@ -74,8 +81,8 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
 export function * refreshThread (action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
   const { threadId } = action.payload
   try {
-    const photos: Photo[] = yield call(TextileNode.getPhotos, -1, threadId)
-    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photos))
+    const photosResult: Photos = yield call(photos, '', -1, threadId)
+    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult.items))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
   }
@@ -87,7 +94,7 @@ export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions
     return
   }
   try {
-    yield call(TextileNode.addPhotoComment, result.photo.block_id, result.comment)
+    yield call(addComment, result.photo.block_id, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
   }

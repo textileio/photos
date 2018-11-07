@@ -7,9 +7,7 @@ import {
 
 const { Events } = NativeModules
 
-const eventEmitter = Platform.select({
+export const eventEmitter = Platform.select({
   android: DeviceEventEmitter,
   ios: new NativeEventEmitter(Events)
 })
-
-export default eventEmitter

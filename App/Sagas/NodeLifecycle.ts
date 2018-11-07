@@ -7,12 +7,12 @@ import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
 
+import { stop } from '../NativeModules/Textile'
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import TextileNode from '../Services/TextileNode'
 import { RootAction } from '../Redux/Types'
-import { Threads } from '../Models/TextileTypes'
+import { Threads } from '../NativeModules/Textile'
 import {logNewEvent} from './DeviceLogs'
 
 export function * manageNode () {
@@ -64,20 +64,20 @@ export function * handleCreateNodeRequest () {
 
 function * createAndStartNode () {
   try {
-    const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-    const logFiles = !__DEV__
-    yield put(TextileNodeActions.creatingNode())
-    yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.RN_TEXTILE_CAFE_URI, logLevel, logFiles)
-    yield put(TextileNodeActions.createNodeSuccess())
-    yield put(TextileNodeActions.startingNode())
-    yield call(TextileNode.start)
-    const threads: Threads = yield call(TextileNode.threads)
-    const defaultThreadName: string = 'default' as any
-    const defaultThread = threads.items.find((thread) => thread.name === defaultThreadName)
-    if (!defaultThread) {
-      yield call(TextileNode.addThread, 'default')
-    }
-    yield put(TextileNodeActions.startNodeSuccess())
+    // const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
+    // const logFiles = !__DEV__
+    // yield put(TextileNodeActions.creatingNode())
+    // yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.RN_TEXTILE_CAFE_URI, logLevel, logFiles)
+    // yield put(TextileNodeActions.createNodeSuccess())
+    // yield put(TextileNodeActions.startingNode())
+    // yield call(TextileNode.start)
+    // const threads: Threads = yield call(TextileNode.threads)
+    // const defaultThreadName: string = 'default' as any
+    // const defaultThread = threads.items.find((thread) => thread.name === defaultThreadName)
+    // if (!defaultThread) {
+    //   yield call(TextileNode.addThread, 'default')
+    // }
+    // yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {
     yield put(TextileNodeActions.nodeError(error))
   }
@@ -122,7 +122,7 @@ function * stopNodeAfterDelay (ms: number) {
         yield call(displayNotification, 'Stopping node')
       }
       yield put(TextileNodeActions.stoppingNode())
-      yield call(TextileNode.stop)
+      yield call(stop)
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Node stopped')
       }

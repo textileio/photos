@@ -13,7 +13,6 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
-import DevicesActions from '../Redux/DevicesRedux'
 import TriggersActions from '../Redux/TriggersRedux'
 
 /* ------------- Sagas ------------- */
@@ -21,7 +20,6 @@ import TriggersActions from '../Redux/TriggersRedux'
 import { startup } from './StartupSagas'
 
 import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } from './NodeLifecycle'
-import { onNodeCreated } from './NodeCreated'
 import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
 
@@ -80,11 +78,7 @@ import {
 } from './ThreadsSagas'
 
 import {
-  signUp,
-  logIn,
-  logOut,
   updateNodeOverview,
-  recoverPassword,
   navigateToThread,
   navigateToComments,
   navigateToLikes,
@@ -93,7 +87,6 @@ import {
   addPhotoLike,
   initializeAppState,
   refreshMessages,
-  addDevice,
   ignorePhoto,
   cameraPermissionsTrigger,
   chooseProfilePhoto,
@@ -110,7 +103,6 @@ export default function * root () {
   yield all([
     call(manageNode),
     call(handleCreateNodeRequest),
-    call(onNodeCreated),
     call(onNodeStarted),
     call(onNodeOnline),
     call(monitorNewThreadActions),
@@ -139,13 +131,6 @@ export default function * root () {
     takeEvery(getType(UIActions.refreshContacts), refreshContacts),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
-
-    takeEvery(getType(AuthActions.signUpRequest), signUp),
-    takeEvery(getType(AuthActions.logInRequest), logIn),
-    takeEvery(getType(AuthActions.logOutRequest), logOut),
-    takeEvery(getType(AuthActions.recoverPasswordRequest), recoverPassword),
-
-    takeEvery(getType(DevicesActions.addDeviceRequest), addDevice),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
     takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),

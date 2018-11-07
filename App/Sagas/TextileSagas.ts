@@ -14,6 +14,21 @@ import { delay } from 'redux-saga'
 import { call, put, select, take, fork } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
+import {
+  overview,
+  Overview,
+  addPhoto,
+  addPhotoToThread,
+  contacts,
+  Contacts,
+  checkCafeMail,
+  ignorePhoto as ignore,
+  setAvatar,
+  profile,
+  Profile,
+  photoKey,
+  addPhotoLike as addLike
+} from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 import { AddDataResult, Contact } from '../NativeModules/Textile'
 import { getPhotos } from '../Services/CameraRoll'
@@ -25,7 +40,6 @@ import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRe
 import AuthActions from '../Redux/AuthRedux'
 import ContactsActions from '../Redux/ContactsRedux'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
-import DevicesActions from '../Redux/DevicesRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType, getType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
@@ -39,57 +53,11 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 import StorageActions from '../Redux/StorageRedux'
 
-export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
-  const {referralCode, username, email, password} = action.payload
-  try {
-    yield call(TextileNode.signUpWithEmail, email, username, password, referralCode.replace(' ', ''))
-    const tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens))
-    // TODO: Put username into textile-go for addition to metadata model
-    yield put(AuthActions.signUpSuccess())
-    yield call(NavigationService.navigate, 'ProfilePic')
-  } catch (error) {
-    yield put(AuthActions.signUpFailure(error))
-  }
-}
-
-export function * logOut (action: ActionType<typeof AuthActions.logOutRequest>) {
-  try {
-    yield call(TextileNode.signOut)
-    yield call(NavigationService.navigate, 'OnboardingNavigation')
-  } catch (error) {
-    yield put(AuthActions.logOutFailure(error))
-  }
-}
-
-export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
-  const {username, password} = action.payload
-  try {
-    yield call(TextileNode.signIn, username, password)
-    const tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens))
-    yield put(AuthActions.logInSuccess())
-    yield call(NavigationService.navigate, 'ProfilePic')
-  } catch (error) {
-    yield put(AuthActions.logInFailure(error))
-  }
-}
-
-export function * recoverPassword (action: ActionType<typeof AuthActions.recoverPasswordRequest>) {
-  // TODO: const {username} = action.payload.data
-  try {
-    yield delay(2000)
-    yield put(AuthActions.recoverPasswordSuccess())
-  } catch (error) {
-    yield put(AuthActions.recoverPasswordFailure(error))
-  }
-}
-
 export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActions.updateOverviewRequest> ) {
   try {
     yield call(NotificationsSagas.waitUntilOnline, 2500)
-    const overview = yield call(TextileNode.getOverview)
-    yield put(StorageActions.storeOverview(overview))
+    const overviewResult: Overview = yield call(overview)
+    yield put(StorageActions.storeOverview(overviewResult))
   } catch (error) {
     // do nothing
   }
@@ -109,7 +77,7 @@ export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.
 function * processAvatarImage(uri: string) {
   const photoPath = uri.replace('file://', '')
   try {
-    const addResult: AddDataResult = yield call(TextileNode.addPhoto, photoPath)
+    const addResult: AddDataResult = yield call(addPhoto, photoPath)
     if (!addResult.archive) {
       throw new Error('no archive returned')
     }
@@ -117,7 +85,7 @@ function * processAvatarImage(uri: string) {
     if (!defaultThread) {
       throw new Error('no default thread')
     }
-    yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+    yield call(addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
     yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
     // set it as our profile picture
@@ -175,26 +143,10 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
   yield call(NavigationService.navigate, 'LikesScreen')
 }
 
-export function * getUsername (contact: Contact) {
-  try {
-    if (contact.username !== undefined) { return }
-    const uri = Config.RN_TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username'
-    const response = yield call(fetch, uri)
-    const username = yield call([response, response.text])
-    yield put(ContactsActions.getUsernameSuccess(contact, username))
-  } catch (error) {
-    // nada
-  }
-}
-
 export function * refreshContacts () {
   try {
-    const contactResult = yield call(TextileNode.getContacts)
-    const contacts = contactResult.items
-    yield put(ContactsActions.getContactsSuccess(contacts))
-    for (const contact of contacts) {
-      yield fork(getUsername, contact)
-    }
+    const contactsResult: Contacts = yield call(contacts)
+    yield put(ContactsActions.getContactsSuccess(contactsResult.items))
   } catch (error) {
     // skip for now
   }
@@ -219,7 +171,7 @@ export function * initializeAppState () {
 export function * refreshMessages () {
   while (yield take(getType(TextileNodeActions.refreshMessagesRequest))) {
     try {
-      yield call(TextileNode.refreshMessages)
+      yield call(checkCafeMail)
       yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
       yield call(logNewEvent, 'Refresh messages', 'Checked offline messages')
     } catch (error) {
@@ -233,7 +185,7 @@ export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.igno
   const { threadId, blockId } = action.payload
   try {
     yield call(NavigationService.goBack)
-    yield call(TextileNode.ignorePhoto, blockId)
+    yield call(ignore, blockId)
   } catch (error) {
     // do nothing new for now
   }
@@ -245,27 +197,17 @@ export function * nodeOnlineSaga () {
     try {
       const pending: string = yield select(PreferencesSelectors.pending)
       if (pending) {
-        yield call(TextileNode.setAvatarId, pending)
-        const profile = yield call(TextileNode.getProfile)
-        yield put(PreferencesActions.getProfileSuccess(profile))
+        yield call(setAvatar, pending)
+        const profileResult: Profile = yield call(profile)
+        yield put(PreferencesActions.getProfileSuccess(profileResult))
       } else {
         // just updated it directly
-        const profile = yield call(TextileNode.getProfile)
-        yield put(PreferencesActions.getProfileSuccess(profile))
+        const profileResult: Profile = yield call(profile)
+        yield put(PreferencesActions.getProfileSuccess(profileResult))
       }
     } catch (error) {
       // nada
     }
-  }
-}
-
-export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceRequest>) {
-  const { name, deviceId } = action.payload
-  try {
-    yield call(TextileNode.addDevice, name, deviceId)
-    yield put(DevicesActions.addDeviceSuccess(deviceId))
-  } catch (error) {
-    yield put(DevicesActions.addDeviceError(deviceId, error))
   }
 }
 
@@ -335,11 +277,11 @@ export function * photosTask () {
       let photoPath = ''
       try {
         photoPath = yield call(CameraRoll.getPhotoPath, uri)
-        const addResult: AddDataResult = yield call(TextileNode.addPhoto, photoPath)
+        const addResult: AddDataResult = yield call(addPhoto, photoPath)
         if (!addResult.archive) {
           throw new Error('no archive returned')
         }
-        const blockId: string = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
+        const blockId: string = yield call(addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
         yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
         addedPhotosData.push({ uri, addResult, blockId })
       } catch (error) {
@@ -431,7 +373,7 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
   const { photoId } = action.payload
   try {
-    const key = yield call(TextileNode.getPhotoKey, photoId)
+    const key: string = yield call(photoKey, photoId)
     const link = Config.RN_TEXTILE_CAFE_URI + '/ipfs/' + photoId + '/photo?key=' + key
     yield call(Share.share, {title: '', message: link})
   } catch (error) {}
@@ -477,7 +419,7 @@ export function * backgroundLocationPermissionsTrigger () {
 export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
-    yield call(TextileNode.addPhotoLike, blockId)
+    yield call(addLike, blockId)
   } catch (error) {
 
   }

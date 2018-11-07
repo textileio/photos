@@ -46,14 +46,14 @@ export type TextAddedNotification = BaseNotification & {
 export type CommentAddedNotification = BaseNotification & {
   threadId: string
   threadName: string
-  photoId: string
+  hash: string
   type: NotificationType.CommentAddedNotification
 }
 
 export type LikeAddedNotification = BaseNotification & {
   threadId: string
   threadName: string
-  photoId: string
+  hash: string
   type: NotificationType.LikeAddedNotification
 }
 

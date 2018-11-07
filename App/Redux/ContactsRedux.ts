@@ -2,9 +2,11 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
 import { Contact } from '../NativeModules/Textile'
 
+// TODO: Update this and sagas to use new Contacts API
+
 const actions = {
   getContactsSuccess: createAction('GET_CONTACT_SUCCESS', (resolve) => {
-    return (contacts: Contact[]) => resolve({contacts})
+    return (contacts: ReadonlyArray<Contact>) => resolve({contacts})
   }),
   getUsernameSuccess: createAction('GET_USERNAME_SUCCESS', (resolve) => {
     return (contact: Contact, username: string) => resolve({contact, username})
@@ -26,9 +28,10 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
     case getType(actions.getUsernameSuccess): {
       const contacts = state.contacts.map((c) => {
         if (c.id === action.payload.contact.id) {
-          c.username = action.payload.username
+          return { ...c, username: action.payload.username }
+        } else {
+          return c
         }
-        return c
       })
       return { ...state, contacts }
     }
@@ -43,8 +46,7 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         }, {} as {[index: string]: Contact})
 
       const contacts = action.payload.contacts.map((c) => {
-        c.username = keepers[c.id] ? keepers[c.id].username : undefined
-        return c
+        return { ...c, username: keepers[c.id].username }
       })
       return { ...state, contacts }
     default:

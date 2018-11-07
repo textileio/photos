@@ -21,9 +21,6 @@ const actions = {
   pendingAvatar: createAction('PENDING_AVATAR_REQUEST', (resolve) => {
     return (avatarId: string) => resolve({ avatarId })
   }),
-  getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', (resolve) => {
-    return (publicKey: string) => resolve({ publicKey })
-  }),
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', (resolve) => {
     return (tourKey: TourScreens) => resolve({ tourKey })
   }),
@@ -65,7 +62,6 @@ export interface PreferencesState {
   onboarded: boolean
   verboseUi: boolean
   mnemonic?: string
-  publicKey?: string
   profile?: Profile
   pending?: string
   readonly services: {readonly [k in ServiceType]: Service}
@@ -151,8 +147,6 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
     case getType(actions.pendingAvatar):
       const pending = action.payload.avatarId
       return { ...state, pending }
-    case getType(actions.getPublicKeySuccess):
-      return { ...state, publicKey: action.payload.publicKey }
     case getType(actions.completeTourSuccess):
       return { ...state, tourScreens: { ...state.tourScreens, [action.payload.tourKey]: false } }
     case getType(actions.toggleServicesRequest): {

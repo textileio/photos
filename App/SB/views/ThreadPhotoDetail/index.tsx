@@ -16,6 +16,7 @@ import ProgressiveImage from '../../../Components/ProgressiveImage'
 import styles from './statics/styles'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
+import { Comment } from '../../../NativeModules/Textile'
 
 const { width } = Dimensions.get('window')
 
@@ -133,10 +134,10 @@ const mapStateToProps = (state: RootState): StateProps  => {
   const comments = viewingPhoto.comments || []
   const commentCardProps = comments.slice().reverse().map((comment) => {
     const props: CommentCardProps = {
-      username: comment.username || 'unknown',
-      peerId: comment.author_id,
+      username: comment.Annotation.username || 'unknown',
+      peerId: comment.Annotation.author_id,
       comment: comment.body,
-      date: comment.date,
+      date: comment.Annotation.date,
       isCaption: false
     }
     return props

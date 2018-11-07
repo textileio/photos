@@ -59,7 +59,7 @@ export function toTypedNotification(notificationData: NotificationData): Notific
         type,
         threadId: notificationData.subject_id,
         threadName: notificationData.subject,
-        photoId: notificationData.data_id!
+        hash: notificationData.data_id!
       }
     case NotificationType.LikeAddedNotification:
       return {
@@ -67,7 +67,7 @@ export function toTypedNotification(notificationData: NotificationData): Notific
         type,
         threadId: notificationData.subject_id,
         threadName: notificationData.subject,
-        photoId: notificationData.data_id!
+        hash: notificationData.data_id!
       }
   }
 }

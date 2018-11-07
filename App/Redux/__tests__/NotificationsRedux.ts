@@ -1,37 +1,33 @@
 import actions, { reducer, NotificationsState } from '../NotificationsRedux'
-import {
-  PhotoAddedNotification,
-  NotificationType
-} from '../../Models/TextileTypes'
+import { FileAddedNotification } from '../../Models/Notifications'
+import { NotificationType } from '../../NativeModules/Textile'
 
 const initialState = reducer(undefined, {} as any)
 
-const notification1: PhotoAddedNotification = {
+const notification1: FileAddedNotification = {
   actor_id: 'PeerId',
-  actor_username: 'UserName',
   block_id: 'BlockId',
   body: 'some photo',
   date: '1999-01-01T00:00:00Z',
   id: 'NotificationId1',
   read: false,
-  type: NotificationType.photoAddedNotification,
+  type: NotificationType.FileAddedNotification,
   threadId: 'threadId1',
   threadName: 'threadName1',
-  photoId: 'photoId1'
+  hash: 'hash'
 }
 
-const notification2: PhotoAddedNotification = {
+const notification2: FileAddedNotification = {
   actor_id: 'PeerId',
-  actor_username: 'UserName',
   block_id: 'BlockId',
   body: 'some photo',
   date: '1999-01-01T00:00:00Z',
   id: 'NotificationId2',
   read: false,
-  type: NotificationType.photoAddedNotification,
+  type: NotificationType.FileAddedNotification,
   threadId: 'threadId2',
   threadName: 'threadName2',
-  photoId: 'photoId2'
+  hash: 'hash2'
 }
 
 describe('notifications stories', () => {

@@ -1,7 +1,7 @@
 import { CameraRoll, Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import ImagePicker from 'react-native-image-picker'
-import TextileNode from './TextileNode'
+import { getFilePath } from '../NativeModules/FS'
 
 export interface IPickerImage {
   uri: string
@@ -49,7 +49,7 @@ export async function getPhotoPath (uri: string): Promise<string> {
   }
   if (uri.includes('content://media')) {
     // Android Method
-    const path = await TextileNode.getFilePath(uri)
+    const path = await getFilePath(uri)
     return path
   }
   throw new Error('unable to determine photo path.')

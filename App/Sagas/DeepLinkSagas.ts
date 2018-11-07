@@ -59,7 +59,10 @@ export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLi
     if (data) {
       if (data.path === '/invites/device' && data.hash !== '') {
         // start pairing the new device
-        NavigationService.navigate('PairingView', { request: DeepLink.getParams(data.hash) })
+
+        // TODO: Something here when we support device pairing again
+
+        // NavigationService.navigate('PairingView', { request: DeepLink.getParams(data.hash) })
       } else if (data.path === '/invites/new' && data.hash !== '') {
         yield call(routeThreadInvite, standardUrl, data.hash)
       }
