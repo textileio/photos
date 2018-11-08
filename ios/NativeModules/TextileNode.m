@@ -339,7 +339,7 @@ RCT_EXPORT_METHOD(version:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRe
 
 // Order of things to init and create the repo:
 // MobileNewTextile If error, inspect it and run next steps or migration
-// MobileNewWallet returns mnemonic
+// MobileNewWallet returns recovery phrase
 // MobileWalletAccountAt returns seed and address
 // MobileInitRepo only run one time ever
 // MobileNewTextile
@@ -375,7 +375,7 @@ RCT_EXPORT_METHOD(newTextile:(NSString*)repoPath resolver:(RCTPromiseResolveBloc
 
 RCT_EXPORT_METHOD(newWallet:(long)wordCount resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = MobileNewWallet(wordCount, &error); // returns mnemonic
+  NSString *result = MobileNewWallet(wordCount, &error); // returns recovery phrase
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 

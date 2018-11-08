@@ -9,8 +9,8 @@ const actions = {
   toggleVerboseUi: createAction('TOGGLE_VERBOSE_UI', (resolve) => {
     return () => resolve()
   }),
-  updatecMnemonic: createAction('UPDATE_MNEMONIC', (resolve) => {
-    return (mnemonic: string) => resolve({ mnemonic })
+  updateRecoveryPhrase: createAction('UPDATE_RECOVERY_PHRASE', (resolve) => {
+    return (recoveryPhrase: string) => resolve({ recoveryPhrase })
   }),
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', (resolve) => {
     return (profile: Profile) => resolve({ profile })
@@ -61,7 +61,7 @@ export interface ViewSettings {
 export interface PreferencesState {
   onboarded: boolean
   verboseUi: boolean
-  mnemonic?: string
+  recoveryPhrase?: string
   profile?: Profile
   pending?: string
   readonly services: {readonly [k in ServiceType]: Service}
@@ -139,9 +139,9 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, onboarded: true }
     case getType(actions.toggleVerboseUi):
       return { ...state, verboseUi: !state.verboseUi }
-    case getType(actions.updatecMnemonic):
-      const mnemonic = action.payload.mnemonic
-      return { ...state, mnemonic }
+    case getType(actions.updateRecoveryPhrase):
+      const recoveryPhrase = action.payload.recoveryPhrase
+      return { ...state, recoveryPhrase }
     case getType(actions.getProfileSuccess):
       return { ...state, profile: action.payload.profile, pending: undefined}
     case getType(actions.pendingAvatar):

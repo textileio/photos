@@ -6,7 +6,7 @@ import Account from '../../../SB/views/UserProfile'
 import NotificationSettings from '../../../SB/views/Notifications'
 import Storage from '../../../SB/views/Storage'
 import DeviceLogs from '../../../SB/views/DeviceLogs'
-import Mnemonic from '../../../SB/views/UserProfile/Mnemonic'
+import RecoveryPhrase from '../../../SB/views/UserProfile/RecoveryPhrase'
 import UpdateAvatar from '../../../SB/views/UserOnBoarding/UpdateAvatar'
 
 import ThreadDetail from '../../../SB/views/ThreadDetail'
@@ -27,7 +27,7 @@ const nav = createStackNavigator(
     Account,
     NotificationSettings,
     Storage,
-    Mnemonic,
+    RecoveryPhrase,
     ChangeAvatar: UpdateAvatar,
 
     ViewThread: ThreadDetail,

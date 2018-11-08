@@ -256,7 +256,7 @@ export async function version(): Promise<string> {
 
 // Order of things to init and create the repo:
 // MobileNewTextile If error, inspect it and run next steps or migration
-// MobileNewWallet returns mnemonic
+// MobileNewWallet returns recovery phrase
 // MobileWalletAccountAt returns seed and address
 // MobileInitRepo only run one time ever
 // MobileNewTextile

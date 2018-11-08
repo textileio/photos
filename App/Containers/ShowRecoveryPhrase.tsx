@@ -44,17 +44,17 @@ const PHRASE: TextStyle = {
 }
 
 interface StateProps {
-  mnemonic?: string
+  recoveryPhrase?: string
 }
 
 interface State {
   buttonText: string
 }
 
-const BUTTON_TEXT_COPY = 'Copy Mnemonic'
+const BUTTON_TEXT_COPY = 'Copy Recovery Phrase'
 const BUTTON_TEXT_COPIED = 'Copied!'
 
-class ShowMnemonic extends React.Component<StateProps, State> {
+class ShowRecoveryPhrase extends React.Component<StateProps, State> {
 
   constructor(props: StateProps) {
     super(props)
@@ -63,10 +63,10 @@ class ShowMnemonic extends React.Component<StateProps, State> {
     }
   }
 
-  copyMnemonic = () => {
-    const { mnemonic } = this.props
-    if (mnemonic) {
-      Clipboard.setString(mnemonic)
+  copyRecoveryPhrase = () => {
+    const { recoveryPhrase } = this.props
+    if (recoveryPhrase) {
+      Clipboard.setString(recoveryPhrase)
       this.setState({ buttonText: BUTTON_TEXT_COPIED })
       setTimeout(() => this.setState({ buttonText: BUTTON_TEXT_COPY }), 4000)
     }
@@ -78,13 +78,13 @@ class ShowMnemonic extends React.Component<StateProps, State> {
         <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/secure.png')} />
         <Text style={TITLE}>Important!</Text>
         <Text style={SUBTITLE}>
-          Displayed below is your mnemonic phrase that uniquely identifies
+          Displayed below is your recovery phrase that uniquely identifies
           and encrypts your account. You <Text style={STRONG}>must</Text> save it somewhere safe. It is
           the only way to recover your account. No one, not even Textile,
           can help you if you loose it. Save it somewhere safe right now.
         </Text>
-        <Text style={PHRASE}>{this.props.mnemonic}</Text>
-        <Button text={this.state.buttonText} onPress={this.copyMnemonic} />
+        <Text style={PHRASE}>{this.props.recoveryPhrase}</Text>
+        <Button text={this.state.buttonText} onPress={this.copyRecoveryPhrase} />
       </View>
     )
   }
@@ -92,8 +92,8 @@ class ShowMnemonic extends React.Component<StateProps, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    mnemonic: state.preferences.mnemonic
+    recoveryPhrase: state.preferences.recoveryPhrase
   }
 }
 
-export default connect(mapStateToProps, undefined)(ShowMnemonic)
+export default connect(mapStateToProps, undefined)(ShowRecoveryPhrase)

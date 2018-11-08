@@ -6,8 +6,8 @@ import { Pages } from 'react-native-pages'
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import MailListSignupScreen from '../MailListSignupScreen'
-import ShowMnemonic from '../ShowMnemonic'
-import VerifyMnemonic from '../VerifyMnemonic'
+import ShowRecoveryPhrase from '../ShowRecoveryPhrase'
+import VerifyRecoveryPhrase from '../VerifyRecoveryPhrase'
 import Icon from '../../Components/Icon'
 
 const CONTAINER: ViewStyle = {
@@ -89,8 +89,8 @@ export default class OnboardingScreen extends React.Component<{}, State> {
             image={require('./statics/sync.png')}
           />
           <MailListSignupScreen onSuccess={this.nextPage} />
-          <ShowMnemonic />
-          <VerifyMnemonic onSuccess={this.nextPage} />
+          <ShowRecoveryPhrase />
+          <VerifyRecoveryPhrase onSuccess={this.nextPage} />
           <OnboardingMessage
             title='All ready!'
             subtitle="You're all set up. Enjoy using Textile :)"

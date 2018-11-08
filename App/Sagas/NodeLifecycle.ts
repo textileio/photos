@@ -73,27 +73,31 @@ export function * handleCreateNodeRequest () {
   }
 }
 
-function * createAndStartNode () {
+function * createAndStartNode(recursionDepth: number = 0): any {
   try {
     try {
       yield put(TextileNodeActions.creatingNode())
       yield call(newTextile, REPO_PATH)
       yield put(TextileNodeActions.createNodeSuccess())
     } catch (error) {
-      if (error.message === MIGRATION_NEEDED_ERROR) {
+      if (recursionDepth > 1) {
+        // We should never get a migration or init error more than twice,
+        // so if we do, just throw the error and don't recurse any more
+        throw error
+      } else if (error.message === MIGRATION_NEEDED_ERROR) {
         yield put(TextileNodeActions.migrationNeeded())
         yield take(getType(TextileNodeActions.migrateNode))
         yield call(migrateRepo, REPO_PATH)
         yield put(TextileNodeActions.migrationSuccess())
-        yield call(createAndStartNode)
+        yield call(createAndStartNode, recursionDepth + 1)
       } else if (error.message === INIT_NEEDED_ERROR) {
         const recoveryPhrase: string = yield call(newWallet, 12)
-        yield put(PreferencesActions.updatecMnemonic(recoveryPhrase))
+        yield put(PreferencesActions.updateRecoveryPhrase(recoveryPhrase))
         const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0, '')
         const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
         const logToDisk = !__DEV__
         yield call(initRepo, walletAccount.Seed, REPO_PATH, logLevel, logToDisk)
-        yield call(createAndStartNode)
+        yield call(createAndStartNode, recursionDepth + 1)
       } else {
         throw error
       }

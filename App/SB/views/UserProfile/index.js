@@ -73,8 +73,8 @@ class UserProfile extends React.PureComponent {
   _contact () {
     this.setState({ contactModal: this.state.contactModal === false })
   }
-  _mnemonic () {
-    this.props.navigation.navigate('Mnemonic', {
+  _recoveryPhrase () {
+    this.props.navigation.navigate('RecoveryPhrase', {
       username: this.props.navigation.state.params.username
     })
   }
@@ -126,8 +126,8 @@ class UserProfile extends React.PureComponent {
           <TouchableOpacity style={styles.listItem} onPress={this._pubKey.bind(this)}>
             <Text style={styles.listText}>Copy Public Key</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={this._mnemonic.bind(this)}>
-            <Text style={[styles.listText, styles.warning]}>Get Mnemonic</Text>
+          <TouchableOpacity style={styles.listItem} onPress={this._recoveryPhrase.bind(this)}>
+            <Text style={[styles.listText, styles.warning]}>Get Recovery Phrase</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={() => {
             Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/PRIVACY.md')
@@ -158,7 +158,7 @@ const mapStateToProps = (state) => {
 
   return {
     verboseUi: state.preferences.verboseUi,
-    mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
+    recoveryPhrase: state.preferences.recoveryPhrase || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
     online,
     nodeRunning

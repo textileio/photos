@@ -13,7 +13,7 @@ import Button from '../../../Components/Button'
 
 import styles from './statics/styles'
 
-class Mnemonic extends React.PureComponent {
+class RecoveryPhrase extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     return {
       headerLeft: (
@@ -40,8 +40,8 @@ class Mnemonic extends React.PureComponent {
     }
   }
 
-  _copyMnemonic () {
-    Clipboard.setString(this.props.mnemonic)
+  _copyRecoveryPhrase () {
+    Clipboard.setString(this.props.recoveryPhrase)
     this.refs.toast.show('Copied, now be careful! Keep this 100% private!', 2500)
   }
 
@@ -52,14 +52,14 @@ class Mnemonic extends React.PureComponent {
           style={styles.headerImage}
           source={require('../../../Images/v2/permissions.png')} />
         <Text style={styles.subScreenText}>
-          Your mnemonic is the key to your
+          Your recovery phrase is the key to your
           entire account. Keep it totally
           secure. As it was created here
           on your device, no server has a
           copy of it or ever should.
         </Text>
-        <Button primary text='Copy Mnemonic' onPress={() => {
-          this._copyMnemonic()
+        <Button primary text='Copy Recovery Phrase' onPress={() => {
+          this._copyRecoveryPhrase()
         }} />
         <Toast ref='toast' position='center' />
       </View>
@@ -72,7 +72,7 @@ const mapStateToProps = (state) => {
   const nodeRunning = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
 
   return {
-    mnemonic: state.preferences.mnemonic || 'sorry, there was an error',
+    recoveryPhrase: state.preferences.recoveryPhrase || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
     online,
     nodeRunning
@@ -85,4 +85,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Mnemonic)
+export default connect(mapStateToProps, mapDispatchToProps)(RecoveryPhrase)

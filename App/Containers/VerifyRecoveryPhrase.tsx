@@ -48,7 +48,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  mnemonic?: string
+  recoveryPhrase?: string
 }
 
 type Props = OwnProps & StateProps
@@ -57,10 +57,10 @@ interface State {
   valid: boolean
 }
 
-const BUTTON_TEXT_COPY = 'Copy Mnemonic'
+const BUTTON_TEXT_COPY = 'Copy Recovery Phrase'
 const BUTTON_TEXT_COPIED = 'Copied!'
 
-class VerifyMnemonic extends React.Component<Props, State> {
+class VerifyRecoveryPhrase extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
@@ -71,7 +71,7 @@ class VerifyMnemonic extends React.Component<Props, State> {
 
   onChangeText = (text?: string) => {
     this.setState({
-      valid: text === this.props.mnemonic
+      valid: text === this.props.recoveryPhrase
     })
   }
 
@@ -84,12 +84,12 @@ class VerifyMnemonic extends React.Component<Props, State> {
           <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/secure.png')} />
           <Text style={TITLE}>Did you save it?</Text>
           <Text style={SUBTITLE}>
-            Enter your mnemonic phrase below to prove that you saved it somewhere safe.
+            Enter your recovery phrase below to prove that you saved it somewhere safe.
           </Text>
           <TextInput
             style={PHRASE}
             multiline={true}
-            placeholder='Mnemonic phrase...'
+            placeholder='Recovery phrase...'
             autoCapitalize='none'
             autoCorrect={false}
             onChangeText={this.onChangeText}
@@ -103,8 +103,8 @@ class VerifyMnemonic extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    mnemonic: state.preferences.mnemonic
+    recoveryPhrase: state.preferences.recoveryPhrase
   }
 }
 
-export default connect(mapStateToProps, undefined)(VerifyMnemonic)
+export default connect(mapStateToProps, undefined)(VerifyRecoveryPhrase)
