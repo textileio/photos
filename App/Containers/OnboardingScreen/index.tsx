@@ -1,5 +1,6 @@
 import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
+// @ts-ignore
 import { Pages } from 'react-native-pages'
 
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'

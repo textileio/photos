@@ -7,13 +7,24 @@ import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
 
-import { stop } from '../NativeModules/Textile'
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { RootAction } from '../Redux/Types'
-import { Threads } from '../NativeModules/Textile'
+import {
+  newTextile,
+  migrateRepo,
+  start,
+  newWallet,
+  walletAccountAt,
+  initRepo,
+  stop,
+  WalletAccount } from '../NativeModules/Textile'
 import {logNewEvent} from './DeviceLogs'
+
+const REPO_PATH = RNFS.DocumentDirectoryPath
+const MIGRATION_NEEDED_ERROR = 'repo needs migration'
+const INIT_NEEDED_ERROR = ''
 
 export function * manageNode () {
   while (true) {
@@ -64,20 +75,32 @@ export function * handleCreateNodeRequest () {
 
 function * createAndStartNode () {
   try {
-    // const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-    // const logFiles = !__DEV__
-    // yield put(TextileNodeActions.creatingNode())
-    // yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.RN_TEXTILE_CAFE_URI, logLevel, logFiles)
-    // yield put(TextileNodeActions.createNodeSuccess())
-    // yield put(TextileNodeActions.startingNode())
-    // yield call(TextileNode.start)
-    // const threads: Threads = yield call(TextileNode.threads)
-    // const defaultThreadName: string = 'default' as any
-    // const defaultThread = threads.items.find((thread) => thread.name === defaultThreadName)
-    // if (!defaultThread) {
-    //   yield call(TextileNode.addThread, 'default')
-    // }
-    // yield put(TextileNodeActions.startNodeSuccess())
+    try {
+      yield put(TextileNodeActions.creatingNode())
+      yield call(newTextile, REPO_PATH)
+      yield put(TextileNodeActions.createNodeSuccess())
+    } catch (error) {
+      if (error.message === MIGRATION_NEEDED_ERROR) {
+        yield put(TextileNodeActions.migrationNeeded())
+        yield take(getType(TextileNodeActions.migrateNode))
+        yield call(migrateRepo, REPO_PATH)
+        yield put(TextileNodeActions.migrationSuccess())
+        yield call(createAndStartNode)
+      } else if (error.message === INIT_NEEDED_ERROR) {
+        const recoveryPhrase: string = yield call(newWallet, 12)
+        yield put(PreferencesActions.updatecMnemonic(recoveryPhrase))
+        const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0, '')
+        const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
+        const logToDisk = !__DEV__
+        yield call(initRepo, walletAccount.Seed, REPO_PATH, logLevel, logToDisk)
+        yield call(createAndStartNode)
+      } else {
+        throw error
+      }
+    }
+    yield put(TextileNodeActions.startingNode())
+    yield call(start)
+    yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {
     yield put(TextileNodeActions.nodeError(error))
   }

@@ -6,13 +6,12 @@ import { NavigationScreenProps } from 'react-navigation'
 import FatalErrorView from '../Components/FatalErrorView'
 
 import { RootState } from '../Redux/Types'
-import { NodeState } from '../Redux/TextileNodeRedux'
-
-const MIGRATION_NEEDED_ERROR = 'repo needs migration'
+import { NodeState, MigrationState } from '../Redux/TextileNodeRedux'
 
 interface StateProps {
+  migrationNeeded: boolean
   onboarded: boolean
-  nodeStarted: boolean
+  nodeStarted: boolean,
   nodeError?: string
 }
 
@@ -21,7 +20,7 @@ type Props = StateProps & NavigationScreenProps<{}>
 class StatusCheck extends React.Component<Props, {}> {
 
   static getDerivedStateFromProps (props: Props, state: {}) {
-    if (props.nodeError === MIGRATION_NEEDED_ERROR) {
+    if (props.migrationNeeded) {
       props.navigation.navigate('MigrationNavigation')
     } else if (!props.nodeError && props.nodeStarted && !props.onboarded) {
       props.navigation.navigate('OnboardingNavigation')
@@ -54,6 +53,7 @@ class StatusCheck extends React.Component<Props, {}> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
+    migrationNeeded: state.textileNode.migrationState.state === MigrationState.pending,
     onboarded: state.preferences.onboarded,
     nodeStarted: state.textileNode.nodeState.state === NodeState.started,
     nodeError: state.textileNode.nodeState.error

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import Avatar from '../../../Components/Avatar'
-import Icons from '../../../Components/Icons'
+import Icons from '../../../Components/Icon'
 import ImageSc from 'react-native-scalable-image'
 
 import RadioButton from '../../components/RadioButton'
