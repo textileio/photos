@@ -9,9 +9,9 @@ const actions = {
   migrationNeeded: createAction('MIGRATION_NEEDED'),
   migrateNode: createAction('MIGRATE_NODE'),
   migrationSuccess: createAction('MIGRATION_SUCCESS'),
-  migrationError: createAction('MIGRATION_ERROR', (resolve) => {
-    return (error: any) => resolve({ error })
-  }),
+  creatingWallet: createAction('CREATING_WALLET'),
+  derivingAccount: createAction('DERIVING_ACCOUNT'),
+  initializingRepo: createAction('INITIALIZING_REPO'),
   createNodeRequest: createAction('CREATE_NODE_REQUEST'),
   creatingNode: createAction('CREATING_NODE'),
   createNodeSuccess: createAction('CREATE_NODE_SUCCESS'),
@@ -57,7 +57,13 @@ export enum NodeState {
   'starting' = 'starting',
   'started' = 'started',
   'stopping' = 'stopping',
-  'stopped' = 'stopped' // Node has been explicitly stopped, different than created
+  'stopped' = 'stopped', // Node has been explicitly stopped, different than created
+  'pendingMigration' = 'pendingMigration',
+  'migrating' = 'migrating',
+  'migrationComplete' = 'migrationComplete',
+  'creatingWallet' = 'creatingWallet',
+  'derivingAccount' = 'derivingAccount',
+  'initializingRepo' = 'initializingRepo'
 }
 
 export enum MigrationState {
@@ -73,10 +79,6 @@ interface TextileNodeState {
   readonly online: boolean
   readonly nodeState: {
     readonly state: NodeState
-    readonly error?: string
-  }
-  readonly migrationState: {
-    readonly state: MigrationState
     readonly error?: string
   }
   readonly refreshingMessages: boolean
@@ -97,9 +99,6 @@ export const initialState: TextileNodeState = {
   nodeState: {
     state: NodeState.nonexistent
   },
-  migrationState: {
-    state: MigrationState.idle
-  },
   refreshingMessages: false
 }
 
@@ -108,16 +107,17 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.appStateChange):
       return { ...state, appState: action.payload.newState, appStateUpdate: getHMS() }
     case getType(actions.migrationNeeded):
-      return { ...state, migrationState: { ...state.migrationState, state: MigrationState.pending } }
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.pendingMigration } }
     case getType(actions.migrateNode):
-      return { ...state, migrationState: { ...state.migrationState, state: MigrationState.migrating } }
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.migrating } }
     case getType(actions.migrationSuccess):
-      return { ...state, migrationState: { ...state.migrationState, state: MigrationState.complete } }
-    case getType(actions.migrationError): {
-      const { error } = action.payload
-      const errorMessage = (error.message as string) || (error as string) || 'unknown'
-      return { ...state, migrationState: { ...state.migrationState, error: errorMessage } }
-    }
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.migrationComplete } }
+    case getType(actions.creatingWallet):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.creatingWallet } }
+    case getType(actions.derivingAccount):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.derivingAccount } }
+    case getType(actions.initializingRepo):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.initializingRepo } }
     case getType(actions.creatingNode):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.creating } }
     case getType(actions.createNodeSuccess):

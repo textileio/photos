@@ -24,7 +24,7 @@ import {logNewEvent} from './DeviceLogs'
 
 const REPO_PATH = RNFS.DocumentDirectoryPath
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
-const INIT_NEEDED_ERROR = ''
+const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 
 export function * manageNode () {
   while (true) {
@@ -73,40 +73,40 @@ export function * handleCreateNodeRequest () {
   }
 }
 
-function * createAndStartNode(recursionDepth: number = 0): any {
+function * createAndStartNode(): any {
+  console.log('repo path:', REPO_PATH)
   try {
-    try {
-      yield put(TextileNodeActions.creatingNode())
-      yield call(newTextile, REPO_PATH)
-      yield put(TextileNodeActions.createNodeSuccess())
-    } catch (error) {
-      if (recursionDepth > 1) {
-        // We should never get a migration or init error more than twice,
-        // so if we do, just throw the error and don't recurse any more
-        throw error
-      } else if (error.message === MIGRATION_NEEDED_ERROR) {
-        yield put(TextileNodeActions.migrationNeeded())
-        yield take(getType(TextileNodeActions.migrateNode))
-        yield call(migrateRepo, REPO_PATH)
-        yield put(TextileNodeActions.migrationSuccess())
-        yield call(createAndStartNode, recursionDepth + 1)
-      } else if (error.message === INIT_NEEDED_ERROR) {
-        const recoveryPhrase: string = yield call(newWallet, 12)
-        yield put(PreferencesActions.updateRecoveryPhrase(recoveryPhrase))
-        const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0, '')
-        const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-        const logToDisk = !__DEV__
-        yield call(initRepo, walletAccount.Seed, REPO_PATH, logLevel, logToDisk)
-        yield call(createAndStartNode, recursionDepth + 1)
-      } else {
-        throw error
-      }
-    }
+    yield put(TextileNodeActions.creatingNode())
+    yield call(newTextile, REPO_PATH)
+    yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
     yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {
-    yield put(TextileNodeActions.nodeError(error))
+    try {
+      if (error.message === MIGRATION_NEEDED_ERROR) {
+        yield put(TextileNodeActions.migrationNeeded())
+        yield take(getType(TextileNodeActions.migrateNode))
+        yield call(migrateRepo, REPO_PATH)
+        yield put(TextileNodeActions.migrationSuccess())
+        yield call(createAndStartNode)
+      } else if (error.message === INIT_NEEDED_ERROR) {
+        yield put(TextileNodeActions.creatingWallet())
+        const recoveryPhrase: string = yield call(newWallet, 12)
+        yield put(PreferencesActions.updateRecoveryPhrase(recoveryPhrase))
+        yield put(TextileNodeActions.derivingAccount())
+        const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0, '')
+        const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
+        const logToDisk = !__DEV__
+        yield put(TextileNodeActions.initializingRepo())
+        yield call(initRepo, walletAccount.Seed, REPO_PATH, logLevel, logToDisk)
+        yield call(createAndStartNode)
+      } else {
+        yield put(TextileNodeActions.nodeError(error))
+      }
+    } catch (error) {
+      yield put(TextileNodeActions.nodeError(error))
+    }
   }
 }
 

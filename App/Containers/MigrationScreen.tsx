@@ -1,7 +1,10 @@
 import React from 'react'
-import { Text, ViewStyle, TextStyle } from 'react-native'
+import { Button, Text, TextStyle, ViewStyle } from 'react-native'
 import { NavigationStackScreenOptions, SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
+import TextileNodeActions from '../Redux/TextileNodeRedux'
+import { RootAction } from '../Redux/Types'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -18,7 +21,11 @@ const TEXT: TextStyle = {
   textAlign: 'center'
 }
 
-class MigrationScreen extends React.Component<{}> {
+interface DispatchProps {
+  startMigration: () => void
+}
+
+class MigrationScreen extends React.Component<DispatchProps> {
 
   // @ts-ignore
   static navigationOptions = ({ navigation }) => {
@@ -32,9 +39,14 @@ class MigrationScreen extends React.Component<{}> {
     return (
       <SafeAreaView style={CONTAINER}>
         <Text style={TEXT}>Let's do a migration!</Text>
+        <Button title={'Start It'} onPress={this.props.startMigration} />
       </SafeAreaView>
     )
   }
 }
 
-export default connect(undefined, undefined)(MigrationScreen)
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
+  startMigration: () => dispatch(TextileNodeActions.migrateNode())
+})
+
+export default connect(undefined, mapDispatchToProps)(MigrationScreen)

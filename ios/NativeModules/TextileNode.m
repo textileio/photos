@@ -182,7 +182,7 @@ RCT_EXPORT_METHOD(ignorePhotoLike:(NSString*)blockId resolver:(RCTPromiseResolve
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(notifications:(NSString*)offset limit:(long)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(notifications:(NSString*)offset limit:(NSInteger)limit resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self.node notifications:offset limit:limit error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
@@ -212,7 +212,7 @@ RCT_EXPORT_METHOD(photoData:(NSString*)id_ path:(NSString*)path resolver:(RCTPro
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(photoDataForMinWidth:(NSString*)id_ minWidth:(long)minWidth resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(photoDataForMinWidth:(NSString*)id_ minWidth:(NSInteger)minWidth resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self _photoDataForMinWidth:id_ minWidth:minWidth error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
@@ -236,7 +236,7 @@ RCT_EXPORT_METHOD(photoThreads:(NSString*)id_ resolver:(RCTPromiseResolveBlock)r
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(photos:(NSString*)offset limit:(long)limit threadId:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(photos:(NSString*)offset limit:(NSInteger)limit threadId:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self.node photos:offset limit:limit threadId:threadId error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
@@ -373,13 +373,13 @@ RCT_EXPORT_METHOD(newTextile:(NSString*)repoPath resolver:(RCTPromiseResolveBloc
   [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(newWallet:(long)wordCount resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(newWallet:(NSInteger)wordCount resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = MobileNewWallet(wordCount, &error); // returns recovery phrase
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(walletAccountAt:(NSString*)phrase index:(long)index password:(NSString*)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(walletAccountAt:(NSString*)phrase index:(NSInteger)index password:(NSString*)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = MobileWalletAccountAt(phrase, index, password, &error); // return seed and address
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
@@ -400,7 +400,7 @@ RCT_EXPORT_METHOD(walletAccountAt:(NSString*)phrase index:(long)index password:(
   return result;
 }
 
-- (NSString*)_photoDataForMinWidth:(NSString*)id_ minWidth:(long)minWidth error:(NSError**)error {
+- (NSString*)_photoDataForMinWidth:(NSString*)id_ minWidth:(NSInteger)minWidth error:(NSError**)error {
   NSString *result = [self.node photoDataForMinWidth:id_ minWidth:minWidth error:error];
   return result;
 }
