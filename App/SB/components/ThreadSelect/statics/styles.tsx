@@ -22,9 +22,7 @@ export default StyleSheet.create({
     fontFamily: 'BentonSans',
     fontSize: 18
   },
-  body: {
-    flex: 1
-  },
+  body: {},
   searchBoxPlaceholder: {
     flexDirection: 'row',
     marginBottom: 2,

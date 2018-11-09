@@ -13,16 +13,25 @@ const styles = StyleSheet.create({
   bottomRow: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    alignSelf: 'center',
     alignItems: 'flex-end',
-    marginBottom: 84,
-    height: '25%'
+    alignContent: 'center',
+    marginBottom: 44,
+    paddingTop: 22,
+    height: '25%',
+    backgroundColor: 'white'
+  } as ViewStyle,
+  button: {
+    width: '40%',
+    alignItems: 'center'
   } as ViewStyle,
   buttonText: {
     fontFamily: 'BentonSans',
     color: Colors.midBlue,
     fontSize: 18,
-    lineHeight: 26
+    lineHeight: 26,
+    textAlign: 'center'
   } as TextStyle,
   disabled: {
     color: Colors.windowTint
@@ -35,21 +44,27 @@ interface ScreenProps {
   continue: () => void
   cancelText?: string
   continueText?: string
+  style?: ViewStyle
 }
 
 const ModalButtons = (props: ScreenProps) => {
+  const cancelText = props.cancelText ? props.cancelText : 'Cancel'
+  const continueText = props.continueText ? props.continueText : 'Continue'
+  const style = props.style ? props.style : styles.bottomRow
   return (
-    <View style={styles.bottomRow}>
+    <View style={style}>
       <TouchableOpacity
         onPress={props.cancel}
+        style={styles.button}
       >
-        <Text style={styles.buttonText}>{props.cancelText || 'Cancel'}</Text>
+        <Text style={styles.buttonText}>{cancelText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         disabled={!props.continueEnabled}
         onPress={props.continue}
+        style={styles.button}
       >
-        <Text style={[styles.buttonText, !props.continueEnabled && styles.disabled]}>{props.continueText || 'Continue'}</Text>
+        <Text style={[styles.buttonText, !props.continueEnabled && styles.disabled]}>{continueText}</Text>
       </TouchableOpacity>
     </View>
   )

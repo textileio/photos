@@ -3,11 +3,11 @@ import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
   contentContainer: {
+    flex: 1,
+    flexDirection: 'column',
     backgroundColor: 'white',
     paddingHorizontal: 18,
-    paddingTop: 25,
-    flex: 1,
-    flexDirection: 'column'
+    paddingTop: 25
   },
   link: {
     ...BentonSansBold(),
@@ -60,9 +60,7 @@ export default StyleSheet.create({
     height: 43,
     width: 43
   },
-  body: {
-    flex: 1
-  },
+  body: {},
   searchBoxContainer: {
     flexDirection: 'row',
     height: 36,

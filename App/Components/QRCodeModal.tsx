@@ -69,7 +69,7 @@ class QRCodeModal extends React.Component<DispatchProps & ScreenProps> {
                 <TouchableOpacity
                   onPress={this.props.cancel}
                 >
-                  <Text style={styles.buttonText}>Cancel</Text>
+                  <Text style={styles.buttonText}>Close</Text>
                 </TouchableOpacity>
               </View>
             </View>
