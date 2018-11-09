@@ -67,7 +67,7 @@ class MigrationScreen extends React.Component<Props> {
   render () {
     return (
       <View style={CONTAINER}>
-        <Image style={IMAGE} source={require('../../../Containers/OnboardingScreen/statics/share.png')} />
+        <Image style={IMAGE} source={require('../../../Containers/OnboardingScreen/statics/sync.png')} />
         <Text style={TITLE}>Data Migration Needed</Text>
         <Text style={SUBTITLE}>Please start the migration and leave Textile running in the foreground until complete.</Text>
         <Button

@@ -4,13 +4,8 @@ import { NavigationScreenProps } from 'react-navigation'
 // @ts-ignore
 import { Pages } from 'react-native-pages'
 
-import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
+import { COLOR_BACKGROUND_PRIMARY, COLOR_BRAND_PINK, MARGIN_SMALL } from '../../Themes/Constants'
 import MigrationScreen from './MigrationScreen'
-import OnboardingMessage from '../../Components/OnboardingMessage'
-import MailListSignupScreen from '../MailListSignupScreen'
-import ShowRecoveryPhrase from '../ShowRecoveryPhrase'
-import VerifyRecoveryPhrase from '../VerifyRecoveryPhrase'
-import Icon from '../../Components/Icon'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
