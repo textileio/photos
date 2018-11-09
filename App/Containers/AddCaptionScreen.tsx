@@ -170,10 +170,12 @@ class AddCaptionScreen extends React.Component<Props> {
             />
           </View>
         </View>
-        <ThreadSelect
-          /* tslint:disable-next-line */
-          createNew={this.openThreadModal()}
-        />
+        <View style={styles.threadSelect}>
+          <ThreadSelect
+            /* tslint:disable-next-line */
+            createNew={this.openThreadModal()}
+          />
+        </View>
         <CreateThreadModal
           isVisible={this.state.showCreateThreadModal}
           fullScreen={true}
