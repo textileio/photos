@@ -11,7 +11,7 @@ import OnboardingMessage from '../../Components/OnboardingMessage'
 import MailListSignupScreen from '../MailListSignupScreen'
 import Icon from '../../Components/Icon'
 import PrefrencesActions from '../../Redux/PreferencesRedux'
-import { RootAction } from '../../Redux/Types';
+import { RootAction } from '../../Redux/Types'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
