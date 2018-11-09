@@ -19,6 +19,8 @@ public class TextileNodePackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new TextileNode(reactContext));
+        modules.add(new CameraRoll(reactContext));
+        modules.add(new FS(reactContext));
 
         return modules;
     }
