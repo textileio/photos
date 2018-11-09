@@ -12,6 +12,7 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { RootAction } from '../Redux/Types'
 import {
+  addThread,
   newTextile,
   migrateRepo,
   start,
@@ -19,7 +20,10 @@ import {
   walletAccountAt,
   initRepo,
   stop,
-  WalletAccount } from '../NativeModules/Textile'
+  threads,
+  Threads,
+  WalletAccount
+ } from '../NativeModules/Textile'
 import {logNewEvent} from './DeviceLogs'
 
 const REPO_PATH = RNFS.DocumentDirectoryPath
@@ -80,6 +84,12 @@ function * createAndStartNode(): any {
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
+    const threadsResult: Threads = yield call(threads)
+    const defaultThreadName = 'default'
+    const defaultThread = threadsResult.items.find((thread) => thread.name === defaultThreadName)
+    if (!defaultThread) {
+      yield call(addThread, 'default')
+    }
     yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {
     try {
