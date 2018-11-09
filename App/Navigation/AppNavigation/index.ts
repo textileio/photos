@@ -1,8 +1,8 @@
 import { createSwitchNavigator } from 'react-navigation'
 
 import OnboardingNavigation from './Onboarding'
-import MigrationNavigation from './Migration'
 import PrimaryNavigation from './Primary'
+import MigrationContainer from '../../Containers/MigrationContainer'
 
 import StatusCheck from '../../Containers/StatusCheck'
 
@@ -10,7 +10,7 @@ const nav = createSwitchNavigator(
   {
     StatusCheck,
     OnboardingNavigation,
-    MigrationNavigation,
+    Migration: MigrationContainer,
     PrimaryNavigation
   },
   {

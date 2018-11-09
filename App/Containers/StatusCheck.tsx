@@ -21,7 +21,7 @@ class StatusCheck extends React.Component<Props, {}> {
 
   static getDerivedStateFromProps (props: Props, state: {}) {
     if (props.migrationNeeded) {
-      props.navigation.navigate('MigrationNavigation')
+      props.navigation.navigate('Migration')
     } else if (!props.nodeError && props.nodeStarted && !props.onboarded) {
       props.navigation.navigate('OnboardingNavigation')
     } else if (!props.nodeError && props.nodeStarted) {

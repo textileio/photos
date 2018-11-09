@@ -74,7 +74,6 @@ export function * handleCreateNodeRequest () {
 }
 
 function * createAndStartNode(): any {
-  console.log('repo path:', REPO_PATH)
   try {
     yield put(TextileNodeActions.creatingNode())
     yield call(newTextile, REPO_PATH)
@@ -87,7 +86,10 @@ function * createAndStartNode(): any {
       if (error.message === MIGRATION_NEEDED_ERROR) {
         yield put(TextileNodeActions.migrationNeeded())
         yield take(getType(TextileNodeActions.migrateNode))
-        yield call(migrateRepo, REPO_PATH)
+        yield all([
+          call(migrateRepo, REPO_PATH),
+          delay(3000)
+        ])
         yield put(TextileNodeActions.migrationSuccess())
         yield call(createAndStartNode)
       } else if (error.message === INIT_NEEDED_ERROR) {
@@ -124,8 +126,8 @@ function * backgroundTaskRace () {
     )
   })
   yield all([
-    yield call(BackgroundTimer.stop),
-    yield call(BackgroundFetch.finish, BackgroundFetch.FETCH_RESULT_NEW_DATA)
+    call(BackgroundTimer.stop),
+    call(BackgroundFetch.finish, BackgroundFetch.FETCH_RESULT_NEW_DATA)
   ])
 
 }
