@@ -2,13 +2,16 @@ import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
 // @ts-ignore
 import { Pages } from 'react-native-pages'
+import { NavigationScreenProps } from 'react-navigation'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
 
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import MailListSignupScreen from '../MailListSignupScreen'
-import ShowRecoveryPhrase from '../ShowRecoveryPhrase'
-import VerifyRecoveryPhrase from '../VerifyRecoveryPhrase'
 import Icon from '../../Components/Icon'
+import PrefrencesActions from '../../Redux/PreferencesRedux'
+import { RootAction } from '../../Redux/Types';
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -28,17 +31,23 @@ const ARROW_FORWARD: ViewStyle = {
   alignSelf: 'flex-end'
 }
 
+interface DispatchProps {
+  complete: () => void
+}
+
+type Props = DispatchProps & NavigationScreenProps
+
 interface State {
   currentPage: number
 }
 
-export default class OnboardingScreen extends React.Component<{}, State> {
+class OnboardingScreen extends React.Component<Props, State> {
 
   pages?: Pages
-  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 6]
-  noForwardArrowIndexes: number[] = [3, 5]
+  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4]
+  noForwardArrowIndexes: number[] = [3, 4]
 
-  constructor(props: {}) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       currentPage: 0
@@ -59,6 +68,11 @@ export default class OnboardingScreen extends React.Component<{}, State> {
 
   onScrollEnd = (index: number) => {
     this.setState({ currentPage: index })
+  }
+
+  complete = () => {
+    this.props.complete()
+    this.props.navigation.navigate('StatusCheck')
   }
 
   render() {
@@ -89,12 +103,12 @@ export default class OnboardingScreen extends React.Component<{}, State> {
             image={require('./statics/sync.png')}
           />
           <MailListSignupScreen onSuccess={this.nextPage} />
-          <ShowRecoveryPhrase />
-          <VerifyRecoveryPhrase onSuccess={this.nextPage} />
           <OnboardingMessage
             title='All ready!'
             subtitle="You're all set up. Enjoy using Textile :)"
             image={require('./statics/sync.png')}
+            buttonText='Get Started'
+            onButtonPress={this.complete}
           />
         </Pages>
         {this.noBackArrowIndexes.indexOf(this.state.currentPage) === -1 &&
@@ -111,3 +125,9 @@ export default class OnboardingScreen extends React.Component<{}, State> {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
+  complete: () => dispatch(PrefrencesActions.onboardedSuccess())
+})
+
+export default connect(undefined, mapDispatchToProps)(OnboardingScreen)
