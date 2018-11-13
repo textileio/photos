@@ -53,8 +53,823 @@ public class TextileNode extends ReactContextBaseJavaModule {
         return REACT_CLASS;
     }
 
+
     @ReactMethod
-    public void create (final String dataDir, final String cafeUrl, final String logLevel, final Boolean logFiles, final Promise promise) {
+    public void acceptExternalThreadInvite(final String id_, final String key, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.acceptExternalThreadInvite(id_, key));
+                }
+                catch (Exception e) {
+                    promise.reject("acceptExternalThreadInvite", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void acceptThreadInviteViaNotification(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.acceptThreadInviteViaNotification(id_));
+                }
+                catch (Exception e) {
+                    promise.reject("acceptThreadInviteViaNotification", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addExternalThreadInvite(final String threadId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addExternalThreadInvite(threadId));
+                }
+                catch (Exception e) {
+                    promise.reject("addExternalThreadInvite", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addPhoto(final String path, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addPhoto(path));
+                }
+                catch (Exception e) {
+                    promise.reject("addPhoto", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addPhotoComment(final String blockId, final String body, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addPhotoComment(blockId, body));
+                }
+                catch (Exception e) {
+                    promise.reject("addPhotoComment", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addPhotoLike(final String blockId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addPhotoLike(blockId));
+                }
+                catch (Exception e) {
+                    promise.reject("addPhotoLike", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addPhotoToThread(final String dataId, final String key, final String threadId, final String caption, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String c = caption;
+                    if (c == null) {
+                        c = "";
+                    }
+                    promise.resolve(node.addPhotoToThread(dataId, key, threadId, c));
+                }
+                catch (Exception e) {
+                    promise.reject("addPhotoToThread", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addThread(final String name, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addThread(name));
+                }
+                catch (Exception e) {
+                    promise.reject("addThread", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addThreadInvite(final String threadId, final String inviteeId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addThreadInvite(threadId, inviteeId));
+                }
+                catch (Exception e) {
+                    promise.reject("addThreadInvite", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void address(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.address());
+                }
+                catch (Exception e) {
+                    promise.reject("address", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void cafeSession(final String peerId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.cafeSession(peerId));
+                }
+                catch (Exception e) {
+                    promise.reject("cafeSession", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void cafeSessions(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.cafeSessions());
+                }
+                catch (Exception e) {
+                    promise.reject("cafeSessions", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void checkCafeMail(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.checkCafeMail();
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("checkCafeMail", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void contact(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.contact(id_));
+                }
+                catch (Exception e) {
+                    promise.reject("contact", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void contactThreads(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.contactThreads(id_));
+                }
+                catch (Exception e) {
+                    promise.reject("contactThreads", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void contactUsername(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.contactUsername(id_));
+                }
+                catch (Exception e) {
+                    promise.reject("contactUsername", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void contacts(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.contacts());
+                }
+                catch (Exception e) {
+                    promise.reject("contacts", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void countUnreadNotifications(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.countUnreadNotifications()); // TODO: long?
+                }
+                catch (Exception e) {
+                    promise.reject("countUnreadNotifications", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void deregisterCafe(final String peerId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.deregisterCafe(peerId);
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("deregisterCafe", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void ignorePhoto(final String blockId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.ignorePhoto(blockId));
+                }
+                catch (Exception e) {
+                    promise.reject("ignorePhoto", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void ignorePhotoComment(final String blockId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.ignorePhotoComment(blockId));
+                }
+                catch (Exception e) {
+                    promise.reject("ignorePhotoComment", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void ignorePhotoLike(final String blockId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.ignorePhotoLike(blockId));
+                }
+                catch (Exception e) {
+                    promise.reject("ignorePhotoLike", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void notifications(final String offset, final Integer limit, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.notifications(offset, limit));
+                }
+                catch (Exception e) {
+                    promise.reject("notifications", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void overview(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.overview());
+                }
+                catch (Exception e) {
+                    promise.reject("overview", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void peerId(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.peerId());
+                }
+                catch (Exception e) {
+                    promise.reject("peerId", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void peerProfile(final String peerId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.peerProfile(peerId));
+                }
+                catch (Exception e) {
+                    promise.reject("peerProfile", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void photoData(final String id_, final String path, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.photoData(id_, path));
+                }
+                catch (Exception e) {
+                    promise.reject("photoData", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void photoDataForMinWidth(final String id_, final Integer minWidth, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.photoDataForMinWidth(id_, minWidth));
+                }
+                catch (Exception e) {
+                    promise.reject("photoDataForMinWidth", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void photoKey(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.photoKey(id_));
+                }
+                catch (Exception e) {
+                    promise.reject("photoKey", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void photoMetadata(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.photoMetadata(id_));
+                }
+                catch (Exception e) {
+                    promise.reject("photoMetadata", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void photoThreads(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.photoThreads(id_));
+                }
+                catch (Exception e) {
+                    promise.reject("photoThreads", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void photos(final String offset, final Integer limit, final String threadId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.photos(offset, limit, threadId));
+                }
+                catch (Exception e) {
+                    promise.reject("photos", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void profile(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.profile());
+                }
+                catch (Exception e) {
+                    promise.reject("profile", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void readAllNotifications(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.readAllNotifications();
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("readAllNotifications", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void readNotification(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.readNotification(id_);
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("readNotification", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void refreshCafeSession(final String cafeId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.refreshCafeSession(cafeId));
+                }
+                catch (Exception e) {
+                    promise.reject("refreshCafeSession", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void registerCafe(final String peerId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.registerCafe(peerId);
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("registerCafe", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void removeThread(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.removeThread(id_));
+                }
+                catch (Exception e) {
+                    promise.reject("removeThread", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void seed(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.seed());
+                }
+                catch (Exception e) {
+                    promise.reject("seed", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setAvatar(final String id_, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.setAvatar(id_);
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("setAvatar", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void setUsername(final String username, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.setUsername(username);
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("setUsername", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void sharePhotoToThread(final String dataId, final String threadId, final String caption, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String c = caption;
+                    if (c == null) {
+                        c = "";
+                    }
+                    promise.resolve(node.sharePhotoToThread(dataId, threadId, c));
+
+                }
+                catch (Exception e) {
+                    promise.reject("sharePhotoToThread", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void start(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.start();
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("start", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void stop(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.stop();
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("stop", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void threadInfo(final String threadId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.threadInfo(threadId));
+                }
+                catch (Exception e) {
+                    promise.reject("threadInfo", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void threads(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.threads());
+                }
+                catch (Exception e) {
+                    promise.reject("threads", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void username(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.username());
+                }
+                catch (Exception e) {
+                    promise.reject("username", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void version(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.version());
+                }
+                catch (Exception e) {
+                    promise.reject("version", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void a (, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                }
+                catch (Exception e) {
+                    promise.reject(" ERROR", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void a (, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                }
+                catch (Exception e) {
+                    promise.reject(" ERROR", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void a (, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                }
+                catch (Exception e) {
+                    promise.reject(" ERROR", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void a (, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                }
+                catch (Exception e) {
+                    promise.reject(" ERROR", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void a (, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                }
+                catch (Exception e) {
+                    promise.reject(" ERROR", e);
+                }
+            }
+        });
+    }
+
+
+    @ReactMethod
+    public void xcreate (final String dataDir, final String cafeUrl, final String logLevel, final Boolean logFiles, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -89,7 +904,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void mnemonic (final Promise promise) {
+    public void xmnemonic (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -109,7 +924,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void start (final Promise promise) {
+    public void xstart (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -125,7 +940,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void stop (final Promise promise) {
+    public void xstop (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -141,7 +956,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void signUpWithEmail (final String email, final String username, final String password, final String referral, final Promise promise) {
+    public void xsignUpWithEmail (final String email, final String username, final String password, final String referral, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -157,7 +972,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void signIn (final String username, final String password, final Promise promise) {
+    public void xsignIn (final String username, final String password, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -173,7 +988,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void signOut (final Promise promise) {
+    public void xsignOut (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -189,7 +1004,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void isSignedIn (final Promise promise) {
+    public void xisSignedIn (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -204,7 +1019,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setAvatarId (final String photoId, final Promise promise) {
+    public void xsetAvatarId (final String photoId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -220,7 +1035,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getProfile (final Promise promise) {
+    public void xgetProfile (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -235,7 +1050,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPeerProfile (final String peerId, final Promise promise) {
+    public void xgetPeerProfile (final String peerId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -250,7 +1065,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPubKey (final Promise promise) {
+    public void xgetPubKey (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -265,7 +1080,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getId (final Promise promise) {
+    public void xgetId (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -280,7 +1095,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getUsername (final Promise promise) {
+    public void xgetUsername (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -295,7 +1110,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getTokens (final Boolean force, final Promise promise) {
+    public void xgetTokens (final Boolean force, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -310,7 +1125,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getOverview (final Promise promise) {
+    public void xgetOverview (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -325,7 +1140,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getContacts (final Promise promise) {
+    public void xgetContacts (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -340,7 +1155,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addThread (final String name, final Promise promise) {
+    public void xaddThread (final String name, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -355,7 +1170,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void removeThread (final String threadId, final Promise promise) {
+    public void xremoveThread (final String threadId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -370,7 +1185,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void threads (final Promise promise) {
+    public void xthreads (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -385,7 +1200,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addThreadInvite (final String threadId, final String inviteePk, final Promise promise) {
+    public void xaddThreadInvite (final String threadId, final String inviteePk, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -400,7 +1215,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addExternalThreadInvite (final String threadId, final Promise promise) {
+    public void xaddExternalThreadInvite (final String threadId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -415,7 +1230,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void acceptExternalThreadInvite (final String threadId, final String key, final Promise promise) {
+    public void xacceptExternalThreadInvite (final String threadId, final String key, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -430,7 +1245,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addPhoto (final String path, final Promise promise) {
+    public void xaddPhoto (final String path, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -445,7 +1260,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addPhotoToThread (final String photoId, final String key, final String threadId, final String caption, final Promise promise) {
+    public void xaddPhotoToThread (final String photoId, final String key, final String threadId, final String caption, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -464,7 +1279,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sharePhotoToThread (final String photoId, final String threadId, final String caption, final Promise promise) {
+    public void xsharePhotoToThread (final String photoId, final String threadId, final String caption, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -483,7 +1298,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotos (final String offset, final Integer limit, final String threadId, final Promise promise) {
+    public void xgetPhotos (final String offset, final Integer limit, final String threadId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -498,7 +1313,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoData (final String photoId, final String path, final Promise promise) {
+    public void xgetPhotoData (final String photoId, final String path, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -513,7 +1328,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void ignorePhoto (final String blockId, final Promise promise) {
+    public void xignorePhoto(final String blockId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -528,7 +1343,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addPhotoComment (final String blockId, final String body, final Promise promise) {
+    public void xaddPhotoComment (final String blockId, final String body, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -543,7 +1358,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void ignorePhotoComment (final String blockId, final Promise promise) {
+    public void xignorePhotoComment (final String blockId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -558,7 +1373,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addPhotoLike (final String blockId, final Promise promise) {
+    public void xaddPhotoLike (final String blockId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -573,7 +1388,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void ignorePhotoLike (final String blockId, final Promise promise) {
+    public void xignorePhotoLike (final String blockId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -588,7 +1403,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoThreads (final String photoId, final Promise promise) {
+    public void xgetPhotoThreads (final String photoId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -603,7 +1418,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPhotoKey (final String photoId, final Promise promise) {
+    public void xgetPhotoKey (final String photoId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -618,7 +1433,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addDevice (final String name, final String pubKey, final Promise promise) {
+    public void xaddDevice (final String name, final String pubKey, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -634,7 +1449,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void removeDevice (final String deviceId, final Promise promise) {
+    public void xremoveDevice (final String deviceId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -651,7 +1466,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void devices (final Promise promise) {
+    public void xdevices (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -667,7 +1482,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void refreshMessages (final Promise promise) {
+    public void xrefreshMessages (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -683,7 +1498,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getNotifications (final String offset, final Integer limit, final Promise promise) {
+    public void xgetNotifications (final String offset, final Integer limit, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -698,7 +1513,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void countUnreadNotifications (final Promise promise) {
+    public void xcountUnreadNotifications (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -713,7 +1528,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void readNotification (final String id, final Promise promise) {
+    public void xreadNotification (final String id, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -729,7 +1544,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void readAllNotifications (final Promise promise) {
+    public void xreadAllNotifications (final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -745,7 +1560,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void acceptThreadInviteViaNotification (final String id, final Promise promise) {
+    public void xacceptThreadInviteViaNotification (final String id, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
