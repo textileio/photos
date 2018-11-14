@@ -31,7 +31,7 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
     protected Bitmap doInBackground(Void... params) {
         try {
-            JSONObject imageJson = new JSONObject(TextileNode.node.getPhotoDataForMinWidth(this.imageId, this.forMinWidth));
+            JSONObject imageJson = new JSONObject(TextileNode.node.photoDataForMinWidth(this.imageId, this.forMinWidth));
             String dataUrl = imageJson.getString("url");
             String encodingPrefix = "base64,";
             int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
