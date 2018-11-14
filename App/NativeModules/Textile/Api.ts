@@ -278,7 +278,7 @@ export async function newWallet(wordCount: number): Promise<string> {
   return result as string
 }
 
-export async function walletAccountAt(phrase: string, index: number, password: string): Promise<WalletAccount> {
+export async function walletAccountAt(phrase: string, index: number, password?: string): Promise<WalletAccount> {
   const result = await TextileNode.walletAccountAt(phrase, index, password) // return seed and address
   return JSON.parse(result) as WalletAccount
 }

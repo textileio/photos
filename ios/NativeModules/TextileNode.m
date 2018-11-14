@@ -87,8 +87,9 @@ RCT_EXPORT_METHOD(addPhotoLike:(NSString*)blockId resolver:(RCTPromiseResolveBlo
 }
 
 RCT_EXPORT_METHOD(addPhotoToThread:(NSString*)dataId key:(NSString*)key threadId:(NSString*)threadId caption:(NSString*)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSString *c = caption ? caption : @"";
   NSError *error;
-  NSString *result = [self.node addPhotoToThread:dataId key:key threadId:threadId caption:caption error:&error];
+  NSString *result = [self.node addPhotoToThread:dataId key:key threadId:threadId caption:c error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
@@ -297,8 +298,9 @@ RCT_EXPORT_METHOD(setUsername:(NSString*)username resolver:(RCTPromiseResolveBlo
 }
 
 RCT_EXPORT_METHOD(sharePhotoToThread:(NSString*)dataId threadId:(NSString*)threadId caption:(NSString*)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSString *c = caption ? caption : @"";
   NSError *error;
-  NSString *result = [self.node sharePhotoToThread:dataId threadId:threadId caption:caption error:&error];
+  NSString *result = [self.node sharePhotoToThread:dataId threadId:threadId caption:c error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
@@ -380,8 +382,9 @@ RCT_EXPORT_METHOD(newWallet:(NSInteger)wordCount resolver:(RCTPromiseResolveBloc
 }
 
 RCT_EXPORT_METHOD(walletAccountAt:(NSString*)phrase index:(NSInteger)index password:(NSString*)password resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSString *p = password ? password : @"";
   NSError *error;
-  NSString *result = MobileWalletAccountAt(phrase, index, password, &error); // return seed and address
+  NSString *result = MobileWalletAccountAt(phrase, index, p, &error); // return seed and address
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 

@@ -1,14 +1,7 @@
-//  Created by react-native-create-bridge
-
 package com.textile.textilenode;
 
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -18,10 +11,6 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -29,7 +18,9 @@ import mobile.Event;
 import mobile.Messenger;
 import mobile.Mobile;
 import mobile.Mobile_;
-import mobile.NodeConfig;
+import mobile.InitConfig;
+import mobile.MigrateConfig;
+import mobile.RunConfig;
 
 public class TextileNode extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileNode";
@@ -150,10 +141,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    String c = caption;
-                    if (c == null) {
-                        c = "";
-                    }
+                    String c = caption != null ? caption : "";
                     promise.resolve(node.addPhotoToThread(dataId, key, threadId, c));
                 }
                 catch (Exception e) {
@@ -320,7 +308,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.countUnreadNotifications()); // TODO: long?
+                    promise.resolve(node.countUnreadNotifications());
                 }
                 catch (Exception e) {
                     promise.reject("countUnreadNotifications", e);
@@ -686,10 +674,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    String c = caption;
-                    if (c == null) {
-                        c = "";
-                    }
+                    String c = caption != null ? caption : "";
                     promise.resolve(node.sharePhotoToThread(dataId, threadId, c));
 
                 }
@@ -793,94 +778,54 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void a (, final Promise promise) {
+    public void initRepo(final String seed, final String repoPath, final String logLevel, final Boolean logToDisk, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-
+                    InitConfig config = new InitConfig();
+                    config.setSeed(seed);
+                    config.setRepoPath(repoPath);
+                    config.setLogLevel(logLevel);
+                    config.setLogToDisk(logToDisk);
+                    Mobile.initRepo(config);
+                    promise.resolve(null);
                 }
                 catch (Exception e) {
-                    promise.reject(" ERROR", e);
+                    promise.reject("initRepo", e);
                 }
             }
         });
     }
 
     @ReactMethod
-    public void a (, final Promise promise) {
+    public void migrateRepo(final String repoPath, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-
+                    MigrateConfig config = new MigrateConfig();
+                    config.setRepoPath(repoPath);
+                    Mobile.migrateRepo(config);
+                    promise.resolve(null);
                 }
                 catch (Exception e) {
-                    promise.reject(" ERROR", e);
+                    promise.reject("migrateRepo", e);
                 }
             }
         });
     }
 
     @ReactMethod
-    public void a (, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-
-                }
-                catch (Exception e) {
-                    promise.reject(" ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void a (, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-
-                }
-                catch (Exception e) {
-                    promise.reject(" ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void a (, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-
-                }
-                catch (Exception e) {
-                    promise.reject(" ERROR", e);
-                }
-            }
-        });
-    }
-
-
-    @ReactMethod
-    public void xcreate (final String dataDir, final String cafeUrl, final String logLevel, final Boolean logFiles, final Promise promise) {
+    public void newTextile(final String repoPath, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 if (node == null) {
                     try {
-                        NodeConfig config = new NodeConfig();
-                        config.setRepoPath(dataDir);
-                        config.setCafeAddr(cafeUrl);
-                        config.setLogLevel(logLevel);
-                        config.setLogFiles(logFiles);
-                        node = Mobile.newNode(config, new Messenger() {
+                        RunConfig config = new RunConfig();
+                        config.setRepoPath(repoPath);
+                        node = Mobile.newTextile(config, new Messenger() {
                             @Override
                             public void notify(Event event) {
                                 try {
@@ -893,8 +838,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
                             }
                         });
                         promise.resolve(null);
-                    } catch (Exception e) {
-                        promise.reject("CREATE NODE ERROR", e);
+                    }
+                    catch (Exception e) {
+                        promise.reject("newTextile", e);
                     }
                 } else {
                     promise.resolve(null);
@@ -904,671 +850,31 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void xmnemonic (final Promise promise) {
+    public void newWallet(final Integer wordCount, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String mnemonic = node.getMnemonic();
-                    if (mnemonic.length() > 0) {
-                        promise.resolve(mnemonic);
-                    } else {
-                        promise.reject("MNEMONIC ERROR", "Mnemonic unavailable.");
-                    }
+                    promise.resolve(Mobile.newWallet(wordCount));
                 }
                 catch (Exception e) {
-                    promise.reject("START ERROR", e);
+                    promise.reject("newWallet", e);
                 }
             }
         });
     }
 
     @ReactMethod
-    public void xstart (final Promise promise) {
+    public void walletAccountAt(final String phrase, final Integer index, final String password, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    node.start();
-                    promise.resolve(null);
+                    String p = password != null ? password : "";
+                    promise.resolve(Mobile.walletAccountAt(phrase, index, p));
                 }
                 catch (Exception e) {
-                    promise.reject("START ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xstop (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.stop();
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("STOP ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xsignUpWithEmail (final String email, final String username, final String password, final String referral, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.signUpWithEmail(email, username, password, referral);
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("SIGNUP WITH EMAIL ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xsignIn (final String username, final String password, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.signIn(username, password);
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("SIGNIN ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xsignOut (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.signOut();
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("SIGNOUT ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xisSignedIn (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.isSignedIn());
-                }
-                catch (Exception e) {
-                    promise.reject("IS SIGNED IN ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xsetAvatarId (final String photoId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.setAvatarId(photoId);
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("SET AVATAR ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetProfile (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getProfile());
-                }
-                catch (Exception e) {
-                    promise.reject("GET PROFILE ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetPeerProfile (final String peerId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getPeerProfile(peerId));
-                }
-                catch (Exception e) {
-                    promise.reject("GET PEER PROFILE ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetPubKey (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getPubKey());
-                }
-                catch (Exception e) {
-                    promise.reject("GET PUBLIC KEY ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetId (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getId());
-                }
-                catch (Exception e) {
-                    promise.reject("GET ID ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetUsername (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getUsername());
-                }
-                catch (Exception e) {
-                    promise.reject("GET USERNAME ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetTokens (final Boolean force, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getTokens(force));
-                }
-                catch (Exception e) {
-                    promise.reject("GET TOKENS ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetOverview (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.overview());
-                }
-                catch (Exception e) {
-                    promise.reject("GET OVERVIEW ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetContacts (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.contacts());
-                }
-                catch (Exception e) {
-                    promise.reject("GET CONTACT ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xaddThread (final String name, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.addThread(name));
-                }
-                catch (Exception e) {
-                    promise.reject("ADD THREAD ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xremoveThread (final String threadId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.removeThread(threadId));
-                }
-                catch (Exception e) {
-                    promise.reject("REMOVE THREAD ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xthreads (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.threads());
-                }
-                catch (Exception e) {
-                    promise.reject("GET THREADS ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xaddThreadInvite (final String threadId, final String inviteePk, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.addThreadInvite(threadId, inviteePk));
-                }
-                catch (Exception e) {
-                    promise.reject("ADD EXTERNAL INVITE ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xaddExternalThreadInvite (final String threadId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.addExternalThreadInvite(threadId));
-                }
-                catch (Exception e) {
-                    promise.reject("ADD EXTERNAL INVITE ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xacceptExternalThreadInvite (final String threadId, final String key, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.acceptExternalThreadInvite(threadId, key));
-                }
-                catch (Exception e) {
-                    promise.reject("ACCEPT EXTERNAL INVITE ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xaddPhoto (final String path, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.addPhoto(path));
-                }
-                catch (Exception e) {
-                    promise.reject("ADD PHOTO ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xaddPhotoToThread (final String photoId, final String key, final String threadId, final String caption, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String c = caption;
-                    if (c == null) {
-                        c = "";
-                    }
-                    promise.resolve(node.addPhotoToThread(photoId, key, threadId, c));
-                }
-                catch (Exception e) {
-                    promise.reject("SHARE PHOTO ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xsharePhotoToThread (final String photoId, final String threadId, final String caption, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String c = caption;
-                    if (c == null) {
-                        c = "";
-                    }
-                    promise.resolve(node.sharePhotoToThread(photoId, threadId, c));
-                }
-                catch (Exception e) {
-                    promise.reject("SHARE PHOTO ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetPhotos (final String offset, final Integer limit, final String threadId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getPhotos(offset, limit, threadId));
-                }
-                catch (Exception e) {
-                    promise.reject("GET PHOTO BLOCKS ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetPhotoData (final String photoId, final String path, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getPhotoData(photoId, path));
-                }
-                catch (Exception e) {
-                    promise.reject("GET BLOCK DATA ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xignorePhoto(final String blockId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.ignorePhoto(blockId));
-                }
-                catch (Exception e) {
-                    promise.reject("IGNORE PHOTO ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xaddPhotoComment (final String blockId, final String body, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.addPhotoComment(blockId, body));
-                }
-                catch (Exception e) {
-                    promise.reject("ADD PHOTO COMMENT ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xignorePhotoComment (final String blockId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.ignorePhotoComment(blockId));
-                }
-                catch (Exception e) {
-                    promise.reject("IGNORE PHOTO COMMENT ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xaddPhotoLike (final String blockId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.addPhotoLike(blockId));
-                }
-                catch (Exception e) {
-                    promise.reject("ADD PHOTO LIKE ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xignorePhotoLike (final String blockId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.ignorePhotoLike(blockId));
-                }
-                catch (Exception e) {
-                    promise.reject("IGNORE PHOTO LIKE ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetPhotoThreads (final String photoId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.photoThreads(photoId));
-                }
-                catch (Exception e) {
-                    promise.reject("GET PHOTO THREADS ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetPhotoKey (final String photoId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getPhotoKey(photoId));
-                }
-                catch (Exception e) {
-                    promise.reject("GET PHOTO KEY ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xaddDevice (final String name, final String pubKey, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.addDevice(name, pubKey);
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("ADD DEVICE ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xremoveDevice (final String deviceId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.removeDevice(deviceId);
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("REMOVE DEVICE ERROR", e);
-                }
-            }
-        });
-    }
-
-
-    @ReactMethod
-    public void xdevices (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.devices());
-                }
-                catch (Exception e) {
-                    promise.reject("GET DEVICES ERROR", e);
-                }
-            }
-        });
-    }
-
-
-    @ReactMethod
-    public void xrefreshMessages (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.refreshMessages();
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("REFRESH MESSAGES ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xgetNotifications (final String offset, final Integer limit, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.getNotifications(offset, limit));
-                }
-                catch (Exception e) {
-                    promise.reject("GET NOTIFICATIONS ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xcountUnreadNotifications (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.countUnreadNotifications());
-                }
-                catch (Exception e) {
-                    promise.reject("COUNT NOTIFICATIONS ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xreadNotification (final String id, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.readNotification(id);
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("READ NOTIFICATION ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xreadAllNotifications (final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.readAllNotifications();
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("READ ALL NOTIFICATIONS ERROR", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void xacceptThreadInviteViaNotification (final String id, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.acceptThreadInviteViaNotification(id));
-                }
-                catch (Exception e) {
-                    promise.reject("READ NOTIFICATION ERROR", e);
+                    promise.reject("walletAccountAt", e);
                 }
             }
         });
