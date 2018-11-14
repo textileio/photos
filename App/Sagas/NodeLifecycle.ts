@@ -107,7 +107,7 @@ function * createAndStartNode(): any {
         const recoveryPhrase: string = yield call(newWallet, 12)
         yield put(PreferencesActions.updateRecoveryPhrase(recoveryPhrase))
         yield put(TextileNodeActions.derivingAccount())
-        const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0, '')
+        const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
         const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
         const logToDisk = !__DEV__
         yield put(TextileNodeActions.initializingRepo())
