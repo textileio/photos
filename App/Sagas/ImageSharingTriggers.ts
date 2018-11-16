@@ -9,8 +9,8 @@ import { SharedImage } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
 import {insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread} from './ImageSharingSagas'
-import { refreshTokens } from './NodeCreated'
 import { logNewEvent } from './DeviceLogs'
+import { refreshAllSessions } from '../Services/CafeSessions'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -57,7 +57,7 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
 export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.expiredTokenError>) {
   const { uuid } = action.payload
   try {
-    yield call(refreshTokens, true)
+    yield call(refreshAllSessions)
     yield put(ProcessingImagesActions.retry(uuid))
   } catch (error) {
     // TODO: Should redirect user back to login

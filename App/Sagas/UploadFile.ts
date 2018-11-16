@@ -3,28 +3,24 @@ import { call, put, select } from 'redux-saga/effects'
 import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 
-import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
-import { CafeSessions, cafeSession, cafeSessions } from '../NativeModules/Textile'
+import { bestCafeSession } from '../Services/CafeSessions'
+import { CafeSession } from '../NativeModules/Textile'
 
 export function * uploadFile (id: string, payloadPath: string) {
-  let sessions: CafeSessions | undefined = yield select(AuthSelectors.sessions)
-  if (!sessions) {
-    sessions = yield call(cafeSessions)
-    yield put(AuthActions.getSessionsSuccess(sessions!))
+  const session: CafeSession | undefined = yield call(bestCafeSession)
+  if (!session) {
+    throw new Error('unable to get CafeSession')
   }
   yield call(
     Upload.startUpload,
     {
       customUploadId: id,
       path: payloadPath,
-      url: Config.RN_TEXTILE_CAFE_URI + Config.RN_TEXTILE_CAFE_PIN_PATH,
+      url: session.http_addr + Config.RN_TEXTILE_CAFE_PIN_PATH, // TODO: Not sure about the formatting of http_addr
       method: 'POST',
       type: 'raw',
       headers: {
-
-        // TODO: Figure out auth with new API
-
-        // 'Authorization': `Bearer ${sessions!.access}`,
+        'Authorization': `Bearer ${session.access}`,
         'Content-Type': 'application/gzip'
       }
     }
