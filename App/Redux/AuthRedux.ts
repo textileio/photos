@@ -1,56 +1,14 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
-import { CafeSessions } from '../NativeModules/Textile'
+import { CafeSessions, CafeSession } from '../NativeModules/Textile'
 
 const actions = {
-  updateReferralCode: createAction('UPDATE_REFERRAL_CODE', (resolve) => {
-    return (referralCode: string) => resolve({ referralCode })
-  }),
-  updateEmail: createAction('UPDATE_EMAIL', (resolve) => {
-    return (email: string) => resolve({ email })
-  }),
-  updateUsername: createAction('UPDATE_USERNAME', (resolve) => {
-    return (username: string) => resolve({ username })
-  }),
-  updatePassword: createAction('UPDATE_PASSWORD', (resolve) => {
-    return (password: string) => resolve({ password })
-  }),
-  signUpRequest: createAction('SIGN_UP_REQUEST', (resolve) => {
-    return (referralCode: string, email: string, username: string, password: string) => resolve({ referralCode, email, username, password })
-  }),
-  logInRequest: createAction('LOG_IN_REQUEST', (resolve) => {
-    return (username: string, password: string) => resolve({ username, password })
-  }),
-  logOutRequest: createAction('LOG_OUT_REQUEST', (resolve) => {
-    return () => resolve()
-  }),
-  recoverPasswordRequest: createAction('RECOVER_PASSWORD_REQUEST', (resolve) => {
-    return (data: any) => resolve({ data })
-  }),
-  signUpSuccess: createAction('SIGN_UP_SUCCESS', (resolve) => {
-    return () => resolve()
-  }),
-  logInSuccess: createAction('LOG_IN_SUCCESS', (resolve) => {
-    return () => resolve()
-  }),
-  getSessionsSuccess: createAction('GET_SESSIONS_SUCCESS', (resolve) => {
-    return (sessions: CafeSessions) => resolve({ sessions })
-  }),
-  recoverPasswordSuccess: createAction('RECOVER_PASSWORD_SUCCESS', (resolve) => {
-    return () => resolve()
-  }),
-  signUpFailure: createAction('SIGN_UP_FAILURE', (resolve) => {
-    return (error: Error) => resolve({ error })
-  }),
-  logInFailure: createAction('LOG_IN_FAILURE', (resolve) => {
-    return (error: Error) => resolve({ error })
-  }),
-  logOutFailure: createAction('LOG_OUT_FAILURE', (resolve) => {
-    return (error: Error) => resolve({ error })
-  }),
-  recoverPasswordFailure: createAction('RECOVER_PASSWORD_FAILURE', (resolve) => {
-    return (error: Error) => resolve({ error })
-  }),
+  getSessionsRequest: createAction('GET_SESSIONS_REQUEST'),
+  getSessionsSuccess: createAction('GET_SESSIONS_SUCCESS', (resolve) => (sessions: CafeSessions) => resolve({ sessions })),
+  getSessionsFailure: createAction('GET_SESSIONS_FAILURE', (resolve) => (error: any) => resolve({ error })),
+  refreshSessionRequest: createAction('REFRESH_SESSION_REQUEST', (resolve) => (cafeId: string) => resolve({ cafeId })),
+  refreshSessionSuccess: createAction('REFRESH_SESSION_SUCCESS', (resolve) => (session: CafeSession) => resolve({ session })),
+  refreshSessionFailure: createAction('REFRESH_SESSION_FAILURE', (resolve) => (cafeId: string, error: any) => resolve({ cafeId, error })),
   dismissError: createAction('DISMISS_ERROR', (resolve) => {
     return () => resolve()
   }),
@@ -67,58 +25,80 @@ export type AuthAction = ActionType<typeof actions>
 // An email verification regexp when we need it
 // const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
+interface SessionData {
+  readonly processing: boolean
+  readonly session?: CafeSession
+  readonly error?: string
+}
+
+interface Sessions {
+  readonly [index: string]: SessionData
+}
+
+interface SessionsData {
+  readonly processing: boolean
+  readonly sessions: Sessions
+  readonly error?: string
+}
+
 export interface AuthState {
   readonly processing: boolean
   readonly error?: string
-  readonly sessions?: CafeSessions
-  readonly formData: {
-    readonly referralCode?: string
-    readonly email?: string
-    readonly username?: string
-    readonly password?: string
-  }
+  readonly sessionsData: SessionsData
   readonly invite?: {
-    url: string
-    hash: string
-    referral: string
+    readonly url: string
+    readonly hash: string
+    readonly referral: string
   }
 }
 
 export const initialState: AuthState = {
   processing: false,
-  formData: {}
+  sessionsData: {
+    processing: false,
+    sessions: {}
+  }
 }
 
 export function reducer (state: AuthState = initialState, action: AuthAction): AuthState {
   switch (action.type) {
-    case getType(actions.updateReferralCode):
-      const { referralCode } = action.payload
-      return { ...state, error: undefined, formData: { ...state.formData, referralCode } }
-    case getType(actions.updateEmail):
-      const { email } = action.payload
-      return { ...state, error: undefined, formData: { ...state.formData, email } }
-    case getType(actions.updateUsername):
-      const { username } = action.payload
-      return { ...state, error: undefined, formData: { ...state.formData, username } }
-    case getType(actions.updatePassword):
-      const { password } = action.payload
-      return { ...state, error: undefined, formData: { ...state.formData, password } }
-    case getType(actions.signUpRequest):
-    case getType(actions.logInRequest):
-    case getType(actions.recoverPasswordRequest):
-      return { ...state, processing: true }
-    case getType(actions.getSessionsSuccess):
-      return { ...state, processing: false, sessions: action.payload.sessions }
-    case getType(actions.recoverPasswordSuccess):
-      return { ...state, processing: false }
-    case getType(actions.signUpFailure):
-    case getType(actions.logInFailure):
-    case getType(actions.recoverPasswordFailure):
-      return { ...state, processing: false, error: action.payload.error.message }
+    case getType(actions.getSessionsRequest):
+      return { ...state, sessionsData: { ...state.sessionsData, processing: true } }
+    case getType(actions.getSessionsSuccess): {
+      const { items } = action.payload.sessions
+      const sessionsData = items.reduce((accum, session) => ({ ...accum, [session.cafe_id]: { session } }), { sessions: {}, processing: false } as SessionsData)
+      return { ...state, processing: false, sessionsData }
+    }
+    case getType(actions.getSessionsFailure): {
+      const { error } = action.payload
+      const message = error.message && error.message as string ? error.message as string : error as string || 'unknown error'
+      return { ...state, processing: false, sessionsData: { processing: false, sessions: {}, error: message } }
+    }
+    case getType(actions.refreshSessionRequest): {
+      const { cafeId } = action.payload
+      const oldSessionData = state.sessionsData.sessions[cafeId]
+      const sessionData: SessionData = { ...oldSessionData, processing: true }
+      const sessionsData: SessionsData = { ...state.sessionsData, [cafeId]: sessionData }
+      return { ...state, sessionsData }
+    }
+    case getType(actions.refreshSessionSuccess): {
+      const { session } = action.payload
+      const sessionData: SessionData = { processing: false, session }
+      const sessionsData: SessionsData = { ...state.sessionsData, [session.cafe_id]: sessionData }
+      return { ...state, sessionsData }
+    }
+    case getType(actions.refreshSessionFailure): {
+      const { cafeId, error } = action.payload
+      const oldSessionData = state.sessionsData.sessions[cafeId]
+      const message = error.message && error.message as string ? error.message as string : error as string || 'unknown error'
+      const sessionData: SessionData = { processing: false, error: message }
+      const sessionsData: SessionsData = { ...state.sessionsData, [cafeId]: sessionData }
+      return { ...state, sessionsData }
+    }
     case getType(actions.dismissError):
       return { ...state, error: undefined }
     case getType(actions.onboardWithInviteRequest):
-      return { ...state, invite: action.payload, formData: {...state.formData, referralCode: action.payload.referral} }
+      return { ...state, invite: action.payload }
     default:
       return state
   }
