@@ -53,7 +53,7 @@ class StatusCheck extends React.Component<Props, {}> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    migrationNeeded: state.textileNode.nodeState.state === NodeState.pendingMigration,
+    migrationNeeded: state.textileNode.nodeState.state === NodeState.migrationNeeded,
     onboarded: state.preferences.onboarded,
     nodeStarted: state.textileNode.nodeState.state === NodeState.started,
     nodeError: state.textileNode.nodeState.error

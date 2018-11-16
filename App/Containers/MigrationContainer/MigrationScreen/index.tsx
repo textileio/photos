@@ -85,15 +85,15 @@ class MigrationScreen extends React.Component<Props> {
 const mapStateToProps = (state: RootState): StateProps => {
   const nodeState = state.textileNode.nodeState.state
   return {
-    processing: nodeState !== NodeState.pendingMigration && nodeState !== NodeState.started,
-    buttonText: nodeState === NodeState.pendingMigration ? 'Start Migration' : 'Complete!',
+    processing: nodeState !== NodeState.migrationNeeded && nodeState !== NodeState.started,
+    buttonText: nodeState === NodeState.migrationNeeded ? 'Start Migration' : 'Complete!',
     complete: nodeState === NodeState.started,
     error: state.textileNode.nodeState.error
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  startMigration: () => dispatch(TextileNodeActions.migrateNode())
+  startMigration: () => dispatch(TextileNodeActions.initMigration())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MigrationScreen)

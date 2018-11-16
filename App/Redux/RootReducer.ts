@@ -14,6 +14,7 @@ import { reducer as processingImagesReducer } from './ProcessingImagesRedux'
 import { reducer as storageReducer } from './StorageRedux'
 import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
+import { reducer as migrationReducer } from './MigrationRedux'
 
 export default combineReducers({
   auth: authReducer,
@@ -29,5 +30,6 @@ export default combineReducers({
   processingImages: processingImagesReducer,
   storage: storageReducer,
   startup: startupReducer,
-  deviceLogs: deviceLogsReducer
+  deviceLogs: deviceLogsReducer,
+  migration: migrationReducer
 })

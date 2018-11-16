@@ -7,6 +7,8 @@ const actions = {
     return (previousState: TextileAppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
   }),
   migrationNeeded: createAction('MIGRATION_NEEDED'),
+  initMigration: createAction('INIT_MIGRATION'),
+  initMigrationSuccess: createAction('INIT_MIGRATION_SUCCESS'),
   migrateNode: createAction('MIGRATE_NODE'),
   migrationSuccess: createAction('MIGRATION_SUCCESS'),
   creatingWallet: createAction('CREATING_WALLET'),
@@ -58,6 +60,8 @@ export enum NodeState {
   'started' = 'started',
   'stopping' = 'stopping',
   'stopped' = 'stopped', // Node has been explicitly stopped, different than created
+  'migrationNeeded' = 'migrationNeeded',
+  'initingMigration' = 'initingMigration',
   'pendingMigration' = 'pendingMigration',
   'migrating' = 'migrating',
   'migrationComplete' = 'migrationComplete',
@@ -107,6 +111,10 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.appStateChange):
       return { ...state, appState: action.payload.newState, appStateUpdate: getHMS() }
     case getType(actions.migrationNeeded):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.migrationNeeded } }
+    case getType(actions.initMigration):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.initingMigration } }
+    case getType(actions.initMigrationSuccess):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.pendingMigration } }
     case getType(actions.migrateNode):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.migrating } }

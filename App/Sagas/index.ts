@@ -1,5 +1,6 @@
 import { takeLatest, takeEvery, all, call } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
+import { Dispatch } from 'redux'
 
 /* ------------- Types ------------- */
 
@@ -99,10 +100,10 @@ import {
 
 /* ------------- Connect Types To Sagas ------------- */
 
-export default function * root () {
+export default function * root (dispatch: Dispatch) {
   yield all([
     call(manageNode),
-    call(handleCreateNodeRequest),
+    call(handleCreateNodeRequest, dispatch),
     call(onNodeStarted),
     call(onNodeOnline),
     call(monitorNewThreadActions),

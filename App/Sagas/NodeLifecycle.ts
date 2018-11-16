@@ -1,4 +1,5 @@
 import { delay, Task } from 'redux-saga'
+import { Dispatch } from 'redux'
 import { all, take, call, put, fork, cancelled, race, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
@@ -24,7 +25,8 @@ import {
   Threads,
   WalletAccount
  } from '../NativeModules/Textile'
-import {logNewEvent} from './DeviceLogs'
+import { logNewEvent } from './DeviceLogs'
+import { migrate } from './Migration'
 
 const REPO_PATH = RNFS.DocumentDirectoryPath
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
@@ -63,21 +65,22 @@ export function * manageNode () {
   }
 }
 
-export function * handleCreateNodeRequest () {
+export function * handleCreateNodeRequest (dispatch: Dispatch) {
   while (true) {
     // We take a request to create and start the node.
     // While we're processing that request, any additional requests will be ignored.
     yield take(getType(TextileNodeActions.createNodeRequest))
 
     // Fork the call to create and start the node so we don't block upstream saga manageNode
-    const task: Task = yield fork(createAndStartNode)
+    const task: Task = yield fork(createAndStartNode, dispatch)
 
     // Don't take any other createNodeRequests until the forked task is done
     yield call(() => task.done)
   }
 }
 
-function * createAndStartNode(): any {
+function * createAndStartNode(dispatch: Dispatch): any {
+  console.log('PATH', REPO_PATH)
   try {
     yield put(TextileNodeActions.creatingNode())
     yield call(newTextile, REPO_PATH)
@@ -95,13 +98,11 @@ function * createAndStartNode(): any {
     try {
       if (error.message === MIGRATION_NEEDED_ERROR) {
         yield put(TextileNodeActions.migrationNeeded())
-        yield take(getType(TextileNodeActions.migrateNode))
-        yield all([
-          call(migrateRepo, REPO_PATH),
-          delay(3000)
-        ])
-        yield put(TextileNodeActions.migrationSuccess())
-        yield call(createAndStartNode)
+        yield take(getType(TextileNodeActions.initMigration))
+        yield call(migrateRepo, REPO_PATH)
+        yield call(createAndStartNode, dispatch)
+        yield put(TextileNodeActions.initMigrationSuccess())
+        yield call(migrate, dispatch)
       } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)
@@ -112,7 +113,7 @@ function * createAndStartNode(): any {
         const logToDisk = !__DEV__
         yield put(TextileNodeActions.initializingRepo())
         yield call(initRepo, walletAccount.Seed, REPO_PATH, logLevel, logToDisk)
-        yield call(createAndStartNode)
+        yield call(createAndStartNode, dispatch)
       } else {
         yield put(TextileNodeActions.nodeError(error))
       }
