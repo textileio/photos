@@ -77,17 +77,17 @@ class Component extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <View style={{flex: 1}}>
-        <ContactSelect
-          displayQRCode={this._displayThreadQRCode.bind(this)}
-          getPublicLink={this._getPublicLink.bind(this)}
-          contacts={this.props.contacts}
-          select={this._select.bind(this)}
-          selected={this.state.selected}
-          topFive={this.props.topFive}
-          notInThread={this.props.notInThread}
-          threadName={this.props.threadName}
-        />
+        <View style={{flex: 1, zIndex: 10}}>
+          <ContactSelect
+            displayQRCode={this._displayThreadQRCode.bind(this)}
+            getPublicLink={this._getPublicLink.bind(this)}
+            contacts={this.props.contacts}
+            select={this._select.bind(this)}
+            selected={this.state.selected}
+            topFive={this.props.topFive}
+            notInThread={this.props.notInThread}
+            threadName={this.props.threadName}
+          />
         </View>
         <ModalButtons
           continueEnabled={this.state.selected.length > 0}
