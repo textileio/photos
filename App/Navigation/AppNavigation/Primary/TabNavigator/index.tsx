@@ -28,7 +28,7 @@ const nav = createBottomTabNavigator(
             icon = 'bell'
           }
           const tint = tintColor || undefined
-          return <Icons name={icon} size={25} color={tint} />
+          return <Icons name={icon} size={24} color={tint} />
         }
       }
     },
