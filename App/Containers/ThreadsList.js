@@ -1,12 +1,11 @@
 import React from 'react'
 import Icons from '../Components/Icons'
 import { connect } from 'react-redux'
-import HeaderButtons, { Item } from 'react-navigation-header-buttons'
+import { Item } from 'react-navigation-header-buttons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
-import { View, Text, Image, Alert, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, Image, Alert } from 'react-native'
 import PhotoStream from '../Components/PhotoStream'
-import Avatar from '../Components/Avatar'
 import InvitePeerModal from '../Components/InvitePeerModal'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
@@ -17,7 +16,6 @@ import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
-import navStyles from '../Navigation/Styles/NavigationStyles'
 
 class ThreadsList extends React.PureComponent {
   state = {
@@ -28,41 +26,14 @@ class ThreadsList extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
-    const headerLeft = (
-      <HeaderButtons left>
-        <Item
-          title='Account'
-          onPress={() => navigation.navigate('Account', { username })}
-          buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
-          ButtonElement={
-            <Avatar
-              width={24}
-              height={24}
-              defaultSource={require('../SB/views/Notifications/statics/main-image.png')}
-              owner
-            />
-          }
-        />
-      </HeaderButtons>
-    )
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add Photo' iconName='plus' onPress={params.showWalletPicker} />
         <Item title='Invite Peer' iconName='invite' onPress={params.invitePeerRequest} />
       </TextileHeaderButtons>
     )
-    const headerTitle = (
-      <View style={navStyles.headerTitleLogo}>
-        <TouchableWithoutFeedback
-          delayLongPress={3000}
-          onLongPress={params.toggleVerboseUi}>
-          <Image style={navStyles.headerLogo} source={require('../SB/views/ThreadsList/statics/logo.png')} />
-        </TouchableWithoutFeedback>
-      </View>
-    )
     return {
-      headerLeft,
-      headerTitle,
+      headerTitle: 'Shared Photos',
       headerRight
     }
   }
@@ -76,7 +47,6 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile,
       online: this.props.online,
-      toggleVerboseUi: this.props.toggleVerboseUi,
       invitePeerRequest: this.invitePeerRequest(),
       showWalletPicker: this.props.showWalletPicker
     })
@@ -142,7 +112,8 @@ class ThreadsList extends React.PureComponent {
           private Threads or post a new photo.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons name='more-horizontal' size={28} color='black' /> button above and create your first Thread.
+          Click the <Icons name='plus' size={18} color='black' /> button above to start sharing photos
+          or the <Icons name='invite' size={18} color='black' /> button to invite friends.
         </Text>
       </View>
     )
@@ -258,7 +229,6 @@ const mapDispatchToProps = (dispatch) => {
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     showWalletPicker: () => { dispatch(UIActions.showWalletPicker()) },
-    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) },
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) }
   }
 }

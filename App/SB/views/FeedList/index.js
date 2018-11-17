@@ -1,10 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image } from 'react-native'
-import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 
 import FeedItem from '../../components/FeedItem'
-import Avatar from '../../../Components/Avatar'
 
 import NotificationsActions from '../../../Redux/NotificationsRedux'
 
@@ -17,29 +15,9 @@ class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
     const username = params.profile && params.profile.username ? params.profile.username : undefined
-    const headerLeft = (
-      <HeaderButtons left>
-        <Item
-          title='Account'
-          delayLongPress={3000}
-          onLongPress={params.toggleVerboseUi}
-          onPress={() => navigation.navigate('Account', { username })}
-          buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
-          ButtonElement={
-            <Avatar
-              width={24}
-              height={24}
-              defaultSource={require('../../../Images/v2/main-image.png')}
-              owner
-            />
-          }
-        />
-      </HeaderButtons>
-    )
     const headerTitle = 'Notifications'
 
     return {
-      headerLeft,
       headerTitle,
       headerRight: (<View />) // ensure spacing in android
     }

@@ -21,7 +21,7 @@ const nav = createBottomTabNavigator(
         tabBarIcon: ({focused, tintColor}) => {
           let icon
           if (routeName === 'Wallet') {
-            icon = 'wallet'
+            icon = 'user'
           } else if (routeName === 'Threads') {
             icon = 'grid-slides'
           } else {
