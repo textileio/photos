@@ -1,15 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, ScrollView, Text, TouchableOpacity, Clipboard, Dimensions, Linking } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, Clipboard, Dimensions, Linking } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import ImageSc from 'react-native-scalable-image'
 import Toast, { DURATION } from 'react-native-easy-toast'
-import HeaderButtons, { Item } from 'react-navigation-header-buttons'
 import VersionNumber from 'react-native-version-number'
 
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
 import AuthActions from '../../../Redux/AuthRedux'
+import PreferencesActions from '../../../Redux/PreferencesRedux'
 import Avatar from '../../../Components/Avatar'
 
 import styles from './statics/styles'
@@ -32,22 +32,7 @@ class UserProfile extends React.PureComponent {
           <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
         </TextileHeaderButtons>
       ),
-      headerRight: (
-        <HeaderButtons>
-          <Item
-            title='Avatar'
-            buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
-            ButtonElement={
-              <Avatar
-                width={32}
-                height={32}
-                defaultSource={require('../Notifications/statics/main-image.png')}
-                owner
-              />
-            }
-          />
-        </HeaderButtons>
-      )
+      title: 'Settings'
     }
   }
 
@@ -106,10 +91,15 @@ class UserProfile extends React.PureComponent {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.contentContainer}>
-          <View style={styles.logoContainer}>
-            <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
-            <Text style={styles.versionDescription}>{VersionNumber.appVersion} ({VersionNumber.buildVersion})</Text>
-          </View>
+          <TouchableWithoutFeedback
+            style={styles.logoContainer}
+            delayLongPress={3000}
+            onLongPress={this.props.toggleVerboseUi}>
+            <View style={styles.logoContainer}>
+              <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
+              <Text style={styles.versionDescription}>{VersionNumber.appVersion} ({VersionNumber.buildVersion})</Text>
+            </View>
+          </TouchableWithoutFeedback>
           {this.connectivity()}
           <TouchableOpacity style={styles.listItemFirst} onPress={this._notifications.bind(this)}>
             <Text style={styles.listText}>Notifications</Text>
@@ -167,7 +157,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    lockScreen: () => { dispatch(AuthActions.logOutRequest()) }
+    lockScreen: () => { dispatch(AuthActions.logOutRequest()) },
+    toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
   }
 }
 

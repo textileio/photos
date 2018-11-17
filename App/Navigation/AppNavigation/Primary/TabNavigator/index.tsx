@@ -21,14 +21,14 @@ const nav = createBottomTabNavigator(
         tabBarIcon: ({focused, tintColor}) => {
           let icon
           if (routeName === 'Wallet') {
-            icon = 'wallet'
+            icon = 'user'
           } else if (routeName === 'Threads') {
             icon = 'grid-slides'
           } else {
             icon = 'bell'
           }
           const tint = tintColor || undefined
-          return <Icon name={icon} size={25} color={tint} />
+          return <Icon name={icon} size={24} color={tint} />
         }
       }
     },

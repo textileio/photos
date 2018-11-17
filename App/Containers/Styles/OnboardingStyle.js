@@ -32,7 +32,7 @@ export default StyleSheet.create({
     fontSize: 16,
     lineHeight: 26,
     textAlign: 'center',
-    paddingHorizontal: 52,
+    paddingHorizontal: 22,
     marginBottom: 24
   }
 })
