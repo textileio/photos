@@ -52,6 +52,19 @@ function * downloadPhoto(item: PhotoItem, dispatch: Dispatch) {
   yield put(MigrationActions.downloadComplete(jobId, statusCode, bytesWritten))
 }
 
+function * upload() {
+  const options: FS.UploadFileOptions = {
+    toUrl: 'aurl',
+    files: [],
+    headers: {
+
+    },
+    begin: (begin) => console.log(begin),
+    progress: (progress) => console.log(progress)
+  }
+  FS.uploadFiles(options)
+}
+
 async function getItems<T>(path: string) {
   if (await FS.exists(path)) {
     const content = await FS.readFile(path)
