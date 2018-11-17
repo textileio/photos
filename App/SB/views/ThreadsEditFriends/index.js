@@ -54,12 +54,17 @@ class Component extends React.PureComponent {
     })
   }
 
+  getSelected () {
+    return Object.keys(this.state.selected).filter((id) => this.state.selected[id] === true)
+  }
+
   _updateThread () {
-    if (this.state.selected.length === 0) {
+    const selected = this.getSelected()
+    if (selected.length === 0) {
       return
     }
     // grab the Pks from the user Ids
-    const inviteePks = Object.keys(this.state.selected).filter((id) => this.state.selected[id] === true).map((id) => {
+    const inviteePks = selected.map((id) => {
       const existing = this.props.contacts.find((ctc) => ctc.id === id)
       return existing.pk
     })
@@ -90,7 +95,7 @@ class Component extends React.PureComponent {
           />
         </View>
         <ModalButtons
-          continueEnabled={this.state.selected.length > 0}
+          continueEnabled={this.getSelected().length > 0}
           continue={this._updateThread}
           cancel={this.props.cancel}
           continueText={'Send'}
