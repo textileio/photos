@@ -293,10 +293,10 @@ const mapStateToProps = (state) => {
     available: !!state.storage.overview,
     photoCount: state.storage.overview ? photos.length.toString() : '·',
     photoTitle: !state.storage.overview || photos.length !== 1 ? 'photos' : 'photo',
-    threadCount: state.storage.overview ? (state.storage.overview.thread_count - 1).toString() : '·',
-    threadTitle: !state.storage.overview || state.storage.overview.thread_count - 1 !== 1 ? 'threads' : 'thread',
-    peerCount: state.storage.overview ? state.storage.overview.contact_count.toString() : '·',
-    peerTitle: !state.storage.overview || state.storage.overview.contact_count !== 1 ? 'peers' : 'peer'
+    threadCount: state.storage.overview ? (state.storage.overview.thread_cnt - 1).toString() : '·',
+    threadTitle: !state.storage.overview || state.storage.overview.thread_cnt - 1 !== 1 ? 'threads' : 'thread',
+    peerCount: state.storage.overview ? state.storage.overview.contact_cnt.toString() : '·',
+    peerTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'peers' : 'peer'
   }
 
   const profile = state.preferences.profile
