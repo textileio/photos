@@ -109,12 +109,14 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
             <Text style={styles.title}>Select Thread</Text>
           </View>
         </View>
-        <ThreadSelectComponent
-          createNew={this.props.createNew}
-          select={this.props.selectThread}
-          threads={this.props.threads}
-          selected={this.props.selectedThreadId}
-        />
+        <View style={{flex: 1}}>
+          <ThreadSelectComponent
+            createNew={this.props.createNew}
+            select={this.props.selectThread}
+            threads={this.props.threads}
+            selected={this.props.selectedThreadId}
+          />
+        </View>
       </View>
     )
   }

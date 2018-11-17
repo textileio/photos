@@ -17,8 +17,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'flex-end',
     alignContent: 'center',
-    marginBottom: 84,
-    height: '25%'
+    marginBottom: 44,
+    paddingTop: 22,
+    height: '25%',
+    backgroundColor: 'white'
   } as ViewStyle,
   button: {
     width: '40%',
@@ -42,13 +44,15 @@ interface ScreenProps {
   continue: () => void
   cancelText?: string
   continueText?: string
+  style?: ViewStyle
 }
 
 const ModalButtons = (props: ScreenProps) => {
   const cancelText = props.cancelText ? props.cancelText : 'Cancel'
   const continueText = props.continueText ? props.continueText : 'Continue'
+  const style = props.style ? props.style : styles.bottomRow
   return (
-    <View style={styles.bottomRow}>
+    <View style={style}>
       <TouchableOpacity
         onPress={props.cancel}
         style={styles.button}

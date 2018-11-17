@@ -928,7 +928,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				93C00536216BB93C007786A5 /* Fabric */,
 			);
 			buildRules = (
 			);
@@ -1491,25 +1490,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		93C00536216BB93C007786A5 /* Fabric */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			name = Fabric;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/Fabric.framework/run\" 59497e1c708bbca68843a5c707d11dc9b9b8bbb9 40e63f11b482074a58353dfb3c00fa602159ddd4140ef25bb9b2139cf971675f\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

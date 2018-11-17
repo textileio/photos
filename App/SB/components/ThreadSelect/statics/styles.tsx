@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native'
 export default StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 0,
-    marginTop: 25,
-    paddingTop: 25,
+    marginVertical: 25,
+    paddingVertical: 25,
     borderTopColor: '#ECEDEE',
     borderTopWidth: 1,
     flex: 1
@@ -22,9 +22,7 @@ export default StyleSheet.create({
     fontFamily: 'BentonSans',
     fontSize: 18
   },
-  body: {
-    flex: 1
-  },
+  body: {},
   searchBoxPlaceholder: {
     flexDirection: 'row',
     marginBottom: 2,

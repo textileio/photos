@@ -23,6 +23,10 @@ export default StyleSheet.create({
     minHeight: 40,
     flexWrap: 'wrap'
   },
+  threadSelect: {
+    flex: 1,
+    flexDirection: 'row'
+  },
   imagePreviewRow: {
     justifyContent: 'center',
     alignContent: 'center',

@@ -112,5 +112,17 @@ export default StyleSheet.create({
   contactSelectRadio: {
     position: 'absolute',
     right: 0
+  },
+  bottomRow: {
+    flex: 0.35,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'flex-end',
+    alignContent: 'center',
+    marginBottom: 44,
+    paddingTop: 22,
+    height: '25%',
+    width: '100%'
   }
 })

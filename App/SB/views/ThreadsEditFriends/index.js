@@ -54,12 +54,17 @@ class Component extends React.PureComponent {
     })
   }
 
+  getSelected () {
+    return Object.keys(this.state.selected).filter((id) => this.state.selected[id] === true)
+  }
+
   _updateThread () {
-    if (this.state.selected.length === 0) {
+    const selected = this.getSelected()
+    if (selected.length === 0) {
       return
     }
     // grab the Pks from the user Ids
-    const inviteePks = Object.keys(this.state.selected).filter((id) => this.state.selected[id] === true).map((id) => {
+    const inviteePks = selected.map((id) => {
       const existing = this.props.contacts.find((ctc) => ctc.id === id)
       return existing.pk
     })
@@ -77,27 +82,28 @@ class Component extends React.PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <ContactSelect
-          displayQRCode={this._displayThreadQRCode.bind(this)}
-          getPublicLink={this._getPublicLink.bind(this)}
-          contacts={this.props.contacts}
-          select={this._select.bind(this)}
-          selected={this.state.selected}
-          topFive={this.props.topFive}
-          notInThread={this.props.notInThread}
-          threadName={this.props.threadName}
+        <View style={{flex: 1, zIndex: 10}}>
+          <ContactSelect
+            displayQRCode={this._displayThreadQRCode.bind(this)}
+            getPublicLink={this._getPublicLink.bind(this)}
+            contacts={this.props.contacts}
+            select={this._select.bind(this)}
+            selected={this.state.selected}
+            topFive={this.props.topFive}
+            notInThread={this.props.notInThread}
+            threadName={this.props.threadName}
+          />
+        </View>
+        <ModalButtons
+          continueEnabled={this.getSelected().length > 0}
+          continue={this._updateThread}
+          cancel={this.props.cancel}
+          continueText={'Send'}
+          cancelText={'Exit'}
+          style={styles.bottomRow}
         />
         <QRCodeModal isVisible={this.state.showQrCode} invite={this.props.qrCodeInvite} cancel={this._hideQRCode()} />
         <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} />
-        <View style={styles.buttons}>
-          <ModalButtons
-            continueEnabled={this.state.selected.length > 0}
-            continue={this._updateThread}
-            cancel={this.props.cancel}
-            continueText={'Send'}
-            cancelText={'Exit'}
-          />
-        </View>
       </View>
     )
   }
