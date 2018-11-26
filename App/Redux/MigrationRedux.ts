@@ -2,24 +2,36 @@ import { createAction, getType, ActionType } from 'typesafe-actions'
 
 const actions = {
   migrationMetadata: createAction(
-    'MIGRATION_METADATA',
+    '@migration/MIGRATION_METADATA',
     (resolve) => (photosCount: number, threadsCount: number) => resolve({ photosCount, threadsCount })
   ),
   insertDownload: createAction(
-    'INSERT_DOWNLOAD',
+    '@migration/INSERT_DOWNLOAD',
     (resolve) => (jobId: number, path: string) => resolve({ jobId, path })
   ),
   downloadStarted: createAction(
-    'DOWNLOAD_STARTED',
+    '@migration/DOWNLOAD_STARTED',
     (resolve) => (jobId: number, statusCode: number, contentLength: number) => resolve({ jobId, statusCode, contentLength })
   ),
   downloadProgress: createAction(
-    'DOWNLOAD_PROGRESS',
+    '@migration/DOWNLOAD_PROGRESS',
     (resolve) => (jobId: number, bytesWritten: number) => resolve({ jobId, bytesWritten })
   ),
   downloadComplete: createAction(
-    'DOWNLOAD_COMPLETE',
+    '@migration/DOWNLOAD_COMPLETE',
     (resolve) => (jobId: number, statusCode: number, bytesWritten: number) => resolve({ jobId, statusCode, bytesWritten })
+  ),
+  insertAdd: createAction(
+    '@migration/INSERT_ADD',
+    (resolve) => (sourcePath: string) => resolve({ sourcePath })
+  ),
+  startAdd: createAction(
+    '@migration/ADD',
+    (resolve) => (id: string) => resolve({ id })
+  ),
+  addComplete: createAction(
+    '@migration/ADD_COMPLETE',
+    (resolve) => (id: string, payloadPath?: string, hash?: string) => resolve({ id, payloadPath, hash })
   )
 }
 
@@ -38,14 +50,27 @@ export interface PhotoDownloads {
   readonly [key: number]: PhotoDownload
 }
 
+export interface PhotoAdd {
+  readonly sourcePath: string
+  readonly status: 'pending' | 'adding' | 'complete'
+  readonly payloadPath?: string
+  readonly hash?: string
+}
+
+export interface PhotoAdds {
+  readonly [key: string]: PhotoAdd
+}
+
 export interface MigrationState {
   readonly photosCount?: number
   readonly threadsCount?: number
   readonly photoDownloads: PhotoDownloads
+  readonly photoAdds: PhotoAdds
 }
 
 const initialState: MigrationState = {
-  photoDownloads: {}
+  photoDownloads: {},
+  photoAdds: {}
 }
 
 export function reducer(state: MigrationState = initialState, action: MigrationAction): MigrationState {
@@ -79,6 +104,22 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
       const updatedDownload: PhotoDownload = { ...download, statusCode, bytesWritten }
       const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
       return { ...state, photoDownloads }
+    }
+    case getType(actions.insertAdd): {
+      const { sourcePath } =  action.payload
+      return { ...state, photoAdds: { ...state.photoAdds, [sourcePath]: { sourcePath, status: 'pending' } } }
+    }
+    case getType(actions.startAdd): {
+      const { id } = action.payload
+      const addData = state.photoAdds[id]
+      const updated: PhotoAdd = { ...addData, status: 'adding' }
+      return { ...state, photoAdds: { ...state.photoAdds, [id]: updated } }
+    }
+    case getType(actions.addComplete): {
+      const { id, payloadPath, hash } = action.payload
+      const addData = state.photoAdds[id]
+      const updated: PhotoAdd = { ...addData, status: 'complete', payloadPath, hash }
+      return { ...state, photoAdds: { ...state.photoAdds, [id]: updated } }
     }
     default:
       return state
