@@ -53,12 +53,26 @@ export interface ThreadFilesInfo {
   readonly threads: ReadonlyArray<string>
 }
 
+export enum BlockType {
+  MERGE = 'MERGE',
+  IGNORE = 'IGNORE',
+  FLAG = 'FLAG',
+  JOIN = 'JOIN',
+  ANNOUNCE = 'ANNOUNCE',
+  LEAVE = 'LEAVE',
+  MESSAGE = 'MESSAGE',
+  FILES = 'FILES',
+  COMMENT = 'COMMENT',
+  LIKE = 'LIKE',
+  INVALID = 'INVALID'
+}
+
 export interface BlockInfo {
   readonly id: string
   readonly thread_id: string
   readonly author_id: string
   readonly username: string
-  readonly type: string // TODO: No more enum?
+  readonly type: BlockType
   readonly date: string
   readonly parents: ReadonlyArray<string>
   readonly target?: string
@@ -149,17 +163,18 @@ export interface Node {
   readonly links?: { readonly [key: string]: Link }
 }
 
-// TODO: Use these if we get enums on ThreadInfo
 export enum ThreadType {
-  PrivateThread,
-  ReadOnlyThread,
-  PublicThread,
-  OpenThread
+  PRIVATE = 'PRIVATE',
+  READONLY = 'READONLY',
+  PUBLIC = 'PUBLIC',
+  OPEN = 'OPEN',
+  INVALID = 'INVALID'
 }
 
 export enum ThreadState {
-  ThreadLoading,
-  ThreadLoaded
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
+  INVALID = 'INVALID'
 }
 
 export interface ThreadInfo {
@@ -169,8 +184,8 @@ export interface ThreadInfo {
   readonly schema?: Node
   readonly schem_id?: string
   readonly initiator: string
-  readonly type: string // TODO: no enum?
-  readonly state: string // TODO: no enum?
+  readonly type: ThreadType
+  readonly state: ThreadState
   readonly head?: BlockInfo
   readonly peer_cnt: number
   readonly block_cnt: number
@@ -186,7 +201,7 @@ export interface ThreadUpdate {
   block: BlockInfo
   thread_id: string
   thread_name: string
-  info?: { [key: string]: any } // interface{} is this correct?
+  info?: any // interface{} is this correct?
 }
 
 export enum UpdateType {
