@@ -16,7 +16,6 @@ import ProgressiveImage from '../../../Components/ProgressiveImage'
 import styles from './statics/styles'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
-import { Comment } from '../../../NativeModules/Textile'
 
 const { width } = Dimensions.get('window')
 

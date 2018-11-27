@@ -242,11 +242,12 @@ RCT_EXPORT_METHOD(peerProfile:(NSString*)peerId resolver:(RCTPromiseResolveBlock
 
 RCT_EXPORT_METHOD(prepareFiles:(NSString*)path threadId:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
+  // TODO: convert this NSData to an object?
   NSData *result = [self.node prepareFiles:path threadId:threadId error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(prepareFilesAsync:(NSString*)path threadId:(NSString*)threadId cb:(id<MobileCallback>)cb resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(prepareFilesAsync:(NSString*)path threadId:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   [self.node prepareFilesAsync:path threadId:threadId cb:[[Callback alloc] initWithCompletion:^ (NSData *payload, NSError *error) {
     if (error) {
       reject(@(error.code).stringValue, error.localizedDescription, error);

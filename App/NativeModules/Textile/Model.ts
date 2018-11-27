@@ -1,29 +1,74 @@
 // export type BlockId = string & { _blockIdBrand: void }
 
+export interface File {
+  readonly mill: string
+  readonly checksum: string
+  readonly source: string
+  readonly opts?: string
+  readonly hash: string
+  readonly key?: string
+  readonly media: string
+  readonly name?: string
+  readonly size: number
+  readonly added: string
+  readonly meta?: ReadonlyMap<string, any>
+  readonly targets?: ReadonlyArray<string>
+}
+
+export interface Directory {
+  readonly [key: string]: File
+}
+
+export interface ThreadFileInfo {
+  readonly index: number
+  readonly file?: File
+  readonly links?: Directory
+}
+
+export interface ThreadCommentInfo {
+  readonly id: string
+  readonly date: string
+  readonly author_id: string
+  readonly username?: string
+  readonly body: string
+}
+
+export interface ThreadLikeInfo {
+  readonly id: string
+  readonly date: string
+  readonly author_id: string
+  readonly username?: string
+}
+
+export interface ThreadFilesInfo {
+  readonly block: string
+  readonly target: string
+  readonly date: string
+  readonly author_id: string
+  readonly username?: string
+  readonly caption?: string
+  readonly files: ReadonlyArray<ThreadFileInfo>
+  readonly comments: ReadonlyArray<ThreadCommentInfo>
+  readonly likes: ReadonlyArray<ThreadLikeInfo>
+  readonly threads: ReadonlyArray<string>
+}
+
+export interface BlockInfo {
+  readonly id: string
+  readonly thread_id: string
+  readonly author_id: string
+  readonly username: string
+  readonly type: string // TODO: No more enum?
+  readonly date: string
+  readonly parents: ReadonlyArray<string>
+  readonly target?: string
+  readonly body?: string
+}
+
 export interface ExternalInvite {
   readonly id: string
   readonly key: string
   readonly inviter: string
-}
-
-export interface Archive {
-  readonly path: string
-}
-
-export interface AddDataResult {
-  readonly id: string
-  readonly key: string
-  readonly archive?: Archive
-}
-
-export interface Thread {
-  readonly id: string
-  readonly name: string
-  readonly peers: number
-}
-
-export interface Threads {
-  readonly items: ReadonlyArray<Thread>
 }
 
 export interface CafeSession {
@@ -32,10 +77,7 @@ export interface CafeSession {
   readonly refresh: string
   readonly expiry: string
   readonly http_addr: string
-}
-
-export interface CafeSessions {
-  readonly items: ReadonlyArray<CafeSession>
+  readonly swarm_addrs: ReadonlyArray<string>
 }
 
 export interface Contact {
@@ -45,17 +87,13 @@ export interface Contact {
   readonly added: string
 }
 
-export interface Contacts {
-  readonly items: ReadonlyArray<Contact>
-}
-
 export enum NotificationType {
-  ReceivedInviteNotification,
+  InviteReceivedNotification,
   AccountPeerAddedNotification,
   PeerJoinedNotification,
   PeerLeftNotification,
-  FileAddedNotification,
-  TextAddedNotification,
+  MessageAddedNotification,
+  FilesAddedNotification,
   CommentAddedNotification,
   LikeAddedNotification
 }
@@ -67,14 +105,10 @@ export interface Notification {
   readonly subject: string
   readonly subject_id: string
   readonly block_id?: string
-  readonly data_id?: string
+  readonly target?: string
   readonly type: NotificationType
   readonly body: string
   readonly read: boolean
-}
-
-export interface Notifications {
-  readonly items: ReadonlyArray<Notification>
 }
 
 export interface Overview {
@@ -87,89 +121,57 @@ export interface Overview {
 
 export interface Profile {
   readonly address: string
-  readonly inboxes: ReadonlyArray<string>
+  readonly inboxes?: ReadonlyArray<string>
   readonly username?: string
   readonly avatar_uri?: string
 }
 
-export interface ImageData {
+export interface FileData {
   readonly url: string
 }
 
-export interface Metadata {
-  readonly version: string
-  readonly created?: string
-  readonly added: string
-  readonly name: string
-  readonly ext: string
-  readonly width: number
-  readonly height: number
-  readonly original_format: string
-  readonly encoding_format: string
-  readonly latitude?: number
-  readonly longitude?: number
+export interface Link {
+  readonly use?: string
+  readonly pin: boolean
+  readonly plaintext: boolean
+  readonly mill?: string
+  readonly opts?: { readonly [key: string]: string }
+  readonly json_schema?: { readonly [key: string]: any }
 }
 
-export interface Annotation {
-  readonly id: string
-  readonly date: string
-  readonly author_id: string
-  readonly username?: string
+export interface Node {
+  readonly name?: string
+  readonly pin: boolean
+  readonly plaintext: boolean
+  readonly mill?: string
+  readonly opts?: { readonly [key: string]: string }
+  readonly json_schema?: { readonly [key: string]: any }
+  readonly links?: { readonly [key: string]: Link }
 }
 
-export interface Comment {
-  readonly Annotation: Annotation // TODO: no json name mapping in textile-go
-  readonly body: string
+// TODO: Use these if we get enums on ThreadInfo
+export enum ThreadType {
+  PrivateThread,
+  ReadOnlyThread,
+  PublicThread,
+  OpenThread
 }
 
-export interface Like {
-  readonly Annotation: Annotation // TODO: no json name mapping in textile-go
-}
-
-export interface Photo {
-  readonly id: string
-  readonly block_id: string
-  readonly date: string
-  readonly author_id: string
-  readonly caption?: string
-  readonly username?: string
-  readonly metadata?: Metadata
-  readonly comments: ReadonlyArray<Comment>
-  readonly likes: ReadonlyArray<Like>
-}
-
-export interface Photos {
-  readonly items: ReadonlyArray<Photo>
-}
-
-export enum BlockType {
-  MergeBlock,
-  IgnoreBlock,
-  JoinBlock,
-  AnnounceBlock,
-  LeaveBlock,
-  PhotoBlock,
-  CommentBlock,
-  LikeBlock
-}
-
-export interface Block {
-  readonly id: string
-  readonly date: string
-  readonly parents: ReadonlyArray<string>
-  readonly thread_id: string
-  readonly author_id: string
-  readonly type: BlockType
-  readonly data_id?: string
-  // readonly data_key?: byte[] // TODO: what type should this be?
-  readonly data_caption?: string
-  readonly data_metadata?: Metadata
+export enum ThreadState {
+  ThreadLoading,
+  ThreadLoaded
 }
 
 export interface ThreadInfo {
   readonly id: string
+  readonly key: string
   readonly name: string
-  readonly head?: Block
+  readonly schema?: Node
+  readonly schem_id?: string
+  readonly initiator: string
+  readonly type: string // TODO: no enum?
+  readonly state: string // TODO: no enum?
+  readonly head?: BlockInfo
   readonly peer_cnt: number
   readonly block_cnt: number
   readonly file_cnt: number
@@ -181,9 +183,10 @@ export interface WalletAccount {
 }
 
 export interface ThreadUpdate {
-  block: Block
+  block: BlockInfo
   thread_id: string
   thread_name: string
+  info?: { [key: string]: any } // interface{} is this correct?
 }
 
 export enum UpdateType {

@@ -1,22 +1,18 @@
 import { NativeModules } from 'react-native'
 
 import {
+  File,
   ExternalInvite,
-  AddDataResult,
-  Thread,
-  Threads,
   CafeSession,
-  CafeSessions,
   Contact,
-  Contacts,
-  Metadata,
-  Notifications,
   Overview,
   Profile,
-  ImageData,
-  Photos,
+  FileData,
   ThreadInfo,
-  WalletAccount
+  WalletAccount,
+  BlockInfo,
+  ThreadFilesInfo,
+  Notification
 } from './Model'
 
 const { TextileNode } = NativeModules
@@ -36,33 +32,44 @@ export async function addExternalThreadInvite(threadId: string): Promise<Externa
   return JSON.parse(result) as ExternalInvite
 }
 
-export async function addPhoto(path: string): Promise<AddDataResult> {
-  const result = await TextileNode.addPhoto(path)
-  return JSON.parse(result) as AddDataResult
+export async function addSchema(jsonstr: string): Promise<File> {
+  const result = await TextileNode.addSchema(jsonstr)
+  return JSON.parse(result) as File
 }
 
-export async function addPhotoComment(blockId: string, body: string): Promise<string> {
-  const result = await TextileNode.addPhotoComment(blockId, body) // returns hash
-  return result as string
-}
-
-export async function addPhotoLike(blockId: string): Promise<string> {
-  const result = await TextileNode.addPhotoLike(blockId) // returns hash
-  return result as string
-}
-
-export async function addPhotoToThread(dataId: string, key: string, threadId: string, caption?: string): Promise<string> {
-  const result = await TextileNode.addPhotoToThread(dataId, key, threadId, caption) // returns hash
-  return result as string
-}
-
-export async function addThread(name: string): Promise<Thread> {
+export async function addThread(name: string): Promise<ThreadInfo> {
   const result = await TextileNode.addThread(name)
-  return JSON.parse(result) as Thread
+  return JSON.parse(result) as ThreadInfo
+}
+
+export async function addThreadComment(blockId: string, body: string): Promise<string> {
+  const result = await TextileNode.addThreadComment(blockId, body) // returns hash
+  return result as string
+}
+
+// TODO: Figure out what type dir is
+export async function addThreadFiles(dir: any, threadId: string, caption: string): Promise<BlockInfo> {
+  const result = await TextileNode.addThreadFiles(dir, threadId, caption)
+  return JSON.parse(result) as BlockInfo
+}
+
+export async function addThreadFilesByTarget(target: string, threadId: string, caption: string): Promise<BlockInfo> {
+  const result = await TextileNode.addThreadFilesByTarget(target, threadId, caption)
+  return JSON.parse(result) as BlockInfo
+}
+
+export async function addThreadIgnore(blockId: string): Promise<string> {
+  const result = await TextileNode.addThreadIgnore(blockId) // returns hash
+  return result as string
 }
 
 export async function addThreadInvite(threadId: string, inviteeId: string): Promise<string> {
   const result = await TextileNode.addThreadInvite(threadId, inviteeId) // returns hash
+  return result as string
+}
+
+export async function addThreadLike(blockId: string): Promise<string> {
+  const result = await TextileNode.addThreadLike(blockId) // returns hash
   return result as string
 }
 
@@ -76,12 +83,12 @@ export async function cafeSession(peerId: string): Promise<CafeSession> {
   return JSON.parse(result) as CafeSession
 }
 
-export async function cafeSessions(): Promise<CafeSessions> {
+export async function cafeSessions(): Promise<ReadonlyArray<CafeSession>> {
   const result = await TextileNode.cafeSessions()
-  return JSON.parse(result) as CafeSessions
+  return JSON.parse(result) as ReadonlyArray<CafeSession>
 }
 
-export async function checkCafeMail(): Promise<void> {
+export async function checkCafeMessages(): Promise<void> {
   return await TextileNode.checkCafeMail()
 }
 
@@ -90,9 +97,9 @@ export async function contact(id_: string): Promise<Contact> {
   return JSON.parse(result) as Contact
 }
 
-export async function contactThreads(id_: string): Promise<Threads> {
+export async function contactThreads(id_: string): Promise<ReadonlyArray<ThreadInfo>> {
   const result = await TextileNode.contactThreads(id_)
-  return JSON.parse(result) as Threads
+  return JSON.parse(result) as ReadonlyArray<ThreadInfo>
 }
 
 export async function contactUsername(id_: string): Promise<string> {
@@ -101,9 +108,9 @@ export async function contactUsername(id_: string): Promise<string> {
   return result as string
 }
 
-export async function contacts(): Promise<Contacts> {
+export async function contacts(): Promise<ReadonlyArray<Contact>> {
   const result = await TextileNode.contacts()
-  return JSON.parse(result) as Contacts
+  return JSON.parse(result) as ReadonlyArray<Contact>
 }
 
 export async function countUnreadNotifications(): Promise<number> {
@@ -115,24 +122,25 @@ export async function deregisterCafe(peerId: string): Promise<void> {
   return await TextileNode.deregisterCafe(peerId)
 }
 
-export async function ignorePhoto(blockId: string): Promise<string> {
-  const result = await TextileNode.ignorePhoto(blockId) // returns hash
+export async function fileData(hash: string): Promise<FileData> {
+  const result = await TextileNode.fileData(hash)
+  return JSON.parse(result) as FileData
+}
+
+export async function ignoreThreadInviteViaNotification(id_: string): Promise<string> {
+  const result = await TextileNode.ignoreThreadInviteViaNotification(id_)
   return result as string
 }
 
-export async function ignorePhotoComment(blockId: string): Promise<string> {
-  const result = await TextileNode.ignorePhotoComment(blockId) // returns hash
-  return result as string
+// TODO: pth?
+export async function imageFileDataForMinWidth(pth: string, minWidth: number): Promise<FileData> {
+  const result = await TextileNode.imageFileDataForMinWidth(pth, minWidth)
+  return JSON.parse(result) as FileData
 }
 
-export async function ignorePhotoLike(blockId: string): Promise<string> {
-  const result = await TextileNode.ignorePhotoLike(blockId) // returns hash
-  return result as string
-}
-
-export async function notifications(offset: string, limit: number): Promise<Notifications> {
+export async function notifications(offset: string, limit: number): Promise<ReadonlyArray<Notification>> {
   const result = await TextileNode.notifications(offset, limit)
-  return JSON.parse(result) as Notifications
+  return JSON.parse(result) as ReadonlyArray<Notification>
 }
 
 export async function overview(): Promise<Overview> {
@@ -150,34 +158,16 @@ export async function peerProfile(peerId: string): Promise<Profile> {
   return JSON.parse(result) as Profile
 }
 
-export async function photoData(id_: string, path: string): Promise<ImageData> {
-  const result = await TextileNode.photoData(id_, path)
-  return JSON.parse(result) as ImageData
+export async function prepareFiles(path: string, threadId: string): Promise<any> {
+  // This result should be an object type from proto buf, update return type
+  const result = await TextileNode.prepareFiles(path, threadId)
+  return result as any
 }
 
-export async function photoDataForMinWidth(id_: string, minWidth: number): Promise<ImageData> {
-  const result = await TextileNode.photoDataForMinWidth(id_, minWidth)
-  return JSON.parse(result) as ImageData
-}
-
-export async function photoKey(id_: string): Promise<string> {
-  const result = await TextileNode.photoKey(id_) // returns base58 key
-  return result as string
-}
-
-export async function photoMetadata(id_: string): Promise<Metadata> {
-  const result = await TextileNode.photoMetadata(id_)
-  return JSON.parse(result) as Metadata
-}
-
-export async function photoThreads(id_: string): Promise<Threads> {
-  const result = await TextileNode.photoThreads(id_)
-  return JSON.parse(result) as Threads
-}
-
-export async function photos(offset: string, limit: number, threadId: string): Promise<Photos> {
-  const result = await TextileNode.photos(offset, limit, threadId)
-  return JSON.parse(result) as Photos
+export async function prepareFilesAsync(path: string, threadId: string): Promise<any> {
+  // This result should be an object type from proto buf, update return type
+  const result = await TextileNode.prepareFilesAsync(path, threadId)
+  return result as any
 }
 
 export async function profile(): Promise<Profile> {
@@ -220,11 +210,6 @@ export async function setUsername(username: string): Promise<void> {
   return await TextileNode.setUsername(username)
 }
 
-export async function sharePhotoToThread(dataId: string, threadId: string, caption?: string): Promise<string> {
-  const result = await TextileNode.sharePhotoToThread(dataId, threadId, caption) // returns hash b58 string
-  return result as string
-}
-
 export async function start(): Promise<void> {
   return await TextileNode.start()
 }
@@ -233,14 +218,19 @@ export async function stop(): Promise<void> {
   return await TextileNode.stop()
 }
 
+export async function threadFiles(offset: string, limit: number, threadId: string): Promise<ReadonlyArray<ThreadFilesInfo>> {
+  const result = await TextileNode.threadFiles(offset, limit, threadId)
+  return JSON.parse(result) as ReadonlyArray<ThreadFilesInfo>
+}
+
 export async function threadInfo(threadId: string): Promise<ThreadInfo> {
   const result = await TextileNode.threadInfo(threadId)
   return JSON.parse(result) as ThreadInfo
 }
 
-export async function threads(): Promise<Threads> {
+export async function threads(): Promise<ReadonlyArray<ThreadInfo>> {
   const result = await TextileNode.threads()
-  return JSON.parse(result) as Threads
+  return JSON.parse(result) as ReadonlyArray<ThreadInfo>
 }
 
 export async function username(): Promise<string> {
