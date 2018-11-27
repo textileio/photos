@@ -132,7 +132,7 @@ export async function ignoreThreadInviteViaNotification(id_: string): Promise<st
   return result as string
 }
 
-// TODO: pth?
+// Note: pth is <target>/<index>, e.g., "Qm.../0"
 export async function imageFileDataForMinWidth(pth: string, minWidth: number): Promise<FileData> {
   const result = await TextileNode.imageFileDataForMinWidth(pth, minWidth)
   return JSON.parse(result) as FileData
