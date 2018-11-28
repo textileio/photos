@@ -37,8 +37,8 @@ export async function addSchema(jsonstr: string): Promise<File> {
   return JSON.parse(result) as File
 }
 
-export async function addThread(name: string): Promise<ThreadInfo> {
-  const result = await TextileNode.addThread(name)
+export async function addThread(key: string, name: string): Promise<ThreadInfo> {
+  const result = await TextileNode.addThread(key, name)
   return JSON.parse(result) as ThreadInfo
 }
 
@@ -122,6 +122,7 @@ export async function deregisterCafe(peerId: string): Promise<void> {
   return await TextileNode.deregisterCafe(peerId)
 }
 
+// TODO: Use this to get image data
 export async function fileData(hash: string): Promise<FileData> {
   const result = await TextileNode.fileData(hash)
   return JSON.parse(result) as FileData
@@ -218,7 +219,8 @@ export async function stop(): Promise<void> {
   return await TextileNode.stop()
 }
 
-export async function threadFiles(offset: string, limit: number, threadId: string): Promise<ReadonlyArray<ThreadFilesInfo>> {
+// TODO: How to pass undefined values?
+export async function threadFiles(offset: string, limit: number, threadId?: string): Promise<ReadonlyArray<ThreadFilesInfo>> {
   const result = await TextileNode.threadFiles(offset, limit, threadId)
   return JSON.parse(result) as ReadonlyArray<ThreadFilesInfo>
 }

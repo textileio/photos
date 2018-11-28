@@ -413,11 +413,13 @@ RCT_EXPORT_METHOD(walletAccountAt:(NSString*)phrase index:(NSInteger)index passw
 
 - (NSString*)_fileData:(NSString*)hash error:(NSError**)error {
   NSString *result = [self.node fileData:hash error:error];
+  // TODO: Parse this json string into a dictionary and pull base64 data from it
   return result;
 }
 
 - (NSString*)_imageFileDataForMinWidth:(NSString*)pth minWidth:(long)minWidth error:(NSError**)error {
   NSString *result = [self.node imageFileDataForMinWidth:pth minWidth:minWidth error:error];
+  // TODO: Parse this json string into a dictionary and pull base64 data from it
   return result;
 }
 
