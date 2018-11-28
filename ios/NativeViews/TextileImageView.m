@@ -23,9 +23,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   return self;
 }
 
-- (void)setImageId:(NSString *)imageId {
-  if (_imageId != imageId) {
-    _imageId = imageId;
+- (void)setImagePath:(NSString *)imagePath {
+  if (_imagePath != imagePath) {
+    _imagePath = imagePath;
     self.needsRenderImage = true;
   }
 }
@@ -61,7 +61,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       NSError *error;
       UIImage *image;
       NSString *jsonString;
-      jsonString = [self->_bridge.textileNode _photoDataForMinWidth:self.imageId minWidth:self.forMinWidth error:&error];
+      jsonString = [self->_bridge.textileNode _imageFileDataForMinWidth:self.imagePath minWidth:self.forMinWidth error:&error];
       if (jsonString) {
         NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
         NSError *error;
