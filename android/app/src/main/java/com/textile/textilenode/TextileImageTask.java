@@ -16,22 +16,25 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
     private int viewId;
     private RCTEventEmitter eventEmitter;
-    private String imagePath;
+    private String target;
+    private int index;
     private int forMinWidth;
     private ImageView imageView;
     private Exception e;
 
-    public TextileImageTask(int viewId, RCTEventEmitter eventEmitter, String imagePath, int forMinWidth, ImageView imageView) {
+    public TextileImageTask(int viewId, RCTEventEmitter eventEmitter, String target, int index, int forMinWidth, ImageView imageView) {
         this.viewId = viewId;
         this.eventEmitter = eventEmitter;
-        this.imagePath = imagePath;
+        this.target = target;
+        this.index = index;
         this.forMinWidth = forMinWidth;
         this.imageView = imageView;
     }
 
     protected Bitmap doInBackground(Void... params) {
         try {
-            JSONObject imageJson = new JSONObject(TextileNode.node.imageFileDataForMinWidth(this.imagePath, this.forMinWidth));
+            String path = String.format("%s/%d", this.target, this.index);
+            JSONObject imageJson = new JSONObject(TextileNode.node.imageFileDataForMinWidth(path, this.forMinWidth));
             String dataUrl = imageJson.getString("url");
             String encodingPrefix = "base64,";
             int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();

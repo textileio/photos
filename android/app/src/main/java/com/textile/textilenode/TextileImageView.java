@@ -13,7 +13,8 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 class TextileImageView extends AppCompatImageView {
 
     private ThemedReactContext context;
-    private String imagePath;
+    private String target;
+    private int index;
     private int forMinWidth;
     private ScaleType scaleType;
     private boolean needsRenderScaleType = false;
@@ -24,9 +25,16 @@ class TextileImageView extends AppCompatImageView {
         this.context = context;
     }
 
-    public void setImagePath(String imagePath) {
-        if (this.imagePath != imagePath) {
-            this.imagePath = imagePath;
+    public void setTarget(String target) {
+        if (this.target != target) {
+            this.target = target;
+            this.needsRenderImage = true;
+        }
+    }
+
+    public void setIndex(int index) {
+        if (this.index != index) {
+            this.index = index;
             this.needsRenderImage = true;
         }
     }
@@ -53,7 +61,7 @@ class TextileImageView extends AppCompatImageView {
         if (this.needsRenderImage) {
             ReactContext reactContext = (ReactContext)getContext();
             RCTEventEmitter eventEmitter = reactContext.getJSModule(RCTEventEmitter.class);
-            new TextileImageTask(getId(), eventEmitter, this.imagePath, this.forMinWidth, this).execute();
+            new TextileImageTask(getId(), eventEmitter, this.target, this.index, this.forMinWidth, this).execute();
             this.needsRenderImage = false;
         }
     }

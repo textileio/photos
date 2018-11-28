@@ -2,7 +2,8 @@ import React from 'react'
 import { requireNativeComponent, ImageStyle, PixelRatio } from 'react-native'
 
 export interface Props {
-  imageId: string,
+  target: string,
+  index: number,
   forMinWidth: number,
   resizeMode: string,
   capInsets?: string,
