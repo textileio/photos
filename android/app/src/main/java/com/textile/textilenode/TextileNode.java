@@ -21,6 +21,7 @@ import mobile.Mobile_;
 import mobile.InitConfig;
 import mobile.MigrateConfig;
 import mobile.RunConfig;
+import mobile.Callback;
 
 public class TextileNode extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "TextileNode";
@@ -91,76 +92,91 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addPhoto(final String path, final Promise promise) {
+    public void addSchema(final String jsonstr, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.addPhoto(path));
+                    promise.resolve(node.addSchema(jsonstr));
                 }
                 catch (Exception e) {
-                    promise.reject("addPhoto", e);
+                    promise.reject("addSchema", e);
                 }
             }
         });
     }
 
     @ReactMethod
-    public void addPhotoComment(final String blockId, final String body, final Promise promise) {
+    public void addThread(final String key, final String name, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.addPhotoComment(blockId, body));
-                }
-                catch (Exception e) {
-                    promise.reject("addPhotoComment", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void addPhotoLike(final String blockId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.addPhotoLike(blockId));
-                }
-                catch (Exception e) {
-                    promise.reject("addPhotoLike", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void addPhotoToThread(final String dataId, final String key, final String threadId, final String caption, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String c = caption != null ? caption : "";
-                    promise.resolve(node.addPhotoToThread(dataId, key, threadId, c));
-                }
-                catch (Exception e) {
-                    promise.reject("addPhotoToThread", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void addThread(final String name, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.addThread(name));
+                    promise.resolve(node.addThread(key, name));
                 }
                 catch (Exception e) {
                     promise.reject("addThread", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addThreadComment(final String blockId, final String body, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addThreadComment(blockId, body));
+                }
+                catch (Exception e) {
+                    promise.reject("addThreadComment", e);
+                }
+            }
+        });
+    }
+
+    // TODO: figure out dir arg
+    @ReactMethod
+    public void addThreadFiles(final byte[] dir, final String threadId, final String caption, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addThreadFiles(dir, threadId, caption));
+                }
+                catch (Exception e) {
+                    promise.reject("addThreadFiles", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addThreadFilesByTarget(final String target, final String threadId, final String caption, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addThreadFilesByTarget(target, threadId, caption));
+                }
+                catch (Exception e) {
+                    promise.reject("addThreadFilesByTarget", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addThreadIgnore(final String blockId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addThreadIgnore(blockId));
+                }
+                catch (Exception e) {
+                    promise.reject("addThreadIgnore", e);
                 }
             }
         });
@@ -176,6 +192,21 @@ public class TextileNode extends ReactContextBaseJavaModule {
                 }
                 catch (Exception e) {
                     promise.reject("addThreadInvite", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addThreadLike(final String blockId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.addThreadLike(blockId));
+                }
+                catch (Exception e) {
+                    promise.reject("addThreadLike", e);
                 }
             }
         });
@@ -227,16 +258,16 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void checkCafeMail(final Promise promise) {
+    public void checkCafeMessages(final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    node.checkCafeMail();
+                    node.checkCafeMessages();
                     promise.resolve(null);
                 }
                 catch (Exception e) {
-                    promise.reject("checkCafeMail", e);
+                    promise.reject("checkCafeMessages", e);
                 }
             }
         });
@@ -334,45 +365,46 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void ignorePhoto(final String blockId, final Promise promise) {
+    public void fileData(final String hash, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.ignorePhoto(blockId));
+                    promise.resolve(node.fileData(hash));
                 }
                 catch (Exception e) {
-                    promise.reject("ignorePhoto", e);
+                    promise.reject("fileData", e);
                 }
             }
         });
     }
 
     @ReactMethod
-    public void ignorePhotoComment(final String blockId, final Promise promise) {
+    public void ignoreThreadInviteViaNotification(final String id_, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.ignorePhotoComment(blockId));
+                    node.ignoreThreadInviteViaNotification(id_);
+                    promise.resolve(null);
                 }
                 catch (Exception e) {
-                    promise.reject("ignorePhotoComment", e);
+                    promise.reject("ignoreThreadInviteViaNotification", e);
                 }
             }
         });
     }
 
     @ReactMethod
-    public void ignorePhotoLike(final String blockId, final Promise promise) {
+    public void imageFileDataForMinWidth(final String pth, final Integer minWidth, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.ignorePhotoLike(blockId));
+                    promise.resolve(node.imageFileDataForMinWidth(pth, minWidth));
                 }
                 catch (Exception e) {
-                    promise.reject("ignorePhotoLike", e);
+                    promise.reject("imageFileDataForMinWidth", e);
                 }
             }
         });
@@ -439,90 +471,41 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void photoData(final String id_, final String path, final Promise promise) {
+    public void prepareFiles(final String path, final String threadId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.photoData(id_, path));
+                    // TODO: byte[] coming back here, what to do with it?
+                    promise.resolve(node.prepareFiles(path, threadId));
                 }
                 catch (Exception e) {
-                    promise.reject("photoData", e);
+                    promise.reject("prepareFiles", e);
                 }
             }
         });
     }
 
     @ReactMethod
-    public void photoDataForMinWidth(final String id_, final Integer minWidth, final Promise promise) {
+    public void prepareFilesAsync(final String path, final String threadId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.photoDataForMinWidth(id_, minWidth));
+                    node.prepareFilesAsync(path, threadId, new Callback() {
+                        @Override
+                        public void call(byte[] bytes, Exception e) {
+                            if (e == null) {
+                                // TODO: byte[] coming back here, what to do with it?
+                                promise.resolve(bytes);
+                            } else {
+                                promise.reject("prepareFilesAsync", e);
+                            }
+                        }
+                    });
                 }
                 catch (Exception e) {
-                    promise.reject("photoDataForMinWidth", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void photoKey(final String id_, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.photoKey(id_));
-                }
-                catch (Exception e) {
-                    promise.reject("photoKey", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void photoMetadata(final String id_, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.photoMetadata(id_));
-                }
-                catch (Exception e) {
-                    promise.reject("photoMetadata", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void photoThreads(final String id_, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.photoThreads(id_));
-                }
-                catch (Exception e) {
-                    promise.reject("photoThreads", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void photos(final String offset, final Integer limit, final String threadId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.photos(offset, limit, threadId));
-                }
-                catch (Exception e) {
-                    promise.reject("photos", e);
+                    promise.reject("prepareFilesAsync", e);
                 }
             }
         });
@@ -669,23 +652,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sharePhotoToThread(final String dataId, final String threadId, final String caption, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String c = caption != null ? caption : "";
-                    promise.resolve(node.sharePhotoToThread(dataId, threadId, c));
-
-                }
-                catch (Exception e) {
-                    promise.reject("sharePhotoToThread", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
     public void start(final Promise promise) {
         executor.execute(new Runnable() {
             @Override
@@ -712,6 +678,21 @@ public class TextileNode extends ReactContextBaseJavaModule {
                 }
                 catch (Exception e) {
                     promise.reject("stop", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void threadFiles(final String offset, final Integer limit, final String threadId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.threadFiles(offset, limit, threadId));
+                }
+                catch (Exception e) {
+                    promise.reject("threadFiles", e);
                 }
             }
         });
