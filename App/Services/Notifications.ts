@@ -11,9 +11,9 @@ export interface INotificationsPayload {
 }
 
 export function toTypedNotification(notificationData: NotificationData): Notification {
-  const { subject_id, subject, data_id, type, ...baseNotification } = notificationData
+  const { subject_id, subject, target, type, ...baseNotification } = notificationData
   switch (type) {
-    case NotificationType.ReceivedInviteNotification:
+    case NotificationType.InviteReceivedNotification:
       return {
         ...baseNotification,
         type,
@@ -38,20 +38,21 @@ export function toTypedNotification(notificationData: NotificationData): Notific
         threadId: notificationData.subject_id,
         threadName: notificationData.subject
       }
-      case NotificationType.FileAddedNotification:
+      case NotificationType.MessageAddedNotification:
       return {
         ...baseNotification,
         type,
         threadId: notificationData.subject_id,
         threadName: notificationData.subject,
-        hash: notificationData.data_id!
+        target: notificationData.target!
       }
-      case NotificationType.TextAddedNotification:
+      case NotificationType.FilesAddedNotification:
       return {
         ...baseNotification,
         type,
         threadId: notificationData.subject_id,
-        threadName: notificationData.subject
+        threadName: notificationData.subject,
+        target: notificationData.target!
       }
     case NotificationType.CommentAddedNotification:
       return {
@@ -59,7 +60,7 @@ export function toTypedNotification(notificationData: NotificationData): Notific
         type,
         threadId: notificationData.subject_id,
         threadName: notificationData.subject,
-        hash: notificationData.data_id!
+        target: notificationData.target!
       }
     case NotificationType.LikeAddedNotification:
       return {
@@ -67,7 +68,7 @@ export function toTypedNotification(notificationData: NotificationData): Notific
         type,
         threadId: notificationData.subject_id,
         threadName: notificationData.subject,
-        hash: notificationData.data_id!
+        target: notificationData.target!
       }
   }
 }
@@ -81,7 +82,7 @@ export function toPayload(notification: Notification): INotificationsPayload {
   const actor = notification.actor_id || 'A peer' // TODO: We want username here, need to look it up?
 
   switch (notification.type) {
-    case(NotificationType.ReceivedInviteNotification): {
+    case(NotificationType.InviteReceivedNotification): {
       const title = 'New Invite'
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
@@ -105,13 +106,13 @@ export function toPayload(notification: Notification): INotificationsPayload {
       const feed = [actor, notification.body, 'thread', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(NotificationType.FileAddedNotification): {
+    case(NotificationType.MessageAddedNotification): {
       const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(NotificationType.TextAddedNotification): {
+    case(NotificationType.FilesAddedNotification): {
       const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'to', notification.threadName].join(' ')

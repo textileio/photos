@@ -17,7 +17,7 @@ import { ActionType } from 'typesafe-actions'
 import { readAllNotifications as readAll, readNotification, notifications } from '../NativeModules/Textile'
 import {
   NotificationType,
-  Notifications
+  Notification
 } from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 
@@ -93,17 +93,17 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.hash))
+          yield put(PhotoViewingAction.viewPhoto(notification.target))
           yield call(NavigationService.navigate, 'Comments')
         }
         break
       }
       case NotificationType.LikeAddedNotification:
-      case NotificationType.FileAddedNotification: {
+      case NotificationType.FilesAddedNotification: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.hash))
+          yield put(PhotoViewingAction.viewPhoto(notification.target))
           yield call(NavigationService.navigate, 'PhotoScreen')
         }
         break
@@ -117,7 +117,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         }
         break
       }
-      case NotificationType.ReceivedInviteNotification: {
+      case NotificationType.InviteReceivedNotification: {
         yield * waitUntilOnline(1000)
         yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
         break
@@ -135,8 +135,8 @@ export function * refreshNotifications () {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: Notifications = yield call(notifications, '', 99) // TODO: offset?
-    yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.items.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))))
+    const notificationResponse: ReadonlyArray<Notification> = yield call(notifications, '', 99) // TODO: offset?
+    yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))))
   } catch (error) {
     yield put(NotificationsActions.refreshNotificationsFailure())
   }

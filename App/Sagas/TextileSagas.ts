@@ -15,13 +15,14 @@ import { call, put, select, take, fork } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import {
+  AddDataResult,
   overview,
   Overview,
   addPhoto,
   addPhotoToThread,
   contacts,
-  Contacts,
-  checkCafeMail,
+  Contact,
+  checkCafeMessages,
   ignorePhoto as ignore,
   setAvatar,
   profile,
@@ -30,7 +31,6 @@ import {
   addPhotoLike as addLike
 } from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
-import { AddDataResult, Contact } from '../NativeModules/Textile'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
 import StartupActions from '../Redux/StartupRedux'
@@ -145,8 +145,8 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
 
 export function * refreshContacts () {
   try {
-    const contactsResult: Contacts = yield call(contacts)
-    yield put(ContactsActions.getContactsSuccess(contactsResult.items))
+    const contactsResult: ReadonlyArray<Contact> = yield call(contacts)
+    yield put(ContactsActions.getContactsSuccess(contactsResult))
   } catch (error) {
     // skip for now
   }
@@ -171,7 +171,7 @@ export function * initializeAppState () {
 export function * refreshMessages () {
   while (yield take(getType(TextileNodeActions.refreshMessagesRequest))) {
     try {
-      yield call(checkCafeMail)
+      yield call(checkCafeMessages)
       yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
       yield call(logNewEvent, 'Refresh messages', 'Checked offline messages')
     } catch (error) {

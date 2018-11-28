@@ -13,7 +13,7 @@ import {Share} from 'react-native'
 import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import { ActionType } from 'typesafe-actions'
-import { ExternalInvite, Threads } from '../NativeModules/Textile'
+import { ExternalInvite } from '../NativeModules/Textile'
 import {
   addExternalThreadInvite,
   acceptExternalThreadInvite,

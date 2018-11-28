@@ -9,9 +9,9 @@ interface BaseNotification {
   read: boolean
 }
 
-export type ReceivedInviteNotification = BaseNotification & {
+export type InviteReceivedNotification = BaseNotification & {
   threadName: string
-  type: NotificationType.ReceivedInviteNotification
+  type: NotificationType.InviteReceivedNotification
 }
 
 export type AccountPeerAddedNotification = BaseNotification & {
@@ -30,39 +30,40 @@ export type PeerLeftNotification = BaseNotification & {
   type: NotificationType.PeerLeftNotification
 }
 
-export type FileAddedNotification = BaseNotification & {
+export type MessageAddedNotification = BaseNotification & {
   threadId: string
   threadName: string
-  hash: string
-  type: NotificationType.FileAddedNotification
+  target: string
+  type: NotificationType.MessageAddedNotification
 }
 
-export type TextAddedNotification = BaseNotification & {
+export type FilesAddedNotification = BaseNotification & {
   threadId: string
   threadName: string
-  type: NotificationType.TextAddedNotification
+  target: string
+  type: NotificationType.FilesAddedNotification
 }
 
 export type CommentAddedNotification = BaseNotification & {
   threadId: string
   threadName: string
-  hash: string
+  target: string
   type: NotificationType.CommentAddedNotification
 }
 
 export type LikeAddedNotification = BaseNotification & {
   threadId: string
   threadName: string
-  hash: string
+  target: string
   type: NotificationType.LikeAddedNotification
 }
 
 export type Notification =
-  ReceivedInviteNotification |
+  InviteReceivedNotification |
   AccountPeerAddedNotification |
   PeerJoinedNotification |
   PeerLeftNotification |
-  FileAddedNotification |
-  TextAddedNotification |
+  MessageAddedNotification |
+  FilesAddedNotification |
   CommentAddedNotification |
   LikeAddedNotification

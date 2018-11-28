@@ -7,7 +7,7 @@ import {
 
 export async function bestCafeSession() {
   const allSessions = await sessions()
-  const sorted = allSessions.items.slice().sort((a, b) => {
+  const sorted = allSessions.slice().sort((a, b) => {
     const aExpiry = new Date(a.expiry).getTime()
     const bExpiry = new Date(b.expiry).getTime()
     return aExpiry - bExpiry
@@ -22,8 +22,7 @@ export async function bestCafeSession() {
 }
 
 export async function cafeSessions() {
-  const s = await sessions()
-  return s.items
+  return await sessions()
 }
 
 export async function cafeSession(cafeId: string) {
@@ -36,6 +35,6 @@ export async function refreshCafeSession(session: CafeSession) {
 
 export async function refreshAllSessions() {
   const sessionsData = await sessions()
-  const refreshedSessions = await Promise.all(sessionsData.items.map(async (session) => await refresh(session.cafe_id)))
+  const refreshedSessions = await Promise.all(sessionsData.map(async (session) => await refresh(session.cafe_id)))
   return refreshedSessions as ReadonlyArray<CafeSession>
 }

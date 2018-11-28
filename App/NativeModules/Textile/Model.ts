@@ -201,7 +201,7 @@ export interface ThreadUpdate {
   block: BlockInfo
   thread_id: string
   thread_name: string
-  info?: any // interface{} is this correct?
+  info?: any
 }
 
 export enum UpdateType {
