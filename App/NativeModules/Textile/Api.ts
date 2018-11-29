@@ -4,7 +4,7 @@ import {
   File,
   ExternalInvite,
   CafeSession,
-  Contact,
+  ContactInfo,
   Overview,
   Profile,
   FileData,
@@ -27,9 +27,17 @@ export async function acceptThreadInviteViaNotification(id_: string): Promise<st
   return result as string
 }
 
+export async function addContact(id_: string, address: string, username: string): Promise<void> {
+  await TextileNode.addContact(id_, address, username)
+}
+
 export async function addExternalThreadInvite(threadId: string): Promise<ExternalInvite> {
   const result = await TextileNode.addExternalThreadInvite(threadId)
   return JSON.parse(result) as ExternalInvite
+}
+
+export async function addPeerToThread(id_: string, threadId: string): Promise<void> {
+  await TextileNode.addPeerToThread(id_, threadId)
 }
 
 export async function addSchema(jsonstr: string): Promise<File> {
@@ -89,12 +97,12 @@ export async function cafeSessions(): Promise<ReadonlyArray<CafeSession>> {
 }
 
 export async function checkCafeMessages(): Promise<void> {
-  return await TextileNode.checkCafeMail()
+  await TextileNode.checkCafeMail()
 }
 
-export async function contact(id_: string): Promise<Contact> {
+export async function contact(id_: string): Promise<ContactInfo> {
   const result = await TextileNode.contact(id_)
-  return JSON.parse(result) as Contact
+  return JSON.parse(result) as ContactInfo
 }
 
 export async function contactThreads(id_: string): Promise<ReadonlyArray<ThreadInfo>> {
@@ -108,9 +116,9 @@ export async function contactUsername(id_: string): Promise<string> {
   return result as string
 }
 
-export async function contacts(): Promise<ReadonlyArray<Contact>> {
+export async function contacts(): Promise<ReadonlyArray<ContactInfo>> {
   const result = await TextileNode.contacts()
-  return JSON.parse(result) as ReadonlyArray<Contact>
+  return JSON.parse(result) as ReadonlyArray<ContactInfo>
 }
 
 export async function countUnreadNotifications(): Promise<number> {
@@ -119,7 +127,7 @@ export async function countUnreadNotifications(): Promise<number> {
 }
 
 export async function deregisterCafe(peerId: string): Promise<void> {
-  return await TextileNode.deregisterCafe(peerId)
+  await TextileNode.deregisterCafe(peerId)
 }
 
 // TODO: Use this to get image data
@@ -177,11 +185,11 @@ export async function profile(): Promise<Profile> {
 }
 
 export async function readAllNotifications(): Promise<void> {
-  return await TextileNode.readAllNotifications()
+  await TextileNode.readAllNotifications()
 }
 
 export async function readNotification(id_: string): Promise<void> {
-  return await TextileNode.readNotification(id_)
+  await TextileNode.readNotification(id_)
 }
 
 export async function refreshCafeSession(cafeId: string): Promise<CafeSession> {
@@ -190,7 +198,7 @@ export async function refreshCafeSession(cafeId: string): Promise<CafeSession> {
 }
 
 export async function registerCafe(peerId: string): Promise<void> {
-  return await TextileNode.registerCafe(peerId)
+  await TextileNode.registerCafe(peerId)
 }
 
 export async function removeThread(id_: string): Promise<string> {
@@ -204,19 +212,19 @@ export async function seed(): Promise<string> {
 }
 
 export async function setAvatar(id_: string): Promise<void> {
-  return await TextileNode.setAvatar(id_)
+  await TextileNode.setAvatar(id_)
 }
 
 export async function setUsername(username: string): Promise<void> {
-  return await TextileNode.setUsername(username)
+  await TextileNode.setUsername(username)
 }
 
 export async function start(): Promise<void> {
-  return await TextileNode.start()
+  await TextileNode.start()
 }
 
 export async function stop(): Promise<void> {
-  return await TextileNode.stop()
+  await TextileNode.stop()
 }
 
 // TODO: How to pass undefined values?
@@ -258,11 +266,11 @@ export async function initRepo(seed: string, repoPath: string, logLevel: string,
 }
 
 export async function migrateRepo(repoPath: string): Promise<void> {
-  return await TextileNode.migrateRepo(repoPath)
+  await TextileNode.migrateRepo(repoPath)
 }
 
 export async function newTextile(repoPath: string): Promise<void> {
-  return await TextileNode.newTextile(repoPath)
+  await TextileNode.newTextile(repoPath)
 }
 
 export async function newWallet(wordCount: number): Promise<string> {

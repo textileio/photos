@@ -567,9 +567,9 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@textile/go-mobile@1.0.0-rc1":
-  version "1.0.0-rc1"
-  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc1.tgz#2436af90d861fd2f8840bde0aabd9810ae51f0fb"
+"@textile/go-mobile@1.0.0-rc3":
+  version "1.0.0-rc3"
+  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc3.tgz#9d98f576fe2633b202cbfa69574f0a97d6e2331c"
 
 "@types/cheerio@*":
   version "0.22.9"

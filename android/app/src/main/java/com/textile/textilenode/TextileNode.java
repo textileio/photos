@@ -77,6 +77,22 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void addContact(final String id_, final String address, final String username, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.addContact(id_, address, username);
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("addContact", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
     public void addExternalThreadInvite(final String threadId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
@@ -86,6 +102,22 @@ public class TextileNode extends ReactContextBaseJavaModule {
                 }
                 catch (Exception e) {
                     promise.reject("addExternalThreadInvite", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addPeerToThread(final String id_, final String threadId, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    node.addPeerToThread(id_, threadId);
+                    promise.resolve(null);
+                }
+                catch (Exception e) {
+                    promise.reject("addPeerToThread", e);
                 }
             }
         });

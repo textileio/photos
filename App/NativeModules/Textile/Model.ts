@@ -94,8 +94,9 @@ export interface CafeSession {
   readonly swarm_addrs: ReadonlyArray<string>
 }
 
-export interface Contact {
+export interface ContactInfo {
   readonly id: string
+  readonly address: string
   readonly username: string
   readonly thread_ids: ReadonlyArray<string>
   readonly added: string
@@ -193,8 +194,8 @@ export interface ThreadInfo {
 }
 
 export interface WalletAccount {
-  readonly Seed: string // TODO: no json name mappings for these in textile-go
-  readonly Address: string
+  readonly seed: string
+  readonly address: string
 }
 
 export interface ThreadUpdate {
