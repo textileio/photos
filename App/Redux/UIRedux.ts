@@ -1,6 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { SharedImage } from '../Models/TextileTypes'
 import { RootState } from './Types'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
@@ -20,7 +21,7 @@ const actions = {
     return () => resolve()
   }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
-    return (image: SharedImage | string) => resolve({ image })
+    return (image: SharedImage | ThreadFilesInfo) => resolve({ image })
   }),
   updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', (resolve) => {
     return (threadId: string) => resolve({ threadId })
@@ -90,7 +91,7 @@ export interface UIState {
     readonly error?: Error
   }
   readonly sharingPhoto?: {
-    readonly image?: SharedImage | string
+    readonly image?: SharedImage | ThreadFilesInfo
     readonly threadId?: string
     readonly comment?: string
   },

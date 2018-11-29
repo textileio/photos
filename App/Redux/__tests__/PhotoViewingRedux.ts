@@ -1,13 +1,20 @@
 import actions, { reducer } from '../PhotoViewingRedux'
-import { Photo } from '../../NativeModules/Textile'
+import { ThreadFilesInfo } from '../../NativeModules/Textile'
 
 const initialState = reducer(undefined, {} as any)
 
 const threadId: string = 'threadId' as any
 const threadName: string = 'threadName' as any
-const photos: Photo[] = [
-  { id: 'id' as any, author_id: 'author_id' as any, block_id: 'block_id' as any, date: 'now', comments: [], likes: [] }
-]
+const photos: ThreadFilesInfo[] = [{
+  block: 'block_id',
+  target: 'target',
+  date: 'now',
+  author_id: 'author_id',
+  files: [],
+  comments: [],
+  likes: [],
+  threads: []
+}]
 
 describe('photo viewing stories', () => {
   describe('initial state', () => {

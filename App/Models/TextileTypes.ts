@@ -4,11 +4,11 @@
 // read here: https://basarat.gitbooks.io/typescript/docs/tips/nominalTyping.html#using-enums
 
 import {IProcessingImageProps} from '../Components/ProcessingImage'
-import { Photo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 
 export interface IPhotoGridType {
   type: 'photo' | 'processingItem'
-  photo: Photo | IProcessingImageProps
+  photo: ThreadFilesInfo | IProcessingImageProps
   id: string
 }
 

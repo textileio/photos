@@ -1,13 +1,13 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 
-import { Photo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
     return (id: string, name: string) => resolve({ id, name })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
-    return (name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: string, comment?: string } }) => resolve({ name }, options)
+    return (key: string, name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: string, comment?: string } }) => resolve({ key, name }, options)
   }),
   threadAdded: createAction('THREAD_ADDED', (resolve) => {
     return (id: string, name: string) => resolve({ id, name })
@@ -33,7 +33,7 @@ const actions = {
     return (threadId: string) => resolve({ threadId })
   }),
   refreshThreadSuccess: createAction('REFRESH_THREAD_SUCCESS', (resolve) => {
-    return (threadId: string, photos: ReadonlyArray<Photo>) => resolve({ threadId, photos })
+    return (threadId: string, photos: ReadonlyArray<ThreadFilesInfo>) => resolve({ threadId, photos })
   }),
   refreshThreadError: createAction('REFRESH_THREAD_ERROR', (resolve) => {
     return (threadId: string, error: any) => resolve({ threadId, error })
@@ -60,7 +60,7 @@ export interface ThreadData {
   readonly id: string
   readonly name: string
   readonly querying: boolean
-  readonly photos: ReadonlyArray<Photo>
+  readonly photos: ReadonlyArray<ThreadFilesInfo>
   readonly error?: string
 }
 
@@ -86,9 +86,9 @@ interface PhotoViewingState {
     readonly id: string
     readonly error?: string
   }
-  readonly viewingWalletPhoto?: Photo
+  readonly viewingWalletPhoto?: ThreadFilesInfo
   readonly viewingThreadId?: string
-  readonly viewingPhoto?: Photo
+  readonly viewingPhoto?: ThreadFilesInfo
   readonly authoringComment?: string
 }
 
@@ -173,10 +173,10 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       }
       const obj: ThreadData = { ...threadData, querying: false, photos }
       const threads: ThreadMap = { ...state.threads, [threadId]: obj }
-      let viewingPhoto: Photo | undefined
+      let viewingPhoto: ThreadFilesInfo | undefined
       if (state.viewingThreadId === threadId && state.viewingPhoto) {
         const currentViewingPhoto = state.viewingPhoto
-        viewingPhoto = photos.find((photo) => currentViewingPhoto.id === photo.id)
+        viewingPhoto = photos.find((photo) => currentViewingPhoto.target === photo.target)
       }
       return { ...state, threads, viewingPhoto }
     }
@@ -200,7 +200,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       if (!defaultThreadData) {
         return state
       }
-      const viewingWalletPhoto = defaultThreadData.photos.find((photo) => photo.id === photoId)
+      const viewingWalletPhoto = defaultThreadData.photos.find((photo) => photo.target === photoId)
       return { ...state, viewingWalletPhoto }
     }
     case getType(actions.viewThread): {
@@ -214,7 +214,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       }
       const threadData = state.threads[state.viewingThreadId]
       const photos = threadData ? threadData.photos : []
-      const photo = photos.find((photo) => photo.id === photoId)
+      const photo = photos.find((photo) => photo.target === photoId)
       return { ...state, viewingPhoto: photo, authoringComment: undefined }
     }
     case getType(actions.updateComment): {

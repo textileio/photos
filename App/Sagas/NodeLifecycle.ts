@@ -3,7 +3,6 @@ import { Dispatch } from 'redux'
 import { all, take, call, put, fork, cancelled, race, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
-import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
@@ -22,7 +21,7 @@ import {
   initRepo,
   stop,
   threads,
-  Threads,
+  ThreadInfo,
   WalletAccount
  } from '../NativeModules/Textile'
 import { logNewEvent } from './DeviceLogs'
@@ -86,11 +85,11 @@ function * createAndStartNode(dispatch: Dispatch): any {
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
-    const threadsResult: Threads = yield call(threads)
+    const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
     const defaultThreadName = 'default'
-    const defaultThread = threadsResult.items.find((thread) => thread.name === defaultThreadName)
+    const defaultThread = threadsResult.find((thread) => thread.key === defaultThreadName)
     if (!defaultThread) {
-      yield call(addThread, 'default')
+      yield call(addThread, defaultThreadName, defaultThreadName)
     }
     yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {

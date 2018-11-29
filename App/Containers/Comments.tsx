@@ -97,10 +97,10 @@ const mapStateToProps = (state: RootState): StateProps  => {
   const comments = viewingPhoto ? viewingPhoto.comments : []
   const commentCardProps = comments.slice().reverse().map((comment) => {
     const props: CommentCardProps = {
-      username: comment.Annotation.username || 'unknown',
-      peerId: comment.Annotation.author_id,
+      username: comment.username || 'unknown',
+      peerId: comment.author_id,
       comment: comment.body,
-      date: comment.Annotation.date,
+      date: comment.date,
       isCaption: false
     }
     return props

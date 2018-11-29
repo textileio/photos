@@ -14,7 +14,7 @@ import Avatar from './Avatar'
 import { TextileHeaderButtons, Item } from './HeaderButtons'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
-import { Photo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 
 // Styles
 import styles from './Styles/ContactModal'
@@ -75,7 +75,7 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
 }
 
 interface DispatchStateProps {
-  threads: Array<{id: string, name: string, thumb?: Photo}>
+  threads: Array<{id: string, name: string, thumb?: ThreadFilesInfo}>
 }
 
 const mapStateToProps = (state: RootState, ownProps: ScreenProps): DispatchStateProps => {

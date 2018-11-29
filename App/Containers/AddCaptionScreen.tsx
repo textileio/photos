@@ -11,12 +11,12 @@ import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../Components/TextileImage'
 import { SharedImage } from '../Models/TextileTypes'
-import { Photo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
 interface StateProps {
-  image?: SharedImage | string,
+  image?: SharedImage | ThreadFilesInfo,
   threadId?: string,
   comment?: string,
   selectedThreadId?: string
@@ -85,10 +85,12 @@ class AddCaptionScreen extends React.Component<Props> {
       disableShare: this.props.selectedThreadId === undefined,
       cancelShare: () => { this.props.cancelShare() },
       share: () => {
-        if (typeof this.props.image === 'string') {
-          this.props.share(this.props.image as string, this.props.threadId, this.props.comment)
-        } else if (this.props.image) {
-          this.props.share(this.props.image, this.props.threadId, this.props.comment)
+        if (this.props.image && (this.props.image as ThreadFilesInfo).target) {
+          const filesInfo = this.props.image as ThreadFilesInfo
+          this.props.share(filesInfo.target, this.props.threadId, this.props.comment)
+        } else if (this.props.image && (this.props.image as SharedImage).uri) {
+          const sharedImage = this.props.image as SharedImage
+          this.props.share(sharedImage, this.props.threadId, this.props.comment)
         }
       },
       shareToNewThread: this._shareToNewThread.bind(this)
@@ -102,8 +104,8 @@ class AddCaptionScreen extends React.Component<Props> {
     }
   }
 
-  _shareToNewThread (withPhoto: Photo, withThreadName: string) {
-    this.props.shareNewThread(withPhoto.id, withThreadName, this.props.comment)
+  _shareToNewThread (withPhoto: ThreadFilesInfo, withThreadName: string) {
+    this.props.shareNewThread(withPhoto.target, withThreadName, this.props.comment)
   }
 
   _createNewThread () {
@@ -140,10 +142,12 @@ class AddCaptionScreen extends React.Component<Props> {
           style={{...styles.image, width: 70, height: 70}}
         />
       )
-    } else if (image && typeof image === 'string') {
+    } else if (image && (image as ThreadFilesInfo).target) {
+      const filesInfo = image as ThreadFilesInfo
       return (
         <TextileImage
-          imageId={image}
+          target={filesInfo.target}
+          index={filesInfo.files[0].index}
           forMinWidth={70}
           resizeMode={'cover'}
           style={{...styles.image, width: 70, height: 70}}
@@ -205,7 +209,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     updateComment: (text: string) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
     share: (image?: SharedImage | string, threadId?: string, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    shareNewThread: (imageId: string, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
+    shareNewThread: (imageId: string, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, threadName, { sharePhoto: { imageId, comment } })) }
   }
 }
 

@@ -6,7 +6,7 @@ import { FlatList, ViewStyle, View, ListRenderItemInfo, Text, TextStyle } from '
 import { RootState } from '../Redux/Types'
 import Avatar from '../Components/Avatar'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
-import { Like } from '../NativeModules/Textile'
+import { ThreadLikeInfo } from '../NativeModules/Textile'
 
 const CONTAINER: ViewStyle = {
   backgroundColor: '#FAFCFE'
@@ -76,10 +76,10 @@ const mapStateToProps = (state: RootState): StateProps => {
   if (!state.photoViewing.viewingPhoto) {
     throw Error('No viewing photo')
   }
-  const likes = state.photoViewing.viewingPhoto.likes.map((like: Like) => {
-    const username: string = like.Annotation.username || 'unknown'
+  const likes = state.photoViewing.viewingPhoto.likes.map((like) => {
+    const username: string = like.username || 'unknown'
     return {
-      peerId: like.Annotation.author_id,
+      peerId: like.author_id,
       username
     }
   })

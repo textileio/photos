@@ -12,7 +12,6 @@ import Modal from 'react-native-modal'
 import { RootAction } from '../Redux/Types'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
-import { Photo } from '../NativeModules/Textile'
 import Input from '../SB/components/Input'
 
 // Styles
@@ -45,10 +44,6 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
     return (text: string) => {
       this.setState({ value: text })
     }
-  }
-
-  _submitWithPhoto (withPhoto: Photo) {
-    const withThreadName = this.state.value
   }
 
   create () {
@@ -111,7 +106,7 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
+    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, name, { navigate, selectToShare })) }
   }
 }
 

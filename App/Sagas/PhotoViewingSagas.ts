@@ -10,11 +10,11 @@ import {
   addThread as add,
   removeThread as remove,
   threads,
-  photos,
-  addPhotoComment as addComment,
-  Photos
+  threadFiles,
+  addThreadComment,
+  ThreadFilesInfo,
+  ThreadInfo
 } from '../NativeModules/Textile'
-import { Threads, Photo } from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
 
@@ -48,9 +48,9 @@ export function * monitorNewThreadActions () {
 }
 
 export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
-  const { name } = action.payload
+  const { key, name } = action.payload
   try {
-    yield call(add, name)
+    yield call(add, key, name)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
   }
@@ -68,8 +68,8 @@ export function * removeThread (action: ActionType<typeof PhotoViewingActions.re
 
 export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>) {
   try {
-    const threadsResult: Threads = yield call(threads)
-    for (const thread of threadsResult.items) {
+    const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
+    for (const thread of threadsResult) {
       yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
       yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
@@ -81,20 +81,20 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
 export function * refreshThread (action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
   const { threadId } = action.payload
   try {
-    const photosResult: Photos = yield call(photos, '', -1, threadId)
-    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult.items))
+    const photosResult: ReadonlyArray<ThreadFilesInfo> = yield call(threadFiles, '', -1, threadId)
+    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
   }
 }
 
 export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions.addCommentRequest>) {
-  const result: { photo: Photo | undefined, comment: string | undefined } = yield select(photoAndComment)
+  const result: { photo: ThreadFilesInfo | undefined, comment: string | undefined } = yield select(photoAndComment)
   if (!result.photo || !result.comment) {
     return
   }
   try {
-    yield call(addComment, result.photo.block_id, result.comment)
+    yield call(addThreadComment, result.photo.block, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
   }

@@ -23,12 +23,12 @@ import {
   contacts,
   Contact,
   checkCafeMessages,
-  ignorePhoto as ignore,
+  addThreadIgnore,
   setAvatar,
   profile,
   Profile,
   photoKey,
-  addPhotoLike as addLike
+  addThreadLike
 } from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
@@ -182,10 +182,10 @@ export function * refreshMessages () {
 }
 
 export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.ignorePhotoRequest>) {
-  const { threadId, blockId } = action.payload
+  const { blockId } = action.payload
   try {
     yield call(NavigationService.goBack)
-    yield call(ignore, blockId)
+    yield call(addThreadIgnore, blockId)
   } catch (error) {
     // do nothing new for now
   }
@@ -419,7 +419,7 @@ export function * backgroundLocationPermissionsTrigger () {
 export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
-    yield call(addLike, blockId)
+    yield call(addThreadLike, blockId)
   } catch (error) {
 
   }

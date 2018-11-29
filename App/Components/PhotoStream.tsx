@@ -4,7 +4,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 
-import { Photo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 import {RootAction} from '../Redux/Types'
 
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
@@ -19,7 +19,7 @@ import styles from './Styles/PhotoStreamStyles'
 
 interface PhotoItem {
   type: string
-  photo: Photo
+  photo: ThreadFilesInfo
 }
 interface ProcessingItem {
   type: string
@@ -34,15 +34,15 @@ interface ScreenProps {
 
 class PhotoStream extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
 
-  _onCommentSelect = (photo: Photo, threadId: string) => {
+  _onCommentSelect = (photo: ThreadFilesInfo, threadId: string) => {
     return () => {
-      this.props.navigateToComments(photo.id, threadId)
+      this.props.navigateToComments(photo.target, threadId)
     }
   }
 
-  onLikes = (photo: Photo, threadId: string) => {
+  onLikes = (photo: ThreadFilesInfo, threadId: string) => {
     return () => {
-      this.props.navigateToLikes(photo.id, threadId)
+      this.props.navigateToLikes(photo.target, threadId)
     }
   }
 

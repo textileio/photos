@@ -32,7 +32,7 @@ const actions = {
     return () => resolve()
   }),
   ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', (resolve) => {
-    return (threadId: string, blockId: string) => resolve({ threadId, blockId })
+    return (blockId: string) => resolve({ blockId })
   }),
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', (resolve) => {
     return () => resolve()
