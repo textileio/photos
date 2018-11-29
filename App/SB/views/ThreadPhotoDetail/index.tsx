@@ -21,6 +21,7 @@ const { width } = Dimensions.get('window')
 
 interface StateProps {
   photoId: string
+  fileIndex: number
   blockId: string
   size?: {
     height: number
@@ -82,6 +83,7 @@ class ThreadPhotoDetail extends Component<Props, State> {
     return (
       <ProgressiveImage
         imageId={this.props.photoId}
+        fileIndex={this.props.fileIndex}
         showPreview={true}
         forMinWidth={width}
         style={{ ...styles.mainPhoto as ImageStyle, height }}
@@ -133,17 +135,18 @@ const mapStateToProps = (state: RootState): StateProps  => {
   const comments = viewingPhoto.comments || []
   const commentCardProps = comments.slice().reverse().map((comment) => {
     const props: CommentCardProps = {
-      username: comment.Annotation.username || 'unknown',
-      peerId: comment.Annotation.author_id,
+      username: comment.username || 'unknown',
+      peerId: comment.author_id,
       comment: comment.body,
-      date: comment.Annotation.date,
+      date: comment.date,
       isCaption: false
     }
     return props
   })
   return {
-    photoId: viewingPhoto.id,
-    blockId: viewingPhoto.block_id,
+    photoId: viewingPhoto.target,
+    fileIndex: viewingPhoto.files[0].index,
+    blockId: viewingPhoto.block,
     size,
     commentCardProps: captionCommentCardProps ? [{...captionCommentCardProps}, ...commentCardProps] : commentCardProps,
     commentValue : state.photoViewing.authoringComment

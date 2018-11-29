@@ -5,6 +5,7 @@ import TextileImage from './TextileImage'
 
 export interface IProgressiveImageProps {
   imageId: string,
+  fileIndex: number,
   forMinWidth: number,
   showPreview?: boolean,
   isVisible?: boolean,
@@ -40,14 +41,16 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     return (
       <View style={this.props.style} >
         {this.props.showPreview && <TextileImage
-          imageId={this.props.imageId}
+          target={this.props.imageId}
+          index={this.props.fileIndex}
           forMinWidth={this.getPreviewWidth()}
           style={baseStyle}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
         />}
         <TextileImage
-          imageId={this.props.imageId}
+          target={this.props.imageId}
+          index={this.props.fileIndex}
           forMinWidth={this.props.forMinWidth}
           style={previewStyle}
           resizeMode={resizeMode}
@@ -62,14 +65,16 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     if (this.props.showPreview) {
       return (
         <TextileImage
-          imageId={this.props.imageId}
+          target={this.props.imageId}
+          index={this.props.fileIndex}
           forMinWidth={this.getPreviewWidth()}
           style={this.props.style}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
         >
           <TextileImage
-            imageId={this.props.imageId}
+            target={this.props.imageId}
+            index={this.props.fileIndex}
             forMinWidth={this.props.forMinWidth}
             style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
             resizeMode={resizeMode}
@@ -81,7 +86,8 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     // no preview path, just return the image
     return (
       <TextileImage
-        imageId={this.props.imageId}
+        target={this.props.imageId}
+        index={this.props.fileIndex}
         forMinWidth={this.props.forMinWidth}
         style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
         resizeMode={resizeMode}
@@ -96,7 +102,8 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     if (!this.props.showPreview || !isVisible) {
       return (
         <TextileImage
-          imageId={this.props.imageId}
+          target={this.props.imageId}
+          index={this.props.fileIndex}
           forMinWidth={this.props.forMinWidth}
           style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
           resizeMode={resizeMode}

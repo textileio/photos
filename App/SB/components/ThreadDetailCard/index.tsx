@@ -11,14 +11,14 @@ import UIActions from '../../../Redux/UIRedux'
 import styles from './statics/styles'
 import Icon from '../../../Components/Icon'
 import Colors from '../../../Themes/Colors'
-import { Photo } from '../../../NativeModules/Textile'
+import { ThreadFilesInfo } from '../../../NativeModules/Textile'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
 
 const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
-  item: {type: string, photo: Photo, threadId?: string, threadName?: string}, // TODO make proper type now
+  item: {type: string, photo: ThreadFilesInfo, threadId?: string, threadName?: string}, // TODO make proper type now
   recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void
@@ -54,13 +54,13 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     }
   }
 
-  _onLikePress = (photo: Photo) => {
+  _onLikePress = (photo: ThreadFilesInfo) => {
     return () => {
-      this.props.addPhotoLike(photo.block_id)
+      this.props.addPhotoLike(photo.block)
     }
   }
 
-  renderLikes (isLiked: boolean, didLike: boolean, photo: Photo) {
+  renderLikes (isLiked: boolean, didLike: boolean, photo: ThreadFilesInfo) {
     // you are the only like or there are no likes, return ''
     return !isLiked || (didLike && photo.likes.length === 1) ? undefined :
       (
@@ -97,7 +97,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     }
 
     const recentComments = photo.comments.slice(0, this.props.recentCommentsCount).reverse().map((comment, index) => {
-      const username = comment.Annotation.username || 'unknown'
+      const username = comment.username || 'unknown'
       return <KeyValueText key={index} keyString={username as string} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
     })
 
@@ -132,7 +132,8 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
         <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
           <View style={styles.imageStretch}>
             <ProgressiveImage
-              imageId={photo.id}
+              imageId={photo.target}
+              fileIndex={photo.files[0].index}
               showPreview={true}
               forMinWidth={imageWidth}
               style={{...styles.image, width: imageWidth, height: imageHeight}}
@@ -183,7 +184,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
 
   const totalLikes = photo.likes ? photo.likes.length : 0
   const isLiked = photo.likes && photo.likes.length > 0
-  const didLike = isLiked && photo.likes.find((like) => like.Annotation.author_id === selfId) !== undefined
+  const didLike = isLiked && photo.likes.find((like) => like.author_id === selfId) !== undefined
 
   // Unsquares the images by maintaining the aspect ratio no matter device size
   const imageWidth = WIDTH

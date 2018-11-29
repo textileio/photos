@@ -74,7 +74,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
 
 // Called whenever someone selects to share from the wallet and then picks a photo
 export function * walletPickerSuccess(action: ActionType<typeof UIActions.walletPickerSuccess>) {
-  yield put(UIActions.updateSharingPhotoImage(action.payload.photoId))
+  yield put(UIActions.updateSharingPhotoImage(action.payload.photo))
   // indicates if request was made from merged main feed or from a specific thread
   const threadId = yield select(UISelectors.sharingPhotoThread)
   if (threadId) {

@@ -6,11 +6,19 @@
 import {IProcessingImageProps} from '../Components/ProcessingImage'
 import { ThreadFilesInfo } from '../NativeModules/Textile'
 
-export interface IPhotoGridType {
-  type: 'photo' | 'processingItem'
-  photo: ThreadFilesInfo | IProcessingImageProps
+export interface PhotoType {
+  type: 'photo',
+  photo: ThreadFilesInfo
   id: string
 }
+
+export interface ProcessingItemType {
+  type: 'processingItem',
+  photo: IProcessingImageProps
+  id: string
+}
+
+export type IPhotoGridType = PhotoType | ProcessingItemType
 
 export interface SharedImage {
   origURL?: string,

@@ -12,9 +12,8 @@ import Toast from 'react-native-easy-toast'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
-import { IPhotoGridType } from '../Models/TextileTypes'
+import { IPhotoGridType, ProcessingItemType } from '../Models/TextileTypes'
 import { ThreadFilesInfo } from '../NativeModules/Textile'
-import {IProcessingImageProps} from './ProcessingImage'
 import ProgressiveImage from './ProgressiveImage'
 import ProcessingWalletImageCard from './ProcessingWalletImage'
 
@@ -50,8 +49,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
       }
     }
   }
-  _getOverlay (item: IPhotoGridType) {
-    const processing = item.photo as IProcessingImageProps
+  _getOverlay (item: ProcessingItemType) {
+    const processing = item.photo
     const id = item.id as string // We know this is a processing image so the id is a string
     return (
       <ProcessingWalletImageCard
@@ -86,7 +85,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
           >
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
-                imageId={row.item.id}
+                imageId={item.photo.target}
+                fileIndex={item.photo.files[0].index}
                 showPreview={true}
                 forMinWidth={PRODUCT_ITEM_HEIGHT}
                 style={styles.itemImage}

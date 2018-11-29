@@ -110,7 +110,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
         const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
         const logToDisk = !__DEV__
         yield put(TextileNodeActions.initializingRepo())
-        yield call(initRepo, walletAccount.Seed, REPO_PATH, logLevel, logToDisk)
+        yield call(initRepo, walletAccount.seed, REPO_PATH, logLevel, logToDisk)
         yield call(createAndStartNode, dispatch)
       } else {
         yield put(TextileNodeActions.nodeError(error))

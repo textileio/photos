@@ -21,7 +21,7 @@ import {
   addPhoto,
   addPhotoToThread,
   contacts,
-  Contact,
+  ContactInfo,
   checkCafeMessages,
   addThreadIgnore,
   setAvatar,
@@ -145,7 +145,7 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
 
 export function * refreshContacts () {
   try {
-    const contactsResult: ReadonlyArray<Contact> = yield call(contacts)
+    const contactsResult: ReadonlyArray<ContactInfo> = yield call(contacts)
     yield put(ContactsActions.getContactsSuccess(contactsResult))
   } catch (error) {
     // skip for now
