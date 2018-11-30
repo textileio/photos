@@ -162,7 +162,7 @@ export default function * root (dispatch: Dispatch) {
 
     takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),
 
-    takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
+    takeEvery(getType(UIActions.shareByLink), presentPublicLinkInterface),
 
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
     takeEvery(getType(UIActions.showWalletPicker), showWalletPicker),

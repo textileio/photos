@@ -23,10 +23,7 @@ interface StateProps {
   photoId: string
   fileIndex: number
   blockId: string
-  size?: {
-    height: number
-    width: number
-  }
+  widthByHeightRatio?: number
   commentCardProps: CommentCardProps[]
   commentValue: string | undefined
 }
@@ -79,11 +76,12 @@ class ThreadPhotoDetail extends Component<Props, State> {
   }
 
   renderImage () {
-    const height = this.props.size ? (this.props.size.height / this.props.size.width) * width : width
+    const { widthByHeightRatio, photoId, fileIndex } = this.props
+    const height = widthByHeightRatio ? width / widthByHeightRatio : width
     return (
       <ProgressiveImage
-        imageId={this.props.photoId}
-        fileIndex={this.props.fileIndex}
+        imageId={photoId}
+        fileIndex={fileIndex}
         showPreview={true}
         forMinWidth={width}
         style={{ ...styles.mainPhoto as ImageStyle, height }}
@@ -116,9 +114,13 @@ const mapStateToProps = (state: RootState): StateProps  => {
     throw new Error('no viewing thread or photo')
   }
 
-  let size: { height: number, width: number} | undefined
-  if (viewingPhoto.metadata) {
-    size = { height: viewingPhoto.metadata.height, width: viewingPhoto.metadata.width }
+  const links = viewingPhoto.files[0].links
+  const meta = links ? links['large'].meta : undefined
+  const width = meta ? meta.get('width') as number : undefined
+  const height = meta ? meta.get('height') as number : undefined
+  let widthByHeightRatio: number | undefined
+  if (width && height) {
+    widthByHeightRatio = width / height
   }
 
   let captionCommentCardProps: CommentCardProps | undefined
@@ -147,7 +149,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
     photoId: viewingPhoto.target,
     fileIndex: viewingPhoto.files[0].index,
     blockId: viewingPhoto.block,
-    size,
+    widthByHeightRatio,
     commentCardProps: captionCommentCardProps ? [{...captionCommentCardProps}, ...commentCardProps] : commentCardProps,
     commentValue : state.photoViewing.authoringComment
   }

@@ -38,8 +38,8 @@ const actions = {
   imageSharingError: createAction('IMAGE_SHARING_ERROR', (resolve) => {
     return (error: Error) => resolve(error)
   }),
-  getPublicLink: createAction('GET_PUBLIC_LINK', (resolve) => {
-    return (photoId: string) => resolve({ photoId })
+  shareByLink: createAction('SHARE_BY_LINK', (resolve) => {
+    return (path: string) => resolve({ path })
   }),
   showImagePicker: createAction('SHOW_IMAGE_PICKER', (resolve) => {
     return (pickerType?: string) => resolve({ pickerType })

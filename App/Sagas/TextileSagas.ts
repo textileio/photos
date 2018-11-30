@@ -15,11 +15,10 @@ import { call, put, select, take, fork } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import {
-  AddDataResult,
+  prepareFiles,
+  addThreadFiles,
   overview,
   Overview,
-  addPhoto,
-  addPhotoToThread,
   contacts,
   ContactInfo,
   checkCafeMessages,
@@ -27,8 +26,8 @@ import {
   setAvatar,
   profile,
   Profile,
-  photoKey,
-  addThreadLike
+  addThreadLike,
+  BlockInfo
 } from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
@@ -52,6 +51,7 @@ import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 import StorageActions from '../Redux/StorageRedux'
+import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 
 export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActions.updateOverviewRequest> ) {
   try {
@@ -75,27 +75,33 @@ export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.
 }
 
 function * processAvatarImage(uri: string) {
+  // TODO: How should this work? Seems like it should fit into an existing photo add flow (backup, share) or should have it's own thread
   const photoPath = uri.replace('file://', '')
   try {
-    const addResult: AddDataResult = yield call(addPhoto, photoPath)
-    if (!addResult.archive) {
-      throw new Error('no archive returned')
-    }
     const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
     if (!defaultThread) {
       throw new Error('no default thread')
     }
-    yield call(addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-    yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
+    const preparedFiles: IMobilePreparedFiles = yield call(prepareFiles, photoPath, defaultThread.id)
+    if (!preparedFiles.dir || !preparedFiles.pin) {
+      throw new Error('no dir or pin returned')
+    }
+    const blockInfo: BlockInfo = yield call(addThreadFiles, preparedFiles.dir, defaultThread.id, defaultThread.id)
+
+    // TODO: Upload all the pins or get this into some existing flow
+
+    // yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
 
     // set it as our profile picture
-    yield put(PreferencesActions.pendingAvatar(addResult.id))
+
+    // TODO: Not sure what blockInfo prop we should pass here
+    yield put(PreferencesActions.pendingAvatar(blockInfo.id))
 
     try {
-      yield * uploadFile(
-        addResult.id,
-        addResult.archive.path
-      )
+      // yield * uploadFile(
+      //   addResult.id,
+      //   addResult.archive.path
+      // )
     } catch (error) {
       // Leave all the data in place so we can rerty upload
       let message = ''
@@ -106,7 +112,7 @@ function * processAvatarImage(uri: string) {
       } else if (error.message) {
         message = error.message
       }
-      yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
+      // yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
     }
   } catch (error) {
     // TODO: What do to if adding profile photo fails?
@@ -242,107 +248,6 @@ export function * chooseProfilePhoto () {
   }
 }
 
-export function * photosTask () {
-  while (true) {
-    // This take effect inside a while loop ensures that the entire photoTask
-    // will run before the next startNodeSuccess is received and photoTask run again
-    yield take(getType(TextileNodeActions.startNodeSuccess))
-
-    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
-    if (!defaultThread) {
-      continue
-    }
-
-    const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
-    if (!queriredPhotosInitialized) {
-      yield put(CameraRollActions.updateQuerying(true))
-      const uris: string[] = yield call(CameraRoll.getPhotos, 1000)
-      yield put(CameraRollActions.updateQuerying(false))
-      yield put(CameraRollActions.initialzePhotos(uris))
-      continue
-    }
-
-    yield put(CameraRollActions.updateQuerying(true))
-    const uris: string[] = yield call(CameraRoll.getPhotos, 250)
-    yield put(CameraRollActions.updateQuerying(false))
-
-    const previouslyQueriedPhotos: QueriedPhotosMap = yield select(cameraRollSelectors.queriedPhotos)
-
-    const urisToProcess = uris.filter((uri) => !previouslyQueriedPhotos[uri]).reverse()
-    yield put(CameraRollActions.trackPhotos(urisToProcess))
-
-    const addedPhotosData: Array<{ uri: string, addResult: AddDataResult, blockId: string }> = []
-
-    for (const uri of urisToProcess) {
-      let photoPath = ''
-      try {
-        photoPath = yield call(CameraRoll.getPhotoPath, uri)
-        const addResult: AddDataResult = yield call(addPhoto, photoPath)
-        if (!addResult.archive) {
-          throw new Error('no archive returned')
-        }
-        const blockId: string = yield call(addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-        yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-        addedPhotosData.push({ uri, addResult, blockId })
-      } catch (error) {
-        yield put(CameraRollActions.untrackPhoto(uri))
-      } finally {
-        const exists: boolean = yield call(RNFS.exists, photoPath)
-        if (exists) {
-          yield call(RNFS.unlink, photoPath)
-        }
-      }
-    }
-
-    for (const addedPhotoData of addedPhotosData) {
-      try {
-        if (!addedPhotoData.addResult.archive) {
-          throw new Error('no archive to upload')
-        }
-        yield * uploadFile(
-          addedPhotoData.addResult.id,
-          addedPhotoData.addResult.archive.path
-        )
-      } catch (error) {
-        // Leave all the data in place so we can rerty upload
-        let message = ''
-        if (!error) {
-          message = ''
-        } else if (typeof error === 'string') {
-          message = error
-        } else if (error.message) {
-          message = error.message
-        }
-        yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, message))
-      }
-    }
-
-    // Ensure we don't have any images thought to be uploading that aren't in the native layer
-    try {
-      yield synchronizeNativeUploads()
-    } catch (error) {
-      // double certain sync can't interfere with anything
-    }
-    // Process images for upload retry
-    const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
-    for (const imageToRetry of imagesToRetry) {
-      try {
-        yield * uploadFile(imageToRetry.dataId, imageToRetry.path)
-      } catch (error) {
-        let message = ''
-        if (!error) {
-          message = ''
-        } else if (typeof error === 'string') {
-          message = error
-        } else if (error.message) {
-          message = error.message
-        }
-        yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, message))
-      }
-    }
-  }
-}
-
 export function * removePayloadFile (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
   // TODO: Seeing an error here where the file is sometimes not found on disk...
   const { dataId } = action.payload
@@ -370,11 +275,10 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
   }
 }
 
-export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
-  const { photoId } = action.payload
+export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.shareByLink>) {
+  const { path } = action.payload
   try {
-    const key: string = yield call(photoKey, photoId)
-    const link = Config.RN_TEXTILE_CAFE_URI + '/ipfs/' + photoId + '/photo?key=' + key
+    const link = Config.RN_TEXTILE_CAFE_URI + '/ipfs/' + path
     yield call(Share.share, {title: '', message: link})
   } catch (error) {}
 }

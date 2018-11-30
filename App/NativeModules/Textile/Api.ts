@@ -14,6 +14,7 @@ import {
   ThreadFilesInfo,
   Notification
 } from './Model'
+import { IMobilePreparedFiles, IDirectory } from './pb/textile-go'
 
 const { TextileNode } = NativeModules
 
@@ -55,13 +56,12 @@ export async function addThreadComment(blockId: string, body: string): Promise<s
   return result as string
 }
 
-// TODO: Figure out what type dir is
-export async function addThreadFiles(dir: any, threadId: string, caption: string): Promise<BlockInfo> {
+export async function addThreadFiles(dir: IDirectory, threadId: string, caption?: string): Promise<BlockInfo> {
   const result = await TextileNode.addThreadFiles(dir, threadId, caption)
   return JSON.parse(result) as BlockInfo
 }
 
-export async function addThreadFilesByTarget(target: string, threadId: string, caption: string): Promise<BlockInfo> {
+export async function addThreadFilesByTarget(target: string, threadId: string, caption?: string): Promise<BlockInfo> {
   const result = await TextileNode.addThreadFilesByTarget(target, threadId, caption)
   return JSON.parse(result) as BlockInfo
 }
@@ -167,16 +167,16 @@ export async function peerProfile(peerId: string): Promise<Profile> {
   return JSON.parse(result) as Profile
 }
 
-export async function prepareFiles(path: string, threadId: string): Promise<any> {
+export async function prepareFiles(path: string, threadId: string): Promise<IMobilePreparedFiles> {
   // This result should be an object type from proto buf, update return type
   const result = await TextileNode.prepareFiles(path, threadId)
-  return result as any
+  return result as IMobilePreparedFiles
 }
 
-export async function prepareFilesAsync(path: string, threadId: string): Promise<any> {
+export async function prepareFilesAsync(path: string, threadId: string): Promise<IMobilePreparedFiles> {
   // This result should be an object type from proto buf, update return type
   const result = await TextileNode.prepareFilesAsync(path, threadId)
-  return result as any
+  return result as IMobilePreparedFiles
 }
 
 export async function profile(): Promise<Profile> {

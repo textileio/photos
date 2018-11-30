@@ -8,7 +8,7 @@ import { SharedImage } from '../Models/TextileTypes'
 
 import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
-import {insertImage, addToIpfs, uploadArchive, shareWalletImage, addToWallet, shareToThread} from './ImageSharingSagas'
+import {insertImage, prepareImage, uploadArchive, shareWalletImage, addToWallet, shareToThread} from './ImageSharingSagas'
 import { logNewEvent } from './DeviceLogs'
 import { refreshAllSessions } from '../Services/CafeSessions'
 
@@ -22,17 +22,18 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
 }
 
 export function * handleImageUploadComplete (action: ActionType<typeof ProcessingImagesActions.imageUploadComplete>) {
+  // TODO: Handle image upload complete with new redux modeling
   const { uuid } = action.payload
   yield call(logNewEvent, 'uploadComplete', uuid)
   yield call(addToWallet, uuid)
   try {
     const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (processingImage && processingImage.addData && processingImage.addData.addResult.archive) {
-      const exists: boolean = yield call(RNFS.exists, processingImage.addData.addResult.archive.path)
-      if (exists) {
-        yield call(RNFS.unlink, processingImage.addData.addResult.archive.path)
-      }
-    }
+    // if (processingImage && processingImage.addData && processingImage.addData.addResult.archive) {
+    //   const exists: boolean = yield call(RNFS.exists, processingImage.addData.addResult.archive.path)
+    //   if (exists) {
+    //     yield call(RNFS.unlink, processingImage.addData.addResult.archive.path)
+    //   }
+    // }
   } catch (e) {}
 }
 
@@ -47,10 +48,10 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
     yield call(shareToThread, uuid)
   } else if (processingImage.state === 'uploaded' || processingImage.state === 'addingToWallet') {
     yield call(addToWallet, uuid)
-  } else if (processingImage.state === 'added' || processingImage.state === 'uploading') {
+  } else if (processingImage.state === 'prepared' || processingImage.state === 'uploading') {
     yield call(uploadArchive, uuid)
-  } else if (processingImage.state === 'pending' || processingImage.state === 'adding') {
-    yield call(addToIpfs, uuid)
+  } else if (processingImage.state === 'pending' || processingImage.state === 'preparing') {
+    yield call(prepareImage, uuid)
   }
 }
 
@@ -84,12 +85,15 @@ export function * cancelImageShare (action: ActionType<typeof ProcessingImagesAc
     }
 
     // Delete the Textile payload
-    if (processingImage.addData && processingImage.addData.addResult.archive) {
-      const exists: boolean = yield call(RNFS.exists, processingImage.addData.addResult.archive.path)
-      if (exists) {
-        yield call(RNFS.unlink, processingImage.addData.addResult.archive.path)
-      }
-    }
+
+    // TODO: Handle this with new redux structure
+
+    // if (processingImage.addData && processingImage.addData.addResult.archive) {
+    //   const exists: boolean = yield call(RNFS.exists, processingImage.addData.addResult.archive.path)
+    //   if (exists) {
+    //     yield call(RNFS.unlink, processingImage.addData.addResult.archive.path)
+    //   }
+    // }
 
     // What else? Undo local add, remote pin, remove from wallet?
 

@@ -188,8 +188,15 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
 
   // Unsquares the images by maintaining the aspect ratio no matter device size
   const imageWidth = WIDTH
-  const heightProperties = getHeight(photo.metadata, imageWidth)
-  const imageHeight = heightProperties.height
+  const links = photo.files[0].links
+  const meta = links ? links['large'].meta : undefined
+  const width = meta ? meta.get('width') as number : undefined
+  const height = meta ? meta.get('height') as number : undefined
+  let imageHeight = imageWidth
+  if (width && height) {
+    const ratio = width / height
+    imageHeight = imageWidth / ratio
+  }
   return {
     peerId: photo.author_id,
     dateString,

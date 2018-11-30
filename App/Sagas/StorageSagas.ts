@@ -1,5 +1,4 @@
 import {call, put, select, take} from 'redux-saga/effects'
-import { addPhoto, addPhotoToThread} from '../NativeModules/Textile'
 import { requestLocalPhotos } from '../NativeModules/CameraRoll'
 import { ILocalPhotoResult, SharedImage } from '../Models/TextileTypes'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
@@ -19,30 +18,6 @@ export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLoc
   }
   yield put(UIActions.sharePhotoRequest(sharedImage))
   yield call(logNewEvent, 'newLocalPhoto', photo.path)
-}
-
-// TODO: Not used for now. Revisit if needed
-export function * savePhotoToWallet (photo: ILocalPhotoResult) {
-  try {
-    const addResult = yield call(addPhoto, photo.path)
-    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
-    if (!defaultThread) {
-      throw new Error('no default thread')
-    }
-    const blockId: string = yield call(addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-    // Issue: if the user doesn't want to store private files on remote IPFS, we need to record that these are
-    // only available locally in case the user then shares
-    // Idea perhaps...
-    // Store a table of images in StorageRedux
-    // path string, hash string, remote string
-    // you could set that in this sage with blockId and photo.path above
-    // whenever a user shares a photo to a thread from the wallet, just grab the remote?
-    // if not remote, do a photo remote pin
-    // it will take a slightly modified photo remote pin, since at the end of it all you will skip adding to the wallet
-    // maybe?
-  } catch (error) {
-    // ignore for now. todo
-  }
 }
 
 export function * toggleStorage (action: ActionType<typeof PreferencesActions.toggleStorageRequest>) {

@@ -54,7 +54,7 @@ class PhotoDetail extends Component {
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add To Thread' iconName='share' onPress={params.sharePressed} />
-        <Item title='Share' iconName='share-arrow' onPress={params.getPublicLink} />
+        <Item title='Share' iconName='share-arrow' onPress={params.shareByLink} />
         <Item title='Delete' iconName='circle-x' onPress={params.removePhoto} />
       </TextileHeaderButtons>
     )
@@ -67,7 +67,7 @@ class PhotoDetail extends Component {
   componentDidMount () {
     this.props.navigation.setParams({
       sharePressed: this.sharePressed.bind(this),
-      getPublicLink: this.getPublicLink.bind(this),
+      shareByLink: this.shareByLink.bind(this),
       removePhoto: this.removePhoto.bind(this)
     })
   }
@@ -96,9 +96,9 @@ class PhotoDetail extends Component {
     }
   }
 
-  getPublicLink () {
+  shareByLink () {
     this.refs.toast.show('You are creating a public link for this photo!', 1000)
-    this.props.getPublicLink(this.props.photo.id)
+    this.props.shareByLink(this.props.photo.files.target + '/0/large?key=' + this.props.photo.files[0]['links']['key'])
   }
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
@@ -163,7 +163,7 @@ const mapDispatchToProps = (dispatch) => {
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
     shareImage: (imageId) => { dispatch(UIActions.updateSharingPhotoImage(imageId)) },
     shareToThread: (threadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) },
-    getPublicLink: (imageId) => { dispatch(UIActions.getPublicLink(imageId)) },
+    shareByLink: (path) => { dispatch(UIActions.shareByLink(path)) },
     ignorePhoto: (threadId, blockId) => { dispatch(TextileNodeActions.ignorePhotoRequest(threadId, blockId)) }
   }
 }

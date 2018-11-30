@@ -23,6 +23,7 @@ export interface IAvatarProps extends IPropsFromState {
   style?: StyleProp<ViewStyle>
 }
 
+// TODO: Improve Avatar
 class Avatar extends React.PureComponent<IAvatarProps> {
   getCafeAddress (peerId: string) {
     return `${Config.RN_TEXTILE_CAFE_URI}/ipns/${peerId}/avatar`
@@ -55,7 +56,8 @@ class Avatar extends React.PureComponent<IAvatarProps> {
         <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
           <View style={styles.stretch}>
             <TextileImage
-              imageId={photoId}
+              target={photoId}
+              index={0}
               forMinWidth={width}
               style={{ width, height }}
               resizeMode={'cover'}
