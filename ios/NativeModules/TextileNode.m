@@ -121,9 +121,10 @@ RCT_EXPORT_METHOD(addThreadComment:(NSString*)blockId body:(NSString*)body resol
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(addThreadFiles:(NSData*)dir threadId:(NSString*)threadId caption:(NSString*)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addThreadFiles:(NSString*)dir threadId:(NSString*)threadId caption:(NSString*)caption resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self.node addThreadFiles:dir threadId:threadId caption:caption error:&error];
+  NSData *data = [[NSData alloc] initWithBase64EncodedString:dir options:0];
+  NSString *result = [self.node addThreadFiles:data threadId:threadId caption:caption error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
@@ -254,9 +255,9 @@ RCT_EXPORT_METHOD(peerProfile:(NSString*)peerId resolver:(RCTPromiseResolveBlock
 
 RCT_EXPORT_METHOD(prepareFiles:(NSString*)path threadId:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  // TODO: convert this NSData to an object?
   NSData *result = [self.node prepareFiles:path threadId:threadId error:&error];
-  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+  NSString *base64 = [result base64EncodedStringWithOptions:0];
+  [self fulfillWithResult:base64 error:error resolver:resolve rejecter:reject];
 }
 
 RCT_EXPORT_METHOD(prepareFilesAsync:(NSString*)path threadId:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -264,8 +265,8 @@ RCT_EXPORT_METHOD(prepareFilesAsync:(NSString*)path threadId:(NSString*)threadId
     if (error) {
       reject(@(error.code).stringValue, error.localizedDescription, error);
     } else {
-      // TODO: Convert NSData to an object?
-      resolve(payload);
+      NSString *base64 = [payload base64EncodedStringWithOptions:0];
+      resolve(base64);
     }
   }]];
 }

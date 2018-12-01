@@ -1,4 +1,5 @@
 import { NativeModules } from 'react-native'
+import { Buffer } from 'buffer'
 
 import {
   File,
@@ -14,7 +15,7 @@ import {
   ThreadFilesInfo,
   Notification
 } from './Model'
-import { IMobilePreparedFiles, IDirectory } from './pb/textile-go'
+import { IMobilePreparedFiles, IDirectory, MobilePreparedFiles, Directory } from './pb/textile-go'
 
 const { TextileNode } = NativeModules
 
@@ -57,7 +58,10 @@ export async function addThreadComment(blockId: string, body: string): Promise<s
 }
 
 export async function addThreadFiles(dir: IDirectory, threadId: string, caption?: string): Promise<BlockInfo> {
-  const result = await TextileNode.addThreadFiles(dir, threadId, caption)
+  const byteArray = Directory.encode(dir).finish()
+  const buffer = Buffer.from(byteArray)
+  const base64 = buffer.toString('base64')
+  const result = await TextileNode.addThreadFiles(base64, threadId, caption)
   return JSON.parse(result) as BlockInfo
 }
 
@@ -168,15 +172,15 @@ export async function peerProfile(peerId: string): Promise<Profile> {
 }
 
 export async function prepareFiles(path: string, threadId: string): Promise<IMobilePreparedFiles> {
-  // This result should be an object type from proto buf, update return type
   const result = await TextileNode.prepareFiles(path, threadId)
-  return result as IMobilePreparedFiles
+  const buffer = Buffer.from(result, 'base64')
+  return MobilePreparedFiles.decode(buffer)
 }
 
 export async function prepareFilesAsync(path: string, threadId: string): Promise<IMobilePreparedFiles> {
-  // This result should be an object type from proto buf, update return type
   const result = await TextileNode.prepareFilesAsync(path, threadId)
-  return result as IMobilePreparedFiles
+  const buffer = Buffer.from(result, 'base64')
+  return MobilePreparedFiles.decode(buffer)
 }
 
 export async function profile(): Promise<Profile> {

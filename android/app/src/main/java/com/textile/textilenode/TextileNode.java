@@ -1,6 +1,7 @@
 package com.textile.textilenode;
 
 import android.support.annotation.Nullable;
+import android.util.Base64;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -168,14 +169,14 @@ public class TextileNode extends ReactContextBaseJavaModule {
         });
     }
 
-    // TODO: figure out dir arg
     @ReactMethod
-    public void addThreadFiles(final byte[] dir, final String threadId, final String caption, final Promise promise) {
+    public void addThreadFiles(final String dir, final String threadId, final String caption, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    promise.resolve(node.addThreadFiles(dir, threadId, caption));
+                    byte[] bytes = dir.getBytes();
+                    promise.resolve(node.addThreadFiles(bytes, threadId, caption));
                 }
                 catch (Exception e) {
                     promise.reject("addThreadFiles", e);
@@ -508,8 +509,9 @@ public class TextileNode extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    // TODO: byte[] coming back here, what to do with it?
-                    promise.resolve(node.prepareFiles(path, threadId));
+                    byte[] bytes = node.prepareFiles(path, threadId);
+                    String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+                    promise.resolve(base64);
                 }
                 catch (Exception e) {
                     promise.reject("prepareFiles", e);
@@ -528,8 +530,8 @@ public class TextileNode extends ReactContextBaseJavaModule {
                         @Override
                         public void call(byte[] bytes, Exception e) {
                             if (e == null) {
-                                // TODO: byte[] coming back here, what to do with it?
-                                promise.resolve(bytes);
+                                String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+                                promise.resolve(base64);
                             } else {
                                 promise.reject("prepareFilesAsync", e);
                             }

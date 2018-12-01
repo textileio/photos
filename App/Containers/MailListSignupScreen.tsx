@@ -1,6 +1,7 @@
 import React from 'react'
 import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
 import Config from 'react-native-config'
+import { Buffer } from 'buffer'
 
 import Input from '../SB/components/Input'
 import Button from '../Components/Button'

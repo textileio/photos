@@ -23,9 +23,16 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   return self;
 }
 
-- (void)setImagePath:(NSString *)imagePath {
-  if (_imagePath != imagePath) {
-    _imagePath = imagePath;
+- (void)setTarget:(NSString *)target {
+  if (_target != target) {
+    _target = target;
+  }
+  self.needsRenderImage = true;
+}
+
+- (void)setIndex:(int)index {
+  if (_index != index) {
+    _index = index;
     self.needsRenderImage = true;
   }
 }
