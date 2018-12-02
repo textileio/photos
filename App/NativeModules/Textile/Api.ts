@@ -101,7 +101,7 @@ export async function cafeSessions(): Promise<ReadonlyArray<CafeSession>> {
 }
 
 export async function checkCafeMessages(): Promise<void> {
-  await TextileNode.checkCafeMail()
+  await TextileNode.checkCafeMessages()
 }
 
 export async function contact(id_: string): Promise<ContactInfo> {
