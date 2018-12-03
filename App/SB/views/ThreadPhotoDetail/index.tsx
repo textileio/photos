@@ -116,8 +116,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
 
   const links = viewingPhoto.files[0].links
   const meta = links ? links['large'].meta : undefined
-  const width = meta ? meta.get('width') as number : undefined
-  const height = meta ? meta.get('height') as number : undefined
+  const width = meta ? meta['width'] as number : undefined
+  const height = meta ? meta['height'] as number : undefined
   let widthByHeightRatio: number | undefined
   if (width && height) {
     widthByHeightRatio = width / height

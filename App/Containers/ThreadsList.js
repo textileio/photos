@@ -13,6 +13,7 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
+import { totalUploadProgress } from '../Redux/ProcessingImagesSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
@@ -186,19 +187,17 @@ const mapStateToProps = (state) => {
   const defaultThreadId = defaultData ? defaultData.id : undefined
 
   const processingItems = state.processingImages.images
-    .filter(image => image.destinationThreadId && image.destinationThreadId !== defaultThreadId)
+    .filter(image => image.destinationThreadId !== defaultThreadId)
     .map(image => {
       let progress = 0
-      if (image.shareToThreadData) {
+      if (image.blockInfo) {
         progress = 1
-      } else if (image.addToWalletData) {
-        progress = 0.95
       } else if (image.uploadData) {
-        progress = 0.1 + (image.uploadData.uploadProgress * 0.8)
-      } else if (image.addData) {
+        progress = 0.1 + (totalUploadProgress(state, image.uuid) * 0.8)
+      } else if (image.preparedFiles) {
         progress = 0.1
       }
-      const message = image.state
+      const message = image.status
       return {
         id: image.uuid,
         type: 'processingItem',

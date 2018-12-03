@@ -25,7 +25,7 @@ interface StateProps {
 interface DispatchProps {
   updateComment: (text: string) => void
   cancelShare: () => void
-  share: (image?: SharedImage | string, threadId?: string, comment?: string) => void
+  share: (image: SharedImage | string, threadId: string, comment?: string) => void
   shareNewThread: (imageId: string, threadName: string, comment?: string) => void
 }
 
@@ -85,10 +85,10 @@ class AddCaptionScreen extends React.Component<Props> {
       disableShare: this.props.selectedThreadId === undefined,
       cancelShare: () => { this.props.cancelShare() },
       share: () => {
-        if (this.props.image && (this.props.image as ThreadFilesInfo).target) {
+        if (this.props.image && (this.props.image as ThreadFilesInfo).target && this.props.threadId) {
           const filesInfo = this.props.image as ThreadFilesInfo
           this.props.share(filesInfo.target, this.props.threadId, this.props.comment)
-        } else if (this.props.image && (this.props.image as SharedImage).uri) {
+        } else if (this.props.image && (this.props.image as SharedImage).uri && this.props.threadId) {
           const sharedImage = this.props.image as SharedImage
           this.props.share(sharedImage, this.props.threadId, this.props.comment)
         }
@@ -207,7 +207,7 @@ const mapStateToProps = (state: RootState): StateProps => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     updateComment: (text: string) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
-    share: (image?: SharedImage | string, threadId?: string, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
+    share: (image: SharedImage | string, threadId: string, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
     shareNewThread: (imageId: string, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, threadName, { sharePhoto: { imageId, comment } })) }
   }

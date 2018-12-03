@@ -16,7 +16,8 @@ export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLoc
     path: photo.path,
     canDelete: photo.canDelete // <- allow the native layer to dictate if it's a duplicate or not
   }
-  yield put(UIActions.sharePhotoRequest(sharedImage))
+  // TODO: Create and wire up redux flow for photo backup
+  // yield put(UIActions.sharePhotoRequest(sharedImage))
   yield call(logNewEvent, 'newLocalPhoto', photo.path)
 }
 

@@ -11,7 +11,7 @@ export interface File {
   readonly name?: string
   readonly size: number
   readonly added: string
-  readonly meta?: ReadonlyMap<string, any>
+  readonly meta?: { readonly [key: string]: any }
   readonly targets?: ReadonlyArray<string>
 }
 

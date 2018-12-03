@@ -1,7 +1,6 @@
 import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
-
 import { uploadFile } from './UploadFile'
 import {
   prepareFiles,
@@ -10,14 +9,12 @@ import {
   BlockInfo
 } from '../NativeModules/Textile'
 import { SharedImage } from '../Models/TextileTypes'
-import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
-import UIActions, {UISelectors} from '../Redux/UIRedux'
-import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
-import { ThreadData } from '../Redux/PhotoViewingRedux'
-import {ActionType} from 'typesafe-actions'
+import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
+import { processingImageByUuid } from '../Redux/ProcessingImagesSelectors'
+import UIActions, { UISelectors } from '../Redux/UIRedux'
+import { ActionType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
-import * as TT from '../Models/TextileTypes'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
@@ -57,7 +54,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
     yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
   } else {
     try {
-      const image: TT.SharedImage = {
+      const image: SharedImage = {
         origURL: pickerResponse.origURL,
         uri: pickerResponse.uri,
         path: pickerResponse.path,
@@ -99,83 +96,53 @@ export function * shareWalletImage (id: string, threadId: string, comment?: stri
   }
 }
 
-export function * insertImage (image: SharedImage, threadId?: string, comment?: string) {
+export function * insertImage (image: SharedImage, threadId: string, comment?: string) {
   const id = uuid()
   yield put(ProcessingImagesActions.insertImage(id, image, threadId, comment))
+  yield call(prepareImage, id)
 }
 
 export function * prepareImage (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
+    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
     if (!processingImage) {
       throw new Error('no ProcessingImage found')
     }
-    yield put(ProcessingImagesActions.prepareImage(uuid))
     const { sharedImage, destinationThreadId } = processingImage
-    if (destinationThreadId) {
-      const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
-      yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
-      yield call(uploadArchive, uuid)
-    } else {
-      throw new Error('no destinationThreadId')
-    }
+    const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
+    yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
+    yield call(uploadPins, uuid)
   } catch (error) {
     yield put(ProcessingImagesActions.error(uuid, error))
   }
 }
 
-export function * uploadArchive (uuid: string) {
+export function * uploadPins (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage) {
-      throw new Error('no ProcessingImage found')
+    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+    if (!processingImage || ! processingImage.uploadData) {
+      throw new Error('no ProcessingImage or uploadData found')
     }
-    yield put(ProcessingImagesActions.uploadStarted(uuid))
-    if (!processingImage.preparedData || !processingImage.preparedData.pin) {
-      throw new Error('no preparedData or pin map')
+    for (const uploadId in processingImage.uploadData) {
+      if (processingImage.uploadData[uploadId]) {
+        yield put(ProcessingImagesActions.uploadStarted(uuid, uploadId))
+        yield call(uploadFile, uploadId, processingImage.uploadData[uploadId].path)
+      }
     }
-    // TODO: start all the uploads
-    // yield call(uploadFile, uuid, processingImage.addData.addResult.archive.path)
   } catch (error) {
     put(ProcessingImagesActions.error(uuid, error))
   }
 }
 
-export function * addToWallet (uuid: string) {
-  try {
-    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage || !processingImage.preparedData || !processingImage.preparedData.dir) {
-      throw new Error('no ProcessingImage or preparedData or dir found')
-    }
-    const { dir } = processingImage.preparedData
-    yield put(ProcessingImagesActions.addingToWallet(uuid))
-    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
-    if (!defaultThread) {
-      throw new Error('no default thread')
-    }
-    const blockInfo: BlockInfo = yield call(addThreadFiles, dir, defaultThread.id)
-    yield put(ProcessingImagesActions.addedToWallet(uuid, blockInfo.id))
-    if (processingImage.destinationThreadId) {
-      yield call(shareToThread, uuid)
-    } else {
-      // If there is no destinationThreadId, just complete after adding to wallet
-      yield put(ProcessingImagesActions.complete(uuid))
-    }
-  } catch (error) {
-    yield put(ProcessingImagesActions.error(uuid, error))
-  }
-}
-
 export function * shareToThread (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage || !processingImage.destinationThreadId || !processingImage.preparedData || !processingImage.preparedData.dir) {
-      throw new Error('no ProcessingImage or destinationThreadId or preparedData or dir found')
+    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+    if (!processingImage || !processingImage.preparedFiles || !processingImage.preparedFiles.dir) {
+      throw new Error('no ProcessingImage or preparedData or dir found')
     }
-    const { dir } = processingImage.preparedData
-    yield put(ProcessingImagesActions.sharingToThread(uuid))
+    const { dir } = processingImage.preparedFiles
     const blockInfo: BlockInfo = yield call(addThreadFiles, dir, processingImage.destinationThreadId, processingImage.comment)
-    yield put(ProcessingImagesActions.sharedToThread(uuid, blockInfo.id))
+    yield put(ProcessingImagesActions.sharedToThread(uuid, blockInfo))
     yield put(ProcessingImagesActions.complete(uuid))
   } catch (error) {
     yield put(ProcessingImagesActions.error(uuid, error))

@@ -30,7 +30,7 @@ const actions = {
     return (comment: string) => resolve({ comment })
   }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', (resolve) => {
-    return (image?: SharedImage | string, threadId?: string, comment?: string) => resolve({ image, threadId, comment })
+    return (image: SharedImage | string, threadId: string, comment?: string) => resolve({ image, threadId, comment })
   }),
   cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', (resolve) => {
     return () => resolve()

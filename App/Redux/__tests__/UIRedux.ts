@@ -55,7 +55,7 @@ describe('ui stories', () => {
     it('sharePhotoRequest should clear sharing state', () => {
       const state0 = reducer(initialState, actions.updateSharingPhotoImage(sharedPhoto))
       expect(state0.sharingPhoto).toBeDefined()
-      const state1 = reducer(initialState, actions.sharePhotoRequest())
+      const state1 = reducer(initialState, actions.sharePhotoRequest('imageId', 'threadId'))
       expect(state1.sharingPhoto).toBeUndefined()
     })
     it('imageSharingError should not update state', () => {

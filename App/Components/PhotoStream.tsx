@@ -52,7 +52,7 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
 
   _keyExtractor = (item: any, index: number) => item.id + '_' + index
 
-  _renderItem = ( rowData: any) => {
+  _renderItem = (rowData: any) => {
     const item = rowData.item
     switch (item.type) {
       case 'processingItem': {

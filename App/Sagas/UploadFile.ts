@@ -16,12 +16,11 @@ export function * uploadFile (id: string, payloadPath: string) {
     {
       customUploadId: id,
       path: payloadPath,
-      url: session.http_addr + Config.RN_TEXTILE_CAFE_PIN_PATH, // TODO: Not sure about the formatting of http_addr
+      url: `${Config.RN_TEXTILE_CAFE_URI_PREFIX}${session.http_addr}${Config.RN_TEXTILE_CAFE_PIN_PATH}`,
       method: 'POST',
       type: 'raw',
       headers: {
-        'Authorization': `Bearer ${session.access}`,
-        'Content-Type': 'application/gzip'
+        Authorization: `Bearer ${session.access}`
       }
     }
   )
