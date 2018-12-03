@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
-import { Profile } from '../NativeModules/Textile'
+import { Profile, peerId } from '../NativeModules/Textile'
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', (resolve) => {
@@ -14,6 +14,9 @@ const actions = {
   }),
   getProfileSuccess: createAction('GET_AVATAR_SUCCESS', (resolve) => {
     return (profile: Profile) => resolve({ profile })
+  }),
+  getPeerIdSuccess: createAction('GET_PEER_ID_SUCCECSS', (resolve) => {
+    return (peerId: string) => resolve({ peerId })
   }),
   setAvatar: createAction('SET_AVATAR_REQUEST', (resolve) => {
     return (avatarId: string) => resolve({ avatarId })
@@ -63,6 +66,7 @@ export interface PreferencesState {
   verboseUi: boolean
   recoveryPhrase?: string
   profile?: Profile
+  peerId?: string
   pending?: string
   readonly services: {readonly [k in ServiceType]: Service}
   readonly storage: {readonly [k in StorageType]: Service}
@@ -144,6 +148,8 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, recoveryPhrase }
     case getType(actions.getProfileSuccess):
       return { ...state, profile: action.payload.profile, pending: undefined}
+    case getType(actions.getPeerIdSuccess):
+      return { ...state, peerId: action.payload.peerId }
     case getType(actions.pendingAvatar):
       const pending = action.payload.avatarId
       return { ...state, pending }
@@ -168,9 +174,9 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
 }
 
 export const PreferencesSelectors = {
-  // TODO: Need typed state
   onboarded: (state: RootState) => state.preferences.onboarded,
   pending: (state: RootState) => state.preferences.pending,
+  peerId: (state: RootState) => state.preferences.peerId,
   profile: (state: RootState) => state.preferences.profile,
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
   storage: (state: RootState, name: StorageType) => state.preferences.storage[name],

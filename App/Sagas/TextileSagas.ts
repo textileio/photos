@@ -24,6 +24,7 @@ import {
   checkCafeMessages,
   addThreadIgnore,
   setAvatar,
+  peerId,
   profile,
   Profile,
   addThreadLike,
@@ -201,16 +202,15 @@ export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {
     try {
+      const peerIdResult: string = yield call(peerId)
+      yield put(PreferencesActions.getPeerIdSuccess(peerIdResult))
+
       const pending: string = yield select(PreferencesSelectors.pending)
       if (pending) {
         yield call(setAvatar, pending)
-        const profileResult: Profile = yield call(profile)
-        yield put(PreferencesActions.getProfileSuccess(profileResult))
-      } else {
-        // just updated it directly
-        const profileResult: Profile = yield call(profile)
-        yield put(PreferencesActions.getProfileSuccess(profileResult))
       }
+      const profileResult: Profile = yield call(profile)
+      yield put(PreferencesActions.getProfileSuccess(profileResult))
     } catch (error) {
       // nada
     }
