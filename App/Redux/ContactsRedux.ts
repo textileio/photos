@@ -2,14 +2,10 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
 import { ContactInfo } from '../NativeModules/Textile'
 
-// TODO: Update this and sagas to use new Contacts API
-
 const actions = {
+  getContactsRequest: createAction('GET_CONTACTS_REQUEST'),
   getContactsSuccess: createAction('GET_CONTACT_SUCCESS', (resolve) => {
     return (contacts: ReadonlyArray<ContactInfo>) => resolve({contacts})
-  }),
-  getUsernameSuccess: createAction('GET_USERNAME_SUCCESS', (resolve) => {
-    return (contact: ContactInfo, username: string) => resolve({contact, username})
   })
 }
 
@@ -25,30 +21,8 @@ export const initialState: ContactsState = {
 
 export function reducer (state: ContactsState = initialState, action: ContactsAction): ContactsState {
   switch (action.type) {
-    case getType(actions.getUsernameSuccess): {
-      const contacts = state.contacts.map((c) => {
-        if (c.id === action.payload.contact.id) {
-          return { ...c, username: action.payload.username }
-        } else {
-          return c
-        }
-      })
-      return { ...state, contacts }
-    }
     case getType(actions.getContactsSuccess):
-
-      // TODO: Bandaid until we put username responsibility into Go
-      const keepers = state.contacts
-        .filter((c) => c.username !== undefined)
-        .reduce((map, obj) => {
-          map[obj.id] = obj
-          return map
-        }, {} as {[index: string]: ContactInfo})
-
-      const contacts = action.payload.contacts.map((c) => {
-        return { ...c, username: keepers[c.id].username }
-      })
-      return { ...state, contacts }
+      return { ...state, contacts: action.payload.contacts }
     default:
       return state
   }
