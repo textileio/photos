@@ -1,12 +1,14 @@
 import { all, call } from 'redux-saga/effects'
 import {
-  refreshAccountInfo,
+  refreshProfile,
+  refreshPeerId,
   setAvatar
 } from './AccountSagas'
 
 export default function * accountSaga () {
   yield all([
-    call(refreshAccountInfo),
+    call(refreshProfile),
+    call(refreshPeerId),
     call(setAvatar)
   ])
 }

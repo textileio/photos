@@ -269,7 +269,7 @@ const mapStateToProps = (state) => {
     peerTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'peers' : 'peer'
   }
 
-  const profile = state.account.info.profile
+  const profile = state.account.profile.value
 
   return {
     peers,

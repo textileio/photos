@@ -11,18 +11,26 @@ import {
   Profile
 } from '../../NativeModules/Textile'
 
-export function * refreshAccountInfo () {
+export function * refreshProfile () {
   while (true) {
     try {
-      yield take(getType(AccountActions.refreshAccountInfoRequest))
-      const addressResult: string = yield call(address)
-      const peerIdResult: string = yield call(peerId)
+      yield take(getType(AccountActions.refreshProfileRequest))
       const profileResult: Profile = yield call(profile)
-      const seedResult: string = yield call(seed)
-      const usernameResult: string | undefined = yield call(username)
-      yield put(AccountActions.refreshAccountInfoSuccess(addressResult, peerIdResult, profileResult, seedResult, usernameResult))
+      yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
-      yield put(AccountActions.refreshAccountInfoError(error))
+      yield put(AccountActions.refreshProfileError(error))
+    }
+  }
+}
+
+export function * refreshPeerId () {
+  while (true) {
+    try {
+      yield take(getType(AccountActions.refreshPeerIdRequest))
+      const peerIdResult = yield call(peerId)
+      yield put(AccountActions.refreshPeerIdSuccess(peerIdResult))
+    } catch (error) {
+      yield put(AccountActions.refreshPeerIdError(error))
     }
   }
 }

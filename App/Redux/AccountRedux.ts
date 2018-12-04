@@ -2,11 +2,18 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { Profile } from '../NativeModules/Textile'
 
 const actions = {
-  refreshAccountInfoRequest: createAction('REFRESH_ACCOUNT_INFO_REQUEST'),
-  refreshAccountInfoSuccess: createAction('REFRESH_ACCOUNT_INFO_SUCCESS', (resolve) => {
-    return (address: string, peerId: string, profile: Profile, seed: string, username?: string) => resolve({ address, peerId, profile, seed, username })
+  refreshProfileRequest: createAction('REFRESH_PROFILE_REQUEST'),
+  refreshProfileSuccess: createAction('REFRESH_PROFILE_SUCCESS', (resolve) => {
+    return (profile: Profile) => resolve({ profile })
   }),
-  refreshAccountInfoError: createAction('REFRESH_ACCOUNT_INFO_ERROR', (resolve) => {
+  refreshProfileError: createAction('REFRESH_PROFILE_ERROR', (resolve) => {
+    return (error: any) => resolve({ error })
+  }),
+  refreshPeerIdRequest: createAction('REFRESH_PEER_ID_REQUEST'),
+  refreshPeerIdSuccess: createAction('REFRESH_PEER_ID_SUCCESS', (resolve) => {
+    return (peerId: string) => resolve({ peerId })
+  }),
+  refreshPeerIdError: createAction('REFRESH_PEER_ID_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
   }),
   setAvatarRequest: createAction('SET_AVATAR_REQUEST', (resolve) => {
@@ -26,12 +33,12 @@ const actions = {
 export type AccountAction = ActionType<typeof actions>
 
 interface AccountState {
-  info: {
-    address?: string
-    peerId?: string
-    profile?: Profile
-    seed?: string
-    username?: string
+  profile: {
+    value?: Profile
+    error?: string
+  }
+  peerId: {
+    value?: string
     error?: string
   }
   avatar: {
@@ -42,19 +49,28 @@ interface AccountState {
 }
 
 const initialState: AccountState = {
-  info: {},
+  profile: {},
+  peerId: {},
   avatar: {}
 }
 
 export function reducer(state: AccountState = initialState, action: AccountAction): AccountState {
   switch (action.type) {
-    case getType(actions.refreshAccountInfoSuccess):
-      const { address, peerId, profile, seed, username } = action.payload
-      return { ...state, info: { address, peerId, profile, seed, username } }
-    case getType(actions.refreshAccountInfoError): {
+    case getType(actions.refreshProfileSuccess):
+      const { profile } = action.payload
+      return { ...state, profile: { value: profile } }
+    case getType(actions.refreshProfileError): {
       const obj = action.payload.error
       const error = obj.message as string || obj as string || 'unknown error'
-      return { ...state, info: { ...state.info, error } }
+      return { ...state, profile: { ...state.profile, error } }
+    }
+    case getType(actions.refreshPeerIdSuccess):
+      const { peerId } = action.payload
+      return { ...state, peerId: { value: peerId } }
+    case getType(actions.refreshPeerIdError): {
+      const obj = action.payload.error
+      const error = obj.message as string || obj as string || 'unknown error'
+      return { ...state, peerId: { ...state.peerId, error } }
     }
     case getType(actions.setAvatarError): {
       const obj = action.payload.error
