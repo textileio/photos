@@ -9,7 +9,8 @@ import RNPushNotification from 'react-native-push-notification'
 
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import AccountActions from '../Redux/AccountRedux'
 import { RootAction } from '../Redux/Types'
 import {
   addThread,
@@ -104,7 +105,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
       } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)
-        yield put(PreferencesActions.updateRecoveryPhrase(recoveryPhrase))
+        yield put(AccountActions.setRecoveryPhrase(recoveryPhrase))
         yield put(TextileNodeActions.derivingAccount())
         const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
         // const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')

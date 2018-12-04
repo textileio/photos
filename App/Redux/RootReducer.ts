@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 
+import { reducer as accountReducer } from './AccountRedux'
 import { reducer as authReducer } from './AuthRedux'
 import { reducer as cameraRollReducer } from './CameraRollRedux'
 import { reducer as contactsReducer } from './ContactsRedux'
@@ -17,6 +18,7 @@ import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as migrationReducer } from './MigrationRedux'
 
 export default combineReducers({
+  account: accountReducer,
   auth: authReducer,
   cameraRoll: cameraRollReducer,
   contacts: contactsReducer,

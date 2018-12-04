@@ -257,7 +257,7 @@ const mapStateToProps = (state) => {
     threadName,
     items,
     displayImages,
-    profile: state.preferences.profile,
+    profile: state.account.info.profile,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
     displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,

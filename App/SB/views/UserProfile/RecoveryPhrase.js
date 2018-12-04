@@ -72,7 +72,7 @@ const mapStateToProps = (state) => {
   const nodeRunning = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
 
   return {
-    recoveryPhrase: state.preferences.recoveryPhrase || 'sorry, there was an error',
+    recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
     online,
     nodeRunning

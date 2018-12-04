@@ -265,7 +265,7 @@ const mapStateToProps = (state) => {
       .map(thread => {
         // tmp contact stuff
         for (let photo of thread.photos) {
-          if (state.preferences.profile && photo.author_id === state.preferences.profile.id) {
+          if (state.account.info.profile && photo.author_id === state.account.info.profile.id) {
             continue
           }
           peers[photo.author_id] = peers[photo.author_id] ? peers[photo.author_id] : photo.username
@@ -299,7 +299,7 @@ const mapStateToProps = (state) => {
     peerTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'peers' : 'peer'
   }
 
-  const profile = state.preferences.profile
+  const profile = state.account.info.profile
 
   return {
     peers,

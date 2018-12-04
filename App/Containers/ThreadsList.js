@@ -149,7 +149,7 @@ class ThreadsList extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const profile = state.preferences.profile
+  const profile = state.account.profile
   const allThreads = getThreads(state)
   let threads
   if (allThreads.length > 0) {

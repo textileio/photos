@@ -170,7 +170,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
 }
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
-  const { profile, peerId } = state.preferences
+  const { profile, peerId } = state.account.info
   const { photo } = ownProps.item
   const date = moment(photo.date)
   const dateString = date.fromNow()

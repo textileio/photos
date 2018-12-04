@@ -19,6 +19,8 @@ import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
 
+import accountSaga from './Account'
+
 import { startup } from './StartupSagas'
 
 import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } from './NodeLifecycle'
@@ -103,6 +105,8 @@ import {
 
 export default function * root (dispatch: Dispatch) {
   yield all([
+    accountSaga,
+
     call(manageNode),
     call(handleCreateNodeRequest, dispatch),
     call(onNodeStarted),
@@ -190,7 +194,6 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(PreferencesActions.onboardedSuccess), inviteAfterOnboard),
 
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
-    takeLatest(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),
 
     initializeAppState()
   ])

@@ -103,7 +103,7 @@ class VerifyRecoveryPhrase extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    recoveryPhrase: state.preferences.recoveryPhrase
+    recoveryPhrase: state.account.recoveryPhrase
   }
 }
 
