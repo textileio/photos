@@ -1,18 +1,14 @@
 import actions, { reducer } from '../AccountRedux'
+import { Profile } from '../../NativeModules/Textile'
 
 const initialState = reducer(undefined, {} as any)
-const info = {
+const profile: Profile = {
   address: 'address',
-  peerId: 'peerId',
-  profile: {
-    address: 'address',
-    inboxes: ['address1', 'address2'],
-    username: 'username',
-    avatar_uri: 'avatarUri'
-  },
-  seed: 'seed',
-  username: 'username'
+  inboxes: ['address1', 'address2'],
+  username: 'username',
+  avatar_uri: 'avatarUri'
 }
+const peerId = 'peerId'
 const error = 'error'
 const avatarId = 'avatarId'
 const recoveryPhrase = 'recoveryPhrase'
@@ -23,19 +19,32 @@ describe('account', () => {
       expect(initialState).toMatchSnapshot()
     })
   })
-  describe('account info', () => {
+  describe('profile', () => {
     it('should not change state for request', () => {
-      const state0 =  reducer(initialState, actions.refreshAccountInfoRequest())
+      const state0 =  reducer(initialState, actions.refreshProfileRequest())
       expect(state0).toEqual(initialState)
     })
-    it('should update account info', () => {
-      const { address, peerId, profile, seed, username } = info
-      const state0 = reducer(initialState, actions.refreshAccountInfoSuccess(address, peerId, profile, seed, username))
-      expect(state0.info).toEqual(info)
+    it('should update profile', () => {
+      const state0 = reducer(initialState, actions.refreshProfileSuccess(profile))
+      expect(state0.profile.value).toEqual(profile)
     })
-    it('should track account info error', () => {
-      const state0 = reducer(initialState, actions.refreshAccountInfoError(error))
-      expect(state0.info.error).toEqual(error)
+    it('should track profile error', () => {
+      const state0 = reducer(initialState, actions.refreshProfileError(error))
+      expect(state0.profile.error).toEqual(error)
+    })
+  })
+  describe('peer id', () => {
+    it('should not change state for request', () => {
+      const state0 =  reducer(initialState, actions.refreshPeerIdRequest())
+      expect(state0).toEqual(initialState)
+    })
+    it('should update peer id', () => {
+      const state0 = reducer(initialState, actions.refreshPeerIdSuccess(peerId))
+      expect(state0.peerId.value).toEqual(peerId)
+    })
+    it('should track peer id error', () => {
+      const state0 = reducer(initialState, actions.refreshPeerIdError(error))
+      expect(state0.peerId.error).toEqual(error)
     })
   })
   describe('avatar', () => {

@@ -124,7 +124,7 @@ const mapStateToProps = (state) => {
 
   return {
     notifications,
-    profile: state.account.info.profile,
+    profile: state.account.profile.value,
     showOnboarding
   }
 }
