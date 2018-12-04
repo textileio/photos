@@ -13,7 +13,7 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
+import { defaultThreadData, getThreads, getActivePeers} from '../Redux/PhotoViewingSelectors'
 import Colors from '../Themes/Colors'
 
 import style from './Styles/TextilePhotosStyle'
@@ -171,7 +171,10 @@ class Wallet extends React.PureComponent {
           username={this.props.profile.username}
         />
         <View style={style.gridContainer}>
-          {this.props.selectedTab === 'Threads' && <ThreadSelector threads={this.props.threads} createNewThread={this.openThreadModal()}/>}
+          {this.props.selectedTab === 'Threads' && <ThreadSelector 
+            threads={this.props.threads} 
+            createNewThread={this.openThreadModal()}
+          />}
           {this.props.selectedTab === 'Photos' && <PhotoGrid
             items={this.props.items}
             onSelect={this.onSelect}
@@ -254,40 +257,10 @@ const mapStateToProps = (state) => {
     ? 'Wallet Status:\n' + nodeStatus
     : 'Any new photos you take will be added to your Textile wallet.'
 
-  const allThreads = getThreads(state)
-  let threads
-  // tmp contact stuff
-  let peers = {}
-  // end
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter(thread => thread.name !== 'default')
-      .map(thread => {
-        // tmp contact stuff
-        for (let photo of thread.photos) {
-          if (state.preferences.profile && photo.author_id === state.preferences.profile.id) {
-            continue
-          }
-          peers[photo.author_id] = peers[photo.author_id] ? peers[photo.author_id] : photo.username
-        }
-        // end
-        return {
-          id: thread.id,
-          name: thread.name,
-          // total number of images in the thread
-          size: thread.photos.length,
-          // just keep the top 2
-          photos: thread.photos.slice(0, 3),
-          // get a rough count of distinct users
-          userCount: thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1,
-          // latest update based on the latest item
-          updated: thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0,
-          // latest peer to push to the thread
-          latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
-        }
-      })
-      .sort((a, b) => a.updated < b.updated)
-  }
+  let threads = getThreads(state, 'date')
+
+  // Todo: replace with contacts api
+  let peers = getActivePeers(state)
 
   const overview = {
     available: !!state.storage.overview,

@@ -64,6 +64,22 @@ export interface ThreadData {
   readonly error?: string
 }
 
+export interface ThreadThumbs {
+  readonly id: string
+  readonly name: string
+  readonly thumb?: ThreadFilesInfo
+}
+
+export interface ThreadPreviewData {
+  readonly id: string
+  readonly name: string
+  readonly size: number
+  readonly photos: ReadonlyArray<ThreadFilesInfo>
+  readonly userCount: number
+  readonly updated: number
+  readonly latestPeerId?: string
+}
+
 interface ThreadMap {
   readonly [key: string]: ThreadData | undefined
 }

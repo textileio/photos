@@ -166,35 +166,12 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
 }
 
 interface StateProps {
-  threads: ThreadData[]
+  threads: ReadonlyArray<ThreadData>
 }
 
 const mapStateToProps = (state: RootState): StateProps  => {
-
-  const allThreads = getThreads(state)
-  let threads: ThreadData[] = []
-  const defaultThreadName: string = 'default' as any
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter((thread: ThreadData) => thread.name !== defaultThreadName)
-      .sort((a, b) => {
-        if (a.name === null || a.name === '') {
-          return 1
-        } else if (b.name === null || b.name === '') {
-          return -1
-        }
-        const A = a.name.toString().toUpperCase()
-        const B = b.name.toString().toUpperCase()
-        if (A === B) {
-          return 0
-        } else {
-          return A < B ? -1 : 1
-        }
-      })
-  }
-
   return {
-    threads
+    threads: getThreads(state, 'name')
   }
 }
 
