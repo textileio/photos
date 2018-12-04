@@ -1,4 +1,4 @@
-import { all } from 'redux-saga/effects'
+import { all, call } from 'redux-saga/effects'
 import {
   refreshAccountInfo,
   setAvatar
@@ -6,7 +6,7 @@ import {
 
 export default function * accountSaga () {
   yield all([
-    refreshAccountInfo,
-    setAvatar
+    call(refreshAccountInfo),
+    call(setAvatar)
   ])
 }

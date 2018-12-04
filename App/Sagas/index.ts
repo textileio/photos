@@ -105,7 +105,7 @@ import {
 
 export default function * root (dispatch: Dispatch) {
   yield all([
-    accountSaga,
+    call(accountSaga),
 
     call(manageNode),
     call(handleCreateNodeRequest, dispatch),
