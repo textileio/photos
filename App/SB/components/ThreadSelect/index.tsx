@@ -16,7 +16,7 @@ import styles from './statics/styles'
 interface ComponentProps {
   createNew: () => void
   select: (threadId: string) => void
-  threads: ThreadData[]
+  threads: ReadonlyArray<ThreadData>
   selected?: string
 }
 
