@@ -148,7 +148,7 @@ const mapStateToProps = (state) => {
 
   return {
     verboseUi: state.preferences.verboseUi,
-    recoveryPhrase: state.preferences.recoveryPhrase || 'sorry, there was an error',
+    recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
     online,
     nodeRunning

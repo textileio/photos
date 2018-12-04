@@ -170,12 +170,10 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
 }
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
-  const { profile } = state.preferences
+  const { profile, peerId } = state.account.info
   const { photo } = ownProps.item
   const date = moment(photo.date)
   const dateString = date.fromNow()
-  // TODO: Make sure address is what 'id' used to be
-  const selfId = profile && profile.address
 
   const username = profile ? (profile.username || 'unknown') : 'unknown'
   const photoUsername = photo.username ? photo.username : photo.author_id.substring(0, 8)
@@ -183,8 +181,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const defaultSource = require('../../views/Notifications/statics/main-image.png')
 
   const totalLikes = photo.likes ? photo.likes.length : 0
-  const isLiked = photo.likes && photo.likes.length > 0
-  const didLike = isLiked && photo.likes.find((like) => like.author_id === selfId) !== undefined
+  const isLiked = photo.likes.length > 0
+  const didLike = isLiked && photo.likes.find((like) => like.author_id === peerId) !== undefined
 
   // Unsquares the images by maintaining the aspect ratio no matter device size
   const imageWidth = WIDTH

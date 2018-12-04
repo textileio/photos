@@ -13,7 +13,7 @@ import { CreateThreadComponent } from './CreateThreadModal'
 import { RootAction, RootState } from '../Redux/Types'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
-import UIActions from '../Redux/UIRedux'
+import ContactsActions from '../Redux/ContactsRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 import { ThreadSelectComponent } from '../SB/components/ThreadSelect'
@@ -178,7 +178,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    refreshContacts: () => { dispatch(UIActions.refreshContacts()) },
+    refreshContacts: () => { dispatch(ContactsActions.getContactsRequest()) },
     submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, name, { navigate, selectToShare })) }
   }
 }

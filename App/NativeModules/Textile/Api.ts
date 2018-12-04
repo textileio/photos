@@ -247,10 +247,9 @@ export async function threads(): Promise<ReadonlyArray<ThreadInfo>> {
   return JSON.parse(result) as ReadonlyArray<ThreadInfo>
 }
 
-export async function username(): Promise<string> {
-  // TODO: Deal with empty string?
-  const result = await TextileNode.username()
-  return result as string
+export async function username(): Promise<string | undefined> {
+  const result: string = await TextileNode.username()
+  return result.length > 0 ? result : undefined
 }
 
 export async function version(): Promise<string> {

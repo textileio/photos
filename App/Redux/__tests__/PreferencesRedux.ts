@@ -33,10 +33,4 @@ describe('preferences stories', () => {
       expect(state1.verboseUi).toBe(false)
     })
   })
-  describe('recovery phrase', () => {
-    it('should update recovery phrase', () => {
-      const state = reducer(initialState, actions.updateRecoveryPhrase(recoveryPhrase))
-      expect(state.recoveryPhrase).toEqual(recoveryPhrase)
-    })
-  })
 })

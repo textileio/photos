@@ -40,7 +40,7 @@ class AddCaptionScreen extends React.Component<Props> {
   static navigationOptions = ({navigation}: NavigationScreenProps) => {
     const params = navigation.state.params || {}
     return {
-      headerTitle: 'Photo Caption',
+      headerTitle: 'Share Photo',
       headerLeft: (
         <TextileHeaderButtons left={true}>
           <Item

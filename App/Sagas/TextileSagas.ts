@@ -24,6 +24,7 @@ import {
   checkCafeMessages,
   addThreadIgnore,
   setAvatar,
+  peerId,
   profile,
   Profile,
   addThreadLike,
@@ -36,14 +37,12 @@ import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import AuthActions from '../Redux/AuthRedux'
+import AccountActions from '../Redux/AccountRedux'
 import ContactsActions from '../Redux/ContactsRedux'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType, getType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
-import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
-import { uploadFile } from './UploadFile'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
@@ -52,6 +51,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 import StorageActions from '../Redux/StorageRedux'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { RootState } from '../Redux/Types'
 
 export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActions.updateOverviewRequest> ) {
   try {
@@ -95,7 +95,7 @@ function * processAvatarImage(uri: string) {
     // set it as our profile picture
 
     // TODO: Not sure what blockInfo prop we should pass here
-    yield put(PreferencesActions.pendingAvatar(blockInfo.id))
+    yield put(AccountActions.setPendingAvatar(blockInfo.id))
 
     try {
       // yield * uploadFile(
@@ -201,15 +201,9 @@ export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {
     try {
-      const pending: string = yield select(PreferencesSelectors.pending)
+      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pendingId)
       if (pending) {
         yield call(setAvatar, pending)
-        const profileResult: Profile = yield call(profile)
-        yield put(PreferencesActions.getProfileSuccess(profileResult))
-      } else {
-        // just updated it directly
-        const profileResult: Profile = yield call(profile)
-        yield put(PreferencesActions.getProfileSuccess(profileResult))
       }
     } catch (error) {
       // nada

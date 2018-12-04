@@ -58,6 +58,7 @@ const FeedItem = props => {
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
+        {/* TODO: Update textile image props to target and index */}
         {isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.photoId} forMinWidth={40} resizeMode={'cover'} />}
       </View>
     </TouchableOpacity>

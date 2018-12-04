@@ -15,8 +15,11 @@ import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import TriggersActions from '../Redux/TriggersRedux'
+import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
+
+import accountSaga from './Account'
 
 import { startup } from './StartupSagas'
 
@@ -102,6 +105,8 @@ import {
 
 export default function * root (dispatch: Dispatch) {
   yield all([
+    call(accountSaga),
+
     call(manageNode),
     call(handleCreateNodeRequest, dispatch),
     call(onNodeStarted),
@@ -129,9 +134,10 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
-    takeEvery(getType(UIActions.refreshContacts), refreshContacts),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
+
+    takeEvery(getType(ContactsActions.getContactsRequest), refreshContacts),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
     takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),
@@ -187,9 +193,7 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardedSuccess), inviteAfterOnboard),
 
-    // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
-    takeLatest(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),
 
     initializeAppState()
   ])

@@ -126,7 +126,7 @@ class Avatar extends React.PureComponent<IAvatarProps> {
 
 const mapStateToProps = (state: RootState): IPropsFromState => {
   return {
-    profile: state.preferences.profile,
+    profile: state.account.info.profile,
     online: !!state.textileNode.online
   }
 }

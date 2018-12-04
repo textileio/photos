@@ -92,7 +92,7 @@ class ShowRecoveryPhrase extends React.Component<StateProps, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    recoveryPhrase: state.preferences.recoveryPhrase
+    recoveryPhrase: state.account.recoveryPhrase
   }
 }
 
