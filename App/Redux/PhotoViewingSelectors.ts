@@ -1,5 +1,5 @@
 import { RootState } from './Types'
-import { ThreadData, ThreadPreviewData, ThreadThumbs } from './PhotoViewingRedux'
+import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
 
 export function defaultThreadData (state: RootState): ThreadData | undefined {
   const defaultThreadName: string = 'default' as any
@@ -41,7 +41,7 @@ export function getActivePeers (state: RootState): {[key: string]: string} {
   return peers
 }
 
-export function getThreads (state: RootState, sortBy?: string): ReadonlyArray<ThreadData> {
+export function getThreads (state: RootState, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadData> {
   const result = Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
     .filter((thread) => thread.name !== 'default') // TODO: filter by real account thread

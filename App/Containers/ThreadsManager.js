@@ -11,7 +11,6 @@ import CreateThreadModal from '../Components/CreateThreadModal'
 import ThreadSelector from '../Components/ThreadSelector'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
@@ -104,7 +103,7 @@ class ThreadsManager extends React.PureComponent {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <ThreadSelector threads={this.props.threads} createNewThread={this.openThreadModal()}/>}
+        {!this.props.showOnboarding && <ThreadSelector createNewThread={this.openThreadModal()}/>}
         <CreateThreadModal
           isVisible={this.state.showCreateThreadModal}
           fullScreen={false}
@@ -118,12 +117,6 @@ class ThreadsManager extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    threads: getThreads(state, 'date')
-  }
-}
-
 const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
@@ -131,4 +124,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadsManager)
+export default connect(undefined, mapDispatchToProps)(ThreadsManager)

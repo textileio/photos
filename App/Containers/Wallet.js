@@ -13,7 +13,7 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { defaultThreadData, getThreads, getActivePeers} from '../Redux/PhotoViewingSelectors'
+import { defaultThreadData, getActivePeers} from '../Redux/PhotoViewingSelectors'
 import Colors from '../Themes/Colors'
 
 import style from './Styles/TextilePhotosStyle'
@@ -172,7 +172,6 @@ class Wallet extends React.PureComponent {
         />
         <View style={style.gridContainer}>
           {this.props.selectedTab === 'Threads' && <ThreadSelector 
-            threads={this.props.threads} 
             createNewThread={this.openThreadModal()}
           />}
           {this.props.selectedTab === 'Photos' && <PhotoGrid
@@ -257,8 +256,6 @@ const mapStateToProps = (state) => {
     ? 'Wallet Status:\n' + nodeStatus
     : 'Any new photos you take will be added to your Textile wallet.'
 
-  let threads = getThreads(state, 'date')
-
   // Todo: replace with contacts api
   let peers = getActivePeers(state)
 
@@ -277,7 +274,6 @@ const mapStateToProps = (state) => {
   return {
     peers,
     threadId,
-    threads,
     photos,
     items,
     displayImages: state.textileNode.nodeState.state === 'started',
