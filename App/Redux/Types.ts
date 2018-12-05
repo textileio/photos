@@ -2,6 +2,7 @@ import { StateType } from 'typesafe-actions'
 import { PersistPartial } from 'redux-persist'
 
 import RootReducer from './RootReducer'
+import { AccountAction } from './AccountRedux'
 import { AuthAction } from './AuthRedux'
 import { CameraRollAction } from './CameraRollRedux'
 import { ContactsAction } from './ContactsRedux'
@@ -19,6 +20,7 @@ import { MigrationAction } from './MigrationRedux'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
+  AccountAction |
   AuthAction |
   CameraRollAction |
   ContactsAction |

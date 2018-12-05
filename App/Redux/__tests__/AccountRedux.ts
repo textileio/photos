@@ -20,17 +20,23 @@ describe('account', () => {
     })
   })
   describe('profile', () => {
-    it('should not change state for request', () => {
+    it('should be processing from refresh', () => {
       const state0 =  reducer(initialState, actions.refreshProfileRequest())
-      expect(state0).toEqual(initialState)
+      expect(state0.profile.processing).toBeTruthy()
+    })
+    it('should be processing from setUsername', () => {
+      const state0 =  reducer(initialState, actions.setUsernameRequest('username'))
+      expect(state0.profile.processing).toBeTruthy()
     })
     it('should update profile', () => {
       const state0 = reducer(initialState, actions.refreshProfileSuccess(profile))
       expect(state0.profile.value).toEqual(profile)
+      expect(state0.profile.processing).toBeFalsy()
     })
     it('should track profile error', () => {
-      const state0 = reducer(initialState, actions.refreshProfileError(error))
+      const state0 = reducer(initialState, actions.profileError(error))
       expect(state0.profile.error).toEqual(error)
+      expect(state0.profile.processing).toBeFalsy()
     })
   })
   describe('peer id', () => {

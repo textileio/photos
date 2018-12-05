@@ -8,6 +8,7 @@ import { Dispatch } from 'redux'
 
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
+import OnboardingUsername from '../../Containers/OnboardingUsername'
 import MailListSignupScreen from '../MailListSignupScreen'
 import Icon from '../../Components/Icon'
 import PrefrencesActions from '../../Redux/PreferencesRedux'
@@ -44,8 +45,8 @@ interface State {
 class OnboardingScreen extends React.Component<Props, State> {
 
   pages?: Pages
-  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4]
-  noForwardArrowIndexes: number[] = [3, 4]
+  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 5]
+  noForwardArrowIndexes: number[] = [3, 4, 5]
 
   constructor(props: Props) {
     super(props)
@@ -102,6 +103,7 @@ class OnboardingScreen extends React.Component<Props, State> {
             subtitle='Everytime you take a picture, Textile will be there to automatically sync your photos.'
             image={require('./statics/sync.png')}
           />
+          <OnboardingUsername onSuccess={this.nextPage} />
           <MailListSignupScreen onSuccess={this.nextPage} />
           <OnboardingMessage
             title='All ready!'

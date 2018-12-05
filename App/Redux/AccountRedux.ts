@@ -6,7 +6,7 @@ const actions = {
   refreshProfileSuccess: createAction('REFRESH_PROFILE_SUCCESS', (resolve) => {
     return (profile: Profile) => resolve({ profile })
   }),
-  refreshProfileError: createAction('REFRESH_PROFILE_ERROR', (resolve) => {
+  profileError: createAction('PROFILE_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
   }),
   refreshPeerIdRequest: createAction('REFRESH_PEER_ID_REQUEST'),
@@ -15,6 +15,9 @@ const actions = {
   }),
   refreshPeerIdError: createAction('REFRESH_PEER_ID_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
+  }),
+  setUsernameRequest: createAction('SET_USERNAME_REQUEST', (resolve) => {
+    return (username: string) => resolve({ username })
   }),
   setAvatarRequest: createAction('SET_AVATAR_REQUEST', (resolve) => {
     return (avatarId: string) => resolve({ avatarId })
@@ -35,6 +38,7 @@ export type AccountAction = ActionType<typeof actions>
 interface AccountState {
   profile: {
     value?: Profile
+    processing: boolean
     error?: string
   }
   peerId: {
@@ -49,20 +53,25 @@ interface AccountState {
 }
 
 const initialState: AccountState = {
-  profile: {},
+  profile: {
+    processing: false
+  },
   peerId: {},
   avatar: {}
 }
 
 export function reducer(state: AccountState = initialState, action: AccountAction): AccountState {
   switch (action.type) {
+    case getType(actions.setUsernameRequest):
+    case getType(actions.refreshProfileRequest):
+      return { ...state, profile: { ...state.profile, processing: true } }
     case getType(actions.refreshProfileSuccess):
       const { profile } = action.payload
-      return { ...state, profile: { value: profile } }
-    case getType(actions.refreshProfileError): {
+      return { ...state, profile: { value: profile, processing: false } }
+    case getType(actions.profileError): {
       const obj = action.payload.error
       const error = obj.message as string || obj as string || 'unknown error'
-      return { ...state, profile: { ...state.profile, error } }
+      return { ...state, profile: { ...state.profile, processing: false, error } }
     }
     case getType(actions.refreshPeerIdSuccess):
       const { peerId } = action.payload

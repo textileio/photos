@@ -2,12 +2,10 @@ import { take, put, call } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import AccountActions from '../../Redux/AccountRedux'
 import {
-  address,
   peerId,
   profile,
-  seed,
-  username,
   setAvatar as updateAvatar,
+  setUsername as username,
   Profile
 } from '../../NativeModules/Textile'
 
@@ -18,7 +16,7 @@ export function * refreshProfile () {
       const profileResult: Profile = yield call(profile)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
-      yield put(AccountActions.refreshProfileError(error))
+      yield put(AccountActions.profileError(error))
     }
   }
 }
@@ -31,6 +29,20 @@ export function * refreshPeerId () {
       yield put(AccountActions.refreshPeerIdSuccess(peerIdResult))
     } catch (error) {
       yield put(AccountActions.refreshPeerIdError(error))
+    }
+  }
+}
+
+export function * setUsername () {
+  while (true) {
+    try {
+      const action: ActionType<typeof AccountActions.setUsernameRequest> = yield take(getType(AccountActions.setUsernameRequest))
+      yield call(username, action.payload.username)
+      // Setting the username makes it available in the Profile, so update it
+      const profileResult: Profile = yield call(profile)
+      yield put(AccountActions.refreshProfileSuccess(profileResult))
+    } catch (error) {
+      yield put(AccountActions.profileError(error))
     }
   }
 }
