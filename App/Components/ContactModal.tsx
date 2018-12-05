@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Dispatch} from 'redux'
 import {
   View,
   ScrollView,
@@ -13,12 +12,12 @@ import { SafeAreaView } from 'react-navigation'
 import Avatar from './Avatar'
 import { TextileHeaderButtons, Item } from './HeaderButtons'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
-import { getThreads } from '../Redux/PhotoViewingSelectors'
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
 
 // Styles
 import styles from './Styles/ContactModal'
 import { RootState } from '../Redux/Types'
+import { ThreadThumbs } from '../Redux/PhotoViewingRedux';
 
 interface ScreenProps {
   isVisible: boolean
@@ -59,9 +58,9 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
           </View>
           <ScrollView style={styles.threadsList}>
             <Text style={styles.threadsTitle}>
-              {this.props.threads.length > 0 ? 'Sharing in Threads:' : 'Not part of any shared threads'}
+              {this.props.threadThumbs.length > 0 ? 'Sharing in Threads:' : 'Not part of any shared threads'}
             </Text>
-            {this.props.threads.map((thread, i) => (
+            {this.props.threadThumbs.map((thread, i) => (
               <TouchableOpacity key={i} onPress={this.navigate(thread.id, thread.name)}>
                 <PhotoWithTextBox key={i} text={thread.name} photo={thread.thumb} />
               </TouchableOpacity>
@@ -75,26 +74,12 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
 }
 
 interface DispatchStateProps {
-  threads: Array<{id: string, name: string, thumb?: ThreadFilesInfo}>
+  threadThumbs: ReadonlyArray<ThreadThumbs>
 }
 
 const mapStateToProps = (state: RootState, ownProps: ScreenProps): DispatchStateProps => {
-  const allThreads = getThreads(state)
-  let threads
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter((thread) => thread.photos.some((p) => p.author_id === ownProps.peerId))
-      .map((thread) => {
-        return {
-          id: thread.id,
-          thumb: thread.photos.length > 0 ? thread.photos[0] : undefined,
-          name: thread.name
-        }
-      })
-  }
-
   return {
-    threads: threads || []
+    threadThumbs: getThreadThumbs(state, ownProps.peerId)
   }
 }
 

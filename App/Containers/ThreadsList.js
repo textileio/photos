@@ -12,7 +12,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
-import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { totalUploadProgress } from '../Redux/ProcessingImagesSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
@@ -149,29 +149,7 @@ class ThreadsList extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const profile = state.account.profile
-  const allThreads = getThreads(state)
-  let threads
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter(thread => thread.name !== 'default')
-      .map(thread => {
-        return {
-          id: thread.id,
-          name: thread.name,
-          // total number of images in the thread
-          size: thread.photos.length,
-          // just keep the top 2
-          photos: thread.photos.slice(0, 3),
-          // get a rough count of distinct users
-          userCount: thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1,
-          // latest update based on the latest item
-          updated: thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0,
-          // latest peer to push to the thread
-          latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
-        }
-      })
-  }
+  const profile = state.preferences.profile
 
   const items = Object.keys(state.photoViewing.threads)
     .filter((id) => state.photoViewing.threads[id].name !== 'default')
@@ -216,9 +194,9 @@ const mapStateToProps = (state) => {
   return {
     profile,
     items,
-    showNotificationsPrompt: state.preferences.tourScreens.notifications && threads,
+    showNotificationsPrompt: state.preferences.tourScreens.notifications && items.length,
     services: state.preferences.services,
-    showOnboarding: state.preferences.tourScreens.threads && threads && threads.length === 0
+    showOnboarding: state.preferences.tourScreens.threads && items && items.length === 0
   }
 }
 

@@ -16,7 +16,7 @@ import styles from './statics/styles'
 interface ComponentProps {
   createNew: () => void
   select: (threadId: string) => void
-  threads: ThreadData[]
+  threads: ReadonlyArray<ThreadData>
   selected?: string
 }
 
@@ -84,7 +84,7 @@ export interface ScreenProps {
 }
 
 interface StateProps {
-  threads: ThreadData[]
+  threads: ReadonlyArray<ThreadData>
   selectedThreadId?: string
 }
 
@@ -126,30 +126,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
 
   const selectedThreadId = state.ui.sharingPhoto ? state.ui.sharingPhoto.threadId : undefined
 
-  const allThreads = getThreads(state)
-  let threads: ThreadData[] = []
-  const defaultThreadName: string = 'default' as any
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter((thread) => thread.name !== defaultThreadName)
-      .sort((a, b) => {
-        if (a.name === null || a.name === '') {
-          return 1
-        } else if (b.name === null || b.name === '') {
-          return -1
-        }
-        const A = a.name.toString().toUpperCase()
-        const B = b.name.toString().toUpperCase()
-        if (A === B) {
-          return 0
-        } else {
-          return A < B ? -1 : 1
-        }
-      })
-  }
-
   return {
-    threads,
+    threads: getThreads(state, 'name'),
     selectedThreadId
   }
 }
