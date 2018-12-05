@@ -4,6 +4,7 @@ import { ActionType, getType } from 'typesafe-actions'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { ThreadsSelectors, InboundInvite } from '../Redux/ThreadsRedux'
+import { getAddress } from '../Redux/AccountSelectors'
 import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
 import {
@@ -68,10 +69,16 @@ export function * removeThread (action: ActionType<typeof PhotoViewingActions.re
 
 export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>) {
   try {
+    const accountThreadId = yield select(getAddress)
     const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
     for (const thread of threadsResult) {
-      yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
-      yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
+      /**
+       * Filters out the Account thread from PhotoViewing Thread List
+       */
+      if (thread.key !== accountThreadId) {
+        yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
+        yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
+      }
     }
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadsError(error))
