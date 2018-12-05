@@ -75,10 +75,11 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
       /**
        * Filters out the Account thread from PhotoViewing Thread List
        */
-      if (thread.key !== accountThreadId) {
-        yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
-        yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
+      if (thread.key === accountThreadId) {
+        continue
       }
+      yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
+      yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadsError(error))
