@@ -6,8 +6,6 @@ import { RootState } from './Types'
  * Account Thread Key === Account Address
  */
 export function getAddress (state: RootState): string | undefined {
-  return state.account &&
-         state.account.profile &&
-         state.account.profile.value &&
+  return state.account.profile.value &&
          state.account.profile.value.address
 }
