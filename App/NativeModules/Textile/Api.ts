@@ -13,7 +13,7 @@ import {
   WalletAccount,
   BlockInfo,
   ThreadFilesInfo,
-  Notification
+  NotificationInfo
 } from './Model'
 import { IMobilePreparedFiles, IDirectory, MobilePreparedFiles, Directory } from './pb/textile-go'
 
@@ -151,9 +151,9 @@ export async function imageFileDataForMinWidth(pth: string, minWidth: number): P
   return JSON.parse(result) as FileData
 }
 
-export async function notifications(offset: string, limit: number): Promise<ReadonlyArray<Notification>> {
+export async function notifications(offset: string, limit: number): Promise<ReadonlyArray<NotificationInfo>> {
   const result = await TextileNode.notifications(offset, limit)
-  return JSON.parse(result) as ReadonlyArray<Notification>
+  return JSON.parse(result) as ReadonlyArray<NotificationInfo>
 }
 
 export async function overview(): Promise<Overview> {

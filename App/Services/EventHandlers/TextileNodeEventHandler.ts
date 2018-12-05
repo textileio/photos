@@ -1,7 +1,7 @@
 import { Store } from 'redux'
 
 import { ILocalPhotoResult } from '../../Models/TextileTypes'
-import {  Update, ThreadUpdate, BlockType, Notification } from '../../NativeModules/Textile'
+import {  Update, ThreadUpdate, BlockType, NotificationInfo } from '../../NativeModules/Textile'
 import EventEmitter from '../../NativeModules/Events'
 import { RootState } from '../../Redux/Types'
 
@@ -41,7 +41,7 @@ export default class TextileNodeEventHandler {
     EventEmitter.addListener('onThreadRemoved', (payload: Update) => {
       this.store.dispatch(PhotoViewingActions.threadRemoved(payload.id))
     })
-    EventEmitter.addListener('onNotification', (payload: Notification) => {
+    EventEmitter.addListener('onNotification', (payload: NotificationInfo) => {
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
   }

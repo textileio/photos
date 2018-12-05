@@ -1,4 +1,4 @@
-import { Notification as NotificationData, NotificationType } from '../NativeModules/Textile'
+import { NotificationInfo as NotificationData, NotificationType } from '../NativeModules/Textile'
 import { Notification } from '../Models/Notifications'
 import RNPushNotification, { PushNotification } from 'react-native-push-notification'
 import { Alert, Platform } from 'react-native'
@@ -11,7 +11,8 @@ export interface INotificationsPayload {
 }
 
 export function toTypedNotification(notificationData: NotificationData): Notification {
-  const { subject_id, subject, target, type, ...baseNotification } = notificationData
+  const { subject_id, subject, target, type, username, ...baseNotification } = notificationData
+  // TODO: something with username?
   switch (type) {
     case NotificationType.InviteReceivedNotification:
       return {
@@ -19,7 +20,7 @@ export function toTypedNotification(notificationData: NotificationData): Notific
         type,
         threadName: notificationData.subject
       }
-    case NotificationType.AccountPeerAddedNotification:
+    case NotificationType.AccountPeerJoinedNotification:
       return {
         ...baseNotification,
         type
@@ -78,7 +79,7 @@ export function isPhoto(notification: Notification): boolean {
 }
 
 export function toPayload(notification: Notification): INotificationsPayload {
-  const typeString = NotificationType[notification.type] as string
+  const typeString = notification.type as string
   const actor = notification.actor_id || 'A peer' // TODO: We want username here, need to look it up?
 
   switch (notification.type) {
@@ -88,7 +89,7 @@ export function toPayload(notification: Notification): INotificationsPayload {
       const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(NotificationType.AccountPeerAddedNotification): {
+    case(NotificationType.AccountPeerJoinedNotification): {
       const title = 'New Account Peer'
       const message = 'You paired with a new account peer'
       const feed = message

@@ -17,7 +17,7 @@ import { ActionType } from 'typesafe-actions'
 import { readAllNotifications as readAll, readNotification, notifications } from '../NativeModules/Textile'
 import {
   NotificationType,
-  Notification
+  NotificationInfo
 } from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 
@@ -46,8 +46,8 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
     if (!service || service.status !== true) {
       return
     }
-    const {notification} = action.payload
-    const type = NotificationType[notification.type] as string
+    const { notification } = action.payload
+    const type = notification.type as string
 
     // if notifications for this type are not enabled, return
     const preferences = yield select(PreferencesSelectors.service, type as ServiceType)
@@ -135,7 +135,7 @@ export function * refreshNotifications () {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: ReadonlyArray<Notification> = yield call(notifications, '', 99) // TODO: offset?
+    const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(notifications, '', 99) // TODO: offset?
     yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))))
   } catch (error) {
     yield put(NotificationsActions.refreshNotificationsFailure())

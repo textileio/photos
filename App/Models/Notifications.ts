@@ -14,8 +14,8 @@ export type InviteReceivedNotification = BaseNotification & {
   type: NotificationType.InviteReceivedNotification
 }
 
-export type AccountPeerAddedNotification = BaseNotification & {
-  type: NotificationType.AccountPeerAddedNotification
+export type AccountPeerJoinedNotification = BaseNotification & {
+  type: NotificationType.AccountPeerJoinedNotification
 }
 
 export type PeerJoinedNotification = BaseNotification & {
@@ -60,7 +60,7 @@ export type LikeAddedNotification = BaseNotification & {
 
 export type Notification =
   InviteReceivedNotification |
-  AccountPeerAddedNotification |
+  AccountPeerJoinedNotification |
   PeerJoinedNotification |
   PeerLeftNotification |
   MessageAddedNotification |

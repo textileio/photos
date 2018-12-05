@@ -103,20 +103,21 @@ export interface ContactInfo {
 }
 
 export enum NotificationType {
-  InviteReceivedNotification,
-  AccountPeerAddedNotification,
-  PeerJoinedNotification,
-  PeerLeftNotification,
-  MessageAddedNotification,
-  FilesAddedNotification,
-  CommentAddedNotification,
-  LikeAddedNotification
+  InviteReceivedNotification = 'INVITE_RECEIVED',
+  AccountPeerJoinedNotification = 'ACCOUNT_PEER_JOINED',
+  PeerJoinedNotification = 'PEER_JOINED',
+  PeerLeftNotification = 'PEER_LEFT',
+  MessageAddedNotification = 'MESSAGE_ADDED',
+  FilesAddedNotification = 'FILES_ADDED',
+  CommentAddedNotification = 'COMMENT_ADDED',
+  LikeAddedNotification = 'LIKE_ADDED'
 }
 
-export interface Notification {
+export interface NotificationInfo {
   readonly id: string
   readonly date: string
   readonly actor_id: string
+  readonly username?: string
   readonly subject: string
   readonly subject_id: string
   readonly block_id?: string
