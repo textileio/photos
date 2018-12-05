@@ -25,11 +25,11 @@ interface DispatchProps {
   retryShare: (uuid: string) => void
 }
 
-interface ScreenProps {
+interface OwnProps {
   peers: {[key: string]: string}
 }
 
-class PeerGrid extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
+class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScreenProps<{}>> {
   state = {
     contactCard: false,
     selectedPeer: '',
