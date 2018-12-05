@@ -116,9 +116,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
           <Avatar style={styles.cardAvatar} width={18} height={18} peerId={peerId} defaultSource={defaultSource} />
 
           <Text style={styles.cardAction}>
-            <Text style={styles.cardActionName}>
-              {photoUsername === username ? 'You' : photoUsername}
-            </Text> added a photo
+            <Text style={styles.cardActionName}>{photoUsername}</Text> added a photo
           </Text>
           {this.props.displayThread &&
             <TouchableOpacity
@@ -177,7 +175,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const dateString = date.fromNow()
 
   const username = profile ? (profile.username || 'unknown') : 'unknown'
-  const photoUsername = photo.username ? photo.username : photo.author_id.substring(0, 8)
+  const photoUsername = peerId === photo.author_id ? 'You' : photo.username ? photo.username : photo.author_id.substring(0, 8)
 
   const defaultSource = require('../../views/Notifications/statics/main-image.png')
 
