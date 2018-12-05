@@ -30,7 +30,7 @@ export function getActivePeers (state: RootState): {[key: string]: string} {
       // tmp contact stuff
       for (const photo of thread.photos) {
         const id: string = photo.author_id !== undefined ? photo.author_id : ''
-        if (state.preferences.profile && photo.author_id === state.preferences.profile.address) {
+        if (state.account.profile.value && photo.author_id === state.account.profile.value.address) {
           continue
         }
         if (photo.author_id) {
