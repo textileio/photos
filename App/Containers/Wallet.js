@@ -13,7 +13,7 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { defaultThreadData, getActivePeers} from '../Redux/PhotoViewingSelectors'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import Colors from '../Themes/Colors'
 
 import style from './Styles/TextilePhotosStyle'
@@ -256,8 +256,7 @@ const mapStateToProps = (state) => {
     ? 'Wallet Status:\n' + nodeStatus
     : 'Any new photos you take will be added to your Textile wallet.'
 
-  // Todo: replace with contacts api
-  let peers = getActivePeers(state)
+  let peers = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo.username }), {})
 
   const overview = {
     available: !!state.storage.overview,

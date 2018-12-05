@@ -20,27 +20,6 @@ export function photoAndComment (state: RootState) {
   }
 }
 
-// TODO: replace with contacts api
-export function getActivePeers (state: RootState): {[key: string]: string} {
-  const peers: {[key: string]: string} = {}
-  Object.keys(state.photoViewing.threads)
-    .map((key) => state.photoViewing.threads[key]!)
-    .filter((thread) => thread.name !== 'default')
-    .forEach((thread) => {
-      // tmp contact stuff
-      for (const photo of thread.photos) {
-        const id: string = photo.author_id !== undefined ? photo.author_id : ''
-        if (state.account.profile.value && photo.author_id === state.account.profile.value.address) {
-          continue
-        }
-        if (photo.author_id) {
-          peers[photo.author_id] = peers[photo.author_id] || photo.username || ''
-        }
-      }
-    })
-  return peers
-}
-
 export function getThreads (state: RootState, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadData> {
   const result = Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
