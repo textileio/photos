@@ -17,6 +17,7 @@ export function * onNodeOnline () {
       const cafesString: string = Config.RN_TEXTILE_CAFES
       const cafeIds = cafesString.split(',')
       for (const cafeId of cafeIds) {
+        // TODO: Add some error handling here, maybe state management
         yield call(registerCafe, cafeId)
       }
     }

@@ -3,13 +3,13 @@ import { ExternalInvite } from '../NativeModules/Textile'
 import { RootState } from './Types'
 
 const actions = {
-  addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', (resolve) => {
+  addExternalInviteRequest: createAction('ADD_EXTERNAL_INVITE_REQUEST', (resolve) => {
     return (id: string, name: string) => resolve({ id, name })
   }),
-  addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
+  addExternalInviteSuccess: createAction('ADD_EXTERNAL_INVITE_SUCCESS', (resolve) => {
     return (id: string, name: string, invite: ExternalInvite) => resolve({ id, name, invite })
   }),
-  addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
+  addExternalInviteError: createAction('ADD_EXTERNAL_INVITE_ERROR', (resolve) => {
     return (id: string, error: Error) => resolve({ id, error })
   }),
   threadQRCodeRequest: createAction('THREAD_INVITE_QR_REQUEST', (resolve) => {
