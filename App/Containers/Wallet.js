@@ -171,7 +171,7 @@ class Wallet extends React.PureComponent {
           username={this.props.profile.username}
         />
         <View style={style.gridContainer}>
-          {this.props.selectedTab === 'Threads' && <ThreadSelector 
+          {this.props.selectedTab === 'Threads' && <ThreadSelector
             createNewThread={this.openThreadModal()}
           />}
           {this.props.selectedTab === 'Photos' && <PhotoGrid

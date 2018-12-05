@@ -12,7 +12,7 @@ import UIActions from '../Redux/UIRedux'
 
 import ThreadCard from '../SB/components/ThreadListCard'
 import styles from './Styles/ThreadSelectorStyles'
-import { ThreadFilesInfo } from '../NativeModules/Textile';
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 
 interface ScreenProps {
   createNewThread: () => void

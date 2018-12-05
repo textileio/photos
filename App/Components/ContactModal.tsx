@@ -17,7 +17,7 @@ import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
 // Styles
 import styles from './Styles/ContactModal'
 import { RootState } from '../Redux/Types'
-import { ThreadThumbs } from '../Redux/PhotoViewingRedux';
+import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
 
 interface ScreenProps {
   isVisible: boolean
