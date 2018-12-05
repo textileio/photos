@@ -1,4 +1,4 @@
-import { NotificationType } from '../NativeModules/Textile'
+import { NotificationType, username } from '../NativeModules/Textile'
 
 interface BaseNotification {
   id: string
@@ -7,6 +7,7 @@ interface BaseNotification {
   block_id?: string
   body: string
   read: boolean
+  username?: string
 }
 
 export type InviteReceivedNotification = BaseNotification & {

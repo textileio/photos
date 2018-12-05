@@ -11,8 +11,7 @@ export interface INotificationsPayload {
 }
 
 export function toTypedNotification(notificationData: NotificationData): Notification {
-  const { subject_id, subject, target, type, username, ...baseNotification } = notificationData
-  // TODO: something with username?
+  const { subject_id, subject, target, type, ...baseNotification } = notificationData
   switch (type) {
     case NotificationType.InviteReceivedNotification:
       return {
