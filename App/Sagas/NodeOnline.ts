@@ -8,7 +8,6 @@ import { cafeSessions } from '../Services/CafeSessions'
 import { CafeSession, registerCafe } from '../NativeModules/Textile'
 
 export function * onNodeOnline () {
-  const ZZZ = Math.random()
   while (yield take(getType(TextileNodeActions.nodeOnline))) {
     yield call(logNewEvent, 'IPFS online', 'success')
 
