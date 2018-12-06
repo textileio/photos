@@ -259,7 +259,7 @@ const mapStateToProps = (state) => {
   let peers = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo.username }), {})
 
   // NOTE: if future cases of more non-shared threads existing, we'll want to move this to a redux
-  const nonSharedThreads = 2
+  const nonSharedThreads = 3
 
   const overview = {
     available: !!state.storage.overview,
