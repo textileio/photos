@@ -33,12 +33,18 @@ interface ScreenProps {
   cancel: () => void
 }
 
+interface State {
+  submitted: boolean
+  showCreateThreadModal: boolean
+  threadId?: string,
+  threadName?: string,
+  threadSelected: boolean
+}
+
 class InvitePeerModal extends React.Component<DispatchProps & StateProps & ScreenProps> {
-  state = {
+  state: State = {
     submitted: false,
     showCreateThreadModal: false,
-    threadId: undefined,
-    threadName: undefined,
     threadSelected: false
   }
 
@@ -118,11 +124,11 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
     )
   }
 
-  renderPeerSelect () {
+  renderPeerSelect (threadId: string, threadName: string) {
     return (
       <ThreadsEditFriendsComponent
-        threadId={this.state.threadId}
-        threadName={this.state.threadName}
+        threadId={threadId}
+        threadName={threadName}
         cancel={this.cancelPeerRequest()}
       />
     )
@@ -143,8 +149,8 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
   renderBody () {
     if (this.state.showCreateThreadModal) {
       return this.renderCreateThread()
-    } else if (this.state.threadSelected) {
-      return this.renderPeerSelect()
+    } else if (this.state.threadSelected && this.state.threadId && this.state.threadName) {
+      return this.renderPeerSelect(this.state.threadId, this.state.threadName)
     }
     return this.renderThreadSelect()
   }
