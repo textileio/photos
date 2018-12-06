@@ -47,6 +47,7 @@ function getData (href: string): DeepLinkData | undefined {
 }
 
 function createInviteLink (invite: ExternalInvite, threadName: string): string {
+  console.log('axh', invite.key)
   const hash: string[] = []
   hash.push(`id=${encodeURIComponent(invite.id)}`)
   hash.push(`key=${encodeURIComponent(invite.key)}`)

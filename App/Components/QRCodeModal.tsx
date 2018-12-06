@@ -31,7 +31,7 @@ interface ScreenProps {
 
 class QRCodeModal extends React.Component<DispatchProps & ScreenProps> {
   getLink (link: string): string {
-    return link.replace('https://', 'textile://')
+    return link.replace('https://', 'textile-dev://')
   }
 
   render () {

@@ -20,6 +20,7 @@ import { IMobilePreparedFiles, IDirectory, MobilePreparedFiles, Directory } from
 const { TextileNode } = NativeModules
 
 export async function acceptExternalThreadInvite(id_: string, key: string): Promise<string> {
+  console.log('axh', 'accept', id_, key)
   const result = await TextileNode.acceptExternalThreadInvite(id_, key) // returns hash
   return result as string
 }
@@ -35,6 +36,7 @@ export async function addContact(id_: string, address: string, username: string)
 
 export async function addExternalThreadInvite(threadId: string): Promise<ExternalInvite> {
   const result = await TextileNode.addExternalThreadInvite(threadId)
+  console.log(result, 'axh')
   return JSON.parse(result) as ExternalInvite
 }
 
@@ -76,7 +78,9 @@ export async function addThreadIgnore(blockId: string): Promise<string> {
 }
 
 export async function addThreadInvite(threadId: string, inviteeId: string): Promise<string> {
+  console.log('axh inviting', threadId, inviteeId)
   const result = await TextileNode.addThreadInvite(threadId, inviteeId) // returns hash
+  console.log('axh result', result)
   return result as string
 }
 
