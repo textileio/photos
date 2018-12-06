@@ -12,7 +12,7 @@ import ThreadsActions, { InviteQRCode } from '../../../Redux/ThreadsRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
 
 import styles from './statics/styles'
-import { ContactInfo } from '../../../NativeModules/Textile';
+import { ContactInfo } from '../../../NativeModules/Textile'
 
 interface ScreenProps {
   threadId: string
@@ -127,7 +127,7 @@ class Component extends React.PureComponent<Props, State> {
           style={styles.bottomRow}
         />
         <QRCodeModal isVisible={this.state.showQrCode} invite={this.props.qrCodeInvite} cancel={this._hideQRCode()} />
-        <Toast 
+        <Toast
           /* tslint:disable-next-line jsx-no-string-ref */
           ref='toast'
           position='top'
@@ -160,7 +160,7 @@ const mapStateToProps = (state: RootState, ownProps: Props): StateProps  => {
     })
     .filter((contact) => contact.username !== '' && contact.username !== undefined)
 
-  const notInThread = contacts.filter(c => !c.included)
+  const notInThread = contacts.filter((c) => !c.included)
   const popularity = notInThread.sort((a, b) => b.thread_ids.length - a.thread_ids.length)
   const topFive = popularity.slice(0, 5)
   const sortedContacts = contacts.sort((a, b) => {
@@ -169,8 +169,8 @@ const mapStateToProps = (state: RootState, ownProps: Props): StateProps  => {
     } else if (b.username === null || b.username === '') {
       return -1
     }
-    let A = a.username.toString().toUpperCase()
-    let B = b.username.toString().toUpperCase()
+    const A = a.username.toString().toUpperCase()
+    const B = b.username.toString().toUpperCase()
     if (A === B) {
       return 0
     } else {
