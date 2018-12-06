@@ -17,8 +17,8 @@ import { ContactInfo } from '../../../NativeModules/Textile'
 interface ScreenProps {
   threadId: string
   threadName: string
-  isVisible?: boolean
   cancel: () => void
+  isVisible?: boolean
 }
 
 interface State {
@@ -28,13 +28,10 @@ interface State {
 
 type Props = DispatchProps & StateProps & ScreenProps
 
-class Component extends React.PureComponent<Props, State> {
-  constructor (props: Props) {
-    super(props)
-    this.state = {
-      selected: {},
-      showQrCode: false
-    }
+class Component extends React.Component<Props> {
+  state: State = {
+    selected: {},
+    showQrCode: false
   }
 
   _getPublicLink () {
@@ -148,7 +145,7 @@ interface StateProps {
   qrCodeInvite?: InviteQRCode
 }
 
-const mapStateToProps = (state: RootState, ownProps: Props): StateProps  => {
+const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  => {
   const threadId = ownProps.threadId
   const contacts = state.contacts.contacts
     .map((contact) => {
@@ -201,7 +198,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
 
 export const ThreadsEditFriendsComponent = connect(mapStateToProps, mapDispatchToProps)(Component)
 
-export default class ThreadsEditFriends extends React.PureComponent<Props, State> {
+export default class ThreadsEditFriends extends React.Component<ScreenProps> {
   render () {
     return (
       <Modal
@@ -212,7 +209,7 @@ export default class ThreadsEditFriends extends React.PureComponent<Props, State
         backdropOpacity={0.5}
         style={{margin: 0, padding: 0}}
       >
-        <ThreadsEditFriendsComponent {...this.props} />
+        <ThreadsEditFriendsComponent {...this.props}/>
       </Modal>
     )
   }
