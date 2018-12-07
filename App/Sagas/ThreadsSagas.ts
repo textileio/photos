@@ -85,10 +85,10 @@ export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptI
 }
 
 export function * addInternalInvites (action: ActionType<typeof ThreadsActions.addInternalInvitesRequest>) {
-  const { threadId, inviteePks } = action.payload
+  const { threadId, addresses } = action.payload
   try {
-    for (const inviteePk of inviteePks) {
-      yield fork(addThreadInvite, threadId, inviteePk)
+    for (const address of addresses) {
+      yield call(addThreadInvite, threadId, address)
     }
   } catch (error) {
   }
