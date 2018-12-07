@@ -38,7 +38,8 @@ export function * handleImageUploadComplete (action: ActionType<typeof Processin
       }
     } catch (e) {}
     const allComplete: boolean = yield select(allUploadsComplete, processingImage.uuid)
-    if (allComplete) {
+    const alreadySharing = processingImage.status === 'sharing' || processingImage.status === 'complete'
+    if (allComplete && !alreadySharing) {
       yield call(shareToThread, processingImage.uuid)
     }
   }
