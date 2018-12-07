@@ -130,7 +130,6 @@ export function * refreshContactThreads (action: ActionType<typeof ContactsActio
   }
 }
 
-
 export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
   yield call(refreshContacts)
 }

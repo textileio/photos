@@ -69,7 +69,6 @@ export function getThreadThumb (state: RootState, threadId: string): ThreadThumb
   }
 }
 
-
 export function shouldNavigateToNewThread (state: RootState) {
   return state.photoViewing.navigateToNewThread
 }
