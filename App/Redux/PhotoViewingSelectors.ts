@@ -1,5 +1,5 @@
 import { RootState } from './Types'
-import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
+import { ThreadData, ThreadThumb } from './PhotoViewingRedux'
 
 export function defaultThreadData (state: RootState): ThreadData | undefined {
   const defaultThreadName: string = 'default' as any
@@ -55,18 +55,20 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
   }
 }
 
-export function getThreadThumbs (state: RootState, byPeerId: string): ReadonlyArray<ThreadThumbs> {
-  return Object.keys(state.photoViewing.threads)
-    .map((key) => state.photoViewing.threads[key]!)
-    .filter((thread) => thread.photos.some((p) => p.author_id === byPeerId))
-    .map((thread) => {
-      return {
-        id: thread.id,
-        thumb: thread.photos.length > 0 ? thread.photos[0] : undefined,
-        name: thread.name
-      }
-    })
+export function getThreadThumb (state: RootState, threadId: string): ThreadThumb | undefined {
+  const thread = Object.keys(state.photoViewing.threads)
+  .map((key) => state.photoViewing.threads[key]!)
+  .find((thread) => thread.id === threadId)
+  if (!thread) {
+    return
+  }
+  return {
+    id: thread.id,
+    thumb: thread.photos.length > 0 ? thread.photos[0] : undefined,
+    name: thread.name
+  }
 }
+
 
 export function shouldNavigateToNewThread (state: RootState) {
   return state.photoViewing.navigateToNewThread

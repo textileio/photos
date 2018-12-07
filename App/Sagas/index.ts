@@ -87,6 +87,7 @@ import {
   navigateToComments,
   navigateToLikes,
   refreshContacts,
+  refreshContactThreads,
   addFriends,
   addPhotoLike,
   initializeAppState,
@@ -138,6 +139,7 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
 
     takeEvery(getType(ContactsActions.getContactsRequest), refreshContacts),
+    takeEvery(getType(ContactsActions.getContactThreadsRequest), refreshContactThreads),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
     takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),

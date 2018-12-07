@@ -15,11 +15,13 @@ import InvitePeerModal from './InvitePeerModal'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
+import ContactsActions from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 // Styles
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PeerGridStyles'
 
 interface DispatchProps {
+  requestContactThreads: (id: string) => void
   cancelShare: (uuid: string) => void
   navigateToThread: (id: string, name: string) => void
   retryShare: (uuid: string) => void
@@ -42,6 +44,7 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
 
   selectPeer (peerId: string, username: string) {
     return () => {
+      this.props.requestContactThreads(peerId)
       this.setState({selectedPeer: peerId, selectedUsername: username, contactCard: true})
     }
   }
@@ -159,6 +162,7 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
+    requestContactThreads: (id: string) => { dispatch(ContactsActions.getContactThreadsRequest(id)) },
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
     cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
     navigateToThread: (id: string, name: string) => {

@@ -20,6 +20,7 @@ import {
   overview,
   Overview,
   contacts,
+  contactThreads,
   ContactInfo,
   checkCafeMessages,
   addThreadIgnore,
@@ -28,7 +29,8 @@ import {
   profile,
   Profile,
   addThreadLike,
-  BlockInfo
+  BlockInfo,
+  ThreadInfo
 } from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
@@ -117,6 +119,17 @@ export function * refreshContacts () {
     // skip for now
   }
 }
+
+export function * refreshContactThreads (action: ActionType<typeof ContactsActions.getContactThreadsRequest>) {
+  try {
+    const { id } = action.payload
+    const threads: ReadonlyArray<ThreadInfo> = yield call(contactThreads, id)
+    yield put(ContactsActions.getContactThreadsSuccess(id, threads))
+  } catch (error) {
+    // skip for now
+  }
+}
+
 
 export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
   yield call(refreshContacts)

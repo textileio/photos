@@ -12,12 +12,14 @@ import { SafeAreaView } from 'react-navigation'
 import Avatar from './Avatar'
 import { TextileHeaderButtons, Item } from './HeaderButtons'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
-import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
+import { getThreadThumb } from '../Redux/PhotoViewingSelectors'
+import { ContactsSelectors } from '../Redux/ContactsRedux'
 
 // Styles
 import styles from './Styles/ContactModal'
 import { RootState } from '../Redux/Types'
-import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
+import { ThreadThumb } from '../Redux/PhotoViewingRedux'
+import { ThreadInfo } from '../NativeModules/Textile'
 
 interface ScreenProps {
   isVisible: boolean
@@ -74,12 +76,24 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
 }
 
 interface DispatchStateProps {
-  threadThumbs: ReadonlyArray<ThreadThumbs>
+  threads: ReadonlyArray<ThreadInfo>
+  threadThumbs: ThreadThumb[]
 }
 
 const mapStateToProps = (state: RootState, ownProps: ScreenProps): DispatchStateProps => {
+  const threads = ContactsSelectors.getContactThreads(state, ownProps.peerId)
+
+  const threadThumbs: ThreadThumb[] = threads.reduce((thumbs, thread) => {
+    const thumb = getThreadThumb(state, thread.id)
+    if (thumb) {
+      thumbs.push(thumb)
+    }
+    return thumbs
+  }, [] as ThreadThumb[])
+
   return {
-    threadThumbs: getThreadThumbs(state, ownProps.peerId)
+    threads,
+    threadThumbs
   }
 }
 

@@ -64,7 +64,7 @@ export interface ThreadData {
   readonly error?: string
 }
 
-export interface ThreadThumbs {
+export interface ThreadThumb {
   readonly id: string
   readonly name: string
   readonly thumb?: ThreadFilesInfo
