@@ -3,7 +3,9 @@ import {
   refreshProfile,
   refreshPeerId,
   setUsername,
-  setAvatar
+  setAvatar,
+  getCafeSessions,
+  refreshCafeSessions
 } from './AccountSagas'
 
 export default function * accountSaga () {
@@ -11,6 +13,8 @@ export default function * accountSaga () {
     call(refreshProfile),
     call(refreshPeerId),
     call(setUsername),
-    call(setAvatar)
+    call(setAvatar),
+    call(getCafeSessions),
+    call(refreshCafeSessions)
   ])
 }

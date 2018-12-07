@@ -1,12 +1,15 @@
-import { take, put, call } from 'redux-saga/effects'
+import { take, put, call, all } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import AccountActions from '../../Redux/AccountRedux'
 import {
+  cafeSessions,
+  refreshCafeSession,
   peerId,
   profile,
   setAvatar as updateAvatar,
   setUsername as username,
-  Profile
+  Profile,
+  CafeSession
 } from '../../NativeModules/Textile'
 
 export function * refreshProfile () {
@@ -54,6 +57,32 @@ export function * setAvatar () {
       yield call(updateAvatar, action.payload.avatarId)
     } catch (error) {
       yield put(AccountActions.setAvatarError(error))
+    }
+  }
+}
+
+export function * getCafeSessions () {
+  while (true) {
+    try {
+      yield take(getType(AccountActions.getCafeSessionsRequest))
+      const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
+      yield put(AccountActions.cafeSessionsSuccess(sessions))
+    } catch (error) {
+      yield put(AccountActions.cafeSessionsError(error))
+    }
+  }
+}
+
+export function * refreshCafeSessions () {
+  while (true) {
+    try {
+      yield take(getType(AccountActions.refreshCafeSessionsRequest))
+      const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
+      const effects = sessions.map((session) => call(refreshCafeSession, session.cafe_id))
+      const refreshedSessions: ReadonlyArray<CafeSession> = yield all(effects)
+      yield put(AccountActions.cafeSessionsSuccess(refreshedSessions))
+    } catch (error) {
+      yield put(AccountActions.cafeSessionsError(error))
     }
   }
 }

@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { Profile } from '../NativeModules/Textile'
+import { Profile, CafeSession } from '../NativeModules/Textile'
 
 const actions = {
   refreshProfileRequest: createAction('REFRESH_PROFILE_REQUEST'),
@@ -30,6 +30,14 @@ const actions = {
   }),
   setRecoveryPhrase: createAction('SET_RECOVERY_PHRASE', (resolve) => {
     return (recoveryPhrase: string) => resolve({ recoveryPhrase })
+  }),
+  getCafeSessionsRequest: createAction('GET_CAFE_SESSIONS_REQUEST'),
+  refreshCafeSessionsRequest: createAction('REFRESH_CAFE_SESSIONS_REQUEST'),
+  cafeSessionsSuccess: createAction('CAFE_SESSIONS_SUCCESS', (resolve) => {
+    return (sessions: ReadonlyArray<CafeSession>) => resolve({ sessions })
+  }),
+  cafeSessionsError: createAction('CAFE_SESSIONS_ERROR', (resolve) => {
+    return (error: any) => resolve({ error })
   })
 }
 
@@ -44,12 +52,17 @@ interface AccountState {
   peerId: {
     value?: string
     error?: string
-  }
+  },
   avatar: {
     pendingId?: string
     error?: string
   }
-  recoveryPhrase?: string
+  recoveryPhrase?: string,
+  cafeSessions: {
+    sessions: ReadonlyArray<CafeSession>
+    processing: boolean
+    error?: string
+  }
 }
 
 const initialState: AccountState = {
@@ -57,7 +70,11 @@ const initialState: AccountState = {
     processing: false
   },
   peerId: {},
-  avatar: {}
+  avatar: {},
+  cafeSessions: {
+    processing: false,
+    sessions: []
+  }
 }
 
 export function reducer(state: AccountState = initialState, action: AccountAction): AccountState {
@@ -90,6 +107,15 @@ export function reducer(state: AccountState = initialState, action: AccountActio
       return { ...state, avatar: { ...state.avatar, pendingId: action.payload.avatarId } }
     case getType(actions.setRecoveryPhrase):
       return { ...state, recoveryPhrase: action.payload.recoveryPhrase }
+    case getType(actions.getCafeSessionsRequest):
+    case getType(actions.refreshCafeSessionsRequest):
+      return { ...state, cafeSessions: { ...state.cafeSessions, processing: true, error: undefined } }
+    case getType(actions.cafeSessionsSuccess):
+      return { ...state, cafeSessions: { sessions: action.payload.sessions , processing: false, error: undefined } }
+    case getType(actions.cafeSessionsError):
+      const obj = action.payload.error
+      const error = obj.message as string || obj as string || 'unknown error'
+      return { ...state, cafeSessions: { ...state.cafeSessions, processing: false, error } }
     default:
       return state
   }

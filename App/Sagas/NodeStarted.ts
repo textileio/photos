@@ -11,6 +11,7 @@ export function * onNodeStarted () {
     try {
       yield put(AccountActions.refreshProfileRequest())
       yield put(AccountActions.refreshPeerIdRequest())
+      yield put(AccountActions.getCafeSessionsRequest())
       yield put(ContactsActions.getContactsRequest())
       yield put(PhotoViewingActions.refreshThreadsRequest())
     } catch (error) {
