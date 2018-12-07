@@ -52,6 +52,7 @@ import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 import StorageActions from '../Redux/StorageRedux'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { RootState } from '../Redux/Types'
+import { SharedImage } from '../Models/TextileTypes'
 
 export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActions.updateOverviewRequest> ) {
   try {
@@ -64,63 +65,22 @@ export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActi
 }
 
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
-  yield put(PreferencesActions.onboardedSuccess())
-  yield call(NavigationService.navigate, 'PrimaryNavigation')
-  yield * processAvatarImage(action.payload.uri)
+  yield * processAvatarImage(action.payload.image)
 }
 
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
-  yield call(NavigationService.navigate, 'TabNavigator')
-  yield * processAvatarImage(action.payload.uri)
+  yield * processAvatarImage(action.payload.image)
 }
 
-function * processAvatarImage(uri: string) {
-  // TODO: How should this work? Seems like it should fit into an existing photo add flow (backup, share) or should have it's own thread
-  const photoPath = uri.replace('file://', '')
+function * processAvatarImage(image: SharedImage) {
   try {
     const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
     if (!defaultThread) {
       throw new Error('no default thread')
     }
-    const preparedFiles: IMobilePreparedFiles = yield call(prepareFiles, photoPath, defaultThread.id)
-    if (!preparedFiles.dir || !preparedFiles.pin) {
-      throw new Error('no dir or pin returned')
-    }
-    const blockInfo: BlockInfo = yield call(addThreadFiles, preparedFiles.dir, defaultThread.id, defaultThread.id)
-
-    // TODO: Upload all the pins or get this into some existing flow
-
-    // yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-
-    // set it as our profile picture
-
-    // TODO: Not sure what blockInfo prop we should pass here
-    yield put(AccountActions.setPendingAvatar(blockInfo.id))
-
-    try {
-      // yield * uploadFile(
-      //   addResult.id,
-      //   addResult.archive.path
-      // )
-    } catch (error) {
-      // Leave all the data in place so we can rerty upload
-      let message = ''
-      if (!error) {
-        message = ''
-      } else if (typeof error === 'string') {
-        message = error
-      } else if (error.message) {
-        message = error.message
-      }
-      // yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
-    }
+    yield put(UIActions.sharePhotoRequest(image, defaultThread.id))
   } catch (error) {
     // TODO: What do to if adding profile photo fails?
-  } finally {
-    const exists: boolean = yield call(RNFS.exists, photoPath)
-    if (exists) {
-      yield call(RNFS.unlink, photoPath)
-    }
   }
 }
 
@@ -235,8 +195,15 @@ export function * synchronizeNativeUploads() {
 
 export function * chooseProfilePhoto () {
   try {
-    const result: { uri: string, data: string } = yield call(CameraRoll.chooseProfilePhoto)
-    yield put(UIActions.chooseProfilePhotoSuccess(result.uri, result.data))
+    const result: { image: CameraRoll.IPickerImage, data: string } = yield call(CameraRoll.chooseProfilePhoto)
+    const image: SharedImage = {
+      isAvatar: true,
+      origURL: result.image.origURL,
+      uri: result.image.uri,
+      path: result.image.path,
+      canDelete: result.image.canDelete
+    }
+    yield put(UIActions.chooseProfilePhotoSuccess(image, result.data))
   } catch (error) {
     yield put(UIActions.chooseProfilePhotoError(error))
   }

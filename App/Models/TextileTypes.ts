@@ -21,6 +21,7 @@ export interface ProcessingItemType {
 export type IPhotoGridType = PhotoType | ProcessingItemType
 
 export interface SharedImage {
+  isAvatar: boolean,
   origURL?: string,
   uri: string,
   path: string,

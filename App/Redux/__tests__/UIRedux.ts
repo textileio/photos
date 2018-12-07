@@ -6,6 +6,7 @@ const initialState = reducer(undefined, {} as any)
 const threadId: string = 'threadId' as any
 const comment = 'comment'
 const sharedImage: SharedImage = {
+  isAvatar: false,
   origURL: 'origURL',
   uri: 'uri',
   path: '/here',

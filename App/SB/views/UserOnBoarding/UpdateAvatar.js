@@ -38,7 +38,7 @@ class UserOnBoardingContainer extends React.Component {
       <UserOnBoarding
         {...this.props}
         chooseProfilePicture={this.props.chooseProfilePicture}
-        selectProfilePicture={this.props.updateProfilePicture}
+        updateProfilePicture={this.props.updateProfilePicture}
       />
     )
   }
@@ -46,16 +46,16 @@ class UserOnBoardingContainer extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    username: state.auth.username || 'Mysterious User',
+    username: state.account.profile.value ? state.account.profile.value.username : 'Mysterious User',
     profilePictureData: state.ui.chosenProfilePhoto.data,
-    profilePictureUri: state.ui.chosenProfilePhoto.uri
+    profilePictureImage: state.ui.chosenProfilePhoto.image
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     chooseProfilePicture: () => dispatch(UIActions.chooseProfilePhotoRequest()),
-    updateProfilePicture: (uri) => dispatch(UIActions.updateProfilePicture(uri)),
+    updateProfilePicture: (image) => dispatch(UIActions.updateProfilePicture(image)),
     cancelProfileUpdate: () => dispatch(UIActions.cancelProfileUpdate())
   }
 }

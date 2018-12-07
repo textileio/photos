@@ -1,4 +1,4 @@
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, fork } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
@@ -6,6 +6,7 @@ import {
   prepareFiles,
   addThreadFiles,
   addThreadFilesByTarget,
+  setAvatar,
   BlockInfo
 } from '../NativeModules/Textile'
 import { SharedImage } from '../Models/TextileTypes'
@@ -34,11 +35,11 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
 
   switch (pickerType) {
     case 'camera': {
-      pickerResponse = yield CameraRoll.launchCamera()
+      pickerResponse = yield call(CameraRoll.launchCamera)
       break
     }
     case 'camera-roll': {
-      pickerResponse = yield CameraRoll.launchImageLibrary()
+      pickerResponse = yield call(CameraRoll.launchImageLibrary)
       break
     }
     default:
@@ -55,6 +56,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   } else {
     try {
       const image: SharedImage = {
+        isAvatar: false,
         origURL: pickerResponse.origURL,
         uri: pickerResponse.uri,
         path: pickerResponse.path,
@@ -110,6 +112,11 @@ export function * prepareImage (uuid: string) {
     }
     const { sharedImage, destinationThreadId } = processingImage
     const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
+    if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['large'].hash) {
+      // TODO: This doesn't seem right in here, but ok
+      const hash = preparedFiles.dir.files['large'].hash as string
+      yield call(setAvatar, hash)
+    }
     yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
   } catch (error) {

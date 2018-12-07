@@ -9,6 +9,7 @@ import { Dispatch } from 'redux'
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
+import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
 import Icon from '../../Components/Icon'
 import PrefrencesActions from '../../Redux/PreferencesRedux'
@@ -45,8 +46,8 @@ interface State {
 class OnboardingScreen extends React.Component<Props, State> {
 
   pages?: Pages
-  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 5]
-  noForwardArrowIndexes: number[] = [3, 4, 5]
+  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 5, 6]
+  noForwardArrowIndexes: number[] = [3, 4, 5, 6]
 
   constructor(props: Props) {
     super(props)
@@ -104,6 +105,7 @@ class OnboardingScreen extends React.Component<Props, State> {
             image={require('./statics/sync.png')}
           />
           <OnboardingUsername onSuccess={this.nextPage} />
+          <SetAvatar onSuccess={this.nextPage} />
           <MailListSignupScreen onSuccess={this.nextPage} />
           <OnboardingMessage
             title='All ready!'

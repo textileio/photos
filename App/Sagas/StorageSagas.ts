@@ -12,6 +12,7 @@ import { logNewEvent } from './DeviceLogs'
 export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLocalPhoto>) {
   const { photo } = action.payload
   const sharedImage: SharedImage = {
+    isAvatar: false,
     uri: photo.uri,
     path: photo.path,
     canDelete: photo.canDelete // <- allow the native layer to dictate if it's a duplicate or not

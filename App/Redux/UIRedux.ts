@@ -6,16 +6,16 @@ import { ThreadFilesInfo } from '../NativeModules/Textile'
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
   chooseProfilePhotoSuccess: createAction('CHOOSE_PROFILE_PHOTO_SUCCESS', (resolve) => {
-    return (uri: string, data: string) => resolve({ uri, data })
+    return (image: SharedImage, data: string) => resolve({ image, data })
   }),
   chooseProfilePhotoError: createAction('CHOOSE_PROFILE_PHOTO_ERROR', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
   selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', (resolve) => {
-    return (uri: string) => resolve({ uri })
+    return (image: SharedImage) => resolve({ image })
   }),
   updateProfilePicture: createAction('UPDATE_PROFILE_PICTURE', (resolve) => {
-    return (uri: string) => resolve({ uri })
+    return (image: SharedImage) => resolve({ image })
   }),
   cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', (resolve) => {
     return () => resolve()
@@ -83,7 +83,7 @@ export type UIAction = ActionType<typeof actions>
 
 export interface UIState {
   readonly chosenProfilePhoto: {
-    readonly uri?: string
+    readonly image?: SharedImage
     readonly data?: string
     readonly error?: Error
   }

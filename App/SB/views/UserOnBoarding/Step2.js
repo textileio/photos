@@ -8,7 +8,7 @@ import ImageSc from 'react-native-scalable-image'
 import styles from './statics/styles'
 
 const Step2 = props => {
-  const { chooseProfilePicture, profilePictureData, profilePictureUri, selectProfilePicture } = props
+  const { chooseProfilePicture, profilePictureData, profilePictureImage, updateProfilePicture } = props
   const source = { uri: 'data:image/jpeg;base64,' + profilePictureData }
   return (
     <Fragment>
@@ -19,7 +19,7 @@ const Step2 = props => {
         <View style={styles.contentContainer}>
           <View style={styles.uploadContainer}>
             <ImageSc style={styles.photoUploaded} width={184} height={184} source={source} />
-            <Button style={styles.uploadButton} textStyle={styles.uploadButtonText} text='Confirm Picture' onPress={() => { selectProfilePicture(profilePictureUri) }} />
+            <Button style={styles.uploadButton} textStyle={styles.uploadButtonText} text='Confirm Picture' onPress={() => { updateProfilePicture(profilePictureImage) }} />
             <TouchableOpacity onPress={chooseProfilePicture}>
               <Text style={styles.link}>Select New Picture</Text>
             </TouchableOpacity>
