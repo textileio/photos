@@ -5,7 +5,7 @@ import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-
 import moment from 'moment'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 import { getHeight } from '../../../Services/PhotoUtils'
-import Avatar from '../../../Components/Avatar'
+import Avatar from '../../../Components/AvatarNew'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
@@ -113,7 +113,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader} >
-          <Avatar style={styles.cardAvatar} width={18} height={18} peerId={peerId} defaultSource={defaultSource} />
+          <Avatar style={styles.cardAvatar} peerId={peerId} defaultSource={defaultSource} />
 
           <Text style={styles.cardAction}>
             <Text style={styles.cardActionName}>{photoUsername}</Text> added a photo
