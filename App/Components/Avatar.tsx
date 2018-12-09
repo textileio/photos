@@ -71,6 +71,7 @@ class Avatar extends React.Component<Props, State> {
           index={0}
           forMinWidth={widthNumber}
           resizeMode={'cover'}
+          onLayout={this.onImageLayout}
         />
       )
     } else if (uri) {
@@ -90,6 +91,7 @@ class Avatar extends React.Component<Props, State> {
           name={'question-circle'}
           size={heightNumber}
           color={s.COLOR_GREY_LIGHT}
+          onLayout={this.onImageLayout}
         />
       )
     } else {

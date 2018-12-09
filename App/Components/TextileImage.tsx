@@ -1,7 +1,7 @@
 import React from 'react'
-import { requireNativeComponent, ImageStyle, PixelRatio } from 'react-native'
+import { requireNativeComponent, ImageStyle, PixelRatio, ImageProps } from 'react-native'
 
-export interface Props {
+export interface OwnProps {
   target: string,
   index: number,
   forMinWidth: number,
@@ -11,6 +11,8 @@ export interface Props {
   onLoad?: () => void,
   onError?: (error: string) => void
 }
+
+type Props = OwnProps & Partial<ImageProps>
 
 export default class TextileImage extends React.Component<Props> {
   static propTypes = {}
