@@ -39,15 +39,13 @@ const ContactSelect = (props) => {
               return (<View />)
             }
 
-            const defaultSource = require('../../../Images/v2/main-image.png')
-
             const selectState = !!selected[item.id] || item.included
 
             return (
               <TouchableOpacity key={item.id} activeOpacity={0.6} style={styles.selectedContact} onPress={() => {
                 select(item, item.included)
               }}>
-                <Avatar style={styles.selectedContact} width={43} height={43} peerId={item.id} defaultSource={defaultSource} />
+                <Avatar style={styles.selectedContact} peerId={item.id} />
                 {selectState && <Image style={styles.selectedContactIcon} source={require('./statics/icon-select.png')} />}
               </TouchableOpacity>
             )

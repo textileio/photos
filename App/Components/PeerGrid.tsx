@@ -38,7 +38,6 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
   }
 
   oneScreensWorth = 40
-  defaultSource = require('../Images/v2/main-image.png')
 
   selectPeer (peerId: string, username: string) {
     return () => {
@@ -67,7 +66,7 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
         onPress={this.invitePeerRequest()}
         activeOpacity={0.95}
       >
-        <Avatar width={dimension} height={dimension} defaultSource={require('../Images/v2/new-invite.png')} />
+        <Avatar style={{ width: dimension, height: dimension }} />
         <Text style={styles.username}>New Invite</Text>
       </TouchableOpacity>
     )
@@ -85,7 +84,7 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
         onPress={this.selectPeer(item, this.props.peers[item])}
         activeOpacity={0.95}
       >
-        <Avatar width={dimension} height={dimension} peerId={item} defaultSource={this.defaultSource} />
+        <Avatar style={{ width: dimension, height: dimension }} peerId={item} />
         <Text style={styles.username}>{this.props.peers[item]}</Text>
       </TouchableOpacity>
     )

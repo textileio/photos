@@ -10,7 +10,7 @@ import { RootAction, RootState } from '../Redux/Types'
 import UIActions from '../Redux/UIRedux'
 import { SharedImage } from '../Models/TextileTypes'
 import Icon from '../Components/Icon'
-import Avatar from '../Components/AvatarNew'
+import Avatar from '../Components/Avatar'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
 const CONTAINER: ViewStyle = {

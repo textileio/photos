@@ -51,10 +51,9 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
 
   renderItem = (info: ListRenderItemInfo<{ peerId: string; username: string }>) => {
     const { peerId, username } = info.item
-    const defaultSource = require('../SB/views/Notifications/statics/main-image.png')
     return (
       <View style={LIKE_ITEM}>
-        <Avatar width={55} height={55} peerId={peerId} defaultSource={defaultSource} />
+        <Avatar style={{ width: 55, height: 55 }} peerId={peerId} />
         <Text style={LIKE_TEXT}>{username}</Text>
       </View>
     )

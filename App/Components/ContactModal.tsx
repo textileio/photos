@@ -29,8 +29,6 @@ interface ScreenProps {
 
 class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
 
-  defaultSource = require('../Images/v2/main-image.png')
-
   navigate (id: string, name: string) {
     return () => {
       this.props.navigateToThread(id, name)
@@ -53,7 +51,7 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
         </TextileHeaderButtons>
         <View style={styles.content}>
           <View style={styles.profile}>
-            <Avatar width={72} height={72} peerId={this.props.peerId} defaultSource={this.defaultSource} />
+            <Avatar style={{ width: 72, height: 72 }} peerId={this.props.peerId} />
             <Text style={styles.username}>{this.props.username}</Text>
           </View>
           <ScrollView style={styles.threadsList}>

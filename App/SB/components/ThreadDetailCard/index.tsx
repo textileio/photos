@@ -5,7 +5,7 @@ import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-
 import moment from 'moment'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 import { getHeight } from '../../../Services/PhotoUtils'
-import Avatar from '../../../Components/AvatarNew'
+import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
@@ -29,7 +29,6 @@ interface OwnProps {
 interface StateProps {
   peerId: string
   dateString: string
-  defaultSource?: number | ImageURISource
   didLike: boolean
   isLiked: boolean
   totalLikes: number
@@ -75,7 +74,6 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       item,
       peerId,
       dateString,
-      defaultSource,
       didLike,
       isLiked,
       imageHeight,
@@ -113,7 +111,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader} >
-          <Avatar style={styles.cardAvatar} peerId={peerId} defaultSource={defaultSource} />
+          <Avatar style={styles.cardAvatar} peerId={peerId} />
 
           <Text style={styles.cardAction}>
             <Text style={styles.cardActionName}>{photoUsername}</Text> added a photo
@@ -177,8 +175,6 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const username = profile ? (profile.username || 'unknown') : 'unknown'
   const photoUsername = peerId === photo.author_id ? 'You' : photo.username ? photo.username : photo.author_id.substring(0, 8)
 
-  const defaultSource = require('../../views/Notifications/statics/main-image.png')
-
   const totalLikes = photo.likes ? photo.likes.length : 0
   const isLiked = photo.likes.length > 0
   const didLike = isLiked && photo.likes.find((like) => like.author_id === peerId) !== undefined
@@ -197,7 +193,6 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   return {
     peerId: photo.author_id,
     dateString,
-    defaultSource,
     didLike,
     isLiked,
     totalLikes,

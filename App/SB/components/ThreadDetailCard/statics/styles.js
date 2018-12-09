@@ -26,7 +26,8 @@ export default StyleSheet.create({
   },
   cardAvatar: {
     justifyContent: 'center',
-    width: 18
+    width: 18,
+    height: 18
   },
   cardAction: {
     fontFamily: 'BentonSans',

@@ -36,10 +36,8 @@ const FeedItem = props => {
       style={{...readStyle, justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}
     >
       <Avatar
-        width={24}
-        height={24}
+        style={{ width: 24, height: 24 }}
         peerId={notification.actor_id}
-        defaultSource={require('../../../Images/v2/main-image.png')}
       />
     </View>
   )

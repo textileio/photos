@@ -19,6 +19,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 - (instancetype)initWithBridge:(RCTBridge *)bridge {
   if ((self = [super init])) {
     _bridge = bridge;
+    self.clipsToBounds = true;
   }
   return self;
 }

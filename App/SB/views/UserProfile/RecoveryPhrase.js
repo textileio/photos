@@ -27,12 +27,7 @@ class RecoveryPhrase extends React.PureComponent {
             title='Avatar'
             buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
             ButtonElement={
-              <Avatar
-                width={32}
-                height={32}
-                defaultSource={require('../Notifications/statics/main-image.png')}
-                owner
-              />
+              <Avatar style={{ width: 32, height: 32 }} />
             }
           />
         </HeaderButtons>
