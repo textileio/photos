@@ -1,4 +1,4 @@
-import { call, put, select, fork } from 'redux-saga/effects'
+import { call, put, select, fork, take } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
@@ -6,14 +6,18 @@ import {
   prepareFiles,
   addThreadFiles,
   addThreadFilesByTarget,
+  profile,
   setAvatar,
-  BlockInfo
+  BlockInfo,
+  Profile
 } from '../NativeModules/Textile'
 import { SharedImage } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
 import { processingImageByUuid } from '../Redux/ProcessingImagesSelectors'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
-import { ActionType } from 'typesafe-actions'
+import AccountActions from '../Redux/AccountRedux'
+import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
+import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
@@ -115,7 +119,7 @@ export function * prepareImage (uuid: string) {
     if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['large'].hash) {
       // TODO: This doesn't seem right in here, but ok
       const hash = preparedFiles.dir.files['large'].hash as string
-      yield call(setAvatar, hash)
+      yield fork(updateAvatarAndProfile, hash)
     }
     yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
@@ -166,4 +170,18 @@ async function prepare (image: SharedImage, destinationThreadId: string): Promis
   } catch (e) {
   }
   return addResult
+}
+
+function * updateAvatarAndProfile (hash: string) {
+  try {
+    const online: boolean = yield select(TextileNodeSelectors.online)
+    if (!online) {
+      yield take(getType(TextileNodeActions.nodeOnline))
+    }
+    yield call(setAvatar, hash)
+    const profileResult: Profile = yield call(profile)
+    yield put(AccountActions.refreshProfileSuccess(profileResult))
+  } catch (error) {
+    yield put(AccountActions.profileError(error))
+  }
 }
