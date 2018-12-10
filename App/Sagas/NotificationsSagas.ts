@@ -136,7 +136,8 @@ export function * refreshNotifications () {
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
     const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(notifications, '', 99) // TODO: offset?
-    yield put(NotificationsActions.refreshNotificationsSuccess(notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))))
+    const typedNotifs = notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
+    yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
     yield put(NotificationsActions.refreshNotificationsFailure())
   }

@@ -79,7 +79,7 @@ export function isPhoto(notification: Notification): boolean {
 
 export function toPayload(notification: Notification): INotificationsPayload {
   const typeString = notification.type as string
-  const actor = notification.actor_id || 'A peer' // TODO: We want username here, need to look it up?
+  const actor = notification.username || 'A peer' // TODO: We want username here, need to look it up?
 
   switch (notification.type) {
     case(NotificationType.InviteReceivedNotification): {
