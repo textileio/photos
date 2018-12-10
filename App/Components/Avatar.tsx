@@ -57,7 +57,7 @@ class Avatar extends React.Component<Props, State> {
     const isLocalUser = (!peerId && localPeerId) || peerId === localPeerId
 
     const peerIdToUse = peerId || localPeerId
-    const uri = peerIdToUse ? `${Config.RN_TEXTILE_CAFE_URI_PREFIX}127.0.0.1:5050/ipns/${peerIdToUse}/avatar/large` : undefined
+    const uri = peerIdToUse ? `${Config.RN_TEXTILE_CAFE_URI_PREFIX}13.57.218.232:5050/ipns/${peerIdToUse}/avatar/large` : undefined
 
     const widthNumber = typeof width === 'number' ? width as number : undefined
     const heightNumber = typeof height === 'number' ? height as number : undefined
