@@ -122,7 +122,7 @@ class Wallet extends React.PureComponent {
 
   onSelect = (photo) => {
     return () => {
-      this.props.viewWalletPhoto(photo.id)
+      this.props.viewWalletPhoto(photo.target)
       this.props.navigation.navigate('PrivatePhotoDetail')
     }
   }
@@ -214,7 +214,7 @@ const mapStateToProps = (state) => {
   const photos = defaultData ? defaultData.photos : []
 
   const items = !defaultData ? [] : defaultData.photos.map((photo) => {
-    return {type: 'photo', photo, id: photo.id}
+    return {type: 'photo', photo, id: photo.target}
   })
 
   // We only are showing wallet upload status in verbose for now
