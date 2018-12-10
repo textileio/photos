@@ -133,7 +133,7 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.startingNode):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.starting } }
     case getType(actions.startNodeSuccess):
-      return { ...state, nodeState: {...state.nodeState, state: NodeState.started } }
+      return { ...state, nodeState: {...state.nodeState, state: NodeState.started, error: undefined } }
     case getType(actions.stoppingNode):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.stopping } }
     case getType(actions.stopNodeSuccess):
