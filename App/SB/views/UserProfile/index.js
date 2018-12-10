@@ -46,10 +46,7 @@ class UserProfile extends React.PureComponent {
     this.props.navigation.navigate('DeviceLogs')
   }
   _changeAvatar () {
-    const payload = {
-      username: this.props.navigation.state.params.username
-    }
-    this.props.navigation.navigate('ChangeAvatar', payload)
+    this.props.navigation.navigate('ChangeAvatar', { onSuccess: () => this.props.navigation.goBack() })
   }
   _pubKey () {
     Clipboard.setString(this.props.publicKey)

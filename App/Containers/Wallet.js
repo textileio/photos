@@ -153,7 +153,7 @@ class Wallet extends React.PureComponent {
   }
 
   _createThread = () => {
-    this.props.navigation.navigate('AddThread', {backTo: 'Wallet'})
+    this.props.navigation.navigate('AddThread', { backTo: 'Wallet' })
   }
 
   renderWallet () {
@@ -161,7 +161,7 @@ class Wallet extends React.PureComponent {
       <View style={style.container}>
         <WalletHeader
           changeAvatar={() => {
-            this.props.navigation.navigate('ChangeAvatar', { avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet' })
+            this.props.navigation.navigate('ChangeAvatar', { onSuccess: () => this.props.navigation.goBack() })
           }}
           onToggle={(newValue) => {
             this.props.toggleTab(newValue)

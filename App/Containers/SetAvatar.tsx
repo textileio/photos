@@ -66,6 +66,7 @@ const LINK: TextStyle = {
 }
 
 interface NavigationParams {
+  onSuccess?: () => void
   cancel: () => void
 }
 
@@ -138,6 +139,12 @@ class SetAvatar extends React.Component<Props> {
     }
     if (this.props.onSuccess) {
       this.props.onSuccess()
+    }
+    if (this.props.navigation) {
+      const onSuccess = this.props.navigation.getParam('onSuccess')
+      if (onSuccess) {
+        onSuccess()
+      }
     }
   }
 
