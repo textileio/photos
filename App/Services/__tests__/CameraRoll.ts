@@ -27,7 +27,7 @@ describe('camera roll', () => {
             // Success
             expect(chooseProfilePhoto()).resolves.toMatchSnapshot()
             // User cancel
-            expect(chooseProfilePhoto()).rejects.toEqual(new Error('user cancelled'))
+            expect(chooseProfilePhoto()).rejects.toEqual(new Error('user canceled'))
             // Camera error
             expect(chooseProfilePhoto()).rejects.toEqual(new Error('mock error'))
         })
