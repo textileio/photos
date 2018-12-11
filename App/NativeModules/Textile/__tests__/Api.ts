@@ -6,7 +6,7 @@ import {
     addThread,
     addThreadFiles
 } from '../Api'
-import { IDirectory } from '../pb/textile-go';
+import { IDirectory } from '../pb/textile-go'
 
 const threadId = 'QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW'
 const threadKey = 'VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5'

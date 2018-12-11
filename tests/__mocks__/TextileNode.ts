@@ -5,7 +5,8 @@ import {
     ThreadType,
     ThreadState,
     BlockInfo,
-    BlockType
+    BlockType,
+    Profile
 } from '../../App/NativeModules/Textile/Model'
 
 export default {
@@ -62,6 +63,13 @@ export default {
             parents: []
           }
         resolve(JSON.stringify(mockBlockInfo))
+    })),
+    profile: jest.fn((): Promise<string> => new Promise((resolve) => {
+        const mockProfile: Profile = {
+            address: '123',
+            username: 'mock'
+        }
+        resolve(JSON.stringify(mockProfile))
     })),
     stop: jest.fn((): Promise<void> => new Promise((resolve) => {
         resolve()

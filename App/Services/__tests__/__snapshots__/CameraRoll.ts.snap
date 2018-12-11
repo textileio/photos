@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`camera roll chooseProfilePhoto should get a valid photo response, user cancel, and error 1`] = `
+Object {
+  "canDelete": true,
+  "customButton": undefined,
+  "didCancel": false,
+  "error": undefined,
+  "height": 200,
+  "isVertical": false,
+  "origURL": "uri",
+  "path": "uri",
+  "uri": "uri",
+  "width": 200,
+}
+`;
+
+exports[`camera roll getPhotos get an arry of uris 1`] = `
+Array [
+  "/disk/uri",
+]
+`;
