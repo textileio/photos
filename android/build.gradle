@@ -43,8 +43,7 @@ task wrapper(type: Wrapper) {
 
 // Hack to make unpublished versions of Gradle available
 subprojects {
-    if (
-    project.name.contains('react-native-image-picker') {
+    if (project.name.contains('react-native-image-picker')) {
         buildscript {
             repositories {
                 jcenter()
