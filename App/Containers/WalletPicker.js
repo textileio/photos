@@ -47,7 +47,7 @@ class TextileWalletPicker extends React.PureComponent {
 
   onSelect = (photo) => {
     return () => {
-      this.props.success(photo.id)
+      this.props.success(photo)
     }
   }
 
@@ -101,7 +101,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    success: (photoId) => { dispatch(UIActions.walletPickerSuccess(photoId)) },
+    success: (photo) => { dispatch(UIActions.walletPickerSuccess(photo)) },
     cancelSharingPhoto: () => { dispatch(UIActions.cancelSharingPhoto()) },
     refresh: (threadId) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
     showImagePicker: (type) => { dispatch(UIActions.showImagePicker(type)) },

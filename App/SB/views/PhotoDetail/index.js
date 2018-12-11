@@ -52,7 +52,7 @@ class PhotoDetail extends Component {
   }
 
   sharePressed () {
-    this.props.shareImage(this.props.photo.target)
+    this.props.shareImage(this.props.photo)
     this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PrivatePhotoDetail', withPhoto: this.props.photo })
   }
 
@@ -140,7 +140,7 @@ class PhotoDetail extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
-    shareImage: (imageId) => { dispatch(UIActions.updateSharingPhotoImage(imageId)) },
+    shareImage: (image) => { dispatch(UIActions.updateSharingPhotoImage(image)) },
     shareToThread: (threadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) },
     shareByLink: (path) => { dispatch(UIActions.shareByLink(path)) },
     ignorePhoto: (threadId, blockId) => { dispatch(TextileNodeActions.ignorePhotoRequest(threadId, blockId)) }
