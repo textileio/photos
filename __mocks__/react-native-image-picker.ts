@@ -2,19 +2,6 @@ import { IPickerImage } from '../App/Services/CameraRoll'
 
 export default {
     showImagePicker: jest.fn()
-    // Successful
-    .mockImplementationOnce((options: any, callback: (response: any) => void) => {
-        const response = {
-            uri: 'uri',
-            path: 'some/path',
-            height: 200,
-            width: 200,
-            isVertical: false,
-            origURL: 'uri',
-            didCancel: false
-        }
-        callback(response)
-    })
     // User cancelled
     .mockImplementationOnce((options: any, callback: (response: any) => void) => {
         const response = {
@@ -26,6 +13,19 @@ export default {
     .mockImplementationOnce((options: any, callback: (response: any) => void) => {
         const response = {
             error: 'mock error'
+        }
+        callback(response)
+    })
+    // Successful
+    .mockImplementationOnce((options: any, callback: (response: any) => void) => {
+        const response = {
+            uri: 'uri',
+            path: 'some/path',
+            height: 200,
+            width: 200,
+            isVertical: false,
+            origURL: 'uri',
+            didCancel: false
         }
         callback(response)
     }),

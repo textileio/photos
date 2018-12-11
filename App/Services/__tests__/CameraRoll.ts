@@ -8,18 +8,8 @@ import {
 describe('camera roll', () => {
     describe('getPhotos', () => {
       it('get an arry of uris', async () => {
-          expect(getPhotos(1)).resolves.toMatchSnapshot()
+        await expect(getPhotos(1)).resolves.toMatchSnapshot()
       })
-    })
-    describe('chooseProfilePhoto', () => {
-        it('should get a valid photo response, user cancel, and error', async () => {
-            // Success
-            expect(chooseProfilePhoto()).resolves.toMatchSnapshot()
-            // User cancel
-            expect(chooseProfilePhoto()).rejects.toEqual(new Error('user canceled'))
-            // Camera error
-            expect(chooseProfilePhoto()).rejects.toEqual(new Error('mock error'))
-        })
     })
     describe('launchCamera', () => {
         it('should successfully launch', async () => {
@@ -29,7 +19,18 @@ describe('camera roll', () => {
     })
     describe('launchImageLibrary', () => {
         it('should successfully launch', async () => {
-            expect(launchImageLibrary()).resolves.toMatchSnapshot()
+            const result = await launchImageLibrary()
+            expect(result).toMatchSnapshot()
+        })
+    })
+    describe('chooseProfilePhoto', () => {
+        it('should get a valid phto response, user cancel, and error', async () => {
+            // User cancel
+            await expect(chooseProfilePhoto()).rejects.toEqual(new Error('user canceled'))
+            // Camera error
+            await expect(chooseProfilePhoto()).rejects.toEqual(new Error('mock error'))
+            // Success
+            await expect(chooseProfilePhoto()).resolves.toMatchSnapshot()
         })
     })
 })
