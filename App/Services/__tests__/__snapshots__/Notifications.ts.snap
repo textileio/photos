@@ -2,6 +2,78 @@
 
 exports[`notifications enable should fire notification lib successfully 1`] = `undefined`;
 
+exports[`notifications toPayload to create AccountPeerJoinedNotification 1`] = `
+Object {
+  "feed": "You paired with a new account peer",
+  "message": "You paired with a new account peer",
+  "title": "New Account Peer",
+  "typeString": "ACCOUNT_PEER_JOINED",
+}
+`;
+
+exports[`notifications toPayload to create CommentAddedNotification 1`] = `
+Object {
+  "feed": "mock test commented on a photo in Great Thread",
+  "message": "mock test commented on a photo: a camel!",
+  "title": "Great Thread",
+  "typeString": "COMMENT_ADDED",
+}
+`;
+
+exports[`notifications toPayload to create FilesAddedNotification 1`] = `
+Object {
+  "feed": "mock test added a photo to Great Thread",
+  "message": "mock test added a photo",
+  "title": "Great Thread",
+  "typeString": "FILES_ADDED",
+}
+`;
+
+exports[`notifications toPayload to create InviteReceivedNotification 1`] = `
+Object {
+  "feed": "mock test invited you to join to Great Thread",
+  "message": "mock test invited you to join",
+  "title": "New Invite",
+  "typeString": "INVITE_RECEIVED",
+}
+`;
+
+exports[`notifications toPayload to create LikeAddedNotification 1`] = `
+Object {
+  "feed": "mock test liked a photo in Great Thread",
+  "message": "mock test liked a photo",
+  "title": "Great Thread",
+  "typeString": "LIKE_ADDED",
+}
+`;
+
+exports[`notifications toPayload to create MessageAddedNotification 1`] = `
+Object {
+  "feed": "mock test here is my message! to Great Thread",
+  "message": "mock test here is my message!",
+  "title": "Great Thread",
+  "typeString": "MESSAGE_ADDED",
+}
+`;
+
+exports[`notifications toPayload to create PeerJoinedNotification 1`] = `
+Object {
+  "feed": "mock test joined thread Great Thread",
+  "message": "mock test joined",
+  "title": "Great Thread",
+  "typeString": "PEER_JOINED",
+}
+`;
+
+exports[`notifications toPayload to create PeerLeftNotification 1`] = `
+Object {
+  "feed": "mock test left thread Great Thread",
+  "message": "mock test left",
+  "title": "Great Thread",
+  "typeString": "PEER_LEFT",
+}
+`;
+
 exports[`notifications toPayload to create account peer notification correctly 1`] = `
 Object {
   "feed": "You paired with a new account peer",
