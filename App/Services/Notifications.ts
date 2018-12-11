@@ -10,6 +10,17 @@ export interface INotificationsPayload {
   typeString: string,
 }
 
+export async function enable(): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      RNPushNotification.requestPermissions()
+      resolve()
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 export function toTypedNotification(notificationData: NotificationData): Notification {
   const { subject_id, subject, target, type, ...baseNotification } = notificationData
   switch (type) {
@@ -134,13 +145,6 @@ export function toPayload(notification: Notification): INotificationsPayload {
   }
 }
 
-export function getData(engagement: PushNotification): any {
-  if (Platform.OS !== 'ios') {
-    const { data } = engagement
-    return data
-  }
-}
-
 export async function createNew(notification: Notification): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
@@ -174,17 +178,6 @@ export async function createNew(notification: Notification): Promise<void> {
       resolve()
     } catch (error) {
       reject()
-    }
-  })
-}
-
-export async function enable(): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    try {
-      RNPushNotification.requestPermissions()
-      resolve()
-    } catch (error) {
-      reject(error)
     }
   })
 }
