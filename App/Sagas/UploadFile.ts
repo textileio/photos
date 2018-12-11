@@ -16,7 +16,7 @@ export function * uploadFile (id: string, payloadPath: string) {
     {
       customUploadId: id,
       path: payloadPath,
-      url: `${Config.RN_TEXTILE_CAFE_URI_PREFIX}${session.http_addr}${Config.RN_TEXTILE_CAFE_PIN_PATH}`,
+      url: `${Config.RN_TEXTILE_CAFE_API_PREFIX}${session.http_addr}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
       method: 'POST',
       type: 'raw',
       headers: {

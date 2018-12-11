@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, ImageResizeMode } from 'react-native'
 import { ImageStyle, Platform } from 'react-native'
 import TextileImage from './TextileImage'
 
@@ -9,7 +9,7 @@ export interface IProgressiveImageProps {
   forMinWidth: number,
   showPreview?: boolean,
   isVisible?: boolean,
-  resizeMode?: string,
+  resizeMode?: ImageResizeMode,
   capInsets?: string,
   style?: ImageStyle
 }
@@ -34,7 +34,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     return Math.floor(this.props.forMinWidth / 2)
   }
 
-  android (resizeMode: string) {
+  android (resizeMode: ImageResizeMode) {
     const baseStyle: ImageStyle = {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }
     const previewStyle: ImageStyle[] = [{ backgroundColor: 'transparent'}, baseStyle, this.state.androidPreview ? { height: 0 } : {}]
     // if no previewPath, don't try and render it here
@@ -61,7 +61,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     )
   }
 
-  ios(resizeMode: string) {
+  ios(resizeMode: ImageResizeMode) {
     if (this.props.showPreview) {
       return (
         <TextileImage
