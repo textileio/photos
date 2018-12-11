@@ -76,23 +76,23 @@ class Component extends React.Component<Props> {
     const selected = this.getSelected()
 
     // grab the Pks from the user Ids
-    const addresses: string[] = selected.map((id) => {
+    const ids: string[] = selected.map((id) => {
       const existing = this.props.contacts.find((ctc) => ctc.id === id)
-      if (existing && existing.address) {
-        return existing.address
+      if (existing) {
+        return existing.id
       }
       return ''
     })
-    .filter((address) => address !== '')
+    .filter((id) => id !== '')
 
-    if (addresses.length === 0) {
+    if (ids.length === 0) {
       // @ts-ignore
       this.refs.toast.show('Select a peer first.', 1500)
       return
     }
     // @ts-ignore
     this.refs.toast.show('Success! The peer list will not update until your invitees accept.', 2400)
-    this.props.addInternalInvites(this.props.threadId, addresses)
+    this.props.addInternalInvites(this.props.threadId, ids)
     setTimeout(() => { this.props.cancel() }, 2400)
   }
 
