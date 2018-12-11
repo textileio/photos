@@ -239,7 +239,7 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
 export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.shareByLink>) {
   const { path } = action.payload
   try {
-    const link = Config.RN_TEXTILE_CAFE_URI + '/ipfs/' + path
+    const link = Config.RN_TEXTILE_CAFE_GATEWAY_URL + '/ipfs/' + path
     yield call(Share.share, {title: '', message: link})
   } catch (error) {}
 }
