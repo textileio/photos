@@ -40,3 +40,16 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.4'
     distributionUrl = distributionUrl.replace("bin", "all")
 }
+
+// Hack to make unpublished versions of Gradle available
+subprojects {
+    if (
+    project.name.contains('react-native-image-picker') {
+        buildscript {
+            repositories {
+                jcenter()
+                maven { url "https://dl.bintray.com/android/android-tools/" }
+            }
+        }
+    }
+}
