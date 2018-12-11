@@ -1,6 +1,6 @@
 import Enzyme from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
-import TextileNode from './__mocks__/TextileNode' 
+import TextileNode from './__mocks__/TextileNode'
 
 // Custom mock APIs for native TextileNode
 jest.mock('NativeModules', () => {

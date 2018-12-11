@@ -1,4 +1,4 @@
-import { IPickerImage } from "../App/Services/CameraRoll";
+import { IPickerImage } from '../App/Services/CameraRoll'
 
 export default {
     showImagePicker: jest.fn()
