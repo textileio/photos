@@ -2,7 +2,7 @@
 
 exports[`notifications enable should fire notification lib successfully 1`] = `undefined`;
 
-exports[`notifications toPayload to create AccountPeerJoinedNotification 1`] = `
+exports[`notifications toPayload should create AccountPeerJoinedNotification 1`] = `
 Object {
   "feed": "You paired with a new account peer",
   "message": "You paired with a new account peer",
@@ -11,7 +11,7 @@ Object {
 }
 `;
 
-exports[`notifications toPayload to create CommentAddedNotification 1`] = `
+exports[`notifications toPayload should create CommentAddedNotification 1`] = `
 Object {
   "feed": "mock test commented on a photo in Great Thread",
   "message": "mock test commented on a photo: a camel!",
@@ -20,7 +20,7 @@ Object {
 }
 `;
 
-exports[`notifications toPayload to create FilesAddedNotification 1`] = `
+exports[`notifications toPayload should create FilesAddedNotification 1`] = `
 Object {
   "feed": "mock test added a photo to Great Thread",
   "message": "mock test added a photo",
@@ -29,7 +29,7 @@ Object {
 }
 `;
 
-exports[`notifications toPayload to create InviteReceivedNotification 1`] = `
+exports[`notifications toPayload should create InviteReceivedNotification 1`] = `
 Object {
   "feed": "mock test invited you to join to Great Thread",
   "message": "mock test invited you to join",
@@ -38,7 +38,7 @@ Object {
 }
 `;
 
-exports[`notifications toPayload to create LikeAddedNotification 1`] = `
+exports[`notifications toPayload should create LikeAddedNotification 1`] = `
 Object {
   "feed": "mock test liked a photo in Great Thread",
   "message": "mock test liked a photo",
@@ -47,16 +47,16 @@ Object {
 }
 `;
 
-exports[`notifications toPayload to create MessageAddedNotification 1`] = `
+exports[`notifications toPayload should create MessageAddedNotification 1`] = `
 Object {
-  "feed": "mock test here is my message! to Great Thread",
-  "message": "mock test here is my message!",
+  "feed": "mock test wrote here is my message!",
+  "message": "mock test wrote here is my message!",
   "title": "Great Thread",
   "typeString": "MESSAGE_ADDED",
 }
 `;
 
-exports[`notifications toPayload to create PeerJoinedNotification 1`] = `
+exports[`notifications toPayload should create PeerJoinedNotification 1`] = `
 Object {
   "feed": "mock test joined thread Great Thread",
   "message": "mock test joined",
@@ -65,7 +65,7 @@ Object {
 }
 `;
 
-exports[`notifications toPayload to create PeerLeftNotification 1`] = `
+exports[`notifications toPayload should create PeerLeftNotification 1`] = `
 Object {
   "feed": "mock test left thread Great Thread",
   "message": "mock test left",

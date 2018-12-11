@@ -119,8 +119,8 @@ export function toPayload(notification: Notification): INotificationsPayload {
     }
     case(NotificationType.MessageAddedNotification): {
       const title = notification.threadName
-      const message =  [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
+      const message =  [actor, 'wrote', notification.body].join(' ')
+      const feed = message
       return { title, message, feed, typeString }
     }
     case(NotificationType.FilesAddedNotification): {

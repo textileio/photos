@@ -22,7 +22,7 @@ describe('notifications', () => {
             threadName: 'Great Thread',
             target: 'DEF'
         }
-        it('to create InviteReceivedNotification', () => {
+        it('should create InviteReceivedNotification', () => {
             const notification = {
                 ...base,
                 body: 'invited you to join',
@@ -30,7 +30,7 @@ describe('notifications', () => {
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
-        it('to create AccountPeerJoinedNotification', () => {
+        it('should create AccountPeerJoinedNotification', () => {
             const notification = {
                 ...base,
                 body: 'joined',
@@ -38,7 +38,7 @@ describe('notifications', () => {
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
-        it('to create PeerJoinedNotification', () => {
+        it('should create PeerJoinedNotification', () => {
             const notification = {
                 ...base,
                 body: 'joined',
@@ -46,7 +46,7 @@ describe('notifications', () => {
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
-        it('to create PeerLeftNotification', () => {
+        it('should create PeerLeftNotification', () => {
             const notification = {
                 ...base,
                 body: 'left',
@@ -54,7 +54,7 @@ describe('notifications', () => {
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
-        it('to create MessageAddedNotification', () => {
+        it('should create MessageAddedNotification', () => {
             const notification = {
                 ...base,
                 body: 'here is my message!',
@@ -62,7 +62,7 @@ describe('notifications', () => {
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
-        it('to create FilesAddedNotification', () => {
+        it('should create FilesAddedNotification', () => {
             const notification = {
                 ...base,
                 body: 'added a photo',
@@ -70,7 +70,7 @@ describe('notifications', () => {
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
-        it('to create CommentAddedNotification', () => {
+        it('should create CommentAddedNotification', () => {
             const notification = {
                 ...base,
                 body: 'commented on a photo: a camel!',
@@ -78,7 +78,7 @@ describe('notifications', () => {
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
-        it('to create LikeAddedNotification', () => {
+        it('should create LikeAddedNotification', () => {
             const notification = {
                 ...base,
                 body: 'liked a photo',
