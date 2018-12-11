@@ -3,7 +3,7 @@ import {
     acceptThreadInviteViaNotification,
     addExternalThreadInvite
 } from '../Api'
-import { 
+import {
     ExternalInvite
 } from '../Model'
 
