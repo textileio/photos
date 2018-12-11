@@ -3,7 +3,7 @@ import {
     toPayload
 } from '../Notifications'
 import { NotificationType } from '../../NativeModules/Textile'
-import { Notification, FilesAddedNotification } from '../../Models/Notifications';
+import { Notification } from '../../Models/Notifications'
 
 describe('notifications', () => {
     describe('enable', () => {
