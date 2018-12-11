@@ -11,6 +11,16 @@ describe('camera roll', () => {
           expect(getPhotos(1)).resolves.toMatchSnapshot()
       })
     })
+    describe('chooseProfilePhoto', () => {
+        it('should get a valid photo response, user cancel, and error', async () => {
+            // Success
+            expect(chooseProfilePhoto()).resolves.toMatchSnapshot()
+            // User cancel
+            expect(chooseProfilePhoto()).rejects.toEqual(new Error('user canceled'))
+            // Camera error
+            expect(chooseProfilePhoto()).rejects.toEqual(new Error('mock error'))
+        })
+    })
     describe('launchCamera', () => {
         it('should successfully launch', async () => {
             const result = await launchCamera()
@@ -20,16 +30,6 @@ describe('camera roll', () => {
     describe('launchImageLibrary', () => {
         it('should successfully launch', async () => {
             expect(launchImageLibrary()).resolves.toMatchSnapshot()
-        })
-    })
-    describe('chooseProfilePhoto', () => {
-        it('should get a valid photo response, user cancel, and error', async () => {
-            // Success
-            expect(chooseProfilePhoto()).resolves.toMatchSnapshot()
-            // User cancel
-            expect(chooseProfilePhoto()).rejects.toEqual(new Error('user canceled'))
-            // Camera error
-            expect(chooseProfilePhoto()).rejects.toEqual(new Error('mock error'))
         })
     })
 })
