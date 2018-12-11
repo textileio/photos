@@ -87,7 +87,7 @@ class Avatar extends React.Component<Props, State> {
     } else if (heightNumber) {
       return (
         <Icon
-          style={{ ...(this.props.style || {}), width, height, borderRadius: this.state.borderRadius }}
+          style={{ width, height, borderRadius: this.state.borderRadius }}
           name={'question-circle'}
           size={heightNumber}
           color={s.COLOR_GREY_LIGHT}
