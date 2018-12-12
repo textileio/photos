@@ -1,4 +1,4 @@
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, fork } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 // @ts-ignore
@@ -7,9 +7,9 @@ import Upload from 'react-native-background-upload'
 import { SharedImage } from '../Models/TextileTypes'
 
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
-import { allUploadsComplete, processingImageForUploadId, processingImageByUuid } from '../Redux/ProcessingImagesSelectors'
+import { allUploadsComplete, processingImageForUploadId, processingImageByUuid, allUploadingImages } from '../Redux/ProcessingImagesSelectors'
 import UIActions from '../Redux/UIRedux'
-import {insertImage, prepareImage, uploadPins, shareWalletImage, shareToThread} from './ImageSharingSagas'
+import { insertImage, prepareImage, uploadPins, monitorForUploadsComplete, shareWalletImage, shareToThread } from './ImageSharingSagas'
 import { logNewEvent } from './DeviceLogs'
 import { refreshAllSessions } from '../Services/CafeSessions'
 
@@ -23,7 +23,8 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
 }
 
 export function * handleImageUploadComplete (action: ActionType<typeof ProcessingImagesActions.imageUploadComplete>) {
-  // TODO: Handle image upload complete with new redux modeling
+  // This saga just listens for complete uploads and deletes the source file
+  // ImageSharingSagas.monitorForUploadsComplete is what triggers the next step once all uploads are complete
   const { uploadId } = action.payload
   yield call(logNewEvent, 'uploadComplete', uploadId)
   const processingImage: ProcessingImage | undefined = yield select(processingImageForUploadId, uploadId)
@@ -37,11 +38,13 @@ export function * handleImageUploadComplete (action: ActionType<typeof Processin
         }
       }
     } catch (e) {}
-    const allComplete: boolean = yield select(allUploadsComplete, processingImage.uuid)
-    const alreadySharing = processingImage.status === 'sharing' || processingImage.status === 'complete'
-    if (allComplete && !alreadySharing) {
-      yield call(shareToThread, processingImage.uuid)
-    }
+  }
+}
+
+export function * startMonitoringExistingUploads () {
+  const uploadingImages: ReadonlyArray<ProcessingImage> = yield select(allUploadingImages)
+  for (const uploadingImage of uploadingImages) {
+    yield fork(monitorForUploadsComplete, uploadingImage.uuid)
   }
 }
 

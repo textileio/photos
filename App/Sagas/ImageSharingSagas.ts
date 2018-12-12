@@ -1,4 +1,4 @@
-import { call, put, select, fork, take } from 'redux-saga/effects'
+import { call, put, select, fork, take, race } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
@@ -13,7 +13,7 @@ import {
 } from '../NativeModules/Textile'
 import { SharedImage } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
-import { processingImageByUuid } from '../Redux/ProcessingImagesSelectors'
+import { processingImageByUuid, allUploadsComplete } from '../Redux/ProcessingImagesSelectors'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
 import AccountActions from '../Redux/AccountRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
@@ -21,6 +21,8 @@ import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { waitFor } from './WaitFor'
+import { RootAction } from '../Redux/Types'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
   const { threadId } = action.payload
@@ -134,6 +136,7 @@ export function * uploadPins (uuid: string) {
     if (!processingImage || ! processingImage.uploadData) {
       throw new Error('no ProcessingImage or uploadData found')
     }
+    yield fork(monitorForUploadsComplete, uuid)
     for (const uploadId in processingImage.uploadData) {
       if (processingImage.uploadData[uploadId]) {
         yield put(ProcessingImagesActions.uploadStarted(uuid, uploadId))
@@ -142,6 +145,17 @@ export function * uploadPins (uuid: string) {
     }
   } catch (error) {
     put(ProcessingImagesActions.error(uuid, error))
+  }
+}
+
+export function * monitorForUploadsComplete(uuid: string) {
+  const { complete } = yield race({
+    complete: waitFor(select(allUploadsComplete, uuid)),
+    // In case we decide to error out the whole ProcessingImage because of too many upload failures
+    errorAction: take((action: RootAction) => action.type === getType(ProcessingImagesActions.error) && (action.payload.uuid === uuid))
+  })
+  if (complete) {
+    yield call(shareToThread, uuid)
   }
 }
 

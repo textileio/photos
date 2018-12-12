@@ -39,7 +39,8 @@ import {
   retryImageShare,
   cancelImageShare,
   retryWithTokenRefresh,
-  handleImageUploadError
+  handleImageUploadError,
+  startMonitoringExistingUploads
 } from './ImageSharingTriggers'
 
 import {
@@ -113,6 +114,8 @@ export default function * root (dispatch: Dispatch) {
     call(onNodeStarted),
     call(onNodeOnline),
     call(monitorNewThreadActions),
+
+    call(startMonitoringExistingUploads),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),

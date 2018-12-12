@@ -35,10 +35,13 @@ const actions = {
     return (uuid: string) => resolve({ uuid })
   }),
   expiredTokenError: createAction('processingImages/EXPIRED_TOKEN', (resolve) => {
-    return (uuid: string) => resolve({ uuid })
+    return (uploadId: string) => resolve({ uploadId })
   }),
   error: createAction('processingImages/ERROR', (resolve) => {
     return (uuid: string, error: any) => resolve({ uuid, error })
+  }),
+  uploadError: createAction('processingImages/UPLOAD_ERROR', (resolve) => {
+    return (uploadId: string, error: any) => resolve({ uploadId, error })
   })
 }
 
@@ -81,6 +84,9 @@ export const selectors = {
   allUploadsComplete: (state: ProcessingImagesState, uuid: string) => {
     const processingImage = selectors.processingImageByUuid(state, uuid)
     if (!processingImage || !processingImage.uploadData) {
+      return false
+    }
+    if (Object.keys(processingImage.uploadData).length < 1) {
       return false
     }
     let allUploadsComplete = true
@@ -197,6 +203,20 @@ export function reducer (state: ProcessingImagesState = initialState, action: Pr
       const images = state.images.map((image) => {
         if (image.uuid === uuid) {
           return { ...image, error: e }
+        }
+        return image
+      })
+      return { ...state, images }
+    }
+    case getType(actions.uploadError): {
+      const { uploadId, error } = action.payload
+      const e = (error.message as string) || (error as string) || 'unknown'
+      const images = state.images.map((image) => {
+        if (image.uploadData && image.uploadData[uploadId]) {
+          const upload: Upload = { ...image.uploadData![uploadId], error: e }
+          const uploadData: UploadData = { ...image.uploadData, [uploadId]: upload }
+          const processingImage: ProcessingImage = { ...image, uploadData }
+          return processingImage
         }
         return image
       })
