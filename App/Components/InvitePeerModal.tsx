@@ -11,10 +11,9 @@ import ModalButtons from './ModalButtons'
 import { CreateThreadComponent } from './CreateThreadModal'
 
 import { RootAction, RootState } from '../Redux/Types'
-import { ThreadId, ThreadName } from '../Models/TextileTypes'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
-import UIActions from '../Redux/UIRedux'
+import ContactsActions from '../Redux/ContactsRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 import { ThreadSelectComponent } from '../SB/components/ThreadSelect'
@@ -34,12 +33,18 @@ interface ScreenProps {
   cancel: () => void
 }
 
+interface State {
+  submitted: boolean
+  showCreateThreadModal: boolean
+  threadId?: string,
+  threadName?: string,
+  threadSelected: boolean
+}
+
 class InvitePeerModal extends React.Component<DispatchProps & StateProps & ScreenProps> {
-  state = {
+  state: State = {
     submitted: false,
     showCreateThreadModal: false,
-    threadId: undefined,
-    threadName: undefined,
     threadSelected: false
   }
 
@@ -62,7 +67,7 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
   }
 
   selectThread () {
-    return (threadId: ThreadId) => {
+    return (threadId: string) => {
       const thread = this.props.threads.find((t) => t.id === threadId)
       const threadName = thread ? thread.name : 'thread'
       this.setState({threadId, threadName})
@@ -119,11 +124,11 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
     )
   }
 
-  renderPeerSelect () {
+  renderPeerSelect (threadId: string, threadName: string) {
     return (
       <ThreadsEditFriendsComponent
-        threadId={this.state.threadId}
-        threadName={this.state.threadName}
+        threadId={threadId}
+        threadName={threadName}
         cancel={this.cancelPeerRequest()}
       />
     )
@@ -144,8 +149,8 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
   renderBody () {
     if (this.state.showCreateThreadModal) {
       return this.renderCreateThread()
-    } else if (this.state.threadSelected) {
-      return this.renderPeerSelect()
+    } else if (this.state.threadSelected && this.state.threadId && this.state.threadName) {
+      return this.renderPeerSelect(this.state.threadId, this.state.threadName)
     }
     return this.renderThreadSelect()
   }
@@ -167,42 +172,19 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
 }
 
 interface StateProps {
-  threads: ThreadData[]
+  threads: ReadonlyArray<ThreadData>
 }
 
 const mapStateToProps = (state: RootState): StateProps  => {
-
-  const allThreads = getThreads(state)
-  let threads: ThreadData[] = []
-  const defaultThreadName: ThreadName = 'default' as any
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter((thread: ThreadData) => thread.name !== defaultThreadName)
-      .sort((a, b) => {
-        if (a.name === null || a.name === '') {
-          return 1
-        } else if (b.name === null || b.name === '') {
-          return -1
-        }
-        const A = a.name.toString().toUpperCase()
-        const B = b.name.toString().toUpperCase()
-        if (A === B) {
-          return 0
-        } else {
-          return A < B ? -1 : 1
-        }
-      })
-  }
-
   return {
-    threads
+    threads: getThreads(state, 'name')
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    refreshContacts: () => { dispatch(UIActions.refreshContacts()) },
+    refreshContacts: () => { dispatch(ContactsActions.getContactsRequest()) },
     submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
   }
 }

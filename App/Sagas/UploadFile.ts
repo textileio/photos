@@ -3,27 +3,24 @@ import { call, put, select } from 'redux-saga/effects'
 import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 
-import TextileNode from '../Services/TextileNode'
-import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
-import { CafeTokens } from '../Models/TextileTypes'
+import { bestCafeSession } from '../Services/CafeSessions'
+import { CafeSession } from '../NativeModules/Textile'
 
 export function * uploadFile (id: string, payloadPath: string) {
-  let tokens: CafeTokens | undefined = yield select(AuthSelectors.tokens)
-  if (!tokens) {
-    tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens!))
+  const session: CafeSession | undefined = yield call(bestCafeSession)
+  if (!session) {
+    throw new Error('unable to get CafeSession')
   }
   yield call(
     Upload.startUpload,
     {
       customUploadId: id,
       path: payloadPath,
-      url: Config.RN_TEXTILE_CAFE_URI + Config.RN_TEXTILE_CAFE_PIN_PATH,
+      url: `${Config.RN_TEXTILE_CAFE_API_PREFIX}${session.http_addr}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
       method: 'POST',
       type: 'raw',
       headers: {
-        'Authorization': `Bearer ${tokens!.access}`,
-        'Content-Type': 'application/gzip'
+        Authorization: `Bearer ${session.access}`
       }
     }
   )

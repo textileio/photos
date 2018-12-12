@@ -1,19 +1,14 @@
 import { createStackNavigator } from 'react-navigation'
 
-import OnboardingScreen from '../../../SB/views/OnBoarding'
-import SignUpScreen from '../../../SB/views/SignUp/SignUpContainer'
-import SignInScreen from '../../../SB/views/SignIn/SignInContainer'
-import ProfilePicScreen from '../../../SB/views/UserOnBoarding/UserOnBoardingContainer'
+import OnboardingScreen from '../../../Containers/OnboardingScreen'
 
 const nav = createStackNavigator(
   {
-    Onboarding: OnboardingScreen,
-    SignUp: SignUpScreen,
-    SignIn: SignInScreen,
-    ProfilePic: ProfilePicScreen
+    Onboarding: OnboardingScreen
   },
   {
     headerMode: 'none',
+    initialRouteName: 'Onboarding',
     navigationOptions: {
       gesturesEnabled: false
     }

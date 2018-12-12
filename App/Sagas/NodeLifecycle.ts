@@ -1,19 +1,37 @@
 import { delay, Task } from 'redux-saga'
+import { Dispatch } from 'redux'
 import { all, take, call, put, fork, cancelled, race, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
-import Config from 'react-native-config'
 import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
+import Config from 'react-native-config'
 
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import TextileNode from '../Services/TextileNode'
+import AccountActions from '../Redux/AccountRedux'
 import { RootAction } from '../Redux/Types'
-import {Threads, ThreadName} from '../Models/TextileTypes'
-import {logNewEvent} from './DeviceLogs'
+import {
+  addThread,
+  newTextile,
+  migrateRepo,
+  start,
+  newWallet,
+  walletAccountAt,
+  initRepo,
+  stop,
+  threads,
+  ThreadInfo,
+  WalletAccount
+ } from '../NativeModules/Textile'
+import { logNewEvent } from './DeviceLogs'
+import { migrate } from './Migration'
+
+const REPO_PATH = RNFS.DocumentDirectoryPath
+const MIGRATION_NEEDED_ERROR = 'repo needs migration'
+const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 
 export function * manageNode () {
   while (true) {
@@ -48,38 +66,62 @@ export function * manageNode () {
   }
 }
 
-export function * handleCreateNodeRequest () {
+export function * handleCreateNodeRequest (dispatch: Dispatch) {
   while (true) {
     // We take a request to create and start the node.
     // While we're processing that request, any additional requests will be ignored.
     yield take(getType(TextileNodeActions.createNodeRequest))
 
     // Fork the call to create and start the node so we don't block upstream saga manageNode
-    const task: Task = yield fork(createAndStartNode)
+    const task: Task = yield fork(createAndStartNode, dispatch)
 
     // Don't take any other createNodeRequests until the forked task is done
     yield call(() => task.done)
   }
 }
 
-function * createAndStartNode () {
+function * createAndStartNode(dispatch: Dispatch): any {
   try {
-    const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-    const logFiles = !__DEV__
     yield put(TextileNodeActions.creatingNode())
-    yield call(TextileNode.create, RNFS.DocumentDirectoryPath, Config.RN_TEXTILE_CAFE_URI, logLevel, logFiles)
+    yield call(newTextile, REPO_PATH)
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
-    yield call(TextileNode.start)
-    const threads: Threads = yield call(TextileNode.threads)
-    const defaultThreadName: ThreadName = 'default' as any
-    const defaultThread = threads.items.find((thread) => thread.name === defaultThreadName)
-    if (!defaultThread) {
-      yield call(TextileNode.addThread, 'default')
+    yield call(start)
+    const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
+    const cameraRollThreadName = 'Camera Roll'
+    const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
+    const cameraRollThread = threadsResult.find((thread) => thread.key === cameraRollThreadKey)
+    if (!cameraRollThread) {
+      yield call(addThread, cameraRollThreadKey, cameraRollThreadName)
     }
     yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {
-    yield put(TextileNodeActions.nodeError(error))
+    try {
+      if (error.message === MIGRATION_NEEDED_ERROR) {
+        yield put(TextileNodeActions.migrationNeeded())
+        yield take(getType(TextileNodeActions.initMigration))
+        yield call(migrateRepo, REPO_PATH)
+        yield call(createAndStartNode, dispatch)
+        yield put(TextileNodeActions.initMigrationSuccess())
+        yield call(migrate, dispatch)
+      } else if (error.message === INIT_NEEDED_ERROR) {
+        yield put(TextileNodeActions.creatingWallet())
+        const recoveryPhrase: string = yield call(newWallet, 12)
+        yield put(AccountActions.setRecoveryPhrase(recoveryPhrase))
+        yield put(TextileNodeActions.derivingAccount())
+        const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
+        // const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
+        const logLevel = 'ERROR'
+        const logToDisk = !__DEV__
+        yield put(TextileNodeActions.initializingRepo())
+        yield call(initRepo, walletAccount.seed, REPO_PATH, logLevel, logToDisk)
+        yield call(createAndStartNode, dispatch)
+      } else {
+        yield put(TextileNodeActions.nodeError(error))
+      }
+    } catch (error) {
+      yield put(TextileNodeActions.nodeError(error))
+    }
   }
 }
 
@@ -97,8 +139,8 @@ function * backgroundTaskRace () {
     )
   })
   yield all([
-    yield call(BackgroundTimer.stop),
-    yield call(BackgroundFetch.finish, BackgroundFetch.FETCH_RESULT_NEW_DATA)
+    call(BackgroundTimer.stop),
+    call(BackgroundFetch.finish, BackgroundFetch.FETCH_RESULT_NEW_DATA)
   ])
 
 }
@@ -122,7 +164,7 @@ function * stopNodeAfterDelay (ms: number) {
         yield call(displayNotification, 'Stopping node')
       }
       yield put(TextileNodeActions.stoppingNode())
-      yield call(TextileNode.stop)
+      yield call(stop)
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'Node stopped')
       }

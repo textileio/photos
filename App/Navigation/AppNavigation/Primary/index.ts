@@ -6,8 +6,8 @@ import Account from '../../../SB/views/UserProfile'
 import NotificationSettings from '../../../SB/views/Notifications'
 import Storage from '../../../SB/views/Storage'
 import DeviceLogs from '../../../SB/views/DeviceLogs'
-import Mnemonic from '../../../SB/views/UserProfile/Mnemonic'
-import UpdateAvatar from '../../../SB/views/UserOnBoarding/UpdateAvatar'
+import RecoveryPhrase from '../../../SB/views/UserProfile/RecoveryPhrase'
+import SetAvatar from '../../../Containers/SetAvatar'
 
 import ThreadDetail from '../../../SB/views/ThreadDetail'
 import PhotoScreen from '../../../Containers/PhotoScreen'
@@ -16,7 +16,6 @@ import LikesScreen from '../../../Containers/LikesScreen'
 import AddCaptionScreen from '../../../Containers/AddCaptionScreen'
 import WalletPicker from '../../../Containers/WalletPicker'
 
-import PairingView from '../../../SB/views/DevicePairingView'
 import AcceptInviteScreen from '../../../Containers/AcceptInviteScreen'
 
 import styles, { headerTintColor } from '../../Styles/NavigationStyles'
@@ -28,8 +27,8 @@ const nav = createStackNavigator(
     Account,
     NotificationSettings,
     Storage,
-    Mnemonic,
-    ChangeAvatar: UpdateAvatar,
+    RecoveryPhrase,
+    ChangeAvatar: SetAvatar,
 
     ViewThread: ThreadDetail,
     PhotoScreen,
@@ -38,7 +37,6 @@ const nav = createStackNavigator(
     ThreadSharePhoto: AddCaptionScreen,
     WalletPicker,
 
-    PairingView,
     ThreadInvite: AcceptInviteScreen,
 
     DeviceLogs

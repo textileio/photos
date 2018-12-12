@@ -36,10 +36,8 @@ const FeedItem = props => {
       style={{...readStyle, justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}
     >
       <Avatar
-        width={24}
-        height={24}
+        style={{ width: 24, height: 24 }}
         peerId={notification.actor_id}
-        defaultSource={require('../../../Images/v2/main-image.png')}
       />
     </View>
   )
@@ -58,6 +56,7 @@ const FeedItem = props => {
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
+        {/* TODO: Update textile image props to target and index */}
         {isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.photoId} forMinWidth={40} resizeMode={'cover'} />}
       </View>
     </TouchableOpacity>

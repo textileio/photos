@@ -1,5 +1,6 @@
 import { takeLatest, takeEvery, all, call } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
+import { Dispatch } from 'redux'
 
 /* ------------- Types ------------- */
 
@@ -13,15 +14,16 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
-import DevicesActions from '../Redux/DevicesRedux'
 import TriggersActions from '../Redux/TriggersRedux'
+import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
+
+import accountSaga from './Account'
 
 import { startup } from './StartupSagas'
 
 import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } from './NodeLifecycle'
-import { onNodeCreated } from './NodeCreated'
 import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
 
@@ -57,6 +59,7 @@ import {
 import {
   refreshThreads,
   refreshThread,
+  monitorThreadAddedNotifications,
   addThread,
   removeThread,
   addPhotoComment,
@@ -80,11 +83,7 @@ import {
 } from './ThreadsSagas'
 
 import {
-  signUp,
-  logIn,
-  logOut,
   updateNodeOverview,
-  recoverPassword,
   navigateToThread,
   navigateToComments,
   navigateToLikes,
@@ -93,7 +92,6 @@ import {
   addPhotoLike,
   initializeAppState,
   refreshMessages,
-  addDevice,
   ignorePhoto,
   cameraPermissionsTrigger,
   chooseProfilePhoto,
@@ -106,11 +104,12 @@ import {
 
 /* ------------- Connect Types To Sagas ------------- */
 
-export default function * root () {
+export default function * root (dispatch: Dispatch) {
   yield all([
+    call(accountSaga),
+
     call(manageNode),
-    call(handleCreateNodeRequest),
-    call(onNodeCreated),
+    call(handleCreateNodeRequest, dispatch),
     call(onNodeStarted),
     call(onNodeOnline),
     call(monitorNewThreadActions),
@@ -136,18 +135,13 @@ export default function * root () {
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
-    takeEvery(getType(UIActions.refreshContacts), refreshContacts),
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
 
-    takeEvery(getType(AuthActions.signUpRequest), signUp),
-    takeEvery(getType(AuthActions.logInRequest), logIn),
-    takeEvery(getType(AuthActions.logOutRequest), logOut),
-    takeEvery(getType(AuthActions.recoverPasswordRequest), recoverPassword),
-
-    takeEvery(getType(DevicesActions.addDeviceRequest), addDevice),
+    takeEvery(getType(ContactsActions.getContactsRequest), refreshContacts),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
+    takeEvery(getType(PhotoViewingActions.threadAddedNotification), monitorThreadAddedNotifications),
     takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),
     takeEvery(getType(PhotoViewingActions.refreshThreadsRequest), refreshThreads),
     takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
@@ -176,7 +170,7 @@ export default function * root () {
 
     takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),
 
-    takeEvery(getType(UIActions.getPublicLink), presentPublicLinkInterface),
+    takeEvery(getType(UIActions.shareByLink), presentPublicLinkInterface),
 
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
     takeEvery(getType(UIActions.showWalletPicker), showWalletPicker),
@@ -201,9 +195,7 @@ export default function * root () {
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardedSuccess), inviteAfterOnboard),
 
-    // Update contacts
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
-    takeLatest(getType(PreferencesActions.pendingAvatar), nodeOnlineSaga),
 
     initializeAppState()
   ])

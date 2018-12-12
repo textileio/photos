@@ -1,41 +1,36 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import {
-  BlockId,
-  PhotoId,
-  SharedImage,
-  ThreadId,
-  ThreadName
-} from '../Models/TextileTypes'
+import { SharedImage } from '../Models/TextileTypes'
 import { RootState } from './Types'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
   chooseProfilePhotoSuccess: createAction('CHOOSE_PROFILE_PHOTO_SUCCESS', (resolve) => {
-    return (uri: string, data: string) => resolve({ uri, data })
+    return (image: SharedImage, data: string) => resolve({ image, data })
   }),
   chooseProfilePhotoError: createAction('CHOOSE_PROFILE_PHOTO_ERROR', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
   selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', (resolve) => {
-    return (uri: string) => resolve({ uri })
+    return (image: SharedImage) => resolve({ image })
   }),
   updateProfilePicture: createAction('UPDATE_PROFILE_PICTURE', (resolve) => {
-    return (uri: string) => resolve({ uri })
+    return (image: SharedImage) => resolve({ image })
   }),
   cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', (resolve) => {
     return () => resolve()
   }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
-    return (image: SharedImage | PhotoId) => resolve({ image })
+    return (image: SharedImage | ThreadFilesInfo) => resolve({ image })
   }),
   updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', (resolve) => {
-    return (threadId: ThreadId) => resolve({ threadId })
+    return (threadId: string) => resolve({ threadId })
   }),
   updateSharingPhotoComment: createAction('UPDATE_SHARING_PHOTO_COMMENT', (resolve) => {
     return (comment: string) => resolve({ comment })
   }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', (resolve) => {
-    return (image?: SharedImage | PhotoId, threadId?: ThreadId, comment?: string) => resolve({ image, threadId, comment })
+    return (image: SharedImage | string, threadId: string, comment?: string) => resolve({ image, threadId, comment })
   }),
   cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', (resolve) => {
     return () => resolve()
@@ -43,20 +38,20 @@ const actions = {
   imageSharingError: createAction('IMAGE_SHARING_ERROR', (resolve) => {
     return (error: Error) => resolve(error)
   }),
-  getPublicLink: createAction('GET_PUBLIC_LINK', (resolve) => {
-    return (photoId: PhotoId) => resolve({ photoId })
+  shareByLink: createAction('SHARE_BY_LINK', (resolve) => {
+    return (path: string) => resolve({ path })
   }),
   showImagePicker: createAction('SHOW_IMAGE_PICKER', (resolve) => {
     return (pickerType?: string) => resolve({ pickerType })
   }),
   showWalletPicker: createAction('SHOW_WALLET_PICKER', (resolve) => {
-    return (threadId?: ThreadId) => resolve({ threadId })
+    return (threadId?: string) => resolve({ threadId })
   }),
   walletPickerSuccess: createAction('WALLET_PICKER_SUCCESS', (resolve) => {
-    return (photoId: PhotoId) => resolve({ photoId })
+    return (photo: ThreadFilesInfo) => resolve({ photo })
   }),
   newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', (resolve) => {
-    return (threadId: ThreadId) => resolve({ threadId })
+    return (threadId: string) => resolve({ threadId })
   }),
   newImagePickerError: createAction('NEW_IMAGE_PICKER_ERROR', (resolve) => {
     return (error: Error, message?: string) => resolve({ error, message })
@@ -67,23 +62,20 @@ const actions = {
   routeDeepLinkRequest: createAction('ROUTE_DEEP_LINK_REQUEST', (resolve) => {
     return (url: string) => resolve({url})
   }),
-  refreshContacts: createAction('refreshContacts', (resolve) => {
-    return () => resolve()
-  }),
   addFriendRequest: createAction('ADD_FRIEND_REQUEST', (resolve) => {
-    return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
+    return (threadId: string, threadName: string) => resolve({ threadId, threadName })
   }),
   addLikeRequest: createAction('ADD_LIKE_REQUEST', (resolve) => {
-    return (blockId: BlockId) => resolve({blockId})
+    return (blockId: string) => resolve({blockId})
   }),
   navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', (resolve) => {
-    return (threadId: ThreadId, threadName: ThreadName) => resolve({ threadId, threadName })
+    return (threadId: string, threadName: string) => resolve({ threadId, threadName })
   }),
   navigateToCommentsRequest: createAction('NAVIGATE_TO_COMMENTS_REQUEST', (resolve) => {
-    return (photoId: PhotoId, threadId?: ThreadId) => resolve({ photoId, threadId })
+    return (photoId: string, threadId?: string) => resolve({ photoId, threadId })
   }),
   navigateToLikesRequest: createAction('NAVIGATE_TO_LIKES_REQUEST', (resolve) => {
-    return (photoId: PhotoId, threadId?: ThreadId) => resolve({ photoId, threadId })
+    return (photoId: string, threadId?: string) => resolve({ photoId, threadId })
   })
 }
 
@@ -91,13 +83,13 @@ export type UIAction = ActionType<typeof actions>
 
 export interface UIState {
   readonly chosenProfilePhoto: {
-    readonly uri?: string
+    readonly image?: SharedImage
     readonly data?: string
     readonly error?: Error
   }
   readonly sharingPhoto?: {
-    readonly image?: SharedImage | PhotoId
-    readonly threadId?: ThreadId
+    readonly image?: SharedImage | ThreadFilesInfo
+    readonly threadId?: string
     readonly comment?: string
   },
   readonly imagePickerError?: string // used to notify the user of any error during photo picking

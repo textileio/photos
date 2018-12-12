@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Dispatch} from 'redux'
 import {
   View,
   ScrollView,
@@ -13,26 +12,24 @@ import { SafeAreaView } from 'react-navigation'
 import Avatar from './Avatar'
 import { TextileHeaderButtons, Item } from './HeaderButtons'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
-import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
 
 // Styles
 import styles from './Styles/ContactModal'
-import { PeerId, ThreadId, Photo, ThreadName } from '../Models/TextileTypes'
 import { RootState } from '../Redux/Types'
+import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
 
 interface ScreenProps {
   isVisible: boolean
-  peerId: PeerId
+  peerId: string
   username: string
   close: () => void
-  navigateToThread: (id: ThreadId, name: ThreadName) => void
+  navigateToThread: (id: string, name: string) => void
 }
 
 class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
 
-  defaultSource = require('../Images/v2/main-image.png')
-
-  navigate (id: ThreadId, name: ThreadName) {
+  navigate (id: string, name: string) {
     return () => {
       this.props.navigateToThread(id, name)
     }
@@ -54,14 +51,14 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
         </TextileHeaderButtons>
         <View style={styles.content}>
           <View style={styles.profile}>
-            <Avatar width={72} height={72} peerId={this.props.peerId} defaultSource={this.defaultSource} />
+            <Avatar style={{ width: 72, height: 72 }} peerId={this.props.peerId} />
             <Text style={styles.username}>{this.props.username}</Text>
           </View>
           <ScrollView style={styles.threadsList}>
             <Text style={styles.threadsTitle}>
-              {this.props.threads.length > 0 ? 'Sharing in Threads:' : 'Not part of any shared threads'}
+              {this.props.threadThumbs.length > 0 ? 'Sharing in Threads:' : 'Not part of any shared threads'}
             </Text>
-            {this.props.threads.map((thread, i) => (
+            {this.props.threadThumbs.map((thread, i) => (
               <TouchableOpacity key={i} onPress={this.navigate(thread.id, thread.name)}>
                 <PhotoWithTextBox key={i} text={thread.name} photo={thread.thumb} />
               </TouchableOpacity>
@@ -75,26 +72,12 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
 }
 
 interface DispatchStateProps {
-  threads: Array<{id: ThreadId, name: ThreadName, thumb?: Photo}>
+  threadThumbs: ReadonlyArray<ThreadThumbs>
 }
 
 const mapStateToProps = (state: RootState, ownProps: ScreenProps): DispatchStateProps => {
-  const allThreads = getThreads(state)
-  let threads
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter((thread) => thread.photos.some((p) => p.author_id === ownProps.peerId))
-      .map((thread) => {
-        return {
-          id: thread.id,
-          thumb: thread.photos.length > 0 ? thread.photos[0] : undefined,
-          name: thread.name
-        }
-      })
-  }
-
   return {
-    threads: threads || []
+    threadThumbs: getThreadThumbs(state, ownProps.peerId)
   }
 }
 

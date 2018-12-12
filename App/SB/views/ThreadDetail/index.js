@@ -4,7 +4,7 @@ import { Alert, View, Text, Image } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
-import Icons from '../../../Components/Icons'
+import Icon from '../../../Components/Icon'
 
 import BottomDrawerList from '../../components/BottomDrawerList'
 import PhotoStream from '../../../Components/PhotoStream'
@@ -15,7 +15,6 @@ import PreferencesActions from '../../../Redux/PreferencesRedux'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { threadDataByThreadId } from '../../../Redux/PhotoViewingSelectors'
 import ProcessingImagesActions from '../../../Redux/ProcessingImagesRedux'
-import { Photo, ThreadId, ThreadName } from '../../../Models/TextileTypes'
 import ActionSheet from 'react-native-actionsheet'
 
 import AlertComponent from '../../../SB/components/Alert'
@@ -163,8 +162,8 @@ class ThreadDetail extends React.PureComponent {
           Time to share some photos. Anyone you invite to the Thread will be able to send photos, view other members photos, and invite new friends.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons style={{ margin: 10 }} name='plus' size={16} color='black' /> button to add your first photo.
-          Or click the <Icons name='more-horizontal' size={16} color='black' /> button to start inviting friends.
+          Click the <Icon style={{ margin: 10 }} name='plus' size={16} color='black' /> button to add your first photo.
+          Or click the <Icon name='more-horizontal' size={16} color='black' /> button to start inviting friends.
         </Text>
       </View>
     )
@@ -258,7 +257,7 @@ const mapStateToProps = (state) => {
     threadName,
     items,
     displayImages,
-    profile: state.preferences.profile,
+    profile: state.account.profile.value,
     // Image Picker details
     errorMessage: state.ui.imagePickerError,
     displayError: state.ui.hasOwnProperty('imagePickerError') && state.ui.imagePickerError !== undefined,

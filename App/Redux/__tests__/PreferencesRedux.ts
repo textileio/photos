@@ -1,9 +1,8 @@
 import actions, { reducer } from '../PreferencesRedux'
-import { Mnemonic } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
-const mnemonic: Mnemonic = 'mnemonic' as any
+const recoveryPhrase: string = 'recoveryPhrase'
 
 describe('preferences stories', () => {
   describe('initial state', () => {
@@ -32,12 +31,6 @@ describe('preferences stories', () => {
       expect(state0.verboseUi).toBe(true)
       const state1 = reducer(state0, actions.toggleVerboseUi())
       expect(state1.verboseUi).toBe(false)
-    })
-  })
-  describe('mnemonic', () => {
-    it('should update mnemonic', () => {
-      const state = reducer(initialState, actions.updatecMnemonic(mnemonic))
-      expect(state.mnemonic).toEqual(mnemonic)
     })
   })
 })

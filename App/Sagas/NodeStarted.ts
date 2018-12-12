@@ -1,6 +1,7 @@
-import { all, call, put, take } from 'redux-saga/effects'
+import { put, take } from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
-import TextileNode from '../Services/TextileNode'
+import AccountActions from '../Redux/AccountRedux'
+import ContactsActions from '../Redux/ContactsRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
@@ -8,17 +9,13 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 export function * onNodeStarted () {
   while (yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])) {
     try {
-      yield all([
-        put(PhotoViewingActions.refreshThreadsRequest()),
-        call(refreshPublicKey)
-      ])
+      yield put(AccountActions.refreshProfileRequest())
+      yield put(AccountActions.refreshPeerIdRequest())
+      yield put(AccountActions.getCafeSessionsRequest())
+      yield put(ContactsActions.getContactsRequest())
+      yield put(PhotoViewingActions.refreshThreadsRequest())
     } catch (error) {
       // nothing to do here for now
     }
   }
-}
-
-function * refreshPublicKey () {
-  const publicKey = yield call(TextileNode.getPublicKey)
-  yield put(PreferencesActions.getPublicKeySuccess(publicKey))
 }

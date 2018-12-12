@@ -4,10 +4,10 @@ import styles from './statics/styles'
 import Avatar from '../../../Components/Avatar'
 
 const SmallIconTag = props => {
-  const { text, peerId, textStyle, avatarStyle, style, defaultSource } = props
+  const { text, peerId, textStyle, avatarStyle, style } = props
   return (
     <View style={[styles.detail, style]}>
-      <Avatar style={avatarStyle} width={27} height={27} peerId={peerId} defaultSource={defaultSource} />
+      <Avatar style={{ ...avatarStyle, width: 27, height: 27 }} peerId={peerId} />
       <View style={[styles.detailTextView]}>
         <Text style={[styles.detailText, textStyle]}>{text}</Text>
       </View>

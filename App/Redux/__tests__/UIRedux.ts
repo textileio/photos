@@ -1,17 +1,28 @@
 import actions, { reducer } from '../UIRedux'
-import { SharedImage, ThreadId, PhotoId } from '../../Models/TextileTypes'
+import { SharedImage } from '../../Models/TextileTypes'
+import { ThreadFilesInfo } from '../../NativeModules/Textile'
 
 const initialState = reducer(undefined, {} as any)
-const threadId: ThreadId = 'threadId' as any
+const threadId: string = 'threadId' as any
 const comment = 'comment'
 const sharedImage: SharedImage = {
+  isAvatar: false,
   origURL: 'origURL',
   uri: 'uri',
   path: '/here',
   canDelete: false
 }
 
-const sharedHash: PhotoId = 'hash' as any
+const sharedPhoto: ThreadFilesInfo = {
+  author_id: 'a',
+  block: 'b',
+  comments: [],
+  date: 'c',
+  files: [],
+  likes: [],
+  target: 'd',
+  threads: []
+}
 
 describe('ui stories', () => {
   describe('initial state', () => {
@@ -25,8 +36,8 @@ describe('ui stories', () => {
       expect(state.sharingPhoto!.image).toMatchObject(sharedImage)
     })
     it('should update sharing photo via photo hash', () => {
-      const state = reducer(initialState, actions.updateSharingPhotoImage(sharedHash))
-      expect(state.sharingPhoto!.image).toEqual(sharedHash)
+      const state = reducer(initialState, actions.updateSharingPhotoImage(sharedPhoto))
+      expect(state.sharingPhoto!.image).toEqual(sharedPhoto)
     })
     it('should update sharing thread', () => {
       const state = reducer(initialState, actions.updateSharingPhotoThread(threadId))
@@ -37,15 +48,15 @@ describe('ui stories', () => {
       expect(state.sharingPhoto!.comment).toEqual(comment)
     })
     it('should cancel sharing', () => {
-      const state = reducer(initialState, actions.updateSharingPhotoImage(sharedHash))
+      const state = reducer(initialState, actions.updateSharingPhotoImage(sharedPhoto))
       expect(state.sharingPhoto).toBeDefined()
       const state1 = reducer(state, actions.cancelSharingPhoto())
       expect(state1.sharingPhoto).toBeUndefined()
     })
     it('sharePhotoRequest should clear sharing state', () => {
-      const state0 = reducer(initialState, actions.updateSharingPhotoImage(sharedHash))
+      const state0 = reducer(initialState, actions.updateSharingPhotoImage(sharedPhoto))
       expect(state0.sharingPhoto).toBeDefined()
-      const state1 = reducer(initialState, actions.sharePhotoRequest())
+      const state1 = reducer(initialState, actions.sharePhotoRequest('imageId', 'threadId'))
       expect(state1.sharingPhoto).toBeUndefined()
     })
     it('imageSharingError should not update state', () => {

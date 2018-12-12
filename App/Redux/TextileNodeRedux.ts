@@ -1,12 +1,19 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
-import { ThreadId, BlockId, Photo, PhotoId, PhotoMetadata } from '../Models/TextileTypes'
 import { RootState } from './Types'
 
 const actions = {
   appStateChange: createAction('APP_STATE_CHANGE', (resolve) => {
     return (previousState: TextileAppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
   }),
+  migrationNeeded: createAction('MIGRATION_NEEDED'),
+  initMigration: createAction('INIT_MIGRATION'),
+  initMigrationSuccess: createAction('INIT_MIGRATION_SUCCESS'),
+  migrateNode: createAction('MIGRATE_NODE'),
+  migrationSuccess: createAction('MIGRATION_SUCCESS'),
+  creatingWallet: createAction('CREATING_WALLET'),
+  derivingAccount: createAction('DERIVING_ACCOUNT'),
+  initializingRepo: createAction('INITIALIZING_REPO'),
   createNodeRequest: createAction('CREATE_NODE_REQUEST'),
   creatingNode: createAction('CREATING_NODE'),
   createNodeSuccess: createAction('CREATE_NODE_SUCCESS'),
@@ -25,7 +32,7 @@ const actions = {
     return () => resolve()
   }),
   ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', (resolve) => {
-    return (threadId: ThreadId, blockId: BlockId) => resolve({ threadId, blockId })
+    return (blockId: string) => resolve({ blockId })
   }),
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', (resolve) => {
     return () => resolve()
@@ -52,7 +59,22 @@ export enum NodeState {
   'starting' = 'starting',
   'started' = 'started',
   'stopping' = 'stopping',
-  'stopped' = 'stopped' // Node has been explicitly stopped, different than created
+  'stopped' = 'stopped', // Node has been explicitly stopped, different than created
+  'migrationNeeded' = 'migrationNeeded',
+  'initingMigration' = 'initingMigration',
+  'pendingMigration' = 'pendingMigration',
+  'migrating' = 'migrating',
+  'migrationComplete' = 'migrationComplete',
+  'creatingWallet' = 'creatingWallet',
+  'derivingAccount' = 'derivingAccount',
+  'initializingRepo' = 'initializingRepo'
+}
+
+export enum MigrationState {
+  'idle',
+  'pending',
+  'migrating',
+  'complete'
 }
 
 interface TextileNodeState {
@@ -88,6 +110,22 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
   switch (action.type) {
     case getType(actions.appStateChange):
       return { ...state, appState: action.payload.newState, appStateUpdate: getHMS() }
+    case getType(actions.migrationNeeded):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.migrationNeeded } }
+    case getType(actions.initMigration):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.initingMigration } }
+    case getType(actions.initMigrationSuccess):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.pendingMigration } }
+    case getType(actions.migrateNode):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.migrating } }
+    case getType(actions.migrationSuccess):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.migrationComplete } }
+    case getType(actions.creatingWallet):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.creatingWallet } }
+    case getType(actions.derivingAccount):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.derivingAccount } }
+    case getType(actions.initializingRepo):
+      return { ...state, nodeState: { ...state.nodeState, state: NodeState.initializingRepo } }
     case getType(actions.creatingNode):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.creating } }
     case getType(actions.createNodeSuccess):
@@ -95,15 +133,16 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.startingNode):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.starting } }
     case getType(actions.startNodeSuccess):
-      return { ...state, nodeState: {...state.nodeState, state: NodeState.started } }
+      return { ...state, nodeState: {...state.nodeState, state: NodeState.started, error: undefined } }
     case getType(actions.stoppingNode):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.stopping } }
     case getType(actions.stopNodeSuccess):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.stopped } }
-    case getType(actions.nodeError):
+    case getType(actions.nodeError): {
       const { error } = action.payload
       const errorMessage = (error.message as string) || (error as string) || 'unknown'
       return { ...state, nodeState: { ...state.nodeState, error: errorMessage } }
+    }
     case getType(actions.nodeOnline):
       return { ...state, online: true }
     case getType(actions.refreshMessagesRequest):

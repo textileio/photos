@@ -5,7 +5,7 @@ import ImageSc from 'react-native-scalable-image'
 import AuthAction from '../../../Redux/AuthRedux'
 
 import { Button } from 'react-native-elements'
-import ButtonSB from '../../components/Button'
+import ButtonSB from '../../../Components/Button'
 import PermissionsInfo from '../../components/PermissionsInfo'
 
 import styles from './statics/styles'

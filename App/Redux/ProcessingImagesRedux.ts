@@ -1,37 +1,26 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import {ThreadId, SharedImage, AddResult, BlockId} from '../Models/TextileTypes'
-import { RootState } from './Types'
+import { SharedImage } from '../Models/TextileTypes'
+import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { BlockInfo } from '../NativeModules/Textile'
 
 const actions = {
   insertImage: createAction('processingImages/INSERT_IMAGE', (resolve) => {
-    return (uuid: string, sharedImage: SharedImage, destinationThreadId?: ThreadId, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
+    return (uuid: string, sharedImage: SharedImage, destinationThreadId: string, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
   }),
-  addingImage: createAction('processingImages/ADDING_IMAGE', (resolve) => {
-    return (uuid: string) => resolve({ uuid })
-  }),
-  imageAdded: createAction('processingImages/IMAGE_ADDED', (resolve) => {
-    return (uuid: string, addResult: AddResult) => resolve({ uuid, addResult })
+  imagePrepared: createAction('processingImages/IMAGE_PREPARED', (resolve) => {
+    return (uuid: string, preparedFiles: IMobilePreparedFiles) => resolve({ uuid, preparedFiles })
   }),
   uploadStarted: createAction('processingImages/UPLOAD_STARTED', (resolve) => {
-    return (uuid: string) => resolve({ uuid })
+    return (uuid: string, uploadId: string) => resolve({ uuid, uploadId })
   }),
   imageUploadProgress: createAction('processingImages/IMAGE_UPLOAD_PROGRESS', (resolve) => {
-    return (uuid: string, progress: number) => resolve({ uuid, progress })
+    return (uploadId: string, progress: number) => resolve({ uploadId, progress })
   }),
   imageUploadComplete: createAction('processingImages/IMAGE_UPLOAD_COMPLETE', (resolve) => {
-    return (uuid: string, responseCode: string, responseBody: string) => resolve({ uuid, responseCode, responseBody })
-  }),
-  addingToWallet: createAction('processingImages/ADDING_TO_WALLET', (resolve) => {
-    return (uuid: string) => resolve({ uuid })
-  }),
-  addedToWallet: createAction('processingImages/ADDED_TO_WALLET', (resolve) => {
-    return (uuid: string, blockId: BlockId) => resolve({ uuid, blockId })
-  }),
-  sharingToThread: createAction('processingImages/SHARING_TO_THREAD', (resolve) => {
-    return (uuid: string) => resolve({ uuid })
+    return (uploadId: string, responseCode: string, responseBody: string) => resolve({ uploadId, responseCode, responseBody })
   }),
   sharedToThread: createAction('processingImages/SHARED_TO_THREAD', (resolve) => {
-    return (uuid: string, blockId: BlockId) => resolve({ uuid, blockId })
+    return (uuid: string, blockInfo: BlockInfo) => resolve({ uuid, blockInfo })
   }),
   complete: createAction('processingImages/COMPLETE', (resolve) => {
     return (uuid: string) => resolve({ uuid })
@@ -55,68 +44,77 @@ const actions = {
 
 export type ProcessingImagesAction = ActionType<typeof actions>
 
+interface Upload {
+  readonly id: string
+  readonly path: string
+  readonly status: 'pending' | 'uploading' | 'complete'
+  readonly uploadProgress: number
+  readonly responseCode?: string
+  readonly responseBody?: string
+  readonly error?: string
+}
+interface UploadData {
+  [key: string]: Upload
+}
+
 export interface ProcessingImage {
   readonly uuid: string,
   readonly sharedImage: SharedImage
-  readonly destinationThreadId?: ThreadId
+  readonly status: 'preparing'  | 'uploading' | 'sharing' | 'complete'
+  readonly destinationThreadId: string
   readonly comment?: string
-  readonly state: 'pending' | 'adding' | 'added' | 'uploading' | 'uploaded' | 'addingToWallet' | 'addedToWallet' | 'sharing' | 'shared'
+  readonly preparedFiles?: IMobilePreparedFiles
+  readonly uploadData?: UploadData
+  readonly blockInfo?: BlockInfo
   readonly error?: string
-  readonly addData?: {
-    readonly addResult: AddResult
-  }
-  readonly uploadData?: {
-    readonly uploadProgress: number
-    readonly responseCode?: string
-    readonly responseBody?: string
-  }
-  readonly addToWalletData?: {
-    readonly blockId: BlockId
-  }
-  readonly shareToThreadData?: {
-    readonly blockId: BlockId
-  }
 }
 
 export interface ProcessingImagesState {
-  readonly images: ProcessingImage[]
+  readonly images: ReadonlyArray<ProcessingImage>
 }
 
 export const initialState: ProcessingImagesState = {
   images: []
 }
 
-export const ProcessingImagesSelectors = {
-  processingImageByUuid: (state: RootState, uuid: string) => {
-    const image = state.processingImages.images.find((image) => {
-      return image.uuid === uuid
-    })
-    return image
-  }
+export const selectors = {
+  allUploadsComplete: (state: ProcessingImagesState, uuid: string) => {
+    const processingImage = selectors.processingImageByUuid(state, uuid)
+    if (!processingImage || !processingImage.uploadData) {
+      return false
+    }
+    let allUploadsComplete = true
+    for (const id in processingImage.uploadData) {
+      if (processingImage.uploadData[id]) {
+        if (processingImage.uploadData[id].status !== 'complete') {
+          allUploadsComplete = false
+        }
+      }
+    }
+    return allUploadsComplete
+  },
+  processingImageByUuid: (state: ProcessingImagesState, uuid: string) => state.images.find((image) => image.uuid === uuid)
 }
 
 export function reducer (state: ProcessingImagesState = initialState, action: ProcessingImagesAction): ProcessingImagesState {
   switch (action.type) {
     case getType(actions.insertImage): {
-      const processingImage: ProcessingImage = { ...action.payload, state: 'pending' }
+      const processingImage: ProcessingImage = { ...action.payload, status: 'preparing' }
       return { ...state, images: [...state.images, processingImage]}
     }
-    case getType(actions.addingImage): {
-      const { uuid } = action.payload
+    case getType(actions.imagePrepared): {
+      const { uuid, preparedFiles } = action.payload
       const images = state.images.map((image) => {
         if (image.uuid === uuid) {
-          const processingImage: ProcessingImage = { ...image, state: 'adding' }
-          return processingImage
-        }
-        return image
-      })
-      return { ...state, images }
-    }
-    case getType(actions.imageAdded): {
-      const { uuid, addResult } = action.payload
-      const images = state.images.map((image) => {
-        if (image.uuid === uuid) {
-          const processingImage: ProcessingImage = { ...image, addData: { addResult }, state: 'added' }
+          const uploadData: UploadData = {}
+          if (preparedFiles.pin) {
+            for (const id in preparedFiles.pin) {
+              if (preparedFiles.pin[id]) {
+                uploadData[id] = { id, path: preparedFiles.pin[id], status: 'pending', uploadProgress: 0 }
+              }
+            }
+          }
+          const processingImage: ProcessingImage = { ...image, preparedFiles, uploadData, status: 'uploading' }
           return processingImage
         }
         return image
@@ -124,10 +122,12 @@ export function reducer (state: ProcessingImagesState = initialState, action: Pr
       return { ...state, images }
     }
     case getType(actions.uploadStarted): {
-      const { uuid } = action.payload
+      const { uuid, uploadId } = action.payload
       const images = state.images.map((image) => {
         if (image.uuid === uuid) {
-          const processingImage: ProcessingImage = { ...image, uploadData: { uploadProgress: 0 }, state: 'uploading' }
+          const upload: Upload = { ...image.uploadData![uploadId], status: 'uploading' }
+          const uploadData: UploadData = { ...image.uploadData, [uploadId]: upload }
+          const processingImage: ProcessingImage = { ...image, uploadData }
           return processingImage
         }
         return image
@@ -135,64 +135,38 @@ export function reducer (state: ProcessingImagesState = initialState, action: Pr
       return { ...state, images }
     }
     case getType(actions.imageUploadProgress): {
-      const { uuid, progress } = action.payload
+      const { uploadId, progress } = action.payload
       const images = state.images.map((image) => {
-        if (image.uuid === uuid) {
-          return { ...image, uploadData: { ...image.uploadData, uploadProgress: progress / 100}}
+        if (image.uploadData && image.uploadData[uploadId]) {
+          const upload: Upload = { ...image.uploadData![uploadId], uploadProgress: progress / 100 }
+          const uploadData: UploadData = { ...image.uploadData, [uploadId]: upload }
+          const processingImage: ProcessingImage = { ...image, uploadData }
+          return processingImage
         }
         return image
       })
       return { ...state, images }
     }
     case getType(actions.imageUploadComplete): {
-      const { uuid, responseCode, responseBody } = action.payload
+      const { uploadId, responseCode, responseBody } = action.payload
       const images = state.images.map((image) => {
-        if (image.uuid === uuid) {
-          const updated: ProcessingImage = { ...image, uploadData: { ...image.uploadData, uploadProgress: 1, responseCode, responseBody }, state: 'uploaded' }
-          return updated
-        }
-        return image
-      })
-      return { ...state, images }
-    }
-    case getType(actions.addingToWallet): {
-      const { uuid } = action.payload
-      const images = state.images.map((image) => {
-        if (image.uuid === uuid) {
-          const updated: ProcessingImage = { ...image, state: 'addingToWallet' }
-          return updated
-        }
-        return image
-      })
-      return { ...state, images }
-    }
-    case getType(actions.addedToWallet): {
-      const { uuid, blockId } = action.payload
-      const images = state.images.map((image) => {
-        if (image.uuid === uuid) {
-          const updated: ProcessingImage = { ...image, addToWalletData: { blockId }, state: 'addedToWallet' }
-          return updated
-        }
-        return image
-      })
-      return { ...state, images }
-    }
-    case getType(actions.sharingToThread): {
-      const { uuid } = action.payload
-      const images = state.images.map((image) => {
-        if (image.uuid === uuid) {
-          const updated: ProcessingImage = { ...image, state: 'sharing' }
-          return updated
+        if (image.uploadData && image.uploadData[uploadId]) {
+          const upload: Upload = { ...image.uploadData[uploadId], responseCode, responseBody, status: 'complete' }
+          const uploadData: UploadData = { ...image.uploadData, [uploadId]: upload }
+          const allUploadsComplete = selectors.allUploadsComplete(state, image.uuid)
+          const status = allUploadsComplete ? 'sharing' : image.status
+          const processingImage: ProcessingImage = { ...image, uploadData, status }
+          return processingImage
         }
         return image
       })
       return { ...state, images }
     }
     case getType(actions.sharedToThread): {
-      const { uuid, blockId } = action.payload
+      const { uuid, blockInfo } = action.payload
       const images = state.images.map((image) => {
         if (image.uuid === uuid) {
-          const updated: ProcessingImage = { ...image, shareToThreadData: { blockId }, state: 'shared' }
+          const updated: ProcessingImage = { ...image, blockInfo, status: 'complete' }
           return updated
         }
         return image

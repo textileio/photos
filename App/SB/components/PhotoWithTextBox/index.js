@@ -14,7 +14,8 @@ const PhotoWithTextBox = props => {
       <View style={styles.item}>
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
-            imageId={photo.id}
+            target={photo.target}
+            index={photo.files[0].index}
             forMinWidth={70}
             style={{...styles.itemPhoto, width: 70, height: 50}}
             resizeMode={'cover'}

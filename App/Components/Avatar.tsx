@@ -1,132 +1,119 @@
 import React from 'react'
-import Config from 'react-native-config'
-import ImageSc from 'react-native-scalable-image'
 import { connect } from 'react-redux'
-import { View, ImageURISource, StyleProp, ViewStyle } from 'react-native'
-import TextileImage from './TextileImage'
-import { Profile, ProfileAvatarId, PeerId, PhotoId } from '../Models/TextileTypes'
-
-import styles from './Styles/AvatarStyles'
+import { ImageProps, Image, ImageStyle, ImageSourcePropType, LayoutChangeEvent, View } from 'react-native'
 import { RootState } from '../Redux/Types'
+import Config from 'react-native-config'
+import TextileImage from './TextileImage'
+import Icon from './Icon'
+import * as s from '../Themes/Constants'
 
-interface IPropsFromState {
-  profile: Profile | undefined
+interface OwnProps {
+  peerId?: string
+  style?: ImageStyle
+}
+
+interface StateProps {
+  localPeerId?: string
   online: boolean
+  localAvatar?: string
 }
 
-export interface IAvatarProps extends IPropsFromState {
-  height: number
-  width: number
-  owner?: boolean // flags if it is known already to be the local user's profile
-  peerId?: PeerId // will auto check to see if it is the same as the local user's
-  defaultSource?: number | ImageURISource
-  style?: StyleProp<ViewStyle>
+type Props = OwnProps & StateProps & Partial<ImageProps>
+
+interface State {
+  borderRadius: number
 }
 
-class Avatar extends React.PureComponent<IAvatarProps> {
-  getCafeAddress (peerId: PeerId) {
-    return `${Config.RN_TEXTILE_CAFE_URI}/ipns/${peerId}/avatar`
-  }
-  photoIdFromAvatar (): PhotoId | undefined {
-    const { profile } = this.props
-    const avatarId: ProfileAvatarId = profile && profile.avatar_id || '' as any
-    const parts = avatarId.split('/')
-    return parts.length > 1 ? parts[2] as any : undefined
-  }
-  renderSelf () {
-    const { height, width, defaultSource, style } = this.props
-    const photoId = this.photoIdFromAvatar()
-    if (!photoId && defaultSource) {
-      return (
-        <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
-          <View style={styles.stretch}>
-            <ImageSc
-              source={defaultSource}
-              style={{ width, height }}
-              width={width}
-              height={height}
-              resizeMode={'cover'}
-            />
-          </View>
-        </View>
-      )
-    } else if (photoId) {
-      return (
-        <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
-          <View style={styles.stretch}>
-            <TextileImage
-              imageId={photoId}
-              forMinWidth={width}
-              style={{ width, height }}
-              resizeMode={'cover'}
-            />
-          </View>
-        </View>
-      )
+class Avatar extends React.Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      borderRadius: 0
     }
   }
-  renderCafe (peerId: PeerId) {
-    const { height, width, defaultSource, style } = this.props
-    const avatarUri = this.getCafeAddress(peerId)
-    return (
-      <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
-        <View style={styles.stretch}>
-          <ImageSc
-            source={{ uri: avatarUri }}
-            style={{ width, height }}
-            width={width}
-            height={height}
-            defaultSource={defaultSource}
-            resizeMode={'cover'}
-          />
-        </View>
-      </View>
-    )
-  }
 
-  renderPlaceholder = () => {
-    const { height, width, defaultSource, style } = this.props
-    return (
-      <View style={[styles.container, style, { width, height, borderRadius: height / 2 }]}>
-        <View style={styles.stretch}>
-          { defaultSource && <ImageSc
-            style={{ width, height }}
-            width={width}
-            height={height}
-            source={defaultSource}
-          />}
-        </View>
-      </View>
-    )
+  onImageLayout = (event: LayoutChangeEvent) => {
+    this.setState({
+      borderRadius: event.nativeEvent.layout.width / 2
+    })
   }
 
   render () {
-    const { profile, online, owner, peerId } = this.props
-    if (owner && (profile && profile.avatar_id !== undefined)) {
-      if (!online || !profile.avatar_id) {
-        // not online or no url and owner, render cafe
-        return this.renderCafe(profile.id)
-      }
-      // owner, render local
-      return this.renderSelf()
+    let width: string | number = 100
+    let height: string | number = width
+    const w = this.props.style && this.props.style.width
+    const h = this.props.style && this.props.style.height
+    if (w) {
+      width = w
+      height = w
+    } else if (h) {
+      width = h
+      height = h
     }
-    if (peerId) {
-      if (online && profile && profile.id === peerId && profile.avatar_id) {
-        // owner, render local
-        return this.renderSelf()
-      }
-      // render cafe
-      return this.renderCafe(peerId)
+
+    const { peerId, localPeerId, online, localAvatar } = this.props
+
+    const isLocalUser = (!peerId && localPeerId) || peerId === localPeerId
+
+    const peerIdToUse = peerId || localPeerId
+    const uri = peerIdToUse ? `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipns/${peerIdToUse}/avatar/large` : undefined
+
+    const widthNumber = typeof width === 'number' ? width as number : undefined
+    const heightNumber = typeof height === 'number' ? height as number : undefined
+
+    if (isLocalUser && online && localAvatar && widthNumber) {
+      // Render TextileImage
+      return (
+        <TextileImage
+          style={{ ...(this.props.style || {}), width, height, borderRadius: this.state.borderRadius }}
+          target={localAvatar}
+          index={0}
+          forMinWidth={widthNumber}
+          resizeMode={'cover'}
+          onLayout={this.onImageLayout}
+        />
+      )
+    } else if (uri) {
+      return (
+        <Image
+          {...this.props}
+          source={{ uri }}
+          style={{ ...(this.props.style || {}), width, height, borderRadius: this.state.borderRadius }}
+          resizeMode={'cover'}
+          onLayout={this.onImageLayout}
+        />
+      )
+    } else if (heightNumber) {
+      return (
+        <Icon
+          style={{ width, height, borderRadius: this.state.borderRadius }}
+          name={'question-circle'}
+          size={heightNumber}
+          color={s.COLOR_GREY_LIGHT}
+          onLayout={this.onImageLayout}
+        />
+      )
+    } else {
+      return <View />
     }
-    return this.renderPlaceholder()
   }
 }
 
-const mapStateToProps = (state: RootState): IPropsFromState => {
+const mapStateToProps = (state: RootState): StateProps => {
+  const avatarUri = state.account.profile.value ? state.account.profile.value.avatar_uri : undefined
+  let localAvatar: string | undefined
+  if (avatarUri) {
+    const parts = avatarUri.split('/')
+    if (parts.length > 2) {
+      localAvatar = parts[2]
+    }
+  }
   return {
-    profile: state.preferences.profile,
-    online: !!state.textileNode.online
+    localPeerId: state.account.peerId.value,
+    online: state.textileNode.online,
+    localAvatar
   }
 }
 
-export default connect(mapStateToProps, undefined)(Avatar)
+export default connect(mapStateToProps)(Avatar)

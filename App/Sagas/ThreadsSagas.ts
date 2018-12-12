@@ -13,8 +13,13 @@ import {Share} from 'react-native'
 import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
 import { ActionType } from 'typesafe-actions'
-import { BlockId, ExternalInvite, Thread, Threads, ThreadId } from '../Models/TextileTypes'
-import TextileNode from '../Services/TextileNode'
+import { ExternalInvite } from '../NativeModules/Textile'
+import {
+  addExternalThreadInvite,
+  acceptExternalThreadInvite,
+  acceptThreadInviteViaNotification,
+  addThreadInvite
+} from '../NativeModules/Textile'
 import DeepLink from '../Services/DeepLink'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import NavigationService from '../Services/NavigationService'
@@ -23,16 +28,17 @@ import UIActions from '../Redux/UIRedux'
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
   try {
-    const invite: ExternalInvite = yield call(TextileNode.addExternalThreadInvite, id)
+    const invite: ExternalInvite = yield call(addExternalThreadInvite, id)
     yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
   } catch (error) {
     yield put(ThreadsActions.addExternalInviteError(id, error))
   }
 }
+
 export function * displayThreadQRCode (action: ActionType<typeof ThreadsActions.threadQRCodeRequest>) {
   const { id, name } = action.payload
   try {
-    const invite: ExternalInvite = yield call(TextileNode.addExternalThreadInvite, id)
+    const invite: ExternalInvite = yield call(addExternalThreadInvite, id)
     const link = DeepLink.createInviteLink(invite, name)
     yield put(ThreadsActions.threadQRCodeSuccess(id, name, link))
     // displayThreadQRCode
@@ -50,7 +56,7 @@ export function * presentShareInterface(action: ActionType<typeof ThreadsActions
 export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const threadId: ThreadId = yield call(TextileNode.acceptExternalThreadInvite, inviteId, key)
+    const threadId: string = yield call(acceptExternalThreadInvite, inviteId, key)
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, threadId))
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
@@ -70,8 +76,7 @@ export function * pendingInvitesTask () {
 export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
   const { notificationId, threadName } = action.payload
   try {
-    const threadId = yield call(TextileNode.acceptThreadInviteViaNotification, notificationId)
-    const threads: Threads = yield call(TextileNode.threads)
+    const threadId = yield call(acceptThreadInviteViaNotification, notificationId)
     yield put(PhotoViewingActions.refreshThreadsRequest())
     yield put(UIActions.navigateToThreadRequest(threadId, threadName))
   } catch (error) {
@@ -80,10 +85,10 @@ export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptI
 }
 
 export function * addInternalInvites (action: ActionType<typeof ThreadsActions.addInternalInvitesRequest>) {
-  const { threadId, inviteePks } = action.payload
+  const { threadId, addresses } = action.payload
   try {
-    for (const inviteePk of inviteePks) {
-      yield fork(TextileNode.addThreadInvite, threadId, inviteePk)
+    for (const address of addresses) {
+      yield call(addThreadInvite, threadId, address)
     }
   } catch (error) {
   }

@@ -5,21 +5,21 @@ import { View, TouchableOpacity } from 'react-native'
 import { RootState } from '../../../Redux/Types'
 
 import {ThreadData} from '../../../Redux/PhotoViewingRedux'
-import {Photo, ThreadId} from '../../../Models/TextileTypes'
+import { ThreadFilesInfo } from '../../../NativeModules/Textile'
 import PhotoWithTextBox from '../PhotoWithTextBox'
 import RadioButton from '../../components/RadioButton'
 
 import styles from './statics/styles'
 
 interface StateProps {
-  thumb?: Photo
+  thumb?: ThreadFilesInfo
 }
 
 interface ScreenProps {
   thread: ThreadData
   selected: boolean
   disabled?: boolean
-  onSelect?: (threadId: ThreadId) => void
+  onSelect?: (threadId: string) => void
 }
 
 type Props = StateProps & ScreenProps

@@ -14,24 +14,35 @@ import { delay } from 'redux-saga'
 import { call, put, select, take, fork } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
+import {
+  prepareFiles,
+  addThreadFiles,
+  overview,
+  Overview,
+  contacts,
+  ContactInfo,
+  checkCafeMessages,
+  addThreadIgnore,
+  setAvatar,
+  peerId,
+  profile,
+  Profile,
+  addThreadLike,
+  BlockInfo
+} from '../NativeModules/Textile'
 import NavigationService from '../Services/NavigationService'
-import TextileNode from '../Services/TextileNode'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
 import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import AuthActions from '../Redux/AuthRedux'
+import AccountActions from '../Redux/AccountRedux'
 import ContactsActions from '../Redux/ContactsRedux'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
-import DevicesActions from '../Redux/DevicesRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType, getType } from 'typesafe-actions'
-import * as TT from '../Models/TextileTypes'
 import * as CameraRoll from '../Services/CameraRoll'
-import CameraRollActions, { cameraRollSelectors, QueriedPhotosMap } from '../Redux/CameraRollRedux'
-import { uploadFile } from './UploadFile'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
@@ -39,115 +50,37 @@ import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 import StorageActions from '../Redux/StorageRedux'
-
-export function * signUp (action: ActionType<typeof AuthActions.signUpRequest>) {
-  const {referralCode, username, email, password} = action.payload
-  try {
-    yield call(TextileNode.signUpWithEmail, email, username, password, referralCode.replace(' ', ''))
-    const tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens))
-    // TODO: Put username into textile-go for addition to metadata model
-    yield put(AuthActions.signUpSuccess())
-    yield call(NavigationService.navigate, 'ProfilePic')
-  } catch (error) {
-    yield put(AuthActions.signUpFailure(error))
-  }
-}
-
-export function * logOut (action: ActionType<typeof AuthActions.logOutRequest>) {
-  try {
-    yield call(TextileNode.signOut)
-    yield call(NavigationService.navigate, 'OnboardingNavigation')
-  } catch (error) {
-    yield put(AuthActions.logOutFailure(error))
-  }
-}
-
-export function * logIn (action: ActionType<typeof AuthActions.logInRequest>) {
-  const {username, password} = action.payload
-  try {
-    yield call(TextileNode.signIn, username, password)
-    const tokens = yield call(TextileNode.getTokens)
-    yield put(AuthActions.getTokensSuccess(tokens))
-    yield put(AuthActions.logInSuccess())
-    yield call(NavigationService.navigate, 'ProfilePic')
-  } catch (error) {
-    yield put(AuthActions.logInFailure(error))
-  }
-}
-
-export function * recoverPassword (action: ActionType<typeof AuthActions.recoverPasswordRequest>) {
-  // TODO: const {username} = action.payload.data
-  try {
-    yield delay(2000)
-    yield put(AuthActions.recoverPasswordSuccess())
-  } catch (error) {
-    yield put(AuthActions.recoverPasswordFailure(error))
-  }
-}
+import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { RootState } from '../Redux/Types'
+import { SharedImage } from '../Models/TextileTypes'
 
 export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActions.updateOverviewRequest> ) {
   try {
     yield call(NotificationsSagas.waitUntilOnline, 2500)
-    const overview = yield call(TextileNode.getOverview)
-    yield put(StorageActions.storeOverview(overview))
+    const overviewResult: Overview = yield call(overview)
+    yield put(StorageActions.storeOverview(overviewResult))
   } catch (error) {
     // do nothing
   }
 }
 
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
-  yield put(PreferencesActions.onboardedSuccess())
-  yield call(NavigationService.navigate, 'PrimaryNavigation')
-  yield * processAvatarImage(action.payload.uri)
+  yield * processAvatarImage(action.payload.image)
 }
 
 export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
-  yield call(NavigationService.navigate, 'TabNavigator')
-  yield * processAvatarImage(action.payload.uri)
+  yield * processAvatarImage(action.payload.image)
 }
 
-function * processAvatarImage(uri: string) {
-  const photoPath = uri.replace('file://', '')
+function * processAvatarImage(image: SharedImage) {
   try {
-    const addResult: TT.AddResult = yield call(TextileNode.addPhoto, photoPath)
-    if (!addResult.archive) {
-      throw new Error('no archive returned')
-    }
     const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
     if (!defaultThread) {
       throw new Error('no default thread')
     }
-    yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-    yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-
-    // set it as our profile picture
-    yield put(PreferencesActions.pendingAvatar(addResult.id))
-
-    try {
-      yield * uploadFile(
-        addResult.id,
-        addResult.archive.path
-      )
-    } catch (error) {
-      // Leave all the data in place so we can rerty upload
-      let message = ''
-      if (!error) {
-        message = ''
-      } else if (typeof error === 'string') {
-        message = error
-      } else if (error.message) {
-        message = error.message
-      }
-      yield put(UploadingImagesActions.imageUploadError(addResult.id, message))
-    }
+    yield put(UIActions.sharePhotoRequest(image, defaultThread.id))
   } catch (error) {
     // TODO: What do to if adding profile photo fails?
-  } finally {
-    const exists: boolean = yield call(RNFS.exists, photoPath)
-    if (exists) {
-      yield call(RNFS.unlink, photoPath)
-    }
   }
 }
 
@@ -176,26 +109,10 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
   yield call(NavigationService.navigate, 'LikesScreen')
 }
 
-export function * getUsername (contact: TT.Contact) {
-  try {
-    if (contact.username !== undefined) { return }
-    const uri = Config.RN_TEXTILE_CAFE_URI + '/ipns/' + contact.id + '/username'
-    const response = yield call(fetch, uri)
-    const username = yield call([response, response.text])
-    yield put(ContactsActions.getUsernameSuccess(contact, username))
-  } catch (error) {
-    // nada
-  }
-}
-
 export function * refreshContacts () {
   try {
-    const contactResult = yield call(TextileNode.getContacts)
-    const contacts = contactResult.items
-    yield put(ContactsActions.getContactsSuccess(contacts))
-    for (const contact of contacts) {
-      yield fork(getUsername, contact)
-    }
+    const contactsResult: ReadonlyArray<ContactInfo> = yield call(contacts)
+    yield put(ContactsActions.getContactsSuccess(contactsResult))
   } catch (error) {
     // skip for now
   }
@@ -220,7 +137,7 @@ export function * initializeAppState () {
 export function * refreshMessages () {
   while (yield take(getType(TextileNodeActions.refreshMessagesRequest))) {
     try {
-      yield call(TextileNode.refreshMessages)
+      yield call(checkCafeMessages)
       yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
       yield call(logNewEvent, 'Refresh messages', 'Checked offline messages')
     } catch (error) {
@@ -231,10 +148,10 @@ export function * refreshMessages () {
 }
 
 export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.ignorePhotoRequest>) {
-  const { threadId, blockId } = action.payload
+  const { blockId } = action.payload
   try {
     yield call(NavigationService.goBack)
-    yield call(TextileNode.ignorePhoto, blockId)
+    yield call(addThreadIgnore, blockId)
   } catch (error) {
     // do nothing new for now
   }
@@ -244,29 +161,13 @@ export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {
     try {
-      const pending: TT.PhotoId = yield select(PreferencesSelectors.pending)
+      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pendingId)
       if (pending) {
-        yield call(TextileNode.setAvatarId, pending)
-        const profile = yield call(TextileNode.getProfile)
-        yield put(PreferencesActions.getProfileSuccess(profile))
-      } else {
-        // just updated it directly
-        const profile = yield call(TextileNode.getProfile)
-        yield put(PreferencesActions.getProfileSuccess(profile))
+        yield call(setAvatar, pending)
       }
     } catch (error) {
       // nada
     }
-  }
-}
-
-export function * addDevice (action: ActionType<typeof DevicesActions.addDeviceRequest>) {
-  const { name, deviceId } = action.payload
-  try {
-    yield call(TextileNode.addDevice, name, deviceId)
-    yield put(DevicesActions.addDeviceSuccess(deviceId))
-  } catch (error) {
-    yield put(DevicesActions.addDeviceError(deviceId, error))
   }
 }
 
@@ -278,7 +179,7 @@ export function * synchronizeNativeUploads() {
     // Grab all the upload Ids from the native layer
     const nativeUploads = yield call(Upload.activeUploads)
     // Grab all the upload Ids from the react native layer
-    const reactUploads: TT.PhotoId[] = yield select(UploadingImagesSelectors.uploadingImageIds)
+    const reactUploads: string[] = yield select(UploadingImagesSelectors.uploadingImageIds)
     // Check that each upload ID from the react layer exists in the array from the native layer
     // If not, register an image upload error so a retry can happen if necessary
     for (const uploadId of reactUploads) {
@@ -294,111 +195,17 @@ export function * synchronizeNativeUploads() {
 
 export function * chooseProfilePhoto () {
   try {
-    const result: { uri: string, data: string } = yield call(CameraRoll.chooseProfilePhoto)
-    yield put(UIActions.chooseProfilePhotoSuccess(result.uri, result.data))
+    const result: { image: CameraRoll.IPickerImage, data: string } = yield call(CameraRoll.chooseProfilePhoto)
+    const image: SharedImage = {
+      isAvatar: true,
+      origURL: result.image.origURL,
+      uri: result.image.uri,
+      path: result.image.path,
+      canDelete: result.image.canDelete
+    }
+    yield put(UIActions.chooseProfilePhotoSuccess(image, result.data))
   } catch (error) {
     yield put(UIActions.chooseProfilePhotoError(error))
-  }
-}
-
-export function * photosTask () {
-  while (true) {
-    // This take effect inside a while loop ensures that the entire photoTask
-    // will run before the next startNodeSuccess is received and photoTask run again
-    yield take(getType(TextileNodeActions.startNodeSuccess))
-
-    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
-    if (!defaultThread) {
-      continue
-    }
-
-    const queriredPhotosInitialized: boolean = yield select(cameraRollSelectors.initialized)
-    if (!queriredPhotosInitialized) {
-      yield put(CameraRollActions.updateQuerying(true))
-      const uris: string[] = yield call(CameraRoll.getPhotos, 1000)
-      yield put(CameraRollActions.updateQuerying(false))
-      yield put(CameraRollActions.initialzePhotos(uris))
-      continue
-    }
-
-    yield put(CameraRollActions.updateQuerying(true))
-    const uris: string[] = yield call(CameraRoll.getPhotos, 250)
-    yield put(CameraRollActions.updateQuerying(false))
-
-    const previouslyQueriedPhotos: QueriedPhotosMap = yield select(cameraRollSelectors.queriedPhotos)
-
-    const urisToProcess = uris.filter((uri) => !previouslyQueriedPhotos[uri]).reverse()
-    yield put(CameraRollActions.trackPhotos(urisToProcess))
-
-    const addedPhotosData: Array<{ uri: string, addResult: TT.AddResult, blockId: TT.BlockId }> = []
-
-    for (const uri of urisToProcess) {
-      let photoPath = ''
-      try {
-        photoPath = yield call(CameraRoll.getPhotoPath, uri)
-        const addResult: TT.AddResult = yield call(TextileNode.addPhoto, photoPath)
-        if (!addResult.archive) {
-          throw new Error('no archive returned')
-        }
-        const blockId: TT.BlockId = yield call(TextileNode.addPhotoToThread, addResult.id, addResult.key, defaultThread.id)
-        yield put(UploadingImagesActions.addImage(addResult.archive.path, addResult.id, 3))
-        addedPhotosData.push({ uri, addResult, blockId })
-      } catch (error) {
-        yield put(CameraRollActions.untrackPhoto(uri))
-      } finally {
-        const exists: boolean = yield call(RNFS.exists, photoPath)
-        if (exists) {
-          yield call(RNFS.unlink, photoPath)
-        }
-      }
-    }
-
-    for (const addedPhotoData of addedPhotosData) {
-      try {
-        if (!addedPhotoData.addResult.archive) {
-          throw new Error('no archive to upload')
-        }
-        yield * uploadFile(
-          addedPhotoData.addResult.id,
-          addedPhotoData.addResult.archive.path
-        )
-      } catch (error) {
-        // Leave all the data in place so we can rerty upload
-        let message = ''
-        if (!error) {
-          message = ''
-        } else if (typeof error === 'string') {
-          message = error
-        } else if (error.message) {
-          message = error.message
-        }
-        yield put(UploadingImagesActions.imageUploadError(addedPhotoData.addResult.id, message))
-      }
-    }
-
-    // Ensure we don't have any images thought to be uploading that aren't in the native layer
-    try {
-      yield synchronizeNativeUploads()
-    } catch (error) {
-      // double certain sync can't interfere with anything
-    }
-    // Process images for upload retry
-    const imagesToRetry: UploadingImage[] = yield select(UploadingImagesSelectors.imagesForRetry)
-    for (const imageToRetry of imagesToRetry) {
-      try {
-        yield * uploadFile(imageToRetry.dataId, imageToRetry.path)
-      } catch (error) {
-        let message = ''
-        if (!error) {
-          message = ''
-        } else if (typeof error === 'string') {
-          message = error
-        } else if (error.message) {
-          message = error.message
-        }
-        yield put(UploadingImagesActions.imageUploadError(imageToRetry.dataId, message))
-      }
-    }
   }
 }
 
@@ -429,11 +236,10 @@ export function * handleUploadError (action: ActionType<typeof UploadingImagesAc
   }
 }
 
-export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.getPublicLink>) {
-  const { photoId } = action.payload
+export function * presentPublicLinkInterface(action: ActionType<typeof UIActions.shareByLink>) {
+  const { path } = action.payload
   try {
-    const key = yield call(TextileNode.getPhotoKey, photoId)
-    const link = Config.RN_TEXTILE_CAFE_URI + '/ipfs/' + photoId + '/photo?key=' + key
+    const link = Config.RN_TEXTILE_CAFE_GATEWAY_URL + '/ipfs/' + path
     yield call(Share.share, {title: '', message: link})
   } catch (error) {}
 }
@@ -478,7 +284,7 @@ export function * backgroundLocationPermissionsTrigger () {
 export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
-    yield call(TextileNode.addPhotoLike, blockId)
+    yield call(addThreadLike, blockId)
   } catch (error) {
 
   }

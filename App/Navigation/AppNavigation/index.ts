@@ -2,17 +2,19 @@ import { createSwitchNavigator } from 'react-navigation'
 
 import OnboardingNavigation from './Onboarding'
 import PrimaryNavigation from './Primary'
+import MigrationContainer from '../../Containers/MigrationContainer'
 
-import OnboardingCheck from '../../Containers/OnboardingCheck'
+import StatusCheck from '../../Containers/StatusCheck'
 
 const nav = createSwitchNavigator(
   {
-    OnboardingCheck,
+    StatusCheck,
     OnboardingNavigation,
+    Migration: MigrationContainer,
     PrimaryNavigation
   },
   {
-    initialRouteName: 'OnboardingCheck'
+    initialRouteName: 'StatusCheck'
   }
 )
 

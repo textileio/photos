@@ -2,7 +2,6 @@ import React from 'react'
 import { Image, View, Text, Button, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import ImageSc from 'react-native-scalable-image'
-import DevicesActions from '../../../Redux/DevicesRedux'
 
 import Toolbar from '../../components/Toolbar'
 
@@ -36,11 +35,11 @@ class DevicePairing extends React.PureComponent {
 
   cancel = () => {
     this.props.removeDeviceRequest(this.state.key)
-    this.props.navigation.navigate('OnboardingCheck')
+    this.props.navigation.navigate('StatusCheck')
   }
 
   continue = () => {
-    this.props.navigation.navigate('OnboardingCheck')
+    this.props.navigation.navigate('StatusCheck')
   }
 
   renderConfirm () {
@@ -149,8 +148,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addDeviceRequest: (name, id) => { dispatch(DevicesActions.addDeviceRequest(name, id)) },
-    removeDeviceRequest: (id) => { dispatch(DevicesActions.removeDeviceRequest(id)) }
   }
 }
 

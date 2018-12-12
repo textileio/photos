@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
 
+import { reducer as accountReducer } from './AccountRedux'
 import { reducer as authReducer } from './AuthRedux'
 import { reducer as cameraRollReducer } from './CameraRollRedux'
 import { reducer as contactsReducer } from './ContactsRedux'
-import { reducer as devicesReducer } from './DevicesRedux'
 import { reducer as photoViewingReducer } from './PhotoViewingRedux'
 import { reducer as prefrencesReducer } from './PreferencesRedux'
 import { reducer as notificationsReducer } from './NotificationsRedux'
@@ -15,12 +15,13 @@ import { reducer as processingImagesReducer } from './ProcessingImagesRedux'
 import { reducer as storageReducer } from './StorageRedux'
 import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
+import { reducer as migrationReducer } from './MigrationRedux'
 
 export default combineReducers({
+  account: accountReducer,
   auth: authReducer,
   cameraRoll: cameraRollReducer,
   contacts: contactsReducer,
-  devices: devicesReducer,
   photoViewing: photoViewingReducer,
   preferences: prefrencesReducer,
   notifications: notificationsReducer,
@@ -31,5 +32,6 @@ export default combineReducers({
   processingImages: processingImagesReducer,
   storage: storageReducer,
   startup: startupReducer,
-  deviceLogs: deviceLogsReducer
+  deviceLogs: deviceLogsReducer,
+  migration: migrationReducer
 })

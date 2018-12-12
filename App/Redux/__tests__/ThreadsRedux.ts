@@ -1,18 +1,11 @@
 import actions, { reducer } from '../ThreadsRedux'
-import {
-  BlockId,
-  ExternalInvite,
-  PrivateKey,
-  ThreadId,
-  ThreadName,
-  UserName
-} from '../../Models/TextileTypes'
+import { ExternalInvite } from '../../NativeModules/Textile'
 
-const id: ThreadId = 'id' as any
-const name: ThreadName = 'myThread' as any
+const id: string = 'id' as any
+const name: string = 'myThread' as any
 const error = new Error('an error')
-const inviteId: BlockId = 'invite_id' as any
-const inviteKey: PrivateKey = 'a_key' as any
+const inviteId: string = 'invite_id' as any
+const inviteKey: string = 'a_key' as any
 const invite: ExternalInvite = {id: inviteId, inviter: 'tests' as any, key: inviteKey}
 
 const initialState = reducer(undefined, {} as any)

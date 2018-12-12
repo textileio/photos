@@ -1,10 +1,9 @@
 import actions, { reducer, UploadingImage } from '../UploadingImagesRedux'
-import { PhotoId } from '../../Models/TextileTypes'
 
 const initialState = reducer(undefined, {} as any)
 
 const path = 'path'
-const dataId: PhotoId = 'dataId' as any
+const dataId: string = 'dataId' as any
 const attempts = 3
 const uploadProgress = 50
 const responseCode = 'responseCode'

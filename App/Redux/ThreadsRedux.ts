@@ -1,40 +1,31 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import {
-  BlockId,
-  ExternalInvite,
-  NotificationId,
-  PrivateKey,
-  PublicKey,
-  ThreadId,
-  ThreadName,
-  UserName
-} from '../Models/TextileTypes'
+import { ExternalInvite } from '../NativeModules/Textile'
 import { RootState } from './Types'
 
 const actions = {
-  addExternalInviteRequest: createAction('ADD_EXTERNAL_THREAD_INVITE', (resolve) => {
-    return (id: ThreadId, name: ThreadName) => resolve({ id, name })
+  addExternalInviteRequest: createAction('ADD_EXTERNAL_INVITE_REQUEST', (resolve) => {
+    return (id: string, name: string) => resolve({ id, name })
   }),
-  addExternalInviteSuccess: createAction('ADD_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
-    return (id: ThreadId, name: ThreadName, invite: ExternalInvite) => resolve({ id, name, invite })
+  addExternalInviteSuccess: createAction('ADD_EXTERNAL_INVITE_SUCCESS', (resolve) => {
+    return (id: string, name: string, invite: ExternalInvite) => resolve({ id, name, invite })
   }),
-  addExternalInviteError: createAction('ADD_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
-    return (id: ThreadId, error: Error) => resolve({ id, error })
+  addExternalInviteError: createAction('ADD_EXTERNAL_INVITE_ERROR', (resolve) => {
+    return (id: string, error: Error) => resolve({ id, error })
   }),
   threadQRCodeRequest: createAction('THREAD_INVITE_QR_REQUEST', (resolve) => {
-    return (id: ThreadId, name: ThreadName) => resolve({ id, name })
+    return (id: string, name: string) => resolve({ id, name })
   }),
   threadQRCodeSuccess: createAction('THREAD_INVITE_QR_SUCCESS', (resolve) => {
-    return (id: ThreadId, name: ThreadName, link: string) => resolve({ id, name, link })
+    return (id: string, name: string, link: string) => resolve({ id, name, link })
   }),
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', (resolve) => {
-    return (inviteId: BlockId, key: PrivateKey, name?: ThreadName, inviter?: UserName) => resolve({ inviteId, key, name, inviter })
+    return (inviteId: string, key: string, name?: string, inviter?: string) => resolve({ inviteId, key, name, inviter })
   }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
-    return (inviteId: BlockId, id: ThreadId) => resolve({inviteId, id})
+    return (inviteId: string, id: string) => resolve({inviteId, id})
   }),
   acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
-    return (inviteId: BlockId, error: Error) => resolve({ inviteId, error })
+    return (inviteId: string, error: Error) => resolve({ inviteId, error })
   }),
   storeExternalInviteLink: createAction('STORE_EXTERNAL_INVITE_LINK', (resolve) => {
     return (link: string) => resolve({ link })
@@ -43,34 +34,34 @@ const actions = {
     return () => resolve()
   }),
   acceptInviteRequest: createAction('ACCEPT_THREAD_INVITE', (resolve) => {
-    return (notificationId: NotificationId, threadName: ThreadName) => resolve({ notificationId, threadName  })
+    return (notificationId: string, threadName: string) => resolve({ notificationId, threadName  })
   }),
   addInternalInvitesRequest: createAction('ADD_INTERNAL_INVITES_REQUEST', (resolve) => {
-    return (threadId: ThreadId, inviteePks: PublicKey[]) => resolve({ threadId, inviteePks  })
+    return (threadId: string, addresses: string[]) => resolve({ threadId, addresses  })
   })
 }
 
 export type ThreadsAction = ActionType<typeof actions>
 
 export interface InviteQRCode {
-  readonly id: ThreadId
-  readonly name: ThreadName
+  readonly id: string
+  readonly name: string
   readonly link: string
 }
 
 export interface OutboundInvite {
-  readonly id: ThreadId
-  readonly name: ThreadName
+  readonly id: string
+  readonly name: string
   readonly invite?: ExternalInvite
   readonly error?: Error
 }
 
 export interface InboundInvite {
-  readonly inviteId: BlockId
-  readonly key: PrivateKey
-  readonly id?: ThreadId
-  readonly name?: ThreadName
-  readonly inviter?: UserName
+  readonly inviteId: string
+  readonly key: string
+  readonly id?: string
+  readonly name?: string
+  readonly inviter?: string
   readonly error?: Error
 }
 
@@ -168,8 +159,8 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
 
 export const ThreadsSelectors = {
   pendingInviteLink: (state: RootState) => state.threads.pendingInviteLink,
-  inboundInviteByThreadId: (state: RootState, threadId: ThreadId) => state.threads.inboundInvites.find((invite) => invite.id === threadId),
-  inboundInviteByThreadName: (state: RootState, threadName: ThreadName) => state.threads.inboundInvites.find((invite) => invite.name === threadName)
+  inboundInviteByThreadId: (state: RootState, threadId: string) => state.threads.inboundInvites.find((invite) => invite.id === threadId),
+  inboundInviteByThreadName: (state: RootState, threadName: string) => state.threads.inboundInvites.find((invite) => invite.name === threadName)
 }
 
 export default actions

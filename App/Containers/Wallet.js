@@ -8,12 +8,12 @@ import WalletHeader from '../Components/WalletHeader'
 import ThreadSelector from '../Components/ThreadSelector'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
-import Button from '../SB/components/Button'
+import Button from '../Components/Button'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import Colors from '../Themes/Colors'
 
 import style from './Styles/TextilePhotosStyle'
@@ -122,7 +122,7 @@ class Wallet extends React.PureComponent {
 
   onSelect = (photo) => {
     return () => {
-      this.props.viewWalletPhoto(photo.id)
+      this.props.viewWalletPhoto(photo.target)
       this.props.navigation.navigate('PrivatePhotoDetail')
     }
   }
@@ -153,7 +153,7 @@ class Wallet extends React.PureComponent {
   }
 
   _createThread = () => {
-    this.props.navigation.navigate('AddThread', {backTo: 'Wallet'})
+    this.props.navigation.navigate('AddThread', { backTo: 'Wallet' })
   }
 
   renderWallet () {
@@ -161,7 +161,7 @@ class Wallet extends React.PureComponent {
       <View style={style.container}>
         <WalletHeader
           changeAvatar={() => {
-            this.props.navigation.navigate('ChangeAvatar', { avatarUrl: this.props.avatarUrl, username: this.props.username, backTo: 'Wallet' })
+            this.props.navigation.navigate('ChangeAvatar', { onSuccess: () => this.props.navigation.goBack() })
           }}
           onToggle={(newValue) => {
             this.props.toggleTab(newValue)
@@ -171,7 +171,9 @@ class Wallet extends React.PureComponent {
           username={this.props.profile.username}
         />
         <View style={style.gridContainer}>
-          {this.props.selectedTab === 'Threads' && <ThreadSelector threads={this.props.threads} createNewThread={this.openThreadModal()}/>}
+          {this.props.selectedTab === 'Threads' && <ThreadSelector
+            createNewThread={this.openThreadModal()}
+          />}
           {this.props.selectedTab === 'Photos' && <PhotoGrid
             items={this.props.items}
             onSelect={this.onSelect}
@@ -212,7 +214,7 @@ const mapStateToProps = (state) => {
   const photos = defaultData ? defaultData.photos : []
 
   const items = !defaultData ? [] : defaultData.photos.map((photo) => {
-    return {type: 'photo', photo, id: photo.id}
+    return {type: 'photo', photo, id: photo.target}
   })
 
   // We only are showing wallet upload status in verbose for now
@@ -254,57 +256,26 @@ const mapStateToProps = (state) => {
     ? 'Wallet Status:\n' + nodeStatus
     : 'Any new photos you take will be added to your Textile wallet.'
 
-  const allThreads = getThreads(state)
-  let threads
-  // tmp contact stuff
-  let peers = {}
-  // end
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter(thread => thread.name !== 'default')
-      .map(thread => {
-        // tmp contact stuff
-        for (let photo of thread.photos) {
-          if (state.preferences.profile && photo.author_id === state.preferences.profile.id) {
-            continue
-          }
-          peers[photo.author_id] = peers[photo.author_id] ? peers[photo.author_id] : photo.username
-        }
-        // end
-        return {
-          id: thread.id,
-          name: thread.name,
-          // total number of images in the thread
-          size: thread.photos.length,
-          // just keep the top 2
-          photos: thread.photos.slice(0, 3),
-          // get a rough count of distinct users
-          userCount: thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1,
-          // latest update based on the latest item
-          updated: thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0,
-          // latest peer to push to the thread
-          latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
-        }
-      })
-      .sort((a, b) => a.updated < b.updated)
-  }
+  let peers = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo.username }), {})
+
+  // NOTE: if future cases of more non-shared threads existing, we'll want to move this to a redux
+  const nonSharedThreads = 3
 
   const overview = {
     available: !!state.storage.overview,
     photoCount: state.storage.overview ? photos.length.toString() : '·',
     photoTitle: !state.storage.overview || photos.length !== 1 ? 'photos' : 'photo',
-    threadCount: state.storage.overview ? (state.storage.overview.thread_count - 1).toString() : '·',
-    threadTitle: !state.storage.overview || state.storage.overview.thread_count - 1 !== 1 ? 'threads' : 'thread',
-    peerCount: state.storage.overview ? state.storage.overview.contact_count.toString() : '·',
-    peerTitle: !state.storage.overview || state.storage.overview.contact_count !== 1 ? 'peers' : 'peer'
+    threadCount: state.storage.overview ? (state.storage.overview.thread_cnt - nonSharedThreads).toString() : '·',
+    threadTitle: !state.storage.overview || state.storage.overview.thread_cnt - nonSharedThreads !== 1 ? 'threads' : 'thread',
+    peerCount: state.storage.overview ? state.storage.overview.contact_cnt.toString() : '·',
+    peerTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'peers' : 'peer'
   }
 
-  const profile = state.preferences.profile
+  const profile = state.account.profile.value
 
   return {
     peers,
     threadId,
-    threads,
     photos,
     items,
     displayImages: state.textileNode.nodeState.state === 'started',
@@ -312,7 +283,7 @@ const mapStateToProps = (state) => {
     verboseUi: state.preferences.verboseUi,
     profile,
     showTourScreen: state.preferences.tourScreens.wallet,
-    avatarUrl: profile && profile.avatar_id ? Config.RN_TEXTILE_CAFE_URI + profile.avatar_id : undefined,
+    avatarUrl: profile && profile.avatar_id ? Config.RN_TEXTILE_CAFE_GATEWAY_URL + profile.avatar_id : undefined,
     username: profile && profile.username ? profile.username : undefined,
     selectedTab: state.preferences.viewSettings.selectedWalletTab,
     storage: state.preferences.storage,

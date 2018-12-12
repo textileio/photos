@@ -9,16 +9,15 @@ import ThreadSelectCard from './ThreadSelectCard'
 import ThreadCreateCard from './ThreadCreateCard'
 import {getThreads} from '../../../Redux/PhotoViewingSelectors'
 import {ThreadData} from '../../../Redux/PhotoViewingRedux'
-import {ThreadId, ThreadName} from '../../../Models/TextileTypes'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
 
 interface ComponentProps {
   createNew: () => void
-  select: (threadId: ThreadId) => void
-  threads: ThreadData[]
-  selected?: ThreadId
+  select: (threadId: string) => void
+  threads: ReadonlyArray<ThreadData>
+  selected?: string
 }
 
 export class ThreadSelectComponent extends React.Component<ComponentProps> {
@@ -85,12 +84,12 @@ export interface ScreenProps {
 }
 
 interface StateProps {
-  threads: ThreadData[]
-  selectedThreadId?: ThreadId
+  threads: ReadonlyArray<ThreadData>
+  selectedThreadId?: string
 }
 
 interface DispatchProps {
-  selectThread: (threadId: ThreadId) => void
+  selectThread: (threadId: string) => void
 }
 
 type Props = StateProps & DispatchProps
@@ -127,36 +126,14 @@ const mapStateToProps = (state: RootState): StateProps  => {
 
   const selectedThreadId = state.ui.sharingPhoto ? state.ui.sharingPhoto.threadId : undefined
 
-  const allThreads = getThreads(state)
-  let threads: ThreadData[] = []
-  const defaultThreadName: ThreadName = 'default' as any
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter((thread) => thread.name !== defaultThreadName)
-      .sort((a, b) => {
-        if (a.name === null || a.name === '') {
-          return 1
-        } else if (b.name === null || b.name === '') {
-          return -1
-        }
-        const A = a.name.toString().toUpperCase()
-        const B = b.name.toString().toUpperCase()
-        if (A === B) {
-          return 0
-        } else {
-          return A < B ? -1 : 1
-        }
-      })
-  }
-
   return {
-    threads,
+    threads: getThreads(state, 'name'),
     selectedThreadId
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  selectThread: (threadId: ThreadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) }
+  selectThread: (threadId: string) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThreadSelect)

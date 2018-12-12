@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, TextInput, Text, TouchableOpacity } from 'react-native'
 
-import Icons from '../../../Components/Icons'
+import Icon from '../../../Components/Icon'
 
 import styles from './statics/styles'
 
@@ -24,7 +24,7 @@ const CommentBox = (props: Props) => {
         value={value}
       />
       <TouchableOpacity onPress={onSubmit} >
-        <Icons name='circle-plus' color='black' size={24} />
+        <Icon name='circle-plus' color='black' size={24} />
       </TouchableOpacity>
     </View>
   )

@@ -1,18 +1,26 @@
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, fork, take } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
-
 import { uploadFile } from './UploadFile'
-import TextileNode from '../Services/TextileNode'
-import {AddResult, BlockId, SharedImage, PhotoId, Thread, ThreadId} from '../Models/TextileTypes'
-import ProcessingImagesActions, { ProcessingImage, ProcessingImagesSelectors } from '../Redux/ProcessingImagesRedux'
-import UIActions, {UISelectors} from '../Redux/UIRedux'
-import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
-import { ThreadData } from '../Redux/PhotoViewingRedux'
-import {ActionType} from 'typesafe-actions'
+import {
+  prepareFiles,
+  addThreadFiles,
+  addThreadFilesByTarget,
+  profile,
+  setAvatar,
+  BlockInfo,
+  Profile
+} from '../NativeModules/Textile'
+import { SharedImage } from '../Models/TextileTypes'
+import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
+import { processingImageByUuid } from '../Redux/ProcessingImagesSelectors'
+import UIActions, { UISelectors } from '../Redux/UIRedux'
+import AccountActions from '../Redux/AccountRedux'
+import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
+import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
-import * as TT from '../Models/TextileTypes'
+import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
   const { threadId } = action.payload
@@ -31,11 +39,11 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
 
   switch (pickerType) {
     case 'camera': {
-      pickerResponse = yield CameraRoll.launchCamera()
+      pickerResponse = yield call(CameraRoll.launchCamera)
       break
     }
     case 'camera-roll': {
-      pickerResponse = yield CameraRoll.launchImageLibrary()
+      pickerResponse = yield call(CameraRoll.launchImageLibrary)
       break
     }
     default:
@@ -51,7 +59,8 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
     yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
   } else {
     try {
-      const image: TT.SharedImage = {
+      const image: SharedImage = {
+        isAvatar: false,
         origURL: pickerResponse.origURL,
         uri: pickerResponse.uri,
         path: pickerResponse.path,
@@ -74,7 +83,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
 
 // Called whenever someone selects to share from the wallet and then picks a photo
 export function * walletPickerSuccess(action: ActionType<typeof UIActions.walletPickerSuccess>) {
-  yield put(UIActions.updateSharingPhotoImage(action.payload.photoId))
+  yield put(UIActions.updateSharingPhotoImage(action.payload.photo))
   // indicates if request was made from merged main feed or from a specific thread
   const threadId = yield select(UISelectors.sharingPhotoThread)
   if (threadId) {
@@ -84,99 +93,75 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
   }
 }
 
-export function * shareWalletImage (id: PhotoId, threadId: ThreadId, comment?: string) {
+export function * shareWalletImage (id: string, threadId: string, comment?: string) {
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
-    const blockId: BlockId = yield call(TextileNode.sharePhotoToThread, id, threadId, comment)
+    const blockId: string = yield call(addThreadFilesByTarget, id, threadId, comment)
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
 }
 
-export function * insertImage (image: SharedImage, threadId?: ThreadId, comment?: string) {
+export function * insertImage (image: SharedImage, threadId: string, comment?: string) {
   const id = uuid()
   yield put(ProcessingImagesActions.insertImage(id, image, threadId, comment))
-  yield call(addToIpfs, id)
+  yield call(prepareImage, id)
 }
 
-export function * addToIpfs (uuid: string) {
+export function * prepareImage (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
+    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
     if (!processingImage) {
       throw new Error('no ProcessingImage found')
     }
-    yield put(ProcessingImagesActions.addingImage(uuid))
-    const { sharedImage } = processingImage
-    const addResult: AddResult = yield call(addImage, sharedImage)
-    yield put(ProcessingImagesActions.imageAdded(uuid, addResult))
-    yield call(uploadArchive, uuid)
+    const { sharedImage, destinationThreadId } = processingImage
+    const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
+    if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['large'].hash) {
+      // TODO: This doesn't seem right in here, but ok
+      const hash = preparedFiles.dir.files['large'].hash as string
+      yield fork(updateAvatarAndProfile, hash)
+    }
+    yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
+    yield call(uploadPins, uuid)
   } catch (error) {
     yield put(ProcessingImagesActions.error(uuid, error))
   }
 }
 
-export function * uploadArchive (uuid: string) {
+export function * uploadPins (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage) {
-      throw new Error('no ProcessingImage found')
+    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+    if (!processingImage || ! processingImage.uploadData) {
+      throw new Error('no ProcessingImage or uploadData found')
     }
-    yield put(ProcessingImagesActions.uploadStarted(uuid))
-    if (!processingImage.addData || !processingImage.addData.addResult.archive) {
-      throw new Error('no addData or archive')
+    for (const uploadId in processingImage.uploadData) {
+      if (processingImage.uploadData[uploadId]) {
+        yield put(ProcessingImagesActions.uploadStarted(uuid, uploadId))
+        yield call(uploadFile, uploadId, processingImage.uploadData[uploadId].path)
+      }
     }
-    yield call(uploadFile, uuid, processingImage.addData.addResult.archive.path)
   } catch (error) {
     put(ProcessingImagesActions.error(uuid, error))
   }
 }
 
-export function * addToWallet (uuid: string) {
-  try {
-    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage || !processingImage.addData) {
-      throw new Error('no ProcessingImage or addData found')
-    }
-    const { id, key } = processingImage.addData.addResult
-    yield put(ProcessingImagesActions.addingToWallet(uuid))
-    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
-    if (!defaultThread) {
-      throw new Error('no default thread')
-    }
-    const blockId: BlockId = yield call(TextileNode.addPhotoToThread, id, key, defaultThread.id)
-    yield put(ProcessingImagesActions.addedToWallet(uuid, blockId))
-    if (processingImage.destinationThreadId) {
-      yield call(shareToThread, uuid)
-    } else {
-      // If there is no destinationThreadId, just complete after adding to wallet
-      yield put(ProcessingImagesActions.complete(uuid))
-    }
-  } catch (error) {
-    yield put(ProcessingImagesActions.error(uuid, error))
-  }
-}
-
 export function * shareToThread (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(ProcessingImagesSelectors.processingImageByUuid, uuid)
-    if (!processingImage || !processingImage.addData) {
-      throw new Error('no ProcessingImage or addData found')
+    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+    if (!processingImage || !processingImage.preparedFiles || !processingImage.preparedFiles.dir) {
+      throw new Error('no ProcessingImage or preparedData or dir found')
     }
-    const { id } = processingImage.addData.addResult
-    yield put(ProcessingImagesActions.sharingToThread(uuid))
-    const { destinationThreadId, comment } = processingImage
-    if (destinationThreadId) {
-      const shareBlockId: BlockId = yield call(TextileNode.sharePhotoToThread, id, destinationThreadId, comment)
-      yield put(ProcessingImagesActions.sharedToThread(uuid, shareBlockId))
-      yield put(ProcessingImagesActions.complete(uuid))
-    }
+    const { dir } = processingImage.preparedFiles
+    const blockInfo: BlockInfo = yield call(addThreadFiles, dir, processingImage.destinationThreadId, processingImage.comment)
+    yield put(ProcessingImagesActions.sharedToThread(uuid, blockInfo))
+    yield put(ProcessingImagesActions.complete(uuid))
   } catch (error) {
     yield put(ProcessingImagesActions.error(uuid, error))
   }
 }
 
-async function addImage (image: SharedImage): Promise<AddResult> {
-  const addResult = await TextileNode.addPhoto(image.path)
+async function prepare (image: SharedImage, destinationThreadId: string): Promise<IMobilePreparedFiles> {
+  const addResult = await prepareFiles(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {
@@ -185,4 +170,18 @@ async function addImage (image: SharedImage): Promise<AddResult> {
   } catch (e) {
   }
   return addResult
+}
+
+function * updateAvatarAndProfile (hash: string) {
+  try {
+    const online: boolean = yield select(TextileNodeSelectors.online)
+    if (!online) {
+      yield take(getType(TextileNodeActions.nodeOnline))
+    }
+    yield call(setAvatar, hash)
+    const profileResult: Profile = yield call(profile)
+    yield put(AccountActions.refreshProfileSuccess(profileResult))
+  } catch (error) {
+    yield put(AccountActions.profileError(error))
+  }
 }

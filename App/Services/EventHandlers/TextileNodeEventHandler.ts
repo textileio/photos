@@ -1,7 +1,8 @@
 import { Store } from 'redux'
 
-import {Update, BlockType, ILocalPhotoResult} from '../../Models/TextileTypes'
-import TextileNode from '../TextileNode'
+import { ILocalPhotoResult } from '../../Models/TextileTypes'
+import {  Update, ThreadUpdate, BlockType, NotificationInfo } from '../../NativeModules/Textile'
+import EventEmitter from '../../NativeModules/Events'
 import { RootState } from '../../Redux/Types'
 
 import TextileNodeActions from '../../Redux/TextileNodeRedux'
@@ -19,33 +20,33 @@ export default class TextileNodeEventHandler {
   }
 
   setup () {
-    TextileNode.eventEmitter.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
+    EventEmitter.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
       this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
     })
-    TextileNode.eventEmitter.addListener('onOnline', () => {
+    EventEmitter.addListener('onOnline', () => {
       this.store.dispatch(TextileNodeActions.nodeOnline())
     })
-    TextileNode.eventEmitter.addListener('onThreadUpdate', (update: Update) => {
+    EventEmitter.addListener('onThreadUpdate', (update: ThreadUpdate) => {
       const { type } = update.block
-      if (type === BlockType.CommentBlock ||
-        type === BlockType.LikeBlock ||
-        type === BlockType.PhotoBlock ||
-        type === BlockType.IgnoreBlock) {
+      if (type === BlockType.COMMENT ||
+        type === BlockType.LIKE ||
+        type === BlockType.FILES ||
+        type === BlockType.IGNORE) {
         this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread_id))
       }
     })
-    TextileNode.eventEmitter.addListener('onThreadAdded', (payload) => {
-      this.store.dispatch(PhotoViewingActions.threadAdded(payload.id, payload.name))
+    EventEmitter.addListener('onThreadAdded', (payload: Update) => {
+      this.store.dispatch(PhotoViewingActions.threadAddedNotification(payload.id))
     })
-    TextileNode.eventEmitter.addListener('onThreadRemoved', (payload) => {
+    EventEmitter.addListener('onThreadRemoved', (payload: Update) => {
       this.store.dispatch(PhotoViewingActions.threadRemoved(payload.id))
     })
-    TextileNode.eventEmitter.addListener('onNotification', (payload) => {
+    EventEmitter.addListener('onNotification', (payload: NotificationInfo) => {
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
   }
 
   tearDown () {
-    TextileNode.eventEmitter.removeAllListeners()
+    EventEmitter.removeAllListeners()
   }
 }

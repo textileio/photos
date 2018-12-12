@@ -1,13 +1,21 @@
 import actions, { reducer } from '../PhotoViewingRedux'
-import { ThreadId, ThreadName, Photo, PhotoId, BlockId, PeerId } from '../../Models/TextileTypes'
+import { ThreadFilesInfo } from '../../NativeModules/Textile'
 
 const initialState = reducer(undefined, {} as any)
 
-const threadId: ThreadId = 'threadId' as any
-const threadName: ThreadName = 'threadName' as any
-const photos: Photo[] = [
-  { id: 'id' as any, author_id: 'author_id' as any, block_id: 'block_id' as any, date: 'now', comments: [], likes: [] }
-]
+const threadId = 'threadId'
+const threadKey = 'threadKey'
+const threadName = 'threadName'
+const photos: ThreadFilesInfo[] = [{
+  block: 'block_id',
+  target: 'target',
+  date: 'now',
+  author_id: 'author_id',
+  files: [],
+  comments: [],
+  likes: [],
+  threads: []
+}]
 
 describe('photo viewing stories', () => {
   describe('initial state', () => {
@@ -17,7 +25,7 @@ describe('photo viewing stories', () => {
   })
   describe('refresh thread', () => {
     it('should refresh', () => {
-      const state0 = reducer(initialState, actions.insertThread(threadId, threadName))
+      const state0 = reducer(initialState, actions.insertThread(threadId, threadKey, threadName))
       expect(state0.threads[threadId]).toBeDefined()
       const state1 = reducer(state0, actions.refreshThreadRequest(threadId))
       expect(state1.threads[threadId]).toBeDefined()

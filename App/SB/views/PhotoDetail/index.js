@@ -20,29 +20,8 @@ import styles from './statics/styles'
 
 // via https://github.com/react-native-community/react-native-modal/issues/147
 const WIDTH = Dimensions.get('window').width
-// May be slightly off on some bigger Android devices...
-const HEIGHT = Dimensions.get('window').height
 
 class PhotoDetail extends Component {
-  constructor (props) {
-    super(props)
-    const metadata = this.props.photo && this.props.photo.metadata
-    const heightProperties = getHeight(metadata, WIDTH)
-    this.state = {
-      ...heightProperties
-    }
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    if (
-      this.props.photo.metadata !== prevProps.photo.metadata
-    ) {
-      const heightProperties = getHeight(this.props.photo.metadata, WIDTH)
-      this.setState({
-        ...heightProperties
-      })
-    }
-  }
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state
@@ -54,7 +33,7 @@ class PhotoDetail extends Component {
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add To Thread' iconName='share' onPress={params.sharePressed} />
-        <Item title='Share' iconName='share-arrow' onPress={params.getPublicLink} />
+        <Item title='Share' iconName='share-arrow' onPress={params.shareByLink} />
         <Item title='Delete' iconName='circle-x' onPress={params.removePhoto} />
       </TextileHeaderButtons>
     )
@@ -67,13 +46,13 @@ class PhotoDetail extends Component {
   componentDidMount () {
     this.props.navigation.setParams({
       sharePressed: this.sharePressed.bind(this),
-      getPublicLink: this.getPublicLink.bind(this),
+      shareByLink: this.shareByLink.bind(this),
       removePhoto: this.removePhoto.bind(this)
     })
   }
 
   sharePressed () {
-    this.props.shareImage(this.props.photo.id)
+    this.props.shareImage(this.props.photo)
     this.props.navigation.navigate('WalletSharePhoto', { backTo: 'PrivatePhotoDetail', withPhoto: this.props.photo })
   }
 
@@ -96,9 +75,9 @@ class PhotoDetail extends Component {
     }
   }
 
-  getPublicLink () {
+  shareByLink () {
     this.refs.toast.show('You are creating a public link for this photo!', 1000)
-    this.props.getPublicLink(this.props.photo.id)
+    this.props.shareByLink(this.props.photo.files.target + '/0/large?key=' + this.props.photo.files[0]['links']['key'])
   }
 
   // If a user wants to see a photo in a thread, this will navigate to the thread
@@ -112,7 +91,7 @@ class PhotoDetail extends Component {
       imageId={id}
       showPreview={true}
       forMinWidth={WIDTH}
-      style={{ height: this.state.height, width: WIDTH, marginBottom: 10 }}
+      style={{ height: this.props.height, width: this.props.width, marginBottom: 10 }}
       resizeMode={'cover'}
     />)
   }
@@ -120,8 +99,8 @@ class PhotoDetail extends Component {
   render () {
     return (
       <ScrollView style={styles.bodyContainer}>
-        <View style={{ overflow: 'hidden', height: this.state.height, width: WIDTH }}>
-          {this.props.photo && this.renderImage(this.props.photo.id)}
+        <View style={{ overflow: 'hidden', height: this.props.height, width: this.props.width }}>
+          {this.props.photo && this.renderImage(this.props.photo.target)}
         </View>
         <View style={styles.photoDetails}>
           <View style={styles.detailItem}>
@@ -161,9 +140,9 @@ class PhotoDetail extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
-    shareImage: (imageId) => { dispatch(UIActions.updateSharingPhotoImage(imageId)) },
+    shareImage: (image) => { dispatch(UIActions.updateSharingPhotoImage(image)) },
     shareToThread: (threadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) },
-    getPublicLink: (imageId) => { dispatch(UIActions.getPublicLink(imageId)) },
+    shareByLink: (path) => { dispatch(UIActions.shareByLink(path)) },
     ignorePhoto: (threadId, blockId) => { dispatch(TextileNodeActions.ignorePhotoRequest(threadId, blockId)) }
   }
 }
@@ -181,33 +160,38 @@ const mapStateToProps = (state) => {
     if (state.photoViewing.threads[t].photos.length > 0) {
       thumbs[t] = state.photoViewing.threads[t].photos[state.photoViewing.threads[t].photos.length - 1]
     }
-    if (photo && photo.id && state.photoViewing.threads[t].photos.find(i => i.id === photo.id)) {
+    if (photo && photo.target && state.photoViewing.threads[t].photos.find(i => i.target === photo.target)) {
       containingThreads.push(t)
     }
   }
 
   const threads = getThreads(state)
-
-  let threadsNotIn = threads.filter(t => containingThreads.indexOf(t.id) < 0 && t.name !== 'default').map(t => {
-    return {
-      ...t,
-      size: !state.photoViewing.threads[t.id] ? 0 : state.photoViewing.threads[t.id].photos.length
-    }
-  }).sort((a, b) => b - a)
+  const threadsInIds = photo.threads
+  const threadsIn = threads.filter((thread) => threadsInIds.includes(thread.id))
 
   const path = '/photo'
-  const source = photo ? {url: 'file://' + photo.id + '.png'} : {url: 'file://.png'}
+  const source = photo ? {url: 'file://' + photo.target + '.png'} : {url: 'file://.png'}
+
+  const links = photo.files[0].links
+  const meta = links ? links['large'].meta : undefined
+  const w = meta ? meta['width'] : undefined
+  const h = meta ? meta['height'] : undefined
+  const width = WIDTH
+  let height = width
+  if (w && h) {
+    const widthByHeightRatio = w / h
+    height = width / widthByHeightRatio
+  }
 
   return {
     photo,
     date: photo && photo.date ? photo.date.split('T')[0] : '',
-    key: photo && photo.id ? photo.id + path : path,
-    // TODO: real dimensions are in the metadata alread now
-    dimensions: { width: 150, height: 150 },
+    key: photo && photo.target ? photo.target + path : path,
+    width,
+    height,
     displayImages: state.textileNode.nodeState.state === 'started',
     threadId: defaultData.id,
-    threadsIn: threads.filter(t => containingThreads.indexOf(t.id) > -1 && t.name !== 'default'),
-    threadsNotIn,
+    threadsIn,
     thumbs,
     source // <-- in case RN uses to know things
   }

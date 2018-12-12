@@ -9,16 +9,16 @@ import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
-import Icons from '../../../Components/Icons'
+import Icon from '../../../Components/Icon'
 import Colors from '../../../Themes/Colors'
-import {Photo, BlockId, ThreadName, ThreadId, PeerId} from '../../../Models/TextileTypes'
+import { ThreadFilesInfo } from '../../../NativeModules/Textile'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
 
 const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
-  item: {type: string, photo: Photo, threadId?: ThreadId, threadName?: ThreadName}, // TODO make proper type now
+  item: {type: string, photo: ThreadFilesInfo, threadId?: string, threadName?: string}, // TODO make proper type now
   recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void
@@ -27,9 +27,8 @@ interface OwnProps {
 }
 
 interface StateProps {
-  peerId: PeerId
+  peerId: string
   dateString: string
-  defaultSource?: number | ImageURISource
   didLike: boolean
   isLiked: boolean
   totalLikes: number
@@ -40,27 +39,27 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  addPhotoLike: (photoBlockId: BlockId) => void
-  navigateToThread: (threadId: ThreadId, threadName: ThreadName) => void
+  addPhotoLike: (photoBlockId: string) => void
+  navigateToThread: (threadId: string, threadName: string) => void
 }
 
 class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & DispatchProps> {
 
-  _threadSelect = (id?: ThreadId, name?: ThreadName) => {
+  _threadSelect = (id?: string, name?: string) => {
     return () => {
       if (id && name) {
-        this.props.navigateToThread(id as ThreadId, name as ThreadName)
+        this.props.navigateToThread(id, name)
       }
     }
   }
 
-  _onLikePress = (photo: Photo) => {
+  _onLikePress = (photo: ThreadFilesInfo) => {
     return () => {
-      this.props.addPhotoLike(photo.block_id)
+      this.props.addPhotoLike(photo.block)
     }
   }
 
-  renderLikes (isLiked: boolean, didLike: boolean, photo: Photo) {
+  renderLikes (isLiked: boolean, didLike: boolean, photo: ThreadFilesInfo) {
     // you are the only like or there are no likes, return ''
     return !isLiked || (didLike && photo.likes.length === 1) ? undefined :
       (
@@ -75,7 +74,6 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       item,
       peerId,
       dateString,
-      defaultSource,
       didLike,
       isLiked,
       imageHeight,
@@ -113,12 +111,10 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader} >
-          <Avatar style={styles.cardAvatar} width={18} height={18} peerId={peerId} defaultSource={defaultSource} />
+          <Avatar style={styles.cardAvatar} peerId={peerId} />
 
           <Text style={styles.cardAction}>
-            <Text style={styles.cardActionName}>
-              {photoUsername === username ? 'You' : photoUsername}
-            </Text> added a photo
+            <Text style={styles.cardActionName}>{photoUsername}</Text> added a photo
           </Text>
           {this.props.displayThread &&
             <TouchableOpacity
@@ -132,7 +128,8 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
         <View style={[styles.cardImage, {width: imageWidth, height: imageHeight}]}>
           <View style={styles.imageStretch}>
             <ProgressiveImage
-              imageId={photo.id}
+              imageId={photo.target}
+              fileIndex={photo.files[0].index}
               showPreview={true}
               forMinWidth={imageWidth}
               style={{...styles.image, width: imageWidth, height: imageHeight}}
@@ -142,16 +139,16 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
         </View>
         <View style={styles.cardFooter} >
           <View style={styles.cardFooterTop} >
-            {didLike && <Icons name='heart' size={24} style={{ color: Colors.brandRed }} />}
+            {didLike && <Icon name='heart' size={24} style={{ color: Colors.brandRed }} />}
             {!didLike &&
               <TouchableOpacity
                 onPress={this._onLikePress(this.props.item.photo)}
               >
-                <Icons name='heart' size={24} />
+                <Icon name='heart' size={24} />
               </TouchableOpacity>
             }
             <TouchableOpacity onPress={onComment} style={styles.cardFooterTopItem} >
-              <Icons name='comment' size={24} />
+              <Icon name='comment' size={24} />
             </TouchableOpacity>
           </View>
           {isLiked && likeRow
@@ -169,29 +166,33 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
 }
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
-  const { profile } = state.preferences
+  const profile = state.account.profile.value
+  const peerId = state.account.peerId.value
   const { photo } = ownProps.item
   const date = moment(photo.date)
   const dateString = date.fromNow()
-  const selfId = profile && profile.id
 
   const username = profile ? (profile.username || 'unknown') : 'unknown'
-  const photoUsername = photo.username ? photo.username : photo.author_id.substring(0, 8)
-
-  const defaultSource = require('../../views/Notifications/statics/main-image.png')
+  const photoUsername = peerId === photo.author_id ? 'You' : photo.username ? photo.username : photo.author_id.substring(0, 8)
 
   const totalLikes = photo.likes ? photo.likes.length : 0
-  const isLiked = photo.likes && photo.likes.length > 0
-  const didLike = isLiked && photo.likes.find((like) => like.author_id === selfId) !== undefined
+  const isLiked = photo.likes.length > 0
+  const didLike = isLiked && photo.likes.find((like) => like.author_id === peerId) !== undefined
 
   // Unsquares the images by maintaining the aspect ratio no matter device size
   const imageWidth = WIDTH
-  const heightProperties = getHeight(photo.metadata, imageWidth)
-  const imageHeight = heightProperties.height
+  const links = photo.files[0].links
+  const meta = links ? links['large'].meta : undefined
+  const width = meta ? meta['width'] as number : undefined
+  const height = meta ? meta['height'] as number : undefined
+  let imageHeight = imageWidth
+  if (width && height) {
+    const ratio = width / height
+    imageHeight = imageWidth / ratio
+  }
   return {
     peerId: photo.author_id,
     dateString,
-    defaultSource,
     didLike,
     isLiked,
     totalLikes,
@@ -204,8 +205,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    addPhotoLike: (photoBlockId: BlockId) => { dispatch(UIActions.addLikeRequest(photoBlockId)) },
-    navigateToThread: (id: ThreadId, name: ThreadName) => {
+    addPhotoLike: (photoBlockId: string) => { dispatch(UIActions.addLikeRequest(photoBlockId)) },
+    navigateToThread: (id: string, name: string) => {
      dispatch(UIActions.navigateToThreadRequest(id, name))
    }
   }

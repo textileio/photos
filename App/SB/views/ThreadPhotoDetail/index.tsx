@@ -16,17 +16,14 @@ import ProgressiveImage from '../../../Components/ProgressiveImage'
 import styles from './statics/styles'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
-import { BlockId, PhotoId } from '../../../Models/TextileTypes'
 
 const { width } = Dimensions.get('window')
 
 interface StateProps {
-  photoId: PhotoId
-  blockId: BlockId
-  size?: {
-    height: number
-    width: number
-  }
+  photoId: string
+  fileIndex: number
+  blockId: string
+  widthByHeightRatio?: number
   commentCardProps: CommentCardProps[]
   commentValue: string | undefined
 }
@@ -79,10 +76,12 @@ class ThreadPhotoDetail extends Component<Props, State> {
   }
 
   renderImage () {
-    const height = this.props.size ? (this.props.size.height / this.props.size.width) * width : width
+    const { widthByHeightRatio, photoId, fileIndex } = this.props
+    const height = widthByHeightRatio ? width / widthByHeightRatio : width
     return (
       <ProgressiveImage
-        imageId={this.props.photoId}
+        imageId={photoId}
+        fileIndex={fileIndex}
         showPreview={true}
         forMinWidth={width}
         style={{ ...styles.mainPhoto as ImageStyle, height }}
@@ -115,9 +114,13 @@ const mapStateToProps = (state: RootState): StateProps  => {
     throw new Error('no viewing thread or photo')
   }
 
-  let size: { height: number, width: number} | undefined
-  if (viewingPhoto.metadata) {
-    size = { height: viewingPhoto.metadata.height, width: viewingPhoto.metadata.width }
+  const links = viewingPhoto.files[0].links
+  const meta = links ? links['large'].meta : undefined
+  const width = meta ? meta['width'] as number : undefined
+  const height = meta ? meta['height'] as number : undefined
+  let widthByHeightRatio: number | undefined
+  if (width && height) {
+    widthByHeightRatio = width / height
   }
 
   let captionCommentCardProps: CommentCardProps | undefined
@@ -143,9 +146,10 @@ const mapStateToProps = (state: RootState): StateProps  => {
     return props
   })
   return {
-    photoId: viewingPhoto.id,
-    blockId: viewingPhoto.block_id,
-    size,
+    photoId: viewingPhoto.target,
+    fileIndex: viewingPhoto.files[0].index,
+    blockId: viewingPhoto.block,
+    widthByHeightRatio,
     commentCardProps: captionCommentCardProps ? [{...captionCommentCardProps}, ...commentCardProps] : commentCardProps,
     commentValue : state.photoViewing.authoringComment
   }

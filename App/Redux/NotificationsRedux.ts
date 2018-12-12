@@ -1,9 +1,8 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import {
-  NotificationData,
   Notification,
-  ReceivedInviteNotification
-} from '../Models/TextileTypes'
+  InviteReceivedNotification
+} from '../Models/Notifications'
 import { PushNotification } from 'react-native-push-notification'
 import { RootState } from './Types'
 
@@ -36,7 +35,7 @@ const actions = {
     return (notification: Notification) => resolve({ notification })
   }),
   reviewNotificationThreadInvite: createAction('REVIEW_NOTIFICATION_THREAD_INVITE', (resolve) => {
-    return (notification: ReceivedInviteNotification) => resolve({ notification })
+    return (notification: InviteReceivedNotification) => resolve({ notification })
   })
 }
 

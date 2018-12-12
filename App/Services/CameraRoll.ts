@@ -1,7 +1,7 @@
 import { CameraRoll, Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import ImagePicker from 'react-native-image-picker'
-import TextileNode from './TextileNode'
+import { getFilePath } from '../NativeModules/FS'
 
 export interface IPickerImage {
   uri: string
@@ -49,14 +49,14 @@ export async function getPhotoPath (uri: string): Promise<string> {
   }
   if (uri.includes('content://media')) {
     // Android Method
-    const path = await TextileNode.getFilePath(uri)
+    const path = await getFilePath(uri)
     return path
   }
   throw new Error('unable to determine photo path.')
 }
 
-export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}> {
-  return new Promise<{ uri: string, data: string}>((resolve, reject) => {
+export async function chooseProfilePhoto(): Promise<{ image: IPickerImage, data: string}> {
+  return new Promise<{ image: IPickerImage, data: string}>((resolve, reject) => {
     const options = {
       title: 'Choose a Profile Picture',
       maxWidth: 1200,
@@ -77,8 +77,29 @@ export async function chooseProfilePhoto(): Promise<{ uri: string, data: string}
       } else {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        const { uri, data } = response
-        resolve({ uri, data })
+        let path: string
+        let canDelete: boolean
+        if (Platform.OS === 'ios') {
+          path = response.uri ? response.uri.replace('file://', '') : ''
+          canDelete = true
+        } else {
+          path = response.path!
+          canDelete = false
+        }
+        const image: IPickerImage = {
+          uri: response.uri,
+          path,
+          canDelete,
+          height: response.height,
+          width: response.width,
+          isVertical: response.isVertical,
+          origURL: response.origURL,
+          didCancel: response.didCancel,
+          customButton: response.customButton,
+          error: response.error
+        }
+        const { data } = response
+        resolve({ image, data })
       }
     })
   })

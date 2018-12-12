@@ -1,6 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
-import { Mnemonic, PhotoId, Profile, PublicKey } from '../Models/TextileTypes'
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', (resolve) => {
@@ -8,21 +7,6 @@ const actions = {
   }),
   toggleVerboseUi: createAction('TOGGLE_VERBOSE_UI', (resolve) => {
     return () => resolve()
-  }),
-  updatecMnemonic: createAction('UPDATE_MNEMONIC', (resolve) => {
-    return (mnemonic: Mnemonic) => resolve({ mnemonic })
-  }),
-  getProfileSuccess: createAction('GET_AVATAR_SUCCESS', (resolve) => {
-    return (profile: Profile) => resolve({ profile })
-  }),
-  setAvatar: createAction('SET_AVATAR_REQUEST', (resolve) => {
-    return (avatarId: PhotoId) => resolve({ avatarId })
-  }),
-  pendingAvatar: createAction('PENDING_AVATAR_REQUEST', (resolve) => {
-    return (avatarId: PhotoId) => resolve({ avatarId })
-  }),
-  getPublicKeySuccess: createAction('GET_PUBLIC_KEY_SUCCESS', (resolve) => {
-    return (publicKey: PublicKey) => resolve({ publicKey })
   }),
   completeTourSuccess: createAction('COMPLETE_TOUR_SUCCESS', (resolve) => {
     return (tourKey: TourScreens) => resolve({ tourKey })
@@ -64,10 +48,6 @@ export interface ViewSettings {
 export interface PreferencesState {
   onboarded: boolean
   verboseUi: boolean
-  mnemonic?: Mnemonic
-  publicKey?: PublicKey
-  profile?: Profile
-  pending?: PhotoId
   readonly services: {readonly [k in ServiceType]: Service}
   readonly storage: {readonly [k in StorageType]: Service}
   readonly tourScreens: {readonly [k in TourScreens]: boolean} // true = still need to show, false = no need
@@ -143,16 +123,6 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
       return { ...state, onboarded: true }
     case getType(actions.toggleVerboseUi):
       return { ...state, verboseUi: !state.verboseUi }
-    case getType(actions.updatecMnemonic):
-      const mnemonic = action.payload.mnemonic
-      return { ...state, mnemonic }
-    case getType(actions.getProfileSuccess):
-      return { ...state, profile: action.payload.profile, pending: undefined}
-    case getType(actions.pendingAvatar):
-      const pending = action.payload.avatarId
-      return { ...state, pending }
-    case getType(actions.getPublicKeySuccess):
-      return { ...state, publicKey: action.payload.publicKey }
     case getType(actions.completeTourSuccess):
       return { ...state, tourScreens: { ...state.tourScreens, [action.payload.tourKey]: false } }
     case getType(actions.toggleServicesRequest): {
@@ -174,10 +144,7 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
 }
 
 export const PreferencesSelectors = {
-  // TODO: Need typed state
   onboarded: (state: RootState) => state.preferences.onboarded,
-  pending: (state: RootState) => state.preferences.pending,
-  profile: (state: RootState) => state.preferences.profile,
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
   storage: (state: RootState, name: StorageType) => state.preferences.storage[name],
   verboseUi: (state: RootState) => state.preferences.verboseUi,

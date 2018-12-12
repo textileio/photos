@@ -1,8 +1,9 @@
 import React from 'react'
-import Icons from '../Components/Icons'
+import Icon from '../Components/Icon'
 import { connect } from 'react-redux'
 import { Item } from 'react-navigation-header-buttons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
+import Config from 'react-native-config'
 
 import { View, Text, Image, Alert } from 'react-native'
 import PhotoStream from '../Components/PhotoStream'
@@ -12,7 +13,8 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
-import { defaultThreadData, getThreads } from '../Redux/PhotoViewingSelectors'
+import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
+import { totalUploadProgress } from '../Redux/ProcessingImagesSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
@@ -112,8 +114,8 @@ class ThreadsList extends React.PureComponent {
           private Threads or post a new photo.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icons name='plus' size={18} color='black' /> button above to start sharing photos
-          or the <Icons name='invite' size={18} color='black' /> button to invite friends.
+          Click the <Icon name='plus' size={18} color='black' /> button above to start sharing photos
+          or the <Icon name='invite' size={18} color='black' /> button to invite friends.
         </Text>
       </View>
     )
@@ -149,31 +151,9 @@ class ThreadsList extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   const profile = state.preferences.profile
-  const allThreads = getThreads(state)
-  let threads
-  if (allThreads.length > 0) {
-    threads = allThreads
-      .filter(thread => thread.name !== 'default')
-      .map(thread => {
-        return {
-          id: thread.id,
-          name: thread.name,
-          // total number of images in the thread
-          size: thread.photos.length,
-          // just keep the top 2
-          photos: thread.photos.slice(0, 3),
-          // get a rough count of distinct users
-          userCount: thread.photos.length > 0 ? [...new Set(thread.photos.map(photo => photo.author_id))].length : 1,
-          // latest update based on the latest item
-          updated: thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0,
-          // latest peer to push to the thread
-          latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
-        }
-      })
-  }
 
   const items = Object.keys(state.photoViewing.threads)
-    .filter((id) => state.photoViewing.threads[id].name !== 'default')
+    .filter((id) => state.photoViewing.threads[id].key !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
     .map((id) => state.photoViewing.threads[id].photos
       .map((photo) => {
         return { type: 'photo', photo, id: photo.id, threadId: id, threadName: state.photoViewing.threads[id].name }
@@ -186,19 +166,17 @@ const mapStateToProps = (state) => {
   const defaultThreadId = defaultData ? defaultData.id : undefined
 
   const processingItems = state.processingImages.images
-    .filter(image => image.destinationThreadId && image.destinationThreadId !== defaultThreadId)
+    .filter(image => image.destinationThreadId !== defaultThreadId)
     .map(image => {
       let progress = 0
-      if (image.shareToThreadData) {
+      if (image.blockInfo) {
         progress = 1
-      } else if (image.addToWalletData) {
-        progress = 0.95
       } else if (image.uploadData) {
-        progress = 0.1 + (image.uploadData.uploadProgress * 0.8)
-      } else if (image.addData) {
+        progress = 0.1 + (totalUploadProgress(state, image.uuid) * 0.8)
+      } else if (image.preparedFiles) {
         progress = 0.1
       }
-      const message = image.state
+      const message = image.status
       return {
         id: image.uuid,
         type: 'processingItem',
@@ -217,9 +195,9 @@ const mapStateToProps = (state) => {
   return {
     profile,
     items,
-    showNotificationsPrompt: state.preferences.tourScreens.notifications && threads,
+    showNotificationsPrompt: state.preferences.tourScreens.notifications && items.length,
     services: state.preferences.services,
-    showOnboarding: state.preferences.tourScreens.threads && threads && threads.length === 0
+    showOnboarding: state.preferences.tourScreens.threads && items && items.length === 0
   }
 }
 

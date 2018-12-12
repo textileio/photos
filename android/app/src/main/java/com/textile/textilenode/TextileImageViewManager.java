@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -32,13 +33,18 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
         return new TextileImageView(context);
     }
 
-    @ReactProp(name = "imageId")
-    public void setImageId(TextileImageView textileImageView, String imageId) {
-        textileImageView.setImageId(imageId);
+    @ReactProp(name = "target")
+    public void setTarget(TextileImageView textileImageView, String target) {
+        textileImageView.setTarget(target);
+    }
+
+    @ReactProp(name = "index")
+    public void setIndex(TextileImageView textileImageView, int index) {
+        textileImageView.setIndex(index);
     }
 
     @ReactProp(name = "forMinWidth")
-    public void setMinWdth(TextileImageView textileImageView, int forMinWidth) {
+    public void setForMinWidth(TextileImageView textileImageView, int forMinWidth) {
         textileImageView.setForMinWidth(forMinWidth);
     }
 

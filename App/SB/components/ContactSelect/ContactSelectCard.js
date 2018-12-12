@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import Avatar from '../../../Components/Avatar'
-import Icons from '../../../Components/Icons'
+import Icons from '../../../Components/Icon'
 import ImageSc from 'react-native-scalable-image'
 
 import RadioButton from '../../components/RadioButton'
@@ -10,13 +10,12 @@ import styles from './statics/styles'
 
 const ContactSelectCard = (props) => {
   const { item, select, selected } = props
-  const defaultSource = require('../../../Images/v2/main-image.png')
 
   return (
     <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={() => {
       select(item, item.included)
     }}>
-      <Avatar style={styles.selectedContact} width={43} height={43} peerId={item.id} defaultSource={defaultSource} />
+      <Avatar style={styles.selectedContact} peerId={item.id} />
       <Text style={styles.contactName}>{item.username || 'peer'}</Text>
       <View style={styles.contactSelectRadio}>
         <RadioButton disabled={item.included} selected={selected} />

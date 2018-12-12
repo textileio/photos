@@ -2,7 +2,7 @@ import {
   CameraRoll
 } from 'react-native'
 import RNFS from 'react-native-fs'
-import TextileNode from './TextileNode'
+import { getFilePath } from '../NativeModules/FS'
 
 export function getHeight (metadata, targetWidth) {
   const known = !!(metadata && metadata.height && metadata.height > 0 && metadata.width && metadata.width > 0)
@@ -71,7 +71,7 @@ export async function getPhotoPath (photo) {
     photo['path'] = path
   } else if (photo.uri.includes('content://media')) {
     // Android Method
-    photo['path'] = await TextileNode.getFilePath(photo.uri)
+    photo['path'] = await getFilePath(photo.uri)
   }
   return photo
 }
