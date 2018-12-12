@@ -6,6 +6,7 @@ import RNFS from 'react-native-fs'
 import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
+import Config from 'react-native-config'
 
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
@@ -87,10 +88,11 @@ function * createAndStartNode(dispatch: Dispatch): any {
     yield put(TextileNodeActions.startingNode())
     yield call(start)
     const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
-    const defaultThreadName = 'default'
-    const defaultThread = threadsResult.find((thread) => thread.key === defaultThreadName)
-    if (!defaultThread) {
-      yield call(addThread, defaultThreadName, defaultThreadName)
+    const cameraRollThreadName = 'Camera Roll'
+    const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
+    const cameraRollThread = threadsResult.find((thread) => thread.key === cameraRollThreadKey)
+    if (!cameraRollThread) {
+      yield call(addThread, cameraRollThreadKey, cameraRollThreadName)
     }
     yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {

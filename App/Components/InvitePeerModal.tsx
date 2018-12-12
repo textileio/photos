@@ -185,7 +185,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
     refreshContacts: () => { dispatch(ContactsActions.getContactsRequest()) },
-    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, name, { navigate, selectToShare })) }
+    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
   }
 }
 

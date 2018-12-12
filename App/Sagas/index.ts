@@ -59,6 +59,7 @@ import {
 import {
   refreshThreads,
   refreshThread,
+  monitorThreadAddedNotifications,
   addThread,
   removeThread,
   addPhotoComment,
@@ -140,6 +141,7 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(ContactsActions.getContactsRequest), refreshContacts),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
+    takeEvery(getType(PhotoViewingActions.threadAddedNotification), monitorThreadAddedNotifications),
     takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),
     takeEvery(getType(PhotoViewingActions.refreshThreadsRequest), refreshThreads),
     takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),

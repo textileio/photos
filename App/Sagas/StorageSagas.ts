@@ -1,12 +1,9 @@
 import {call, put, select, take} from 'redux-saga/effects'
 import { requestLocalPhotos } from '../NativeModules/CameraRoll'
-import { ILocalPhotoResult, SharedImage } from '../Models/TextileTypes'
+import { SharedImage } from '../Models/TextileTypes'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
 import {ActionType, getType} from 'typesafe-actions'
 import PreferencesActions, {PreferencesSelectors} from '../Redux/PreferencesRedux'
-import UIActions from '../Redux/UIRedux'
-import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
-import { ThreadData } from '../Redux/PhotoViewingRedux'
 import { logNewEvent } from './DeviceLogs'
 
 export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLocalPhoto>) {

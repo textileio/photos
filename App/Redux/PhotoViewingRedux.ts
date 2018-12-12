@@ -1,16 +1,20 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
+import Config from 'react-native-config'
 
 import { ThreadFilesInfo } from '../NativeModules/Textile'
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
-    return (id: string, name: string) => resolve({ id, name })
+    return (id: string, key: string, name: string) => resolve({ id, key, name })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
-    return (key: string, name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: string, comment?: string } }) => resolve({ key, name }, options)
+    return (name: string, options?: { navigate?: boolean, selectToShare?: boolean, sharePhoto?: { imageId: string, comment?: string } }) => resolve({ name }, options)
+  }),
+  threadAddedNotification: createAction('THREAD_ADDED_NOTIFICATION', (resolve) => {
+    return (id: string) => resolve({ id })
   }),
   threadAdded: createAction('THREAD_ADDED', (resolve) => {
-    return (id: string, name: string) => resolve({ id, name })
+    return (id: string, key: string, name: string) => resolve({ id, key, name })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -58,6 +62,7 @@ export type PhotoViewingAction = ActionType<typeof actions>
 
 export interface ThreadData {
   readonly id: string
+  readonly key: string
   readonly name: string
   readonly querying: boolean
   readonly photos: ReadonlyArray<ThreadFilesInfo>
@@ -107,11 +112,11 @@ const initialState: PhotoViewingState = {
 export function reducer (state: PhotoViewingState = initialState, action: PhotoViewingAction): PhotoViewingState {
   switch (action.type) {
     case getType(actions.insertThread): {
-      const { id, name } = action.payload
+      const { id, key, name } = action.payload
       if (state.threads[id]) {
         return state
       }
-      return { ...state, threads: { ...state.threads, [id]: { id, name, querying: false, photos: [] } } }
+      return { ...state, threads: { ...state.threads, [id]: { id, key, name, querying: false, photos: [] } } }
     }
     case getType(actions.addThreadRequest): {
       const { name } = action.payload
@@ -120,11 +125,11 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       return { ...state, navigateToNewThread: navigate || false, selectToShare: selectToShare || false, shareToNewThread, addingThread: { name }}
     }
     case getType(actions.threadAdded): {
-      const { id, name } = action.payload
+      const { id, key, name } = action.payload
       if (state.threads[id]) {
         return state
       }
-      const newThreadData: ThreadData = { id, name, querying: false, photos: [] }
+      const newThreadData: ThreadData = { id, key, name, querying: false, photos: [] }
       return { ...state, addingThread: undefined, threads: { ...state.threads, [id]: newThreadData } }
     }
     case getType(actions.addThreadError): {
@@ -199,10 +204,9 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     }
     case getType(actions.viewWalletPhoto): {
       const { photoId } = action.payload
-      const defaultThreadName: string = 'default' as any
       const defaultThreadData = Object.keys(state.threads)
         .map((key) => state.threads[key]! )
-        .find((threadData) => threadData.name === defaultThreadName)
+        .find((threadData) => threadData.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
       if (!defaultThreadData) {
         return state
       }

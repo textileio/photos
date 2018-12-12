@@ -3,8 +3,9 @@ import { ThreadFilesInfo } from '../../NativeModules/Textile'
 
 const initialState = reducer(undefined, {} as any)
 
-const threadId: string = 'threadId' as any
-const threadName: string = 'threadName' as any
+const threadId = 'threadId'
+const threadKey = 'threadKey'
+const threadName = 'threadName'
 const photos: ThreadFilesInfo[] = [{
   block: 'block_id',
   target: 'target',
@@ -24,7 +25,7 @@ describe('photo viewing stories', () => {
   })
   describe('refresh thread', () => {
     it('should refresh', () => {
-      const state0 = reducer(initialState, actions.insertThread(threadId, threadName))
+      const state0 = reducer(initialState, actions.insertThread(threadId, threadKey, threadName))
       expect(state0.threads[threadId]).toBeDefined()
       const state1 = reducer(state0, actions.refreshThreadRequest(threadId))
       expect(state1.threads[threadId]).toBeDefined()

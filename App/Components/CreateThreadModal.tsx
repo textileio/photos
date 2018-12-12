@@ -106,7 +106,7 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, name, { navigate, selectToShare })) }
+    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
   }
 }
 
