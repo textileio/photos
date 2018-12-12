@@ -138,7 +138,7 @@ export function * uploadPins (uuid: string) {
     }
     yield fork(monitorForUploadsComplete, uuid)
     for (const uploadId in processingImage.uploadData) {
-      if (processingImage.uploadData[uploadId]) {
+      if (processingImage.uploadData[uploadId] && processingImage.uploadData[uploadId].status !== 'complete') {
         yield put(ProcessingImagesActions.uploadStarted(uuid, uploadId))
         yield call(uploadFile, uploadId, processingImage.uploadData[uploadId].path)
       }

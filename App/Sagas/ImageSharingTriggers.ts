@@ -1,5 +1,5 @@
-import { call, put, select, fork } from 'redux-saga/effects'
-import { ActionType } from 'typesafe-actions'
+import { call, put, select, fork, take } from 'redux-saga/effects'
+import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
@@ -7,11 +7,11 @@ import Upload from 'react-native-background-upload'
 import { SharedImage } from '../Models/TextileTypes'
 
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
-import { allUploadsComplete, processingImageForUploadId, processingImageByUuid, allUploadingImages } from '../Redux/ProcessingImagesSelectors'
+import AccountActions from '../Redux/AccountRedux'
+import { processingImageForUploadId, processingImageByUuid, allUploadingImages } from '../Redux/ProcessingImagesSelectors'
 import UIActions from '../Redux/UIRedux'
 import { insertImage, prepareImage, uploadPins, monitorForUploadsComplete, shareWalletImage, shareToThread } from './ImageSharingSagas'
 import { logNewEvent } from './DeviceLogs'
-import { refreshAllSessions } from '../Services/CafeSessions'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -69,7 +69,10 @@ export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingIma
   const processingImage: ProcessingImage | undefined = yield select(processingImageForUploadId, uploadId)
   if (processingImage) {
     try {
-      yield call(refreshAllSessions)
+      // put an error action so that the uploads listener will cancel itself and we'll retry the whole thing
+      yield put(ProcessingImagesActions.error(processingImage.uuid, 'expired token'))
+      yield put(AccountActions.refreshCafeSessionsRequest())
+      yield take(getType(AccountActions.cafeSessionsSuccess))
       yield put(ProcessingImagesActions.retry(processingImage.uuid))
     } catch (error) {
       // TODO: Should redirect user back to login
