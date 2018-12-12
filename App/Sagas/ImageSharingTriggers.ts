@@ -65,13 +65,16 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
 }
 
 export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.expiredTokenError>) {
-  const { uuid } = action.payload
-  try {
-    yield call(refreshAllSessions)
-    yield put(ProcessingImagesActions.retry(uuid))
-  } catch (error) {
-    // TODO: Should redirect user back to login
-    yield put(ProcessingImagesActions.error(uuid, 'Failed refresh tokens'))
+  const { uploadId } = action.payload
+  const processingImage: ProcessingImage | undefined = yield select(processingImageForUploadId, uploadId)
+  if (processingImage) {
+    try {
+      yield call(refreshAllSessions)
+      yield put(ProcessingImagesActions.retry(processingImage.uuid))
+    } catch (error) {
+      // TODO: Should redirect user back to login
+      yield put(ProcessingImagesActions.error(processingImage.uuid, 'Failed refresh tokens'))
+    }
   }
 }
 
