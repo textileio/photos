@@ -1,6 +1,7 @@
 import { delay } from 'redux-saga'
 import { call, put, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
+import uuid from 'uuid/v4'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { ThreadsSelectors, InboundInvite } from '../Redux/ThreadsRedux'
@@ -10,6 +11,7 @@ import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, phot
 import {
   addThread as add,
   removeThread as remove,
+  threadInfo,
   threads,
   threadFiles,
   addThreadComment,
@@ -48,9 +50,22 @@ export function * monitorNewThreadActions () {
   }
 }
 
-export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
-  const { key, name } = action.payload
+export function * monitorThreadAddedNotifications (action: ActionType<typeof PhotoViewingActions.threadAddedNotification>) {
   try {
+    // We need this one because the callback we get from the node doesn't include key. This queries for the thread and gets
+    // all the required data for threadAdded()
+    const thread: ThreadInfo = yield call(threadInfo, action.payload.id)
+    const { id, key, name } = thread
+    yield put(PhotoViewingActions.threadAdded(id, key, name))
+  } catch (error) {
+    yield put(PhotoViewingActions.addThreadError(error))
+  }
+}
+
+export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
+  const { name } = action.payload
+  try {
+    const key = `textile_photos-shared-${uuid()}`
     yield call(add, key, name)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
@@ -78,7 +93,7 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
       if (thread.key === accountThreadId) {
         continue
       }
-      yield put(PhotoViewingActions.insertThread(thread.id, thread.name))
+      yield put(PhotoViewingActions.insertThread(thread.id, thread.key, thread.name))
       yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
   } catch (error) {

@@ -1,11 +1,11 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
+import Config from 'react-native-config'
 
 export function defaultThreadData (state: RootState): ThreadData | undefined {
-  const defaultThreadName: string = 'default' as any
   return Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
-    .find((threadData) => threadData.name === defaultThreadName)
+    .find((threadData) => threadData.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
 }
 
 export function threadDataByThreadId (state: RootState, id: string): ThreadData | undefined {
@@ -23,7 +23,7 @@ export function photoAndComment (state: RootState) {
 export function getThreads (state: RootState, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadData> {
   const result = Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
-    .filter((thread) => thread.name !== 'default') // TODO: filter by real account thread
+    .filter((thread) => thread.key !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
 
   switch (sortBy) {
     case 'name':

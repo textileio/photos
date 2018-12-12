@@ -3,6 +3,7 @@ import Icon from '../Components/Icon'
 import { connect } from 'react-redux'
 import { Item } from 'react-navigation-header-buttons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
+import Config from 'react-native-config'
 
 import { View, Text, Image, Alert } from 'react-native'
 import PhotoStream from '../Components/PhotoStream'
@@ -152,7 +153,7 @@ const mapStateToProps = (state) => {
   const profile = state.preferences.profile
 
   const items = Object.keys(state.photoViewing.threads)
-    .filter((id) => state.photoViewing.threads[id].name !== 'default')
+    .filter((id) => state.photoViewing.threads[id].key !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
     .map((id) => state.photoViewing.threads[id].photos
       .map((photo) => {
         return { type: 'photo', photo, id: photo.id, threadId: id, threadName: state.photoViewing.threads[id].name }

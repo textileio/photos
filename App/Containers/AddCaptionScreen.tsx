@@ -209,7 +209,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     updateComment: (text: string) => { dispatch(UIActions.updateSharingPhotoComment(text)) },
     share: (image: SharedImage | string, threadId: string, comment?: string) => { dispatch(UIActions.sharePhotoRequest(image, threadId, comment)) },
     cancelShare: () => { dispatch(UIActions.cancelSharingPhoto()) },
-    shareNewThread: (imageId: string, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, threadName, { sharePhoto: { imageId, comment } })) }
+    shareNewThread: (imageId: string, threadName: string, comment?: string) => { dispatch(PhotoViewingActions.addThreadRequest(threadName, { sharePhoto: { imageId, comment } })) }
   }
 }
 
