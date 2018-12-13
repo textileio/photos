@@ -64,20 +64,17 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
   }
 }
 
-export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.expiredTokenError>) {
-  const { uploadId } = action.payload
-  const processingImage: ProcessingImage | undefined = yield select(processingImageForUploadId, uploadId)
-  if (processingImage) {
-    try {
-      // put an error action so that the uploads listener will cancel itself and we'll retry the whole thing
-      yield put(ProcessingImagesActions.error(processingImage.uuid, 'expired token'))
-      yield put(AccountActions.refreshCafeSessionsRequest())
-      yield take(getType(AccountActions.cafeSessionsSuccess))
-      yield put(ProcessingImagesActions.retry(processingImage.uuid))
-    } catch (error) {
-      // TODO: Should redirect user back to login
-      yield put(ProcessingImagesActions.error(processingImage.uuid, 'Failed refresh tokens'))
-    }
+export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.error>) {
+  if (action.payload.error.type !== 'expiredToken') {
+    return
+  }
+  const { uuid } = action.payload.error
+  try {
+    yield put(AccountActions.refreshCafeSessionsRequest())
+    yield take(getType(AccountActions.cafeSessionsSuccess))
+    yield put(ProcessingImagesActions.retry(uuid))
+  } catch (error) {
+    yield put(ProcessingImagesActions.error({ uuid, underlyingError: 'unable to refresh tokens', type: 'general' }))
   }
 }
 
@@ -115,13 +112,8 @@ export function * cancelImageShare (action: ActionType<typeof ProcessingImagesAc
   yield put(ProcessingImagesActions.cancelComplete(uuid))
 }
 
-export function * handleImageUploadError (action: ActionType<typeof ProcessingImagesActions.error>) {
-  const { error } = action.payload
-  let message = 'handleImageUploadError'
-  if (typeof error === 'string') {
-    message = error
-  } else if (error.message) {
-    message = error.message
-  }
-  yield call(logNewEvent, 'Upload Error', message, true)
+export function * handleImageProcessingError (action: ActionType<typeof ProcessingImagesActions.error>) {
+  const { underlyingError } = action.payload.error
+  const message = underlyingError.message as string || underlyingError as string || 'handleImageProcessingError'
+  yield call(logNewEvent, 'Image Processing Error', message, true)
 }

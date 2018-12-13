@@ -6,6 +6,7 @@ import Upload from 'react-native-background-upload'
 import { RootState } from '../../Redux/Types'
 
 import ProcessingImagesActions from '../../Redux/ProcessingImagesRedux'
+import { processingImageForUploadId } from '../../Redux/ProcessingImagesSelectors'
 
 export default class UploadEventHandler {
   store: Store<RootState>
@@ -24,18 +25,50 @@ export default class UploadEventHandler {
     if (responseCode >= 200 && responseCode < 300) {
       this.store.dispatch(ProcessingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody))
     } else if (responseCode === 401) {
-      this.store.dispatch(ProcessingImagesActions.expiredTokenError(e.id))
+      const processingImage = processingImageForUploadId(this.store.getState(), e.id)
+      if (processingImage) {
+        this.store.dispatch(ProcessingImagesActions.error({
+          uuid: processingImage.uuid,
+          uploadId: e.id,
+          underlyingError: 'expired token',
+          type: 'expiredToken'
+        }))
+      }
     } else {
-      this.store.dispatch(ProcessingImagesActions.uploadError(e.id, `Response code: ${responseCode}`))
+      const processingImage = processingImageForUploadId(this.store.getState(), e.id)
+      if (processingImage) {
+        this.store.dispatch(ProcessingImagesActions.error({
+          uuid: processingImage.uuid,
+          uploadId: e.id,
+          underlyingError: `Response code: ${responseCode}`,
+          type: 'upload'
+        }))
+      }
     }
   }
 
   uploadCancelled (e: any) {
-    this.store.dispatch(ProcessingImagesActions.uploadError(e.id, 'Cancelled'))
+    const processingImage = processingImageForUploadId(this.store.getState(), e.id)
+    if (processingImage) {
+      this.store.dispatch(ProcessingImagesActions.error({
+        uuid: processingImage.uuid,
+        uploadId: e.id,
+        underlyingError: 'Cancelled',
+        type: 'upload'
+      }))
+    }
   }
 
   uploadError (e: any) {
-    this.store.dispatch(ProcessingImagesActions.uploadError(e.id, e.error))
+    const processingImage = processingImageForUploadId(this.store.getState(), e.id)
+    if (processingImage) {
+      this.store.dispatch(ProcessingImagesActions.error({
+        uuid: processingImage.uuid,
+        uploadId: e.id,
+        underlyingError: e.error,
+        type: 'upload'
+      }))
+    }
   }
 
   setup () {

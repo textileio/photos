@@ -34,23 +34,39 @@ const actions = {
   cancelComplete: createAction('processingImages/CANCEL_COMPLETE', (resolve) => {
     return (uuid: string) => resolve({ uuid })
   }),
-  expiredTokenError: createAction('processingImages/EXPIRED_TOKEN', (resolve) => {
-    return (uploadId: string) => resolve({ uploadId })
-  }),
   error: createAction('processingImages/ERROR', (resolve) => {
-    return (uuid: string, error: any) => resolve({ uuid, error })
-  }),
-  uploadError: createAction('processingImages/UPLOAD_ERROR', (resolve) => {
-    return (uploadId: string, error: any) => resolve({ uploadId, error })
+    return (error: ProcessingImageError) => resolve({ error })
   })
 }
 
 export type ProcessingImagesAction = ActionType<typeof actions>
 
+interface GeneralError {
+  uuid: string
+  underlyingError: any
+  type: 'general'
+}
+
+interface ExpiredTokenError {
+  uuid: string
+  uploadId: string
+  underlyingError: 'expired token'
+  type: 'expiredToken'
+}
+
+interface UploadError {
+  uuid: string
+  uploadId: string
+  underlyingError: any
+  type: 'upload'
+}
+
+type ProcessingImageError = GeneralError | ExpiredTokenError | UploadError
+
 interface Upload {
   readonly id: string
   readonly path: string
-  readonly status: 'pending' | 'uploading' | 'complete'
+  readonly status: 'pending' | 'uploading' | 'complete' | 'error'
   readonly uploadProgress: number
   readonly responseCode?: string
   readonly responseBody?: string
@@ -198,25 +214,28 @@ export function reducer (state: ProcessingImagesState = initialState, action: Pr
       return { ...state, images }
     }
     case getType(actions.error): {
-      const { uuid, error } = action.payload
-      const e = (error.message as string) || (error as string) || 'unknown'
+      const { error } = action.payload
+      const e = (error.underlyingError.message as string) || (error.underlyingError as string) || 'unknown'
       const images = state.images.map((image) => {
-        if (image.uuid === uuid) {
-          return { ...image, error: e }
-        }
-        return image
-      })
-      return { ...state, images }
-    }
-    case getType(actions.uploadError): {
-      const { uploadId, error } = action.payload
-      const e = (error.message as string) || (error as string) || 'unknown'
-      const images = state.images.map((image) => {
-        if (image.uploadData && image.uploadData[uploadId]) {
-          const upload: Upload = { ...image.uploadData![uploadId], error: e }
-          const uploadData: UploadData = { ...image.uploadData, [uploadId]: upload }
-          const processingImage: ProcessingImage = { ...image, uploadData }
-          return processingImage
+        if (image.uuid === error.uuid) {
+          switch (error.type) {
+            case 'general':
+              return { ...image, error: e }
+            case 'expiredToken':
+            case 'upload':
+              const { uploadId } = error
+              if (image.uploadData && image.uploadData[uploadId]) {
+                const upload: Upload = { ...image.uploadData[uploadId], error: e, status: 'error' }
+                const uploadData: UploadData = { ...image.uploadData, [uploadId]: upload }
+                // Don't set the ProcessingImage.error if it's an expired token error because
+                // that is expected and handled by automatic retry
+                const errorMessage = error.type === 'expiredToken' ? image.error : e
+                const processingImage: ProcessingImage = { ...image, uploadData, error: errorMessage }
+                return processingImage
+              } else {
+                return { ...image, error: e } // TODO: and here?
+              }
+          }
         }
         return image
       })

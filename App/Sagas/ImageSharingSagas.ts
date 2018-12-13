@@ -126,7 +126,7 @@ export function * prepareImage (uuid: string) {
     yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
   } catch (error) {
-    yield put(ProcessingImagesActions.error(uuid, error))
+    yield put(ProcessingImagesActions.error({ uuid, underlyingError: error, type: 'general' }))
   }
 }
 
@@ -138,21 +138,22 @@ export function * uploadPins (uuid: string) {
     }
     yield fork(monitorForUploadsComplete, uuid)
     for (const uploadId in processingImage.uploadData) {
-      if (processingImage.uploadData[uploadId] && processingImage.uploadData[uploadId].status !== 'complete') {
+      if (processingImage.uploadData[uploadId] && (processingImage.uploadData[uploadId].status === 'pending' || processingImage.uploadData[uploadId].status === 'error')) {
         yield put(ProcessingImagesActions.uploadStarted(uuid, uploadId))
         yield call(uploadFile, uploadId, processingImage.uploadData[uploadId].path)
       }
     }
   } catch (error) {
-    put(ProcessingImagesActions.error(uuid, error))
+    put(ProcessingImagesActions.error({ uuid, underlyingError: error, type: 'general' }))
   }
 }
 
 export function * monitorForUploadsComplete(uuid: string) {
   const { complete } = yield race({
     complete: waitFor(select(allUploadsComplete, uuid)),
-    // In case we decide to error out the whole ProcessingImage because of too many upload failures
-    errorAction: take((action: RootAction) => action.type === getType(ProcessingImagesActions.error) && (action.payload.uuid === uuid))
+    // If there is any error related to this image, we want to cancel the uploads complete listener because the image uploads can
+    // be retried and we'll created a new listener for that
+    errorAction: take((action: RootAction) => action.type === getType(ProcessingImagesActions.error) && (action.payload.error.uuid === uuid))
   })
   if (complete) {
     yield call(shareToThread, uuid)
@@ -170,7 +171,7 @@ export function * shareToThread (uuid: string) {
     yield put(ProcessingImagesActions.sharedToThread(uuid, blockInfo))
     yield put(ProcessingImagesActions.complete(uuid))
   } catch (error) {
-    yield put(ProcessingImagesActions.error(uuid, error))
+    yield put(ProcessingImagesActions.error({ uuid, underlyingError: error, type: 'general' }))
   }
 }
 
