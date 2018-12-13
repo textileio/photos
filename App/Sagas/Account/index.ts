@@ -5,8 +5,7 @@ import {
   setUsername,
   setAvatar,
   getCafeSessions,
-  refreshCafeSessions,
-  getSDKVersion
+  refreshCafeSessions
 } from './AccountSagas'
 
 export default function * accountSaga () {
@@ -16,7 +15,6 @@ export default function * accountSaga () {
     call(setUsername),
     call(setAvatar),
     call(getCafeSessions),
-    call(refreshCafeSessions),
-    call(getSDKVersion)
+    call(refreshCafeSessions)
   ])
 }

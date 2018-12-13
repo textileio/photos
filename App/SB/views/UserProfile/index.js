@@ -151,7 +151,7 @@ const mapStateToProps = (state) => {
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
     online,
     nodeRunning,
-    sdkVersion: verboseUi ? state.account.sdkVersion || '' : ''
+    sdkVersion: verboseUi ? state.textileNode.sdkVersion || '' : ''
   }
 }
 

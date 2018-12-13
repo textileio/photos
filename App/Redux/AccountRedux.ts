@@ -38,13 +38,6 @@ const actions = {
   }),
   cafeSessionsError: createAction('CAFE_SESSIONS_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
-  }),
-  refreshSDKVersionRequest: createAction('REFRESH_SDK_VERSION_REQUEST'),
-  getSDKVersionSuccess: createAction('GET_SDK_VERSION_SUCCESS', (resolve) => {
-    return (version: string) => resolve({ version })
-  }),
-  getSDKVersionError: createAction('GET_SDK_VERSION_ERROR', (resolve) => {
-    return (error: any) => resolve() // No use yet
   })
 }
 
@@ -70,8 +63,6 @@ interface AccountState {
     processing: boolean
     error?: string
   }
-
-  sdkVersion?: string,
 }
 
 const initialState: AccountState = {
@@ -125,8 +116,6 @@ export function reducer(state: AccountState = initialState, action: AccountActio
       const obj = action.payload.error
       const error = obj.message as string || obj as string || 'unknown error'
       return { ...state, cafeSessions: { ...state.cafeSessions, processing: false, error } }
-    case getType(actions.getSDKVersionSuccess):
-      return { ...state, sdkVersion: action.payload.version }
     default:
       return state
   }

@@ -24,7 +24,8 @@ import {
   stop,
   threads,
   ThreadInfo,
-  WalletAccount
+  WalletAccount,
+  version
  } from '../NativeModules/Textile'
 import { logNewEvent } from './DeviceLogs'
 import { migrate } from './Migration'
@@ -171,6 +172,15 @@ function * stopNodeAfterDelay (ms: number) {
       yield put(TextileNodeActions.stopNodeSuccess())
       yield delay(500)
     }
+  }
+}
+
+export function * getSDKVersion () {
+  try {
+    const v: string = yield call(version)
+    yield put(TextileNodeActions.getSDKVersionSuccess(v))
+  } catch (error) {
+    yield put(TextileNodeActions.getSDKVersionError(error))
   }
 }
 
