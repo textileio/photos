@@ -1,7 +1,5 @@
 import { CameraRoll, Platform } from 'react-native'
-import RNFS from 'react-native-fs'
 import ImagePicker from 'react-native-image-picker'
-import { getFilePath } from '../NativeModules/FS'
 
 export interface IPickerImage {
   uri: string
@@ -20,39 +18,6 @@ export async function getPhotos (first: number = -1): Promise<string[]> {
   const result = await CameraRoll.getPhotos({ first })
   const items = result.edges.map((edge) => edge.node.image.uri)
   return items
-}
-
-export async function getPhotoPath (uri: string): Promise<string> {
-  const fullDir = `${RNFS.DocumentDirectoryPath}/images/full/`
-  const fullExists = await RNFS.exists(fullDir)
-  if (!fullExists) {
-    await RNFS.mkdir(fullDir)
-  }
-  // iOS method
-  if (uri.includes('assets-library://')) {
-    const regex = /[?&]([^=#]+)=([^&#]*)/g
-    let match: RegExpExecArray | null
-    const params = new Map<string, string>()
-
-    do {
-      match = regex.exec(uri)
-      if (match) {
-        const key = match[1]
-        const value = match[2]
-        params.set(key, value)
-      }
-    } while (match)
-
-    const path = `${fullDir}${params.get('id')}.JPG`
-    await RNFS.copyAssetsFileIOS(uri, path, 0, 0)
-    return path
-  }
-  if (uri.includes('content://media')) {
-    // Android Method
-    const path = await getFilePath(uri)
-    return path
-  }
-  throw new Error('unable to determine photo path.')
 }
 
 export async function chooseProfilePhoto(): Promise<{ image: IPickerImage, data: string}> {
