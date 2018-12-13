@@ -2,6 +2,9 @@ import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
 import Config from 'react-native-config'
 
+// temporary filter until we stop getting them from textile-go
+const BLACKLIST = ['avatars', 'account']
+
 export function defaultThreadData (state: RootState): ThreadData | undefined {
   return Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
@@ -23,7 +26,10 @@ export function photoAndComment (state: RootState) {
 export function getThreads (state: RootState, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadData> {
   const result = Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
-    .filter((thread) => thread.key !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
+    .filter((thread) => {
+      return thread.key !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY &&
+             BLACKLIST.indexOf(thread.name) < 0
+    })
 
   switch (sortBy) {
     case 'name':
