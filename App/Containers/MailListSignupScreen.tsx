@@ -1,5 +1,6 @@
 import React from 'react'
 import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
+import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'
 import { Buffer } from 'buffer'
 
@@ -63,6 +64,9 @@ interface State {
 }
 
 export default class MailListSignupScreen extends React.Component<Props, State> {
+
+  toast?: Toast
+
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -122,6 +126,10 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
               style={ITEM}
             />
             <Text style={LINK} onPress={this.props.onSuccess}>No thanks</Text>
+            <Toast
+              ref={(toast) => { this.toast = toast ? toast : undefined }}
+              position='center'
+            />
           </View>
       </KeyboardAvoidingView>
     )
@@ -146,19 +154,27 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
         status: 'subscribed'
       }
 
-      const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) })
-      const responseJson = await response.json()
-      this.setState({ processing: false })
-      const validStatus = responseJson.status >= 200 && responseJson.status < 300
-      const memberExists = !validStatus && responseJson.title === 'Member Exists'
-      if (validStatus || memberExists) {
-        this.setState({ buttonText: 'Success!', valid: false })
-        // Set a timer and navigate
-        if (this.props.onSuccess) {
-          setTimeout(this.props.onSuccess, 1000)
+      try {
+        const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) })
+        const responseJson = await response.json()
+        this.setState({ processing: false })
+        const validStatus = responseJson.status >= 200 && responseJson.status < 300
+        const memberExists = !validStatus && responseJson.title === 'Member Exists'
+        if (validStatus || memberExists) {
+          this.setState({ buttonText: 'Success!', valid: false })
+          // Set a timer and navigate
+          if (this.props.onSuccess) {
+            setTimeout(this.props.onSuccess, 1000)
+          }
+        } else {
+          this.setState({ error: responseJson.title })
         }
-      } else {
-        this.setState({ error: responseJson.title })
+      } catch (error) {
+        const message = error.message as string || error as string || 'unknown error'
+        this.setState({ error: message, buttonText: 'Retry', processing: false })
+        if (this.toast) {
+          this.toast.show(`Error: ${message}`, 2000)
+        }
       }
     }
   }
