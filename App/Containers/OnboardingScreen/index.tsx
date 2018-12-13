@@ -80,51 +80,53 @@ class OnboardingScreen extends React.Component<Props, State> {
   render() {
     return (
       <SafeAreaView style={CONTAINER}>
-        <Pages
-          ref={(pages: any) => { this.pages = pages ? pages : undefined }}
-          style={[CONTAINER]}
-          containerStyle={{ marginBottom: MARGIN_SMALL }}
-          indicatorColor={COLOR_BRAND_PINK}
-          onScrollEnd={this.onScrollEnd}
-          startPage={this.state.currentPage}
-          scrollEnabled={false}
-        >
-          <OnboardingMessage
-            title='Own your memories'
-            subtitle='Your data is stored in a decentralized system to bring you full ownership of your photos.'
-            image={require('./statics/secure.png')}
-          />
-          <OnboardingMessage
-            title='Better together'
-            subtitle='Create private threads to share your photos with friends and family.'
-            image={require('./statics/share.png')}
-          />
-          <OnboardingMessage
-            title='Backed up safely'
-            subtitle='Everytime you take a picture, Textile will be there to automatically sync your photos.'
-            image={require('./statics/sync.png')}
-          />
-          <OnboardingUsername onSuccess={this.nextPage} />
-          <SetAvatar onSuccess={this.nextPage} />
-          <MailListSignupScreen onSuccess={this.nextPage} />
-          <OnboardingMessage
-            title='All ready!'
-            subtitle="You're all set up. Enjoy using Textile :)"
-            image={require('./statics/sync.png')}
-            buttonText='Get Started'
-            onButtonPress={this.complete}
-          />
-        </Pages>
-        {this.noBackArrowIndexes.indexOf(this.state.currentPage) === -1 &&
-          <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_BACK} onPress={this.previousPage}>
-            <Icon name={'arrow-left'} size={24} />
-          </TouchableOpacity>
-        }
-        {this.noForwardArrowIndexes.indexOf(this.state.currentPage) === -1 &&
-          <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
-            <Icon name={'arrow-right'} size={24} />
-          </TouchableOpacity>
-        }
+        <View style={CONTAINER}>
+          <Pages
+            ref={(pages: any) => { this.pages = pages ? pages : undefined }}
+            style={[CONTAINER]}
+            containerStyle={{ marginBottom: MARGIN_SMALL }}
+            indicatorColor={COLOR_BRAND_PINK}
+            onScrollEnd={this.onScrollEnd}
+            startPage={this.state.currentPage}
+            scrollEnabled={false}
+          >
+            <OnboardingMessage
+              title='Own your memories'
+              subtitle='Your data is stored in a decentralized system to bring you full ownership of your photos.'
+              image={require('./statics/secure.png')}
+            />
+            <OnboardingMessage
+              title='Better together'
+              subtitle='Create private threads to share your photos with friends and family.'
+              image={require('./statics/share.png')}
+            />
+            <OnboardingMessage
+              title='Backed up safely'
+              subtitle='Everytime you take a picture, Textile will be there to automatically sync your photos.'
+              image={require('./statics/sync.png')}
+            />
+            <OnboardingUsername onSuccess={this.nextPage} />
+            <SetAvatar onSuccess={this.nextPage} />
+            <MailListSignupScreen onSuccess={this.nextPage} />
+            <OnboardingMessage
+              title='All ready!'
+              subtitle="You're all set up. Enjoy using Textile :)"
+              image={require('./statics/sync.png')}
+              buttonText='Get Started'
+              onButtonPress={this.complete}
+            />
+          </Pages>
+          {this.noBackArrowIndexes.indexOf(this.state.currentPage) === -1 &&
+            <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_BACK} onPress={this.previousPage}>
+              <Icon name={'arrow-left'} size={24} />
+            </TouchableOpacity>
+          }
+          {this.noForwardArrowIndexes.indexOf(this.state.currentPage) === -1 &&
+            <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
+              <Icon name={'arrow-right'} size={24} />
+            </TouchableOpacity>
+          }
+        </View>
       </SafeAreaView>
     )
   }
