@@ -1,7 +1,6 @@
 import {call, put, take} from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
 import Config from 'react-native-config'
-import { getSDKVersion } from './NodeLifecycle'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { logNewEvent } from './DeviceLogs'
 import StorageActions from '../Redux/StorageRedux'
@@ -28,8 +27,5 @@ export function * onNodeOnline () {
 
     // Check for new photos on every online event
     yield put(StorageActions.refreshLocalImagesRequest())
-
-    // update
-    yield call(getSDKVersion)
   }
 }
