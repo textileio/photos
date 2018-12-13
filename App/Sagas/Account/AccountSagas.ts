@@ -9,7 +9,8 @@ import {
   setAvatar as updateAvatar,
   setUsername as username,
   Profile,
-  CafeSession
+  CafeSession,
+  version
 } from '../../NativeModules/Textile'
 
 export function * refreshProfile () {
@@ -83,6 +84,19 @@ export function * refreshCafeSessions () {
       yield put(AccountActions.cafeSessionsSuccess(refreshedSessions))
     } catch (error) {
       yield put(AccountActions.cafeSessionsError(error))
+    }
+  }
+}
+
+export function * getSDKVersion () {
+  while (true) {
+    try {
+      yield take(getType(AccountActions.refreshSDKVersionRequest))
+      const v: string = yield call(version)
+      yield put(AccountActions.getSDKVersionSuccess(v))
+      break
+    } catch (error) {
+      yield put(AccountActions.getSDKVersionError(error))
     }
   }
 }
