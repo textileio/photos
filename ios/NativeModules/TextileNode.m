@@ -372,11 +372,10 @@ RCT_EXPORT_METHOD(version:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRe
 // MobileInitRepo only run one time ever
 // MobileNewTextile
 
-RCT_EXPORT_METHOD(initRepo:(NSString*)seed repoPath:(NSString*)repoPath logLevel:(NSString*)logLevel logToDisk:(BOOL)logToDisk resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(initRepo:(NSString*)seed repoPath:(NSString*)repoPath logToDisk:(BOOL)logToDisk resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   MobileInitConfig *config = [[MobileInitConfig alloc] init];
   config.seed = seed;
   config.repoPath = repoPath;
-  config.logLevel = logLevel;
   config.logToDisk = logToDisk;
   NSError *error;
   MobileInitRepo(config, &error); // only run one time ever
