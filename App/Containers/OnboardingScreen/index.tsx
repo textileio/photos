@@ -13,7 +13,7 @@ import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
 import Icon from '../../Components/Icon'
 import PrefrencesActions from '../../Redux/PreferencesRedux'
-import { RootAction } from '../../Redux/Types'
+import { RootAction, RootState } from '../../Redux/Types'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -33,11 +33,15 @@ const ARROW_FORWARD: ViewStyle = {
   alignSelf: 'flex-end'
 }
 
+interface StateProps {
+  pendingMigration: boolean
+}
+
 interface DispatchProps {
   complete: () => void
 }
 
-type Props = DispatchProps & NavigationScreenProps
+type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
   currentPage: number
@@ -46,13 +50,20 @@ interface State {
 class OnboardingScreen extends React.Component<Props, State> {
 
   pages?: Pages
-  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 5, 6]
-  noForwardArrowIndexes: number[] = [3, 4, 5, 6]
+  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 5, 6, 7]
 
   constructor(props: Props) {
     super(props)
     this.state = {
       currentPage: 0
+    }
+  }
+
+  noForwardArrowIndexes = () => {
+    if (this.props.pendingMigration) {
+      return [4, 5, 6, 7]
+    } else {
+      return [3, 4, 5, 6]
     }
   }
 
@@ -90,6 +101,17 @@ class OnboardingScreen extends React.Component<Props, State> {
             startPage={this.state.currentPage}
             scrollEnabled={false}
           >
+            {this.props.pendingMigration &&
+              <OnboardingMessage
+                title='Big Changes Under the Hood'
+                subtitle={`We're working fast to make Textile Photos even better for you.
+                  Your old data isn't compatible with this new version of the app,
+                  so for now, you'll be starting fresh. We've stored your
+                  old data here on your phone, and we'll be importing it into this new
+                  version of Textile Photos in a near-future update ;)`}
+                image={require('./statics/secure.png')}
+              />
+            }
             <OnboardingMessage
               title='Own your memories'
               subtitle='Your data is stored in a decentralized system to bring you full ownership of your photos.'
@@ -121,7 +143,7 @@ class OnboardingScreen extends React.Component<Props, State> {
               <Icon name={'arrow-left'} size={24} />
             </TouchableOpacity>
           }
-          {this.noForwardArrowIndexes.indexOf(this.state.currentPage) === -1 &&
+          {this.noForwardArrowIndexes().indexOf(this.state.currentPage) === -1 &&
             <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
               <Icon name={'arrow-right'} size={24} />
             </TouchableOpacity>
@@ -132,8 +154,12 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state: RootState): StateProps => ({
+  pendingMigration: state.preferences.pendingMigration
+})
+
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   complete: () => dispatch(PrefrencesActions.onboardedSuccess())
 })
 
-export default connect(undefined, mapDispatchToProps)(OnboardingScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen)
