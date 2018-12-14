@@ -11,6 +11,10 @@ export function processingImageForUploadId(state: RootState, uploadId: string) {
   })
 }
 
+export function allUploadingImages(state: RootState) {
+  return state.processingImages.images.filter((image) => image.status === 'uploading')
+}
+
 export function allUploadsComplete(state: RootState, uuid: string) {
   return selectors.allUploadsComplete(state.processingImages, uuid)
 }

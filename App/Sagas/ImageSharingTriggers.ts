@@ -1,5 +1,5 @@
-import { call, put, select } from 'redux-saga/effects'
-import { ActionType } from 'typesafe-actions'
+import { call, put, select, fork, take } from 'redux-saga/effects'
+import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
@@ -7,11 +7,11 @@ import Upload from 'react-native-background-upload'
 import { SharedImage } from '../Models/TextileTypes'
 
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
-import { allUploadsComplete, processingImageForUploadId, processingImageByUuid } from '../Redux/ProcessingImagesSelectors'
+import AccountActions from '../Redux/AccountRedux'
+import { processingImageForUploadId, processingImageByUuid, allUploadingImages } from '../Redux/ProcessingImagesSelectors'
 import UIActions from '../Redux/UIRedux'
-import {insertImage, prepareImage, uploadPins, shareWalletImage, shareToThread} from './ImageSharingSagas'
+import { insertImage, prepareImage, uploadPins, monitorForUploadsComplete, shareWalletImage, shareToThread } from './ImageSharingSagas'
 import { logNewEvent } from './DeviceLogs'
-import { refreshAllSessions } from '../Services/CafeSessions'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -23,7 +23,8 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
 }
 
 export function * handleImageUploadComplete (action: ActionType<typeof ProcessingImagesActions.imageUploadComplete>) {
-  // TODO: Handle image upload complete with new redux modeling
+  // This saga just listens for complete uploads and deletes the source file
+  // ImageSharingSagas.monitorForUploadsComplete is what triggers the next step once all uploads are complete
   const { uploadId } = action.payload
   yield call(logNewEvent, 'uploadComplete', uploadId)
   const processingImage: ProcessingImage | undefined = yield select(processingImageForUploadId, uploadId)
@@ -37,11 +38,13 @@ export function * handleImageUploadComplete (action: ActionType<typeof Processin
         }
       }
     } catch (e) {}
-    const allComplete: boolean = yield select(allUploadsComplete, processingImage.uuid)
-    const alreadySharing = processingImage.status === 'sharing' || processingImage.status === 'complete'
-    if (allComplete && !alreadySharing) {
-      yield call(shareToThread, processingImage.uuid)
-    }
+  }
+}
+
+export function * startMonitoringExistingUploads () {
+  const uploadingImages: ReadonlyArray<ProcessingImage> = yield select(allUploadingImages)
+  for (const uploadingImage of uploadingImages) {
+    yield fork(monitorForUploadsComplete, uploadingImage.uuid)
   }
 }
 
@@ -61,14 +64,17 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
   }
 }
 
-export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.expiredTokenError>) {
-  const { uuid } = action.payload
+export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.error>) {
+  if (action.payload.error.type !== 'expiredToken') {
+    return
+  }
+  const { uuid } = action.payload.error
   try {
-    yield call(refreshAllSessions)
+    yield put(AccountActions.refreshCafeSessionsRequest())
+    yield take(getType(AccountActions.cafeSessionsSuccess))
     yield put(ProcessingImagesActions.retry(uuid))
   } catch (error) {
-    // TODO: Should redirect user back to login
-    yield put(ProcessingImagesActions.error(uuid, 'Failed refresh tokens'))
+    yield put(ProcessingImagesActions.error({ uuid, underlyingError: 'unable to refresh tokens', type: 'general' }))
   }
 }
 
@@ -106,13 +112,8 @@ export function * cancelImageShare (action: ActionType<typeof ProcessingImagesAc
   yield put(ProcessingImagesActions.cancelComplete(uuid))
 }
 
-export function * handleImageUploadError (action: ActionType<typeof ProcessingImagesActions.error>) {
-  const { error } = action.payload
-  let message = 'handleImageUploadError'
-  if (typeof error === 'string') {
-    message = error
-  } else if (error.message) {
-    message = error.message
-  }
-  yield call(logNewEvent, 'Upload Error', message, true)
+export function * handleImageProcessingError (action: ActionType<typeof ProcessingImagesActions.error>) {
+  const { underlyingError } = action.payload.error
+  const message = underlyingError.message as string || underlyingError as string || 'handleImageProcessingError'
+  yield call(logNewEvent, 'Image Processing Error', message, true)
 }
