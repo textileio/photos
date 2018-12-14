@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 import mobile.Event;
 import mobile.Messenger;
 import mobile.Mobile;
-import mobile.Mobile;
+import mobile.Mobile_;
 import mobile.InitConfig;
 import mobile.MigrateConfig;
 import mobile.RunConfig;
