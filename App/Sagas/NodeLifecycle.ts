@@ -111,11 +111,9 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield put(AccountActions.setRecoveryPhrase(recoveryPhrase))
         yield put(TextileNodeActions.derivingAccount())
         const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
-        // const logLevel = (__DEV__ ? 'DEBUG' : 'INFO')
-        const logLevel = 'ERROR'
         const logToDisk = !__DEV__
         yield put(TextileNodeActions.initializingRepo())
-        yield call(initRepo, walletAccount.seed, REPO_PATH, logLevel, logToDisk)
+        yield call(initRepo, walletAccount.seed, REPO_PATH, logToDisk)
         yield call(createAndStartNode, dispatch)
       } else {
         yield put(TextileNodeActions.nodeError(error))
