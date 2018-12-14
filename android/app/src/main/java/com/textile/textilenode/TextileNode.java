@@ -793,7 +793,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void initRepo(final String seed, final String repoPath, final String logLevel, final Boolean logToDisk, final Promise promise) {
+    public void initRepo(final String seed, final String repoPath, final Boolean logToDisk, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -801,7 +801,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
                     InitConfig config = new InitConfig();
                     config.setSeed(seed);
                     config.setRepoPath(repoPath);
-                    config.setLogLevel(logLevel);
                     config.setLogToDisk(logToDisk);
                     Mobile.initRepo(config);
                     promise.resolve(null);
