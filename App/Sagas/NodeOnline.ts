@@ -23,8 +23,6 @@ export function * onNodeOnline () {
       }
     }
 
-    yield put(TextileNodeActions.refreshMessagesRequest())
-
     // Check for new photos on every online event
     yield put(StorageActions.refreshLocalImagesRequest())
   }
