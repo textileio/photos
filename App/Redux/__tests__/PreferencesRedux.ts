@@ -2,8 +2,6 @@ import actions, { reducer } from '../PreferencesRedux'
 
 const initialState = reducer(undefined, {} as any)
 
-const recoveryPhrase: string = 'recoveryPhrase'
-
 describe('preferences stories', () => {
   describe('initial state', () => {
     it('should match snapshot', () => {

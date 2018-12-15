@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`deeplink createInviteLink should create a valid invite link 1`] = `"https://www.textile.photos/invites/new#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev"`;
+
+exports[`deeplink getData should parse a Beta link 1`] = `
+Object {
+  "hash": "#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING",
+  "host": "www.textile.photos",
+  "hostname": "www.textile.photos",
+  "href": "textile-beta://www.textile.photos/invites/new#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING",
+  "path": "/invites/new",
+  "port": undefined,
+  "protocol": "textile-beta",
+  "search": "",
+}
+`;
+
+exports[`deeplink getData should parse a Dev link 1`] = `
+Object {
+  "hash": "#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING",
+  "host": "www.textile.photos",
+  "hostname": "www.textile.photos",
+  "href": "textile-dev://www.textile.photos/invites/new#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING",
+  "path": "/invites/new",
+  "port": undefined,
+  "protocol": "textile-dev",
+  "search": "",
+}
+`;
+
+exports[`deeplink getData should parse a HTTP link 1`] = `
+Object {
+  "hash": "#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING",
+  "host": "www.textile.photos",
+  "hostname": "www.textile.photos",
+  "href": "https://www.textile.photos/invites/new#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING",
+  "path": "/invites/new",
+  "port": undefined,
+  "protocol": "https",
+  "search": "",
+}
+`;
+
+exports[`deeplink getData should parse a Production link 1`] = `
+Object {
+  "hash": "#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING",
+  "host": "www.textile.photos",
+  "hostname": "www.textile.photos",
+  "href": "textile://www.textile.photos/invites/new#id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING",
+  "path": "/invites/new",
+  "port": undefined,
+  "protocol": "textile",
+  "search": "",
+}
+`;
+
+exports[`deeplink getParams should parse a Production link 1`] = `
+Object {
+  "id": "QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW",
+  "inviter": "andrew-dev",
+  "key": "VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5",
+  "name": "TRT Dev",
+  "referral": "SOMETHING",
+}
+`;

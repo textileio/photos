@@ -61,7 +61,7 @@ Object {
   },
   "verboseUi": false,
   "viewSettings": Object {
-    "selectedWalletTab": "Photos",
+    "selectedWalletTab": "Threads",
   },
 }
 `;

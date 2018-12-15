@@ -1,14 +1,14 @@
-import { select, take } from 'redux-saga/effects'
+import { select, take, SelectEffect } from 'redux-saga/effects'
 import { RootState } from '../Redux/Types'
 
-export function * waitFor (selector: (state: RootState) => boolean) {
-  if (yield select(selector)) {
-    return
+export function * waitFor (selectEffect: SelectEffect) {
+  if (yield selectEffect) {
+    return true
   }
   while (true) {
     yield take('*')
-    if (yield select(selector)) {
-      return
+    if (yield selectEffect) {
+      return true
     }
   }
 }

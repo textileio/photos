@@ -94,7 +94,9 @@ class UserProfile extends React.PureComponent {
             onLongPress={this.props.toggleVerboseUi}>
             <View style={styles.logoContainer}>
               <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
-              <Text style={styles.versionDescription}>{VersionNumber.appVersion} ({VersionNumber.buildVersion})</Text>
+              <Text style={styles.versionDescription}>
+                {VersionNumber.appVersion} ({VersionNumber.buildVersion}) {this.props.sdkVersion}
+              </Text>
             </View>
           </TouchableWithoutFeedback>
           {this.connectivity()}
@@ -142,13 +144,14 @@ class UserProfile extends React.PureComponent {
 const mapStateToProps = (state) => {
   const online = state.textileNode && state.textileNode.online && state.textileNode.online ? state.textileNode.online : false
   const nodeRunning = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
-
+  const verboseUi = state.preferences.verboseUi
   return {
-    verboseUi: state.preferences.verboseUi,
+    verboseUi,
     recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
     publicKey: state.preferences.publicKey || 'sorry, there was an error',
     online,
-    nodeRunning
+    nodeRunning,
+    sdkVersion: verboseUi ? state.textileNode.sdkVersion || '' : ''
   }
 }
 

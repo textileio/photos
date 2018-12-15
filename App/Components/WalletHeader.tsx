@@ -17,6 +17,7 @@ export interface IWalletHeaderProps {
   username: string,
   changeAvatar: () => void,
   onToggle: (value: string) => void
+  verboseUi?: boolean
 }
 
 const WalletHeader = (props: IWalletHeaderProps) => {
@@ -54,7 +55,7 @@ const WalletHeader = (props: IWalletHeaderProps) => {
           <Text style={style.walletUsername}>Hello, {username}</Text>
         </View>
         <View style={style.walletBottom}>
-          {statButton('Photos', overview.photoCount, overview.photoTitle)}
+          {props.verboseUi && statButton('Photos', overview.photoCount, overview.photoTitle)}
           {statButton('Threads', overview.threadCount, overview.threadTitle)}
           {statButton('Peers', overview.peerCount, overview.peerTitle)}
         </View>

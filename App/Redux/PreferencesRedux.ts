@@ -116,7 +116,7 @@ export const initialState: PreferencesState = {
     }
   },
   viewSettings: {
-    selectedWalletTab: 'Photos'
+    selectedWalletTab: 'Threads'
   }
 }
 
