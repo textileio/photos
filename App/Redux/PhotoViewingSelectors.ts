@@ -1,9 +1,19 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 import Config from 'react-native-config'
 
 // temporary filter until we stop getting them from textile-go
-const BLACKLIST = ['avatars', 'account']
+export const BLACKLIST = ['avatars', 'account']
+
+export interface FeedPhoto {
+  type: 'processingItem' | 'photo'
+  block: string
+  photo?: ThreadFilesInfo
+  threadId?: string
+  threadName?: string
+  props?: any
+}
 
 export function defaultThreadData (state: RootState): ThreadData | undefined {
   return Object.keys(state.photoViewing.threads)
@@ -59,6 +69,24 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
     default:
       return result
   }
+}
+export function getPhotoFeed (state: RootState): ReadonlyArray<FeedPhoto> {
+  return getThreads(state)
+  .map((thread) => thread.photos
+    .map((photo): FeedPhoto => {
+      return { type: 'photo', photo, block: photo.block, threadId: thread.id, threadName: thread.name }
+    })
+  )
+  .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
+  .sort((a, b) => {
+    if (!a.photo) {
+      return 1
+    } else if (!b.photo) {
+      return -1
+    } else {
+      return (new Date(b.photo.date)).getTime() - (new Date(a.photo.date)).getTime()
+    }
+  })
 }
 
 export function getThreadThumbs (state: RootState, byPeerId: string): ReadonlyArray<ThreadThumbs> {
