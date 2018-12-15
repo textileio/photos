@@ -3,7 +3,6 @@ import Icon from '../Components/Icon'
 import { connect } from 'react-redux'
 import { Item } from 'react-navigation-header-buttons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
-import Config from 'react-native-config'
 
 import { View, Text, Image, Alert } from 'react-native'
 import PhotoStream from '../Components/PhotoStream'
@@ -13,8 +12,8 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
-import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
-import { totalUploadProgress } from '../Redux/ProcessingImagesSelectors'
+import { getPhotoFeed } from '../Redux/PhotoViewingSelectors'
+import { getProcessingImages } from '../Redux/ProcessingImagesSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
@@ -152,42 +151,8 @@ class ThreadsList extends React.PureComponent {
 const mapStateToProps = (state) => {
   const profile = state.preferences.profile
 
-  const items = Object.keys(state.photoViewing.threads)
-    .filter((id) => state.photoViewing.threads[id].key !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
-    .map((id) => state.photoViewing.threads[id].photos
-      .map((photo) => {
-        return { type: 'photo', photo, id: photo.id, threadId: id, threadName: state.photoViewing.threads[id].name }
-      })
-    )
-    .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
-    .sort((a, b) => new Date(b.photo.date) - new Date(a.photo.date))
-
-  const defaultData = defaultThreadData(state)
-  const defaultThreadId = defaultData ? defaultData.id : undefined
-
-  const processingItems = state.processingImages.images
-    .filter(image => image.destinationThreadId !== defaultThreadId)
-    .map(image => {
-      let progress = 0
-      if (image.blockInfo) {
-        progress = 1
-      } else if (image.uploadData) {
-        progress = 0.1 + (totalUploadProgress(state, image.uuid) * 0.8)
-      } else if (image.preparedFiles) {
-        progress = 0.1
-      }
-      const message = image.status
-      return {
-        id: image.uuid,
-        type: 'processingItem',
-        props: {
-          imageUri: image.sharedImage.origURL || image.sharedImage.uri, // TODO: Check this on Android
-          progress,
-          message,
-          errorMessage: image.error
-        }
-      }
-    })
+  const items = getPhotoFeed(state)
+  const processingItems = getProcessingImages(state)
 
   // add processing items to the beginning of the list
   items.unshift(...processingItems)

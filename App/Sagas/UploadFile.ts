@@ -1,16 +1,15 @@
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, take } from 'redux-saga/effects'
+import { getType } from 'typesafe-actions'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 
-import { bestCafeSession } from '../Services/CafeSessions'
+import AccountActions from '../Redux/AccountRedux'
+import { bestSession } from '../Redux/AccountSelectors'
 import { CafeSession } from '../NativeModules/Textile'
 
 export function * uploadFile (id: string, payloadPath: string) {
-  const session: CafeSession | undefined = yield call(bestCafeSession)
-  if (!session) {
-    throw new Error('unable to get CafeSession')
-  }
+  const session: CafeSession = yield call(getSession)
   yield call(
     Upload.startUpload,
     {
@@ -24,4 +23,19 @@ export function * uploadFile (id: string, payloadPath: string) {
       }
     }
   )
+}
+
+function * getSession (depth: number = 0): any {
+  const session: CafeSession | undefined = yield select(bestSession)
+  if (!session || new Date(session.expiry) < new Date()) {
+    if (depth === 0) {
+      yield put(AccountActions.refreshCafeSessionsRequest())
+      yield take(getType(AccountActions.cafeSessionsSuccess))
+      yield call(getSession, 1)
+    } else {
+      throw new Error('unable to get CafeSession')
+    }
+  } else {
+    return session
+  }
 }

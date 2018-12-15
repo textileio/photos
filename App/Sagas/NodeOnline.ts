@@ -4,8 +4,7 @@ import Config from 'react-native-config'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { logNewEvent } from './DeviceLogs'
 import StorageActions from '../Redux/StorageRedux'
-import { cafeSessions } from '../Services/CafeSessions'
-import { CafeSession, registerCafe } from '../NativeModules/Textile'
+import { CafeSession, registerCafe, cafeSessions } from '../NativeModules/Textile'
 
 export function * onNodeOnline () {
   while (yield take(getType(TextileNodeActions.nodeOnline))) {
