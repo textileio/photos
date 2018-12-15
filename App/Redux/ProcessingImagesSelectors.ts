@@ -1,5 +1,33 @@
 import { RootState } from './Types'
 import { selectors } from './ProcessingImagesRedux'
+import { FeedPhoto } from './PhotoViewingSelectors'
+import Config from 'react-native-config'
+
+export function getProcessingImages(state: RootState): ReadonlyArray<FeedPhoto> {
+  return state.processingImages.images
+    .filter((image) => image.destinationThreadId !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
+    .map((image) => {
+      let progress = 0
+      if (image.blockInfo) {
+        progress = 1
+      } else if (image.uploadData) {
+        progress = 0.1 + (totalUploadProgress(state, image.uuid) * 0.8)
+      } else if (image.preparedFiles) {
+        progress = 0.1
+      }
+      const message = image.status
+      return {
+        type: 'processingItem',
+        block: image.uuid,
+        props: {
+          imageUri: image.sharedImage.origURL || image.sharedImage.uri, // TODO: Check this on Android
+          progress,
+          message,
+          errorMessage: image.error
+        }
+      } as FeedPhoto
+    })
+}
 
 export function processingImageByUuid(state: RootState, uuid: string) {
   return selectors.processingImageByUuid(state.processingImages, uuid)
