@@ -21,6 +21,7 @@ interface ThreadItem {
 }
 
 export function * migrate(dispatch: Dispatch) {
+  console.log('axh', 'migration ')
   // Take some sort of action to start the migration
   yield call(keepScreenOn)
   yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
@@ -30,6 +31,7 @@ export function * migrate(dispatch: Dispatch) {
   const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, dispatch))
   yield all(downloadEffects)
   yield call(letScreenSleep)
+  console.log('axh', 'migration done ')
 }
 
 function * downloadPhoto(item: PhotoItem, dispatch: Dispatch) {

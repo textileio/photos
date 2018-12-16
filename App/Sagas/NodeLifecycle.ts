@@ -96,9 +96,12 @@ function * createAndStartNode(dispatch: Dispatch): any {
       yield call(addThread, cameraRollThreadKey, cameraRollThreadName)
     }
     yield put(TextileNodeActions.startNodeSuccess())
+    console.log('axh', 'no error')
   } catch (error) {
+    console.log('axh', error.message)
     try {
       if (error.message === MIGRATION_NEEDED_ERROR) {
+        console.log('axh', 'migration needed error')
         yield put(TextileNodeActions.migrationNeeded())
         yield take(getType(TextileNodeActions.initMigration))
         yield call(migrateRepo, REPO_PATH)
