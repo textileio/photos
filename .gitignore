@@ -2,6 +2,9 @@
 
 *.keystore
 *.jks
+android/**/*.settings
+android/**/*.project
+android/**/*.classpath
 
 # OSX
 #

@@ -10,6 +10,17 @@ export interface INotificationsPayload {
   typeString: string,
 }
 
+export async function enable(): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      RNPushNotification.requestPermissions()
+      resolve()
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 export function toTypedNotification(notificationData: NotificationData): Notification {
   const { subject_id, subject, target, type, ...baseNotification } = notificationData
   switch (type) {
@@ -108,8 +119,8 @@ export function toPayload(notification: Notification): INotificationsPayload {
     }
     case(NotificationType.MessageAddedNotification): {
       const title = notification.threadName
-      const message =  [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
+      const message =  [actor, 'wrote', notification.body].join(' ')
+      const feed = message
       return { title, message, feed, typeString }
     }
     case(NotificationType.FilesAddedNotification): {
@@ -131,13 +142,6 @@ export function toPayload(notification: Notification): INotificationsPayload {
       const feed = [actor, notification.body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-  }
-}
-
-export function getData(engagement: PushNotification): any {
-  if (Platform.OS !== 'ios') {
-    const { data } = engagement
-    return data
   }
 }
 
@@ -174,17 +178,6 @@ export async function createNew(notification: Notification): Promise<void> {
       resolve()
     } catch (error) {
       reject()
-    }
-  })
-}
-
-export async function enable(): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    try {
-      RNPushNotification.requestPermissions()
-      resolve()
-    } catch (error) {
-      reject(error)
     }
   })
 }

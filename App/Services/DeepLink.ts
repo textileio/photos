@@ -1,4 +1,4 @@
-import NavigationService from './NavigationService'
+import { NavigationService } from './NavigationService'
 import Config from 'react-native-config'
 import { DeepLinkData} from '../Models/TextileTypes'
 import { ExternalInvite } from '../NativeModules/Textile'
@@ -58,7 +58,7 @@ function createInviteLink (invite: ExternalInvite, threadName: string): string {
   return `https://www.textile.photos/invites/new#${hash.join('&')}`
 }
 
-function route (link: string) {
+function route (link: string, navigation: NavigationService) {
   const data = getData(link)
   if (data) {
     if (data.path === '/invites/device' && data.hash !== '') {
@@ -69,7 +69,7 @@ function route (link: string) {
       // NavigationService.navigate('PairingView', { request: getParams(data.hash) })
     } else if (data.path === '/invites/new' && data.hash !== '') {
       // invite the user to the thread
-      NavigationService.navigate('ThreadInvite', { ...getParams(data.hash) })
+      navigation.navigate('ThreadInvite', { ...getParams(data.hash) })
     }
   }
 }

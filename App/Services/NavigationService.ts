@@ -25,10 +25,15 @@ function goBack() {
   )
 }
 
-// add other navigation functions that you need and export them
+export interface NavigationService {
+  setTopLevelNavigator: (navigatorRef: NavigationContainerComponent) => void
+  navigate: (routeName: string, params?: NavigationParams) => void
+  goBack: () => void
+}
 
+// add other navigation functions that you need and export them
 export default {
   navigate,
   goBack,
   setTopLevelNavigator
-}
+} as NavigationService

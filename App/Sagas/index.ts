@@ -39,7 +39,8 @@ import {
   retryImageShare,
   cancelImageShare,
   retryWithTokenRefresh,
-  handleImageUploadError
+  handleImageProcessingError,
+  startMonitoringExistingUploads
 } from './ImageSharingTriggers'
 
 import {
@@ -114,13 +115,15 @@ export default function * root (dispatch: Dispatch) {
     call(onNodeOnline),
     call(monitorNewThreadActions),
 
+    call(startMonitoringExistingUploads),
+
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
 
     // just for logging purposes
     takeLatest(getType(TriggersActions.backgroundFetch), backgroundFetch),
     takeLatest(getType(TriggersActions.locationUpdate), locationUpdate),
-    takeEvery(getType(ProcessingImagesActions.error), handleImageUploadError),
+    takeEvery(getType(ProcessingImagesActions.error), handleImageProcessingError),
 
     // profile photo
     takeEvery(getType(UIActions.chooseProfilePhotoRequest), chooseProfilePhoto),
@@ -180,7 +183,7 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
     takeEvery(getType(ProcessingImagesActions.retry), retryImageShare),
     takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
-    takeEvery(getType(ProcessingImagesActions.expiredTokenError), retryWithTokenRefresh),
+    takeEvery(getType(ProcessingImagesActions.error), retryWithTokenRefresh),
     takeEvery(getType(StorageActions.newLocalPhoto), newLocalPhoto),
 
     // Notifications

@@ -40,6 +40,13 @@ const actions = {
   }),
   updateOverviewRequest: createAction('UPDATE_OVERVIEW_REQUEST', (resolve) => {
     return () => resolve()
+  }),
+  refreshSDKVersionRequest: createAction('REFRESH_SDK_VERSION_REQUEST'),
+  getSDKVersionSuccess: createAction('GET_SDK_VERSION_SUCCESS', (resolve) => {
+    return (version: string) => resolve({ version })
+  }),
+  getSDKVersionError: createAction('GET_SDK_VERSION_ERROR', (resolve) => {
+    return (error: any) => resolve() // No use yet
   })
 }
 
@@ -69,6 +76,7 @@ interface TextileNodeState {
     readonly error?: string
   }
   readonly refreshingMessages: boolean
+  readonly sdkVersion?: string
 }
 
 function getHMS() {
@@ -123,6 +131,8 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.refreshMessagesSuccess):
     case getType(actions.refreshMessagesFailure):
       return { ...state, refreshingMessages: false }
+    case getType(actions.getSDKVersionSuccess):
+      return { ...state, sdkVersion: action.payload.version }
     default:
       return state
   }

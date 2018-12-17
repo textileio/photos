@@ -1,6 +1,19 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
+import { ThreadFilesInfo } from '../NativeModules/Textile'
 import Config from 'react-native-config'
+
+// temporary filter until we stop getting them from textile-go
+export const BLACKLIST = ['avatars', 'account']
+
+export interface FeedPhoto {
+  type: 'processingItem' | 'photo'
+  block: string
+  photo?: ThreadFilesInfo
+  threadId?: string
+  threadName?: string
+  props?: any
+}
 
 export function defaultThreadData (state: RootState): ThreadData | undefined {
   return Object.keys(state.photoViewing.threads)
@@ -23,7 +36,10 @@ export function photoAndComment (state: RootState) {
 export function getThreads (state: RootState, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadData> {
   const result = Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
-    .filter((thread) => thread.key !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
+    .filter((thread) => {
+      return thread.key !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY &&
+             BLACKLIST.indexOf(thread.name) < 0
+    })
 
   switch (sortBy) {
     case 'name':
@@ -53,6 +69,24 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
     default:
       return result
   }
+}
+export function getPhotoFeed (state: RootState): ReadonlyArray<FeedPhoto> {
+  return getThreads(state)
+  .map((thread) => thread.photos
+    .map((photo): FeedPhoto => {
+      return { type: 'photo', photo, block: photo.block, threadId: thread.id, threadName: thread.name }
+    })
+  )
+  .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
+  .sort((a, b) => {
+    if (!a.photo) {
+      return 1
+    } else if (!b.photo) {
+      return -1
+    } else {
+      return (new Date(b.photo.date)).getTime() - (new Date(a.photo.date)).getTime()
+    }
+  })
 }
 
 export function getThreadThumbs (state: RootState, byPeerId: string): ReadonlyArray<ThreadThumbs> {

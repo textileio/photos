@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux/index'
+import Config from 'react-native-config'
 import {
   View,
   Text,
@@ -31,7 +32,7 @@ interface ScreenProps {
 
 class QRCodeModal extends React.Component<DispatchProps & ScreenProps> {
   getLink (link: string): string {
-    return link.replace('https://', 'textile://')
+    return link.replace('https://', `${Config.RN_URL_SCHEME}://`)
   }
 
   render () {

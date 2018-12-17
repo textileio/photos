@@ -264,8 +264,8 @@ export async function version(): Promise<string> {
 // MobileInitRepo only run one time ever
 // MobileNewTextile
 
-export async function initRepo(seed: string, repoPath: string, logLevel: string, logToDisk: boolean): Promise<void> {
-  return await TextileNode.initRepo(seed, repoPath, logLevel, logToDisk)
+export async function initRepo(seed: string, repoPath: string, logToDisk: boolean): Promise<void> {
+  return await TextileNode.initRepo(seed, repoPath, logToDisk)
 }
 
 export async function migrateRepo(repoPath: string): Promise<void> {
