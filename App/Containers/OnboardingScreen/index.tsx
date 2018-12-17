@@ -104,13 +104,14 @@ class OnboardingScreen extends React.Component<Props, State> {
             {this.props.pendingMigration &&
               <OnboardingMessage
                 title='Big Changes Under the Hood'
-                subtitle={`We're working fast to make Textile Photos even better for you.
-                  Your old data isn't compatible with this new version of the app,
-                  so for now, you'll be starting fresh. We've stored your
-                  old data here on your phone, and we'll be importing it into this new
-                  version of Textile Photos in a near-future update ;)`}
                 image={require('./statics/secure.png')}
-              />
+              >
+                We're working fast to make Textile Photos even better for you.
+                Your old data isn't compatible with this new version of the app,
+                so for now, you'll be starting fresh. We've stored your old data
+                here on your phone, and we'll be importing it into this new
+                version of Textile Photos in a near-future update ;)
+              </OnboardingMessage>
             }
             <OnboardingMessage
               title='Own your memories'
