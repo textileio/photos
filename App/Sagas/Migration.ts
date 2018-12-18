@@ -62,7 +62,7 @@ export function * runRecurringMigrationTasks () {
       // for each contact ask if they've migrated
       const contact = yield call(findContact, peer)
       if (contact) {
-        yield call(addContact, contact.peerId, contact.address, contact.username)
+        yield call(addContact, contact.peerId, contact.address, contact.username || '')
       } else {
         throw new Error('peer not found')
       }
@@ -103,9 +103,9 @@ export async function announceMigration(peerId: string, address: string, usernam
 }
 
 // will error response doesn't include the peer
-export async function findContact(peerId: string): Promise<{peerId: string, address: string, username: string} | undefined> {
+export async function findContact(peerId: string): Promise<{peerId: string, address: string, username?: string} | undefined> {
   const response = await fetch(`${Config.RN_PEER_SWAP_API}?peerId=${peerId}`, { method: 'GET' })
-  const responseJson: [{peerId: string, address: string, username: string}] = await response.json()
+  const responseJson: [{peerId: string, address: string, username?: string}] = await response.json()
   return responseJson[0]
 }
 
