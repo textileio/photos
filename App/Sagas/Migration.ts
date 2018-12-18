@@ -50,7 +50,7 @@ export function * runRecurringMigrationTasks () {
   if (announcement) {
     const {peerId, address, username, previous} = announcement
     try {
-      yield call(announceMigration, peerId, address, username, previous)
+      yield call(announceId, peerId, address, username, previous)
       // If no error, mark as successful
       yield put(MigrationActions.announceSuccess())
     } catch (error) {
@@ -92,7 +92,7 @@ export function * migrateConnections() {
 }
 
 // Will error for any non-success
-export async function announceMigration(peerId: string, address: string, username: string, previousId: string) {
+export async function announceId(peerId: string, address: string, username: string, previousId: string) {
   const headers = {'Content-type': 'application/json'}
   const body = JSON.stringify({ peerId, previousId, address, username })
   const response = await fetch(Config.RN_PEER_SWAP, { method: 'POST', headers, body })
