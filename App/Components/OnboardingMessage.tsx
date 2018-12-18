@@ -31,11 +31,12 @@ const BUTTON_WRAPPER: ViewStyle = {
 
 interface Props {
   title: string
-  subtitle: string
+  subtitle?: string
   buttonText?: string
   onButtonPress?: () => void
   image: ImageSourcePropType
   containerStyle?: ViewStyle
+  children?: string
 }
 
 const onboardingMessage = (props: Props) => {
@@ -43,7 +44,7 @@ const onboardingMessage = (props: Props) => {
     <View style={[CONTAINER, props.containerStyle]}>
       <Image style={IMAGE} source={props.image} />
       <Text style={TITLE}>{props.title}</Text>
-      <Text style={SUBTITLE}>{props.subtitle}</Text>
+      <Text style={SUBTITLE}>{props.subtitle || props.children}</Text>
       {props.buttonText &&
         <View style={BUTTON_WRAPPER}>
           <Button text={props.buttonText} onPress={props.onButtonPress} />
