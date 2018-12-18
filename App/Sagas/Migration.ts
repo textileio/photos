@@ -1,13 +1,16 @@
 import FS from 'react-native-fs'
 import Config from 'react-native-config'
-import { all, call, put } from 'redux-saga/effects'
+import { all, call, put, select } from 'redux-saga/effects'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
 import MigrationActions from '../Redux/MigrationRedux'
+import { getAddress, getUsername, getPeerId } from '../Redux/AccountSelectors'
+
 import {
   addContact
  } from '../NativeModules/Textile'
 
+const PREVIOUS_ID_PATH = `${FS.DocumentDirectoryPath}/migration005_peerid.ndjson`
 const PHOTOS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_default_photos.ndjson`
 const THREADS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_threads.ndjson`
 const IMAGE_URL = (id: string, key: string) => `https://cafe.textile.io/ipfs/${id}/photo?key=${key}`
@@ -17,6 +20,9 @@ const IMAGE_PATH = (id: string) => `${MIGRATION_IMAGES_PATH}/${id}.jpg`
 interface PhotoItem {
   id: string,
   key: string
+}
+interface PeerIdItem {
+  peerid: string
 }
 
 interface ThreadItem {
@@ -28,8 +34,15 @@ interface ThreadItem {
 export function * migrate(dispatch: Dispatch) {
   // Take some sort of action to start the migration
   yield call(keepScreenOn)
+
   // TODO: announceMigration below
-  // announceMigration(params)
+  const previousItems: PeerIdItem[] = yield call(getItems, PREVIOUS_ID_PATH)
+  const previous = previousItems[0]
+  const peerId = yield select(getPeerId)
+  const address = yield select(getAddress)
+  const username = yield select(getUsername) || ''
+  announceMigration(peerId, address, username, previous.peerid)
+
   yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
   const photoItems: PhotoItem[] = yield call(getItems, PHOTOS_FILE_PATH)
   const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
@@ -54,17 +67,20 @@ export async function announceMigration(peerId: string, address: string, usernam
   }
 }
 
-export async function * peerConnect(threadItems: ThreadItem[]) {
+export async function peerConnect(threadItems: ThreadItem[]) {
   // an array of distinct contacts
   const contacts = [...new Set(([] as string[]).concat(...threadItems.map((thread) => thread.peers)))]
   const retry = []
   for (const peer of contacts) {
-    // for each contact ask if they've migrated
-    const contact = await findContact(peer)
-    if (contact) {
-      // if so, add them to our contacts
-      yield call(addContact, contact.peerId, contact.address, contact.username)
-    } else {
+    try {
+      // for each contact ask if they've migrated
+      const contact = await findContact(peer)
+      if (contact) {
+        await addContact(contact.peerId, contact.address, contact.username)
+      } else {
+        throw new Error('peer not announced')
+      }
+    } catch (error) {
       retry.push(peer)
     }
   }
