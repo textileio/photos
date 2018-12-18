@@ -35,6 +35,18 @@ export function * migrate(dispatch: Dispatch) {
   // Take some sort of action to start the migration
   yield call(keepScreenOn)
 
+  yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
+  const photoItems: PhotoItem[] = yield call(getItems, PHOTOS_FILE_PATH)
+  const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
+  // TODO: reconnect to old peers
+  // peerConnect(threadItems)
+  yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
+  const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, dispatch))
+  yield all(downloadEffects)
+  yield call(letScreenSleep)
+}
+
+export function * migrateConnections() {
   // TODO: announceMigration below
   // TODO: we should store if announce was successful or not and retry later if not
   // probably cause of failure would be tmp bad/missing connection
@@ -45,15 +57,9 @@ export function * migrate(dispatch: Dispatch) {
   const username = yield select(getUsername) || ''
   announceMigration(peerId, address, username, previous.peerid)
 
-  yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
-  const photoItems: PhotoItem[] = yield call(getItems, PHOTOS_FILE_PATH)
   const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
   // TODO: reconnect to old peers
-  // peerConnect(threadItems)
-  yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
-  const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, dispatch))
-  yield all(downloadEffects)
-  yield call(letScreenSleep)
+  peerConnect(threadItems)
 }
 
 export async function announceMigration(peerId: string, address: string, username: string, previousId: string) {
