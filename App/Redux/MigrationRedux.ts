@@ -5,6 +5,7 @@ const actions = {
     '@migration/MIGRATION_METADATA',
     (resolve) => (photosCount: number, threadsCount: number) => resolve({ photosCount, threadsCount })
   ),
+  requestRunRecurringMigrationTasks: createAction('@migration/REQUEST_RECURRING_MIGRATION'),
   announceMigration: createAction(
     '@migration/ANNOUNCE',
     (resolve) => (peerId: string, address: string, username: string, previousId: string) => resolve({ peerId, address, username, previousId })

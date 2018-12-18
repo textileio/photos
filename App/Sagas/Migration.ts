@@ -1,6 +1,7 @@
 import FS from 'react-native-fs'
 import Config from 'react-native-config'
-import { all, call, put, select } from 'redux-saga/effects'
+import { all, call, put, select, take } from 'redux-saga/effects'
+import { getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
 import MigrationActions from '../Redux/MigrationRedux'
@@ -45,29 +46,33 @@ export function * migrate(dispatch: Dispatch) {
 }
 
 // Can be run on each node online
+
 export function * runRecurringMigrationTasks () {
-  const announcement = yield select(getAnnouncement)
-  if (announcement) {
-    const {peerId, address, username, previous} = announcement
-    try {
-      yield call(announceId, peerId, address, username, previous)
-      // If no error, mark as successful
-      yield put(MigrationActions.announceSuccess())
-    } catch (error) {
-      // just run again later
-    }
-  }
-  const peers = yield select(getNetwork)
-  for (const peer of peers) {
-    try {
-      // for each contact ask if they've migrated
-      const contact = yield call(findContact, peer)
-      if (contact) {
-        yield call(addContact, contact.peerId, contact.address, contact.username || '')
-        yield put(MigrationActions.connectionSuccess(peer))
+  while (true) {
+    yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
+    const announcement = yield select(getAnnouncement)
+    if (announcement) {
+      const {peerId, address, username, previous} = announcement
+      try {
+        yield call(announceId, peerId, address, username, previous)
+        // If no error, mark as successful
+        yield put(MigrationActions.announceSuccess())
+      } catch (error) {
+        // just run again later
       }
-    } catch (error) {
-      // just run again later
+    }
+    const peers = yield select(getNetwork)
+    for (const peer of peers) {
+      try {
+        // for each contact ask if they've migrated
+        const contact = yield call(findContact, peer)
+        if (contact) {
+          yield call(addContact, contact.peerId, contact.address, contact.username || '')
+          yield put(MigrationActions.connectionSuccess(peer))
+        }
+      } catch (error) {
+        // just run again later
+      }
     }
   }
 }
@@ -88,7 +93,7 @@ export function * migrateConnections() {
   const peers = [...new Set(([] as string[]).concat(...threadItems.map((thread) => thread.peers)))]
   yield put(MigrationActions.connectToPeers(peers))
   // run it for the first time
-  yield call(runRecurringMigrationTasks)
+  yield put(MigrationActions.requestRunRecurringMigrationTasks())
 }
 
 // Will error for any non-success
