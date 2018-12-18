@@ -184,7 +184,7 @@ export interface ThreadInfo {
   readonly key: string
   readonly name: string
   readonly schema?: Node
-  readonly schem_id?: string
+  readonly schema_id?: string
   readonly initiator: string
   readonly type: ThreadType
   readonly state: ThreadState
