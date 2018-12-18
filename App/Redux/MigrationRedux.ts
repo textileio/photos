@@ -77,11 +77,11 @@ export interface PhotoAdds {
   readonly [key: string]: PhotoAdd
 }
 
-export interface MigrationAnnounce {
-  peerId: string,
-  previousId: string,
-  address: string,
-  username: string
+export interface PeerDetails {
+  readonly peerId: string,
+  readonly previousId: string,
+  readonly address: string,
+  readonly username: string
 }
 
 export interface MigrationState {
@@ -89,7 +89,7 @@ export interface MigrationState {
   readonly threadsCount?: number
   readonly photoDownloads: PhotoDownloads
   readonly photoAdds: PhotoAdds
-  readonly announcement?: MigrationAnnounce
+  readonly announcement?: PeerDetails
   readonly network?: ReadonlyArray<string>
 }
 
@@ -105,7 +105,7 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
       return { ...state, photosCount, threadsCount }
     }
     case getType(actions.announceMigration): {
-      const announcement: MigrationAnnounce = action.payload
+      const announcement: PeerDetails = action.payload
       return { ...state, announcement }
     }
     case getType(actions.announceSuccess): {
