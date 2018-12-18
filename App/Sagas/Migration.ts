@@ -66,7 +66,7 @@ export async function announceMigration(peerId: string, address: string, usernam
   try {
     const headers = {'Content-type': 'application/json'}
     const body = JSON.stringify({ peerId, previousId })
-    const response = await fetch(Config.RN_PEER_SWAP_API, { method: 'POST', headers, body })
+    const response = await fetch(Config.RN_PEER_SWAP, { method: 'POST', headers, body })
     if (!(response.status >= 200 && response.status < 300)) {
       throw Error('Request failed')
     }
