@@ -105,7 +105,8 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield put(PreferencesActions.migrationNeeded())
         // call the create/start sequence again
         yield call(createAndStartNode, dispatch)
-        // yield call(migrateConnections)
+        // migrate peerid
+        yield call(migrateConnections)
       } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)
