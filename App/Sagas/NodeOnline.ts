@@ -4,6 +4,7 @@ import Config from 'react-native-config'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { logNewEvent } from './DeviceLogs'
 import StorageActions from '../Redux/StorageRedux'
+import { runRecurringMigrationTasks } from './Migration'
 import { CafeSession, registerCafe, cafeSessions } from '../NativeModules/Textile'
 
 export function * onNodeOnline () {
@@ -26,5 +27,8 @@ export function * onNodeOnline () {
 
     // Check for new photos on every online event
     yield put(StorageActions.refreshLocalImagesRequest())
+
+    // Only run this after everything else in the node is running
+    yield call(runRecurringMigrationTasks)
   }
 }

@@ -1,4 +1,5 @@
 import { RootState } from './Types'
+import { MigrationAnnounce } from './MigrationRedux';
 
 export function overallDownloadProgress(state: RootState) {
   let totalSize = 0
@@ -11,4 +12,12 @@ export function overallDownloadProgress(state: RootState) {
     }
   }
   return totalDownloaded / totalSize
+}
+
+export function getAnnouncement(state: RootState): MigrationAnnounce | undefined {
+  return state.migration.announcement
+}
+
+export function getNetwork(state: RootState): ReadonlyArray<string> {
+  return state.migration.network || []
 }
