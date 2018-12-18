@@ -46,6 +46,7 @@ export function * migrate(dispatch: Dispatch) {
   yield call(letScreenSleep)
 }
 
+// Try to find any old peers that have already migrated
 export function * migrateConnections() {
   // TODO: announceMigration below
   // TODO: we should store if announce was successful or not and retry later if not
@@ -62,6 +63,7 @@ export function * migrateConnections() {
   peerConnect(threadItems)
 }
 
+// Let's old peers know your new peerId reconnect
 export async function announceMigration(peerId: string, address: string, username: string, previousId: string) {
   try {
     const headers = {'Content-type': 'application/json'}
