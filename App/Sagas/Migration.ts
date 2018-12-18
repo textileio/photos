@@ -51,9 +51,10 @@ export function * runRecurringMigrationTasks () {
     const {peerId, address, username, previous} = announcement
     try {
       yield call(announceMigration, peerId, address, username, previous)
-    } finally {
       // If no error, mark as successful
       yield put(MigrationActions.announceSuccess())
+    } catch (error) {
+      // just run again later
     }
   }
   const peers = yield select(getNetwork)
@@ -63,12 +64,10 @@ export function * runRecurringMigrationTasks () {
       const contact = yield call(findContact, peer)
       if (contact) {
         yield call(addContact, contact.peerId, contact.address, contact.username || '')
-      } else {
-        throw new Error('peer not found')
+        yield put(MigrationActions.connectionSuccess(peer))
       }
-    } finally {
-      // If no error, mark as successful
-      yield put(MigrationActions.connectionSuccess(peer))
+    } catch (error) {
+      // just run again later
     }
   }
 }
