@@ -36,8 +36,10 @@ export function * migrate(dispatch: Dispatch) {
   yield call(keepScreenOn)
 
   // TODO: announceMigration below
+  // TODO: we should store if announce was successful or not and retry later if not
+  // probably cause of failure would be tmp bad/missing connection
   const previousItems: PeerIdItem[] = yield call(getItems, PREVIOUS_ID_PATH)
-  const previous = previousItems[0]
+  const previous = previousItems[0] // needs a check to see if it's even there
   const peerId = yield select(getPeerId)
   const address = yield select(getAddress)
   const username = yield select(getUsername) || ''
