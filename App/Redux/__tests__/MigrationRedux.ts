@@ -37,9 +37,9 @@ describe('migration', () => {
         migrationState,
         actions.announceMigration(
           peerDetails.peerId,
+          peerDetails.previousId,
           peerDetails.address,
-          peerDetails.username,
-          peerDetails.previousId
+          peerDetails.username
         )
       )
       expect(migrationState.announcement).toEqual(peerDetails)
