@@ -60,11 +60,7 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   noForwardArrowIndexes = () => {
-    if (this.props.pendingMigration) {
-      return [4, 5, 6, 7]
-    } else {
-      return [3, 4, 5, 6]
-    }
+    return [4, 5, 6, 7]
   }
 
   nextPage = () => {
