@@ -1,9 +1,18 @@
 import FS from 'react-native-fs'
-import { all, call, put } from 'redux-saga/effects'
+import Config from 'react-native-config'
+import { all, call, put, select, take } from 'redux-saga/effects'
+import { getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
 import MigrationActions from '../Redux/MigrationRedux'
+import { getAnnouncement, getNetwork } from '../Redux/MigrationSelectors'
+import { getAddress, getUsername, getPeerId } from '../Redux/AccountSelectors'
 
+import {
+  addContact
+ } from '../NativeModules/Textile'
+
+const PREVIOUS_ID_PATH = `${FS.DocumentDirectoryPath}/migration005_peerid.ndjson`
 const PHOTOS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_default_photos.ndjson`
 const THREADS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_threads.ndjson`
 const IMAGE_URL = (id: string, key: string) => `https://cafe.textile.io/ipfs/${id}/photo?key=${key}`
@@ -14,10 +23,15 @@ interface PhotoItem {
   id: string,
   key: string
 }
+interface PeerIdItem {
+  peerid: string
+  username?: string
+}
 
 interface ThreadItem {
-  id: string,
-  sk: string
+  name: string,
+  sk: string,
+  peers: string[]
 }
 
 export function * migrate(dispatch: Dispatch) {
@@ -30,6 +44,73 @@ export function * migrate(dispatch: Dispatch) {
   const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, dispatch))
   yield all(downloadEffects)
   yield call(letScreenSleep)
+}
+
+// Can be run on each node online
+
+export function * runRecurringMigrationTasks () {
+  while (true) {
+    yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
+    const announcement = yield select(getAnnouncement)
+    if (announcement) {
+      const {peerId, address, username, previousId} = announcement
+      try {
+        yield call(announceId, peerId, address, username, previousId)
+        // If no error, mark as successful
+        yield put(MigrationActions.announceSuccess())
+      } catch (error) {
+        // just run again later
+      }
+    }
+    const peers = yield select(getNetwork)
+    for (const peer of peers) {
+      try {
+        // for each contact ask if they've migrated
+        const contact = yield call(findContact, peer)
+        if (contact) {
+          yield call(addContact, contact.peerId, contact.address, contact.username || '')
+          yield put(MigrationActions.connectionSuccess(peer))
+        }
+      } catch (error) {
+        // just run again later
+      }
+    }
+  }
+}
+
+// Should be run the first time
+export function * migrateConnections() {
+  // announce to other peers
+  const previousItems: PeerIdItem[] = yield call(getItems, PREVIOUS_ID_PATH)
+  if (previousItems.length) {
+    const previous = previousItems[0]
+    const peerId = yield select(getPeerId)
+    const address = yield select(getAddress)
+    yield put(MigrationActions.announceMigration(peerId, previous.peerid, address, previous.username))
+  }
+  // locate old peers
+  const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
+  const peers = [...new Set(([] as string[]).concat(...threadItems.map((thread) => thread.peers)))]
+  yield put(MigrationActions.connectToPeers(peers))
+  // run it for the first time
+  yield put(MigrationActions.requestRunRecurringMigrationTasks())
+}
+
+// Will error for any non-success
+export async function announceId(peerId: string, address: string, username: string, previousId: string) {
+  const headers = {'Content-type': 'application/json'}
+  const body = JSON.stringify({ peerId, previousId, address, username })
+  const response = await fetch(Config.RN_PEER_SWAP, { method: 'POST', headers, body })
+  if (!(response.status >= 200 && response.status < 300)) {
+    throw Error('Request failed')
+  }
+}
+
+// will error response doesn't include the peer
+export async function findContact(peerId: string): Promise<{peerId: string, previousId: string, address: string, username?: string}> {
+  const response = await fetch(`${Config.RN_PEER_SWAP}?peerId=${peerId}`, { method: 'GET' })
+  const responseJson: [{peerId: string, previousId: string, address: string, username?: string}] = await response.json()
+  return responseJson[0]
 }
 
 function * downloadPhoto(item: PhotoItem, dispatch: Dispatch) {

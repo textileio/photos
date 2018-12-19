@@ -1,11 +1,13 @@
 import { RootState } from './Types'
 import { selectors } from './ProcessingImagesRedux'
-import { FeedPhoto } from './PhotoViewingSelectors'
+import { FeedPhoto, getThreads } from './PhotoViewingSelectors'
 import Config from 'react-native-config'
 
 export function getProcessingImages(state: RootState): ReadonlyArray<FeedPhoto> {
+  // Filters out uplaods happening on non-UI threads (avatars etc)
+  const threadIds = getThreads(state).map((thread) => thread.id)
   return state.processingImages.images
-    .filter((image) => image.destinationThreadId !== Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
+    .filter((image) => threadIds.indexOf(image.destinationThreadId) >= 0)
     .map((image) => {
       let progress = 0
       if (image.blockInfo) {

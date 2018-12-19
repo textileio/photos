@@ -1,6 +1,7 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
 import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { getPeerId } from './AccountSelectors'
 import Config from 'react-native-config'
 
 // temporary filter until we stop getting them from textile-go
@@ -13,6 +14,13 @@ export interface FeedPhoto {
   threadId?: string
   threadName?: string
   props?: any
+}
+
+export interface SharedPhoto {
+  type: 'photo'
+  photo: ThreadFilesInfo
+  id: string
+  original: string
 }
 
 export function defaultThreadData (state: RootState): ThreadData | undefined {
@@ -86,6 +94,25 @@ export function getPhotoFeed (state: RootState): ReadonlyArray<FeedPhoto> {
     } else {
       return (new Date(b.photo.date)).getTime() - (new Date(a.photo.date)).getTime()
     }
+  })
+}
+
+export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
+  const selfId = getPeerId(state)
+  const photos = getThreads(state)
+    .map((thread) => thread.photos
+      .filter((photo) => photo.author_id === selfId)
+      .map((photo): SharedPhoto => {
+        const files = photo.files.length ? photo.files[0] : undefined
+        const original = files && files.links ? files.links.exif.checksum : photo.block
+        return { type: 'photo', photo, id: photo.block, original }
+      })
+    )
+    .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
+  return photos.filter((s1, pos, arr) => {
+    return arr.findIndex((s2) => {
+      return s2.original === s1.original
+    }) === pos
   })
 }
 
