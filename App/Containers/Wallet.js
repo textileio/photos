@@ -283,7 +283,7 @@ const mapStateToProps = (state) => {
       peerCount: state.storage.overview ? state.storage.overview.contact_cnt.toString() : '·',
       peerTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'peers' : 'peer'
     }
-  } 
+  }
 
   const profile = state.account.profile.value
 
