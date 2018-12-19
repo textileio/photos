@@ -129,10 +129,10 @@ export interface NotificationInfo {
 
 export interface Overview {
   readonly swarm_size: number
-  readonly account_peer_count: number
-  readonly thread_count: number
-  readonly photo_count: number
-  readonly contact_count: number
+  readonly account_peer_cnt: number
+  readonly thread_cnt: number
+  readonly file_cnt: number
+  readonly contact_cnt: number
 }
 
 export interface Profile {

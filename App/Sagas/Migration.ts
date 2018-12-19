@@ -25,6 +25,7 @@ interface PhotoItem {
 }
 interface PeerIdItem {
   peerid: string
+  username?: string
 }
 
 interface ThreadItem {
@@ -52,9 +53,9 @@ export function * runRecurringMigrationTasks () {
     yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
     const announcement = yield select(getAnnouncement)
     if (announcement) {
-      const {peerId, address, username, previous} = announcement
+      const {peerId, address, username, previousId} = announcement
       try {
-        yield call(announceId, peerId, address, username, previous)
+        yield call(announceId, peerId, address, username, previousId)
         // If no error, mark as successful
         yield put(MigrationActions.announceSuccess())
       } catch (error) {
@@ -85,8 +86,7 @@ export function * migrateConnections() {
     const previous = previousItems[0]
     const peerId = yield select(getPeerId)
     const address = yield select(getAddress)
-    const username = yield select(getUsername) || ''
-    yield put(MigrationActions.announceMigration(peerId, address, username, previous.peerid))
+    yield put(MigrationActions.announceMigration(peerId, previous.peerid, address, previous.username))
   }
   // locate old peers
   const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
@@ -107,9 +107,9 @@ export async function announceId(peerId: string, address: string, username: stri
 }
 
 // will error response doesn't include the peer
-export async function findContact(peerId: string): Promise<{peerId: string, address: string, username?: string} | undefined> {
-  const response = await fetch(`${Config.RN_PEER_SWAP_API}?peerId=${peerId}`, { method: 'GET' })
-  const responseJson: [{peerId: string, address: string, username?: string}] = await response.json()
+export async function findContact(peerId: string): Promise<{peerId: string, previousId: string, address: string, username?: string}> {
+  const response = await fetch(`${Config.RN_PEER_SWAP}?peerId=${peerId}`, { method: 'GET' })
+  const responseJson: [{peerId: string, previousId: string, address: string, username?: string}] = await response.json()
   return responseJson[0]
 }
 

@@ -8,7 +8,7 @@ const actions = {
   requestRunRecurringMigrationTasks: createAction('@migration/REQUEST_RECURRING_MIGRATION'),
   announceMigration: createAction(
     '@migration/ANNOUNCE',
-    (resolve) => (peerId: string, address: string, username: string, previousId: string) => resolve({ peerId, address, username, previousId })
+    (resolve) => (peerId: string, previousId: string, address: string, username?: string) => resolve({ peerId, address, username, previousId })
   ),
   announceSuccess: createAction(
     '@migration/ANNOUNCE_SUCCESS',
@@ -82,7 +82,7 @@ export interface PeerDetails {
   readonly peerId: string,
   readonly previousId: string,
   readonly address: string,
-  readonly username: string
+  readonly username?: string
 }
 
 export interface MigrationState {

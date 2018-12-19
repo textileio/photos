@@ -75,9 +75,7 @@ class TextileWalletPicker extends React.PureComponent {
 const mapStateToProps = (state) => {
   const defaultData = defaultThreadData(state)
   const threadId = defaultData ? defaultData.id : undefined
-  // const items = !defaultData ? [] : defaultData.photos.map((photo) => {
-  //   return {type: 'photo', photo, id: photo.id}
-  // })
+  
   const items = getSharedPhotos(state)
 
   const refreshing = defaultData ? defaultData.querying : false

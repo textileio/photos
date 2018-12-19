@@ -262,15 +262,28 @@ const mapStateToProps = (state) => {
   // NOTE: if future cases of more non-shared threads existing, we'll want to move this to a redux
   const nonSharedThreads = 3
 
-  const overview = {
-    available: !!state.storage.overview,
-    photoCount: state.storage.overview ? photos.length.toString() : '·',
-    photoTitle: !state.storage.overview || photos.length !== 1 ? 'photos' : 'photo',
-    threadCount: state.storage.overview ? (state.storage.overview.thread_cnt - nonSharedThreads).toString() : '·',
-    threadTitle: !state.storage.overview || state.storage.overview.thread_cnt - nonSharedThreads !== 1 ? 'threads' : 'thread',
-    peerCount: state.storage.overview ? state.storage.overview.contact_cnt.toString() : '·',
-    peerTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'peers' : 'peer'
+  let overview = {
+    available: false,
+    photoCount: '·',
+    photoTitle: 'photos',
+    threadCount: '·',
+    threadTitle: 'threads',
+    peerCount: '·',
+    peerTitle: 'peers'
   }
+
+  // tmp fix in case old state had wrong format thread_count, contact_count
+  if (state.storage.overview && state.storage.overview.thread_cnt) {
+    overview = {
+      available: !!state.storage.overview,
+      photoCount: state.storage.overview ? photos.length.toString() : '·',
+      photoTitle: !state.storage.overview || photos.length !== 1 ? 'photos' : 'photo',
+      threadCount: state.storage.overview ? (state.storage.overview.thread_cnt - nonSharedThreads).toString() : '·',
+      threadTitle: !state.storage.overview || state.storage.overview.thread_cnt - nonSharedThreads !== 1 ? 'threads' : 'thread',
+      peerCount: state.storage.overview ? state.storage.overview.contact_cnt.toString() : '·',
+      peerTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'peers' : 'peer'
+    }
+  } 
 
   const profile = state.account.profile.value
 
