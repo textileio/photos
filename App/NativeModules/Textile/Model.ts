@@ -81,7 +81,7 @@ export interface BlockInfo {
 
 export interface ExternalInvite {
   readonly id: string
-  readonly inviteKey: string
+  readonly key: string
   readonly inviter: string
 }
 
