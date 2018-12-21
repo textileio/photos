@@ -170,7 +170,6 @@ function * downloadPhoto(item: MigrationPhoto, threadId: string, dispatch: Dispa
   }
   const preparedFile = yield call(prepare, img, threadId)
   const { dir } = preparedFile
-  console.log('try the share...')
   yield call(addThreadFiles, dir, threadId)
 }
 

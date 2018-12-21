@@ -11,7 +11,7 @@ import styles from './statics/styles'
 import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
-import CustomFeedItem from '../../components/FeedItem/Custom';
+import CustomFeedItem from '../../components/FeedItem/Custom'
 
 class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -89,12 +89,11 @@ class Notifications extends React.PureComponent {
   }
 
   runPhotoMigration = () => {
-    console.log('axh run run')
     this.props.startPhotoMigration()
   }
   migrationComponent = () => {
     return (
-      <CustomFeedItem onClick={() => { this.runPhotoMigration() }} title={"Photo migration available"} subtitle={"Click here to migrate photos a beta installation"} />
+      <CustomFeedItem onClick={() => { this.runPhotoMigration() }} title={'Photo migration available'} subtitle={'Click here to migrate photos a beta installation'} />
     )
   }
 
@@ -145,7 +144,7 @@ const mapDispatchToProps = (dispatch) => {
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     clickNotification: (notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) },
-    startPhotoMigration: () => { dispatch(MigrationActions.startPhotoMigration()) },
+    startPhotoMigration: () => { dispatch(MigrationActions.startPhotoMigration()) }
   }
 }
 
