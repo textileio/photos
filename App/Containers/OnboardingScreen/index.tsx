@@ -34,7 +34,7 @@ const ARROW_FORWARD: ViewStyle = {
 }
 
 interface StateProps {
-  migrationUsername: string
+  migrationUsername?: string
   pendingMigration: boolean
 }
 
