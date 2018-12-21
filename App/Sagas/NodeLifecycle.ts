@@ -28,7 +28,7 @@ import {
   version
  } from '../NativeModules/Textile'
 import { logNewEvent } from './DeviceLogs'
-import { migrate, migrateConnections, preparePhotoMigration } from './Migration'
+import { migrateConnections, preparePhotoMigration } from './Migration'
 
 const REPO_PATH = RNFS.DocumentDirectoryPath
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
