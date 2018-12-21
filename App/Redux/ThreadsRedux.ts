@@ -21,6 +21,9 @@ const actions = {
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', (resolve) => {
     return (inviteId: string, key: string, name?: string, inviter?: string) => resolve({ inviteId, key, name, inviter })
   }),
+  acceptExternalInviteDismiss: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_DISMISS', (resolve) => {
+    return (inviteId: string) => resolve({inviteId})
+  }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
     return (inviteId: string, id: string) => resolve({inviteId, id})
   }),
@@ -56,9 +59,14 @@ export interface OutboundInvite {
   readonly error?: Error
 }
 
+export type InviteStage = 'joining' | 'complete' | 'error'
+
 export interface InboundInvite {
   readonly inviteId: string
-  readonly key: string
+  readonly inviteKey: string
+  readonly stage: InviteStage
+
+  readonly dismissed?: boolean // track if UI has dismissed the invite status
   readonly id?: string
   readonly name?: string
   readonly inviter?: string
@@ -125,16 +133,38 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
         // if the invite already exists and hasn't error'd, return
         return state
       }
-      const inboundInvite = {inviteId, key, name, inviter}
-      const inboundInvites = state.inboundInvites.filter((inv) => inv.inviteId !== inviteId).concat([inboundInvite])
+      const stage: InviteStage = 'joining'
+      const inboundInvite: InboundInvite = {inviteId, inviteKey: key, name, inviter, stage}
+      const inboundInvites = state.inboundInvites
+        .filter((inv) => inv.inviteId !== inviteId)
+        .concat([inboundInvite])
       return { ...state, inboundInvites }
     }
     case getType(actions.acceptExternalInviteSuccess): {
       const { inviteId, id } = action.payload
       // update the inbound invite with the new thread id object
       const inboundInvites = state.inboundInvites.map(
-        (inbound) => inbound.inviteId === inviteId ? {...inbound, id}
-          : inbound
+        (inbound) => {
+          if (inbound.inviteId === inviteId) {
+            const stage: InviteStage = 'complete'
+            return {...inbound, id, stage}
+          }
+          return inbound
+        }
+      )
+      return { ...state, inboundInvites }
+    }
+    case getType(actions.acceptExternalInviteDismiss): {
+      const { inviteId } = action.payload
+      // update the inbound invite with the new thread id object
+      const inboundInvites = state.inboundInvites.map(
+        (inbound) => {
+          if (inbound.inviteId === inviteId) {
+            const dismiss = true
+            return {...inbound, dismiss}
+          }
+          return inbound
+        }
       )
       return { ...state, inboundInvites }
     }
@@ -142,8 +172,13 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
       const { inviteId, error } = action.payload
       // update the inbound invite with the new error
       const inboundInvites = state.inboundInvites.map(
-        (outbound) => outbound.inviteId === inviteId ? {...outbound, error}
-          : outbound
+        (inbound) => {
+          if (inbound.inviteId === inviteId) {
+            const stage: InviteStage = 'error'
+            return {...inbound, error, stage}
+          }
+          return inbound
+        }
       )
       return { ...state, inboundInvites }
 
@@ -155,12 +190,6 @@ export function reducer (state: ThreadsState = initialState, action: ThreadsActi
     default:
       return state
   }
-}
-
-export const ThreadsSelectors = {
-  pendingInviteLink: (state: RootState) => state.threads.pendingInviteLink,
-  inboundInviteByThreadId: (state: RootState, threadId: string) => state.threads.inboundInvites.find((invite) => invite.id === threadId),
-  inboundInviteByThreadName: (state: RootState, threadName: string) => state.threads.inboundInvites.find((invite) => invite.name === threadName)
 }
 
 export default actions

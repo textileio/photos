@@ -19,7 +19,7 @@ export default {
     addExternalThreadInvite: jest.fn((id): Promise<string> => new Promise((resolve) => {
         const mockInvite: ExternalInvite = {
             id,
-            key: 'VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5',
+            inviteKey: 'VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5',
             inviter: 'mock'
         }
         resolve(JSON.stringify(mockInvite))

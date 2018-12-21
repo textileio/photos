@@ -14,6 +14,7 @@ import UIActions from '../Redux/UIRedux'
 import ThreadDetailCard from '../SB/components/ThreadDetailCard'
 
 import ProcessingImageCard, { IProcessingImageProps } from './ProcessingImage'
+import ProcessingThreadCard from './ProcessingThread'
 
 import styles from './Styles/PhotoStreamStyles'
 
@@ -55,6 +56,13 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
   _renderItem = (rowData: any) => {
     const item = rowData.item
     switch (item.type) {
+      case 'processingThread': {
+        return (
+          <ProcessingThreadCard
+            {...item.props}
+          />
+        )
+      }
       case 'processingItem': {
         return (
           <ProcessingImageCard
