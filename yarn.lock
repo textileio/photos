@@ -610,9 +610,9 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
 
-"@textile/go-mobile@1.0.0-rc12":
-  version "1.0.0-rc12"
-  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc12.tgz#2655aea0149c4e015761ab7e62a356332f322783"
+"@textile/go-mobile@1.0.0-rc13":
+  version "1.0.0-rc13"
+  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc13.tgz#e31d4b4a6ffdd289a85405309f186b361bf92d14"
 
 "@types/cheerio@*":
   version "0.22.9"

@@ -92,6 +92,7 @@ export interface MigrationState {
   readonly photoAdds: PhotoAdds
   readonly announcement?: PeerDetails
   readonly network?: ReadonlyArray<string>
+  readonly username?: string
 }
 
 const initialState: MigrationState = {
@@ -107,7 +108,8 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
     }
     case getType(actions.announceMigration): {
       const announcement: PeerDetails = action.payload
-      return { ...state, announcement }
+      const { username } = action.payload
+      return { ...state, announcement, username }
     }
     case getType(actions.announceSuccess): {
       return { ...state, announcement: undefined }
