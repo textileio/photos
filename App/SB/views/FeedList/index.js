@@ -92,9 +92,12 @@ class Notifications extends React.PureComponent {
     this.props.startPhotoMigration()
   }
   migrationComponent = () => {
-    return (
-      <CustomFeedItem onClick={() => { this.runPhotoMigration() }} title={'Photo migration available'} subtitle={'Click here to migrate photos a beta installation'} />
-    )
+    if (this.props.migration) { 
+      return (
+        <CustomFeedItem onClick={() => { this.runPhotoMigration() }} title={'Photo migration available'} subtitle={'Click here to migrate photos a beta installation'} />
+      )
+    }
+    return
   }
 
   _renderItems () {
