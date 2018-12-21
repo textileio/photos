@@ -10,7 +10,7 @@ const params = 'id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8
 const link = `www.textile.photos/invites/new#${params}`
 const invite: ExternalInvite = {
     id: 'QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW',
-    inviteKey: 'VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5',
+    key: 'VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5',
     inviter: 'andrew-dev'
 }
 const threadName: string = 'TRT Dev'
