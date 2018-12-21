@@ -54,6 +54,12 @@ const ERROR: TextStyle = {
   flex: 1
 }
 
+const SUCCESS: TextStyle = {
+  ...ITEM,
+  ...STATUS,
+  flex: 1
+}
+
 class ProcessingThread extends React.Component<InboundInvite & DispatchProps & StateProps> {
   dismiss (inviteId: string) {
     return () => {
@@ -90,8 +96,8 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
 
   getMessage (stage: string, threadName?: string) {
     const name = threadName || 'new thread'
-    const body = stage === 'complete' ? 'successfully joined' : stage
-    const message = `${body}: ${name}`
+    const body = stage === 'complete' ? 'Successfully joined' : stage[0].toUpperCase() + stage.substr(1).toLowerCase()
+    const message = `${body} ${name}`
     return message
   }
 
@@ -120,12 +126,9 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
       }
       content = (
         <Fragment>
-          <View style={STACK}>
-            <Text style={STATUS} />
-            <ProgressBar progress={progress} />
-            <Text style={STATUS}>{message}</Text>
-          </View>
+          <Text style={SUCCESS}>{message}</Text>
           <Button title={'View'} onPress={view} />
+          <Button title={'Dismiss'} onPress={dismiss} />
         </Fragment>
       )
     } else {
