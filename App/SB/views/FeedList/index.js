@@ -5,11 +5,13 @@ import { View, Text, FlatList, Image } from 'react-native'
 import FeedItem from '../../components/FeedItem'
 
 import NotificationsActions from '../../../Redux/NotificationsRedux'
+import MigrationActions from '../../../Redux/MigrationRedux'
 
 import styles from './statics/styles'
 import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../../Redux/TextileNodeRedux'
+import CustomFeedItem from '../../components/FeedItem/Custom';
 
 class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -86,10 +88,21 @@ class Notifications extends React.PureComponent {
     )
   }
 
+  runPhotoMigration = () => {
+    console.log('axh run run')
+    this.props.startPhotoMigration()
+  }
+  migrationComponent = () => {
+    return (
+      <CustomFeedItem onClick={() => { this.runPhotoMigration() }} title={"Photo migration available"} subtitle={"Click here to migrate photos a beta installation"} />
+    )
+  }
+
   _renderItems () {
     return (
       <View style={styles.contentContainer}>
         <FlatList
+          ListHeaderComponent={this.migrationComponent}
           data={this.props.notifications}
           keyExtractor={this._keyExtractor.bind(this)}
           renderItem={this._renderItem.bind(this)}
@@ -97,7 +110,7 @@ class Notifications extends React.PureComponent {
           onRefresh={this.props.refreshMessages}
           initialNumToRender={20}
         />
-      </View >
+      </View>
     )
   }
 
@@ -114,9 +127,11 @@ class Notifications extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   const notifications = state.notifications.notifications
-  const showOnboarding = state.preferences.tourScreens.feed === true
+  const migration = state.migration.migrationPhotos && state.migration.migrationPhotos.length
+  const showOnboarding = state.preferences.tourScreens.feed === true && !migration
 
   return {
+    migration,
     notifications,
     profile: state.account.profile.value,
     showOnboarding
@@ -129,7 +144,8 @@ const mapDispatchToProps = (dispatch) => {
     readAllNotifications: () => dispatch(NotificationsActions.readAllNotificationsRequest()),
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     clickNotification: (notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
-    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) }
+    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) },
+    startPhotoMigration: () => { dispatch(MigrationActions.startPhotoMigration()) },
   }
 }
 

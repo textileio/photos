@@ -21,3 +21,7 @@ export function getAnnouncement(state: RootState): PeerDetails | undefined {
 export function getNetwork(state: RootState): ReadonlyArray<string> {
   return state.migration.network || []
 }
+
+export function getMigrationPhotos(state: RootState): ReadonlyArray<MigrationPhoto> {
+  return state.migration.migrationPhotos || []
+}

@@ -29,6 +29,12 @@ export function defaultThreadData (state: RootState): ThreadData | undefined {
     .find((threadData) => threadData.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
 }
 
+export function getThreadByName(state: RootState, name: string): ThreadData | undefined {
+  return Object.keys(state.photoViewing.threads)
+    .map((key) => state.photoViewing.threads[key]!)
+    .find((threadData) => threadData.name === name)
+}
+
 export function threadDataByThreadId (state: RootState, id: string): ThreadData | undefined {
   const threadData = state.photoViewing.threads[id]
   return threadData

@@ -28,7 +28,7 @@ import {
   version
  } from '../NativeModules/Textile'
 import { logNewEvent } from './DeviceLogs'
-import { migrate, migrateConnections } from './Migration'
+import { migrate, migrateConnections, preparePhotoMigration } from './Migration'
 
 const REPO_PATH = RNFS.DocumentDirectoryPath
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
@@ -107,6 +107,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield call(createAndStartNode, dispatch)
         // migrate peerid
         yield call(migrateConnections)
+        yield call(preparePhotoMigration)
       } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)

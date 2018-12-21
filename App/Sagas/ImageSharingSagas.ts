@@ -175,7 +175,7 @@ export function * shareToThread (uuid: string) {
   }
 }
 
-async function prepare (image: SharedImage, destinationThreadId: string): Promise<IMobilePreparedFiles> {
+export async function prepare (image: SharedImage, destinationThreadId: string): Promise<IMobilePreparedFiles> {
   const addResult = await prepareFiles(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)

@@ -10,6 +10,15 @@ const actions = {
     '@migration/ANNOUNCE',
     (resolve) => (peerId: string, previousId: string, address: string, username?: string) => resolve({ peerId, address, username, previousId })
   ),
+  photoMigration: createAction(
+    '@migration/PHOTO_MIGRATION_SETUP',
+    (resolve) => (photos: MigrationPhoto[]) => resolve({ photos })
+  ),
+  startPhotoMigration: createAction('@migration/START_PHOTO_MIGRATION'),
+  photoMigrationSuccess: createAction(
+    '@migration/PHOTO_MIGRATION_SUCCESS',
+    (resolve) => () => resolve()
+  ),
   announceSuccess: createAction(
     '@migration/ANNOUNCE_SUCCESS',
     (resolve) => () => resolve()
@@ -54,6 +63,11 @@ const actions = {
 
 export type MigrationAction = ActionType<typeof actions>
 
+export interface MigrationPhoto {
+  id: string,
+  key: string
+}
+
 export interface PhotoDownload {
   readonly jobId: number
   readonly path: string
@@ -93,6 +107,7 @@ export interface MigrationState {
   readonly announcement?: PeerDetails
   readonly network?: ReadonlyArray<string>
   readonly username?: string
+  readonly migrationPhotos?: ReadonlyArray<MigrationPhoto>
 }
 
 const initialState: MigrationState = {
@@ -125,6 +140,13 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
       }
       const peers = state.network.filter((p) => p !== peer)
       return { ...state, network: peers }
+    }
+    case getType(actions.photoMigration): {
+      const { photos } = action.payload
+      return { ...state, migrationPhotos: photos }
+    }
+    case getType(actions.photoMigrationSuccess): {
+      return { ...state, migrationPhotos: undefined }
     }
     case getType(actions.insertDownload): {
       const { jobId, path } = action.payload
