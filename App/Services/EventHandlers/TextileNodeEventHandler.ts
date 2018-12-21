@@ -8,6 +8,7 @@ import { RootState } from '../../Redux/Types'
 import TextileNodeActions from '../../Redux/TextileNodeRedux'
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import DeviceLogsActions from '../../Redux/DeviceLogsRedux'
 import StorageActions from '../../Redux/StorageRedux'
 import { toTypedNotification } from '../Notifications'
 
@@ -34,6 +35,10 @@ export default class TextileNodeEventHandler {
         type === BlockType.IGNORE) {
         this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread_id))
       }
+      // create a local log line for the threadUpdate event
+      const name = update.thread_name || update.thread_id
+      const message = `BlockType ${type} on ${name}`
+      this.store.dispatch(DeviceLogsActions.logNewEvent( (new Date()).getTime(), 'onThreadUpdate', message, false))
     })
     EventEmitter.addListener('onThreadAdded', (payload: Update) => {
       this.store.dispatch(PhotoViewingActions.threadAddedNotification(payload.id))

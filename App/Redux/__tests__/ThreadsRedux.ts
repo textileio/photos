@@ -6,7 +6,7 @@ const name: string = 'myThread' as any
 const error = new Error('an error')
 const inviteId: string = 'invite_id' as any
 const inviteKey: string = 'a_key' as any
-const invite: ExternalInvite = {id: inviteId, inviter: 'tests' as any, key: inviteKey}
+const invite: ExternalInvite = {id: inviteId, inviter: 'tests' as any, inviteKey}
 
 const initialState = reducer(undefined, {} as any)
 
@@ -35,18 +35,18 @@ describe('ui stories', () => {
     })
     it('should succeed at accepting an invite', () => {
       const state0 = reducer(initialState, actions.acceptExternalInviteRequest(inviteId, inviteKey))
-      const match0 = [{ inviteId, key: inviteKey }]
+      const match0 = [{ inviteId, inviteKey }]
       expect(state0.inboundInvites).toMatchObject(match0)
       const state1 = reducer(state0, actions.acceptExternalInviteSuccess(inviteId, id))
-      const match1 = [{ id, inviteId, key: inviteKey }]
+      const match1 = [{ id, inviteId, inviteKey }]
       expect(state1.inboundInvites).toMatchObject(match1)
     })
     it('should fail at accepting an invite', () => {
       const state0 = reducer(initialState, actions.acceptExternalInviteRequest(inviteId, inviteKey))
-      const match0 = [{ inviteId, key: inviteKey }]
+      const match0 = [{ inviteId, inviteKey }]
       expect(state0.inboundInvites).toMatchObject(match0)
       const state1 = reducer(state0, actions.acceptExternalInviteError(inviteId, error))
-      const match1 = [{ inviteId, key: inviteKey, error }]
+      const match1 = [{ inviteId, inviteKey, error }]
       expect(state1.inboundInvites).toMatchObject(match1)
     })
     it('should ignore out of order events', () => {

@@ -11,7 +11,8 @@
 *************************************************************/
 import {Share} from 'react-native'
 import { call, put, select, fork } from 'redux-saga/effects'
-import ThreadsActions, { ThreadsSelectors } from '../Redux/ThreadsRedux'
+import ThreadsActions from '../Redux/ThreadsRedux'
+import { pendingInviteLink } from '../Redux/ThreadsSelectors'
 import { ActionType } from 'typesafe-actions'
 import { ExternalInvite } from '../NativeModules/Textile'
 import {
@@ -54,9 +55,16 @@ export function * presentShareInterface(action: ActionType<typeof ThreadsActions
 }
 
 export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
+  yield fork(processExternalInvite, action)
+}
+
+function * processExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
     const threadId: string = yield call(acceptExternalThreadInvite, inviteId, key)
+    if (!threadId) {
+      throw new Error('invite previously accepted')
+    }
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, threadId))
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
@@ -66,9 +74,9 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
 
 export function * pendingInvitesTask () {
   // Process any pending external invites created while user wasn't logged in
-  const pendingInviteLink: string | undefined = yield select(ThreadsSelectors.pendingInviteLink)
-  if (pendingInviteLink) {
-    yield call(DeepLink.route, pendingInviteLink, NavigationService)
+  const inviteLink: string | undefined = yield select(pendingInviteLink)
+  if (inviteLink) {
+    yield call(DeepLink.route, inviteLink, NavigationService)
     yield put(ThreadsActions.removeExternalInviteLink())
   }
 }
