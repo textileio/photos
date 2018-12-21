@@ -34,6 +34,7 @@ const ARROW_FORWARD: ViewStyle = {
 }
 
 interface StateProps {
+  migrationUsername?: string
   pendingMigration: boolean
 }
 
@@ -122,7 +123,7 @@ class OnboardingScreen extends React.Component<Props, State> {
               subtitle='Everytime you take a picture, Textile will be there to automatically sync your photos.'
               image={require('./statics/sync.png')}
             />
-            <OnboardingUsername onSuccess={this.nextPage} />
+            <OnboardingUsername onSuccess={this.nextPage} suggestion={this.props.migrationUsername} />
             <SetAvatar onSuccess={this.nextPage} />
             <MailListSignupScreen onSuccess={this.nextPage} />
             <OnboardingMessage
@@ -150,6 +151,7 @@ class OnboardingScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
+  migrationUsername: state.migration.username,
   pendingMigration: state.preferences.pendingMigration
 })
 
