@@ -28,7 +28,7 @@ import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } 
 import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
 
-import { runRecurringMigrationTasks, migrate } from './Migration'
+import { runRecurringMigrationTasks, migratePhotos } from './Migration'
 
 import {
   showImagePicker,
@@ -121,7 +121,7 @@ export default function * root (dispatch: Dispatch) {
     call(startMonitoringExistingUploads),
 
     call(runRecurringMigrationTasks),
-    call(migrate, dispatch),
+    call(migratePhotos, dispatch),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),

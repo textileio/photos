@@ -15,6 +15,7 @@ const actions = {
     (resolve) => (photos: MigrationPhoto[]) => resolve({ photos })
   ),
   startPhotoMigration: createAction('@migration/START_PHOTO_MIGRATION'),
+  photoMigrationError: createAction('@migration/PHOTO_MIGRATION_ERROR'),
   photoMigrationSuccess: createAction(
     '@migration/PHOTO_MIGRATION_SUCCESS',
     (resolve) => () => resolve()

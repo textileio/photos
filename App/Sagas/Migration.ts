@@ -33,33 +33,32 @@ interface ThreadItem {
   peers: string[]
 }
 
-export function * migrate(dispatch: Dispatch) {
-  console.log('axh setup')
+export function * migratePhotos(dispatch: Dispatch) {
   while (true) {
-    yield take(getType(MigrationActions.startPhotoMigration))
-    console.log('axh while true')
-    // Take some sort of action to start the migration
-    console.log('axh lets migrate')
     yield call(keepScreenOn)
-    yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
-    // where the photo should be shared when complete
-    const photoItems: MigrationPhoto[] = yield select(getMigrationPhotos)
-    const threadId = yield call(createMigrationAlbum)
-    console.log('axh lets migrate', threadId)
-    // the photos ready to migrate
-    console.log('axh lets migrate', photoItems.length)
-    // don't think we need this right now...
-    const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
-    yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
-    // create the actions
-    const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, threadId, dispatch))
-    console.log('axh here we go')
-    // run
-    yield all(downloadEffects)
-    // release
-    yield put(MigrationActions.photoMigrationSuccess())
-    console.log('axh done')
-    yield call(letScreenSleep)
+    try {
+      yield take(getType(MigrationActions.startPhotoMigration))
+      // Take some sort of action to start the migration
+      yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
+      // where the photo should be shared when complete
+      const photoItems: MigrationPhoto[] = yield select(getMigrationPhotos)
+      const threadId = yield call(createMigrationAlbum)
+      // the photos ready to migrate
+      // don't think we need this right now...
+      const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
+      yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
+      // create the actions
+      const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, threadId, dispatch))
+      // run
+      yield all(downloadEffects)
+      // release
+      yield put(MigrationActions.photoMigrationSuccess())
+      yield call(letScreenSleep)
+    } catch {
+      yield put(MigrationActions.photoMigrationError())
+    } finally {
+      yield call(letScreenSleep)
+    }
   }
 }
 
