@@ -1,5 +1,5 @@
 import { RootState } from './Types'
-import { PeerDetails } from './MigrationRedux'
+import { PeerDetails, MigrationPhoto } from './MigrationRedux'
 
 export function overallDownloadProgress(state: RootState) {
   let totalSize = 0
