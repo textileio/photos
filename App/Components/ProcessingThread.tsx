@@ -71,9 +71,9 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
       this.props.retry(inviteId, key)
     }
   }
-  view (id: string, name: string) {
+  view (threadId: string, name: string) {
     return () => {
-      this.props.navigateToThread(id, name)
+      this.props.navigateToThread(threadId, name)
     }
   }
 
@@ -127,7 +127,6 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
       content = (
         <Fragment>
           <Text style={SUCCESS}>{message}</Text>
-          <Button title={'View'} onPress={view} />
           <Button title={'Dismiss'} onPress={dismiss} />
         </Fragment>
       )
