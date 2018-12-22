@@ -19,6 +19,9 @@ import { IMobilePreparedFiles, IDirectory, MobilePreparedFiles, Directory } from
 
 const { TextileNode } = NativeModules
 
+/**
+ * Returns the hash of the initial join block. Not the threadId of the final thread created/joined
+ */
 export async function acceptExternalThreadInvite(id_: string, key: string): Promise<string> {
   const result = await TextileNode.acceptExternalThreadInvite(id_, key) // returns hash
   return result as string
