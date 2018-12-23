@@ -49,7 +49,6 @@ You should store a file called, `.env` in the root of your Textile Mobile folder
 ```
 RN_TEXTILE_CAFES="{cafe-peerid}"
 RN_TEXTILE_CAFE_GATEWAY_URL="http://{gateway-address}"
-RN_TEXTILE_CAFE_API_PREFIX="http://"
 RN_TEXTILE_CAFE_API_PIN_PATH="/cafe/v0/pin"
 RN_TEXTILE_CAMERA_ROLL_THREAD_KEY="photos-camera_roll"
 RN_TEMPORARY_REFERRAL="SOMETHING"
