@@ -1,6 +1,8 @@
+import { Alert } from 'react-native'
 import FS from 'react-native-fs'
 import Config from 'react-native-config'
 import { all, call, put, select, take } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
@@ -33,33 +35,49 @@ interface ThreadItem {
   peers: string[]
 }
 
-export function * migratePhotos(dispatch: Dispatch) {
+export function * handleMigrationRequest(dispatch: Dispatch) {
   while (true) {
-    yield call(keepScreenOn)
     try {
-      yield take(getType(MigrationActions.startPhotoMigration))
-      // Take some sort of action to start the migration
-      yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
-      // where the photo should be shared when complete
-      const photoItems: MigrationPhoto[] = yield select(getMigrationPhotos)
-      const threadId = yield call(createMigrationAlbum)
-      // the photos ready to migrate
-      // don't think we need this right now...
-      const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
-      yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
-      // create the actions
-      const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, threadId, dispatch))
-      // run
-      yield all(downloadEffects)
-      // release
-      yield put(MigrationActions.photoMigrationSuccess())
-      yield call(letScreenSleep)
+      yield take(getType(MigrationActions.requestMigration))
+      const response: MigrationResponse = yield call(migrationPrompt)
+      switch (response) {
+        case MigrationResponse.cancel:
+          yield put(MigrationActions.cancelMigration())
+        case MigrationResponse.later:
+          continue
+        case MigrationResponse.proceed:
+          yield call(processMigration, dispatch)
+      }
     } catch {
       yield put(MigrationActions.photoMigrationError())
     } finally {
       yield call(letScreenSleep)
     }
   }
+}
+
+function * processMigration(dispatch: Dispatch) {
+  yield put(MigrationActions.migrationStarted())
+
+  // TODO: try/catch
+
+  // yield call(keepScreenOn)
+  // // Take some sort of action to start the migration
+  // yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
+  // // where the photo should be shared when complete
+  // const photoItems: MigrationPhoto[] = yield select(getMigrationPhotos)
+  // const threadId = yield call(createMigrationAlbum)
+  // // the photos ready to migrate
+  // // don't think we need this right now...
+  // const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
+  // yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
+  // // create the actions
+  // const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, threadId, dispatch))
+  // // run
+  // yield all(downloadEffects)
+  // // release
+  // yield put(MigrationActions.photoMigrationSuccess())
+  // yield call(letScreenSleep)
 }
 
 export function * preparePhotoMigration () {
@@ -209,4 +227,27 @@ function startDownload(options: FS.DownloadFileOptions, dispatch: Dispatch) {
   const result = FS.downloadFile(options)
   dispatch(MigrationActions.insertDownload(result.jobId, options.toFile))
   return result.promise
+}
+
+enum MigrationResponse {
+  proceed,
+  later,
+  cancel
+}
+
+function migrationPrompt(): Promise<MigrationResponse> {
+  return new Promise<number>((resolve, reject) => {
+    Alert.alert(
+      'Migration Available',
+      'We\'ll import your old Textile Photos peers, threads, and photos as best we can. ' +
+      'It will require a bit of time, bandwidth, and data transfer, so you should be on WiFi. ' +
+      'Please leave Textile Photos running in the foreground until the migration is complete.',
+      [
+        { text: 'Later', onPress: () => resolve(MigrationResponse.later) },
+        { text: 'No Thanks', onPress: () => resolve(MigrationResponse.cancel), style: 'cancel' },
+        { text: 'Proceed', onPress: () => resolve(MigrationResponse.proceed) }
+      ],
+      { cancelable: false }
+    )
+  })
 }

@@ -88,13 +88,10 @@ class Notifications extends React.PureComponent {
     )
   }
 
-  runPhotoMigration = () => {
-    this.props.startPhotoMigration()
-  }
   migrationComponent = () => {
     if (this.props.migration) {
       return (
-        <CustomFeedItem onClick={() => { this.runPhotoMigration() }} title={'Photo migration available'} subtitle={'Click here to migrate photos a beta installation'} />
+        <CustomFeedItem onClick={this.props.requestMigration} title={'Migration available'} subtitle={'Tap here to get started'} />
       )
     }
     return null // tslint:disable-line
@@ -129,7 +126,7 @@ class Notifications extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   const notifications = state.notifications.notifications
-  const migration = state.migration.migrationPhotos && state.migration.migrationPhotos.length
+  const migration = state.migration.status === 'pending'
   const showOnboarding = state.preferences.tourScreens.feed === true && !migration
 
   return {
@@ -147,7 +144,7 @@ const mapDispatchToProps = (dispatch) => {
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
     clickNotification: (notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) },
-    startPhotoMigration: () => { dispatch(MigrationActions.startPhotoMigration()) }
+    requestMigration: () => { dispatch(MigrationActions.requestMigration()) }
   }
 }
 

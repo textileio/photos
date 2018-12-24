@@ -1,6 +1,11 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
 
 const actions = {
+  migrationNeeded: createAction('@migration/MIGRATION_NEEDED'),
+  requestMigration: createAction('@migration/REQUEST_MIGRATION'),
+  cancelMigration: createAction('@migration/CANCEL_MIGRATION'),
+  migrationStarted: createAction('@migration/MIGRATION_STARTED'),
+  migrationComplete: createAction('@migration/MIGRATION_COMPLETE'),
   migrationMetadata: createAction(
     '@migration/MIGRATION_METADATA',
     (resolve) => (photosCount: number, threadsCount: number) => resolve({ photosCount, threadsCount })
@@ -14,7 +19,6 @@ const actions = {
     '@migration/PHOTO_MIGRATION_SETUP',
     (resolve) => (photos: MigrationPhoto[]) => resolve({ photos })
   ),
-  startPhotoMigration: createAction('@migration/START_PHOTO_MIGRATION'),
   photoMigrationError: createAction('@migration/PHOTO_MIGRATION_ERROR'),
   photoMigrationSuccess: createAction(
     '@migration/PHOTO_MIGRATION_SUCCESS',
@@ -101,6 +105,7 @@ export interface PeerDetails {
 }
 
 export interface MigrationState {
+  readonly status: 'none' | 'pending' | 'processing' | 'complete'
   readonly photosCount?: number
   readonly threadsCount?: number
   readonly photoDownloads: PhotoDownloads
@@ -112,12 +117,21 @@ export interface MigrationState {
 }
 
 const initialState: MigrationState = {
+  status: 'none',
   photoDownloads: {},
   photoAdds: {}
 }
 
 export function reducer(state: MigrationState = initialState, action: MigrationAction): MigrationState {
   switch (action.type) {
+    case getType(actions.migrationNeeded):
+      return { ...state, status: 'pending' }
+    case getType(actions.cancelMigration):
+      return { ...state, status: 'none' }
+    case getType(actions.migrationStarted):
+      return { ...state, status: 'processing' }
+    case getType(actions.migrationComplete):
+      return { ...state, status: 'complete' }
     case getType(actions.migrationMetadata): {
       const { photosCount, threadsCount } = action.payload
       return { ...state, photosCount, threadsCount }

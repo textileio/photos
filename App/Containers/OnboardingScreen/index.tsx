@@ -102,11 +102,10 @@ class OnboardingScreen extends React.Component<Props, State> {
               title='Big Changes Under the Hood'
               image={require('./statics/secure.png')}
             >
-                We're working fast to make Textile Photos even better for you.
-                Your old data isn't compatible with this new version of the app,
-                so for now, you'll be starting fresh. The migration will create
-                a local map of your private photos and your contacts so they can
-                be restored in a future release. ;)
+              We're working fast to make Textile Photos even better.
+              Your old data isn't compatible with this new version of the app,
+              so for now you'll be starting fresh. Check out your Notifications
+              screen to get started migrating your old data if you'd like.
             </OnboardingMessage>
             <OnboardingMessage
               title='Own your memories'
@@ -152,7 +151,7 @@ class OnboardingScreen extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   migrationUsername: state.migration.username,
-  pendingMigration: state.preferences.pendingMigration
+  pendingMigration: state.migration.status === 'pending'
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({

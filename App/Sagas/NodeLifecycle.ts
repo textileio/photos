@@ -10,7 +10,8 @@ import Config from 'react-native-config'
 
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import MigrationActions from '../Redux/MigrationRedux'
 import AccountActions from '../Redux/AccountRedux'
 import { RootAction } from '../Redux/Types'
 import {
@@ -82,6 +83,7 @@ export function * handleCreateNodeRequest (dispatch: Dispatch) {
 }
 
 function * createAndStartNode(dispatch: Dispatch): any {
+  console.log('REPO PATH:', REPO_PATH)
   try {
     yield put(TextileNodeActions.creatingNode())
     yield call(newTextile, REPO_PATH)
@@ -102,12 +104,13 @@ function * createAndStartNode(dispatch: Dispatch): any {
         // instruct the node to export data to files
         yield call(migrateRepo, REPO_PATH)
         // store the fact there is a pending migration in the preferences redux persisted state
-        yield put(PreferencesActions.migrationNeeded())
+        yield put(MigrationActions.migrationNeeded())
         // call the create/start sequence again
         yield call(createAndStartNode, dispatch)
         // migrate peerid
-        yield call(migrateConnections)
-        yield call(preparePhotoMigration)
+        // TODO: Should these just be triggered when the user starts the migration manually? I think so
+        // yield call(migrateConnections)
+        // yield call(preparePhotoMigration)
       } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)
