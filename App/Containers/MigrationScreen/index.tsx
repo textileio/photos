@@ -31,17 +31,39 @@ const SUBTITLE: TextStyle = {
   ...s.H1
 }
 
-class MigrationScreen extends React.Component<{}> {
+interface StateProps {
+  description?: string,
+  progress?: string
+}
+
+class MigrationScreen extends React.Component<StateProps> {
 
   render () {
     return (
       <View style={CONTAINER}>
         <Image style={IMAGE} source={require('../../Containers/OnboardingScreen/statics/sync.png')} />
         <Text style={TITLE}>Data Migration</Text>
-        <Text style={SUBTITLE}>Please start the migration and leave Textile running in the foreground until complete.</Text>
+        <Text style={SUBTITLE}>{this.props.description}</Text>
+        <Text style={SUBTITLE}>{this.props.progress}</Text>
       </View>
     )
   }
 }
 
-export default connect(undefined, undefined)(MigrationScreen)
+const mapStateToProps = (state: RootState): StateProps => {
+  let description: string | undefined
+  let progress: string | undefined
+  if (state.migration.network) {
+    description = 'Previous peers'
+    progress = 'As your previous peers migrate to this new version of Textile Photos, they\'ll be added to your new peer list'
+  } else if (state.migration.peerAnnouncement) {
+    description = 'Your new peer identity'
+    progress = 'This will allow your previous peers to find you when they migrate to the new Textile Photos'
+  }
+  return {
+    description,
+    progress
+  }
+}
+
+export default connect(mapStateToProps, undefined)(MigrationScreen)

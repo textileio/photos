@@ -11,9 +11,9 @@ const actions = {
     (resolve) => (photosCount: number, threadsCount: number) => resolve({ photosCount, threadsCount })
   ),
   requestRunRecurringMigrationTasks: createAction('@migration/REQUEST_RECURRING_MIGRATION'),
-  announceMigration: createAction(
-    '@migration/ANNOUNCE',
-    (resolve) => (peerId: string, previousId: string, address: string, username?: string) => resolve({ peerId, address, username, previousId })
+  peerAnnouncement: createAction(
+    '@migration/PEER_ANNOUNCEMENT',
+    (resolve) => (peerDetails: PeerDetails) => resolve({ peerDetails })
   ),
   photoMigration: createAction(
     '@migration/PHOTO_MIGRATION_SETUP',
@@ -24,10 +24,7 @@ const actions = {
     '@migration/PHOTO_MIGRATION_SUCCESS',
     (resolve) => () => resolve()
   ),
-  announceSuccess: createAction(
-    '@migration/ANNOUNCE_SUCCESS',
-    (resolve) => () => resolve()
-  ),
+  peerAnnouncementSuccess: createAction('@migration/PEER_ANNOUNCEMENT_SUCCESS'),
   connectToPeers: createAction(
     '@migration/CONNECT_TO_PEERS',
     (resolve) => (peers: string[]) => resolve({ peers })
@@ -98,28 +95,29 @@ export interface PhotoAdds {
 }
 
 export interface PeerDetails {
-  readonly peerId: string,
-  readonly previousId: string,
-  readonly address: string,
-  readonly username?: string
+  readonly currentPeerId: string,
+  readonly previousPeerId: string,
+  readonly currentAddress: string,
+  readonly previousUsername?: string
 }
 
 export interface MigrationState {
   readonly status: 'none' | 'pending' | 'processing' | 'complete'
+  readonly peerAnnouncement?: {
+    readonly peerDetails: PeerDetails,
+    readonly status: 'pending' | 'complete'
+  }
+  readonly network?: ReadonlyArray<string>,
   readonly photosCount?: number
   readonly threadsCount?: number
-  readonly photoDownloads: PhotoDownloads
-  readonly photoAdds: PhotoAdds
-  readonly announcement?: PeerDetails
-  readonly network?: ReadonlyArray<string>
+  readonly photoDownloads?: PhotoDownloads
+  readonly photoAdds?: PhotoAdds
   readonly username?: string
   readonly migrationPhotos?: ReadonlyArray<MigrationPhoto>
 }
 
 const initialState: MigrationState = {
-  status: 'none',
-  photoDownloads: {},
-  photoAdds: {}
+  status: 'none'
 }
 
 export function reducer(state: MigrationState = initialState, action: MigrationAction): MigrationState {
@@ -131,18 +129,18 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
     case getType(actions.migrationStarted):
       return { ...state, status: 'processing' }
     case getType(actions.migrationComplete):
-      return { ...state, status: 'complete' }
+      return { ...state, status: 'pending' } // TODO: change to complete
     case getType(actions.migrationMetadata): {
       const { photosCount, threadsCount } = action.payload
       return { ...state, photosCount, threadsCount }
     }
-    case getType(actions.announceMigration): {
-      const announcement: PeerDetails = action.payload
-      const { username } = action.payload
-      return { ...state, announcement, username }
+    case getType(actions.peerAnnouncement): {
+      const { peerDetails } = action.payload
+      const { previousUsername } = peerDetails
+      return { ...state, peerAnnouncement: { peerDetails, status: 'pending' }, username: previousUsername }
     }
-    case getType(actions.announceSuccess): {
-      return { ...state, announcement: undefined }
+    case getType(actions.peerAnnouncementSuccess): {
+      return { ...state, peerAnnouncement: { ...state.peerAnnouncement!, status: 'complete' } }
     }
     case getType(actions.connectToPeers): {
       const network = action.payload.peers
@@ -170,21 +168,21 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
     }
     case getType(actions.downloadStarted): {
       const { jobId, statusCode, contentLength } = action.payload
-      const download = state.photoDownloads[jobId]
+      const download = state.photoDownloads![jobId]
       const updatedDownload: PhotoDownload = { ...download, statusCode, contentLength }
       const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
       return { ...state, photoDownloads }
     }
     case getType(actions.downloadProgress): {
       const { jobId, bytesWritten } = action.payload
-      const download = state.photoDownloads[jobId]
+      const download = state.photoDownloads![jobId]
       const updatedDownload: PhotoDownload = { ...download, bytesWritten }
       const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
       return { ...state, photoDownloads }
     }
     case getType(actions.downloadComplete): {
       const { jobId, statusCode, bytesWritten } = action.payload
-      const download = state.photoDownloads[jobId]
+      const download = state.photoDownloads![jobId]
       const updatedDownload: PhotoDownload = { ...download, statusCode, bytesWritten }
       const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
       return { ...state, photoDownloads }
@@ -195,13 +193,13 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
     }
     case getType(actions.startAdd): {
       const { id } = action.payload
-      const addData = state.photoAdds[id]
+      const addData = state.photoAdds![id]
       const updated: PhotoAdd = { ...addData, status: 'adding' }
       return { ...state, photoAdds: { ...state.photoAdds, [id]: updated } }
     }
     case getType(actions.addComplete): {
       const { id, payloadPath, hash } = action.payload
-      const addData = state.photoAdds[id]
+      const addData = state.photoAdds![id]
       const updated: PhotoAdd = { ...addData, status: 'complete', payloadPath, hash }
       return { ...state, photoAdds: { ...state.photoAdds, [id]: updated } }
     }

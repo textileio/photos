@@ -14,8 +14,8 @@ export function overallDownloadProgress(state: RootState) {
   return totalDownloaded / totalSize
 }
 
-export function getAnnouncement(state: RootState): PeerDetails | undefined {
-  return state.migration.announcement
+export function getAnnouncement(state: RootState) {
+  return state.migration.peerAnnouncement
 }
 
 export function getNetwork(state: RootState): ReadonlyArray<string> {

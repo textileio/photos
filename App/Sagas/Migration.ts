@@ -6,7 +6,7 @@ import { delay } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
-import MigrationActions, { MigrationPhoto } from '../Redux/MigrationRedux'
+import MigrationActions, { MigrationPhoto, PeerDetails } from '../Redux/MigrationRedux'
 import { getAnnouncement, getNetwork, getMigrationPhotos } from '../Redux/MigrationSelectors'
 import { getAddress, getPeerId } from '../Redux/AccountSelectors'
 import { prepare } from '../Sagas/ImageSharingSagas'
@@ -50,18 +50,27 @@ export function * handleMigrationRequest(dispatch: Dispatch) {
       }
     } catch {
       yield put(MigrationActions.photoMigrationError())
-    } finally {
-      yield call(letScreenSleep)
     }
   }
 }
 
 function * processMigration(dispatch: Dispatch) {
-  yield put(MigrationActions.migrationStarted())
+  try {
+    yield put(MigrationActions.migrationStarted())
+    yield call(keepScreenOn)
+    yield call(announcePeer)
+    yield call(delay, 5000)
+    yield call(connectToPeers)
+    yield call(delay, 5000)
+    // Kick this off the first time, it will be run in NodeOnline in the future
+    yield put(MigrationActions.requestRunRecurringMigrationTasks())
+    yield call(letScreenSleep)
+    yield put(MigrationActions.migrationComplete())
+  } catch (error) {
+    yield put(MigrationActions.photoMigrationError())
+  }
 
-  // TODO: try/catch
-
-  // yield call(keepScreenOn)
+  //
   // // Take some sort of action to start the migration
   // yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
   // // where the photo should be shared when complete
@@ -93,59 +102,68 @@ async function createMigrationAlbum(): Promise<string> {
   return threadInfo.id
 }
 
-// Can be run on each node online
-export function * runRecurringMigrationTasks () {
-  while (true) {
-    yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
-    const announcement = yield select(getAnnouncement)
-    if (announcement) {
-      const {peerId, address, username, previousId} = announcement
-      try {
-        yield call(announceId, peerId, address, username, previousId)
-        // If no error, mark as successful
-        yield put(MigrationActions.announceSuccess())
-      } catch (error) {
-        // just run again later
-      }
-    }
-    const peers = yield select(getNetwork)
-    for (const peer of peers) {
-      try {
-        // for each contact ask if they've migrated
-        const contact = yield call(findContact, peer)
-        if (contact) {
-          yield call(addContact, contact.peerId, contact.address, contact.username || '')
-          yield put(MigrationActions.connectionSuccess(peer))
-        }
-      } catch (error) {
-        // just run again later
-      }
-    }
-  }
-}
-
-// Should be run the first time
-export function * migrateConnections() {
+function * announcePeer() {
   // announce to other peers
   const previousItems: PeerIdItem[] = yield call(getItems, PREVIOUS_ID_PATH)
   if (previousItems.length) {
     const previous = previousItems[0]
     const peerId = yield select(getPeerId)
     const address = yield select(getAddress)
-    yield put(MigrationActions.announceMigration(peerId, previous.peerid, address, previous.username))
+    const details: PeerDetails = {
+      currentPeerId: peerId,
+      previousPeerId: previous.peerid,
+      currentAddress: address,
+      previousUsername: previous.username
+    }
+    yield put(MigrationActions.peerAnnouncement(details))
   }
+}
+
+function * connectToPeers() {
   // locate old peers
   const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
   const peers = [...new Set(([] as string[]).concat(...threadItems.map((thread) => thread.peers)))]
   yield put(MigrationActions.connectToPeers(peers))
-  // run it for the first time
-  yield put(MigrationActions.requestRunRecurringMigrationTasks())
+
+}
+
+// Can be run on each node online
+export function * runRecurringMigrationTasks () {
+  while (true) {
+    yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
+    const announcement: { peerDetails: PeerDetails, status: 'complete' | 'pending' } | undefined = yield select(getAnnouncement)
+    if (announcement && announcement.status === 'pending') {
+      const { currentPeerId, currentAddress, previousUsername, previousPeerId } = announcement.peerDetails
+      try {
+        yield call(announceId, currentPeerId, previousPeerId, currentAddress, previousUsername)
+        // If no error, mark as successful
+        yield put(MigrationActions.peerAnnouncementSuccess())
+      } catch (error) {
+        // just run again later
+      }
+    }
+    const peers: ReadonlyArray<string> = yield select(getNetwork)
+    for (const peer of peers) {
+      try {
+        // for each contact ask if they've migrated
+        const contact: { peerId: string, previousId: string, address: string, username?: string } = yield call(findContact, peer)
+        yield call(addContact, contact.peerId, contact.address, contact.username || '')
+        yield put(MigrationActions.connectionSuccess(peer))
+      } catch (error) {
+        // just run again later
+      }
+    }
+  }
 }
 
 // Will error for any non-success
-export async function announceId(peerId: string, address: string, username: string, previousId: string) {
+async function announceId(currentPeerId: string, previousPeerId: string, currentAddress: string, previousUsername?: string) {
   const headers = {'Content-type': 'application/json'}
-  const body = JSON.stringify({ peerId, previousId, address, username })
+  const payload: { [key: string]: string } = { peerId: currentPeerId, previousId: previousPeerId, address: currentAddress }
+  if (previousUsername) {
+    payload['username'] = previousUsername
+  }
+  const body = JSON.stringify(payload)
   const response = await fetch(Config.RN_PEER_SWAP, { method: 'POST', headers, body })
   if (!(response.status >= 200 && response.status < 300)) {
     throw Error('Request failed')
@@ -153,7 +171,7 @@ export async function announceId(peerId: string, address: string, username: stri
 }
 
 // will error response doesn't include the peer
-export async function findContact(peerId: string): Promise<{peerId: string, previousId: string, address: string, username?: string}> {
+async function findContact(peerId: string): Promise<{peerId: string, previousId: string, address: string, username?: string}> {
   const response = await fetch(`${Config.RN_PEER_SWAP}?peerId=${peerId}`, { method: 'GET' })
   const responseJson: [{peerId: string, previousId: string, address: string, username?: string}] = await response.json()
   return responseJson[0]

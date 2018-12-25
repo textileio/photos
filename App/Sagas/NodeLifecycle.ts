@@ -107,10 +107,6 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield put(MigrationActions.migrationNeeded())
         // call the create/start sequence again
         yield call(createAndStartNode, dispatch)
-        // migrate peerid
-        // TODO: Should these just be triggered when the user starts the migration manually? I think so
-        // yield call(migrateConnections)
-        // yield call(preparePhotoMigration)
       } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)
