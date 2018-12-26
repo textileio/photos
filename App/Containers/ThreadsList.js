@@ -157,6 +157,16 @@ const mapStateToProps = (state) => {
   // add processing items to the beginning of the list
   items.unshift(...processingItems)
 
+  const threadJoins = state.threads.inboundInvites
+    .filter((invite) => !invite.dismiss)
+    .map((invite) => {
+      return {
+        props: invite,
+        type: 'processingThread'
+      }
+    })
+  items.unshift(...threadJoins)
+
   return {
     profile,
     items,
