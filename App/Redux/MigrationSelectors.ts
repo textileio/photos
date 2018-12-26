@@ -1,17 +1,38 @@
 import { RootState } from './Types'
-import { PeerDetails, MigrationPhoto } from './MigrationRedux'
+import { PeerDetails, MigrationPhoto, PhotoDownload, LocalProcessingTask } from './MigrationRedux'
 
-export function overallDownloadProgress(state: RootState) {
-  let totalSize = 0
-  let totalDownloaded = 0
-  for (const jobId in state.migration.photoDownloads) {
-    if (state.migration.photoDownloads[jobId]) {
-      const download = state.migration.photoDownloads[jobId]
-      totalSize = totalSize + (download.contentLength || 0)
-      totalDownloaded = totalDownloaded + download.bytesWritten
-    }
-  }
-  return totalDownloaded / totalSize
+export function completeLocalProcessingTasks(state: RootState) {
+  return Object.keys(state.migration.localProcessingTasks || {})
+    .map((key) => state.migration.localProcessingTasks![key] as LocalProcessingTask)
+    .filter((task) => task.status === 'complete')
+}
+
+export function completeLocalProcessingTasksCount(state: RootState) {
+  return Object.keys(state.migration.localProcessingTasks || {})
+    .map((key) => state.migration.localProcessingTasks![key] as LocalProcessingTask)
+    .filter((task) => task.status === 'complete' || task.status === 'error')
+    .length
+}
+
+export function localProcessingTasksCount(state: RootState) {
+  return Object.keys(state.migration.localProcessingTasks || {}).length
+}
+
+export function completeDownloads(state: RootState) {
+  return Object.keys(state.migration.photoDownloads || {})
+    .map((key) => state.migration.photoDownloads![key] as PhotoDownload)
+    .filter((download) => download.status === 'complete')
+}
+
+export function completeDownloadsCount(state: RootState) {
+  return Object.keys(state.migration.photoDownloads || {})
+    .map((key) => state.migration.photoDownloads![key] as PhotoDownload)
+    .filter((download) => download.status === 'complete' || download.status === 'error')
+    .length
+}
+
+export function downloadsCount(state: RootState) {
+  return Object.keys(state.migration.photoDownloads || {}).length
 }
 
 export function getAnnouncement(state: RootState) {

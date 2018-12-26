@@ -1,4 +1,5 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
+import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 
 const actions = {
   migrationNeeded: createAction('@migration/MIGRATION_NEEDED'),
@@ -35,7 +36,7 @@ const actions = {
   ),
   insertDownload: createAction(
     '@migration/INSERT_DOWNLOAD',
-    (resolve) => (jobId: number, path: string) => resolve({ jobId, path })
+    (resolve) => (photoId: string, jobId: number, path: string) => resolve({ photoId, jobId, path })
   ),
   downloadStarted: createAction(
     '@migration/DOWNLOAD_STARTED',
@@ -49,17 +50,21 @@ const actions = {
     '@migration/DOWNLOAD_COMPLETE',
     (resolve) => (jobId: number, statusCode: number, bytesWritten: number) => resolve({ jobId, statusCode, bytesWritten })
   ),
-  insertAdd: createAction(
-    '@migration/INSERT_ADD',
-    (resolve) => (sourcePath: string) => resolve({ sourcePath })
+  downloadError: createAction(
+    '@migration/DOWNLOAD_ERROR',
+    (resolve) => (photoId: string, error: any) => resolve({ photoId, error })
   ),
-  startAdd: createAction(
-    '@migration/ADD',
-    (resolve) => (id: string) => resolve({ id })
+  insertLocalProcessingTask: createAction(
+    '@migration/INSERT_LOCAL_PROCESSING_TASK',
+    (resolve) => (photoId: string) => resolve({ photoId })
   ),
-  addComplete: createAction(
-    '@migration/ADD_COMPLETE',
-    (resolve) => (id: string, payloadPath?: string, hash?: string) => resolve({ id, payloadPath, hash })
+  localProcessingTaskComplete: createAction(
+    '@migration/INSERT_LOCAL_PROCESSING_TASK_COMPLETE',
+    (resolve) => (photoId: string, preparedFiles: IMobilePreparedFiles) => resolve({ photoId, preparedFiles })
+  ),
+  localProcessingTaskError: createAction(
+    '@migration/INSERT_LOCAL_PROCESSING_TASK_ERROR',
+    (resolve) => (photoId: string, error: any) => resolve({ photoId, error })
   )
 }
 
@@ -71,27 +76,29 @@ export interface MigrationPhoto {
 }
 
 export interface PhotoDownload {
+  readonly photoId: string
   readonly jobId: number
   readonly path: string
   readonly contentLength?: number
   readonly bytesWritten: number
   readonly statusCode?: number
   readonly error?: string
+  readonly status: 'pending' | 'downloading' | 'complete' | 'error'
 }
 
 export interface PhotoDownloads {
   readonly [key: number]: PhotoDownload
 }
 
-export interface PhotoAdd {
-  readonly sourcePath: string
-  readonly status: 'pending' | 'adding' | 'complete'
-  readonly payloadPath?: string
-  readonly hash?: string
+export interface LocalProcessingTask {
+  readonly photoId: string
+  readonly preparedFiles?: IMobilePreparedFiles
+  readonly status: 'processing' | 'complete' | 'error'
+  readonly error?: string
 }
 
-export interface PhotoAdds {
-  readonly [key: string]: PhotoAdd
+export interface LocalProcessingTasks {
+  readonly [key: string]: LocalProcessingTask
 }
 
 export interface PeerDetails {
@@ -110,10 +117,10 @@ export interface MigrationState {
   readonly network?: ReadonlyArray<string>,
   readonly photosCount?: number
   readonly threadsCount?: number
-  readonly photoDownloads?: PhotoDownloads
-  readonly photoAdds?: PhotoAdds
   readonly username?: string
   readonly migrationPhotos?: ReadonlyArray<MigrationPhoto>
+  readonly photoDownloads?: PhotoDownloads
+  readonly localProcessingTasks?: LocalProcessingTasks
 }
 
 const initialState: MigrationState = {
@@ -162,14 +169,14 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
       return { ...state, migrationPhotos: undefined }
     }
     case getType(actions.insertDownload): {
-      const { jobId, path } = action.payload
-      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: { jobId, path, bytesWritten: 0 }}
+      const { photoId, jobId, path } = action.payload
+      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: { photoId, jobId, path, bytesWritten: 0, status: 'pending' }}
       return { ...state, photoDownloads }
     }
     case getType(actions.downloadStarted): {
       const { jobId, statusCode, contentLength } = action.payload
       const download = state.photoDownloads![jobId]
-      const updatedDownload: PhotoDownload = { ...download, statusCode, contentLength }
+      const updatedDownload: PhotoDownload = { ...download, statusCode, contentLength, status: 'downloading' }
       const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
       return { ...state, photoDownloads }
     }
@@ -183,25 +190,36 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
     case getType(actions.downloadComplete): {
       const { jobId, statusCode, bytesWritten } = action.payload
       const download = state.photoDownloads![jobId]
-      const updatedDownload: PhotoDownload = { ...download, statusCode, bytesWritten }
+      const updatedDownload: PhotoDownload = { ...download, statusCode, bytesWritten, status: 'complete' }
       const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
       return { ...state, photoDownloads }
     }
-    case getType(actions.insertAdd): {
-      const { sourcePath } =  action.payload
-      return { ...state, photoAdds: { ...state.photoAdds, [sourcePath]: { sourcePath, status: 'pending' } } }
+    case getType(actions.downloadError): {
+      // TODO: Update the right download with via photoId
+      const { photoId, error } = action.payload
+      // const download = state.photoDownloads![jobId]
+      // const message = error.message as string || error as string || 'unknown error'
+      // const updatedDownload: PhotoDownload = { ...download, error: message, status: 'error' }
+      // const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
+      // return { ...state, photoDownloads }
+      return state
     }
-    case getType(actions.startAdd): {
-      const { id } = action.payload
-      const addData = state.photoAdds![id]
-      const updated: PhotoAdd = { ...addData, status: 'adding' }
-      return { ...state, photoAdds: { ...state.photoAdds, [id]: updated } }
+    case getType(actions.insertLocalProcessingTask): {
+      const { photoId } =  action.payload
+      return { ...state, localProcessingTasks: { ...state.localProcessingTasks, [photoId]: { photoId, status: 'processing' } } }
     }
-    case getType(actions.addComplete): {
-      const { id, payloadPath, hash } = action.payload
-      const addData = state.photoAdds![id]
-      const updated: PhotoAdd = { ...addData, status: 'complete', payloadPath, hash }
-      return { ...state, photoAdds: { ...state.photoAdds, [id]: updated } }
+    case getType(actions.localProcessingTaskComplete): {
+      const { photoId, preparedFiles } = action.payload
+      const taskData = state.localProcessingTasks![photoId]
+      const updated: LocalProcessingTask = { ...taskData, status: 'complete', preparedFiles }
+      return { ...state, localProcessingTasks: { ...state.localProcessingTasks, [photoId]: updated } }
+    }
+    case getType(actions.localProcessingTaskError): {
+      const { photoId, error } = action.payload
+      const taskData = state.localProcessingTasks![photoId]
+      const message = error.message as string || error as string || 'unknown error'
+      const updated: LocalProcessingTask = { ...taskData, status: 'error', error: message }
+      return { ...state, localProcessingTasks: { ...state.localProcessingTasks, [photoId]: updated } }
     }
     default:
       return state

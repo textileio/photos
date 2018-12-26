@@ -6,15 +6,16 @@ import { delay } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
-import MigrationActions, { MigrationPhoto, PeerDetails } from '../Redux/MigrationRedux'
-import { getAnnouncement, getNetwork, getMigrationPhotos } from '../Redux/MigrationSelectors'
+import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload } from '../Redux/MigrationRedux'
+import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads } from '../Redux/MigrationSelectors'
 import { getAddress, getPeerId } from '../Redux/AccountSelectors'
 import { prepare } from '../Sagas/ImageSharingSagas'
 import uuid from 'uuid/v4'
 
 import {
-  addContact, addThreadFiles, addThread
+  addContact, addThreadFiles, addThread, ThreadInfo
  } from '../NativeModules/Textile'
+import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 
 const PREVIOUS_ID_PATH = `${FS.DocumentDirectoryPath}/migration005_peerid.ndjson`
 const PHOTOS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_default_photos.ndjson`
@@ -22,6 +23,7 @@ const THREADS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_threads.ndjs
 const IMAGE_URL = (id: string, key: string) => `https://cafe.textile.io/ipfs/${id}/photo?key=${key}`
 const MIGRATION_IMAGES_PATH = `${FS.DocumentDirectoryPath}/migration_images`
 const IMAGE_PATH = (id: string) => `${MIGRATION_IMAGES_PATH}/${id}.jpg`
+const MIGRATION_ALBUM_KEY = 'textile_photos-migrated-photos'
 const MIGRATION_ALBUM_NAME = 'Migrated photos'
 
 interface PeerIdItem {
@@ -64,6 +66,8 @@ function * processMigration(dispatch: Dispatch) {
     yield call(delay, 5000)
     // Kick this off the first time, it will be run in NodeOnline in the future
     yield put(MigrationActions.requestRunRecurringMigrationTasks())
+    yield call(downloadOldPhotos, dispatch)
+    yield call(processCompletedDownloads)
     yield call(letScreenSleep)
     yield put(MigrationActions.migrationComplete())
   } catch (error) {
@@ -72,34 +76,66 @@ function * processMigration(dispatch: Dispatch) {
 
   //
   // // Take some sort of action to start the migration
-  // yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
+  //
   // // where the photo should be shared when complete
-  // const photoItems: MigrationPhoto[] = yield select(getMigrationPhotos)
-  // const threadId = yield call(createMigrationAlbum)
+  // const threadId: string = yield call(createMigrationAlbum)
+  //
   // // the photos ready to migrate
   // // don't think we need this right now...
   // const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
   // yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
   // // create the actions
-  // const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, threadId, dispatch))
+  //
   // // run
-  // yield all(downloadEffects)
+  //
   // // release
   // yield put(MigrationActions.photoMigrationSuccess())
   // yield call(letScreenSleep)
 }
 
-export function * preparePhotoMigration () {
-  const photoItems: MigrationPhoto[] = yield call(getItems, PHOTOS_FILE_PATH)
-  if (photoItems.length) {
-    yield put(MigrationActions.photoMigration(photoItems))
+function * downloadOldPhotos (dispatch: Dispatch) {
+  const items: MigrationPhoto[] = yield call(getItems, PHOTOS_FILE_PATH)
+  if (items.length < 1) {
+    return
   }
+  yield put(MigrationActions.photoMigration(items))
+  yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
+  const photoItems: MigrationPhoto[] = yield select(getMigrationPhotos)
+  const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, dispatch))
+  yield all(downloadEffects)
 }
 
-async function createMigrationAlbum(): Promise<string> {
-  const key = `textile_photos-shared-${uuid()}`
-  const threadInfo = await addThread(key, MIGRATION_ALBUM_NAME)
-  return threadInfo.id
+function * processCompletedDownloads() {
+  const downloads: PhotoDownload[] = yield select(completeDownloads)
+  if (downloads.length < 1) {
+    return
+  }
+  const threadInfo: ThreadInfo = yield call(addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME)
+  const effects = downloads.map((download) => call(processCompletedDownload, download, threadInfo.id))
+  yield all(effects)
+}
+
+function * processCompletedDownload(download: PhotoDownload, threadId: string) {
+  const { photoId, path } = download
+  try {
+    const img = {
+      isAvatar: false,
+      origURL: path,
+      uri: path,
+      path,
+      canDelete: true
+    }
+    yield put(MigrationActions.insertLocalProcessingTask(photoId))
+    const preparedFiles: IMobilePreparedFiles = yield call(prepare, img, threadId)
+    const { dir } = preparedFiles
+    if (!dir) {
+      throw new Error('No dir on MobilePreparedFiles')
+    }
+    yield call(addThreadFiles, dir, threadId)
+    yield put(MigrationActions.localProcessingTaskComplete(photoId, preparedFiles))
+  } catch (error) {
+    yield put(MigrationActions.localProcessingTaskError(photoId, error))
+  }
 }
 
 function * announcePeer() {
@@ -160,8 +196,9 @@ export function * runRecurringMigrationTasks () {
 async function announceId(currentPeerId: string, previousPeerId: string, currentAddress: string, previousUsername?: string) {
   const headers = {'Content-type': 'application/json'}
   const payload: { [key: string]: string } = { peerId: currentPeerId, previousId: previousPeerId, address: currentAddress }
-  if (previousUsername) {
-    payload['username'] = previousUsername
+  const username = previousUsername ? previousUsername.trim() : ''
+  if (username.length > 0) {
+    payload['username'] = username
   }
   const body = JSON.stringify(payload)
   const response = await fetch(Config.RN_PEER_SWAP, { method: 'POST', headers, body })
@@ -177,7 +214,7 @@ async function findContact(peerId: string): Promise<{peerId: string, previousId:
   return responseJson[0]
 }
 
-function * downloadPhoto(item: MigrationPhoto, threadId: string, dispatch: Dispatch) {
+function * downloadPhoto(item: MigrationPhoto, dispatch: Dispatch) {
   const finalPath = IMAGE_PATH(item.id)
   const options: FS.DownloadFileOptions = {
     fromUrl: IMAGE_URL(item.id, item.key),
@@ -193,20 +230,9 @@ function * downloadPhoto(item: MigrationPhoto, threadId: string, dispatch: Dispa
       dispatch(MigrationActions.downloadProgress(jobId, bytesWritten))
     }
   }
-  const result: FS.DownloadResult = yield call(startDownload, options, dispatch)
+  const result: FS.DownloadResult = yield call(startDownload, item.id, options, dispatch)
   const { jobId, statusCode, bytesWritten } = result
   yield put(MigrationActions.downloadComplete(jobId, statusCode, bytesWritten))
-  // share the downloaded file to our target thread
-  const img = {
-    isAvatar: false,
-    origURL: finalPath,
-    uri: finalPath,
-    path: finalPath,
-    canDelete: true
-  }
-  const preparedFile = yield call(prepare, img, threadId)
-  const { dir } = preparedFile
-  yield call(addThreadFiles, dir, threadId)
 }
 
 // function * upload() {
@@ -241,9 +267,9 @@ async function deleteFile(path: string) {
   }
 }
 
-function startDownload(options: FS.DownloadFileOptions, dispatch: Dispatch) {
+function startDownload(photoId: string, options: FS.DownloadFileOptions, dispatch: Dispatch) {
   const result = FS.downloadFile(options)
-  dispatch(MigrationActions.insertDownload(result.jobId, options.toFile))
+  dispatch(MigrationActions.insertDownload(photoId, result.jobId, options.toFile))
   return result.promise
 }
 
