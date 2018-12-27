@@ -129,10 +129,10 @@ export interface NotificationInfo {
 
 export interface Overview {
   readonly swarm_size: number
-  readonly account_peer_count: number
-  readonly thread_count: number
-  readonly photo_count: number
-  readonly contact_count: number
+  readonly account_peer_cnt: number
+  readonly thread_cnt: number
+  readonly file_cnt: number
+  readonly contact_cnt: number
 }
 
 export interface Profile {
@@ -184,7 +184,7 @@ export interface ThreadInfo {
   readonly key: string
   readonly name: string
   readonly schema?: Node
-  readonly schem_id?: string
+  readonly schema_id?: string
   readonly initiator: string
   readonly type: ThreadType
   readonly state: ThreadState

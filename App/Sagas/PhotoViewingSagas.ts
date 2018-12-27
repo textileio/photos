@@ -4,7 +4,8 @@ import { ActionType, getType } from 'typesafe-actions'
 import uuid from 'uuid/v4'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { ThreadsSelectors, InboundInvite } from '../Redux/ThreadsRedux'
+import { InboundInvite } from '../Redux/ThreadsRedux'
+import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
 import { getAddress } from '../Redux/AccountSelectors'
 import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
@@ -28,7 +29,7 @@ export function * monitorNewThreadActions () {
     const photoToShare: { threadName: string, imageId: string, comment?: string} | undefined = yield select(photoToShareToNewThread)
     const shouldNav: boolean = yield select(shouldNavigateToNewThread)
     const shouldSelect: boolean = yield select(shouldSelectNewThread)
-    const invite: InboundInvite | undefined = yield select(ThreadsSelectors.inboundInviteByThreadName, name)
+    const invite: InboundInvite | undefined = yield select(inboundInviteByThreadName, name)
 
     yield put(PhotoViewingActions.clearNewThreadActions())
 

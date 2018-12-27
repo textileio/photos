@@ -9,7 +9,7 @@ import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import navStyles from '../Navigation/Styles/NavigationStyles'
 import { NavigationActions } from 'react-navigation'
-import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
+import { defaultThreadData, getSharedPhotos } from '../Redux/PhotoViewingSelectors'
 
 class TextileWalletPicker extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -23,7 +23,7 @@ class TextileWalletPicker extends React.PureComponent {
       </TextileHeaderButtons>
     )
     const headerTitle = (
-      <Text style={navStyles.headerTitle}>Wallet Photos</Text>
+      <Text style={navStyles.headerTitle}>Recent Photos</Text>
     )
     const headerRight = (
       <TextileHeaderButtons>
@@ -75,9 +75,7 @@ class TextileWalletPicker extends React.PureComponent {
 const mapStateToProps = (state) => {
   const defaultData = defaultThreadData(state)
   const threadId = defaultData ? defaultData.id : undefined
-  const items = !defaultData ? [] : defaultData.photos.map((photo) => {
-    return {type: 'photo', photo, id: photo.id}
-  })
+  const items = getSharedPhotos(state)
 
   const refreshing = defaultData ? defaultData.querying : false
 

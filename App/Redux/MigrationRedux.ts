@@ -5,6 +5,23 @@ const actions = {
     '@migration/MIGRATION_METADATA',
     (resolve) => (photosCount: number, threadsCount: number) => resolve({ photosCount, threadsCount })
   ),
+  requestRunRecurringMigrationTasks: createAction('@migration/REQUEST_RECURRING_MIGRATION'),
+  announceMigration: createAction(
+    '@migration/ANNOUNCE',
+    (resolve) => (peerId: string, previousId: string, address: string, username?: string) => resolve({ peerId, address, username, previousId })
+  ),
+  announceSuccess: createAction(
+    '@migration/ANNOUNCE_SUCCESS',
+    (resolve) => () => resolve()
+  ),
+  connectToPeers: createAction(
+    '@migration/CONNECT_TO_PEERS',
+    (resolve) => (peers: string[]) => resolve({ peers })
+  ),
+  connectionSuccess: createAction(
+    '@migration/CONNECTION_SUCCESS',
+    (resolve) => (peer: string) => resolve({ peer })
+  ),
   insertDownload: createAction(
     '@migration/INSERT_DOWNLOAD',
     (resolve) => (jobId: number, path: string) => resolve({ jobId, path })
@@ -61,11 +78,21 @@ export interface PhotoAdds {
   readonly [key: string]: PhotoAdd
 }
 
+export interface PeerDetails {
+  readonly peerId: string,
+  readonly previousId: string,
+  readonly address: string,
+  readonly username?: string
+}
+
 export interface MigrationState {
   readonly photosCount?: number
   readonly threadsCount?: number
   readonly photoDownloads: PhotoDownloads
   readonly photoAdds: PhotoAdds
+  readonly announcement?: PeerDetails
+  readonly network?: ReadonlyArray<string>
+  readonly username?: string
 }
 
 const initialState: MigrationState = {
@@ -78,6 +105,26 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
     case getType(actions.migrationMetadata): {
       const { photosCount, threadsCount } = action.payload
       return { ...state, photosCount, threadsCount }
+    }
+    case getType(actions.announceMigration): {
+      const announcement: PeerDetails = action.payload
+      const { username } = action.payload
+      return { ...state, announcement, username }
+    }
+    case getType(actions.announceSuccess): {
+      return { ...state, announcement: undefined }
+    }
+    case getType(actions.connectToPeers): {
+      const network = action.payload.peers
+      return { ...state, network }
+    }
+    case getType(actions.connectionSuccess): {
+      const { peer } = action.payload
+      if (!state.network) {
+        return state
+      }
+      const peers = state.network.filter((p) => p !== peer)
+      return { ...state, network: peers }
     }
     case getType(actions.insertDownload): {
       const { jobId, path } = action.payload

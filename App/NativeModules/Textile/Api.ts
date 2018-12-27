@@ -30,7 +30,11 @@ export async function acceptThreadInviteViaNotification(id_: string): Promise<st
 }
 
 export async function addContact(id_: string, address: string, username: string): Promise<void> {
-  await TextileNode.addContact(id_, address, username)
+  try {
+    await TextileNode.addContact(id_, address, username)
+  } catch (error) {
+    // nothing for now
+  }
 }
 
 export async function addExternalThreadInvite(threadId: string): Promise<ExternalInvite> {

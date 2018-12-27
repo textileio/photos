@@ -10,7 +10,7 @@ import Config from 'react-native-config'
 
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AccountActions from '../Redux/AccountRedux'
 import { RootAction } from '../Redux/Types'
 import {
@@ -28,7 +28,7 @@ import {
   version
  } from '../NativeModules/Textile'
 import { logNewEvent } from './DeviceLogs'
-import { migrate } from './Migration'
+import { migrate, migrateConnections } from './Migration'
 
 const REPO_PATH = RNFS.DocumentDirectoryPath
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
@@ -99,12 +99,14 @@ function * createAndStartNode(dispatch: Dispatch): any {
   } catch (error) {
     try {
       if (error.message === MIGRATION_NEEDED_ERROR) {
-        yield put(TextileNodeActions.migrationNeeded())
-        yield take(getType(TextileNodeActions.initMigration))
+        // instruct the node to export data to files
         yield call(migrateRepo, REPO_PATH)
+        // store the fact there is a pending migration in the preferences redux persisted state
+        yield put(PreferencesActions.migrationNeeded())
+        // call the create/start sequence again
         yield call(createAndStartNode, dispatch)
-        yield put(TextileNodeActions.initMigrationSuccess())
-        yield call(migrate, dispatch)
+        // migrate peerid
+        yield call(migrateConnections)
       } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)

@@ -27,6 +27,8 @@ import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } 
 import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
 
+import { runRecurringMigrationTasks } from './Migration'
+
 import {
   showImagePicker,
   showWalletPicker,
@@ -114,6 +116,8 @@ export default function * root (dispatch: Dispatch) {
     call(onNodeStarted),
     call(onNodeOnline),
     call(monitorNewThreadActions),
+
+    call(runRecurringMigrationTasks),
 
     call(startMonitoringExistingUploads),
 

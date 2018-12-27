@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`migration initial state should match snapshot 1`] = `
+Object {
+  "photoAdds": Object {},
+  "photoDownloads": Object {},
+}
+`;

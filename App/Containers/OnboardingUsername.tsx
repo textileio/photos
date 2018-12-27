@@ -45,6 +45,7 @@ const LABEL: TextStyle = {
 }
 
 interface OwnProps {
+  suggestion?: string
   onSuccess?: () => void
 }
 
@@ -80,6 +81,12 @@ class OnboardingUsername extends React.Component<Props, State> {
     }
     if (this.props.onSuccess) {
       setTimeout(this.props.onSuccess, 1000)
+    }
+  }
+
+  componentDidMount = () => {
+    if (this.props.suggestion) {
+      this.updateText(this.props.suggestion)
     }
   }
 

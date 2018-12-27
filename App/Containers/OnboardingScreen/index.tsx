@@ -13,7 +13,7 @@ import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
 import Icon from '../../Components/Icon'
 import PrefrencesActions from '../../Redux/PreferencesRedux'
-import { RootAction } from '../../Redux/Types'
+import { RootAction, RootState } from '../../Redux/Types'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -33,11 +33,16 @@ const ARROW_FORWARD: ViewStyle = {
   alignSelf: 'flex-end'
 }
 
+interface StateProps {
+  migrationUsername?: string
+  pendingMigration: boolean
+}
+
 interface DispatchProps {
   complete: () => void
 }
 
-type Props = DispatchProps & NavigationScreenProps
+type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
   currentPage: number
@@ -46,14 +51,17 @@ interface State {
 class OnboardingScreen extends React.Component<Props, State> {
 
   pages?: Pages
-  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 5, 6]
-  noForwardArrowIndexes: number[] = [3, 4, 5, 6]
+  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 5, 6, 7]
 
   constructor(props: Props) {
     super(props)
     this.state = {
-      currentPage: 0
+      currentPage: props.pendingMigration ? 0 : 1
     }
+  }
+
+  noForwardArrowIndexes = () => {
+    return [4, 5, 6, 7]
   }
 
   nextPage = () => {
@@ -91,6 +99,16 @@ class OnboardingScreen extends React.Component<Props, State> {
             scrollEnabled={false}
           >
             <OnboardingMessage
+              title='Big Changes Under the Hood'
+              image={require('./statics/secure.png')}
+            >
+                We're working fast to make Textile Photos even better for you.
+                Your old data isn't compatible with this new version of the app,
+                so for now, you'll be starting fresh. The migration will create
+                a local map of your private photos and your contacts so they can
+                be restored in a future release. ;)
+            </OnboardingMessage>
+            <OnboardingMessage
               title='Own your memories'
               subtitle='Your data is stored in a decentralized system to bring you full ownership of your photos.'
               image={require('./statics/secure.png')}
@@ -105,7 +123,7 @@ class OnboardingScreen extends React.Component<Props, State> {
               subtitle='Everytime you take a picture, Textile will be there to automatically sync your photos.'
               image={require('./statics/sync.png')}
             />
-            <OnboardingUsername onSuccess={this.nextPage} />
+            <OnboardingUsername onSuccess={this.nextPage} suggestion={this.props.migrationUsername} />
             <SetAvatar onSuccess={this.nextPage} />
             <MailListSignupScreen onSuccess={this.nextPage} />
             <OnboardingMessage
@@ -121,7 +139,7 @@ class OnboardingScreen extends React.Component<Props, State> {
               <Icon name={'arrow-left'} size={24} />
             </TouchableOpacity>
           }
-          {this.noForwardArrowIndexes.indexOf(this.state.currentPage) === -1 &&
+          {this.noForwardArrowIndexes().indexOf(this.state.currentPage) === -1 &&
             <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
               <Icon name={'arrow-right'} size={24} />
             </TouchableOpacity>
@@ -132,8 +150,13 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state: RootState): StateProps => ({
+  migrationUsername: state.migration.username,
+  pendingMigration: state.preferences.pendingMigration
+})
+
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   complete: () => dispatch(PrefrencesActions.onboardedSuccess())
 })
 
-export default connect(undefined, mapDispatchToProps)(OnboardingScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen)
