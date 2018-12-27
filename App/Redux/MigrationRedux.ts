@@ -7,10 +7,7 @@ const actions = {
   cancelMigration: createAction('@migration/CANCEL_MIGRATION'),
   migrationStarted: createAction('@migration/MIGRATION_STARTED'),
   migrationComplete: createAction('@migration/MIGRATION_COMPLETE'),
-  migrationMetadata: createAction(
-    '@migration/MIGRATION_METADATA',
-    (resolve) => (photosCount: number, threadsCount: number) => resolve({ photosCount, threadsCount })
-  ),
+  migrationError: createAction('@migration/MIGRATION_ERROR', (resolve) => (error: any) => resolve({ error })),
   requestRunRecurringMigrationTasks: createAction('@migration/REQUEST_RECURRING_MIGRATION'),
   peerAnnouncement: createAction(
     '@migration/PEER_ANNOUNCEMENT',
@@ -19,11 +16,6 @@ const actions = {
   photoMigration: createAction(
     '@migration/PHOTO_MIGRATION_SETUP',
     (resolve) => (photos: MigrationPhoto[]) => resolve({ photos })
-  ),
-  photoMigrationError: createAction('@migration/PHOTO_MIGRATION_ERROR'),
-  photoMigrationSuccess: createAction(
-    '@migration/PHOTO_MIGRATION_SUCCESS',
-    (resolve) => () => resolve()
   ),
   peerAnnouncementSuccess: createAction('@migration/PEER_ANNOUNCEMENT_SUCCESS'),
   connectToPeers: createAction(
@@ -142,19 +134,17 @@ export interface PeerDetails {
 }
 
 export interface MigrationState {
-  readonly status: 'none' | 'pending' | 'processing' | 'complete'
+  readonly status: 'none' | 'pending' | 'processing' | 'complete' | 'cancelled'
   readonly peerAnnouncement?: {
     readonly peerDetails: PeerDetails,
     readonly status: 'pending' | 'complete'
   }
   readonly network?: ReadonlyArray<string>,
-  readonly photosCount?: number
-  readonly threadsCount?: number
-  readonly username?: string
   readonly migrationPhotos?: ReadonlyArray<MigrationPhoto>
   readonly photoDownloads?: PhotoDownloads
   readonly localProcessingTasks?: LocalProcessingTasks
   readonly photoUploads?: PhotoUploads
+  readonly error?: string
 }
 
 const initialState: MigrationState = {
@@ -166,19 +156,19 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
     case getType(actions.migrationNeeded):
       return { ...state, status: 'pending' }
     case getType(actions.cancelMigration):
-      return { ...state, status: 'none' }
+      return { ...state, status: 'cancelled' }
     case getType(actions.migrationStarted):
       return { ...state, status: 'processing' }
     case getType(actions.migrationComplete):
-      return { ...state, status: 'pending' } // TODO: change to complete
-    case getType(actions.migrationMetadata): {
-      const { photosCount, threadsCount } = action.payload
-      return { ...state, photosCount, threadsCount }
+      return { ...state, status: 'complete' }
+    case getType(actions.migrationError): {
+      const { error } = action.payload
+      const message = error.message as string || error as string || 'unknown error'
+      return { ...state, error: message }
     }
     case getType(actions.peerAnnouncement): {
       const { peerDetails } = action.payload
-      const { previousUsername } = peerDetails
-      return { ...state, peerAnnouncement: { peerDetails, status: 'pending' }, username: previousUsername }
+      return { ...state, peerAnnouncement: { peerDetails, status: 'pending' } }
     }
     case getType(actions.peerAnnouncementSuccess): {
       return { ...state, peerAnnouncement: { ...state.peerAnnouncement!, status: 'complete' } }
@@ -198,9 +188,6 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
     case getType(actions.photoMigration): {
       const { photos } = action.payload
       return { ...state, migrationPhotos: photos }
-    }
-    case getType(actions.photoMigrationSuccess): {
-      return { ...state, migrationPhotos: undefined }
     }
     case getType(actions.insertDownload): {
       const { photoId, path } = action.payload

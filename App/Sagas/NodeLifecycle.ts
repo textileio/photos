@@ -29,6 +29,7 @@ import {
   version
  } from '../NativeModules/Textile'
 import { logNewEvent } from './DeviceLogs'
+import { announcePeer } from './Migration'
 
 const REPO_PATH = RNFS.DocumentDirectoryPath
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
@@ -103,6 +104,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield call(migrateRepo, REPO_PATH)
         // store the fact there is a pending migration in the preferences redux persisted state
         yield put(MigrationActions.migrationNeeded())
+        yield call(announcePeer)
         // call the create/start sequence again
         yield call(createAndStartNode, dispatch)
       } else if (error.message === INIT_NEEDED_ERROR) {

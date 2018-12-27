@@ -20,6 +20,11 @@ export function overallUploadProgress(state: RootState) {
   }
 }
 
+export function allLocalProcessingTasks(state: RootState) {
+  return Object.keys(state.migration.localProcessingTasks || {})
+    .map((key) => state.migration.localProcessingTasks![key] as LocalProcessingTask)
+}
+
 export function completeLocalProcessingTasks(state: RootState) {
   return Object.keys(state.migration.localProcessingTasks || {})
     .map((key) => state.migration.localProcessingTasks![key] as LocalProcessingTask)

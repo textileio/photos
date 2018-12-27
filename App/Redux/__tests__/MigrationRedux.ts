@@ -5,8 +5,6 @@ import { RootState } from '../Types'
 
 const initialState = reducer(undefined, {} as any)
 const profile: MigrationState = {
-  photosCount: 0,
-  threadsCount: 0,
   photoDownloads: {},
   localProcessingTasks: {},
   status: 'none'

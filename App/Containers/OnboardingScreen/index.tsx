@@ -150,7 +150,7 @@ class OnboardingScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  migrationUsername: state.migration.username,
+  migrationUsername: state.migration.peerAnnouncement ? state.migration.peerAnnouncement.peerDetails.previousUsername : undefined,
   pendingMigration: state.migration.status === 'pending'
 })
 

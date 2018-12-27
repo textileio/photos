@@ -7,7 +7,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
 import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload, LocalProcessingTask } from '../Redux/MigrationRedux'
-import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads, completeLocalProcessingTasks } from '../Redux/MigrationSelectors'
+import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads, completeLocalProcessingTasks, allLocalProcessingTasks } from '../Redux/MigrationSelectors'
 import { getAddress, getPeerId } from '../Redux/AccountSelectors'
 import { prepare } from './ImageSharingSagas'
 import { getSession } from './UploadFile'
@@ -45,6 +45,7 @@ export function * handleMigrationRequest(dispatch: Dispatch) {
       const response: MigrationResponse = yield call(migrationPrompt)
       switch (response) {
         case MigrationResponse.cancel:
+          yield call(cleanup)
           yield put(MigrationActions.cancelMigration())
         case MigrationResponse.later:
           continue
@@ -52,7 +53,7 @@ export function * handleMigrationRequest(dispatch: Dispatch) {
           yield call(processMigration, dispatch)
       }
     } catch {
-      yield put(MigrationActions.photoMigrationError())
+      // don't worry about it
     }
   }
 }
@@ -70,29 +71,14 @@ function * processMigration(dispatch: Dispatch) {
     yield call(downloadOldPhotos, dispatch)
     yield call(prepareAndAddPhotos)
     yield call(processAllRemotePins, dispatch)
+    yield call(cleanup)
     yield call(letScreenSleep)
     yield put(MigrationActions.migrationComplete())
+    yield call(delay, 1000)
+    yield call(Alert.alert, 'Migration complete!')
   } catch (error) {
-    yield put(MigrationActions.photoMigrationError())
+    yield put(MigrationActions.migrationError(error))
   }
-
-  //
-  // // Take some sort of action to start the migration
-  //
-  // // where the photo should be shared when complete
-  // const threadId: string = yield call(createMigrationAlbum)
-  //
-  // // the photos ready to migrate
-  // // don't think we need this right now...
-  // const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
-  // yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
-  // // create the actions
-  //
-  // // run
-  //
-  // // release
-  // yield put(MigrationActions.photoMigrationSuccess())
-  // yield call(letScreenSleep)
 }
 
 function * downloadOldPhotos (dispatch: Dispatch) {
@@ -161,7 +147,30 @@ function * processRemotePins(task: LocalProcessingTask, dispatch: Dispatch) {
   yield all(effects)
 }
 
-function * announcePeer() {
+function * cleanup() {
+  yield call(deleteFile, PREVIOUS_ID_PATH)
+  yield call(deleteFile, THREADS_FILE_PATH)
+  yield call(deleteFile, PHOTOS_FILE_PATH)
+  yield call(deleteFile, MIGRATION_IMAGES_PATH)
+  const tasks: LocalProcessingTask[] = yield select(allLocalProcessingTasks)
+  const tasksEffects = tasks.map((task) => call(deleteFilesForTask, task))
+  yield all(tasksEffects)
+}
+
+function * deleteFilesForTask(task: LocalProcessingTask) {
+  if (!task.preparedFiles || !task.preparedFiles.pin) {
+    return
+  }
+  const pin = task.preparedFiles.pin
+  const effects = Object.keys(pin).map((photoId) => {
+    const path = pin[photoId]
+    return call(deleteFile, path)
+  })
+  yield all(effects)
+}
+
+// Exporting this so we can call it early so the old username is available during onboarding
+export function * announcePeer() {
   // announce to other peers
   const previousItems: PeerIdItem[] = yield call(getItems, PREVIOUS_ID_PATH)
   if (previousItems.length) {
