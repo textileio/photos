@@ -36,19 +36,19 @@ const actions = {
   ),
   insertDownload: createAction(
     '@migration/INSERT_DOWNLOAD',
-    (resolve) => (photoId: string, jobId: number, path: string) => resolve({ photoId, jobId, path })
+    (resolve) => (photoId: string, path: string) => resolve({ photoId, path })
   ),
   downloadStarted: createAction(
     '@migration/DOWNLOAD_STARTED',
-    (resolve) => (jobId: number, statusCode: number, contentLength: number) => resolve({ jobId, statusCode, contentLength })
+    (resolve) => (photoId: string, statusCode: number, contentLength: number) => resolve({ photoId, statusCode, contentLength })
   ),
   downloadProgress: createAction(
     '@migration/DOWNLOAD_PROGRESS',
-    (resolve) => (jobId: number, bytesWritten: number) => resolve({ jobId, bytesWritten })
+    (resolve) => (photoId: string, bytesWritten: number) => resolve({ photoId, bytesWritten })
   ),
   downloadComplete: createAction(
     '@migration/DOWNLOAD_COMPLETE',
-    (resolve) => (jobId: number, statusCode: number, bytesWritten: number) => resolve({ jobId, statusCode, bytesWritten })
+    (resolve) => (photoId: string, statusCode: number, bytesWritten: number) => resolve({ photoId, statusCode, bytesWritten })
   ),
   downloadError: createAction(
     '@migration/DOWNLOAD_ERROR',
@@ -77,7 +77,6 @@ export interface MigrationPhoto {
 
 export interface PhotoDownload {
   readonly photoId: string
-  readonly jobId: number
   readonly path: string
   readonly contentLength?: number
   readonly bytesWritten: number
@@ -87,7 +86,7 @@ export interface PhotoDownload {
 }
 
 export interface PhotoDownloads {
-  readonly [key: number]: PhotoDownload
+  readonly [key: string]: PhotoDownload
 }
 
 export interface LocalProcessingTask {
@@ -169,40 +168,38 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
       return { ...state, migrationPhotos: undefined }
     }
     case getType(actions.insertDownload): {
-      const { photoId, jobId, path } = action.payload
-      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: { photoId, jobId, path, bytesWritten: 0, status: 'pending' }}
+      const { photoId, path } = action.payload
+      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [photoId]: { photoId, path, bytesWritten: 0, status: 'pending' }}
       return { ...state, photoDownloads }
     }
     case getType(actions.downloadStarted): {
-      const { jobId, statusCode, contentLength } = action.payload
-      const download = state.photoDownloads![jobId]
+      const { photoId, statusCode, contentLength } = action.payload
+      const download = state.photoDownloads![photoId]
       const updatedDownload: PhotoDownload = { ...download, statusCode, contentLength, status: 'downloading' }
-      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
+      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [photoId]: updatedDownload }
       return { ...state, photoDownloads }
     }
     case getType(actions.downloadProgress): {
-      const { jobId, bytesWritten } = action.payload
-      const download = state.photoDownloads![jobId]
+      const { photoId, bytesWritten } = action.payload
+      const download = state.photoDownloads![photoId]
       const updatedDownload: PhotoDownload = { ...download, bytesWritten }
-      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
+      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [photoId]: updatedDownload }
       return { ...state, photoDownloads }
     }
     case getType(actions.downloadComplete): {
-      const { jobId, statusCode, bytesWritten } = action.payload
-      const download = state.photoDownloads![jobId]
+      const { photoId, statusCode, bytesWritten } = action.payload
+      const download = state.photoDownloads![photoId]
       const updatedDownload: PhotoDownload = { ...download, statusCode, bytesWritten, status: 'complete' }
-      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
+      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [photoId]: updatedDownload }
       return { ...state, photoDownloads }
     }
     case getType(actions.downloadError): {
-      // TODO: Update the right download with via photoId
       const { photoId, error } = action.payload
-      // const download = state.photoDownloads![jobId]
-      // const message = error.message as string || error as string || 'unknown error'
-      // const updatedDownload: PhotoDownload = { ...download, error: message, status: 'error' }
-      // const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [jobId]: updatedDownload }
-      // return { ...state, photoDownloads }
-      return state
+      const download = state.photoDownloads![photoId]
+      const message = error.message as string || error as string || 'unknown error'
+      const updatedDownload: PhotoDownload = { ...download, error: message, status: 'error' }
+      const photoDownloads: PhotoDownloads = { ...state.photoDownloads, [photoId]: updatedDownload }
+      return { ...state, photoDownloads }
     }
     case getType(actions.insertLocalProcessingTask): {
       const { photoId } =  action.payload

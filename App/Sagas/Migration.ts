@@ -215,24 +215,28 @@ async function findContact(peerId: string): Promise<{peerId: string, previousId:
 }
 
 function * downloadPhoto(item: MigrationPhoto, dispatch: Dispatch) {
-  const finalPath = IMAGE_PATH(item.id)
-  const options: FS.DownloadFileOptions = {
-    fromUrl: IMAGE_URL(item.id, item.key),
-    toFile: finalPath,
-    connectionTimeout: 5000,
-    readTimeout: 5000,
-    begin: (begin) => {
-      const { jobId, statusCode, contentLength } = begin
-      dispatch(MigrationActions.downloadStarted(jobId, statusCode, contentLength))
-    },
-    progress: (progress) => {
-      const { jobId, bytesWritten } = progress
-      dispatch(MigrationActions.downloadProgress(jobId, bytesWritten))
+  try {
+    const finalPath = IMAGE_PATH(item.id)
+    const options: FS.DownloadFileOptions = {
+      fromUrl: IMAGE_URL(item.id, item.key),
+      toFile: finalPath,
+      connectionTimeout: 5000,
+      readTimeout: 5000,
+      begin: (begin) => {
+        const { jobId, statusCode, contentLength } = begin
+        dispatch(MigrationActions.downloadStarted(item.id, statusCode, contentLength))
+      },
+      progress: (progress) => {
+        const { jobId, bytesWritten } = progress
+        dispatch(MigrationActions.downloadProgress(item.id, bytesWritten))
+      }
     }
+    const result: FS.DownloadResult = yield call(startDownload, item.id, options, dispatch)
+    const { statusCode, bytesWritten } = result
+    yield put(MigrationActions.downloadComplete(item.id, statusCode, bytesWritten))
+  } catch (error) {
+    yield put(MigrationActions.downloadError(item.id, error))
   }
-  const result: FS.DownloadResult = yield call(startDownload, item.id, options, dispatch)
-  const { jobId, statusCode, bytesWritten } = result
-  yield put(MigrationActions.downloadComplete(jobId, statusCode, bytesWritten))
 }
 
 // function * upload() {
@@ -269,7 +273,7 @@ async function deleteFile(path: string) {
 
 function startDownload(photoId: string, options: FS.DownloadFileOptions, dispatch: Dispatch) {
   const result = FS.downloadFile(options)
-  dispatch(MigrationActions.insertDownload(photoId, result.jobId, options.toFile))
+  dispatch(MigrationActions.insertDownload(photoId, options.toFile))
   return result.promise
 }
 
