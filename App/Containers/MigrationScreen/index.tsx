@@ -56,7 +56,8 @@ const mapStateToProps = (state: RootState): StateProps => {
   let progress: string | undefined
   if (state.migration.photoUploads) {
     description = 'Remotely pinning photos'
-    progress = `${Math.floor(overallUploadProgress(state) * 100)}%`
+    const overallProgress = overallUploadProgress(state)
+    progress = overallProgress ? `${Math.floor(overallProgress * 100)}%` : undefined
   } else if (state.migration.localProcessingTasks) {
     description = 'Adding photos to local IPFS node'
     progress = `${completeLocalProcessingTasksCount(state)}/${localProcessingTasksCount(state)}`

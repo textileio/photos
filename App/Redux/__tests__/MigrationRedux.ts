@@ -8,14 +8,15 @@ const profile: MigrationState = {
   photosCount: 0,
   threadsCount: 0,
   photoDownloads: {},
-  photoAdds: {}
+  localProcessingTasks: {},
+  status: 'none'
 }
 
 const peerDetails: PeerDetails = {
-  peerId: 'ABC-DEF-GHI',
-  previousId: 'XYZ-UVW-RST',
-  address: '123-456-789',
-  username: 'jest test'
+  currentPeerId: 'ABC-DEF-GHI',
+  previousPeerId: 'XYZ-UVW-RST',
+  currentAddress: '123-456-789',
+  previousUsername: 'jest test'
 }
 
 const network: string[] = [
@@ -35,14 +36,9 @@ describe('migration', () => {
     it('should store peer details to migration', () => {
       migrationState =  reducer(
         migrationState,
-        actions.announceMigration(
-          peerDetails.peerId,
-          peerDetails.previousId,
-          peerDetails.address,
-          peerDetails.username
-        )
+        actions.peerAnnouncement(peerDetails)
       )
-      expect(migrationState.announcement).toEqual(peerDetails)
+      expect(migrationState.peerAnnouncement).toEqual(peerDetails)
     })
     it('should select correct announcement details', () => {
       const selected = getAnnouncement({migration: migrationState} as RootState)

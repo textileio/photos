@@ -4,14 +4,20 @@ import { PeerDetails, MigrationPhoto, PhotoDownload, LocalProcessingTask } from 
 export function overallUploadProgress(state: RootState) {
   let totalSize = 0
   let totalUploaded = 0
-  for (const photoId in state.migration.photoUploads) {
-    if (state.migration.photoUploads[photoId]) {
-      const upload = state.migration.photoUploads[photoId]
-      totalSize = totalSize + (upload.totalBytesExpectedToSend || 0)
-      totalUploaded = totalUploaded + (upload.totalBytesSent || 0)
+  if (state.migration.photoUploads) {
+    for (const photoId in state.migration.photoUploads) {
+      if (state.migration.photoUploads[photoId]) {
+        const upload = state.migration.photoUploads[photoId]
+        totalSize = totalSize + (upload.totalBytesExpectedToSend || 0)
+        totalUploaded = totalUploaded + (upload.totalBytesSent || 0)
+      }
     }
   }
-  return totalUploaded / totalSize
+  if (totalSize > 0) {
+    return totalUploaded / totalSize
+  } else {
+    return undefined
+  }
 }
 
 export function completeLocalProcessingTasks(state: RootState) {

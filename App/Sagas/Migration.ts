@@ -17,7 +17,6 @@ import {
  } from '../NativeModules/Textile'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { CafeSession } from '../NativeModules/Textile'
-import { string } from 'prop-types';
 
 const PREVIOUS_ID_PATH = `${FS.DocumentDirectoryPath}/migration005_peerid.ndjson`
 const PHOTOS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_default_photos.ndjson`
@@ -293,7 +292,6 @@ function * uploadPhoto(photoId: string, path: string, dispatch: Dispatch) {
     }
     const result: FS.UploadResult = yield call(startUpload, photoId, options)
     const { statusCode } = result
-    console.log('RESULT:', result)
     yield put(MigrationActions.uploadComplete(photoId, statusCode))
   } catch (error) {
     yield put(MigrationActions.uploadError(photoId, error))
