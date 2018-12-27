@@ -1,6 +1,19 @@
 import { RootState } from './Types'
 import { PeerDetails, MigrationPhoto, PhotoDownload, LocalProcessingTask } from './MigrationRedux'
 
+export function overallUploadProgress(state: RootState) {
+  let totalSize = 0
+  let totalUploaded = 0
+  for (const photoId in state.migration.photoUploads) {
+    if (state.migration.photoUploads[photoId]) {
+      const upload = state.migration.photoUploads[photoId]
+      totalSize = totalSize + (upload.totalBytesExpectedToSend || 0)
+      totalUploaded = totalUploaded + (upload.totalBytesSent || 0)
+    }
+  }
+  return totalUploaded / totalSize
+}
+
 export function completeLocalProcessingTasks(state: RootState) {
   return Object.keys(state.migration.localProcessingTasks || {})
     .map((key) => state.migration.localProcessingTasks![key] as LocalProcessingTask)

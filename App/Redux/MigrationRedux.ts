@@ -65,6 +65,26 @@ const actions = {
   localProcessingTaskError: createAction(
     '@migration/INSERT_LOCAL_PROCESSING_TASK_ERROR',
     (resolve) => (photoId: string, error: any) => resolve({ photoId, error })
+  ),
+  insertUpload: createAction(
+    '@migration/INSERT_UPLOAD',
+    (resolve) => (photoId: string, path: string) => resolve({ photoId, path })
+  ),
+  uploadStarted: createAction(
+    '@migration/UPLOAD_STARTED',
+    (resolve) => (photoId: string) => resolve({ photoId })
+  ),
+  uploadProgress: createAction(
+    '@migration/UPLOAD_PROGRESS',
+    (resolve) => (photoId: string, totalBytesExpectedToSend: number, totalBytesSent: number) => resolve({ photoId, totalBytesExpectedToSend, totalBytesSent })
+  ),
+  uploadComplete: createAction(
+    '@migration/UPLOAD_COMPLETE',
+    (resolve) => (photoId: string, statusCode: number) => resolve({ photoId, statusCode })
+  ),
+  uploadError: createAction(
+    '@migration/UPLOAD_ERROR',
+    (resolve) => (photoId: string, error: any) => resolve({ photoId, error })
   )
 }
 
@@ -100,6 +120,20 @@ export interface LocalProcessingTasks {
   readonly [key: string]: LocalProcessingTask
 }
 
+export interface PhotoUpload {
+  readonly photoId: string
+  readonly path: string
+  readonly statusCode?: number
+  readonly totalBytesExpectedToSend?: number
+  readonly totalBytesSent?: number
+  readonly error?: string
+  readonly status: 'pending' | 'uploading' | 'complete' | 'error'
+}
+
+export interface PhotoUploads {
+  readonly [key: string]: PhotoUpload
+}
+
 export interface PeerDetails {
   readonly currentPeerId: string,
   readonly previousPeerId: string,
@@ -120,6 +154,7 @@ export interface MigrationState {
   readonly migrationPhotos?: ReadonlyArray<MigrationPhoto>
   readonly photoDownloads?: PhotoDownloads
   readonly localProcessingTasks?: LocalProcessingTasks
+  readonly photoUploads?: PhotoUploads
 }
 
 const initialState: MigrationState = {
@@ -217,6 +252,40 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
       const message = error.message as string || error as string || 'unknown error'
       const updated: LocalProcessingTask = { ...taskData, status: 'error', error: message }
       return { ...state, localProcessingTasks: { ...state.localProcessingTasks, [photoId]: updated } }
+    }
+    case getType(actions.insertUpload): {
+      const { photoId, path } = action.payload
+      const photoUploads: PhotoUploads = { ...state.photoUploads, [photoId]: { photoId, path, status: 'pending' }}
+      return { ...state, photoUploads }
+    }
+    case getType(actions.uploadStarted): {
+      const { photoId } = action.payload
+      const upload = state.photoUploads![photoId]
+      const updatedUpload: PhotoUpload = { ...upload, status: 'uploading' }
+      const photoUploads: PhotoUploads = { ...state.photoUploads, [photoId]: updatedUpload }
+      return { ...state, photoUploads }
+    }
+    case getType(actions.uploadProgress): {
+      const { photoId, totalBytesExpectedToSend, totalBytesSent } = action.payload
+      const upload = state.photoUploads![photoId]
+      const updatedUpload: PhotoUpload = { ...upload, totalBytesExpectedToSend, totalBytesSent }
+      const photoUploads: PhotoUploads = { ...state.photoUploads, [photoId]: updatedUpload }
+      return { ...state, photoUploads }
+    }
+    case getType(actions.uploadComplete): {
+      const { photoId, statusCode } = action.payload
+      const upload = state.photoUploads![photoId]
+      const updatedUpload: PhotoUpload = { ...upload, statusCode, status: 'complete' }
+      const photoUploads: PhotoUploads = { ...state.photoUploads, [photoId]: updatedUpload }
+      return { ...state, photoUploads }
+    }
+    case getType(actions.uploadError): {
+      const { photoId, error } = action.payload
+      const upload = state.photoUploads![photoId]
+      const message = error.message as string || error as string || 'unknown error'
+      const updatedUpload: PhotoUpload = { ...upload, error: message, status: 'error' }
+      const photoUploads: PhotoUploads = { ...state.photoUploads, [photoId]: updatedUpload }
+      return { ...state, photoUploads }
     }
     default:
       return state

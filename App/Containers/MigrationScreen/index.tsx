@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import Button from '../../Components/Button'
 import TextileNodeActions, { NodeState } from '../../Redux/TextileNodeRedux'
-import { downloadsCount, completeDownloadsCount, localProcessingTasksCount, completeLocalProcessingTasksCount } from '../../Redux/MigrationSelectors'
+import { downloadsCount, completeDownloadsCount, localProcessingTasksCount, completeLocalProcessingTasksCount, overallUploadProgress } from '../../Redux/MigrationSelectors'
 import { RootAction, RootState } from '../../Redux/Types'
 import * as s from '../../Themes/Constants'
 
@@ -54,7 +54,10 @@ class MigrationScreen extends React.Component<StateProps> {
 const mapStateToProps = (state: RootState): StateProps => {
   let description: string | undefined
   let progress: string | undefined
-  if (state.migration.localProcessingTasks) {
+  if (state.migration.photoUploads) {
+    description = 'Remotely pinning photos'
+    progress = `${Math.floor(overallUploadProgress(state) * 100)}%`
+  } else if (state.migration.localProcessingTasks) {
     description = 'Adding photos to local IPFS node'
     progress = `${completeLocalProcessingTasksCount(state)}/${localProcessingTasksCount(state)}`
   } else if (state.migration.photoDownloads) {

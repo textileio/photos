@@ -6,16 +6,17 @@ import { delay } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
-import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload } from '../Redux/MigrationRedux'
-import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads } from '../Redux/MigrationSelectors'
+import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload, LocalProcessingTask } from '../Redux/MigrationRedux'
+import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads, completeLocalProcessingTasks } from '../Redux/MigrationSelectors'
 import { getAddress, getPeerId } from '../Redux/AccountSelectors'
-import { prepare } from '../Sagas/ImageSharingSagas'
-import uuid from 'uuid/v4'
+import { prepare } from './ImageSharingSagas'
+import { getSession } from './UploadFile'
 
 import {
   addContact, addThreadFiles, addThread, ThreadInfo
  } from '../NativeModules/Textile'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { CafeSession } from '../NativeModules/Textile'
 
 const PREVIOUS_ID_PATH = `${FS.DocumentDirectoryPath}/migration005_peerid.ndjson`
 const PHOTOS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_default_photos.ndjson`
@@ -68,6 +69,7 @@ function * processMigration(dispatch: Dispatch) {
     yield put(MigrationActions.requestRunRecurringMigrationTasks())
     yield call(downloadOldPhotos, dispatch)
     yield call(processCompletedDownloads)
+    yield call(processCompletedLocalProcessingTasks, dispatch)
     yield call(letScreenSleep)
     yield put(MigrationActions.migrationComplete())
   } catch (error) {
@@ -136,6 +138,27 @@ function * processCompletedDownload(download: PhotoDownload, threadId: string) {
   } catch (error) {
     yield put(MigrationActions.localProcessingTaskError(photoId, error))
   }
+}
+
+function * processCompletedLocalProcessingTasks(dispatch: Dispatch) {
+  const tasks: LocalProcessingTask[] = yield select(completeLocalProcessingTasks)
+  if (tasks.length < 1) {
+    return
+  }
+  const effects = tasks.map((task) => call(processCompletedLocalProcessingTask, task, dispatch))
+  yield all(effects)
+}
+
+function * processCompletedLocalProcessingTask(task: LocalProcessingTask, dispatch: Dispatch) {
+  if (!task.preparedFiles || !task.preparedFiles.pin) {
+    return
+  }
+  const pin = task.preparedFiles.pin
+  const effects = Object.keys(pin).map((photoId) => {
+    const path = pin[photoId]
+    return call(uploadPhoto, photoId, path, dispatch)
+  })
+  yield all(effects)
 }
 
 function * announcePeer() {
@@ -223,11 +246,11 @@ function * downloadPhoto(item: MigrationPhoto, dispatch: Dispatch) {
       connectionTimeout: 5000,
       readTimeout: 5000,
       begin: (begin) => {
-        const { jobId, statusCode, contentLength } = begin
+        const { statusCode, contentLength } = begin
         dispatch(MigrationActions.downloadStarted(item.id, statusCode, contentLength))
       },
       progress: (progress) => {
-        const { jobId, bytesWritten } = progress
+        const { bytesWritten } = progress
         dispatch(MigrationActions.downloadProgress(item.id, bytesWritten))
       }
     }
@@ -239,18 +262,50 @@ function * downloadPhoto(item: MigrationPhoto, dispatch: Dispatch) {
   }
 }
 
-// function * upload() {
-//   const options: FS.UploadFileOptions = {
-//     toUrl: 'aurl',
-//     files: [],
-//     headers: {
+function * uploadPhoto(photoId: string, path: string, dispatch: Dispatch) {
+  try {
+    yield put(MigrationActions.insertUpload(photoId, path))
+    const filename = path.split('/').pop()!
+    const session: CafeSession = yield call(getSession)
+    const options: FS.UploadFileOptions = {
+      toUrl: `${session.http_addr}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
+      files: [{
+        name: filename,
+        filename,
+        filepath: path,
+        filetype: 'image/jpeg'
+      }],
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${session.access}`
+      },
+      begin: (begin) => {
+        dispatch(MigrationActions.uploadStarted(photoId))
+      },
+      progress: (progress) => {
+        const { totalBytesExpectedToSend, totalBytesSent } = progress
+        dispatch(MigrationActions.uploadProgress(photoId, totalBytesExpectedToSend, totalBytesSent))
+      }
+    }
+    const result: FS.UploadResult = yield call(startUpload, photoId, options)
+    const { statusCode } = result
+    console.log('RESULT:', result)
+    yield put(MigrationActions.uploadComplete(photoId, statusCode))
+  } catch (error) {
+    yield put(MigrationActions.uploadError(photoId, error))
+  }
+}
 
-//     },
-//     begin: (begin) => console.log(begin),
-//     progress: (progress) => console.log(progress)
-//   }
-//   FS.uploadFiles(options)
-// }
+function startDownload(photoId: string, options: FS.DownloadFileOptions, dispatch: Dispatch) {
+  const result = FS.downloadFile(options)
+  dispatch(MigrationActions.insertDownload(photoId, options.toFile))
+  return result.promise
+}
+
+function startUpload(photoId: string, options: FS.UploadFileOptions) {
+  const result = FS.uploadFiles(options)
+  return result.promise
+}
 
 async function getItems<T>(path: string) {
   if (await FS.exists(path)) {
@@ -269,12 +324,6 @@ async function deleteFile(path: string) {
   if (await FS.exists(path)) {
     await FS.unlink(path)
   }
-}
-
-function startDownload(photoId: string, options: FS.DownloadFileOptions, dispatch: Dispatch) {
-  const result = FS.downloadFile(options)
-  dispatch(MigrationActions.insertDownload(photoId, options.toFile))
-  return result.promise
 }
 
 enum MigrationResponse {
