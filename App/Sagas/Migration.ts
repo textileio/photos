@@ -1,7 +1,7 @@
 import { Alert } from 'react-native'
 import FS, { StatResult } from 'react-native-fs'
 import Config from 'react-native-config'
-import { all, call, put, select, take } from 'redux-saga/effects'
+import { all, call, put, select, take, race } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
@@ -45,17 +45,27 @@ export function * handleMigrationRequest(dispatch: Dispatch) {
       const response: MigrationResponse = yield call(migrationPrompt)
       switch (response) {
         case MigrationResponse.cancel:
-          yield call(cleanup)
           yield put(MigrationActions.cancelMigration())
         case MigrationResponse.later:
           continue
         case MigrationResponse.proceed:
-          yield call(processMigration, dispatch)
+          yield race({
+            processMigation: call(processMigration, dispatch),
+            cancel: take(getType(MigrationActions.cancelMigration))
+          })
       }
     } catch {
       // don't worry about it
     }
   }
+}
+
+export function * handleCancelMigration() {
+ while (true) {
+   yield take(getType(MigrationActions.cancelMigration))
+   yield call(cleanupMigrationFiles)
+   yield call(cleanupArtifacts)
+ }
 }
 
 function * processMigration(dispatch: Dispatch) {
@@ -71,13 +81,15 @@ function * processMigration(dispatch: Dispatch) {
     yield call(downloadOldPhotos, dispatch)
     yield call(prepareAndAddPhotos)
     yield call(processAllRemotePins, dispatch)
-    yield call(cleanup)
-    yield call(letScreenSleep)
+    yield call(cleanupMigrationFiles)
     yield put(MigrationActions.migrationComplete())
     yield call(delay, 1000)
     yield call(Alert.alert, 'Migration complete!')
   } catch (error) {
     yield put(MigrationActions.migrationError(error))
+  } finally {
+    yield call(letScreenSleep)
+    yield call(cleanupArtifacts)
   }
 }
 
@@ -147,10 +159,13 @@ function * processRemotePins(task: LocalProcessingTask, dispatch: Dispatch) {
   yield all(effects)
 }
 
-function * cleanup() {
+function * cleanupMigrationFiles() {
   yield call(deleteFile, PREVIOUS_ID_PATH)
   yield call(deleteFile, THREADS_FILE_PATH)
   yield call(deleteFile, PHOTOS_FILE_PATH)
+}
+
+function * cleanupArtifacts() {
   yield call(deleteFile, MIGRATION_IMAGES_PATH)
   const tasks: LocalProcessingTask[] = yield select(allLocalProcessingTasks)
   const tasksEffects = tasks.map((task) => call(deleteFilesForTask, task))
