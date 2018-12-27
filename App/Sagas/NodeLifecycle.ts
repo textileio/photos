@@ -82,7 +82,6 @@ export function * handleCreateNodeRequest (dispatch: Dispatch) {
 }
 
 function * createAndStartNode(dispatch: Dispatch): any {
-  console.log('REPO PATH:', REPO_PATH)
   try {
     yield put(TextileNodeActions.creatingNode())
     yield call(newTextile, REPO_PATH)

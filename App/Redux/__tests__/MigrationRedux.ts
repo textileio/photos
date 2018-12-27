@@ -38,11 +38,13 @@ describe('migration', () => {
         migrationState,
         actions.peerAnnouncement(peerDetails)
       )
-      expect(migrationState.peerAnnouncement).toEqual(peerDetails)
+      expect(migrationState.peerAnnouncement).toBeDefined()
+      expect(migrationState.peerAnnouncement!.peerDetails).toEqual(peerDetails)
     })
     it('should select correct announcement details', () => {
       const selected = getAnnouncement({migration: migrationState} as RootState)
-      expect(selected).toEqual(peerDetails)
+      expect(selected).toBeDefined()
+      expect(selected!.peerDetails).toEqual(peerDetails)
     })
     it('should store network details for migration', () => {
       migrationState =  reducer(
