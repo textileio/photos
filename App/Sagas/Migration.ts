@@ -1,5 +1,5 @@
 import { Alert } from 'react-native'
-import FS from 'react-native-fs'
+import FS, { StatResult } from 'react-native-fs'
 import Config from 'react-native-config'
 import { all, call, put, select, take } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
@@ -17,6 +17,7 @@ import {
  } from '../NativeModules/Textile'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { CafeSession } from '../NativeModules/Textile'
+import { string } from 'prop-types';
 
 const PREVIOUS_ID_PATH = `${FS.DocumentDirectoryPath}/migration005_peerid.ndjson`
 const PHOTOS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_default_photos.ndjson`
@@ -68,8 +69,8 @@ function * processMigration(dispatch: Dispatch) {
     // Kick this off the first time, it will be run in NodeOnline in the future
     yield put(MigrationActions.requestRunRecurringMigrationTasks())
     yield call(downloadOldPhotos, dispatch)
-    yield call(processCompletedDownloads)
-    yield call(processCompletedLocalProcessingTasks, dispatch)
+    yield call(prepareAndAddPhotos)
+    yield call(processAllRemotePins, dispatch)
     yield call(letScreenSleep)
     yield put(MigrationActions.migrationComplete())
   } catch (error) {
@@ -107,17 +108,17 @@ function * downloadOldPhotos (dispatch: Dispatch) {
   yield all(downloadEffects)
 }
 
-function * processCompletedDownloads() {
+function * prepareAndAddPhotos() {
   const downloads: PhotoDownload[] = yield select(completeDownloads)
   if (downloads.length < 1) {
     return
   }
   const threadInfo: ThreadInfo = yield call(addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME)
-  const effects = downloads.map((download) => call(processCompletedDownload, download, threadInfo.id))
+  const effects = downloads.map((download) => call(prepareAndAddPhoto, download, threadInfo.id))
   yield all(effects)
 }
 
-function * processCompletedDownload(download: PhotoDownload, threadId: string) {
+function * prepareAndAddPhoto(download: PhotoDownload, threadId: string) {
   const { photoId, path } = download
   try {
     const img = {
@@ -140,16 +141,16 @@ function * processCompletedDownload(download: PhotoDownload, threadId: string) {
   }
 }
 
-function * processCompletedLocalProcessingTasks(dispatch: Dispatch) {
+function * processAllRemotePins(dispatch: Dispatch) {
   const tasks: LocalProcessingTask[] = yield select(completeLocalProcessingTasks)
   if (tasks.length < 1) {
     return
   }
-  const effects = tasks.map((task) => call(processCompletedLocalProcessingTask, task, dispatch))
+  const effects = tasks.map((task) => call(processRemotePins, task, dispatch))
   yield all(effects)
 }
 
-function * processCompletedLocalProcessingTask(task: LocalProcessingTask, dispatch: Dispatch) {
+function * processRemotePins(task: LocalProcessingTask, dispatch: Dispatch) {
   if (!task.preparedFiles || !task.preparedFiles.pin) {
     return
   }
@@ -264,7 +265,9 @@ function * downloadPhoto(item: MigrationPhoto, dispatch: Dispatch) {
 
 function * uploadPhoto(photoId: string, path: string, dispatch: Dispatch) {
   try {
-    yield put(MigrationActions.insertUpload(photoId, path))
+    const stats: StatResult = yield call(FS.stat, path)
+    const size = + stats.size
+    yield put(MigrationActions.insertUpload(photoId, path, size))
     const filename = path.split('/').pop()!
     const session: CafeSession = yield call(getSession)
     const options: FS.UploadFileOptions = {
@@ -273,11 +276,12 @@ function * uploadPhoto(photoId: string, path: string, dispatch: Dispatch) {
         name: filename,
         filename,
         filepath: path,
-        filetype: 'image/jpeg'
+        filetype: 'application/octet-stream'
       }],
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${session.access}`
+        'Authorization': `Bearer ${session.access}`,
+        'Content-Type': 'application/octet-stream'
       },
       begin: (begin) => {
         dispatch(MigrationActions.uploadStarted(photoId))
@@ -336,7 +340,7 @@ function migrationPrompt(): Promise<MigrationResponse> {
   return new Promise<number>((resolve, reject) => {
     Alert.alert(
       'Migration Available',
-      'We\'ll import your old Textile Photos peers, threads, and photos as best we can. ' +
+      'We\'ll import your old Textile peers and photos as best we can. ' +
       'It will require a bit of time, bandwidth, and data transfer, so you should be on WiFi. ' +
       'Please leave Textile Photos running in the foreground until the migration is complete.',
       [

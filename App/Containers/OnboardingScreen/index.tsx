@@ -104,7 +104,7 @@ class OnboardingScreen extends React.Component<Props, State> {
             >
               We're working fast to make Textile Photos even better.
               Your old data isn't compatible with this new version of the app,
-              so for now you'll be starting fresh. Check out your Notifications
+              so you'll be starting fresh now. Check out your Notifications
               screen to get started migrating your old data if you'd like.
             </OnboardingMessage>
             <OnboardingMessage

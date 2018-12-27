@@ -68,7 +68,7 @@ const actions = {
   ),
   insertUpload: createAction(
     '@migration/INSERT_UPLOAD',
-    (resolve) => (photoId: string, path: string) => resolve({ photoId, path })
+    (resolve) => (photoId: string, path: string, totalBytesExpectedToSend: number) => resolve({ photoId, path, totalBytesExpectedToSend })
   ),
   uploadStarted: createAction(
     '@migration/UPLOAD_STARTED',
@@ -124,8 +124,8 @@ export interface PhotoUpload {
   readonly photoId: string
   readonly path: string
   readonly statusCode?: number
-  readonly totalBytesExpectedToSend?: number
-  readonly totalBytesSent?: number
+  readonly totalBytesExpectedToSend: number
+  readonly totalBytesSent: number
   readonly error?: string
   readonly status: 'pending' | 'uploading' | 'complete' | 'error'
 }
@@ -254,8 +254,8 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
       return { ...state, localProcessingTasks: { ...state.localProcessingTasks, [photoId]: updated } }
     }
     case getType(actions.insertUpload): {
-      const { photoId, path } = action.payload
-      const photoUploads: PhotoUploads = { ...state.photoUploads, [photoId]: { photoId, path, status: 'pending' }}
+      const { photoId, path, totalBytesExpectedToSend } = action.payload
+      const photoUploads: PhotoUploads = { ...state.photoUploads, [photoId]: { photoId, path, totalBytesExpectedToSend, totalBytesSent: 0, status: 'pending' }}
       return { ...state, photoUploads }
     }
     case getType(actions.uploadStarted): {
