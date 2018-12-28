@@ -122,7 +122,7 @@ function * prepareAndAddPhotos() {
   if (downloads.length < 1) {
     return
   }
-  const threadInfo: ThreadInfo = yield call(addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME)
+  const threadInfo: ThreadInfo = yield call(addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME, true)
   const effects = downloads.map((download) => call(prepareAndAddPhoto, download, threadInfo.id))
   yield all(effects)
 }
