@@ -109,9 +109,9 @@ RCT_EXPORT_METHOD(addSchema:(NSString*)jsonstr resolver:(RCTPromiseResolveBlock)
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(addThread:(NSString*)key name:(NSString*)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addThread:(NSString*)key name:(NSString*)name shared:(BOOL)shared resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self.node addThread:key name:name error:&error];
+  NSString *result = [self.node addThread:key name:name shared:shared error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
