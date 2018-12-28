@@ -1,9 +1,9 @@
 import { Alert } from 'react-native'
 import FS, { StatResult } from 'react-native-fs'
 import Config from 'react-native-config'
-import { all, call, put, select, take, race } from 'redux-saga/effects'
+import { all, call, put, select, take, race, fork } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { ActionType, getType } from 'typesafe-actions'
+import { getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
 import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload, LocalProcessingTask } from '../Redux/MigrationRedux'
@@ -49,14 +49,26 @@ export function * handleMigrationRequest(dispatch: Dispatch) {
         case MigrationResponse.later:
           continue
         case MigrationResponse.proceed:
-          yield race({
-            processMigation: call(processMigration, dispatch),
-            cancel: take(getType(MigrationActions.cancelMigration))
-          })
+          yield call(runMigrationOrCancel, dispatch)
       }
     } catch {
       // don't worry about it
     }
+  }
+}
+
+function * runMigrationOrCancel(dispatch: Dispatch) {
+  yield race({
+    processMigation: call(processMigration, dispatch),
+    cancel: take(getType(MigrationActions.cancelMigration))
+  })
+}
+
+export function * handleRetryMigration(dispatch: Dispatch) {
+  while (true) {
+    yield take(getType(MigrationActions.retryMigration))
+    yield call(cleanupArtifacts)
+    yield fork(runMigrationOrCancel, dispatch)
   }
 }
 

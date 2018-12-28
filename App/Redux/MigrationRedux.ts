@@ -5,6 +5,7 @@ const actions = {
   migrationNeeded: createAction('@migration/MIGRATION_NEEDED'),
   requestMigration: createAction('@migration/REQUEST_MIGRATION'),
   cancelMigration: createAction('@migration/CANCEL_MIGRATION'),
+  retryMigration: createAction('@migration/RETRY_MIGRATION'),
   migrationStarted: createAction('@migration/MIGRATION_STARTED'),
   migrationComplete: createAction('@migration/MIGRATION_COMPLETE'),
   migrationError: createAction('@migration/MIGRATION_ERROR', (resolve) => (error: any) => resolve({ error })),
@@ -157,6 +158,8 @@ export function reducer(state: MigrationState = initialState, action: MigrationA
       return { ...state, status: 'pending' }
     case getType(actions.cancelMigration):
       return { ...state, status: 'cancelled' }
+    case getType(actions.retryMigration):
+      return { status: 'pending' }
     case getType(actions.migrationStarted):
       return { ...state, status: 'processing' }
     case getType(actions.migrationComplete):

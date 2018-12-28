@@ -3,7 +3,7 @@ import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
 import {
-  prepareFiles,
+  prepareFilesAsync,
   addThreadFiles,
   addThreadFilesByTarget,
   profile,
@@ -176,7 +176,7 @@ export function * shareToThread (uuid: string) {
 }
 
 export async function prepare (image: SharedImage, destinationThreadId: string): Promise<IMobilePreparedFiles> {
-  const addResult = await prepareFiles(image.path, destinationThreadId)
+  const addResult = await prepareFilesAsync(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {

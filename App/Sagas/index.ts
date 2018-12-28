@@ -16,7 +16,6 @@ import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import TriggersActions from '../Redux/TriggersRedux'
 import ContactsActions from '../Redux/ContactsRedux'
-import MigrationActions from '../Redux/MigrationRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -28,7 +27,7 @@ import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } 
 import { onNodeStarted } from './NodeStarted'
 import { onNodeOnline } from './NodeOnline'
 
-import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration } from './Migration'
+import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration } from './Migration'
 
 import {
   showImagePicker,
@@ -123,6 +122,7 @@ export default function * root (dispatch: Dispatch) {
     call(runRecurringMigrationTasks),
     call(handleMigrationRequest, dispatch),
     call(handleCancelMigration),
+    call(handleRetryMigration, dispatch),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),

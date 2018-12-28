@@ -1,9 +1,9 @@
-import React from 'react'
-import { Image, ImageStyle, Text, TextStyle, View, ViewStyle } from 'react-native'
+import React, { Fragment } from 'react'
+import { Text, TextStyle, View, ViewStyle, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import Button from '../../Components/Button'
-import TextileNodeActions, { NodeState } from '../../Redux/TextileNodeRedux'
+import MigrationActions from '../../Redux/MigrationRedux'
 import { downloadsCount, completeDownloadsCount, localProcessingTasksCount, completeLocalProcessingTasksCount, overallUploadProgress } from '../../Redux/MigrationSelectors'
 import { RootAction, RootState } from '../../Redux/Types'
 import * as s from '../../Themes/Constants'
@@ -14,8 +14,8 @@ const CONTAINER: ViewStyle = {
   backgroundColor: s.COLOR_BACKGROUND_PRIMARY
 }
 
-const IMAGE: ImageStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+const MAIN_GROUP: ViewStyle = {
+  flex: 1
 }
 
 const ITEM: ViewStyle = {
@@ -23,29 +23,72 @@ const ITEM: ViewStyle = {
 }
 
 const TITLE: TextStyle = {
+  marginTop: '70%',
   ...ITEM,
-  ...s.H2
+  ...s.HEADER
 }
 
 const SUBTITLE: TextStyle = {
   ...ITEM,
+  ...s.H2
+}
+
+const TEXT: TextStyle = {
+  ...ITEM,
   ...s.H1
+}
+
+const ERROR: TextStyle = {
+  ...ITEM,
+  ...s.H1,
+  color: s.COLOR_BRAND_RED
+}
+
+const LINK: TextStyle = {
+  fontFamily: s.FONT_FAMILY_REGULAR,
+  fontSize: s.FONT_SIZE_REGULAR,
+  color: s.COLOR_GREY_MEDIUM,
+  textDecorationLine: 'underline',
+  textAlign: 'center'
 }
 
 interface StateProps {
   description?: string,
   progress?: string
+  error?: string
 }
 
-class MigrationScreen extends React.Component<StateProps> {
+interface DispatchProps {
+  retry: () => void
+  cancel: () => void
+}
+
+type Props = StateProps & DispatchProps
+
+class MigrationScreen extends React.Component<Props> {
 
   render () {
     return (
       <View style={CONTAINER}>
-        <Image style={IMAGE} source={require('../../Containers/OnboardingScreen/statics/sync.png')} />
-        <Text style={TITLE}>Data Migration</Text>
-        <Text style={SUBTITLE}>{this.props.description}</Text>
-        <Text style={SUBTITLE}>{this.props.progress}</Text>
+        <View style={MAIN_GROUP}>
+          <Text style={TITLE}>Migrating:</Text>
+          <Text style={SUBTITLE}>{this.props.description}</Text>
+          <Text style={TEXT}>{this.props.progress}</Text>
+          {this.props.error &&
+            <Fragment>
+              <Text style={ERROR}>{this.props.error}</Text>
+              <Button
+                text='Retry'
+                onPress={this.props.retry}
+                style={ITEM}
+              />
+            </Fragment>
+          }
+          {!this.props.error &&
+            <ActivityIndicator size='large' animating={true} color={s.COLOR_BRAND_BLUE} style={ITEM} />
+          }
+        </View>
+        <Text style={LINK} onPress={this.props.cancel}>Cancel</Text>
       </View>
     )
   }
@@ -73,8 +116,14 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
   return {
     description,
-    progress
+    progress,
+    error: state.migration.error
   }
 }
 
-export default connect(mapStateToProps, undefined)(MigrationScreen)
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
+  cancel: () => dispatch(MigrationActions.cancelMigration()),
+  retry: () => dispatch(MigrationActions.retryMigration())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MigrationScreen)
