@@ -94,7 +94,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
     const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
     const cameraRollThread = threadsResult.find((thread) => thread.key === cameraRollThreadKey)
     if (!cameraRollThread) {
-      yield call(addThread, cameraRollThreadKey, cameraRollThreadName)
+      yield call(addThread, cameraRollThreadKey, cameraRollThreadName, false)
     }
     yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {
