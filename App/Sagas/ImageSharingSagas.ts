@@ -118,9 +118,9 @@ export function * prepareImage (uuid: string) {
     }
     const { sharedImage, destinationThreadId } = processingImage
     const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
-    if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['large'].hash) {
+    if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['raw'] && preparedFiles.dir.files['raw'].hash) {
       // TODO: This doesn't seem right in here, but ok
-      const hash = preparedFiles.dir.files['large'].hash as string
+      const hash = preparedFiles.dir.files['raw'].hash as string
       yield fork(updateAvatarAndProfile, hash)
     }
     yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))

@@ -11,6 +11,7 @@ import { IDirectory } from '../pb/textile-go'
 const threadId = 'QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW'
 const threadKey = 'VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5'
 const threadName = 'Great Name'
+const shared = true
 
 describe('textile api', () => {
     describe('thread invites', () => {
@@ -36,7 +37,7 @@ describe('textile api', () => {
             expect(result).toHaveProperty('mill')
         })
         it('addThread', async () => {
-            const result = await addThread(threadKey, threadName)
+            const result = await addThread(threadKey, threadName, shared)
             expect(typeof result).toEqual('object')
             expect(result).toHaveProperty('key')
             expect(result.key).toEqual(threadKey)
