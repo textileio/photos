@@ -33,6 +33,16 @@ import { migrate, migrateConnections } from './Migration'
 const REPO_PATH = RNFS.DocumentDirectoryPath
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
 const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
+const LOG_LEVELS = JSON.stringify({
+  'tex-broadcast': 'DEBUG',
+  'tex-core': 'DEBUG',
+  'tex-datastore': 'DEBUG',
+  'tex-ipfs': 'DEBUG',
+  'tex-mill': 'DEBUG',
+  'tex-repo': 'DEBUG',
+  'tex-repo-config': 'DEBUG',
+  'tex-service': 'DEBUG'
+})
 
 export function * manageNode () {
   while (true) {
@@ -84,7 +94,7 @@ export function * handleCreateNodeRequest (dispatch: Dispatch) {
 function * createAndStartNode(dispatch: Dispatch): any {
   try {
     yield put(TextileNodeActions.creatingNode())
-    yield call(newTextile, REPO_PATH)
+    yield call(newTextile, REPO_PATH, LOG_LEVELS)
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)

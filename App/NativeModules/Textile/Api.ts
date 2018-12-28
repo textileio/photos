@@ -276,8 +276,8 @@ export async function migrateRepo(repoPath: string): Promise<void> {
   await TextileNode.migrateRepo(repoPath)
 }
 
-export async function newTextile(repoPath: string): Promise<void> {
-  await TextileNode.newTextile(repoPath)
+export async function newTextile(repoPath: string, logLevels: string): Promise<void> {
+  await TextileNode.newTextile(repoPath, logLevels)
 }
 
 export async function newWallet(wordCount: number): Promise<string> {

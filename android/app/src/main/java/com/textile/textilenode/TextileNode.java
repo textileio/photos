@@ -831,7 +831,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void newTextile(final String repoPath, final Promise promise) {
+    public void newTextile(final String repoPath, final String logLevels, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -839,6 +839,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
                     try {
                         RunConfig config = new RunConfig();
                         config.setRepoPath(repoPath);
+                        config.setLogLevels(logLevels);
                         node = Mobile.newTextile(config, new Messenger() {
                             @Override
                             public void notify(Event event) {
