@@ -2,7 +2,6 @@
 
 exports[`migration initial state should match snapshot 1`] = `
 Object {
-  "photoAdds": Object {},
-  "photoDownloads": Object {},
+  "status": "none",
 }
 `;

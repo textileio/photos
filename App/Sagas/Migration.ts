@@ -1,16 +1,22 @@
-import FS from 'react-native-fs'
+import { Alert } from 'react-native'
+import FS, { StatResult } from 'react-native-fs'
 import Config from 'react-native-config'
-import { all, call, put, select, take } from 'redux-saga/effects'
+import { all, call, put, select, take, race, fork } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import { getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
-import MigrationActions from '../Redux/MigrationRedux'
-import { getAnnouncement, getNetwork } from '../Redux/MigrationSelectors'
-import { getAddress, getUsername, getPeerId } from '../Redux/AccountSelectors'
+import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload, LocalProcessingTask } from '../Redux/MigrationRedux'
+import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads, completeLocalProcessingTasks, allLocalProcessingTasks } from '../Redux/MigrationSelectors'
+import { getAddress, getPeerId } from '../Redux/AccountSelectors'
+import { prepare } from './ImageSharingSagas'
+import { getSession } from './UploadFile'
 
 import {
-  addContact
+  addContact, addThreadFiles, addThread, ThreadInfo
  } from '../NativeModules/Textile'
+import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { CafeSession } from '../NativeModules/Textile'
 
 const PREVIOUS_ID_PATH = `${FS.DocumentDirectoryPath}/migration005_peerid.ndjson`
 const PHOTOS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_default_photos.ndjson`
@@ -18,11 +24,9 @@ const THREADS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_threads.ndjs
 const IMAGE_URL = (id: string, key: string) => `https://cafe.textile.io/ipfs/${id}/photo?key=${key}`
 const MIGRATION_IMAGES_PATH = `${FS.DocumentDirectoryPath}/migration_images`
 const IMAGE_PATH = (id: string) => `${MIGRATION_IMAGES_PATH}/${id}.jpg`
+const MIGRATION_ALBUM_KEY = 'textile_photos-migrated-photos'
+const MIGRATION_ALBUM_NAME = 'Migrated photos'
 
-interface PhotoItem {
-  id: string,
-  key: string
-}
 interface PeerIdItem {
   peerid: string
   username?: string
@@ -34,72 +38,228 @@ interface ThreadItem {
   peers: string[]
 }
 
-export function * migrate(dispatch: Dispatch) {
-  // Take some sort of action to start the migration
-  yield call(keepScreenOn)
-  yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
-  const photoItems: PhotoItem[] = yield call(getItems, PHOTOS_FILE_PATH)
-  const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
-  yield put(MigrationActions.migrationMetadata(photoItems.length, threadItems.length))
-  const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, dispatch))
-  yield all(downloadEffects)
-  yield call(letScreenSleep)
-}
-
-// Can be run on each node online
-
-export function * runRecurringMigrationTasks () {
+export function * handleMigrationRequest(dispatch: Dispatch) {
   while (true) {
-    yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
-    const announcement = yield select(getAnnouncement)
-    if (announcement) {
-      const {peerId, address, username, previousId} = announcement
-      try {
-        yield call(announceId, peerId, address, username, previousId)
-        // If no error, mark as successful
-        yield put(MigrationActions.announceSuccess())
-      } catch (error) {
-        // just run again later
+    try {
+      yield take(getType(MigrationActions.requestMigration))
+      const response: MigrationResponse = yield call(migrationPrompt)
+      switch (response) {
+        case MigrationResponse.cancel:
+          yield put(MigrationActions.cancelMigration())
+        case MigrationResponse.later:
+          continue
+        case MigrationResponse.proceed:
+          yield call(runMigrationOrCancel, dispatch)
       }
-    }
-    const peers = yield select(getNetwork)
-    for (const peer of peers) {
-      try {
-        // for each contact ask if they've migrated
-        const contact = yield call(findContact, peer)
-        if (contact) {
-          yield call(addContact, contact.peerId, contact.address, contact.username || '')
-          yield put(MigrationActions.connectionSuccess(peer))
-        }
-      } catch (error) {
-        // just run again later
-      }
+    } catch {
+      // don't worry about it
     }
   }
 }
 
-// Should be run the first time
-export function * migrateConnections() {
+function * runMigrationOrCancel(dispatch: Dispatch) {
+  yield race({
+    processMigation: call(processMigration, dispatch),
+    cancel: take(getType(MigrationActions.cancelMigration))
+  })
+}
+
+export function * handleRetryMigration(dispatch: Dispatch) {
+  while (true) {
+    yield take(getType(MigrationActions.retryMigration))
+    yield call(cleanupArtifacts)
+    yield fork(runMigrationOrCancel, dispatch)
+  }
+}
+
+export function * handleCancelMigration() {
+ while (true) {
+   yield take(getType(MigrationActions.cancelMigration))
+   yield call(cleanupMigrationFiles)
+   yield call(cleanupArtifacts)
+ }
+}
+
+function * processMigration(dispatch: Dispatch) {
+  try {
+    yield put(MigrationActions.migrationStarted())
+    yield call(keepScreenOn)
+    yield call(announcePeer)
+    yield call(delay, 5000)
+    yield call(connectToPeers)
+    yield call(delay, 5000)
+    // Kick this off the first time, it will be run in NodeOnline in the future
+    yield put(MigrationActions.requestRunRecurringMigrationTasks())
+    yield call(downloadOldPhotos, dispatch)
+    yield call(prepareAndAddPhotos)
+    yield call(processAllRemotePins, dispatch)
+    yield call(cleanupMigrationFiles)
+    yield put(MigrationActions.migrationComplete())
+    yield call(delay, 1000)
+    yield call(Alert.alert, 'Migration complete!')
+  } catch (error) {
+    yield put(MigrationActions.migrationError(error))
+  } finally {
+    yield call(letScreenSleep)
+    yield call(cleanupArtifacts)
+  }
+}
+
+function * downloadOldPhotos (dispatch: Dispatch) {
+  const items: MigrationPhoto[] = yield call(getItems, PHOTOS_FILE_PATH)
+  if (items.length < 1) {
+    return
+  }
+  yield put(MigrationActions.photoMigration(items))
+  yield call(FS.mkdir, MIGRATION_IMAGES_PATH)
+  const photoItems: MigrationPhoto[] = yield select(getMigrationPhotos)
+  const downloadEffects = photoItems.map((item) => call(downloadPhoto, item, dispatch))
+  yield all(downloadEffects)
+}
+
+function * prepareAndAddPhotos() {
+  const downloads: PhotoDownload[] = yield select(completeDownloads)
+  if (downloads.length < 1) {
+    return
+  }
+  const threadInfo: ThreadInfo = yield call(addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME, true)
+  const effects = downloads.map((download) => call(prepareAndAddPhoto, download, threadInfo.id))
+  yield all(effects)
+}
+
+function * prepareAndAddPhoto(download: PhotoDownload, threadId: string) {
+  const { photoId, path } = download
+  try {
+    const img = {
+      isAvatar: false,
+      origURL: path,
+      uri: path,
+      path,
+      canDelete: true
+    }
+    yield put(MigrationActions.insertLocalProcessingTask(photoId))
+    const preparedFiles: IMobilePreparedFiles = yield call(prepare, img, threadId)
+    const { dir } = preparedFiles
+    if (!dir) {
+      throw new Error('No dir on MobilePreparedFiles')
+    }
+    yield call(addThreadFiles, dir, threadId)
+    yield put(MigrationActions.localProcessingTaskComplete(photoId, preparedFiles))
+  } catch (error) {
+    yield put(MigrationActions.localProcessingTaskError(photoId, error))
+  }
+}
+
+function * processAllRemotePins(dispatch: Dispatch) {
+  const tasks: LocalProcessingTask[] = yield select(completeLocalProcessingTasks)
+  if (tasks.length < 1) {
+    return
+  }
+  const effects = tasks.map((task) => call(processRemotePins, task, dispatch))
+  yield all(effects)
+}
+
+function * processRemotePins(task: LocalProcessingTask, dispatch: Dispatch) {
+  if (!task.preparedFiles || !task.preparedFiles.pin) {
+    return
+  }
+  const pin = task.preparedFiles.pin
+  const effects = Object.keys(pin).map((photoId) => {
+    const path = pin[photoId]
+    return call(uploadPhoto, photoId, path, dispatch)
+  })
+  yield all(effects)
+}
+
+function * cleanupMigrationFiles() {
+  yield call(deleteFile, PREVIOUS_ID_PATH)
+  yield call(deleteFile, THREADS_FILE_PATH)
+  yield call(deleteFile, PHOTOS_FILE_PATH)
+}
+
+function * cleanupArtifacts() {
+  yield call(deleteFile, MIGRATION_IMAGES_PATH)
+  const tasks: LocalProcessingTask[] = yield select(allLocalProcessingTasks)
+  const tasksEffects = tasks.map((task) => call(deleteFilesForTask, task))
+  yield all(tasksEffects)
+}
+
+function * deleteFilesForTask(task: LocalProcessingTask) {
+  if (!task.preparedFiles || !task.preparedFiles.pin) {
+    return
+  }
+  const pin = task.preparedFiles.pin
+  const effects = Object.keys(pin).map((photoId) => {
+    const path = pin[photoId]
+    return call(deleteFile, path)
+  })
+  yield all(effects)
+}
+
+// Exporting this so we can call it early so the old username is available during onboarding
+export function * announcePeer() {
   // announce to other peers
   const previousItems: PeerIdItem[] = yield call(getItems, PREVIOUS_ID_PATH)
   if (previousItems.length) {
     const previous = previousItems[0]
     const peerId = yield select(getPeerId)
     const address = yield select(getAddress)
-    yield put(MigrationActions.announceMigration(peerId, previous.peerid, address, previous.username))
+    const details: PeerDetails = {
+      currentPeerId: peerId,
+      previousPeerId: previous.peerid,
+      currentAddress: address,
+      previousUsername: previous.username
+    }
+    yield put(MigrationActions.peerAnnouncement(details))
   }
+}
+
+function * connectToPeers() {
   // locate old peers
   const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
   const peers = [...new Set(([] as string[]).concat(...threadItems.map((thread) => thread.peers)))]
   yield put(MigrationActions.connectToPeers(peers))
-  // run it for the first time
-  yield put(MigrationActions.requestRunRecurringMigrationTasks())
+
+}
+
+// Can be run on each node online
+export function * runRecurringMigrationTasks () {
+  while (true) {
+    yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
+    const announcement: { peerDetails: PeerDetails, status: 'complete' | 'pending' } | undefined = yield select(getAnnouncement)
+    if (announcement && announcement.status === 'pending') {
+      const { currentPeerId, currentAddress, previousUsername, previousPeerId } = announcement.peerDetails
+      try {
+        yield call(announceId, currentPeerId, previousPeerId, currentAddress, previousUsername)
+        // If no error, mark as successful
+        yield put(MigrationActions.peerAnnouncementSuccess())
+      } catch (error) {
+        // just run again later
+      }
+    }
+    const peers: ReadonlyArray<string> = yield select(getNetwork)
+    for (const peer of peers) {
+      try {
+        // for each contact ask if they've migrated
+        const contact: { peerId: string, previousId: string, address: string, username?: string } = yield call(findContact, peer)
+        yield call(addContact, contact.peerId, contact.address, contact.username || '')
+        yield put(MigrationActions.connectionSuccess(peer))
+      } catch (error) {
+        // just run again later
+      }
+    }
+  }
 }
 
 // Will error for any non-success
-export async function announceId(peerId: string, address: string, username: string, previousId: string) {
+async function announceId(currentPeerId: string, previousPeerId: string, currentAddress: string, previousUsername?: string) {
   const headers = {'Content-type': 'application/json'}
-  const body = JSON.stringify({ peerId, previousId, address, username })
+  const payload: { [key: string]: string } = { peerId: currentPeerId, previousId: previousPeerId, address: currentAddress }
+  const username = previousUsername ? previousUsername.trim() : ''
+  if (username.length > 0) {
+    payload['username'] = username
+  }
+  const body = JSON.stringify(payload)
   const response = await fetch(Config.RN_PEER_SWAP, { method: 'POST', headers, body })
   if (!(response.status >= 200 && response.status < 300)) {
     throw Error('Request failed')
@@ -107,44 +267,83 @@ export async function announceId(peerId: string, address: string, username: stri
 }
 
 // will error response doesn't include the peer
-export async function findContact(peerId: string): Promise<{peerId: string, previousId: string, address: string, username?: string}> {
+async function findContact(peerId: string): Promise<{peerId: string, previousId: string, address: string, username?: string}> {
   const response = await fetch(`${Config.RN_PEER_SWAP}?peerId=${peerId}`, { method: 'GET' })
   const responseJson: [{peerId: string, previousId: string, address: string, username?: string}] = await response.json()
   return responseJson[0]
 }
 
-function * downloadPhoto(item: PhotoItem, dispatch: Dispatch) {
-  const options: FS.DownloadFileOptions = {
-    fromUrl: IMAGE_URL(item.id, item.key),
-    toFile: IMAGE_PATH(item.id),
-    connectionTimeout: 5000,
-    readTimeout: 5000,
-    begin: (begin) => {
-      const { jobId, statusCode, contentLength } = begin
-      dispatch(MigrationActions.downloadStarted(jobId, statusCode, contentLength))
-    },
-    progress: (progress) => {
-      const { jobId, bytesWritten } = progress
-      dispatch(MigrationActions.downloadProgress(jobId, bytesWritten))
+function * downloadPhoto(item: MigrationPhoto, dispatch: Dispatch) {
+  try {
+    const finalPath = IMAGE_PATH(item.id)
+    const options: FS.DownloadFileOptions = {
+      fromUrl: IMAGE_URL(item.id, item.key),
+      toFile: finalPath,
+      connectionTimeout: 5000,
+      readTimeout: 5000,
+      begin: (begin) => {
+        const { statusCode, contentLength } = begin
+        dispatch(MigrationActions.downloadStarted(item.id, statusCode, contentLength))
+      },
+      progress: (progress) => {
+        const { bytesWritten } = progress
+        dispatch(MigrationActions.downloadProgress(item.id, bytesWritten))
+      }
     }
+    const result: FS.DownloadResult = yield call(startDownload, item.id, options, dispatch)
+    const { statusCode, bytesWritten } = result
+    yield put(MigrationActions.downloadComplete(item.id, statusCode, bytesWritten))
+  } catch (error) {
+    yield put(MigrationActions.downloadError(item.id, error))
   }
-  const result: FS.DownloadResult = yield call(startDownload, options, dispatch)
-  const { jobId, statusCode, bytesWritten } = result
-  yield put(MigrationActions.downloadComplete(jobId, statusCode, bytesWritten))
 }
 
-// function * upload() {
-//   const options: FS.UploadFileOptions = {
-//     toUrl: 'aurl',
-//     files: [],
-//     headers: {
+function * uploadPhoto(photoId: string, path: string, dispatch: Dispatch) {
+  try {
+    const stats: StatResult = yield call(FS.stat, path)
+    const size = + stats.size
+    yield put(MigrationActions.insertUpload(photoId, path, size))
+    const filename = path.split('/').pop()!
+    const session: CafeSession = yield call(getSession)
+    const options: FS.UploadFileOptions = {
+      toUrl: `${session.http_addr}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
+      files: [{
+        name: filename,
+        filename,
+        filepath: path,
+        filetype: 'application/octet-stream'
+      }],
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.access}`,
+        'Content-Type': 'application/octet-stream'
+      },
+      begin: (begin) => {
+        dispatch(MigrationActions.uploadStarted(photoId))
+      },
+      progress: (progress) => {
+        const { totalBytesExpectedToSend, totalBytesSent } = progress
+        dispatch(MigrationActions.uploadProgress(photoId, totalBytesExpectedToSend, totalBytesSent))
+      }
+    }
+    const result: FS.UploadResult = yield call(startUpload, photoId, options)
+    const { statusCode } = result
+    yield put(MigrationActions.uploadComplete(photoId, statusCode))
+  } catch (error) {
+    yield put(MigrationActions.uploadError(photoId, error))
+  }
+}
 
-//     },
-//     begin: (begin) => console.log(begin),
-//     progress: (progress) => console.log(progress)
-//   }
-//   FS.uploadFiles(options)
-// }
+function startDownload(photoId: string, options: FS.DownloadFileOptions, dispatch: Dispatch) {
+  const result = FS.downloadFile(options)
+  dispatch(MigrationActions.insertDownload(photoId, options.toFile))
+  return result.promise
+}
+
+function startUpload(photoId: string, options: FS.UploadFileOptions) {
+  const result = FS.uploadFiles(options)
+  return result.promise
+}
 
 async function getItems<T>(path: string) {
   if (await FS.exists(path)) {
@@ -165,8 +364,25 @@ async function deleteFile(path: string) {
   }
 }
 
-function startDownload(options: FS.DownloadFileOptions, dispatch: Dispatch) {
-  const result = FS.downloadFile(options)
-  dispatch(MigrationActions.insertDownload(result.jobId, options.toFile))
-  return result.promise
+enum MigrationResponse {
+  proceed,
+  later,
+  cancel
+}
+
+function migrationPrompt(): Promise<MigrationResponse> {
+  return new Promise<number>((resolve, reject) => {
+    Alert.alert(
+      'Migration Available',
+      'We\'ll import your old Textile peers and photos as best we can. ' +
+      'It will require a bit of time, bandwidth, and data transfer, so you should be on WiFi. ' +
+      'Please leave Textile Photos running in the foreground until the migration is complete.',
+      [
+        { text: 'Later', onPress: () => resolve(MigrationResponse.later) },
+        { text: 'No Thanks', onPress: () => resolve(MigrationResponse.cancel), style: 'cancel' },
+        { text: 'Proceed', onPress: () => resolve(MigrationResponse.proceed) }
+      ],
+      { cancelable: false }
+    )
+  })
 }

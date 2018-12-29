@@ -7,7 +7,7 @@ const CONTAINER: ViewStyle = {
   flex: 1,
   marginTop: '33%',
   paddingHorizontal: s.MARGIN_STANDARD,
-  backgroundColor: 's.COLOR_BACKGROUND_PRIMARY'
+  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
 }
 
 const IMAGE: ImageStyle = {
@@ -32,6 +32,7 @@ const BUTTON_WRAPPER: ViewStyle = {
 interface Props {
   title: string
   subtitle?: string
+  showArrow?: boolean
   buttonText?: string
   onButtonPress?: () => void
   image: ImageSourcePropType

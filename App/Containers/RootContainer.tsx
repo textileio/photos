@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Redux, { Dispatch } from 'redux'
 import { View, StatusBar, ActivityIndicator, Platform, PermissionsAndroid, Text } from 'react-native'
+import Modal from 'react-native-modal'
 import { Overlay } from 'react-native-elements'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
@@ -8,12 +9,14 @@ import { connect } from 'react-redux'
 import NavigationService from '../Services/NavigationService'
 import { RootState, RootAction } from '../Redux/Types'
 import TriggersActions from '../Redux/TriggersRedux'
+import MigrationScreen from '../Containers/MigrationScreen'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
 
 interface StateProps {
   showOverlay: boolean
+  showMigrationModal: boolean
   monitorLocation: boolean
   verboseUi: boolean
   overlayMessage: string
@@ -78,6 +81,9 @@ class RootContainer extends Component<StateProps & DispatchProps> {
           <Text style={styles.overlayText}>{this.props.overlayMessage}</Text>
         </View>
         }
+        <Modal isVisible={this.props.showMigrationModal} style={{ margin: 0 }}>
+          <MigrationScreen />
+        </Modal>
       </View>
     )
   }
@@ -92,6 +98,7 @@ const mapStateToProps = (state: RootState): StateProps => {
 
   return {
     showOverlay: state.auth.processing,
+    showMigrationModal: state.migration.status === 'processing',
     monitorLocation: state.preferences.services.backgroundLocation.status,
     verboseUi: state.preferences.verboseUi,
     overlayMessage

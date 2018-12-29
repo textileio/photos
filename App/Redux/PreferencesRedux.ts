@@ -2,7 +2,6 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
 
 const actions = {
-  migrationNeeded: createAction('MIGRATION_NEEDED'),
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', (resolve) => {
     return () => resolve()
   }),
@@ -47,7 +46,6 @@ export interface ViewSettings {
   selectedWalletTab: 'Photos' | 'Threads' | 'Peers',
 }
 export interface PreferencesState {
-  pendingMigration: boolean
   onboarded: boolean
   verboseUi: boolean
   readonly services: {readonly [k in ServiceType]: Service}
@@ -57,7 +55,6 @@ export interface PreferencesState {
 }
 
 export const initialState: PreferencesState = {
-  pendingMigration: false,
   onboarded: false,
   verboseUi: false,
   tourScreens: {
@@ -122,8 +119,6 @@ export const initialState: PreferencesState = {
 
 export function reducer (state: PreferencesState = initialState, action: PreferencesAction): PreferencesState {
   switch (action.type) {
-    case getType(actions.migrationNeeded):
-      return { ...state, pendingMigration: true }
     case getType(actions.onboardedSuccess):
       return { ...state, onboarded: true }
     case getType(actions.toggleVerboseUi):
