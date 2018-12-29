@@ -5,9 +5,11 @@ import { Pages } from 'react-native-pages'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
+import Config from 'react-native-config'
 
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
+import ReferralCode from '../../Containers/ReferralCode'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
 import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
@@ -20,12 +22,6 @@ const CONTAINER: ViewStyle = {
   backgroundColor: COLOR_BACKGROUND_PRIMARY
 }
 
-const ARROW_BACK: ViewStyle = {
-  position: 'absolute',
-  bottom: MARGIN_SMALL,
-  left: MARGIN_STANDARD
-}
-
 const ARROW_FORWARD: ViewStyle = {
   position: 'absolute',
   bottom: MARGIN_SMALL,
@@ -36,6 +32,7 @@ const ARROW_FORWARD: ViewStyle = {
 interface StateProps {
   migrationUsername?: string
   pendingMigration: boolean
+  skipReferralCode: boolean
 }
 
 interface DispatchProps {
@@ -45,23 +42,34 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
+  showArrow: boolean
   currentPage: number
 }
 
 class OnboardingScreen extends React.Component<Props, State> {
 
   pages?: Pages
-  noBackArrowIndexes: number[] = [0, 1, 2, 3, 4, 5, 6, 7]
 
   constructor(props: Props) {
     super(props)
     this.state = {
-      currentPage: props.pendingMigration ? 0 : 1
+      showArrow: false,
+      currentPage: 0
     }
   }
 
-  noForwardArrowIndexes = () => {
-    return [4, 5, 6, 7]
+  componentDidMount() {
+    this.setState({
+      showArrow: this.showArrowForIndex(0)
+    })
+  }
+
+  showArrowForIndex = (index: number) => {
+    if (!this.pages || !this.pages.props.children[index]) {
+      return false
+    }
+    const showArrow = this.pages.props.children[index].props.showArrow
+    return showArrow
   }
 
   nextPage = () => {
@@ -70,14 +78,11 @@ class OnboardingScreen extends React.Component<Props, State> {
     }
   }
 
-  previousPage = () => {
-    if (this.state.currentPage > 0) {
-      this.pages.scrollToPage(this.state.currentPage - 1)
-    }
-  }
-
   onScrollEnd = (index: number) => {
-    this.setState({ currentPage: index })
+    this.setState({
+      showArrow: this.showArrowForIndex(index),
+      currentPage: index
+    })
   }
 
   complete = () => {
@@ -85,7 +90,88 @@ class OnboardingScreen extends React.Component<Props, State> {
     this.props.navigation.navigate('StatusCheck')
   }
 
+  pagesArray = () => {
+    const pages = [
+      (
+        <OnboardingMessage
+          key='own'
+          title='Own your memories'
+          subtitle='Your data is stored in a decentralized system to bring you full ownership of your photos.'
+          image={require('./statics/secure.png')}
+          showArrow={true}
+        />
+      ),
+      (
+        <OnboardingMessage
+          key='better'
+          title='Better together'
+          subtitle='Create private threads to share your photos with friends and family.'
+          image={require('./statics/share.png')}
+          showArrow={true}
+        />
+      ),
+      (
+        <OnboardingMessage
+          key='backed'
+          title='Backed up safely'
+          subtitle='Everytime you take a picture, Textile will be there to automatically sync your photos.'
+          image={require('./statics/sync.png')}
+          showArrow={true}
+        />
+      ),
+      (
+        <OnboardingUsername
+          key='username'
+          onSuccess={this.nextPage}
+          suggestion={this.props.migrationUsername}
+        />
+      ),
+      (
+        <SetAvatar key='avatar' onSuccess={this.nextPage} />
+      ),
+      (
+        <MailListSignupScreen key='mail' onSuccess={this.nextPage} />
+      ),
+      (
+        <OnboardingMessage
+          key='ready'
+          title='All ready!'
+          subtitle="You're all set up. Enjoy using Textile :)"
+          image={require('./statics/sync.png')}
+          buttonText='Get Started'
+          onButtonPress={this.complete}
+        />
+      )
+    ]
+    if (!this.props.skipReferralCode) {
+      pages.splice(3, 0, (
+        <ReferralCode
+          key='referral'
+          referralCode={Config.RN_TEMPORARY_REFERRAL}
+          onSuccess={this.nextPage}
+        />
+      ))
+    }
+    if (this.props.pendingMigration) {
+      pages.unshift((
+        <OnboardingMessage
+          key='migration'
+          title='Big Changes Under the Hood'
+          image={require('./statics/secure.png')}
+          showArrow={true}
+        >
+          We're working fast to make Textile Photos even better.
+          Your old data isn't compatible with this new version of the app,
+          so you'll be starting fresh now. Check out your Notifications
+          screen to get started migrating your old data if you'd like.
+        </OnboardingMessage>
+      ))
+    }
+    return pages
+  }
+
   render() {
+    const pages = this.pagesArray()
     return (
       <SafeAreaView style={CONTAINER}>
         <View style={CONTAINER}>
@@ -98,47 +184,9 @@ class OnboardingScreen extends React.Component<Props, State> {
             startPage={this.state.currentPage}
             scrollEnabled={false}
           >
-            <OnboardingMessage
-              title='Big Changes Under the Hood'
-              image={require('./statics/secure.png')}
-            >
-              We're working fast to make Textile Photos even better.
-              Your old data isn't compatible with this new version of the app,
-              so you'll be starting fresh now. Check out your Notifications
-              screen to get started migrating your old data if you'd like.
-            </OnboardingMessage>
-            <OnboardingMessage
-              title='Own your memories'
-              subtitle='Your data is stored in a decentralized system to bring you full ownership of your photos.'
-              image={require('./statics/secure.png')}
-            />
-            <OnboardingMessage
-              title='Better together'
-              subtitle='Create private threads to share your photos with friends and family.'
-              image={require('./statics/share.png')}
-            />
-            <OnboardingMessage
-              title='Backed up safely'
-              subtitle='Everytime you take a picture, Textile will be there to automatically sync your photos.'
-              image={require('./statics/sync.png')}
-            />
-            <OnboardingUsername onSuccess={this.nextPage} suggestion={this.props.migrationUsername} />
-            <SetAvatar onSuccess={this.nextPage} />
-            <MailListSignupScreen onSuccess={this.nextPage} />
-            <OnboardingMessage
-              title='All ready!'
-              subtitle="You're all set up. Enjoy using Textile :)"
-              image={require('./statics/sync.png')}
-              buttonText='Get Started'
-              onButtonPress={this.complete}
-            />
+            {pages}
           </Pages>
-          {this.noBackArrowIndexes.indexOf(this.state.currentPage) === -1 &&
-            <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_BACK} onPress={this.previousPage}>
-              <Icon name={'arrow-left'} size={24} />
-            </TouchableOpacity>
-          }
-          {this.noForwardArrowIndexes().indexOf(this.state.currentPage) === -1 &&
+          {this.state.showArrow &&
             <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
               <Icon name={'arrow-right'} size={24} />
             </TouchableOpacity>
@@ -151,7 +199,9 @@ class OnboardingScreen extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   migrationUsername: state.migration.peerAnnouncement ? state.migration.peerAnnouncement.peerDetails.previousUsername : undefined,
-  pendingMigration: state.migration.status === 'pending'
+  pendingMigration: state.migration.status === 'pending',
+  // No need for a referral challenge if this was a previous install and we're migrating or the user received a thread invite and is getting set up
+  skipReferralCode: state.migration.status === 'pending' || state.auth.invite !== undefined
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
