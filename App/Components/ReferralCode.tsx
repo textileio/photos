@@ -1,10 +1,12 @@
 import React from 'react'
 import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
 import Toast from 'react-native-easy-toast'
+import Modal from 'react-native-modal'
 
 import Input from '../SB/components/Input'
-import Button from '../Components/Button'
+import Button from './Button'
 import * as s from '../Themes/Constants'
+import WaitListSignupScreen from './WaitListSignupScreen'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -58,6 +60,7 @@ interface State {
   valid: boolean
   referralCode?: string
   error?: string
+  showWaitlistSignup: boolean
 }
 
 export default class ReferralCode extends React.Component<Props, State> {
@@ -67,7 +70,8 @@ export default class ReferralCode extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      valid: false
+      valid: false,
+      showWaitlistSignup: false
     }
   }
 
@@ -75,6 +79,18 @@ export default class ReferralCode extends React.Component<Props, State> {
     this.setState({
       referralCode: text,
       valid: text.trim().toLowerCase() === this.props.referralCode.trim().toLowerCase()
+    })
+  }
+
+  showWaitlistSignup = () => {
+    this.setState({
+      showWaitlistSignup: true
+    })
+  }
+
+  hideWaitlistSignup = () => {
+    this.setState({
+      showWaitlistSignup: false
     })
   }
 
@@ -106,12 +122,15 @@ export default class ReferralCode extends React.Component<Props, State> {
               onPress={this.props.onSuccess}
               style={ITEM}
             />
-            <Text style={LINK} onPress={this.props.onSuccess}>Request a referral code</Text>
+            <Text style={LINK} onPress={this.showWaitlistSignup}>Request a referral code</Text>
             <Toast
               ref={(toast) => { this.toast = toast ? toast : undefined }}
               position='center'
             />
           </View>
+          <Modal style={{ flex: 1, margin: 0 }} isVisible={this.state.showWaitlistSignup}>
+            <WaitListSignupScreen onSuccess={this.hideWaitlistSignup} />
+          </Modal>
       </KeyboardAvoidingView>
     )
   }

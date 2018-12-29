@@ -9,7 +9,7 @@ import Config from 'react-native-config'
 
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
-import ReferralCode from '../../Containers/ReferralCode'
+import ReferralCode from '../../Components/ReferralCode'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
 import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
