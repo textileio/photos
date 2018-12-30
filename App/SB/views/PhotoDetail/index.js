@@ -173,7 +173,7 @@ const mapStateToProps = (state) => {
   const source = photo ? {url: 'file://' + photo.target + '.png'} : {url: 'file://.png'}
 
   const links = photo.files[0].links
-  const meta = links ? links['large'].meta : undefined
+  const meta = links ? links['thumb'].meta : undefined
   const w = meta ? meta['width'] : undefined
   const h = meta ? meta['height'] : undefined
   const width = WIDTH
