@@ -3,7 +3,6 @@
 exports[`preferences stories initial state should match snapshot 1`] = `
 Object {
   "onboarded": false,
-  "pendingMigration": false,
   "services": Object {
     "backgroundLocation": Object {
       "status": false,

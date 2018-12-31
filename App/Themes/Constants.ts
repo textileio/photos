@@ -43,3 +43,10 @@ export const H2: TextStyle = {
   fontSize: FONT_SIZE_LARGE,
   color: COLOR_FONT_DARK_ON_LIGHT_DARK
 }
+
+export const HEADER: TextStyle = {
+  fontFamily: FONT_FAMILY_REGULAR,
+  fontSize: FONT_SIZE_MEDIUM,
+  color: COLOR_FONT_DARK_ON_LIGHT_DARK,
+  textTransform: 'uppercase'
+}

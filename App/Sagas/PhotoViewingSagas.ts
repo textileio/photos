@@ -67,7 +67,7 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
   const { name } = action.payload
   try {
     const key = `textile_photos-shared-${uuid()}`
-    yield call(add, key, name)
+    yield call(add, key, name, true)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
   }

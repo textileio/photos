@@ -231,7 +231,6 @@ const migrations: MigrationManifest = {
       ...state,
       preferences: {
         ...state.preferences,
-        pendingMigration: false,
         onboarded: false
       }
     }

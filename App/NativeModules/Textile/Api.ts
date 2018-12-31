@@ -51,8 +51,8 @@ export async function addSchema(jsonstr: string): Promise<File> {
   return JSON.parse(result) as File
 }
 
-export async function addThread(key: string, name: string): Promise<ThreadInfo> {
-  const result = await TextileNode.addThread(key, name)
+export async function addThread(key: string, name: string, shared: boolean): Promise<ThreadInfo> {
+  const result = await TextileNode.addThread(key, name, shared)
   return JSON.parse(result) as ThreadInfo
 }
 
@@ -276,8 +276,8 @@ export async function migrateRepo(repoPath: string): Promise<void> {
   await TextileNode.migrateRepo(repoPath)
 }
 
-export async function newTextile(repoPath: string): Promise<void> {
-  await TextileNode.newTextile(repoPath)
+export async function newTextile(repoPath: string, logLevels: string): Promise<void> {
+  await TextileNode.newTextile(repoPath, logLevels)
 }
 
 export async function newWallet(wordCount: number): Promise<string> {
