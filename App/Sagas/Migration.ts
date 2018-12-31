@@ -230,9 +230,11 @@ export function * runRecurringMigrationTasks () {
     if (announcement && announcement.status === 'pending') {
       const { currentPeerId, currentAddress, previousUsername, previousPeerId } = announcement.peerDetails
       try {
-        yield call(announceId, currentPeerId, previousPeerId, currentAddress, previousUsername)
-        // If no error, mark as successful
-        yield put(MigrationActions.peerAnnouncementSuccess())
+        if (currentPeerId && previousPeerId && currentAddress) {
+          yield call(announceId, currentPeerId, previousPeerId, currentAddress, previousUsername)
+          // If no error, mark as successful
+          yield put(MigrationActions.peerAnnouncementSuccess())
+        }
       } catch (error) {
         // just run again later
       }
