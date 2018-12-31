@@ -10,7 +10,8 @@ import Config from 'react-native-config'
 
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import MigrationActions from '../Redux/MigrationRedux'
 import AccountActions from '../Redux/AccountRedux'
 import { RootAction } from '../Redux/Types'
 import {
@@ -28,11 +29,21 @@ import {
   version
  } from '../NativeModules/Textile'
 import { logNewEvent } from './DeviceLogs'
-import { migrate, migrateConnections } from './Migration'
+import { announcePeer } from './Migration'
 
 const REPO_PATH = RNFS.DocumentDirectoryPath
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
 const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
+const LOG_LEVELS = JSON.stringify({
+  'tex-broadcast': 'DEBUG',
+  'tex-core': 'DEBUG',
+  'tex-datastore': 'DEBUG',
+  'tex-ipfs': 'DEBUG',
+  'tex-mill': 'DEBUG',
+  'tex-repo': 'DEBUG',
+  'tex-repo-config': 'DEBUG',
+  'tex-service': 'DEBUG'
+})
 
 export function * manageNode () {
   while (true) {
@@ -84,7 +95,7 @@ export function * handleCreateNodeRequest (dispatch: Dispatch) {
 function * createAndStartNode(dispatch: Dispatch): any {
   try {
     yield put(TextileNodeActions.creatingNode())
-    yield call(newTextile, REPO_PATH)
+    yield call(newTextile, REPO_PATH, LOG_LEVELS)
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
@@ -93,7 +104,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
     const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
     const cameraRollThread = threadsResult.find((thread) => thread.key === cameraRollThreadKey)
     if (!cameraRollThread) {
-      yield call(addThread, cameraRollThreadKey, cameraRollThreadName)
+      yield call(addThread, cameraRollThreadKey, cameraRollThreadName, false)
     }
     yield put(TextileNodeActions.startNodeSuccess())
   } catch (error) {
@@ -102,11 +113,10 @@ function * createAndStartNode(dispatch: Dispatch): any {
         // instruct the node to export data to files
         yield call(migrateRepo, REPO_PATH)
         // store the fact there is a pending migration in the preferences redux persisted state
-        yield put(PreferencesActions.migrationNeeded())
+        yield put(MigrationActions.migrationNeeded())
+        yield call(announcePeer)
         // call the create/start sequence again
         yield call(createAndStartNode, dispatch)
-        // migrate peerid
-        yield call(migrateConnections)
       } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)

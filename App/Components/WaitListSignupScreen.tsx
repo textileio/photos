@@ -63,7 +63,7 @@ interface State {
   buttonText: string
 }
 
-export default class MailListSignupScreen extends React.Component<Props, State> {
+export default class WaitListSignupScreen extends React.Component<Props, State> {
 
   toast?: Toast
 
@@ -72,7 +72,7 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
     this.state = {
       valid: false,
       processing: false,
-      buttonText: 'Subscribe'
+      buttonText: 'Submit'
     }
   }
 
@@ -105,8 +105,8 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
           <View>
             <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/share.png')} />
-            <Text style={TITLE}>Keep in touch!</Text>
-            <Text style={SUBTITLE}>If you'd like to receive periodic updates and information from Textile, enter your email address below.</Text>
+            <Text style={TITLE}>Thanks for your interest!</Text>
+            <Text style={SUBTITLE}>Enter your email address below, and we'll send you a referral code as soon as possible.</Text>
             <Input
               label={'Email Address'}
               keyboardType='email-address'
@@ -125,7 +125,7 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
               onPress={this.submit}
               style={ITEM}
             />
-            <Text style={LINK} onPress={this.props.onSuccess}>No thanks</Text>
+            <Text style={LINK} onPress={this.props.onSuccess}>Cancel</Text>
             <Toast
               ref={(toast) => { this.toast = toast ? toast : undefined }}
               position='center'
@@ -139,7 +139,7 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
     if (this.state.emailAddress) {
       this.setState({ processing: true })
       const baseUrl: string = Config.RN_MAILCHIMP_API_URL
-      const listId: string = Config.RN_MAILCHIMP_LIST_ID
+      const listId: string = Config.RN_MAILCHIMP_WAITLIST_ID
       const url = baseUrl + '/3.0/lists/' + listId + '/members'
 
       const apiKey: string = Config.RN_MAILCHIMP_API_KEY

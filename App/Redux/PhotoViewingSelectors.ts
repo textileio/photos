@@ -104,7 +104,7 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
       .filter((photo) => photo.author_id === selfId)
       .map((photo): SharedPhoto => {
         const files = photo.files.length ? photo.files[0] : undefined
-        const original = files && files.links ? files.links.exif.checksum : photo.block
+        const original = files && files.links ? files.links.thumb.checksum : photo.block
         return { type: 'photo', photo, id: photo.block, original }
       })
     )

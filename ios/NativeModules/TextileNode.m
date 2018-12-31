@@ -109,9 +109,9 @@ RCT_EXPORT_METHOD(addSchema:(NSString*)jsonstr resolver:(RCTPromiseResolveBlock)
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(addThread:(NSString*)key name:(NSString*)name resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addThread:(NSString*)key name:(NSString*)name shared:(BOOL)shared resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
-  NSString *result = [self.node addThread:key name:name error:&error];
+  NSString *result = [self.node addThread:key name:name shared:shared error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
@@ -390,11 +390,12 @@ RCT_EXPORT_METHOD(migrateRepo:(NSString*)repoPath resolver:(RCTPromiseResolveBlo
   [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(newTextile:(NSString*)repoPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(newTextile:(NSString*)repoPath logLevels:(NSString*)logLevels resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   if (!self.node) {
     MobileRunConfig *config = [[MobileRunConfig alloc] init];
     config.repoPath = repoPath;
+    config.logLevels = logLevels;
     self.node = MobileNewTextile(config, [[Messenger alloc] init], &error); // Returns the 'needs migration error'
   }
   [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];

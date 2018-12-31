@@ -182,7 +182,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   // Unsquares the images by maintaining the aspect ratio no matter device size
   const imageWidth = WIDTH
   const links = photo.files[0].links
-  const meta = links ? links['large'].meta : undefined
+  const meta = links ? links['thumb'].meta : undefined
   const width = meta ? meta['width'] as number : undefined
   const height = meta ? meta['height'] as number : undefined
   let imageHeight = imageWidth

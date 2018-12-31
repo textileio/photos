@@ -25,7 +25,7 @@ export function * uploadFile (id: string, payloadPath: string) {
   )
 }
 
-function * getSession (depth: number = 0): any {
+export function * getSession (depth: number = 0): any {
   const session: CafeSession | undefined = yield select(bestSession)
   if (!session || new Date(session.expiry) < new Date()) {
     if (depth === 0) {
