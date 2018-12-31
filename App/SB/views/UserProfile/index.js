@@ -148,7 +148,7 @@ const mapStateToProps = (state) => {
   return {
     verboseUi,
     recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
-    peerId: getPeerId() || 'sorry, there was an error',
+    peerId: getPeerId(state) || 'sorry, there was an error',
     online,
     nodeRunning,
     sdkVersion: verboseUi ? state.textileNode.sdkVersion || '' : ''
