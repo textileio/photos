@@ -61,11 +61,11 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
 function * processExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const threadId: string = yield call(acceptExternalThreadInvite, inviteId, key)
-    if (!threadId) {
+    const joinId: string = yield call(acceptExternalThreadInvite, inviteId, key)
+    if (!joinId) {
       throw new Error('invite previously accepted')
     }
-    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, threadId))
+    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, joinId))
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
