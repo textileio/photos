@@ -127,8 +127,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   let peerColor = 'hsla(200, 60%, 100%, 0.3)'
   if (ownProps.peerId) {
     const last = ownProps.peerId.length - 1
-    const h = Math.floor(100 + 120 * ownProps.peerId[last - 1].charCodeAt() / 125)
-    const l = Math.floor(40 + 40 * ownProps.peerId[last].charCodeAt() / 125)
+    const h = Math.floor(100 + 120 * ownProps.peerId.charCodeAt(last - 1) / 125)
+    const l = Math.floor(40 + 40 * ownProps.peerId.charCodeAt(last) / 125)
     const lit = l < 100 ? l > 0 ? l : 0 : 100
     const hue = h < 360 ? h > 0 ? h : 0 : 360
     peerColor = `hsla(${hue},60%,${lit}%,0.3)`
