@@ -1,5 +1,6 @@
 package com.textile.textilenode;
 
+import android.app.Activity;
 import android.view.WindowManager;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -23,11 +24,23 @@ public class ScreenControl extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void letScreenSleep() {
-        getCurrentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        final Activity activity = getCurrentActivity();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        });
     }
 
     @ReactMethod
     public void keepScreenOn() {
-        getCurrentActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        final Activity activity = getCurrentActivity();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        });
     }
 }

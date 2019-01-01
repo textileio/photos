@@ -10,7 +10,7 @@ import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/H
 
 import AuthActions from '../../../Redux/AuthRedux'
 import PreferencesActions from '../../../Redux/PreferencesRedux'
-import Avatar from '../../../Components/Avatar'
+import { getPeerId } from '../../../Redux/AccountSelectors'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
@@ -48,9 +48,9 @@ class UserProfile extends React.PureComponent {
   _changeAvatar () {
     this.props.navigation.navigate('ChangeAvatar', { onSuccess: () => this.props.navigation.goBack() })
   }
-  _pubKey () {
-    Clipboard.setString(this.props.publicKey)
-    this.refs.toast.show('Copied Public Key to Clipboard', DURATION.LENGTH_SHORT)
+  _peerId () {
+    Clipboard.setString(this.props.peerId)
+    this.refs.toast.show('Copied PeerId to Clipboard', DURATION.LENGTH_SHORT)
   }
   _contact () {
     this.setState({ contactModal: this.state.contactModal === false })
@@ -112,12 +112,12 @@ class UserProfile extends React.PureComponent {
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={this._pubKey.bind(this)}>
-            <Text style={styles.listText}>Copy Public Key</Text>
+          <TouchableOpacity style={styles.listItem} onPress={this._peerId.bind(this)}>
+            <Text style={styles.listText}>Copy PeerId</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={this._recoveryPhrase.bind(this)}>
+          {/* <TouchableOpacity style={styles.listItem} onPress={this._recoveryPhrase.bind(this)}>
             <Text style={[styles.listText, styles.warning]}>Get Recovery Phrase</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={styles.listItem} onPress={() => {
             Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/PRIVACY.md')
           }}>
@@ -148,7 +148,7 @@ const mapStateToProps = (state) => {
   return {
     verboseUi,
     recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
-    publicKey: state.preferences.publicKey || 'sorry, there was an error',
+    peerId: getPeerId(state) || 'sorry, there was an error',
     online,
     nodeRunning,
     sdkVersion: verboseUi ? state.textileNode.sdkVersion || '' : ''
