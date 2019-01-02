@@ -88,7 +88,7 @@ class ThreadsManager extends React.PureComponent {
           source={require('../Images/v2/party.png')} />
         <Text style={onboardingStyles.emptyStateText}>
           This is where you can manage
-          your private Groups - where 
+          your private Groups - where
           you can share photos with your
           friends and family.
         </Text>
