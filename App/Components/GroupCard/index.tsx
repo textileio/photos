@@ -56,18 +56,18 @@ const GroupCard = (props: ScreenProps) => {
       onPress={getCallback()}
     >
       <View style={styles.groupLeftColumn}>
+          {getThumb()}
+      </View>
+      <View style={styles.groupMiddleColumn}>
+        <Text numberOfLines={2} style={styles.groupName}>{name}</Text>
+      </View>
+      <View style={styles.groupRightColumn}>
         <View style={styles.avatarContainer}>
           { authors.slice(0, 8).map((authorId: string, i: number) => {
             const imageStyle = cardImageStyle(authors, i)
             return (<Avatar key={authorId} style={imageStyle} peerId={authorId} />)
           })}
         </View>
-      </View>
-      <View style={styles.groupMiddleColumn}>
-        <Text numberOfLines={2} style={styles.groupName}>{name}</Text>
-      </View>
-      <View style={styles.groupRightColumn}>
-          {getThumb()}
       </View>
     </TouchableOpacity>
   )

@@ -9,7 +9,9 @@ export const ICON_WIDTH = ROW_COLUMN * 0.5
 export function cardImageStyle (list: string[], index: number): ImageStyle {
   const baseStyle = {
     margin: 0,
-    padding: 0
+    padding: 0,
+    borderWidth: 2,
+    borderColor: s.COLOR_BACKGROUND_PRIMARY
     } as ImageStyle
 
   if (index >= 8) {
@@ -28,7 +30,7 @@ export function cardImageStyle (list: string[], index: number): ImageStyle {
     marginBottom,
     marginLeft,
     marginTop,
-    alignSelf: list.length >= 4 ? 'flex-end' : 'center'
+    alignSelf: list.length >= 4 ? 'flex-start' : 'center'
   }
 }
 
@@ -37,12 +39,12 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     height: ROW_HEIGHT,
-    marginHorizontal: 5,
+    marginHorizontal: 22,
     alignSelf: 'center',
     borderBottomColor: s.COLOR_GREY_LIGHT,
     borderBottomWidth: 1
   },
-  groupLeftColumn: {
+  groupRightColumn: {
     width: ROW_COLUMN * 2,
     alignItems: 'center',
     justifyContent: 'center',
@@ -52,14 +54,14 @@ export default StyleSheet.create({
     width: ROW_COLUMN * 2,
     height: ROW_HEIGHT / 2,
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     flexDirection: 'row',
     flex: 1
   },
   groupMiddleColumn: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingLeft: 12,
+    paddingLeft: 18,
     flex: 1
   },
   groupName: {
@@ -67,10 +69,10 @@ export default StyleSheet.create({
     fontSize: 16,
     color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM
   },
-  groupRightColumn: {
+  groupLeftColumn: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: ROW_COLUMN * 1.5
+    width: ICON_WIDTH * 1.5
   },
   iconStyle: {
     margin: 0,
