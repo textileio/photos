@@ -1,6 +1,5 @@
 import {call, put, take} from 'redux-saga/effects'
 import { getType } from 'typesafe-actions'
-import Config from 'react-native-config'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { logNewEvent } from './DeviceLogs'
 import StorageActions from '../Redux/StorageRedux'
