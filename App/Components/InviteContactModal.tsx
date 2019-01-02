@@ -20,7 +20,7 @@ import { ThreadSelectComponent } from '../SB/components/ThreadSelect'
 import { ThreadsEditFriendsComponent } from '../SB/views/ThreadsEditFriends'
 
 // Styles
-import styles from './Styles/InvitePeerModalStyles'
+import styles from './Styles/InviteContactModalStyles'
 
 interface DispatchProps {
   completeScreen: (threadName: string) => void
@@ -35,34 +35,34 @@ interface ScreenProps {
 
 interface State {
   submitted: boolean
-  showCreateThreadModal: boolean
+  showCreateGroupModal: boolean
   threadId?: string,
   threadName?: string,
   threadSelected: boolean
 }
 
-class InvitePeerModal extends React.Component<DispatchProps & StateProps & ScreenProps> {
+class InviteContactModal extends React.Component<DispatchProps & StateProps & ScreenProps> {
   state: State = {
     submitted: false,
-    showCreateThreadModal: false,
+    showCreateGroupModal: false,
     threadSelected: false
   }
 
   openThreadModal () {
     return () => {
-      this.setState({showCreateThreadModal: true, threadId: undefined, threadName: undefined})
+      this.setState({showCreateGroupModal: true, threadId: undefined, threadName: undefined})
     }
   }
 
   cancelCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
   completeCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
@@ -102,8 +102,8 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
     return (
       <View style={styles.content}>
         <View style={styles.title}>
-          <Text style={styles.titleText}>Invite New Peer</Text>
-          <Text style={styles.subTitleText}>First select a Thread to share with peer.</Text>
+          <Text style={styles.titleText}>Invite New Contact</Text>
+          <Text style={styles.subTitleText}>Select a Group to add your new Contact.</Text>
         </View>
         <View style={styles.body}>
           <ThreadSelectComponent
@@ -147,7 +147,7 @@ class InvitePeerModal extends React.Component<DispatchProps & StateProps & Scree
   }
 
   renderBody () {
-    if (this.state.showCreateThreadModal) {
+    if (this.state.showCreateGroupModal) {
       return this.renderCreateThread()
     } else if (this.state.threadSelected && this.state.threadId && this.state.threadName) {
       return this.renderPeerSelect(this.state.threadId, this.state.threadName)
@@ -189,4 +189,4 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InvitePeerModal)
+export default connect(mapStateToProps, mapDispatchToProps)(InviteContactModal)

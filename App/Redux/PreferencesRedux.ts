@@ -43,7 +43,7 @@ export interface Service {
   status: boolean,
 }
 export interface ViewSettings {
-  selectedWalletTab: 'Photos' | 'Threads' | 'Peers',
+  selectedWalletTab: 'Photos' | 'Groups' | 'Contacts',
 }
 export interface PreferencesState {
   onboarded: boolean
@@ -113,7 +113,7 @@ export const initialState: PreferencesState = {
     }
   },
   viewSettings: {
-    selectedWalletTab: 'Threads'
+    selectedWalletTab: 'Groups'
   }
 }
 

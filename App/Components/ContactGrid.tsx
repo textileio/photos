@@ -11,13 +11,13 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import Avatar from './Avatar'
 import ContactModal from './ContactModal'
-import InvitePeerModal from './InvitePeerModal'
+import InviteContactModal from './InviteContactModal'
 
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
 // Styles
-import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PeerGridStyles'
+import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/ContactGridStyles'
 
 interface DispatchProps {
   cancelShare: (uuid: string) => void
@@ -26,22 +26,22 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-  peers: {[key: string]: string}
+  contacts: {[key: string]: string}
 }
 
-class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScreenProps<{}>> {
+class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationScreenProps<{}>> {
   state = {
     contactCard: false,
-    selectedPeer: '',
+    selectedContact: '',
     selectedUsername: '',
-    showInvitePeerModal: false
+    showInviteContactModal: false
   }
 
   oneScreensWorth = 40
 
-  selectPeer (peerId: string, username: string) {
+  selectContact (peerId: string, username: string) {
     return () => {
-      this.setState({selectedPeer: peerId, selectedUsername: username, contactCard: true})
+      this.setState({selectedContact: peerId, selectedUsername: username, contactCard: true})
     }
   }
 
@@ -63,7 +63,7 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
     return (
       <TouchableOpacity
         style={[styles.item, {width: PRODUCT_ITEM_HEIGHT, height: PRODUCT_ITEM_HEIGHT}]}
-        onPress={this.invitePeerRequest()}
+        onPress={this.inviteContactRequest()}
         activeOpacity={0.95}
       >
         <Avatar style={{ width: dimension, height: dimension }} />
@@ -81,11 +81,11 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
     return (
       <TouchableOpacity
         style={styles.item}
-        onPress={this.selectPeer(item, this.props.peers[item])}
+        onPress={this.selectContact(item, this.props.contacts[item])}
         activeOpacity={0.95}
       >
         <Avatar style={{ width: dimension, height: dimension }} peerId={item} />
-        <Text style={styles.username}>{this.props.peers[item]}</Text>
+        <Text style={styles.username}>{this.props.contacts[item]}</Text>
       </TouchableOpacity>
     )
   }
@@ -99,15 +99,15 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
     }
   }
 
-  cancelInvitePeer () {
+  cancelInviteContact () {
     return () => {
-      this.setState({showInvitePeerModal: false})
+      this.setState({showInviteContactModal: false})
     }
   }
 
-  invitePeerRequest () {
+  inviteContactRequest () {
     return () => {
-      this.setState({showInvitePeerModal: true})
+      this.setState({showInviteContactModal: true})
     }
   }
 
@@ -117,11 +117,11 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
   keyExtractor = (item: string) => item
 
   render () {
-    const peerIds: string[] = Object.keys(this.props.peers).sort((a, b) => {
-      if (!this.props.peers[b] || this.props.peers[a] < this.props.peers[b]) {
+    const peerIds: string[] = Object.keys(this.props.contacts).sort((a, b) => {
+      if (!this.props.contacts[b] || this.props.contacts[a] < this.props.contacts[b]) {
         return -1
       }
-      if (!this.props.peers[a] || this.props.peers[a] > this.props.peers[b]) {
+      if (!this.props.contacts[a] || this.props.contacts[a] > this.props.contacts[b]) {
         return 1
       }
       return 0
@@ -142,14 +142,14 @@ class PeerGrid extends React.Component<OwnProps & DispatchProps & NavigationScre
         />
         <ContactModal
           isVisible={this.state.contactCard}
-          peerId={this.state.selectedPeer}
+          peerId={this.state.selectedContact}
           username={this.state.selectedUsername}
           navigateToThread={this.navigateToThread()}
           close={this.closeModal()}
         />
-        <InvitePeerModal
-          isVisible={this.state.showInvitePeerModal}
-          cancel={this.cancelInvitePeer()}
+        <InviteContactModal
+          isVisible={this.state.showInviteContactModal}
+          cancel={this.cancelInviteContact()}
         />
       </View>
     )
@@ -166,4 +166,4 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   }
 }
 
-export default connect(undefined, mapDispatchToProps)(PeerGrid)
+export default connect(undefined, mapDispatchToProps)(ContactGrid)

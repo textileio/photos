@@ -70,7 +70,7 @@ class AcceptInviteScreen extends React.Component<StateProps & DispatchProps & Na
       </TextileHeaderButtons>
     )
     const options: NavigationStackScreenOptions = {
-      title: 'Thread Invite',
+      title: 'Group Invite',
       headerLeft
     }
     return options
@@ -95,7 +95,7 @@ class AcceptInviteScreen extends React.Component<StateProps & DispatchProps & Na
           </Fragment>
         }
         {!this.props.valid &&
-          <Text style={TEXT}>There was an issue with the Thread invite. Be sure you got this invite from a trusted Textile user using the latest version of the Textile app.</Text>
+          <Text style={TEXT}>There was an issue with the Group invite. Be sure you got this invite from a Textile user using the latest version of the Textile app.</Text>
         }
       </SafeAreaView>
     )
