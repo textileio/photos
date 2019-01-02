@@ -77,7 +77,7 @@ interface DispatchStateProps {
 
 const mapStateToProps = (state: RootState, ownProps: ScreenProps): DispatchStateProps => {
   return {
-    threadThumbs: getThreadThumbs(state, ownProps.peerId)
+    threadThumbs: getThreadThumbs(state, ownProps.peerId, 'name')
   }
 }
 
