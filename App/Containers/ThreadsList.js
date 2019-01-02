@@ -6,7 +6,7 @@ import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
 import { View, Text, Image, Alert } from 'react-native'
 import PhotoStream from '../Components/PhotoStream'
-import InvitePeerModal from '../Components/InvitePeerModal'
+import InviteContactModal from '../Components/InviteContactModal'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
@@ -21,7 +21,7 @@ import onboardingStyles from './Styles/OnboardingStyle'
 class ThreadsList extends React.PureComponent {
   state = {
     showCreateThreadModal: false,
-    showInvitePeerModal: false
+    showInviteContactModal: false
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -30,11 +30,11 @@ class ThreadsList extends React.PureComponent {
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='Add Photo' iconName='plus' onPress={params.showWalletPicker} />
-        <Item title='Invite Peer' iconName='invite' onPress={params.invitePeerRequest} />
+        <Item title='Invite Contact' iconName='invite' onPress={params.inviteContactRequest} />
       </TextileHeaderButtons>
     )
     return {
-      headerTitle: 'Shared Photos',
+      headerTitle: 'Timeline',
       headerRight
     }
   }
@@ -48,7 +48,7 @@ class ThreadsList extends React.PureComponent {
     this.props.navigation.setParams({
       profile: this.props.profile,
       online: this.props.online,
-      invitePeerRequest: this.invitePeerRequest(),
+      inviteContactRequest: this.inviteContactRequest(),
       showWalletPicker: this.props.showWalletPicker
     })
   }
@@ -107,10 +107,10 @@ class ThreadsList extends React.PureComponent {
           style={onboardingStyles.emptyStateImage}
           source={require('../Images/v2/thread-empty-state.png')} />
         <Text style={onboardingStyles.emptyStateText}>
-          This is your shared photo stream,
+          This is your private update stream,
           where you can come to see the latest
           photos shared to you in any of your
-          private Threads or post a new photo.
+          private Groups or post a new photo.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
           Click the <Icon name='plus' size={18} color='black' /> button above to start sharing photos
@@ -120,15 +120,15 @@ class ThreadsList extends React.PureComponent {
     )
   }
 
-  cancelInvitePeer () {
+  cancelInviteContact () {
     return () => {
-      this.setState({showInvitePeerModal: false})
+      this.setState({showInviteContactModal: false})
     }
   }
 
-  invitePeerRequest () {
+  inviteContactRequest () {
     return () => {
-      this.setState({showInvitePeerModal: true})
+      this.setState({showInviteContactModal: true})
     }
   }
 
@@ -138,9 +138,9 @@ class ThreadsList extends React.PureComponent {
         {this.props.showOnboarding && this._renderOnboarding()}
         {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items}/>}
 
-        <InvitePeerModal
-          isVisible={this.state.showInvitePeerModal}
-          cancel={this.cancelInvitePeer()}
+        <InviteContactModal
+          isVisible={this.state.showInviteContactModal}
+          cancel={this.cancelInviteContact()}
         />
 
       </View>

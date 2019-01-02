@@ -88,12 +88,12 @@ class ThreadsManager extends React.PureComponent {
           source={require('../Images/v2/party.png')} />
         <Text style={onboardingStyles.emptyStateText}>
           This is where you can manage
-          your Threads - private groups
-          where you can share photos with your
+          your private Groups - where 
+          you can share photos with your
           friends and family.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icon name='plus' size={24} color='black' /> button above to create your first Thread.
+          Click the <Icon name='plus' size={24} color='black' /> button above to create your first Group.
         </Text>
       </View>
     )

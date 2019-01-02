@@ -39,7 +39,7 @@ class ThreadSelector extends React.Component<ScreenProps & StateProps & Dispatch
         style={styles.createThreadBox}
         onPress={this.props.createNewThread}
       >
-        <Text style={styles.createThreadText}>Create New Thread</Text>
+        <Text style={styles.createThreadText}>Create New Group</Text>
       </TouchableOpacity>
     )
   }

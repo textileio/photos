@@ -19,7 +19,7 @@ class   ThreadSelectCard extends Component<ScreenProps> {
         /* tslint:disable-next-line */
         onPress={this.props.onSelect}
       >
-        <PhotoBoxEmpty title={'Create new thread'} />
+        <PhotoBoxEmpty title={'Create New Group'} />
         <View style={styles.threadSelectRadio}>
           <RadioButton selected={false} />
         </View>
