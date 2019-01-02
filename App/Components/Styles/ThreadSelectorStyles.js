@@ -24,14 +24,10 @@ export default StyleSheet.create({
     right: 0
   },
   createThreadBox: {
-    borderWidth: 2,
-    borderColor: '#EEE',
-    borderStyle: 'dashed',
-    borderRadius: 10,
-    marginTop: 27,
+    marginTop: 12,
     marginBottom: 29,
     marginHorizontal: 10,
-    height: 150,
+    height: 80,
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center'
