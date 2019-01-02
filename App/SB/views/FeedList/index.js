@@ -80,7 +80,7 @@ class Notifications extends React.PureComponent {
         <Text style={onboardingStyles.emptyStateText}>
           This is your notification feed where
           you'll be able to quickly view all
-          activity in your threads, such as likes,
+          activity in your groups, such as likes,
           comments, and new photo shares. There's
           nothing here yet, so go invite some friends!
           </Text>
