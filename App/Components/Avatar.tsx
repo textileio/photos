@@ -15,6 +15,7 @@ interface OwnProps {
 interface StateProps {
   localPeerId?: string
   online: boolean
+  peerColor: string
   localAvatar?: string
 }
 
@@ -22,6 +23,7 @@ type Props = OwnProps & StateProps & Partial<ImageProps>
 
 interface State {
   borderRadius: number
+  showIcon: boolean
 }
 
 class Avatar extends React.Component<Props, State> {
@@ -29,13 +31,20 @@ class Avatar extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      borderRadius: 0
+      borderRadius: 0,
+      showIcon: false
     }
   }
 
   onImageLayout = (event: LayoutChangeEvent) => {
     this.setState({
       borderRadius: event.nativeEvent.layout.width / 2
+    })
+  }
+
+  onIconLoad = () => {
+    this.setState({
+      showIcon: true
     })
   }
 
@@ -75,13 +84,18 @@ class Avatar extends React.Component<Props, State> {
         />
       )
     } else if (uri) {
+      const uniqueUserColor = !this.state.showIcon ? {
+        tintColor: this.props.peerColor
+      } : {}
       return (
         <Image
           {...this.props}
           source={{ uri }}
-          style={{ ...(this.props.style || {}), width, height, borderRadius: this.state.borderRadius }}
+          style={{ ...(this.props.style || {}), ...uniqueUserColor, width, height, borderRadius: this.state.borderRadius }}
           resizeMode={'cover'}
           onLayout={this.onImageLayout}
+          defaultSource={require('../Images/v2/empty.png')}
+          onLoad={this.onIconLoad}
         />
       )
     } else if (heightNumber) {
@@ -100,7 +114,7 @@ class Avatar extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const avatarUri = state.account.profile.value ? state.account.profile.value.avatar_uri : undefined
   let localAvatar: string | undefined
   if (avatarUri) {
@@ -109,10 +123,22 @@ const mapStateToProps = (state: RootState): StateProps => {
       localAvatar = parts[2]
     }
   }
+
+  let peerColor = 'hsla(200, 60%, 100%, 0.3)'
+  if (ownProps.peerId) {
+    const last = ownProps.peerId.length - 1
+    const h = Math.floor(100 + 120 * ownProps.peerId.charCodeAt(last - 1) / 125)
+    const l = Math.floor(40 + 40 * ownProps.peerId.charCodeAt(last) / 125)
+    const lit = l < 100 ? l > 0 ? l : 0 : 100
+    const hue = h < 360 ? h > 0 ? h : 0 : 360
+    peerColor = `hsla(${hue},60%,${lit}%,0.3)`
+  }
+
   return {
     localPeerId: state.account.peerId.value,
     online: state.textileNode.online,
-    localAvatar
+    localAvatar,
+    peerColor
   }
 }
 
