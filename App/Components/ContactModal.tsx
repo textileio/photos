@@ -56,7 +56,7 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
           </View>
           <ScrollView style={styles.threadsList}>
             <Text style={styles.threadsTitle}>
-              {this.props.threadThumbs.length > 0 ? 'Sharing in Threads:' : 'Not part of any shared threads'}
+              {this.props.threadThumbs.length > 0 ? 'Sharing in Groups:' : 'Not part of any shared groups'}
             </Text>
             {this.props.threadThumbs.map((thread, i) => (
               <TouchableOpacity key={i} onPress={this.navigate(thread.id, thread.name)}>
