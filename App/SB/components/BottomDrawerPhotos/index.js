@@ -36,7 +36,7 @@ export default class BottomDrawerPhotos extends Component {
           <TouchableOpacity onPress={() => {
             this.props.screenProps.newThread()
           }}>
-            <PhotoBoxEmpty title='Create new thread' />
+            <PhotoBoxEmpty title='Create New Group' />
           </TouchableOpacity>
         </ScrollView>
       </View>

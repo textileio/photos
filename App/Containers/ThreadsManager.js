@@ -18,26 +18,7 @@ import onboardingStyles from './Styles/OnboardingStyle'
 class ThreadsManager extends React.PureComponent {
 
   state = {
-    showCreateThreadModal: false
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    const headerLeft = (
-      <TextileHeaderButtons left>
-        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
-      </TextileHeaderButtons>
-    )
-    const headerRight = (
-      <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='player-list-add' onPress={params.openThreadModal} />
-      </TextileHeaderButtons>
-    )
-    return {
-      headerLeft,
-      headerTitle: 'Threads',
-      headerRight
-    }
+    showCreateGroupModal: false
   }
 
   componentWillMount () {
@@ -64,19 +45,19 @@ class ThreadsManager extends React.PureComponent {
 
   openThreadModal () {
     return () => {
-      this.setState({showCreateThreadModal: true})
+      this.setState({showCreateGroupModal: true})
     }
   }
 
   cancelCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
   completeCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
@@ -88,12 +69,12 @@ class ThreadsManager extends React.PureComponent {
           source={require('../Images/v2/party.png')} />
         <Text style={onboardingStyles.emptyStateText}>
           This is where you can manage
-          your Threads - private groups
-          where you can share photos with your
+          your private Groups - where
+          you can share photos with your
           friends and family.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icon name='plus' size={24} color='black' /> button above to create your first Thread.
+          Click the <Icon name='plus' size={24} color='black' /> button above to create your first Group.
         </Text>
       </View>
     )
@@ -105,7 +86,7 @@ class ThreadsManager extends React.PureComponent {
         {this.props.showOnboarding && this._renderOnboarding()}
         {!this.props.showOnboarding && <ThreadSelector createNewThread={this.openThreadModal()}/>}
         <CreateThreadModal
-          isVisible={this.state.showCreateThreadModal}
+          isVisible={this.state.showCreateGroupModal}
           fullScreen={false}
           selectToShare={false}
           navigateTo={true}

@@ -60,7 +60,7 @@ Object {
   },
   "verboseUi": false,
   "viewSettings": Object {
-    "selectedWalletTab": "Threads",
+    "selectedWalletTab": "Groups",
   },
 }
 `;

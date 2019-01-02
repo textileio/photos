@@ -8,10 +8,10 @@ export interface IWalletHeaderProps {
     available: boolean,
     photoCount: string,
     photoTitle: string,
-    threadCount: string,
-    threadTitle: string,
-    peerCount: string,
-    peerTitle: string
+    groupCount: string,
+    groupTitle: string,
+    contactCount: string,
+    contactTitle: string
   },
   selectedTab: string,
   username: string,
@@ -22,12 +22,7 @@ export interface IWalletHeaderProps {
 
 const WalletHeader = (props: IWalletHeaderProps) => {
   const { overview, selectedTab, username, changeAvatar, onToggle } = props
-  const options = [
-    { label: 'Photos', value: 'Photos' },
-    { label: 'Threads', value: 'Threads' },
-    { label: 'Peers', value: 'Threads' }
-  ]
-  const initialTab = selectedTab === 'Threads' ? 1 : 0
+
   const toggle = (value: string) => {
     return () => {
       onToggle(value)
@@ -56,8 +51,8 @@ const WalletHeader = (props: IWalletHeaderProps) => {
         </View>
         <View style={style.walletBottom}>
           {props.verboseUi && statButton('Photos', overview.photoCount, overview.photoTitle)}
-          {statButton('Threads', overview.threadCount, overview.threadTitle)}
-          {statButton('Peers', overview.peerCount, overview.peerTitle)}
+          {statButton('Groups', overview.groupCount, overview.groupTitle)}
+          {statButton('Contacts', overview.contactCount, overview.contactTitle)}
         </View>
       </View>
     </View>
