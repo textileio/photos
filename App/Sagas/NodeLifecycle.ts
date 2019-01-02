@@ -31,7 +31,7 @@ import {
 import { logNewEvent } from './DeviceLogs'
 import { announcePeer } from './Migration'
 
-const REPO_PATH = RNFS.DocumentDirectoryPath
+export const REPO_PATH = `${RNFS.DocumentDirectoryPath}/textile-go`
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
 const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 const LOG_LEVELS = JSON.stringify({
@@ -93,8 +93,14 @@ export function * handleCreateNodeRequest (dispatch: Dispatch) {
 }
 
 function * createAndStartNode(dispatch: Dispatch): any {
+  console.log(REPO_PATH)
   try {
     yield put(TextileNodeActions.creatingNode())
+    const repoPathExists: boolean = yield call(RNFS.exists, REPO_PATH)
+    if (!repoPathExists) {
+      yield call(RNFS.mkdir, REPO_PATH)
+      yield call(moveTextileFiles)
+    }
     yield call(newTextile, REPO_PATH, LOG_LEVELS)
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
@@ -132,6 +138,15 @@ function * createAndStartNode(dispatch: Dispatch): any {
       }
     } catch (error) {
       yield put(TextileNodeActions.nodeError(error))
+    }
+  }
+}
+
+async function moveTextileFiles() {
+  const files = await RNFS.readDir(RNFS.DocumentDirectoryPath)
+  for (const file of files) {
+    if (file.path !== REPO_PATH && file.name !== 'RCTAsyncLocalStorage_V1') {
+      await RNFS.moveFile(file.path, `${REPO_PATH}/${file.name}`)
     }
   }
 }
