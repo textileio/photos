@@ -106,7 +106,7 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
       <View style={styles.contentContainer}>
         <View style={styles.header}>
           <View style={styles.headerTitle}>
-            <Text style={styles.title}>Select Thread</Text>
+            <Text style={styles.title}>Select Group</Text>
           </View>
         </View>
         <View style={{flex: 1}}>
