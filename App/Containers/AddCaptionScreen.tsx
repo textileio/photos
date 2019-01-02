@@ -34,7 +34,7 @@ type Props = DispatchProps & StateProps & NavigationScreenProps
 class AddCaptionScreen extends React.Component<Props> {
 
   state = {
-    showCreateThreadModal: false
+    showCreateGroupModal: false
   }
 
   static navigationOptions = ({navigation}: NavigationScreenProps) => {
@@ -114,19 +114,19 @@ class AddCaptionScreen extends React.Component<Props> {
 
   openThreadModal () {
     return () => {
-      this.setState({showCreateThreadModal: true})
+      this.setState({showCreateGroupModal: true})
     }
   }
 
   cancelCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
   completeCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
@@ -182,7 +182,7 @@ class AddCaptionScreen extends React.Component<Props> {
           />
         </View>
         <CreateThreadModal
-          isVisible={this.state.showCreateThreadModal}
+          isVisible={this.state.showCreateGroupModal}
           fullScreen={true}
           selectToShare={true}
           navigateTo={false}

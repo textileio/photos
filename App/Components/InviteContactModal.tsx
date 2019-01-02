@@ -35,7 +35,7 @@ interface ScreenProps {
 
 interface State {
   submitted: boolean
-  showCreateThreadModal: boolean
+  showCreateGroupModal: boolean
   threadId?: string,
   threadName?: string,
   threadSelected: boolean
@@ -44,25 +44,25 @@ interface State {
 class InviteContactModal extends React.Component<DispatchProps & StateProps & ScreenProps> {
   state: State = {
     submitted: false,
-    showCreateThreadModal: false,
+    showCreateGroupModal: false,
     threadSelected: false
   }
 
   openThreadModal () {
     return () => {
-      this.setState({showCreateThreadModal: true, threadId: undefined, threadName: undefined})
+      this.setState({showCreateGroupModal: true, threadId: undefined, threadName: undefined})
     }
   }
 
   cancelCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
   completeCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
@@ -147,7 +147,7 @@ class InviteContactModal extends React.Component<DispatchProps & StateProps & Sc
   }
 
   renderBody () {
-    if (this.state.showCreateThreadModal) {
+    if (this.state.showCreateGroupModal) {
       return this.renderCreateThread()
     } else if (this.state.threadSelected && this.state.threadId && this.state.threadName) {
       return this.renderPeerSelect(this.state.threadId, this.state.threadName)

@@ -20,7 +20,7 @@ import onboardingStyles from './Styles/OnboardingStyle'
 
 class ThreadsList extends React.PureComponent {
   state = {
-    showCreateThreadModal: false,
+    showCreateGroupModal: false,
     showInviteContactModal: false
   }
 

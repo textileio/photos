@@ -22,7 +22,7 @@ import onboardingStyles from './Styles/OnboardingStyle'
 class Wallet extends React.PureComponent {
 
   state = {
-    showCreateThreadModal: false
+    showCreateGroupModal: false
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -104,19 +104,19 @@ class Wallet extends React.PureComponent {
 
   openThreadModal () {
     return () => {
-      this.setState({showCreateThreadModal: true})
+      this.setState({showCreateGroupModal: true})
     }
   }
 
   cancelCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
   completeCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
@@ -189,7 +189,7 @@ class Wallet extends React.PureComponent {
           />}
         </View>
         <CreateThreadModal
-          isVisible={this.state.showCreateThreadModal}
+          isVisible={this.state.showCreateGroupModal}
           fullScreen={false}
           selectToShare={false}
           navigateTo={true}

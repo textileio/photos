@@ -18,26 +18,7 @@ import onboardingStyles from './Styles/OnboardingStyle'
 class ThreadsManager extends React.PureComponent {
 
   state = {
-    showCreateThreadModal: false
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    const params = navigation.state.params || {}
-    const headerLeft = (
-      <TextileHeaderButtons left>
-        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
-      </TextileHeaderButtons>
-    )
-    const headerRight = (
-      <TextileHeaderButtons>
-        <Item title='Add Thread' iconName='player-list-add' onPress={params.openThreadModal} />
-      </TextileHeaderButtons>
-    )
-    return {
-      headerLeft,
-      headerTitle: 'Threads',
-      headerRight
-    }
+    showCreateGroupModal: false
   }
 
   componentWillMount () {
@@ -64,19 +45,19 @@ class ThreadsManager extends React.PureComponent {
 
   openThreadModal () {
     return () => {
-      this.setState({showCreateThreadModal: true})
+      this.setState({showCreateGroupModal: true})
     }
   }
 
   cancelCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
   completeCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
@@ -105,7 +86,7 @@ class ThreadsManager extends React.PureComponent {
         {this.props.showOnboarding && this._renderOnboarding()}
         {!this.props.showOnboarding && <ThreadSelector createNewThread={this.openThreadModal()}/>}
         <CreateThreadModal
-          isVisible={this.state.showCreateThreadModal}
+          isVisible={this.state.showCreateGroupModal}
           fullScreen={false}
           selectToShare={false}
           navigateTo={true}
