@@ -4,9 +4,9 @@ exports[`notifications enable should fire notification lib successfully 1`] = `u
 
 exports[`notifications toPayload should create AccountPeerJoinedNotification 1`] = `
 Object {
-  "feed": "You paired with a new account peer",
-  "message": "You paired with a new account peer",
-  "title": "New Account Peer",
+  "feed": "You connected to a new account contact",
+  "message": "You connected to a new account contact",
+  "title": "New Contact",
   "typeString": "ACCOUNT_PEER_JOINED",
 }
 `;
@@ -58,7 +58,7 @@ Object {
 
 exports[`notifications toPayload should create PeerJoinedNotification 1`] = `
 Object {
-  "feed": "mock test joined thread Great Thread",
+  "feed": "mock test joined group Great Thread",
   "message": "mock test joined",
   "title": "Great Thread",
   "typeString": "PEER_JOINED",
@@ -67,7 +67,7 @@ Object {
 
 exports[`notifications toPayload should create PeerLeftNotification 1`] = `
 Object {
-  "feed": "mock test left thread Great Thread",
+  "feed": "mock test left group Great Thread",
   "message": "mock test left",
   "title": "Great Thread",
   "typeString": "PEER_LEFT",

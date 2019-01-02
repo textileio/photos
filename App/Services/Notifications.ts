@@ -90,7 +90,7 @@ export function isPhoto(notification: Notification): boolean {
 
 export function toPayload(notification: Notification): INotificationsPayload {
   const typeString = notification.type as string
-  const actor = notification.username || 'A peer' // TODO: We want username here, need to look it up?
+  const actor = notification.username || 'A contact' // TODO: We want username here, need to look it up?
 
   switch (notification.type) {
     case(NotificationType.InviteReceivedNotification): {
@@ -100,21 +100,21 @@ export function toPayload(notification: Notification): INotificationsPayload {
       return { title, message, feed, typeString }
     }
     case(NotificationType.AccountPeerJoinedNotification): {
-      const title = 'New Account Peer'
-      const message = 'You paired with a new account peer'
+      const title = 'New Contact'
+      const message = 'You connected to a new account contact'
       const feed = message
       return { title, message, feed, typeString }
     }
     case(NotificationType.PeerJoinedNotification): {
       const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'thread', notification.threadName].join(' ')
+      const feed = [actor, notification.body, 'group', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.PeerLeftNotification): {
       const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'thread', notification.threadName].join(' ')
+      const feed = [actor, notification.body, 'group', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.MessageAddedNotification): {

@@ -179,7 +179,7 @@ class ThreadDetail extends React.PureComponent {
         <ActionSheet
           ref={o => { this.actionSheet = o }}
           title={this.props.threadName + ' options'}
-          options={['Invite Others', 'Leave Thread', 'Cancel']}
+          options={['Invite Others', 'Leave Group', 'Cancel']}
           cancelButtonIndex={2}
           onPress={this.handleActionSheetResponse.bind(this)}
         />

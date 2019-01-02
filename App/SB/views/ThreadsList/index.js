@@ -25,9 +25,9 @@ const ThreadsList = () => {
           <Image style={styles.emptyStateImage} source={require('./statics/thread-empty-state.png')} />
           <Text style={styles.emptyStateText}>
             Start sharing your memories with
-            friends and family with threads.
+            friends and family with Groups.
           </Text>
-          <Button primary title='Create new thread' />
+          <Button primary title='Create New Group' />
         </View>
       )}
       { !empty && (

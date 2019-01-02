@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { View, Text, Image } from 'react-native'
 import Config from 'react-native-config'
 import PhotoGrid from '../Components/PhotoGrid'
-import PeerGrid from '../Components/PeerGrid'
+import ContactGrid from '../Components/ContactGrid'
 import WalletHeader from '../Components/WalletHeader'
 import ThreadSelector from '../Components/ThreadSelector'
 import CreateThreadModal from '../Components/CreateThreadModal'
@@ -22,7 +22,7 @@ import onboardingStyles from './Styles/OnboardingStyle'
 class Wallet extends React.PureComponent {
 
   state = {
-    showCreateThreadModal: false
+    showCreateGroupModal: false
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -104,19 +104,19 @@ class Wallet extends React.PureComponent {
 
   openThreadModal () {
     return () => {
-      this.setState({showCreateThreadModal: true})
+      this.setState({showCreateGroupModal: true})
     }
   }
 
   cancelCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
   completeCreateThread () {
     return () => {
-      this.setState({showCreateThreadModal: false})
+      this.setState({showCreateGroupModal: false})
     }
   }
 
@@ -172,7 +172,7 @@ class Wallet extends React.PureComponent {
           verboseUi={this.props.verboseUi}
         />
         <View style={style.gridContainer}>
-          {this.props.selectedTab === 'Threads' && <ThreadSelector
+          {this.props.selectedTab === 'Groups' && <ThreadSelector
             createNewThread={this.openThreadModal()}
           />}
           {this.props.selectedTab === 'Photos' && <PhotoGrid
@@ -184,12 +184,12 @@ class Wallet extends React.PureComponent {
             displayImages={this.props.displayImages}
             verboseUi={this.props.verboseUi}
           />}
-          {this.props.selectedTab === 'Peers' && <PeerGrid
-            peers={this.props.peers}
+          {this.props.selectedTab === 'Contacts' && <ContactGrid
+            contacts={this.props.contacts}
           />}
         </View>
         <CreateThreadModal
-          isVisible={this.state.showCreateThreadModal}
+          isVisible={this.state.showCreateGroupModal}
           fullScreen={false}
           selectToShare={false}
           navigateTo={true}
@@ -257,19 +257,19 @@ const mapStateToProps = (state) => {
     ? 'Wallet Status:\n' + nodeStatus
     : 'Any new photos you take will be added to your Textile wallet.'
 
-  let peers = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo.username }), {})
+  let contacts = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo.username }), {})
 
   // NOTE: if future cases of more non-shared threads existing, we'll want to move this to a redux
-  const nonSharedThreads = 3
+  const nonSharedGroups = 3
 
   let overview = {
     available: false,
     photoCount: '·',
     photoTitle: 'photos',
-    threadCount: '·',
-    threadTitle: 'threads',
-    peerCount: '·',
-    peerTitle: 'peers'
+    groupCount: '·',
+    groupTitle: 'groups',
+    contactCount: '·',
+    contactTitle: 'contacts'
   }
 
   // tmp fix in case old state had wrong format thread_count, contact_count
@@ -278,17 +278,17 @@ const mapStateToProps = (state) => {
       available: !!state.storage.overview,
       photoCount: state.storage.overview ? photos.length.toString() : '·',
       photoTitle: !state.storage.overview || photos.length !== 1 ? 'photos' : 'photo',
-      threadCount: state.storage.overview ? (state.storage.overview.thread_cnt - nonSharedThreads).toString() : '·',
-      threadTitle: !state.storage.overview || state.storage.overview.thread_cnt - nonSharedThreads !== 1 ? 'threads' : 'thread',
-      peerCount: state.storage.overview ? state.storage.overview.contact_cnt.toString() : '·',
-      peerTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'peers' : 'peer'
+      groupCount: state.storage.overview ? (state.storage.overview.thread_cnt - nonSharedGroups).toString() : '·',
+      groupTitle: !state.storage.overview || state.storage.overview.thread_cnt - nonSharedGroups !== 1 ? 'groups' : 'group',
+      contactCount: state.storage.overview ? state.storage.overview.contact_cnt.toString() : '·',
+      contactTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'contacts' : 'contact'
     }
   }
 
   const profile = state.account.profile.value
 
   return {
-    peers,
+    contacts,
     threadId,
     photos,
     items,
