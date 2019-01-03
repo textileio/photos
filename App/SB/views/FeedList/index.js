@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, FlatList, Image } from 'react-native'
+import { View, Text, FlatList, Image, Dimensions } from 'react-native'
 
 import FeedItem from '../../components/FeedItem'
 
@@ -72,12 +72,15 @@ class Notifications extends React.PureComponent {
   }
 
   _renderOnboarding () {
+    // needed a dynamic width for the blurb to fit without scroll
+    const containerWidth = (Dimensions.get('window').width) * 0.92
+    const fontSize = Math.min(containerWidth / (32 * 0.5476) - 5, 16)
     return (
       <View style={onboardingStyles.emptyStateContainer}>
         <Image
           style={onboardingStyles.emptyStateImage3}
           source={require('../../../Images/v2/notifications.png')} />
-        <Text style={onboardingStyles.emptyStateText}>
+        <Text style={{...onboardingStyles.emptyStateText, fontSize}}>
           This is your notification feed where
           you'll be able to quickly view all
           activity in your groups, such as likes,
