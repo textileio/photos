@@ -47,6 +47,7 @@ You'll need these to modify your `.env` to run the mobile app in development mod
 You should store a file called, `.env` in the root of your Textile Mobile folder. It should look like,
 
 ```
+RN_TEXTILE_CAFE_OVERRIDE="{optional-cafe-peer-id}"
 RN_TEXTILE_CAFE_GATEWAY_URL="http://{gateway-address}"
 RN_TEXTILE_CAFE_API_PIN_PATH="/cafe/v0/pin"
 RN_TEXTILE_CAMERA_ROLL_THREAD_KEY="photos-camera_roll"
@@ -54,4 +55,4 @@ RN_TEMPORARY_REFERRAL="SOMETHING"
 RN_URL_SCHEME="textile-dev"
 ```
 
-You can find the values for `cafe-peerid` in the Quick Start step above and the `gateway-address` (including port) should be found in the Cafe setup step above.
+You can find the values for `optional-cafe-peer-id` in the Quick Start step above and the `gateway-address` (including port) should be found in the Cafe setup step above.
