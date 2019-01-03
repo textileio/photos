@@ -138,7 +138,6 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
   }
 }
 
-// TODO: create RootState type that will be passed into these
 export const TextileNodeSelectors = {
   appState: (state: RootState) => state.textileNode.appState,
   nodeState: (state: RootState) => state.textileNode.nodeState.state,

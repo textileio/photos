@@ -17,10 +17,11 @@ import {
  } from '../NativeModules/Textile'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { CafeSession } from '../NativeModules/Textile'
+import { REPO_PATH } from './NodeLifecycle'
 
-const PREVIOUS_ID_PATH = `${FS.DocumentDirectoryPath}/migration005_peerid.ndjson`
-const PHOTOS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_default_photos.ndjson`
-const THREADS_FILE_PATH = `${FS.DocumentDirectoryPath}/migration005_threads.ndjson`
+const PREVIOUS_ID_PATH = `${REPO_PATH}/migration005_peerid.ndjson`
+const PHOTOS_FILE_PATH = `${REPO_PATH}/migration005_default_photos.ndjson`
+const THREADS_FILE_PATH = `${REPO_PATH}/migration005_threads.ndjson`
 const IMAGE_URL = (id: string, key: string) => `https://cafe.textile.io/ipfs/${id}/photo?key=${key}`
 const MIGRATION_IMAGES_PATH = `${FS.DocumentDirectoryPath}/migration_images`
 const IMAGE_PATH = (id: string) => `${MIGRATION_IMAGES_PATH}/${id}.jpg`
