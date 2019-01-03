@@ -281,7 +281,7 @@ const mapStateToProps = (state) => {
       groupCount: state.storage.overview ? (state.storage.overview.thread_cnt - nonSharedGroups).toString() : '·',
       groupTitle: !state.storage.overview || state.storage.overview.thread_cnt - nonSharedGroups !== 1 ? 'groups' : 'group',
       contactCount: state.storage.overview ? state.storage.overview.contact_cnt.toString() : '·',
-      contactTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'contacts' : 'contacts'
+      contactTitle: !state.storage.overview || state.storage.overview.contact_cnt !== 1 ? 'contacts' : 'contact'
     }
   }
 
