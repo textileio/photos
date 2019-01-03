@@ -88,7 +88,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     if (ownId && authors.length < 8) {
       authors.unshift(ownId)
     }
-    const thumb = thread.photos.length ? thread.photos[thread.photos.length - 1] : undefined
+    const thumb = thread.photos.length ? thread.photos[0] : undefined
     return {
       id: thread.id,
       name: thread.name,
