@@ -116,14 +116,13 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
   })
 }
 
-export function getThreadThumbs (state: RootState, byPeerId: string): ReadonlyArray<ThreadThumbs> {
-  return Object.keys(state.photoViewing.threads)
-    .map((key) => state.photoViewing.threads[key]!)
+export function getThreadThumbs (state: RootState, byPeerId: string, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadThumbs> {
+  return getThreads(state, sortBy)
     .filter((thread) => thread.photos.some((p) => p.author_id === byPeerId))
     .map((thread) => {
       return {
         id: thread.id,
-        thumb: thread.photos.length > 0 ? thread.photos[0] : undefined,
+        thumb: thread.photos.length > 0 ? thread.photos[thread.photos.length - 1] : undefined,
         name: thread.name
       }
     })

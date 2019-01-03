@@ -159,7 +159,7 @@ class ThreadDetail extends React.PureComponent {
           style={onboardingStyles.emptyStateImage2}
           source={require('../../../Images/v2/invite_friends.png')} />
         <Text style={onboardingStyles.emptyStateText}>
-          Time to share some photos. Anyone you invite to the Thread will be able to send photos, view other members photos, and invite new friends.
+          Time to share some photos. Anyone you invite to this Group will be able to send photos, view other members photos, and invite new friends.
         </Text>
         <Text style={onboardingStyles.emptyStateText}>
           Click the <Icon style={{ margin: 10 }} name='plus' size={16} color='black' /> button to add your first photo.
