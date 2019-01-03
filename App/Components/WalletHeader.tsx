@@ -1,7 +1,11 @@
 import React from 'react'
-import { View, TouchableOpacity, Text } from 'react-native'
+import { View, TouchableOpacity, Text, Dimensions } from 'react-native'
 import Avatar from './Avatar'
 import style from './Styles/WalletHeader'
+
+// needed a dynamic width for the word, "contacts" to fit in single row column
+const containerWidth = (Dimensions.get('window').width - 100) / 3
+const labelSize = Math.min(containerWidth / (8 * 0.5476) - 5, 14)
 
 export interface IWalletHeaderProps {
   overview: {
@@ -32,7 +36,7 @@ const WalletHeader = (props: IWalletHeaderProps) => {
     return (
       <TouchableOpacity style={style.walletButton} onPress={toggle(title)} activeOpacity={0.9}>
         <Text style={[style.walletButtonNumber, selectedTab === title && style.walletSelected]}>{count}</Text>
-        <Text style={[style.walletButtonText, selectedTab === title && style.walletSelected]}>{countTitle}</Text>
+        <Text style={[style.walletButtonText, selectedTab === title && style.walletSelected, {fontSize: labelSize}]}>{countTitle}</Text>
       </TouchableOpacity>
     )
   }
