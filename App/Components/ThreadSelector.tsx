@@ -7,6 +7,7 @@ import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 import {RootAction, RootState} from '../Redux/Types'
 
 import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { ContactsSelectors } from '../Redux/ContactsRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 
@@ -83,8 +84,8 @@ const mapStateToProps = (state: RootState): StateProps => {
   const ownId = state.account.peerId.value
   const threads = getThreads(state, 'date')
   .map((thread) => {
-    const authors: string[] = [...new Set(thread.photos.map((photo) => photo.author_id))].filter((id) => id !== ownId)
-    if (ownId && authors.length === 0) {
+    const authors = ContactsSelectors.byThreadId(state, thread.id).map((contact) => contact.id).filter((id) => id !== ownId)
+    if (ownId && authors.length < 8) {
       authors.unshift(ownId)
     }
     const thumb = thread.photos.length ? thread.photos[thread.photos.length - 1] : undefined
