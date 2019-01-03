@@ -125,8 +125,9 @@ export function toPayload(notification: Notification): INotificationsPayload {
     }
     case(NotificationType.FilesAddedNotification): {
       const title = notification.threadName
-      const message =  [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
+      const body = 'added a photo'
+      const message =  [actor, body].join(' ')
+      const feed = [actor, body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.CommentAddedNotification): {
