@@ -13,7 +13,7 @@ Object {
 
 exports[`notifications toPayload should create CommentAddedNotification 1`] = `
 Object {
-  "feed": "mock test commented on a photo in Great Thread",
+  "feed": "mock test commented on your photo in Great Thread",
   "message": "mock test commented on a photo: a camel!",
   "title": "Great Thread",
   "typeString": "COMMENT_ADDED",
@@ -40,8 +40,8 @@ Object {
 
 exports[`notifications toPayload should create LikeAddedNotification 1`] = `
 Object {
-  "feed": "mock test liked a photo in Great Thread",
-  "message": "mock test liked a photo",
+  "feed": "mock test liked your photo in Great Thread",
+  "message": "mock test liked your photo",
   "title": "Great Thread",
   "typeString": "LIKE_ADDED",
 }
