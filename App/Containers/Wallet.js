@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, Dimensions } from 'react-native'
 import Config from 'react-native-config'
 import PhotoGrid from '../Components/PhotoGrid'
 import ContactGrid from '../Components/ContactGrid'
@@ -133,13 +133,16 @@ class Wallet extends React.PureComponent {
   }
 
   renderTour () {
+    // needed a dynamic width for the blurb to fit without scroll
+    const containerWidth = (Dimensions.get('window').width) * 0.92
+    const fontSize = Math.min(containerWidth / (32 * 0.5476) - 5, 16)
     return (
       <View style={style.container}>
         <View style={onboardingStyles.emptyStateContainer}>
           <Image
             style={onboardingStyles.emptyStateImage}
             source={require('../Images/v2/permissions.png')} />
-          <Text style={onboardingStyles.emptyStateText}>
+          <Text style={{...onboardingStyles.emptyStateText, fontSize}}>
             This is the Textile wallet, a private
             space where you can manage the data
             you create while using the app.

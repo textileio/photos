@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Item } from 'react-navigation-header-buttons'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
-import { View, Text, Image, Alert } from 'react-native'
+import { View, Text, Image, Alert, Dimensions } from 'react-native'
 import PhotoStream from '../Components/PhotoStream'
 import InviteContactModal from '../Components/InviteContactModal'
 
@@ -101,20 +101,23 @@ class ThreadsList extends React.PureComponent {
   }
 
   _renderOnboarding () {
+    // needed a dynamic width for the blurb to fit without scroll
+    const containerWidth = (Dimensions.get('window').width) * 0.92
+    const fontSize = Math.min(containerWidth / (32 * 0.5476) - 5, 16)
     return (
       <View style={onboardingStyles.emptyStateContainer}>
         <Image
           style={onboardingStyles.emptyStateImage}
           source={require('../Images/v2/thread-empty-state.png')} />
-        <Text style={onboardingStyles.emptyStateText}>
+        <Text style={{...onboardingStyles.emptyStateText, fontSize}}>
           This is your private update stream,
           where you can come to see the latest
           photos shared to you in any of your
           private Groups or post a new photo.
         </Text>
-        <Text style={onboardingStyles.emptyStateText}>
-          Click the <Icon name='plus' size={18} color='black' /> button above to start sharing photos
-          or the <Icon name='invite' size={18} color='black' /> button to invite friends.
+        <Text style={{...onboardingStyles.emptyStateText, fontSize}}>
+          Click the <Icon name='plus' size={fontSize + 4} color='black' /> button above to start sharing photos
+          or the <Icon name='invite' size={fontSize + 4} color='black' /> button to invite friends.
         </Text>
       </View>
     )
