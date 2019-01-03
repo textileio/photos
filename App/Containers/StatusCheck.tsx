@@ -40,8 +40,8 @@ class StatusCheck extends React.Component<Props, {}> {
       )
     } else {
       return (
-        <View style={{ flex: 1 }}>
-          <ActivityIndicator />
+        <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size='large' />
         </View>
       )
     }

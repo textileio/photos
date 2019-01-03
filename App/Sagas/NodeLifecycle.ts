@@ -2,12 +2,14 @@ import { delay, Task } from 'redux-saga'
 import { Dispatch } from 'redux'
 import { all, take, call, put, fork, cancelled, race, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import RNFS from 'react-native-fs'
+import RNFS, { read } from 'react-native-fs'
 import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
 import Config from 'react-native-config'
 
+import { waitFor } from './WaitFor'
+import { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
@@ -26,12 +28,15 @@ import {
   threads,
   ThreadInfo,
   WalletAccount,
-  version
+  version,
+  registerCafe,
+  cafeSessions,
+  CafeSession
  } from '../NativeModules/Textile'
 import { logNewEvent } from './DeviceLogs'
 import { announcePeer } from './Migration'
 
-const REPO_PATH = RNFS.DocumentDirectoryPath
+export const REPO_PATH = `${RNFS.DocumentDirectoryPath}/textile-go`
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
 const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 const LOG_LEVELS = JSON.stringify({
@@ -95,10 +100,19 @@ export function * handleCreateNodeRequest (dispatch: Dispatch) {
 function * createAndStartNode(dispatch: Dispatch): any {
   try {
     yield put(TextileNodeActions.creatingNode())
+    const repoPathExists: boolean = yield call(RNFS.exists, REPO_PATH)
+    if (!repoPathExists) {
+      yield call(RNFS.mkdir, REPO_PATH)
+      yield call(moveTextileFiles)
+    }
     yield call(newTextile, REPO_PATH, LOG_LEVELS)
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
+    const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
+    if (sessions.length < 1) {
+      yield call(discoverAndRegisterCafes)
+    }
     const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
     const cameraRollThreadName = 'Camera Roll'
     const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
@@ -134,6 +148,56 @@ function * createAndStartNode(dispatch: Dispatch): any {
       yield put(TextileNodeActions.nodeError(error))
     }
   }
+}
+
+async function moveTextileFiles() {
+  const files = await RNFS.readDir(RNFS.DocumentDirectoryPath)
+  for (const file of files) {
+    if (file.path !== REPO_PATH && file.name !== 'RCTAsyncLocalStorage_V1') {
+      await RNFS.moveFile(file.path, `${REPO_PATH}/${file.name}`)
+    }
+  }
+}
+
+function * discoverAndRegisterCafes() {
+  const { cafes, timeout } = yield race({
+    cafes: call(discoverCafes),
+    timeout: call(delay, 5000)
+  })
+  if (timeout) {
+    throw new Error('cafe discovery timed out, internet connection needed')
+  }
+  const discoveredCafes = cafes as DiscoveredCafes
+  const { online, onlineTimout } = yield race({
+    online: waitFor(select(TextileNodeSelectors.online)),
+    onlineTimout: call(delay, 10000)
+  })
+  if (onlineTimout) {
+    throw new Error('node online timed out, internet connection needed')
+  }
+  yield call(registerCafe, discoveredCafes.primary.peer)
+  yield call(registerCafe, discoveredCafes.secondary.peer)
+}
+
+interface DiscoveredCafe {
+  readonly peer: string
+  readonly address: string
+  readonly api: string
+  readonly protocol: string
+  readonly node: string
+}
+interface DiscoveredCafes {
+  readonly primary: DiscoveredCafe
+  readonly secondary: DiscoveredCafe
+}
+
+async function discoverCafes() {
+  const response = await fetch(`${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/cafes`, { method: 'GET' })
+  if (response.status < 200 || response.status > 299) {
+    throw new Error(`Status code error: ${response.statusText}`)
+  }
+  const discoveredCafes = await response.json() as DiscoveredCafes
+  return discoveredCafes
 }
 
 function * backgroundTaskRace () {
