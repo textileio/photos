@@ -2,16 +2,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image, Dimensions } from 'react-native'
 
-import FeedItem from '../../components/FeedItem'
+import FeedItem from '../../SB/components/FeedItem'
 
-import NotificationsActions from '../../../Redux/NotificationsRedux'
-import MigrationActions from '../../../Redux/MigrationRedux'
+import NotificationsActions from '../../Redux/NotificationsRedux'
+import MigrationActions from '../../Redux/MigrationRedux'
 
 import styles from './statics/styles'
-import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
-import PreferencesActions from '../../../Redux/PreferencesRedux'
-import TextileNodeActions from '../../../Redux/TextileNodeRedux'
-import CustomFeedItem from '../../components/FeedItem/Custom'
+import onboardingStyles from '../Styles/OnboardingStyle'
+import PreferencesActions from '../../Redux/PreferencesRedux'
+import TextileNodeActions from '../../Redux/TextileNodeRedux'
+import CustomFeedItem from '../../SB/components/FeedItem/Custom'
 
 class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -79,7 +79,7 @@ class Notifications extends React.PureComponent {
       <View style={onboardingStyles.emptyStateContainer}>
         <Image
           style={onboardingStyles.emptyStateImage3}
-          source={require('../../../Images/v2/notifications.png')} />
+          source={require('../../Images/v2/notifications.png')} />
         <Text style={{...onboardingStyles.emptyStateText, fontSize}}>
           This is your notification feed where
           you'll be able to quickly view all

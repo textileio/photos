@@ -16,7 +16,7 @@ const FeedItem = props => {
     return (<View />)
   }
 
-  const isPhotoType = NotificationServices.isPhoto(notification)
+  const photoId = NotificationServices.getPhotoId(notification)
 
   const readStyle = notification.read ? {
     width: 29,
@@ -56,7 +56,7 @@ const FeedItem = props => {
       </View>
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
         {/* TODO: Update textile image props to target and index */}
-        {isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.photoId} forMinWidth={40} resizeMode={'cover'} />}
+        {photoId && <TextileImage style={{width: 40, height: 40}} target={photoId} forMinWidth={40} resizeMode={'cover'} />}
       </View>
     </TouchableOpacity>
   )
