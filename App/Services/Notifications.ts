@@ -84,8 +84,16 @@ export function toTypedNotification(notificationData: NotificationData): Notific
   }
 }
 
-export function isPhoto(notification: Notification): boolean {
-  return 'photoId' in notification
+// Returns blockId if photo type
+export function getPhotoId(notification: Notification): string | undefined {
+  switch (notification.type) {
+    case NotificationType.CommentAddedNotification:
+    case NotificationType.FilesAddedNotification:
+    case NotificationType.LikeAddedNotification:
+      return notification.target
+    default:
+      return
+  }
 }
 
 export function toPayload(notification: Notification): INotificationsPayload {
@@ -133,14 +141,15 @@ export function toPayload(notification: Notification): INotificationsPayload {
     case(NotificationType.CommentAddedNotification): {
       const title =  notification.threadName
       const message = [actor, notification.body].join(' ')
-      const body = notification.body.split(': ')
-      const feed = [actor, body[0], 'in', notification.threadName].join(' ')
+      const body = 'commented on your photo'
+      const feed = [actor, body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.LikeAddedNotification): {
       const title = notification.threadName
-      const message = [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'in', notification.threadName].join(' ')
+      const body = 'liked your photo'
+      const message = [actor, body].join(' ')
+      const feed = [actor, body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
   }
