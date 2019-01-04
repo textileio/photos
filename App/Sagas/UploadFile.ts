@@ -19,7 +19,8 @@ export function * uploadFile (id: string, payloadPath: string) {
       method: 'POST',
       type: 'raw',
       headers: {
-        Authorization: `Bearer ${session.access}`
+        'Authorization': `Bearer ${session.access}`,
+        'Content-Type': 'application/octet-stream'
       }
     }
   )

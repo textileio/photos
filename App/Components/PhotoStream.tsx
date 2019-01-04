@@ -51,7 +51,7 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
     this.props.refreshMessages()
   }
 
-  _keyExtractor = (item: any, index: number) => item.id + '_' + index
+  _keyExtractor = (item: any, index: number) => item.block + '_' + index
 
   _renderItem = (rowData: any) => {
     const item = rowData.item
@@ -68,9 +68,9 @@ class PhotoStream extends React.Component<ScreenProps & DispatchProps & Navigati
           <ProcessingImageCard
             {...item.props}
             /* tslint:disable-next-line */
-            retry={() => {this.props.retryShare(item.id)}}
+            retry={() => {this.props.retryShare(item.block)}}
             /* tslint:disable-next-line */
-            cancel={() => {this.props.cancelShare(item.id)}}
+            cancel={() => {this.props.cancelShare(item.block)}}
           />
         )
       }
