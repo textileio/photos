@@ -111,7 +111,12 @@ function * createAndStartNode(dispatch: Dispatch): any {
     yield call(start)
     const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
     if (sessions.length < 1) {
-      yield call(discoverAndRegisterCafes)
+      const cafeOverride: string = Config.RN_TEXTILE_CAFE_OVERRIDE
+      if (cafeOverride) {
+        yield call(registerOverrideCafe, cafeOverride)
+      } else {
+        yield call(discoverAndRegisterCafes)
+      }
     }
     const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
     const cameraRollThreadName = 'Camera Roll'
@@ -159,22 +164,31 @@ async function moveTextileFiles() {
   }
 }
 
-function * discoverAndRegisterCafes() {
-  const { cafes, timeout } = yield race({
-    cafes: call(discoverCafes),
-    timeout: call(delay, 5000)
-  })
-  if (timeout) {
-    throw new Error('cafe discovery timed out, internet connection needed')
-  }
-  const discoveredCafes = cafes as DiscoveredCafes
-  const { online, onlineTimout } = yield race({
+function * waitForOnline() {
+  const { onlineTimout } = yield race({
     online: waitFor(select(TextileNodeSelectors.online)),
     onlineTimout: call(delay, 10000)
   })
   if (onlineTimout) {
     throw new Error('node online timed out, internet connection needed')
   }
+}
+
+function * registerOverrideCafe(url: string) {
+  yield call(waitForOnline)
+  yield call(registerCafe, url)
+}
+
+function * discoverAndRegisterCafes() {
+  const { cafes, timeout } = yield race({
+    cafes: call(discoverCafes),
+    timeout: call(delay, 10000)
+  })
+  if (timeout) {
+    throw new Error('cafe discovery timed out, internet connection needed')
+  }
+  const discoveredCafes = cafes as DiscoveredCafes
+  yield call(waitForOnline)
   yield call(registerCafe, discoveredCafes.primary.url)
   yield call(registerCafe, discoveredCafes.secondary.url)
 }
