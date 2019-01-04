@@ -55,4 +55,4 @@ RN_TEMPORARY_REFERRAL="SOMETHING"
 RN_URL_SCHEME="textile-dev"
 ```
 
-You can find the values for `optional-cafe-peer-id` in the Quick Start step above and the `gateway-address` (including port) should be found in the Cafe setup step above.
+You can find the values for `optional-cafe-url` in the Quick Start step above and the `gateway-address` (including port) should be found in the Cafe setup step above.
