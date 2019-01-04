@@ -175,8 +175,8 @@ function * discoverAndRegisterCafes() {
   if (onlineTimout) {
     throw new Error('node online timed out, internet connection needed')
   }
-  yield call(registerCafe, discoveredCafes.primary.peer)
-  yield call(registerCafe, discoveredCafes.secondary.peer)
+  yield call(registerCafe, discoveredCafes.primary.url)
+  yield call(registerCafe, discoveredCafes.secondary.url)
 }
 
 interface DiscoveredCafe {
@@ -185,6 +185,7 @@ interface DiscoveredCafe {
   readonly api: string
   readonly protocol: string
   readonly node: string
+  readonly url: string
 }
 interface DiscoveredCafes {
   readonly primary: DiscoveredCafe
