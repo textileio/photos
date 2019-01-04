@@ -1,17 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, FlatList, Image } from 'react-native'
+import { View, Text, FlatList, Image, Dimensions } from 'react-native'
 
-import FeedItem from '../../components/FeedItem'
+import FeedItem from '../../SB/components/FeedItem'
 
-import NotificationsActions from '../../../Redux/NotificationsRedux'
-import MigrationActions from '../../../Redux/MigrationRedux'
+import NotificationsActions from '../../Redux/NotificationsRedux'
+import MigrationActions from '../../Redux/MigrationRedux'
 
 import styles from './statics/styles'
-import onboardingStyles from '../../../Containers/Styles/OnboardingStyle'
-import PreferencesActions from '../../../Redux/PreferencesRedux'
-import TextileNodeActions from '../../../Redux/TextileNodeRedux'
-import CustomFeedItem from '../../components/FeedItem/Custom'
+import onboardingStyles from '../Styles/OnboardingStyle'
+import PreferencesActions from '../../Redux/PreferencesRedux'
+import TextileNodeActions from '../../Redux/TextileNodeRedux'
+import CustomFeedItem from '../../SB/components/FeedItem/Custom'
 
 class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -72,15 +72,18 @@ class Notifications extends React.PureComponent {
   }
 
   _renderOnboarding () {
+    // needed a dynamic width for the blurb to fit without scroll
+    const containerWidth = (Dimensions.get('window').width) * 0.92
+    const fontSize = Math.min(containerWidth / (32 * 0.5476) - 5, 16)
     return (
       <View style={onboardingStyles.emptyStateContainer}>
         <Image
           style={onboardingStyles.emptyStateImage3}
-          source={require('../../../Images/v2/notifications.png')} />
-        <Text style={onboardingStyles.emptyStateText}>
+          source={require('../../Images/v2/notifications.png')} />
+        <Text style={{...onboardingStyles.emptyStateText, fontSize}}>
           This is your notification feed where
           you'll be able to quickly view all
-          activity in your threads, such as likes,
+          activity in your groups, such as likes,
           comments, and new photo shares. There's
           nothing here yet, so go invite some friends!
           </Text>

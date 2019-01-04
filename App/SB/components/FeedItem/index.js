@@ -1,7 +1,6 @@
 import React from 'react'
 import moment from 'moment'
 import { View, Text, TouchableOpacity } from 'react-native'
-import ImageSc from 'react-native-scalable-image'
 import * as NotificationServices from '../../../Services/Notifications'
 import Avatar from '../../../Components/Avatar'
 import TextileImage from '../../../Components/TextileImage'
@@ -17,7 +16,7 @@ const FeedItem = props => {
     return (<View />)
   }
 
-  const isPhotoType = NotificationServices.isPhoto(notification)
+  const photoId = NotificationServices.getPhotoId(notification)
 
   const readStyle = notification.read ? {
     width: 29,
@@ -28,7 +27,7 @@ const FeedItem = props => {
     height: 29,
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: '#dbc5d2'
+    borderColor: 'rgba(255, 28, 63, 0.2)'
   }
 
   const leftSource = (
@@ -57,7 +56,7 @@ const FeedItem = props => {
       </View>
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
         {/* TODO: Update textile image props to target and index */}
-        {isPhotoType && <TextileImage style={{width: 40, height: 40}} imageId={notification.photoId} forMinWidth={40} resizeMode={'cover'} />}
+        {photoId && <TextileImage style={{width: 40, height: 40}} target={photoId} forMinWidth={40} resizeMode={'cover'} />}
       </View>
     </TouchableOpacity>
   )

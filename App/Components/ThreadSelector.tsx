@@ -7,10 +7,11 @@ import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 import {RootAction, RootState} from '../Redux/Types'
 
 import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { ContactsSelectors } from '../Redux/ContactsRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 
-import ThreadCard from '../SB/components/ThreadListCard'
+import GroupCard from './GroupCard'
 import styles from './Styles/ThreadSelectorStyles'
 import { ThreadFilesInfo } from '../NativeModules/Textile'
 
@@ -26,9 +27,9 @@ class ThreadSelector extends React.Component<ScreenProps & StateProps & Dispatch
   }
 
   _renderItem = (rowData: any) => {
-    const item: ThreadPreview = rowData.item
+    const item: GroupAuthors = rowData.item
     return (
-      <ThreadCard id={item.id} {...item} onPress={this._onPressItem} />
+      <GroupCard id={item.id} {...item} onPress={this._onPressItem} />
     )
   }
 
@@ -48,7 +49,7 @@ class ThreadSelector extends React.Component<ScreenProps & StateProps & Dispatch
     this.props.refreshMessages()
   }
 
-  _keyExtractor = (item: ThreadPreview) => item.id
+  _keyExtractor = (item: GroupAuthors) => item.id
 
   render () {
     return (
@@ -67,38 +68,36 @@ class ThreadSelector extends React.Component<ScreenProps & StateProps & Dispatch
   }
 }
 
-interface ThreadPreview {
+interface GroupAuthors {
   readonly id: string
   readonly name: string
   readonly size: number
-  readonly photos: ReadonlyArray<ThreadFilesInfo>
-  readonly userCount: number
-  readonly updated: number
-  readonly latestPeerId?: string
+  readonly authors: string[]
+  readonly thumb?: ThreadFilesInfo
 }
 
 interface StateProps {
-  threads: ReadonlyArray<ThreadPreview>
+  threads: ReadonlyArray<GroupAuthors>
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  const ownId = state.account.peerId.value
   const threads = getThreads(state, 'date')
-    .map((thread) => {
-      return {
-        id: thread.id,
-        name: thread.name,
-        // total number of images in the thread
-        size: thread.photos.length,
-        // just keep the top 2
-        photos: thread.photos.slice(0, 3),
-        // get a rough count of distinct users
-        userCount: thread.photos.length > 0 ? [...new Set(thread.photos.map((photo) => photo.author_id))].length : 1,
-        // latest update based on the latest item
-        updated: thread.photos.length > 0 && thread.photos[0].date ? Date.parse(thread.photos[0].date) : 0,
-        // latest peer to push to the thread
-        latestPeerId: thread.photos.length > 0 && thread.photos[0].author_id ? thread.photos[0].author_id : undefined
-      }
-    })
+  .map((thread) => {
+    const authors = ContactsSelectors.byThreadId(state, thread.id).map((contact) => contact.id).filter((id) => id !== ownId)
+    if (ownId && authors.length < 8) {
+      authors.unshift(ownId)
+    }
+    const thumb = thread.photos.length ? thread.photos[0] : undefined
+    return {
+      id: thread.id,
+      name: thread.name,
+      // total number of images in the thread
+      size: thread.photos.length,
+      authors,
+      thumb
+    }
+  })
   return {
     threads
   }
