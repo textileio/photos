@@ -85,21 +85,31 @@ export interface ExternalInvite {
   readonly inviter: string
 }
 
+export interface Cafe {
+  readonly peer: string
+  readonly address: string
+  readonly api: string
+  readonly protocol: string
+  readonly node: string
+  readonly url: string
+  readonly swarm: ReadonlyArray<string>
+}
+
 export interface CafeSession {
-  readonly cafe_id: string
+  readonly id: string
   readonly access: string
   readonly refresh: string
   readonly expiry: string
-  readonly http_addr: string
-  readonly swarm_addrs: ReadonlyArray<string>
+  readonly cafe: Cafe
 }
 
 export interface ContactInfo {
   readonly id: string
   readonly address: string
   readonly username: string
-  readonly thread_ids: ReadonlyArray<string>
+  readonly inboxes: ReadonlyArray<Cafe>
   readonly added: string
+  readonly thread_ids: ReadonlyArray<string>
 }
 
 export enum NotificationType {
