@@ -175,7 +175,6 @@ function * waitForOnline() {
 }
 
 function * registerOverrideCafe(url: string) {
-  yield call(waitForOnline)
   yield call(registerCafe, url)
 }
 
@@ -188,7 +187,6 @@ function * discoverAndRegisterCafes() {
     throw new Error('cafe discovery timed out, internet connection needed')
   }
   const discoveredCafes = cafes as DiscoveredCafes
-  yield call(waitForOnline)
   yield call(registerCafe, discoveredCafes.primary.url)
   yield call(registerCafe, discoveredCafes.secondary.url)
 }
