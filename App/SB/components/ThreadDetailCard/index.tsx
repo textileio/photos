@@ -83,8 +83,8 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       onComment
     } = this.props
 
-    const recentCommentsCount = this.props.recentCommentsCount === -1 ? photo.comments.length : this.props.recentCommentsCount
     const { photo } = item
+    const recentCommentsCount = this.props.recentCommentsCount === -1 ? photo.comments.length : this.props.recentCommentsCount
 
     const likeRow = this.renderLikes(isLiked, didLike, photo)
 
