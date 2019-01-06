@@ -34,6 +34,8 @@ export default class TextileNodeEventHandler {
         type === BlockType.FILES ||
         type === BlockType.IGNORE) {
         this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread_id))
+      } else if (type === BlockType.JOIN) {
+
       }
       // create a local log line for the threadUpdate event
       const name = update.thread_name || update.thread_id

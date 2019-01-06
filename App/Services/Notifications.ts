@@ -141,13 +141,13 @@ export function toPayload(notification: Notification): INotificationsPayload {
     case(NotificationType.CommentAddedNotification): {
       const title =  notification.threadName
       const message = [actor, notification.body].join(' ')
-      const body = 'commented on your photo'
+      const body = 'commented on a photo' // todo: fix "a" vs "your"
       const feed = [actor, body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
     case(NotificationType.LikeAddedNotification): {
       const title = notification.threadName
-      const body = 'liked your photo'
+      const body = 'liked a photo' // todo: fix "a" vs "your"
       const message = [actor, body].join(' ')
       const feed = [actor, body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
