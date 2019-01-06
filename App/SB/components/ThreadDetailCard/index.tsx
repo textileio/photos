@@ -83,6 +83,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       onComment
     } = this.props
 
+    const recentCommentsCount = this.props.recentCommentsCount === -1 ? photo.comments.length : this.props.recentCommentsCount
     const { photo } = item
 
     const likeRow = this.renderLikes(isLiked, didLike, photo)
@@ -94,13 +95,13 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       caption = <Text>{''}</Text>
     }
 
-    const recentComments = photo.comments.slice(0, this.props.recentCommentsCount).reverse().map((comment, index) => {
+    const recentComments = photo.comments.slice(0, recentCommentsCount).reverse().map((comment, index) => {
       const username = comment.username || 'unknown'
       return <KeyValueText key={index} keyString={username as string} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
     })
 
     let commentCountDescription
-    if (photo.comments.length > this.props.recentCommentsCount) {
+    if (photo.comments.length > recentCommentsCount) {
       commentCountDescription = (
         <TouchableOpacity onPress={onComment} >
           <Text style={styles.commentCount}>See all {photo.comments.length} comments...</Text>

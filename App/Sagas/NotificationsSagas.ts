@@ -94,7 +94,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
           yield put(PhotoViewingAction.viewPhoto(notification.target))
-          yield call(NavigationService.navigate, 'Comments')
+          yield call(NavigationService.navigate, 'PhotoScreen')
         }
         break
       }
