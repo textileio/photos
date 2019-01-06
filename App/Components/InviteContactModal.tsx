@@ -24,7 +24,6 @@ import styles from './Styles/InviteContactModalStyles'
 
 interface DispatchProps {
   completeScreen: (threadName: string) => void
-  refreshContacts: () => void
   submit: (name: string, navigate: boolean, selectToShare: boolean) => void
 }
 
@@ -82,7 +81,6 @@ class InviteContactModal extends React.Component<DispatchProps & StateProps & Sc
 
   continue () {
     return () => {
-      this.props.refreshContacts()
       this.setState({threadSelected: true})
     }
   }
@@ -184,7 +182,6 @@ const mapStateToProps = (state: RootState): StateProps  => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    refreshContacts: () => { dispatch(ContactsActions.getContactsRequest()) },
     submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
   }
 }
