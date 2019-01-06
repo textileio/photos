@@ -78,7 +78,7 @@ export function * refreshCafeSessions () {
     try {
       yield take(getType(AccountActions.refreshCafeSessionsRequest))
       const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
-      const effects = sessions.map((session) => call(refreshCafeSession, session.cafe_id))
+      const effects = sessions.map((session) => call(refreshCafeSession, session.id))
       const refreshedSessions: ReadonlyArray<CafeSession> = yield all(effects)
       yield put(AccountActions.cafeSessionsSuccess(refreshedSessions))
     } catch (error) {

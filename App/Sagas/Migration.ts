@@ -309,7 +309,7 @@ function * uploadPhoto(photoId: string, path: string, dispatch: Dispatch) {
     const filename = path.split('/').pop()!
     const session: CafeSession = yield call(getSession)
     const options: FS.UploadFileOptions = {
-      toUrl: `${session.http_addr}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
+      toUrl: `${session.cafe.url}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
       files: [{
         name: filename,
         filename,
