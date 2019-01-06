@@ -36,6 +36,8 @@ export default class TextileNodeEventHandler {
         type === BlockType.IGNORE) {
         this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread_id))
       } else if (type === BlockType.JOIN) {
+        // Every time the a JOIN block is detected, we should refresh our in-mem contact list
+        // Enhancement: compare the joiner id with known ids and skip the refresh if known.
         this.store.dispatch(ContactsActions.getContactsRequest())
       }
       // create a local log line for the threadUpdate event
