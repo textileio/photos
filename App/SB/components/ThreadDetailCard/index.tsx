@@ -19,10 +19,10 @@ const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
   item: {type: string, photo: ThreadFilesInfo, threadId?: string, threadName?: string}, // TODO make proper type now
-  recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void
   onLikes: () => void
+  recentCommentsCount?: number,
   displayThread?: boolean
 }
 
@@ -84,7 +84,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     } = this.props
 
     const { photo } = item
-    const recentCommentsCount = this.props.recentCommentsCount === -1 ? photo.comments.length : this.props.recentCommentsCount
+    const recentCommentsCount = this.props.recentCommentsCount || photo.comments.length
 
     const likeRow = this.renderLikes(isLiked, didLike, photo)
 
