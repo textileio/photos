@@ -19,10 +19,10 @@ const WIDTH = Dimensions.get('window').width
 
 interface OwnProps {
   item: {type: string, photo: ThreadFilesInfo, threadId?: string, threadName?: string}, // TODO make proper type now
-  recentCommentsCount: number,
   maxLinesPerComment: number,
   onComment: () => void
   onLikes: () => void
+  recentCommentsCount?: number,
   displayThread?: boolean
 }
 
@@ -84,6 +84,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     } = this.props
 
     const { photo } = item
+    const recentCommentsCount = this.props.recentCommentsCount || photo.comments.length
 
     const likeRow = this.renderLikes(isLiked, didLike, photo)
 
@@ -94,13 +95,13 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       caption = <Text>{''}</Text>
     }
 
-    const recentComments = photo.comments.slice(0, this.props.recentCommentsCount).reverse().map((comment, index) => {
+    const recentComments = photo.comments.slice(0, recentCommentsCount).reverse().map((comment, index) => {
       const username = comment.username || 'unknown'
       return <KeyValueText key={index} keyString={username as string} value={comment.body} numberOfLines={this.props.maxLinesPerComment} />
     })
 
     let commentCountDescription
-    if (photo.comments.length > this.props.recentCommentsCount) {
+    if (photo.comments.length > recentCommentsCount) {
       commentCountDescription = (
         <TouchableOpacity onPress={onComment} >
           <Text style={styles.commentCount}>See all {photo.comments.length} comments...</Text>

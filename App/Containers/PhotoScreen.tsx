@@ -41,7 +41,6 @@ class PhotoScreen extends React.Component<StateProps & NavigationScreenProps<{}>
           item={{type: 'photo', photo: this.props.photo, threadId: this.props.threadId, threadName: this.props.threadName}}
           onComment={this.onComment}
           onLikes={this.onLikes}
-          recentCommentsCount={5}
           maxLinesPerComment={5}
         />
       }
