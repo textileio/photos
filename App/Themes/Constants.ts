@@ -25,6 +25,7 @@ export const FONT_LINE_HEIGHT_SMALL = 15
 export const FONT_LINE_HEIGHT_REGULAR = 18
 export const FONT_LINE_HEIGHT_MEDIUM = 24
 
+export const MARGIN_EXTRA_SMALL = 8
 export const MARGIN_SMALL = 16
 export const MARGIN_STANDARD = 20
 
