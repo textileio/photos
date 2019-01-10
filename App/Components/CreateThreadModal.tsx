@@ -40,10 +40,8 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
     submitted: false
   }
 
-  handleNewText = () => {
-    return (text: string) => {
-      this.setState({ value: text })
-    }
+  handleNewText = (text: string) => {
+    this.setState({ value: text })
   }
 
   create () {
@@ -80,7 +78,7 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
                   style={styles.inputStyle}
                   value={this.state.value}
                   label={this.state.value === '' ? 'Add title...' : ''}
-                  onChangeText={this.handleNewText()}
+                  onChangeText={this.handleNewText}
                 />
               </View>
               <View style={[styles.bottomRow, !this.props.fullScreen && styles.bottomRowMargin]}>
