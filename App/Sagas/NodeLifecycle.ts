@@ -56,7 +56,8 @@ export function * manageNode () {
       // Block until we get an active or background app state
       const action: ActionType<typeof TextileNodeActions.appStateChange> =
         yield take((action: RootAction) =>
-          action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
+          action.type === getType(TextileNodeActions.appStateChange) &&
+          (action.payload.newState === 'active' || action.payload.newState === 'background' || action.payload.newState === 'backgroundFromForeground')
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
@@ -71,7 +72,7 @@ export function * manageNode () {
       //
       // This background state can come from a active > background transition
       // or by launching into the background because of a trigger.
-      if (action.payload.newState === 'background') {
+      if (action.payload.newState === 'background' || action.payload.newState === 'backgroundFromForeground') {
         yield fork(backgroundTaskRace)
       }
     } catch (error) {
