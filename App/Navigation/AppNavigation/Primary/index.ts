@@ -6,6 +6,7 @@ import Account from '../../../SB/views/UserProfile'
 import NotificationSettings from '../../../SB/views/Notifications'
 import Storage from '../../../SB/views/Storage'
 import DeviceLogs from '../../../SB/views/DeviceLogs'
+import NodeLogsScreen from '../../../Components/NodeLogsScreen'
 import RecoveryPhrase from '../../../SB/views/UserProfile/RecoveryPhrase'
 import SetAvatar from '../../../Containers/SetAvatar'
 
@@ -39,7 +40,8 @@ const nav = createStackNavigator(
 
     ThreadInvite: AcceptInviteScreen,
 
-    DeviceLogs
+    DeviceLogs,
+    NodeLogsScreen
   },
   {
     navigationOptions: {

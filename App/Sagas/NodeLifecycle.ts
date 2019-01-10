@@ -143,9 +143,8 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield put(AccountActions.setRecoveryPhrase(recoveryPhrase))
         yield put(TextileNodeActions.derivingAccount())
         const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
-        const logToDisk = !__DEV__
         yield put(TextileNodeActions.initializingRepo())
-        yield call(initRepo, walletAccount.seed, REPO_PATH, logToDisk)
+        yield call(initRepo, walletAccount.seed, REPO_PATH, true)
         yield call(createAndStartNode, dispatch)
       } else {
         yield put(TextileNodeActions.nodeError(error))

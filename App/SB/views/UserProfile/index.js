@@ -45,6 +45,9 @@ class UserProfile extends React.PureComponent {
   _deviceLogs () {
     this.props.navigation.navigate('DeviceLogs')
   }
+  _nodeLogs () {
+    this.props.navigation.navigate('NodeLogsScreen')
+  }
   _changeAvatar () {
     this.props.navigation.navigate('ChangeAvatar', { onSuccess: () => this.props.navigation.goBack() })
   }
@@ -108,6 +111,9 @@ class UserProfile extends React.PureComponent {
           </TouchableOpacity>}
           {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._deviceLogs.bind(this)}>
             <Text style={styles.listText}>Device Logs</Text>
+          </TouchableOpacity>}
+          {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._nodeLogs.bind(this)}>
+            <Text style={styles.listText}>Node Logs</Text>
           </TouchableOpacity>}
           <TouchableOpacity style={styles.listItem} onPress={this._changeAvatar.bind(this)}>
             <Text style={styles.listText}>Change Avatar</Text>
