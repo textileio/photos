@@ -175,7 +175,7 @@ public class TextileNode extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    byte[] bytes = dir.getBytes();
+                    byte[] bytes = Base64.decode(dir, Base64.DEFAULT);
                     promise.resolve(node.addThreadFiles(bytes, threadId, caption));
                 }
                 catch (Exception e) {
