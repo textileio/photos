@@ -25,15 +25,14 @@ const actions = {
 export type PreferencesAction = ActionType<typeof actions>
 
 export type TourScreens = 'wallet' | 'threads' | 'threadView' | 'threadsManager' | 'notifications' | 'feed' | 'location'
-export type ServiceType = 'backgroundLocation' |
-  'notifications' |
-  'photoAddedNotification' |
-  'receivedInviteNotification' |
-  'deviceAddedNotification' |
-  'commentAddedNotification' |
-  'likeAddedNotification' |
-  'peerJoinedNotification' |
-  'peerLeftNotification'
+export type ServiceType = 'backgroundLocation' | 'notifications' |
+  'INVITE_RECEIVED' |
+  'ACCOUNT_PEER_JOINED' |
+  'PEER_JOINED' |
+  'PEER_LEFT' |
+  'FILES_ADDED' |
+  'COMMENT_ADDED' |
+  'LIKE_ADDED'
 export type StorageType = 'autoPinPhotos' |
   'storeHighRes' |
   'deleteDeviceCopy' |
@@ -70,25 +69,25 @@ export const initialState: PreferencesState = {
     notifications: {
       status: false
     },
-    photoAddedNotification: {
+    FILES_ADDED: {
       status: true
     },
-    receivedInviteNotification: {
+    INVITE_RECEIVED: {
       status: true
     },
-    deviceAddedNotification: {
+    ACCOUNT_PEER_JOINED: {
       status: false
     },
-    commentAddedNotification: {
+    COMMENT_ADDED: {
       status: true
     },
-    likeAddedNotification: {
+    LIKE_ADDED: {
       status: true
     },
-    peerJoinedNotification: {
-      status: true
+    PEER_JOINED: {
+      status: false
     },
-    peerLeftNotification: {
+    PEER_LEFT: {
       status: false
     },
     backgroundLocation: {
