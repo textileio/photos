@@ -70,8 +70,7 @@ class Comments extends Component<Props, ComponentState> {
     if (this.props.commentValue === undefined && this.state.submitting === true) {
       // the comment was flushed so we can type a new one and submit again
       this.setState({submitting: false})
-    }
-    if (this.props.commentError === true && this.state.submitting === true) {
+    } else if (this.props.commentError === true && this.state.submitting === true) {
       // there was an error, allow a retry
       this.setState({submitting: false})
     }
