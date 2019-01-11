@@ -10,8 +10,6 @@ import KeyboardResponsiveContainer from '../Components/KeyboardResponsiveContain
 import CommentCard, { Props as CommentCardProps } from '../SB/components/CommentCard'
 import CommentBox from '../SB/components/CommentBox/CommentBox'
 
-import ProgressiveImage from '../Components/ProgressiveImage'
-
 import styles from './Styles/CommentsStyle'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'

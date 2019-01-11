@@ -56,7 +56,7 @@ const actions = {
   }),
   addCommentRequest: createAction('ADD_COMMENT_REQUEST'),
   addCommentSuccess: createAction('ADD_COMMENT_SUCCESS'),
-  addCommentError: createAction('ADD_COMMENT_SUCCESS')
+  addCommentError: createAction('ADD_COMMENT_ERROR')
 }
 
 export type PhotoViewingAction = ActionType<typeof actions>
@@ -236,10 +236,10 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       const { comment } = action.payload
       return { ...state, authoringComment: comment, authoringCommentError: undefined }
     }
-    case getType(actions.addCommentError): {
+    case getType(actions.addCommentSuccess): {
       return { ...state, authoringComment: undefined, authoringCommentError: undefined }
     }
-    case getType(actions.addCommentSuccess): {
+    case getType(actions.addCommentError): {
       return { ...state, authoringCommentError: true }
     }
     default:
