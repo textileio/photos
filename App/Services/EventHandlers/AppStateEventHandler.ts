@@ -22,14 +22,7 @@ export default class AppStateEventHandler {
   }
 
   setup () {
-    // capture whatever state already exists in the system
-    const initialState = AppState.currentState
-    // setup our listener for changes
     AppState.addEventListener('change', this.handleAppState.bind(this))
-      // if initialState === null we know we'll get our new state via the listener
-    if (initialState !== null) {
-      this.handleAppState(initialState)
-    }
   }
 
   tearDown () {
