@@ -91,7 +91,7 @@ export const initialState: PreferencesState = {
       status: false
     },
     backgroundLocation: {
-      status: true
+      status: false
     }
   },
   storage: {

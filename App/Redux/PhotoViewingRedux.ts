@@ -188,6 +188,9 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       if (state.viewingThreadId === threadId && state.viewingPhoto) {
         const currentViewingPhoto = state.viewingPhoto
         viewingPhoto = photos.find((photo) => currentViewingPhoto.target === photo.target)
+      } else {
+        // if update not needed, be sure to maintain whatever current state there is
+        viewingPhoto = state.viewingPhoto
       }
       return { ...state, threads, viewingPhoto }
     }
