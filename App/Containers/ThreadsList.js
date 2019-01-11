@@ -63,6 +63,7 @@ class ThreadsList extends React.PureComponent {
         online: this.props.online
       })
     }
+    // After user is in system and has some photos, prompted them about enabling Notifications
     if (
       this.props.items &&
       prevProps.items &&
@@ -71,6 +72,14 @@ class ThreadsList extends React.PureComponent {
       this.props.items.length !== prevProps.items.length
     ) {
       this._notificationPrompt()
+    }
+    // Auto complete the tour screen if the user has managed to create threads on their own
+    if (
+      this.props.items &&
+      prevProps.items &&
+      this.props.showOnboarding
+    ) {
+      this.props.completeScreen('threads')
     }
   }
 
