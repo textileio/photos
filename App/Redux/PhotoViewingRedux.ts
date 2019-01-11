@@ -228,7 +228,6 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       const threadData = state.threads[state.viewingThreadId]
       const photos = threadData ? threadData.photos : []
       const photo = photos.find((photo) => photo.target === photoId)
-      console.log('axh or here')
       return { ...state, viewingPhoto: photo, authoringComment: undefined }
     }
     case getType(actions.updateComment): {
