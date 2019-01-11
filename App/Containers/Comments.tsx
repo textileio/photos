@@ -20,6 +20,7 @@ interface StateProps {
   captionCommentCardProps?: CommentCardProps
   commentCardProps: CommentCardProps[]
   commentValue?: string
+  commentError?: boolean
 }
 
 interface DispatchProps {
@@ -27,9 +28,13 @@ interface DispatchProps {
   submitComment: () => void
 }
 
+interface ComponentState {
+  submitting: boolean
+}
+
 type Props = StateProps & DispatchProps
 
-class Comments extends Component<Props> {
+class Comments extends Component<Props, ComponentState> {
   // @ts-ignore
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
@@ -46,6 +51,13 @@ class Comments extends Component<Props> {
 
   scrollView?: ScrollView
 
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      submitting: false
+    }
+  }
+
   scrollToEnd = () => {
     if (this.scrollView) {
       this.scrollView.scrollToEnd()
@@ -56,6 +68,25 @@ class Comments extends Component<Props> {
     if (this.props.commentCardProps.length > previousProps.commentCardProps.length) {
       // New comment added, scroll down, need timeout to allow rendering
       setTimeout(this.scrollToEnd, 100)
+    }
+    if (this.props.commentValue === undefined && this.state.submitting === true) {
+      // the comment was flushed so we can type a new one and submit again
+      this.setState({submitting: false})
+    }
+    if (this.props.commentError === true && this.state.submitting === true) {
+      // there was an error, allow a retry
+      this.setState({submitting: false})
+    }
+  }
+
+  onSubmit = () => {
+    return () => {
+      if (this.state.submitting) {
+        return
+      }
+      // lock up submissions until the comment gets flushed
+      this.setState({submitting: true})
+      this.props.submitComment()
     }
   }
 
@@ -73,7 +104,7 @@ class Comments extends Component<Props> {
               ))}
             </View>
           </ScrollView>
-          <CommentBox onUpdate={this.props.updateComment} onSubmit={this.props.submitComment} value={this.props.commentValue} />
+          <CommentBox onUpdate={this.props.updateComment} onSubmit={this.onSubmit()} value={this.props.commentValue} showError={this.props.commentError} />
         </KeyboardResponsiveContainer>
       </SafeAreaView>
     )
@@ -105,10 +136,12 @@ const mapStateToProps = (state: RootState): StateProps  => {
     }
     return props
   })
+
   return {
     captionCommentCardProps,
     commentCardProps,
-    commentValue : state.photoViewing.authoringComment
+    commentValue : state.photoViewing.authoringComment,
+    commentError : state.photoViewing.authoringCommentError
   }
 }
 

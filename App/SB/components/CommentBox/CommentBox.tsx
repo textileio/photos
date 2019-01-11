@@ -7,12 +7,16 @@ import styles from './statics/styles'
 
 interface Props {
   value: string | undefined
+  showError?: boolean
   onUpdate: (text: string) => void
   onSubmit: () => void
 }
 
 const CommentBox = (props: Props) => {
-  const { value, onUpdate, onSubmit } = props
+  const { value, onUpdate, onSubmit, showError } = props
+
+  // subtle way to just indicat that a submission error occurred
+  const iconColor = showError ? 'red' : 'black'
 
   return (
     <View style={styles.commentFooter}>
@@ -24,7 +28,7 @@ const CommentBox = (props: Props) => {
         value={value}
       />
       <TouchableOpacity onPress={onSubmit} >
-        <Icon name='circle-plus' color='black' size={24} />
+        <Icon name='circle-plus' color={iconColor} size={24} />
       </TouchableOpacity>
     </View>
   )
