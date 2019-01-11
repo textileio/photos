@@ -114,7 +114,9 @@ const mapStateToProps = state => {
   // get all top level services
   const allServices = Object.keys(state.preferences.services)
     .reduce((previous, current) => {
-      let basic = state.preferences.services[current]
+      let basic = {
+        status: state.preferences.services[current].status
+      }
       basic.info = GetServiceInfo(current)
       previous[current] = basic
       return previous
