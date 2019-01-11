@@ -1,6 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
-import { NotificationType } from '../NativeModules/Textile';
 
 const actions = {
   onboardedSuccess: createAction('ONBOARDED_SUCCESS', (resolve) => {
