@@ -14,43 +14,43 @@ export default function (service) {
         subtitle: 'Enable notifications',
         details: 'Choose Textile events that trigger notifications. Notifications can be enabled or disabled at any time.'
       }
-    case 'receivedInviteNotification':
+    case 'INVITE_RECEIVED':
       return {
         title: 'New Thread Invite',
         subtitle: 'Someone shares a photo with you',
         dependsOn: 'notifications'
       }
-    case 'deviceAddedNotification':
+    case 'ACCOUNT_PEER_JOINED':
       return {
         title: 'New Device Paired',
         subtitle: 'Someone shares a photo with you',
         dependsOn: 'notifications'
       }
-    case 'photoAddedNotification':
+    case 'FILES_ADDED':
       return {
         title: 'New Shared Photos',
         subtitle: 'Someone shares a photo with you',
         dependsOn: 'notifications'
       }
-    case 'commentAddedNotification':
+    case 'COMMENT_ADDED':
       return {
         title: 'New Photo Comment',
         subtitle: 'Someone shares a photo with you',
         dependsOn: 'notifications'
       }
-    case 'likeAddedNotification':
+    case 'LIKE_ADDED':
       return {
         title: 'New Photo Like',
         subtitle: 'Someone shares a photo with you',
         dependsOn: 'notifications'
       }
-    case 'peerJoinedNotification':
+    case 'PEER_JOINED':
       return {
         title: 'Contact Joined Thread',
         subtitle: 'Someone shares a photo with you',
         dependsOn: 'notifications'
       }
-    case 'peerLeftNotification':
+    case 'PEER_LEFT':
       return {
         title: 'Contact Left Thread',
         subtitle: 'Someone shares a photo with you',

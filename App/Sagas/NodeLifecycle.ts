@@ -273,10 +273,20 @@ export function * getSDKVersion () {
 
 export function * backgroundFetch () {
   yield call(logNewEvent, 'Background fetch trigger', 'Check new content')
+  yield call(startBackgroundTask)
 }
 
 export function * locationUpdate () {
   yield call(logNewEvent, 'Location trigger', 'Check new content')
+  yield call(startBackgroundTask)
+}
+
+function * startBackgroundTask () {
+  const currentState = yield select(TextileNodeSelectors.appState)
+  // ensure we don't cause things in foreground
+  if (currentState === 'background' || currentState === 'backgroundFromForeground') {
+    yield put(TextileNodeActions.appStateChange(currentState, 'background'))
+  }
 }
 
 function displayNotification (message: string, title?: string) {

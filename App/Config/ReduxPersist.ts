@@ -234,13 +234,51 @@ const migrations: MigrationManifest = {
         onboarded: false
       }
     }
+  },
+  15: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        services: {
+          notifications: {
+            status: true
+          },
+          backgroundLocation: {
+            status: true
+          },
+          INVITE_RECEIVED: {
+            status: true
+          },
+          ACCOUNT_PEER_JOINED: {
+            status: true
+          },
+          PEER_JOINED: {
+            status: true
+          },
+          PEER_LEFT: {
+            status: true
+          },
+          FILES_ADDED: {
+            status: true
+          },
+          COMMENT_ADDED: {
+            status: true
+          },
+          LIKE_ADDED: {
+            status: true
+          }
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 14,
+  version: 15,
   whitelist: ['account', 'preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'storage', 'deviceLogs', 'migration'],
   migrate: createMigrate(migrations, { debug: false })
 }
