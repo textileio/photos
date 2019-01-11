@@ -240,7 +240,9 @@ function * stopNodeAfterDelay (ms: number) {
     }
     // Since node will go offline in 20s, do a final check for messages
     yield call(TextileNodeActions.refreshMessagesRequest)
-    yield delay(ms)
+    yield delay(ms * 0.5)
+    yield call(TextileNodeActions.refreshMessagesRequest)
+    yield delay(ms * 0.5)
   } finally {
     if (yield cancelled()) {
       // Let it keep running
