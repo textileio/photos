@@ -238,6 +238,8 @@ function * stopNodeAfterDelay (ms: number) {
     if (yield select(PreferencesSelectors.verboseUi)) {
       yield call(displayNotification, 'Running the node for 20 sec. in the background')
     }
+    // Since node will go offline in 20s, do a final check for messages
+    yield call(TextileNodeActions.refreshMessagesRequest)
     yield delay(ms)
   } finally {
     if (yield cancelled()) {
