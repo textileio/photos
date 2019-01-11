@@ -83,8 +83,6 @@ class Comments extends Component<Props> {
 const mapStateToProps = (state: RootState): StateProps  => {
   const { viewingPhoto } = state.photoViewing
 
-  console.log(viewingPhoto)
-  console.log('axh photo', viewingPhoto && viewingPhoto.caption, viewingPhoto && viewingPhoto.username)
   let captionCommentCardProps: CommentCardProps | undefined
   if (viewingPhoto && viewingPhoto.caption) {
     captionCommentCardProps = {
