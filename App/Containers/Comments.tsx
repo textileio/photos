@@ -77,14 +77,12 @@ class Comments extends Component<Props, ComponentState> {
   }
 
   onSubmit = () => {
-    return () => {
-      if (this.state.submitting) {
-        return
-      }
-      // lock up submissions until the comment gets flushed
-      this.setState({submitting: true})
-      this.props.submitComment()
+    if (this.state.submitting) {
+      return
     }
+    // lock up submissions until the comment gets flushed
+    this.setState({submitting: true})
+    this.props.submitComment()
   }
 
   render () {
@@ -101,7 +99,7 @@ class Comments extends Component<Props, ComponentState> {
               ))}
             </View>
           </ScrollView>
-          <CommentBox onUpdate={this.props.updateComment} onSubmit={this.onSubmit()} value={this.props.commentValue} showError={this.props.commentError} />
+          <CommentBox onUpdate={this.props.updateComment} onSubmit={this.onSubmit} value={this.props.commentValue} showError={this.props.commentError} />
         </KeyboardResponsiveContainer>
       </SafeAreaView>
     )
