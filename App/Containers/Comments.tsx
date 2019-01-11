@@ -105,7 +105,6 @@ const mapStateToProps = (state: RootState): StateProps  => {
     }
     return props
   })
-  console.log('axh', comments.length)
   return {
     captionCommentCardProps,
     commentCardProps,
