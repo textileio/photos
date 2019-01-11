@@ -256,7 +256,7 @@ export function * runRecurringMigrationTasks () {
 
 // Will error for any non-success
 async function announceId(currentPeerId: string, previousPeerId: string, currentAddress: string, previousUsername?: string) {
-  const headers = {'Content-type': 'application/json'}
+  const headers = {'Content-Type': 'application/json'}
   const payload: { [key: string]: string } = { peerId: currentPeerId, previousId: previousPeerId, address: currentAddress }
   const username = previousUsername ? previousUsername.trim() : ''
   if (username.length > 0) {
