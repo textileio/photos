@@ -17,12 +17,10 @@ export default class UploadEventHandler {
   }
 
   uploadProgress (e: any) {
-    console.log('TTT: UPLOAD PROGRESS:', e)
     this.store.dispatch(ProcessingImagesActions.imageUploadProgress(e.id, e.progress))
   }
 
   uploadComplete (e: any) {
-    console.log('TTT: UPLOAD COMPLETE:', e)
     const { responseCode } = e
     if (responseCode >= 200 && responseCode < 300) {
       this.store.dispatch(ProcessingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody))
@@ -50,7 +48,6 @@ export default class UploadEventHandler {
   }
 
   uploadCancelled (e: any) {
-    console.log('TTT: UPLOAD CANCELED:', e)
     const processingImage = processingImageForUploadId(this.store.getState(), e.id)
     if (processingImage) {
       this.store.dispatch(ProcessingImagesActions.error({
@@ -63,7 +60,6 @@ export default class UploadEventHandler {
   }
 
   uploadError (e: any) {
-    console.log('TTT: UPLOAD ERROR HANDLER:', e)
     const processingImage = processingImageForUploadId(this.store.getState(), e.id)
     if (processingImage) {
       this.store.dispatch(ProcessingImagesActions.error({

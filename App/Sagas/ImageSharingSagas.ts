@@ -140,45 +140,37 @@ export function * uploadPins (uuid: string) {
     for (const uploadId in processingImage.uploadData) {
       if (processingImage.uploadData[uploadId] && (processingImage.uploadData[uploadId].status === 'pending' || processingImage.uploadData[uploadId].status === 'error')) {
         yield put(ProcessingImagesActions.uploadStarted(uuid, uploadId))
-        console.log('TTT: UPLOADING FILE', uploadId)
         yield call(uploadFile, uploadId, processingImage.uploadData[uploadId].path)
       }
     }
   } catch (error) {
-    console.log('TTT: UPLOAD ERROR FROM uploadPins', error)
     put(ProcessingImagesActions.error({ uuid, underlyingError: error, type: 'general' }))
   }
 }
 
 export function * monitorForUploadsComplete(uuid: string) {
-  const { complete, errorAction } = yield race({
+  const { complete } = yield race({
     complete: waitFor(select(allUploadsComplete, uuid)),
     // If there is any error related to this image, we want to cancel the uploads complete listener because the image uploads can
     // be retried and we'll created a new listener for that
     errorAction: take((action: RootAction) => action.type === getType(ProcessingImagesActions.error) && (action.payload.error.uuid === uuid))
   })
   if (complete) {
-    console.log('TTT: UPLOADS COMPLETE')
     yield call(shareToThread, uuid)
-  } else {
-    console.log('TTT: ERROR WHILE WAITING:', errorAction)
   }
 }
 
 export function * shareToThread (uuid: string) {
   try {
-    console.log('TTT: SHARING:', uuid)
     const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
     if (!processingImage || !processingImage.preparedFiles || !processingImage.preparedFiles.dir) {
       throw new Error('no ProcessingImage or preparedData or dir found')
     }
     const { dir } = processingImage.preparedFiles
-    console.log('TTT: SHARING ADD THREAD FILES:', dir)
     const blockInfo: BlockInfo = yield call(addThreadFiles, dir, processingImage.destinationThreadId, processingImage.comment)
     yield put(ProcessingImagesActions.sharedToThread(uuid, blockInfo))
     yield put(ProcessingImagesActions.complete(uuid))
   } catch (error) {
-    console.log('TTT: SHARING ERROR:', error)
     yield put(ProcessingImagesActions.error({ uuid, underlyingError: error, type: 'general' }))
   }
 }
