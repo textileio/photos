@@ -4,7 +4,7 @@ import { RootState } from './Types'
 
 const actions = {
   appStateChange: createAction('APP_STATE_CHANGE', (resolve) => {
-    return (previousState: TextileAppStateStatus, newState: AppStateStatus) => resolve({ previousState, newState })
+    return (previousState: TextileAppStateStatus, newState: TextileAppStateStatus) => resolve({ previousState, newState })
   }),
   creatingWallet: createAction('CREATING_WALLET'),
   derivingAccount: createAction('DERIVING_ACCOUNT'),
@@ -52,7 +52,7 @@ const actions = {
 
 export type TextileNodeAction = ActionType<typeof actions>
 
-type TextileAppStateStatus = AppStateStatus | 'unknown'
+export type TextileAppStateStatus = AppStateStatus | 'unknown' | 'backgroundFromForeground'
 
 export enum NodeState {
   'nonexistent' = 'nonexistent',

@@ -3,7 +3,7 @@ import { AppState, AppStateStatus } from 'react-native'
 
 import { RootState } from '../../Redux/Types'
 
-import TextileNodeActions from '../../Redux/TextileNodeRedux'
+import TextileNodeActions, { TextileAppStateStatus } from '../../Redux/TextileNodeRedux'
 
 export default class AppStateEventHandler {
   store: Store<RootState>
@@ -13,9 +13,10 @@ export default class AppStateEventHandler {
     this.setup()
   }
 
-  handleAppState (newState: AppStateStatus) {
+  handleAppState (nextState: AppStateStatus) {
     const currentState = this.store.getState().textileNode.appState
-    if (newState !== currentState) {
+    const newState: TextileAppStateStatus = nextState === 'background' && (currentState === 'active' || currentState === 'inactive') ? 'backgroundFromForeground' : nextState
+    if (newState !== currentState || newState === 'background') {
       this.store.dispatch(TextileNodeActions.appStateChange(currentState, newState))
     }
   }

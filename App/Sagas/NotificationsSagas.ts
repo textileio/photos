@@ -57,7 +57,7 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
 
     // Ensure we aren't in the foreground (Android only req)
     const queriedAppState = yield select(TextileNodeSelectors.appState)
-    if (Platform.OS === 'ios' || queriedAppState.match(/background/)) {
+    if (Platform.OS === 'ios' || queriedAppState.match(/background/) || queriedAppState.match(/backgroundFromForeground/)) {
       // fire the notification
       yield call(logNewEvent, 'Notifications', 'creating local')
       yield call(NotificationsServices.createNew, notification)
@@ -94,7 +94,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
           yield put(PhotoViewingAction.viewPhoto(notification.target))
-          yield call(NavigationService.navigate, 'Comments')
+          yield call(NavigationService.navigate, 'PhotoScreen')
         }
         break
       }

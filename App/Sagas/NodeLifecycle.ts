@@ -56,7 +56,8 @@ export function * manageNode () {
       // Block until we get an active or background app state
       const action: ActionType<typeof TextileNodeActions.appStateChange> =
         yield take((action: RootAction) =>
-          action.type === getType(TextileNodeActions.appStateChange) && (action.payload.newState === 'active' || action.payload.newState === 'background')
+          action.type === getType(TextileNodeActions.appStateChange) &&
+          (action.payload.newState === 'active' || action.payload.newState === 'background' || action.payload.newState === 'backgroundFromForeground')
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
@@ -71,7 +72,7 @@ export function * manageNode () {
       //
       // This background state can come from a active > background transition
       // or by launching into the background because of a trigger.
-      if (action.payload.newState === 'background') {
+      if (action.payload.newState === 'background' || action.payload.newState === 'backgroundFromForeground') {
         yield fork(backgroundTaskRace)
       }
     } catch (error) {
@@ -142,9 +143,8 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield put(AccountActions.setRecoveryPhrase(recoveryPhrase))
         yield put(TextileNodeActions.derivingAccount())
         const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
-        const logToDisk = !__DEV__
         yield put(TextileNodeActions.initializingRepo())
-        yield call(initRepo, walletAccount.seed, REPO_PATH, logToDisk)
+        yield call(initRepo, walletAccount.seed, REPO_PATH, true)
         yield call(createAndStartNode, dispatch)
       } else {
         yield put(TextileNodeActions.nodeError(error))
@@ -175,7 +175,6 @@ function * waitForOnline() {
 }
 
 function * registerOverrideCafe(url: string) {
-  yield call(waitForOnline)
   yield call(registerCafe, url)
 }
 
@@ -188,7 +187,6 @@ function * discoverAndRegisterCafes() {
     throw new Error('cafe discovery timed out, internet connection needed')
   }
   const discoveredCafes = cafes as DiscoveredCafes
-  yield call(waitForOnline)
   yield call(registerCafe, discoveredCafes.primary.url)
   yield call(registerCafe, discoveredCafes.secondary.url)
 }
@@ -275,10 +273,20 @@ export function * getSDKVersion () {
 
 export function * backgroundFetch () {
   yield call(logNewEvent, 'Background fetch trigger', 'Check new content')
+  yield call(startBackgroundTask)
 }
 
 export function * locationUpdate () {
   yield call(logNewEvent, 'Location trigger', 'Check new content')
+  yield call(startBackgroundTask)
+}
+
+function * startBackgroundTask () {
+  const currentState = yield select(TextileNodeSelectors.appState)
+  // ensure we don't cause things in foreground
+  if (currentState === 'background' || currentState === 'backgroundFromForeground') {
+    yield put(TextileNodeActions.appStateChange(currentState, 'background'))
+  }
 }
 
 function displayNotification (message: string, title?: string) {
