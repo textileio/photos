@@ -121,5 +121,7 @@ export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions
     yield call(addThreadComment, result.photo.block, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
+    // for now an error will just flush the comment... ideally we can notify the user of a failed comment
+    yield put(PhotoViewingActions.addCommentError())
   }
 }
