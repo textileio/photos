@@ -31,7 +31,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
   }
 
   getPreviewWidth = () => {
-    return Math.floor(this.props.forMinWidth / 2)
+    return 100
   }
 
   android (resizeMode: ImageResizeMode) {
