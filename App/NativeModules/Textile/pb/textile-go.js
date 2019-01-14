@@ -7,343 +7,6 @@ const $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.
 // Exported root namespace
 const $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
 
-export const Cafe = $root.Cafe = (() => {
-
-    /**
-     * Properties of a Cafe.
-     * @exports ICafe
-     * @interface ICafe
-     * @property {string|null} [peer] Cafe peer
-     * @property {string|null} [address] Cafe address
-     * @property {string|null} [api] Cafe api
-     * @property {string|null} [protocol] Cafe protocol
-     * @property {string|null} [node] Cafe node
-     * @property {string|null} [url] Cafe url
-     * @property {Array.<string>|null} [swarm] Cafe swarm
-     */
-
-    /**
-     * Constructs a new Cafe.
-     * @exports Cafe
-     * @classdesc Represents a Cafe.
-     * @implements ICafe
-     * @constructor
-     * @param {ICafe=} [properties] Properties to set
-     */
-    function Cafe(properties) {
-        this.swarm = [];
-        if (properties)
-            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * Cafe peer.
-     * @member {string} peer
-     * @memberof Cafe
-     * @instance
-     */
-    Cafe.prototype.peer = "";
-
-    /**
-     * Cafe address.
-     * @member {string} address
-     * @memberof Cafe
-     * @instance
-     */
-    Cafe.prototype.address = "";
-
-    /**
-     * Cafe api.
-     * @member {string} api
-     * @memberof Cafe
-     * @instance
-     */
-    Cafe.prototype.api = "";
-
-    /**
-     * Cafe protocol.
-     * @member {string} protocol
-     * @memberof Cafe
-     * @instance
-     */
-    Cafe.prototype.protocol = "";
-
-    /**
-     * Cafe node.
-     * @member {string} node
-     * @memberof Cafe
-     * @instance
-     */
-    Cafe.prototype.node = "";
-
-    /**
-     * Cafe url.
-     * @member {string} url
-     * @memberof Cafe
-     * @instance
-     */
-    Cafe.prototype.url = "";
-
-    /**
-     * Cafe swarm.
-     * @member {Array.<string>} swarm
-     * @memberof Cafe
-     * @instance
-     */
-    Cafe.prototype.swarm = $util.emptyArray;
-
-    /**
-     * Creates a new Cafe instance using the specified properties.
-     * @function create
-     * @memberof Cafe
-     * @static
-     * @param {ICafe=} [properties] Properties to set
-     * @returns {Cafe} Cafe instance
-     */
-    Cafe.create = function create(properties) {
-        return new Cafe(properties);
-    };
-
-    /**
-     * Encodes the specified Cafe message. Does not implicitly {@link Cafe.verify|verify} messages.
-     * @function encode
-     * @memberof Cafe
-     * @static
-     * @param {ICafe} message Cafe message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    Cafe.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        if (message.peer != null && message.hasOwnProperty("peer"))
-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.peer);
-        if (message.address != null && message.hasOwnProperty("address"))
-            writer.uint32(/* id 2, wireType 2 =*/18).string(message.address);
-        if (message.api != null && message.hasOwnProperty("api"))
-            writer.uint32(/* id 3, wireType 2 =*/26).string(message.api);
-        if (message.protocol != null && message.hasOwnProperty("protocol"))
-            writer.uint32(/* id 4, wireType 2 =*/34).string(message.protocol);
-        if (message.node != null && message.hasOwnProperty("node"))
-            writer.uint32(/* id 5, wireType 2 =*/42).string(message.node);
-        if (message.url != null && message.hasOwnProperty("url"))
-            writer.uint32(/* id 6, wireType 2 =*/50).string(message.url);
-        if (message.swarm != null && message.swarm.length)
-            for (let i = 0; i < message.swarm.length; ++i)
-                writer.uint32(/* id 7, wireType 2 =*/58).string(message.swarm[i]);
-        return writer;
-    };
-
-    /**
-     * Encodes the specified Cafe message, length delimited. Does not implicitly {@link Cafe.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof Cafe
-     * @static
-     * @param {ICafe} message Cafe message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    Cafe.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a Cafe message from the specified reader or buffer.
-     * @function decode
-     * @memberof Cafe
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {Cafe} Cafe
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    Cafe.decode = function decode(reader, length) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Cafe();
-        while (reader.pos < end) {
-            let tag = reader.uint32();
-            switch (tag >>> 3) {
-            case 1:
-                message.peer = reader.string();
-                break;
-            case 2:
-                message.address = reader.string();
-                break;
-            case 3:
-                message.api = reader.string();
-                break;
-            case 4:
-                message.protocol = reader.string();
-                break;
-            case 5:
-                message.node = reader.string();
-                break;
-            case 6:
-                message.url = reader.string();
-                break;
-            case 7:
-                if (!(message.swarm && message.swarm.length))
-                    message.swarm = [];
-                message.swarm.push(reader.string());
-                break;
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Decodes a Cafe message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof Cafe
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {Cafe} Cafe
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    Cafe.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a Cafe message.
-     * @function verify
-     * @memberof Cafe
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    Cafe.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        if (message.peer != null && message.hasOwnProperty("peer"))
-            if (!$util.isString(message.peer))
-                return "peer: string expected";
-        if (message.address != null && message.hasOwnProperty("address"))
-            if (!$util.isString(message.address))
-                return "address: string expected";
-        if (message.api != null && message.hasOwnProperty("api"))
-            if (!$util.isString(message.api))
-                return "api: string expected";
-        if (message.protocol != null && message.hasOwnProperty("protocol"))
-            if (!$util.isString(message.protocol))
-                return "protocol: string expected";
-        if (message.node != null && message.hasOwnProperty("node"))
-            if (!$util.isString(message.node))
-                return "node: string expected";
-        if (message.url != null && message.hasOwnProperty("url"))
-            if (!$util.isString(message.url))
-                return "url: string expected";
-        if (message.swarm != null && message.hasOwnProperty("swarm")) {
-            if (!Array.isArray(message.swarm))
-                return "swarm: array expected";
-            for (let i = 0; i < message.swarm.length; ++i)
-                if (!$util.isString(message.swarm[i]))
-                    return "swarm: string[] expected";
-        }
-        return null;
-    };
-
-    /**
-     * Creates a Cafe message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof Cafe
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {Cafe} Cafe
-     */
-    Cafe.fromObject = function fromObject(object) {
-        if (object instanceof $root.Cafe)
-            return object;
-        let message = new $root.Cafe();
-        if (object.peer != null)
-            message.peer = String(object.peer);
-        if (object.address != null)
-            message.address = String(object.address);
-        if (object.api != null)
-            message.api = String(object.api);
-        if (object.protocol != null)
-            message.protocol = String(object.protocol);
-        if (object.node != null)
-            message.node = String(object.node);
-        if (object.url != null)
-            message.url = String(object.url);
-        if (object.swarm) {
-            if (!Array.isArray(object.swarm))
-                throw TypeError(".Cafe.swarm: array expected");
-            message.swarm = [];
-            for (let i = 0; i < object.swarm.length; ++i)
-                message.swarm[i] = String(object.swarm[i]);
-        }
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a Cafe message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof Cafe
-     * @static
-     * @param {Cafe} message Cafe
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    Cafe.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        let object = {};
-        if (options.arrays || options.defaults)
-            object.swarm = [];
-        if (options.defaults) {
-            object.peer = "";
-            object.address = "";
-            object.api = "";
-            object.protocol = "";
-            object.node = "";
-            object.url = "";
-        }
-        if (message.peer != null && message.hasOwnProperty("peer"))
-            object.peer = message.peer;
-        if (message.address != null && message.hasOwnProperty("address"))
-            object.address = message.address;
-        if (message.api != null && message.hasOwnProperty("api"))
-            object.api = message.api;
-        if (message.protocol != null && message.hasOwnProperty("protocol"))
-            object.protocol = message.protocol;
-        if (message.node != null && message.hasOwnProperty("node"))
-            object.node = message.node;
-        if (message.url != null && message.hasOwnProperty("url"))
-            object.url = message.url;
-        if (message.swarm && message.swarm.length) {
-            object.swarm = [];
-            for (let j = 0; j < message.swarm.length; ++j)
-                object.swarm[j] = message.swarm[j];
-        }
-        return object;
-    };
-
-    /**
-     * Converts this Cafe to JSON.
-     * @function toJSON
-     * @memberof Cafe
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    Cafe.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    return Cafe;
-})();
-
 export const CafeChallenge = $root.CafeChallenge = (() => {
 
     /**
@@ -4244,6 +3907,1127 @@ export const CafeDeleteMessagesAck = $root.CafeDeleteMessagesAck = (() => {
     return CafeDeleteMessagesAck;
 })();
 
+export const Contact = $root.Contact = (() => {
+
+    /**
+     * Properties of a Contact.
+     * @exports IContact
+     * @interface IContact
+     * @property {string|null} [id] Contact id
+     * @property {string|null} [address] Contact address
+     * @property {string|null} [username] Contact username
+     * @property {string|null} [avatar] Contact avatar
+     * @property {Array.<ICafe>|null} [inboxes] Contact inboxes
+     * @property {google.protobuf.ITimestamp|null} [created] Contact created
+     * @property {google.protobuf.ITimestamp|null} [updated] Contact updated
+     */
+
+    /**
+     * Constructs a new Contact.
+     * @exports Contact
+     * @classdesc Represents a Contact.
+     * @implements IContact
+     * @constructor
+     * @param {IContact=} [properties] Properties to set
+     */
+    function Contact(properties) {
+        this.inboxes = [];
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * Contact id.
+     * @member {string} id
+     * @memberof Contact
+     * @instance
+     */
+    Contact.prototype.id = "";
+
+    /**
+     * Contact address.
+     * @member {string} address
+     * @memberof Contact
+     * @instance
+     */
+    Contact.prototype.address = "";
+
+    /**
+     * Contact username.
+     * @member {string} username
+     * @memberof Contact
+     * @instance
+     */
+    Contact.prototype.username = "";
+
+    /**
+     * Contact avatar.
+     * @member {string} avatar
+     * @memberof Contact
+     * @instance
+     */
+    Contact.prototype.avatar = "";
+
+    /**
+     * Contact inboxes.
+     * @member {Array.<ICafe>} inboxes
+     * @memberof Contact
+     * @instance
+     */
+    Contact.prototype.inboxes = $util.emptyArray;
+
+    /**
+     * Contact created.
+     * @member {google.protobuf.ITimestamp|null|undefined} created
+     * @memberof Contact
+     * @instance
+     */
+    Contact.prototype.created = null;
+
+    /**
+     * Contact updated.
+     * @member {google.protobuf.ITimestamp|null|undefined} updated
+     * @memberof Contact
+     * @instance
+     */
+    Contact.prototype.updated = null;
+
+    /**
+     * Creates a new Contact instance using the specified properties.
+     * @function create
+     * @memberof Contact
+     * @static
+     * @param {IContact=} [properties] Properties to set
+     * @returns {Contact} Contact instance
+     */
+    Contact.create = function create(properties) {
+        return new Contact(properties);
+    };
+
+    /**
+     * Encodes the specified Contact message. Does not implicitly {@link Contact.verify|verify} messages.
+     * @function encode
+     * @memberof Contact
+     * @static
+     * @param {IContact} message Contact message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Contact.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.id != null && message.hasOwnProperty("id"))
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
+        if (message.address != null && message.hasOwnProperty("address"))
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.address);
+        if (message.username != null && message.hasOwnProperty("username"))
+            writer.uint32(/* id 3, wireType 2 =*/26).string(message.username);
+        if (message.avatar != null && message.hasOwnProperty("avatar"))
+            writer.uint32(/* id 4, wireType 2 =*/34).string(message.avatar);
+        if (message.inboxes != null && message.inboxes.length)
+            for (let i = 0; i < message.inboxes.length; ++i)
+                $root.Cafe.encode(message.inboxes[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+        if (message.created != null && message.hasOwnProperty("created"))
+            $root.google.protobuf.Timestamp.encode(message.created, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+        if (message.updated != null && message.hasOwnProperty("updated"))
+            $root.google.protobuf.Timestamp.encode(message.updated, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+        return writer;
+    };
+
+    /**
+     * Encodes the specified Contact message, length delimited. Does not implicitly {@link Contact.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof Contact
+     * @static
+     * @param {IContact} message Contact message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Contact.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a Contact message from the specified reader or buffer.
+     * @function decode
+     * @memberof Contact
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {Contact} Contact
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    Contact.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Contact();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1:
+                message.id = reader.string();
+                break;
+            case 2:
+                message.address = reader.string();
+                break;
+            case 3:
+                message.username = reader.string();
+                break;
+            case 4:
+                message.avatar = reader.string();
+                break;
+            case 5:
+                if (!(message.inboxes && message.inboxes.length))
+                    message.inboxes = [];
+                message.inboxes.push($root.Cafe.decode(reader, reader.uint32()));
+                break;
+            case 6:
+                message.created = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                break;
+            case 7:
+                message.updated = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                break;
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a Contact message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof Contact
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {Contact} Contact
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    Contact.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a Contact message.
+     * @function verify
+     * @memberof Contact
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    Contact.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.id != null && message.hasOwnProperty("id"))
+            if (!$util.isString(message.id))
+                return "id: string expected";
+        if (message.address != null && message.hasOwnProperty("address"))
+            if (!$util.isString(message.address))
+                return "address: string expected";
+        if (message.username != null && message.hasOwnProperty("username"))
+            if (!$util.isString(message.username))
+                return "username: string expected";
+        if (message.avatar != null && message.hasOwnProperty("avatar"))
+            if (!$util.isString(message.avatar))
+                return "avatar: string expected";
+        if (message.inboxes != null && message.hasOwnProperty("inboxes")) {
+            if (!Array.isArray(message.inboxes))
+                return "inboxes: array expected";
+            for (let i = 0; i < message.inboxes.length; ++i) {
+                let error = $root.Cafe.verify(message.inboxes[i]);
+                if (error)
+                    return "inboxes." + error;
+            }
+        }
+        if (message.created != null && message.hasOwnProperty("created")) {
+            let error = $root.google.protobuf.Timestamp.verify(message.created);
+            if (error)
+                return "created." + error;
+        }
+        if (message.updated != null && message.hasOwnProperty("updated")) {
+            let error = $root.google.protobuf.Timestamp.verify(message.updated);
+            if (error)
+                return "updated." + error;
+        }
+        return null;
+    };
+
+    /**
+     * Creates a Contact message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof Contact
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {Contact} Contact
+     */
+    Contact.fromObject = function fromObject(object) {
+        if (object instanceof $root.Contact)
+            return object;
+        let message = new $root.Contact();
+        if (object.id != null)
+            message.id = String(object.id);
+        if (object.address != null)
+            message.address = String(object.address);
+        if (object.username != null)
+            message.username = String(object.username);
+        if (object.avatar != null)
+            message.avatar = String(object.avatar);
+        if (object.inboxes) {
+            if (!Array.isArray(object.inboxes))
+                throw TypeError(".Contact.inboxes: array expected");
+            message.inboxes = [];
+            for (let i = 0; i < object.inboxes.length; ++i) {
+                if (typeof object.inboxes[i] !== "object")
+                    throw TypeError(".Contact.inboxes: object expected");
+                message.inboxes[i] = $root.Cafe.fromObject(object.inboxes[i]);
+            }
+        }
+        if (object.created != null) {
+            if (typeof object.created !== "object")
+                throw TypeError(".Contact.created: object expected");
+            message.created = $root.google.protobuf.Timestamp.fromObject(object.created);
+        }
+        if (object.updated != null) {
+            if (typeof object.updated !== "object")
+                throw TypeError(".Contact.updated: object expected");
+            message.updated = $root.google.protobuf.Timestamp.fromObject(object.updated);
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a Contact message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof Contact
+     * @static
+     * @param {Contact} message Contact
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    Contact.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.arrays || options.defaults)
+            object.inboxes = [];
+        if (options.defaults) {
+            object.id = "";
+            object.address = "";
+            object.username = "";
+            object.avatar = "";
+            object.created = null;
+            object.updated = null;
+        }
+        if (message.id != null && message.hasOwnProperty("id"))
+            object.id = message.id;
+        if (message.address != null && message.hasOwnProperty("address"))
+            object.address = message.address;
+        if (message.username != null && message.hasOwnProperty("username"))
+            object.username = message.username;
+        if (message.avatar != null && message.hasOwnProperty("avatar"))
+            object.avatar = message.avatar;
+        if (message.inboxes && message.inboxes.length) {
+            object.inboxes = [];
+            for (let j = 0; j < message.inboxes.length; ++j)
+                object.inboxes[j] = $root.Cafe.toObject(message.inboxes[j], options);
+        }
+        if (message.created != null && message.hasOwnProperty("created"))
+            object.created = $root.google.protobuf.Timestamp.toObject(message.created, options);
+        if (message.updated != null && message.hasOwnProperty("updated"))
+            object.updated = $root.google.protobuf.Timestamp.toObject(message.updated, options);
+        return object;
+    };
+
+    /**
+     * Converts this Contact to JSON.
+     * @function toJSON
+     * @memberof Contact
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    Contact.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    return Contact;
+})();
+
+export const File = $root.File = (() => {
+
+    /**
+     * Properties of a File.
+     * @exports IFile
+     * @interface IFile
+     * @property {string|null} [mill] File mill
+     * @property {string|null} [checksum] File checksum
+     * @property {string|null} [source] File source
+     * @property {string|null} [opts] File opts
+     * @property {string|null} [hash] File hash
+     * @property {string|null} [key] File key
+     * @property {string|null} [media] File media
+     * @property {string|null} [name] File name
+     * @property {number|Long|null} [size] File size
+     * @property {google.protobuf.ITimestamp|null} [added] File added
+     * @property {google.protobuf.IStruct|null} [meta] File meta
+     */
+
+    /**
+     * Constructs a new File.
+     * @exports File
+     * @classdesc Represents a File.
+     * @implements IFile
+     * @constructor
+     * @param {IFile=} [properties] Properties to set
+     */
+    function File(properties) {
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * File mill.
+     * @member {string} mill
+     * @memberof File
+     * @instance
+     */
+    File.prototype.mill = "";
+
+    /**
+     * File checksum.
+     * @member {string} checksum
+     * @memberof File
+     * @instance
+     */
+    File.prototype.checksum = "";
+
+    /**
+     * File source.
+     * @member {string} source
+     * @memberof File
+     * @instance
+     */
+    File.prototype.source = "";
+
+    /**
+     * File opts.
+     * @member {string} opts
+     * @memberof File
+     * @instance
+     */
+    File.prototype.opts = "";
+
+    /**
+     * File hash.
+     * @member {string} hash
+     * @memberof File
+     * @instance
+     */
+    File.prototype.hash = "";
+
+    /**
+     * File key.
+     * @member {string} key
+     * @memberof File
+     * @instance
+     */
+    File.prototype.key = "";
+
+    /**
+     * File media.
+     * @member {string} media
+     * @memberof File
+     * @instance
+     */
+    File.prototype.media = "";
+
+    /**
+     * File name.
+     * @member {string} name
+     * @memberof File
+     * @instance
+     */
+    File.prototype.name = "";
+
+    /**
+     * File size.
+     * @member {number|Long} size
+     * @memberof File
+     * @instance
+     */
+    File.prototype.size = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+    /**
+     * File added.
+     * @member {google.protobuf.ITimestamp|null|undefined} added
+     * @memberof File
+     * @instance
+     */
+    File.prototype.added = null;
+
+    /**
+     * File meta.
+     * @member {google.protobuf.IStruct|null|undefined} meta
+     * @memberof File
+     * @instance
+     */
+    File.prototype.meta = null;
+
+    /**
+     * Creates a new File instance using the specified properties.
+     * @function create
+     * @memberof File
+     * @static
+     * @param {IFile=} [properties] Properties to set
+     * @returns {File} File instance
+     */
+    File.create = function create(properties) {
+        return new File(properties);
+    };
+
+    /**
+     * Encodes the specified File message. Does not implicitly {@link File.verify|verify} messages.
+     * @function encode
+     * @memberof File
+     * @static
+     * @param {IFile} message File message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    File.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.mill != null && message.hasOwnProperty("mill"))
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.mill);
+        if (message.checksum != null && message.hasOwnProperty("checksum"))
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.checksum);
+        if (message.source != null && message.hasOwnProperty("source"))
+            writer.uint32(/* id 3, wireType 2 =*/26).string(message.source);
+        if (message.opts != null && message.hasOwnProperty("opts"))
+            writer.uint32(/* id 4, wireType 2 =*/34).string(message.opts);
+        if (message.hash != null && message.hasOwnProperty("hash"))
+            writer.uint32(/* id 5, wireType 2 =*/42).string(message.hash);
+        if (message.key != null && message.hasOwnProperty("key"))
+            writer.uint32(/* id 6, wireType 2 =*/50).string(message.key);
+        if (message.media != null && message.hasOwnProperty("media"))
+            writer.uint32(/* id 7, wireType 2 =*/58).string(message.media);
+        if (message.name != null && message.hasOwnProperty("name"))
+            writer.uint32(/* id 8, wireType 2 =*/66).string(message.name);
+        if (message.size != null && message.hasOwnProperty("size"))
+            writer.uint32(/* id 9, wireType 0 =*/72).int64(message.size);
+        if (message.added != null && message.hasOwnProperty("added"))
+            $root.google.protobuf.Timestamp.encode(message.added, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+        if (message.meta != null && message.hasOwnProperty("meta"))
+            $root.google.protobuf.Struct.encode(message.meta, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+        return writer;
+    };
+
+    /**
+     * Encodes the specified File message, length delimited. Does not implicitly {@link File.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof File
+     * @static
+     * @param {IFile} message File message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    File.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a File message from the specified reader or buffer.
+     * @function decode
+     * @memberof File
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {File} File
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    File.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.File();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1:
+                message.mill = reader.string();
+                break;
+            case 2:
+                message.checksum = reader.string();
+                break;
+            case 3:
+                message.source = reader.string();
+                break;
+            case 4:
+                message.opts = reader.string();
+                break;
+            case 5:
+                message.hash = reader.string();
+                break;
+            case 6:
+                message.key = reader.string();
+                break;
+            case 7:
+                message.media = reader.string();
+                break;
+            case 8:
+                message.name = reader.string();
+                break;
+            case 9:
+                message.size = reader.int64();
+                break;
+            case 10:
+                message.added = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                break;
+            case 11:
+                message.meta = $root.google.protobuf.Struct.decode(reader, reader.uint32());
+                break;
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a File message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof File
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {File} File
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    File.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a File message.
+     * @function verify
+     * @memberof File
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    File.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.mill != null && message.hasOwnProperty("mill"))
+            if (!$util.isString(message.mill))
+                return "mill: string expected";
+        if (message.checksum != null && message.hasOwnProperty("checksum"))
+            if (!$util.isString(message.checksum))
+                return "checksum: string expected";
+        if (message.source != null && message.hasOwnProperty("source"))
+            if (!$util.isString(message.source))
+                return "source: string expected";
+        if (message.opts != null && message.hasOwnProperty("opts"))
+            if (!$util.isString(message.opts))
+                return "opts: string expected";
+        if (message.hash != null && message.hasOwnProperty("hash"))
+            if (!$util.isString(message.hash))
+                return "hash: string expected";
+        if (message.key != null && message.hasOwnProperty("key"))
+            if (!$util.isString(message.key))
+                return "key: string expected";
+        if (message.media != null && message.hasOwnProperty("media"))
+            if (!$util.isString(message.media))
+                return "media: string expected";
+        if (message.name != null && message.hasOwnProperty("name"))
+            if (!$util.isString(message.name))
+                return "name: string expected";
+        if (message.size != null && message.hasOwnProperty("size"))
+            if (!$util.isInteger(message.size) && !(message.size && $util.isInteger(message.size.low) && $util.isInteger(message.size.high)))
+                return "size: integer|Long expected";
+        if (message.added != null && message.hasOwnProperty("added")) {
+            let error = $root.google.protobuf.Timestamp.verify(message.added);
+            if (error)
+                return "added." + error;
+        }
+        if (message.meta != null && message.hasOwnProperty("meta")) {
+            let error = $root.google.protobuf.Struct.verify(message.meta);
+            if (error)
+                return "meta." + error;
+        }
+        return null;
+    };
+
+    /**
+     * Creates a File message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof File
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {File} File
+     */
+    File.fromObject = function fromObject(object) {
+        if (object instanceof $root.File)
+            return object;
+        let message = new $root.File();
+        if (object.mill != null)
+            message.mill = String(object.mill);
+        if (object.checksum != null)
+            message.checksum = String(object.checksum);
+        if (object.source != null)
+            message.source = String(object.source);
+        if (object.opts != null)
+            message.opts = String(object.opts);
+        if (object.hash != null)
+            message.hash = String(object.hash);
+        if (object.key != null)
+            message.key = String(object.key);
+        if (object.media != null)
+            message.media = String(object.media);
+        if (object.name != null)
+            message.name = String(object.name);
+        if (object.size != null)
+            if ($util.Long)
+                (message.size = $util.Long.fromValue(object.size)).unsigned = false;
+            else if (typeof object.size === "string")
+                message.size = parseInt(object.size, 10);
+            else if (typeof object.size === "number")
+                message.size = object.size;
+            else if (typeof object.size === "object")
+                message.size = new $util.LongBits(object.size.low >>> 0, object.size.high >>> 0).toNumber();
+        if (object.added != null) {
+            if (typeof object.added !== "object")
+                throw TypeError(".File.added: object expected");
+            message.added = $root.google.protobuf.Timestamp.fromObject(object.added);
+        }
+        if (object.meta != null) {
+            if (typeof object.meta !== "object")
+                throw TypeError(".File.meta: object expected");
+            message.meta = $root.google.protobuf.Struct.fromObject(object.meta);
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a File message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof File
+     * @static
+     * @param {File} message File
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    File.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.defaults) {
+            object.mill = "";
+            object.checksum = "";
+            object.source = "";
+            object.opts = "";
+            object.hash = "";
+            object.key = "";
+            object.media = "";
+            object.name = "";
+            if ($util.Long) {
+                let long = new $util.Long(0, 0, false);
+                object.size = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+            } else
+                object.size = options.longs === String ? "0" : 0;
+            object.added = null;
+            object.meta = null;
+        }
+        if (message.mill != null && message.hasOwnProperty("mill"))
+            object.mill = message.mill;
+        if (message.checksum != null && message.hasOwnProperty("checksum"))
+            object.checksum = message.checksum;
+        if (message.source != null && message.hasOwnProperty("source"))
+            object.source = message.source;
+        if (message.opts != null && message.hasOwnProperty("opts"))
+            object.opts = message.opts;
+        if (message.hash != null && message.hasOwnProperty("hash"))
+            object.hash = message.hash;
+        if (message.key != null && message.hasOwnProperty("key"))
+            object.key = message.key;
+        if (message.media != null && message.hasOwnProperty("media"))
+            object.media = message.media;
+        if (message.name != null && message.hasOwnProperty("name"))
+            object.name = message.name;
+        if (message.size != null && message.hasOwnProperty("size"))
+            if (typeof message.size === "number")
+                object.size = options.longs === String ? String(message.size) : message.size;
+            else
+                object.size = options.longs === String ? $util.Long.prototype.toString.call(message.size) : options.longs === Number ? new $util.LongBits(message.size.low >>> 0, message.size.high >>> 0).toNumber() : message.size;
+        if (message.added != null && message.hasOwnProperty("added"))
+            object.added = $root.google.protobuf.Timestamp.toObject(message.added, options);
+        if (message.meta != null && message.hasOwnProperty("meta"))
+            object.meta = $root.google.protobuf.Struct.toObject(message.meta, options);
+        return object;
+    };
+
+    /**
+     * Converts this File to JSON.
+     * @function toJSON
+     * @memberof File
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    File.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    return File;
+})();
+
+export const Cafe = $root.Cafe = (() => {
+
+    /**
+     * Properties of a Cafe.
+     * @exports ICafe
+     * @interface ICafe
+     * @property {string|null} [peer] Cafe peer
+     * @property {string|null} [address] Cafe address
+     * @property {string|null} [api] Cafe api
+     * @property {string|null} [protocol] Cafe protocol
+     * @property {string|null} [node] Cafe node
+     * @property {string|null} [url] Cafe url
+     * @property {Array.<string>|null} [swarm] Cafe swarm
+     */
+
+    /**
+     * Constructs a new Cafe.
+     * @exports Cafe
+     * @classdesc Represents a Cafe.
+     * @implements ICafe
+     * @constructor
+     * @param {ICafe=} [properties] Properties to set
+     */
+    function Cafe(properties) {
+        this.swarm = [];
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * Cafe peer.
+     * @member {string} peer
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.peer = "";
+
+    /**
+     * Cafe address.
+     * @member {string} address
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.address = "";
+
+    /**
+     * Cafe api.
+     * @member {string} api
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.api = "";
+
+    /**
+     * Cafe protocol.
+     * @member {string} protocol
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.protocol = "";
+
+    /**
+     * Cafe node.
+     * @member {string} node
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.node = "";
+
+    /**
+     * Cafe url.
+     * @member {string} url
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.url = "";
+
+    /**
+     * Cafe swarm.
+     * @member {Array.<string>} swarm
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.swarm = $util.emptyArray;
+
+    /**
+     * Creates a new Cafe instance using the specified properties.
+     * @function create
+     * @memberof Cafe
+     * @static
+     * @param {ICafe=} [properties] Properties to set
+     * @returns {Cafe} Cafe instance
+     */
+    Cafe.create = function create(properties) {
+        return new Cafe(properties);
+    };
+
+    /**
+     * Encodes the specified Cafe message. Does not implicitly {@link Cafe.verify|verify} messages.
+     * @function encode
+     * @memberof Cafe
+     * @static
+     * @param {ICafe} message Cafe message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Cafe.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.peer != null && message.hasOwnProperty("peer"))
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.peer);
+        if (message.address != null && message.hasOwnProperty("address"))
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.address);
+        if (message.api != null && message.hasOwnProperty("api"))
+            writer.uint32(/* id 3, wireType 2 =*/26).string(message.api);
+        if (message.protocol != null && message.hasOwnProperty("protocol"))
+            writer.uint32(/* id 4, wireType 2 =*/34).string(message.protocol);
+        if (message.node != null && message.hasOwnProperty("node"))
+            writer.uint32(/* id 5, wireType 2 =*/42).string(message.node);
+        if (message.url != null && message.hasOwnProperty("url"))
+            writer.uint32(/* id 6, wireType 2 =*/50).string(message.url);
+        if (message.swarm != null && message.swarm.length)
+            for (let i = 0; i < message.swarm.length; ++i)
+                writer.uint32(/* id 7, wireType 2 =*/58).string(message.swarm[i]);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified Cafe message, length delimited. Does not implicitly {@link Cafe.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof Cafe
+     * @static
+     * @param {ICafe} message Cafe message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Cafe.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a Cafe message from the specified reader or buffer.
+     * @function decode
+     * @memberof Cafe
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {Cafe} Cafe
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    Cafe.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Cafe();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1:
+                message.peer = reader.string();
+                break;
+            case 2:
+                message.address = reader.string();
+                break;
+            case 3:
+                message.api = reader.string();
+                break;
+            case 4:
+                message.protocol = reader.string();
+                break;
+            case 5:
+                message.node = reader.string();
+                break;
+            case 6:
+                message.url = reader.string();
+                break;
+            case 7:
+                if (!(message.swarm && message.swarm.length))
+                    message.swarm = [];
+                message.swarm.push(reader.string());
+                break;
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a Cafe message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof Cafe
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {Cafe} Cafe
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    Cafe.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a Cafe message.
+     * @function verify
+     * @memberof Cafe
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    Cafe.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.peer != null && message.hasOwnProperty("peer"))
+            if (!$util.isString(message.peer))
+                return "peer: string expected";
+        if (message.address != null && message.hasOwnProperty("address"))
+            if (!$util.isString(message.address))
+                return "address: string expected";
+        if (message.api != null && message.hasOwnProperty("api"))
+            if (!$util.isString(message.api))
+                return "api: string expected";
+        if (message.protocol != null && message.hasOwnProperty("protocol"))
+            if (!$util.isString(message.protocol))
+                return "protocol: string expected";
+        if (message.node != null && message.hasOwnProperty("node"))
+            if (!$util.isString(message.node))
+                return "node: string expected";
+        if (message.url != null && message.hasOwnProperty("url"))
+            if (!$util.isString(message.url))
+                return "url: string expected";
+        if (message.swarm != null && message.hasOwnProperty("swarm")) {
+            if (!Array.isArray(message.swarm))
+                return "swarm: array expected";
+            for (let i = 0; i < message.swarm.length; ++i)
+                if (!$util.isString(message.swarm[i]))
+                    return "swarm: string[] expected";
+        }
+        return null;
+    };
+
+    /**
+     * Creates a Cafe message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof Cafe
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {Cafe} Cafe
+     */
+    Cafe.fromObject = function fromObject(object) {
+        if (object instanceof $root.Cafe)
+            return object;
+        let message = new $root.Cafe();
+        if (object.peer != null)
+            message.peer = String(object.peer);
+        if (object.address != null)
+            message.address = String(object.address);
+        if (object.api != null)
+            message.api = String(object.api);
+        if (object.protocol != null)
+            message.protocol = String(object.protocol);
+        if (object.node != null)
+            message.node = String(object.node);
+        if (object.url != null)
+            message.url = String(object.url);
+        if (object.swarm) {
+            if (!Array.isArray(object.swarm))
+                throw TypeError(".Cafe.swarm: array expected");
+            message.swarm = [];
+            for (let i = 0; i < object.swarm.length; ++i)
+                message.swarm[i] = String(object.swarm[i]);
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a Cafe message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof Cafe
+     * @static
+     * @param {Cafe} message Cafe
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    Cafe.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.arrays || options.defaults)
+            object.swarm = [];
+        if (options.defaults) {
+            object.peer = "";
+            object.address = "";
+            object.api = "";
+            object.protocol = "";
+            object.node = "";
+            object.url = "";
+        }
+        if (message.peer != null && message.hasOwnProperty("peer"))
+            object.peer = message.peer;
+        if (message.address != null && message.hasOwnProperty("address"))
+            object.address = message.address;
+        if (message.api != null && message.hasOwnProperty("api"))
+            object.api = message.api;
+        if (message.protocol != null && message.hasOwnProperty("protocol"))
+            object.protocol = message.protocol;
+        if (message.node != null && message.hasOwnProperty("node"))
+            object.node = message.node;
+        if (message.url != null && message.hasOwnProperty("url"))
+            object.url = message.url;
+        if (message.swarm && message.swarm.length) {
+            object.swarm = [];
+            for (let j = 0; j < message.swarm.length; ++j)
+                object.swarm[j] = message.swarm[j];
+        }
+        return object;
+    };
+
+    /**
+     * Converts this Cafe to JSON.
+     * @function toJSON
+     * @memberof Cafe
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    Cafe.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    return Cafe;
+})();
+
 export const Message = $root.Message = (() => {
 
     /**
@@ -5090,438 +5874,6 @@ export const Error = $root.Error = (() => {
     return Error;
 })();
 
-export const File = $root.File = (() => {
-
-    /**
-     * Properties of a File.
-     * @exports IFile
-     * @interface IFile
-     * @property {string|null} [mill] File mill
-     * @property {string|null} [checksum] File checksum
-     * @property {string|null} [source] File source
-     * @property {string|null} [opts] File opts
-     * @property {string|null} [hash] File hash
-     * @property {string|null} [key] File key
-     * @property {string|null} [media] File media
-     * @property {string|null} [name] File name
-     * @property {number|Long|null} [size] File size
-     * @property {google.protobuf.ITimestamp|null} [added] File added
-     * @property {google.protobuf.IStruct|null} [meta] File meta
-     */
-
-    /**
-     * Constructs a new File.
-     * @exports File
-     * @classdesc Represents a File.
-     * @implements IFile
-     * @constructor
-     * @param {IFile=} [properties] Properties to set
-     */
-    function File(properties) {
-        if (properties)
-            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * File mill.
-     * @member {string} mill
-     * @memberof File
-     * @instance
-     */
-    File.prototype.mill = "";
-
-    /**
-     * File checksum.
-     * @member {string} checksum
-     * @memberof File
-     * @instance
-     */
-    File.prototype.checksum = "";
-
-    /**
-     * File source.
-     * @member {string} source
-     * @memberof File
-     * @instance
-     */
-    File.prototype.source = "";
-
-    /**
-     * File opts.
-     * @member {string} opts
-     * @memberof File
-     * @instance
-     */
-    File.prototype.opts = "";
-
-    /**
-     * File hash.
-     * @member {string} hash
-     * @memberof File
-     * @instance
-     */
-    File.prototype.hash = "";
-
-    /**
-     * File key.
-     * @member {string} key
-     * @memberof File
-     * @instance
-     */
-    File.prototype.key = "";
-
-    /**
-     * File media.
-     * @member {string} media
-     * @memberof File
-     * @instance
-     */
-    File.prototype.media = "";
-
-    /**
-     * File name.
-     * @member {string} name
-     * @memberof File
-     * @instance
-     */
-    File.prototype.name = "";
-
-    /**
-     * File size.
-     * @member {number|Long} size
-     * @memberof File
-     * @instance
-     */
-    File.prototype.size = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-
-    /**
-     * File added.
-     * @member {google.protobuf.ITimestamp|null|undefined} added
-     * @memberof File
-     * @instance
-     */
-    File.prototype.added = null;
-
-    /**
-     * File meta.
-     * @member {google.protobuf.IStruct|null|undefined} meta
-     * @memberof File
-     * @instance
-     */
-    File.prototype.meta = null;
-
-    /**
-     * Creates a new File instance using the specified properties.
-     * @function create
-     * @memberof File
-     * @static
-     * @param {IFile=} [properties] Properties to set
-     * @returns {File} File instance
-     */
-    File.create = function create(properties) {
-        return new File(properties);
-    };
-
-    /**
-     * Encodes the specified File message. Does not implicitly {@link File.verify|verify} messages.
-     * @function encode
-     * @memberof File
-     * @static
-     * @param {IFile} message File message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    File.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        if (message.mill != null && message.hasOwnProperty("mill"))
-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.mill);
-        if (message.checksum != null && message.hasOwnProperty("checksum"))
-            writer.uint32(/* id 2, wireType 2 =*/18).string(message.checksum);
-        if (message.source != null && message.hasOwnProperty("source"))
-            writer.uint32(/* id 3, wireType 2 =*/26).string(message.source);
-        if (message.opts != null && message.hasOwnProperty("opts"))
-            writer.uint32(/* id 4, wireType 2 =*/34).string(message.opts);
-        if (message.hash != null && message.hasOwnProperty("hash"))
-            writer.uint32(/* id 5, wireType 2 =*/42).string(message.hash);
-        if (message.key != null && message.hasOwnProperty("key"))
-            writer.uint32(/* id 6, wireType 2 =*/50).string(message.key);
-        if (message.media != null && message.hasOwnProperty("media"))
-            writer.uint32(/* id 7, wireType 2 =*/58).string(message.media);
-        if (message.name != null && message.hasOwnProperty("name"))
-            writer.uint32(/* id 8, wireType 2 =*/66).string(message.name);
-        if (message.size != null && message.hasOwnProperty("size"))
-            writer.uint32(/* id 9, wireType 0 =*/72).int64(message.size);
-        if (message.added != null && message.hasOwnProperty("added"))
-            $root.google.protobuf.Timestamp.encode(message.added, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
-        if (message.meta != null && message.hasOwnProperty("meta"))
-            $root.google.protobuf.Struct.encode(message.meta, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
-        return writer;
-    };
-
-    /**
-     * Encodes the specified File message, length delimited. Does not implicitly {@link File.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof File
-     * @static
-     * @param {IFile} message File message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    File.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a File message from the specified reader or buffer.
-     * @function decode
-     * @memberof File
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {File} File
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    File.decode = function decode(reader, length) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.File();
-        while (reader.pos < end) {
-            let tag = reader.uint32();
-            switch (tag >>> 3) {
-            case 1:
-                message.mill = reader.string();
-                break;
-            case 2:
-                message.checksum = reader.string();
-                break;
-            case 3:
-                message.source = reader.string();
-                break;
-            case 4:
-                message.opts = reader.string();
-                break;
-            case 5:
-                message.hash = reader.string();
-                break;
-            case 6:
-                message.key = reader.string();
-                break;
-            case 7:
-                message.media = reader.string();
-                break;
-            case 8:
-                message.name = reader.string();
-                break;
-            case 9:
-                message.size = reader.int64();
-                break;
-            case 10:
-                message.added = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
-                break;
-            case 11:
-                message.meta = $root.google.protobuf.Struct.decode(reader, reader.uint32());
-                break;
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Decodes a File message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof File
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {File} File
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    File.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a File message.
-     * @function verify
-     * @memberof File
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    File.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        if (message.mill != null && message.hasOwnProperty("mill"))
-            if (!$util.isString(message.mill))
-                return "mill: string expected";
-        if (message.checksum != null && message.hasOwnProperty("checksum"))
-            if (!$util.isString(message.checksum))
-                return "checksum: string expected";
-        if (message.source != null && message.hasOwnProperty("source"))
-            if (!$util.isString(message.source))
-                return "source: string expected";
-        if (message.opts != null && message.hasOwnProperty("opts"))
-            if (!$util.isString(message.opts))
-                return "opts: string expected";
-        if (message.hash != null && message.hasOwnProperty("hash"))
-            if (!$util.isString(message.hash))
-                return "hash: string expected";
-        if (message.key != null && message.hasOwnProperty("key"))
-            if (!$util.isString(message.key))
-                return "key: string expected";
-        if (message.media != null && message.hasOwnProperty("media"))
-            if (!$util.isString(message.media))
-                return "media: string expected";
-        if (message.name != null && message.hasOwnProperty("name"))
-            if (!$util.isString(message.name))
-                return "name: string expected";
-        if (message.size != null && message.hasOwnProperty("size"))
-            if (!$util.isInteger(message.size) && !(message.size && $util.isInteger(message.size.low) && $util.isInteger(message.size.high)))
-                return "size: integer|Long expected";
-        if (message.added != null && message.hasOwnProperty("added")) {
-            let error = $root.google.protobuf.Timestamp.verify(message.added);
-            if (error)
-                return "added." + error;
-        }
-        if (message.meta != null && message.hasOwnProperty("meta")) {
-            let error = $root.google.protobuf.Struct.verify(message.meta);
-            if (error)
-                return "meta." + error;
-        }
-        return null;
-    };
-
-    /**
-     * Creates a File message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof File
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {File} File
-     */
-    File.fromObject = function fromObject(object) {
-        if (object instanceof $root.File)
-            return object;
-        let message = new $root.File();
-        if (object.mill != null)
-            message.mill = String(object.mill);
-        if (object.checksum != null)
-            message.checksum = String(object.checksum);
-        if (object.source != null)
-            message.source = String(object.source);
-        if (object.opts != null)
-            message.opts = String(object.opts);
-        if (object.hash != null)
-            message.hash = String(object.hash);
-        if (object.key != null)
-            message.key = String(object.key);
-        if (object.media != null)
-            message.media = String(object.media);
-        if (object.name != null)
-            message.name = String(object.name);
-        if (object.size != null)
-            if ($util.Long)
-                (message.size = $util.Long.fromValue(object.size)).unsigned = false;
-            else if (typeof object.size === "string")
-                message.size = parseInt(object.size, 10);
-            else if (typeof object.size === "number")
-                message.size = object.size;
-            else if (typeof object.size === "object")
-                message.size = new $util.LongBits(object.size.low >>> 0, object.size.high >>> 0).toNumber();
-        if (object.added != null) {
-            if (typeof object.added !== "object")
-                throw TypeError(".File.added: object expected");
-            message.added = $root.google.protobuf.Timestamp.fromObject(object.added);
-        }
-        if (object.meta != null) {
-            if (typeof object.meta !== "object")
-                throw TypeError(".File.meta: object expected");
-            message.meta = $root.google.protobuf.Struct.fromObject(object.meta);
-        }
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a File message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof File
-     * @static
-     * @param {File} message File
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    File.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        let object = {};
-        if (options.defaults) {
-            object.mill = "";
-            object.checksum = "";
-            object.source = "";
-            object.opts = "";
-            object.hash = "";
-            object.key = "";
-            object.media = "";
-            object.name = "";
-            if ($util.Long) {
-                let long = new $util.Long(0, 0, false);
-                object.size = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-            } else
-                object.size = options.longs === String ? "0" : 0;
-            object.added = null;
-            object.meta = null;
-        }
-        if (message.mill != null && message.hasOwnProperty("mill"))
-            object.mill = message.mill;
-        if (message.checksum != null && message.hasOwnProperty("checksum"))
-            object.checksum = message.checksum;
-        if (message.source != null && message.hasOwnProperty("source"))
-            object.source = message.source;
-        if (message.opts != null && message.hasOwnProperty("opts"))
-            object.opts = message.opts;
-        if (message.hash != null && message.hasOwnProperty("hash"))
-            object.hash = message.hash;
-        if (message.key != null && message.hasOwnProperty("key"))
-            object.key = message.key;
-        if (message.media != null && message.hasOwnProperty("media"))
-            object.media = message.media;
-        if (message.name != null && message.hasOwnProperty("name"))
-            object.name = message.name;
-        if (message.size != null && message.hasOwnProperty("size"))
-            if (typeof message.size === "number")
-                object.size = options.longs === String ? String(message.size) : message.size;
-            else
-                object.size = options.longs === String ? $util.Long.prototype.toString.call(message.size) : options.longs === Number ? new $util.LongBits(message.size.low >>> 0, message.size.high >>> 0).toNumber() : message.size;
-        if (message.added != null && message.hasOwnProperty("added"))
-            object.added = $root.google.protobuf.Timestamp.toObject(message.added, options);
-        if (message.meta != null && message.hasOwnProperty("meta"))
-            object.meta = $root.google.protobuf.Struct.toObject(message.meta, options);
-        return object;
-    };
-
-    /**
-     * Converts this File to JSON.
-     * @function toJSON
-     * @memberof File
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    File.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    return File;
-})();
-
 export const google = $root.google = (() => {
 
     /**
@@ -5762,225 +6114,6 @@ export const google = $root.google = (() => {
             };
 
             return Timestamp;
-        })();
-
-        protobuf.Any = (function() {
-
-            /**
-             * Properties of an Any.
-             * @memberof google.protobuf
-             * @interface IAny
-             * @property {string|null} [type_url] Any type_url
-             * @property {Uint8Array|null} [value] Any value
-             */
-
-            /**
-             * Constructs a new Any.
-             * @memberof google.protobuf
-             * @classdesc Represents an Any.
-             * @implements IAny
-             * @constructor
-             * @param {google.protobuf.IAny=} [properties] Properties to set
-             */
-            function Any(properties) {
-                if (properties)
-                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
-                            this[keys[i]] = properties[keys[i]];
-            }
-
-            /**
-             * Any type_url.
-             * @member {string} type_url
-             * @memberof google.protobuf.Any
-             * @instance
-             */
-            Any.prototype.type_url = "";
-
-            /**
-             * Any value.
-             * @member {Uint8Array} value
-             * @memberof google.protobuf.Any
-             * @instance
-             */
-            Any.prototype.value = $util.newBuffer([]);
-
-            /**
-             * Creates a new Any instance using the specified properties.
-             * @function create
-             * @memberof google.protobuf.Any
-             * @static
-             * @param {google.protobuf.IAny=} [properties] Properties to set
-             * @returns {google.protobuf.Any} Any instance
-             */
-            Any.create = function create(properties) {
-                return new Any(properties);
-            };
-
-            /**
-             * Encodes the specified Any message. Does not implicitly {@link google.protobuf.Any.verify|verify} messages.
-             * @function encode
-             * @memberof google.protobuf.Any
-             * @static
-             * @param {google.protobuf.IAny} message Any message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            Any.encode = function encode(message, writer) {
-                if (!writer)
-                    writer = $Writer.create();
-                if (message.type_url != null && message.hasOwnProperty("type_url"))
-                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.type_url);
-                if (message.value != null && message.hasOwnProperty("value"))
-                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.value);
-                return writer;
-            };
-
-            /**
-             * Encodes the specified Any message, length delimited. Does not implicitly {@link google.protobuf.Any.verify|verify} messages.
-             * @function encodeDelimited
-             * @memberof google.protobuf.Any
-             * @static
-             * @param {google.protobuf.IAny} message Any message or plain object to encode
-             * @param {$protobuf.Writer} [writer] Writer to encode to
-             * @returns {$protobuf.Writer} Writer
-             */
-            Any.encodeDelimited = function encodeDelimited(message, writer) {
-                return this.encode(message, writer).ldelim();
-            };
-
-            /**
-             * Decodes an Any message from the specified reader or buffer.
-             * @function decode
-             * @memberof google.protobuf.Any
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @param {number} [length] Message length if known beforehand
-             * @returns {google.protobuf.Any} Any
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            Any.decode = function decode(reader, length) {
-                if (!(reader instanceof $Reader))
-                    reader = $Reader.create(reader);
-                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.Any();
-                while (reader.pos < end) {
-                    let tag = reader.uint32();
-                    switch (tag >>> 3) {
-                    case 1:
-                        message.type_url = reader.string();
-                        break;
-                    case 2:
-                        message.value = reader.bytes();
-                        break;
-                    default:
-                        reader.skipType(tag & 7);
-                        break;
-                    }
-                }
-                return message;
-            };
-
-            /**
-             * Decodes an Any message from the specified reader or buffer, length delimited.
-             * @function decodeDelimited
-             * @memberof google.protobuf.Any
-             * @static
-             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {google.protobuf.Any} Any
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            Any.decodeDelimited = function decodeDelimited(reader) {
-                if (!(reader instanceof $Reader))
-                    reader = new $Reader(reader);
-                return this.decode(reader, reader.uint32());
-            };
-
-            /**
-             * Verifies an Any message.
-             * @function verify
-             * @memberof google.protobuf.Any
-             * @static
-             * @param {Object.<string,*>} message Plain object to verify
-             * @returns {string|null} `null` if valid, otherwise the reason why it is not
-             */
-            Any.verify = function verify(message) {
-                if (typeof message !== "object" || message === null)
-                    return "object expected";
-                if (message.type_url != null && message.hasOwnProperty("type_url"))
-                    if (!$util.isString(message.type_url))
-                        return "type_url: string expected";
-                if (message.value != null && message.hasOwnProperty("value"))
-                    if (!(message.value && typeof message.value.length === "number" || $util.isString(message.value)))
-                        return "value: buffer expected";
-                return null;
-            };
-
-            /**
-             * Creates an Any message from a plain object. Also converts values to their respective internal types.
-             * @function fromObject
-             * @memberof google.protobuf.Any
-             * @static
-             * @param {Object.<string,*>} object Plain object
-             * @returns {google.protobuf.Any} Any
-             */
-            Any.fromObject = function fromObject(object) {
-                if (object instanceof $root.google.protobuf.Any)
-                    return object;
-                let message = new $root.google.protobuf.Any();
-                if (object.type_url != null)
-                    message.type_url = String(object.type_url);
-                if (object.value != null)
-                    if (typeof object.value === "string")
-                        $util.base64.decode(object.value, message.value = $util.newBuffer($util.base64.length(object.value)), 0);
-                    else if (object.value.length)
-                        message.value = object.value;
-                return message;
-            };
-
-            /**
-             * Creates a plain object from an Any message. Also converts values to other types if specified.
-             * @function toObject
-             * @memberof google.protobuf.Any
-             * @static
-             * @param {google.protobuf.Any} message Any
-             * @param {$protobuf.IConversionOptions} [options] Conversion options
-             * @returns {Object.<string,*>} Plain object
-             */
-            Any.toObject = function toObject(message, options) {
-                if (!options)
-                    options = {};
-                let object = {};
-                if (options.defaults) {
-                    object.type_url = "";
-                    if (options.bytes === String)
-                        object.value = "";
-                    else {
-                        object.value = [];
-                        if (options.bytes !== Array)
-                            object.value = $util.newBuffer(object.value);
-                    }
-                }
-                if (message.type_url != null && message.hasOwnProperty("type_url"))
-                    object.type_url = message.type_url;
-                if (message.value != null && message.hasOwnProperty("value"))
-                    object.value = options.bytes === String ? $util.base64.encode(message.value, 0, message.value.length) : options.bytes === Array ? Array.prototype.slice.call(message.value) : message.value;
-                return object;
-            };
-
-            /**
-             * Converts this Any to JSON.
-             * @function toJSON
-             * @memberof google.protobuf.Any
-             * @instance
-             * @returns {Object.<string,*>} JSON object
-             */
-            Any.prototype.toJSON = function toJSON() {
-                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-            };
-
-            return Any;
         })();
 
         protobuf.Struct = (function() {
@@ -6781,6 +6914,225 @@ export const google = $root.google = (() => {
             };
 
             return ListValue;
+        })();
+
+        protobuf.Any = (function() {
+
+            /**
+             * Properties of an Any.
+             * @memberof google.protobuf
+             * @interface IAny
+             * @property {string|null} [type_url] Any type_url
+             * @property {Uint8Array|null} [value] Any value
+             */
+
+            /**
+             * Constructs a new Any.
+             * @memberof google.protobuf
+             * @classdesc Represents an Any.
+             * @implements IAny
+             * @constructor
+             * @param {google.protobuf.IAny=} [properties] Properties to set
+             */
+            function Any(properties) {
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * Any type_url.
+             * @member {string} type_url
+             * @memberof google.protobuf.Any
+             * @instance
+             */
+            Any.prototype.type_url = "";
+
+            /**
+             * Any value.
+             * @member {Uint8Array} value
+             * @memberof google.protobuf.Any
+             * @instance
+             */
+            Any.prototype.value = $util.newBuffer([]);
+
+            /**
+             * Creates a new Any instance using the specified properties.
+             * @function create
+             * @memberof google.protobuf.Any
+             * @static
+             * @param {google.protobuf.IAny=} [properties] Properties to set
+             * @returns {google.protobuf.Any} Any instance
+             */
+            Any.create = function create(properties) {
+                return new Any(properties);
+            };
+
+            /**
+             * Encodes the specified Any message. Does not implicitly {@link google.protobuf.Any.verify|verify} messages.
+             * @function encode
+             * @memberof google.protobuf.Any
+             * @static
+             * @param {google.protobuf.IAny} message Any message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Any.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.type_url != null && message.hasOwnProperty("type_url"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.type_url);
+                if (message.value != null && message.hasOwnProperty("value"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.value);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified Any message, length delimited. Does not implicitly {@link google.protobuf.Any.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof google.protobuf.Any
+             * @static
+             * @param {google.protobuf.IAny} message Any message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Any.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes an Any message from the specified reader or buffer.
+             * @function decode
+             * @memberof google.protobuf.Any
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {google.protobuf.Any} Any
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Any.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.Any();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.type_url = reader.string();
+                        break;
+                    case 2:
+                        message.value = reader.bytes();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes an Any message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof google.protobuf.Any
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {google.protobuf.Any} Any
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Any.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies an Any message.
+             * @function verify
+             * @memberof google.protobuf.Any
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Any.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.type_url != null && message.hasOwnProperty("type_url"))
+                    if (!$util.isString(message.type_url))
+                        return "type_url: string expected";
+                if (message.value != null && message.hasOwnProperty("value"))
+                    if (!(message.value && typeof message.value.length === "number" || $util.isString(message.value)))
+                        return "value: buffer expected";
+                return null;
+            };
+
+            /**
+             * Creates an Any message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof google.protobuf.Any
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {google.protobuf.Any} Any
+             */
+            Any.fromObject = function fromObject(object) {
+                if (object instanceof $root.google.protobuf.Any)
+                    return object;
+                let message = new $root.google.protobuf.Any();
+                if (object.type_url != null)
+                    message.type_url = String(object.type_url);
+                if (object.value != null)
+                    if (typeof object.value === "string")
+                        $util.base64.decode(object.value, message.value = $util.newBuffer($util.base64.length(object.value)), 0);
+                    else if (object.value.length)
+                        message.value = object.value;
+                return message;
+            };
+
+            /**
+             * Creates a plain object from an Any message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof google.protobuf.Any
+             * @static
+             * @param {google.protobuf.Any} message Any
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Any.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.defaults) {
+                    object.type_url = "";
+                    if (options.bytes === String)
+                        object.value = "";
+                    else {
+                        object.value = [];
+                        if (options.bytes !== Array)
+                            object.value = $util.newBuffer(object.value);
+                    }
+                }
+                if (message.type_url != null && message.hasOwnProperty("type_url"))
+                    object.type_url = message.type_url;
+                if (message.value != null && message.hasOwnProperty("value"))
+                    object.value = options.bytes === String ? $util.base64.encode(message.value, 0, message.value.length) : options.bytes === Array ? Array.prototype.slice.call(message.value) : message.value;
+                return object;
+            };
+
+            /**
+             * Converts this Any to JSON.
+             * @function toJSON
+             * @memberof google.protobuf.Any
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Any.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return Any;
         })();
 
         return protobuf;
@@ -8282,8 +8634,7 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
      * @exports IThreadJoin
      * @interface IThreadJoin
      * @property {string|null} [inviter] ThreadJoin inviter
-     * @property {string|null} [username] ThreadJoin username
-     * @property {Array.<ICafe>|null} [inboxes] ThreadJoin inboxes
+     * @property {IContact|null} [contact] ThreadJoin contact
      */
 
     /**
@@ -8295,7 +8646,6 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
      * @param {IThreadJoin=} [properties] Properties to set
      */
     function ThreadJoin(properties) {
-        this.inboxes = [];
         if (properties)
             for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                 if (properties[keys[i]] != null)
@@ -8311,20 +8661,12 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
     ThreadJoin.prototype.inviter = "";
 
     /**
-     * ThreadJoin username.
-     * @member {string} username
+     * ThreadJoin contact.
+     * @member {IContact|null|undefined} contact
      * @memberof ThreadJoin
      * @instance
      */
-    ThreadJoin.prototype.username = "";
-
-    /**
-     * ThreadJoin inboxes.
-     * @member {Array.<ICafe>} inboxes
-     * @memberof ThreadJoin
-     * @instance
-     */
-    ThreadJoin.prototype.inboxes = $util.emptyArray;
+    ThreadJoin.prototype.contact = null;
 
     /**
      * Creates a new ThreadJoin instance using the specified properties.
@@ -8352,11 +8694,8 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
             writer = $Writer.create();
         if (message.inviter != null && message.hasOwnProperty("inviter"))
             writer.uint32(/* id 1, wireType 2 =*/10).string(message.inviter);
-        if (message.username != null && message.hasOwnProperty("username"))
-            writer.uint32(/* id 2, wireType 2 =*/18).string(message.username);
-        if (message.inboxes != null && message.inboxes.length)
-            for (let i = 0; i < message.inboxes.length; ++i)
-                $root.Cafe.encode(message.inboxes[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+        if (message.contact != null && message.hasOwnProperty("contact"))
+            $root.Contact.encode(message.contact, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
         return writer;
     };
 
@@ -8395,12 +8734,7 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
                 message.inviter = reader.string();
                 break;
             case 2:
-                message.username = reader.string();
-                break;
-            case 3:
-                if (!(message.inboxes && message.inboxes.length))
-                    message.inboxes = [];
-                message.inboxes.push($root.Cafe.decode(reader, reader.uint32()));
+                message.contact = $root.Contact.decode(reader, reader.uint32());
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -8440,17 +8774,10 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
         if (message.inviter != null && message.hasOwnProperty("inviter"))
             if (!$util.isString(message.inviter))
                 return "inviter: string expected";
-        if (message.username != null && message.hasOwnProperty("username"))
-            if (!$util.isString(message.username))
-                return "username: string expected";
-        if (message.inboxes != null && message.hasOwnProperty("inboxes")) {
-            if (!Array.isArray(message.inboxes))
-                return "inboxes: array expected";
-            for (let i = 0; i < message.inboxes.length; ++i) {
-                let error = $root.Cafe.verify(message.inboxes[i]);
-                if (error)
-                    return "inboxes." + error;
-            }
+        if (message.contact != null && message.hasOwnProperty("contact")) {
+            let error = $root.Contact.verify(message.contact);
+            if (error)
+                return "contact." + error;
         }
         return null;
     };
@@ -8469,17 +8796,10 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
         let message = new $root.ThreadJoin();
         if (object.inviter != null)
             message.inviter = String(object.inviter);
-        if (object.username != null)
-            message.username = String(object.username);
-        if (object.inboxes) {
-            if (!Array.isArray(object.inboxes))
-                throw TypeError(".ThreadJoin.inboxes: array expected");
-            message.inboxes = [];
-            for (let i = 0; i < object.inboxes.length; ++i) {
-                if (typeof object.inboxes[i] !== "object")
-                    throw TypeError(".ThreadJoin.inboxes: object expected");
-                message.inboxes[i] = $root.Cafe.fromObject(object.inboxes[i]);
-            }
+        if (object.contact != null) {
+            if (typeof object.contact !== "object")
+                throw TypeError(".ThreadJoin.contact: object expected");
+            message.contact = $root.Contact.fromObject(object.contact);
         }
         return message;
     };
@@ -8497,21 +8817,14 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
         if (!options)
             options = {};
         let object = {};
-        if (options.arrays || options.defaults)
-            object.inboxes = [];
         if (options.defaults) {
             object.inviter = "";
-            object.username = "";
+            object.contact = null;
         }
         if (message.inviter != null && message.hasOwnProperty("inviter"))
             object.inviter = message.inviter;
-        if (message.username != null && message.hasOwnProperty("username"))
-            object.username = message.username;
-        if (message.inboxes && message.inboxes.length) {
-            object.inboxes = [];
-            for (let j = 0; j < message.inboxes.length; ++j)
-                object.inboxes[j] = $root.Cafe.toObject(message.inboxes[j], options);
-        }
+        if (message.contact != null && message.hasOwnProperty("contact"))
+            object.contact = $root.Contact.toObject(message.contact, options);
         return object;
     };
 
@@ -8535,8 +8848,7 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
      * Properties of a ThreadAnnounce.
      * @exports IThreadAnnounce
      * @interface IThreadAnnounce
-     * @property {string|null} [username] ThreadAnnounce username
-     * @property {Array.<ICafe>|null} [inboxes] ThreadAnnounce inboxes
+     * @property {IContact|null} [contact] ThreadAnnounce contact
      */
 
     /**
@@ -8548,7 +8860,6 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
      * @param {IThreadAnnounce=} [properties] Properties to set
      */
     function ThreadAnnounce(properties) {
-        this.inboxes = [];
         if (properties)
             for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                 if (properties[keys[i]] != null)
@@ -8556,20 +8867,12 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
     }
 
     /**
-     * ThreadAnnounce username.
-     * @member {string} username
+     * ThreadAnnounce contact.
+     * @member {IContact|null|undefined} contact
      * @memberof ThreadAnnounce
      * @instance
      */
-    ThreadAnnounce.prototype.username = "";
-
-    /**
-     * ThreadAnnounce inboxes.
-     * @member {Array.<ICafe>} inboxes
-     * @memberof ThreadAnnounce
-     * @instance
-     */
-    ThreadAnnounce.prototype.inboxes = $util.emptyArray;
+    ThreadAnnounce.prototype.contact = null;
 
     /**
      * Creates a new ThreadAnnounce instance using the specified properties.
@@ -8595,11 +8898,8 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
     ThreadAnnounce.encode = function encode(message, writer) {
         if (!writer)
             writer = $Writer.create();
-        if (message.username != null && message.hasOwnProperty("username"))
-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.username);
-        if (message.inboxes != null && message.inboxes.length)
-            for (let i = 0; i < message.inboxes.length; ++i)
-                $root.Cafe.encode(message.inboxes[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+        if (message.contact != null && message.hasOwnProperty("contact"))
+            $root.Contact.encode(message.contact, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
         return writer;
     };
 
@@ -8635,12 +8935,7 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
             let tag = reader.uint32();
             switch (tag >>> 3) {
             case 1:
-                message.username = reader.string();
-                break;
-            case 2:
-                if (!(message.inboxes && message.inboxes.length))
-                    message.inboxes = [];
-                message.inboxes.push($root.Cafe.decode(reader, reader.uint32()));
+                message.contact = $root.Contact.decode(reader, reader.uint32());
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -8677,17 +8972,10 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
     ThreadAnnounce.verify = function verify(message) {
         if (typeof message !== "object" || message === null)
             return "object expected";
-        if (message.username != null && message.hasOwnProperty("username"))
-            if (!$util.isString(message.username))
-                return "username: string expected";
-        if (message.inboxes != null && message.hasOwnProperty("inboxes")) {
-            if (!Array.isArray(message.inboxes))
-                return "inboxes: array expected";
-            for (let i = 0; i < message.inboxes.length; ++i) {
-                let error = $root.Cafe.verify(message.inboxes[i]);
-                if (error)
-                    return "inboxes." + error;
-            }
+        if (message.contact != null && message.hasOwnProperty("contact")) {
+            let error = $root.Contact.verify(message.contact);
+            if (error)
+                return "contact." + error;
         }
         return null;
     };
@@ -8704,17 +8992,10 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
         if (object instanceof $root.ThreadAnnounce)
             return object;
         let message = new $root.ThreadAnnounce();
-        if (object.username != null)
-            message.username = String(object.username);
-        if (object.inboxes) {
-            if (!Array.isArray(object.inboxes))
-                throw TypeError(".ThreadAnnounce.inboxes: array expected");
-            message.inboxes = [];
-            for (let i = 0; i < object.inboxes.length; ++i) {
-                if (typeof object.inboxes[i] !== "object")
-                    throw TypeError(".ThreadAnnounce.inboxes: object expected");
-                message.inboxes[i] = $root.Cafe.fromObject(object.inboxes[i]);
-            }
+        if (object.contact != null) {
+            if (typeof object.contact !== "object")
+                throw TypeError(".ThreadAnnounce.contact: object expected");
+            message.contact = $root.Contact.fromObject(object.contact);
         }
         return message;
     };
@@ -8732,17 +9013,10 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
         if (!options)
             options = {};
         let object = {};
-        if (options.arrays || options.defaults)
-            object.inboxes = [];
         if (options.defaults)
-            object.username = "";
-        if (message.username != null && message.hasOwnProperty("username"))
-            object.username = message.username;
-        if (message.inboxes && message.inboxes.length) {
-            object.inboxes = [];
-            for (let j = 0; j < message.inboxes.length; ++j)
-                object.inboxes[j] = $root.Cafe.toObject(message.inboxes[j], options);
-        }
+            object.contact = null;
+        if (message.contact != null && message.hasOwnProperty("contact"))
+            object.contact = $root.Contact.toObject(message.contact, options);
         return object;
     };
 
