@@ -7,6 +7,343 @@ const $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.
 // Exported root namespace
 const $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
 
+export const Cafe = $root.Cafe = (() => {
+
+    /**
+     * Properties of a Cafe.
+     * @exports ICafe
+     * @interface ICafe
+     * @property {string|null} [peer] Cafe peer
+     * @property {string|null} [address] Cafe address
+     * @property {string|null} [api] Cafe api
+     * @property {string|null} [protocol] Cafe protocol
+     * @property {string|null} [node] Cafe node
+     * @property {string|null} [url] Cafe url
+     * @property {Array.<string>|null} [swarm] Cafe swarm
+     */
+
+    /**
+     * Constructs a new Cafe.
+     * @exports Cafe
+     * @classdesc Represents a Cafe.
+     * @implements ICafe
+     * @constructor
+     * @param {ICafe=} [properties] Properties to set
+     */
+    function Cafe(properties) {
+        this.swarm = [];
+        if (properties)
+            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * Cafe peer.
+     * @member {string} peer
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.peer = "";
+
+    /**
+     * Cafe address.
+     * @member {string} address
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.address = "";
+
+    /**
+     * Cafe api.
+     * @member {string} api
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.api = "";
+
+    /**
+     * Cafe protocol.
+     * @member {string} protocol
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.protocol = "";
+
+    /**
+     * Cafe node.
+     * @member {string} node
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.node = "";
+
+    /**
+     * Cafe url.
+     * @member {string} url
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.url = "";
+
+    /**
+     * Cafe swarm.
+     * @member {Array.<string>} swarm
+     * @memberof Cafe
+     * @instance
+     */
+    Cafe.prototype.swarm = $util.emptyArray;
+
+    /**
+     * Creates a new Cafe instance using the specified properties.
+     * @function create
+     * @memberof Cafe
+     * @static
+     * @param {ICafe=} [properties] Properties to set
+     * @returns {Cafe} Cafe instance
+     */
+    Cafe.create = function create(properties) {
+        return new Cafe(properties);
+    };
+
+    /**
+     * Encodes the specified Cafe message. Does not implicitly {@link Cafe.verify|verify} messages.
+     * @function encode
+     * @memberof Cafe
+     * @static
+     * @param {ICafe} message Cafe message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Cafe.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.peer != null && message.hasOwnProperty("peer"))
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.peer);
+        if (message.address != null && message.hasOwnProperty("address"))
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.address);
+        if (message.api != null && message.hasOwnProperty("api"))
+            writer.uint32(/* id 3, wireType 2 =*/26).string(message.api);
+        if (message.protocol != null && message.hasOwnProperty("protocol"))
+            writer.uint32(/* id 4, wireType 2 =*/34).string(message.protocol);
+        if (message.node != null && message.hasOwnProperty("node"))
+            writer.uint32(/* id 5, wireType 2 =*/42).string(message.node);
+        if (message.url != null && message.hasOwnProperty("url"))
+            writer.uint32(/* id 6, wireType 2 =*/50).string(message.url);
+        if (message.swarm != null && message.swarm.length)
+            for (let i = 0; i < message.swarm.length; ++i)
+                writer.uint32(/* id 7, wireType 2 =*/58).string(message.swarm[i]);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified Cafe message, length delimited. Does not implicitly {@link Cafe.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof Cafe
+     * @static
+     * @param {ICafe} message Cafe message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    Cafe.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a Cafe message from the specified reader or buffer.
+     * @function decode
+     * @memberof Cafe
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {Cafe} Cafe
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    Cafe.decode = function decode(reader, length) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.Cafe();
+        while (reader.pos < end) {
+            let tag = reader.uint32();
+            switch (tag >>> 3) {
+            case 1:
+                message.peer = reader.string();
+                break;
+            case 2:
+                message.address = reader.string();
+                break;
+            case 3:
+                message.api = reader.string();
+                break;
+            case 4:
+                message.protocol = reader.string();
+                break;
+            case 5:
+                message.node = reader.string();
+                break;
+            case 6:
+                message.url = reader.string();
+                break;
+            case 7:
+                if (!(message.swarm && message.swarm.length))
+                    message.swarm = [];
+                message.swarm.push(reader.string());
+                break;
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a Cafe message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof Cafe
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {Cafe} Cafe
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    Cafe.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a Cafe message.
+     * @function verify
+     * @memberof Cafe
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    Cafe.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.peer != null && message.hasOwnProperty("peer"))
+            if (!$util.isString(message.peer))
+                return "peer: string expected";
+        if (message.address != null && message.hasOwnProperty("address"))
+            if (!$util.isString(message.address))
+                return "address: string expected";
+        if (message.api != null && message.hasOwnProperty("api"))
+            if (!$util.isString(message.api))
+                return "api: string expected";
+        if (message.protocol != null && message.hasOwnProperty("protocol"))
+            if (!$util.isString(message.protocol))
+                return "protocol: string expected";
+        if (message.node != null && message.hasOwnProperty("node"))
+            if (!$util.isString(message.node))
+                return "node: string expected";
+        if (message.url != null && message.hasOwnProperty("url"))
+            if (!$util.isString(message.url))
+                return "url: string expected";
+        if (message.swarm != null && message.hasOwnProperty("swarm")) {
+            if (!Array.isArray(message.swarm))
+                return "swarm: array expected";
+            for (let i = 0; i < message.swarm.length; ++i)
+                if (!$util.isString(message.swarm[i]))
+                    return "swarm: string[] expected";
+        }
+        return null;
+    };
+
+    /**
+     * Creates a Cafe message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof Cafe
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {Cafe} Cafe
+     */
+    Cafe.fromObject = function fromObject(object) {
+        if (object instanceof $root.Cafe)
+            return object;
+        let message = new $root.Cafe();
+        if (object.peer != null)
+            message.peer = String(object.peer);
+        if (object.address != null)
+            message.address = String(object.address);
+        if (object.api != null)
+            message.api = String(object.api);
+        if (object.protocol != null)
+            message.protocol = String(object.protocol);
+        if (object.node != null)
+            message.node = String(object.node);
+        if (object.url != null)
+            message.url = String(object.url);
+        if (object.swarm) {
+            if (!Array.isArray(object.swarm))
+                throw TypeError(".Cafe.swarm: array expected");
+            message.swarm = [];
+            for (let i = 0; i < object.swarm.length; ++i)
+                message.swarm[i] = String(object.swarm[i]);
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a Cafe message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof Cafe
+     * @static
+     * @param {Cafe} message Cafe
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    Cafe.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        let object = {};
+        if (options.arrays || options.defaults)
+            object.swarm = [];
+        if (options.defaults) {
+            object.peer = "";
+            object.address = "";
+            object.api = "";
+            object.protocol = "";
+            object.node = "";
+            object.url = "";
+        }
+        if (message.peer != null && message.hasOwnProperty("peer"))
+            object.peer = message.peer;
+        if (message.address != null && message.hasOwnProperty("address"))
+            object.address = message.address;
+        if (message.api != null && message.hasOwnProperty("api"))
+            object.api = message.api;
+        if (message.protocol != null && message.hasOwnProperty("protocol"))
+            object.protocol = message.protocol;
+        if (message.node != null && message.hasOwnProperty("node"))
+            object.node = message.node;
+        if (message.url != null && message.hasOwnProperty("url"))
+            object.url = message.url;
+        if (message.swarm && message.swarm.length) {
+            object.swarm = [];
+            for (let j = 0; j < message.swarm.length; ++j)
+                object.swarm[j] = message.swarm[j];
+        }
+        return object;
+    };
+
+    /**
+     * Converts this Cafe to JSON.
+     * @function toJSON
+     * @memberof Cafe
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    Cafe.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    return Cafe;
+})();
+
 export const CafeChallenge = $root.CafeChallenge = (() => {
 
     /**
@@ -650,14 +987,14 @@ export const CafeSession = $root.CafeSession = (() => {
      * Properties of a CafeSession.
      * @exports ICafeSession
      * @interface ICafeSession
+     * @property {string|null} [id] CafeSession id
      * @property {string|null} [access] CafeSession access
      * @property {google.protobuf.ITimestamp|null} [exp] CafeSession exp
      * @property {string|null} [refresh] CafeSession refresh
      * @property {google.protobuf.ITimestamp|null} [rexp] CafeSession rexp
      * @property {string|null} [subject] CafeSession subject
      * @property {string|null} [type] CafeSession type
-     * @property {string|null} [httpAddr] CafeSession httpAddr
-     * @property {Array.<string>|null} [swarmAddrs] CafeSession swarmAddrs
+     * @property {ICafe|null} [cafe] CafeSession cafe
      */
 
     /**
@@ -669,12 +1006,19 @@ export const CafeSession = $root.CafeSession = (() => {
      * @param {ICafeSession=} [properties] Properties to set
      */
     function CafeSession(properties) {
-        this.swarmAddrs = [];
         if (properties)
             for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                 if (properties[keys[i]] != null)
                     this[keys[i]] = properties[keys[i]];
     }
+
+    /**
+     * CafeSession id.
+     * @member {string} id
+     * @memberof CafeSession
+     * @instance
+     */
+    CafeSession.prototype.id = "";
 
     /**
      * CafeSession access.
@@ -725,20 +1069,12 @@ export const CafeSession = $root.CafeSession = (() => {
     CafeSession.prototype.type = "";
 
     /**
-     * CafeSession httpAddr.
-     * @member {string} httpAddr
+     * CafeSession cafe.
+     * @member {ICafe|null|undefined} cafe
      * @memberof CafeSession
      * @instance
      */
-    CafeSession.prototype.httpAddr = "";
-
-    /**
-     * CafeSession swarmAddrs.
-     * @member {Array.<string>} swarmAddrs
-     * @memberof CafeSession
-     * @instance
-     */
-    CafeSession.prototype.swarmAddrs = $util.emptyArray;
+    CafeSession.prototype.cafe = null;
 
     /**
      * Creates a new CafeSession instance using the specified properties.
@@ -764,23 +1100,22 @@ export const CafeSession = $root.CafeSession = (() => {
     CafeSession.encode = function encode(message, writer) {
         if (!writer)
             writer = $Writer.create();
+        if (message.id != null && message.hasOwnProperty("id"))
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
         if (message.access != null && message.hasOwnProperty("access"))
-            writer.uint32(/* id 1, wireType 2 =*/10).string(message.access);
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.access);
         if (message.exp != null && message.hasOwnProperty("exp"))
-            $root.google.protobuf.Timestamp.encode(message.exp, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            $root.google.protobuf.Timestamp.encode(message.exp, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
         if (message.refresh != null && message.hasOwnProperty("refresh"))
-            writer.uint32(/* id 3, wireType 2 =*/26).string(message.refresh);
+            writer.uint32(/* id 4, wireType 2 =*/34).string(message.refresh);
         if (message.rexp != null && message.hasOwnProperty("rexp"))
-            $root.google.protobuf.Timestamp.encode(message.rexp, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+            $root.google.protobuf.Timestamp.encode(message.rexp, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
         if (message.subject != null && message.hasOwnProperty("subject"))
-            writer.uint32(/* id 5, wireType 2 =*/42).string(message.subject);
+            writer.uint32(/* id 6, wireType 2 =*/50).string(message.subject);
         if (message.type != null && message.hasOwnProperty("type"))
-            writer.uint32(/* id 6, wireType 2 =*/50).string(message.type);
-        if (message.httpAddr != null && message.hasOwnProperty("httpAddr"))
-            writer.uint32(/* id 7, wireType 2 =*/58).string(message.httpAddr);
-        if (message.swarmAddrs != null && message.swarmAddrs.length)
-            for (let i = 0; i < message.swarmAddrs.length; ++i)
-                writer.uint32(/* id 8, wireType 2 =*/66).string(message.swarmAddrs[i]);
+            writer.uint32(/* id 7, wireType 2 =*/58).string(message.type);
+        if (message.cafe != null && message.hasOwnProperty("cafe"))
+            $root.Cafe.encode(message.cafe, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
         return writer;
     };
 
@@ -816,30 +1151,28 @@ export const CafeSession = $root.CafeSession = (() => {
             let tag = reader.uint32();
             switch (tag >>> 3) {
             case 1:
-                message.access = reader.string();
+                message.id = reader.string();
                 break;
             case 2:
-                message.exp = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                message.access = reader.string();
                 break;
             case 3:
-                message.refresh = reader.string();
+                message.exp = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
                 break;
             case 4:
-                message.rexp = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                message.refresh = reader.string();
                 break;
             case 5:
-                message.subject = reader.string();
+                message.rexp = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
                 break;
             case 6:
-                message.type = reader.string();
+                message.subject = reader.string();
                 break;
             case 7:
-                message.httpAddr = reader.string();
+                message.type = reader.string();
                 break;
             case 8:
-                if (!(message.swarmAddrs && message.swarmAddrs.length))
-                    message.swarmAddrs = [];
-                message.swarmAddrs.push(reader.string());
+                message.cafe = $root.Cafe.decode(reader, reader.uint32());
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -876,6 +1209,9 @@ export const CafeSession = $root.CafeSession = (() => {
     CafeSession.verify = function verify(message) {
         if (typeof message !== "object" || message === null)
             return "object expected";
+        if (message.id != null && message.hasOwnProperty("id"))
+            if (!$util.isString(message.id))
+                return "id: string expected";
         if (message.access != null && message.hasOwnProperty("access"))
             if (!$util.isString(message.access))
                 return "access: string expected";
@@ -898,15 +1234,10 @@ export const CafeSession = $root.CafeSession = (() => {
         if (message.type != null && message.hasOwnProperty("type"))
             if (!$util.isString(message.type))
                 return "type: string expected";
-        if (message.httpAddr != null && message.hasOwnProperty("httpAddr"))
-            if (!$util.isString(message.httpAddr))
-                return "httpAddr: string expected";
-        if (message.swarmAddrs != null && message.hasOwnProperty("swarmAddrs")) {
-            if (!Array.isArray(message.swarmAddrs))
-                return "swarmAddrs: array expected";
-            for (let i = 0; i < message.swarmAddrs.length; ++i)
-                if (!$util.isString(message.swarmAddrs[i]))
-                    return "swarmAddrs: string[] expected";
+        if (message.cafe != null && message.hasOwnProperty("cafe")) {
+            let error = $root.Cafe.verify(message.cafe);
+            if (error)
+                return "cafe." + error;
         }
         return null;
     };
@@ -923,6 +1254,8 @@ export const CafeSession = $root.CafeSession = (() => {
         if (object instanceof $root.CafeSession)
             return object;
         let message = new $root.CafeSession();
+        if (object.id != null)
+            message.id = String(object.id);
         if (object.access != null)
             message.access = String(object.access);
         if (object.exp != null) {
@@ -941,14 +1274,10 @@ export const CafeSession = $root.CafeSession = (() => {
             message.subject = String(object.subject);
         if (object.type != null)
             message.type = String(object.type);
-        if (object.httpAddr != null)
-            message.httpAddr = String(object.httpAddr);
-        if (object.swarmAddrs) {
-            if (!Array.isArray(object.swarmAddrs))
-                throw TypeError(".CafeSession.swarmAddrs: array expected");
-            message.swarmAddrs = [];
-            for (let i = 0; i < object.swarmAddrs.length; ++i)
-                message.swarmAddrs[i] = String(object.swarmAddrs[i]);
+        if (object.cafe != null) {
+            if (typeof object.cafe !== "object")
+                throw TypeError(".CafeSession.cafe: object expected");
+            message.cafe = $root.Cafe.fromObject(object.cafe);
         }
         return message;
     };
@@ -966,17 +1295,18 @@ export const CafeSession = $root.CafeSession = (() => {
         if (!options)
             options = {};
         let object = {};
-        if (options.arrays || options.defaults)
-            object.swarmAddrs = [];
         if (options.defaults) {
+            object.id = "";
             object.access = "";
             object.exp = null;
             object.refresh = "";
             object.rexp = null;
             object.subject = "";
             object.type = "";
-            object.httpAddr = "";
+            object.cafe = null;
         }
+        if (message.id != null && message.hasOwnProperty("id"))
+            object.id = message.id;
         if (message.access != null && message.hasOwnProperty("access"))
             object.access = message.access;
         if (message.exp != null && message.hasOwnProperty("exp"))
@@ -989,13 +1319,8 @@ export const CafeSession = $root.CafeSession = (() => {
             object.subject = message.subject;
         if (message.type != null && message.hasOwnProperty("type"))
             object.type = message.type;
-        if (message.httpAddr != null && message.hasOwnProperty("httpAddr"))
-            object.httpAddr = message.httpAddr;
-        if (message.swarmAddrs && message.swarmAddrs.length) {
-            object.swarmAddrs = [];
-            for (let j = 0; j < message.swarmAddrs.length; ++j)
-                object.swarmAddrs[j] = message.swarmAddrs[j];
-        }
+        if (message.cafe != null && message.hasOwnProperty("cafe"))
+            object.cafe = $root.Cafe.toObject(message.cafe, options);
         return object;
     };
 
@@ -1449,24 +1774,24 @@ export const CafeStore = $root.CafeStore = (() => {
     return CafeStore;
 })();
 
-export const CafeBlockList = $root.CafeBlockList = (() => {
+export const CafeObjectList = $root.CafeObjectList = (() => {
 
     /**
-     * Properties of a CafeBlockList.
-     * @exports ICafeBlockList
-     * @interface ICafeBlockList
-     * @property {Array.<string>|null} [cids] CafeBlockList cids
+     * Properties of a CafeObjectList.
+     * @exports ICafeObjectList
+     * @interface ICafeObjectList
+     * @property {Array.<string>|null} [cids] CafeObjectList cids
      */
 
     /**
-     * Constructs a new CafeBlockList.
-     * @exports CafeBlockList
-     * @classdesc Represents a CafeBlockList.
-     * @implements ICafeBlockList
+     * Constructs a new CafeObjectList.
+     * @exports CafeObjectList
+     * @classdesc Represents a CafeObjectList.
+     * @implements ICafeObjectList
      * @constructor
-     * @param {ICafeBlockList=} [properties] Properties to set
+     * @param {ICafeObjectList=} [properties] Properties to set
      */
-    function CafeBlockList(properties) {
+    function CafeObjectList(properties) {
         this.cids = [];
         if (properties)
             for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
@@ -1475,35 +1800,35 @@ export const CafeBlockList = $root.CafeBlockList = (() => {
     }
 
     /**
-     * CafeBlockList cids.
+     * CafeObjectList cids.
      * @member {Array.<string>} cids
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @instance
      */
-    CafeBlockList.prototype.cids = $util.emptyArray;
+    CafeObjectList.prototype.cids = $util.emptyArray;
 
     /**
-     * Creates a new CafeBlockList instance using the specified properties.
+     * Creates a new CafeObjectList instance using the specified properties.
      * @function create
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @static
-     * @param {ICafeBlockList=} [properties] Properties to set
-     * @returns {CafeBlockList} CafeBlockList instance
+     * @param {ICafeObjectList=} [properties] Properties to set
+     * @returns {CafeObjectList} CafeObjectList instance
      */
-    CafeBlockList.create = function create(properties) {
-        return new CafeBlockList(properties);
+    CafeObjectList.create = function create(properties) {
+        return new CafeObjectList(properties);
     };
 
     /**
-     * Encodes the specified CafeBlockList message. Does not implicitly {@link CafeBlockList.verify|verify} messages.
+     * Encodes the specified CafeObjectList message. Does not implicitly {@link CafeObjectList.verify|verify} messages.
      * @function encode
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @static
-     * @param {ICafeBlockList} message CafeBlockList message or plain object to encode
+     * @param {ICafeObjectList} message CafeObjectList message or plain object to encode
      * @param {$protobuf.Writer} [writer] Writer to encode to
      * @returns {$protobuf.Writer} Writer
      */
-    CafeBlockList.encode = function encode(message, writer) {
+    CafeObjectList.encode = function encode(message, writer) {
         if (!writer)
             writer = $Writer.create();
         if (message.cids != null && message.cids.length)
@@ -1513,33 +1838,33 @@ export const CafeBlockList = $root.CafeBlockList = (() => {
     };
 
     /**
-     * Encodes the specified CafeBlockList message, length delimited. Does not implicitly {@link CafeBlockList.verify|verify} messages.
+     * Encodes the specified CafeObjectList message, length delimited. Does not implicitly {@link CafeObjectList.verify|verify} messages.
      * @function encodeDelimited
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @static
-     * @param {ICafeBlockList} message CafeBlockList message or plain object to encode
+     * @param {ICafeObjectList} message CafeObjectList message or plain object to encode
      * @param {$protobuf.Writer} [writer] Writer to encode to
      * @returns {$protobuf.Writer} Writer
      */
-    CafeBlockList.encodeDelimited = function encodeDelimited(message, writer) {
+    CafeObjectList.encodeDelimited = function encodeDelimited(message, writer) {
         return this.encode(message, writer).ldelim();
     };
 
     /**
-     * Decodes a CafeBlockList message from the specified reader or buffer.
+     * Decodes a CafeObjectList message from the specified reader or buffer.
      * @function decode
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @static
      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
      * @param {number} [length] Message length if known beforehand
-     * @returns {CafeBlockList} CafeBlockList
+     * @returns {CafeObjectList} CafeObjectList
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    CafeBlockList.decode = function decode(reader, length) {
+    CafeObjectList.decode = function decode(reader, length) {
         if (!(reader instanceof $Reader))
             reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.CafeBlockList();
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.CafeObjectList();
         while (reader.pos < end) {
             let tag = reader.uint32();
             switch (tag >>> 3) {
@@ -1557,30 +1882,30 @@ export const CafeBlockList = $root.CafeBlockList = (() => {
     };
 
     /**
-     * Decodes a CafeBlockList message from the specified reader or buffer, length delimited.
+     * Decodes a CafeObjectList message from the specified reader or buffer, length delimited.
      * @function decodeDelimited
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @static
      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {CafeBlockList} CafeBlockList
+     * @returns {CafeObjectList} CafeObjectList
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    CafeBlockList.decodeDelimited = function decodeDelimited(reader) {
+    CafeObjectList.decodeDelimited = function decodeDelimited(reader) {
         if (!(reader instanceof $Reader))
             reader = new $Reader(reader);
         return this.decode(reader, reader.uint32());
     };
 
     /**
-     * Verifies a CafeBlockList message.
+     * Verifies a CafeObjectList message.
      * @function verify
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @static
      * @param {Object.<string,*>} message Plain object to verify
      * @returns {string|null} `null` if valid, otherwise the reason why it is not
      */
-    CafeBlockList.verify = function verify(message) {
+    CafeObjectList.verify = function verify(message) {
         if (typeof message !== "object" || message === null)
             return "object expected";
         if (message.cids != null && message.hasOwnProperty("cids")) {
@@ -1594,20 +1919,20 @@ export const CafeBlockList = $root.CafeBlockList = (() => {
     };
 
     /**
-     * Creates a CafeBlockList message from a plain object. Also converts values to their respective internal types.
+     * Creates a CafeObjectList message from a plain object. Also converts values to their respective internal types.
      * @function fromObject
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @static
      * @param {Object.<string,*>} object Plain object
-     * @returns {CafeBlockList} CafeBlockList
+     * @returns {CafeObjectList} CafeObjectList
      */
-    CafeBlockList.fromObject = function fromObject(object) {
-        if (object instanceof $root.CafeBlockList)
+    CafeObjectList.fromObject = function fromObject(object) {
+        if (object instanceof $root.CafeObjectList)
             return object;
-        let message = new $root.CafeBlockList();
+        let message = new $root.CafeObjectList();
         if (object.cids) {
             if (!Array.isArray(object.cids))
-                throw TypeError(".CafeBlockList.cids: array expected");
+                throw TypeError(".CafeObjectList.cids: array expected");
             message.cids = [];
             for (let i = 0; i < object.cids.length; ++i)
                 message.cids[i] = String(object.cids[i]);
@@ -1616,15 +1941,15 @@ export const CafeBlockList = $root.CafeBlockList = (() => {
     };
 
     /**
-     * Creates a plain object from a CafeBlockList message. Also converts values to other types if specified.
+     * Creates a plain object from a CafeObjectList message. Also converts values to other types if specified.
      * @function toObject
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @static
-     * @param {CafeBlockList} message CafeBlockList
+     * @param {CafeObjectList} message CafeObjectList
      * @param {$protobuf.IConversionOptions} [options] Conversion options
      * @returns {Object.<string,*>} Plain object
      */
-    CafeBlockList.toObject = function toObject(message, options) {
+    CafeObjectList.toObject = function toObject(message, options) {
         if (!options)
             options = {};
         let object = {};
@@ -1639,39 +1964,40 @@ export const CafeBlockList = $root.CafeBlockList = (() => {
     };
 
     /**
-     * Converts this CafeBlockList to JSON.
+     * Converts this CafeObjectList to JSON.
      * @function toJSON
-     * @memberof CafeBlockList
+     * @memberof CafeObjectList
      * @instance
      * @returns {Object.<string,*>} JSON object
      */
-    CafeBlockList.prototype.toJSON = function toJSON() {
+    CafeObjectList.prototype.toJSON = function toJSON() {
         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
 
-    return CafeBlockList;
+    return CafeObjectList;
 })();
 
-export const CafeBlock = $root.CafeBlock = (() => {
+export const CafeObject = $root.CafeObject = (() => {
 
     /**
-     * Properties of a CafeBlock.
-     * @exports ICafeBlock
-     * @interface ICafeBlock
-     * @property {string|null} [token] CafeBlock token
-     * @property {Uint8Array|null} [rawData] CafeBlock rawData
-     * @property {string|null} [cid] CafeBlock cid
+     * Properties of a CafeObject.
+     * @exports ICafeObject
+     * @interface ICafeObject
+     * @property {string|null} [token] CafeObject token
+     * @property {string|null} [cid] CafeObject cid
+     * @property {Uint8Array|null} [data] CafeObject data
+     * @property {Uint8Array|null} [node] CafeObject node
      */
 
     /**
-     * Constructs a new CafeBlock.
-     * @exports CafeBlock
-     * @classdesc Represents a CafeBlock.
-     * @implements ICafeBlock
+     * Constructs a new CafeObject.
+     * @exports CafeObject
+     * @classdesc Represents a CafeObject.
+     * @implements ICafeObject
      * @constructor
-     * @param {ICafeBlock=} [properties] Properties to set
+     * @param {ICafeObject=} [properties] Properties to set
      */
-    function CafeBlock(properties) {
+    function CafeObject(properties) {
         if (properties)
             for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                 if (properties[keys[i]] != null)
@@ -1679,90 +2005,100 @@ export const CafeBlock = $root.CafeBlock = (() => {
     }
 
     /**
-     * CafeBlock token.
+     * CafeObject token.
      * @member {string} token
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @instance
      */
-    CafeBlock.prototype.token = "";
+    CafeObject.prototype.token = "";
 
     /**
-     * CafeBlock rawData.
-     * @member {Uint8Array} rawData
-     * @memberof CafeBlock
-     * @instance
-     */
-    CafeBlock.prototype.rawData = $util.newBuffer([]);
-
-    /**
-     * CafeBlock cid.
+     * CafeObject cid.
      * @member {string} cid
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @instance
      */
-    CafeBlock.prototype.cid = "";
+    CafeObject.prototype.cid = "";
 
     /**
-     * Creates a new CafeBlock instance using the specified properties.
-     * @function create
-     * @memberof CafeBlock
-     * @static
-     * @param {ICafeBlock=} [properties] Properties to set
-     * @returns {CafeBlock} CafeBlock instance
+     * CafeObject data.
+     * @member {Uint8Array} data
+     * @memberof CafeObject
+     * @instance
      */
-    CafeBlock.create = function create(properties) {
-        return new CafeBlock(properties);
+    CafeObject.prototype.data = $util.newBuffer([]);
+
+    /**
+     * CafeObject node.
+     * @member {Uint8Array} node
+     * @memberof CafeObject
+     * @instance
+     */
+    CafeObject.prototype.node = $util.newBuffer([]);
+
+    /**
+     * Creates a new CafeObject instance using the specified properties.
+     * @function create
+     * @memberof CafeObject
+     * @static
+     * @param {ICafeObject=} [properties] Properties to set
+     * @returns {CafeObject} CafeObject instance
+     */
+    CafeObject.create = function create(properties) {
+        return new CafeObject(properties);
     };
 
     /**
-     * Encodes the specified CafeBlock message. Does not implicitly {@link CafeBlock.verify|verify} messages.
+     * Encodes the specified CafeObject message. Does not implicitly {@link CafeObject.verify|verify} messages.
      * @function encode
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @static
-     * @param {ICafeBlock} message CafeBlock message or plain object to encode
+     * @param {ICafeObject} message CafeObject message or plain object to encode
      * @param {$protobuf.Writer} [writer] Writer to encode to
      * @returns {$protobuf.Writer} Writer
      */
-    CafeBlock.encode = function encode(message, writer) {
+    CafeObject.encode = function encode(message, writer) {
         if (!writer)
             writer = $Writer.create();
         if (message.token != null && message.hasOwnProperty("token"))
             writer.uint32(/* id 1, wireType 2 =*/10).string(message.token);
-        if (message.rawData != null && message.hasOwnProperty("rawData"))
-            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.rawData);
         if (message.cid != null && message.hasOwnProperty("cid"))
-            writer.uint32(/* id 3, wireType 2 =*/26).string(message.cid);
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.cid);
+        if (message.data != null && message.hasOwnProperty("data"))
+            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.data);
+        if (message.node != null && message.hasOwnProperty("node"))
+            writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.node);
         return writer;
     };
 
     /**
-     * Encodes the specified CafeBlock message, length delimited. Does not implicitly {@link CafeBlock.verify|verify} messages.
+     * Encodes the specified CafeObject message, length delimited. Does not implicitly {@link CafeObject.verify|verify} messages.
      * @function encodeDelimited
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @static
-     * @param {ICafeBlock} message CafeBlock message or plain object to encode
+     * @param {ICafeObject} message CafeObject message or plain object to encode
      * @param {$protobuf.Writer} [writer] Writer to encode to
      * @returns {$protobuf.Writer} Writer
      */
-    CafeBlock.encodeDelimited = function encodeDelimited(message, writer) {
+    CafeObject.encodeDelimited = function encodeDelimited(message, writer) {
         return this.encode(message, writer).ldelim();
     };
 
     /**
-     * Decodes a CafeBlock message from the specified reader or buffer.
+     * Decodes a CafeObject message from the specified reader or buffer.
      * @function decode
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @static
      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
      * @param {number} [length] Message length if known beforehand
-     * @returns {CafeBlock} CafeBlock
+     * @returns {CafeObject} CafeObject
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    CafeBlock.decode = function decode(reader, length) {
+    CafeObject.decode = function decode(reader, length) {
         if (!(reader instanceof $Reader))
             reader = $Reader.create(reader);
-        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.CafeBlock();
+        let end = length === undefined ? reader.len : reader.pos + length, message = new $root.CafeObject();
         while (reader.pos < end) {
             let tag = reader.uint32();
             switch (tag >>> 3) {
@@ -1770,10 +2106,13 @@ export const CafeBlock = $root.CafeBlock = (() => {
                 message.token = reader.string();
                 break;
             case 2:
-                message.rawData = reader.bytes();
+                message.cid = reader.string();
                 break;
             case 3:
-                message.cid = reader.string();
+                message.data = reader.bytes();
+                break;
+            case 4:
+                message.node = reader.bytes();
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -1784,113 +2123,130 @@ export const CafeBlock = $root.CafeBlock = (() => {
     };
 
     /**
-     * Decodes a CafeBlock message from the specified reader or buffer, length delimited.
+     * Decodes a CafeObject message from the specified reader or buffer, length delimited.
      * @function decodeDelimited
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @static
      * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {CafeBlock} CafeBlock
+     * @returns {CafeObject} CafeObject
      * @throws {Error} If the payload is not a reader or valid buffer
      * @throws {$protobuf.util.ProtocolError} If required fields are missing
      */
-    CafeBlock.decodeDelimited = function decodeDelimited(reader) {
+    CafeObject.decodeDelimited = function decodeDelimited(reader) {
         if (!(reader instanceof $Reader))
             reader = new $Reader(reader);
         return this.decode(reader, reader.uint32());
     };
 
     /**
-     * Verifies a CafeBlock message.
+     * Verifies a CafeObject message.
      * @function verify
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @static
      * @param {Object.<string,*>} message Plain object to verify
      * @returns {string|null} `null` if valid, otherwise the reason why it is not
      */
-    CafeBlock.verify = function verify(message) {
+    CafeObject.verify = function verify(message) {
         if (typeof message !== "object" || message === null)
             return "object expected";
         if (message.token != null && message.hasOwnProperty("token"))
             if (!$util.isString(message.token))
                 return "token: string expected";
-        if (message.rawData != null && message.hasOwnProperty("rawData"))
-            if (!(message.rawData && typeof message.rawData.length === "number" || $util.isString(message.rawData)))
-                return "rawData: buffer expected";
         if (message.cid != null && message.hasOwnProperty("cid"))
             if (!$util.isString(message.cid))
                 return "cid: string expected";
+        if (message.data != null && message.hasOwnProperty("data"))
+            if (!(message.data && typeof message.data.length === "number" || $util.isString(message.data)))
+                return "data: buffer expected";
+        if (message.node != null && message.hasOwnProperty("node"))
+            if (!(message.node && typeof message.node.length === "number" || $util.isString(message.node)))
+                return "node: buffer expected";
         return null;
     };
 
     /**
-     * Creates a CafeBlock message from a plain object. Also converts values to their respective internal types.
+     * Creates a CafeObject message from a plain object. Also converts values to their respective internal types.
      * @function fromObject
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @static
      * @param {Object.<string,*>} object Plain object
-     * @returns {CafeBlock} CafeBlock
+     * @returns {CafeObject} CafeObject
      */
-    CafeBlock.fromObject = function fromObject(object) {
-        if (object instanceof $root.CafeBlock)
+    CafeObject.fromObject = function fromObject(object) {
+        if (object instanceof $root.CafeObject)
             return object;
-        let message = new $root.CafeBlock();
+        let message = new $root.CafeObject();
         if (object.token != null)
             message.token = String(object.token);
-        if (object.rawData != null)
-            if (typeof object.rawData === "string")
-                $util.base64.decode(object.rawData, message.rawData = $util.newBuffer($util.base64.length(object.rawData)), 0);
-            else if (object.rawData.length)
-                message.rawData = object.rawData;
         if (object.cid != null)
             message.cid = String(object.cid);
+        if (object.data != null)
+            if (typeof object.data === "string")
+                $util.base64.decode(object.data, message.data = $util.newBuffer($util.base64.length(object.data)), 0);
+            else if (object.data.length)
+                message.data = object.data;
+        if (object.node != null)
+            if (typeof object.node === "string")
+                $util.base64.decode(object.node, message.node = $util.newBuffer($util.base64.length(object.node)), 0);
+            else if (object.node.length)
+                message.node = object.node;
         return message;
     };
 
     /**
-     * Creates a plain object from a CafeBlock message. Also converts values to other types if specified.
+     * Creates a plain object from a CafeObject message. Also converts values to other types if specified.
      * @function toObject
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @static
-     * @param {CafeBlock} message CafeBlock
+     * @param {CafeObject} message CafeObject
      * @param {$protobuf.IConversionOptions} [options] Conversion options
      * @returns {Object.<string,*>} Plain object
      */
-    CafeBlock.toObject = function toObject(message, options) {
+    CafeObject.toObject = function toObject(message, options) {
         if (!options)
             options = {};
         let object = {};
         if (options.defaults) {
             object.token = "";
-            if (options.bytes === String)
-                object.rawData = "";
-            else {
-                object.rawData = [];
-                if (options.bytes !== Array)
-                    object.rawData = $util.newBuffer(object.rawData);
-            }
             object.cid = "";
+            if (options.bytes === String)
+                object.data = "";
+            else {
+                object.data = [];
+                if (options.bytes !== Array)
+                    object.data = $util.newBuffer(object.data);
+            }
+            if (options.bytes === String)
+                object.node = "";
+            else {
+                object.node = [];
+                if (options.bytes !== Array)
+                    object.node = $util.newBuffer(object.node);
+            }
         }
         if (message.token != null && message.hasOwnProperty("token"))
             object.token = message.token;
-        if (message.rawData != null && message.hasOwnProperty("rawData"))
-            object.rawData = options.bytes === String ? $util.base64.encode(message.rawData, 0, message.rawData.length) : options.bytes === Array ? Array.prototype.slice.call(message.rawData) : message.rawData;
         if (message.cid != null && message.hasOwnProperty("cid"))
             object.cid = message.cid;
+        if (message.data != null && message.hasOwnProperty("data"))
+            object.data = options.bytes === String ? $util.base64.encode(message.data, 0, message.data.length) : options.bytes === Array ? Array.prototype.slice.call(message.data) : message.data;
+        if (message.node != null && message.hasOwnProperty("node"))
+            object.node = options.bytes === String ? $util.base64.encode(message.node, 0, message.node.length) : options.bytes === Array ? Array.prototype.slice.call(message.node) : message.node;
         return object;
     };
 
     /**
-     * Converts this CafeBlock to JSON.
+     * Converts this CafeObject to JSON.
      * @function toJSON
-     * @memberof CafeBlock
+     * @memberof CafeObject
      * @instance
      * @returns {Object.<string,*>} JSON object
      */
-    CafeBlock.prototype.toJSON = function toJSON() {
+    CafeObject.prototype.toJSON = function toJSON() {
         return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
     };
 
-    return CafeBlock;
+    return CafeObject;
 })();
 
 export const CafeStoreThread = $root.CafeStoreThread = (() => {
@@ -4082,6 +4438,7 @@ export const Message = $root.Message = (() => {
             case 62:
             case 63:
             case 64:
+            case 65:
             case 500:
                 break;
             }
@@ -4148,11 +4505,11 @@ export const Message = $root.Message = (() => {
         case 55:
             message.type = 55;
             break;
-        case "CAFE_BLOCK":
+        case "CAFE_OBJECT":
         case 56:
             message.type = 56;
             break;
-        case "CAFE_BLOCKLIST":
+        case "CAFE_OBJECT_LIST":
         case 57:
             message.type = 57;
             break;
@@ -4183,6 +4540,10 @@ export const Message = $root.Message = (() => {
         case "CAFE_DELETE_MESSAGES_ACK":
         case 64:
             message.type = 64;
+            break;
+        case "CAFE_YOU_HAVE_MAIL":
+        case 65:
+            message.type = 65;
             break;
         case "ERROR":
         case 500:
@@ -4255,8 +4616,8 @@ export const Message = $root.Message = (() => {
      * @property {number} CAFE_SESSION=53 CAFE_SESSION value
      * @property {number} CAFE_REFRESH_SESSION=54 CAFE_REFRESH_SESSION value
      * @property {number} CAFE_STORE=55 CAFE_STORE value
-     * @property {number} CAFE_BLOCK=56 CAFE_BLOCK value
-     * @property {number} CAFE_BLOCKLIST=57 CAFE_BLOCKLIST value
+     * @property {number} CAFE_OBJECT=56 CAFE_OBJECT value
+     * @property {number} CAFE_OBJECT_LIST=57 CAFE_OBJECT_LIST value
      * @property {number} CAFE_STORE_THREAD=58 CAFE_STORE_THREAD value
      * @property {number} CAFE_STORED=59 CAFE_STORED value
      * @property {number} CAFE_DELIVER_MESSAGE=60 CAFE_DELIVER_MESSAGE value
@@ -4264,6 +4625,7 @@ export const Message = $root.Message = (() => {
      * @property {number} CAFE_MESSAGES=62 CAFE_MESSAGES value
      * @property {number} CAFE_DELETE_MESSAGES=63 CAFE_DELETE_MESSAGES value
      * @property {number} CAFE_DELETE_MESSAGES_ACK=64 CAFE_DELETE_MESSAGES_ACK value
+     * @property {number} CAFE_YOU_HAVE_MAIL=65 CAFE_YOU_HAVE_MAIL value
      * @property {number} ERROR=500 ERROR value
      */
     Message.Type = (function() {
@@ -4277,8 +4639,8 @@ export const Message = $root.Message = (() => {
         values[valuesById[53] = "CAFE_SESSION"] = 53;
         values[valuesById[54] = "CAFE_REFRESH_SESSION"] = 54;
         values[valuesById[55] = "CAFE_STORE"] = 55;
-        values[valuesById[56] = "CAFE_BLOCK"] = 56;
-        values[valuesById[57] = "CAFE_BLOCKLIST"] = 57;
+        values[valuesById[56] = "CAFE_OBJECT"] = 56;
+        values[valuesById[57] = "CAFE_OBJECT_LIST"] = 57;
         values[valuesById[58] = "CAFE_STORE_THREAD"] = 58;
         values[valuesById[59] = "CAFE_STORED"] = 59;
         values[valuesById[60] = "CAFE_DELIVER_MESSAGE"] = 60;
@@ -4286,6 +4648,7 @@ export const Message = $root.Message = (() => {
         values[valuesById[62] = "CAFE_MESSAGES"] = 62;
         values[valuesById[63] = "CAFE_DELETE_MESSAGES"] = 63;
         values[valuesById[64] = "CAFE_DELETE_MESSAGES_ACK"] = 64;
+        values[valuesById[65] = "CAFE_YOU_HAVE_MAIL"] = 65;
         values[valuesById[500] = "ERROR"] = 500;
         return values;
     })();
@@ -7920,7 +8283,7 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
      * @interface IThreadJoin
      * @property {string|null} [inviter] ThreadJoin inviter
      * @property {string|null} [username] ThreadJoin username
-     * @property {Array.<string>|null} [inboxes] ThreadJoin inboxes
+     * @property {Array.<ICafe>|null} [inboxes] ThreadJoin inboxes
      */
 
     /**
@@ -7957,7 +8320,7 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
 
     /**
      * ThreadJoin inboxes.
-     * @member {Array.<string>} inboxes
+     * @member {Array.<ICafe>} inboxes
      * @memberof ThreadJoin
      * @instance
      */
@@ -7993,7 +8356,7 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
             writer.uint32(/* id 2, wireType 2 =*/18).string(message.username);
         if (message.inboxes != null && message.inboxes.length)
             for (let i = 0; i < message.inboxes.length; ++i)
-                writer.uint32(/* id 3, wireType 2 =*/26).string(message.inboxes[i]);
+                $root.Cafe.encode(message.inboxes[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
         return writer;
     };
 
@@ -8037,7 +8400,7 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
             case 3:
                 if (!(message.inboxes && message.inboxes.length))
                     message.inboxes = [];
-                message.inboxes.push(reader.string());
+                message.inboxes.push($root.Cafe.decode(reader, reader.uint32()));
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -8083,9 +8446,11 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
         if (message.inboxes != null && message.hasOwnProperty("inboxes")) {
             if (!Array.isArray(message.inboxes))
                 return "inboxes: array expected";
-            for (let i = 0; i < message.inboxes.length; ++i)
-                if (!$util.isString(message.inboxes[i]))
-                    return "inboxes: string[] expected";
+            for (let i = 0; i < message.inboxes.length; ++i) {
+                let error = $root.Cafe.verify(message.inboxes[i]);
+                if (error)
+                    return "inboxes." + error;
+            }
         }
         return null;
     };
@@ -8110,8 +8475,11 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
             if (!Array.isArray(object.inboxes))
                 throw TypeError(".ThreadJoin.inboxes: array expected");
             message.inboxes = [];
-            for (let i = 0; i < object.inboxes.length; ++i)
-                message.inboxes[i] = String(object.inboxes[i]);
+            for (let i = 0; i < object.inboxes.length; ++i) {
+                if (typeof object.inboxes[i] !== "object")
+                    throw TypeError(".ThreadJoin.inboxes: object expected");
+                message.inboxes[i] = $root.Cafe.fromObject(object.inboxes[i]);
+            }
         }
         return message;
     };
@@ -8142,7 +8510,7 @@ export const ThreadJoin = $root.ThreadJoin = (() => {
         if (message.inboxes && message.inboxes.length) {
             object.inboxes = [];
             for (let j = 0; j < message.inboxes.length; ++j)
-                object.inboxes[j] = message.inboxes[j];
+                object.inboxes[j] = $root.Cafe.toObject(message.inboxes[j], options);
         }
         return object;
     };
@@ -8168,7 +8536,7 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
      * @exports IThreadAnnounce
      * @interface IThreadAnnounce
      * @property {string|null} [username] ThreadAnnounce username
-     * @property {Array.<string>|null} [inboxes] ThreadAnnounce inboxes
+     * @property {Array.<ICafe>|null} [inboxes] ThreadAnnounce inboxes
      */
 
     /**
@@ -8197,7 +8565,7 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
 
     /**
      * ThreadAnnounce inboxes.
-     * @member {Array.<string>} inboxes
+     * @member {Array.<ICafe>} inboxes
      * @memberof ThreadAnnounce
      * @instance
      */
@@ -8231,7 +8599,7 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
             writer.uint32(/* id 1, wireType 2 =*/10).string(message.username);
         if (message.inboxes != null && message.inboxes.length)
             for (let i = 0; i < message.inboxes.length; ++i)
-                writer.uint32(/* id 2, wireType 2 =*/18).string(message.inboxes[i]);
+                $root.Cafe.encode(message.inboxes[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
         return writer;
     };
 
@@ -8272,7 +8640,7 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
             case 2:
                 if (!(message.inboxes && message.inboxes.length))
                     message.inboxes = [];
-                message.inboxes.push(reader.string());
+                message.inboxes.push($root.Cafe.decode(reader, reader.uint32()));
                 break;
             default:
                 reader.skipType(tag & 7);
@@ -8315,9 +8683,11 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
         if (message.inboxes != null && message.hasOwnProperty("inboxes")) {
             if (!Array.isArray(message.inboxes))
                 return "inboxes: array expected";
-            for (let i = 0; i < message.inboxes.length; ++i)
-                if (!$util.isString(message.inboxes[i]))
-                    return "inboxes: string[] expected";
+            for (let i = 0; i < message.inboxes.length; ++i) {
+                let error = $root.Cafe.verify(message.inboxes[i]);
+                if (error)
+                    return "inboxes." + error;
+            }
         }
         return null;
     };
@@ -8340,8 +8710,11 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
             if (!Array.isArray(object.inboxes))
                 throw TypeError(".ThreadAnnounce.inboxes: array expected");
             message.inboxes = [];
-            for (let i = 0; i < object.inboxes.length; ++i)
-                message.inboxes[i] = String(object.inboxes[i]);
+            for (let i = 0; i < object.inboxes.length; ++i) {
+                if (typeof object.inboxes[i] !== "object")
+                    throw TypeError(".ThreadAnnounce.inboxes: object expected");
+                message.inboxes[i] = $root.Cafe.fromObject(object.inboxes[i]);
+            }
         }
         return message;
     };
@@ -8368,7 +8741,7 @@ export const ThreadAnnounce = $root.ThreadAnnounce = (() => {
         if (message.inboxes && message.inboxes.length) {
             object.inboxes = [];
             for (let j = 0; j < message.inboxes.length; ++j)
-                object.inboxes[j] = message.inboxes[j];
+                object.inboxes[j] = $root.Cafe.toObject(message.inboxes[j], options);
         }
         return object;
     };
