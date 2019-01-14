@@ -36,8 +36,7 @@ const SUBTITLE: TextStyle = {
 const TEXT: TextStyle = {
   fontFamily: s.FONT_FAMILY_REGULAR,
   fontSize: s.FONT_SIZE_MEDIUM,
-  color: s.COLOR_FONT_DARK_ON_LIGHT_DARK,
-  height: s.FONT_LINE_HEIGHT_MEDIUM
+  color: s.COLOR_FONT_DARK_ON_LIGHT_DARK
 }
 
 const LABEL: TextStyle = {
@@ -111,6 +110,7 @@ export default class ReferralCode extends React.Component<Props, State> {
               keyboardType='default'
               autoCapitalize='none'
               autoCorrect={false}
+              style={{ height: 40 }}
               inputStyle={TEXT}
               labelStyle={LABEL}
               onChangeText={this.updateText}
