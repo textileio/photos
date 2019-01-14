@@ -47,7 +47,7 @@ class QRCodeModal extends React.Component<DispatchProps & ScreenProps> {
         backdropOpacity={0.5}
         style={{margin: 0, padding: 0}}
       >
-      <KeyboardAvoidingView behavior={'height'} style={[styles.modal, styles.fullModal]}>
+      <KeyboardAvoidingView behavior={'height'} style={styles.modal}>
           <View style={styles.container}>
             <View style={styles.content}>
               <View style={styles.title}>
