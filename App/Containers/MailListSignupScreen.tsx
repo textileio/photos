@@ -112,6 +112,7 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
               keyboardType='email-address'
               autoCapitalize='none'
               autoCorrect={false}
+              style={{ height: 40 }}
               inputStyle={TEXT}
               labelStyle={LABEL}
               value={this.state.emailAddress}

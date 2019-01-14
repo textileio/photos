@@ -7,18 +7,12 @@ const {height, width} = Dimensions.get('window')
 export default StyleSheet.create({
   modal: {
     position: 'absolute',
+    top: 0,
     bottom: 0,
     right: 0,
     left: 0,
     padding: 0,
     margin: 0
-  } as ViewStyle,
-  fullModal: {
-    top: 0
-  } as ViewStyle,
-  slideModal: {
-    width,
-    height: 280
   } as ViewStyle,
   container: {
     flex: 1,

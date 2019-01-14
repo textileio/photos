@@ -62,9 +62,8 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
 
   render () {
     const submitDisabled = !(this.state.value.length > 0)
-    const modalStyle = this.props.fullScreen ? styles.fullModal : styles.slideModal
     return (
-      <KeyboardAvoidingView behavior={'height'} style={[styles.modal, modalStyle]}>
+      <KeyboardAvoidingView behavior={'height'} style={styles.modal}>
           <View style={styles.container}>
             <View style={styles.content}>
               {this.props.fullScreen && <View style={styles.title}>
