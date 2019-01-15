@@ -164,7 +164,7 @@ class Wallet extends React.PureComponent {
       <View style={style.container}>
         <WalletHeader
           changeAvatar={() => {
-            this.props.navigation.navigate('ChangeAvatar', { onSuccess: () => this.props.navigation.goBack() })
+            this.props.navigation.navigate('ChangeAvatar', { onSuccess: () => this.props.navigation.navigate('Wallet') })
           }}
           onToggle={(newValue) => {
             this.props.toggleTab(newValue)
