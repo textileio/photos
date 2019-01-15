@@ -42,7 +42,7 @@ const WalletHeader = (props: IWalletHeaderProps) => {
   }
 
   // calculate the line with the prefix or without, if without the line will wrap but still have prefix
-  const usernamePrefix = username.length < 11 ? 'Hello, ' : ''
+  const usernamePrefix = username && username.length < 11 ? 'Hello, ' : ''
   const userWelcome = `${usernamePrefix}${username}`
   const availableWidth = (Dimensions.get('window').width - 140)
   const usernameSize = Math.min(availableWidth / (userWelcome.length * 0.5476), 23)
