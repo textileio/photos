@@ -272,13 +272,25 @@ const migrations: MigrationManifest = {
         }
       }
     }
+  },
+  16: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        viewSettings: {
+          selectedWalletTab: 'Groups'
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 15,
+  version: 16,
   whitelist: ['account', 'preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'storage', 'deviceLogs', 'migration'],
   migrate: createMigrate(migrations, { debug: false })
 }
