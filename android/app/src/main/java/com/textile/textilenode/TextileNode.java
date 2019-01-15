@@ -78,12 +78,12 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addContact(final String id_, final String address, final String username, final Promise promise) {
+    public void addContact(final String contactJsonString, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    node.addContact(id_, address, username);
+                    node.addContact(contactJsonString);
                     promise.resolve(null);
                 }
                 catch (Exception e) {

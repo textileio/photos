@@ -13,7 +13,7 @@ import { prepare } from './ImageSharingSagas'
 import { getSession } from './UploadFile'
 
 import {
-  addContact, addThreadFiles, addThread, ThreadInfo
+  addContact, addThreadFiles, addThread, ThreadInfo, ContactInfo, contact
  } from '../NativeModules/Textile'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { CafeSession } from '../NativeModules/Textile'
@@ -204,12 +204,11 @@ export function * announcePeer() {
   if (previousItems.length) {
     const previous = previousItems[0]
     const peerId = yield select(getPeerId)
-    const address = yield select(getAddress)
+    const contactInfo: ContactInfo = yield call(contact, peerId)
     const details: PeerDetails = {
-      currentPeerId: peerId,
       previousPeerId: previous.peerid,
-      currentAddress: address,
-      previousUsername: previous.username
+      previousUsername: previous.username,
+      currentContactInfo: contactInfo
     }
     yield put(MigrationActions.peerAnnouncement(details))
   }
@@ -229,13 +228,10 @@ export function * runRecurringMigrationTasks () {
     yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
     const announcement: { peerDetails: PeerDetails, status: 'complete' | 'pending' } | undefined = yield select(getAnnouncement)
     if (announcement && announcement.status === 'pending') {
-      const { currentPeerId, currentAddress, previousUsername, previousPeerId } = announcement.peerDetails
       try {
-        if (currentPeerId && previousPeerId && currentAddress) {
-          yield call(announceId, currentPeerId, previousPeerId, currentAddress, previousUsername)
-          // If no error, mark as successful
-          yield put(MigrationActions.peerAnnouncementSuccess())
-        }
+        yield call(announcePeerDetails, announcement.peerDetails)
+        // If no error, mark as successful
+        yield put(MigrationActions.peerAnnouncementSuccess())
       } catch (error) {
         // just run again later
       }
@@ -244,9 +240,11 @@ export function * runRecurringMigrationTasks () {
     for (const peer of peers) {
       try {
         // for each contact ask if they've migrated
-        const contact: { peerId: string, previousId: string, address: string, username?: string } = yield call(findContact, peer)
-        yield call(addContact, contact.peerId, contact.address, contact.username || '')
-        yield put(MigrationActions.connectionSuccess(peer))
+        const contactInfo: ContactInfo | undefined = yield call(findContact, peer)
+        if (contactInfo) {
+          yield call(addContact, contactInfo)
+          yield put(MigrationActions.connectionSuccess(peer))
+        }
       } catch (error) {
         // just run again later
       }
@@ -255,12 +253,13 @@ export function * runRecurringMigrationTasks () {
 }
 
 // Will error for any non-success
-async function announceId(currentPeerId: string, previousPeerId: string, currentAddress: string, previousUsername?: string) {
+async function announcePeerDetails(peerDetails: PeerDetails) {
   const headers = {'Content-Type': 'application/json'}
-  const payload: { [key: string]: string } = { peerId: currentPeerId, previousId: previousPeerId, address: currentAddress }
-  const username = previousUsername ? previousUsername.trim() : ''
-  if (username.length > 0) {
-    payload['username'] = username
+  const contactInfoJsonString = JSON.stringify(peerDetails.currentContactInfo)
+  const payload: { [key: string]: string } = { previousPeerId: peerDetails.previousPeerId, currentContactInfo: contactInfoJsonString }
+  const previousUsername = peerDetails.previousUsername ? peerDetails.previousUsername.trim() : ''
+  if (previousUsername.length > 0) {
+    payload['previousUsername'] = previousUsername
   }
   const body = JSON.stringify(payload)
   const response = await fetch(Config.RN_PEER_SWAP, { method: 'POST', headers, body })
@@ -270,10 +269,15 @@ async function announceId(currentPeerId: string, previousPeerId: string, current
 }
 
 // will error response doesn't include the peer
-async function findContact(peerId: string): Promise<{peerId: string, previousId: string, address: string, username?: string}> {
+async function findContact(peerId: string): Promise<ContactInfo | undefined> {
   const response = await fetch(`${Config.RN_PEER_SWAP}?peerId=${peerId}`, { method: 'GET' })
-  const responseJson: [{peerId: string, previousId: string, address: string, username?: string}] = await response.json()
-  return responseJson[0]
+  const peerDetailsArray: ReadonlyArray<{ previousPeerId: string, previousUsername?: string, currentContactInfo: string }> = await response.json()
+  if (peerDetailsArray.length > 0) {
+    const contactInfo = JSON.parse(peerDetailsArray[0].currentContactInfo) as ContactInfo
+    return contactInfo
+  } else {
+    return undefined
+  }
 }
 
 function * downloadPhoto(item: MigrationPhoto, dispatch: Dispatch) {
