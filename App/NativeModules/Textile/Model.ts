@@ -106,10 +106,12 @@ export interface CafeSession {
 export interface ContactInfo {
   readonly id: string
   readonly address: string
-  readonly username: string
-  readonly inboxes: ReadonlyArray<Cafe>
-  readonly added: string
-  readonly thread_ids: ReadonlyArray<string>
+  readonly username?: string
+  readonly avatar?: string
+  readonly inboxes?: ReadonlyArray<Cafe>
+  readonly created: string
+  readonly updated: string
+  readonly thread_ids?: ReadonlyArray<string>
 }
 
 export enum NotificationType {

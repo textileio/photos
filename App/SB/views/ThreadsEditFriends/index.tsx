@@ -152,18 +152,18 @@ const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  =
       return {
         ...contact,
         type: 'contact',
-        included: contact.thread_ids.indexOf(threadId) >= 0
+        included: (contact.thread_ids || []).indexOf(threadId) >= 0
       }
     })
     .filter((contact) => contact.username !== '' && contact.username !== undefined)
 
   const notInThread = contacts.filter((c) => !c.included)
-  const popularity = notInThread.sort((a, b) => b.thread_ids.length - a.thread_ids.length)
+  const popularity = notInThread.sort((a, b) => (b.thread_ids || []).length - (a.thread_ids || []).length)
   const topFive = popularity.slice(0, 5)
   const sortedContacts = contacts.sort((a, b) => {
-    if (a.username === null || a.username === '') {
+    if (!a.username || a.username === '') {
       return 1
-    } else if (b.username === null || b.username === '') {
+    } else if (!b.username || b.username === '') {
       return -1
     }
     const A = a.username.toString().toUpperCase()

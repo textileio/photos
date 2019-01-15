@@ -14,11 +14,15 @@
 RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(letScreenSleep) {
-  UIApplication.sharedApplication.idleTimerDisabled = NO;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    UIApplication.sharedApplication.idleTimerDisabled = NO;
+  });
 }
 
 RCT_EXPORT_METHOD(keepScreenOn) {
-  UIApplication.sharedApplication.idleTimerDisabled = YES;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    UIApplication.sharedApplication.idleTimerDisabled = YES;
+  });
 }
 
 @end
