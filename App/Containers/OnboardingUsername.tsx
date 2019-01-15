@@ -62,6 +62,7 @@ type Props = OwnProps & StateProps & DispatchProps
 
 interface State {
   valid: boolean
+  nextDisabled: boolean
   username?: string
   error?: string
 }
@@ -70,15 +71,26 @@ class OnboardingUsername extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      valid: false
+      valid: false,
+      nextDisabled: false
     }
   }
 
   submit = () => {
     const { username } = this.state
     if (username) {
-      this.props.submitUsername(username)
+      // this.props.submitUsername(username)
     }
+    // prevent double tap, disable for as long as onSuccess takes
+    this.setState({
+      nextDisabled: true
+    })
+    setTimeout(() => {
+      this.setState({
+        nextDisabled: false
+      })
+    }, 1200)
+
     if (this.props.onSuccess) {
       setTimeout(this.props.onSuccess, 1000)
     }
@@ -125,7 +137,7 @@ class OnboardingUsername extends React.Component<Props, State> {
             />
             <Button
               text={this.props.buttonText}
-              disabled={!this.state.valid}
+              disabled={!this.state.valid || this.state.nextDisabled}
               processing={this.props.processing}
               onPress={this.submit}
               style={ITEM}
