@@ -11,10 +11,14 @@ const profile: MigrationState = {
 }
 
 const peerDetails: PeerDetails = {
-  currentPeerId: 'ABC-DEF-GHI',
   previousPeerId: 'XYZ-UVW-RST',
-  currentAddress: '123-456-789',
-  previousUsername: 'jest test'
+  previousUsername: 'jest test',
+  currentContactInfo: {
+    id: 'id',
+    address: 'address',
+    created: 'created',
+    updated: 'updated'
+  }
 }
 
 const network: string[] = [

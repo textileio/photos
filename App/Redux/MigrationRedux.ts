@@ -1,5 +1,6 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { ContactInfo } from '../NativeModules/Textile'
 
 const actions = {
   migrationNeeded: createAction('@migration/MIGRATION_NEEDED'),
@@ -128,10 +129,9 @@ export interface PhotoUploads {
 }
 
 export interface PeerDetails {
-  readonly currentPeerId: string,
   readonly previousPeerId: string,
-  readonly currentAddress: string,
-  readonly previousUsername?: string
+  readonly previousUsername?: string,
+  readonly currentContactInfo?: ContactInfo
 }
 
 export interface MigrationState {
