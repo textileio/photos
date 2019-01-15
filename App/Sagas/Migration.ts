@@ -19,9 +19,9 @@ import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { CafeSession } from '../NativeModules/Textile'
 import { REPO_PATH } from './NodeLifecycle'
 
-const PREVIOUS_ID_PATH = `${REPO_PATH}/migration005_peerid.ndjson`
-const PHOTOS_FILE_PATH = `${REPO_PATH}/migration005_default_photos.ndjson`
-const THREADS_FILE_PATH = `${REPO_PATH}/migration005_threads.ndjson`
+const PREVIOUS_ID_PATH = () => `${REPO_PATH}/migration005_peerid.ndjson`
+const PHOTOS_FILE_PATH = () => `${REPO_PATH}/migration005_default_photos.ndjson`
+const THREADS_FILE_PATH = () => `${REPO_PATH}/migration005_threads.ndjson`
 const IMAGE_URL = (id: string, key: string) => `https://cafe.textile.io/ipfs/${id}/photo?key=${key}`
 const MIGRATION_IMAGES_PATH = `${FS.DocumentDirectoryPath}/migration_images`
 const IMAGE_PATH = (id: string) => `${MIGRATION_IMAGES_PATH}/${id}.jpg`
@@ -107,7 +107,7 @@ function * processMigration(dispatch: Dispatch) {
 }
 
 function * downloadOldPhotos (dispatch: Dispatch) {
-  const items: MigrationPhoto[] = yield call(getItems, PHOTOS_FILE_PATH)
+  const items: MigrationPhoto[] = yield call(getItems, PHOTOS_FILE_PATH())
   if (items.length < 1) {
     return
   }
@@ -173,9 +173,9 @@ function * processRemotePins(task: LocalProcessingTask, dispatch: Dispatch) {
 }
 
 function * cleanupMigrationFiles() {
-  yield call(deleteFile, PREVIOUS_ID_PATH)
-  yield call(deleteFile, THREADS_FILE_PATH)
-  yield call(deleteFile, PHOTOS_FILE_PATH)
+  yield call(deleteFile, (PREVIOUS_ID_PATH()))
+  yield call(deleteFile, THREADS_FILE_PATH())
+  yield call(deleteFile, PHOTOS_FILE_PATH())
 }
 
 function * cleanupArtifacts() {
@@ -200,11 +200,14 @@ function * deleteFilesForTask(task: LocalProcessingTask) {
 // Exporting this so we can call it early so the old username is available during onboarding
 export function * announcePeer() {
   // announce to other peers
-  const previousItems: PeerIdItem[] = yield call(getItems, PREVIOUS_ID_PATH)
+  const previousItems: PeerIdItem[] = yield call(getItems, PREVIOUS_ID_PATH())
   if (previousItems.length) {
     const previous = previousItems[0]
     const peerId = yield select(getPeerId)
-    const contactInfo: ContactInfo = yield call(contact, peerId)
+    let contactInfo: ContactInfo | undefined
+    if (peerId) {
+      contactInfo = yield call(contact, peerId)
+    }
     const details: PeerDetails = {
       previousPeerId: previous.peerid,
       previousUsername: previous.username,
@@ -216,7 +219,7 @@ export function * announcePeer() {
 
 function * connectToPeers() {
   // locate old peers
-  const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH)
+  const threadItems: ThreadItem[] = yield call(getItems, THREADS_FILE_PATH())
   const peers = [...new Set(([] as string[]).concat(...threadItems.map((thread) => thread.peers)))]
   yield put(MigrationActions.connectToPeers(peers))
 
@@ -227,7 +230,7 @@ export function * runRecurringMigrationTasks () {
   while (true) {
     yield take(getType(MigrationActions.requestRunRecurringMigrationTasks))
     const announcement: { peerDetails: PeerDetails, status: 'complete' | 'pending' } | undefined = yield select(getAnnouncement)
-    if (announcement && announcement.status === 'pending') {
+    if (announcement && announcement.status === 'pending' && announcement.peerDetails.currentContactInfo) {
       try {
         yield call(announcePeerDetails, announcement.peerDetails)
         // If no error, mark as successful
@@ -270,7 +273,7 @@ async function announcePeerDetails(peerDetails: PeerDetails) {
 
 // will error response doesn't include the peer
 async function findContact(peerId: string): Promise<ContactInfo | undefined> {
-  const response = await fetch(`${Config.RN_PEER_SWAP}?peerId=${peerId}`, { method: 'GET' })
+  const response = await fetch(`${Config.RN_PEER_SWAP}?previousPeerId=${peerId}`, { method: 'GET' })
   const peerDetailsArray: ReadonlyArray<{ previousPeerId: string, previousUsername?: string, currentContactInfo: string }> = await response.json()
   if (peerDetailsArray.length > 0) {
     const contactInfo = JSON.parse(peerDetailsArray[0].currentContactInfo) as ContactInfo

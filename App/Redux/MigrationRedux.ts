@@ -131,7 +131,7 @@ export interface PhotoUploads {
 export interface PeerDetails {
   readonly previousPeerId: string,
   readonly previousUsername?: string,
-  readonly currentContactInfo: ContactInfo
+  readonly currentContactInfo?: ContactInfo
 }
 
 export interface MigrationState {
