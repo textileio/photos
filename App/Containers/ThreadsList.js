@@ -75,8 +75,7 @@ class ThreadsList extends React.PureComponent {
     }
     // Auto complete the tour screen if the user has managed to create threads on their own
     if (
-      this.props.items &&
-      prevProps.items &&
+      this.props.items.length &&
       this.props.showOnboarding
     ) {
       this.props.completeScreen('threads')
