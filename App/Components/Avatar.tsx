@@ -14,7 +14,7 @@ interface OwnProps {
 
 interface StateProps {
   localPeerId?: string
-  online: boolean
+  nodeStarted: boolean
   peerColor: string
   localAvatar?: string
 }
@@ -61,7 +61,7 @@ class Avatar extends React.Component<Props, State> {
       height = h
     }
 
-    const { peerId, localPeerId, online, localAvatar } = this.props
+    const { peerId, localPeerId, nodeStarted, localAvatar } = this.props
 
     const isLocalUser = (!peerId && localPeerId) || peerId === localPeerId
 
@@ -71,7 +71,7 @@ class Avatar extends React.Component<Props, State> {
     const widthNumber = typeof width === 'number' ? width as number : undefined
     const heightNumber = typeof height === 'number' ? height as number : undefined
 
-    if (isLocalUser && online && localAvatar && widthNumber) {
+    if (isLocalUser && nodeStarted && localAvatar && widthNumber) {
       // Render TextileImage
       return (
         <TextileImage
@@ -133,7 +133,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
 
   return {
     localPeerId: state.account.peerId.value,
-    online: state.textileNode.online,
+    nodeStarted: state.textileNode.nodeState.state === 'started',
     localAvatar,
     peerColor
   }
