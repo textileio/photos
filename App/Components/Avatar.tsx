@@ -74,14 +74,16 @@ class Avatar extends React.Component<Props, State> {
     if (isLocalUser && nodeStarted && localAvatar && widthNumber) {
       // Render TextileImage
       return (
-        <TextileImage
-          style={{ ...(this.props.style || {}), width, height, borderRadius: this.state.borderRadius }}
-          target={localAvatar}
-          index={0}
-          forMinWidth={widthNumber}
-          resizeMode={'cover'}
-          onLayout={this.onImageLayout}
-        />
+        <View style={{ width, height, borderRadius: this.state.borderRadius, overflow: 'hidden' }}>
+          <TextileImage
+            style={{ ...(this.props.style || {}), width, height, borderRadius: this.state.borderRadius }}
+            target={localAvatar}
+            index={0}
+            forMinWidth={widthNumber}
+            resizeMode={'cover'}
+            onLayout={this.onImageLayout}
+          />
+        </View>
       )
     } else if (uri) {
       const uniqueUserColor = !this.state.showIcon ? {
