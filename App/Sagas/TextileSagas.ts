@@ -86,7 +86,7 @@ function * processAvatarImage(image: SharedImage) {
 
 export function * navigateToThread ( action: ActionType<typeof UIActions.navigateToThreadRequest> ) {
   yield put(PhotoViewingActions.viewThread(action.payload.threadId))
-  yield call(NavigationService.navigate, 'ViewThread', { id: action.payload.threadId, name: action.payload.threadName })
+  yield call(NavigationService.navigate, 'ViewThread', { threadId: action.payload.threadId })
 }
 
 export function * navigateToComments ( action: ActionType<typeof UIActions.navigateToCommentsRequest> ) {

@@ -113,7 +113,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield call(NavigationService.navigate, 'ViewThread', { id: threadData.id, name: threadData.name })
+          yield call(NavigationService.navigate, 'ViewThread', { threadId: threadData.id })
         }
         break
       }

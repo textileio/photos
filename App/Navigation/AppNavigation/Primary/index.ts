@@ -10,7 +10,7 @@ import NodeLogsScreen from '../../../Components/NodeLogsScreen'
 import RecoveryPhrase from '../../../SB/views/UserProfile/RecoveryPhrase'
 import SetAvatar from '../../../Containers/SetAvatar'
 
-import ThreadDetail from '../../../SB/views/ThreadDetail'
+import ThreadsList from '../../../Containers/ThreadsList'
 import PhotoScreen from '../../../Containers/PhotoScreen'
 import Comments from '../../../Containers/Comments'
 import LikesScreen from '../../../Containers/LikesScreen'
@@ -31,7 +31,7 @@ const nav = createStackNavigator(
     RecoveryPhrase,
     ChangeAvatar: SetAvatar,
 
-    ViewThread: ThreadDetail,
+    ViewThread: ThreadsList,
     PhotoScreen,
     Comments,
     LikesScreen,

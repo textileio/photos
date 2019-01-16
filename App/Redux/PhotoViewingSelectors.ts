@@ -78,8 +78,9 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
       return result
   }
 }
-export function getPhotoFeed (state: RootState): ReadonlyArray<FeedPhoto> {
+export function getPhotoFeed (state: RootState, threadId?: string): ReadonlyArray<FeedPhoto> {
   return getThreads(state)
+  .filter((thread) => threadId ? thread.id === threadId : true)
   .map((thread) => thread.photos
     .map((photo): FeedPhoto => {
       return { type: 'photo', photo, block: photo.block, threadId: thread.id, threadName: thread.name }

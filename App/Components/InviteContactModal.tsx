@@ -13,7 +13,6 @@ import { CreateThreadComponent } from './CreateThreadModal'
 import { RootAction, RootState } from '../Redux/Types'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
-import ContactsActions from '../Redux/ContactsRedux'
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 
 import { ThreadSelectComponent } from '../SB/components/ThreadSelect'
@@ -29,6 +28,8 @@ interface DispatchProps {
 
 interface ScreenProps {
   isVisible: boolean
+  selectedThreadId?: string
+  selectedThreadName?: string
   cancel: () => void
 }
 
@@ -40,11 +41,19 @@ interface State {
   threadSelected: boolean
 }
 
-class InviteContactModal extends React.Component<DispatchProps & StateProps & ScreenProps> {
-  state: State = {
-    submitted: false,
-    showCreateGroupModal: false,
-    threadSelected: false
+type Props = DispatchProps & StateProps & ScreenProps
+
+class InviteContactModal extends React.Component<Props, State> {
+
+  constructor (props: Props) {
+    super(props)
+    this.state = {
+      submitted: false,
+      showCreateGroupModal: false,
+      threadSelected: props.selectedThreadId !== undefined,
+      threadId: props.selectedThreadId,
+      threadName: props.selectedThreadName
+    }
   }
 
   openThreadModal () {
@@ -88,9 +97,9 @@ class InviteContactModal extends React.Component<DispatchProps & StateProps & Sc
   cancelPeerRequest () {
     return () => {
       this.setState({
-        threadId: undefined,
-        threadName: undefined,
-        threadSelected: false
+        threadId: this.props.selectedThreadId,
+        threadName: this.props.selectedThreadName,
+        threadSelected: this.props.selectedThreadId !== undefined
       })
       this.props.cancel()
     }

@@ -2,6 +2,7 @@ import React from 'react'
 import Icon from '../Components/Icon'
 import { connect } from 'react-redux'
 import { Item } from 'react-navigation-header-buttons'
+import ActionSheet from 'react-native-actionsheet'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
 import { View, Text, Image, Alert, Dimensions } from 'react-native'
@@ -12,7 +13,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
-import { getPhotoFeed } from '../Redux/PhotoViewingSelectors'
+import { getPhotoFeed, threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
 import { getProcessingImages } from '../Redux/ProcessingImagesSelectors'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
@@ -26,15 +27,22 @@ class ThreadsList extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const username = params.profile && params.profile.username ? params.profile.username : undefined
+    const showWalletPicker = () => params.showWalletPicker(params.threadId)
+    const headerLeft = (
+      <TextileHeaderButtons left>
+        <Item title='Back' iconName='arrow-left' onPress={() => navigation.goBack()} />
+      </TextileHeaderButtons>
+    )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Photo' iconName='plus' onPress={params.showWalletPicker} />
-        <Item title='Invite Contact' iconName='invite' onPress={params.inviteContactRequest} />
+        <Item title='Add Photo' iconName='plus' onPress={showWalletPicker} />
+        {!params.threadId && <Item title='Invite Contact' iconName='invite' onPress={params.inviteContactRequest} />}
+        {params.threadId && <Item title='More' iconName='more-vertical' onPress={params.showActionSheet} />}
       </TextileHeaderButtons>
     )
     return {
-      headerTitle: 'Timeline',
+      headerLeft: params.threadId ? headerLeft : undefined,
+      headerTitle: params.title,
       headerRight
     }
   }
@@ -46,10 +54,13 @@ class ThreadsList extends React.PureComponent {
 
   componentDidMount () {
     this.props.navigation.setParams({
+      title: this.props.title,
+      threadId: this.props.threadId,
       profile: this.props.profile,
       online: this.props.online,
-      inviteContactRequest: this.inviteContactRequest(),
-      showWalletPicker: this.props.showWalletPicker
+      inviteContactRequest: this.inviteContactRequest,
+      showWalletPicker: this.props.showWalletPicker,
+      showActionSheet: this.showActionSheet
     })
   }
 
@@ -137,38 +148,66 @@ class ThreadsList extends React.PureComponent {
     }
   }
 
-  inviteContactRequest () {
-    return () => {
-      this.setState({showInviteContactModal: true})
+  inviteContactRequest = () => {
+    this.setState({showInviteContactModal: true})
+  }
+
+  showActionSheet = () => {
+    this.actionSheet.show()
+  }
+
+  handleActionSheetResponse = (index) => {
+    if (index === 0) {
+      this.inviteContactRequest()
+    } else if (index === 1) {
+      this.props.leaveThread(this.props.threadId)
     }
   }
 
   render () {
+    const displayThread = this.props.threadId ? false : true
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && <PhotoStream displayThread items={this.props.items}/>}
-
+        {!this.props.showOnboarding && <PhotoStream displayThread={displayThread} items={this.props.items}/>}
         <InviteContactModal
           isVisible={this.state.showInviteContactModal}
           cancel={this.cancelInviteContact()}
+          selectedThreadId={this.props.threadId}
+          selectedThreadName={this.props.title}
         />
-
+        <ActionSheet
+          ref={o => { this.actionSheet = o }}
+          title={this.props.title + ' options'}
+          options={['Invite Others', 'Leave Group', 'Cancel']}
+          cancelButtonIndex={2}
+          onPress={this.handleActionSheetResponse}
+        />
       </View>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const profile = state.preferences.profile
 
-  const items = getPhotoFeed(state)
-  const processingItems = getProcessingImages(state)
+  const threadId = ownProps.navigation.getParam('threadId', undefined)
+
+  let title = 'Timeline'
+  if (threadId) {
+    const threadData = threadDataByThreadId(state, threadId)
+    title = threadData ? threadData.name : 'No Name Group'
+  }
+
+  const items = getPhotoFeed(state, threadId)
+  const processingItems = getProcessingImages(state, threadId)
 
   // add processing items to the beginning of the list
   items.unshift(...processingItems)
 
-  const threadJoins = state.threads.inboundInvites
+  // Only display thread joins if we're not viewing a specific thread
+  if (!threadId) {
+    const threadJoins = state.threads.inboundInvites
     .filter((invite) => !invite.dismiss)
     .map((invite) => {
       return {
@@ -176,9 +215,12 @@ const mapStateToProps = (state) => {
         type: 'processingThread'
       }
     })
-  items.unshift(...threadJoins)
+    items.unshift(...threadJoins)
+  }
 
   return {
+    title,
+    threadId,
     profile,
     items,
     showNotificationsPrompt: state.preferences.tourScreens.notifications && items.length,
@@ -192,8 +234,9 @@ const mapDispatchToProps = (dispatch) => {
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },
     refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
-    showWalletPicker: () => { dispatch(UIActions.showWalletPicker()) },
-    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) }
+    showWalletPicker: (threadId) => { dispatch(UIActions.showWalletPicker(threadId)) },
+    viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
+    leaveThread: (threadId) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) }
   }
 }
 
