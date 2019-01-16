@@ -79,7 +79,7 @@ class OnboardingUsername extends React.Component<Props, State> {
   submit = () => {
     const { username } = this.state
     if (username) {
-      // this.props.submitUsername(username)
+      this.props.submitUsername(username)
     }
     // prevent double tap, disable for as long as onSuccess takes
     this.setState({
@@ -89,7 +89,7 @@ class OnboardingUsername extends React.Component<Props, State> {
       this.setState({
         nextDisabled: false
       })
-    }, 1200)
+    }, 1000)
 
     if (this.props.onSuccess) {
       setTimeout(this.props.onSuccess, 1000)
