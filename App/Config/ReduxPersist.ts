@@ -243,10 +243,10 @@ const migrations: MigrationManifest = {
         ...state.preferences,
         services: {
           notifications: {
-            status: true
+            status: false
           },
           backgroundLocation: {
-            status: true
+            status: false
           },
           INVITE_RECEIVED: {
             status: true
