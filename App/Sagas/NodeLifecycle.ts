@@ -106,7 +106,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
       yield call(RNFS.mkdir, REPO_PATH)
       yield call(moveTextileFiles)
     }
-    const logLevel = __DEV__ ? 'DEBUG' : 'ERROR'
+    const logLevel = Config.RN_RELEASE_TYPE === 'production' ? 'ERROR' : 'DEBUG'
     yield call(newTextile, REPO_PATH, LOG_LEVELS(logLevel))
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
