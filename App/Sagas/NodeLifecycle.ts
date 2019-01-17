@@ -39,15 +39,15 @@ import { announcePeer } from './Migration'
 export const REPO_PATH = `${RNFS.DocumentDirectoryPath}/textile-go`
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
 const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
-const LOG_LEVELS = JSON.stringify({
-  'tex-broadcast': 'DEBUG',
-  'tex-core': 'DEBUG',
-  'tex-datastore': 'DEBUG',
-  'tex-ipfs': 'DEBUG',
-  'tex-mill': 'DEBUG',
-  'tex-repo': 'DEBUG',
-  'tex-repo-config': 'DEBUG',
-  'tex-service': 'DEBUG'
+const LOG_LEVELS = (level: 'CRITICAL' | 'ERROR' | 'WARNING' | 'NOTICE' | 'INFO' | 'DEBUG') => JSON.stringify({
+  'tex-broadcast': level,
+  'tex-core': level,
+  'tex-datastore': level,
+  'tex-ipfs': level,
+  'tex-mill': level,
+  'tex-repo': level,
+  'tex-repo-config': level,
+  'tex-service': level
 })
 
 export function * manageNode () {
@@ -106,7 +106,8 @@ function * createAndStartNode(dispatch: Dispatch): any {
       yield call(RNFS.mkdir, REPO_PATH)
       yield call(moveTextileFiles)
     }
-    yield call(newTextile, REPO_PATH, LOG_LEVELS)
+    const logLevel = __DEV__ ? 'DEBUG' : 'ERROR'
+    yield call(newTextile, REPO_PATH, LOG_LEVELS(logLevel))
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
