@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, TextInput, Platform, Clipboard } from 'react-native'
+import { ScrollView, TextInput, Platform, Clipboard, ActivityIndicator, View } from 'react-native'
 import FS, { exists } from 'react-native-fs'
 import { NavigationScreenProps} from 'react-navigation'
 import * as s from '../Themes/Constants'
@@ -14,6 +14,7 @@ interface NavProps {
 }
 
 interface State {
+  refreshing: boolean
   logData?: string
 }
 
@@ -39,20 +40,21 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
     }
   }
 
-  state: State = {}
+  state: State = { refreshing: false }
 
   textInput?: TextInput
   scrollView?: ScrollView
 
   refreshLogData = async () => {
+    this.setState({ refreshing: true, logData: undefined })
     const extists = await FS.exists(LOG_FILE_PATH)
     if (exists) {
       const stats = await FS.stat(LOG_FILE_PATH)
       const size = stats.size as unknown as number
-      const bytesToRead = 1024 * 300
-      const offset = size - bytesToRead
+      const bytesToRead = 1024 * 300 // 300KB
+      const offset = Math.max(size, bytesToRead) - bytesToRead
       const contents = await FS.read(LOG_FILE_PATH, bytesToRead, offset, 'utf8')
-      this.setState({ logData: contents })
+      this.setState({ refreshing: false, logData: contents })
     }
   }
 
@@ -78,6 +80,13 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
 
   render() {
     const font = Platform.OS === 'ios' ? 'Courier' : 'monospace'
+    if (this.state.refreshing) {
+      return (
+        <View style={{ flex: 1, backgroundColor: s.COLOR_BACKGROUND_PRIMARY, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator animating={true} size='large' />
+        </View>
+      )
+    }
     return (
       <ScrollView
         ref={(ref) => { this.scrollView = ref ? ref : undefined }}
