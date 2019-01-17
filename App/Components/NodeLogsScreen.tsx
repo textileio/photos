@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, TextInput, Platform, Clipboard, ActivityIndicator, View } from 'react-native'
-import FS, { exists } from 'react-native-fs'
+import FS from 'react-native-fs'
 import { NavigationScreenProps} from 'react-navigation'
 import * as s from '../Themes/Constants'
 import { REPO_PATH } from '../Sagas/NodeLifecycle'
@@ -47,7 +47,7 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
 
   refreshLogData = async () => {
     this.setState({ refreshing: true, logData: undefined })
-    const extists = await FS.exists(LOG_FILE_PATH)
+    const exists = await FS.exists(LOG_FILE_PATH)
     if (exists) {
       const stats = await FS.stat(LOG_FILE_PATH)
       const size = stats.size as unknown as number
@@ -55,6 +55,8 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
       const offset = Math.max(size, bytesToRead) - bytesToRead
       const contents = await FS.read(LOG_FILE_PATH, bytesToRead, offset, 'utf8')
       this.setState({ refreshing: false, logData: contents })
+    } else {
+      this.setState({ refreshing: false })
     }
   }
 
