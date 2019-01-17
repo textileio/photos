@@ -83,7 +83,7 @@ class PhotoDetail extends Component {
   // If a user wants to see a photo in a thread, this will navigate to the thread
   viewThread (thread) {
     this.props.viewThread(thread.id)
-    this.props.navigation.navigate('ViewThread', { id: thread.id, name: thread.name })
+    this.props.navigation.navigate('ViewThread', { threadId: thread.id })
   }
 
   renderImage (id) {

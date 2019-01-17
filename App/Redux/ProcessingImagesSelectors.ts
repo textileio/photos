@@ -3,9 +3,11 @@ import { selectors } from './ProcessingImagesRedux'
 import { FeedPhoto, getThreads } from './PhotoViewingSelectors'
 import Config from 'react-native-config'
 
-export function getProcessingImages(state: RootState): ReadonlyArray<FeedPhoto> {
-  // Filters out uplaods happening on non-UI threads (avatars etc)
-  const threadIds = getThreads(state).map((thread) => thread.id)
+export function getProcessingImages(state: RootState, threadId?: string): ReadonlyArray<FeedPhoto> {
+  // Filters out uplaods happening on non-UI threads (avatars etc), and filter out everything except threadId if provided
+  const threadIds = getThreads(state)
+    .filter((thread) => threadId ? thread.id === threadId : true)
+    .map((thread) => thread.id)
   return state.processingImages.images
     .filter((image) => threadIds.indexOf(image.destinationThreadId) >= 0)
     .map((image) => {

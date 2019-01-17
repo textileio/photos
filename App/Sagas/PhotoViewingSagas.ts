@@ -41,12 +41,12 @@ export function * monitorNewThreadActions () {
     if (shouldNav) {
       yield put(PhotoViewingActions.viewThread(id))
       yield delay(700)
-      yield call(NavigationService.navigate, 'ViewThread')
+      yield call(NavigationService.navigate, 'ViewThread', { threadId: id })
     } else if (shouldSelect) {
       yield put(UIActions.updateSharingPhotoThread(id))
     } else if (invite) {
       yield put(PhotoViewingActions.viewThread(id))
-      yield call(NavigationService.navigate, 'ViewThread')
+      yield call(NavigationService.navigate, 'ViewThread', { threadId: id })
     }
   }
 }
