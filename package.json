@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@textile/go-mobile": "1.0.0-rc27",
+    "@textile/react-native-screen-control": "1.0.1",
     "buffer": "^5.2.1",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
