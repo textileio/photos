@@ -6,6 +6,7 @@ import {
   ExternalInvite,
   CafeSession,
   ContactInfo,
+  ContactInfoQueryResult,
   Overview,
   Profile,
   FileData,
@@ -40,10 +41,6 @@ export async function addContact(contact: ContactInfo): Promise<void> {
 export async function addExternalThreadInvite(threadId: string): Promise<ExternalInvite> {
   const result = await TextileNode.addExternalThreadInvite(threadId)
   return JSON.parse(result) as ExternalInvite
-}
-
-export async function addPeerToThread(id_: string, threadId: string): Promise<void> {
-  await TextileNode.addPeerToThread(id_, threadId)
 }
 
 export async function addSchema(jsonstr: string): Promise<File> {
@@ -92,6 +89,11 @@ export async function addThreadLike(blockId: string): Promise<string> {
 export async function address(): Promise<string> {
   const result = await TextileNode.address()
   return result as string
+}
+
+export async function avatar(): Promise<string | undefined> {
+  const result: string = await TextileNode.avatar()
+  return result.length > 0 ? result : undefined
 }
 
 export async function cafeSession(peerId: string): Promise<CafeSession> {
@@ -144,6 +146,11 @@ export async function fileData(hash: string): Promise<FileData> {
   return JSON.parse(result) as FileData
 }
 
+export async function findContact(username: string, limit: number, wait: number): Promise<ContactInfoQueryResult> {
+  const result = await TextileNode.findContact(username, limit, wait)
+  return JSON.parse(result) as ContactInfoQueryResult
+}
+
 export async function ignoreThreadInviteViaNotification(id_: string): Promise<string> {
   const result = await TextileNode.ignoreThreadInviteViaNotification(id_)
   return result as string
@@ -168,11 +175,6 @@ export async function overview(): Promise<Overview> {
 export async function peerId(): Promise<string> {
   const result = await TextileNode.peerId()
   return result as string
-}
-
-export async function peerProfile(peerId: string): Promise<Profile> {
-  const result = await TextileNode.peerProfile(peerId)
-  return JSON.parse(result) as Profile
 }
 
 export async function prepareFiles(path: string, threadId: string): Promise<IMobilePreparedFiles> {

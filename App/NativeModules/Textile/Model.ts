@@ -114,6 +114,11 @@ export interface ContactInfo {
   readonly thread_ids?: ReadonlyArray<string>
 }
 
+export interface ContactInfoQueryResult {
+  readonly local?: ReadonlyArray<ContactInfo>
+  readonly remote?: ReadonlyArray<ContactInfo>
+}
+
 export enum NotificationType {
   InviteReceivedNotification = 'INVITE_RECEIVED',
   AccountPeerJoinedNotification = 'ACCOUNT_PEER_JOINED',

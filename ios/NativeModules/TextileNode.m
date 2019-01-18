@@ -97,12 +97,6 @@ RCT_EXPORT_METHOD(addExternalThreadInvite:(NSString*)threadId resolver:(RCTPromi
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
-RCT_EXPORT_METHOD(addPeerToThread:(NSString*)id_ threadId:(NSString*)threadId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  [self.node addPeerToThread:id_ threadId:threadId error:&error];
-  [self fulfillWithResult:nil error:error resolver:resolve rejecter:reject];
-}
-
 RCT_EXPORT_METHOD(addSchema:(NSString*)jsonstr resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self.node addSchema:jsonstr error:&error];
@@ -155,6 +149,12 @@ RCT_EXPORT_METHOD(addThreadLike:(NSString*)blockId resolver:(RCTPromiseResolveBl
 RCT_EXPORT_METHOD(address:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSString *result = self.node.address;
   resolve(result);
+}
+
+RCT_EXPORT_METHOD(avatar:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node avatar:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
 RCT_EXPORT_METHOD(cafeSession:(NSString*)peerId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -217,6 +217,12 @@ RCT_EXPORT_METHOD(fileData:(NSString*)hash resolver:(RCTPromiseResolveBlock)reso
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
+RCT_EXPORT_METHOD(findContact:(NSString*)username limit:(NSInteger)limit wait:(NSInteger)wait resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  NSError *error;
+  NSString *result = [self.node findContact:username limit:limit wait:wait error:&error];
+  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
+}
+
 RCT_EXPORT_METHOD(ignoreThreadInviteViaNotification:(NSString*)id_ resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   [self.node ignoreThreadInviteViaNotification:id_ error:&error];
@@ -244,12 +250,6 @@ RCT_EXPORT_METHOD(overview:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseR
 RCT_EXPORT_METHOD(peerId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   NSError *error;
   NSString *result = [self.node peerId:&error];
-  [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
-}
-
-RCT_EXPORT_METHOD(peerProfile:(NSString*)peerId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  NSError *error;
-  NSString *result = [self.node peerProfile:peerId error:&error];
   [self fulfillWithResult:result error:error resolver:resolve rejecter:reject];
 }
 
