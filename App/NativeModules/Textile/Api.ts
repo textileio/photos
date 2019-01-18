@@ -15,7 +15,7 @@ import {
   ThreadFilesInfo,
   NotificationInfo
 } from './Model'
-import { IMobilePreparedFiles, IDirectory, MobilePreparedFiles, Directory } from './pb/textile-go'
+import { IMobilePreparedFiles, IDirectory, MobilePreparedFiles, Directory } from '@textile/react-native-protobufs'
 
 const { TextileNode } = NativeModules
 

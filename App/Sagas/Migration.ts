@@ -15,7 +15,7 @@ import { getSession } from './UploadFile'
 import {
   addContact, addThreadFiles, addThread, ThreadInfo, ContactInfo, contact
  } from '../NativeModules/Textile'
-import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { IMobilePreparedFiles } from '@textile/react-native-protobufs'
 import { CafeSession } from '../NativeModules/Textile'
 import { REPO_PATH } from './NodeLifecycle'
 

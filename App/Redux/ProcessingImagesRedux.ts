@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { SharedImage } from '../Models/TextileTypes'
-import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { IMobilePreparedFiles } from '@textile/react-native-protobufs'
 import { BlockInfo } from '../NativeModules/Textile'
 
 const actions = {

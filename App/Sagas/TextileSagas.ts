@@ -49,7 +49,6 @@ import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 import StorageActions from '../Redux/StorageRedux'
-import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { RootState } from '../Redux/Types'
 import { SharedImage } from '../Models/TextileTypes'
 

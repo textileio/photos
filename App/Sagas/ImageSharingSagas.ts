@@ -20,7 +20,7 @@ import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRe
 import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
-import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
+import { IMobilePreparedFiles } from '@textile/react-native-protobufs'
 import { waitFor } from '@textile/react-native-wait-for'
 import { RootAction } from '../Redux/Types'
 
