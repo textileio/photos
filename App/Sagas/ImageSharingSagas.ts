@@ -21,7 +21,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
-import { waitFor } from './WaitFor'
+import { waitFor } from '@textile/react-native-wait-for'
 import { RootAction } from '../Redux/Types'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
