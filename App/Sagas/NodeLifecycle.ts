@@ -8,7 +8,7 @@ import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
 import Config from 'react-native-config'
 
-import { waitFor } from './WaitFor'
+import { waitFor } from '@textile/react-native-wait-for'
 import { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
