@@ -167,7 +167,7 @@ class SetAvatar extends React.Component<Props> {
       const source = { uri: 'data:image/jpeg;base64,' + this.props.data }
       return <Image style={IMAGE} source={source} />
     } else if (this.props.accountHasAvatar) {
-      return <Avatar style={IMAGE} />
+      return <Avatar style={IMAGE} self={true}/>
     } else {
       return <Icon style={PLACEHOLDER} name={'question-circle'} size={120} color={s.COLOR_GREY_LIGHT} />
     }

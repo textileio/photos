@@ -65,7 +65,7 @@ const GroupCard = (props: ScreenProps) => {
         <View style={styles.avatarContainer}>
           { authors.slice(0, 8).map((authorId: string, i: number) => {
             const imageStyle = cardImageStyle(authors, i)
-            return (<Avatar key={authorId} style={imageStyle} peerId={authorId} />)
+            return (<Avatar key={authorId} style={imageStyle}/>)
           })}
         </View>
       </View>

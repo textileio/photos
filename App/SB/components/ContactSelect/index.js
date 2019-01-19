@@ -45,7 +45,7 @@ const ContactSelect = (props) => {
               <TouchableOpacity key={item.id} activeOpacity={0.6} style={styles.selectedContact} onPress={() => {
                 select(item, item.included)
               }}>
-                <Avatar style={styles.selectedContact} peerId={item.id} />
+                <Avatar style={styles.selectedContact} />
                 {selectState && <Image style={styles.selectedContactIcon} source={require('./statics/icon-select.png')} />}
               </TouchableOpacity>
             )

@@ -23,6 +23,7 @@ interface ScreenProps {
   isVisible: boolean
   peerId: string
   username: string
+  avatar?: string
   close: () => void
   navigateToThread: (id: string, name: string) => void
 }
@@ -51,7 +52,7 @@ class ContactModal extends React.Component<DispatchStateProps & ScreenProps> {
         </TextileHeaderButtons>
         <View style={styles.content}>
           <View style={styles.profile}>
-            <Avatar style={{ width: 72, height: 72 }} peerId={this.props.peerId} />
+            <Avatar style={{ width: 72, height: 72 }} target={this.props.avatar} />
             <Text style={styles.username}>{this.props.username}</Text>
           </View>
           <ScrollView style={styles.threadsList}>

@@ -26,7 +26,8 @@ const LIKE_TEXT: TextStyle = {
 interface StateProps {
   likes: ReadonlyArray<{
     peerId: string,
-    username: string
+    username: string,
+    avatar?: string
   }>
 }
 
@@ -49,11 +50,11 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
     return item.username + index
   }
 
-  renderItem = (info: ListRenderItemInfo<{ peerId: string; username: string }>) => {
-    const { peerId, username } = info.item
+  renderItem = (info: ListRenderItemInfo<{ peerId: string; username: string, avatar?: string }>) => {
+    const { username, avatar } = info.item
     return (
       <View style={LIKE_ITEM}>
-        <Avatar style={{ width: 55, height: 55 }} peerId={peerId} />
+        <Avatar style={{ width: 55, height: 55 }} target={avatar} />
         <Text style={LIKE_TEXT}>{username}</Text>
       </View>
     )
@@ -79,7 +80,8 @@ const mapStateToProps = (state: RootState): StateProps => {
     const username: string = like.username || 'unknown'
     return {
       peerId: like.author_id,
-      username
+      username,
+      avatar: like.avatar
     }
   })
   return {

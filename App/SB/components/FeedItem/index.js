@@ -36,7 +36,7 @@ const FeedItem = props => {
     >
       <Avatar
         style={{ width: 24, height: 24 }}
-        peerId={notification.actor_id}
+        target={notification.avatar}
       />
     </View>
   )

@@ -8,6 +8,7 @@ interface BaseNotification {
   body: string
   read: boolean
   username?: string
+  avatar?: string
 }
 
 export type InviteReceivedNotification = BaseNotification & {

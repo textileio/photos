@@ -35,7 +35,9 @@ interface StateProps {
   imageHeight: number
   imageWidth: number
   username: string,
-  photoUsername: string
+  avatar: string | undefined,
+  photoUsername: string,
+  photoAvatar: string | undefined
 }
 
 interface DispatchProps {
@@ -79,7 +81,9 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
       imageHeight,
       imageWidth,
       username,
+      avatar,
       photoUsername,
+      photoAvatar,
       onComment
     } = this.props
 
@@ -112,7 +116,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader} >
-          <Avatar style={styles.cardAvatar} peerId={peerId} />
+          <Avatar style={styles.cardAvatar} target={photoAvatar} />
 
           <Text style={styles.cardAction}>
             <Text style={styles.cardActionName}>{photoUsername}</Text> added a photo
@@ -174,6 +178,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const dateString = date.fromNow()
 
   const username = profile ? (profile.username || 'unknown') : 'unknown'
+  const avatar = profile ? profile.avatar : undefined
   const photoUsername = peerId === photo.author_id ? 'You' : photo.username ? photo.username : photo.author_id.substring(0, 8)
 
   const totalLikes = photo.likes ? photo.likes.length : 0
@@ -200,7 +205,9 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     imageHeight,
     imageWidth,
     username,
-    photoUsername
+    avatar,
+    photoUsername,
+    photoAvatar: photo.avatar
   }
 }
 

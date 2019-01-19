@@ -37,6 +37,7 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
     contactCard: false,
     selectedContact: '',
     selectedUsername: '',
+    selectedAvatar: undefined,
     showInviteContactModal: false
   }
 
@@ -47,6 +48,7 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
       this.setState({
         selectedContact: contact.id,
         selectedUsername: contact.username,
+        selectedAvatar: contact.avatar,
         contactCard: true
       })
     }
@@ -143,6 +145,7 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
           isVisible={this.state.contactCard}
           peerId={this.state.selectedContact}
           username={this.state.selectedUsername}
+          avatar={this.state.selectedAvatar}
           navigateToThread={this.navigateToThread()}
           close={this.closeModal()}
         />

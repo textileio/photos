@@ -15,7 +15,7 @@ const ContactSelectCard = (props) => {
     <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={() => {
       select(item, item.included)
     }}>
-      <Avatar style={styles.selectedContact} peerId={item.id} />
+      <Avatar style={styles.selectedContact} />
       <Text style={styles.contactName}>{item.username || 'peer'}</Text>
       <View style={styles.contactSelectRadio}>
         <RadioButton disabled={item.included} selected={selected} />
