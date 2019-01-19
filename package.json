@@ -13,7 +13,7 @@
     "@textile/react-native-screen-control": "1.0.9",
     "@textile/react-native-wait-for": "1.0.0",
     "@textile/react-native-protobufs": "1.0.5",
-    "buffer": "^5.2.1",
+    "@textile/react-native-sdk": "file:../react-native-sdk",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "protobufjs": "^6.8.8",
