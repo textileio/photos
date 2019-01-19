@@ -620,9 +620,9 @@
   dependencies:
     protobufjs "^6.8.8"
 
-"@textile/react-native-screen-control@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.5.tgz#0d3f649d5e94f0930d7ac79f348840642967f5a0"
+"@textile/react-native-screen-control@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.6.tgz#a0dea97f447d135908edcefc47177ed4ae7008cf"
 
 "@textile/react-native-wait-for@1.0.0":
   version "1.0.0"
