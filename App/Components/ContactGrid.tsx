@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux/index'
+import { Dispatch } from 'redux'
 import {
   View,
   Text,
@@ -16,6 +16,9 @@ import InviteContactModal from './InviteContactModal'
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
+
+import { ContactInfo } from '../NativeModules/Textile'
+
 // Styles
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/ContactGridStyles'
 
@@ -26,7 +29,7 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-  contacts: {[key: string]: string}
+  contacts: {[key: string]: ContactInfo}
 }
 
 class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationScreenProps<{}>> {
@@ -39,9 +42,13 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
 
   oneScreensWorth = 40
 
-  selectContact (peerId: string, username: string) {
+  selectContact (contact: ContactInfo) {
     return () => {
-      this.setState({selectedContact: peerId, selectedUsername: username, contactCard: true})
+      this.setState({
+        selectedContact: contact.id,
+        selectedUsername: contact.username,
+        contactCard: true
+      })
     }
   }
 
@@ -72,20 +79,17 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
     )
   }
 
-  renderRow (row: ListRenderItemInfo<string>) {
+  renderRow (row: ListRenderItemInfo<ContactInfo>) {
     const { item } = row
-    if (item === 'invite') {
-      return this.renderInvite()
-    }
     const dimension = PRODUCT_ITEM_HEIGHT * 0.5
     return (
       <TouchableOpacity
         style={styles.item}
-        onPress={this.selectContact(item, this.props.contacts[item])}
+        onPress={this.selectContact(item)}
         activeOpacity={0.95}
       >
-        <Avatar style={{ width: dimension, height: dimension }} peerId={item} />
-        <Text style={styles.username}>{this.props.contacts[item]}</Text>
+        <Avatar style={{ width: dimension, height: dimension }} target={item.avatar} />
+        <Text style={styles.username}>{item.username}</Text>
       </TouchableOpacity>
     )
   }
@@ -114,23 +118,18 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item: string) => item
+  keyExtractor = (item: ContactInfo) => item.id
 
   render () {
-    const peerIds: string[] = Object.keys(this.props.contacts).sort((a, b) => {
-      if (!this.props.contacts[b] || this.props.contacts[a] < this.props.contacts[b]) {
-        return -1
-      }
-      if (!this.props.contacts[a] || this.props.contacts[a] > this.props.contacts[b]) {
-        return 1
-      }
-      return 0
+    const ids: string[] = Object.keys(this.props.contacts).sort()
+    const contacts: ContactInfo[] = ids.map((id) => {
+      return this.props.contacts[id]
     })
     return (
       <View style={styles.container}>
         <FlatList
           style={styles.listContainer}
-          data={['invite', ...peerIds]}
+          data={contacts}
           keyExtractor={this.keyExtractor}
           /* tslint:disable-next-line */
           renderItem={this.renderRow.bind(this)}

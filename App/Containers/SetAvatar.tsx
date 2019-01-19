@@ -198,7 +198,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   displaySubButton: state.ui.chosenProfilePhoto.image !== undefined,
   image: state.ui.chosenProfilePhoto.image,
   data: state.ui.chosenProfilePhoto.data,
-  accountHasAvatar: state.account.profile.value ? state.account.profile.value.avatar_uri !== undefined : false
+  accountHasAvatar: state.account.profile.value ? state.account.profile.value.avatar !== undefined : false
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({

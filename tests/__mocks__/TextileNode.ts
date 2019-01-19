@@ -6,8 +6,8 @@ import {
     ThreadState,
     BlockInfo,
     BlockType,
-    Profile
-} from '../../App/NativeModules/Textile/Model'
+    ContactInfo
+} from '../../App/NativeModules/Textile'
 
 export default {
     acceptExternalThreadInvite: jest.fn((id, key): Promise<string> => new Promise((resolve) => {
@@ -65,9 +65,12 @@ export default {
         resolve(JSON.stringify(mockBlockInfo))
     })),
     profile: jest.fn((): Promise<string> => new Promise((resolve) => {
-        const mockProfile: Profile = {
+        const mockProfile: ContactInfo = {
+            id: 'id',
             address: '123',
-            username: 'mock'
+            username: 'mock',
+            created: 'created',
+            updated: 'updated'
         }
         resolve(JSON.stringify(mockProfile))
     })),

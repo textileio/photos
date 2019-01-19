@@ -145,18 +145,10 @@ export interface NotificationInfo {
 }
 
 export interface Overview {
-  readonly swarm_size: number
   readonly account_peer_cnt: number
   readonly thread_cnt: number
   readonly file_cnt: number
   readonly contact_cnt: number
-}
-
-export interface Profile {
-  readonly address: string
-  readonly inboxes?: ReadonlyArray<string>
-  readonly username?: string
-  readonly avatar_uri?: string
 }
 
 export interface FileData {

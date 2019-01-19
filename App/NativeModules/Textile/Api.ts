@@ -8,7 +8,6 @@ import {
   ContactInfo,
   ContactInfoQueryResult,
   Overview,
-  Profile,
   FileData,
   ThreadInfo,
   WalletAccount,
@@ -189,9 +188,9 @@ export async function prepareFilesAsync(path: string, threadId: string): Promise
   return MobilePreparedFiles.decode(buffer)
 }
 
-export async function profile(): Promise<Profile> {
+export async function profile(): Promise<ContactInfo> {
   const result = await TextileNode.profile()
-  return JSON.parse(result) as Profile
+  return JSON.parse(result) as ContactInfo
 }
 
 export async function readAllNotifications(): Promise<void> {

@@ -260,7 +260,7 @@ const mapStateToProps = (state) => {
     ? 'Wallet Status:\n' + nodeStatus
     : 'Any new photos you take will be added to your Textile wallet.'
 
-  let contacts = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo.username }), {})
+  let contacts = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo }), {})
 
   // NOTE: if future cases of more non-shared threads existing, we'll want to move this to a redux
   const nonSharedGroups = 3
@@ -289,6 +289,10 @@ const mapStateToProps = (state) => {
   }
 
   const profile = state.account.profile.value
+  let avatarUrl
+  if (profile && profile.avatar) {
+    avatarUrl = Config.RN_TEXTILE_CAFE_GATEWAY_URL + '/ipfs/' + profile.avatar + '/0/large/d'
+  }
 
   return {
     contacts,
@@ -300,7 +304,7 @@ const mapStateToProps = (state) => {
     verboseUi: state.preferences.verboseUi,
     profile,
     showTourScreen: state.preferences.tourScreens.wallet,
-    avatarUrl: profile && profile.avatar_id ? Config.RN_TEXTILE_CAFE_GATEWAY_URL + profile.avatar_id : undefined,
+    avatarUrl: avatarUrl,
     username: profile && profile.username ? profile.username : undefined,
     selectedTab: state.preferences.viewSettings.selectedWalletTab,
     storage: state.preferences.storage,

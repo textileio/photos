@@ -1,10 +1,10 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { Profile, CafeSession } from '../NativeModules/Textile'
+import { ContactInfo, CafeSession } from '../NativeModules/Textile'
 
 const actions = {
   refreshProfileRequest: createAction('REFRESH_PROFILE_REQUEST'),
   refreshProfileSuccess: createAction('REFRESH_PROFILE_SUCCESS', (resolve) => {
-    return (profile: Profile) => resolve({ profile })
+    return (profile: ContactInfo) => resolve({ profile })
   }),
   profileError: createAction('PROFILE_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -20,13 +20,13 @@ const actions = {
     return (username: string) => resolve({ username })
   }),
   setAvatarRequest: createAction('SET_AVATAR_REQUEST', (resolve) => {
-    return (avatarId: string) => resolve({ avatarId })
+    return (avatar: string) => resolve({ avatar })
   }),
   setAvatarError: createAction('SET_AVATAR_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
   }),
   setPendingAvatar: createAction('SET_PENDING_AVATAR', (resolve) => {
-    return (avatarId: string) => resolve({ avatarId })
+    return (avatar: string) => resolve({ avatar })
   }),
   setRecoveryPhrase: createAction('SET_RECOVERY_PHRASE', (resolve) => {
     return (recoveryPhrase: string) => resolve({ recoveryPhrase })
@@ -45,7 +45,7 @@ export type AccountAction = ActionType<typeof actions>
 
 interface AccountState {
   profile: {
-    value?: Profile
+    value?: ContactInfo
     processing: boolean
     error?: string
   }
@@ -54,7 +54,7 @@ interface AccountState {
     error?: string
   },
   avatar: {
-    pendingId?: string
+    pending?: string
     error?: string
   }
   recoveryPhrase?: string,
@@ -104,7 +104,7 @@ export function reducer(state: AccountState = initialState, action: AccountActio
       return { ...state, avatar: { ...state.avatar, error } }
     }
     case getType(actions.setPendingAvatar):
-      return { ...state, avatar: { ...state.avatar, pendingId: action.payload.avatarId } }
+      return { ...state, avatar: { ...state.avatar, pending: action.payload.avatar } }
     case getType(actions.setRecoveryPhrase):
       return { ...state, recoveryPhrase: action.payload.recoveryPhrase }
     case getType(actions.getCafeSessionsRequest):
