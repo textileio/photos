@@ -119,12 +119,6 @@ export async function contactThreads(id_: string): Promise<ReadonlyArray<ThreadI
   return JSON.parse(result) as ReadonlyArray<ThreadInfo>
 }
 
-export async function contactUsername(id_: string): Promise<string> {
-  // TODO: Deal with empty string?
-  const result = await TextileNode.contactUsername(id_)
-  return result as string
-}
-
 export async function contacts(): Promise<ReadonlyArray<ContactInfo>> {
   const result = await TextileNode.contacts()
   return JSON.parse(result) as ReadonlyArray<ContactInfo>

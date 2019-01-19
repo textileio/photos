@@ -335,21 +335,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void contactUsername(final String id_, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.contactUsername(id_));
-                }
-                catch (Exception e) {
-                    promise.reject("contactUsername", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
     public void contacts(final Promise promise) {
         executor.execute(new Runnable() {
             @Override

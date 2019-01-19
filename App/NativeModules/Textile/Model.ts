@@ -30,6 +30,7 @@ export interface ThreadCommentInfo {
   readonly date: string
   readonly author_id: string
   readonly username?: string
+  readonly avatar?: string
   readonly body: string
 }
 
@@ -38,6 +39,7 @@ export interface ThreadLikeInfo {
   readonly date: string
   readonly author_id: string
   readonly username?: string
+  readonly avatar?: string
 }
 
 export interface ThreadFilesInfo {
@@ -46,6 +48,7 @@ export interface ThreadFilesInfo {
   readonly date: string
   readonly author_id: string
   readonly username?: string
+  readonly avatar?: string
   readonly caption?: string
   readonly files: ReadonlyArray<ThreadFileInfo>
   readonly comments: ReadonlyArray<ThreadCommentInfo>
@@ -72,6 +75,7 @@ export interface BlockInfo {
   readonly thread_id: string
   readonly author_id: string
   readonly username: string
+  readonly avatar?: string
   readonly type: BlockType
   readonly date: string
   readonly parents: ReadonlyArray<string>
@@ -135,6 +139,7 @@ export interface NotificationInfo {
   readonly date: string
   readonly actor_id: string
   readonly username?: string
+  readonly avatar?: string
   readonly subject: string
   readonly subject_id: string
   readonly block_id?: string
@@ -211,6 +216,7 @@ export interface WalletAccount {
 export interface ThreadUpdate {
   block: BlockInfo
   thread_id: string
+  thread_key: string
   thread_name: string
   info?: any
 }
@@ -224,6 +230,7 @@ export enum UpdateType {
 
 export interface Update {
   id: string
+  key: string
   name: string
   type: UpdateType
 }

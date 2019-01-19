@@ -8,6 +8,7 @@ import Icon from './Icon'
 import * as s from '../Themes/Constants'
 
 interface OwnProps {
+  self?: boolean
   target?: string
   style?: ImageStyle
 }
@@ -91,12 +92,12 @@ class Avatar extends React.Component<Props, State> {
       )
     }
 
-    const uniqueUserColor = !this.state.showIcon ? { tintColor: color } : {}
+    const tintColor = !this.state.showIcon ? { tintColor: color } : {}
     return (
       <Image
         {...this.props}
         source={{ uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d` }}
-        style={{ ...(this.props.style || {}), ...uniqueUserColor, width, height, borderRadius: radius }}
+        style={{ ...(this.props.style || {}), ...tintColor, width, height, borderRadius: radius }}
         resizeMode={'cover'}
         onLayout={this.onImageLayout}
         defaultSource={require('../Images/v2/empty.png')}
@@ -111,7 +112,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
 
   const profile = state.account.profile.value
   const localTarget = profile ? profile.avatar : undefined
-  const local = !target || target === localTarget
+  const local = ownProps.self || target === localTarget
   if (local) {
     target = localTarget
   }
