@@ -10,6 +10,8 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
+import io.textile.rnmobile.TextileNode;
+
 import org.json.JSONObject;
 
 public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {

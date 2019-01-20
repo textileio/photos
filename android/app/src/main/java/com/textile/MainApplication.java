@@ -3,8 +3,6 @@ package com.textile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import io.textile.rnmobile.RNTextilePackage;
-import io.textile.screencontrol.RNScreenControlPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -22,9 +20,10 @@ import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
 import com.smixx.fabric.FabricPackage;
-import com.textile.textilenode.TextileNodePackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
+import io.textile.rnmobile.RNTextilePackage;
+import io.textile.screencontrol.RNScreenControlPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -38,7 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNTextilePackage(),
+          new RNTextilePackage(),
           new RNScreenControlPackage(),
           new RNBackgroundFetchPackage(),
           new ReactNativePushNotificationPackage(),
@@ -48,8 +47,7 @@ public class MainApplication extends Application implements ReactApplication {
           new ReactNativeConfigPackage(),
           new FabricPackage(),
           new BackgroundTimerPackage(),
-          new RNVersionNumberPackage(),
-          new TextileNodePackage()
+          new RNVersionNumberPackage()
       );
     }
 
