@@ -1,15 +1,4 @@
 version: 2.1
-
-install-android-tools: &install-android-tools
-    run:
-        name: install android tools
-        command: |
-            sdkmanager --licenses
-            echo y | sdkmanager "build-tools;27.0.3"
-            echo y | sdkmanager "platforms;android-27"
-            echo y | sdkmanager "build-tools;28.0.3"
-            echo y | sdkmanager "platforms;android-28"
-
 jobs:
     lint:
         working_directory: ~/textile-mobile
@@ -104,7 +93,7 @@ jobs:
             LANG: en_US.UTF-8
         working_directory: ~/textile-mobile
         docker:
-            - image: circleci/android:api-28-node8-alpha
+            - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
@@ -141,8 +130,6 @@ jobs:
                 paths:
                     - vendor/bundle
 
-            - *install-android-tools
-
             - run:
                 name: fastlane tests
                 working_directory: android
@@ -162,7 +149,7 @@ jobs:
             LANG: en_US.UTF-8
         working_directory: ~/textile-mobile
         docker:
-            - image: circleci/android:api-28-node8-alpha
+            - image: circleci/android:api-27-node8-alpha
         resource_class: large
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
@@ -185,10 +172,6 @@ jobs:
             - restore_cache:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
-
-            - run: yes | sdkmanager --licenses || exit 0
-            - run: yes | sdkmanager --update || exit 0
-
             - run: yarn install
 
             - run:
@@ -197,8 +180,6 @@ jobs:
 
             - run:
                 command: bundle install
-
-            - *install-android-tools
 
             - run:
                 command: bundle exec fastlane prep_release
@@ -232,7 +213,7 @@ jobs:
             LANG: en_US.UTF-8
         working_directory: ~/textile-mobile
         docker:
-            - image: circleci/android:api-28-node8-alpha
+            - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
             - checkout:
@@ -271,8 +252,6 @@ jobs:
             - run:
                 command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
                 working_directory: android
-
-            - *install-android-tools
 
             - run:
                 command: bundle exec fastlane release
@@ -546,32 +525,32 @@ workflows:
     version: 2
     dev:
         jobs:
-            - lint:
-                filters:
-                    branches:
-                        ignore:
-                            - master
-            - tests:
-                filters:
-                    branches:
-                        ignore:
-                            - master
+            # - lint:
+            #     filters:
+            #         branches:
+            #             ignore:
+            #                 - master
+            # - tests:
+            #     filters:
+            #         branches:
+            #             ignore:
+            #                 - master
             - android:
-                requires:
-                    - lint
-                    - tests
+                # requires:
+                #     - lint
+                #     - tests
                 filters:
                     branches:
                         ignore:
                             - master
-            - ios:
-                requires:
-                    - lint
-                    - tests
-                filters:
-                    branches:
-                        ignore:
-                            - master
+            # - ios:
+            #     requires:
+            #         - lint
+            #         - tests
+            #     filters:
+            #         branches:
+            #             ignore:
+            #                 - master
     adhoc:
         jobs:
             - ios-adhoc:
