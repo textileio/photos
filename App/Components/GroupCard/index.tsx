@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
-import {TextileImage} from '@textile/react-native-sdk'
+import TextileImage from '../TextileImage'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import * as s from '../../Themes/Constants'

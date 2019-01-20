@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View } from 'react-native'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
-import { TextileImage } from '@textile/react-native-sdk'
+import TextileImage from './TextileImage'
 import Icon from './Icon'
 import * as s from '../Themes/Constants'
 
