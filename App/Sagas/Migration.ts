@@ -14,9 +14,9 @@ import { getSession } from './UploadFile'
 
 import {
   addContact, addThreadFiles, addThread, ThreadInfo, ContactInfo, contact
- } from '../NativeModules/Textile'
+ } from '@textile/react-native-sdk'
 import { IMobilePreparedFiles } from '@textile/react-native-protobufs'
-import { CafeSession } from '../NativeModules/Textile'
+import { CafeSession } from '@textile/react-native-sdk'
 import { REPO_PATH } from './NodeLifecycle'
 
 const PREVIOUS_ID_PATH = () => `${REPO_PATH}/migration005_peerid.ndjson`

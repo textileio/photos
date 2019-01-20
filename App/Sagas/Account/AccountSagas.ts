@@ -10,7 +10,7 @@ import {
   setUsername as username,
   Profile,
   CafeSession
-} from '../../NativeModules/Textile'
+} from '@textile/react-native-sdk'
 
 export function * refreshProfile () {
   while (true) {

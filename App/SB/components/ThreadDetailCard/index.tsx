@@ -11,7 +11,7 @@ import UIActions from '../../../Redux/UIRedux'
 import styles from './statics/styles'
 import Icon from '../../../Components/Icon'
 import Colors from '../../../Themes/Colors'
-import { ThreadFilesInfo } from '../../../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import KeyValueText from '../../../Components/KeyValueText'
 import { RootState, RootAction } from '../../../Redux/Types'
 

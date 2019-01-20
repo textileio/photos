@@ -6,7 +6,7 @@ import Config from 'react-native-config'
 
 import AccountActions from '../Redux/AccountRedux'
 import { bestSession } from '../Redux/AccountSelectors'
-import { CafeSession } from '../NativeModules/Textile'
+import { CafeSession } from '@textile/react-native-sdk'
 
 export function * uploadFile (id: string, payloadPath: string) {
   const session: CafeSession = yield call(getSession)

@@ -13,7 +13,7 @@ import UIActions from '../Redux/UIRedux'
 
 import GroupCard from './GroupCard'
 import styles from './Styles/ThreadSelectorStyles'
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 
 interface ScreenProps {
   createNewThread: () => void

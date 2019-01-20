@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { Profile, CafeSession } from '../NativeModules/Textile'
+import { Profile, CafeSession } from '@textile/react-native-sdk'
 
 const actions = {
   refreshProfileRequest: createAction('REFRESH_PROFILE_REQUEST'),

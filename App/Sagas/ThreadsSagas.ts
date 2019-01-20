@@ -14,13 +14,13 @@ import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import { pendingInviteLink } from '../Redux/ThreadsSelectors'
 import { ActionType } from 'typesafe-actions'
-import { ExternalInvite } from '../NativeModules/Textile'
+import { ExternalInvite } from '@textile/react-native-sdk'
 import {
   addExternalThreadInvite,
   acceptExternalThreadInvite,
   acceptThreadInviteViaNotification,
   addThreadInvite
-} from '../NativeModules/Textile'
+} from '@textile/react-native-sdk'
 import DeepLink from '../Services/DeepLink'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import NavigationService from '../Services/NavigationService'

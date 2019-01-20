@@ -10,7 +10,7 @@ import {
   setAvatar,
   BlockInfo,
   Profile
-} from '../NativeModules/Textile'
+} from '@textile/react-native-sdk'
 import { SharedImage } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
 import { processingImageByUuid, allUploadsComplete } from '../Redux/ProcessingImagesSelectors'

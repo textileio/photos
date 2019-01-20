@@ -1,6 +1,6 @@
 import actions, { reducer, NotificationsState } from '../NotificationsRedux'
 import { FilesAddedNotification } from '../../Models/Notifications'
-import { NotificationType } from '../../NativeModules/Textile'
+import { NotificationType } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 

@@ -1,5 +1,5 @@
 import DeepLink from '../DeepLink'
-import { ExternalInvite } from '../../NativeModules/Textile'
+import { ExternalInvite } from '@textile/react-native-sdk'
 import { NavigationService } from '../NavigationService'
 import {
     NavigationContainerComponent,
