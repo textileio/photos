@@ -9,6 +9,7 @@ import * as s from '../Themes/Constants'
 
 interface OwnProps {
   self?: boolean
+  icon?: string
   target?: string
   style?: ImageStyle
 }
@@ -50,7 +51,7 @@ class Avatar extends React.Component<Props, State> {
   }
 
   render () {
-    const { style, target, local, started, color } = this.props
+    const { style, icon, target, local, started, color } = this.props
 
     const defaultSize = 100
     let width: string | number = defaultSize
@@ -64,11 +65,11 @@ class Avatar extends React.Component<Props, State> {
     }
     const { borderRadius: radius } = this.state
 
-    if (!started || !target) {
+    if (icon || !started || !target) {
       return (
         <Icon
           style={{ ...(this.props.style || {}), width, height, borderRadius: radius }}
-          name={'question-circle'}
+          name={icon || 'question-circle'}
           size={height as number}
           color={s.COLOR_GREY_LIGHT}
           onLayout={this.onImageLayout}

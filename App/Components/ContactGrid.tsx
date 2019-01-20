@@ -75,23 +75,27 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
         onPress={this.inviteContactRequest()}
         activeOpacity={0.95}
       >
-        <Avatar style={{ width: dimension, height: dimension }} />
-        <Text style={styles.username}>New Invite</Text>
+        <Avatar style={{ width: dimension, height: dimension }} icon={'invite'}/>
+        <Text numberOfLines={1} style={styles.username}>Invite</Text>
       </TouchableOpacity>
     )
   }
 
-  renderRow (row: ListRenderItemInfo<ContactInfo>) {
+  renderRow (row: ListRenderItemInfo<string>) {
     const { item } = row
+    if (item === 'add') {
+      return this.renderInvite()
+    }
+    const contact = this.props.contacts[item]
     const dimension = PRODUCT_ITEM_HEIGHT * 0.5
     return (
       <TouchableOpacity
         style={styles.item}
-        onPress={this.selectContact(item)}
+        onPress={this.selectContact(contact)}
         activeOpacity={0.95}
       >
-        <Avatar style={{ width: dimension, height: dimension }} target={item.avatar} />
-        <Text style={styles.username}>{item.username}</Text>
+        <Avatar style={{ width: dimension, height: dimension }} target={contact.avatar} />
+        <Text numberOfLines={1} style={styles.username}>{contact.username}</Text>
       </TouchableOpacity>
     )
   }
@@ -117,21 +121,15 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
     }
   }
 
-  // The default function if no Key is provided is index
-  // an identifiable key is important if you plan on
-  // item reordering.  Otherwise index is fine
-  keyExtractor = (item: ContactInfo) => item.id
+  keyExtractor = (item: string) => item
 
   render () {
     const ids: string[] = Object.keys(this.props.contacts).sort()
-    const contacts: ContactInfo[] = ids.map((id) => {
-      return this.props.contacts[id]
-    })
     return (
       <View style={styles.container}>
         <FlatList
           style={styles.listContainer}
-          data={contacts}
+          data={['add', ...ids]}
           keyExtractor={this.keyExtractor}
           /* tslint:disable-next-line */
           renderItem={this.renderRow.bind(this)}

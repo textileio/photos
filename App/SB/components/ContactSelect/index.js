@@ -8,13 +8,11 @@ import styles from './statics/styles'
 
 function getSubTitle (contacts, topFive, notInThread) {
   if (contacts.length === 0) {
-    return 'No peers yet'
-  } else if (contacts.length > 0 && notInThread === 0) {
-    return 'No peers left to invite'
+    return 'You don\'t have any contacts.'
   } else if (topFive.length > 0 && topFive.length > notInThread) {
-    return 'Suggested peers'
+    return 'Suggested:'
   }
-  return 'Press invite when done'
+  return 'Invite existing contacts or generate an external invite link or QR code.'
 }
 
 const ContactSelect = (props) => {
@@ -22,7 +20,7 @@ const ContactSelect = (props) => {
   const subTitle = getSubTitle(contacts, topFive, notInThread)
   const showSuggested = topFive.length > 0 && topFive.length > notInThread
 
-  const title = threadName && threadName !== '' ? `Invite to ${threadName}` : 'Select new peers'
+  const title = threadName && threadName !== '' ? `Invite to ${threadName}` : 'Invite others'
   return (
     <View style={styles.contentContainer}>
       <View style={styles.header}>
@@ -30,7 +28,7 @@ const ContactSelect = (props) => {
           <Text style={styles.title}>{title}</Text>
         </View>
 
-        {subTitle && <Text style={styles.subtitle}> { subTitle } </Text> }
+        {subTitle && <Text style={styles.subtitle}>{subTitle}</Text> }
 
         {showSuggested && <View style={styles.selectedContactList}>
           {topFive.map((item) => {

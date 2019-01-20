@@ -67,10 +67,10 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
           <View style={styles.container}>
             <View style={styles.content}>
               {this.props.fullScreen && <View style={styles.title}>
-                <Text style={styles.titleText}>Create New Group</Text>
+                <Text style={styles.titleText}>New Group</Text>
               </View>}
               {!this.props.fullScreen && <View style={styles.header}>
-                <Text style={styles.headerText}>Create New Group</Text>
+                <Text style={styles.headerText}>New Group</Text>
               </View>}
               <View style={styles.topRow}>
                 <Input

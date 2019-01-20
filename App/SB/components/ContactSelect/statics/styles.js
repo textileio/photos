@@ -37,6 +37,7 @@ export default StyleSheet.create({
   subtitle: {
     fontFamily: 'BentonSans',
     fontSize: 14,
+    lineHeight: 20,
     color: '#9b9b9b',
     marginBottom: 10
   },

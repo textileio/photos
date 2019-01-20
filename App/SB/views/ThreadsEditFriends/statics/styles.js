@@ -12,10 +12,10 @@ export default StyleSheet.create({
     paddingHorizontal: 16
   },
   toast: {
-    backgroundColor: '#EEF0F3'
+    backgroundColor: '#8e8e93'
   },
   toastText: {
-    color: '#2D3237',
+    color: 'white',
     textAlign: 'center',
     fontSize: 18,
     padding: 24
