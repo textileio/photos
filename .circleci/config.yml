@@ -129,7 +129,7 @@ jobs:
                 key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
                 paths:
                     - vendor/bundle
-                    
+
             - run:
                   name: install tools
                   command: |
@@ -534,32 +534,32 @@ workflows:
     version: 2
     dev:
         jobs:
-            # - lint:
-            #     filters:
-            #         branches:
-            #             ignore:
-            #                 - master
-            # - tests:
-            #     filters:
-            #         branches:
-            #             ignore:
-            #                 - master
-            - android:
-                # requires:
-                #     - lint
-                #     - tests
+            - lint:
                 filters:
                     branches:
                         ignore:
                             - master
-            # - ios:
-            #     requires:
-            #         - lint
-            #         - tests
-            #     filters:
-            #         branches:
-            #             ignore:
-            #                 - master
+            - tests:
+                filters:
+                    branches:
+                        ignore:
+                            - master
+            - android:
+                requires:
+                    - lint
+                    - tests
+                filters:
+                    branches:
+                        ignore:
+                            - master
+            - ios:
+                requires:
+                    - lint
+                    - tests
+                filters:
+                    branches:
+                        ignore:
+                            - master
     adhoc:
         jobs:
             - ios-adhoc:
