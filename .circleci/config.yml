@@ -185,6 +185,10 @@ jobs:
             - restore_cache:
                 key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
+
+            - run: yes | sdkmanager --licenses || exit 0
+            - run: yes | sdkmanager --update || exit 0
+
             - run: yarn install
 
             - run:
