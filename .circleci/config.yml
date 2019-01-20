@@ -122,13 +122,6 @@ jobs:
                 key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
 
             - run:
-                name: install tools
-                command: |
-                    sdkmanager --licenses
-                    echo y | sdkmanager "build-tools;28.0.3"
-                    echo y | sdkmanager "platforms;android-28"
-
-            - run:
                 command: bundle install
                 working_directory: android
 
@@ -136,6 +129,15 @@ jobs:
                 key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
                 paths:
                     - vendor/bundle
+
+            - run:
+                  name: install tools
+                  command: |
+                      sdkmanager --licenses
+                      echo y | sdkmanager "build-tools;27.0.3"
+                      echo y | sdkmanager "platforms;android-27"
+                      echo y | sdkmanager "build-tools;28.0.3"
+                      echo y | sdkmanager "platforms;android-28"
 
             - run:
                 name: fastlane tests
