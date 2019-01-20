@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { SharedImage } from '../Models/TextileTypes'
 import { IMobilePreparedFiles } from '@textile/react-native-protobufs'
-import { BlockInfo } from '../NativeModules/Textile'
+import { BlockInfo } from '@textile/react-native-sdk'
 
 const actions = {
   insertImage: createAction('processingImages/INSERT_IMAGE', (resolve) => {

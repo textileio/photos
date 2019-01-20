@@ -28,7 +28,7 @@ import {
   profile,
   addThreadLike,
   BlockInfo
-} from '../NativeModules/Textile'
+} from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'

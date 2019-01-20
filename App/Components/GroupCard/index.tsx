@@ -1,10 +1,10 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
-import TextileImage from '../TextileImage'
+import {TextileImage} from '@textile/react-native-sdk'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import * as s from '../../Themes/Constants'
-import {ContactInfo, ThreadFilesInfo} from '../../NativeModules/Textile'
+import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'
 
 import styles, { cardImageStyle, ICON_WIDTH, ROW_COLUMN } from './statics/styles'
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { requireNativeComponent, ImageStyle, PixelRatio, ImageProps } from 'react-native'
 
 export interface OwnProps {
@@ -42,5 +42,5 @@ export default class TextileImage extends React.Component<Props> {
     return <TextileImageView {...nativeProps} />
   }
 }
-
+//@ts-ignore
 const TextileImageView = requireNativeComponent('TextileImageView', TextileImage)

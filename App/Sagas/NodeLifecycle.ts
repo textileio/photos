@@ -32,7 +32,7 @@ import {
   registerCafe,
   cafeSessions,
   CafeSession
- } from '../NativeModules/Textile'
+ } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { announcePeer } from './Migration'
 

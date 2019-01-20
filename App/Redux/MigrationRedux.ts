@@ -1,6 +1,6 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
 import { IMobilePreparedFiles } from '@textile/react-native-protobufs'
-import { ContactInfo } from '../NativeModules/Textile'
+import { ContactInfo } from '@textile/react-native-sdk'
 
 const actions = {
   migrationNeeded: createAction('@migration/MIGRATION_NEEDED'),

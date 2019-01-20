@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ImageResizeMode } from 'react-native'
 import { ImageStyle, Platform } from 'react-native'
-import TextileImage from './TextileImage'
+import {TextileImage} from '@textile/react-native-sdk'
 
 export interface IProgressiveImageProps {
   imageId: string,

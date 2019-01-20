@@ -14,11 +14,11 @@ import {delay} from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
-import { readAllNotifications as readAll, readNotification, notifications } from '../NativeModules/Textile'
+import { readAllNotifications as readAll, readNotification, notifications } from '@textile/react-native-sdk'
 import {
   NotificationType,
   NotificationInfo
-} from '../NativeModules/Textile'
+} from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'

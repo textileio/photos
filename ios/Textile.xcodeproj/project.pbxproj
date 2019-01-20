@@ -54,7 +54,10 @@
 		93C00609216C3873007786A5 /* libRNVersionNumber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00606216C385D007786A5 /* libRNVersionNumber.a */; };
 		93C0060B216C4381007786A5 /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0060A216C4381007786A5 /* Mobile.framework */; };
 		93C00620216D3334007786A5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0061F216D325D007786A5 /* libRCTCameraRoll.a */; };
+		A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */; };
+		A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		DA1E3E3D7BBB497DB7BBAA5F /* libRNTextile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A241645F9B64ADAAB20F86D /* libRNTextile.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -422,6 +425,13 @@
 			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
 			remoteInfo = RCTCameraRoll;
 		};
+		A2150F0621F3E0C30075B7FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0817766337CD450883D10692 /* RNTextile.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNTextile;
+		};
 		A27552BC21F28BEC00C603F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 93C004FF216BB273007786A5 /* ReactNativeConfig.xcodeproj */;
@@ -454,6 +464,7 @@
 		00E356EE1AD99517003FC87E /* TextileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TextileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* TextileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextileTests.m; sourceTree = "<group>"; };
+		0817766337CD450883D10692 /* RNTextile.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNTextile.xcodeproj; path = "../node_modules/@textile/react-native-sdk/ios/RNTextile.xcodeproj"; sourceTree = "<group>"; };
 		0DEE29BED9A54C45A984E8CC /* libRNScreenControl.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNScreenControl.a; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -465,6 +476,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Textile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Textile/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		1A241645F9B64ADAAB20F86D /* libRNTextile.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNTextile.a; sourceTree = "<group>"; };
 		2BBDF1D28CBB43F1A775D4FA /* RNScreenControl.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNScreenControl.xcodeproj; path = "../node_modules/@textile/react-native-screen-control/ios/RNScreenControl.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -499,6 +511,10 @@
 		93C0060A216C4381007786A5 /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mobile.framework; path = "../node_modules/@textile/go-mobile/ios/Mobile.framework"; sourceTree = "<group>"; };
 		93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93C00621216D385B007786A5 /* Textile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Textile.entitlements; path = Textile/Textile.entitlements; sourceTree = "<group>"; };
+		A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
+		A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
+		A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
+		A2588A0E21F3F7A0007A1B62 /* TextileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageView.h; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -542,6 +558,7 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				551C262884FA47A8B7D59F27 /* libRNScreenControl.a in Frameworks */,
+				DA1E3E3D7BBB497DB7BBAA5F /* libRNTextile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -720,6 +737,7 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				2BBDF1D28CBB43F1A775D4FA /* RNScreenControl.xcodeproj */,
+				0817766337CD450883D10692 /* RNTextile.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -736,6 +754,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A2588A0A21F3F7A0007A1B62 /* NativeViews */,
 				13B07FAE1A68108700A75B9A /* Textile */,
 				93C005D9216C1FB9007786A5 /* Resources */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -865,10 +884,30 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		A2150F0321F3E0C30075B7FF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A2150F0721F3E0C30075B7FF /* libRNTextile.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A2588A0A21F3F7A0007A1B62 /* NativeViews */ = {
+			isa = PBXGroup;
+			children = (
+				A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */,
+				A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */,
+				A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */,
+				A2588A0E21F3F7A0007A1B62 /* TextileImageView.h */,
+			);
+			path = NativeViews;
+			sourceTree = "<group>";
+		};
 		A275529121F28BEB00C603F5 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
 				0DEE29BED9A54C45A984E8CC /* libRNScreenControl.a */,
+				1A241645F9B64ADAAB20F86D /* libRNTextile.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1049,6 +1088,10 @@
 				{
 					ProductGroup = A27552C921F28BEC00C603F5 /* Products */;
 					ProjectRef = 2BBDF1D28CBB43F1A775D4FA /* RNScreenControl.xcodeproj */;
+				},
+				{
+					ProductGroup = A2150F0321F3E0C30075B7FF /* Products */;
+					ProjectRef = 0817766337CD450883D10692 /* RNTextile.xcodeproj */;
 				},
 				{
 					ProductGroup = 93C00601216C385D007786A5 /* Products */;
@@ -1429,6 +1472,13 @@
 			remoteRef = 93C0061E216D325D007786A5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		A2150F0721F3E0C30075B7FF /* libRNTextile.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNTextile.a;
+			remoteRef = A2150F0621F3E0C30075B7FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		A27552BD21F28BEC00C603F5 /* libReactNativeConfig-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1515,6 +1565,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */,
+				A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */,
 				93C00487216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
@@ -1558,12 +1610,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
+					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
 				);
 				INFOPLIST_FILE = TextileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1588,12 +1642,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
+					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
 				);
 				INFOPLIST_FILE = TextileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1622,14 +1678,17 @@
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
+					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
 				);
 				INFOPLIST_FILE = Textile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1657,14 +1716,17 @@
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
+					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
 				);
 				INFOPLIST_FILE = Textile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

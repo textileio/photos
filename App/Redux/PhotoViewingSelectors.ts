@@ -1,6 +1,6 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import { getPeerId } from './AccountSelectors'
 import Config from 'react-native-config'
 

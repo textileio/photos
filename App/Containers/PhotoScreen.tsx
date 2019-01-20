@@ -3,7 +3,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle } from 'react-native'
 
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import { RootState } from '../Redux/Types'
 
 import ThreadDetailCard from '../SB/components/ThreadDetailCard'

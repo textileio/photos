@@ -1,5 +1,5 @@
 import actions, { reducer } from '../PhotoViewingRedux'
-import { ThreadFilesInfo } from '../../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 
