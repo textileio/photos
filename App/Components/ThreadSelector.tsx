@@ -11,9 +11,10 @@ import { ContactsSelectors } from '../Redux/ContactsRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 
+import {ContactInfo, ThreadFilesInfo} from '../NativeModules/Textile'
+
 import GroupCard from './GroupCard'
 import styles from './Styles/ThreadSelectorStyles'
-import { ThreadFilesInfo } from '../NativeModules/Textile'
 
 interface ScreenProps {
   createNewThread: () => void
@@ -72,7 +73,7 @@ interface GroupAuthors {
   readonly id: string
   readonly name: string
   readonly size: number
-  readonly authors: string[]
+  readonly members: ContactInfo[]
   readonly thumb?: ThreadFilesInfo
 }
 
@@ -82,11 +83,12 @@ interface StateProps {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const ownId = state.account.peerId.value
+  const profile = state.account.profile.value
   const threads = getThreads(state, 'date')
   .map((thread) => {
-    const authors = ContactsSelectors.byThreadId(state, thread.id).map((contact) => contact.id).filter((id) => id !== ownId)
-    if (ownId && authors.length < 8) {
-      authors.unshift(ownId)
+    const members = ContactsSelectors.byThreadId(state, thread.id).filter((contact) => contact.id !== ownId)
+    if (profile && members.length < 8) {
+      members.unshift(profile)
     }
     const thumb = thread.photos.length ? thread.photos[0] : undefined
     return {
@@ -94,7 +96,7 @@ const mapStateToProps = (state: RootState): StateProps => {
       name: thread.name,
       // total number of images in the thread
       size: thread.photos.length,
-      authors,
+      members,
       thumb
     }
   })

@@ -92,7 +92,7 @@ export class ContactSelectComponent extends React.Component {
     return (
       <FlatList
       data={this.props.contacts}
-      keyExtractor={(item) => item.pk}
+      keyExtractor={(item) => item.id}
       extraData={this.props.selected}
       ListHeaderComponent={this.renderHeader()}
       renderItem={(contact) => {

@@ -6,7 +6,7 @@ export const ROW_COLUMN = 60
 
 export const ICON_WIDTH = ROW_COLUMN * 0.5
 
-export function cardImageStyle (list: string[], index: number): ImageStyle {
+export function cardImageStyle (count: number, index: number): ImageStyle {
   const baseStyle = {
     margin: 0,
     padding: 0,
@@ -21,7 +21,7 @@ export function cardImageStyle (list: string[], index: number): ImageStyle {
   }
 
   const marginLeft = index === 0 || index === 4 ? 0 : -(0.27 * ROW_COLUMN)
-  const marginBottom = list.length >= 4 ? -(0.44 * ROW_COLUMN) : 0
+  const marginBottom = count >= 4 ? -(0.44 * ROW_COLUMN) : 0
   const marginTop = 0
   return {
     ...baseStyle,
@@ -30,7 +30,7 @@ export function cardImageStyle (list: string[], index: number): ImageStyle {
     marginBottom,
     marginLeft,
     marginTop,
-    alignSelf: list.length >= 4 ? 'flex-start' : 'center'
+    alignSelf: count >= 4 ? 'flex-start' : 'center'
   }
 }
 
