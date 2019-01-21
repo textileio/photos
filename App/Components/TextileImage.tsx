@@ -42,5 +42,5 @@ export default class TextileImage extends React.Component<Props> {
     return <TextileImageView {...nativeProps} />
   }
 }
-//@ts-ignore
+// @ts-ignore
 const TextileImageView = requireNativeComponent('TextileImageView', TextileImage)
