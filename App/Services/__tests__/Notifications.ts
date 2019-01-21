@@ -2,8 +2,9 @@ import {
     enable,
     toPayload
 } from '../Notifications'
-import { NotificationType } from '@textile/react-native-sdk'
+// import { NotificationType } from '@textile/react-native-sdk'
 import { Notification } from '../../Models/Notifications'
+import { NotificationType } from '@textile/react-native-sdk'
 
 describe('notifications', () => {
     describe('enable', () => {
