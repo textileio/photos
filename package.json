@@ -9,15 +9,10 @@
     "lint": "tslint -c tslint.json --project ."
   },
   "dependencies": {
-<<<<<<< HEAD
     "@textile/go-mobile": "1.0.0-rc27",
     "@textile/react-native-protobufs": "1.0.5",
-    "@textile/react-native-screen-control": "1.0.10",
-    "@textile/react-native-sdk": "1.0.8",
-=======
-    "@textile/go-mobile": "1.0.0-rc26",
     "@textile/react-native-screen-control": "1.0.11",
->>>>>>> trying lower version...
+    "@textile/react-native-sdk": "1.0.8",
     "@textile/react-native-wait-for": "1.0.0",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
