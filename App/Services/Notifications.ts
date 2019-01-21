@@ -1,7 +1,7 @@
 import { NotificationInfo as NotificationData, NotificationType } from '@textile/react-native-sdk'
 import { Notification } from '../Models/Notifications'
-import RNPushNotification, { PushNotification } from 'react-native-push-notification'
-import { Alert, Platform } from 'react-native'
+import RNPushNotification from 'react-native-push-notification'
+import { Alert } from 'react-native'
 
 export interface INotificationsPayload {
   title: string,

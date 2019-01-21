@@ -1,4 +1,4 @@
-import { NotificationType, username } from '@textile/react-native-sdk'
+import { NotificationType } from '@textile/react-native-sdk'
 
 interface BaseNotification {
   id: string
