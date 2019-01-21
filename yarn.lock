@@ -621,13 +621,13 @@
   dependencies:
     protobufjs "^6.8.8"
 
-"@textile/react-native-screen-control@1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.11.tgz#82c57beba095f60d9dfaa8ad6c95c1969e990d98"
+"@textile/react-native-screen-control@1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.12.tgz#1be41a4eaa9648fa4766e2489a6c2764d95985e1"
 
-"@textile/react-native-sdk@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.8.tgz#40cc4900242fbead62d2988f8a43e8006466c7ed"
+"@textile/react-native-sdk@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.9.tgz#3708be67d0e9520696a8ee6fa95aab1db6391381"
   dependencies:
     "@textile/go-mobile" "1.0.0-rc26"
     buffer "^5.2.1"
