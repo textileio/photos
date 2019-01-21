@@ -93,7 +93,7 @@ jobs:
             LANG: en_US.UTF-8
         working_directory: ~/textile-mobile
         docker:
-            - image: circleci/android:api-28-node8-alpha
+            - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
@@ -131,15 +131,6 @@ jobs:
                     - vendor/bundle
 
             - run:
-                  name: install tools
-                  command: |
-                      sdkmanager --licenses
-                      echo y | sdkmanager "build-tools;27.0.3"
-                      echo y | sdkmanager "platforms;android-27"
-                      echo y | sdkmanager "build-tools;28.0.3"
-                      echo y | sdkmanager "platforms;android-28"
-
-            - run:
                 name: fastlane tests
                 working_directory: android
                 command: |
@@ -158,7 +149,7 @@ jobs:
             LANG: en_US.UTF-8
         working_directory: ~/textile-mobile
         docker:
-            - image: circleci/android:api-28-node8-alpha
+            - image: circleci/android:api-26-node8-alpha
         resource_class: large
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
