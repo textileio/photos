@@ -53,7 +53,7 @@ const WalletHeader = (props: IWalletHeaderProps) => {
         style={style.walletAvatar}
         onPress={changeAvatar}
       >
-        <Avatar style={{ width: 90, height: 90 }} />
+        <Avatar style={{ width: 90, height: 90 }} self={true}/>
       </TouchableOpacity>
       <View style={style.walletInfo}>
         <View style={style.walletTop}>

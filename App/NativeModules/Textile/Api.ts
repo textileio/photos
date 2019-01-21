@@ -6,8 +6,8 @@ import {
   ExternalInvite,
   CafeSession,
   ContactInfo,
+  ContactInfoQueryResult,
   Overview,
-  Profile,
   FileData,
   ThreadInfo,
   WalletAccount,
@@ -40,10 +40,6 @@ export async function addContact(contact: ContactInfo): Promise<void> {
 export async function addExternalThreadInvite(threadId: string): Promise<ExternalInvite> {
   const result = await TextileNode.addExternalThreadInvite(threadId)
   return JSON.parse(result) as ExternalInvite
-}
-
-export async function addPeerToThread(id_: string, threadId: string): Promise<void> {
-  await TextileNode.addPeerToThread(id_, threadId)
 }
 
 export async function addSchema(jsonstr: string): Promise<File> {
@@ -94,6 +90,11 @@ export async function address(): Promise<string> {
   return result as string
 }
 
+export async function avatar(): Promise<string | undefined> {
+  const result: string = await TextileNode.avatar()
+  return result.length > 0 ? result : undefined
+}
+
 export async function cafeSession(peerId: string): Promise<CafeSession> {
   const result = await TextileNode.cafeSession(peerId)
   return JSON.parse(result) as CafeSession
@@ -118,12 +119,6 @@ export async function contactThreads(id_: string): Promise<ReadonlyArray<ThreadI
   return JSON.parse(result) as ReadonlyArray<ThreadInfo>
 }
 
-export async function contactUsername(id_: string): Promise<string> {
-  // TODO: Deal with empty string?
-  const result = await TextileNode.contactUsername(id_)
-  return result as string
-}
-
 export async function contacts(): Promise<ReadonlyArray<ContactInfo>> {
   const result = await TextileNode.contacts()
   return JSON.parse(result) as ReadonlyArray<ContactInfo>
@@ -142,6 +137,11 @@ export async function deregisterCafe(peerId: string): Promise<void> {
 export async function fileData(hash: string): Promise<FileData> {
   const result = await TextileNode.fileData(hash)
   return JSON.parse(result) as FileData
+}
+
+export async function findContact(username: string, limit: number, wait: number): Promise<ContactInfoQueryResult> {
+  const result = await TextileNode.findContact(username, limit, wait)
+  return JSON.parse(result) as ContactInfoQueryResult
 }
 
 export async function ignoreThreadInviteViaNotification(id_: string): Promise<string> {
@@ -170,11 +170,6 @@ export async function peerId(): Promise<string> {
   return result as string
 }
 
-export async function peerProfile(peerId: string): Promise<Profile> {
-  const result = await TextileNode.peerProfile(peerId)
-  return JSON.parse(result) as Profile
-}
-
 export async function prepareFiles(path: string, threadId: string): Promise<IMobilePreparedFiles> {
   const result = await TextileNode.prepareFiles(path, threadId)
   const buffer = Buffer.from(result, 'base64')
@@ -187,9 +182,9 @@ export async function prepareFilesAsync(path: string, threadId: string): Promise
   return MobilePreparedFiles.decode(buffer)
 }
 
-export async function profile(): Promise<Profile> {
+export async function profile(): Promise<ContactInfo> {
   const result = await TextileNode.profile()
-  return JSON.parse(result) as Profile
+  return JSON.parse(result) as ContactInfo
 }
 
 export async function readAllNotifications(): Promise<void> {

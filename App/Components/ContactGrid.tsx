@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux/index'
+import { Dispatch } from 'redux'
 import {
   View,
   Text,
@@ -16,6 +16,9 @@ import InviteContactModal from './InviteContactModal'
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
+
+import { ContactInfo } from '../NativeModules/Textile'
+
 // Styles
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/ContactGridStyles'
 
@@ -26,7 +29,7 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-  contacts: {[key: string]: string}
+  contacts: {[key: string]: ContactInfo}
 }
 
 class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationScreenProps<{}>> {
@@ -34,14 +37,20 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
     contactCard: false,
     selectedContact: '',
     selectedUsername: '',
+    selectedAvatar: undefined,
     showInviteContactModal: false
   }
 
   oneScreensWorth = 40
 
-  selectContact (peerId: string, username: string) {
+  selectContact (contact: ContactInfo) {
     return () => {
-      this.setState({selectedContact: peerId, selectedUsername: username, contactCard: true})
+      this.setState({
+        selectedContact: contact.id,
+        selectedUsername: contact.username,
+        selectedAvatar: contact.avatar,
+        contactCard: true
+      })
     }
   }
 
@@ -66,26 +75,27 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
         onPress={this.inviteContactRequest()}
         activeOpacity={0.95}
       >
-        <Avatar style={{ width: dimension, height: dimension }} />
-        <Text style={styles.username}>New Invite</Text>
+        <Avatar style={{ width: dimension, height: dimension }} icon={'invite'}/>
+        <Text numberOfLines={1} style={styles.username}>Invite</Text>
       </TouchableOpacity>
     )
   }
 
   renderRow (row: ListRenderItemInfo<string>) {
     const { item } = row
-    if (item === 'invite') {
+    if (item === 'add') {
       return this.renderInvite()
     }
+    const contact = this.props.contacts[item]
     const dimension = PRODUCT_ITEM_HEIGHT * 0.5
     return (
       <TouchableOpacity
         style={styles.item}
-        onPress={this.selectContact(item, this.props.contacts[item])}
+        onPress={this.selectContact(contact)}
         activeOpacity={0.95}
       >
-        <Avatar style={{ width: dimension, height: dimension }} peerId={item} />
-        <Text style={styles.username}>{this.props.contacts[item]}</Text>
+        <Avatar style={{ width: dimension, height: dimension }} target={contact.avatar} />
+        <Text numberOfLines={1} style={styles.username}>{contact.username}</Text>
       </TouchableOpacity>
     )
   }
@@ -111,26 +121,15 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
     }
   }
 
-  // The default function if no Key is provided is index
-  // an identifiable key is important if you plan on
-  // item reordering.  Otherwise index is fine
   keyExtractor = (item: string) => item
 
   render () {
-    const peerIds: string[] = Object.keys(this.props.contacts).sort((a, b) => {
-      if (!this.props.contacts[b] || this.props.contacts[a] < this.props.contacts[b]) {
-        return -1
-      }
-      if (!this.props.contacts[a] || this.props.contacts[a] > this.props.contacts[b]) {
-        return 1
-      }
-      return 0
-    })
+    const ids: string[] = Object.keys(this.props.contacts).sort()
     return (
       <View style={styles.container}>
         <FlatList
           style={styles.listContainer}
-          data={['invite', ...peerIds]}
+          data={['add', ...ids]}
           keyExtractor={this.keyExtractor}
           /* tslint:disable-next-line */
           renderItem={this.renderRow.bind(this)}
@@ -144,6 +143,7 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
           isVisible={this.state.contactCard}
           peerId={this.state.selectedContact}
           username={this.state.selectedUsername}
+          avatar={this.state.selectedAvatar}
           navigateToThread={this.navigateToThread()}
           close={this.closeModal()}
         />

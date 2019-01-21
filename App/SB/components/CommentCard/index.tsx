@@ -8,19 +8,19 @@ import styles from './statics/styles'
 
 export interface Props {
   username: string
-  peerId?: string,
+  avatar?: string,
   comment: string
   date: string
   isCaption: boolean
 }
 
 const CommentCard = (props: Props) => {
-  const { username, peerId, comment, date, isCaption } = props
+  const { username, avatar, comment, date, isCaption } = props
   const dateString = moment.utc(date).fromNow()
   return (
     <View style={[styles.container, isCaption ? styles.withDivider : {} ]}>
       <View style={styles.content} >
-        <Avatar style={{marginRight: 11, width: 38, height: 38 }} peerId={peerId} />
+        <Avatar style={{marginRight: 11, width: 38, height: 38 }} target={avatar} />
         <View style={styles.commentTexts}>
           <Text style={styles.commentUser}>{username}</Text>
           <View style={styles.commentTextWrapper}><Text style={styles.commentText}>{comment}</Text></View>

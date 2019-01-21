@@ -4,20 +4,20 @@ import TextileImage from '../TextileImage'
 import Avatar from '../Avatar'
 import Icon from '../Icon'
 import * as s from '../../Themes/Constants'
-import { ThreadFilesInfo } from '../../NativeModules/Textile'
+import {ContactInfo, ThreadFilesInfo} from '../../NativeModules/Textile'
 
 import styles, { cardImageStyle, ICON_WIDTH, ROW_COLUMN } from './statics/styles'
 
 interface ScreenProps {
   id: string
   name: string
-  authors: string[]
+  members: ContactInfo[]
   thumb?: ThreadFilesInfo
   onPress: (groupCardProps: any) => void
 }
 
 const GroupCard = (props: ScreenProps) => {
-  const { name, authors, thumb } = props
+  const { name, members, thumb } = props
   const getCallback = () => {
     return () => {
       props.onPress(props)
@@ -42,7 +42,7 @@ const GroupCard = (props: ScreenProps) => {
     return (
       <Icon
         style={styles.iconStyle}
-        name={'camera'}
+        name={'image'}
         size={ICON_WIDTH}
         color={s.COLOR_FONT_DARK_ON_LIGHT_LIGHT}
       />
@@ -59,13 +59,13 @@ const GroupCard = (props: ScreenProps) => {
           {getThumb()}
       </View>
       <View style={styles.groupMiddleColumn}>
-        <Text numberOfLines={2} style={styles.groupName}>{name}</Text>
+        <Text numberOfLines={1} style={styles.groupName}>{name}</Text>
       </View>
       <View style={styles.groupRightColumn}>
         <View style={styles.avatarContainer}>
-          { authors.slice(0, 8).map((authorId: string, i: number) => {
-            const imageStyle = cardImageStyle(authors, i)
-            return (<Avatar key={authorId} style={imageStyle} peerId={authorId} />)
+          { members.slice(0, 8).map((mem: ContactInfo, i: number) => {
+            const imageStyle = cardImageStyle(members.length, i)
+            return (<Avatar key={mem.id} style={imageStyle} target={mem.avatar}/>)
           })}
         </View>
       </View>

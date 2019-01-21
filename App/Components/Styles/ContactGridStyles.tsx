@@ -45,7 +45,8 @@ export default StyleSheet.create({
     alignSelf: 'center',
     color: Colors.charcoal,
     backgroundColor: Colors.clear,
-    textAlign: 'center'
+    textAlign: 'center',
+    width: '90%'
   },
   emptyListStyle: {
     flex: 1,

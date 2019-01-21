@@ -26,7 +26,14 @@ RCT_EXPORT_MODULE();
 
 // The list of available events
 - (NSArray<NSString *> *)supportedEvents {
-  return @[@"newLocalPhoto", @"onOnline", @"onThreadUpdate", @"onThreadAdded", @"onThreadRemoved", @"onDeviceAdded", @"onDeviceRemoved", @"onNotification"];
+  return @[@"newLocalPhoto",
+           @"onOnline",
+           @"onThreadAdded",
+           @"onThreadRemoved",
+           @"onThreadUpdate",
+           @"onAccountPeerAdded",
+           @"onAccountPeerRemoved",
+           @"onNotification"];
 }
 
 // This function listens for the events we want to send out and will then pass the

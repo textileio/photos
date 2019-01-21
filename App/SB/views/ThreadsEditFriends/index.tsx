@@ -87,11 +87,11 @@ class Component extends React.Component<Props> {
 
     if (ids.length === 0) {
       // @ts-ignore
-      this.refs.toast.show('Select a peer first.', 1500)
+      this.refs.toast.show('No contacts selected.', 1500)
       return
     }
     // @ts-ignore
-    this.refs.toast.show('Success! The peer list will not update until your invitees accept.', 2400)
+    this.refs.toast.show('Success! Your invite(s) were sent.', 2400)
     this.props.addInternalInvites(this.props.threadId, ids)
     setTimeout(() => { this.props.cancel() }, 2400)
   }

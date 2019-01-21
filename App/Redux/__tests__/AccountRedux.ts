@@ -1,16 +1,27 @@
 import actions, { reducer } from '../AccountRedux'
-import { Profile } from '../../NativeModules/Textile'
+import { ContactInfo } from '../../NativeModules/Textile'
 
 const initialState = reducer(undefined, {} as any)
-const profile: Profile = {
+const profile: ContactInfo = {
+  id: 'id',
   address: 'address',
-  inboxes: ['address1', 'address2'],
   username: 'username',
-  avatar_uri: 'avatarUri'
+  avatar: 'avatar',
+  inboxes: [{
+    peer: 'peer',
+    address: 'address',
+    api: 'api',
+    protocol: 'protocol',
+    node: 'node',
+    url: 'url',
+    swarm: ['swarm']
+  }],
+  created: 'created',
+  updated: 'updated'
 }
 const peerId = 'peerId'
 const error = 'error'
-const avatarId = 'avatarId'
+const avatar = 'avatar'
 const recoveryPhrase = 'recoveryPhrase'
 
 describe('account', () => {
@@ -55,16 +66,16 @@ describe('account', () => {
   })
   describe('avatar', () => {
     it('should not change state for request', () => {
-      const state0 = reducer(initialState, actions.setAvatarRequest('avatarId'))
+      const state0 = reducer(initialState, actions.setAvatarRequest('avatar'))
       expect(state0).toEqual(initialState)
     })
     it('should track avatar error', () => {
       const state0 = reducer(initialState, actions.setAvatarError(error))
       expect(state0.avatar.error).toEqual(error)
     })
-    it('should track pending avatar id', () => {
-      const state0 = reducer(initialState, actions.setPendingAvatar(avatarId))
-      expect(state0.avatar.pendingId).toEqual(avatarId)
+    it('should track pending avatar', () => {
+      const state0 = reducer(initialState, actions.setPendingAvatar(avatar))
+      expect(state0.avatar.pending).toEqual(avatar)
     })
   })
   describe('recovery phrase', () => {

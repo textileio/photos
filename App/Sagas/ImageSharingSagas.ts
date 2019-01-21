@@ -9,7 +9,7 @@ import {
   profile,
   setAvatar,
   BlockInfo,
-  Profile
+  ContactInfo
 } from '../NativeModules/Textile'
 import { SharedImage } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
@@ -194,7 +194,7 @@ function * updateAvatarAndProfile (hash: string) {
       yield take(getType(TextileNodeActions.nodeOnline))
     }
     yield call(setAvatar, hash)
-    const profileResult: Profile = yield call(profile)
+    const profileResult: ContactInfo = yield call(profile)
     yield put(AccountActions.refreshProfileSuccess(profileResult))
   } catch (error) {
     yield put(AccountActions.profileError(error))

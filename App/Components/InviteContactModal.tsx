@@ -109,8 +109,8 @@ class InviteContactModal extends React.Component<Props, State> {
     return (
       <View style={styles.content}>
         <View style={styles.title}>
-          <Text style={styles.titleText}>Invite New Contact</Text>
-          <Text style={styles.subTitleText}>Select a Group to add your new Contact.</Text>
+          <Text style={styles.titleText}>Invite others</Text>
+          <Text style={styles.subTitleText}>Select an existing group or create a new one.</Text>
         </View>
         <View style={styles.body}>
           <ThreadSelectComponent

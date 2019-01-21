@@ -26,7 +26,6 @@ import {
   setAvatar,
   peerId,
   profile,
-  Profile,
   addThreadLike,
   BlockInfo
 } from '../NativeModules/Textile'
@@ -54,7 +53,7 @@ import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { RootState } from '../Redux/Types'
 import { SharedImage } from '../Models/TextileTypes'
 
-export function * updateNodeOverview ( action: ActionType<typeof TextileNodeActions.updateOverviewRequest> ) {
+export function * updateNodeOverview(action: ActionType<typeof TextileNodeActions.updateOverviewRequest>) {
   try {
     yield call(NotificationsSagas.waitUntilOnline, 2500)
     const overviewResult: Overview = yield call(overview)
@@ -161,7 +160,7 @@ export function * nodeOnlineSaga () {
   const online = yield select(TextileNodeSelectors.online)
   if (online) {
     try {
-      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pendingId)
+      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
       if (pending) {
         yield call(setAvatar, pending)
       }

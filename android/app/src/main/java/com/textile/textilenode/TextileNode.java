@@ -46,7 +46,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
         return REACT_CLASS;
     }
 
-
     @ReactMethod
     public void acceptExternalThreadInvite(final String id_, final String key, final Promise promise) {
         executor.execute(new Runnable() {
@@ -103,22 +102,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
                 }
                 catch (Exception e) {
                     promise.reject("addExternalThreadInvite", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void addPeerToThread(final String id_, final String threadId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.addPeerToThread(id_, threadId);
-                    promise.resolve(null);
-                }
-                catch (Exception e) {
-                    promise.reject("addPeerToThread", e);
                 }
             }
         });
@@ -261,6 +244,21 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void avatar(final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.avatar());
+                }
+                catch (Exception e) {
+                    promise.reject("avatar", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
     public void cafeSession(final String peerId, final Promise promise) {
         executor.execute(new Runnable() {
             @Override
@@ -337,21 +335,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void contactUsername(final String id_, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.contactUsername(id_));
-                }
-                catch (Exception e) {
-                    promise.reject("contactUsername", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
     public void contacts(final Promise promise) {
         executor.execute(new Runnable() {
             @Override
@@ -407,6 +390,21 @@ public class TextileNode extends ReactContextBaseJavaModule {
                 }
                 catch (Exception e) {
                     promise.reject("fileData", e);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void findContact(final String username, final Integer limit, final Integer wait, final Promise promise) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    promise.resolve(node.findContact(username, limit, wait));
+                }
+                catch (Exception e) {
+                    promise.reject("findContact", e);
                 }
             }
         });
@@ -483,21 +481,6 @@ public class TextileNode extends ReactContextBaseJavaModule {
                 }
                 catch (Exception e) {
                     promise.reject("peerId", e);
-                }
-            }
-        });
-    }
-
-    @ReactMethod
-    public void peerProfile(final String peerId, final Promise promise) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    promise.resolve(node.peerProfile(peerId));
-                }
-                catch (Exception e) {
-                    promise.reject("peerProfile", e);
                 }
             }
         });

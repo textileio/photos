@@ -167,7 +167,7 @@ class SetAvatar extends React.Component<Props> {
       const source = { uri: 'data:image/jpeg;base64,' + this.props.data }
       return <Image style={IMAGE} source={source} />
     } else if (this.props.accountHasAvatar) {
-      return <Avatar style={IMAGE} />
+      return <Avatar style={IMAGE} self={true}/>
     } else {
       return <Icon style={PLACEHOLDER} name={'question-circle'} size={120} color={s.COLOR_GREY_LIGHT} />
     }
@@ -198,7 +198,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   displaySubButton: state.ui.chosenProfilePhoto.image !== undefined,
   image: state.ui.chosenProfilePhoto.image,
   data: state.ui.chosenProfilePhoto.data,
-  accountHasAvatar: state.account.profile.value ? state.account.profile.value.avatar_uri !== undefined : false
+  accountHasAvatar: state.account.profile.value ? state.account.profile.value.avatar !== undefined : false
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({

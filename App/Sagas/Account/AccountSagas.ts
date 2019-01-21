@@ -8,7 +8,7 @@ import {
   profile,
   setAvatar as updateAvatar,
   setUsername as username,
-  Profile,
+  ContactInfo,
   CafeSession
 } from '../../NativeModules/Textile'
 
@@ -16,7 +16,7 @@ export function * refreshProfile () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshProfileRequest))
-      const profileResult: Profile = yield call(profile)
+      const profileResult: ContactInfo = yield call(profile)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
       yield put(AccountActions.profileError(error))
@@ -42,7 +42,7 @@ export function * setUsername () {
       const action: ActionType<typeof AccountActions.setUsernameRequest> = yield take(getType(AccountActions.setUsernameRequest))
       yield call(username, action.payload.username)
       // Setting the username makes it available in the Profile, so update it
-      const profileResult: Profile = yield call(profile)
+      const profileResult: ContactInfo = yield call(profile)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
       yield put(AccountActions.profileError(error))
@@ -54,7 +54,7 @@ export function * setAvatar () {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setAvatarRequest> = yield take(getType(AccountActions.setAvatarRequest))
-      yield call(updateAvatar, action.payload.avatarId)
+      yield call(updateAvatar, action.payload.avatar)
     } catch (error) {
       yield put(AccountActions.setAvatarError(error))
     }
