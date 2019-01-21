@@ -66,11 +66,12 @@ class Avatar extends React.Component<Props, State> {
     const { borderRadius: radius } = this.state
 
     if (icon || !started || !target) {
+      const heightNumber = typeof height === 'number' ? height as number : defaultSize
       return (
         <Icon
           style={{ ...(this.props.style || {}), width, height, borderRadius: radius }}
           name={icon || 'question-circle'}
-          size={height as number}
+          size={heightNumber}
           color={s.COLOR_GREY_LIGHT}
           onLayout={this.onImageLayout}
         />
@@ -79,13 +80,14 @@ class Avatar extends React.Component<Props, State> {
 
     // local means the target belongs to the local node
     if (local) {
+      const widthNumber = typeof width === 'number' ? width as number : defaultSize
       return (
         <View style={{ ...(this.props.style || {}), width, height, borderRadius: radius, overflow: 'hidden' }}>
           <TextileImage
             style={{ ...(this.props.style || {}), width, height, borderRadius: radius }}
             target={target}
             index={0}
-            forMinWidth={width as number}
+            forMinWidth={widthNumber}
             resizeMode={'cover'}
             onLayout={this.onImageLayout}
           />
