@@ -27,7 +27,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'invited you to join',
-                type: 'INVITE_RECEIVED' as NotificationType
+                type: NotificationType.InviteReceivedNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
