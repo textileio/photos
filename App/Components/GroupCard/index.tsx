@@ -42,7 +42,7 @@ const GroupCard = (props: ScreenProps) => {
     return (
       <Icon
         style={styles.iconStyle}
-        name={'camera'}
+        name={'image'}
         size={ICON_WIDTH}
         color={s.COLOR_FONT_DARK_ON_LIGHT_LIGHT}
       />
@@ -59,7 +59,7 @@ const GroupCard = (props: ScreenProps) => {
           {getThumb()}
       </View>
       <View style={styles.groupMiddleColumn}>
-        <Text numberOfLines={2} style={styles.groupName}>{name}</Text>
+        <Text numberOfLines={1} style={styles.groupName}>{name}</Text>
       </View>
       <View style={styles.groupRightColumn}>
         <View style={styles.avatarContainer}>

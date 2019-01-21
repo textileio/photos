@@ -67,6 +67,7 @@ export default StyleSheet.create({
   groupName: {
     fontFamily: 'BentonSans',
     fontSize: 16,
+    lineHeight: ROW_HEIGHT,
     color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM
   },
   groupLeftColumn: {
