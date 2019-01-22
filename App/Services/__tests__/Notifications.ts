@@ -2,7 +2,6 @@ import {
     enable,
     toPayload
 } from '../Notifications'
-// import { NotificationType } from '@textile/react-native-sdk'
 import { Notification } from '../../Models/Notifications'
 import { NotificationType } from '@textile/react-native-sdk'
 
@@ -27,7 +26,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'invited you to join',
-                type: NotificationType.InviteReceivedNotification
+                type: 'INVITE_RECEIVED' as NotificationType.InviteReceivedNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -35,7 +34,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'joined',
-                type: NotificationType.AccountPeerJoinedNotification
+                type: 'ACCOUNT_PEER_JOINED' as NotificationType.AccountPeerJoinedNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -43,7 +42,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'joined',
-                type: NotificationType.PeerJoinedNotification
+                type: 'PEER_JOINED' as NotificationType.PeerJoinedNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -51,7 +50,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'left',
-                type: NotificationType.PeerLeftNotification
+                type: 'PEER_LEFT' as NotificationType.PeerLeftNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -59,7 +58,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'here is my message!',
-                type: NotificationType.MessageAddedNotification
+                type: 'MESSAGE_ADDED' as NotificationType.MessageAddedNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -67,7 +66,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'added a photo',
-                type: NotificationType.FilesAddedNotification
+                type: 'FILES_ADDED' as NotificationType.FilesAddedNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -75,7 +74,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'commented on a photo: a camel!',
-                type: NotificationType.CommentAddedNotification
+                type: 'COMMENT_ADDED' as NotificationType.CommentAddedNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -83,7 +82,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'liked a photo',
-                type: NotificationType.LikeAddedNotification
+                type: 'LIKE_ADDED' as NotificationType.LikeAddedNotification
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })

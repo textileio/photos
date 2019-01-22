@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
     "jsx": "react-native",
     "lib": ["es6"],
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
-    "target": "esnext",
-    "skipLibCheck": true
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "target": "esnext"
   },
-  "exclude": ["node_modules", "coverage"]
+  "exclude": ["node_modules", "coverage"],
+  "include": ["node_modules/@textile/react-native-sdk"]
 }
