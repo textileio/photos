@@ -1,6 +1,5 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
-import { Protobufs } from '@textile/react-native-sdk'
-import { ContactInfo } from '@textile/react-native-sdk'
+import { ContactInfo, Protobufs } from '@textile/react-native-sdk'
 
 const actions = {
   migrationNeeded: createAction('@migration/MIGRATION_NEEDED'),

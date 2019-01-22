@@ -6,7 +6,6 @@ import {
     ThreadState,
     BlockInfo,
     BlockType,
-    Profile,
     ContactInfo
 } from '@textile/react-native-sdk'
 

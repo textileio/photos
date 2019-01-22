@@ -8,7 +8,7 @@ import { Dispatch } from 'redux'
 import { keepScreenOn, letScreenSleep } from '@textile/react-native-screen-control'
 import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload, LocalProcessingTask } from '../Redux/MigrationRedux'
 import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads, completeLocalProcessingTasks, allLocalProcessingTasks } from '../Redux/MigrationSelectors'
-import { getAddress, getPeerId } from '../Redux/AccountSelectors'
+import { getPeerId } from '../Redux/AccountSelectors'
 import { prepare } from './ImageSharingSagas'
 import { getSession } from './UploadFile'
 

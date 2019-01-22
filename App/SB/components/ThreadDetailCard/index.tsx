@@ -1,10 +1,9 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, Dimensions, TouchableOpacity, ImageURISource } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import moment from 'moment'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
-import { getHeight } from '../../../Services/PhotoUtils'
 import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
 

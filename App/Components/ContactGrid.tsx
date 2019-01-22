@@ -17,7 +17,7 @@ import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
 
-import { ContactInfo } from '../NativeModules/Textile'
+import { ContactInfo } from '@textile/react-native-sdk'
 
 // Styles
 import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/ContactGridStyles'

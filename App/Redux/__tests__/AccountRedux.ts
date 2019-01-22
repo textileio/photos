@@ -1,5 +1,5 @@
 import actions, { reducer } from '../AccountRedux'
-import { ContactInfo, Profile } from '@textile/react-native-sdk'
+import { ContactInfo } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 const profile: ContactInfo = {

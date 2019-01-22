@@ -9,7 +9,6 @@ import {
   profile,
   setAvatar,
   BlockInfo,
-  Profile,
   ContactInfo,
   Protobufs
 } from '@textile/react-native-sdk'
