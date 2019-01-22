@@ -12,6 +12,5 @@
     "skipLibCheck": true,
     "target": "esnext"
   },
-  "exclude": ["node_modules", "coverage"],
-  "include": ["node_modules/@textile/react-native-sdk"]
+  "exclude": ["node_modules", "coverage"]
 }

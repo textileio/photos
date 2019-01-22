@@ -11,9 +11,10 @@ import { ContactsSelectors } from '../Redux/ContactsRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import UIActions from '../Redux/UIRedux'
 
+import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'
+
 import GroupCard from './GroupCard'
 import styles from './Styles/ThreadSelectorStyles'
-import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'
 
 interface ScreenProps {
   createNewThread: () => void

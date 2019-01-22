@@ -9,14 +9,11 @@
     "lint": "tslint -c tslint.json --project ."
   },
   "dependencies": {
-    "@textile/go-mobile": "1.0.0-rc27",
-    "@textile/react-native-protobufs": "1.0.5",
     "@textile/react-native-screen-control": "1.0.12",
-    "@textile/react-native-sdk": "1.0.15",
+    "@textile/react-native-sdk": "1.0.16",
     "@textile/redux-saga-wait-for": "1.0.1",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
-    "protobufjs": "^6.8.8",
     "react": "16.5.0",
     "react-native": "0.57.2",
     "react-native-actionsheet": "^2.4.2",

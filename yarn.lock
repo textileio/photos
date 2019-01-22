@@ -613,11 +613,10 @@
 "@textile/go-mobile@1.0.0-rc27":
   version "1.0.0-rc27"
   resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc27.tgz#7d2c45ecafdeef9f19bccf4d76c87facc73acf43"
-  integrity sha512-vSAN6RXnsayNELULBrhvzbB+1aQqCMbrcJV88UcC7lHL4rj/6JXhsq/ltzjrK38WsqjjFHCiBYH7MWW5u61q4g==
 
-"@textile/react-native-protobufs@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-protobufs/-/react-native-protobufs-1.0.5.tgz#6188556470818addcf5e11daa77da3371dcb95e0"
+"@textile/react-native-protobufs@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-protobufs/-/react-native-protobufs-1.0.6.tgz#0ac6da7f565e746b686913efe1d43ca22cab81c7"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -625,14 +624,14 @@
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.12.tgz#1be41a4eaa9648fa4766e2489a6c2764d95985e1"
 
-"@textile/react-native-sdk@1.0.15":
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.15.tgz#63dc9da0de7db590b0aa90ac2d0f919177161061"
+"@textile/react-native-sdk@1.0.16":
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.16.tgz#0d79a2c1d88a2052eb9f293ea37b79fa7371c7ac"
   dependencies:
-    "@textile/go-mobile" "1.0.0-rc26"
-    "@textile/react-native-protobufs" "1.0.5"
+    "@textile/go-mobile" "1.0.0-rc27"
+    "@textile/react-native-protobufs" "1.0.6"
     buffer "^5.2.1"
-    prop-types "^15.6.1"
+    prop-types "^15.6.2"
 
 "@textile/redux-saga-wait-for@1.0.1":
   version "1.0.1"
@@ -670,8 +669,8 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.11.4.tgz#e8bd933c3f78795d580ae41d86590bfc1f4f389d"
 
 "@types/node@^10.1.0":
-  version "10.12.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.10.tgz#4fa76e6598b7de3f0cb6ec3abacc4f59e5b3a2ce"
+  version "10.12.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
 
 "@types/prop-types@*":
   version "15.5.6"
