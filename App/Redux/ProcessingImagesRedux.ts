@@ -81,7 +81,7 @@ export interface ProcessingImage {
   readonly status: 'preparing'  | 'uploading' | 'sharing' | 'complete'
   readonly destinationThreadId: string
   readonly comment?: string
-  readonly preparedFiles?: IMobilePreparedFiles
+  readonly preparedFiles?: Protobufs.IMobilePreparedFiles
   readonly uploadData?: UploadData
   readonly blockInfo?: BlockInfo
   readonly error?: string
