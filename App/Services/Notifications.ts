@@ -101,51 +101,51 @@ export function toPayload(notification: Notification): INotificationsPayload {
   const actor = notification.username || 'A contact' // TODO: We want username here, need to look it up?
 
   switch (notification.type) {
-    case(NotificationType.InviteReceivedNotification): {
+    case('INVITE_RECEIVED' as NotificationType.InviteReceivedNotification): {
       const title = 'New Invite'
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(NotificationType.AccountPeerJoinedNotification): {
+    case('ACCOUNT_PEER_JOINED' as NotificationType.AccountPeerJoinedNotification): {
       const title = 'New Contact'
       const message = 'You connected to a new account contact'
       const feed = message
       return { title, message, feed, typeString }
     }
-    case(NotificationType.PeerJoinedNotification): {
+    case('PEER_JOINED' as NotificationType.PeerJoinedNotification): {
       const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'group', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(NotificationType.PeerLeftNotification): {
+    case('PEER_LEFT' as NotificationType.PeerLeftNotification): {
       const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'group', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(NotificationType.MessageAddedNotification): {
+    case('MESSAGE_ADDED' as NotificationType.MessageAddedNotification): {
       const title = notification.threadName
       const message =  [actor, 'wrote', notification.body].join(' ')
       const feed = message
       return { title, message, feed, typeString }
     }
-    case(NotificationType.FilesAddedNotification): {
+    case('FILES_ADDED' as NotificationType.FilesAddedNotification): {
       const title = notification.threadName
       const body = 'added a photo'
       const message =  [actor, body].join(' ')
       const feed = [actor, body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(NotificationType.CommentAddedNotification): {
+    case('COMMENT_ADDED' as NotificationType.CommentAddedNotification): {
       const title =  notification.threadName
       const message = [actor, notification.body].join(' ')
       const body = 'commented on a photo' // todo: fix "a" vs "your"
       const feed = [actor, body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(NotificationType.LikeAddedNotification): {
+    case('LIKE_ADDED' as NotificationType.LikeAddedNotification): {
       const title = notification.threadName
       const body = 'liked a photo' // todo: fix "a" vs "your"
       const message = [actor, body].join(' ')

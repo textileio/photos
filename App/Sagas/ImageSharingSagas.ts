@@ -10,7 +10,8 @@ import {
   setAvatar,
   BlockInfo,
   Profile,
-  ContactInfo
+  ContactInfo,
+  Protobufs
 } from '@textile/react-native-sdk'
 import { SharedImage } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
@@ -21,8 +22,7 @@ import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRe
 import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
-import { IMobilePreparedFiles } from '@textile/react-native-protobufs'
-import { waitFor } from '@textile/react-native-wait-for'
+import { waitFor } from '@textile/redux-saga-wait-for'
 import { RootAction } from '../Redux/Types'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
@@ -118,7 +118,7 @@ export function * prepareImage (uuid: string) {
       throw new Error('no ProcessingImage found')
     }
     const { sharedImage, destinationThreadId } = processingImage
-    const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
+    const preparedFiles: Protobufs.IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
     if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['raw'] && preparedFiles.dir.files['raw'].hash) {
       // TODO: This doesn't seem right in here, but ok
       const hash = preparedFiles.dir.files['raw'].hash as string

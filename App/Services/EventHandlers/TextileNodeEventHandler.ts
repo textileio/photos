@@ -1,8 +1,7 @@
 import { Store } from 'redux'
 
 import { ILocalPhotoResult } from '../../Models/TextileTypes'
-import {  Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
-import { Events } from '@textile/react-native-sdk'
+import {  Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
 
 import TextileNodeActions from '../../Redux/TextileNodeRedux'

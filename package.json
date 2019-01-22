@@ -12,8 +12,8 @@
     "@textile/go-mobile": "1.0.0-rc27",
     "@textile/react-native-protobufs": "1.0.5",
     "@textile/react-native-screen-control": "1.0.12",
-    "@textile/react-native-sdk": "1.0.9",
-    "@textile/react-native-wait-for": "1.0.0",
+    "@textile/react-native-sdk": "1.0.15",
+    "@textile/redux-saga-wait-for": "1.0.1",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "protobufjs": "^6.8.8",
@@ -72,10 +72,10 @@
     "reactotron-react-native": "^2.1.0",
     "reactotron-redux": "^2.1.0",
     "reactotron-redux-saga": "^2.1.0",
-    "ts-jest": "^23.10.4",
+    "ts-jest": "^23.10.5",
     "tslint": "^5.11.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.1.1"
+    "typescript": "^3.2.4"
   },
   "jest": {
     "preset": "react-native",
@@ -98,13 +98,10 @@
       "node"
     ],
     "modulePaths": [
-      "<rootDir>"
+      "<rootDir>/node_modules"
     ],
     "setupFiles": [
       "./tests/setup.js"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!@textile/react-native-protobufs)/"
     ]
   }
 }
