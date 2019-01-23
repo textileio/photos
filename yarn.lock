@@ -730,13 +730,6 @@
     "@types/prop-types" "*"
     "@types/react" "*"
 
-"@types/react-navigation@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-3.0.1.tgz#374db42a441f4fc50cc0c86a399e41ce4680bfd3"
-  dependencies:
-    "@types/react" "*"
-    "@types/react-native" "*"
-
 "@types/react-redux@^6.0.9":
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-6.0.9.tgz#96aa7f5b0716bcc3bfb36ceaa1223118d509f79a"

@@ -55,7 +55,6 @@
     "@types/react-native-push-notification": "^3.0.3",
     "@types/react-native-qrcode": "^0.2.2",
     "@types/react-native-vector-icons": "^4.6.4",
-    "@types/react-navigation": "^3.0.1",
     "@types/react-redux": "^6.0.9",
     "@types/react-test-renderer": "^16.0.3",
     "@types/uuid": "^3.4.4",
