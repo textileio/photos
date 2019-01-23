@@ -11,7 +11,7 @@ const nav = createStackNavigator(
     ThreadsManager
   },
   {
-    navigationOptions: {
+    defaultNavigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
       headerTintColor
