@@ -31,6 +31,7 @@
     "react-native-push-notification": "^3.1.1",
     "react-native-qrcode": "^0.2.7",
     "react-native-scalable-image": "^0.4.0",
+    "react-native-screens": "^1.0.0-alpha.22",
     "react-native-vector-icons": "6.1.0",
     "react-native-version-number": "https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f",
     "react-navigation": "^3.0.0",
