@@ -13,7 +13,7 @@ import Toast from 'react-native-easy-toast'
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import { IPhotoGridType, ProcessingItemType } from '../Models/TextileTypes'
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import ProgressiveImage from './ProgressiveImage'
 import ProcessingWalletImageCard from './ProcessingWalletImage'
 

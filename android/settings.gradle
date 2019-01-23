@@ -1,4 +1,8 @@
 rootProject.name = 'Textile'
+include ':@textile_react-native-sdk'
+project(':@textile_react-native-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/@textile/react-native-sdk/android')
+include ':@textile_react-native-screen-control'
+project(':@textile_react-native-screen-control').projectDir = new File(rootProject.projectDir, '../node_modules/@textile/react-native-screen-control/android')
 
 include ':app'
 include ':react-native-background-fetch'

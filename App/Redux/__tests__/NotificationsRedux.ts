@@ -1,6 +1,6 @@
 import actions, { reducer, NotificationsState } from '../NotificationsRedux'
 import { FilesAddedNotification } from '../../Models/Notifications'
-import { NotificationType } from '../../NativeModules/Textile'
+import { NotificationType } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 
@@ -11,7 +11,7 @@ const notification1: FilesAddedNotification = {
   date: '1999-01-01T00:00:00Z',
   id: 'NotificationId1',
   read: false,
-  type: NotificationType.FilesAddedNotification,
+  type: 'FILES_ADDED' as NotificationType.FilesAddedNotification,
   threadId: 'threadId1',
   threadName: 'threadName1',
   target: 'hash'
@@ -24,7 +24,7 @@ const notification2: FilesAddedNotification = {
   date: '1999-01-01T00:00:00Z',
   id: 'NotificationId2',
   read: false,
-  type: NotificationType.FilesAddedNotification,
+  type: 'FILES_ADDED' as NotificationType.FilesAddedNotification,
   threadId: 'threadId2',
   threadName: 'threadName2',
   target: 'hash2'

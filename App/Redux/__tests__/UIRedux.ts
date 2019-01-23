@@ -1,6 +1,6 @@
 import actions, { reducer } from '../UIRedux'
 import { SharedImage } from '../../Models/TextileTypes'
-import { ThreadFilesInfo } from '../../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 const threadId: string = 'threadId' as any

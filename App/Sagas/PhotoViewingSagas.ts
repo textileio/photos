@@ -18,7 +18,7 @@ import {
   addThreadComment,
   ThreadFilesInfo,
   ThreadInfo
-} from '../NativeModules/Textile'
+} from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
 

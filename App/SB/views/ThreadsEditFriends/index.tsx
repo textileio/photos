@@ -12,7 +12,7 @@ import ThreadsActions, { InviteQRCode } from '../../../Redux/ThreadsRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
 
 import styles from './statics/styles'
-import { ContactInfo } from '../../../NativeModules/Textile'
+import { ContactInfo } from '@textile/react-native-sdk'
 
 interface ScreenProps {
   threadId: string

@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { ILocalPhotoResult } from '../Models/TextileTypes'
-import { Overview } from '../NativeModules/Textile'
+import { Overview } from '@textile/react-native-sdk'
 import { RootState } from './Types'
 
 const actions = {

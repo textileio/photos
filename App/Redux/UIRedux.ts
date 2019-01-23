@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { SharedImage } from '../Models/TextileTypes'
 import { RootState } from './Types'
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),

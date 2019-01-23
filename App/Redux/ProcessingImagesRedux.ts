@@ -1,14 +1,13 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { SharedImage } from '../Models/TextileTypes'
-import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
-import { BlockInfo } from '../NativeModules/Textile'
+import { BlockInfo, Protobufs } from '@textile/react-native-sdk'
 
 const actions = {
   insertImage: createAction('processingImages/INSERT_IMAGE', (resolve) => {
     return (uuid: string, sharedImage: SharedImage, destinationThreadId: string, comment?: string) => resolve({ uuid, sharedImage, destinationThreadId, comment })
   }),
   imagePrepared: createAction('processingImages/IMAGE_PREPARED', (resolve) => {
-    return (uuid: string, preparedFiles: IMobilePreparedFiles) => resolve({ uuid, preparedFiles })
+    return (uuid: string, preparedFiles: Protobufs.IMobilePreparedFiles) => resolve({ uuid, preparedFiles })
   }),
   uploadStarted: createAction('processingImages/UPLOAD_STARTED', (resolve) => {
     return (uuid: string, uploadId: string) => resolve({ uuid, uploadId })
@@ -82,7 +81,7 @@ export interface ProcessingImage {
   readonly status: 'preparing'  | 'uploading' | 'sharing' | 'complete'
   readonly destinationThreadId: string
   readonly comment?: string
-  readonly preparedFiles?: IMobilePreparedFiles
+  readonly preparedFiles?: Protobufs.IMobilePreparedFiles
   readonly uploadData?: UploadData
   readonly blockInfo?: BlockInfo
   readonly error?: string

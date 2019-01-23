@@ -2,9 +2,9 @@ import React from 'react'
 import {Dispatch} from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import {RootAction} from '../Redux/Types'
 
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'

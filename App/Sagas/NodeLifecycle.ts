@@ -8,7 +8,7 @@ import BackgroundFetch from 'react-native-background-fetch'
 import RNPushNotification from 'react-native-push-notification'
 import Config from 'react-native-config'
 
-import { waitFor } from './WaitFor'
+import { waitFor } from '@textile/redux-saga-wait-for'
 import { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import StorageActions from '../Redux/StorageRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
@@ -32,7 +32,7 @@ import {
   registerCafe,
   cafeSessions,
   CafeSession
- } from '../NativeModules/Textile'
+ } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { announcePeer } from './Migration'
 

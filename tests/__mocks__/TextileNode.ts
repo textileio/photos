@@ -7,7 +7,7 @@ import {
     BlockInfo,
     BlockType,
     ContactInfo
-} from '../../App/NativeModules/Textile'
+} from '@textile/react-native-sdk'
 
 export default {
     acceptExternalThreadInvite: jest.fn((id, key): Promise<string> => new Promise((resolve) => {

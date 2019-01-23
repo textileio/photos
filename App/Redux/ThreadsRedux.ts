@@ -1,6 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { ExternalInvite } from '../NativeModules/Textile'
-import { RootState } from './Types'
+import { ExternalInvite } from '@textile/react-native-sdk'
 
 const actions = {
   addExternalInviteRequest: createAction('ADD_EXTERNAL_INVITE_REQUEST', (resolve) => {

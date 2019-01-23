@@ -1,7 +1,7 @@
 import { NavigationService } from './NavigationService'
 import Config from 'react-native-config'
 import { DeepLinkData} from '../Models/TextileTypes'
-import { ExternalInvite } from '../NativeModules/Textile'
+import { ExternalInvite } from '@textile/react-native-sdk'
 
 function getParams (hash: string): { [key: string]: (string | string[]) } {
   const query = hash.replace('#', '')

@@ -5,7 +5,7 @@ import { View, TouchableOpacity } from 'react-native'
 import { RootState } from '../../../Redux/Types'
 
 import {ThreadData} from '../../../Redux/PhotoViewingRedux'
-import { ThreadFilesInfo } from '../../../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import PhotoWithTextBox from '../PhotoWithTextBox'
 import RadioButton from '../../components/RadioButton'
 

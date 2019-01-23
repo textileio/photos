@@ -5,18 +5,16 @@ import { all, call, put, select, take, race, fork } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
-import { keepScreenOn, letScreenSleep } from '../NativeModules/ScreenControl'
+import { keepScreenOn, letScreenSleep } from '@textile/react-native-screen-control'
 import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload, LocalProcessingTask } from '../Redux/MigrationRedux'
 import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads, completeLocalProcessingTasks, allLocalProcessingTasks } from '../Redux/MigrationSelectors'
-import { getAddress, getPeerId } from '../Redux/AccountSelectors'
+import { getPeerId } from '../Redux/AccountSelectors'
 import { prepare } from './ImageSharingSagas'
 import { getSession } from './UploadFile'
 
 import {
-  addContact, addThreadFiles, addThread, ThreadInfo, ContactInfo, contact
- } from '../NativeModules/Textile'
-import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
-import { CafeSession } from '../NativeModules/Textile'
+  addContact, addThreadFiles, addThread, ThreadInfo, ContactInfo, contact, CafeSession, Protobufs
+ } from '@textile/react-native-sdk'
 import { REPO_PATH } from './NodeLifecycle'
 
 const PREVIOUS_ID_PATH = () => `${REPO_PATH}/migration005_peerid.ndjson`
@@ -139,7 +137,7 @@ function * prepareAndAddPhoto(download: PhotoDownload, threadId: string) {
       canDelete: true
     }
     yield put(MigrationActions.insertLocalProcessingTask(photoId))
-    const preparedFiles: IMobilePreparedFiles = yield call(prepare, img, threadId)
+    const preparedFiles: Protobufs.IMobilePreparedFiles = yield call(prepare, img, threadId)
     const { dir } = preparedFiles
     if (!dir) {
       throw new Error('No dir on MobilePreparedFiles')

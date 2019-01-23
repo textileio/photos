@@ -9,6 +9,12 @@ jest.mock('NativeModules', () => {
     }
 })
 
+jest.mock('@textile/react-native-sdk', () => {
+    return {
+        eventEmitter: jest.fn()
+    }
+})
+
 jest.mock('CameraRoll', () => {
     return {
         getPhotos: jest.fn((payload) => new Promise((resolve) => {

@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
-import { ContactInfo } from '../NativeModules/Textile'
+import { ContactInfo } from '@textile/react-native-sdk'
 
 const actions = {
   getContactsRequest: createAction('GET_CONTACTS_REQUEST'),

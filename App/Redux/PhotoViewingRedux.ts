@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import Config from 'react-native-config'
 
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {

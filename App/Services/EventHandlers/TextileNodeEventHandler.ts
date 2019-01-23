@@ -1,8 +1,7 @@
 import { Store } from 'redux'
 
 import { ILocalPhotoResult } from '../../Models/TextileTypes'
-import {  Update, ThreadUpdate, BlockType, NotificationInfo } from '../../NativeModules/Textile'
-import EventEmitter from '../../NativeModules/Events'
+import {  Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
 
 import TextileNodeActions from '../../Redux/TextileNodeRedux'
@@ -22,13 +21,13 @@ export default class TextileNodeEventHandler {
   }
 
   setup () {
-    EventEmitter.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
+    Events.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
       this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
     })
-    EventEmitter.addListener('onOnline', () => {
+    Events.addListener('onOnline', () => {
       this.store.dispatch(TextileNodeActions.nodeOnline())
     })
-    EventEmitter.addListener('onThreadUpdate', (update: ThreadUpdate) => {
+    Events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
       const { type } = update.block
       if (type === BlockType.COMMENT ||
         type === BlockType.LIKE ||
@@ -45,18 +44,18 @@ export default class TextileNodeEventHandler {
       const message = `BlockType ${type} on ${name}`
       this.store.dispatch(DeviceLogsActions.logNewEvent( (new Date()).getTime(), 'onThreadUpdate', message, false))
     })
-    EventEmitter.addListener('onThreadAdded', (payload: Update) => {
+    Events.addListener('onThreadAdded', (payload: Update) => {
       this.store.dispatch(PhotoViewingActions.threadAddedNotification(payload.id))
     })
-    EventEmitter.addListener('onThreadRemoved', (payload: Update) => {
+    Events.addListener('onThreadRemoved', (payload: Update) => {
       this.store.dispatch(PhotoViewingActions.threadRemoved(payload.id))
     })
-    EventEmitter.addListener('onNotification', (payload: NotificationInfo) => {
+    Events.addListener('onNotification', (payload: NotificationInfo) => {
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
   }
 
   tearDown () {
-    EventEmitter.removeAllListeners()
+    Events.removeAllListeners()
   }
 }

@@ -6,7 +6,6 @@ import { FlatList, ViewStyle, View, ListRenderItemInfo, Text, TextStyle } from '
 import { RootState } from '../Redux/Types'
 import Avatar from '../Components/Avatar'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
-import { ThreadLikeInfo } from '../NativeModules/Textile'
 
 const CONTAINER: ViewStyle = {
   backgroundColor: '#FAFCFE'

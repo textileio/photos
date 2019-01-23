@@ -1,6 +1,5 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
-import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
-import { ContactInfo } from '../NativeModules/Textile'
+import { ContactInfo, Protobufs } from '@textile/react-native-sdk'
 
 const actions = {
   migrationNeeded: createAction('@migration/MIGRATION_NEEDED'),
@@ -54,7 +53,7 @@ const actions = {
   ),
   localProcessingTaskComplete: createAction(
     '@migration/INSERT_LOCAL_PROCESSING_TASK_COMPLETE',
-    (resolve) => (photoId: string, preparedFiles: IMobilePreparedFiles) => resolve({ photoId, preparedFiles })
+    (resolve) => (photoId: string, preparedFiles: Protobufs.IMobilePreparedFiles) => resolve({ photoId, preparedFiles })
   ),
   localProcessingTaskError: createAction(
     '@migration/INSERT_LOCAL_PROCESSING_TASK_ERROR',
@@ -105,7 +104,7 @@ export interface PhotoDownloads {
 
 export interface LocalProcessingTask {
   readonly photoId: string
-  readonly preparedFiles?: IMobilePreparedFiles
+  readonly preparedFiles?: Protobufs.IMobilePreparedFiles
   readonly status: 'processing' | 'complete' | 'error'
   readonly error?: string
 }

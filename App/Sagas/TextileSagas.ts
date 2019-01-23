@@ -11,12 +11,10 @@
 *************************************************************/
 import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, select, take, fork } from 'redux-saga/effects'
+import { call, put, select, take } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import {
-  prepareFiles,
-  addThreadFiles,
   overview,
   Overview,
   contacts,
@@ -24,11 +22,8 @@ import {
   checkCafeMessages,
   addThreadIgnore,
   setAvatar,
-  peerId,
-  profile,
-  addThreadLike,
-  BlockInfo
-} from '../NativeModules/Textile'
+  addThreadLike
+} from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
@@ -36,9 +31,8 @@ import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import AccountActions from '../Redux/AccountRedux'
 import ContactsActions from '../Redux/ContactsRedux'
-import UIActions, { UISelectors } from '../Redux/UIRedux'
+import UIActions from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType, getType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
@@ -49,7 +43,6 @@ import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 import StorageActions from '../Redux/StorageRedux'
-import { IMobilePreparedFiles } from '../NativeModules/Textile/pb/textile-go'
 import { RootState } from '../Redux/Types'
 import { SharedImage } from '../Models/TextileTypes'
 

@@ -11,7 +11,7 @@ import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../Components/TextileImage'
 import { SharedImage } from '../Models/TextileTypes'
-import { ThreadFilesInfo } from '../NativeModules/Textile'
+import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
