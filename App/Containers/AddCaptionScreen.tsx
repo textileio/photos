@@ -4,7 +4,6 @@ import { Image, View } from 'react-native'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import Input from '../SB/components/Input'
-// @ts-ignore
 import {NavigationActions, NavigationScreenProps} from 'react-navigation'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import ThreadSelect from '../SB/components/ThreadSelect'

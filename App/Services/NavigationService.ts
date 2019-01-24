@@ -2,7 +2,6 @@ import {
   NavigationActions,
   NavigationContainerComponent,
   NavigationParams
-// @ts-ignore
 } from 'react-navigation'
 
 let _navigator: NavigationContainerComponent

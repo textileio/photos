@@ -1,5 +1,4 @@
 import React from 'react'
-// @ts-ignore
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle } from 'react-native'

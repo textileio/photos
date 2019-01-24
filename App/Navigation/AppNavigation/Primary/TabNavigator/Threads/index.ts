@@ -1,4 +1,3 @@
-// @ts-ignore
 import { createStackNavigator } from 'react-navigation'
 
 import ThreadsList from '../../../../../Containers/ThreadsList'

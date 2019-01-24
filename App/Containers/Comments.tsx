@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, ScrollView, ViewStyle } from 'react-native'
-// @ts-ignore
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'

@@ -1,4 +1,3 @@
-// @ts-ignore
 import { createStackNavigator } from 'react-navigation'
 
 import Notifications from '../../../../../Containers/FeedList'

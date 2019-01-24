@@ -7,7 +7,6 @@ import {
   FlatList,
   TouchableOpacity, ListRenderItemInfo
 } from 'react-native'
-// @ts-ignore
 import { NavigationScreenProps } from 'react-navigation'
 
 import Avatar from './Avatar'

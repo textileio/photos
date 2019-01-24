@@ -3,7 +3,6 @@ import Redux, { Dispatch } from 'redux'
 import { View, StatusBar, ActivityIndicator, Platform, PermissionsAndroid, Text } from 'react-native'
 import Modal from 'react-native-modal'
 import { Overlay } from 'react-native-elements'
-// @ts-ignore
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'

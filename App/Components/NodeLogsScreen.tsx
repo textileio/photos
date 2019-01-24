@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, TextInput, Platform, Clipboard, ActivityIndicator, View, Text } from 'react-native'
 import FS from 'react-native-fs'
-// @ts-ignore
 import { NavigationScreenProps} from 'react-navigation'
 import * as s from '../Themes/Constants'
 import { REPO_PATH } from '../Sagas/NodeLifecycle'

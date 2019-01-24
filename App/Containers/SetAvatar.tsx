@@ -2,7 +2,6 @@ import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
-// @ts-ignore
 import { NavigationScreenProps, NavigationScreenProp, NavigationRoute } from 'react-navigation'
 
 import Button from '../Components/Button'

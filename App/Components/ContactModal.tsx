@@ -7,7 +7,6 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Modal from 'react-native-modal'
-// @ts-ignore
 import { SafeAreaView } from 'react-navigation'
 
 import Avatar from './Avatar'

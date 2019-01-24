@@ -1,6 +1,5 @@
 import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
-// @ts-ignore
 import { NavigationScreenProps } from 'react-navigation'
 // @ts-ignore
 import { Pages } from 'react-native-pages'
