@@ -21,7 +21,8 @@ export default StyleSheet.create({
   content: {
     flex: 1,
     alignContent: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingTop: 40
   } as ViewStyle,
   title: {
     flex: 1,

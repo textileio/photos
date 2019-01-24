@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, Image, Dimensions } from 'react-native'
+import { Item } from 'react-navigation-header-buttons'
 
 import FeedItem from '../../SB/components/FeedItem'
 
@@ -12,15 +13,28 @@ import onboardingStyles from '../Styles/OnboardingStyle'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import TextileNodeActions from '../../Redux/TextileNodeRedux'
 import CustomFeedItem from '../../SB/components/FeedItem/Custom'
+import { TextileHeaderButtons } from '../../Components/HeaderButtons'
+import Avatar from '../../Components/Avatar'
 
 class Notifications extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const params = navigation.state.params || {}
-    const username = params.profile && params.profile.username ? params.profile.username : undefined
     const headerTitle = 'Notifications'
+
+    const headerLeft = (
+      <TextileHeaderButtons left>
+        <Item
+          title='Account'
+          onPress={params.openDrawer}
+          ButtonElement={<Avatar style={{ width: 24, height: 24 }} self={true} />}
+          buttonWrapperStyle={{ margin: 11 }}
+        />
+      </TextileHeaderButtons>
+    )
 
     return {
       headerTitle,
+      headerLeft,
       headerRight: (<View />) // ensure spacing in android
     }
   }
@@ -42,7 +56,8 @@ class Notifications extends React.PureComponent {
     this.props.navigation.addListener('willFocus', this._onFocus.bind(this))
     this.props.navigation.addListener('willBlur', this._onBlur.bind(this))
     this.props.navigation.setParams({
-      profile: this.props.profile
+      profile: this.props.profile,
+      openDrawer: this.openDrawer
     })
   }
 
@@ -64,6 +79,10 @@ class Notifications extends React.PureComponent {
   }
 
   _keyExtractor = (item, index) => item.id + '_' + index
+
+  openDrawer = () => {
+    this.props.navigation.openDrawer()
+  }
 
   _renderItem = ({ item }) => {
     return (
