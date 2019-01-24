@@ -22,7 +22,7 @@ class StatusCheck extends React.Component<Props, {}> {
     if (!props.nodeError && props.nodeStarted && !props.onboarded) {
       props.navigation.navigate('OnboardingNavigation')
     } else if (!props.nodeError && props.nodeStarted) {
-      props.navigation.navigate('PrimaryNavigation')
+      props.navigation.navigate('ModalNavigation')
     }
     // tslint:disable-next-line no-null-keyword
     return null

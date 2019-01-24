@@ -27,9 +27,9 @@ class UserProfile extends React.PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerLeft: (
-        <TextileHeaderButtons left>
-          <TextileItem title='Back' iconName='arrow-left' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
+      headerRight: (
+        <TextileHeaderButtons>
+          <TextileItem title='Back' iconName='chevron-bottom' onPress={() => { navigation.dispatch(NavigationActions.back()) }} />
         </TextileHeaderButtons>
       ),
       title: 'Settings'

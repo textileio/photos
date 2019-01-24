@@ -1,15 +1,13 @@
 // @ts-ignore
-import { createBottomTabNavigator, createDrawerNavigator } from 'react-navigation'
-import React from 'react'
+import { createDrawerNavigator } from 'react-navigation'
 import { Dimensions } from 'react-native'
 import Contacts from './Contacts'
 import Groups from './Groups'
 import Notifications from './Notifications'
-import Colors from '../../../../Themes/Colors'
-import Drawer from '../../../../Containers/Drawer'
-import * as s from '../../../../Themes/Constants'
+import Drawer from '../../../../../Containers/Drawer'
+import * as s from '../../../../../Themes/Constants'
 
-import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
+import styles, { headerTintColor } from '../../../../Styles/NavigationStyles'
 
 const drawer = createDrawerNavigator(
   {

@@ -1,12 +1,12 @@
 import { createStackNavigator } from 'react-navigation'
 
-import Notifications from '../../../../../Containers/FeedList'
+import Contacts from '../../../../../../Containers/Contacts'
 
-import styles, { headerTintColor } from '../../../../Styles/NavigationStyles'
+import styles, { headerTintColor } from '../../../../../Styles/NavigationStyles'
 
 const nav = createStackNavigator(
   {
-    Notifications
+    Contacts
   },
   {
     headerMode: 'float',
