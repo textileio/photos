@@ -1,53 +1,42 @@
-import { createBottomTabNavigator } from 'react-navigation'
+// @ts-ignore
+import { createBottomTabNavigator, createDrawerNavigator } from 'react-navigation'
 import React from 'react'
+import { Dimensions } from 'react-native'
 import Icon from '../../../../Components/Icon'
 import Wallet from './Wallet'
 import Threads from './Threads'
 import Notifications from './Notifications'
 import Colors from '../../../../Themes/Colors'
+import Drawer from '../../../../Containers/Drawer'
+import * as s from '../../../../Themes/Constants'
 
 import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
 
-const nav = createBottomTabNavigator(
+const drawer = createDrawerNavigator(
   {
     Wallet,
     Threads,
     Notifications
   },
   {
-    defaultNavigationOptions: ({ navigation }) => {
-      const { routeName } = navigation.state
-      return {
-        tabBarIcon: ({focused, tintColor}) => {
-          let icon
-          if (routeName === 'Wallet') {
-            icon = 'user'
-          } else if (routeName === 'Threads') {
-            icon = 'grid-slides'
-          } else {
-            icon = 'bell'
-          }
-          const tint = tintColor || undefined
-          return <Icon name={icon} size={24} color={tint} />
-        }
+    drawerType: 'slide',
+    drawerWidth: Dimensions.get('screen').width - 40,
+    contentComponent: Drawer,
+    contentOptions: {
+      labelStyle: {
+        fontFamily: s.FONT_FAMILY_REGULAR,
+        fontWeight: 'normal',
+        fontSize: s.FONT_SIZE_MEDIUM
+      },
+      activeLabelStyle: {
+        color: s.COLOR_BRAND_BLUE
       }
     },
-    tabBarOptions: {
-      showLabel: false,
-      activeTintColor: Colors.brandBlue,
-      inactiveTintColor: Colors.charcoal,
-      style: styles.bottomBar
-    },
-    animationEnabled: false,
-    swipeEnabled: false,
-    initialRouteName: 'Threads'
+    navigationOptions: {
+      // tslint:disable-next-line:no-null-keyword
+      header: null
+    }
   }
 )
 
-nav.navigationOptions = {
-  // Hide the header from AppNavigator stack
-  // tslint:disable-next-line:no-null-keyword
-  header: null
-}
-
-export default nav
+export default drawer
