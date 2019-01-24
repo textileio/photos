@@ -1,4 +1,5 @@
 import React from 'react'
+// @ts-ignore
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { FlatList, ViewStyle, View, ListRenderItemInfo, Text, TextStyle } from 'react-native'

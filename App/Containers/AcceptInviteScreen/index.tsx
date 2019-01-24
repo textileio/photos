@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { Image, Text, ViewStyle, ImageStyle, TextStyle } from 'react-native'
+// @ts-ignore
 import { NavigationScreenProps, NavigationScreenProp, NavigationRoute, NavigationStackScreenOptions, SafeAreaView } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'

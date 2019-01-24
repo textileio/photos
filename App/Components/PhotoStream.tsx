@@ -1,5 +1,6 @@
 import React from 'react'
 import {Dispatch} from 'redux'
+// @ts-ignore
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { FlatList, View } from 'react-native'

@@ -2,6 +2,7 @@ import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
 // @ts-ignore
 import { Pages } from 'react-native-pages'
+// @ts-ignore
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'

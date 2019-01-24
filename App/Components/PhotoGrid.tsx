@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity, ListRenderItemInfo
 } from 'react-native'
+// @ts-ignore
 import { NavigationScreenProps } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 

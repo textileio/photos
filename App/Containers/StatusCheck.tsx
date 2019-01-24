@@ -1,6 +1,7 @@
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { connect } from 'react-redux'
+// @ts-ignore
 import { NavigationScreenProps } from 'react-navigation'
 
 import FatalErrorView from '../Components/FatalErrorView'

@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createStackNavigator } from 'react-navigation'
 
 import Wallet from '../../../../../Containers/Wallet'

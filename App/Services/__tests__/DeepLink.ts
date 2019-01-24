@@ -4,7 +4,8 @@ import { NavigationService } from '../NavigationService'
 import {
     NavigationContainerComponent,
     NavigationParams
-  } from 'react-navigation'
+// @ts-ignore
+} from 'react-navigation'
 
 const params = 'id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING'
 const link = `www.textile.photos/invites/new#${params}`

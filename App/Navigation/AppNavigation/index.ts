@@ -1,6 +1,7 @@
 import {
   createAppContainer,
   createSwitchNavigator
+// @ts-ignore
 } from 'react-navigation'
 
 import OnboardingNavigation from './Onboarding'

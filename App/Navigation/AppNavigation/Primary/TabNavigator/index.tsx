@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createBottomTabNavigator } from 'react-navigation'
 import React from 'react'
 import Icon from '../../../../Components/Icon'
