@@ -26,6 +26,7 @@ import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
 import io.textile.rnmobile.RNTextilePackage;
 import io.textile.screencontrol.RNScreenControlPackage;
+import com.textile.textilenode.TextilePackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -51,7 +52,8 @@ public class MainApplication extends Application implements ReactApplication {
           new BackgroundTimerPackage(),
           new RNVersionNumberPackage(),
           new RNGestureHandlerPackage(),
-          new RNScreensPackage()
+          new RNScreensPackage(),
+          new TextilePackage()
       );
     }
 
