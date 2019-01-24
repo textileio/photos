@@ -9,7 +9,7 @@ const nav = createStackNavigator(
   {
     headerMode: 'none',
     initialRouteName: 'Onboarding',
-    navigationOptions: {
+    defaultNavigationOptions: {
       gesturesEnabled: false
     }
   }

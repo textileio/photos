@@ -20,6 +20,8 @@ import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
 import com.smixx.fabric.FabricPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.swmansion.rnscreens.RNScreensPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
 import io.textile.rnmobile.RNTextilePackage;
@@ -47,7 +49,9 @@ public class MainApplication extends Application implements ReactApplication {
           new ReactNativeConfigPackage(),
           new FabricPackage(),
           new BackgroundTimerPackage(),
-          new RNVersionNumberPackage()
+          new RNVersionNumberPackage(),
+          new RNGestureHandlerPackage(),
+          new RNScreensPackage()
       );
     }
 

@@ -14,7 +14,7 @@ const nav = createStackNavigator(
   },
   {
     headerMode: 'float',
-    navigationOptions: {
+    defaultNavigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
       headerTintColor

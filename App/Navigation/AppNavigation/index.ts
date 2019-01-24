@@ -1,4 +1,7 @@
-import { createSwitchNavigator } from 'react-navigation'
+import {
+  createAppContainer,
+  createSwitchNavigator
+} from 'react-navigation'
 
 import OnboardingNavigation from './Onboarding'
 import PrimaryNavigation from './Primary'
@@ -18,4 +21,6 @@ const nav = createSwitchNavigator(
   }
 )
 
-export default nav
+const app = createAppContainer(nav)
+
+export default app
