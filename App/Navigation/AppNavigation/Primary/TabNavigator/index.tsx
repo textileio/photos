@@ -15,7 +15,7 @@ const nav = createBottomTabNavigator(
     Notifications
   },
   {
-    navigationOptions: ({ navigation }) => {
+    defaultNavigationOptions: ({ navigation }) => {
       const { routeName } = navigation.state
       return {
         tabBarIcon: ({focused, tintColor}) => {

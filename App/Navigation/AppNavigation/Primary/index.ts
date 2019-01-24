@@ -44,7 +44,7 @@ const nav = createStackNavigator(
     NodeLogsScreen
   },
   {
-    navigationOptions: {
+    defaultNavigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
       headerTintColor

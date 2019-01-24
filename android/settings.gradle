@@ -1,10 +1,10 @@
 rootProject.name = 'Textile'
+
+include ':app'
 include ':@textile_react-native-sdk'
 project(':@textile_react-native-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/@textile/react-native-sdk/android')
 include ':@textile_react-native-screen-control'
 project(':@textile_react-native-screen-control').projectDir = new File(rootProject.projectDir, '../node_modules/@textile/react-native-screen-control/android')
-
-include ':app'
 include ':react-native-background-fetch'
 project(':react-native-background-fetch').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-fetch/android')
 include ':react-native-push-notification'
@@ -23,4 +23,8 @@ include ':react-native-background-timer'
 project(':react-native-background-timer').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-timer/android')
 include ':react-native-version-number'
 project(':react-native-version-number').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-version-number/android')
+include ':react-native-gesture-handler'
+project(':react-native-gesture-handler').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-gesture-handler/android')
+include ':react-native-screens'
+project(':react-native-screens').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-screens/android')
 include ':textilego'

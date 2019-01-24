@@ -16,7 +16,7 @@ const nav = createStackNavigator(
   {
     headerMode: 'none',
     initialRouteName: 'ShareToThreadList',
-    navigationOptions: {
+    defaultNavigationOptions: {
       gesturesEnabled: false,
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
