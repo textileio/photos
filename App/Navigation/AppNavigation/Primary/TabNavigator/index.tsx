@@ -2,9 +2,8 @@
 import { createBottomTabNavigator, createDrawerNavigator } from 'react-navigation'
 import React from 'react'
 import { Dimensions } from 'react-native'
-import Icon from '../../../../Components/Icon'
-import Wallet from './Wallet'
-import Threads from './Threads'
+import Contacts from './Contacts'
+import Groups from './Groups'
 import Notifications from './Notifications'
 import Colors from '../../../../Themes/Colors'
 import Drawer from '../../../../Containers/Drawer'
@@ -14,8 +13,8 @@ import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
 
 const drawer = createDrawerNavigator(
   {
-    Wallet,
-    Threads,
+    Groups,
+    Contacts,
     Notifications
   },
   {
