@@ -30,7 +30,7 @@ class Account extends Component<Props> {
   render() {
     return (
       <View style={CONTAINER}>
-        <Icon style={{ position: 'absolute', top: 0, right: 20 }} color={Colors.charcoal} name='nut' onPress={this.navToSettings} size={24} />
+        <Icon style={{ position: 'absolute', top: 11, right: 11 }} color={Colors.charcoal} name='nut' onPress={this.navToSettings} size={24} />
         <View style={{ alignItems: 'center' }}>
           <Avatar style={{ width: 120, height: 120 }} self={true} />
           <Text style={{ ...s.H2, margin: 20 }}>{this.props.username}</Text>
