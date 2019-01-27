@@ -29,3 +29,7 @@ export function bestSession(state: RootState) {
   const newest = sorted.pop()
   return newest
 }
+
+export function onboarded(state: RootState) {
+  return state.account.onboarded
+}

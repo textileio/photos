@@ -17,6 +17,7 @@ import { UIAction } from './UIRedux'
 import { UploadingImagesAction } from './UploadingImagesRedux'
 import { StartupAction } from './StartupRedux'
 import { MigrationAction } from './MigrationRedux'
+import { MockBridgeAction } from './MockBridge'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -34,4 +35,5 @@ export type RootAction =
   UIAction |
   UploadingImagesAction |
   StartupAction |
-  MigrationAction
+  MigrationAction |
+  MockBridgeAction

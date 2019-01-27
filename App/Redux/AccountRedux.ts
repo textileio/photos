@@ -2,6 +2,9 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { ContactInfo, CafeSession } from '@textile/react-native-sdk'
 
 const actions = {
+  onboardedSuccess: createAction('ONBOARDED_SUCCESS', (resolve) => {
+    return () => resolve()
+  }),
   refreshProfileRequest: createAction('REFRESH_PROFILE_REQUEST'),
   refreshProfileSuccess: createAction('REFRESH_PROFILE_SUCCESS', (resolve) => {
     return (profile: ContactInfo) => resolve({ profile })
@@ -44,6 +47,7 @@ const actions = {
 export type AccountAction = ActionType<typeof actions>
 
 interface AccountState {
+  onboarded: boolean,
   profile: {
     value?: ContactInfo
     processing: boolean
@@ -66,6 +70,7 @@ interface AccountState {
 }
 
 const initialState: AccountState = {
+  onboarded: false,
   profile: {
     processing: false
   },
@@ -79,6 +84,8 @@ const initialState: AccountState = {
 
 export function reducer(state: AccountState = initialState, action: AccountAction): AccountState {
   switch (action.type) {
+    case getType(actions.onboardedSuccess):
+      return { ...state, onboarded: true }
     case getType(actions.setUsernameRequest):
     case getType(actions.refreshProfileRequest):
       return { ...state, profile: { ...state.profile, processing: true } }

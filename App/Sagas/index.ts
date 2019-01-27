@@ -4,6 +4,7 @@ import { Dispatch } from 'redux'
 
 /* ------------- Types ------------- */
 
+import AccountActions from '../Redux/AccountRedux'
 import StartupActions from '../Redux/StartupRedux'
 import StorageActions from '../Redux/StorageRedux'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
@@ -21,6 +22,7 @@ import ContactsActions from '../Redux/ContactsRedux'
 
 import accountSaga from './Account'
 
+import { mockEvents } from './MockBridge'
 import { startup } from './StartupSagas'
 
 import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } from './NodeLifecycle'
@@ -124,6 +126,8 @@ export default function * root (dispatch: Dispatch) {
     call(handleCancelMigration),
     call(handleRetryMigration, dispatch),
 
+    call(mockEvents),
+
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
 
@@ -203,7 +207,7 @@ export default function * root (dispatch: Dispatch) {
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
-    takeEvery(getType(PreferencesActions.onboardedSuccess), inviteAfterOnboard),
+    takeEvery(getType(AccountActions.onboardedSuccess), inviteAfterOnboard),
 
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
 

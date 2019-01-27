@@ -2,9 +2,6 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
 
 const actions = {
-  onboardedSuccess: createAction('ONBOARDED_SUCCESS', (resolve) => {
-    return () => resolve()
-  }),
   toggleVerboseUi: createAction('TOGGLE_VERBOSE_UI', (resolve) => {
     return () => resolve()
   }),
@@ -45,7 +42,6 @@ export interface ViewSettings {
   selectedWalletTab: 'Photos' | 'Groups' | 'Contacts',
 }
 export interface PreferencesState {
-  onboarded: boolean
   verboseUi: boolean
   readonly services: {readonly [k in ServiceType]: Service}
   readonly storage: {readonly [k in StorageType]: Service}
@@ -54,7 +50,6 @@ export interface PreferencesState {
 }
 
 export const initialState: PreferencesState = {
-  onboarded: false,
   verboseUi: false,
   tourScreens: {
     wallet: true,
@@ -118,8 +113,6 @@ export const initialState: PreferencesState = {
 
 export function reducer (state: PreferencesState = initialState, action: PreferencesAction): PreferencesState {
   switch (action.type) {
-    case getType(actions.onboardedSuccess):
-      return { ...state, onboarded: true }
     case getType(actions.toggleVerboseUi):
       return { ...state, verboseUi: !state.verboseUi }
     case getType(actions.completeTourSuccess):
@@ -143,7 +136,6 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
 }
 
 export const PreferencesSelectors = {
-  onboarded: (state: RootState) => state.preferences.onboarded,
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
   storage: (state: RootState, name: StorageType) => state.preferences.storage[name],
   verboseUi: (state: RootState) => state.preferences.verboseUi,
