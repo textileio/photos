@@ -9,6 +9,7 @@
     "lint": "tslint -c tslint.json --project ."
   },
   "dependencies": {
+    "@textile/react-native-icon": "^1.0.0",
     "@textile/react-native-screen-control": "1.0.12",
     "@textile/react-native-sdk": "1.0.16",
     "@textile/redux-saga-wait-for": "1.0.1",
@@ -22,7 +23,7 @@
     "react-native-background-upload": "https://github.com/textileio/react-native-background-upload#9dedcbae13815ce869e5d7809cf71e3c2d49cc0e",
     "react-native-config": "^0.11.7",
     "react-native-easy-toast": "^1.1.0",
-    "react-native-elements": "1.0.0-beta5",
+    "react-native-elements": "1.0.0-beta7",
     "react-native-fabric": "https://github.com/corymsmith/react-native-fabric#523a4edab3b2bf55ea9eeea2cf0dde82c5c29dd4",
     "react-native-fs": "^2.11.17",
     "react-native-image-picker": "^0.27.1",
@@ -32,7 +33,6 @@
     "react-native-qrcode": "^0.2.7",
     "react-native-scalable-image": "^0.4.0",
     "react-native-screens": "^1.0.0-alpha.22",
-    "react-native-vector-icons": "6.1.0",
     "react-native-version-number": "https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f",
     "react-navigation": "^3.0.0",
     "react-navigation-header-buttons": "^2.1.0",
@@ -54,7 +54,6 @@
     "@types/react-native-fs": "^2.8.2",
     "@types/react-native-push-notification": "^3.0.3",
     "@types/react-native-qrcode": "^0.2.2",
-    "@types/react-native-vector-icons": "^4.6.4",
     "@types/react-redux": "^6.0.9",
     "@types/react-test-renderer": "^16.0.3",
     "@types/uuid": "^3.4.4",

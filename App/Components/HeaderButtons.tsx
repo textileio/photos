@@ -1,5 +1,5 @@
 import React from 'react'
-import Icon from './Icon'
+import Icon from '@textile/react-native-icon'
 import HeaderButtons, { HeaderButton } from 'react-navigation-header-buttons'
 import Colors from '../Themes/Colors'
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, TextInput, TouchableOpacity } from 'react-native'
-
-import Icon from '../../../Components/Icon'
+import Icon from '@textile/react-native-icon'
 
 import styles from './statics/styles'
 

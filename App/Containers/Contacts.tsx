@@ -5,10 +5,14 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity, ListRenderItemInfo
+  TouchableOpacity, ListRenderItemInfo, Platform
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
+import Icon from '@textile/react-native-icon'
 
+import SearchBar from '../Components/SearchBar'
+import RowSeparator from '../Components/RowSeparator'
+import ListItem from '../Components/ListItem'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import ContactModal from '../Components/ContactModal'
@@ -20,8 +24,10 @@ import UIActions from '../Redux/UIRedux'
 
 import { ContactInfo } from '@textile/react-native-sdk'
 
+import * as s from '../Themes/Constants'
+
 // Styles
-import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/ContactsStyles'
+import styles, { PRODUCT_ITEM_HEIGHT } from './Styles/ContactsStyles'
 
 interface DispatchProps {
   cancelShare: (uuid: string) => void
@@ -30,19 +36,30 @@ interface DispatchProps {
 }
 
 interface StateProps {
-  contacts: { [key: string]: ContactInfo }
+  contacts: ReadonlyArray<ContactInfo>
 }
 
 interface NavProps {
   openDrawer: () => void
+  addContact: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
-class Contacts extends React.Component<Props> {
+interface State {
+  searchString?: string,
+  contactCard: boolean,
+  selectedContact?: string,
+  selectedUsername?: string,
+  selectedAvatar?: string,
+  showInviteContactModal: boolean
+}
+
+class Contacts extends React.Component<Props, State> {
 
   static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
+    const addContact = navigation.getParam('addContact')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item
@@ -54,21 +71,28 @@ class Contacts extends React.Component<Props> {
       </TextileHeaderButtons>
     )
 
+    const headerRight = (
+      <TextileHeaderButtons>
+        <Item iconName='plus' onPress={addContact} />
+      </TextileHeaderButtons>
+    )
+
     return {
       headerTitle: 'Contacts',
-      headerLeft
+      headerLeft,
+      headerRight
     }
   }
 
-  state = {
-    contactCard: false,
-    selectedContact: '',
-    selectedUsername: '',
-    selectedAvatar: undefined,
-    showInviteContactModal: false
-  }
-
   oneScreensWorth = 40
+
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      contactCard: false,
+      showInviteContactModal: false
+    }
+  }
 
   selectContact (contact: ContactInfo) {
     return () => {
@@ -94,46 +118,27 @@ class Contacts extends React.Component<Props> {
     }
   }
 
-  renderInvite () {
-    const dimension = PRODUCT_ITEM_HEIGHT * 0.5
-    return (
-      <TouchableOpacity
-        style={[styles.item, {width: PRODUCT_ITEM_HEIGHT, height: PRODUCT_ITEM_HEIGHT}]}
-        onPress={this.inviteContactRequest()}
-        activeOpacity={0.95}
-      >
-        <Avatar style={{ width: dimension, height: dimension }} icon={'invite'}/>
-        <Text numberOfLines={1} style={styles.username}>Invite</Text>
-      </TouchableOpacity>
-    )
+  updateSearchString = (string?: string) => {
+    this.setState({
+      searchString: string
+    })
   }
 
-  renderRow (row: ListRenderItemInfo<string>) {
+  onPress = (id: string) => {
+    console.log('PRESSED:', id)
+  }
+
+  renderRow = (row: ListRenderItemInfo<ContactInfo>) => {
     const { item } = row
-    if (item === 'add') {
-      return this.renderInvite()
-    }
-    const contact = this.props.contacts[item]
-    const dimension = PRODUCT_ITEM_HEIGHT * 0.5
     return (
-      <TouchableOpacity
-        style={styles.item}
-        onPress={this.selectContact(contact)}
-        activeOpacity={0.95}
-      >
-        <Avatar style={{ width: dimension, height: dimension }} target={contact.avatar} />
-        <Text numberOfLines={1} style={styles.username}>{contact.username}</Text>
-      </TouchableOpacity>
+      <ListItem
+        id={item.id}
+        title={item.username || item.id}
+        renderLeftItem={() => <Avatar style={{ width: 60 }} target={item.avatar} />}
+        renderRightItems={() => [<Icon name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]}
+        onPress={this.onPress}
+      />
     )
-  }
-
-  _getItemLayout = (length: any, index: number) => {
-    const productHeight = PRODUCT_ITEM_HEIGHT + PRODUCT_ITEM_MARGIN
-    return {
-      length: productHeight,
-      offset: productHeight * index,
-      index
-    }
   }
 
   cancelInviteContact () {
@@ -152,7 +157,7 @@ class Contacts extends React.Component<Props> {
     this.props.navigation.openDrawer()
   }
 
-  keyExtractor = (item: string) => item
+  keyExtractor = (item: ContactInfo) => item.id
 
   componentDidMount () {
     this.props.navigation.setParams({
@@ -161,29 +166,42 @@ class Contacts extends React.Component<Props> {
   }
 
   render () {
-    const ids: string[] = Object.keys(this.props.contacts).sort()
+    const allContacts: ReadonlyArray<ContactInfo> = this.props.contacts
+    let data = allContacts
+    if (this.state.searchString !== undefined && this.state.searchString.length > 0) {
+      data = data.filter((contact) => {
+        const searchKey = contact.username || contact.id
+        const index = searchKey.indexOf(this.state.searchString!)
+        return index > -1
+      })
+    }
     return (
       <View style={styles.container}>
         <FlatList
           style={styles.listContainer}
-          data={['add', ...ids]}
+          data={data}
           keyExtractor={this.keyExtractor}
-          /* tslint:disable-next-line */
-          renderItem={this.renderRow.bind(this)}
-          getItemLayout={this._getItemLayout}
-          numColumns={numColumns}
-          windowSize={this.oneScreensWorth}
-          initialNumToRender={this.oneScreensWorth}
-          onEndReachedThreshold={0.55}
+          renderItem={this.renderRow}
+          ItemSeparatorComponent={RowSeparator}
+          ListHeaderComponent={
+            <SearchBar
+              containerStyle={{ backgroundColor: '#FAFCFE' }}
+              inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: s.COLOR_GREY_LIGHT }}
+              iconColor={s.COLOR_GREY_MEDIUM}
+              onTextChanged={this.updateSearchString}
+            />
+          }
+          keyboardShouldPersistTaps='handled'
+          keyboardDismissMode='on-drag'
         />
-        <ContactModal
+        {/* <ContactModal
           isVisible={this.state.contactCard}
           peerId={this.state.selectedContact}
           username={this.state.selectedUsername}
           avatar={this.state.selectedAvatar}
           navigateToThread={this.navigateToThread()}
           close={this.closeModal()}
-        />
+        /> */}
         <InviteContactModal
           isVisible={this.state.showInviteContactModal}
           cancel={this.cancelInviteContact()}
@@ -194,8 +212,17 @@ class Contacts extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const map: { [key: string]: ContactInfo } = {}
-  const contacts = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo }), map)
+  const contacts = state.contacts.contacts.slice().sort((a, b) => {
+    const aSortKey = a.username || a.id
+    const bSortKey = b.username || b.id
+    if (aSortKey < bSortKey) {
+      return -1
+    } else if (aSortKey > bSortKey) {
+      return 1
+    } else {
+      return 0
+    }
+  })
   return {
     contacts
   }

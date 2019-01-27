@@ -40,7 +40,6 @@
 		93C00540216BD9B6007786A5 /* libSMXCrashlytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0053D216BD99A007786A5 /* libSMXCrashlytics.a */; };
 		93C005D7216C15F7007786A5 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C005CE216C15E9007786A5 /* libRNBackgroundTimer.a */; };
 		93C005DE216C1FE1007786A5 /* BentonSans-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005DA216C1FE1007786A5 /* BentonSans-Light.otf */; };
-		93C005DF216C1FE1007786A5 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005DB216C1FE1007786A5 /* icomoon.ttf */; };
 		93C005E0216C1FE1007786A5 /* BentonSans-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005DC216C1FE1007786A5 /* BentonSans-Bold.otf */; };
 		93C005E1216C1FE1007786A5 /* BentonSans.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005DD216C1FE1007786A5 /* BentonSans.otf */; };
 		93C005F1216C2034007786A5 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005E2216C2033007786A5 /* Octicons.ttf */; };
@@ -56,6 +55,7 @@
 		93C00609216C3873007786A5 /* libRNVersionNumber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00606216C385D007786A5 /* libRNVersionNumber.a */; };
 		93C0060B216C4381007786A5 /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0060A216C4381007786A5 /* Mobile.framework */; };
 		93C00620216D3334007786A5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0061F216D325D007786A5 /* libRCTCameraRoll.a */; };
+		93F1804F21FCE11C00883267 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1804E21FCE11B00883267 /* icomoon.ttf */; };
 		A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */; };
 		A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -529,6 +529,7 @@
 		93C0060A216C4381007786A5 /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mobile.framework; path = "../node_modules/@textile/go-mobile/ios/Mobile.framework"; sourceTree = "<group>"; };
 		93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93C00621216D385B007786A5 /* Textile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Textile.entitlements; path = Textile/Textile.entitlements; sourceTree = "<group>"; };
+		93F1804E21FCE11B00883267 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = "../node_modules/@textile/react-native-icon/icomoon_gen/fonts/icomoon.ttf"; sourceTree = "<group>"; };
 		A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
 		A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
 		A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
@@ -776,6 +777,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				93F1804E21FCE11B00883267 /* icomoon.ttf */,
 				A2588A0A21F3F7A0007A1B62 /* NativeViews */,
 				13B07FAE1A68108700A75B9A /* Textile */,
 				93C005D9216C1FB9007786A5 /* Resources */,
@@ -1574,6 +1576,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93F1804F21FCE11C00883267 /* icomoon.ttf in Resources */,
 				93C005F2216C2034007786A5 /* Zocial.ttf in Resources */,
 				93C005F5216C2034007786A5 /* Entypo.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
@@ -1588,7 +1591,6 @@
 				93C005FB216C2034007786A5 /* EvilIcons.ttf in Resources */,
 				93C005E1216C1FE1007786A5 /* BentonSans.otf in Resources */,
 				93C005FD216C2034007786A5 /* MaterialCommunityIcons.ttf in Resources */,
-				93C005DF216C1FE1007786A5 /* icomoon.ttf in Resources */,
 				93C005F6216C2034007786A5 /* FontAwesome.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
