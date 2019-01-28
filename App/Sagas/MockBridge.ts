@@ -1,6 +1,7 @@
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import AccountActions from '../Redux/AccountRedux'
+import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import MockBridgeActions from '../Redux/MockBridge'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
@@ -173,7 +174,6 @@ export function * newError () {
     }
   }
 }
-
 
 function displayNotification (message: string, title?: string) {
   RNPushNotification.localNotification({

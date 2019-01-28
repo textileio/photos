@@ -2,7 +2,6 @@
 
 exports[`preferences stories initial state should match snapshot 1`] = `
 Object {
-  "onboarded": false,
   "services": Object {
     "ACCOUNT_PEER_JOINED": Object {
       "status": false,

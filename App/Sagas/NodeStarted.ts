@@ -8,7 +8,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { getSDKVersion } from './NodeLifecycle'
 
 export function * onNodeStarted () {
-  while (yield take([getType(TextileNodeActions.startNodeSuccess), getType(PreferencesActions.onboardedSuccess)])) {
+  while (yield take([getType(TextileNodeActions.startNodeSuccess), getType(AccountActions.onboardedSuccess)])) {
     try {
       yield put(AccountActions.refreshProfileRequest())
       yield put(AccountActions.refreshPeerIdRequest())
