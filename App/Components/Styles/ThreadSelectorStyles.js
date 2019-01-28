@@ -34,6 +34,6 @@ export default StyleSheet.create({
   },
   createThreadText: {
     color: '#BBB',
-    fontFamily: 'BentonSans'
+    fontFamily: 'Biotif-Regular'
   }
 })

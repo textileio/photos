@@ -12,9 +12,9 @@ export const COLOR_BRAND_PINK = '#FFB6D5'
 export const COLOR_GREY_LIGHT = '#e5e5e5'
 export const COLOR_GREY_MEDIUM = '#c6c6c6'
 
-export const FONT_FAMILY_LIGHT = 'BentonSans-Light'
-export const FONT_FAMILY_REGULAR = 'BentonSans'
-export const FONT_FAMILY_BOLD = 'BentonSans-Bold'
+export const FONT_FAMILY_REGULAR = 'Biotif-Regular'
+export const FONT_FAMILY_MEDIUM = 'Biotif-Medium'
+export const FONT_FAMILY_BOLD = 'Biotif-Bold'
 
 export const FONT_SIZE_SMALL = 11
 export const FONT_SIZE_REGULAR = 14
@@ -40,7 +40,7 @@ export const H1: TextStyle = {
 }
 
 export const H2: TextStyle = {
-  fontFamily: FONT_FAMILY_BOLD,
+  fontFamily: FONT_FAMILY_MEDIUM,
   fontSize: FONT_SIZE_LARGE,
   color: COLOR_FONT_DARK_ON_LIGHT_DARK
 }

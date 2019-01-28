@@ -34,6 +34,6 @@ export default StyleSheet.create({
   },
   overlayText: {
     color: 'white',
-    fontFamily: 'BentonSans'
+    fontFamily: 'Biotif-Regular'
   }
 })

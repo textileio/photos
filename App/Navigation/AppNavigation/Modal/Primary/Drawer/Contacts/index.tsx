@@ -1,12 +1,14 @@
 import { createStackNavigator } from 'react-navigation'
 
 import Contacts from '../../../../../../Containers/Contacts'
+import Contact from '../../../../../../Containers/Contact'
 
 import styles, { headerTintColor } from '../../../../../Styles/NavigationStyles'
 
 const nav = createStackNavigator(
   {
-    Contacts
+    Contacts,
+    Contact
   },
   {
     headerMode: 'float',

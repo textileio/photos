@@ -85,7 +85,7 @@ export default StyleSheet.create({
     height: 16
   },
   threadsTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#9b9b9b',
     paddingBottom: 16

@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View } from 'react-native'
+import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
 import TextileImage from './TextileImage'
-import Icon from './Icon'
 import * as s from '../Themes/Constants'
 
 interface OwnProps {

@@ -10,7 +10,7 @@ const BUTTON: ViewStyle = {
 }
 
 const BUTTON_TEXT: TextStyle = {
-  fontFamily: 'BentonSans',
+  fontFamily: 'Biotif-Regular',
   fontSize: 18,
   color: 'white',
   textAlign: 'center'

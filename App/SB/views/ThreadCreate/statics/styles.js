@@ -56,7 +56,7 @@ export default StyleSheet.create({
     color: '#2625ff'
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 34,
     lineHeight: 34,
     marginBottom: 10

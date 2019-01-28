@@ -139,7 +139,7 @@ class AddCaptionScreen extends React.Component<Props> {
         <Image
           source={{ uri: sourceUri }}
           resizeMode={'cover'}
-          style={{...styles.image, width: 70, height: 70}}
+          style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}
         />
       )
     } else if (image && (image as ThreadFilesInfo).target) {
@@ -150,7 +150,7 @@ class AddCaptionScreen extends React.Component<Props> {
           index={filesInfo.files[0].index}
           forMinWidth={70}
           resizeMode={'cover'}
-          style={{...styles.image, width: 70, height: 70}}
+          style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}
         />
       )
     }

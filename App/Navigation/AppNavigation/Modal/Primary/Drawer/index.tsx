@@ -21,8 +21,8 @@ const drawer = createDrawerNavigator(
     contentComponent: Drawer,
     contentOptions: {
       labelStyle: {
-        fontFamily: s.FONT_FAMILY_REGULAR,
-        fontWeight: 'normal',
+        fontFamily: 'Biotif',
+        fontWeight: '500',
         fontSize: s.FONT_SIZE_MEDIUM
       },
       activeLabelStyle: {

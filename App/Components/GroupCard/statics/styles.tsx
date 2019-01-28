@@ -65,7 +65,7 @@ export default StyleSheet.create({
     flex: 1
   },
   groupName: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     lineHeight: ROW_HEIGHT,
     color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM

@@ -16,7 +16,7 @@ export default StyleSheet.create({
     marginLeft: 11
   },
   text: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12
   },
   link: {

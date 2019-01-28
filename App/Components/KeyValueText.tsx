@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, TextStyle, TextProps } from 'react-native'
 
 const KEY: TextStyle = {
-  fontFamily: 'BentonSans',
+  fontFamily: 'Biotif-Bold',
   fontSize: 14,
   lineHeight: 16
 }
@@ -11,7 +11,7 @@ const VALUE: TextStyle = {
   flex: 1,
   flexDirection: 'row',
   flexWrap: 'wrap',
-  fontFamily: 'BentonSans-Light',
+  fontFamily: 'Biotif-Regular',
   fontSize: 14,
   lineHeight: 16,
   overflow: 'visible',

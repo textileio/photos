@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import Redux, { Dispatch } from 'redux'
-import { View, StatusBar, ActivityIndicator, Platform, PermissionsAndroid, Text } from 'react-native'
+import { View, StatusBar, Platform, PermissionsAndroid, Text } from 'react-native'
 import Modal from 'react-native-modal'
-import { Overlay } from 'react-native-elements'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
@@ -15,7 +14,6 @@ import MigrationScreen from '../Containers/MigrationScreen'
 import styles from './Styles/RootContainerStyles'
 
 interface StateProps {
-  showOverlay: boolean
   showMigrationModal: boolean
   monitorLocation: boolean
   verboseUi: boolean
@@ -65,17 +63,9 @@ class RootContainer extends Component<StateProps & DispatchProps> {
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle={barStyle} />
-        <AppNavigation ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }} />
-        <Overlay
-          isVisible={this.props.showOverlay}
-          windowBackgroundColor={'rgba(0, 0, 0, .1)'}
-          overlayBackgroundColor={'rgba(0, 0, 0, .8)'}
-          borderRadius={8}
-          width={'auto'}
-          height={'auto'}
-        >
-          <ActivityIndicator size={'large'} color={'#ffffff'} />
-        </Overlay>
+        <AppNavigation
+          ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }}
+        />
         {this.props.verboseUi &&
         <View style={styles.bottomOverlay} >
           <Text style={styles.overlayText}>{this.props.overlayMessage}</Text>
@@ -97,7 +87,6 @@ const mapStateToProps = (state: RootState): StateProps => {
   const overlayMessage = state.textileNode.appStateUpdate + ': ' + appState + ' | ' + nodeStatus
 
   return {
-    showOverlay: state.auth.processing,
     showMigrationModal: state.migration.status === 'processing',
     monitorLocation: state.preferences.services.backgroundLocation.status,
     verboseUi: state.preferences.verboseUi,

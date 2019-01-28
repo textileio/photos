@@ -24,7 +24,7 @@ export default StyleSheet.create({
   itemText: {
     flex: 1,
     paddingRight: 24,
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14
   },
   itemBox: {

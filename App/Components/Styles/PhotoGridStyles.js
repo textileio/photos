@@ -116,7 +116,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   noPhotos: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     padding: 20,
     alignSelf: 'center',
     color: Colors.steel,

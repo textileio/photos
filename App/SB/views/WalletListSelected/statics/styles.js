@@ -41,12 +41,12 @@ export default StyleSheet.create({
     height: 20
   },
   toolbarTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 30,
     paddingTop: 23
   },
   fixedDate: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     color: '#4a4a4a',
     paddingLeft: 10,
@@ -57,7 +57,7 @@ export default StyleSheet.create({
     ...BentonSansBold()
   },
   text: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14
   },
   link: {

@@ -25,7 +25,7 @@ export default StyleSheet.create({
     justifyContent: 'space-around'
   },
   message: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: '#9b9b9b',
     paddingTop: 20,
     fontSize: 14,

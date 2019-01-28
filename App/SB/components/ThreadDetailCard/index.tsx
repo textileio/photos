@@ -3,12 +3,13 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import moment from 'moment'
+import Icon from '@textile/react-native-icon'
+
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 import Avatar from '../../../Components/Avatar'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
-import Icon from '../../../Components/Icon'
 import Colors from '../../../Themes/Colors'
 import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import KeyValueText from '../../../Components/KeyValueText'
@@ -115,7 +116,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader} >
-          <Avatar style={styles.cardAvatar} target={photoAvatar} />
+          <Avatar style={{ width: 18 }} target={photoAvatar} />
 
           <Text style={styles.cardAction}>
             <Text style={styles.cardActionName}>{photoUsername}</Text> added a photo
@@ -136,7 +137,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
               fileIndex={photo.files[0].index}
               showPreview={true}
               forMinWidth={imageWidth}
-              style={{...styles.image, width: imageWidth, height: imageHeight}}
+              style={{ width: imageWidth, height: imageHeight}}
               resizeMode={'cover'}
             />
           </View>

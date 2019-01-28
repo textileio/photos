@@ -1,8 +1,8 @@
 import React from 'react'
-import Icon from '../Components/Icon'
 import { connect } from 'react-redux'
 import { Item } from 'react-navigation-header-buttons'
 import ActionSheet from 'react-native-actionsheet'
+import Icon from '@textile/react-native-icon'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
 import { View, Text, Image, Alert, Dimensions, TouchableOpacity } from 'react-native'
