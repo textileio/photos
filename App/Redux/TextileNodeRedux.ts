@@ -82,7 +82,7 @@ interface TextileNodeState {
     readonly error?: string
   }
   readonly refreshingMessages: boolean
-  readonly startupComplete: boolean
+  readonly reduxReady: boolean
   readonly sdkVersion?: string
 }
 
@@ -101,14 +101,14 @@ export const initialState: TextileNodeState = {
   nodeState: {
     state: NodeState.nonexistent
   },
-  startupComplete: false,
+  reduxReady: false,
   refreshingMessages: false
 }
 
 export function reducer (state: TextileNodeState = initialState, action: TextileNodeAction): TextileNodeState {
   switch (action.type) {
     case getType(actions.startupComplete): {
-      return { ...state, startupComplete: true }
+      return { ...state, reduxReady: true }
     }
     case getType(actions.appStateChange):
       return { ...state, appState: action.payload.newState, appStateUpdate: getHMS() }
@@ -150,7 +150,7 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
 }
 
 export const TextileNodeSelectors = {
-  started: (state: RootState) => state.textileNode.started,
+  reduxStartupComplete: (state: RootState) => state.textileNode.reduxReady,
   appState: (state: RootState) => state.textileNode.appState,
   nodeState: (state: RootState) => state.textileNode.nodeState.state,
   online: (state: RootState) => state.textileNode.online,

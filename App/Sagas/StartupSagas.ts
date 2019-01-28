@@ -1,9 +1,7 @@
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import { put, all } from 'redux-saga/effects'
+import { put, all, call } from 'redux-saga/effects'
 // process STARTUP actions
-export function * startup (): IterableIterator<void> {
+export function * startup (): IterableIterator<any> {
   // Dispatch actions you want on STARTUP
-  return all([
-    put(TextileNodeActions.startupComplete())
-  ])
+  yield put(TextileNodeActions.startupComplete())
 }
