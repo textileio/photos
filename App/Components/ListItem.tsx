@@ -7,8 +7,8 @@ interface Props {
   id: string
   title: string
   subtitle?: string
-  renderLeftItem?: () => JSX.Element
-  renderRightItems?: () => JSX.Element[]
+  leftItem?: JSX.Element
+  rightItems?: JSX.Element[]
   onPress?: (id: string) => void
 }
 
@@ -29,8 +29,8 @@ class ListItem extends React.PureComponent<Props> {
     return (
       <TouchableOpacity delayPressIn={100} onPress={this.onPress}>
         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 20, paddingRight: 20, paddingTop: 11, paddingBottom: 11 }}>
-          {this.props.renderLeftItem &&
-            this.props.renderLeftItem()
+          {this.props.leftItem &&
+            this.props.leftItem
           }
           <View style={{ flex: 1, justifyContent: 'center', marginLeft: 11 }}>
             <Text style={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_MEDIUM, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM }}>{this.props.title}</Text>
@@ -38,8 +38,8 @@ class ListItem extends React.PureComponent<Props> {
               <Text style={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_LIGHT }}>{this.props.subtitle}</Text>
             }
           </View>
-          {this.props.renderRightItems &&
-            this.spliceRightItems(this.props.renderRightItems())
+          {this.props.rightItems &&
+            this.spliceRightItems(this.props.rightItems)
           }
         </View>
       </TouchableOpacity>

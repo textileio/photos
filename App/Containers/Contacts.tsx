@@ -96,14 +96,14 @@ class Contacts extends React.Component<Props, State> {
 
   renderRow = (row: ListRenderItemInfo<ContactInfo>) => {
     const { item } = row
-    const leftItem = () => <Avatar style={{ width: 50 }} target={item.avatar} />
-    const rightItems = () => [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
+    const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
+    const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
     return (
       <ListItem
         id={item.id}
         title={item.username || item.id}
-        renderLeftItem={leftItem}
-        renderRightItems={rightItems}
+        leftItem={leftItem}
+        rightItems={rightItems}
         onPress={this.onPress}
       />
     )
