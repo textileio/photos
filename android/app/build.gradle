@@ -190,6 +190,8 @@ dependencies {
     compile project(':react-native-fabric')
     compile project(':react-native-background-timer')
     compile project(':react-native-version-number')
+    compile project(':react-native-gesture-handler')
+    compile project(':react-native-screens')
     compile project(':textilego')
 }
 

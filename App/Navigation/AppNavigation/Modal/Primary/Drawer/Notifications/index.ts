@@ -1,8 +1,8 @@
 import { createStackNavigator } from 'react-navigation'
 
-import Notifications from '../../../../../Containers/FeedList'
+import Notifications from '../../../../../../Containers/FeedList'
 
-import styles, { headerTintColor } from '../../../../Styles/NavigationStyles'
+import styles, { headerTintColor } from '../../../../../Styles/NavigationStyles'
 
 const nav = createStackNavigator(
   {
@@ -10,7 +10,7 @@ const nav = createStackNavigator(
   },
   {
     headerMode: 'float',
-    navigationOptions: {
+    defaultNavigationOptions: {
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
       headerTintColor

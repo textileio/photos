@@ -25,6 +25,8 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		551C262884FA47A8B7D59F27 /* libRNScreenControl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DEE29BED9A54C45A984E8CC /* libRNScreenControl.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9356E1EA21F8FEFD00F6FACA /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9356E1E121F8FEDA00F6FACA /* libRNGestureHandler.a */; };
+		9356E2C921F905A200F6FACA /* libRNScreens.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9356E2C221F9059000F6FACA /* libRNScreens.a */; };
 		93C00481216B12A1007786A5 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00480216B1276007786A5 /* libRNBackgroundFetch.a */; };
 		93C00482216B12C8007786A5 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00470216B1066007786A5 /* TSBackgroundFetch.framework */; };
 		93C00487216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C00485216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m */; };
@@ -320,6 +322,20 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		9356E1E021F8FEDA00F6FACA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9356E1AD21F8FEDA00F6FACA /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNGestureHandler;
+		};
+		9356E2C121F9059000F6FACA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9356E28B21F9058F00F6FACA /* RNScreens.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNScreens;
+		};
 		93C0047F216B1276007786A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */;
@@ -481,6 +497,8 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		9356E1AD21F8FEDA00F6FACA /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
+		9356E28B21F9058F00F6FACA /* RNScreens.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNScreens.xcodeproj; path = "../node_modules/react-native-screens/ios/RNScreens.xcodeproj"; sourceTree = "<group>"; };
 		93C00470216B1066007786A5 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = "<group>"; };
 		93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		93C00485216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
@@ -531,6 +549,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9356E2C921F905A200F6FACA /* libRNScreens.a in Frameworks */,
+				9356E1EA21F8FEFD00F6FACA /* libRNGestureHandler.a in Frameworks */,
 				93C00620216D3334007786A5 /* libRCTCameraRoll.a in Frameworks */,
 				93C00609216C3873007786A5 /* libRNVersionNumber.a in Frameworks */,
 				93C005D7216C15F7007786A5 /* libRNBackgroundTimer.a in Frameworks */,
@@ -714,6 +734,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				9356E28B21F9058F00F6FACA /* RNScreens.xcodeproj */,
+				9356E1AD21F8FEDA00F6FACA /* RNGestureHandler.xcodeproj */,
 				93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */,
 				93C00600216C385D007786A5 /* RNVersionNumber.xcodeproj */,
 				93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */,
@@ -773,6 +795,22 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* Textile.app */,
 				00E356EE1AD99517003FC87E /* TextileTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9356E1AE21F8FEDA00F6FACA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9356E1E121F8FEDA00F6FACA /* libRNGestureHandler.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9356E28C21F9058F00F6FACA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9356E2C221F9059000F6FACA /* libRNScreens.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1082,12 +1120,20 @@
 					ProjectRef = 93C00499216B2666007786A5 /* RNFS.xcodeproj */;
 				},
 				{
+					ProductGroup = 9356E1AE21F8FEDA00F6FACA /* Products */;
+					ProjectRef = 9356E1AD21F8FEDA00F6FACA /* RNGestureHandler.xcodeproj */;
+				},
+				{
 					ProductGroup = 93C004A4216BAD0C007786A5 /* Products */;
 					ProjectRef = 93C004A3216BAD0C007786A5 /* RNImagePicker.xcodeproj */;
 				},
 				{
 					ProductGroup = A27552C921F28BEC00C603F5 /* Products */;
 					ProjectRef = 2BBDF1D28CBB43F1A775D4FA /* RNScreenControl.xcodeproj */;
+				},
+				{
+					ProductGroup = 9356E28C21F9058F00F6FACA /* Products */;
+					ProjectRef = 9356E28B21F9058F00F6FACA /* RNScreens.xcodeproj */;
 				},
 				{
 					ProductGroup = A2150F0321F3E0C30075B7FF /* Products */;
@@ -1365,6 +1411,20 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9356E1E121F8FEDA00F6FACA /* libRNGestureHandler.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGestureHandler.a;
+			remoteRef = 9356E1E021F8FEDA00F6FACA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9356E2C221F9059000F6FACA /* libRNScreens.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNScreens.a;
+			remoteRef = 9356E2C121F9059000F6FACA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		93C00480216B1276007786A5 /* libRNBackgroundFetch.a */ = {

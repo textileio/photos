@@ -9,18 +9,19 @@ import {
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 
-import Avatar from './Avatar'
-import ContactModal from './ContactModal'
-import InviteContactModal from './InviteContactModal'
+import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
+import Avatar from '../Components/Avatar'
+import ContactModal from '../Components/ContactModal'
+import InviteContactModal from '../Components/InviteContactModal'
 
-import { RootAction } from '../Redux/Types'
+import { RootAction, RootState } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import UIActions from '../Redux/UIRedux'
 
 import { ContactInfo } from '@textile/react-native-sdk'
 
 // Styles
-import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/ContactGridStyles'
+import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/ContactsStyles'
 
 interface DispatchProps {
   cancelShare: (uuid: string) => void
@@ -28,11 +29,37 @@ interface DispatchProps {
   retryShare: (uuid: string) => void
 }
 
-interface OwnProps {
-  contacts: {[key: string]: ContactInfo}
+interface StateProps {
+  contacts: { [key: string]: ContactInfo }
 }
 
-class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationScreenProps<{}>> {
+interface NavProps {
+  openDrawer: () => void
+}
+
+type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
+
+class Contacts extends React.Component<Props> {
+
+  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+    const openDrawer = navigation.getParam('openDrawer')
+    const headerLeft = (
+      <TextileHeaderButtons left={true}>
+        <Item
+          title='Account'
+          onPress={openDrawer}
+          ButtonElement={<Avatar style={{ width: 24, height: 24 }} self={true} />}
+          buttonWrapperStyle={{ margin: 11 }}
+        />
+      </TextileHeaderButtons>
+    )
+
+    return {
+      headerTitle: 'Contacts',
+      headerLeft
+    }
+  }
+
   state = {
     contactCard: false,
     selectedContact: '',
@@ -121,7 +148,17 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
     }
   }
 
+  openDrawer = () => {
+    this.props.navigation.openDrawer()
+  }
+
   keyExtractor = (item: string) => item
+
+  componentDidMount () {
+    this.props.navigation.setParams({
+      openDrawer: this.openDrawer
+    })
+  }
 
   render () {
     const ids: string[] = Object.keys(this.props.contacts).sort()
@@ -156,6 +193,14 @@ class ContactGrid extends React.Component<OwnProps & DispatchProps & NavigationS
   }
 }
 
+const mapStateToProps = (state: RootState): StateProps => {
+  const map: { [key: string]: ContactInfo } = {}
+  const contacts = state.contacts.contacts.reduce((map, contactInfo) => ({ ...map, [contactInfo.id]: contactInfo }), map)
+  return {
+    contacts
+  }
+}
+
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
@@ -166,4 +211,4 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   }
 }
 
-export default connect(undefined, mapDispatchToProps)(ContactGrid)
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts)

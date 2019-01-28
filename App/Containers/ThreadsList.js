@@ -5,9 +5,10 @@ import { Item } from 'react-navigation-header-buttons'
 import ActionSheet from 'react-native-actionsheet'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 
-import { View, Text, Image, Alert, Dimensions } from 'react-native'
+import { View, Text, Image, Alert, Dimensions, TouchableOpacity } from 'react-native'
 import PhotoStream from '../Components/PhotoStream'
 import InviteContactModal from '../Components/InviteContactModal'
+import Avatar from '../Components/Avatar'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
@@ -30,7 +31,17 @@ class ThreadsList extends React.PureComponent {
     const showWalletPicker = () => params.showWalletPicker(params.threadId)
     const headerLeft = (
       <TextileHeaderButtons left>
-        <Item title='Back' iconName='arrow-left' onPress={() => navigation.goBack()} />
+        {params.threadId &&
+          <Item title='Back' iconName='arrow-left' onPress={() => navigation.goBack()} />
+        }
+        {!params.threadId &&
+          <Item
+            title='Account'
+            onPress={params.openDrawer}
+            ButtonElement={<Avatar style={{ width: 24, height: 24 }} self={true} />}
+            buttonWrapperStyle={{ margin: 11 }}
+          />
+        }
       </TextileHeaderButtons>
     )
     const headerRight = (
@@ -41,7 +52,7 @@ class ThreadsList extends React.PureComponent {
       </TextileHeaderButtons>
     )
     return {
-      headerLeft: params.threadId ? headerLeft : undefined,
+      headerLeft,
       headerTitle: params.title,
       headerRight
     }
@@ -60,7 +71,8 @@ class ThreadsList extends React.PureComponent {
       online: this.props.online,
       inviteContactRequest: this.inviteContactRequest,
       showWalletPicker: this.props.showWalletPicker,
-      showActionSheet: this.showActionSheet
+      showActionSheet: this.showActionSheet,
+      openDrawer: this.openDrawer
     })
   }
 
@@ -162,6 +174,10 @@ class ThreadsList extends React.PureComponent {
     } else if (index === 1) {
       this.props.leaveThread(this.props.threadId)
     }
+  }
+
+  openDrawer = () => {
+    this.props.navigation.openDrawer()
   }
 
   render () {
