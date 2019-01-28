@@ -116,7 +116,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader} >
-          <Avatar style={styles.cardAvatar} target={photoAvatar} />
+          <Avatar style={{ width: 18 }} target={photoAvatar} />
 
           <Text style={styles.cardAction}>
             <Text style={styles.cardActionName}>{photoUsername}</Text> added a photo
@@ -137,7 +137,7 @@ class ThreadDetailCard extends React.PureComponent<OwnProps & StateProps & Dispa
               fileIndex={photo.files[0].index}
               showPreview={true}
               forMinWidth={imageWidth}
-              style={{...styles.image, width: imageWidth, height: imageHeight}}
+              style={{ width: imageWidth, height: imageHeight}}
               resizeMode={'cover'}
             />
           </View>

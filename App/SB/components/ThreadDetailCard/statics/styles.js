@@ -24,11 +24,6 @@ export default StyleSheet.create({
     marginTop: 8,
     marginBottom: 8
   },
-  cardAvatar: {
-    justifyContent: 'center',
-    width: 18,
-    height: 18
-  },
   cardAction: {
     fontFamily: 'Biotif-Regular',
     fontSize: 14,
@@ -143,10 +138,5 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0
-  },
-  image: {
-    alignItems: 'center',
-    padding: 0,
-    margin: 0
   }
 })
