@@ -26,8 +26,14 @@ const actions = {
   nodeOnline: createAction('NODE_ONLINE', (resolve) => {
     return () => resolve()
   }),
-  ignorePhotoRequest: createAction('IGNORE_PHOTO_REQUEST', (resolve) => {
+  ignoreFileRequest: createAction('IGNORE_FILE_REQUEST', (resolve) => {
     return (blockId: string) => resolve({ blockId })
+  }),
+  ignoreFileSuccess: createAction('IGNORE_FILE_SUCCESS', (resolve) => {
+    return () => resolve()
+  }),
+  ignoreFileError: createAction('IGNORE_FILE_ERROR', (resolve) => {
+    return (error: any) => resolve({ error })
   }),
   refreshMessagesRequest: createAction('REFRESH_MESSAGES_REQUEST', (resolve) => {
     return () => resolve()
@@ -136,6 +142,7 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
 }
 
 export const TextileNodeSelectors = {
+  started: (state: RootState) => state.textileNode.started,
   appState: (state: RootState) => state.textileNode.appState,
   nodeState: (state: RootState) => state.textileNode.nodeState.state,
   online: (state: RootState) => state.textileNode.online,

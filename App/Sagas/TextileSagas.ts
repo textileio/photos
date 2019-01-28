@@ -9,36 +9,28 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
-import { delay } from 'redux-saga'
-import { call, put, select, take } from 'redux-saga/effects'
+import { Share, PermissionsAndroid, Platform } from 'react-native'
+import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import {
-  overview,
-  Overview,
   contacts,
   ContactInfo,
-  checkCafeMessages,
-  addThreadIgnore,
   addThreadLike
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
-import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
-import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import ContactsActions from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
-import { ActionType, getType } from 'typesafe-actions'
+import { ActionType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
-import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
 import { SharedImage } from '../Models/TextileTypes'
@@ -99,41 +91,6 @@ export function * refreshContacts () {
 
 export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
   yield call(refreshContacts)
-}
-
-export function * initializeAppState () {
-    yield take(getType(StartupActions.startup))
-    const defaultAppState = yield select(TextileNodeSelectors.appState)
-    let queriedAppState = defaultAppState
-    while (queriedAppState.match(/default|unknown/)) {
-      yield delay(10)
-      const currentAppState = yield call(() => AppState.currentState)
-      queriedAppState = currentAppState || 'unknown'
-    }
-    yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
-}
-
-export function * refreshMessages () {
-  while (yield take(getType(TextileNodeActions.refreshMessagesRequest))) {
-    try {
-      yield call(checkCafeMessages)
-      yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
-      yield call(logNewEvent, 'Refresh messages', 'Checked offline messages')
-    } catch (error) {
-      yield call(logNewEvent, 'Refresh messages', error.message, true)
-      yield put(TextileNodeActions.refreshMessagesFailure(error))
-    }
-  }
-}
-
-export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.ignorePhotoRequest>) {
-  const { blockId } = action.payload
-  try {
-    yield call(NavigationService.goBack)
-    yield call(addThreadIgnore, blockId)
-  } catch (error) {
-    // do nothing new for now
-  }
 }
 
 export function * synchronizeNativeUploads() {

@@ -143,7 +143,7 @@ const mapDispatchToProps = (dispatch) => {
     shareImage: (image) => { dispatch(UIActions.updateSharingPhotoImage(image)) },
     shareToThread: (threadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) },
     shareByLink: (path) => { dispatch(UIActions.shareByLink(path)) },
-    ignorePhoto: (threadId, blockId) => { dispatch(TextileNodeActions.ignorePhotoRequest(threadId, blockId)) }
+    ignorePhoto: (threadId, blockId) => { dispatch(TextileNodeActions.ignoreFileRequest(threadId, blockId)) }
   }
 }
 

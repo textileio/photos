@@ -4,7 +4,6 @@ import { Dispatch } from 'redux'
 
 /* ------------- Types ------------- */
 
-import AccountActions from '../Redux/AccountRedux'
 import StartupActions from '../Redux/StartupRedux'
 import StorageActions from '../Redux/StorageRedux'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
@@ -20,14 +19,7 @@ import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
 
-import accountSaga from './Account'
-
-import { mockEvents } from './MockBridge'
 import { startup } from './StartupSagas'
-
-import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } from './NodeLifecycle'
-import { onNodeStarted } from './NodeStarted'
-import { onNodeOnline, nodeOnlineSaga } from './NodeOnline'
 
 import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration } from './Migration'
 
@@ -94,9 +86,6 @@ import {
   refreshContacts,
   addFriends,
   addPhotoLike,
-  initializeAppState,
-  refreshMessages,
-  ignorePhoto,
   cameraPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
@@ -105,16 +94,22 @@ import {
   updateServices
 } from './TextileSagas'
 
+/* ------------- SDK Imports ------------- */
+
+import accountSaga from './Account'
+import * as MockBridge from './MockBridge'
+import * as NodeLifecycle from './NodeLifecycle'
+import * as NodeStarted from './NodeStarted'
+import * as NodeOnline from './NodeOnline'
+import * as TextileSDK from './SDKSagas'
+
+/* ------------- End SDK Imports ------------- */
+
 /* ------------- Connect Types To Sagas ------------- */
 
 export default function * root (dispatch: Dispatch) {
   yield all([
-    call(accountSaga),
 
-    call(manageNode),
-    call(handleCreateNodeRequest, dispatch),
-    call(onNodeStarted),
-    call(onNodeOnline),
     call(monitorNewThreadActions),
 
     call(startMonitoringExistingUploads),
@@ -124,14 +119,10 @@ export default function * root (dispatch: Dispatch) {
     call(handleCancelMigration),
     call(handleRetryMigration, dispatch),
 
-    call(mockEvents),
-
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
 
     // just for logging purposes
-    takeLatest(getType(TriggersActions.backgroundFetch), backgroundFetch),
-    takeLatest(getType(TriggersActions.locationUpdate), locationUpdate),
     takeEvery(getType(ProcessingImagesActions.error), handleImageProcessingError),
 
     // profile photo
@@ -159,14 +150,10 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
 
-    takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
+    takeEvery(getType(TextileNodeActions.ignoreFileRequest), TextileSDK.ignoreFile),
 
-    call(refreshMessages),
     // check for new images on camera roll
     call(refreshLocalImages),
-
-    // If the user clicked any invites before creating an account, this will now flush them...
-    takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
 
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
@@ -204,8 +191,20 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
 
-    takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
-
-    initializeAppState()
+    /* ------------- SDK ------------- */
+    call(NodeStarted.onNodeStarted),
+    call(NodeOnline.onNodeOnline),
+    call(accountSaga),
+    call(NodeLifecycle.manageNode),
+    call(NodeLifecycle.handleCreateNodeRequest, dispatch),
+    call(TextileSDK.refreshMessages),
+    call(MockBridge.mockEvents),
+    takeLatest(getType(TriggersActions.backgroundFetch), NodeLifecycle.backgroundFetch),
+    takeLatest(getType(TriggersActions.locationUpdate), NodeLifecycle.locationUpdate),
+    // If the user clicked any invites before creating an account, this will now flush them...
+    takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
+    takeLatest(getType(TextileNodeActions.nodeOnline), NodeOnline.nodeOnlineSaga),
+    TextileSDK.initializeAppState()
+    /* ------------- End SDK ------------- */
   ])
 }

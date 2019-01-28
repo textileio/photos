@@ -16,6 +16,7 @@ import { reducer as storageReducer } from './StorageRedux'
 import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as migrationReducer } from './MigrationRedux'
+import { reducer as sdkNoPersistReducer } from './SDKNoPersistRedux'
 
 export default combineReducers({
   account: accountReducer,
@@ -33,5 +34,6 @@ export default combineReducers({
   storage: storageReducer,
   startup: startupReducer,
   deviceLogs: deviceLogsReducer,
-  migration: migrationReducer
+  migration: migrationReducer,
+  sdkNoPersist: sdkNoPersistReducer
 })
