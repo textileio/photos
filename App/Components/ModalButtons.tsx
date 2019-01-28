@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   ViewStyle,
   TextStyle,
-  StyleSheet
+  StyleSheet,
+  StyleProp
 } from 'react-native'
 
 const styles = StyleSheet.create({
@@ -44,7 +45,7 @@ interface ScreenProps {
   continue: () => void
   cancelText?: string
   continueText?: string
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
 }
 
 const ModalButtons = (props: ScreenProps) => {
