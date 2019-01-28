@@ -4,7 +4,8 @@ import {
   View,
   FlatList,
   ListRenderItemInfo,
-  Keyboard
+  Keyboard,
+  ViewStyle
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
@@ -19,8 +20,10 @@ import InviteContactModal from '../Components/InviteContactModal'
 import { RootState } from '../Redux/Types'
 import * as s from '../Themes/Constants'
 
-// Styles
-import styles from './Styles/ContactsStyles'
+const CONTAINER: ViewStyle = {
+  flex: 1,
+  backgroundColor: '#FAFCFE'
+}
 
 interface StateProps {
   contacts: ReadonlyArray<ContactInfo>
@@ -53,13 +56,11 @@ class Contacts extends React.Component<Props, State> {
         />
       </TextileHeaderButtons>
     )
-
     const headerRight = (
       <TextileHeaderButtons>
         <Item iconName='plus' onPress={addContact} />
       </TextileHeaderButtons>
     )
-
     return {
       headerTitle: 'Contacts',
       headerLeft,
@@ -67,62 +68,12 @@ class Contacts extends React.Component<Props, State> {
     }
   }
 
-  oneScreensWorth = 40
-
   constructor(props: Props) {
     super(props)
     this.state = {
       showInviteContactModal: false
     }
   }
-
-  selectContact (contact: ContactInfo) {
-    return () => {
-      this.setState({
-        showInviteContactModal: false
-      })
-    }
-  }
-
-  updateSearchString = (string?: string) => {
-    this.setState({
-      searchString: string
-    })
-  }
-
-  onPress = (id: string) => {
-    this.props.navigation.navigate('Contact', { peerId: id })
-  }
-
-  renderRow = (row: ListRenderItemInfo<ContactInfo>) => {
-    const { item } = row
-    const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
-    const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
-    return (
-      <ListItem
-        id={item.id}
-        title={item.username || item.id}
-        leftItem={leftItem}
-        rightItems={rightItems}
-        onPress={this.onPress}
-      />
-    )
-  }
-
-  cancelInviteContact = () => {
-    this.setState({showInviteContactModal: false})
-  }
-
-  inviteContactRequest = () => {
-    this.setState({showInviteContactModal: true})
-  }
-
-  openDrawer = () => {
-    this.props.navigation.openDrawer()
-    Keyboard.dismiss()
-  }
-
-  keyExtractor = (item: ContactInfo) => item.id
 
   componentDidMount () {
     this.props.navigation.setParams({
@@ -142,9 +93,8 @@ class Contacts extends React.Component<Props, State> {
       })
     }
     return (
-      <View style={styles.container}>
+      <View style={CONTAINER}>
         <FlatList
-          style={styles.listContainer}
           data={data}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderRow}
@@ -167,6 +117,46 @@ class Contacts extends React.Component<Props, State> {
         />
       </View>
     )
+  }
+
+  keyExtractor = (item: ContactInfo) => item.id
+
+  renderRow = (row: ListRenderItemInfo<ContactInfo>) => {
+    const { item } = row
+    const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
+    const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
+    return (
+      <ListItem
+        id={item.id}
+        title={item.username || item.id}
+        leftItem={leftItem}
+        rightItems={rightItems}
+        onPress={this.onPress}
+      />
+    )
+  }
+
+  updateSearchString = (string?: string) => {
+    this.setState({
+      searchString: string
+    })
+  }
+
+  onPress = (id: string) => {
+    this.props.navigation.navigate('Contact', { peerId: id })
+  }
+
+  inviteContactRequest = () => {
+    this.setState({showInviteContactModal: true})
+  }
+
+  cancelInviteContact = () => {
+    this.setState({showInviteContactModal: false})
+  }
+
+  openDrawer = () => {
+    this.props.navigation.openDrawer()
+    Keyboard.dismiss()
   }
 }
 
