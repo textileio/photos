@@ -35,7 +35,7 @@ const STACK: ViewStyle = {
 }
 
 const STATUS: TextStyle = {
-  fontFamily: 'BentonSans',
+  fontFamily: 'Biotif-Regular',
   fontSize: 12,
   color: 'rgb(185, 185, 185)',
   textAlign: 'center',

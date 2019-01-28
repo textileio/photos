@@ -55,6 +55,7 @@
 		93F1805921FD459700883267 /* Biotif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805621FD459700883267 /* Biotif-Bold.ttf */; };
 		93F1805A21FD459700883267 /* Biotif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805721FD459700883267 /* Biotif-Medium.ttf */; };
 		93F1805B21FD459700883267 /* Biotif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805821FD459700883267 /* Biotif-Regular.ttf */; };
+		93F1805D21FD49A900883267 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805C21FD49A900883267 /* icomoon.ttf */; };
 		A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */; };
 		A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -527,6 +528,7 @@
 		93F1805621FD459700883267 /* Biotif-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Bold.ttf"; path = "../../App/Fonts/Biotif-Bold.ttf"; sourceTree = "<group>"; };
 		93F1805721FD459700883267 /* Biotif-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Medium.ttf"; path = "../../App/Fonts/Biotif-Medium.ttf"; sourceTree = "<group>"; };
 		93F1805821FD459700883267 /* Biotif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Regular.ttf"; path = "../../App/Fonts/Biotif-Regular.ttf"; sourceTree = "<group>"; };
+		93F1805C21FD49A900883267 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = "../../node_modules/@textile/react-native-icon/icomoon_gen/fonts/icomoon.ttf"; sourceTree = "<group>"; };
 		A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
 		A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
 		A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
@@ -885,6 +887,7 @@
 		93C005D9216C1FB9007786A5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				93F1805C21FD49A900883267 /* icomoon.ttf */,
 				93F1805621FD459700883267 /* Biotif-Bold.ttf */,
 				93F1805721FD459700883267 /* Biotif-Medium.ttf */,
 				93F1805821FD459700883267 /* Biotif-Regular.ttf */,
@@ -1582,6 +1585,7 @@
 				93F1805B21FD459700883267 /* Biotif-Regular.ttf in Resources */,
 				93C005F1216C2034007786A5 /* Octicons.ttf in Resources */,
 				93C005FE216C2034007786A5 /* Ionicons.ttf in Resources */,
+				93F1805D21FD49A900883267 /* icomoon.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				93C005FB216C2034007786A5 /* EvilIcons.ttf in Resources */,
 				93C005FD216C2034007786A5 /* MaterialCommunityIcons.ttf in Resources */,

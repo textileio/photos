@@ -21,7 +21,7 @@ export default StyleSheet.create({
     height: 17.1
   },
   itemText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     textDecorationLine: 'underline',
     color: Colors.midBlue

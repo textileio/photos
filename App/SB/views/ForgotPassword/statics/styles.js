@@ -7,7 +7,7 @@ export default StyleSheet.create({
     paddingHorizontal: 36
   },
   headerText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     lineHeight: 25
   },
@@ -22,12 +22,12 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   footerText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 13,
     color: '#6d6d6d'
   },
   footerLink: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 13,
     textDecorationLine: 'underline'
   }

@@ -12,7 +12,7 @@ export default StyleSheet.create({
     paddingBottom: 21
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'center',
@@ -39,7 +39,7 @@ export default StyleSheet.create({
   },
   itemTitle: {
     ...BentonSansBold(),
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     lineHeight: 27
   },
@@ -50,7 +50,7 @@ export default StyleSheet.create({
     fontSize: 14
   },
   itemDescription: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     lineHeight: 27,
     color: '#4a4a4a',

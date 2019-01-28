@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, ViewStyle } from 'react-native'
 // @ts-ignore
-import { DrawerItems, NavigationScreenProps } from 'react-navigation'
+import { DrawerItems, NavigationScreenProps, NavigationEvents } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 import Avatar from '../Components/Avatar'
 import { RootState } from '../Redux/Types'
@@ -35,14 +35,14 @@ class Account extends Component<Props> {
           <Avatar style={{ width: 120, height: 120 }} self={true} />
           <Text style={{ ...s.H2, margin: 20 }}>{this.props.username}</Text>
         </View>
-        <DrawerItems {...this.props} style={{ backgroundColor: 'blue' }} />
+        <DrawerItems {...this.props} />
       </View>
     )
   }
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  username: `@${state.account.profile.value ? state.account.profile.value.username || 'uknown' : 'unknown'}`
+  username: state.account.profile.value ? state.account.profile.value.username || state.account.profile.value.id : 'unknown'
 })
 
 export default connect(mapStateToProps, undefined)(Account)

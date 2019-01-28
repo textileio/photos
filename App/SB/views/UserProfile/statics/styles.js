@@ -18,13 +18,13 @@ export default StyleSheet.create({
     width: 40
   },
   toolbarUserName: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 24,
     marginBottom: 8
   },
   toolbarThreadsQty: {
     flexDirection: 'row',
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 13,
     flex: 1
   },
@@ -43,7 +43,7 @@ export default StyleSheet.create({
     ...BentonSansBold()
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#9b9b9b',
     marginBottom: 17
@@ -63,7 +63,7 @@ export default StyleSheet.create({
     borderColor: '#ECEDEE'
   },
   listText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14
   },
   warning: {
@@ -76,7 +76,7 @@ export default StyleSheet.create({
     paddingVertical: 25
   },
   serversText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: '#4A4A4A'
   },
   activeIcon: {
@@ -105,7 +105,7 @@ export default StyleSheet.create({
     marginTop: 30
   },
   versionDescription: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     marginTop: 8,
     color: 'rgb(200,200,200)'
@@ -127,7 +127,7 @@ export default StyleSheet.create({
     marginBottom: 16
   },
   subScreenText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     lineHeight: 26,
     textAlign: 'center',

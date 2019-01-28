@@ -3,7 +3,7 @@ import { BentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
   titleCard: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 30,
     marginTop: 27,
     marginBottom: 11,
@@ -30,7 +30,7 @@ export default StyleSheet.create({
     height: 18
   },
   cardAction: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     lineHeight: 14,
     paddingLeft: 4,
@@ -41,7 +41,7 @@ export default StyleSheet.create({
   },
   cardTarget: {
     flex: 1,
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     lineHeight: 14,
     paddingTop: 4
@@ -69,12 +69,12 @@ export default StyleSheet.create({
     marginLeft: 11
   },
   profileName: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     lineHeight: 16
   },
   commentCount: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#9b9b9b',
     lineHeight: 16,
@@ -82,7 +82,7 @@ export default StyleSheet.create({
     paddingBottom: 8
   },
   likedText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     lineHeight: 16,
     paddingTop: 6,
@@ -95,7 +95,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start'
   },
   detailUpdateTime: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 10,
     color: '#9b9b9b',
     paddingRight: 8
@@ -123,14 +123,14 @@ export default StyleSheet.create({
     marginRight: 10
   },
   month: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     color: '#9b9b9b',
     marginBottom: 9,
     textAlign: 'center'
   },
   day: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 20,
     textAlign: 'center'
   },

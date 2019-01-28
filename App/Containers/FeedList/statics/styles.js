@@ -15,7 +15,7 @@ export default StyleSheet.create({
     padding: 24
   },
   toolbarTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 30,
     marginTop: 16,
     marginBottom: 8

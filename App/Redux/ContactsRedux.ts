@@ -30,7 +30,8 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
 
 export const ContactsSelectors = {
   isKnown: (state: RootState, id: string) => state.contacts.contacts.some((p) => p.id === id),
-  byThreadId: (state: RootState, id: string) => state.contacts.contacts.filter((contact) => (contact.thread_ids || []).indexOf(id) > -1)
+  byThreadId: (state: RootState, id: string) => state.contacts.contacts.filter((contact) => (contact.thread_ids || []).indexOf(id) > -1),
+  contactById: (state: RootState, id: string) => state.contacts.contacts.find((contact) => contact.id === id)
 }
 
 export default actions

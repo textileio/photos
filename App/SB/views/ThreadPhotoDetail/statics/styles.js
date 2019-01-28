@@ -21,7 +21,7 @@ export default StyleSheet.create({
     width: 16
   },
   toolbarTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 30
   },
   backButtonWrapper: {

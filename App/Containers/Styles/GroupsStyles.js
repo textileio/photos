@@ -14,6 +14,7 @@ export default StyleSheet.create({
     height: 24
   },
   contentContainer: {
+    backgroundColor: '#FAFCFE',
     marginTop: 0,
     marginHorizontal: 1,
     position: 'absolute',
@@ -34,6 +35,6 @@ export default StyleSheet.create({
   },
   createThreadText: {
     color: '#BBB',
-    fontFamily: 'BentonSans'
+    fontFamily: 'Biotif-Regular'
   }
 })

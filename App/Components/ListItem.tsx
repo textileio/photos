@@ -27,7 +27,7 @@ class ListItem extends React.PureComponent<Props> {
 
   render() {
     return (
-      <TouchableOpacity onPress={this.onPress}>
+      <TouchableOpacity delayPressIn={100} onPress={this.onPress}>
         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 20, paddingRight: 20, paddingTop: 11, paddingBottom: 11 }}>
           {this.props.renderLeftItem &&
             this.props.renderLeftItem()

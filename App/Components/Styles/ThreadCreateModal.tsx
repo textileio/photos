@@ -32,7 +32,7 @@ export default StyleSheet.create({
     paddingBottom: 45
   } as ViewStyle,
   titleText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: Colors.charcoal,
     fontSize: 28,
     textAlign: 'center'
@@ -42,7 +42,7 @@ export default StyleSheet.create({
     paddingVertical: 40
   } as ViewStyle,
   subTitleText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: Colors.charcoal,
     fontSize: 12,
     textAlign: 'center'
@@ -54,7 +54,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   } as ViewStyle,
   headerText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: Colors.cover,
     fontSize: 14,
     marginTop: 4,
@@ -81,7 +81,7 @@ export default StyleSheet.create({
     paddingTop: 45
   } as ViewStyle,
   buttonText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: Colors.midBlue,
     fontSize: 18,
     lineHeight: 26

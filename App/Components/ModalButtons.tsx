@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   } as ViewStyle,
   buttonText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: Colors.midBlue,
     fontSize: 18,
     lineHeight: 26,

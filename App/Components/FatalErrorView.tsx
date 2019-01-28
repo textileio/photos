@@ -14,7 +14,7 @@ const CONTAINER: ViewStyle = {
 }
 
 const TEXT: TextStyle = {
-  fontFamily: 'BentonSans',
+  fontFamily: 'Biotif-Regular',
   fontSize: 18,
   lineHeight: 22,
   textAlign: 'center'

@@ -1,39 +1,26 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux'
 import {
   View,
-  Text,
   FlatList,
-  TouchableOpacity, ListRenderItemInfo, Platform
+  ListRenderItemInfo,
+  Keyboard
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
+import { ContactInfo } from '@textile/react-native-sdk'
 
 import SearchBar from '../Components/SearchBar'
 import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
-import ContactModal from '../Components/ContactModal'
 import InviteContactModal from '../Components/InviteContactModal'
-
-import { RootAction, RootState } from '../Redux/Types'
-import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
-import UIActions from '../Redux/UIRedux'
-
-import { ContactInfo } from '@textile/react-native-sdk'
-
+import { RootState } from '../Redux/Types'
 import * as s from '../Themes/Constants'
 
 // Styles
-import styles, { PRODUCT_ITEM_HEIGHT } from './Styles/ContactsStyles'
-
-interface DispatchProps {
-  cancelShare: (uuid: string) => void
-  navigateToThread: (id: string, name: string) => void
-  retryShare: (uuid: string) => void
-}
+import styles from './Styles/ContactsStyles'
 
 interface StateProps {
   contacts: ReadonlyArray<ContactInfo>
@@ -44,14 +31,10 @@ interface NavProps {
   addContact: () => void
 }
 
-type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
+type Props = StateProps & NavigationScreenProps<NavProps>
 
 interface State {
   searchString?: string,
-  contactCard: boolean,
-  selectedContact?: string,
-  selectedUsername?: string,
-  selectedAvatar?: string,
   showInviteContactModal: boolean
 }
 
@@ -89,7 +72,6 @@ class Contacts extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      contactCard: false,
       showInviteContactModal: false
     }
   }
@@ -97,24 +79,8 @@ class Contacts extends React.Component<Props, State> {
   selectContact (contact: ContactInfo) {
     return () => {
       this.setState({
-        selectedContact: contact.id,
-        selectedUsername: contact.username,
-        selectedAvatar: contact.avatar,
-        contactCard: true
+        showInviteContactModal: false
       })
-    }
-  }
-
-  closeModal () {
-    return () => {
-      this.setState({contactCard: false})
-    }
-  }
-
-  navigateToThread () {
-    return (id: string, name: string) => {
-      this.setState({contactCard: false})
-      this.props.navigateToThread(id, name)
     }
   }
 
@@ -125,43 +91,43 @@ class Contacts extends React.Component<Props, State> {
   }
 
   onPress = (id: string) => {
-    console.log('PRESSED:', id)
+    this.props.navigation.navigate('Contact', { peerId: id })
   }
 
   renderRow = (row: ListRenderItemInfo<ContactInfo>) => {
     const { item } = row
+    const leftItem = () => <Avatar style={{ width: 50 }} target={item.avatar} />
+    const rightItems = () => [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
     return (
       <ListItem
         id={item.id}
         title={item.username || item.id}
-        renderLeftItem={() => <Avatar style={{ width: 60 }} target={item.avatar} />}
-        renderRightItems={() => [<Icon name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]}
+        renderLeftItem={leftItem}
+        renderRightItems={rightItems}
         onPress={this.onPress}
       />
     )
   }
 
-  cancelInviteContact () {
-    return () => {
-      this.setState({showInviteContactModal: false})
-    }
+  cancelInviteContact = () => {
+    this.setState({showInviteContactModal: false})
   }
 
-  inviteContactRequest () {
-    return () => {
-      this.setState({showInviteContactModal: true})
-    }
+  inviteContactRequest = () => {
+    this.setState({showInviteContactModal: true})
   }
 
   openDrawer = () => {
     this.props.navigation.openDrawer()
+    Keyboard.dismiss()
   }
 
   keyExtractor = (item: ContactInfo) => item.id
 
   componentDidMount () {
     this.props.navigation.setParams({
-      openDrawer: this.openDrawer
+      openDrawer: this.openDrawer,
+      addContact: this.inviteContactRequest
     })
   }
 
@@ -170,8 +136,8 @@ class Contacts extends React.Component<Props, State> {
     let data = allContacts
     if (this.state.searchString !== undefined && this.state.searchString.length > 0) {
       data = data.filter((contact) => {
-        const searchKey = contact.username || contact.id
-        const index = searchKey.indexOf(this.state.searchString!)
+        const searchKey = (contact.username || contact.id).toLowerCase()
+        const index = searchKey.indexOf(this.state.searchString!.toLowerCase())
         return index > -1
       })
     }
@@ -187,6 +153,7 @@ class Contacts extends React.Component<Props, State> {
             <SearchBar
               containerStyle={{ backgroundColor: '#FAFCFE' }}
               inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: s.COLOR_GREY_LIGHT }}
+              additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false }}
               iconColor={s.COLOR_GREY_MEDIUM}
               onTextChanged={this.updateSearchString}
             />
@@ -194,17 +161,9 @@ class Contacts extends React.Component<Props, State> {
           keyboardShouldPersistTaps='handled'
           keyboardDismissMode='on-drag'
         />
-        {/* <ContactModal
-          isVisible={this.state.contactCard}
-          peerId={this.state.selectedContact}
-          username={this.state.selectedUsername}
-          avatar={this.state.selectedAvatar}
-          navigateToThread={this.navigateToThread()}
-          close={this.closeModal()}
-        /> */}
         <InviteContactModal
           isVisible={this.state.showInviteContactModal}
-          cancel={this.cancelInviteContact()}
+          cancel={this.cancelInviteContact}
         />
       </View>
     )
@@ -228,14 +187,4 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
-  return {
-    retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
-    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) },
-    navigateToThread: (id: string, name: string) => {
-      dispatch(UIActions.navigateToThreadRequest(id, name))
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Contacts)
+export default connect(mapStateToProps, undefined)(Contacts)

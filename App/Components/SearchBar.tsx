@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
-import { View, TextInput, ViewStyle, TextStyle, TouchableOpacity } from 'react-native'
+import { View, TextInput, ViewStyle, TextStyle, TouchableOpacity, TextInputProps } from 'react-native'
 import Icon from '@textile/react-native-icon'
+
+import RoundedCornersView from './RoundedCornersView'
 
 interface Props {
   containerStyle: ViewStyle
   inputStyle: TextStyle
+  additionalInputProps: TextInputProps
   placeholder: string
   iconColor: string
   onTextChanged?: (text?: string) => void
@@ -29,6 +32,7 @@ class SearchBar extends Component<Props, State> {
       marginTop: 6,
       marginBottom: 6
     },
+    additionalInputProps: {},
     placeholder: 'Search...',
     iconColor: 'black'
   }
@@ -55,11 +59,11 @@ class SearchBar extends Component<Props, State> {
   }
 
   render() {
-    const borderRadius = (this.props.inputStyle.fontSize || SearchBar.defaultProps.inputStyle.fontSize!) / 3
+    // const borderRadius = (this.props.inputStyle.fontSize || SearchBar.defaultProps.inputStyle.fontSize!) / 3
     const inputColor = this.props.inputStyle.backgroundColor || SearchBar.defaultProps.inputStyle.backgroundColor!
     return (
       <View style={[SearchBar.defaultProps.containerStyle, this.props.containerStyle]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', borderRadius, backgroundColor: inputColor }}>
+        <RoundedCornersView style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: inputColor }}>
           <Icon
             name={'search_16'}
             size={16}
@@ -67,6 +71,7 @@ class SearchBar extends Component<Props, State> {
             style={{ margin: 6 }}
           />
           <TextInput
+            {...this.props.additionalInputProps}
             style={[SearchBar.defaultProps.inputStyle, this.props.inputStyle]}
             placeholder={this.props.placeholder}
             underlineColorAndroid='transparent'
@@ -83,7 +88,7 @@ class SearchBar extends Component<Props, State> {
               />
             </TouchableOpacity>
           }
-        </View>
+        </RoundedCornersView>
       </View>
     )
   }

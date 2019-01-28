@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Redux, { Dispatch } from 'redux'
-import { View, StatusBar, ActivityIndicator, Platform, PermissionsAndroid, Text } from 'react-native'
+import { View, StatusBar, Platform, PermissionsAndroid, Text } from 'react-native'
 import Modal from 'react-native-modal'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
@@ -63,7 +63,9 @@ class RootContainer extends Component<StateProps & DispatchProps> {
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle={barStyle} />
-        <AppNavigation ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }} />
+        <AppNavigation
+          ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }}
+        />
         {this.props.verboseUi &&
         <View style={styles.bottomOverlay} >
           <Text style={styles.overlayText}>{this.props.overlayMessage}</Text>

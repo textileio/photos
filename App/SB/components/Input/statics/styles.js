@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   errorMsg: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     color: '#D0021B',
     paddingTop: 6
@@ -30,7 +30,7 @@ export default StyleSheet.create({
     position: 'relative'
   },
   textInput: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     marginBottom: 8,
     marginTop: 10,

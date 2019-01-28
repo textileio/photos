@@ -41,7 +41,7 @@ export default StyleSheet.create({
     right: 0
   },
   username: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     alignSelf: 'center',
     color: Colors.charcoal,
     backgroundColor: Colors.clear,
@@ -53,7 +53,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   noPeers: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     padding: 20,
     alignSelf: 'center',
     color: Colors.steel,

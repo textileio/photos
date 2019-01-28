@@ -17,9 +17,6 @@ export default StyleSheet.create({
     paddingVertical: 50,
     backgroundColor: 'white'
   } as ViewStyle,
-  content: {
-    flex: 1
-  } as ViewStyle,
   profile: {
     width: '100%',
     flexDirection: 'row',
@@ -32,7 +29,7 @@ export default StyleSheet.create({
   } as ViewStyle,
   username: {
     marginLeft: 18,
-    fontFamily: 'BentonSans-Bold',
+    fontFamily: 'Biotif-Bold',
     color: Colors.cover,
     fontSize: 32
   } as TextStyle,
@@ -43,7 +40,7 @@ export default StyleSheet.create({
     paddingTop: 24
   } as TextStyle,
   threadsTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#9b9b9b',
     paddingBottom: 16
