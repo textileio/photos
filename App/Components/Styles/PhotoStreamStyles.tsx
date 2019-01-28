@@ -33,6 +33,6 @@ export default StyleSheet.create({
   } as ViewStyle,
   createThreadText: {
     color: '#BBB',
-    fontFamily: 'BentonSans'
+    fontFamily: 'Biotif-Regular'
   } as TextStyle
 })

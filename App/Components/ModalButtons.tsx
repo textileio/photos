@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   ViewStyle,
   TextStyle,
-  StyleSheet
+  StyleSheet,
+  StyleProp
 } from 'react-native'
 
 const styles = StyleSheet.create({
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   } as ViewStyle,
   buttonText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: Colors.midBlue,
     fontSize: 18,
     lineHeight: 26,
@@ -44,7 +45,7 @@ interface ScreenProps {
   continue: () => void
   cancelText?: string
   continueText?: string
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
 }
 
 const ModalButtons = (props: ScreenProps) => {

@@ -35,7 +35,7 @@ export default StyleSheet.create({
     minHeight: 33
   },
   detailText: {
-    fontFamily: 'BentonSans-Light',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     lineHeight: 16
   }

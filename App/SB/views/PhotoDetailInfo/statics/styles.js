@@ -16,7 +16,7 @@ export default StyleSheet.create({
     marginBottom: 16
   },
   toolbarTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 30
   },
   itemContainer: {
@@ -28,12 +28,12 @@ export default StyleSheet.create({
     borderColor: '#ECEDEE'
   },
   itemTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#9B9B9B'
   },
   itemDescription: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16
   }
 })

@@ -18,7 +18,7 @@ export default StyleSheet.create({
     borderBottomWidth: 1
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14
   },
   closeIcon: {
@@ -31,7 +31,7 @@ export default StyleSheet.create({
     paddingHorizontal: 14
   },
   details: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     color: '#9b9b9b',
     lineHeight: 18

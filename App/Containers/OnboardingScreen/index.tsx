@@ -6,6 +6,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import Config from 'react-native-config'
+import Icon from '@textile/react-native-icon'
 
 import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
@@ -13,8 +14,7 @@ import ReferralCode from '../../Components/ReferralCode'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
 import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
-import Icon from '../../Components/Icon'
-import PreferencesAction from '../../Redux/PreferencesRedux'
+import PrefrencesActions from '../../Redux/PreferencesRedux'
 import { RootAction, RootState } from '../../Redux/Types'
 
 const CONTAINER: ViewStyle = {
@@ -205,7 +205,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  complete: () => dispatch(PreferencesAction.onboardingSuccess())
+  complete: () => dispatch(PrefrencesActions.onboardingSuccess())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen)

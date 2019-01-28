@@ -22,7 +22,7 @@ export default StyleSheet.create({
     borderBottomWidth: 1
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#9b9b9b'
   },

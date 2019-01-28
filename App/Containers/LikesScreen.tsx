@@ -18,7 +18,7 @@ const LIKE_ITEM: ViewStyle = {
 }
 
 const LIKE_TEXT: TextStyle = {
-  fontFamily: 'BentonSans',
+  fontFamily: 'Biotif-Regular',
   margin: 11
 }
 

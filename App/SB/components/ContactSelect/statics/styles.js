@@ -27,7 +27,7 @@ export default StyleSheet.create({
     marginBottom: 18
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 24
   },
   small: {
@@ -35,7 +35,7 @@ export default StyleSheet.create({
     textDecorationLine: 'underline'
   },
   subtitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     lineHeight: 20,
     color: '#9b9b9b',
@@ -87,7 +87,7 @@ export default StyleSheet.create({
     marginRight: 7
   },
   searchBoxInput: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#8e8e93'
   },
@@ -121,7 +121,7 @@ export default StyleSheet.create({
     width: '100%'
   },
   contactName: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14
   },
   contactSelectRadio: {
@@ -136,7 +136,7 @@ export default StyleSheet.create({
     marginRight: 15
   },
   linkText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     paddingTop: 2,
     color: '#2E8BFE'

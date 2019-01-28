@@ -23,7 +23,7 @@ const IMAGE: ImageStyle = {
 }
 
 const TEXT: TextStyle = {
-  fontFamily: 'BentonSans',
+  fontFamily: 'Biotif-Regular',
   fontSize: 18,
   lineHeight: 22,
   textAlign: 'center'
@@ -31,7 +31,7 @@ const TEXT: TextStyle = {
 
 const TEXT_EMPHASIS: TextStyle = {
   ...TEXT,
-  fontFamily: 'BentonSans-Bold'
+  fontFamily: 'Biotif-Bold'
 }
 
 const TEXT_EMPHASIS_1 = {

@@ -37,7 +37,7 @@ export default StyleSheet.create({
     flexWrap: 'wrap'
   },
   header: {
-    fontFamily: 'BentonSans-Bold'
+    fontFamily: 'Biotif-Bold'
   },
   failure: {
     color: '#FF1C3F'
@@ -51,7 +51,7 @@ export default StyleSheet.create({
     marginRight: 5
   },
   link: {
-    fontFamily: 'BentonSans-Bold',
+    fontFamily: 'Biotif-Bold',
     fontSize: 16,
     color: '#2625ff',
     padding: 5

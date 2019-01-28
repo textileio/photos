@@ -20,12 +20,12 @@ export default StyleSheet.create({
     height: 20
   },
   toolbarTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 30,
     paddingTop: 23
   },
   fixedDate: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     color: '#4a4a4a',
     paddingLeft: 10,

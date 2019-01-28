@@ -12,9 +12,9 @@ export default StyleSheet.create({
     borderBottomColor: '#ECEDEE'
   },
   headerTitle: {
-    fontFamily: 'BentonSans-Bold',
+    fontFamily: 'Biotif',
+    fontWeight: 'bold',
     fontSize: 17,
-    paddingTop: 8, // <- needed because BentonSans has that weird bottom gap
     color: Colors.charcoal,
     flex: 1,
     textAlign: 'center', // import center-overkill
@@ -90,7 +90,7 @@ export default StyleSheet.create({
     marginHorizontal: 16
   },
   headerButton: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: Colors.charcoal,
     fontSize: 17
   },

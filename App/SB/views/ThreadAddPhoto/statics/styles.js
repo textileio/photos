@@ -14,7 +14,7 @@ export default StyleSheet.create({
     width: 40
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 34,
     marginBottom: 17,
     paddingLeft: 14

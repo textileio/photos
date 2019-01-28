@@ -19,7 +19,7 @@ export default StyleSheet.create({
     marginBottom: 18
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 18
   },
   body: {},
@@ -50,7 +50,7 @@ export default StyleSheet.create({
     opacity: 0.8,
     alignSelf: 'center',
     textAlign: 'center',
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     flex: 1
   }

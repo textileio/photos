@@ -29,12 +29,12 @@ export default StyleSheet.create({
     marginBottom: 20
   },
   titleText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 24,
     marginBottom: 18
   },
   subTitleText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#9b9b9b'
   },

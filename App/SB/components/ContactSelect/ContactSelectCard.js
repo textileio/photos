@@ -1,7 +1,8 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
+import Icon from '@textile/react-native-icon'
+
 import Avatar from '../../../Components/Avatar'
-import Icons from '../../../Components/Icon'
 import ImageSc from 'react-native-scalable-image'
 
 import RadioButton from '../../components/RadioButton'
@@ -37,7 +38,7 @@ export const ContactLinkCard = (props) => {
         resizeMode={'cover'}
         style={styles.linkIcon}
       />}
-      {icon !== 'qr-code' && <Icons name={icon} size={20} color={'#2E8BFE'} style={styles.linkIcon}/>}
+      {icon !== 'qr-code' && <Icon name={icon} size={20} color={'#2E8BFE'} style={styles.linkIcon}/>}
       <Text style={styles.linkText}>{text}</Text>
     </TouchableOpacity>
   )

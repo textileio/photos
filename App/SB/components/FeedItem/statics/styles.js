@@ -17,13 +17,13 @@ export default StyleSheet.create({
     marginRight: 11
   },
   text: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     lineHeight: 16,
     marginBottom: 5
   },
   timestamp: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 11,
     color: '#9B9B9B'
   },

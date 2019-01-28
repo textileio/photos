@@ -12,7 +12,7 @@ export default StyleSheet.create({
     marginRight: 2
   },
   detailText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: '#9b9b9b',
     fontSize: 12,
     lineHeight: 12

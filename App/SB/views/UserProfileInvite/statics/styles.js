@@ -16,7 +16,7 @@ export default StyleSheet.create({
     marginBottom: 16
   },
   toolbarTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 30
   },
   mainImage: {
@@ -24,7 +24,7 @@ export default StyleSheet.create({
     marginBottom: 44
   },
   imageText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 38

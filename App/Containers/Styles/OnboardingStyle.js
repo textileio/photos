@@ -28,7 +28,7 @@ export default StyleSheet.create({
     marginBottom: 16
   },
   emptyStateText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     lineHeight: 26,
     textAlign: 'center',

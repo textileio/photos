@@ -89,9 +89,9 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Feather.ttf</string>
-		<string>BentonSans-Bold.otf</string>
-		<string>BentonSans-Light.otf</string>
-		<string>BentonSans.otf</string>
+		<string>Biotif-Bold.ttf</string>
+		<string>Biotif-Medium.ttf</string>
+		<string>Biotif-Regular.ttf</string>
 		<string>icomoon.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>

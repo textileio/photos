@@ -1,5 +1,5 @@
 import React from 'react'
-import Icon from './Icon'
+import Icon from '@textile/react-native-icon'
 import HeaderButtons, { HeaderButton } from 'react-navigation-header-buttons'
 import Colors from '../Themes/Colors'
 
@@ -8,7 +8,7 @@ const TextileHeaderButton = (props: any) => {
   const color = !props.color ? !props.iconName ? Colors.brandBlue : Colors.charcoal : props.color
   const fontSize = !props.iconName ? 17 : 24
   return (
-    <HeaderButton {...props} IconComponent={Icon} buttonStyle={{ fontFamily: 'BentonSans', fontSize }} color={color} />
+    <HeaderButton {...props} IconComponent={Icon} buttonStyle={{ fontFamily: 'Biotif-Regular', fontSize }} color={color} />
   )
 }
 

@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import { View, Text, Image } from 'react-native'
 import { Item } from 'react-navigation-header-buttons'
+import Icon from '@textile/react-native-icon'
 
-import Icon from '../Components/Icon'
 import { TextileHeaderButtons } from '../Components/HeaderButtons'
 import CreateThreadModal from '../Components/CreateThreadModal'
 

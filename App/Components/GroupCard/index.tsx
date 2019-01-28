@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
+import Icon from '@textile/react-native-icon'
 import TextileImage from '../TextileImage'
 import Avatar from '../Avatar'
-import Icon from '../Icon'
 import * as s from '../../Themes/Constants'
 import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'
 

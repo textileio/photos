@@ -8,7 +8,6 @@ import DeviceLogs from '../../../../SB/views/DeviceLogs'
 import NodeLogsScreen from '../../../../Components/NodeLogsScreen'
 import RecoveryPhrase from '../../../../SB/views/UserProfile/RecoveryPhrase'
 import SetAvatar from '../../../../Containers/SetAvatar'
-
 import ThreadsList from '../../../../Containers/ThreadsList'
 import PhotoScreen from '../../../../Containers/PhotoScreen'
 import Comments from '../../../../Containers/Comments'

@@ -32,19 +32,19 @@ export default StyleSheet.create({
     width: 59
   },
   toolbarUserName: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 24,
     marginBottom: 8
   },
   toolbarThreadsQty: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 13
   },
   strong: {
     ...BentonSansBold()
   },
   title: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14,
     color: '#9b9b9b',
     marginBottom: 17
@@ -60,7 +60,7 @@ export default StyleSheet.create({
     marginRight: 14
   },
   itemText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 14
   }
 })

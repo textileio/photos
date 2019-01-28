@@ -18,7 +18,7 @@ export default StyleSheet.create({
     marginBottom: 16
   },
   toolbarTitle: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 30
   },
   mainImage: {
@@ -26,13 +26,13 @@ export default StyleSheet.create({
     marginBottom: 44
   },
   deviceId: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     textAlign: 'center',
     marginBottom: 38
   },
   imageText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 38
@@ -44,7 +44,7 @@ export default StyleSheet.create({
     marginBottom: 28
   },
   button: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     color: Colors.charcoal,
     fontSize: 18,
     alignSelf: 'center',

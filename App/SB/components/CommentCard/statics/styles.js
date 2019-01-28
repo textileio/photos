@@ -38,13 +38,13 @@ export default StyleSheet.create({
     flexGrow: 1
   },
   commentDate: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     color: '#9b9b9b',
     paddingRight: 12
   },
   commentUser: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Bold',
     fontSize: 14,
     marginBottom: 5
   },
@@ -53,7 +53,7 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   commentText: {
-    fontFamily: 'BentonSans',
+    fontFamily: 'Biotif-Regular',
     fontSize: 12,
     lineHeight: 16,
     color: '#4a4a4a',
