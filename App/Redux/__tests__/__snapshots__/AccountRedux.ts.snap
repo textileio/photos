@@ -7,7 +7,7 @@ Object {
     "processing": false,
     "sessions": Array [],
   },
-  "onboarded": false,
+  "initialized": false,
   "peerId": Object {},
   "profile": Object {
     "processing": false,

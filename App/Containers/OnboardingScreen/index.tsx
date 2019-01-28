@@ -14,7 +14,7 @@ import OnboardingUsername from '../../Containers/OnboardingUsername'
 import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
 import Icon from '../../Components/Icon'
-import AccountActions from '../../Redux/AccountRedux'
+import PreferencesAction from '../../Redux/PreferencesRedux'
 import { RootAction, RootState } from '../../Redux/Types'
 
 const CONTAINER: ViewStyle = {
@@ -205,7 +205,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  complete: () => dispatch(AccountActions.onboardedSuccess())
+  complete: () => dispatch(PreferencesAction.onboardingSuccess())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen)

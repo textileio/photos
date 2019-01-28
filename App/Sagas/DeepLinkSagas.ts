@@ -16,7 +16,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import Config from 'react-native-config'
 import DeepLink from '../Services/DeepLink'
 import NavigationService from '../Services/NavigationService'
-import {PreferencesSelectors} from '../Redux/PreferencesRedux'
+import {initialized} from '../Redux/AccountSelectors'
 import AuthActions, {AuthSelectors} from '../Redux/AuthRedux'
 import StartupActions, {startupSelectors} from '../Redux/StartupRedux'
 
@@ -34,8 +34,7 @@ export function * routeThreadInvite(url: string, hash: string ) {
   if (!reduxStarted) {
     yield take(getType(StartupActions.startup))
   }
-  const onboarded = yield select(PreferencesSelectors.onboarded)
-  if (onboarded) {
+  if (yield select(initialized)) {
     NavigationService.navigate('ThreadInvite', { ...DeepLink.getParams(hash) })
   } else {
     // simply store the pending invite information to act on after onboarding success

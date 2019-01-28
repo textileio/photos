@@ -8,13 +8,13 @@ describe('preferences stories', () => {
       expect(initialState).toMatchSnapshot()
     })
   })
-  // describe('onboarding', () => {
-  //   it('should become onboarded', () => {
-  //     expect(initialState.onboarded).toBe(false)
-  //     const state = reducer(initialState, actions.onboardedSuccess())
-  //     expect(state.onboarded).toBe(true)
-  //   })
-  // })
+  describe('onboarding', () => {
+    it('should become onboarded', () => {
+      expect(initialState.onboarded).toBe(false)
+      const state = reducer(initialState, actions.onboardingSuccess())
+      expect(state.onboarded).toBe(true)
+    })
+  })
   describe('tour screens', () => {
     it('wallet should be viewed', () => {
       expect(initialState.tourScreens.wallet).toBe(true)

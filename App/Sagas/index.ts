@@ -27,7 +27,7 @@ import { startup } from './StartupSagas'
 
 import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } from './NodeLifecycle'
 import { onNodeStarted } from './NodeStarted'
-import { onNodeOnline } from './NodeOnline'
+import { onNodeOnline, nodeOnlineSaga } from './NodeOnline'
 
 import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration } from './Migration'
 
@@ -88,7 +88,6 @@ import {
 } from './ThreadsSagas'
 
 import {
-  updateNodeOverview,
   navigateToThread,
   navigateToComments,
   navigateToLikes,
@@ -103,7 +102,6 @@ import {
   handleProfilePhotoSelected,
   handleProfilePhotoUpdated,
   presentPublicLinkInterface,
-  nodeOnlineSaga,
   updateServices
 } from './TextileSagas'
 
@@ -173,9 +171,6 @@ export default function * root (dispatch: Dispatch) {
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
-    // update the node stats
-    takeEvery(getType(TextileNodeActions.updateOverviewRequest), updateNodeOverview),
-
     takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
     takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
@@ -207,7 +202,7 @@ export default function * root (dispatch: Dispatch) {
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
-    takeEvery(getType(AccountActions.onboardedSuccess), inviteAfterOnboard),
+    takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
 
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
 

@@ -30,6 +30,6 @@ export function bestSession(state: RootState) {
   return newest
 }
 
-export function onboarded(state: RootState) {
-  return state.account.onboarded
+export function initialized(state: RootState) {
+  return state.account.initialized
 }

@@ -21,7 +21,6 @@ import {
   ContactInfo,
   checkCafeMessages,
   addThreadIgnore,
-  setAvatar,
   addThreadLike
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
@@ -42,19 +41,7 @@ import { ThreadData } from '../Redux/PhotoViewingRedux'
 import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
-import StorageActions from '../Redux/StorageRedux'
-import { RootState } from '../Redux/Types'
 import { SharedImage } from '../Models/TextileTypes'
-
-export function * updateNodeOverview(action: ActionType<typeof TextileNodeActions.updateOverviewRequest>) {
-  try {
-    yield call(NotificationsSagas.waitUntilOnline, 2500)
-    const overviewResult: Overview = yield call(overview)
-    yield put(StorageActions.storeOverview(overviewResult))
-  } catch (error) {
-    // do nothing
-  }
-}
 
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield * processAvatarImage(action.payload.image)
@@ -146,20 +133,6 @@ export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.igno
     yield call(addThreadIgnore, blockId)
   } catch (error) {
     // do nothing new for now
-  }
-}
-
-export function * nodeOnlineSaga () {
-  const online = yield select(TextileNodeSelectors.online)
-  if (online) {
-    try {
-      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
-      if (pending) {
-        yield call(setAvatar, pending)
-      }
-    } catch (error) {
-      // nada
-    }
   }
 }
 

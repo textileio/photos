@@ -131,6 +131,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield put(TextileNodeActions.initializingRepo())
         yield call(initRepo, walletAccount.seed, REPO_PATH, true)
         yield call(createAndStartNode, dispatch)
+        yield put(AccountActions.initSuccess())
       } else {
         yield put(TextileNodeActions.nodeError(error))
       }

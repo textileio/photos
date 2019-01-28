@@ -291,10 +291,10 @@ const migrations: MigrationManifest = {
       ...state,
       account: {
         ...state.account,
-        onboarded: state.preferences.onboarded
+        initialized: state.preferences.onboarded
       }
     }
-  },
+  }
 }
 
 const persistConfig: PersistConfig = {

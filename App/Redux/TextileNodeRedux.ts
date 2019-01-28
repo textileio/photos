@@ -38,9 +38,6 @@ const actions = {
   refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', (resolve) => {
     return (error: Error) => resolve({ error })
   }),
-  updateOverviewRequest: createAction('UPDATE_OVERVIEW_REQUEST', (resolve) => {
-    return () => resolve()
-  }),
   refreshSDKVersionRequest: createAction('REFRESH_SDK_VERSION_REQUEST'),
   getSDKVersionSuccess: createAction('GET_SDK_VERSION_SUCCESS', (resolve) => {
     return (version: string) => resolve({ version })
