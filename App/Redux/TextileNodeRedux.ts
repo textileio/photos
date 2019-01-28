@@ -12,6 +12,9 @@ const actions = {
   createNodeRequest: createAction('CREATE_NODE_REQUEST'),
   creatingNode: createAction('CREATING_NODE'),
   createNodeSuccess: createAction('CREATE_NODE_SUCCESS'),
+  startupComplete: createAction('REDUX_STARTUP_COMPLETE', (resolve) => {
+    return () => resolve()
+  }),
   startingNode: createAction('STARTING_NODE'),
   startNodeSuccess: createAction('START_NODE_SUCCESS', (resolve) => {
     return () => resolve()
@@ -79,6 +82,7 @@ interface TextileNodeState {
     readonly error?: string
   }
   readonly refreshingMessages: boolean
+  readonly startupComplete: boolean
   readonly sdkVersion?: string
 }
 
@@ -97,11 +101,15 @@ export const initialState: TextileNodeState = {
   nodeState: {
     state: NodeState.nonexistent
   },
+  startupComplete: false,
   refreshingMessages: false
 }
 
 export function reducer (state: TextileNodeState = initialState, action: TextileNodeAction): TextileNodeState {
   switch (action.type) {
+    case getType(actions.startupComplete): {
+      return { ...state, startupComplete: true }
+    }
     case getType(actions.appStateChange):
       return { ...state, appState: action.payload.newState, appStateUpdate: getHMS() }
     case getType(actions.creatingWallet):

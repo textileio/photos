@@ -18,11 +18,10 @@ import {
 } from '@textile/react-native-sdk'
 import StartupActions from '../Redux/StartupRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
-import SDKNoPersistActions from '../Redux/SDKNoPersistRedux'
 import { ActionType, getType } from 'typesafe-actions'
 
 export function * initializeAppState () {
-  yield take(getType(SDKNoPersistActions.startup))
+  yield take(getType(TextileNodeActions.startupComplete))
   const defaultAppState = yield select(TextileNodeSelectors.appState)
   let queriedAppState = defaultAppState
   while (queriedAppState.match(/default|unknown/)) {
