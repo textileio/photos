@@ -99,6 +99,7 @@ export function * handleCreateNodeRequest (dispatch: Dispatch) {
 }
 
 function * createAndStartNode(dispatch: Dispatch): any {
+  const debug = Config.RN_RELEASE_TYPE !== 'production'
   try {
     yield put(TextileNodeActions.creatingNode())
     const repoPathExists: boolean = yield call(RNFS.exists, REPO_PATH)
@@ -106,8 +107,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
       yield call(RNFS.mkdir, REPO_PATH)
       yield call(moveTextileFiles)
     }
-    const logLevel = Config.RN_RELEASE_TYPE === 'production' ? 'ERROR' : 'DEBUG'
-    yield call(newTextile, REPO_PATH, LOG_LEVELS(logLevel))
+    yield call(newTextile, REPO_PATH, debug)
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
@@ -145,7 +145,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield put(TextileNodeActions.derivingAccount())
         const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
         yield put(TextileNodeActions.initializingRepo())
-        yield call(initRepo, walletAccount.seed, REPO_PATH, true)
+        yield call(initRepo, walletAccount.seed, REPO_PATH, true, debug)
         yield call(createAndStartNode, dispatch)
       } else {
         yield put(TextileNodeActions.nodeError(error))

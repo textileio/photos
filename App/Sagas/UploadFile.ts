@@ -28,7 +28,7 @@ export function * uploadFile (id: string, payloadPath: string) {
 
 export function * getSession (depth: number = 0): any {
   const session: CafeSession | undefined = yield select(bestSession)
-  if (!session || new Date(session.expiry) < new Date()) {
+  if (!session || new Date(session.exp) < new Date()) {
     if (depth === 0) {
       yield put(AccountActions.refreshCafeSessionsRequest())
       yield take(getType(AccountActions.cafeSessionsSuccess))
