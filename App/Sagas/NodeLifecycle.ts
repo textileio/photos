@@ -30,9 +30,9 @@ import {
   WalletAccount,
   version,
   registerCafe,
-  cafeSessions,
-  CafeSession
+  cafeSessions
  } from '@textile/react-native-sdk'
+import { ICafeSessions } from '@textile/react-native-protobufs'
 import { logNewEvent } from './DeviceLogs'
 import { announcePeer } from './Migration'
 
@@ -111,8 +111,8 @@ function * createAndStartNode(dispatch: Dispatch): any {
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
-    const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
-    if (sessions.length < 1) {
+    const sessions: ICafeSessions = yield call(cafeSessions)
+    if (!sessions || !sessions.values || sessions.values.length < 1) {
       const cafeOverride: string = Config.RN_TEXTILE_CAFE_OVERRIDE
       if (cafeOverride) {
         yield call(registerOverrideCafe, cafeOverride)

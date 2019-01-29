@@ -641,7 +641,7 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-protobufs@1.1.0":
+"@textile/react-native-protobufs@1.1.0", "@textile/react-native-protobufs@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@textile/react-native-protobufs/-/react-native-protobufs-1.1.0.tgz#facc6791d1e978859ab815fd3208494a5272d675"
   integrity sha512-CsFuXwTxZ1rnWTEOgPeYAIouvmHF0T8Z9Ssoj4JtbG6MgaDbLrwUEOFmSiNYZFPsn0M3QbG8bt6MAypsI/lNLA==
@@ -652,10 +652,10 @@
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.12.tgz#1be41a4eaa9648fa4766e2489a6c2764d95985e1"
 
-"@textile/react-native-sdk@1.0.19":
-  version "1.0.19"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.19.tgz#f988526007568e1e4de968a98821fe86145643b5"
-  integrity sha512-3zOykLYMhQS4pGleQvstxnxUh819ftGJm1vxXUE220mOdBjopkS7LvbvUDla3sq1/M7nmRbpu/Z0Isv741pcKg==
+"@textile/react-native-sdk@1.0.20":
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.20.tgz#b9e533090012dbc0da40c694db6e6e36dbfa2783"
+  integrity sha512-yDocomgc2wjrtYeS6WXAGii65V3exJhXIMetube4za2RZerrKFt/UNAgAifsJZD+o6Ez9vnyFHDuydwazvhjaA==
   dependencies:
     "@textile/go-mobile" "1.0.0-rc29"
     "@textile/react-native-protobufs" "1.1.0"
