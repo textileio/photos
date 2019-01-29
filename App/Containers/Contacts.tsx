@@ -37,8 +37,7 @@ interface NavProps {
 type Props = StateProps & NavigationScreenProps<NavProps>
 
 interface State {
-  searchString?: string,
-  showInviteContactModal: boolean
+  searchString?: string
 }
 
 class Contacts extends React.Component<Props, State> {
@@ -70,9 +69,7 @@ class Contacts extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = {
-      showInviteContactModal: false
-    }
+    this.state = {}
   }
 
   componentDidMount () {
@@ -111,10 +108,6 @@ class Contacts extends React.Component<Props, State> {
           keyboardShouldPersistTaps='handled'
           keyboardDismissMode='on-drag'
         />
-        <InviteContactModal
-          isVisible={this.state.showInviteContactModal}
-          cancel={this.cancelInviteContact}
-        />
       </View>
     )
   }
@@ -147,11 +140,7 @@ class Contacts extends React.Component<Props, State> {
   }
 
   inviteContactRequest = () => {
-    this.setState({showInviteContactModal: true})
-  }
-
-  cancelInviteContact = () => {
-    this.setState({showInviteContactModal: false})
+    this.props.navigation.navigate('AddContact')
   }
 
   openDrawer = () => {

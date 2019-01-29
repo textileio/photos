@@ -20,6 +20,7 @@ import ContactsActions from '../Redux/ContactsRedux'
 /* ------------- Sagas ------------- */
 
 import accountSaga from './Account'
+import contactsSaga from './Contacts'
 
 import { startup } from './StartupSagas'
 
@@ -90,8 +91,6 @@ import {
   navigateToThread,
   navigateToComments,
   navigateToLikes,
-  refreshContacts,
-  addFriends,
   addPhotoLike,
   initializeAppState,
   refreshMessages,
@@ -110,6 +109,7 @@ import {
 export default function * root (dispatch: Dispatch) {
   yield all([
     call(accountSaga),
+    call(contactsSaga),
 
     call(manageNode),
     call(handleCreateNodeRequest, dispatch),
@@ -145,10 +145,7 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
-    takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
-
-    takeEvery(getType(ContactsActions.getContactsRequest), refreshContacts),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
     takeEvery(getType(PhotoViewingActions.threadAddedNotification), monitorThreadAddedNotifications),
