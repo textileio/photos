@@ -9,13 +9,16 @@ import { bestSession, getSessionMillis } from '../Redux/AccountSelectors'
 import { ICafeSession } from '@textile/react-native-protobufs'
 
 export function * uploadFile (id: string, payloadPath: string) {
-  const session: ICafeSession = yield call(getSession)
+  const session: ICafeSession | undefined = yield call(getSession)
+  if (!session || !session.cafe || !session.cafe.url || !session.access) {
+    return
+  }
   yield call(
     Upload.startUpload,
     {
       customUploadId: id,
       path: payloadPath,
-      url: `${session!.cafe!.url}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
+      url: `${session.cafe.url}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
       method: 'POST',
       type: 'raw',
       headers: {

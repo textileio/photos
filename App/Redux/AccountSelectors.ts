@@ -20,10 +20,10 @@ export function getUsername (state: RootState): string | undefined {
          state.account.profile.value.username
 }
 
-export function bestSession(state: RootState) {
+export function bestSession(state: RootState): ICafeSession | undefined {
   const values = state.account.cafeSessions.sessions
   if (values.length === 0) {
-    return
+    return undefined
   }
   const sorted = values.slice().sort((a, b) => {
     const aExpiry = new Date(getSessionMillis(a)).getTime()
