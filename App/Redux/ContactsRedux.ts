@@ -11,6 +11,7 @@ const actions = {
   searchRequest: createAction('@contacts/SEARCH_REQUEST', (resolve) => {
     return (searchString: string) => resolve({ searchString })
   }),
+  searchStarted: createAction('@contacts/SEARCH_STARTED'),
   searchResultsTextile: createAction('@contacts/SEARCH_RESULTS_TEXTILE', (resolve) => {
     return (results: ReadonlyArray<ContactInfo>) => resolve({ results })
   }),
@@ -22,7 +23,8 @@ const actions = {
   }),
   searchErrorAddressBook: createAction('@contacts/SEARCH_ERROR_ADDRESS_BOOK', (resolve) => {
     return (error: any) => resolve({ error })
-  })
+  }),
+  clearSearch: createAction('@contacts/CLEAR_SEARCH')
 }
 
 export type ContactsAction = ActionType<typeof actions>
@@ -59,14 +61,21 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
       return {
         ...state,
         textileSearchResults: {
-          processing: true,
-          results: undefined,
-          error: undefined
+          processing: false
         },
         addressBookSearchResults: {
-          processing: true,
-          results: undefined,
-          error: undefined
+          processing: false
+        }
+      }
+    }
+    case getType(actions.searchStarted): {
+      return {
+        ...state,
+        textileSearchResults: {
+          processing: true
+        },
+        addressBookSearchResults: {
+          processing: true
         }
       }
     }
@@ -75,8 +84,7 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         ...state,
         textileSearchResults: {
           processing: false,
-          results: action.payload.results,
-          error: undefined
+          results: action.payload.results
         }
       }
     }
@@ -85,8 +93,7 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         ...state,
         addressBookSearchResults: {
           processing: false,
-          results: action.payload.results,
-          error: undefined
+          results: action.payload.results
         }
       }
     }
@@ -97,7 +104,6 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         ...state,
         textileSearchResults: {
           processing: false,
-          results: undefined,
           error: message
         }
       }
@@ -109,8 +115,18 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         ...state,
         addressBookSearchResults: {
           processing: false,
-          results: undefined,
           error: message
+        }
+      }
+    }
+    case getType(actions.clearSearch): {
+      return {
+        ...state,
+        textileSearchResults: {
+          processing: false
+        },
+        addressBookSearchResults: {
+          processing: false
         }
       }
     }
@@ -152,7 +168,10 @@ export const ContactsSelectors = {
   searchResults: (state: RootState) => {
     const addressBookItems = state.contacts.addressBookSearchResults.results
     const sections: SearchResultsSection[] = []
-    if (state.contacts.textileSearchResults.error) {
+    if (state.contacts.textileSearchResults.processing) {
+      const data: LoadingSearchResult[] = [{ type: 'loading' }]
+      sections.push({ title: 'Textile Users', data })
+    } else if (state.contacts.textileSearchResults.error) {
       const data: ErrorSearchResult[] = [{ type: 'error', data: state.contacts.textileSearchResults.error }]
       sections.push({ title: 'Textile Users', data })
     } else if (state.contacts.textileSearchResults.results) {
@@ -163,7 +182,10 @@ export const ContactsSelectors = {
       sections.push({ title: 'Textile Users', data })
     }
 
-    if (state.contacts.addressBookSearchResults.error) {
+    if (state.contacts.addressBookSearchResults.processing) {
+      const data: LoadingSearchResult[] = [{ type: 'loading' }]
+      sections.push({ title: 'Address Book', data })
+    } else if (state.contacts.addressBookSearchResults.error) {
       const data: ErrorSearchResult[] = [{ type: 'error', data: state.contacts.addressBookSearchResults.error }]
       sections.push({ title: 'Address Book', data })
     } else if (state.contacts.addressBookSearchResults.results) {

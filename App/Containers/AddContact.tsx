@@ -12,6 +12,7 @@ import {
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 import { ContactInfo } from '@textile/react-native-sdk'
+import uuid from 'uuid/v4'
 
 import SearchBar from '../Components/SearchBar'
 import RowSeparator from '../Components/RowSeparator'
@@ -33,6 +34,7 @@ interface StateProps {
 
 interface DispatchProps {
   search: (searchString: string) => void
+  clearSearch: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<{}>
@@ -52,6 +54,12 @@ class AddContact extends React.Component<Props> {
     }
   }
 
+  constructor(props: Props) {
+    super(props)
+    // this._headerComponent = this._headerComponent.bind(this)
+    // this.updateSearchString = this.updateSearchString.bind(this)
+  }
+
   render () {
     return (
       <View style={CONTAINER}>
@@ -61,15 +69,7 @@ class AddContact extends React.Component<Props> {
           renderSectionHeader={this.renderSectionHeader}
           renderItem={this.renderRow}
           ItemSeparatorComponent={RowSeparator}
-          ListHeaderComponent={
-            <SearchBar
-              containerStyle={{ backgroundColor: '#FAFCFE' }}
-              inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: s.COLOR_GREY_LIGHT }}
-              additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false, autoFocus: true }}
-              iconColor={s.COLOR_GREY_MEDIUM}
-              onTextChanged={this.updateSearchString}
-            />
-          }
+          ListHeaderComponent={this._headerComponent}
           keyboardShouldPersistTaps='handled'
           keyboardDismissMode='on-drag'
         />
@@ -77,16 +77,41 @@ class AddContact extends React.Component<Props> {
     )
   }
 
-  keyExtractor = (item: ContactInfo) => item.id
+  keyExtractor = (item: SearchResult) => {
+    switch (item.type) {
+      case 'loading':
+        return uuid()
+      case 'textile':
+        return item.data.id
+      case 'addressBook':
+        return item.data
+      case 'error':
+        return uuid()
+    }
+  }
+
+  _headerComponent = () => (
+    <SearchBar
+      containerStyle={{ backgroundColor: '#FAFCFE' }}
+      inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: s.COLOR_GREY_LIGHT }}
+      additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false, autoFocus: true }}
+      iconColor={s.COLOR_GREY_MEDIUM}
+      onTextChanged={this.updateSearchString}
+    />
+  )
 
   renderSectionHeader = ({section: { title }}: { section: SectionListData<SearchResultsSection> }) => {
-    return <Text>{title}</Text>
+    return <Text key={title}>{title}</Text>
   }
 
   renderRow = ({ item, section }: SectionListRenderItemInfo<SearchResult>) => {
     let title = ''
     let id = ''
     switch (item.type) {
+      case 'loading':
+        title = 'Loading'
+        id = uuid() // id?
+        break
       case 'textile':
         title = item.data.username || item.data.id
         id = item.data.id
@@ -97,25 +122,28 @@ class AddContact extends React.Component<Props> {
         break
       case 'error':
         title = item.data
-        id = 'hmm' // TODO: What should this id be?
+        id = uuid() // TODO: What should this id be?
+        break
     }
 
     // const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
-    const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
+    // const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
     return (
       <ListItem
         id={id}
         title={title}
         // leftItem={leftItem}
-        rightItems={rightItems}
+        // rightItems={rightItems}
         onPress={this.onPress}
       />
     )
   }
 
   updateSearchString = (string?: string) => {
-    if (string) {
+    if (string !== undefined && string.length > 0) {
       this.props.search(string)
+    } else {
+      this.props.clearSearch()
     }
   }
 
@@ -132,7 +160,8 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    search: (searchString: string) => dispatch(ContactsActions.searchRequest(searchString))
+    search: (searchString: string) => dispatch(ContactsActions.searchRequest(searchString)),
+    clearSearch: () => dispatch(ContactsActions.clearSearch())
   }
 }
 
