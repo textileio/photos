@@ -1,34 +1,18 @@
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import AccountActions from '../Redux/AccountRedux'
 import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import MockBridgeActions from '../Redux/MockBridge'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { getSDKVersion } from './NodeLifecycle'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
 import Config from 'react-native-config'
-
 import {
   addThread,
-  newTextile,
-  migrateRepo,
-  start,
-  newWallet,
-  walletAccountAt,
-  initRepo,
-  stop,
   threads,
-  ThreadInfo,
-  WalletAccount,
-  version,
-  registerCafe,
-  cafeSessions,
-  CafeSession
+  ThreadInfo
  } from '@textile/react-native-sdk'
-
 import { logNewEvent } from './DeviceLogs'
+import { pendingInvitesTask } from './ThreadsSagas'
 
 export function * mockEvents () {
   yield all([
@@ -70,6 +54,10 @@ export function * startNodeFinished () {
           action.type === getType(MockBridgeActions.startNodeFinished)
         )
 
+      // Handle any pending invites now that we are finished
+      yield call(pendingInvitesTask)
+
+      // Update our camera roll
       const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
       const cameraRollThreadName = 'Camera Roll'
       const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY

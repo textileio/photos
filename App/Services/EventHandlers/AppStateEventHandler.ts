@@ -14,7 +14,7 @@ export default class AppStateEventHandler {
   }
 
   handleAppState (nextState: AppStateStatus) {
-    const currentState = this.store.getState().textileNode.appState
+    const currentState = this.store.getState().textile.appState
     const newState: TextileAppStateStatus = nextState === 'background' && (currentState === 'active' || currentState === 'inactive') ? 'backgroundFromForeground' : nextState
     if (newState !== currentState || newState === 'background') {
       this.store.dispatch(TextileNodeActions.appStateChange(currentState, newState))

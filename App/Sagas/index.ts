@@ -94,16 +94,8 @@ import {
   updateServices
 } from './TextileSagas'
 
-/* ------------- SDK Imports ------------- */
-
-import accountSaga from './Account'
 import * as MockBridge from './MockBridge'
-import * as NodeLifecycle from './NodeLifecycle'
-import * as NodeStarted from './NodeStarted'
-import * as NodeOnline from './NodeOnline'
 import * as TextileSDK from './SDKSagas'
-
-/* ------------- End SDK Imports ------------- */
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -191,20 +183,12 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
 
-    /* ------------- SDK ------------- */
-    call(NodeStarted.onNodeStarted),
-    call(NodeOnline.onNodeOnline),
-    call(accountSaga),
-    call(NodeLifecycle.manageNode),
-    call(NodeLifecycle.handleCreateNodeRequest, dispatch),
-    call(TextileSDK.refreshMessages),
     call(MockBridge.mockEvents),
-    takeLatest(getType(TriggersActions.backgroundFetch), NodeLifecycle.backgroundFetch),
-    takeLatest(getType(TriggersActions.locationUpdate), NodeLifecycle.locationUpdate),
-    // If the user clicked any invites before creating an account, this will now flush them...
-    takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
-    takeLatest(getType(TextileNodeActions.nodeOnline), NodeOnline.nodeOnlineSaga),
-    TextileSDK.initializeAppState()
+
+    /* ------------- SDK ------------- */
+    takeLatest(getType(TriggersActions.backgroundFetch), TextileSDK.backgroundFetch),
+    takeLatest(getType(TriggersActions.locationUpdate), TextileSDK.locationUpdate),
+    call(TextileSDK.startSDK, dispatch)
     /* ------------- End SDK ------------- */
   ])
 }

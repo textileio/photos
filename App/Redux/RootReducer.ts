@@ -17,15 +17,18 @@ import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as migrationReducer } from './MigrationRedux'
 
-export default combineReducers({
+const textileReducer = combineReducers({
   account: accountReducer,
+  textileNode: textileNodeReducer
+})
+
+export default combineReducers({
   auth: authReducer,
   cameraRoll: cameraRollReducer,
   contacts: contactsReducer,
   photoViewing: photoViewingReducer,
   preferences: prefrencesReducer,
   notifications: notificationsReducer,
-  textileNode: textileNodeReducer,
   threads: threadsReducer,
   ui: uiReducer,
   uploadingImages: uploadingImagesReducer,
@@ -33,5 +36,7 @@ export default combineReducers({
   storage: storageReducer,
   startup: startupReducer,
   deviceLogs: deviceLogsReducer,
-  migration: migrationReducer
+  migration: migrationReducer,
+  account: accountReducer,
+  textileNode: textileNodeReducer
 })

@@ -11,14 +11,42 @@
 *************************************************************/
 import { AppState } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, select, take } from 'redux-saga/effects'
+import { all, call, put, select, take, takeLatest } from 'redux-saga/effects'
 import {
   checkCafeMessages,
   addThreadIgnore
 } from '@textile/react-native-sdk'
-import StartupActions from '../Redux/StartupRedux'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { ActionType, getType } from 'typesafe-actions'
+import { Dispatch } from 'redux'
+
+import accountSaga from './Account'
+import * as NodeLifecycle from './NodeLifecycle'
+import * as NodeStarted from './NodeStarted'
+import * as NodeOnline from './NodeOnline'
+
+export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
+  yield all([
+    call(NodeStarted.onNodeStarted),
+    call(NodeOnline.onNodeOnline),
+    call(accountSaga),
+    call(NodeLifecycle.manageNode),
+    call(NodeLifecycle.handleCreateNodeRequest, dispatch),
+    call(refreshMessages),
+    // If the user clicked any invites before creating an account, this will now flush them...
+    takeLatest(getType(TextileNodeActions.nodeOnline), NodeOnline.nodeOnlineSaga),
+    initializeAppState()
+  ])
+}
+export function * backgroundFetch () {
+  // yield call(logNewEvent, 'Background fetch trigger', 'Check new content')
+  yield call(NodeLifecycle.startBackgroundTask)
+}
+
+export function * locationUpdate () {
+  // yield call(logNewEvent, 'Location trigger', 'Check new content')
+  yield call(NodeLifecycle.startBackgroundTask)
+}
 
 export function * initializeAppState () {
   yield take(getType(TextileNodeActions.startupComplete))
