@@ -17,11 +17,6 @@ import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as migrationReducer } from './MigrationRedux'
 
-const textileReducer = combineReducers({
-  account: accountReducer,
-  textileNode: textileNodeReducer
-})
-
 export default combineReducers({
   auth: authReducer,
   cameraRoll: cameraRollReducer,
