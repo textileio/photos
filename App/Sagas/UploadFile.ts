@@ -4,7 +4,7 @@ import { getType } from 'typesafe-actions'
 import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 
-import { getSession } from './SDKSagas'
+import { getSession } from './Account/AccountSagas'
 import { CafeSession } from '@textile/react-native-sdk'
 
 export function * uploadFile (id: string, payloadPath: string) {
@@ -24,4 +24,3 @@ export function * uploadFile (id: string, payloadPath: string) {
     }
   )
 }
-

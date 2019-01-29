@@ -39,6 +39,11 @@ export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
   ])
 }
 
+// Temporary pass through until the node just tracks its own state
+export function * nodeOnline () {
+  yield put(TextileNodeActions.nodeOnline())
+}
+
 export function * backgroundFetch () {
   // yield call(logNewEvent, 'Background fetch trigger', 'Check new content')
   yield call(NodeLifecycle.startBackgroundTask)

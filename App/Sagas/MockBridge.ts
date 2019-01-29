@@ -19,6 +19,7 @@ import {
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask } from './ThreadsSagas'
+import App from '../Containers/App'
 
 export function * mockEvents () {
   yield all([

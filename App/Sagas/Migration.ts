@@ -10,7 +10,7 @@ import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload, LocalProc
 import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads, completeLocalProcessingTasks, allLocalProcessingTasks } from '../Redux/MigrationSelectors'
 import { getPeerId } from '../Redux/AccountSelectors'
 import { prepare } from './ImageSharingSagas'
-import { getSession } from './UploadFile'
+import { getSession } from './Account/AccountSagas'
 
 import {
   addContact, addThreadFiles, addThread, ThreadInfo, ContactInfo, contact, CafeSession, Protobufs

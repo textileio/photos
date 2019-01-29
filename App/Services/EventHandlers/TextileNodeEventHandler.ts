@@ -7,7 +7,6 @@ import { ILocalPhotoResult } from '../../Models/TextileTypes'
 import {  Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
 
-import TextileNodeActions from '../../Redux/TextileNodeRedux'
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import ContactsActions from '../../Redux/ContactsRedux'
@@ -31,9 +30,10 @@ export default class TextileNodeEventHandler {
     Events.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
       this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
     })
-    Events.addListener('onOnline', () => {
-      this.store.dispatch(TextileNodeActions.nodeOnline())
-    })
+    // Now handled internally by sdk
+    // Events.addListener('onOnline', () => {
+    //   this.store.dispatch(MockBridge.nodeOnline())
+    // })
     Events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
       const { type } = update.block
       if (type === BlockType.COMMENT ||

@@ -7,8 +7,7 @@ import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import Config from 'react-native-config'
 
-import { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { RootAction } from '../Redux/Types'
 import * as TextileEvents from '../SDK/events'
 import {
