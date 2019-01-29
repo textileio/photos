@@ -1,4 +1,7 @@
 import { Store } from 'redux'
+import {
+  DeviceEventEmitter
+} from 'react-native'
 
 import { ILocalPhotoResult } from '../../Models/TextileTypes'
 import {  Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
@@ -11,6 +14,10 @@ import ContactsActions from '../../Redux/ContactsRedux'
 import DeviceLogsActions from '../../Redux/DeviceLogsRedux'
 import StorageActions from '../../Redux/StorageRedux'
 import { toTypedNotification } from '../Notifications'
+
+import MockBridge from '../../Redux/MockBridge'
+import AccountActions from '../../Redux/AccountRedux'
+import MigrationActions from '../../Redux/MigrationRedux'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
@@ -53,9 +60,49 @@ export default class TextileNodeEventHandler {
     Events.addListener('onNotification', (payload: NotificationInfo) => {
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
+
+    /* ----- JS Events from SDK -----*/
+
+    // New Bridge actions
+    DeviceEventEmitter.addListener('@textile/startNodeFinished', () => {
+      this.store.dispatch(MockBridge.startNodeFinished())
+    })
+    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayStarting', () => {
+      this.store.dispatch(MockBridge.stopNodeAfterDelayStarting())
+    })
+    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayCancelled', () => {
+      this.store.dispatch(MockBridge.stopNodeAfterDelayCancelled())
+    })
+    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayFinishing', () => {
+      this.store.dispatch(MockBridge.stopNodeAfterDelayFinishing())
+    })
+    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayComplete', () => {
+      this.store.dispatch(MockBridge.stopNodeAfterDelayComplete())
+    })
+    DeviceEventEmitter.addListener('@textile/appStateChange', (payload) => {
+      this.store.dispatch(MockBridge.appStateChange(payload.previousState, payload.newState))
+    })
+    DeviceEventEmitter.addListener('@textile/updateProfile', () => {
+      this.store.dispatch(MockBridge.updateProfile())
+    })
+    DeviceEventEmitter.addListener('@textile/newErrorMessage', (payload) => {
+      this.store.dispatch(MockBridge.newErrorMessage(payload.error))
+    })
+    // Account actions
+    DeviceEventEmitter.addListener('@textile/setRecoveryPhrase', (payload) => {
+      this.store.dispatch(AccountActions.setRecoveryPhrase(payload.recoveryPhrase))
+    })
+    DeviceEventEmitter.addListener('@textile/walletInitSuccess', () => {
+      this.store.dispatch(AccountActions.initSuccess())
+    })
+    // Migration actions
+    DeviceEventEmitter.addListener('@textile/migrationNeeded', (payload) => {
+      this.store.dispatch(MigrationActions.migrationNeeded())
+    })
   }
 
   tearDown () {
     Events.removeAllListeners()
+    DeviceEventEmitter.removeAllListeners()
   }
 }

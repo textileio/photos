@@ -8,7 +8,6 @@ import { useScreens } from 'react-native-screens'
 // import LocationEventHandler from '../Services/EventHandlers/LocationEventHandler'
 import AppStateEventHander from '../Services/EventHandlers/AppStateEventHandler'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
-import TextileSDKEventHandler from '../Services/EventHandlers/TextileSDKEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
 import BackgroundFetchEventHandler from '../Services/EventHandlers/BackgroundFetchEventHandler'
@@ -25,7 +24,6 @@ class App extends Component {
   backgroundFetchEventHandler = new BackgroundFetchEventHandler(store)
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
-  textileSDKEventHandler = new TextileSDKEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
   deepLinkEventHandler = new DeepLinkEventHandler(store)
 
@@ -46,7 +44,6 @@ class App extends Component {
     this.appStateEventHander.tearDown()
     this.notificationEventHandler.tearDown()
     this.textileNodeEventHandler.tearDown()
-    this.textileSDKEventHandler.tearDown()
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
     this.backgroundFetchEventHandler.tearDown()
