@@ -5,7 +5,6 @@ import { View, Text, Image } from 'react-native'
 import { Item } from 'react-navigation-header-buttons'
 import Icon from '@textile/react-native-icon'
 
-import { TextileHeaderButtons } from '../Components/HeaderButtons'
 import CreateThreadModal from '../Components/CreateThreadModal'
 
 import ThreadSelector from '../Components/ThreadSelector'

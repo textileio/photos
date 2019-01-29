@@ -3,7 +3,8 @@ import { Image, ImageStyle, Text, TextStyle, View, ViewStyle } from 'react-nativ
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import Button from '../../../Components/Button'
-import TextileNodeActions, { NodeState } from '../../../Redux/TextileNodeRedux'
+import { NodeState } from '../../../Models/TextileTypes'
+import { getNodeState } from '../../../Redux/SDKSelectors'
 import { RootAction, RootState } from '../../../Redux/Types'
 import * as s from '../../../Themes/Constants'
 
@@ -83,7 +84,7 @@ class MigrationScreen extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const nodeState = state.textileNode.nodeState.state
+  const nodeState = getNodeState(state)
   return {
     processing: /*nodeState !== NodeState.migrationNeeded &&*/ nodeState !== NodeState.started,
     buttonText: /*nodeState === NodeState.migrationNeeded ? 'Start Migration' :*/ 'Complete!',

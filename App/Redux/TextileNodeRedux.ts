@@ -1,6 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { AppStateStatus } from 'react-native'
 import { RootState } from './Types'
+import { NodeState } from '../Models/TextileTypes'
 
 const actions = {
   appStateChange: createAction('APP_STATE_CHANGE', (resolve) => {
@@ -59,19 +60,6 @@ const actions = {
 export type TextileNodeAction = ActionType<typeof actions>
 
 export type TextileAppStateStatus = AppStateStatus | 'unknown' | 'backgroundFromForeground'
-
-export enum NodeState {
-  'nonexistent' = 'nonexistent',
-  'creating' = 'creating',
-  'created' = 'created', // Node has been created, on it's way to starting
-  'starting' = 'starting',
-  'started' = 'started',
-  'stopping' = 'stopping',
-  'stopped' = 'stopped', // Node has been explicitly stopped, different than created
-  'creatingWallet' = 'creatingWallet',
-  'derivingAccount' = 'derivingAccount',
-  'initializingRepo' = 'initializingRepo'
-}
 
 interface TextileNodeState {
   readonly appState: TextileAppStateStatus

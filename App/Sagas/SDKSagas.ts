@@ -11,8 +11,9 @@
 *************************************************************/
 import { AppState } from 'react-native'
 import { delay } from 'redux-saga'
-import { all, call, put, select, take, takeLatest } from 'redux-saga/effects'
+import { all, call, put, select, take, takeEvery, takeLatest } from 'redux-saga/effects'
 import {
+  CafeSession,
   addThreadIgnore,
   checkCafeMessages,
   profile,
@@ -28,6 +29,7 @@ import accountSaga from './Account'
 import * as NodeLifecycle from './NodeLifecycle'
 import MockBridge from '../Redux/MockBridge'
 import { RootState } from '../Redux/Types'
+import { bestSession } from '../Redux/AccountSelectors'
 
 export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
   yield all([
@@ -37,9 +39,26 @@ export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
     call(NodeLifecycle.handleCreateNodeRequest, dispatch),
     call(refreshMessages),
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
+    takeEvery(getType(TextileNodeActions.ignoreFileRequest), ignoreFile),
     initializeAppState()
   ])
 }
+
+export function * getSession (depth: number = 0): any {
+  const session: CafeSession | undefined = yield select(bestSession)
+  if (!session || new Date(session.expiry) < new Date()) {
+    if (depth === 0) {
+      yield put(AccountActions.refreshCafeSessionsRequest())
+      yield take(getType(AccountActions.cafeSessionsSuccess))
+      yield call(getSession, 1)
+    } else {
+      throw new Error('unable to get CafeSession')
+    }
+  } else {
+    return session
+  }
+}
+
 export function * backgroundFetch () {
   // yield call(logNewEvent, 'Background fetch trigger', 'Check new content')
   yield call(NodeLifecycle.startBackgroundTask)
@@ -85,6 +104,17 @@ export function * updateAvatarAndProfile (hash: string) {
   } catch (error) {
     yield put(AccountActions.profileError(error))
   }
+}
+
+export function * waitUntilOnline(ms: number) {
+  let ttw = ms
+  let online = yield select(TextileNodeSelectors.online)
+  while (!online && 0 < ttw) {
+    yield delay(50)
+    online = yield select(TextileNodeSelectors.online)
+    ttw -= 50
+  }
+  return online
 }
 
 function * nodeOnlineSaga () {

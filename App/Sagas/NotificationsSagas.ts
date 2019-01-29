@@ -21,6 +21,7 @@ import {
   readAllNotifications as readAll,
   readNotification
 } from '@textile/react-native-sdk'
+import * as TextileSDK from './SDKSagas'
 import NavigationService from '../Services/NavigationService'
 
 import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
@@ -120,7 +121,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         break
       }
       case NotificationType.InviteReceivedNotification: {
-        yield * waitUntilOnline(1000)
+        yield * TextileSDK.waitUntilOnline(1000)
         yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
         break
       }
@@ -135,7 +136,7 @@ export function * refreshNotifications () {
     const busy = yield select(NotificationsSelectors.refreshing)
     // skip multi-request back to back
     if (busy) { return }
-    yield * waitUntilOnline(1000)
+    yield * TextileSDK.waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
     const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(notifications, '', 99) // TODO: offset?
     const typedNotifs = notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
@@ -155,15 +156,4 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
   } catch (error) {
     // Ignore invite
   }
-}
-
-export function * waitUntilOnline(ms: number) {
-  let ttw = ms
-  let online = yield select(TextileNodeSelectors.online)
-  while (!online && 0 < ttw) {
-    yield delay(50)
-    online = yield select(TextileNodeSelectors.online)
-    ttw -= 50
-  }
-  return online
 }

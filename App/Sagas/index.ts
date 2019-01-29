@@ -11,7 +11,6 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import TriggersActions from '../Redux/TriggersRedux'
@@ -141,8 +140,6 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(PhotoViewingActions.refreshThreadsRequest), refreshThreads),
     takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
-
-    takeEvery(getType(TextileNodeActions.ignoreFileRequest), TextileSDK.ignoreFile),
 
     // check for new images on camera roll
     call(refreshLocalImages),
