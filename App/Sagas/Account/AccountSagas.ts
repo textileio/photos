@@ -10,7 +10,7 @@ import {
   setUsername as username,
   ContactInfo
 } from '@textile/react-native-sdk'
-import { ICafeSessions } from '@textile/react-native-protobufs'
+import { ICafeSession, ICafeSessions } from '@textile/react-native-protobufs'
 
 export function * refreshProfile () {
   while (true) {
@@ -65,8 +65,13 @@ export function * getCafeSessions () {
   while (true) {
     try {
       yield take(getType(AccountActions.getCafeSessionsRequest))
-      const sessions: Readonly<ICafeSessions> = yield call(cafeSessions)
-      yield put(AccountActions.cafeSessionsSuccess(sessions))
+      const sessions: ICafeSessions = yield call(cafeSessions)
+      const values: ReadonlyArray<ICafeSession> | undefined | null = sessions.values
+      if (!values) {
+        yield put(AccountActions.cafeSessionsSuccess([]))
+      } else {
+        yield put(AccountActions.cafeSessionsSuccess(values))
+      }
     } catch (error) {
       yield put(AccountActions.cafeSessionsError(error))
     }
@@ -78,10 +83,14 @@ export function * refreshCafeSessions () {
     try {
       yield take(getType(AccountActions.refreshCafeSessionsRequest))
       const sessions: Readonly<ICafeSessions> = yield call(cafeSessions)
-      yield put(AccountActions.cafeSessionsSuccess(sessions))
-      // const effects = sessions.map((session) => call(refreshCafeSession, session.id))
-      // const refreshedSessions: ReadonlyArray<CafeSession> = yield all(effects)
-      // yield put(AccountActions.cafeSessionsSuccess(refreshedSessions))
+      const values: ReadonlyArray<ICafeSession> | undefined | null = sessions.values
+      if (!values) {
+        yield put(AccountActions.cafeSessionsSuccess([]))
+      } else {
+        const effects = values.map((session) => call(refreshCafeSession, session.id!))
+        const refreshedValues: ReadonlyArray<ICafeSession> = yield all(effects)
+        yield put(AccountActions.cafeSessionsSuccess(refreshedValues))
+      }
     } catch (error) {
       yield put(AccountActions.cafeSessionsError(error))
     }

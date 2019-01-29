@@ -5,14 +5,11 @@ import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 
 import AccountActions from '../Redux/AccountRedux'
-import { bestSession } from '../Redux/AccountSelectors'
+import { bestSession, getSessionMillis } from '../Redux/AccountSelectors'
 import { ICafeSession } from '@textile/react-native-protobufs'
 
 export function * uploadFile (id: string, payloadPath: string) {
   const session: ICafeSession = yield call(getSession)
-  console.log('::::')
-  console.log(session)
-
   yield call(
     Upload.startUpload,
     {
@@ -31,15 +28,19 @@ export function * uploadFile (id: string, payloadPath: string) {
 
 export function * getSession (depth: number = 0): any {
   const session: ICafeSession | undefined = yield select(bestSession)
-  // if (!session || new Date(session.exp) < new Date()) {
-  //   if (depth === 0) {
-  //     yield put(AccountActions.refreshCafeSessionsRequest())
-  //     yield take(getType(AccountActions.cafeSessionsSuccess))
-  //     yield call(getSession, 1)
-  //   } else {
-  //     throw new Error('unable to get CafeSession')
-  //   }
-  // } else {
+  if (!session) {
+    return undefined
+  }
+  const millis = getSessionMillis(session)
+  if (new Date(millis) < new Date()) {
+    if (depth === 0) {
+      yield put(AccountActions.refreshCafeSessionsRequest())
+      yield take(getType(AccountActions.cafeSessionsSuccess))
+      yield call(getSession, 1)
+    } else {
+      throw new Error('unable to get CafeSession')
+    }
+  } else {
     return session
-  // }
+  }
 }
