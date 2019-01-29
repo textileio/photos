@@ -8,9 +8,9 @@ import {
   profile,
   setAvatar as updateAvatar,
   setUsername as username,
-  ContactInfo,
-  CafeSession
+  ContactInfo
 } from '@textile/react-native-sdk'
+import { ICafeSessions } from '@textile/react-native-protobufs'
 
 export function * refreshProfile () {
   while (true) {
@@ -65,7 +65,7 @@ export function * getCafeSessions () {
   while (true) {
     try {
       yield take(getType(AccountActions.getCafeSessionsRequest))
-      const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
+      const sessions: Readonly<ICafeSessions> = yield call(cafeSessions)
       yield put(AccountActions.cafeSessionsSuccess(sessions))
     } catch (error) {
       yield put(AccountActions.cafeSessionsError(error))
@@ -77,10 +77,11 @@ export function * refreshCafeSessions () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshCafeSessionsRequest))
-      const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
-      const effects = sessions.map((session) => call(refreshCafeSession, session.id))
-      const refreshedSessions: ReadonlyArray<CafeSession> = yield all(effects)
-      yield put(AccountActions.cafeSessionsSuccess(refreshedSessions))
+      const sessions: Readonly<ICafeSessions> = yield call(cafeSessions)
+      yield put(AccountActions.cafeSessionsSuccess(sessions))
+      // const effects = sessions.map((session) => call(refreshCafeSession, session.id))
+      // const refreshedSessions: ReadonlyArray<CafeSession> = yield all(effects)
+      // yield put(AccountActions.cafeSessionsSuccess(refreshedSessions))
     } catch (error) {
       yield put(AccountActions.cafeSessionsError(error))
     }

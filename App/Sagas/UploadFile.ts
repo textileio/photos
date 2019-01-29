@@ -6,16 +6,19 @@ import Config from 'react-native-config'
 
 import AccountActions from '../Redux/AccountRedux'
 import { bestSession } from '../Redux/AccountSelectors'
-import { CafeSession } from '@textile/react-native-sdk'
+import { ICafeSession } from '@textile/react-native-protobufs'
 
 export function * uploadFile (id: string, payloadPath: string) {
-  const session: CafeSession = yield call(getSession)
+  const session: ICafeSession = yield call(getSession)
+  console.log('::::')
+  console.log(session)
+
   yield call(
     Upload.startUpload,
     {
       customUploadId: id,
       path: payloadPath,
-      url: `${session.cafe.url}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
+      url: `${session!.cafe!.url}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
       method: 'POST',
       type: 'raw',
       headers: {
@@ -27,16 +30,16 @@ export function * uploadFile (id: string, payloadPath: string) {
 }
 
 export function * getSession (depth: number = 0): any {
-  const session: CafeSession | undefined = yield select(bestSession)
-  if (!session || new Date(session.exp) < new Date()) {
-    if (depth === 0) {
-      yield put(AccountActions.refreshCafeSessionsRequest())
-      yield take(getType(AccountActions.cafeSessionsSuccess))
-      yield call(getSession, 1)
-    } else {
-      throw new Error('unable to get CafeSession')
-    }
-  } else {
+  const session: ICafeSession | undefined = yield select(bestSession)
+  // if (!session || new Date(session.exp) < new Date()) {
+  //   if (depth === 0) {
+  //     yield put(AccountActions.refreshCafeSessionsRequest())
+  //     yield take(getType(AccountActions.cafeSessionsSuccess))
+  //     yield call(getSession, 1)
+  //   } else {
+  //     throw new Error('unable to get CafeSession')
+  //   }
+  // } else {
     return session
-  }
+  // }
 }

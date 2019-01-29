@@ -20,12 +20,15 @@ export function getUsername (state: RootState): string | undefined {
 }
 
 export function bestSession(state: RootState) {
-  const allSessions = state.account.cafeSessions.sessions
-  const sorted = allSessions.slice().sort((a, b) => {
-    const aExpiry = new Date(a.exp).getTime()
-    const bExpiry = new Date(b.exp).getTime()
-    return aExpiry - bExpiry
-  })
-  const newest = sorted.pop()
-  return newest
+  const allSessions = state.account.cafeSessions.sessions.values
+  if (allSessions && allSessions.length > 0) {
+    return allSessions[0]
+  }
+  // const sorted = allSessions.slice().sort((a, b) => {
+  //   const aExpiry = new Date(a.exp).getTime()
+  //   const bExpiry = new Date(b.exp).getTime()
+  //   return aExpiry - bExpiry
+  // })
+  // const newest = sorted.pop()
+  // return newest
 }
