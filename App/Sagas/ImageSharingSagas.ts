@@ -6,23 +6,19 @@ import {
   prepareFilesAsync,
   addThreadFiles,
   addThreadFilesByTarget,
-  profile,
-  setAvatar,
   BlockInfo,
-  ContactInfo,
   Protobufs
 } from '@textile/react-native-sdk'
 import { SharedImage } from '../Models/TextileTypes'
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
 import { processingImageByUuid, allUploadsComplete } from '../Redux/ProcessingImagesSelectors'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
-import AccountActions from '../Redux/AccountRedux'
-import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 import { waitFor } from '@textile/redux-saga-wait-for'
 import { RootAction } from '../Redux/Types'
+import * as TextileSDK from './SDKSagas'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
   const { threadId } = action.payload
@@ -121,7 +117,7 @@ export function * prepareImage (uuid: string) {
     if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['raw'] && preparedFiles.dir.files['raw'].hash) {
       // TODO: This doesn't seem right in here, but ok
       const hash = preparedFiles.dir.files['raw'].hash as string
-      yield fork(updateAvatarAndProfile, hash)
+      yield fork(TextileSDK.updateAvatarAndProfile, hash)
     }
     yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
@@ -185,18 +181,4 @@ export async function prepare (image: SharedImage, destinationThreadId: string):
   } catch (e) {
   }
   return addResult
-}
-
-function * updateAvatarAndProfile (hash: string) {
-  try {
-    const online: boolean = yield select(TextileNodeSelectors.online)
-    if (!online) {
-      yield take(getType(TextileNodeActions.nodeOnline))
-    }
-    yield call(setAvatar, hash)
-    const profileResult: ContactInfo = yield call(profile)
-    yield put(AccountActions.refreshProfileSuccess(profileResult))
-  } catch (error) {
-    yield put(AccountActions.profileError(error))
-  }
 }

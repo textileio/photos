@@ -2,6 +2,8 @@ import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
+import ContactsActions from '../Redux/ContactsRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import MockBridgeActions from '../Redux/MockBridge'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
@@ -56,6 +58,11 @@ export function * startNodeFinished () {
 
       // Handle any pending invites now that we are finished
       yield call(pendingInvitesTask)
+
+      // Refresh contacts
+      yield put(ContactsActions.getContactsRequest())
+      // Refresh threads
+      yield put(PhotoViewingActions.refreshThreadsRequest())
 
       // Update our camera roll
       const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)

@@ -108,8 +108,8 @@ function * createAndStartNode(dispatch: Dispatch): any {
       }
     }
 
-    yield put(MockBridgeActions.startNodeFinished())
     yield put(TextileNodeActions.startNodeSuccess())
+    yield put(MockBridgeActions.startNodeFinished())
   } catch (error) {
     try {
       // TODO: put migration back

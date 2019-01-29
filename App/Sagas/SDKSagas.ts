@@ -13,21 +13,25 @@ import { AppState } from 'react-native'
 import { delay } from 'redux-saga'
 import { all, call, put, select, take, takeLatest } from 'redux-saga/effects'
 import {
+  addThreadIgnore,
   checkCafeMessages,
-  addThreadIgnore
+  profile,
+  setAvatar,
+  ContactInfo
 } from '@textile/react-native-sdk'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 
+import AccountActions from '../Redux/AccountRedux'
+import MockActions from '../Redux/MockBridge'
 import accountSaga from './Account'
 import * as NodeLifecycle from './NodeLifecycle'
-import * as NodeStarted from './NodeStarted'
 import * as NodeOnline from './NodeOnline'
 
 export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
   yield all([
-    call(NodeStarted.onNodeStarted),
+    call(onNodeStarted),
     call(NodeOnline.onNodeOnline),
     call(accountSaga),
     call(NodeLifecycle.manageNode),
@@ -46,18 +50,6 @@ export function * backgroundFetch () {
 export function * locationUpdate () {
   // yield call(logNewEvent, 'Location trigger', 'Check new content')
   yield call(NodeLifecycle.startBackgroundTask)
-}
-
-export function * initializeAppState () {
-  yield take(getType(TextileNodeActions.startupComplete))
-  const defaultAppState = yield select(TextileNodeSelectors.appState)
-  let queriedAppState = defaultAppState
-  while (queriedAppState.match(/default|unknown/)) {
-    yield delay(10)
-    const currentAppState = yield call(() => AppState.currentState)
-    queriedAppState = currentAppState || 'unknown'
-  }
-  yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
 
 export function * refreshMessages () {
@@ -81,4 +73,44 @@ export function * ignoreFile (action: ActionType<typeof TextileNodeActions.ignor
   } catch (error) {
     yield put(TextileNodeActions.ignoreFileError(error))
   }
+}
+
+export function * updateAvatarAndProfile (hash: string) {
+  try {
+    const online: boolean = yield select(TextileNodeSelectors.online)
+    if (!online) {
+      yield take(getType(TextileNodeActions.nodeOnline))
+    }
+    yield call(setAvatar, hash)
+    const profileResult: ContactInfo = yield call(profile)
+    yield put(AccountActions.refreshProfileSuccess(profileResult))
+  } catch (error) {
+    yield put(AccountActions.profileError(error))
+  }
+}
+
+function * onNodeStarted () {
+  while (yield take([getType(TextileNodeActions.startNodeSuccess), getType(AccountActions.initSuccess)])) {
+    try {
+      // TODO: Double-check that these run fine now that they are likely called before onboarding success
+      yield put(AccountActions.refreshProfileRequest())
+      yield put(AccountActions.refreshPeerIdRequest())
+      yield put(AccountActions.getCafeSessionsRequest())
+      yield call(NodeLifecycle.getSDKVersion)
+    } catch (error) {
+      // nothing to do here for now
+    }
+  }
+}
+
+function * initializeAppState () {
+  yield take(getType(TextileNodeActions.startupComplete))
+  const defaultAppState = yield select(TextileNodeSelectors.appState)
+  let queriedAppState = defaultAppState
+  while (queriedAppState.match(/default|unknown/)) {
+    yield delay(10)
+    const currentAppState = yield call(() => AppState.currentState)
+    queriedAppState = currentAppState || 'unknown'
+  }
+  yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
 }
