@@ -66,6 +66,9 @@ export function * getCafeSessions () {
     try {
       yield take(getType(AccountActions.getCafeSessionsRequest))
       const sessions: ICafeSessions = yield call(cafeSessions)
+      if (!sessions) {
+        yield put(AccountActions.cafeSessionsSuccess([]))
+      }
       const values: ReadonlyArray<ICafeSession> | undefined | null = sessions.values
       if (!values) {
         yield put(AccountActions.cafeSessionsSuccess([]))
@@ -83,6 +86,9 @@ export function * refreshCafeSessions () {
     try {
       yield take(getType(AccountActions.refreshCafeSessionsRequest))
       const sessions: Readonly<ICafeSessions> = yield call(cafeSessions)
+      if (!sessions) {
+        yield put(AccountActions.cafeSessionsSuccess([]))
+      }
       const values: ReadonlyArray<ICafeSession> | undefined | null = sessions.values
       if (!values) {
         yield put(AccountActions.cafeSessionsSuccess([]))

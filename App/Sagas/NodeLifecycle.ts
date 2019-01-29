@@ -112,7 +112,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
     yield put(TextileNodeActions.startingNode())
     yield call(start)
     const sessions: ICafeSessions = yield call(cafeSessions)
-    if (!sessions.values || sessions.values.length < 1) {
+    if (!sessions || !sessions.values || sessions.values.length < 1) {
       const cafeOverride: string = Config.RN_TEXTILE_CAFE_OVERRIDE
       if (cafeOverride) {
         yield call(registerOverrideCafe, cafeOverride)
