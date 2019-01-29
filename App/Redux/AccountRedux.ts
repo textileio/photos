@@ -1,5 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { ContactInfo, CafeSession } from '@textile/react-native-sdk'
+import { ContactInfo } from '@textile/react-native-sdk'
+import { ICafeSession } from '@textile/react-native-protobufs'
 
 const actions = {
   initSuccess: createAction('INITIALIZATION_SUCCESS', (resolve) => {
@@ -37,7 +38,7 @@ const actions = {
   getCafeSessionsRequest: createAction('GET_CAFE_SESSIONS_REQUEST'),
   refreshCafeSessionsRequest: createAction('REFRESH_CAFE_SESSIONS_REQUEST'),
   cafeSessionsSuccess: createAction('CAFE_SESSIONS_SUCCESS', (resolve) => {
-    return (sessions: ReadonlyArray<CafeSession>) => resolve({ sessions })
+    return (sessions: ReadonlyArray<ICafeSession>) => resolve({ sessions })
   }),
   cafeSessionsError: createAction('CAFE_SESSIONS_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -63,7 +64,7 @@ interface AccountState {
   }
   recoveryPhrase?: string,
   cafeSessions: {
-    sessions: ReadonlyArray<CafeSession>
+    sessions: ReadonlyArray<ICafeSession>
     processing: boolean
     error?: string
   }

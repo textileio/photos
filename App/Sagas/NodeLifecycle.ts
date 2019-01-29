@@ -21,9 +21,10 @@ import {
   version,
   registerCafe,
   cafeSessions,
-  CafeSession,
   migrateRepo
  } from '@textile/react-native-sdk'
+
+import { ICafeSessions } from '@textile/react-native-protobufs'
 
 export const REPO_PATH = `${RNFS.DocumentDirectoryPath}/textile-go`
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
@@ -84,6 +85,7 @@ export function * handleCreateNodeRequest (dispatch: Dispatch) {
 }
 
 function * createAndStartNode(dispatch: Dispatch): any {
+  const debug = Config.RN_RELEASE_TYPE !== 'production'
   try {
     yield put(TextileNodeActions.creatingNode())
     // TODO: put repo migration back in
@@ -92,13 +94,12 @@ function * createAndStartNode(dispatch: Dispatch): any {
       yield call(RNFS.mkdir, REPO_PATH)
       yield call(moveTextileFiles)
     }
-    const logLevel = Config.RN_RELEASE_TYPE === 'production' ? 'ERROR' : 'DEBUG'
-    yield call(newTextile, REPO_PATH, LOG_LEVELS(logLevel))
+    yield call(newTextile, REPO_PATH, debug)
     yield put(TextileNodeActions.createNodeSuccess())
     yield put(TextileNodeActions.startingNode())
     yield call(start)
-    const sessions: ReadonlyArray<CafeSession> = yield call(cafeSessions)
-    if (sessions.length < 1) {
+    const sessions: ICafeSessions = yield call(cafeSessions)
+    if (!sessions || !sessions.values || sessions.values.length < 1) {
       const cafeOverride: string = Config.RN_TEXTILE_CAFE_OVERRIDE
       if (cafeOverride) {
         yield call(registerOverrideCafe, cafeOverride)
@@ -127,7 +128,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
         yield put(TextileNodeActions.derivingAccount())
         const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
         yield put(TextileNodeActions.initializingRepo())
-        yield call(initRepo, walletAccount.seed, REPO_PATH, true)
+        yield call(initRepo, walletAccount.seed, REPO_PATH, true, debug)
         yield call(createAndStartNode, dispatch)
         yield call(TextileEvents.walletInitSuccess)
       } else {
@@ -243,6 +244,7 @@ function * stopNodeAfterDelay (ms: number) {
 }
 
 export function * getSDKVersion () {
+
   try {
     const v: string = yield call(version)
     yield put(TextileNodeActions.getSDKVersionSuccess(v))

@@ -1,51 +1,27 @@
 import {AsyncStorage} from 'react-native'
 import { ContactInfo, CafeSession } from '@textile/react-native-sdk'
 
-export interface ErrorType {
-  error?: Error
-}
-export default class Store {
+export default class TextileStore {
+  keys = {
+    profile: '@textile/profile',
+    peerId: '@textile/peerId',
+    sdkVersion: '@textile/sdkVersion'
+  }
+  clear = async () => {
+    const storeKeys = Object.keys(this.keys).map((key) => this.keys[key])
+    await AsyncStorage.multiRemove(storeKeys)
+  }
   serialize = (data: any) => {
     return JSON.stringify(data)
   }
-  setAccountProfile = async (profile: ContactInfo): Promise<void | ErrorType> => {
-    try {
-      await AsyncStorage.setItem('@textile/profile', this.serialize(profile))
-    } catch (error) {
-      // Error retrieving data
-      return {error}
+  getSDKVersion = async (): Promise<string | void> => {
+    const result = await AsyncStorage.getItem(this.keys.sdkVersion)
+    if (result) {
+      return result
     }
+    return
   }
-  setPeerId = async (peerId: string): Promise<void | ErrorType> => {
-    try {
-      await AsyncStorage.setItem('@textile/peerId', peerId)
-    } catch (error) {
-      // Error retrieving data
-      return {error}
-    }
-  }
-  getAccountProfile = async (): Promise<{result: ContactInfo} | ErrorType> => {
-    try {
-      const result = await AsyncStorage.getItem('@textile/profile')
-      if (result) {
-        return {result: JSON.parse(result) as ContactInfo}
-      }
-    } catch (error) {
-      // Error retrieving data
-      return {error}
-    }
-    return {error: new Error('unknown')}
-  }
-  getPeerId = async (): Promise<{result: string} | ErrorType> => {
-    try {
-      const result = await AsyncStorage.getItem('@textile/peerId')
-      if (result) {
-        return {result}
-      }
-    } catch (error) {
-      // Error retrieving data
-      return {error}
-    }
-    return {error: new Error('unknown')}
+  setSDKVersion = async (version: string): Promise<void> => {
+    await AsyncStorage.setItem(this.keys.sdkVersion, version)
   }
 }

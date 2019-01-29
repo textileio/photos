@@ -7,7 +7,10 @@ import { getSession } from './Account/AccountSagas'
 import { CafeSession } from '@textile/react-native-sdk'
 
 export function * uploadFile (id: string, payloadPath: string) {
-  const session: CafeSession = yield call(getSession)
+  const session: ICafeSession | undefined = yield call(getSession)
+  if (!session || !session.cafe || !session.cafe.url || !session.access) {
+    return
+  }
   yield call(
     Upload.startUpload,
     {

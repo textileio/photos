@@ -14,7 +14,7 @@ import BackgroundFetchEventHandler from '../Services/EventHandlers/BackgroundFet
 import NotificationEventHandler from '../Services/EventHandlers/NotificationEventHandler'
 import { errorHandler } from '../Services/ErrorHandler'
 
-import Textile from '../SDK'
+import {Textile} from '../SDK'
 
 useScreens()
 
@@ -28,7 +28,7 @@ class App extends Component {
   textileNodeEventHandler = new TextileNodeEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
   deepLinkEventHandler = new DeepLinkEventHandler(store)
-  textile = new Textile({store})
+  textile = new Textile({})
 
   render () {
     return (
@@ -41,7 +41,7 @@ class App extends Component {
   }
 
   componentWillMount () {
-    this.textile.setup()
+    this.textile.setup(store)
   }
   componentWillUnmount () {
     if (super.componentWillUnmount) {

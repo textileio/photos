@@ -14,6 +14,7 @@ import { getPeerId } from '../../../Redux/AccountSelectors'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
+import Textile from '../../../SDK'
 
 const WIDTH = Dimensions.get('window').width
 
@@ -98,7 +99,7 @@ class UserProfile extends React.PureComponent {
             <View style={styles.logoContainer}>
               <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
               <Text style={styles.versionDescription}>
-                {VersionNumber.appVersion} ({VersionNumber.buildVersion}) {this.props.sdkVersion}
+                {VersionNumber.appVersion} ({VersionNumber.buildVersion}) {this.props.apiVersion}
               </Text>
             </View>
           </TouchableWithoutFeedback>
@@ -157,7 +158,7 @@ const mapStateToProps = (state) => {
     peerId: getPeerId(state) || 'sorry, there was an error',
     online,
     nodeRunning,
-    sdkVersion: verboseUi ? state.textileNode.sdkVersion || '' : ''
+    apiVersion: Textile.api.version
   }
 }
 

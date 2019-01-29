@@ -3,6 +3,7 @@ import {
     File,
     ThreadInfo,
     ThreadType,
+    ThreadSharing,
     ThreadState,
     BlockInfo,
     BlockType,
@@ -48,6 +49,7 @@ export default {
             block_cnt: 1,
             file_cnt: 1,
             type: 'PUBLIC' as ThreadType,
+            sharing: 'SHARED' as ThreadSharing,
             state: 'LOADED' as ThreadState
           }
         resolve(JSON.stringify(mockThreadInfo))
