@@ -31,6 +31,9 @@ const actions = {
   ),
   nodeOnline: createAction('@bridge/NODE_ONLINE', (resolve) => {
     return () => resolve()
+  }),
+  refreshMessagesRequest: createAction('@bridge/REFRESH_MESSAGES', (resolve) => {
+    return () => resolve()
   })
 }
 

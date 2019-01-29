@@ -11,7 +11,7 @@ import MigrationActions from '../../Redux/MigrationRedux'
 import styles from './statics/styles'
 import onboardingStyles from '../Styles/OnboardingStyle'
 import PreferencesActions from '../../Redux/PreferencesRedux'
-import TextileNodeActions from '../../Redux/TextileNodeRedux'
+import MockBridgeActions from '../../Redux/MockBridge'
 import CustomFeedItem from '../../SB/components/FeedItem/Custom'
 import { TextileHeaderButtons } from '../../Components/HeaderButtons'
 import Avatar from '../../Components/Avatar'
@@ -163,7 +163,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     refreshNotifications: () => dispatch(NotificationsActions.refreshNotificationsRequest()),
     readAllNotifications: () => dispatch(NotificationsActions.readAllNotificationsRequest()),
-    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
+    refreshMessages: () => { dispatch(MockBridgeActions.refreshMessagesRequest()) },
     clickNotification: (notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
     completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) },
     requestMigration: () => { dispatch(MigrationActions.requestMigration()) }

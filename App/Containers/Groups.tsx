@@ -8,7 +8,7 @@ import {RootAction, RootState} from '../Redux/Types'
 
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 import { ContactsSelectors } from '../Redux/ContactsRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import MockBridgeActions from '../Redux/MockBridge'
 import UIActions from '../Redux/UIRedux'
 
 import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'
@@ -188,7 +188,7 @@ const mapStateToProps = (state: RootState): StateProps => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     refreshMessages: () => {
-      dispatch(TextileNodeActions.refreshMessagesRequest())
+      dispatch(MockBridgeActions.refreshMessagesRequest())
     },
     navigateToThread: (id: string, name: string) => {
       dispatch(UIActions.navigateToThreadRequest(id, name))

@@ -1,5 +1,6 @@
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
+import * as TextileSDK from '../Sagas/SDKSagas'
 import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import ContactsActions from '../Redux/ContactsRedux'
@@ -24,11 +25,26 @@ export function * mockEvents () {
     call(stopNodeAfterDelayCancelled),
     call(stopNodeAfterDelayFinishing),
     call(stopNodeAfterDelayComplete),
+    call(refreshMessages),
     call(nodeOnline),
     call(newError)
   ])
 }
-
+export function * refreshMessages () {
+  while (true) {
+    try {
+      // Block until we get an active or background app state
+      const action: ActionType<typeof MockBridgeActions.refreshMessagesRequest> =
+        yield take((action: RootAction) =>
+          action.type === getType(MockBridgeActions.refreshMessagesRequest)
+        )
+      yield call(TextileSDK.refreshMessages)
+      yield call(logNewEvent, 'refreshMessages', action.type)
+    } catch (error) {
+      // handle errors
+    }
+  }
+}
 export function * appStateChange () {
   while (true) {
     try {

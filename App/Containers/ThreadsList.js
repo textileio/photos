@@ -12,7 +12,7 @@ import Avatar from '../Components/Avatar'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import MockBridgeActions from '../Redux/MockBridge'
 import UIActions from '../Redux/UIRedux'
 import { getPhotoFeed, threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
 import { getProcessingImages } from '../Redux/ProcessingImagesSelectors'
@@ -249,7 +249,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
     enableNotifications: () => { dispatch(PreferencesActions.toggleServicesRequest('notifications', true)) },
-    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
+    refreshMessages: () => { dispatch(MockBridgeActions.refreshMessagesRequest()) },
     showWalletPicker: (threadId) => { dispatch(UIActions.showWalletPicker(threadId)) },
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
     leaveThread: (threadId) => { dispatch(PhotoViewingActions.removeThreadRequest(threadId)) }
