@@ -20,7 +20,9 @@ import ContactsActions from '../Redux/ContactsRedux'
 
 import { startup } from './StartupSagas'
 
-import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration } from './Migration'
+import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration, handleMigrationNeeded } from './Migration'
+
+import accountSaga from './Account'
 
 import {
   showImagePicker,
@@ -106,9 +108,12 @@ export default function * root (dispatch: Dispatch) {
     call(startMonitoringExistingUploads),
 
     call(runRecurringMigrationTasks),
+    call(handleMigrationNeeded),
     call(handleMigrationRequest, dispatch),
     call(handleCancelMigration),
     call(handleRetryMigration, dispatch),
+
+    call(accountSaga),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),

@@ -27,3 +27,17 @@ export function * appStateChange (previousState: string, newState: string) {
 export function * newErrorMessage (error: string) {
   DeviceEventEmitter.emit('@textile/newErrorMessage', {error})
 }
+
+export function * updateProfile () {
+  DeviceEventEmitter.emit('@textile/updateProfile')
+}
+export function * walletInitSuccess () {
+  DeviceEventEmitter.emit('@textile/walletInitSuccess')
+}
+
+export function * setRecoveryPhrase (recoveryPhrase: string) {
+  DeviceEventEmitter.emit('@textile/setRecoveryPhrase', {recoveryPhrase})
+}
+export function * migrationNeeded () {
+  DeviceEventEmitter.emit('@textile/migrationNeeded')
+}

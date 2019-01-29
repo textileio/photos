@@ -6,6 +6,8 @@ import {
 import { RootState } from '../../Redux/Types'
 
 import MockBridge from '../../Redux/MockBridge'
+import AccountActions from '../../Redux/AccountRedux'
+import MigrationActions from '../../Redux/MigrationRedux'
 
 export default class TextileSDKEventHandler {
   store: Store<RootState>
@@ -16,6 +18,7 @@ export default class TextileSDKEventHandler {
   }
 
   setup () {
+    // New Bridge actions
     DeviceEventEmitter.addListener('@textile/startNodeFinished', () => {
       this.store.dispatch(MockBridge.startNodeFinished())
     })
@@ -34,8 +37,22 @@ export default class TextileSDKEventHandler {
     DeviceEventEmitter.addListener('@textile/appStateChange', (payload) => {
       this.store.dispatch(MockBridge.appStateChange(payload.previousState, payload.newState))
     })
+    DeviceEventEmitter.addListener('@textile/updateProfile', () => {
+      this.store.dispatch(MockBridge.updateProfile())
+    })
     DeviceEventEmitter.addListener('@textile/newErrorMessage', (payload) => {
       this.store.dispatch(MockBridge.newErrorMessage(payload.error))
+    })
+    // Account actions
+    DeviceEventEmitter.addListener('@textile/setRecoveryPhrase', (payload) => {
+      this.store.dispatch(AccountActions.setRecoveryPhrase(payload.recoveryPhrase))
+    })
+    DeviceEventEmitter.addListener('@textile/walletInitSuccess', () => {
+      this.store.dispatch(AccountActions.initSuccess())
+    })
+    // Migration actions
+    DeviceEventEmitter.addListener('@textile/migrationNeeded', (payload) => {
+      this.store.dispatch(MigrationActions.migrationNeeded())
     })
   }
 

@@ -72,11 +72,19 @@ export function * handleRetryMigration(dispatch: Dispatch) {
 }
 
 export function * handleCancelMigration() {
- while (true) {
-   yield take(getType(MigrationActions.cancelMigration))
-   yield call(cleanupMigrationFiles)
-   yield call(cleanupArtifacts)
+  while (true) {
+    yield take(getType(MigrationActions.cancelMigration))
+    yield call(cleanupMigrationFiles)
+    yield call(cleanupArtifacts)
+  }
  }
+
+ // Announce the new peerId as soon as migration of node happens
+export function * handleMigrationNeeded() {
+  while (true) {
+    yield take(getType(MigrationActions.migrationNeeded))
+    yield call(announcePeer)
+  }
 }
 
 function * processMigration(dispatch: Dispatch) {

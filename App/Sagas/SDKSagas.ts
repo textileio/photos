@@ -13,28 +13,23 @@ import { AppState } from 'react-native'
 import { delay } from 'redux-saga'
 import { all, call, put, select, take, takeEvery, takeLatest } from 'redux-saga/effects'
 import {
-  CafeSession,
   addThreadIgnore,
   checkCafeMessages,
-  profile,
   setAvatar,
-  ContactInfo
+  username
 } from '@textile/react-native-sdk'
 import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 
-import AccountActions from '../Redux/AccountRedux'
-import accountSaga from './Account'
 import * as NodeLifecycle from './NodeLifecycle'
 import MockBridge from '../Redux/MockBridge'
 import { RootState } from '../Redux/Types'
-import { bestSession } from '../Redux/AccountSelectors'
+import * as TextileEvents from '../SDK/events'
 
 export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
   yield all([
     call(onNodeStarted),
-    call(accountSaga),
     call(NodeLifecycle.manageNode),
     call(NodeLifecycle.handleCreateNodeRequest, dispatch),
     call(refreshMessages),
@@ -42,21 +37,6 @@ export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
     takeEvery(getType(TextileNodeActions.ignoreFileRequest), ignoreFile),
     initializeAppState()
   ])
-}
-
-export function * getSession (depth: number = 0): any {
-  const session: CafeSession | undefined = yield select(bestSession)
-  if (!session || new Date(session.expiry) < new Date()) {
-    if (depth === 0) {
-      yield put(AccountActions.refreshCafeSessionsRequest())
-      yield take(getType(AccountActions.cafeSessionsSuccess))
-      yield call(getSession, 1)
-    } else {
-      throw new Error('unable to get CafeSession')
-    }
-  } else {
-    return session
-  }
 }
 
 export function * backgroundFetch () {
@@ -92,6 +72,12 @@ export function * ignoreFile (action: ActionType<typeof TextileNodeActions.ignor
   }
 }
 
+export function * updateUsername (name: string) {
+  yield call(username, name)
+  // Setting the username makes it available in the Profile, so update it
+  yield call(TextileEvents.updateProfile)
+}
+
 export function * updateAvatarAndProfile (hash: string) {
   try {
     const online: boolean = yield select(TextileNodeSelectors.online)
@@ -99,10 +85,9 @@ export function * updateAvatarAndProfile (hash: string) {
       yield take(getType(TextileNodeActions.nodeOnline))
     }
     yield call(setAvatar, hash)
-    const profileResult: ContactInfo = yield call(profile)
-    yield put(AccountActions.refreshProfileSuccess(profileResult))
+    yield call(TextileEvents.updateProfile)
   } catch (error) {
-    yield put(AccountActions.profileError(error))
+    // TODO
   }
 }
 
@@ -133,12 +118,9 @@ function * nodeOnlineSaga () {
 }
 
 function * onNodeStarted () {
-  while (yield take([getType(TextileNodeActions.startNodeSuccess), getType(AccountActions.initSuccess)])) {
+  while (yield take([getType(TextileNodeActions.startNodeSuccess)])) {
     try {
       // TODO: Double-check that these run fine now that they are likely called before onboarding success
-      yield put(AccountActions.refreshProfileRequest())
-      yield put(AccountActions.refreshPeerIdRequest())
-      yield put(AccountActions.getCafeSessionsRequest())
       yield call(NodeLifecycle.getSDKVersion)
     } catch (error) {
       // nothing to do here for now

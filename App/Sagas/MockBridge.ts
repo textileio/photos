@@ -3,6 +3,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import * as TextileSDK from '../Sagas/SDKSagas'
 import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
+import AccountActions from '../Redux/AccountRedux'
 import ContactsActions from '../Redux/ContactsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import MockBridgeActions from '../Redux/MockBridge'
@@ -11,6 +12,8 @@ import { RootAction } from '../Redux/Types'
 import Config from 'react-native-config'
 import {
   addThread,
+  ContactInfo,
+  profile,
   threads,
   ThreadInfo
  } from '@textile/react-native-sdk'
@@ -25,6 +28,7 @@ export function * mockEvents () {
     call(stopNodeAfterDelayCancelled),
     call(stopNodeAfterDelayFinishing),
     call(stopNodeAfterDelayComplete),
+    call(updateProfile),
     call(refreshMessages),
     call(nodeOnline),
     call(newError)
@@ -42,6 +46,25 @@ export function * refreshMessages () {
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
       // handle errors
+    }
+  }
+}
+
+export function * updateProfile () {
+  while (true) {
+    try {
+      // Block until we get an active or background app state
+      const action: ActionType<typeof MockBridgeActions.updateProfile> =
+        yield take((action: RootAction) =>
+          action.type === getType(MockBridgeActions.updateProfile)
+        )
+
+      const profileResult: ContactInfo = yield call(profile)
+      yield put(AccountActions.refreshProfileSuccess(profileResult))
+
+      yield call(logNewEvent, 'refreshMessages', action.type)
+    } catch (error) {
+      yield put(AccountActions.profileError(error))
     }
   }
 }

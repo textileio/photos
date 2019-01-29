@@ -11,6 +11,8 @@ import {
   ContactInfo,
   CafeSession
 } from '@textile/react-native-sdk'
+import * as TextileSDK from '../SDKSagas'
+import { bestSession } from '../../Redux/AccountSelectors'
 
 export function * refreshProfile () {
   while (true) {
@@ -40,10 +42,7 @@ export function * setUsername () {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setUsernameRequest> = yield take(getType(AccountActions.setUsernameRequest))
-      yield call(username, action.payload.username)
-      // Setting the username makes it available in the Profile, so update it
-      const profileResult: ContactInfo = yield call(profile)
-      yield put(AccountActions.refreshProfileSuccess(profileResult))
+      yield call(TextileSDK.updateUsername, action.payload.username)
     } catch (error) {
       yield put(AccountActions.profileError(error))
     }
@@ -58,6 +57,21 @@ export function * setAvatar () {
     } catch (error) {
       yield put(AccountActions.setAvatarError(error))
     }
+  }
+}
+
+export function * getSession (depth: number = 0): any {
+  const session: CafeSession | undefined = yield select(bestSession)
+  if (!session || new Date(session.expiry) < new Date()) {
+    if (depth === 0) {
+      yield put(AccountActions.refreshCafeSessionsRequest())
+      yield take(getType(AccountActions.cafeSessionsSuccess))
+      yield call(getSession, 1)
+    } else {
+      throw new Error('unable to get CafeSession')
+    }
+  } else {
+    return session
   }
 }
 

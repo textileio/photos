@@ -9,7 +9,6 @@ import Config from 'react-native-config'
 
 import { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
-import AccountActions from '../Redux/AccountRedux'
 import { RootAction } from '../Redux/Types'
 import * as TextileEvents from '../SDK/events'
 import {
@@ -23,11 +22,12 @@ import {
   version,
   registerCafe,
   cafeSessions,
-  CafeSession
+  CafeSession,
+  migrateRepo
  } from '@textile/react-native-sdk'
 
 export const REPO_PATH = `${RNFS.DocumentDirectoryPath}/textile-go`
-// const MIGRATION_NEEDED_ERROR = 'repo needs migration'
+const MIGRATION_NEEDED_ERROR = 'repo needs migration'
 const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 const LOG_LEVELS = (level: 'CRITICAL' | 'ERROR' | 'WARNING' | 'NOTICE' | 'INFO' | 'DEBUG') => JSON.stringify({
   'tex-broadcast': level,
@@ -88,11 +88,11 @@ function * createAndStartNode(dispatch: Dispatch): any {
   try {
     yield put(TextileNodeActions.creatingNode())
     // TODO: put repo migration back in
-    // const repoPathExists: boolean = yield call(RNFS.exists, REPO_PATH)
-    // if (!repoPathExists) {
-    //   yield call(RNFS.mkdir, REPO_PATH)
-    //   yield call(moveTextileFiles)
-    // }
+    const repoPathExists: boolean = yield call(RNFS.exists, REPO_PATH)
+    if (!repoPathExists) {
+      yield call(RNFS.mkdir, REPO_PATH)
+      yield call(moveTextileFiles)
+    }
     const logLevel = Config.RN_RELEASE_TYPE === 'production' ? 'ERROR' : 'DEBUG'
     yield call(newTextile, REPO_PATH, LOG_LEVELS(logLevel))
     yield put(TextileNodeActions.createNodeSuccess())
@@ -114,26 +114,23 @@ function * createAndStartNode(dispatch: Dispatch): any {
 
   } catch (error) {
     try {
-      // TODO: put migration back
-      // if (error.message === MIGRATION_NEEDED_ERROR) {
-      //   // instruct the node to export data to files
-      //   yield call(migrateRepo, REPO_PATH)
-      //   // store the fact there is a pending migration in the preferences redux persisted state
-      //   yield put(MigrationActions.migrationNeeded())
-      //   yield call(announcePeer)
-      //   // call the create/start sequence again
-      //   yield call(createAndStartNode, dispatch)
-      // } else
-      if (error.message === INIT_NEEDED_ERROR) {
+      if (error.message === MIGRATION_NEEDED_ERROR) {
+        // instruct the node to export data to files
+        yield call(migrateRepo, REPO_PATH)
+        // store the fact there is a pending migration in the preferences redux persisted state
+        yield call(TextileEvents.migrationNeeded)
+        // call the create/start sequence again
+        yield call(createAndStartNode, dispatch)
+      } else if (error.message === INIT_NEEDED_ERROR) {
         yield put(TextileNodeActions.creatingWallet())
         const recoveryPhrase: string = yield call(newWallet, 12)
-        yield put(AccountActions.setRecoveryPhrase(recoveryPhrase))
+        yield call(TextileEvents.setRecoveryPhrase, recoveryPhrase)
         yield put(TextileNodeActions.derivingAccount())
         const walletAccount: WalletAccount = yield call(walletAccountAt, recoveryPhrase, 0)
         yield put(TextileNodeActions.initializingRepo())
         yield call(initRepo, walletAccount.seed, REPO_PATH, true)
         yield call(createAndStartNode, dispatch)
-        yield put(AccountActions.initSuccess())
+        yield call(TextileEvents.walletInitSuccess)
       } else {
         yield put(TextileNodeActions.nodeError(error))
       }
@@ -144,14 +141,14 @@ function * createAndStartNode(dispatch: Dispatch): any {
 }
 
 // TODO: add repo migration back
-// async function moveTextileFiles() {
-//   const files = await RNFS.readDir(RNFS.DocumentDirectoryPath)
-//   for (const file of files) {
-//     if (file.path !== REPO_PATH && file.name !== 'RCTAsyncLocalStorage_V1') {
-//       await RNFS.moveFile(file.path, `${REPO_PATH}/${file.name}`)
-//     }
-//   }
-// }
+async function moveTextileFiles() {
+  const files = await RNFS.readDir(RNFS.DocumentDirectoryPath)
+  for (const file of files) {
+    if (file.path !== REPO_PATH && file.name !== 'RCTAsyncLocalStorage_V1') {
+      await RNFS.moveFile(file.path, `${REPO_PATH}/${file.name}`)
+    }
+  }
+}
 
 // function * waitForOnline() {
 //   const { onlineTimout } = yield race({
