@@ -24,6 +24,7 @@ export function * mockEvents () {
     call(stopNodeAfterDelayCancelled),
     call(stopNodeAfterDelayFinishing),
     call(stopNodeAfterDelayComplete),
+    call(nodeOnline),
     call(newError)
   ])
 }
@@ -41,6 +42,28 @@ export function * appStateChange () {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
       yield call(logNewEvent, 'State Change', action.payload.newState)
+    } catch (error) {
+      // handle errors
+    }
+  }
+}
+export function * nodeOnline () {
+  while (true) {
+    try {
+      // Block until we get an active or background app state
+      const action: ActionType<typeof MockBridgeActions.nodeOnline> =
+        yield take((action: RootAction) =>
+          action.type === getType(MockBridgeActions.nodeOnline)
+        )
+
+      // Check for new photos on every online event
+      yield put(StorageActions.refreshLocalImagesRequest())
+
+      // TODO: add migration back
+      // Only run this after everything else in the node is running
+      // yield put(MigrationActions.requestRunRecurringMigrationTasks())
+
+      yield call(logNewEvent, 'Node is:', 'online')
     } catch (error) {
       // handle errors
     }

@@ -10,8 +10,8 @@ import Config from 'react-native-config'
 import { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AccountActions from '../Redux/AccountRedux'
-import MockBridgeActions from '../Redux/MockBridge'
 import { RootAction } from '../Redux/Types'
+import * as TextileEvents from '../SDK/events'
 import {
   newTextile,
   start,
@@ -51,8 +51,7 @@ export function * manageNode () {
         )
 
       // Create an public event for appStateChange
-      yield put(MockBridgeActions.appStateChange(action.payload.previousState, action.payload.newState))
-
+      yield call(TextileEvents.appStateChange, action.payload.previousState, action.payload.newState)
       // Reqest to create and start the node no matter what, createAndStartNode below deals with ignoring simultaneious requests.
       yield put(TextileNodeActions.createNodeRequest())
 
@@ -64,7 +63,8 @@ export function * manageNode () {
         yield fork(backgroundTaskRace)
       }
     } catch (error) {
-      yield put(MockBridgeActions.newErrorMessage(error))
+      // yield put(MockBridgeActions.newErrorMessage(error))
+      yield call(TextileEvents.newErrorMessage, error)
       yield put(TextileNodeActions.nodeError(error))
     }
   }
@@ -109,7 +109,9 @@ function * createAndStartNode(dispatch: Dispatch): any {
     }
 
     yield put(TextileNodeActions.startNodeSuccess())
-    yield put(MockBridgeActions.startNodeFinished())
+    yield call(TextileEvents.startNodeFinished)
+    // yield put(MockBridgeActions.startNodeFinished())
+
   } catch (error) {
     try {
       // TODO: put migration back
@@ -223,7 +225,7 @@ function * backgroundTaskRace () {
 function * stopNodeAfterDelay (ms: number) {
   try {
 
-    yield put(MockBridgeActions.stopNodeAfterDelayStarting())
+    call(TextileEvents.stopNodeAfterDelayStarting)
 
     // Since node will go offline in 20s, do a final check for messages
     yield call(TextileNodeActions.refreshMessagesRequest)
@@ -232,12 +234,12 @@ function * stopNodeAfterDelay (ms: number) {
     yield delay(ms * 0.5)
   } finally {
     if (yield cancelled()) {
-      yield put(MockBridgeActions.stopNodeAfterDelayCancelled())
+      yield call(TextileEvents.stopNodeAfterDelayCancelled)
     } else {
-      yield put(MockBridgeActions.stopNodeAfterDelayFinishing())
+      yield call(TextileEvents.stopNodeAfterDelayFinishing)
       yield put(TextileNodeActions.stoppingNode())
       yield call(stop)
-      yield put(MockBridgeActions.stopNodeAfterDelayComplete())
+      yield call(TextileEvents.stopNodeAfterDelayComplete)
       yield put(TextileNodeActions.stopNodeSuccess())
       yield delay(500)
     }

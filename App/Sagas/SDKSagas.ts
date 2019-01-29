@@ -24,21 +24,19 @@ import { ActionType, getType } from 'typesafe-actions'
 import { Dispatch } from 'redux'
 
 import AccountActions from '../Redux/AccountRedux'
-import MockActions from '../Redux/MockBridge'
 import accountSaga from './Account'
 import * as NodeLifecycle from './NodeLifecycle'
-import * as NodeOnline from './NodeOnline'
+import MockBridge from '../Redux/MockBridge'
+import { RootState } from '../Redux/Types'
 
 export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
   yield all([
     call(onNodeStarted),
-    call(NodeOnline.onNodeOnline),
     call(accountSaga),
     call(NodeLifecycle.manageNode),
     call(NodeLifecycle.handleCreateNodeRequest, dispatch),
     call(refreshMessages),
-    // If the user clicked any invites before creating an account, this will now flush them...
-    takeLatest(getType(TextileNodeActions.nodeOnline), NodeOnline.nodeOnlineSaga),
+    takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
     initializeAppState()
   ])
 }
@@ -86,6 +84,21 @@ export function * updateAvatarAndProfile (hash: string) {
     yield put(AccountActions.refreshProfileSuccess(profileResult))
   } catch (error) {
     yield put(AccountActions.profileError(error))
+  }
+}
+
+function * nodeOnlineSaga () {
+  const online = yield select(TextileNodeSelectors.online)
+  if (online) {
+    yield put(MockBridge.nodeOnline())
+    try {
+      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
+      if (pending) {
+        yield call(setAvatar, pending)
+      }
+    } catch (error) {
+      // nada
+    }
   }
 }
 
