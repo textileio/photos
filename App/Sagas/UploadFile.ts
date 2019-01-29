@@ -1,5 +1,4 @@
-import { call, put, select, take } from 'redux-saga/effects'
-import { getType } from 'typesafe-actions'
+import { call } from 'redux-saga/effects'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'

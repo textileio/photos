@@ -28,8 +28,7 @@ class App extends Component {
   textileNodeEventHandler = new TextileNodeEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
   deepLinkEventHandler = new DeepLinkEventHandler(store)
-
-  public textile = new Textile({store})
+  textile = new Textile({store})
 
   render () {
     return (
@@ -41,6 +40,9 @@ class App extends Component {
     )
   }
 
+  componentWillMount () {
+    this.textile.setup()
+  }
   componentWillUnmount () {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()

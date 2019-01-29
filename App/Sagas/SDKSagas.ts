@@ -45,12 +45,10 @@ export function * nodeOnline () {
 }
 
 export function * backgroundFetch () {
-  // yield call(logNewEvent, 'Background fetch trigger', 'Check new content')
   yield call(NodeLifecycle.startBackgroundTask)
 }
 
 export function * locationUpdate () {
-  // yield call(logNewEvent, 'Location trigger', 'Check new content')
   yield call(NodeLifecycle.startBackgroundTask)
 }
 
