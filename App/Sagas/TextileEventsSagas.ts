@@ -1,27 +1,29 @@
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import * as TextileSDK from '../Sagas/SDKSagas'
 import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import AccountActions from '../Redux/AccountRedux'
 import ContactsActions from '../Redux/ContactsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import MockBridgeActions from '../Redux/MockBridge'
+import MigrationActions from '../Redux/MigrationRedux'
+import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
 import Config from 'react-native-config'
 import {
   addThread,
+  addThreadIgnore,
   ContactInfo,
   profile,
   threads,
   ThreadInfo
  } from '@textile/react-native-sdk'
+import Textile from '../SDK'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask } from './ThreadsSagas'
-import App from '../Containers/App'
+import { RootState } from '../Redux/Types'
 
-export function * mockEvents () {
+export function * textileEventSagas () {
   yield all([
     call(appStateChange),
     call(startNodeFinished),
@@ -32,6 +34,7 @@ export function * mockEvents () {
     call(updateProfile),
     call(refreshMessages),
     call(nodeOnline),
+    call(ignoreFileRequest),
     call(newError)
   ])
 }
@@ -39,11 +42,11 @@ export function * refreshMessages () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.refreshMessagesRequest> =
+      const action: ActionType<typeof TextileEventsActions.refreshMessagesRequest> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.refreshMessagesRequest)
+          action.type === getType(TextileEventsActions.refreshMessagesRequest)
         )
-      yield call(TextileSDK.refreshMessages)
+      yield call(Textile.api.checkCafeMessages)
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
       // handle errors
@@ -55,9 +58,9 @@ export function * updateProfile () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.updateProfile> =
+      const action: ActionType<typeof TextileEventsActions.updateProfile> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.updateProfile)
+          action.type === getType(TextileEventsActions.updateProfile)
         )
 
       const profileResult: ContactInfo = yield call(profile)
@@ -69,13 +72,32 @@ export function * updateProfile () {
     }
   }
 }
+
+export function * ignoreFileRequest () {
+  while (true) {
+    try {
+      // Block until we get an active or background app state
+      const action: ActionType<typeof TextileEventsActions.ignoreFileRequest> =
+        yield take((action: RootAction) =>
+          action.type === getType(TextileEventsActions.ignoreFileRequest)
+        )
+
+      yield call(addThreadIgnore, action.payload.blockId)
+
+      yield call(logNewEvent, 'ignoreFile', action.type)
+    } catch (error) {
+      // handle error
+    }
+  }
+}
+
 export function * appStateChange () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.appStateChange> =
+      const action: ActionType<typeof TextileEventsActions.appStateChange> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.appStateChange)
+          action.type === getType(TextileEventsActions.appStateChange)
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
@@ -91,17 +113,21 @@ export function * nodeOnline () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.nodeOnline> =
+      const action: ActionType<typeof TextileEventsActions.nodeOnline> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.nodeOnline)
+          action.type === getType(TextileEventsActions.nodeOnline)
         )
 
       // Check for new photos on every online event
       yield put(StorageActions.refreshLocalImagesRequest())
 
-      // TODO: add migration back
+      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
+      if (pending) {
+        yield call(Textile.api.setAvatar, pending)
+      }
+
       // Only run this after everything else in the node is running
-      // yield put(MigrationActions.requestRunRecurringMigrationTasks())
+      yield put(MigrationActions.requestRunRecurringMigrationTasks())
 
       yield call(logNewEvent, 'Node is:', 'online')
     } catch (error) {
@@ -114,9 +140,9 @@ export function * startNodeFinished () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.startNodeFinished> =
+      const action: ActionType<typeof TextileEventsActions.startNodeFinished> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.startNodeFinished)
+          action.type === getType(TextileEventsActions.startNodeFinished)
         )
 
       // Handle any pending invites now that we are finished
@@ -145,9 +171,9 @@ export function * stopNodeAfterDelayStarting () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.stopNodeAfterDelayStarting> =
+      const action: ActionType<typeof TextileEventsActions.stopNodeAfterDelayStarting> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.stopNodeAfterDelayStarting)
+          action.type === getType(TextileEventsActions.stopNodeAfterDelayStarting)
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
@@ -163,9 +189,9 @@ export function * stopNodeAfterDelayCancelled () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.stopNodeAfterDelayCancelled> =
+      const action: ActionType<typeof TextileEventsActions.stopNodeAfterDelayCancelled> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.stopNodeAfterDelayCancelled)
+          action.type === getType(TextileEventsActions.stopNodeAfterDelayCancelled)
         )
 
       // Let it keep running
@@ -185,9 +211,9 @@ export function * stopNodeAfterDelayFinishing () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.stopNodeAfterDelayFinishing> =
+      const action: ActionType<typeof TextileEventsActions.stopNodeAfterDelayFinishing> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.stopNodeAfterDelayFinishing)
+          action.type === getType(TextileEventsActions.stopNodeAfterDelayFinishing)
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
@@ -202,9 +228,9 @@ export function * stopNodeAfterDelayComplete () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.stopNodeAfterDelayComplete> =
+      const action: ActionType<typeof TextileEventsActions.stopNodeAfterDelayComplete> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.stopNodeAfterDelayComplete)
+          action.type === getType(TextileEventsActions.stopNodeAfterDelayComplete)
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
@@ -219,9 +245,9 @@ export function * newError () {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof MockBridgeActions.newErrorMessage> =
+      const action: ActionType<typeof TextileEventsActions.newErrorMessage> =
         yield take((action: RootAction) =>
-          action.type === getType(MockBridgeActions.newErrorMessage)
+          action.type === getType(TextileEventsActions.newErrorMessage)
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {

@@ -15,11 +15,11 @@ import { getSession } from './Account/AccountSagas'
 import {
   addContact, addThreadFiles, addThread, ThreadInfo, ContactInfo, contact, CafeSession, Protobufs
  } from '@textile/react-native-sdk'
-import { REPO_PATH } from './NodeLifecycle'
+import Textile from '../SDK'
 
-const PREVIOUS_ID_PATH = () => `${REPO_PATH}/migration005_peerid.ndjson`
-const PHOTOS_FILE_PATH = () => `${REPO_PATH}/migration005_default_photos.ndjson`
-const THREADS_FILE_PATH = () => `${REPO_PATH}/migration005_threads.ndjson`
+const PREVIOUS_ID_PATH = () => `${Textile.repoPath}/migration005_peerid.ndjson`
+const PHOTOS_FILE_PATH = () => `${Textile.repoPath}/migration005_default_photos.ndjson`
+const THREADS_FILE_PATH = () => `${Textile.repoPath}/migration005_threads.ndjson`
 const IMAGE_URL = (id: string, key: string) => `https://cafe.textile.io/ipfs/${id}/photo?key=${key}`
 const MIGRATION_IMAGES_PATH = `${FS.DocumentDirectoryPath}/migration_images`
 const IMAGE_PATH = (id: string) => `${MIGRATION_IMAGES_PATH}/${id}.jpg`

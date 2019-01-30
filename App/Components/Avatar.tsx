@@ -127,7 +127,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     color = `hsla(${hue},90%,60%,0.3)`
   }
 
-  const started = state.textileNode.nodeState.state === 'started'
+  const started = state.textile.nodeState.state === 'started'
 
   return { target, local, started, color }
 }

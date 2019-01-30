@@ -10,6 +10,7 @@ import {
   Protobufs
 } from '@textile/react-native-sdk'
 import { SharedImage } from '../Models/TextileTypes'
+import AccountActions from '../Redux/AccountRedux'
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
 import { processingImageByUuid, allUploadsComplete } from '../Redux/ProcessingImagesSelectors'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
@@ -18,7 +19,7 @@ import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 import { waitFor } from '@textile/redux-saga-wait-for'
 import { RootAction } from '../Redux/Types'
-import * as TextileSDK from './SDKSagas'
+import Textile from '../SDK'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
   const { threadId } = action.payload
@@ -117,7 +118,9 @@ export function * prepareImage (uuid: string) {
     if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['raw'] && preparedFiles.dir.files['raw'].hash) {
       // TODO: This doesn't seem right in here, but ok
       const hash = preparedFiles.dir.files['raw'].hash as string
-      yield fork(TextileSDK.updateAvatarAndProfile, hash)
+      // TODO: might error if node not online...
+      yield put(AccountActions.setAvatarRequest(hash))
+      // yield fork(Textile.updateAvatarAndProfile, hash)
     }
     yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)

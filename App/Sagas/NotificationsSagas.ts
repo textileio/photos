@@ -13,7 +13,6 @@ import {Platform} from 'react-native'
 import {delay} from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
-import Textile from '../SDK'
 
 import {
   notifications,
@@ -22,10 +21,9 @@ import {
   readAllNotifications as readAll,
   readNotification
 } from '@textile/react-native-sdk'
-import * as TextileSDK from './SDKSagas'
+import Textile from '../SDK'
 import NavigationService from '../Services/NavigationService'
 
-import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import PhotoViewingAction, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
@@ -123,7 +121,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         break
       }
       case NotificationType.InviteReceivedNotification: {
-        yield * TextileSDK.waitUntilOnline(1000)
+        yield * waitUntilOnline(1000)
         yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
         break
       }
@@ -138,7 +136,7 @@ export function * refreshNotifications () {
     const busy = yield select(NotificationsSelectors.refreshing)
     // skip multi-request back to back
     if (busy) { return }
-    yield * TextileSDK.waitUntilOnline(1000)
+    yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
     const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(notifications, '', 99) // TODO: offset?
     const typedNotifs = notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
@@ -158,4 +156,15 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
   } catch (error) {
     // Ignore invite
   }
+}
+
+export function * waitUntilOnline(ms: number) {
+  let ttw = ms
+  let online = yield select(Textile.nodeOnline)
+  while (!online && 0 < ttw) {
+    yield delay(50)
+    online = yield select(Textile.nodeOnline)
+    ttw -= 50
+  }
+  return online
 }

@@ -8,7 +8,6 @@ import {RootAction, RootState} from '../Redux/Types'
 
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 import { ContactsSelectors } from '../Redux/ContactsRedux'
-import MockBridgeActions from '../Redux/MockBridge'
 import UIActions from '../Redux/UIRedux'
 
 import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'

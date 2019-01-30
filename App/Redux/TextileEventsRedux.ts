@@ -1,6 +1,11 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
+import { NodeState } from '../Models/TextileTypes'
 
 const actions = {
+  newNodeState: createAction(
+    '@bridge/NEW_NODE_STATE',
+    (resolve) => (state: NodeState) => resolve({ state })
+  ),
   appStateChange: createAction(
     '@bridge/APP_STATE_CHANGE',
     (resolve) => (previousState: string, newState: string) => resolve({ previousState, newState })
@@ -37,9 +42,38 @@ const actions = {
   }),
   updateProfile: createAction('@bridge/UPDATE_PROFILE', (resolve) => {
     return () => resolve()
-  })
+  }),
+  ignoreFileRequest: createAction(
+    '@bridge/IGNORE_FILE_REQUEST',
+    (resolve) => (blockId: string) => resolve({ blockId })
+  )
 }
 
-export type MockBridgeActions = ActionType<typeof actions>
+export type TextileEventsActions = ActionType<typeof actions>
 
+interface TextileEventsState {
+  readonly nodeState: {
+    readonly state: NodeState
+    readonly error?: string
+  }
+  readonly online: boolean
+}
+
+export const initialState: TextileEventsState = {
+  nodeState: {
+    state: NodeState.nonexistent
+  },
+  online: false
+}
+
+export function reducer (state: TextileEventsState = initialState, action: TextileEventsActions): TextileEventsState {
+  switch (action.type) {
+    case getType(actions.newNodeState):
+      return { ...state, nodeState: {state: action.payload.state }}
+    case getType(actions.nodeOnline):
+      return { ...state, online: true }
+    default:
+      return state
+  }
+}
 export default actions

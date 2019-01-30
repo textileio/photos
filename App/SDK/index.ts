@@ -1,36 +1,33 @@
-import { NativeModules, NativeEventEmitter, DeviceEventEmitter, Platform, AppState } from 'react-native'
+import { DeviceEventEmitter, AppState } from 'react-native'
 import Config from 'react-native-config'
 import * as API from '@textile/react-native-sdk'
-import TextileNodeActions, { TextileAppStateStatus } from '../Redux/TextileNodeRedux'
-import NodeLifecycle from '../Sagas/NodeLifecycle'
+import {
+  WalletAccount
+ } from '@textile/react-native-sdk'
 import { Store, AnyAction } from 'redux'
 import { RootState } from '../Redux/Types'
 import TextileStore from './store'
 import TextileMigration from './migration'
 import * as TextileEvents from './events'
+import { getHMS } from './helpers'
 import { delay } from 'redux-saga'
-import BackgroundTimer from 'react-native-background-timer'
+// import BackgroundTimer from 'react-native-background-timer'
+import RNFS from 'react-native-fs'
+import { NodeState } from '../Models/TextileTypes'
+
+import { ICafeSessions } from '@textile/react-native-protobufs'
 
 import {
-  DiscoveredCafe,
-  DiscoveredCafes
+  DiscoveredCafes,
+  TextileAppStateStatus,
+  TextileOptions
 } from './types'
 
 const packageFile = require('./../../package.json')
 export const VERSION = packageFile.version
 
-export interface TextileOptions {
-  debug?: boolean
-}
-
-function getHMS() {
-  const now = new Date()
-  return [
-    now.getHours().toString(),
-    now.getMinutes().toString(),
-    now.getSeconds().toString()
-  ].join(':')
-}
+const MIGRATION_NEEDED_ERROR = 'repo needs migration'
+const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 
 class Textile {
   // Temp instance of the app's redux store while I remove deps to it
@@ -40,6 +37,8 @@ class Textile {
   _debug = false
   _store = new TextileStore()
 
+  repoPath = `${RNFS.DocumentDirectoryPath}/textile-go`
+
   constructor(options: TextileOptions) {
     if (options.debug) {
       this._debug = true
@@ -48,11 +47,28 @@ class Textile {
     console.info('Initializing @textile/react-native-sdk v. ' + VERSION)
   }
 
+  /* ---- Functions to wire into app ------ */
+  backgroundFetch () {
+    this.startBackgroundTask()
+  }
+  locationUpdate () {
+    this.startBackgroundTask()
+  }
+
+  // setup should only be run where the class will remain persistent so that
+  // listeners will be wired in to one instance only,
   setup(store: Store<RootState, AnyAction> & { dispatch: {}; }) {
+    // Clear storage to fresh state
+    this._store.clear()
     // Clear state on setup
     // Setup our within sdk listeners
     this.api.Events.addListener('onOnline', () => {
-      store.dispatch(TextileNodeActions.nodeOnline())
+      this._store.setNodeOnline(true)
+      // store.dispatch(TextileNodeActions.nodeOnline())
+    })
+
+    DeviceEventEmitter.addListener('@textile/createAndStartNode', (payload) => {
+      this.createAndStartNode()
     })
 
     DeviceEventEmitter.addListener('@textile/appNextState', (payload) => {
@@ -63,6 +79,8 @@ class Textile {
 
     this.initializeAppState()
   }
+
+  // De-register the listeners
   tearDown() {
     // Clear on out too if detected to help speed up any startup time
     // Clear all our listeners
@@ -70,15 +88,20 @@ class Textile {
     DeviceEventEmitter.removeAllListeners()
   }
 
-  backgroundFetch () {
-    NodeLifecycle.startBackgroundTask()
-  }
-  locationUpdate () {
-    NodeLifecycle.startBackgroundTask()
+  /* ---- STATE BASED METHODS ----- */
+  //  All methods here should only be called as the result of a sequenced kicked off
+  //  By an event and detected by the persistent instance that executed setup()
+
+  startBackgroundTask = async () => {
+    const currentState = await this.appState()
+    // const currentState = yield select(TextileNodeSelectors.appState)
+    // ensure we don't cause things in foreground
+    if (currentState === 'background' || currentState === 'backgroundFromForeground') {
+      await this.appStateChange(currentState, 'background')
+    }
   }
 
   initializeAppState = async () => {
-    // wait just a moment in case we beat native state
     const defaultAppState = 'default' as TextileAppStateStatus
     // if for some reason initialized will ever be called from a non-blank state, we need the below
     // const storedState = await this._store.getAppState()
@@ -86,12 +109,88 @@ class Textile {
     // if (storedState) {
     //   defaultAppState = JSON.parse(storedState) as TextileAppStateStatus
     // }
+    // wait just a moment in case we beat native state
     await delay(10)
     const currentAppState = AppState.currentState
     const queriedAppState = currentAppState || 'unknown'
     await this.appStateChange(defaultAppState, queriedAppState)
   }
 
+  updateNodeState = async (state: NodeState) => {
+    await this._store.setNodeState({state})
+    TextileEvents.newNodeState(state)
+  }
+  updateNodeStateError = async (error: Error) => {
+    const storedState = await this._store.getNodeState()
+    const state = storedState ? storedState.state : NodeState.nonexistent
+    await this._store.setNodeState({state, error: error.message})
+  }
+  createAndStartNode = async () => {
+    // TODO
+    /* In redux/saga world, we did a // yield call(() => task.done) to ensure this wasn't called
+    while already running. Do we need the same check to ensure it doesn't happen here?
+    */
+    const debug = Config.RN_RELEASE_TYPE !== 'production'
+    try {
+      if (!this._reduxStore) {
+        return
+      }
+      await this.updateNodeState(NodeState.creating)
+      const needsMigration = await this.migration.requiresFileMigration(this.repoPath)
+      if (needsMigration) {
+        await this.migration.runFileMigration(this.repoPath)
+      }
+      await this.api.newTextile(this.repoPath, debug)
+
+      await this.updateNodeState(NodeState.created)
+      await this.updateNodeState(NodeState.starting)
+
+      await this.api.start()
+
+      const sessions: ICafeSessions = await this.api.cafeSessions()
+      if (!sessions || !sessions.values || sessions.values.length < 1) {
+        const cafeOverride: string = Config.RN_TEXTILE_CAFE_OVERRIDE
+        if (cafeOverride) {
+          await this.api.registerCafe(cafeOverride)
+        } else {
+          await this.discoverAndRegisterCafes()
+        }
+      }
+      await this.updateNodeState(NodeState.started)
+      TextileEvents.startNodeFinished()
+    } catch (error) {
+      try {
+        if (!this._reduxStore) {
+          return
+        }
+        if (error.message === MIGRATION_NEEDED_ERROR) {
+          // instruct the node to export data to files
+          await this.api.migrateRepo(this.repoPath)
+          // store the fact there is a pending migration in the preferences redux persisted state
+          TextileEvents.migrationNeeded()
+          // call the create/start sequence again
+          TextileEvents.createAndStartNode()
+        } else if (error.message === INIT_NEEDED_ERROR) {
+          await this.updateNodeState(NodeState.creatingWallet)
+          const recoveryPhrase: string = await this.api.newWallet(12)
+          TextileEvents.setRecoveryPhrase(recoveryPhrase)
+          await this.updateNodeState(NodeState.derivingAccount)
+          const walletAccount: WalletAccount = await this.api.walletAccountAt(recoveryPhrase, 0)
+          await this.updateNodeState(NodeState.initializingRepo)
+          await this.api.initRepo(walletAccount.seed, this.repoPath, true, debug)
+          TextileEvents.createAndStartNode()
+          TextileEvents.walletInitSuccess()
+        } else {
+          await this.updateNodeStateError(error)
+        }
+      } catch (error) {
+        if (!this._reduxStore) {
+          return
+        }
+        await this.updateNodeStateError(error)
+      }
+    }
+  }
   nextAppState = async (nextState: TextileAppStateStatus) => {
     const previousState = await this.appState()
         // const currentState = this.store.getState().textileNode.appState
@@ -107,13 +206,12 @@ class Textile {
     await this.manageNode(previousState, nextState)
   }
   manageNode = async (previousState: TextileAppStateStatus, newState: TextileAppStateStatus) => {
-    console.log('axh statechange', previousState, newState)
     if (newState === 'active' || newState === 'background' || newState === 'backgroundFromForeground') {
 
       // try {
       await TextileEvents.appStateChange(previousState, newState)
       if (this._reduxStore) {
-        this._reduxStore.dispatch(TextileNodeActions.createNodeRequest())
+        this.createAndStartNode()
       }
       if (newState === 'background' || newState === 'backgroundFromForeground') {
         // TODO
@@ -138,27 +236,12 @@ class Textile {
   }
 
   discoverAndRegisterCafes = async () => {
-    console.log('axh getting cafes')
-    // const { cafes, timeout } = yield race({
-    //   cafes: call(discoverCafes),
-    //   timeout: call(delay, 10000)
-    // })
-    // if (timeout) {
-    //   throw new Error('cafe discovery timed out, internet connection needed')
-    // }
-    // const discoveredCafes = cafes as DiscoveredCafes
-    // yield call(registerCafe, discoveredCafes.primary.url)
-    // yield call(registerCafe, discoveredCafes.secondary.url)
-
     try {
       const cafes = await this.timeout(10000, this.discoverCafes())
       const discoveredCafes = cafes as DiscoveredCafes
-      console.log('axh registering cafes')
       await this.api.registerCafe(discoveredCafes.primary.url)
       await this.api.registerCafe(discoveredCafes.secondary.url)
-      console.log('axh success cafes')
     } catch (error) {
-      console.log('axh cafe error', error)
       // throw new Error('cafe discovery timed out, internet connection needed')
     }
   }
@@ -174,22 +257,8 @@ class Textile {
 
   /* ----- EVENT EMITTERS ----- */
 
-  updateUsername = async (name: string) => {
-    await this.api.username(name)
-    TextileEvents.updateProfile()
-  }
+  // TODO
 
-  updateAvatarAndProfile = async (hash: string) => {
-    // TODO: somehow need to recreate this check and wait flow outside of redux
-    // const online: boolean = yield select(TextileNodeSelectors.online)
-    // if (!online) {
-    //   yield take(getType(TextileNodeActions.nodeOnline))
-    // }
-
-    // TODO: if not online... return error?
-    await this.api.setAvatar(hash)
-    TextileEvents.updateProfile()
-  }
   /* ----- SELECTORS ----- */
   appState = async (): Promise<TextileAppStateStatus> => {
     const storedState = await this._store.getAppState()
@@ -200,11 +269,65 @@ class Textile {
     return currentState
   }
 
-  nodeStatus = async (): Promise<string> => {
-    await delay(10)
-    return 'startedX'
+  nodeOnline = async (): Promise<boolean> => {
+    const online = await this._store.getNodeOnline()
+    return online
+  }
+
+  nodeState = async (): Promise<string> => {
+    const storedState = await this._store.getNodeState()
+    if (!storedState) {
+      return NodeState.nonexistent
+    }
+    return storedState.state
   }
 }
 
 export { Textile, API }
 export default new Textile({})
+
+/*
+function * backgroundTaskRace () {
+  // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
+  //
+  // Using the race effect, if we get a foreground event while we're waiting
+  // to stop the node, cancel the stop and let it keep running
+  yield call(BackgroundTimer.start)
+  yield race({
+    delayAndStopNode: call(stopNodeAfterDelay, 20000),
+    foregroundEvent: take(
+      (action: RootAction) =>
+        action.type === getType(TextileNodeActions.appStateChange) && action.payload.newState === 'active'
+    )
+  })
+  yield all([
+    call(BackgroundTimer.stop),
+    call(BackgroundFetch.finish, BackgroundFetch.FETCH_RESULT_NEW_DATA)
+  ])
+}
+
+function * stopNodeAfterDelay (ms: number) {
+  try {
+
+    call(TextileEvents.stopNodeAfterDelayStarting)
+
+    // Since node will go offline in 20s, do a final check for messages
+    yield call(TextileNodeActions.refreshMessagesRequest)
+    yield delay(ms * 0.5)
+    yield call(TextileNodeActions.refreshMessagesRequest)
+    yield delay(ms * 0.5)
+  } finally {
+    if (yield cancelled()) {
+      yield call(TextileEvents.stopNodeAfterDelayCancelled)
+    } else {
+      yield call(TextileEvents.stopNodeAfterDelayFinishing)
+      yield put(TextileNodeActions.stoppingNode())
+      yield call(stop)
+      yield call(TextileEvents.stopNodeAfterDelayComplete)
+      yield put(TextileNodeActions.stopNodeSuccess())
+      yield delay(500)
+    }
+  }
+}
+}
+*/

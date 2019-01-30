@@ -15,22 +15,17 @@ import Textile from '../SDK'
 import styles from './Styles/RootContainerStyles'
 
 interface StateProps {
-  showMigrationModal: boolean
   monitorLocation: boolean
+  nodeState: string
+  showMigrationModal: boolean
   verboseUi: boolean
-}
-
-interface ContainerState {
-  appState: string
-  nodeStatus: string
 }
 
 interface DispatchProps {
   locationUpdate: () => void
 }
 
-class RootContainer extends Component<StateProps & DispatchProps & ContainerState> {
-  state = { appState: 'unknown', nodeStatus: 'unknown' }
+class RootContainer extends Component<StateProps & DispatchProps> {
   handleNewPosition () {
     this.props.locationUpdate()
   }
@@ -61,22 +56,9 @@ class RootContainer extends Component<StateProps & DispatchProps & ContainerStat
     this.setupLocationMonitoring()
   }
 
-  componentWillMount () {
-    Textile.appState().then((appState) => {
-      this.setState({
-        appState
-      })
-    })
-    Textile.nodeStatus().then((nodeStatus) => {
-      this.setState({
-        nodeStatus
-      })
-    })
-  }
-
   render () {
     const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content'
-    const overlayMessage = this.state.appState + ' | ' + this.state.nodeStatus
+    const overlayMessage = this.props.nodeState
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle={barStyle} />
@@ -97,14 +79,11 @@ class RootContainer extends Component<StateProps & DispatchProps & ContainerStat
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const nodeStatus = state.textileNode.nodeState.error
-    ? 'Error - ' + state.textileNode.nodeState.error
-    : state.textileNode.nodeState.state
-
   return {
     showMigrationModal: state.migration.status === 'processing',
     monitorLocation: state.preferences.services.backgroundLocation.status,
-    verboseUi: state.preferences.verboseUi
+    verboseUi: state.preferences.verboseUi,
+    nodeState: state.textile.nodeState.state
   }
 }
 

@@ -1,13 +1,14 @@
 import {AsyncStorage} from 'react-native'
-import { ContactInfo, CafeSession } from '@textile/react-native-sdk'
-import { TextileAppStateStatus } from '../Redux/TextileNodeRedux'
+import { StoredNodeState, TextileAppStateStatus } from './types'
 
 export default class TextileStore {
   keys = {
     appState: '@textile/appState',
     profile: '@textile/profile',
     peerId: '@textile/peerId',
-    sdkVersion: '@textile/sdkVersion'
+    sdkVersion: '@textile/sdkVersion',
+    nodeOnline: '@textile/nodeOnline',
+    nodeState: '@textile/nodeOnline'
   }
   clear = async () => {
     const storeKeys = Object.keys(this.keys).map((key) => this.keys[key])
@@ -33,6 +34,27 @@ export default class TextileStore {
     const result = await AsyncStorage.getItem(this.keys.appState)
     if (result) {
       return result
+    }
+    return
+  }
+  setNodeOnline = async (online: boolean): Promise<void> => {
+    await AsyncStorage.setItem(this.keys.nodeOnline, this.serialize(online))
+  }
+  getNodeOnline = async (): Promise<boolean> => {
+    const result = await AsyncStorage.getItem(this.keys.nodeOnline)
+    if (result) {
+      return JSON.parse(result) as boolean
+    }
+    return false
+  }
+
+  setNodeState = async (item: StoredNodeState): Promise<void> => {
+    await AsyncStorage.setItem(this.keys.nodeState, this.serialize(item))
+  }
+  getNodeState = async (): Promise<StoredNodeState | void> => {
+    const result = await AsyncStorage.getItem(this.keys.nodeState)
+    if (result) {
+      return JSON.parse(result) as StoredNodeState
     }
     return
   }

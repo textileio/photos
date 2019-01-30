@@ -1,47 +1,55 @@
 import {
   DeviceEventEmitter
 } from 'react-native'
+import { NodeState } from '../Models/TextileTypes'
 
-export function * startNodeFinished () {
+export function newNodeState (state: NodeState) {
+  DeviceEventEmitter.emit('@textile/newNodeState', {state})
+}
+export function createAndStartNode () {
+  DeviceEventEmitter.emit('@textile/createAndStartNode')
+}
+
+export function startNodeFinished () {
   DeviceEventEmitter.emit('@textile/startNodeFinished')
 }
 
-export function * stopNodeAfterDelayStarting () {
+export function stopNodeAfterDelayStarting () {
   DeviceEventEmitter.emit('@textile/stopNodeAfterDelayStarting')
 }
 
-export function * stopNodeAfterDelayCancelled () {
+export function stopNodeAfterDelayCancelled () {
   DeviceEventEmitter.emit('@textile/stopNodeAfterDelayCancelled')
 }
 
-export function * stopNodeAfterDelayFinishing () {
+export function stopNodeAfterDelayFinishing () {
   DeviceEventEmitter.emit('@textile/stopNodeAfterDelayFinishing')
 }
 
-export function * stopNodeAfterDelayComplete () {
+export function stopNodeAfterDelayComplete () {
   DeviceEventEmitter.emit('@textile/stopNodeAfterDelayComplete')
 }
-export function * appStateChange (previousState: string, newState: string) {
+export function appStateChange (previousState: string, newState: string) {
   DeviceEventEmitter.emit('@textile/appStateChange', {previousState, newState})
 }
-export function * newErrorMessage (error: string) {
+export function newErrorMessage (error: string) {
   DeviceEventEmitter.emit('@textile/newErrorMessage', {error})
 }
 
 export function updateProfile () {
   DeviceEventEmitter.emit('@textile/updateProfile')
 }
-export function * walletInitSuccess () {
+export function walletInitSuccess () {
   DeviceEventEmitter.emit('@textile/walletInitSuccess')
 }
 
-export function * setRecoveryPhrase (recoveryPhrase: string) {
+export function setRecoveryPhrase (recoveryPhrase: string) {
   DeviceEventEmitter.emit('@textile/setRecoveryPhrase', {recoveryPhrase})
 }
-export function * migrationNeeded () {
+export function migrationNeeded () {
   DeviceEventEmitter.emit('@textile/migrationNeeded')
 }
 
-export function * appNextState (nextState: string) {
+export function appNextState (nextState: string) {
   DeviceEventEmitter.emit('@textile/appNextState', {nextState})
 }

@@ -9,7 +9,7 @@ import CreateThreadModal from '../Components/CreateThreadModal'
 
 import ThreadSelector from '../Components/ThreadSelector'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import MockBridgeActions from '../Redux/MockBridge'
+import TextileEventsActions from '../Redux/TextileEventsRedux'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
@@ -100,7 +100,7 @@ class ThreadsManager extends React.PureComponent {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
-    refreshMessages: () => { dispatch(MockBridgeActions.refreshMessagesRequest()) }
+    refreshMessages: () => { dispatch(TextileEventsActions.refreshMessagesRequest()) }
   }
 }
 

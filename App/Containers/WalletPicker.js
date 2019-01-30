@@ -79,11 +79,11 @@ const mapStateToProps = (state) => {
 
   const refreshing = defaultData ? defaultData.querying : false
 
-  const nodeStatus = state.textileNode.nodeState.error
-    ? 'Error - ' + state.textileNode.nodeState.error.message
-    : state.textileNode.nodeState.state
+  const nodeStatus = state.textile.nodeState.error
+    ? 'Error - ' + state.textile.nodeState.error.message
+    : state.textile.nodeState.state
 
-  const placeholderText = state.textileNode.nodeState.state !== 'started'
+  const placeholderText = state.textile.nodeState.state !== 'started'
     ? 'Wallet Status:\n' + nodeStatus
     : 'You need to add some photos first.'
 
@@ -91,7 +91,7 @@ const mapStateToProps = (state) => {
     threadId,
     items,
     refreshing,
-    displayImages: state.textileNode.nodeState.state === 'started',
+    displayImages: state.textile.nodeState.state === 'started',
     placeholderText,
     verboseUi: state.preferences.verboseUi
   }

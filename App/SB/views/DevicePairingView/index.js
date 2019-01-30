@@ -138,8 +138,8 @@ class DevicePairing extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  const online = state.textileNode && state.textileNode.online && state.textileNode.online ? state.textileNode.online : false
-  const nodeState = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
+  const online = state.textile && state.textile.online && state.textile.online ? state.textile.online : false
+  const nodeState = state.textile && state.textile.nodeState ? state.textile.nodeState.state === 'started' : false
   return {
     devices: state.devices && state.devices.devices ? state.devices.devices : [],
     online: nodeState && online

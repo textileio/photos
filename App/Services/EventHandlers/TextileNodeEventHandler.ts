@@ -14,7 +14,7 @@ import DeviceLogsActions from '../../Redux/DeviceLogsRedux'
 import StorageActions from '../../Redux/StorageRedux'
 import { toTypedNotification } from '../Notifications'
 
-import MockBridge from '../../Redux/MockBridge'
+import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import AccountActions from '../../Redux/AccountRedux'
 import MigrationActions from '../../Redux/MigrationRedux'
 
@@ -31,9 +31,9 @@ export default class TextileNodeEventHandler {
       this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
     })
     // Now handled internally by sdk
-    // Events.addListener('onOnline', () => {
-    //   this.store.dispatch(MockBridge.nodeOnline())
-    // })
+    Events.addListener('onOnline', () => {
+      this.store.dispatch(TextileEventsActions.nodeOnline())
+    })
     Events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
       const { type } = update.block
       if (type === BlockType.COMMENT ||
@@ -64,30 +64,33 @@ export default class TextileNodeEventHandler {
     /* ----- JS Events from SDK -----*/
 
     // New Bridge actions
+    DeviceEventEmitter.addListener('@textile/newNodeState', (payload) => {
+      this.store.dispatch(TextileEventsActions.newNodeState(payload.state))
+    })
     DeviceEventEmitter.addListener('@textile/startNodeFinished', () => {
-      this.store.dispatch(MockBridge.startNodeFinished())
+      this.store.dispatch(TextileEventsActions.startNodeFinished())
     })
     DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayStarting', () => {
-      this.store.dispatch(MockBridge.stopNodeAfterDelayStarting())
+      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayStarting())
     })
     DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayCancelled', () => {
-      this.store.dispatch(MockBridge.stopNodeAfterDelayCancelled())
+      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayCancelled())
     })
     DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayFinishing', () => {
-      this.store.dispatch(MockBridge.stopNodeAfterDelayFinishing())
+      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayFinishing())
     })
     DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayComplete', () => {
-      this.store.dispatch(MockBridge.stopNodeAfterDelayComplete())
+      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayComplete())
     })
     DeviceEventEmitter.addListener('@textile/appStateChange', (payload) => {
       console.log('axh mock? state change')
-      this.store.dispatch(MockBridge.appStateChange(payload.previousState, payload.newState))
+      this.store.dispatch(TextileEventsActions.appStateChange(payload.previousState, payload.newState))
     })
     DeviceEventEmitter.addListener('@textile/updateProfile', () => {
-      this.store.dispatch(MockBridge.updateProfile())
+      this.store.dispatch(TextileEventsActions.updateProfile())
     })
     DeviceEventEmitter.addListener('@textile/newErrorMessage', (payload) => {
-      this.store.dispatch(MockBridge.newErrorMessage(payload.error))
+      this.store.dispatch(TextileEventsActions.newErrorMessage(payload.error))
     })
     // Account actions
     DeviceEventEmitter.addListener('@textile/setRecoveryPhrase', (payload) => {

@@ -4,7 +4,7 @@ import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 
 import { getSession } from './Account/AccountSagas'
-import { CafeSession } from '@textile/react-native-sdk'
+import { ICafeSession } from '@textile/react-native-protobufs'
 
 export function * uploadFile (id: string, payloadPath: string) {
   const session: ICafeSession | undefined = yield call(getSession)

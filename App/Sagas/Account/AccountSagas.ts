@@ -1,19 +1,34 @@
 import { take, put, call, all, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import AccountActions from '../../Redux/AccountRedux'
+import ContactsActions from '../../Redux/ContactsRedux'
+import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import PreferencesActions from '../../Redux/PreferencesRedux'
+import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import {
   cafeSessions,
   refreshCafeSession,
   peerId,
   profile,
-  setAvatar as updateAvatar,
-  setUsername as username,
   ContactInfo
 } from '@textile/react-native-sdk'
-import * as TextileSDK from '../SDKSagas'
 import Textile from '../../SDK'
 import { bestSession, getSessionMillis } from '../../Redux/AccountSelectors'
 import { ICafeSession, ICafeSessions } from '@textile/react-native-protobufs'
+
+export function * onNodeStarted () {
+  while (yield take([getType(TextileEventsActions.startNodeFinished), getType(PreferencesActions.onboardingSuccess)])) {
+    try {
+      yield put(AccountActions.refreshProfileRequest())
+      yield put(AccountActions.refreshPeerIdRequest())
+      yield put(AccountActions.getCafeSessionsRequest())
+      yield put(ContactsActions.getContactsRequest())
+      yield put(PhotoViewingActions.refreshThreadsRequest())
+    } catch (error) {
+      // nothing to do here for now
+    }
+  }
+}
 
 export function * refreshProfile () {
   while (true) {
@@ -43,7 +58,14 @@ export function * setUsername () {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setUsernameRequest> = yield take(getType(AccountActions.setUsernameRequest))
-      yield call(Textile.updateUsername, action.payload.username)
+      const online: boolean = yield call(Textile.nodeOnline)
+      if (!online) {
+        yield take(getType(TextileEventsActions.nodeOnline))
+      }
+      // Ideally this could move into the SDK directly so it can manage
+      // knowing its own online state
+      yield call(Textile.api.setUsername, action.payload.username)
+      yield put(TextileEventsActions.updateProfile())
     } catch (error) {
       yield put(AccountActions.profileError(error))
     }
@@ -54,7 +76,14 @@ export function * setAvatar () {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setAvatarRequest> = yield take(getType(AccountActions.setAvatarRequest))
-      yield call(updateAvatar, action.payload.avatar)
+      const online: boolean = yield call(Textile.nodeOnline)
+      if (!online) {
+        yield take(getType(TextileEventsActions.nodeOnline))
+      }
+      // Ideally this could move into the SDK directly so it can manage
+      // knowing its own online state
+      yield call(Textile.api.setAvatar, action.payload.avatar)
+      yield put(TextileEventsActions.updateProfile())
     } catch (error) {
       yield put(AccountActions.setAvatarError(error))
     }

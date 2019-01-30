@@ -95,8 +95,7 @@ import {
   updateServices
 } from './TextileSagas'
 
-import * as MockBridge from './MockBridge'
-import * as TextileSDK from './SDKSagas'
+import * as TextileEventsSagas from './TextileEventsSagas'
 
 /*--- NEW SDK ---*/
 import Textile from '../SDK'
@@ -188,12 +187,11 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
 
-    call(MockBridge.mockEvents),
+    call(TextileEventsSagas.mockEvents),
 
     /* ------------- SDK ------------- */
     takeLatest(getType(TriggersActions.backgroundFetch), Textile.backgroundFetch),
-    takeLatest(getType(TriggersActions.locationUpdate), Textile.locationUpdate),
-    call(TextileSDK.startSDK, dispatch)
+    takeLatest(getType(TriggersActions.locationUpdate), Textile.locationUpdate)
     /* ------------- End SDK ------------- */
   ])
 }
