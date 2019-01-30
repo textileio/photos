@@ -63,13 +63,14 @@ class AddContact extends React.Component<Props> {
   render () {
     return (
       <View style={CONTAINER}>
+        {this._headerComponent()}
         <SectionList
           sections={this.props.searchResults}
           keyExtractor={this.keyExtractor}
           renderSectionHeader={this.renderSectionHeader}
           renderItem={this.renderRow}
           ItemSeparatorComponent={RowSeparator}
-          ListHeaderComponent={this._headerComponent}
+          // ListHeaderComponent={this._headerComponent}
           keyboardShouldPersistTaps='handled'
           keyboardDismissMode='on-drag'
         />

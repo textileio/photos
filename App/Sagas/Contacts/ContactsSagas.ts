@@ -26,7 +26,7 @@ export function * refreshContacts() {
 function * searchTextile(searchString: string) {
   try {
     console.log('SEARCHING TEXTILE FOR:', searchString)
-    const result: ContactInfoQueryResult = yield call(findContact, searchString, 20, 30)
+    const result: ContactInfoQueryResult = yield call(findContact, searchString, 20, 3)
     console.log('SEARCH RESULT', result)
     const isCancelled = yield cancelled()
     if (!isCancelled) {
