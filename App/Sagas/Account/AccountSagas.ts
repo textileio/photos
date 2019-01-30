@@ -11,6 +11,7 @@ import {
   ContactInfo
 } from '@textile/react-native-sdk'
 import * as TextileSDK from '../SDKSagas'
+import Textile from '../../SDK'
 import { bestSession, getSessionMillis } from '../../Redux/AccountSelectors'
 import { ICafeSession, ICafeSessions } from '@textile/react-native-protobufs'
 
@@ -42,7 +43,7 @@ export function * setUsername () {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setUsernameRequest> = yield take(getType(AccountActions.setUsernameRequest))
-      yield call(TextileSDK.updateUsername, action.payload.username)
+      yield call(Textile.updateUsername, action.payload.username)
     } catch (error) {
       yield put(AccountActions.profileError(error))
     }

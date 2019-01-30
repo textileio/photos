@@ -31,36 +31,6 @@ export const REPO_PATH = `${RNFS.DocumentDirectoryPath}/textile-go`
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
 const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 
-// export function * manageNode () {
-//   while (true) {
-//     try {
-//       // Block until we get an active or background app state
-//       const action: ActionType<typeof TextileNodeActions.appStateChange> =
-//         yield take((action: RootAction) =>
-//           action.type === getType(TextileNodeActions.appStateChange) &&
-//           (action.payload.newState === 'active' || action.payload.newState === 'background' || action.payload.newState === 'backgroundFromForeground')
-//         )
-
-//       // Create an public event for appStateChange
-//       yield call(TextileEvents.appStateChange, action.payload.previousState, action.payload.newState)
-//       // Reqest to create and start the node no matter what, createAndStartNode below deals with ignoring simultaneious requests.
-//       yield put(TextileNodeActions.createNodeRequest())
-
-//       // If we got a background app state, start a background task and schedule the node to be stopped in 20 seconds
-//       //
-//       // This background state can come from a active > background transition
-//       // or by launching into the background because of a trigger.
-//       if (action.payload.newState === 'background' || action.payload.newState === 'backgroundFromForeground') {
-//         yield fork(backgroundTaskRace)
-//       }
-//     } catch (error) {
-//       // yield put(MockBridgeActions.newErrorMessage(error))
-//       yield call(TextileEvents.newErrorMessage, error)
-//       yield put(TextileNodeActions.nodeError(error))
-//     }
-//   }
-// }
-
 export function * handleCreateNodeRequest (dispatch: Dispatch) {
   while (true) {
     // We take a request to create and start the node.
@@ -80,10 +50,14 @@ function * createAndStartNode(dispatch: Dispatch): any {
   try {
     yield put(TextileNodeActions.creatingNode())
     // TODO: put repo migration back in
+    const needsMigration = yield call(Textile.migration.requiresFileMigration)
+    if (needsMigration) {
+      yield call(Textile.migration.runFileMigration)
+    }
     const repoPathExists: boolean = yield call(RNFS.exists, REPO_PATH)
     if (!repoPathExists) {
       yield call(RNFS.mkdir, REPO_PATH)
-      yield call(moveTextileFiles)
+      yield call(Textile.migration.moveTextileFiles)
     }
     yield call(newTextile, REPO_PATH, debug)
     yield put(TextileNodeActions.createNodeSuccess())
@@ -131,60 +105,7 @@ function * createAndStartNode(dispatch: Dispatch): any {
   }
 }
 
-// TODO: add repo migration back
-async function moveTextileFiles() {
-  const files = await RNFS.readDir(RNFS.DocumentDirectoryPath)
-  for (const file of files) {
-    if (file.path !== REPO_PATH && file.name !== 'RCTAsyncLocalStorage_V1') {
-      await RNFS.moveFile(file.path, `${REPO_PATH}/${file.name}`)
-    }
-  }
-}
 
-// function * waitForOnline() {
-//   const { onlineTimout } = yield race({
-//     online: waitFor(select(TextileNodeSelectors.online)),
-//     onlineTimout: call(delay, 10000)
-//   })
-//   if (onlineTimout) {
-//     throw new Error('node online timed out, internet connection needed')
-//   }
-// }
-
-// function * discoverAndRegisterCafes() {
-//   const { cafes, timeout } = yield race({
-//     cafes: call(discoverCafes),
-//     timeout: call(delay, 10000)
-//   })
-//   if (timeout) {
-//     throw new Error('cafe discovery timed out, internet connection needed')
-//   }
-//   const discoveredCafes = cafes as DiscoveredCafes
-//   yield call(registerCafe, discoveredCafes.primary.url)
-//   yield call(registerCafe, discoveredCafes.secondary.url)
-// }
-
-// interface DiscoveredCafe {
-//   readonly peer: string
-//   readonly address: string
-//   readonly api: string
-//   readonly protocol: string
-//   readonly node: string
-//   readonly url: string
-// }
-// interface DiscoveredCafes {
-//   readonly primary: DiscoveredCafe
-//   readonly secondary: DiscoveredCafe
-// }
-
-// async function discoverCafes() {
-//   const response = await fetch(`${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/cafes`, { method: 'GET' })
-//   if (response.status < 200 || response.status > 299) {
-//     throw new Error(`Status code error: ${response.statusText}`)
-//   }
-//   const discoveredCafes = await response.json() as DiscoveredCafes
-//   return discoveredCafes
-// }
 
 /*
 function * backgroundTaskRace () {
@@ -238,3 +159,89 @@ export function * startBackgroundTask () {
   }
 }
 */
+
+
+// export function * manageNode () {
+//   while (true) {
+//     try {
+//       // Block until we get an active or background app state
+//       const action: ActionType<typeof TextileNodeActions.appStateChange> =
+//         yield take((action: RootAction) =>
+//           action.type === getType(TextileNodeActions.appStateChange) &&
+//           (action.payload.newState === 'active' || action.payload.newState === 'background' || action.payload.newState === 'backgroundFromForeground')
+//         )
+
+//       // Create an public event for appStateChange
+//       yield call(TextileEvents.appStateChange, action.payload.previousState, action.payload.newState)
+//       // Reqest to create and start the node no matter what, createAndStartNode below deals with ignoring simultaneious requests.
+//       yield put(TextileNodeActions.createNodeRequest())
+
+//       // If we got a background app state, start a background task and schedule the node to be stopped in 20 seconds
+//       //
+//       // This background state can come from a active > background transition
+//       // or by launching into the background because of a trigger.
+//       if (action.payload.newState === 'background' || action.payload.newState === 'backgroundFromForeground') {
+//         yield fork(backgroundTaskRace)
+//       }
+//     } catch (error) {
+//       // yield put(MockBridgeActions.newErrorMessage(error))
+//       yield call(TextileEvents.newErrorMessage, error)
+//       yield put(TextileNodeActions.nodeError(error))
+//     }
+//   }
+// }
+
+// TODO: add repo migration back
+// async function moveTextileFiles() {
+//   const files = await RNFS.readDir(RNFS.DocumentDirectoryPath)
+//   for (const file of files) {
+//     if (file.path !== REPO_PATH && file.name !== 'RCTAsyncLocalStorage_V1') {
+//       await RNFS.moveFile(file.path, `${REPO_PATH}/${file.name}`)
+//     }
+//   }
+// }
+
+// function * waitForOnline() {
+//   const { onlineTimout } = yield race({
+//     online: waitFor(select(TextileNodeSelectors.online)),
+//     onlineTimout: call(delay, 10000)
+//   })
+//   if (onlineTimout) {
+//     throw new Error('node online timed out, internet connection needed')
+//   }
+// }
+
+// function * discoverAndRegisterCafes() {
+//   const { cafes, timeout } = yield race({
+//     cafes: call(discoverCafes),
+//     timeout: call(delay, 10000)
+//   })
+//   if (timeout) {
+//     throw new Error('cafe discovery timed out, internet connection needed')
+//   }
+//   const discoveredCafes = cafes as DiscoveredCafes
+//   yield call(registerCafe, discoveredCafes.primary.url)
+//   yield call(registerCafe, discoveredCafes.secondary.url)
+// }
+
+// interface DiscoveredCafe {
+//   readonly peer: string
+//   readonly address: string
+//   readonly api: string
+//   readonly protocol: string
+//   readonly node: string
+//   readonly url: string
+// }
+// interface DiscoveredCafes {
+//   readonly primary: DiscoveredCafe
+//   readonly secondary: DiscoveredCafe
+// }
+
+// async function discoverCafes() {
+//   const response = await fetch(`${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/cafes`, { method: 'GET' })
+//   if (response.status < 200 || response.status > 299) {
+//     throw new Error(`Status code error: ${response.statusText}`)
+//   }
+//   const discoveredCafes = await response.json() as DiscoveredCafes
+//   return discoveredCafes
+// }

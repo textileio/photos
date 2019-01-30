@@ -6,6 +6,7 @@ import NodeLifecycle from '../Sagas/NodeLifecycle'
 import { Store, AnyAction } from 'redux'
 import { RootState } from '../Redux/Types'
 import TextileStore from './store'
+import TextileMigration from './migration'
 import * as TextileEvents from './events'
 import { delay } from 'redux-saga'
 import BackgroundTimer from 'react-native-background-timer'
@@ -35,6 +36,7 @@ class Textile {
   // Temp instance of the app's redux store while I remove deps to it
   _reduxStore?: Store<RootState, AnyAction> & { dispatch: {}; }
   api: any
+  migration = new TextileMigration()
   _debug = false
   _store = new TextileStore()
 
@@ -170,6 +172,24 @@ class Textile {
     return discoveredCafes
   }
 
+  /* ----- EVENT EMITTERS ----- */
+
+  updateUsername = async (name: string) => {
+    await this.api.username(name)
+    TextileEvents.updateProfile()
+  }
+
+  updateAvatarAndProfile = async (hash: string) => {
+    // TODO: somehow need to recreate this check and wait flow outside of redux
+    // const online: boolean = yield select(TextileNodeSelectors.online)
+    // if (!online) {
+    //   yield take(getType(TextileNodeActions.nodeOnline))
+    // }
+
+    // TODO: if not online... return error?
+    await this.api.setAvatar(hash)
+    TextileEvents.updateProfile()
+  }
   /* ----- SELECTORS ----- */
   appState = async (): Promise<TextileAppStateStatus> => {
     const storedState = await this._store.getAppState()

@@ -28,7 +28,7 @@ export function * newErrorMessage (error: string) {
   DeviceEventEmitter.emit('@textile/newErrorMessage', {error})
 }
 
-export function * updateProfile () {
+export function updateProfile () {
   DeviceEventEmitter.emit('@textile/updateProfile')
 }
 export function * walletInitSuccess () {

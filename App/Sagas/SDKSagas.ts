@@ -62,12 +62,6 @@ export function * ignoreFile (action: ActionType<typeof TextileNodeActions.ignor
   }
 }
 
-export function * updateUsername (name: string) {
-  yield call(username, name)
-  // Setting the username makes it available in the Profile, so update it
-  yield call(TextileEvents.updateProfile)
-}
-
 export function * updateAvatarAndProfile (hash: string) {
   try {
     const online: boolean = yield select(TextileNodeSelectors.online)
