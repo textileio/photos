@@ -41,8 +41,9 @@ class App extends Component {
   }
 
   componentWillMount () {
-    this.textile.setup(store)
+    this.textile.setup()
   }
+
   componentWillUnmount () {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()

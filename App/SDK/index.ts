@@ -4,8 +4,6 @@ import * as API from '@textile/react-native-sdk'
 import {
   WalletAccount
  } from '@textile/react-native-sdk'
-import { Store, AnyAction } from 'redux'
-import { RootState } from '../Redux/Types'
 import TextileStore from './store'
 import TextileMigration from './migration'
 import * as TextileEvents from './events'
@@ -31,7 +29,6 @@ const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 
 class Textile {
   // Temp instance of the app's redux store while I remove deps to it
-  _reduxStore?: Store<RootState, AnyAction> & { dispatch: {}; }
   api: any
   migration = new TextileMigration()
   _debug = false
@@ -57,7 +54,7 @@ class Textile {
 
   // setup should only be run where the class will remain persistent so that
   // listeners will be wired in to one instance only,
-  setup(store: Store<RootState, AnyAction> & { dispatch: {}; }) {
+  setup() {
     // Clear storage to fresh state
     this._store.clear()
     // Clear state on setup
@@ -74,8 +71,6 @@ class Textile {
     DeviceEventEmitter.addListener('@textile/appNextState', (payload) => {
       this.nextAppState(payload.nextState)
     })
-
-    this._reduxStore = store
 
     this.initializeAppState()
   }
@@ -132,9 +127,6 @@ class Textile {
     */
     const debug = Config.RN_RELEASE_TYPE !== 'production'
     try {
-      if (!this._reduxStore) {
-        return
-      }
       await this.updateNodeState(NodeState.creating)
       const needsMigration = await this.migration.requiresFileMigration(this.repoPath)
       if (needsMigration) {
@@ -160,9 +152,6 @@ class Textile {
       TextileEvents.startNodeFinished()
     } catch (error) {
       try {
-        if (!this._reduxStore) {
-          return
-        }
         if (error.message === MIGRATION_NEEDED_ERROR) {
           // instruct the node to export data to files
           await this.api.migrateRepo(this.repoPath)
@@ -184,9 +173,6 @@ class Textile {
           await this.updateNodeStateError(error)
         }
       } catch (error) {
-        if (!this._reduxStore) {
-          return
-        }
         await this.updateNodeStateError(error)
       }
     }
@@ -210,9 +196,7 @@ class Textile {
 
       // try {
       await TextileEvents.appStateChange(previousState, newState)
-      if (this._reduxStore) {
-        this.createAndStartNode()
-      }
+      this.createAndStartNode()
       if (newState === 'background' || newState === 'backgroundFromForeground') {
         // TODO
         // fork(backgroundTaskRace)
