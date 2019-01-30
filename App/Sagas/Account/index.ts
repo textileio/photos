@@ -10,7 +10,6 @@ import {
 } from './AccountSagas'
 
 export default function * accountSaga () {
-  console.log('axh wait, i run also')
   yield all([
     call(refreshProfile),
     call(refreshPeerId),

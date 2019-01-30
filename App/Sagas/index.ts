@@ -187,7 +187,7 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
 
-    call(TextileEventsSagas.mockEvents),
+    call(TextileEventsSagas.startSagas),
 
     /* ------------- SDK ------------- */
     takeLatest(getType(TriggersActions.backgroundFetch), Textile.backgroundFetch),

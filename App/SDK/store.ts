@@ -11,6 +11,7 @@ export default class TextileStore {
     nodeState: '@textile/nodeOnline'
   }
   clear = async () => {
+    // clears only sdk related keys so that any client keys are untouched
     const storeKeys = Object.keys(this.keys).map((key) => this.keys[key])
     await AsyncStorage.multiRemove(storeKeys)
   }

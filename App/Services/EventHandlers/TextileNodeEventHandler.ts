@@ -83,7 +83,6 @@ export default class TextileNodeEventHandler {
       this.store.dispatch(TextileEventsActions.stopNodeAfterDelayComplete())
     })
     DeviceEventEmitter.addListener('@textile/appStateChange', (payload) => {
-      console.log('axh mock? state change')
       this.store.dispatch(TextileEventsActions.appStateChange(payload.previousState, payload.newState))
     })
     DeviceEventEmitter.addListener('@textile/updateProfile', () => {

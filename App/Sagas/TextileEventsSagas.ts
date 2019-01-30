@@ -23,7 +23,7 @@ import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask } from './ThreadsSagas'
 import { RootState } from '../Redux/Types'
 
-export function * textileEventSagas () {
+export function * startSagas () {
   yield all([
     call(appStateChange),
     call(startNodeFinished),
