@@ -1,6 +1,8 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { SectionListData } from 'react-native'
 import { ContactInfo } from '@textile/react-native-sdk'
+import Contacts from 'react-native-contacts'
+
 import { RootState } from './Types'
 
 const actions = {
@@ -16,7 +18,7 @@ const actions = {
     return (results: ReadonlyArray<ContactInfo>) => resolve({ results })
   }),
   searchResultsAddressBook: createAction('@contacts/SEARCH_RESULTS_ADDRESS_BOOK', (resolve) => {
-    return (results: ReadonlyArray<string>) => resolve({ results })
+    return (results: ReadonlyArray<Contacts.Contact>) => resolve({ results })
   }),
   searchErrorTextile: createAction('@contacts/SEARCH_ERROR_TEXTILE', (resolve) => {
     return (error: any) => resolve({ error })
@@ -38,7 +40,7 @@ export interface ContactsState {
   }
   readonly addressBookSearchResults: {
     readonly processing: boolean
-    readonly results?: ReadonlyArray<string>
+    readonly results?: ReadonlyArray<Contacts.Contact>
     readonly error?: string
   }
 }
@@ -142,7 +144,7 @@ export interface TextileSearchResult {
 
 export interface AddressBookSearchResult {
   readonly type: 'addressBook'
-  readonly data: string
+  readonly data: Contacts.Contact
 }
 
 export interface ErrorSearchResult {

@@ -52,6 +52,7 @@
 		93C00609216C3873007786A5 /* libRNVersionNumber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00606216C385D007786A5 /* libRNVersionNumber.a */; };
 		93C0060B216C4381007786A5 /* Mobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0060A216C4381007786A5 /* Mobile.framework */; };
 		93C00620216D3334007786A5 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0061F216D325D007786A5 /* libRCTCameraRoll.a */; };
+		93CCA014220135C700639B38 /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93CC9FE0220135A300639B38 /* libRCTContacts.a */; };
 		93F1805921FD459700883267 /* Biotif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805621FD459700883267 /* Biotif-Bold.ttf */; };
 		93F1805A21FD459700883267 /* Biotif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805721FD459700883267 /* Biotif-Medium.ttf */; };
 		93F1805B21FD459700883267 /* Biotif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805821FD459700883267 /* Biotif-Regular.ttf */; };
@@ -441,6 +442,13 @@
 			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
 			remoteInfo = RCTCameraRoll;
 		};
+		93CC9FDF220135A300639B38 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93CC9FD5220135A300639B38 /* RCTContacts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1441618E1BD0A79300FA4F59;
+			remoteInfo = RCTContacts;
+		};
 		A2150F0621F3E0C30075B7FF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0817766337CD450883D10692 /* RNTextile.xcodeproj */;
@@ -525,6 +533,7 @@
 		93C0060A216C4381007786A5 /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mobile.framework; path = "../node_modules/@textile/go-mobile/ios/Mobile.framework"; sourceTree = "<group>"; };
 		93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93C00621216D385B007786A5 /* Textile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Textile.entitlements; path = Textile/Textile.entitlements; sourceTree = "<group>"; };
+		93CC9FD5220135A300639B38 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
 		93F1805621FD459700883267 /* Biotif-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Bold.ttf"; path = "../../App/Fonts/Biotif-Bold.ttf"; sourceTree = "<group>"; };
 		93F1805721FD459700883267 /* Biotif-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Medium.ttf"; path = "../../App/Fonts/Biotif-Medium.ttf"; sourceTree = "<group>"; };
 		93F1805821FD459700883267 /* Biotif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Regular.ttf"; path = "../../App/Fonts/Biotif-Regular.ttf"; sourceTree = "<group>"; };
@@ -549,6 +558,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93CCA014220135C700639B38 /* libRCTContacts.a in Frameworks */,
 				9356E2C921F905A200F6FACA /* libRNScreens.a in Frameworks */,
 				9356E1EA21F8FEFD00F6FACA /* libRNGestureHandler.a in Frameworks */,
 				93C00620216D3334007786A5 /* libRCTCameraRoll.a in Frameworks */,
@@ -734,6 +744,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				93CC9FD5220135A300639B38 /* RCTContacts.xcodeproj */,
 				9356E28B21F9058F00F6FACA /* RNScreens.xcodeproj */,
 				9356E1AD21F8FEDA00F6FACA /* RNGestureHandler.xcodeproj */,
 				93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */,
@@ -922,6 +933,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		93CC9FD6220135A300639B38 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93CC9FE0220135A300639B38 /* libRCTContacts.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		A2150F0321F3E0C30075B7FF /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1062,6 +1081,10 @@
 				{
 					ProductGroup = 93C0061B216D325C007786A5 /* Products */;
 					ProjectRef = 93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */;
+				},
+				{
+					ProductGroup = 93CC9FD6220135A300639B38 /* Products */;
+					ProjectRef = 93CC9FD5220135A300639B38 /* RCTContacts.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -1530,6 +1553,13 @@
 			fileType = archive.ar;
 			path = libRCTCameraRoll.a;
 			remoteRef = 93C0061E216D325D007786A5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		93CC9FE0220135A300639B38 /* libRCTContacts.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTContacts.a;
+			remoteRef = 93CC9FDF220135A300639B38 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		A2150F0721F3E0C30075B7FF /* libRNTextile.a */ = {

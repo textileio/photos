@@ -633,7 +633,6 @@
 "@textile/go-mobile@1.0.0-rc29":
   version "1.0.0-rc29"
   resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc29.tgz#cd857120ede7f0b7d5e770fda02fefb327501110"
-  integrity sha512-s+tQRboNlGiyUYTWbq3w5xbb9hzp5fsj3SKt0Xmooz3KX46WtbL9+c5LwuAPy38HKtjdNQsiZiTRTnY/c2+o8w==
 
 "@textile/react-native-icon@^1.0.0":
   version "1.0.0"
@@ -644,7 +643,6 @@
 "@textile/react-native-protobufs@1.1.0", "@textile/react-native-protobufs@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@textile/react-native-protobufs/-/react-native-protobufs-1.1.0.tgz#facc6791d1e978859ab815fd3208494a5272d675"
-  integrity sha512-CsFuXwTxZ1rnWTEOgPeYAIouvmHF0T8Z9Ssoj4JtbG6MgaDbLrwUEOFmSiNYZFPsn0M3QbG8bt6MAypsI/lNLA==
   dependencies:
     protobufjs "^6.8.8"
 
@@ -655,7 +653,6 @@
 "@textile/react-native-sdk@1.0.20":
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.20.tgz#b9e533090012dbc0da40c694db6e6e36dbfa2783"
-  integrity sha512-yDocomgc2wjrtYeS6WXAGii65V3exJhXIMetube4za2RZerrKFt/UNAgAifsJZD+o6Ez9vnyFHDuydwazvhjaA==
   dependencies:
     "@textile/go-mobile" "1.0.0-rc29"
     "@textile/react-native-protobufs" "1.1.0"
@@ -4871,6 +4868,10 @@ react-native-background-timer@2.1.0-alpha.6:
 react-native-config@^0.11.7:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.11.7.tgz#a2b323f2ecd76a4df88cbb6bc86eaa2ef9febee7"
+
+react-native-contacts@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-3.1.2.tgz#44ca24046d3ddfcaeba70da06e7e5c750fdbd7e4"
 
 react-native-easy-toast@^1.1.0:
   version "1.1.0"

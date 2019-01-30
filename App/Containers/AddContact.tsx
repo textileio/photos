@@ -85,7 +85,7 @@ class AddContact extends React.Component<Props> {
       case 'textile':
         return item.data.id
       case 'addressBook':
-        return item.data
+        return item.data.recordID
       case 'error':
         return uuid()
     }
@@ -118,8 +118,8 @@ class AddContact extends React.Component<Props> {
         id = item.data.id
         break
       case 'addressBook':
-        title = item.data
-        id = item.data
+        title = item.data.givenName
+        id = item.data.recordID
         break
       case 'error':
         title = item.data

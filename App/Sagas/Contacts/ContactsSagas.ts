@@ -1,6 +1,8 @@
 import { call, put, take, takeLatest, cancelled, all, race } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
+import { Platform, PermissionsAndroid } from 'react-native'
+import Contacts from 'react-native-contacts'
 import {
   contacts,
   findContact,
@@ -48,14 +50,12 @@ function * searchTextile(searchString: string) {
 
 function * searchAddressBook(searchString: string) {
   try {
-    yield call(delay, 2000)
+    const permissions = Platform.OS === 'ios' ? requestPermissionsIOS : requestPermissionsAndroid
+    yield call(permissions)
+    const contacts: Contacts.Contact[] = yield call(getContactsMatching, searchString)
     const isCancelled = yield cancelled()
     if (!isCancelled) {
-      yield put(ContactsActions.searchResultsAddressBook([
-        'Bob',
-        'Saga',
-        'Stephen'
-      ]))
+      yield put(ContactsActions.searchResultsAddressBook(contacts))
     } else {
       console.log('CANCELLED ADDRESS BOOK SEARCH!')
     }
@@ -86,4 +86,54 @@ function * handleSearchRequest(action: ActionType<typeof ContactsActions.searchR
 
 export function * watchForSearchRequest() {
   yield takeLatest(getType(ContactsActions.searchRequest), handleSearchRequest)
+}
+
+async function requestPermissionsAndroid() {
+  const result = await PermissionsAndroid.request(
+    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+    {
+      title: 'Contacts',
+      message: 'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.'
+    }
+  )
+  if (result === PermissionsAndroid.RESULTS.GRANTED) {
+    return 'authorized'
+  } else {
+    return 'denied'
+  }
+}
+
+async function requestPermissionsIOS() {
+  return new Promise<'undefined' |  'authorized' | 'denied'>((resolve, reject) => {
+    Contacts.checkPermission((err, permission) => {
+      if (err) {
+        reject(err)
+        return
+      }
+      if (permission === 'undefined') {
+        Contacts.requestPermission((err, permission) => {
+          if (err) {
+            reject(err)
+            return
+          } else {
+            resolve(permission)
+          }
+        })
+      } else {
+        resolve(permission)
+      }
+    })
+  })
+}
+
+async function getContactsMatching(searchString: string) {
+  return new Promise<Contacts.Contact[]>((resolve, reject) => {
+    Contacts.getContactsMatchingString(searchString, (err, contacts) => {
+      if (err) {
+        reject(err)
+        return
+      }
+      resolve(contacts)
+    })
+  })
 }
