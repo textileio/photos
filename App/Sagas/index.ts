@@ -98,6 +98,9 @@ import {
 import * as MockBridge from './MockBridge'
 import * as TextileSDK from './SDKSagas'
 
+/*--- NEW SDK ---*/
+import Textile from '../SDK'
+
 /* ------------- Connect Types To Sagas ------------- */
 
 export default function * root (dispatch: Dispatch) {
@@ -188,8 +191,8 @@ export default function * root (dispatch: Dispatch) {
     call(MockBridge.mockEvents),
 
     /* ------------- SDK ------------- */
-    takeLatest(getType(TriggersActions.backgroundFetch), TextileSDK.backgroundFetch),
-    takeLatest(getType(TriggersActions.locationUpdate), TextileSDK.locationUpdate),
+    takeLatest(getType(TriggersActions.backgroundFetch), Textile.backgroundFetch),
+    takeLatest(getType(TriggersActions.locationUpdate), Textile.locationUpdate),
     call(TextileSDK.startSDK, dispatch)
     /* ------------- End SDK ------------- */
   ])

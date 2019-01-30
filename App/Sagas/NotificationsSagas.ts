@@ -13,6 +13,7 @@ import {Platform} from 'react-native'
 import {delay} from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
+import Textile from '../SDK'
 
 import {
   notifications,
@@ -59,7 +60,8 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
     }
 
     // Ensure we aren't in the foreground (Android only req)
-    const queriedAppState = yield select(TextileNodeSelectors.appState)
+    // const queriedAppState = yield select(TextileNodeSelectors.appState)
+    const queriedAppState = yield call(Textile.appState)
     if (Platform.OS === 'ios' || queriedAppState.match(/background/) || queriedAppState.match(/backgroundFromForeground/)) {
       // fire the notification
       yield call(logNewEvent, 'Notifications', 'creating local')

@@ -41,3 +41,7 @@ export function * setRecoveryPhrase (recoveryPhrase: string) {
 export function * migrationNeeded () {
   DeviceEventEmitter.emit('@textile/migrationNeeded')
 }
+
+export function * appNextState (nextState: string) {
+  DeviceEventEmitter.emit('@textile/appNextState', {nextState})
+}

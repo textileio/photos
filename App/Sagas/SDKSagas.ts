@@ -26,30 +26,17 @@ import * as NodeLifecycle from './NodeLifecycle'
 import MockBridge from '../Redux/MockBridge'
 import { RootState } from '../Redux/Types'
 import * as TextileEvents from '../SDK/events'
+import Textile from '../SDK'
 
 export function * startSDK (dispatch: Dispatch): IterableIterator<any> {
   yield all([
-    call(onNodeStarted),
-    call(NodeLifecycle.manageNode),
+    // call(NodeLifecycle.manageNode),
     call(NodeLifecycle.handleCreateNodeRequest, dispatch),
     call(refreshMessages),
     takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
-    takeEvery(getType(TextileNodeActions.ignoreFileRequest), ignoreFile),
-    initializeAppState()
+    takeEvery(getType(TextileNodeActions.ignoreFileRequest), ignoreFile)
+    // initializeAppState()
   ])
-}
-
-// Temporary pass through until the node just tracks its own state
-export function * nodeOnline () {
-  yield put(TextileNodeActions.nodeOnline())
-}
-
-export function * backgroundFetch () {
-  yield call(NodeLifecycle.startBackgroundTask)
-}
-
-export function * locationUpdate () {
-  yield call(NodeLifecycle.startBackgroundTask)
 }
 
 export function * refreshMessages () {
@@ -120,25 +107,15 @@ function * nodeOnlineSaga () {
   }
 }
 
-function * onNodeStarted () {
-  while (yield take([getType(TextileNodeActions.startNodeSuccess)])) {
-    try {
-      // TODO: Double-check that these run fine now that they are likely called before onboarding success
-      yield call(NodeLifecycle.getSDKVersion)
-    } catch (error) {
-      // nothing to do here for now
-    }
-  }
-}
-
-function * initializeAppState () {
-  yield take(getType(TextileNodeActions.startupComplete))
-  const defaultAppState = yield select(TextileNodeSelectors.appState)
-  let queriedAppState = defaultAppState
-  while (queriedAppState.match(/default|unknown/)) {
-    yield delay(10)
-    const currentAppState = yield call(() => AppState.currentState)
-    queriedAppState = currentAppState || 'unknown'
-  }
-  yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
-}
+// function * initializeAppState () {
+//   yield take(getType(TextileNodeActions.startupComplete))
+//   const defaultAppState = yield call(Textile.appState)
+//   // const defaultAppState = yield select(TextileNodeSelectors.appState)
+//   let queriedAppState = defaultAppState
+//   while (queriedAppState.match(/default|unknown/)) {
+//     yield delay(10)
+//     const currentAppState = yield call(() => AppState.currentState)
+//     queriedAppState = currentAppState || 'unknown'
+//   }
+//   yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
+// }

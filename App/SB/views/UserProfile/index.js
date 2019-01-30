@@ -22,8 +22,17 @@ class UserProfile extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      contactModal: false
+      contactModal: false,
+      apiVersion: ''
     }
+  }
+
+  componentWillMount () {
+    Textile.api.version().then((version) => {
+      this.setState({
+        apiVersion: version
+      })
+    })
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -99,7 +108,7 @@ class UserProfile extends React.PureComponent {
             <View style={styles.logoContainer}>
               <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
               <Text style={styles.versionDescription}>
-                {VersionNumber.appVersion} ({VersionNumber.buildVersion}) {this.props.apiVersion}
+                {VersionNumber.appVersion} ({VersionNumber.buildVersion}) {this.state.apiVersion}
               </Text>
             </View>
           </TouchableWithoutFeedback>
@@ -157,8 +166,7 @@ const mapStateToProps = (state) => {
     recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
     peerId: getPeerId(state) || 'sorry, there was an error',
     online,
-    nodeRunning,
-    apiVersion: Textile.api.version
+    nodeRunning
   }
 }
 

@@ -9,6 +9,7 @@ import NavigationService from '../Services/NavigationService'
 import { RootState, RootAction } from '../Redux/Types'
 import TriggersActions from '../Redux/TriggersRedux'
 import MigrationScreen from '../Containers/MigrationScreen'
+import Textile from '../SDK'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
@@ -17,17 +18,19 @@ interface StateProps {
   showMigrationModal: boolean
   monitorLocation: boolean
   verboseUi: boolean
-  overlayMessage: string
+}
+
+interface ContainerState {
+  appState: string
+  nodeStatus: string
 }
 
 interface DispatchProps {
   locationUpdate: () => void
 }
 
-class RootContainer extends Component<StateProps & DispatchProps> {
-
-  // TODO: Move all this location handling out of here!!!
-
+class RootContainer extends Component<StateProps & DispatchProps & ContainerState> {
+  state = { appState: 'unknown', nodeStatus: 'unknown' }
   handleNewPosition () {
     this.props.locationUpdate()
   }
@@ -58,8 +61,22 @@ class RootContainer extends Component<StateProps & DispatchProps> {
     this.setupLocationMonitoring()
   }
 
+  componentWillMount () {
+    Textile.appState().then((appState) => {
+      this.setState({
+        appState
+      })
+    })
+    Textile.nodeStatus().then((nodeStatus) => {
+      this.setState({
+        nodeStatus
+      })
+    })
+  }
+
   render () {
     const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content'
+    const overlayMessage = this.state.appState + ' | ' + this.state.nodeStatus
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle={barStyle} />
@@ -68,7 +85,7 @@ class RootContainer extends Component<StateProps & DispatchProps> {
         />
         {this.props.verboseUi &&
         <View style={styles.bottomOverlay} >
-          <Text style={styles.overlayText}>{this.props.overlayMessage}</Text>
+          <Text style={styles.overlayText}>{overlayMessage}</Text>
         </View>
         }
         <Modal isVisible={this.props.showMigrationModal} style={{ margin: 0 }}>
@@ -83,14 +100,11 @@ const mapStateToProps = (state: RootState): StateProps => {
   const nodeStatus = state.textileNode.nodeState.error
     ? 'Error - ' + state.textileNode.nodeState.error
     : state.textileNode.nodeState.state
-  const appState = state.textileNode.appState
-  const overlayMessage = state.textileNode.appStateUpdate + ': ' + appState + ' | ' + nodeStatus
 
   return {
     showMigrationModal: state.migration.status === 'processing',
     monitorLocation: state.preferences.services.backgroundLocation.status,
-    verboseUi: state.preferences.verboseUi,
-    overlayMessage
+    verboseUi: state.preferences.verboseUi
   }
 }
 

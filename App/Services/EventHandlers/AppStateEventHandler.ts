@@ -1,5 +1,5 @@
 import { Store } from 'redux'
-import { AppState, AppStateStatus } from 'react-native'
+import { AppState, AppStateStatus, DeviceEventEmitter } from 'react-native'
 
 import { RootState } from '../../Redux/Types'
 
@@ -14,11 +14,18 @@ export default class AppStateEventHandler {
   }
 
   handleAppState (nextState: AppStateStatus) {
-    const currentState = this.store.getState().textileNode.appState
-    const newState: TextileAppStateStatus = nextState === 'background' && (currentState === 'active' || currentState === 'inactive') ? 'backgroundFromForeground' : nextState
-    if (newState !== currentState || newState === 'background') {
-      this.store.dispatch(TextileNodeActions.appStateChange(currentState, newState))
-    }
+    // AXH
+    DeviceEventEmitter.emit('@textile/appNextState', {nextState})
+
+    // // OLD
+    // const currentState = this.store.getState().textileNode.appState
+    // const newState: TextileAppStateStatus = nextState === 'background' && (currentState === 'active' || currentState === 'inactive') ? 'backgroundFromForeground' : nextState
+    // if (newState !== currentState || newState === 'background') {
+    //   // TODO: Remove the store based init.
+    //   this.store.dispatch(TextileNodeActions.appStateChange(currentState, newState))
+
+    //   DeviceEventEmitter.emit('@textile/appStateChange', {previousState: currentState, newState})
+    // }
   }
 
   setup () {

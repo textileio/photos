@@ -4,9 +4,9 @@ import { RootState } from './Types'
 import { NodeState } from '../Models/TextileTypes'
 
 const actions = {
-  appStateChange: createAction('APP_STATE_CHANGE', (resolve) => {
-    return (previousState: TextileAppStateStatus, newState: TextileAppStateStatus) => resolve({ previousState, newState })
-  }),
+  // appStateChange: createAction('APP_STATE_CHANGE', (resolve) => {
+  //   return (previousState: TextileAppStateStatus, newState: TextileAppStateStatus) => resolve({ previousState, newState })
+  // }),
   creatingWallet: createAction('CREATING_WALLET'),
   derivingAccount: createAction('DERIVING_ACCOUNT'),
   initializingRepo: createAction('INITIALIZING_REPO'),
@@ -47,13 +47,6 @@ const actions = {
   }),
   refreshMessagesFailure: createAction('REFRESH_MESSAGES_FAILURE', (resolve) => {
     return (error: Error) => resolve({ error })
-  }),
-  refreshSDKVersionRequest: createAction('REFRESH_SDK_VERSION_REQUEST'),
-  getSDKVersionSuccess: createAction('GET_SDK_VERSION_SUCCESS', (resolve) => {
-    return (version: string) => resolve({ version })
-  }),
-  getSDKVersionError: createAction('GET_SDK_VERSION_ERROR', (resolve) => {
-    return (error: any) => resolve() // No use yet
   })
 }
 
@@ -62,8 +55,8 @@ export type TextileNodeAction = ActionType<typeof actions>
 export type TextileAppStateStatus = AppStateStatus | 'unknown' | 'backgroundFromForeground'
 
 interface TextileNodeState {
-  readonly appState: TextileAppStateStatus
-  readonly appStateUpdate: string
+  // readonly appState: TextileAppStateStatus
+  // readonly appStateUpdate: string
   readonly online: boolean
   readonly nodeState: {
     readonly state: NodeState
@@ -71,7 +64,6 @@ interface TextileNodeState {
   }
   readonly refreshingMessages: boolean
   readonly reduxReady: boolean
-  readonly sdkVersion?: string
 }
 
 function getHMS() {
@@ -83,8 +75,8 @@ function getHMS() {
   ].join(':')
 }
 export const initialState: TextileNodeState = {
-  appState: 'unknown',
-  appStateUpdate: getHMS(),
+  // appState: 'unknown',
+  // appStateUpdate: getHMS(),
   online: false,
   nodeState: {
     state: NodeState.nonexistent
@@ -98,8 +90,8 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.startupComplete): {
       return { ...state, reduxReady: true }
     }
-    case getType(actions.appStateChange):
-      return { ...state, appState: action.payload.newState, appStateUpdate: getHMS() }
+    // case getType(actions.appStateChange):
+    //   return { ...state, appState: action.payload.newState, appStateUpdate: getHMS() }
     case getType(actions.creatingWallet):
       return { ...state, nodeState: { ...state.nodeState, state: NodeState.creatingWallet } }
     case getType(actions.derivingAccount):
@@ -130,8 +122,6 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
     case getType(actions.refreshMessagesSuccess):
     case getType(actions.refreshMessagesFailure):
       return { ...state, refreshingMessages: false }
-    case getType(actions.getSDKVersionSuccess):
-      return { ...state, sdkVersion: action.payload.version }
     default:
       return state
   }
@@ -139,7 +129,7 @@ export function reducer (state: TextileNodeState = initialState, action: Textile
 
 export const TextileNodeSelectors = {
   reduxStartupComplete: (state: RootState) => state.textileNode.reduxReady,
-  appState: (state: RootState) => state.textileNode.appState,
+  // appState: (state: RootState) => state.textileNode.appState,
   nodeState: (state: RootState) => state.textileNode.nodeState.state,
   online: (state: RootState) => state.textileNode.online,
   refreshingMessages: (state: RootState) => state.textileNode.refreshingMessages

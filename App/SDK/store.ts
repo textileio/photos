@@ -1,8 +1,10 @@
 import {AsyncStorage} from 'react-native'
 import { ContactInfo, CafeSession } from '@textile/react-native-sdk'
+import { TextileAppStateStatus } from '../Redux/TextileNodeRedux'
 
 export default class TextileStore {
   keys = {
+    appState: '@textile/appState',
     profile: '@textile/profile',
     peerId: '@textile/peerId',
     sdkVersion: '@textile/sdkVersion'
@@ -23,5 +25,15 @@ export default class TextileStore {
   }
   setSDKVersion = async (version: string): Promise<void> => {
     await AsyncStorage.setItem(this.keys.sdkVersion, version)
+  }
+  setAppState = async (newState: TextileAppStateStatus): Promise<void> => {
+    await AsyncStorage.setItem(this.keys.appState, this.serialize(newState))
+  }
+  getAppState = async (): Promise<string | void> => {
+    const result = await AsyncStorage.getItem(this.keys.appState)
+    if (result) {
+      return result
+    }
+    return
   }
 }
