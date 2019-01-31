@@ -38,6 +38,7 @@ export function * startSagas () {
     call(newError)
   ])
 }
+
 export function * refreshMessages () {
   while (true) {
     try {

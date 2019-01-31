@@ -9,7 +9,8 @@ import TextileMigration from './migration'
 import * as TextileEvents from './events'
 import { getHMS } from './helpers'
 import { delay } from 'redux-saga'
-// import BackgroundTimer from 'react-native-background-timer'
+import BackgroundTimer from 'react-native-background-timer'
+import BackgroundFetch from 'react-native-background-fetch'
 import RNFS from 'react-native-fs'
 import { NodeState } from '../Models/TextileTypes'
 
@@ -193,23 +194,13 @@ class Textile {
   }
   manageNode = async (previousState: TextileAppStateStatus, newState: TextileAppStateStatus) => {
     if (newState === 'active' || newState === 'background' || newState === 'backgroundFromForeground') {
-
-      // try {
       await TextileEvents.appStateChange(previousState, newState)
       this.createAndStartNode()
       if (newState === 'background' || newState === 'backgroundFromForeground') {
-        // TODO
-        // fork(backgroundTaskRace)
+        await this.backgroundTaskRace()
       }
-      // } catch (error) {
-      //   // yield put(MockBridgeActions.newErrorMessage(error))
-      //   yield call(TextileEvents.newErrorMessage, error)
-      //   yield put(TextileNodeActions.nodeError(error))
-      // }
-
     }
   }
-
   timeout(ms: number, promise: Promise<any>): Promise<any> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -241,7 +232,54 @@ class Textile {
 
   /* ----- EVENT EMITTERS ----- */
 
-  // TODO
+  backgroundTaskRace = async () => {
+    // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
+    //
+    // Using the race effect, if we get a foreground event while we're waiting
+    // to stop the node, cancel the stop and let it keep running
+    await BackgroundTimer.start()
+    const ms = 20000
+    let cancelled = false
+
+    const foregroundEvent = DeviceEventEmitter.addListener('@textile/appNextState', (payload) => {
+      if (payload.nextState === 'active' && !cancelled) {
+        TextileEvents.stopNodeAfterDelayCancelled()
+        cancelled = true
+      }
+    })
+
+    cancelSequence:
+    while (!cancelled) {
+        TextileEvents.stopNodeAfterDelayStarting()
+        await this.api.checkCafeMessages() // do a quick check for new messages
+        await delay(ms / 2)
+        if (cancelled) { // cancelled by event, so abort sequence
+          foregroundEvent.remove() // remove our event listener
+          break cancelSequence
+        }
+        await this.api.checkCafeMessages()
+        await delay(ms / 2)
+        if (cancelled) { // cancelled by event, so abort sequence
+          foregroundEvent.remove() // remove our event listener
+          break cancelSequence
+        }
+        // enter stopping sequence
+        foregroundEvent.remove() // remove our event listener
+        TextileEvents.stopNodeAfterDelayFinishing()
+        await this.stopNode() // stop the node
+        cancelled = true // be sure to exit the loop
+    }
+
+    await BackgroundTimer.stop()
+    await BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
+  }
+
+  stopNode = async () => {
+    this._store.setNodeOnline(false)
+    this._store.setNodeState({state: NodeState.stopping})
+    await this.api.stop()
+    this._store.setNodeState({state: NodeState.stopped})
+  }
 
   /* ----- SELECTORS ----- */
   appState = async (): Promise<TextileAppStateStatus> => {
@@ -269,49 +307,3 @@ class Textile {
 
 export { Textile, API }
 export default new Textile({})
-
-/*
-function * backgroundTaskRace () {
-  // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
-  //
-  // Using the race effect, if we get a foreground event while we're waiting
-  // to stop the node, cancel the stop and let it keep running
-  yield call(BackgroundTimer.start)
-  yield race({
-    delayAndStopNode: call(stopNodeAfterDelay, 20000),
-    foregroundEvent: take(
-      (action: RootAction) =>
-        action.type === getType(TextileNodeActions.appStateChange) && action.payload.newState === 'active'
-    )
-  })
-  yield all([
-    call(BackgroundTimer.stop),
-    call(BackgroundFetch.finish, BackgroundFetch.FETCH_RESULT_NEW_DATA)
-  ])
-}
-
-function * stopNodeAfterDelay (ms: number) {
-  try {
-
-    call(TextileEvents.stopNodeAfterDelayStarting)
-
-    // Since node will go offline in 20s, do a final check for messages
-    yield call(TextileNodeActions.refreshMessagesRequest)
-    yield delay(ms * 0.5)
-    yield call(TextileNodeActions.refreshMessagesRequest)
-    yield delay(ms * 0.5)
-  } finally {
-    if (yield cancelled()) {
-      yield call(TextileEvents.stopNodeAfterDelayCancelled)
-    } else {
-      yield call(TextileEvents.stopNodeAfterDelayFinishing)
-      yield put(TextileNodeActions.stoppingNode())
-      yield call(stop)
-      yield call(TextileEvents.stopNodeAfterDelayComplete)
-      yield put(TextileNodeActions.stopNodeSuccess())
-      yield delay(500)
-    }
-  }
-}
-}
-*/
