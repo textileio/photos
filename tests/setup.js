@@ -18,8 +18,6 @@ jest.mock('@textile/react-native-sdk', () => {
 jest.mock('CameraRoll', () => {
     return {
         getPhotos: jest.fn((payload) => new Promise((resolve) => {
-            // TODO: do something meaningful with first
-            // const { first } = payload
             resolve({
                 edges: [
                     {
@@ -34,9 +32,9 @@ jest.mock('CameraRoll', () => {
         }))
     }
 })
-
-jest.mock("react-native-background-timer", () => {});
-jest.mock("react-native-background-fetch", () => {});
+/* tslint:disable:no-empty */
+jest.mock('react-native-background-timer', () => {})
+jest.mock('react-native-background-fetch', () => {})
 
 jest.mock('react-native-fs', () => {
     return {
@@ -81,8 +79,8 @@ jest.mock('react-native-fs', () => {
       TemporaryDirectoryPath: jest.fn(),
       LibraryDirectoryPath: jest.fn(),
       PicturesDirectoryPath: jest.fn()
-    };
-  });
+    }
+  })
 
 global.fetch = require('jest-fetch-mock')
 Enzyme.configure({ adapter: new Adapter() })
