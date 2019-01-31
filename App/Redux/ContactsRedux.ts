@@ -26,10 +26,30 @@ const actions = {
   searchErrorAddressBook: createAction('@contacts/SEARCH_ERROR_ADDRESS_BOOK', (resolve) => {
     return (error: any) => resolve({ error })
   }),
-  clearSearch: createAction('@contacts/CLEAR_SEARCH')
+  clearSearch: createAction('@contacts/CLEAR_SEARCH'),
+  addContactRequest: createAction('@contacts/ADD_CONTACT_REQUEST', (resolve) => {
+    return (contactInfo: ContactInfo) => resolve({ contactInfo })
+  }),
+  addContactSuccess: createAction('@contacts/ADD_CONTACT_SUCCESS', (resolve) => {
+    return (contactInfo: ContactInfo) => resolve({ contactInfo })
+  }),
+  addContactError: createAction('@contacts/ADD_CONTACT_ERROR', (resolve) => {
+    return (contactInfo: ContactInfo, error: any) => resolve({ contactInfo, error })
+  }),
+  clearAddContact: createAction('@contacts/CLEAR_ADD_CONTACT_ERROR', (resolve) => {
+    return (contactInfo: ContactInfo) => resolve({ contactInfo })
+  })
 }
 
 export type ContactsAction = ActionType<typeof actions>
+
+export interface AddingContact {
+  readonly error?: string
+}
+
+export interface AddingContacts {
+  readonly [key: string]: AddingContact
+}
 
 export interface ContactsState {
   readonly contacts: ReadonlyArray<ContactInfo>
@@ -43,6 +63,7 @@ export interface ContactsState {
     readonly results?: ReadonlyArray<Contacts.Contact>
     readonly error?: string
   }
+  readonly addingContacts: AddingContacts
 }
 
 export const initialState: ContactsState = {
@@ -52,7 +73,8 @@ export const initialState: ContactsState = {
   },
   addressBookSearchResults: {
     processing: false
-  }
+  },
+  addingContacts: {}
 }
 
 export function reducer (state: ContactsState = initialState, action: ContactsAction): ContactsState {
@@ -132,33 +154,77 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         }
       }
     }
+    case getType(actions.addContactRequest): {
+      return {
+        ...state,
+        addingContacts: {
+          ...state.addingContacts,
+          [action.payload.contactInfo.id]: {}
+        }
+      }
+    }
+    case getType(actions.addContactSuccess):
+    case getType(actions.clearAddContact): {
+      const { [action.payload.contactInfo.id]: removed, ...addingContacts } = state.addingContacts
+      return {
+        ...state,
+        addingContacts
+      }
+    }
+    case getType(actions.addContactError): {
+      const { contactInfo, error } = action.payload
+      const message = error.message as string || error as string || 'unknown'
+      return {
+        ...state,
+        addingContacts: {
+          ...state.addingContacts,
+          [contactInfo.id]: {
+            error: message
+          }
+        }
+      }
+    }
     default:
       return state
   }
 }
 
 export interface TextileSearchResult {
+  readonly key: string
   readonly type: 'textile'
-  readonly data: ContactInfo
+  readonly data: {
+    contactInfo: ContactInfo,
+    isContact: boolean,
+    adding: boolean
+  }
 }
 
 export interface AddressBookSearchResult {
+  readonly key: string
   readonly type: 'addressBook'
   readonly data: Contacts.Contact
 }
 
 export interface ErrorSearchResult {
+  readonly key: string
   readonly type: 'error'
   readonly data: string
 }
 
 export interface LoadingSearchResult {
+  readonly key: string
   readonly type: 'loading'
 }
 
-export type SearchResult = TextileSearchResult | AddressBookSearchResult | ErrorSearchResult | LoadingSearchResult
+export interface EmptySearchResult {
+  readonly key: string
+  readonly type: 'empty'
+}
+
+export type SearchResult = TextileSearchResult | AddressBookSearchResult | ErrorSearchResult | LoadingSearchResult | EmptySearchResult
 
 export interface SearchResultsSection {
+  readonly key: string
   readonly title: string
   readonly data: SearchResult[]
 }
@@ -168,34 +234,42 @@ export const ContactsSelectors = {
   byThreadId: (state: RootState, id: string) => state.contacts.contacts.filter((contact) => (contact.thread_ids || []).indexOf(id) > -1),
   contactById: (state: RootState, id: string) => state.contacts.contacts.find((contact) => contact.id === id),
   searchResults: (state: RootState) => {
-    const addressBookItems = state.contacts.addressBookSearchResults.results
     const sections: SearchResultsSection[] = []
+
+    let textileData: SearchResult[] | undefined
     if (state.contacts.textileSearchResults.processing) {
-      const data: LoadingSearchResult[] = [{ type: 'loading' }]
-      sections.push({ title: 'Textile Users', data })
+      textileData = [{ key: 'textile_loading', type: 'loading' }]
     } else if (state.contacts.textileSearchResults.error) {
-      const data: ErrorSearchResult[] = [{ type: 'error', data: state.contacts.textileSearchResults.error }]
-      sections.push({ title: 'Textile Users', data })
-    } else if (state.contacts.textileSearchResults.results) {
-      const data = state.contacts.textileSearchResults.results.map((result) => {
-        const textileResult: TextileSearchResult = { type: 'textile', data: result }
+      textileData = [{ key: 'textile_error', type: 'error', data: state.contacts.textileSearchResults.error }]
+    } else if (state.contacts.textileSearchResults.results && state.contacts.textileSearchResults.results.length > 0) {
+      textileData = state.contacts.textileSearchResults.results.map((result) => {
+        const isContact = ContactsSelectors.isKnown(state, result.id)
+        const adding = Object.keys(state.contacts.addingContacts).indexOf(result.id) > -1
+        const textileResult: TextileSearchResult = { key: result.id, type: 'textile', data: { contactInfo: result, isContact, adding } }
         return textileResult
       })
-      sections.push({ title: 'Textile Users', data })
+    } else if (state.contacts.textileSearchResults.results && state.contacts.textileSearchResults.results.length === 0) {
+      textileData = [{ key: 'textile_empty', type: 'empty' }]
+    }
+    if (textileData) {
+      sections.push({ key: 'textile', title: 'Textile Users', data: textileData })
     }
 
+    let addressBookData: SearchResult[] | undefined
     if (state.contacts.addressBookSearchResults.processing) {
-      const data: LoadingSearchResult[] = [{ type: 'loading' }]
-      sections.push({ title: 'Address Book', data })
+      addressBookData = [{ key: 'addressBook_loading', type: 'loading' }]
     } else if (state.contacts.addressBookSearchResults.error) {
-      const data: ErrorSearchResult[] = [{ type: 'error', data: state.contacts.addressBookSearchResults.error }]
-      sections.push({ title: 'Address Book', data })
-    } else if (state.contacts.addressBookSearchResults.results) {
-      const data = state.contacts.addressBookSearchResults.results.map((result) => {
-        const addressBookResult: AddressBookSearchResult = { type: 'addressBook', data: result }
+      addressBookData = [{ key: 'addressBook_error', type: 'error', data: state.contacts.addressBookSearchResults.error }]
+    } else if (state.contacts.addressBookSearchResults.results && state.contacts.addressBookSearchResults.results.length > 0) {
+      addressBookData = state.contacts.addressBookSearchResults.results.map((result) => {
+        const addressBookResult: AddressBookSearchResult = { key: result.recordID, type: 'addressBook', data: result }
         return addressBookResult
       })
-      sections.push({ title: 'Address Book', data })
+    } else if (state.contacts.addressBookSearchResults.results && state.contacts.addressBookSearchResults.results.length === 0) {
+      addressBookData = [{ key: 'addressBook_empty', type: 'empty' }]
+    }
+    if (addressBookData) {
+      sections.push({ key: 'addressBook', title: 'Address Book', data: addressBookData })
     }
 
     return sections

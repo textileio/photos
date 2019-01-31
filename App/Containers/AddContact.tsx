@@ -7,13 +7,15 @@ import {
   SectionList,
   ViewStyle,
   SectionListRenderItemInfo,
-  SectionListData
+  SectionListData,
+  ActivityIndicator
 } from 'react-native'
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 import { ContactInfo } from '@textile/react-native-sdk'
-import uuid from 'uuid/v4'
+import Contacts from 'react-native-contacts'
 
+import Button from '../Components/SmallButton'
 import SearchBar from '../Components/SearchBar'
 import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
@@ -32,17 +34,25 @@ interface StateProps {
   searchResults: SearchResultsSection[]
 }
 
-interface DispatchProps {
-  search: (searchString: string) => void
+interface NavProps {
   clearSearch: () => void
 }
 
-type Props = StateProps & DispatchProps & NavigationScreenProps<{}>
+interface DispatchProps {
+  search: (searchString: string) => void
+  clearSearch: () => void
+  addContact: (contactInfo: ContactInfo) => void
+}
+
+type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 class AddContact extends React.Component<Props> {
 
-  static navigationOptions = ({ navigation }: NavigationScreenProps<{}>) => {
-    const close = () => navigation.dispatch(NavigationActions.back())
+  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+    const close = () => {
+      navigation.getParam('clearSearch')()
+      navigation.dispatch(NavigationActions.back())
+    }
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='back' iconName='chevron-bottom' onPress={close} />
@@ -60,13 +70,18 @@ class AddContact extends React.Component<Props> {
     // this.updateSearchString = this.updateSearchString.bind(this)
   }
 
+  componentDidMount() {
+    this.props.navigation.setParams({
+      clearSearch: this.props.clearSearch
+    })
+  }
+
   render () {
     return (
       <View style={CONTAINER}>
         {this._headerComponent()}
         <SectionList
           sections={this.props.searchResults}
-          keyExtractor={this.keyExtractor}
           renderSectionHeader={this.renderSectionHeader}
           renderItem={this.renderRow}
           ItemSeparatorComponent={RowSeparator}
@@ -78,66 +93,81 @@ class AddContact extends React.Component<Props> {
     )
   }
 
-  keyExtractor = (item: SearchResult) => {
-    switch (item.type) {
-      case 'loading':
-        return uuid()
-      case 'textile':
-        return item.data.id
-      case 'addressBook':
-        return item.data.recordID
-      case 'error':
-        return uuid()
-    }
-  }
-
   _headerComponent = () => (
     <SearchBar
-      containerStyle={{ backgroundColor: '#FAFCFE' }}
-      inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: s.COLOR_GREY_LIGHT }}
+      containerStyle={{ backgroundColor: s.COLOR_GREY_LIGHT }}
+      inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: '#FAFCFE' }}
       additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false, autoFocus: true }}
       iconColor={s.COLOR_GREY_MEDIUM}
       onTextChanged={this.updateSearchString}
     />
   )
 
-  renderSectionHeader = ({section: { title }}: { section: SectionListData<SearchResultsSection> }) => {
-    return <Text key={title}>{title}</Text>
+  renderSectionHeader = ({section: { key, title }}: { section: SectionListData<SearchResultsSection> }) => {
+    return (
+      <Text
+        key={key}
+        style={{
+          paddingTop: 8,
+          paddingBottom: 8,
+          paddingLeft: 12,
+          paddingRight: 12,
+          fontFamily: s.FONT_FAMILY_BOLD,
+          fontSize: s.FONT_SIZE_SMALL,
+          color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM,
+          backgroundColor: s.COLOR_GREY_LIGHT
+        }}
+      >
+        {title}
+      </Text>
+    )
   }
 
-  renderRow = ({ item, section }: SectionListRenderItemInfo<SearchResult>) => {
-    let title = ''
-    let id = ''
+  renderRow = ({ item, index, section }: SectionListRenderItemInfo<SearchResult>) => {
     switch (item.type) {
       case 'loading':
-        title = 'Loading'
-        id = uuid() // id?
-        break
+        return <ActivityIndicator size='small' style={{ padding: 11 }} />
       case 'textile':
-        title = item.data.username || item.data.id
-        id = item.data.id
-        break
+        return (
+          <ListItem
+            leftItem={<Avatar style={{ width: 50 }} target={item.data.contactInfo.avatar} />}
+            title={item.data.contactInfo.username || item.data.contactInfo.id}
+            rightItems={[
+              <Button
+                key='add'
+                text={item.data.isContact ? 'added' : 'add'}
+                disabled={item.data.isContact || item.data.adding}
+                onPress={this.onAdd(item.data.contactInfo)}
+              />,
+              <Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />
+            ]}
+            onPress={this.onPressTextile(item.data.contactInfo)}
+          />
+        )
       case 'addressBook':
-        title = item.data.givenName
-        id = item.data.recordID
-        break
+        return (
+          <ListItem
+            title={`${item.data.givenName} ${item.data.familyName}`.trim()}
+            rightItems={[<Button key='invite' text='invite' onPress={this.onPressAddressBook(item.data)} />]}
+            onPress={this.onPressAddressBook(item.data)}
+          />
+        )
+      case 'empty':
+        return (
+          <ListItem
+            title='No results'
+          />
+        )
       case 'error':
-        title = item.data
-        id = uuid() // TODO: What should this id be?
-        break
+        return (
+          <ListItem
+            title='Error'
+            subtitle={item.data}
+          />
+        )
     }
-
     // const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
     // const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
-    return (
-      <ListItem
-        id={id}
-        title={title}
-        // leftItem={leftItem}
-        // rightItems={rightItems}
-        onPress={this.onPress}
-      />
-    )
   }
 
   updateSearchString = (string?: string) => {
@@ -145,6 +175,20 @@ class AddContact extends React.Component<Props> {
       this.props.search(string)
     } else {
       this.props.clearSearch()
+    }
+  }
+
+  onPressTextile = (contactInfo: ContactInfo) => {
+    return () => this.props.navigation.navigate('Contact', { contactInfo })
+  }
+
+  onAdd = (contactInfo: ContactInfo) => {
+    return () => this.props.addContact(contactInfo)
+  }
+
+  onPressAddressBook = (contact: Contacts.Contact) => {
+    return () => {
+      console.log('Pressed contact:', contact)
     }
   }
 
@@ -162,7 +206,8 @@ const mapStateToProps = (state: RootState): StateProps => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     search: (searchString: string) => dispatch(ContactsActions.searchRequest(searchString)),
-    clearSearch: () => dispatch(ContactsActions.clearSearch())
+    clearSearch: () => dispatch(ContactsActions.clearSearch()),
+    addContact: (contactInfo: ContactInfo) => dispatch(ContactsActions.addContactRequest(contactInfo))
   }
 }
 

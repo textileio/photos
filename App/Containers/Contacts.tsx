@@ -120,11 +120,10 @@ class Contacts extends React.Component<Props, State> {
     const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
     return (
       <ListItem
-        id={item.id}
         title={item.username || item.id}
         leftItem={leftItem}
         rightItems={rightItems}
-        onPress={this.onPress}
+        onPress={this.onPress(item)}
       />
     )
   }
@@ -135,8 +134,10 @@ class Contacts extends React.Component<Props, State> {
     })
   }
 
-  onPress = (id: string) => {
-    this.props.navigation.navigate('Contact', { peerId: id })
+  onPress = (contactInfo: ContactInfo) => {
+    return () => {
+      this.props.navigation.navigate('Contact', { contactInfo })
+    }
   }
 
   inviteContactRequest = () => {

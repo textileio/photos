@@ -6,11 +6,13 @@ import Contacts from 'react-native-contacts'
 import {
   contacts,
   findContact,
+  addContact,
   ContactInfo,
   ContactInfoQueryResult
 } from '@textile/react-native-sdk'
 
 import ContactsActions from '../../Redux/ContactsRedux'
+import { string } from 'prop-types';
 
 export function * addFriends() {
   yield call(refreshContacts)
@@ -20,8 +22,24 @@ export function * refreshContacts() {
   try {
     const contactsResult: ReadonlyArray<ContactInfo> = yield call(contacts)
     yield put(ContactsActions.getContactsSuccess(contactsResult))
+
   } catch (error) {
     // skip for now
+  }
+}
+
+export function * watchForAddContactRequests() {
+  yield takeLatest(getType(ContactsActions.addContactRequest), handleAddContactRequest)
+}
+
+function * handleAddContactRequest(action: ActionType<typeof ContactsActions.addContactRequest>) {
+  const { contactInfo } = action.payload
+  try {
+    yield call(addContact, contactInfo)
+    yield put(ContactsActions.addContactSuccess(contactInfo))
+    yield call(refreshContacts)
+  } catch (error) {
+    yield put(ContactsActions.addContactError(contactInfo, error))
   }
 }
 
@@ -39,7 +57,15 @@ function * searchTextile(searchString: string) {
       if (result.remote) {
         results = results.concat(result.remote)
       }
-      yield put(ContactsActions.searchResultsTextile(results))
+      const distinct: ContactInfo[] = []
+      const map = new Map<string, boolean>()
+      for (const item of results) {
+        if (!map.has(item.id)) {
+          map.set(item.id, true)
+          distinct.push(item)
+        }
+      }
+      yield put(ContactsActions.searchResultsTextile(distinct))
     } else {
       console.log('CANCELLED TEXTILE SEARCH!')
     }
@@ -64,12 +90,9 @@ function * searchAddressBook(searchString: string) {
   }
 }
 
-function * handleSearchRequest(action: ActionType<typeof ContactsActions.searchRequest>) {
-  // debounce it
-  yield call(delay, 1000)
+function * executeSearchRequest(searchString: string) {
   console.log('STARTING SEARCH')
   yield put(ContactsActions.searchStarted())
-  const { searchString } = action.payload
   const { search, cancel } = yield race({
     search: all([call(searchTextile, searchString), call(searchAddressBook, searchString)]),
     cancel: take(getType(ContactsActions.clearSearch))
@@ -78,9 +101,25 @@ function * handleSearchRequest(action: ActionType<typeof ContactsActions.searchR
   if (search) {
     console.log('FINISHED SEARCH')
   } else if (cancel) {
-    console.log('WAS CANCELLED')
+    console.log('WAS CANCELLED DURING SEARCH')
   } else {
-    console.log('NO IDEA')
+    console.log('NO IDEA DURING SEARCH')
+  }
+}
+
+function * handleSearchRequest(action: ActionType<typeof ContactsActions.searchRequest>) {
+  // debounce it, but cancel it we clear search
+  const { debounce, cancel } = yield race({
+    debounce: call(delay, 1000),
+    cancel: take(getType(ContactsActions.clearSearch))
+  })
+  if (debounce) {
+    console.log('DEBOUNCE DONE')
+    yield call(executeSearchRequest, action.payload.searchString)
+  } else if (cancel) {
+    console.log('WAS CANCELLED DURING DEBOUNCE')
+  } else {
+    console.log('NO IDEA DURING DEBOUNCE')
   }
 }
 
