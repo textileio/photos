@@ -1,5 +1,18 @@
 import { AppStateStatus } from 'react-native'
-import { NodeState } from '../Models/TextileTypes'
+
+export enum NodeState {
+  'nonexistent' = 'nonexistent',
+  'creating' = 'creating',
+  'created' = 'created', // Node has been created, on it's way to starting
+  'starting' = 'starting',
+  'started' = 'started',
+  'stopping' = 'stopping',
+  'stopped' = 'stopped', // Node has been explicitly stopped, different than created
+  'creatingWallet' = 'creatingWallet',
+  'derivingAccount' = 'derivingAccount',
+  'initializingRepo' = 'initializingRepo'
+}
+
 export interface DiscoveredCafe {
   readonly peer: string
   readonly address: string

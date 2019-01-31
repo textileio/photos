@@ -1,4 +1,5 @@
 import '../Config'
+import RNConfig from 'react-native-config'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -41,7 +42,11 @@ class App extends Component {
   }
 
   componentWillMount () {
-    this.textile.setup()
+    this.textile.setup({
+      RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE,
+      TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
+      TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
+    })
   }
 
   componentWillUnmount () {

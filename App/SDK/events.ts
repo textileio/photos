@@ -1,55 +1,71 @@
 import {
   DeviceEventEmitter
 } from 'react-native'
-import { NodeState } from '../Models/TextileTypes'
+import { NodeState } from '../SDK/types'
 
+export const keys = {
+  newNodeState: '@textile/newNodeState',
+  createAndStartNode: '@textile/createAndStartNode',
+  startNodeFinished: '@textile/startNodeFinished',
+  stopNodeAfterDelayStarting: '@textile/stopNodeAfterDelayStarting',
+  stopNodeAfterDelayCancelled: '@textile/stopNodeAfterDelayCancelled',
+  stopNodeAfterDelayFinishing: '@textile/stopNodeAfterDelayFinishing',
+  stopNodeAfterDelayComplete: '@textile/stopNodeAfterDelayComplete',
+  appStateChange: '@textile/appStateChange',
+  updateProfile: '@textile/updateProfile',
+  newErrorMessage: '@textile/newErrorMessage',
+  appNextState: '@textile/appNextState',
+  migrationNeeded: '@textile/migrationNeeded',
+  setRecoveryPhrase: '@textile/setRecoveryPhrase',
+  walletInitSuccess: '@textile/walletInitSuccess'
+}
 export function newNodeState (state: NodeState) {
-  DeviceEventEmitter.emit('@textile/newNodeState', {state})
+  DeviceEventEmitter.emit(keys.newNodeState, {state})
 }
 export function createAndStartNode () {
-  DeviceEventEmitter.emit('@textile/createAndStartNode')
+  DeviceEventEmitter.emit(keys.createAndStartNode)
 }
 
 export function startNodeFinished () {
-  DeviceEventEmitter.emit('@textile/startNodeFinished')
+  DeviceEventEmitter.emit(keys.startNodeFinished)
 }
 
 export function stopNodeAfterDelayStarting () {
-  DeviceEventEmitter.emit('@textile/stopNodeAfterDelayStarting')
+  DeviceEventEmitter.emit(keys.stopNodeAfterDelayStarting)
 }
 
 export function stopNodeAfterDelayCancelled () {
-  DeviceEventEmitter.emit('@textile/stopNodeAfterDelayCancelled')
+  DeviceEventEmitter.emit(keys.stopNodeAfterDelayCancelled)
 }
 
 export function stopNodeAfterDelayFinishing () {
-  DeviceEventEmitter.emit('@textile/stopNodeAfterDelayFinishing')
+  DeviceEventEmitter.emit(keys.stopNodeAfterDelayFinishing)
 }
 
 export function stopNodeAfterDelayComplete () {
-  DeviceEventEmitter.emit('@textile/stopNodeAfterDelayComplete')
+  DeviceEventEmitter.emit(keys.stopNodeAfterDelayComplete)
 }
 export function appStateChange (previousState: string, newState: string) {
-  DeviceEventEmitter.emit('@textile/appStateChange', {previousState, newState})
+  DeviceEventEmitter.emit(keys.appStateChange, {previousState, newState})
 }
 export function newErrorMessage (error: string) {
-  DeviceEventEmitter.emit('@textile/newErrorMessage', {error})
+  DeviceEventEmitter.emit(keys.newErrorMessage, {error})
 }
 
 export function updateProfile () {
-  DeviceEventEmitter.emit('@textile/updateProfile')
+  DeviceEventEmitter.emit(keys.updateProfile)
 }
 export function walletInitSuccess () {
-  DeviceEventEmitter.emit('@textile/walletInitSuccess')
+  DeviceEventEmitter.emit(keys.walletInitSuccess)
 }
 
 export function setRecoveryPhrase (recoveryPhrase: string) {
-  DeviceEventEmitter.emit('@textile/setRecoveryPhrase', {recoveryPhrase})
+  DeviceEventEmitter.emit(keys.setRecoveryPhrase, {recoveryPhrase})
 }
 export function migrationNeeded () {
-  DeviceEventEmitter.emit('@textile/migrationNeeded')
+  DeviceEventEmitter.emit(keys.migrationNeeded)
 }
 
 export function appNextState (nextState: string) {
-  DeviceEventEmitter.emit('@textile/appNextState', {nextState})
+  DeviceEventEmitter.emit(keys.appNextState, {nextState})
 }

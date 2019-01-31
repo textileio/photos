@@ -6,7 +6,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import FatalErrorView from '../Components/FatalErrorView'
 
 import { RootState } from '../Redux/Types'
-import { NodeState } from '../Models/TextileTypes'
+import { NodeState } from '../SDK/types'
 
 interface StateProps {
   onboarded: boolean

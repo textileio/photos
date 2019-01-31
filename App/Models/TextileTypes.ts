@@ -6,18 +6,6 @@
 import {IProcessingImageProps} from '../Components/ProcessingImage'
 import { ThreadFilesInfo } from '@textile/react-native-sdk'
 
-export enum NodeState {
-  'nonexistent' = 'nonexistent',
-  'creating' = 'creating',
-  'created' = 'created', // Node has been created, on it's way to starting
-  'starting' = 'starting',
-  'started' = 'started',
-  'stopping' = 'stopping',
-  'stopped' = 'stopped', // Node has been explicitly stopped, different than created
-  'creatingWallet' = 'creatingWallet',
-  'derivingAccount' = 'derivingAccount',
-  'initializingRepo' = 'initializingRepo'
-}
 export interface PhotoType {
   type: 'photo',
   photo: ThreadFilesInfo

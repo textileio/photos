@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rn store defaults empty state 1`] = `undefined`;
+
+exports[`rn store defaults empty state 2`] = `undefined`;
+
+exports[`rn store defaults empty state 3`] = `undefined`;
+
+exports[`rn store type returns appState 1`] = `"string"`;
+
+exports[`rn store type returns appState 2`] = `"active"`;
+
+exports[`rn store type returns nodeOnline 1`] = `"boolean"`;
+
+exports[`rn store type returns nodeOnline 2`] = `true`;
+
+exports[`rn store type returns nodeOnline 3`] = `"object"`;
+
+exports[`rn store type returns nodeOnline 4`] = `
+Object {
+  "state": "creating",
+}
+`;

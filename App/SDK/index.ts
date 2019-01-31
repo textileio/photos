@@ -1,5 +1,4 @@
 import { DeviceEventEmitter, AppState } from 'react-native'
-import Config from 'react-native-config'
 import * as API from '@textile/react-native-sdk'
 import {
   WalletAccount
@@ -7,12 +6,12 @@ import {
 import TextileStore from './store'
 import TextileMigration from './migration'
 import * as TextileEvents from './events'
+import { NodeState } from './types'
 import { getHMS } from './helpers'
 import { delay } from 'redux-saga'
 import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
 import RNFS from 'react-native-fs'
-import { NodeState } from '../Models/TextileTypes'
 
 import { ICafeSessions } from '@textile/react-native-protobufs'
 
@@ -28,12 +27,23 @@ export const VERSION = packageFile.version
 const MIGRATION_NEEDED_ERROR = 'repo needs migration'
 const INIT_NEEDED_ERROR = 'repo does not exist, initialization is required'
 
+export interface TextileConfig {
+  RELEASE_TYPE: string
+  TEXTILE_CAFE_GATEWAY_URL: string
+  TEXTILE_CAFE_OVERRIDE: string
+}
 class Textile {
   // Temp instance of the app's redux store while I remove deps to it
   api: any
   migration = new TextileMigration()
   _debug = false
   _store = new TextileStore()
+
+  _config: TextileConfig = {
+    RELEASE_TYPE: 'development',
+    TEXTILE_CAFE_GATEWAY_URL: '',
+    TEXTILE_CAFE_OVERRIDE: ''
+  }
 
   repoPath = `${RNFS.DocumentDirectoryPath}/textile-go`
 
@@ -55,14 +65,17 @@ class Textile {
 
   // setup should only be run where the class will remain persistent so that
   // listeners will be wired in to one instance only,
-  setup() {
+  setup(config?: TextileConfig) {
+    // if config provided, set it
+    if (config) {
+      this._config = config
+    }
     // Clear storage to fresh state
     this._store.clear()
     // Clear state on setup
     // Setup our within sdk listeners
     this.api.Events.addListener('onOnline', () => {
       this._store.setNodeOnline(true)
-      // store.dispatch(TextileNodeActions.nodeOnline())
     })
 
     DeviceEventEmitter.addListener('@textile/createAndStartNode', (payload) => {
@@ -99,7 +112,7 @@ class Textile {
 
   initializeAppState = async () => {
     const defaultAppState = 'default' as TextileAppStateStatus
-    // if for some reason initialized will ever be called from a non-blank state, we need the below
+    // if for some reason initialized will ever be called from a non-blank state (?), we need the below
     // const storedState = await this._store.getAppState()
     // let defaultAppState = 'default' as TextileAppStateStatus
     // if (storedState) {
@@ -126,7 +139,7 @@ class Textile {
     /* In redux/saga world, we did a // yield call(() => task.done) to ensure this wasn't called
     while already running. Do we need the same check to ensure it doesn't happen here?
     */
-    const debug = Config.RN_RELEASE_TYPE !== 'production'
+    const debug = this._config.RELEASE_TYPE !== 'production'
     try {
       await this.updateNodeState(NodeState.creating)
       const needsMigration = await this.migration.requiresFileMigration(this.repoPath)
@@ -142,7 +155,7 @@ class Textile {
 
       const sessions: ICafeSessions = await this.api.cafeSessions()
       if (!sessions || !sessions.values || sessions.values.length < 1) {
-        const cafeOverride: string = Config.RN_TEXTILE_CAFE_OVERRIDE
+        const cafeOverride: string = this._config.TEXTILE_CAFE_OVERRIDE
         if (cafeOverride) {
           await this.api.registerCafe(cafeOverride)
         } else {
@@ -222,7 +235,7 @@ class Textile {
   }
 
   discoverCafes = async () => {
-    const response = await fetch(`${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/cafes`, { method: 'GET' })
+    const response = await fetch(`${this._config.TEXTILE_CAFE_GATEWAY_URL}/cafes`, { method: 'GET' })
     if (response.status < 200 || response.status > 299) {
       throw new Error(`Status code error: ${response.statusText}`)
     }
@@ -284,19 +297,16 @@ class Textile {
   /* ----- SELECTORS ----- */
   appState = async (): Promise<TextileAppStateStatus> => {
     const storedState = await this._store.getAppState()
-    let currentState = 'unknown' as TextileAppStateStatus
-    if (storedState) {
-      currentState = JSON.parse(storedState) as TextileAppStateStatus
-    }
+    const currentState = storedState || 'unknown' as TextileAppStateStatus
     return currentState
   }
 
   nodeOnline = async (): Promise<boolean> => {
     const online = await this._store.getNodeOnline()
-    return online
+    return !!online // store can return void, in which case default return false
   }
 
-  nodeState = async (): Promise<string> => {
+  nodeState = async (): Promise<NodeState> => {
     const storedState = await this._store.getNodeState()
     if (!storedState) {
       return NodeState.nonexistent

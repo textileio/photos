@@ -18,39 +18,19 @@ export default class TextileStore {
   serialize = (data: any) => {
     return JSON.stringify(data)
   }
-  getSDKVersion = async (): Promise<string | void> => {
-    const result = await AsyncStorage.getItem(this.keys.sdkVersion)
-    if (result) {
-      return result
-    }
-    return
-  }
-  setSDKVersion = async (version: string): Promise<void> => {
-    await AsyncStorage.setItem(this.keys.sdkVersion, version)
-  }
-  setAppState = async (newState: TextileAppStateStatus): Promise<void> => {
-    await AsyncStorage.setItem(this.keys.appState, this.serialize(newState))
-  }
-  getAppState = async (): Promise<string | void> => {
+  getAppState = async (): Promise<TextileAppStateStatus | void> => {
     const result = await AsyncStorage.getItem(this.keys.appState)
     if (result) {
-      return result
+      return JSON.parse(result) as TextileAppStateStatus
     }
     return
   }
-  setNodeOnline = async (online: boolean): Promise<void> => {
-    await AsyncStorage.setItem(this.keys.nodeOnline, this.serialize(online))
-  }
-  getNodeOnline = async (): Promise<boolean> => {
+  getNodeOnline = async (): Promise<boolean | void> => {
     const result = await AsyncStorage.getItem(this.keys.nodeOnline)
     if (result) {
       return JSON.parse(result) as boolean
     }
-    return false
-  }
-
-  setNodeState = async (item: StoredNodeState): Promise<void> => {
-    await AsyncStorage.setItem(this.keys.nodeState, this.serialize(item))
+    return
   }
   getNodeState = async (): Promise<StoredNodeState | void> => {
     const result = await AsyncStorage.getItem(this.keys.nodeState)
@@ -58,5 +38,14 @@ export default class TextileStore {
       return JSON.parse(result) as StoredNodeState
     }
     return
+  }
+  setAppState = async (newState: TextileAppStateStatus): Promise<void> => {
+    await AsyncStorage.setItem(this.keys.appState, this.serialize(newState))
+  }
+  setNodeOnline = async (online: boolean): Promise<void> => {
+    await AsyncStorage.setItem(this.keys.nodeOnline, this.serialize(online))
+  }
+  setNodeState = async (item: StoredNodeState): Promise<void> => {
+    await AsyncStorage.setItem(this.keys.nodeState, this.serialize(item))
   }
 }
