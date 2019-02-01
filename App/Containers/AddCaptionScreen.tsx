@@ -81,14 +81,15 @@ class AddCaptionScreen extends React.Component<Props> {
   }
 
   componentWillMount () {
+    // TODO: Investigate why share would ever be null? https://github.com/textileio/textile-mobile/issues/888
     this.props.navigation.setParams({
-      disableShare: this.props.selectedThreadId === undefined,
+      disableShare: this.props.selectedThreadId === undefined || !this.props.share,
       cancelShare: () => { this.props.cancelShare() },
       share: () => {
-        if (this.props.image && (this.props.image as ThreadFilesInfo).target && this.props.threadId) {
+        if (this.props.share && this.props.image && (this.props.image as ThreadFilesInfo).target && this.props.threadId) {
           const filesInfo = this.props.image as ThreadFilesInfo
           this.props.share(filesInfo.target, this.props.threadId, this.props.comment)
-        } else if (this.props.image && (this.props.image as SharedImage).uri && this.props.threadId) {
+        } else if (this.props.share && this.props.image && (this.props.image as SharedImage).uri && this.props.threadId) {
           const sharedImage = this.props.image as SharedImage
           this.props.share(sharedImage, this.props.threadId, this.props.comment)
         }
