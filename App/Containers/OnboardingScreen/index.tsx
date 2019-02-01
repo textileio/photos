@@ -79,16 +79,13 @@ class OnboardingScreen extends React.Component<Props, State> {
       this.setState({blockNext: true})
       this.pages.scrollToPage(this.state.currentPage + 1)
       setTimeout(() => {
-        this.setState({blockNext: false})
-      }, 500)
+        this.setState({
+          blockNext: false,
+          showArrow: this.showArrowForIndex(this.state.currentPage + 1),
+          currentPage: this.state.currentPage + 1
+        })
+      }, 350)
     }
-  }
-
-  onScrollEnd = (index: number) => {
-    this.setState({
-      showArrow: this.showArrowForIndex(index),
-      currentPage: index
-    })
   }
 
   complete = () => {
@@ -186,7 +183,6 @@ class OnboardingScreen extends React.Component<Props, State> {
             style={[CONTAINER]}
             containerStyle={{ marginBottom: MARGIN_SMALL }}
             indicatorColor={COLOR_BRAND_PINK}
-            onScrollEnd={this.onScrollEnd}
             startPage={this.state.currentPage}
             scrollEnabled={false}
           >
