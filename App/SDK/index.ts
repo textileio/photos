@@ -31,6 +31,7 @@ export interface TextileConfig {
   RELEASE_TYPE: string
   TEXTILE_CAFE_GATEWAY_URL: string
   TEXTILE_CAFE_OVERRIDE: string
+  TEXTILE_CAFE_TOKEN: string
 }
 class Textile {
   // Temp instance of the app's redux store while I remove deps to it
@@ -42,7 +43,8 @@ class Textile {
   _config: TextileConfig = {
     RELEASE_TYPE: 'development',
     TEXTILE_CAFE_GATEWAY_URL: '',
-    TEXTILE_CAFE_OVERRIDE: ''
+    TEXTILE_CAFE_OVERRIDE: '',
+    TEXTILE_CAFE_TOKEN: ''
   }
 
   repoPath = `${RNFS.DocumentDirectoryPath}/textile-go`
@@ -157,7 +159,7 @@ class Textile {
       if (!sessions || !sessions.values || sessions.values.length < 1) {
         const cafeOverride: string = this._config.TEXTILE_CAFE_OVERRIDE
         if (cafeOverride) {
-          await this.api.registerCafe(cafeOverride)
+          await this.api.registerCafe(cafeOverride, this._config.TEXTILE_CAFE_TOKEN)
         } else {
           await this.discoverAndRegisterCafes()
         }
@@ -227,8 +229,8 @@ class Textile {
     try {
       const cafes = await this.timeout(10000, this.discoverCafes())
       const discoveredCafes = cafes as DiscoveredCafes
-      await this.api.registerCafe(discoveredCafes.primary.url)
-      await this.api.registerCafe(discoveredCafes.secondary.url)
+      await this.api.registerCafe(discoveredCafes.primary.url, this._config.TEXTILE_CAFE_TOKEN)
+      await this.api.registerCafe(discoveredCafes.secondary.url, this._config.TEXTILE_CAFE_TOKEN)
     } catch (error) {
       // throw new Error('cafe discovery timed out, internet connection needed')
     }
