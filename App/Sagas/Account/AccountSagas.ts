@@ -113,16 +113,8 @@ export function * getCafeSessions () {
   while (true) {
     try {
       yield take(getType(AccountActions.getCafeSessionsRequest))
-      const sessions: ICafeSessions = yield call(cafeSessions)
-      if (!sessions) {
-        yield put(AccountActions.cafeSessionsSuccess([]))
-      }
-      const values: ReadonlyArray<ICafeSession> | undefined | null = sessions.values
-      if (!values) {
-        yield put(AccountActions.cafeSessionsSuccess([]))
-      } else {
-        yield put(AccountActions.cafeSessionsSuccess(values))
-      }
+      const values = yield call(Textile.getCafeSessions)
+      yield put(AccountActions.cafeSessionsSuccess(values))
     } catch (error) {
       yield put(AccountActions.cafeSessionsError(error))
     }
@@ -133,18 +125,8 @@ export function * refreshCafeSessions () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshCafeSessionsRequest))
-      const sessions: Readonly<ICafeSessions> = yield call(cafeSessions)
-      if (!sessions) {
-        yield put(AccountActions.cafeSessionsSuccess([]))
-      }
-      const values: ReadonlyArray<ICafeSession> | undefined | null = sessions.values
-      if (!values) {
-        yield put(AccountActions.cafeSessionsSuccess([]))
-      } else {
-        const effects = values.map((session) => call(refreshCafeSession, session.id!))
-        const refreshedValues: ReadonlyArray<ICafeSession> = yield all(effects)
-        yield put(AccountActions.cafeSessionsSuccess(refreshedValues))
-      }
+      const values = yield call(Textile.getRefreshedCafeSessions)
+      yield put(AccountActions.cafeSessionsSuccess(values))
     } catch (error) {
       yield put(AccountActions.cafeSessionsError(error))
     }

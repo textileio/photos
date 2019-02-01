@@ -17,8 +17,18 @@ export const keys = {
   appNextState: '@textile/appNextState',
   migrationNeeded: '@textile/migrationNeeded',
   setRecoveryPhrase: '@textile/setRecoveryPhrase',
-  walletInitSuccess: '@textile/walletInitSuccess'
+  walletInitSuccess: '@textile/walletInitSuccess',
+  error: '@textile/error'
 }
+
+export function newError(message: string, type: string) {
+  DeviceEventEmitter.emit(keys.error, {type, message})
+}
+
+export function nonInitializedError() {
+  newError('nonInitializedError', 'Error: Attempt to use a Textile method reserved for an initialized instance.')
+}
+
 export function newNodeState (state: NodeState) {
   DeviceEventEmitter.emit(keys.newNodeState, {state})
 }
