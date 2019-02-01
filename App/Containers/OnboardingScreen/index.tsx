@@ -42,6 +42,7 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
+  blockNext: boolean
   showArrow: boolean
   currentPage: number
 }
@@ -54,7 +55,8 @@ class OnboardingScreen extends React.Component<Props, State> {
     super(props)
     this.state = {
       showArrow: false,
-      currentPage: 0
+      currentPage: 0,
+      blockNext: false
     }
   }
 
@@ -73,8 +75,12 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   nextPage = () => {
-    if (this.pages && this.pages.props.children.length - 1 > this.state.currentPage) {
+    if (this.pages && this.pages.props.children.length - 1 > this.state.currentPage && !this.state.blockNext) {
+      this.setState({blockNext: true})
       this.pages.scrollToPage(this.state.currentPage + 1)
+      setTimeout(() => {
+        this.setState({blockNext: false})
+      }, 500)
     }
   }
 
