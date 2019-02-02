@@ -127,6 +127,10 @@ class Textile {
   }
 
   startBackgroundTask = async () => {
+    const shouldRun = await this.shouldRunBackgroundTask()
+    if (!shouldRun) {
+      return
+    }
     const currentState = await this.appState()
     // const currentState = yield select(TextileNodeSelectors.appState)
     // ensure we don't cause things in foreground
@@ -276,6 +280,17 @@ class Textile {
   }
 
   /* ------ INTERNAL METHODS ----- */
+  private shouldRunBackgroundTask = async (): Promise<boolean> => {
+    const MINIMUM_MINUTES_BETWEEN_TASKS = 10
+    const now = Number((new Date()).getTime())
+    const last = await this._store.getLastBackgroundEvent()
+    // previous time set and set too recently
+    if (last && (now - last) < 1000 * 60 * MINIMUM_MINUTES_BETWEEN_TASKS) {
+      return false
+    }
+    return true
+  }
+
   private discoverCafes = async () => {
     if (!this._initialized) {
       TextileEvents.nonInitializedError()

@@ -8,7 +8,8 @@ export default class TextileStore {
     peerId: '@textile/peerId',
     sdkVersion: '@textile/sdkVersion',
     nodeOnline: '@textile/nodeOnline',
-    nodeState: '@textile/nodeOnline'
+    nodeState: '@textile/nodeOnline',
+    lastBackgroundEvent: '@textile/lastBackgroundEvent'
   }
   clear = async () => {
     // clears only sdk related keys so that any client keys are untouched
@@ -17,6 +18,13 @@ export default class TextileStore {
   }
   serialize = (data: any) => {
     return JSON.stringify(data)
+  }
+  getLastBackgroundEvent = async (): Promise<number | void> => {
+    const result = await AsyncStorage.getItem(this.keys.lastBackgroundEvent)
+    if (result) {
+      return Number(result)
+    }
+    return
   }
   getAppState = async (): Promise<TextileAppStateStatus | void> => {
     const result = await AsyncStorage.getItem(this.keys.appState)
@@ -38,6 +46,12 @@ export default class TextileStore {
       return JSON.parse(result) as StoredNodeState
     }
     return
+  }
+
+  setLastBackgroundEvent = async (): Promise<number | void> => {
+    // store epoch in milliseconds
+    const now = Math.floor((new Date()).getTime()).toString()
+    await AsyncStorage.setItem(this.keys.lastBackgroundEvent, now)
   }
   setAppState = async (newState: TextileAppStateStatus): Promise<void> => {
     await AsyncStorage.setItem(this.keys.appState, this.serialize(newState))
