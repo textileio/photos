@@ -13,8 +13,6 @@ jest.mock('react-native', () => {
   }
 })
 
-
-
 jest.mock('@textile/react-native-sdk', () => {
   return {
       eventEmitter: jest.fn(),
@@ -24,7 +22,7 @@ jest.mock('@textile/react-native-sdk', () => {
 
 import Textile from '../'
 import { NodeState } from '../types'
-import { delay } from 'redux-saga';
+import { delay } from 'redux-saga'
 
 describe('rn textile', () => {
   describe('stateless functions', () => {
