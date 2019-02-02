@@ -1,4 +1,6 @@
-import DeviceEventEmitter from '../__mocks__/DeviceEventEmitter'
+import DeviceEvent from '../__mocks__/DeviceEvent'
+
+const DeviceEventEmitter = new DeviceEvent()
 
 jest.mock('react-native', () => {
   return {

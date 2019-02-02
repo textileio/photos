@@ -7,7 +7,7 @@ import TextileStore from './store'
 import TextileMigration from './migration'
 import * as TextileEvents from './events'
 import { NodeState } from './types'
-import { getHMS, createTimeout } from './helpers'
+import { createTimeout } from './helpers'
 import { delay } from 'redux-saga'
 import BackgroundTimer from 'react-native-background-timer'
 import BackgroundFetch from 'react-native-background-fetch'
@@ -221,6 +221,10 @@ class Textile {
   }
 
   /* ----- STATE FREE PUBLIC SELECTORS ----- */
+  isInitialized = () => {
+    return this._initialized
+  }
+
   appState = async (): Promise<TextileAppStateStatus> => {
     const storedState = await this._store.getAppState()
     const currentState = storedState || 'unknown' as TextileAppStateStatus
@@ -239,6 +243,8 @@ class Textile {
     }
     return storedState.state
   }
+
+  // Client should use this once account is onboarded to register with Cafe
   getCafeSessions = async (): Promise<ReadonlyArray<ICafeSession>> => {
     const sessions: Readonly<ICafeSessions> = await this.api.cafeSessions()
     if (!sessions) {
@@ -252,6 +258,7 @@ class Textile {
     }
   }
 
+  // Client should use this if cafe sessions are detected as expired
   getRefreshedCafeSessions = async (): Promise<ReadonlyArray<ICafeSession>> => {
     const sessions: Readonly<ICafeSessions> = await this.api.cafeSessions()
     if (!sessions) {
@@ -299,7 +306,6 @@ class Textile {
   private appStateChange = async (previousState: TextileAppStateStatus, nextState: TextileAppStateStatus) => {
     this.isInitializedCheck()
     await this._store.setAppState(nextState)
-    const appStateUpdate = getHMS()
     await this.manageNode(previousState, nextState)
   }
   private updateNodeState = async (state: NodeState) => {
@@ -309,6 +315,13 @@ class Textile {
   }
 
   /* ----- PRIVATE - EVENT EMITTERS ----- */
+
+  private stopNode = async () => {
+    this._store.setNodeOnline(false)
+    this._store.setNodeState({state: NodeState.stopping})
+    await this.api.stop()
+    this._store.setNodeState({state: NodeState.stopped})
+  }
 
   private backgroundTaskRace = async () => {
     // This race cancels whichever effect looses the race, so a foreground event will cancel stopping the node
@@ -350,13 +363,6 @@ class Textile {
 
     await BackgroundTimer.stop()
     await BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA)
-  }
-
-  private stopNode = async () => {
-    this._store.setNodeOnline(false)
-    this._store.setNodeState({state: NodeState.stopping})
-    await this.api.stop()
-    this._store.setNodeState({state: NodeState.stopped})
   }
 }
 
