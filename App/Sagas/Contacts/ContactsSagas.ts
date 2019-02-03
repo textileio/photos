@@ -1,4 +1,13 @@
-import { call, put, take, takeLatest, cancelled, all, race } from 'redux-saga/effects'
+import {
+  call,
+  put,
+  take,
+  takeLatest,
+  takeEvery,
+  cancelled,
+  all,
+  race
+} from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Platform, PermissionsAndroid } from 'react-native'
@@ -12,7 +21,6 @@ import {
 } from '@textile/react-native-sdk'
 
 import ContactsActions from '../../Redux/ContactsRedux'
-import { string } from 'prop-types';
 
 export function * addFriends() {
   yield call(refreshContacts)
@@ -29,7 +37,7 @@ export function * refreshContacts() {
 }
 
 export function * watchForAddContactRequests() {
-  yield takeLatest(getType(ContactsActions.addContactRequest), handleAddContactRequest)
+  yield takeEvery(getType(ContactsActions.addContactRequest), handleAddContactRequest)
 }
 
 function * handleAddContactRequest(action: ActionType<typeof ContactsActions.addContactRequest>) {
@@ -45,9 +53,7 @@ function * handleAddContactRequest(action: ActionType<typeof ContactsActions.add
 
 function * searchTextile(searchString: string) {
   try {
-    console.log('SEARCHING TEXTILE FOR:', searchString)
     const result: ContactInfoQueryResult = yield call(findContact, searchString, 20, 3)
-    console.log('SEARCH RESULT', result)
     const isCancelled = yield cancelled()
     if (!isCancelled) {
       let results: ContactInfo[] = []
@@ -66,8 +72,6 @@ function * searchTextile(searchString: string) {
         }
       }
       yield put(ContactsActions.searchResultsTextile(distinct))
-    } else {
-      console.log('CANCELLED TEXTILE SEARCH!')
     }
   } catch (error) {
     yield put(ContactsActions.searchErrorTextile(error))
@@ -77,13 +81,14 @@ function * searchTextile(searchString: string) {
 function * searchAddressBook(searchString: string) {
   try {
     const permissions = Platform.OS === 'ios' ? requestPermissionsIOS : requestPermissionsAndroid
-    yield call(permissions)
+    const result: 'undefined' | 'authorized' | 'denied' = yield call(permissions)
+    if (result !== 'authorized') {
+      return
+    }
     const contacts: Contacts.Contact[] = yield call(getContactsMatching, searchString)
     const isCancelled = yield cancelled()
     if (!isCancelled) {
       yield put(ContactsActions.searchResultsAddressBook(contacts))
-    } else {
-      console.log('CANCELLED ADDRESS BOOK SEARCH!')
     }
   } catch (error) {
     yield put(ContactsActions.searchErrorAddressBook(error))
@@ -91,35 +96,21 @@ function * searchAddressBook(searchString: string) {
 }
 
 function * executeSearchRequest(searchString: string) {
-  console.log('STARTING SEARCH')
   yield put(ContactsActions.searchStarted())
-  const { search, cancel } = yield race({
+  yield race({
     search: all([call(searchTextile, searchString), call(searchAddressBook, searchString)]),
     cancel: take(getType(ContactsActions.clearSearch))
   })
-
-  if (search) {
-    console.log('FINISHED SEARCH')
-  } else if (cancel) {
-    console.log('WAS CANCELLED DURING SEARCH')
-  } else {
-    console.log('NO IDEA DURING SEARCH')
-  }
 }
 
 function * handleSearchRequest(action: ActionType<typeof ContactsActions.searchRequest>) {
   // debounce it, but cancel it we clear search
-  const { debounce, cancel } = yield race({
+  const { debounce } = yield race({
     debounce: call(delay, 1000),
     cancel: take(getType(ContactsActions.clearSearch))
   })
   if (debounce) {
-    console.log('DEBOUNCE DONE')
     yield call(executeSearchRequest, action.payload.searchString)
-  } else if (cancel) {
-    console.log('WAS CANCELLED DURING DEBOUNCE')
-  } else {
-    console.log('NO IDEA DURING DEBOUNCE')
   }
 }
 
