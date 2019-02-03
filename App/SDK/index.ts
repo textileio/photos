@@ -131,6 +131,7 @@ class Textile {
     if (!shouldRun) {
       return
     }
+    await this._store.setLastBackgroundEvent()
     const currentState = await this.appState()
     // const currentState = yield select(TextileNodeSelectors.appState)
     // ensure we don't cause things in foreground
