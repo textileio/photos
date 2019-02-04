@@ -23,6 +23,7 @@ import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import { RootState, RootAction } from '../Redux/Types'
 import ContactsActions, { ContactsSelectors, SearchResultsSection, SearchResult } from '../Redux/ContactsRedux'
+import { composeMessage } from '../NativeModules/MessageComposer'
 import * as s from '../Themes/Constants'
 
 const CONTAINER: ViewStyle = {
@@ -188,6 +189,7 @@ class AddContact extends React.Component<Props> {
 
   onPressAddressBook = (contact: Contacts.Contact) => {
     return () => {
+      composeMessage('+18015025710', 'cool man')
       console.log('Pressed contact:', contact)
     }
   }
