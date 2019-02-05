@@ -23,7 +23,6 @@ import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import { RootState, RootAction } from '../Redux/Types'
 import ContactsActions, { ContactsSelectors, SearchResultsSection, SearchResult } from '../Redux/ContactsRedux'
-import { composeMessage } from '../NativeModules/MessageComposer'
 import * as s from '../Themes/Constants'
 
 const CONTAINER: ViewStyle = {
@@ -43,6 +42,7 @@ interface DispatchProps {
   search: (searchString: string) => void
   clearSearch: () => void
   addContact: (contactInfo: ContactInfo) => void
+  inviteContact: (contact: Contacts.Contact) => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -189,8 +189,7 @@ class AddContact extends React.Component<Props> {
 
   onPressAddressBook = (contact: Contacts.Contact) => {
     return () => {
-      composeMessage('+18015025710', 'cool man')
-      console.log('Pressed contact:', contact)
+      this.props.inviteContact(contact)
     }
   }
 
@@ -209,7 +208,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     search: (searchString: string) => dispatch(ContactsActions.searchRequest(searchString)),
     clearSearch: () => dispatch(ContactsActions.clearSearch()),
-    addContact: (contactInfo: ContactInfo) => dispatch(ContactsActions.addContactRequest(contactInfo))
+    addContact: (contactInfo: ContactInfo) => dispatch(ContactsActions.addContactRequest(contactInfo)),
+    inviteContact: (contact: Contacts.Contact) => dispatch(ContactsActions.authorInviteRequest(contact))
   }
 }
 

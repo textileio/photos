@@ -38,6 +38,9 @@ const actions = {
   }),
   clearAddContact: createAction('@contacts/CLEAR_ADD_CONTACT_ERROR', (resolve) => {
     return (contactInfo: ContactInfo) => resolve({ contactInfo })
+  }),
+  authorInviteRequest: createAction('@contacts/AUTHOR_INVITE_REQUEST', (resolve) => {
+    return (contact: Contacts.Contact) => resolve({ contact })
   })
 }
 

@@ -6,7 +6,8 @@ import {
   takeEvery,
   cancelled,
   all,
-  race
+  race,
+  select
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
@@ -21,6 +22,8 @@ import {
 } from '@textile/react-native-sdk'
 
 import ContactsActions from '../../Redux/ContactsRedux'
+import { getPeerId, getUsername } from '../../Redux/AccountSelectors'
+import { composeMessage } from '../../NativeModules/MessageComposer'
 
 export function * addFriends() {
   yield call(refreshContacts)
@@ -116,6 +119,31 @@ function * handleSearchRequest(action: ActionType<typeof ContactsActions.searchR
 
 export function * watchForSearchRequest() {
   yield takeLatest(getType(ContactsActions.searchRequest), handleSearchRequest)
+}
+
+export function * sendInviteMessage() {
+  while (true) {
+    const action: ActionType<typeof ContactsActions.authorInviteRequest> = yield take(getType(ContactsActions.authorInviteRequest))
+    const { phoneNumbers } = action.payload.contact
+    const iphone = phoneNumbers.find((number) => number.label.toLowerCase() === 'iphone')
+    const mobile = phoneNumbers.find((number) => number.label.toLowerCase() === 'mobile')
+    const home = phoneNumbers.find((number) => number.label.toLowerCase() === 'home')
+    const work = phoneNumbers.find((number) => number.label.toLowerCase() === 'work')
+    const sendTo = iphone || mobile || home || work
+    if (sendTo) {
+      const username: string | undefined = yield select(getUsername)
+      const peerId: string | undefined = yield select(getPeerId)
+      const url = Platform.OS === 'ios' ? 'http://ioslink.com' : 'http://androidlink.com'
+      let message = `Join me on Textile Photos: ${url}`
+      if (username) {
+        message = `${message}\nMy username: ${username}`
+      }
+      if (peerId) {
+        message = `${message}\nMy peer id snippet: ${peerId.substr(0, 8)}`
+      }
+      yield call(composeMessage, sendTo.number, message)
+    }
+  }
 }
 
 async function requestPermissionsAndroid() {
