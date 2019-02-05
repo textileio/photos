@@ -158,8 +158,8 @@ class UserProfile extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const online = state.textileNode && state.textile.online && state.textile.online ? state.textile.online : false
-  const nodeRunning = state.textileNode && state.textile.nodeState ? state.textile.nodeState.state === 'started' : false
+  const online = state.textile.online
+  const nodeRunning = state.textile.nodeState.state ? state.textile.nodeState.state === 'started' : false
   const verboseUi = state.preferences.verboseUi
   return {
     verboseUi,

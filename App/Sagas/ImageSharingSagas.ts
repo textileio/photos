@@ -171,7 +171,7 @@ export function * shareToThread (uuid: string) {
 }
 
 export async function prepare (image: SharedImage, destinationThreadId: string): Promise<Protobufs.IMobilePreparedFiles> {
-  const addResult = await Textile.api.prepareFilesAsync(image.path, Textile.api.destinationThreadId)
+  const addResult = await Textile.api.prepareFilesAsync(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {
