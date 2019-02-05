@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, ImageSourcePropType, ImageStyle, Text, TextStyle, View, ViewStyle } from 'react-native'
 import * as s from '../Themes/Constants'
-import Button from './Button'
+import Button from './LargeButton'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -26,7 +26,8 @@ const SUBTITLE: TextStyle = {
 
 const BUTTON_WRAPPER: ViewStyle = {
   flex: 1,
-  justifyContent: 'center'
+  justifyContent: 'center',
+  alignSelf: 'center'
 }
 
 interface Props {

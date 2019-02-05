@@ -4,7 +4,7 @@ import Toast from 'react-native-easy-toast'
 import Modal from 'react-native-modal'
 
 import Input from '../SB/components/Input'
-import Button from './Button'
+import Button from './LargeButton'
 import * as s from '../Themes/Constants'
 import WaitListSignupScreen from './WaitListSignupScreen'
 
@@ -41,6 +41,11 @@ const TEXT: TextStyle = {
 
 const LABEL: TextStyle = {
   fontFamily: s.FONT_FAMILY_REGULAR
+}
+
+const BUTTON: ViewStyle = {
+  ...ITEM,
+  alignSelf: 'center'
 }
 
 const LINK: TextStyle = {
@@ -121,7 +126,7 @@ export default class ReferralCode extends React.Component<Props, State> {
               text='Next'
               disabled={!this.state.valid}
               onPress={this.props.onSuccess}
-              style={ITEM}
+              style={BUTTON}
             />
             <Text style={LINK} onPress={this.showWaitlistSignup}>Request a referral code</Text>
             <Toast

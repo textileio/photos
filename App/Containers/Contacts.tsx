@@ -57,7 +57,7 @@ class Contacts extends React.Component<Props, State> {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item iconName='plus' onPress={addContact} />
+        <Item title='Add Contact' iconName='plus' onPress={addContact} />
       </TextileHeaderButtons>
     )
     return {
@@ -98,8 +98,8 @@ class Contacts extends React.Component<Props, State> {
           ItemSeparatorComponent={RowSeparator}
           ListHeaderComponent={
             <SearchBar
-              containerStyle={{ backgroundColor: '#FAFCFE' }}
-              inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: s.COLOR_GREY_LIGHT }}
+              containerStyle={{ backgroundColor: s.COLOR_GREY_LIGHT }}
+              inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: '#FAFCFE' }}
               additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false }}
               iconColor={s.COLOR_GREY_MEDIUM}
               onTextChanged={this.updateSearchString}

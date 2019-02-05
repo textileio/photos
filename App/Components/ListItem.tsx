@@ -28,7 +28,7 @@ class ListItem extends React.PureComponent<Props> {
           <View style={{ flex: 1, justifyContent: 'center', marginLeft: this.props.leftItem ? 12 : 0 }}>
             <Text style={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_MEDIUM, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM }}>{this.props.title}</Text>
             {this.props.subtitle &&
-              <Text style={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_LIGHT }}>{this.props.subtitle}</Text>
+              <Text style={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_SMALL, color: s.COLOR_FONT_DARK_ON_LIGHT_LIGHT }}>{this.props.subtitle}</Text>
             }
           </View>
           {this.props.rightItems &&

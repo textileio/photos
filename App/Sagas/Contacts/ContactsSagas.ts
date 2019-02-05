@@ -140,7 +140,7 @@ export function * sendInviteMessage() {
         message = `${message}\nMy username: ${username}`
       }
       if (peerId) {
-        message = `${message}\nMy peer id snippet: ${peerId.substr(0, 8)}`
+        message = `${message}\nMy peer id snippet: ${peerId.substr(peerId.length - 8, 8)}`
       }
       yield call(composeMessage, sendTo.number, message)
     }

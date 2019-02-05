@@ -1,30 +1,35 @@
 import React from 'react'
+import { ViewStyle } from 'react-native'
 import Button from './Button'
 import * as s from '../Themes/Constants'
 
 interface Props {
   text: string
+  style?: ViewStyle
   disabled?: boolean
+  processing?: boolean
   onPress?: () => void
 }
 
 const button = (props: Props) => {
-  const { text, onPress } = props
+  const { text, onPress, style, processing } = props
   return (
     <Button
       text={text}
       textStyle={{
         fontFamily: 'Biotif-Bold',
-        fontSize: 10,
-        letterSpacing: 2,
-        paddingLeft: 2,
+        fontSize: 16,
+        letterSpacing: 3,
+        paddingLeft: 3,
         textTransform: 'uppercase'
       }}
       style={{
-        paddingHorizontal: 8,
-        paddingVertical: 4,
+        ...style,
+        paddingHorizontal: s.SPACING_24,
+        paddingVertical: s.SPACING_12,
         backgroundColor: s.COLOR_BRAND_BLUE
       }}
+      processing={processing}
       disabled={props.disabled}
       onPress={onPress}
     />

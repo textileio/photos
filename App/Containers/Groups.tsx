@@ -65,7 +65,7 @@ class Groups extends React.Component<Props, State> {
 
     const headerRight = (
       <TextileHeaderButtons>
-        <Item iconName='plus' onPress={openThreadModal} />
+        <Item title='Add Group' iconName='plus' onPress={openThreadModal} />
       </TextileHeaderButtons>
     )
 

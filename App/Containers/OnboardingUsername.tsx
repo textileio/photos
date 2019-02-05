@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
 
 import Input from '../SB/components/Input'
-import Button from '../Components/Button'
+import Button from '../Components/LargeButton'
 import * as s from '../Themes/Constants'
 import { RootAction, RootState } from '../Redux/Types'
 import AccountActions from '../Redux/AccountRedux'
@@ -42,6 +42,11 @@ const TEXT: TextStyle = {
 
 const LABEL: TextStyle = {
   fontFamily: s.FONT_FAMILY_REGULAR
+}
+
+const BUTTON: ViewStyle = {
+  ...ITEM,
+  alignSelf: 'center'
 }
 
 interface OwnProps {
@@ -140,7 +145,7 @@ class OnboardingUsername extends React.Component<Props, State> {
               disabled={!this.state.valid || this.state.nextDisabled}
               processing={this.props.processing}
               onPress={this.submit}
-              style={ITEM}
+              style={BUTTON}
             />
           </View>
       </KeyboardAvoidingView>

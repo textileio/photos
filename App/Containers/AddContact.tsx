@@ -56,7 +56,7 @@ class AddContact extends React.Component<Props> {
     }
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='back' iconName='chevron-bottom' onPress={close} />
+        <Item title='Close' iconName='chevron-bottom' onPress={close} />
       </TextileHeaderButtons>
     )
     return {
@@ -133,6 +133,7 @@ class AddContact extends React.Component<Props> {
           <ListItem
             leftItem={<Avatar style={{ width: 50 }} target={item.data.contactInfo.avatar} />}
             title={item.data.contactInfo.username || item.data.contactInfo.id}
+            subtitle={item.data.contactInfo.id.substr(item.data.contactInfo.id.length - 8, 8)}
             rightItems={[
               <Button
                 key='add'

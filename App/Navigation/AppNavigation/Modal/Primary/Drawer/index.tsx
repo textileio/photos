@@ -11,8 +11,8 @@ import styles, { headerTintColor } from '../../../../Styles/NavigationStyles'
 
 const drawer = createDrawerNavigator(
   {
-    Contacts,
     Groups,
+    Contacts,
     Notifications
   },
   {
