@@ -25,6 +25,20 @@ export const FONT_LINE_HEIGHT_SMALL = 15
 export const FONT_LINE_HEIGHT_REGULAR = 18
 export const FONT_LINE_HEIGHT_MEDIUM = 24
 
+// 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256
+export const SPACING_4 = 4
+export const SPACING_8 = 8
+export const SPACING_12 = 12
+export const SPACING_16 = 16
+export const SPACING_24 = 24
+export const SPACING_32 = 32
+export const SPACING_48 = 48
+export const SPACING_64 = 64
+export const SPACING_96 = 96
+export const SPACING_128 = 128
+export const SPACING_192 = 192
+export const SPACING_256 = 256
+
 export const MARGIN_EXTRA_SMALL = 8
 export const MARGIN_SMALL = 16
 export const MARGIN_STANDARD = 20

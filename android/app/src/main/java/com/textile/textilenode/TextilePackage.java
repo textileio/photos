@@ -19,6 +19,7 @@ public class TextilePackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new FS(reactContext));
+        modules.add(new MessageComposer(reactContext));
 
         return modules;
     }

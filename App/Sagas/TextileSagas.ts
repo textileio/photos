@@ -17,8 +17,6 @@ import Config from 'react-native-config'
 import {
   overview,
   Overview,
-  contacts,
-  ContactInfo,
   checkCafeMessages,
   addThreadIgnore,
   setAvatar,
@@ -99,19 +97,6 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
   }
   yield put(PhotoViewingActions.viewPhoto(photoId))
   yield call(NavigationService.navigate, 'LikesScreen')
-}
-
-export function * refreshContacts () {
-  try {
-    const contactsResult: ReadonlyArray<ContactInfo> = yield call(contacts)
-    yield put(ContactsActions.getContactsSuccess(contactsResult))
-  } catch (error) {
-    // skip for now
-  }
-}
-
-export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
-  yield call(refreshContacts)
 }
 
 export function * initializeAppState () {

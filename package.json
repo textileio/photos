@@ -23,6 +23,7 @@
     "react-native-background-timer": "2.1.0-alpha.6",
     "react-native-background-upload": "https://github.com/textileio/react-native-background-upload#9dedcbae13815ce869e5d7809cf71e3c2d49cc0e",
     "react-native-config": "^0.11.7",
+    "react-native-contacts": "^3.1.2",
     "react-native-easy-toast": "^1.1.0",
     "react-native-elements": "1.0.0-beta7",
     "react-native-fabric": "https://github.com/corymsmith/react-native-fabric#523a4edab3b2bf55ea9eeea2cf0dde82c5c29dd4",

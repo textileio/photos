@@ -5,7 +5,7 @@ import Config from 'react-native-config'
 import { Buffer } from 'buffer'
 
 import Input from '../SB/components/Input'
-import Button from '../Components/Button'
+import Button from '../Components/LargeButton'
 import * as s from '../Themes/Constants'
 
 const CONTAINER: ViewStyle = {
@@ -41,6 +41,11 @@ const TEXT: TextStyle = {
 
 const LABEL: TextStyle = {
   fontFamily: s.FONT_FAMILY_REGULAR
+}
+
+const BUTTON: ViewStyle = {
+  ...ITEM,
+  alignSelf: 'center'
 }
 
 const LINK: TextStyle = {
@@ -124,7 +129,7 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
               disabled={!this.state.valid}
               processing={this.state.processing}
               onPress={this.submit}
-              style={ITEM}
+              style={BUTTON}
             />
             <Text style={LINK} onPress={this.props.onSuccess}>No thanks</Text>
             <Toast

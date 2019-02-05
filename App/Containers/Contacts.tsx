@@ -37,8 +37,7 @@ interface NavProps {
 type Props = StateProps & NavigationScreenProps<NavProps>
 
 interface State {
-  searchString?: string,
-  showInviteContactModal: boolean
+  searchString?: string
 }
 
 class Contacts extends React.Component<Props, State> {
@@ -58,7 +57,7 @@ class Contacts extends React.Component<Props, State> {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item iconName='plus' onPress={addContact} />
+        <Item title='Add Contact' iconName='plus' onPress={addContact} />
       </TextileHeaderButtons>
     )
     return {
@@ -70,9 +69,7 @@ class Contacts extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = {
-      showInviteContactModal: false
-    }
+    this.state = {}
   }
 
   componentDidMount () {
@@ -101,8 +98,8 @@ class Contacts extends React.Component<Props, State> {
           ItemSeparatorComponent={RowSeparator}
           ListHeaderComponent={
             <SearchBar
-              containerStyle={{ backgroundColor: '#FAFCFE' }}
-              inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: s.COLOR_GREY_LIGHT }}
+              containerStyle={{ backgroundColor: s.COLOR_GREY_LIGHT }}
+              inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: '#FAFCFE' }}
               additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false }}
               iconColor={s.COLOR_GREY_MEDIUM}
               onTextChanged={this.updateSearchString}
@@ -110,10 +107,6 @@ class Contacts extends React.Component<Props, State> {
           }
           keyboardShouldPersistTaps='handled'
           keyboardDismissMode='on-drag'
-        />
-        <InviteContactModal
-          isVisible={this.state.showInviteContactModal}
-          cancel={this.cancelInviteContact}
         />
       </View>
     )
@@ -127,11 +120,10 @@ class Contacts extends React.Component<Props, State> {
     const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
     return (
       <ListItem
-        id={item.id}
         title={item.username || item.id}
         leftItem={leftItem}
         rightItems={rightItems}
-        onPress={this.onPress}
+        onPress={this.onPress(item)}
       />
     )
   }
@@ -142,16 +134,14 @@ class Contacts extends React.Component<Props, State> {
     })
   }
 
-  onPress = (id: string) => {
-    this.props.navigation.navigate('Contact', { peerId: id })
+  onPress = (contactInfo: ContactInfo) => {
+    return () => {
+      this.props.navigation.navigate('Contact', { contactInfo })
+    }
   }
 
   inviteContactRequest = () => {
-    this.setState({showInviteContactModal: true})
-  }
-
-  cancelInviteContact = () => {
-    this.setState({showInviteContactModal: false})
+    this.props.navigation.navigate('AddContact')
   }
 
   openDrawer = () => {

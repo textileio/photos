@@ -19,6 +19,7 @@ import com.imagepicker.ImagePickerPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.smixx.fabric.FabricPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
@@ -53,6 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
           new RNVersionNumberPackage(),
           new RNGestureHandlerPackage(),
           new RNScreensPackage(),
+          new ReactNativeContacts(),
           new TextilePackage()
       );
     }
