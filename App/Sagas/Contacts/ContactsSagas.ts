@@ -108,7 +108,7 @@ function * executeSearchRequest(searchString: string) {
 }
 
 function * handleSearchRequest(action: ActionType<typeof ContactsActions.searchRequest>) {
-  // debounce it, but cancel it we clear search
+  // debounce it, but cancel if we clear search
   const { debounce } = yield race({
     debounce: call(delay, 1000),
     cancel: take(getType(ContactsActions.clearSearch))
