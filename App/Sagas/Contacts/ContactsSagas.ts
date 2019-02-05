@@ -20,6 +20,7 @@ import {
   ContactInfo,
   ContactInfoQueryResult
 } from '@textile/react-native-sdk'
+import Config from 'react-native-config'
 
 import ContactsActions from '../../Redux/ContactsRedux'
 import { getPeerId, getUsername } from '../../Redux/AccountSelectors'
@@ -133,7 +134,7 @@ export function * sendInviteMessage() {
     if (sendTo) {
       const username: string | undefined = yield select(getUsername)
       const peerId: string | undefined = yield select(getPeerId)
-      const url = Platform.OS === 'ios' ? 'http://ioslink.com' : 'http://androidlink.com'
+      const url = Platform.OS === 'ios' ? Config.RN_IOS_STORE_LINK : Config.RN_ANDROID_STORE_LINK
       let message = `Join me on Textile Photos: ${url}`
       if (username) {
         message = `${message}\nMy username: ${username}`
