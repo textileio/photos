@@ -14,7 +14,7 @@ import { getPeerId } from '../../../Redux/AccountSelectors'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
-import Textile from '../../../SDK'
+import Textile from '@textile/react-native-sdk'
 
 const WIDTH = Dimensions.get('window').width
 

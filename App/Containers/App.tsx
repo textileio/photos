@@ -7,7 +7,6 @@ import RootContainer from './RootContainer'
 import configureStore from '../Redux/configureStore'
 import { useScreens } from 'react-native-screens'
 // import LocationEventHandler from '../Services/EventHandlers/LocationEventHandler'
-import AppStateEventHander from '../Services/EventHandlers/AppStateEventHandler'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
@@ -15,7 +14,7 @@ import BackgroundFetchEventHandler from '../Services/EventHandlers/BackgroundFet
 import NotificationEventHandler from '../Services/EventHandlers/NotificationEventHandler'
 import { errorHandler } from '../Services/ErrorHandler'
 
-import {Textile} from '../SDK'
+import Textile from '@textile/react-native-sdk'
 
 useScreens()
 
@@ -23,13 +22,12 @@ const { store, persistor } = configureStore()
 
 class App extends Component {
 
-  appStateEventHander = new AppStateEventHander(store)
   backgroundFetchEventHandler = new BackgroundFetchEventHandler(store)
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
   deepLinkEventHandler = new DeepLinkEventHandler(store)
-  textile = new Textile({})
+  textile = Textile
 
   render () {
     return (
@@ -53,7 +51,6 @@ class App extends Component {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
     }
-    this.appStateEventHander.tearDown()
     this.notificationEventHandler.tearDown()
     this.textileNodeEventHandler.tearDown()
     this.uploadEventHandler.tearDown()

@@ -1,5 +1,5 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
-import { NodeState } from '../SDK/types'
+import { NodeState } from '@textile/react-native-sdk'
 
 const actions = {
   newNodeState: createAction(

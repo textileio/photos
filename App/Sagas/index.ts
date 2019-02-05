@@ -98,7 +98,7 @@ import {
 import * as TextileEventsSagas from './TextileEventsSagas'
 
 /*--- NEW SDK ---*/
-import Textile from '../SDK'
+import Textile from '@textile/react-native-sdk'
 
 /* ------------- Connect Types To Sagas ------------- */
 

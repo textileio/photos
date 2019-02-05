@@ -14,11 +14,7 @@ import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import { pendingInviteLink } from '../Redux/ThreadsSelectors'
 import { ActionType } from 'typesafe-actions'
-import {
-  addExternalThreadInvite,
-  acceptExternalThreadInvite,
-  acceptThreadInviteViaNotification,
-  addThreadInvite,
+import Textile, {
   ExternalInvite
 } from '@textile/react-native-sdk'
 import DeepLink from '../Services/DeepLink'
@@ -29,7 +25,7 @@ import UIActions from '../Redux/UIRedux'
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
   try {
-    const invite: ExternalInvite = yield call(addExternalThreadInvite, id)
+    const invite: ExternalInvite = yield call(Textile.api.addExternalThreadInvite, id)
     yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
   } catch (error) {
     yield put(ThreadsActions.addExternalInviteError(id, error))
@@ -39,7 +35,7 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
 export function * displayThreadQRCode (action: ActionType<typeof ThreadsActions.threadQRCodeRequest>) {
   const { id, name } = action.payload
   try {
-    const invite: ExternalInvite = yield call(addExternalThreadInvite, id)
+    const invite: ExternalInvite = yield call(Textile.api.addExternalThreadInvite, id)
     const link = DeepLink.createInviteLink(invite, name)
     yield put(ThreadsActions.threadQRCodeSuccess(id, name, link))
     // displayThreadQRCode
@@ -61,7 +57,7 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
 function * processExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const joinId: string = yield call(acceptExternalThreadInvite, inviteId, key)
+    const joinId: string = yield call(Textile.api.acceptExternalThreadInvite, inviteId, key)
     if (!joinId) {
       throw new Error('invite previously accepted')
     }
@@ -84,7 +80,7 @@ export function * pendingInvitesTask () {
 export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
   const { notificationId, threadName } = action.payload
   try {
-    const threadId = yield call(acceptThreadInviteViaNotification, notificationId)
+    const threadId = yield call(Textile.api.acceptThreadInviteViaNotification, notificationId)
     yield put(PhotoViewingActions.refreshThreadsRequest())
     yield put(UIActions.navigateToThreadRequest(threadId, threadName))
   } catch (error) {
@@ -96,7 +92,7 @@ export function * addInternalInvites (action: ActionType<typeof ThreadsActions.a
   const { threadId, addresses } = action.payload
   try {
     for (const address of addresses) {
-      yield call(addThreadInvite, threadId, address)
+      yield call(Textile.api.addThreadInvite, threadId, address)
     }
   } catch (error) {
   }
