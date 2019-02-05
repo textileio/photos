@@ -630,9 +630,9 @@
     react-native-safe-area-view "^0.11.0"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@textile/go-mobile@1.0.0-rc29":
-  version "1.0.0-rc29"
-  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc29.tgz#cd857120ede7f0b7d5e770fda02fefb327501110"
+"@textile/go-mobile@1.0.0-rc31":
+  version "1.0.0-rc31"
+  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc31.tgz#58d5122a5511caea04b424c87ff48c8180f3678d"
 
 "@textile/react-native-icon@^1.0.0":
   version "1.0.0"
@@ -650,11 +650,11 @@
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.12.tgz#1be41a4eaa9648fa4766e2489a6c2764d95985e1"
 
-"@textile/react-native-sdk@1.0.20":
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.20.tgz#b9e533090012dbc0da40c694db6e6e36dbfa2783"
+"@textile/react-native-sdk@1.0.22":
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.22.tgz#fe1de2f1820a9dd2f9c9d4e6347119869f752c7b"
   dependencies:
-    "@textile/go-mobile" "1.0.0-rc29"
+    "@textile/go-mobile" "1.0.0-rc31"
     "@textile/react-native-protobufs" "1.1.0"
     buffer "^5.2.1"
     prop-types "^15.6.2"
