@@ -1,5 +1,5 @@
 import React from 'react'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
+import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View, TouchableOpacity, Insets } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import Modal from 'react-native-modal'
 
@@ -54,6 +54,13 @@ const LINK: TextStyle = {
   color: s.COLOR_GREY_MEDIUM,
   textDecorationLine: 'underline',
   textAlign: 'center'
+}
+
+const HIT_SLOP: Insets = {
+  top: s.ITEM_SPACING_LARGE,
+  left: s.ITEM_SPACING_LARGE,
+  bottom: s.ITEM_SPACING_LARGE,
+  right: s.ITEM_SPACING_LARGE
 }
 
 interface Props {
@@ -128,7 +135,9 @@ export default class ReferralCode extends React.Component<Props, State> {
               onPress={this.props.onSuccess}
               style={BUTTON}
             />
-            <Text style={LINK} onPress={this.showWaitlistSignup}>Request a referral code</Text>
+            <TouchableOpacity onPress={this.showWaitlistSignup} hitSlop={HIT_SLOP}>
+              <Text style={LINK}>Request a referral code</Text>
+            </TouchableOpacity>
             <Toast
               ref={(toast) => { this.toast = toast ? toast : undefined }}
               position='center'

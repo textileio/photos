@@ -41,7 +41,7 @@ class RootContainer extends Component<StateProps & DispatchProps> {
   }
 
   async setupAndroid() {
-    const hasPermission = await PermissionsAndroid.checkPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+    const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
     if (hasPermission) {
       this.watchPosition()
     }

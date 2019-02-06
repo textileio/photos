@@ -32,6 +32,7 @@ class SearchBar extends Component<Props, State> {
       flex: 1,
       fontSize: 16,
       backgroundColor: 'white',
+      padding: 0,
       marginTop: 6,
       marginBottom: 6
     },
