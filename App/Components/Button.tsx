@@ -14,7 +14,9 @@ const BUTTON_TEXT: TextStyle = {
   fontFamily: 'Biotif-Regular',
   fontSize: 18,
   color: 'white',
-  textAlign: 'center'
+  textAlign: 'center',
+  textAlignVertical: 'center',
+  includeFontPadding: false
 }
 
 const DISABLED: ViewStyle = {
