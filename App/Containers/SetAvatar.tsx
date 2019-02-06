@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
+import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View, TouchableOpacity, Insets } from 'react-native'
 import { NavigationScreenProps, NavigationScreenProp, NavigationRoute } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 
@@ -60,6 +60,13 @@ const LABEL: TextStyle = {
 const BUTTON: ViewStyle = {
   ...ITEM,
   alignSelf: 'center'
+}
+
+const HIT_SLOP: Insets = {
+  top: s.ITEM_SPACING_LARGE,
+  left: s.ITEM_SPACING_LARGE,
+  bottom: s.ITEM_SPACING_LARGE,
+  right: s.ITEM_SPACING_LARGE
 }
 
 const LINK: TextStyle = {
@@ -191,7 +198,14 @@ class SetAvatar extends React.Component<Props> {
               onPress={action}
               style={BUTTON}
             />
-            <Text style={[LINK, { opacity: this.props.displaySubButton ? 1 : 0 }]} onPress={this.props.displayPhotoChooser}>Choose Another</Text>
+            <TouchableOpacity
+              disabled={!this.props.displaySubButton}
+              style={{ opacity: this.props.displaySubButton ? 1 : 0 }}
+              onPress={this.props.displayPhotoChooser}
+              hitSlop={HIT_SLOP}
+            >
+              <Text style={LINK}>Choose Another</Text>
+            </TouchableOpacity>
           </View>
       </KeyboardAvoidingView>
     )
