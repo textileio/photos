@@ -12,33 +12,10 @@ export default StyleSheet.create({
     borderBottomColor: '#ECEDEE'
   },
   headerTitle: {
-    fontFamily: 'Biotif',
-    fontWeight: 'bold',
+    fontFamily: 'Biotif-Bold',
+    fontWeight: 'normal',
     fontSize: 17,
-    color: Colors.charcoal,
-    flex: 1,
-    textAlign: 'center', // import center-overkill
-    justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center'
-  },
-  headerTitleLogo: {
-    flex: 1,
-    justifyContent: 'center', // import center-overkill
-    alignSelf: 'center',
-    alignItems: 'center'
-  },
-  headerLogo: {
-    width: 82.5,
-    height: 23
-  },
-  headerIconList: {
-    width: 23,
-    height: 20
-  },
-  headerIcon: {
-    width: 24,
-    height: 24
+    color: Colors.charcoal
   },
   headerLeft: {
     height: 16,
