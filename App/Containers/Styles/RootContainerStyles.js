@@ -28,7 +28,6 @@ export default StyleSheet.create({
     width: '100%',
     bottom: 85,
     height: 22,
-    paddingTop: 4,
     paddingHorizontal: 16,
     backgroundColor: 'rgba(0,0,0,0.5)'
   },

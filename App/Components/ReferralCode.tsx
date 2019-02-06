@@ -1,5 +1,5 @@
 import React from 'react'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
+import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View, TouchableOpacity } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import Modal from 'react-native-modal'
 
@@ -128,7 +128,9 @@ export default class ReferralCode extends React.Component<Props, State> {
               onPress={this.props.onSuccess}
               style={BUTTON}
             />
-            <Text style={LINK} onPress={this.showWaitlistSignup}>Request a referral code</Text>
+            <TouchableOpacity onPress={this.showWaitlistSignup} hitSlop={{ top: 30, left: 30, bottom: 30, right: 30}}>
+              <Text style={LINK}>Request a referral code</Text>
+            </TouchableOpacity>
             <Toast
               ref={(toast) => { this.toast = toast ? toast : undefined }}
               position='center'
