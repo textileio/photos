@@ -1,6 +1,8 @@
 package com.textile.textilenode;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -24,10 +26,12 @@ public class MessageComposer extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void composeMessage(String number, String message) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + number));
         intent.putExtra("sms_body", message);
-        if (intent.resolveActivity(this.reactContext.getPackageManager()) != null) {
+        PackageManager pm = this.reactContext.getPackageManager();
+        ComponentName cn = intent.resolveActivity(pm);
+        if (cn != null) {
             this.reactContext.startActivity(intent);
         }
 
