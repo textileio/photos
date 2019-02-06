@@ -12,13 +12,12 @@ const button = (props: Props) => {
   const { text, onPress } = props
   return (
     <Button
-      text={text}
+      text={text.toUpperCase()}
       textStyle={{
         fontFamily: 'Biotif-Bold',
         fontSize: 10,
         letterSpacing: 2,
-        paddingLeft: 2,
-        textTransform: 'uppercase'
+        paddingLeft: 2
       }}
       style={{
         paddingHorizontal: 8,
