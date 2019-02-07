@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { Colors } from '../../Themes/'
 
 export const headerTintColor = Colors.charcoal
@@ -13,7 +13,7 @@ export default StyleSheet.create({
   },
   headerTitle: {
     fontFamily: 'Biotif-Bold',
-    fontWeight: 'normal',
+    fontWeight: Platform.OS === 'ios' ? 'bold' : 'normal',
     fontSize: 17,
     color: Colors.charcoal
   },

@@ -1,6 +1,6 @@
 // @ts-ignore
 import { createDrawerNavigator } from 'react-navigation'
-import { Dimensions } from 'react-native'
+import { Dimensions, Platform } from 'react-native'
 import Contacts from './Contacts'
 import Groups from './Groups'
 import Notifications from './Notifications'
@@ -22,7 +22,7 @@ const drawer = createDrawerNavigator(
     contentOptions: {
       labelStyle: {
         fontFamily: 'Biotif-Medium',
-        fontWeight: 'normal',
+        fontWeight: Platform.OS === 'ios' ? '600' : 'normal',
         fontSize: s.FONT_SIZE_MEDIUM
       },
       activeLabelStyle: {
