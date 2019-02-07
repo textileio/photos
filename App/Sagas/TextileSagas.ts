@@ -13,10 +13,8 @@ import { Share, PermissionsAndroid, Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
-import {
-  contacts,
-  ContactInfo,
-  addThreadLike
+import Textile, {
+  ContactInfo
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
@@ -82,7 +80,7 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
 
 export function * refreshContacts () {
   try {
-    const contactsResult: ReadonlyArray<ContactInfo> = yield call(contacts)
+    const contactsResult: ReadonlyArray<ContactInfo> = yield call(Textile.api.contacts)
     yield put(ContactsActions.getContactsSuccess(contactsResult))
   } catch (error) {
     // skip for now
@@ -206,7 +204,7 @@ export function * backgroundLocationPermissionsTrigger () {
 export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
-    yield call(addThreadLike, blockId)
+    yield call(Textile.api.addThreadLike, blockId)
   } catch (error) {
 
   }

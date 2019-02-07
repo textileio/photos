@@ -3,7 +3,7 @@ import { ScrollView, TextInput, Platform, Clipboard, ActivityIndicator, View, Te
 import FS from 'react-native-fs'
 import { NavigationScreenProps} from 'react-navigation'
 import * as s from '../Themes/Constants'
-import Textile from '../SDK'
+import Textile from '@textile/react-native-sdk'
 import { TextileHeaderButtons, Item as TextileItem } from './HeaderButtons'
 
 const LOG_FILE_PATH = `${Textile.repoPath}/logs/textile.log`

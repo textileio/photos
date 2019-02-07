@@ -3,7 +3,7 @@ import { Image, ImageStyle, Text, TextStyle, View, ViewStyle } from 'react-nativ
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import Button from '../../../Components/Button'
-import { NodeState } from '../../../SDK/types'
+import { NodeState } from '@textile/react-native-sdk'
 import { RootAction, RootState } from '../../../Redux/Types'
 import * as s from '../../../Themes/Constants'
 

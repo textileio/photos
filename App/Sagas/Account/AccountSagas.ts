@@ -5,16 +5,11 @@ import ContactsActions from '../../Redux/ContactsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
-import {
-  cafeSessions,
-  refreshCafeSession,
-  peerId,
-  profile,
+import Textile, {
+  Protobufs,
   ContactInfo
 } from '@textile/react-native-sdk'
-import Textile from '../../SDK'
 import { bestSession, getSessionMillis } from '../../Redux/AccountSelectors'
-import { ICafeSession, ICafeSessions } from '@textile/react-native-protobufs'
 
 export function * onNodeStarted () {
   while (yield take([getType(TextileEventsActions.startNodeFinished), getType(PreferencesActions.onboardingSuccess)])) {
@@ -34,7 +29,7 @@ export function * refreshProfile () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshProfileRequest))
-      const profileResult: ContactInfo = yield call(profile)
+      const profileResult: ContactInfo = yield call(Textile.api.profile)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
       yield put(AccountActions.profileError(error))
@@ -46,7 +41,7 @@ export function * refreshPeerId () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshPeerIdRequest))
-      const peerIdResult = yield call(peerId)
+      const peerIdResult = yield call(Textile.api.peerId)
       yield put(AccountActions.refreshPeerIdSuccess(peerIdResult))
     } catch (error) {
       yield put(AccountActions.refreshPeerIdError(error))
@@ -91,7 +86,7 @@ export function * setAvatar () {
 }
 
 export function * getSession (depth: number = 0): any {
-  const session: ICafeSession | undefined = yield select(bestSession)
+  const session: Protobufs.ICafeSession | undefined = yield select(bestSession)
   if (!session) {
     return undefined
   }

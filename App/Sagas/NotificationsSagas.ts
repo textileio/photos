@@ -14,14 +14,10 @@ import {delay} from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
-import {
-  notifications,
+import Textile, {
   NotificationType,
-  NotificationInfo,
-  readAllNotifications as readAll,
-  readNotification
+  NotificationInfo
 } from '@textile/react-native-sdk'
-import Textile from '../SDK'
 import NavigationService from '../Services/NavigationService'
 
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -37,7 +33,7 @@ export function * enable () {
 }
 
 export function * readAllNotifications (action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
-  yield call(readAll)
+  yield call(Textile.api.readAllNotifications)
 }
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
@@ -90,7 +86,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
   try {
-    yield call(readNotification, notification.id)
+    yield call(Textile.api.readNotification, notification.id)
     switch (notification.type) {
       case NotificationType.CommentAddedNotification: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
@@ -138,7 +134,7 @@ export function * refreshNotifications () {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(notifications, '', 99) // TODO: offset?
+    const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(Textile.api.notifications, '', 99) // TODO: offset?
     const typedNotifs = notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {

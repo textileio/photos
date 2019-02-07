@@ -10,15 +10,10 @@ import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
 import Config from 'react-native-config'
-import {
-  addThread,
-  addThreadIgnore,
+import Textile, {
   ContactInfo,
-  profile,
-  threads,
   ThreadInfo
  } from '@textile/react-native-sdk'
-import Textile from '../SDK'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask } from './ThreadsSagas'
 import { RootState } from '../Redux/Types'
@@ -64,7 +59,7 @@ export function * updateProfile () {
           action.type === getType(TextileEventsActions.updateProfile)
         )
 
-      const profileResult: ContactInfo = yield call(profile)
+      const profileResult: ContactInfo = yield call(Textile.api.profile)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
 
       yield call(logNewEvent, 'refreshMessages', action.type)
@@ -83,7 +78,7 @@ export function * ignoreFileRequest () {
           action.type === getType(TextileEventsActions.ignoreFileRequest)
         )
 
-      yield call(addThreadIgnore, action.payload.blockId)
+      yield call(Textile.api.addThreadIgnore, action.payload.blockId)
 
       yield call(logNewEvent, 'ignoreFile', action.type)
     } catch (error) {
@@ -155,12 +150,12 @@ export function * startNodeFinished () {
       yield put(PhotoViewingActions.refreshThreadsRequest())
 
       // Update our camera roll
-      const threadsResult: ReadonlyArray<ThreadInfo> = yield call(threads)
+      const threadsResult: ReadonlyArray<ThreadInfo> = yield call(Textile.api.threads)
       const cameraRollThreadName = 'Camera Roll'
       const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
       const cameraRollThread = threadsResult.find((thread) => thread.key === cameraRollThreadKey)
       if (!cameraRollThread) {
-        yield call(addThread, cameraRollThreadKey, cameraRollThreadName, false)
+        yield call(Textile.api.addThread, cameraRollThreadKey, cameraRollThreadName, false)
       }
     } catch (error) {
       // handle errors

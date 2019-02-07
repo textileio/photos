@@ -14,7 +14,7 @@ import { getPeerId } from '../../../Redux/AccountSelectors'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
-import Textile from '../../../SDK'
+import Textile from '@textile/react-native-sdk'
 
 const WIDTH = Dimensions.get('window').width
 
@@ -158,8 +158,8 @@ class UserProfile extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const online = state.textileNode && state.textile.online && state.textile.online ? state.textile.online : false
-  const nodeRunning = state.textileNode && state.textile.nodeState ? state.textile.nodeState.state === 'started' : false
+  const online = state.textile.online
+  const nodeRunning = state.textile.nodeState.state ? state.textile.nodeState.state === 'started' : false
   const verboseUi = state.preferences.verboseUi
   return {
     verboseUi,

@@ -1,11 +1,10 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
-import { NodeState } from '../SDK/types'
+import { NodeState } from '@textile/react-native-sdk'
 
 const actions = {
-  newNodeState: createAction(
-    '@bridge/NEW_NODE_STATE',
-    (resolve) => (state: NodeState) => resolve({ state })
-  ),
+  newNodeState: createAction('@bridge/NEW_NODE_STATE', (resolve) => {
+    return (state: NodeState) => resolve({ state })
+  }),
   appStateChange: createAction(
     '@bridge/APP_STATE_CHANGE',
     (resolve) => (previousState: string, newState: string) => resolve({ previousState, newState })
