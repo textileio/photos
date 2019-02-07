@@ -40,7 +40,7 @@ You'll need these to modify your `.env` to run the mobile app in development mod
 1. Install all dependancies with `yarn`
 2. Launch your Textile cafe (see above)
 3. Modify your `.env` file to match your cafe details (see below)
-4. Finally, run `react-native start` and launch the app in the simulator of your choice. You can luaunch the app using one of hte IDEs or directly using `react-native run-ios` or `react-native run-android`
+4. Finally, run `react-native start` and launch the app in the simulator of your choice. You can launch the app using one of hte IDEs or directly using `react-native run-ios` or `react-native run-android`
 
 ### Creating your .env file
 
