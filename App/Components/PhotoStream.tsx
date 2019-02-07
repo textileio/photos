@@ -8,7 +8,7 @@ import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import {RootAction} from '../Redux/Types'
 
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
 
 import ThreadDetailCard from '../SB/components/ThreadDetailCard'
@@ -123,7 +123,7 @@ interface DispatchProps {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) },
+    refreshMessages: () => { dispatch(TextileEventsActions.refreshMessagesRequest()) },
     navigateToComments: (id: string, threadId: string) => {
       dispatch(UIActions.navigateToCommentsRequest(id, threadId))
     },

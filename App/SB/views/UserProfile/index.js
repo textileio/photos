@@ -14,6 +14,7 @@ import { getPeerId } from '../../../Redux/AccountSelectors'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
+import Textile from '@textile/react-native-sdk'
 
 const WIDTH = Dimensions.get('window').width
 
@@ -21,8 +22,17 @@ class UserProfile extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      contactModal: false
+      contactModal: false,
+      apiVersion: ''
     }
+  }
+
+  componentWillMount () {
+    Textile.api.version().then((version) => {
+      this.setState({
+        apiVersion: version
+      })
+    })
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -98,7 +108,7 @@ class UserProfile extends React.PureComponent {
             <View style={styles.logoContainer}>
               <ImageSc width={83} source={require('./statics/textile-gray-logo.png')} />
               <Text style={styles.versionDescription}>
-                {VersionNumber.appVersion} ({VersionNumber.buildVersion}) {this.props.sdkVersion}
+                {VersionNumber.appVersion} ({VersionNumber.buildVersion}) {this.state.apiVersion}
               </Text>
             </View>
           </TouchableWithoutFeedback>
@@ -148,16 +158,15 @@ class UserProfile extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const online = state.textileNode && state.textileNode.online && state.textileNode.online ? state.textileNode.online : false
-  const nodeRunning = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
+  const online = state.textile.online
+  const nodeRunning = state.textile.nodeState.state ? state.textile.nodeState.state === 'started' : false
   const verboseUi = state.preferences.verboseUi
   return {
     verboseUi,
     recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
     peerId: getPeerId(state) || 'sorry, there was an error',
     online,
-    nodeRunning,
-    sdkVersion: verboseUi ? state.textileNode.sdkVersion || '' : ''
+    nodeRunning
   }
 }
 

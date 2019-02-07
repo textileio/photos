@@ -284,6 +284,16 @@ const migrations: MigrationManifest = {
         }
       }
     }
+  },
+  17: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      account: {
+        ...state.account,
+        initialized: state.preferences.onboarded
+      }
+    }
   }
 }
 

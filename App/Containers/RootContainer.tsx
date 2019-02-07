@@ -14,10 +14,10 @@ import MigrationScreen from '../Containers/MigrationScreen'
 import styles from './Styles/RootContainerStyles'
 
 interface StateProps {
-  showMigrationModal: boolean
   monitorLocation: boolean
+  nodeState: string
+  showMigrationModal: boolean
   verboseUi: boolean
-  overlayMessage: string
 }
 
 interface DispatchProps {
@@ -25,9 +25,6 @@ interface DispatchProps {
 }
 
 class RootContainer extends Component<StateProps & DispatchProps> {
-
-  // TODO: Move all this location handling out of here!!!
-
   handleNewPosition () {
     this.props.locationUpdate()
   }
@@ -60,6 +57,7 @@ class RootContainer extends Component<StateProps & DispatchProps> {
 
   render () {
     const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content'
+    const overlayMessage = this.props.nodeState
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle={barStyle} />
@@ -68,7 +66,7 @@ class RootContainer extends Component<StateProps & DispatchProps> {
         />
         {this.props.verboseUi &&
         <View style={styles.bottomOverlay} >
-          <Text style={styles.overlayText}>{this.props.overlayMessage}</Text>
+          <Text style={styles.overlayText}>{overlayMessage}</Text>
         </View>
         }
         <Modal isVisible={this.props.showMigrationModal} style={{ margin: 0 }}>
@@ -80,17 +78,11 @@ class RootContainer extends Component<StateProps & DispatchProps> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const nodeStatus = state.textileNode.nodeState.error
-    ? 'Error - ' + state.textileNode.nodeState.error
-    : state.textileNode.nodeState.state
-  const appState = state.textileNode.appState
-  const overlayMessage = state.textileNode.appStateUpdate + ': ' + appState + ' | ' + nodeStatus
-
   return {
     showMigrationModal: state.migration.status === 'processing',
     monitorLocation: state.preferences.services.backgroundLocation.status,
     verboseUi: state.preferences.verboseUi,
-    overlayMessage
+    nodeState: state.textile.nodeState.state
   }
 }
 

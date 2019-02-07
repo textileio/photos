@@ -14,16 +14,12 @@ import {delay} from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
-import {
-  notifications,
+import Textile, {
   NotificationType,
-  NotificationInfo,
-  readAllNotifications as readAll,
-  readNotification
+  NotificationInfo
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 
-import {TextileNodeSelectors} from '../Redux/TextileNodeRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import PhotoViewingAction, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
@@ -37,7 +33,7 @@ export function * enable () {
 }
 
 export function * readAllNotifications (action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
-  yield call(readAll)
+  yield call(Textile.api.readAllNotifications)
 }
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
@@ -58,7 +54,8 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
     }
 
     // Ensure we aren't in the foreground (Android only req)
-    const queriedAppState = yield select(TextileNodeSelectors.appState)
+    // const queriedAppState = yield select(TextileNodeSelectors.appState)
+    const queriedAppState = yield call(Textile.appState)
     if (Platform.OS === 'ios' || queriedAppState.match(/background/) || queriedAppState.match(/backgroundFromForeground/)) {
       // fire the notification
       yield call(logNewEvent, 'Notifications', 'creating local')
@@ -89,7 +86,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
   try {
-    yield call(readNotification, notification.id)
+    yield call(Textile.api.readNotification, notification.id)
     switch (notification.type) {
       case NotificationType.CommentAddedNotification: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
@@ -137,7 +134,7 @@ export function * refreshNotifications () {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(notifications, '', 99) // TODO: offset?
+    const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(Textile.api.notifications, '', 99) // TODO: offset?
     const typedNotifs = notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
@@ -159,10 +156,10 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
 
 export function * waitUntilOnline(ms: number) {
   let ttw = ms
-  let online = yield select(TextileNodeSelectors.online)
+  let online = yield select(Textile.nodeOnline)
   while (!online && 0 < ttw) {
     yield delay(50)
-    online = yield select(TextileNodeSelectors.online)
+    online = yield select(Textile.nodeOnline)
     ttw -= 50
   }
   return online

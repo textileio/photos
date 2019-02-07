@@ -11,7 +11,6 @@ import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import TriggersActions from '../Redux/TriggersRedux'
@@ -24,11 +23,7 @@ import contactsSaga from './Contacts'
 
 import { startup } from './StartupSagas'
 
-import { manageNode, handleCreateNodeRequest, backgroundFetch, locationUpdate } from './NodeLifecycle'
-import { onNodeStarted } from './NodeStarted'
-import { onNodeOnline } from './NodeOnline'
-
-import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration } from './Migration'
+import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration, handleMigrationNeeded } from './Migration'
 
 import {
   showImagePicker,
@@ -87,22 +82,22 @@ import {
 } from './ThreadsSagas'
 
 import {
-  updateNodeOverview,
   navigateToThread,
   navigateToComments,
   navigateToLikes,
   addPhotoLike,
-  initializeAppState,
-  refreshMessages,
-  ignorePhoto,
   cameraPermissionsTrigger,
   chooseProfilePhoto,
   handleProfilePhotoSelected,
   handleProfilePhotoUpdated,
   presentPublicLinkInterface,
-  nodeOnlineSaga,
   updateServices
 } from './TextileSagas'
+
+import * as TextileEventsSagas from './TextileEventsSagas'
+
+/*--- NEW SDK ---*/
+import Textile from '@textile/react-native-sdk'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -111,15 +106,12 @@ export default function * root (dispatch: Dispatch) {
     call(accountSaga),
     call(contactsSaga),
 
-    call(manageNode),
-    call(handleCreateNodeRequest, dispatch),
-    call(onNodeStarted),
-    call(onNodeOnline),
     call(monitorNewThreadActions),
 
     call(startMonitoringExistingUploads),
 
     call(runRecurringMigrationTasks),
+    call(handleMigrationNeeded),
     call(handleMigrationRequest, dispatch),
     call(handleCancelMigration),
     call(handleRetryMigration, dispatch),
@@ -128,8 +120,6 @@ export default function * root (dispatch: Dispatch) {
     takeLatest(getType(StartupActions.startup), startup),
 
     // just for logging purposes
-    takeLatest(getType(TriggersActions.backgroundFetch), backgroundFetch),
-    takeLatest(getType(TriggersActions.locationUpdate), locationUpdate),
     takeEvery(getType(ProcessingImagesActions.error), handleImageProcessingError),
 
     // profile photo
@@ -154,20 +144,11 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
 
-    takeEvery(getType(TextileNodeActions.ignorePhotoRequest), ignorePhoto),
-
-    call(refreshMessages),
     // check for new images on camera roll
     call(refreshLocalImages),
 
-    // If the user clicked any invites before creating an account, this will now flush them...
-    takeEvery(getType(TextileNodeActions.startNodeSuccess), pendingInvitesTask),
-
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
-
-    // update the node stats
-    takeEvery(getType(TextileNodeActions.updateOverviewRequest), updateNodeOverview),
 
     takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
@@ -200,10 +181,13 @@ export default function * root (dispatch: Dispatch) {
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
-    takeEvery(getType(PreferencesActions.onboardedSuccess), inviteAfterOnboard),
+    takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
 
-    takeLatest(getType(TextileNodeActions.nodeOnline), nodeOnlineSaga),
+    call(TextileEventsSagas.startSagas),
 
-    initializeAppState()
+    /* ------------- SDK ------------- */
+    takeLatest(getType(TriggersActions.backgroundFetch), Textile.backgroundFetch),
+    takeLatest(getType(TriggersActions.locationUpdate), Textile.locationUpdate)
+    /* ------------- End SDK ------------- */
   ])
 }

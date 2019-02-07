@@ -9,50 +9,28 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { AppState, Share, PermissionsAndroid, Platform } from 'react-native'
-import { delay } from 'redux-saga'
-import { call, put, select, take } from 'redux-saga/effects'
+import { Share, PermissionsAndroid, Platform } from 'react-native'
+import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
-import {
-  overview,
-  Overview,
-  checkCafeMessages,
-  addThreadIgnore,
-  setAvatar,
-  addThreadLike
+import Textile, {
+  ContactInfo
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
-import StartupActions from '../Redux/StartupRedux'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
-import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import ContactsActions from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
-import { ActionType, getType } from 'typesafe-actions'
+import { ActionType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
 // @ts-ignore
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
-import {logNewEvent} from './DeviceLogs'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
-import StorageActions from '../Redux/StorageRedux'
-import { RootState } from '../Redux/Types'
 import { SharedImage } from '../Models/TextileTypes'
-
-export function * updateNodeOverview(action: ActionType<typeof TextileNodeActions.updateOverviewRequest>) {
-  try {
-    yield call(NotificationsSagas.waitUntilOnline, 2500)
-    const overviewResult: Overview = yield call(overview)
-    yield put(StorageActions.storeOverview(overviewResult))
-  } catch (error) {
-    // do nothing
-  }
-}
 
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield * processAvatarImage(action.payload.image)
@@ -97,55 +75,6 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
   }
   yield put(PhotoViewingActions.viewPhoto(photoId))
   yield call(NavigationService.navigate, 'LikesScreen')
-}
-
-export function * initializeAppState () {
-    yield take(getType(StartupActions.startup))
-    const defaultAppState = yield select(TextileNodeSelectors.appState)
-    let queriedAppState = defaultAppState
-    while (queriedAppState.match(/default|unknown/)) {
-      yield delay(10)
-      const currentAppState = yield call(() => AppState.currentState)
-      queriedAppState = currentAppState || 'unknown'
-    }
-    yield put(TextileNodeActions.appStateChange(defaultAppState, queriedAppState))
-}
-
-export function * refreshMessages () {
-  while (yield take(getType(TextileNodeActions.refreshMessagesRequest))) {
-    try {
-      yield call(checkCafeMessages)
-      yield put(TextileNodeActions.refreshMessagesSuccess(Date.now()))
-      yield call(logNewEvent, 'Refresh messages', 'Checked offline messages')
-    } catch (error) {
-      yield call(logNewEvent, 'Refresh messages', error.message, true)
-      yield put(TextileNodeActions.refreshMessagesFailure(error))
-    }
-  }
-}
-
-export function * ignorePhoto (action: ActionType<typeof TextileNodeActions.ignorePhotoRequest>) {
-  const { blockId } = action.payload
-  try {
-    yield call(NavigationService.goBack)
-    yield call(addThreadIgnore, blockId)
-  } catch (error) {
-    // do nothing new for now
-  }
-}
-
-export function * nodeOnlineSaga () {
-  const online = yield select(TextileNodeSelectors.online)
-  if (online) {
-    try {
-      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
-      if (pending) {
-        yield call(setAvatar, pending)
-      }
-    } catch (error) {
-      // nada
-    }
-  }
 }
 
 export function * synchronizeNativeUploads() {
@@ -261,7 +190,7 @@ export function * backgroundLocationPermissionsTrigger () {
 export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
-    yield call(addThreadLike, blockId)
+    yield call(Textile.api.addThreadLike, blockId)
   } catch (error) {
 
   }

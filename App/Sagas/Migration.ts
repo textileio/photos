@@ -10,16 +10,15 @@ import MigrationActions, { MigrationPhoto, PeerDetails, PhotoDownload, LocalProc
 import { getAnnouncement, getNetwork, getMigrationPhotos, completeDownloads, completeLocalProcessingTasks, allLocalProcessingTasks } from '../Redux/MigrationSelectors'
 import { getPeerId } from '../Redux/AccountSelectors'
 import { prepare } from './ImageSharingSagas'
-import { getSession } from './UploadFile'
+import { getSession } from './Account/AccountSagas'
 
-import {
-  addContact, addThreadFiles, addThread, ThreadInfo, ContactInfo, contact, CafeSession, Protobufs
+import Textile, {
+  ThreadInfo, ContactInfo, CafeSession, Protobufs
  } from '@textile/react-native-sdk'
-import { REPO_PATH } from './NodeLifecycle'
 
-const PREVIOUS_ID_PATH = () => `${REPO_PATH}/migration005_peerid.ndjson`
-const PHOTOS_FILE_PATH = () => `${REPO_PATH}/migration005_default_photos.ndjson`
-const THREADS_FILE_PATH = () => `${REPO_PATH}/migration005_threads.ndjson`
+const PREVIOUS_ID_PATH = () => `${Textile.repoPath}/migration005_peerid.ndjson`
+const PHOTOS_FILE_PATH = () => `${Textile.repoPath}/migration005_default_photos.ndjson`
+const THREADS_FILE_PATH = () => `${Textile.repoPath}/migration005_threads.ndjson`
 const IMAGE_URL = (id: string, key: string) => `https://cafe.textile.io/ipfs/${id}/photo?key=${key}`
 const MIGRATION_IMAGES_PATH = `${FS.DocumentDirectoryPath}/migration_images`
 const IMAGE_PATH = (id: string) => `${MIGRATION_IMAGES_PATH}/${id}.jpg`
@@ -72,11 +71,19 @@ export function * handleRetryMigration(dispatch: Dispatch) {
 }
 
 export function * handleCancelMigration() {
- while (true) {
-   yield take(getType(MigrationActions.cancelMigration))
-   yield call(cleanupMigrationFiles)
-   yield call(cleanupArtifacts)
+  while (true) {
+    yield take(getType(MigrationActions.cancelMigration))
+    yield call(cleanupMigrationFiles)
+    yield call(cleanupArtifacts)
+  }
  }
+
+ // Announce the new peerId as soon as migration of node happens
+export function * handleMigrationNeeded() {
+  while (true) {
+    yield take(getType(MigrationActions.migrationNeeded))
+    yield call(announcePeer)
+  }
 }
 
 function * processMigration(dispatch: Dispatch) {
@@ -121,7 +128,7 @@ function * prepareAndAddPhotos() {
   if (downloads.length < 1) {
     return
   }
-  const threadInfo: ThreadInfo = yield call(addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME, true)
+  const threadInfo: ThreadInfo = yield call(Textile.api.addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME, true)
   const effects = downloads.map((download) => call(prepareAndAddPhoto, download, threadInfo.id))
   yield all(effects)
 }
@@ -142,7 +149,7 @@ function * prepareAndAddPhoto(download: PhotoDownload, threadId: string) {
     if (!dir) {
       throw new Error('No dir on MobilePreparedFiles')
     }
-    yield call(addThreadFiles, dir, threadId)
+    yield call(Textile.api.addThreadFiles, dir, threadId)
     yield put(MigrationActions.localProcessingTaskComplete(photoId, preparedFiles))
   } catch (error) {
     yield put(MigrationActions.localProcessingTaskError(photoId, error))
@@ -204,7 +211,7 @@ export function * announcePeer() {
     const peerId = yield select(getPeerId)
     let contactInfo: ContactInfo | undefined
     if (peerId) {
-      contactInfo = yield call(contact, peerId)
+      contactInfo = yield call(Textile.api.contact, peerId)
     }
     const details: PeerDetails = {
       previousPeerId: previous.peerid,
@@ -243,7 +250,7 @@ export function * runRecurringMigrationTasks () {
         // for each contact ask if they've migrated
         const contactInfo: ContactInfo | undefined = yield call(findContact, peer)
         if (contactInfo) {
-          yield call(addContact, contactInfo)
+          yield call(Textile.api.addContact, contactInfo)
           yield put(MigrationActions.connectionSuccess(peer))
         }
       } catch (error) {

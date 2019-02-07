@@ -39,3 +39,7 @@ export function getSessionMillis(session: ICafeSession): number {
   }
   return (session.exp.seconds as number) * 1e3 + session.exp.nanos / 1e6
 }
+
+export function initialized(state: RootState) {
+  return state.account.initialized
+}

@@ -63,8 +63,8 @@ class RecoveryPhrase extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const online = state.textileNode && state.textileNode.online && state.textileNode.online ? state.textileNode.online : false
-  const nodeRunning = state.textileNode && state.textileNode.nodeState ? state.textileNode.nodeState.state === 'started' : false
+  const online = state.textileNode && state.textile.online && state.textile.online ? state.textile.online : false
+  const nodeRunning = state.textileNode && state.textile.nodeState ? state.textile.nodeState.state === 'started' : false
 
   return {
     recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
