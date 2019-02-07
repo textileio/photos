@@ -9,7 +9,6 @@ import NavigationService from '../Services/NavigationService'
 import { RootState, RootAction } from '../Redux/Types'
 import TriggersActions from '../Redux/TriggersRedux'
 import MigrationScreen from '../Containers/MigrationScreen'
-import Textile from '../SDK'
 
 // Styles
 import styles from './Styles/RootContainerStyles'

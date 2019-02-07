@@ -13,7 +13,9 @@ import { Share, PermissionsAndroid, Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
-import Textile from '@textile/react-native-sdk'
+import Textile, {
+  ContactInfo
+} from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
