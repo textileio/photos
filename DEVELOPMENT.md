@@ -3,7 +3,7 @@
 To run Textile Mobile in development mode you'll need,
 
 1. The latest code from this repo + dependencies
-2. The [textile-go](https://github.com/textileio/textile-g) framework to run a cafe node
+2. The [textile-go](https://github.com/textileio/textile-go) framework to run a cafe node
 
 ## Latest Textile Mobile
 
