@@ -13,17 +13,12 @@ import { Share, PermissionsAndroid, Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
-import {
-  contacts,
-  ContactInfo,
-  addThreadLike
-} from '@textile/react-native-sdk'
+import Textile from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import ContactsActions from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType } from 'typesafe-actions'
@@ -78,19 +73,6 @@ export function * navigateToLikes ( action: ActionType<typeof UIActions.navigate
   }
   yield put(PhotoViewingActions.viewPhoto(photoId))
   yield call(NavigationService.navigate, 'LikesScreen')
-}
-
-export function * refreshContacts () {
-  try {
-    const contactsResult: ReadonlyArray<ContactInfo> = yield call(contacts)
-    yield put(ContactsActions.getContactsSuccess(contactsResult))
-  } catch (error) {
-    // skip for now
-  }
-}
-
-export function * addFriends ( action: ActionType<typeof UIActions.addFriendRequest> ) {
-  yield call(refreshContacts)
 }
 
 export function * synchronizeNativeUploads() {
@@ -206,7 +188,7 @@ export function * backgroundLocationPermissionsTrigger () {
 export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
-    yield call(addThreadLike, blockId)
+    yield call(Textile.api.addThreadLike, blockId)
   } catch (error) {
 
   }

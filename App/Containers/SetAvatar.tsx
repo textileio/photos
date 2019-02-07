@@ -1,11 +1,11 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
+import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View, TouchableOpacity, Insets } from 'react-native'
 import { NavigationScreenProps, NavigationScreenProp, NavigationRoute } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 
-import Button from '../Components/Button'
+import Button from '../Components/LargeButton'
 import * as s from '../Themes/Constants'
 import { RootAction, RootState } from '../Redux/Types'
 import UIActions from '../Redux/UIRedux'
@@ -55,6 +55,18 @@ const TEXT: TextStyle = {
 
 const LABEL: TextStyle = {
   fontFamily: s.FONT_FAMILY_REGULAR
+}
+
+const BUTTON: ViewStyle = {
+  ...ITEM,
+  alignSelf: 'center'
+}
+
+const HIT_SLOP: Insets = {
+  top: s.ITEM_SPACING_LARGE,
+  left: s.ITEM_SPACING_LARGE,
+  bottom: s.ITEM_SPACING_LARGE,
+  right: s.ITEM_SPACING_LARGE
 }
 
 const LINK: TextStyle = {
@@ -184,9 +196,16 @@ class SetAvatar extends React.Component<Props> {
             <Button
               text={this.props.buttonText}
               onPress={action}
-              style={ITEM}
+              style={BUTTON}
             />
-            <Text style={[LINK, { opacity: this.props.displaySubButton ? 1 : 0 }]} onPress={this.props.displayPhotoChooser}>Choose Another</Text>
+            <TouchableOpacity
+              disabled={!this.props.displaySubButton}
+              style={{ opacity: this.props.displaySubButton ? 1 : 0 }}
+              onPress={this.props.displayPhotoChooser}
+              hitSlop={HIT_SLOP}
+            >
+              <Text style={LINK}>Choose Another</Text>
+            </TouchableOpacity>
           </View>
       </KeyboardAvoidingView>
     )

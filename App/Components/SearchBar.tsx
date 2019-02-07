@@ -22,13 +22,17 @@ class SearchBar extends Component<Props, State> {
 
   static defaultProps: Props = {
     containerStyle: {
-      padding: 8,
+      paddingTop: 8,
+      paddingBottom: 8,
+      paddingLeft: 12,
+      paddingRight: 12,
       backgroundColor: 'lightgrey'
     },
     inputStyle: {
       flex: 1,
       fontSize: 16,
       backgroundColor: 'white',
+      padding: 0,
       marginTop: 6,
       marginBottom: 6
     },

@@ -1,11 +1,11 @@
 import React from 'react'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
+import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View, TouchableOpacity, Insets } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'
 import { Buffer } from 'buffer'
 
 import Input from '../SB/components/Input'
-import Button from '../Components/Button'
+import Button from '../Components/LargeButton'
 import * as s from '../Themes/Constants'
 
 const CONTAINER: ViewStyle = {
@@ -43,12 +43,24 @@ const LABEL: TextStyle = {
   fontFamily: s.FONT_FAMILY_REGULAR
 }
 
+const BUTTON: ViewStyle = {
+  ...ITEM,
+  alignSelf: 'center'
+}
+
 const LINK: TextStyle = {
   fontFamily: s.FONT_FAMILY_REGULAR,
   fontSize: s.FONT_SIZE_REGULAR,
   color: s.COLOR_GREY_MEDIUM,
   textDecorationLine: 'underline',
   textAlign: 'center'
+}
+
+const HIT_SLOP: Insets = {
+  top: s.ITEM_SPACING_LARGE,
+  left: s.ITEM_SPACING_LARGE,
+  bottom: s.ITEM_SPACING_LARGE,
+  right: s.ITEM_SPACING_LARGE
 }
 
 interface Props {
@@ -124,9 +136,11 @@ export default class WaitListSignupScreen extends React.Component<Props, State> 
               disabled={!this.state.valid}
               processing={this.state.processing}
               onPress={this.submit}
-              style={ITEM}
+              style={BUTTON}
             />
-            <Text style={LINK} onPress={this.props.onSuccess}>Cancel</Text>
+            <TouchableOpacity onPress={this.props.onSuccess} hitSlop={HIT_SLOP}>
+              <Text style={LINK}>Cancel</Text>
+            </TouchableOpacity>
             <Toast
               ref={(toast) => { this.toast = toast ? toast : undefined }}
               position='center'

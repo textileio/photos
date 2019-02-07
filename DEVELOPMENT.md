@@ -53,6 +53,8 @@ RN_TEXTILE_CAFE_API_PIN_PATH="/cafe/v0/pin"
 RN_TEXTILE_CAMERA_ROLL_THREAD_KEY="photos-camera_roll"
 RN_TEMPORARY_REFERRAL="SOMETHING"
 RN_URL_SCHEME="textile-dev"
+RN_IOS_STORE_LINK="https://<ios store link>"
+RN_ANDROID_STORE_LINK="https://<android store link>"
 ```
 
 You can find the values for `optional-cafe-url` in the Quick Start step above and the `gateway-address` (including port) should be found in the Cafe setup step above.

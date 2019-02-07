@@ -7,6 +7,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
+import { ContactInfo } from '@textile/react-native-sdk'
 
 import Avatar from '../Components/Avatar'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
@@ -20,12 +21,10 @@ import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
 interface NavProps {
-  peerId: string
+  contactInfo: ContactInfo
 }
 
 interface StateProps {
-  username: string
-  avatar?: string
   threadThumbs: ReadonlyArray<ThreadThumbs>
 }
 
@@ -42,7 +41,7 @@ class ContactModal extends React.Component<Props> {
     )
     return {
       headerLeft,
-      headerTitle: 'Contact Info'
+      headerTitle: 'Contact Details'
     }
   }
 
@@ -53,11 +52,12 @@ class ContactModal extends React.Component<Props> {
   }
 
   render () {
+    const { avatar, username } = this.props.navigation.getParam('contactInfo')
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
-          <Avatar style={{ width: 72, height: 72 }} target={this.props.avatar} />
-          <Text style={styles.username}>{this.props.username}</Text>
+          <Avatar style={{ width: 72, height: 72 }} target={avatar} />
+          <Text style={styles.username}>{username}</Text>
         </View>
         <ScrollView style={styles.threadsList}>
           <Text style={styles.threadsTitle}>
@@ -75,11 +75,8 @@ class ContactModal extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
-  const peerId = ownProps.navigation.getParam('peerId')
-  const contact = ContactsSelectors.contactById(state, peerId)
+  const peerId = ownProps.navigation.getParam('contactInfo').id
   return {
-    username: contact !== undefined ? (contact.username || contact.id) : 'unknown',
-    avatar: contact !== undefined ? contact.avatar : undefined,
     threadThumbs: getThreadThumbs(state, peerId, 'name')
   }
 }

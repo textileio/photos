@@ -18,11 +18,12 @@ import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
 
+import accountSaga from './Account'
+import contactsSaga from './Contacts'
+
 import { startup } from './StartupSagas'
 
 import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration, handleMigrationNeeded } from './Migration'
-
-import accountSaga from './Account'
 
 import {
   showImagePicker,
@@ -84,8 +85,6 @@ import {
   navigateToThread,
   navigateToComments,
   navigateToLikes,
-  refreshContacts,
-  addFriends,
   addPhotoLike,
   cameraPermissionsTrigger,
   chooseProfilePhoto,
@@ -104,6 +103,8 @@ import Textile from '../SDK'
 
 export default function * root (dispatch: Dispatch) {
   yield all([
+    call(accountSaga),
+    call(contactsSaga),
 
     call(monitorNewThreadActions),
 
@@ -114,8 +115,6 @@ export default function * root (dispatch: Dispatch) {
     call(handleMigrationRequest, dispatch),
     call(handleCancelMigration),
     call(handleRetryMigration, dispatch),
-
-    call(accountSaga),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
@@ -136,10 +135,7 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
-    takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
-
-    takeEvery(getType(ContactsActions.getContactsRequest), refreshContacts),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
     takeEvery(getType(PhotoViewingActions.threadAddedNotification), monitorThreadAddedNotifications),

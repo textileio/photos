@@ -650,9 +650,9 @@
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.12.tgz#1be41a4eaa9648fa4766e2489a6c2764d95985e1"
 
-"@textile/react-native-sdk@1.0.22":
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.0.22.tgz#fe1de2f1820a9dd2f9c9d4e6347119869f752c7b"
+"@textile/react-native-sdk@1.1.0-rc6":
+  version "1.1.0-rc6"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc6.tgz#f0c4d9df751d60b2d13e6c92295aa63647059191"
   dependencies:
     "@textile/go-mobile" "1.0.0-rc31"
     "@textile/react-native-protobufs" "1.1.0"
@@ -4868,6 +4868,10 @@ react-native-background-timer@2.1.0-alpha.6:
 react-native-config@^0.11.7:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.11.7.tgz#a2b323f2ecd76a4df88cbb6bc86eaa2ef9febee7"
+
+react-native-contacts@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-3.1.2.tgz#44ca24046d3ddfcaeba70da06e7e5c750fdbd7e4"
 
 react-native-easy-toast@^1.1.0:
   version "1.1.0"
