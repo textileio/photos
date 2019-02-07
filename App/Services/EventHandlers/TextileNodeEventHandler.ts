@@ -1,16 +1,22 @@
 import { Store } from 'redux'
+import {
+  DeviceEventEmitter
+} from 'react-native'
 
 import { ILocalPhotoResult } from '../../Models/TextileTypes'
 import {  Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
 
-import TextileNodeActions from '../../Redux/TextileNodeRedux'
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import ContactsActions from '../../Redux/ContactsRedux'
 import DeviceLogsActions from '../../Redux/DeviceLogsRedux'
 import StorageActions from '../../Redux/StorageRedux'
 import { toTypedNotification } from '../Notifications'
+
+import TextileEventsActions from '../../Redux/TextileEventsRedux'
+import AccountActions from '../../Redux/AccountRedux'
+import MigrationActions from '../../Redux/MigrationRedux'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
@@ -24,8 +30,9 @@ export default class TextileNodeEventHandler {
     Events.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
       this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
     })
+    // Now handled internally by sdk
     Events.addListener('onOnline', () => {
-      this.store.dispatch(TextileNodeActions.nodeOnline())
+      this.store.dispatch(TextileEventsActions.nodeOnline())
     })
     Events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
       const { type } = update.block
@@ -53,9 +60,52 @@ export default class TextileNodeEventHandler {
     Events.addListener('onNotification', (payload: NotificationInfo) => {
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
+
+    /* ----- JS Events from SDK -----*/
+
+    // New Bridge actions
+    DeviceEventEmitter.addListener('@textile/newNodeState', (payload) => {
+      this.store.dispatch(TextileEventsActions.newNodeState(payload.state))
+    })
+    DeviceEventEmitter.addListener('@textile/startNodeFinished', () => {
+      this.store.dispatch(TextileEventsActions.startNodeFinished())
+    })
+    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayStarting', () => {
+      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayStarting())
+    })
+    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayCancelled', () => {
+      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayCancelled())
+    })
+    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayFinishing', () => {
+      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayFinishing())
+    })
+    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayComplete', () => {
+      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayComplete())
+    })
+    DeviceEventEmitter.addListener('@textile/appStateChange', (payload) => {
+      this.store.dispatch(TextileEventsActions.appStateChange(payload.previousState, payload.newState))
+    })
+    DeviceEventEmitter.addListener('@textile/updateProfile', () => {
+      this.store.dispatch(TextileEventsActions.updateProfile())
+    })
+    DeviceEventEmitter.addListener('@textile/newErrorMessage', (payload) => {
+      this.store.dispatch(TextileEventsActions.newErrorMessage(payload.error))
+    })
+    // Account actions
+    DeviceEventEmitter.addListener('@textile/setRecoveryPhrase', (payload) => {
+      this.store.dispatch(AccountActions.setRecoveryPhrase(payload.recoveryPhrase))
+    })
+    DeviceEventEmitter.addListener('@textile/walletInitSuccess', () => {
+      this.store.dispatch(AccountActions.initSuccess())
+    })
+    // Migration actions
+    DeviceEventEmitter.addListener('@textile/migrationNeeded', (payload) => {
+      this.store.dispatch(MigrationActions.migrationNeeded())
+    })
   }
 
   tearDown () {
     Events.removeAllListeners()
+    DeviceEventEmitter.removeAllListeners()
   }
 }

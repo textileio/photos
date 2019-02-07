@@ -5,12 +5,11 @@ import { View, Text, Image } from 'react-native'
 import { Item } from 'react-navigation-header-buttons'
 import Icon from '@textile/react-native-icon'
 
-import { TextileHeaderButtons } from '../Components/HeaderButtons'
 import CreateThreadModal from '../Components/CreateThreadModal'
 
 import ThreadSelector from '../Components/ThreadSelector'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import TextileNodeActions from '../Redux/TextileNodeRedux'
+import TextileEventsActions from '../Redux/TextileEventsRedux'
 
 import styles from '../SB/views/ThreadsList/statics/styles'
 import onboardingStyles from './Styles/OnboardingStyle'
@@ -101,7 +100,7 @@ class ThreadsManager extends React.PureComponent {
 const mapDispatchToProps = (dispatch) => {
   return {
     viewThread: (threadId) => { dispatch(PhotoViewingActions.viewThread(threadId)) },
-    refreshMessages: () => { dispatch(TextileNodeActions.refreshMessagesRequest()) }
+    refreshMessages: () => { dispatch(TextileEventsActions.refreshMessagesRequest()) }
   }
 }
 

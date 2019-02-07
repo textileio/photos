@@ -30,6 +30,13 @@ describe('account', () => {
       expect(initialState).toMatchSnapshot()
     })
   })
+  describe('init', () => {
+    it('should become initialized', () => {
+      expect(initialState.initialized).toBe(false)
+      const state = reducer(initialState, actions.initSuccess())
+      expect(state.initialized).toBe(true)
+    })
+  })
   describe('profile', () => {
     it('should be processing from refresh', () => {
       const state0 =  reducer(initialState, actions.refreshProfileRequest())

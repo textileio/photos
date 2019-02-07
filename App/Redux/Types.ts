@@ -10,13 +10,13 @@ import { PhotoViewingAction } from './PhotoViewingRedux'
 import { PreferencesAction } from './PreferencesRedux'
 import { ProcessingImagesAction } from './ProcessingImagesRedux'
 import { NotificationsAction } from './NotificationsRedux'
-import { TextileNodeAction } from './TextileNodeRedux'
 import { ThreadsAction } from './ThreadsRedux'
 import { TriggersAction } from './TriggersRedux'
 import { UIAction } from './UIRedux'
 import { UploadingImagesAction } from './UploadingImagesRedux'
 import { StartupAction } from './StartupRedux'
 import { MigrationAction } from './MigrationRedux'
+import { TextileEventsActions } from './TextileEventsRedux'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -28,10 +28,10 @@ export type RootAction =
   PreferencesAction |
   ProcessingImagesAction |
   NotificationsAction |
-  TextileNodeAction |
   ThreadsAction |
   TriggersAction |
   UIAction |
   UploadingImagesAction |
   StartupAction |
-  MigrationAction
+  MigrationAction |
+  TextileEventsActions

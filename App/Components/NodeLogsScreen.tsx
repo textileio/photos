@@ -3,10 +3,10 @@ import { ScrollView, TextInput, Platform, Clipboard, ActivityIndicator, View, Te
 import FS from 'react-native-fs'
 import { NavigationScreenProps} from 'react-navigation'
 import * as s from '../Themes/Constants'
-import { REPO_PATH } from '../Sagas/NodeLifecycle'
+import Textile from '@textile/react-native-sdk'
 import { TextileHeaderButtons, Item as TextileItem } from './HeaderButtons'
 
-const LOG_FILE_PATH = `${REPO_PATH}/logs/textile.log`
+const LOG_FILE_PATH = `${Textile.repoPath}/logs/textile.log`
 
 interface NavProps {
   refresh: () => void

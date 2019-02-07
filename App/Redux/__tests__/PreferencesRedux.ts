@@ -11,7 +11,7 @@ describe('preferences stories', () => {
   describe('onboarding', () => {
     it('should become onboarded', () => {
       expect(initialState.onboarded).toBe(false)
-      const state = reducer(initialState, actions.onboardedSuccess())
+      const state = reducer(initialState, actions.onboardingSuccess())
       expect(state.onboarded).toBe(true)
     })
   })

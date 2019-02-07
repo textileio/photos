@@ -207,7 +207,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  complete: () => dispatch(PrefrencesActions.onboardedSuccess())
+  complete: () => dispatch(PrefrencesActions.onboardingSuccess())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingScreen)

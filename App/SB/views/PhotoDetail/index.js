@@ -5,7 +5,7 @@ import { Alert, View, Text, Image, Dimensions, ScrollView, TouchableOpacity } fr
 import Toast from 'react-native-easy-toast'
 
 import UIActions from '../../../Redux/UIRedux'
-import TextileNodeActions from '../../../Redux/TextileNodeRedux'
+import TextileEventsActions from '../../../Redux/TextileEventsRedux'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 import { getThreads, defaultThreadData } from '../../../Redux/PhotoViewingSelectors'
 
@@ -13,8 +13,6 @@ import { TextileHeaderButtons, Item } from '../../../Components/HeaderButtons'
 import ProgressiveImage from '../../../Components/ProgressiveImage'
 import PhotoWithTextBox from '../../components/PhotoWithTextBox'
 import PhotoBoxEmpty from '../../components/PhotoBoxEmpty'
-
-import { getHeight } from '../../../Services/PhotoUtils'
 
 import styles from './statics/styles'
 
@@ -143,7 +141,7 @@ const mapDispatchToProps = (dispatch) => {
     shareImage: (image) => { dispatch(UIActions.updateSharingPhotoImage(image)) },
     shareToThread: (threadId) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) },
     shareByLink: (path) => { dispatch(UIActions.shareByLink(path)) },
-    ignorePhoto: (threadId, blockId) => { dispatch(TextileNodeActions.ignorePhotoRequest(threadId, blockId)) }
+    ignorePhoto: (threadId, blockId) => { dispatch(TextileEventsActions.ignoreFileRequest(blockId)) }
   }
 }
 
@@ -189,7 +187,7 @@ const mapStateToProps = (state) => {
     key: photo && photo.target ? photo.target + path : path,
     width,
     height,
-    displayImages: state.textileNode.nodeState.state === 'started',
+    displayImages: state.textile.nodeState.state === 'started',
     threadId: defaultData.id,
     threadsIn,
     thumbs,

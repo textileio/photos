@@ -2,22 +2,15 @@ import { call, put, select, fork, take, race } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
-import {
-  prepareFilesAsync,
-  addThreadFiles,
-  addThreadFilesByTarget,
-  profile,
-  setAvatar,
+import Textile, {
   BlockInfo,
-  ContactInfo,
   Protobufs
 } from '@textile/react-native-sdk'
 import { SharedImage } from '../Models/TextileTypes'
+import AccountActions from '../Redux/AccountRedux'
 import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
 import { processingImageByUuid, allUploadsComplete } from '../Redux/ProcessingImagesSelectors'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
-import AccountActions from '../Redux/AccountRedux'
-import TextileNodeActions, { TextileNodeSelectors } from '../Redux/TextileNodeRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
@@ -98,7 +91,7 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
 export function * shareWalletImage (id: string, threadId: string, comment?: string) {
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
-    const blockId: string = yield call(addThreadFilesByTarget, id, threadId, comment)
+    const blockId: string = yield call(Textile.api.addThreadFilesByTarget, id, threadId, comment)
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
@@ -121,7 +114,9 @@ export function * prepareImage (uuid: string) {
     if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['raw'] && preparedFiles.dir.files['raw'].hash) {
       // TODO: This doesn't seem right in here, but ok
       const hash = preparedFiles.dir.files['raw'].hash as string
-      yield fork(updateAvatarAndProfile, hash)
+      // TODO: might error if node not online...
+      yield put(AccountActions.setAvatarRequest(hash))
+      // yield fork(Textile.updateAvatarAndProfile, hash)
     }
     yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
@@ -167,7 +162,7 @@ export function * shareToThread (uuid: string) {
       throw new Error('no ProcessingImage or preparedData or dir found')
     }
     const { dir } = processingImage.preparedFiles
-    const blockInfo: BlockInfo = yield call(addThreadFiles, dir, processingImage.destinationThreadId, processingImage.comment)
+    const blockInfo: BlockInfo = yield call(Textile.api.addThreadFiles, dir, processingImage.destinationThreadId, processingImage.comment)
     yield put(ProcessingImagesActions.sharedToThread(uuid, blockInfo))
     yield put(ProcessingImagesActions.complete(uuid))
   } catch (error) {
@@ -176,7 +171,7 @@ export function * shareToThread (uuid: string) {
 }
 
 export async function prepare (image: SharedImage, destinationThreadId: string): Promise<Protobufs.IMobilePreparedFiles> {
-  const addResult = await prepareFilesAsync(image.path, destinationThreadId)
+  const addResult = await Textile.api.prepareFilesAsync(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {
@@ -185,18 +180,4 @@ export async function prepare (image: SharedImage, destinationThreadId: string):
   } catch (e) {
   }
   return addResult
-}
-
-function * updateAvatarAndProfile (hash: string) {
-  try {
-    const online: boolean = yield select(TextileNodeSelectors.online)
-    if (!online) {
-      yield take(getType(TextileNodeActions.nodeOnline))
-    }
-    yield call(setAvatar, hash)
-    const profileResult: ContactInfo = yield call(profile)
-    yield put(AccountActions.refreshProfileSuccess(profileResult))
-  } catch (error) {
-    yield put(AccountActions.profileError(error))
-  }
 }
