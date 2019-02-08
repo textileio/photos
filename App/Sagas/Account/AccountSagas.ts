@@ -11,9 +11,11 @@ import Textile, {
   NodeState
 } from '@textile/react-native-sdk'
 import { bestSession, getSessionMillis } from '../../Redux/AccountSelectors'
+import { logNewEvent } from '../DeviceLogs'
 
 export function * onNodeStarted () {
   while (yield take([getType(TextileEventsActions.startNodeFinished), getType(PreferencesActions.onboardingSuccess)])) {
+    yield call(logNewEvent, 'onNodeStarted', 'refresh account data')
     try {
       yield put(AccountActions.refreshProfileRequest())
       yield put(AccountActions.refreshPeerIdRequest())
@@ -33,6 +35,7 @@ export function * refreshProfile () {
       const profileResult: ContactInfo = yield call(Textile.api.profile)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
+      yield call(logNewEvent, 'refreshProfile', error.message, true)
       yield put(AccountActions.profileError(error))
     }
   }
@@ -112,6 +115,7 @@ export function * getCafeSessions () {
       const values = yield call(Textile.getCafeSessions)
       yield put(AccountActions.cafeSessionsSuccess(values))
     } catch (error) {
+      yield call(logNewEvent, 'getCafeSessions', error.message, true)
       yield put(AccountActions.cafeSessionsError(error))
     }
   }
