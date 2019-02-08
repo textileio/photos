@@ -15,12 +15,13 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 import { pendingInviteLink } from '../Redux/ThreadsSelectors'
 import { ActionType } from 'typesafe-actions'
 import Textile, {
-  ExternalInvite
+  ExternalInvite, ThreadInfo
 } from '@textile/react-native-sdk'
 import DeepLink from '../Services/DeepLink'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
+import Config from 'react-native-config'
 
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
@@ -74,6 +75,17 @@ export function * pendingInvitesTask () {
   if (inviteLink) {
     yield call(DeepLink.route, inviteLink, NavigationService)
     yield put(ThreadsActions.removeExternalInviteLink())
+  }
+}
+
+export function * cameraRollThreadCreateTask () {
+  // Update our camera roll
+  const threadsResult: ReadonlyArray<ThreadInfo> = yield call(Textile.api.threads)
+  const cameraRollThreadName = 'Camera Roll'
+  const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
+  const cameraRollThread = threadsResult.find((thread) => thread.key === cameraRollThreadKey)
+  if (!cameraRollThread) {
+    yield call(Textile.api.addThread, cameraRollThreadKey, cameraRollThreadName, false)
   }
 }
 
