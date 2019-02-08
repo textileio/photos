@@ -56,7 +56,7 @@ class ReduxState extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  const redux = JSON.stringify(state, null, 2)
+  const redux = JSON.stringify(state, undefined, 2)
   return {
     redux,
     // instead of rendering big blob of text. https://github.com/facebook/react-native/issues/9077
