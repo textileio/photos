@@ -26,6 +26,10 @@ import { startup } from './StartupSagas'
 import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration, handleMigrationNeeded } from './Migration'
 
 import {
+  onNodeStarted
+} from './Account/AccountSagas'
+
+import {
   showImagePicker,
   showWalletPicker,
   walletPickerSuccess
@@ -94,7 +98,10 @@ import {
   updateServices
 } from './TextileSagas'
 
-import * as TextileEventsSagas from './TextileEventsSagas'
+import {
+  nodeOnline,
+  startSagas
+} from './TextileEventsSagas'
 
 /*--- NEW SDK ---*/
 import Textile from '@textile/react-native-sdk'
@@ -105,6 +112,11 @@ export default function * root (dispatch: Dispatch) {
   yield all([
     call(accountSaga),
     call(contactsSaga),
+
+    call(onNodeStarted),
+    call(nodeOnline),
+
+    call(startSagas),
 
     call(monitorNewThreadActions),
 
@@ -182,8 +194,6 @@ export default function * root (dispatch: Dispatch) {
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
-
-    call(TextileEventsSagas.startSagas),
 
     /* ------------- SDK ------------- */
     takeLatest(getType(TriggersActions.backgroundFetch), Textile.backgroundFetch),

@@ -24,7 +24,6 @@ export function * startSagas () {
     call(stopNodeAfterDelayComplete),
     call(updateProfile),
     call(refreshMessages),
-    call(nodeOnline),
     call(ignoreFileRequest),
     call(newError)
   ])
