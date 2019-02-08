@@ -27,6 +27,7 @@ import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors } from '../Redux/NotificationsRedux'
 import * as NotificationsServices from '../Services/Notifications'
 import {logNewEvent} from './DeviceLogs'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 
 export function * enable () {
   yield call(NotificationsServices.enable)
@@ -156,10 +157,10 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
 
 export function * waitUntilOnline(ms: number) {
   let ttw = ms
-  let online = yield select(Textile.nodeOnline)
+  let online = yield select(TextileEventsSelectors.online)
   while (!online && 0 < ttw) {
     yield delay(50)
-    online = yield select(Textile.nodeOnline)
+    online = yield select(TextileEventsSelectors.online)
     ttw -= 50
   }
   return online

@@ -3,19 +3,15 @@ import { ActionType, getType } from 'typesafe-actions'
 import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import AccountActions from '../Redux/AccountRedux'
-import ContactsActions from '../Redux/ContactsRedux'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import MigrationActions from '../Redux/MigrationRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
-import Config from 'react-native-config'
 import Textile, {
-  ContactInfo,
-  ThreadInfo
+  ContactInfo
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
-import { pendingInvitesTask } from './ThreadsSagas'
+import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { RootState } from '../Redux/Types'
 
 export function * startSagas () {
@@ -143,20 +139,8 @@ export function * startNodeFinished () {
 
       // Handle any pending invites now that we are finished
       yield call(pendingInvitesTask)
+      yield call(cameraRollThreadCreateTask)
 
-      // Refresh contacts
-      yield put(ContactsActions.getContactsRequest())
-      // Refresh threads
-      yield put(PhotoViewingActions.refreshThreadsRequest())
-
-      // Update our camera roll
-      const threadsResult: ReadonlyArray<ThreadInfo> = yield call(Textile.api.threads)
-      const cameraRollThreadName = 'Camera Roll'
-      const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
-      const cameraRollThread = threadsResult.find((thread) => thread.key === cameraRollThreadKey)
-      if (!cameraRollThread) {
-        yield call(Textile.api.addThread, cameraRollThreadKey, cameraRollThreadName, false)
-      }
     } catch (error) {
       // handle errors
     }

@@ -1,5 +1,6 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
 import { NodeState } from '@textile/react-native-sdk'
+import { RootState } from './Types'
 
 const actions = {
   newNodeState: createAction('@bridge/NEW_NODE_STATE', (resolve) => {
@@ -75,4 +76,10 @@ export function reducer (state: TextileEventsState = initialState, action: Texti
       return state
   }
 }
+
+export const TextileEventsSelectors = {
+  nodeState: (state: RootState) => state.textile.nodeState,
+  online: (state: RootState) => state.textile.online
+}
+
 export default actions
