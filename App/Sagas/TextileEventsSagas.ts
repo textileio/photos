@@ -13,6 +13,7 @@ import Textile, {
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { RootState } from '../Redux/Types'
+import { AsyncStorage } from 'react-native';
 
 export function * startSagas () {
   yield all([
@@ -95,7 +96,15 @@ export function * appStateChange () {
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
+
       yield call(logNewEvent, 'State Change', action.payload.newState)
+
+      const nodeState = yield call(AsyncStorage.getItem, '@textile/nodeState')
+      yield call(logNewEvent, '@textile/nodeState', nodeState)
+      const appState = yield call(AsyncStorage.getItem, '@textile/appState')
+      yield call(logNewEvent, '@textile/appState', appState)
+      const nodeOnline = yield call(AsyncStorage.getItem, '@textile/nodeOnline')
+      yield call(logNewEvent, '@textile/nodeOnline', nodeOnline)
     } catch (error) {
       // handle errors
     }
