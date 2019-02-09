@@ -13,7 +13,7 @@ import Textile, {
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { RootState } from '../Redux/Types'
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native'
 
 export function * startSagas () {
   yield all([

@@ -553,18 +553,16 @@ workflows:
                         ignore:
                             - master
             - ios-adhoc:
+                filters:
+                    branches:
+                        ignore:
+                            - master
                 requires:
                     - lint
                     - tests
                 context: textile-mobile-beta
     adhoc:
         jobs:
-            - ios-adhoc:
-                context: textile-mobile-beta
-                filters:
-                    branches:
-                        only:
-                            - master
             - android-adhoc:
                 context: textile-mobile-beta
                 filters:
