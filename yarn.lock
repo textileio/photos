@@ -650,9 +650,9 @@
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.12.tgz#1be41a4eaa9648fa4766e2489a6c2764d95985e1"
 
-"@textile/react-native-sdk@git://github.com/textileio/react-native-sdk.git#ea67b78020b238631ca32165888ad5130511f77d":
+"@textile/react-native-sdk@git://github.com/textileio/react-native-sdk.git#3529fef8ad0529a7b93d22eb06f0ce001f1c7038":
   version "1.1.0-rc9"
-  resolved "git://github.com/textileio/react-native-sdk.git#ea67b78020b238631ca32165888ad5130511f77d"
+  resolved "git://github.com/textileio/react-native-sdk.git#3529fef8ad0529a7b93d22eb06f0ce001f1c7038"
   dependencies:
     "@textile/go-mobile" "1.0.0-rc31"
     "@textile/react-native-protobufs" "1.1.0"
