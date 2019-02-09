@@ -32,7 +32,7 @@ export function * refreshProfile () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshProfileRequest))
-      const profileResult: ContactInfo = yield call(Textile.api.profile)
+      const profileResult: ContactInfo = yield call(Textile.profile)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
       yield call(logNewEvent, 'refreshProfile', error.message, true)
@@ -45,7 +45,7 @@ export function * refreshPeerId () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshPeerIdRequest))
-      const peerIdResult = yield call(Textile.api.peerId)
+      const peerIdResult = yield call(Textile.peerId)
       yield put(AccountActions.refreshPeerIdSuccess(peerIdResult))
     } catch (error) {
       yield put(AccountActions.refreshPeerIdError(error))
@@ -63,7 +63,7 @@ export function * setUsername () {
       }
       // Ideally this could move into the SDK directly so it can manage
       // knowing its own online state
-      yield call(Textile.api.setUsername, action.payload.username)
+      yield call(Textile.setUsername, action.payload.username)
       yield put(TextileEventsActions.updateProfile())
     } catch (error) {
       yield put(AccountActions.profileError(error))
@@ -81,7 +81,7 @@ export function * setAvatar () {
       }
       // Ideally this could move into the SDK directly so it can manage
       // knowing its own online state
-      yield call(Textile.api.setAvatar, action.payload.avatar)
+      yield call(Textile.setAvatar, action.payload.avatar)
       yield put(TextileEventsActions.updateProfile())
     } catch (error) {
       yield put(AccountActions.setAvatarError(error))

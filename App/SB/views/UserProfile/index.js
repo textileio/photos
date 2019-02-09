@@ -28,7 +28,7 @@ class UserProfile extends React.PureComponent {
   }
 
   componentWillMount () {
-    Textile.api.version().then((version) => {
+    Textile.version().then((version) => {
       this.setState({
         apiVersion: version
       })

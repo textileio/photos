@@ -99,7 +99,6 @@ import {
 } from './TextileSagas'
 
 import {
-  nodeOnline,
   startSagas
 } from './TextileEventsSagas'
 
@@ -112,9 +111,6 @@ export default function * root (dispatch: Dispatch) {
   yield all([
     call(accountSaga),
     call(contactsSaga),
-
-    call(onNodeStarted),
-    call(nodeOnline),
 
     call(startSagas),
 

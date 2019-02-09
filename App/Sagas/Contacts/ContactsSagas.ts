@@ -29,7 +29,7 @@ export function * addFriends() {
 
 export function * refreshContacts() {
   try {
-    const contactsResult: ReadonlyArray<ContactInfo> = yield call(Textile.api.contacts)
+    const contactsResult: ReadonlyArray<ContactInfo> = yield call(Textile.contacts)
     yield put(ContactsActions.getContactsSuccess(contactsResult))
 
   } catch (error) {
@@ -44,7 +44,7 @@ export function * watchForAddContactRequests() {
 function * handleAddContactRequest(action: ActionType<typeof ContactsActions.addContactRequest>) {
   const { contactInfo } = action.payload
   try {
-    yield call(Textile.api.addContact, contactInfo)
+    yield call(Textile.addContact, contactInfo)
     yield put(ContactsActions.addContactSuccess(contactInfo))
     yield call(refreshContacts)
   } catch (error) {
@@ -54,7 +54,7 @@ function * handleAddContactRequest(action: ActionType<typeof ContactsActions.add
 
 function * searchTextile(searchString: string) {
   try {
-    const result: ContactInfoQueryResult = yield call(Textile.api.findContact, searchString, 20, 3)
+    const result: ContactInfoQueryResult = yield call(Textile.findContact, searchString, 20, 3)
     const isCancelled = yield cancelled()
     if (!isCancelled) {
       let results: ContactInfo[] = []
