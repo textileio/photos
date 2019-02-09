@@ -25,6 +25,7 @@ export function * startSagas () {
     call(updateProfile),
     call(refreshMessages),
     call(ignoreFileRequest),
+    call(nodeOnline),
     call(newError)
   ])
 }
@@ -37,7 +38,7 @@ export function * refreshMessages () {
         yield take((action: RootAction) =>
           action.type === getType(TextileEventsActions.refreshMessagesRequest)
         )
-      yield call(Textile.api.checkCafeMessages)
+      yield call(Textile.checkCafeMessages)
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
       // handle errors
@@ -54,7 +55,7 @@ export function * updateProfile () {
           action.type === getType(TextileEventsActions.updateProfile)
         )
 
-      const profileResult: ContactInfo = yield call(Textile.api.profile)
+      const profileResult: ContactInfo = yield call(Textile.profile)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
 
       yield call(logNewEvent, 'refreshMessages', action.type)
@@ -73,7 +74,7 @@ export function * ignoreFileRequest () {
           action.type === getType(TextileEventsActions.ignoreFileRequest)
         )
 
-      yield call(Textile.api.addThreadIgnore, action.payload.blockId)
+      yield call(Textile.addThreadIgnore, action.payload.blockId)
 
       yield call(logNewEvent, 'ignoreFile', action.type)
     } catch (error) {
@@ -114,7 +115,7 @@ export function * nodeOnline () {
 
       const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
       if (pending) {
-        yield call(Textile.api.setAvatar, pending)
+        yield call(Textile.setAvatar, pending)
       }
 
       // Only run this after everything else in the node is running

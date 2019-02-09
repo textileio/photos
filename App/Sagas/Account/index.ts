@@ -5,7 +5,8 @@ import {
   setUsername,
   setAvatar,
   getCafeSessions,
-  refreshCafeSessions
+  refreshCafeSessions,
+  onNodeStarted
 } from './AccountSagas'
 
 export default function * accountSaga () {
@@ -15,6 +16,7 @@ export default function * accountSaga () {
     call(setUsername),
     call(setAvatar),
     call(getCafeSessions),
-    call(refreshCafeSessions)
+    call(refreshCafeSessions),
+    call(onNodeStarted)
   ])
 }
