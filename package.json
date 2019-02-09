@@ -12,7 +12,7 @@
     "@textile/react-native-icon": "^1.0.0",
     "@textile/react-native-protobufs": "^1.1.0",
     "@textile/react-native-screen-control": "1.0.12",
-    "@textile/react-native-sdk": "git://github.com/textileio/react-native-sdk.git#1010c9432fe1f373cc8d8da150951eabc97b1568",
+    "@textile/react-native-sdk": "git://github.com/textileio/react-native-sdk.git#233500fb83be2bbf3c2379046dc53b54e4419365",
     "@textile/redux-saga-wait-for": "1.0.1",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
