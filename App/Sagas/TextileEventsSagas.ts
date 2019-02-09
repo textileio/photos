@@ -240,8 +240,9 @@ export function * newError () {
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
-        yield call(displayNotification, action.payload.error, 'Error')
+        yield call(displayNotification, action.payload.type, action.payload.message)
       }
+      yield call(logNewEvent, action.payload.type, action.payload.message, true)
     } catch (error) {
       // handle errors
     }

@@ -12,7 +12,7 @@ const actions = {
   ),
   newErrorMessage: createAction(
     '@bridge/NEW_ERROR_MESSAGE',
-    (resolve) => (error: string) => resolve({ error })
+    (resolve) => (type: string, message: string) => resolve({ type, message })
   ),
   startNodeFinished: createAction(
     '@bridge/startNodeFinished',
