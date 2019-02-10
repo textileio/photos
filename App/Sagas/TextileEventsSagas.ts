@@ -42,7 +42,7 @@ export function * refreshMessages () {
       yield call(Textile.checkCafeMessages)
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'refreshMessages', error.message, true)
     }
   }
 }
@@ -61,6 +61,7 @@ export function * updateProfile () {
 
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
+      yield call(logNewEvent, 'updateProfile', error.message, true)
       yield put(AccountActions.profileError(error))
     }
   }
@@ -79,7 +80,7 @@ export function * ignoreFileRequest () {
 
       yield call(logNewEvent, 'ignoreFile', action.type)
     } catch (error) {
-      // handle error
+      yield call(logNewEvent, 'ignoreFileRequest', error.message, true)
     }
   }
 }
@@ -106,7 +107,7 @@ export function * appStateChange () {
       const nodeOnline = yield call(AsyncStorage.getItem, '@textile/nodeOnline')
       yield call(logNewEvent, '@textile/nodeOnline', nodeOnline)
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'appStateChange', error.message, true)
     }
   }
 }
@@ -150,7 +151,7 @@ export function * startNodeFinished () {
       yield call(cameraRollThreadCreateTask)
 
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'startNodeFinished', error.message, true)
     }
   }
 }
@@ -168,7 +169,7 @@ export function * stopNodeAfterDelayStarting () {
         yield call(displayNotification, 'Running the node for 20 sec. in the background')
       }
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'stopNodeAfterDelayStarting', error.message, true)
     }
   }
 }
@@ -191,7 +192,7 @@ export function * stopNodeAfterDelayCancelled () {
       yield put(StorageActions.refreshLocalImagesRequest())
 
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'stopNodeAfterDelayCancelled', error.message, true)
     }
   }
 }
@@ -208,7 +209,7 @@ export function * stopNodeAfterDelayFinishing () {
         yield call(displayNotification, 'Stopping node')
       }
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'stopNodeAfterDelayFinishing', error.message, true)
     }
   }
 }
@@ -225,7 +226,7 @@ export function * stopNodeAfterDelayComplete () {
         yield call(displayNotification, 'Node stopped')
       }
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'stopNodeAfterDelayComplete', error.message, true)
     }
   }
 }
@@ -243,7 +244,7 @@ export function * newError () {
       }
       yield call(logNewEvent, action.payload.type, action.payload.message, true)
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'newError error', error.message, true)
     }
   }
 }
