@@ -131,7 +131,7 @@ export function * nodeOnline () {
       // Only run this after everything else in the node is running
       yield put(MigrationActions.requestRunRecurringMigrationTasks())
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'nodeOnline', error.message, true)
     }
   }
 }
