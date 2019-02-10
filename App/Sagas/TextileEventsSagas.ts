@@ -118,6 +118,7 @@ export function * nodeOnline () {
         yield take((action: RootAction) =>
           action.type === getType(TextileEventsActions.nodeOnline)
         )
+      yield call(logNewEvent, 'Node is:', 'online')
 
       // Check for new photos on every online event
       yield put(StorageActions.refreshLocalImagesRequest())
@@ -129,8 +130,6 @@ export function * nodeOnline () {
 
       // Only run this after everything else in the node is running
       yield put(MigrationActions.requestRunRecurringMigrationTasks())
-
-      yield call(logNewEvent, 'Node is:', 'online')
     } catch (error) {
       // handle errors
     }

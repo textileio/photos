@@ -39,11 +39,14 @@ class App extends Component {
     )
   }
 
-  componentDidMount () {
+  componentWillMount () {
     this.textile.setup({
-      RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE,
-      TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
-      TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
+      RELEASE_TYPE: 'production',
+      TEXTILE_CAFE_GATEWAY_URL: 'https://gateway.textile.io'
+      // TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
+      // RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE,
+      // TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
+      // TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
     })
   }
 
