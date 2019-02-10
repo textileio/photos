@@ -89,8 +89,8 @@ export default class TextileNodeEventHandler {
     DeviceEventEmitter.addListener('@textile/updateProfile', () => {
       this.store.dispatch(TextileEventsActions.updateProfile())
     })
-    DeviceEventEmitter.addListener('@textile/newErrorMessage', (payload) => {
-      this.store.dispatch(TextileEventsActions.newErrorMessage(payload.error))
+    DeviceEventEmitter.addListener('@textile/error', (payload) => {
+      this.store.dispatch(TextileEventsActions.newErrorMessage(payload.type, payload.message))
     })
     // Account actions
     DeviceEventEmitter.addListener('@textile/setRecoveryPhrase', (payload) => {

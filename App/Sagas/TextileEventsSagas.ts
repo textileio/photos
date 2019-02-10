@@ -8,11 +8,13 @@ import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
 import Textile, {
-  ContactInfo
+  ContactInfo,
+  BackgroundTask
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { RootState } from '../Redux/Types'
+import { AsyncStorage } from 'react-native'
 
 export function * startSagas () {
   yield all([
@@ -30,6 +32,10 @@ export function * startSagas () {
   ])
 }
 
+export function * runBackgroundUpdate () {
+  yield call(BackgroundTask)
+}
+
 export function * refreshMessages () {
   while (true) {
     try {
@@ -41,7 +47,7 @@ export function * refreshMessages () {
       yield call(Textile.checkCafeMessages)
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'refreshMessages', error.message, true)
     }
   }
 }
@@ -60,6 +66,7 @@ export function * updateProfile () {
 
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
+      yield call(logNewEvent, 'updateProfile', error.message, true)
       yield put(AccountActions.profileError(error))
     }
   }
@@ -78,7 +85,7 @@ export function * ignoreFileRequest () {
 
       yield call(logNewEvent, 'ignoreFile', action.type)
     } catch (error) {
-      // handle error
+      yield call(logNewEvent, 'ignoreFileRequest', error.message, true)
     }
   }
 }
@@ -95,9 +102,10 @@ export function * appStateChange () {
       if (yield select(PreferencesSelectors.verboseUi)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
+
       yield call(logNewEvent, 'State Change', action.payload.newState)
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'appStateChange', error.message, true)
     }
   }
 }
@@ -109,6 +117,7 @@ export function * nodeOnline () {
         yield take((action: RootAction) =>
           action.type === getType(TextileEventsActions.nodeOnline)
         )
+      yield call(logNewEvent, 'Node is:', 'online')
 
       // Check for new photos on every online event
       yield put(StorageActions.refreshLocalImagesRequest())
@@ -120,10 +129,8 @@ export function * nodeOnline () {
 
       // Only run this after everything else in the node is running
       yield put(MigrationActions.requestRunRecurringMigrationTasks())
-
-      yield call(logNewEvent, 'Node is:', 'online')
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'nodeOnline', error.message, true)
     }
   }
 }
@@ -142,7 +149,7 @@ export function * startNodeFinished () {
       yield call(cameraRollThreadCreateTask)
 
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'startNodeFinished', error.message, true)
     }
   }
 }
@@ -160,7 +167,7 @@ export function * stopNodeAfterDelayStarting () {
         yield call(displayNotification, 'Running the node for 20 sec. in the background')
       }
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'stopNodeAfterDelayStarting', error.message, true)
     }
   }
 }
@@ -183,7 +190,7 @@ export function * stopNodeAfterDelayCancelled () {
       yield put(StorageActions.refreshLocalImagesRequest())
 
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'stopNodeAfterDelayCancelled', error.message, true)
     }
   }
 }
@@ -200,7 +207,7 @@ export function * stopNodeAfterDelayFinishing () {
         yield call(displayNotification, 'Stopping node')
       }
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'stopNodeAfterDelayFinishing', error.message, true)
     }
   }
 }
@@ -217,7 +224,7 @@ export function * stopNodeAfterDelayComplete () {
         yield call(displayNotification, 'Node stopped')
       }
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'stopNodeAfterDelayComplete', error.message, true)
     }
   }
 }
@@ -231,10 +238,11 @@ export function * newError () {
         )
 
       if (yield select(PreferencesSelectors.verboseUi)) {
-        yield call(displayNotification, action.payload.error, 'Error')
+        yield call(displayNotification, action.payload.type, action.payload.message)
       }
+      yield call(logNewEvent, action.payload.type, action.payload.message, true)
     } catch (error) {
-      // handle errors
+      yield call(logNewEvent, 'newError error', error.message, true)
     }
   }
 }

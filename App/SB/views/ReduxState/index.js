@@ -48,7 +48,7 @@ class ReduxState extends React.PureComponent {
           data={this.props.textLines}
           renderItem={this.renderRow}
           numColumns={1}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => String(index)}
         />
       </View>
     )

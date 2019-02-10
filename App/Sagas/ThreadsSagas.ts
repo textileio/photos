@@ -80,12 +80,13 @@ export function * pendingInvitesTask () {
 
 export function * cameraRollThreadCreateTask () {
   // Update our camera roll
-  const threadsResult: ReadonlyArray<ThreadInfo> = yield call(Textile.threads)
-  const cameraRollThreadName = 'Camera Roll'
-  const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
-  const cameraRollThread = threadsResult.find((thread) => thread.key === cameraRollThreadKey)
-  if (!cameraRollThread) {
+  try {
+    const threadsResult: ReadonlyArray<ThreadInfo> = yield call(Textile.threads)
+    const cameraRollThreadName = 'Camera Roll'
+    const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
     yield call(Textile.addThread, cameraRollThreadKey, cameraRollThreadName, false)
+  } catch (error) {
+    // TODO: the camera sync relies on this tread existing, so if any other besides UNIQUE constraint, we should try again
   }
 }
 
