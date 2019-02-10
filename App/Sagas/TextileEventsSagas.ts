@@ -104,13 +104,6 @@ export function * appStateChange () {
       }
 
       yield call(logNewEvent, 'State Change', action.payload.newState)
-
-      const nodeState = yield call(AsyncStorage.getItem, '@textile/nodeState')
-      yield call(logNewEvent, '@textile/nodeState', nodeState)
-      const appState = yield call(AsyncStorage.getItem, '@textile/appState')
-      yield call(logNewEvent, '@textile/appState', appState)
-      const nodeOnline = yield call(AsyncStorage.getItem, '@textile/nodeOnline')
-      yield call(logNewEvent, '@textile/nodeOnline', nodeOnline)
     } catch (error) {
       yield call(logNewEvent, 'appStateChange', error.message, true)
     }
