@@ -44,8 +44,6 @@ class App extends Component {
       RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE,
       TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
       TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
-    }).then(() => {
-      console.log('axh we are setup')
     })
   }
 
