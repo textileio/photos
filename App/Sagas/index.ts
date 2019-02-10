@@ -156,7 +156,6 @@ export default function * root (dispatch: Dispatch) {
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
-
     /* ------------- SDK ------------- */
     takeLatest(getType(TriggersActions.backgroundFetch), runBackgroundUpdate),
     takeLatest(getType(TriggersActions.locationUpdate), runBackgroundUpdate),
@@ -195,8 +194,4 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard)
   ])
-}
-
-function * logSomething() {
-  console.log('axh this happened actually')
 }
