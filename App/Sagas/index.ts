@@ -99,11 +99,9 @@ import {
 } from './TextileSagas'
 
 import {
+  runBackgroundUpdate,
   startSagas
 } from './TextileEventsSagas'
-
-/*--- NEW SDK ---*/
-import Textile from '@textile/react-native-sdk'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -158,6 +156,12 @@ export default function * root (dispatch: Dispatch) {
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
+
+    /* ------------- SDK ------------- */
+    takeLatest(getType(TriggersActions.backgroundFetch), runBackgroundUpdate),
+    takeLatest(getType(TriggersActions.locationUpdate), runBackgroundUpdate),
+    /* ------------- End SDK ------------- */
+
     takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
     takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
@@ -189,11 +193,10 @@ export default function * root (dispatch: Dispatch) {
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
-    takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
-
-    /* ------------- SDK ------------- */
-    takeLatest(getType(TriggersActions.backgroundFetch), Textile.backgroundFetch),
-    takeLatest(getType(TriggersActions.locationUpdate), Textile.locationUpdate)
-    /* ------------- End SDK ------------- */
+    takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard)
   ])
+}
+
+function * logSomething() {
+  console.log('axh this happened actually')
 }

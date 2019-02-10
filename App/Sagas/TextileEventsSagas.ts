@@ -8,7 +8,8 @@ import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
 import Textile, {
-  ContactInfo
+  ContactInfo,
+  newBackgroundTask
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
@@ -29,6 +30,10 @@ export function * startSagas () {
     call(nodeOnline),
     call(newError)
   ])
+}
+
+export function * runBackgroundUpdate () {
+  yield call(newBackgroundTask)
 }
 
 export function * refreshMessages () {
