@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 
 import { ILocalPhotoResult } from '../../Models/TextileTypes'
-import {  Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
+import Textile, { Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
 
 import NotificationActions from '../../Redux/NotificationsRedux'
@@ -64,6 +64,7 @@ export default class TextileNodeEventHandler {
     /* ----- JS Events from SDK -----*/
 
     // New Bridge actions
+
     DeviceEventEmitter.addListener('@textile/newNodeState', (payload) => {
       this.store.dispatch(TextileEventsActions.newNodeState(payload.state))
     })
@@ -88,8 +89,8 @@ export default class TextileNodeEventHandler {
     DeviceEventEmitter.addListener('@textile/updateProfile', () => {
       this.store.dispatch(TextileEventsActions.updateProfile())
     })
-    DeviceEventEmitter.addListener('@textile/newErrorMessage', (payload) => {
-      this.store.dispatch(TextileEventsActions.newErrorMessage(payload.error))
+    DeviceEventEmitter.addListener('@textile/error', (payload) => {
+      this.store.dispatch(TextileEventsActions.newErrorMessage(payload.type, payload.message))
     })
     // Account actions
     DeviceEventEmitter.addListener('@textile/setRecoveryPhrase', (payload) => {

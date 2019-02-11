@@ -28,7 +28,7 @@ class UserProfile extends React.PureComponent {
   }
 
   componentWillMount () {
-    Textile.api.version().then((version) => {
+    Textile.version().then((version) => {
       this.setState({
         apiVersion: version
       })
@@ -54,6 +54,9 @@ class UserProfile extends React.PureComponent {
   }
   _deviceLogs () {
     this.props.navigation.navigate('DeviceLogs')
+  }
+  _reduxState () {
+    this.props.navigation.navigate('ReduxState')
   }
   _nodeLogs () {
     this.props.navigation.navigate('NodeLogsScreen')
@@ -121,6 +124,9 @@ class UserProfile extends React.PureComponent {
           </TouchableOpacity>}
           {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._deviceLogs.bind(this)}>
             <Text style={styles.listText}>Device Logs</Text>
+          </TouchableOpacity>}
+          {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._reduxState.bind(this)}>
+            <Text style={styles.listText}>Redux</Text>
           </TouchableOpacity>}
           {this.props.verboseUi && <TouchableOpacity style={styles.listItem} onPress={this._nodeLogs.bind(this)}>
             <Text style={styles.listText}>Node Logs</Text>

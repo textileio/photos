@@ -27,6 +27,10 @@ import { startup } from './StartupSagas'
 import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration, handleMigrationNeeded } from './Migration'
 
 import {
+  onNodeStarted
+} from './Account/AccountSagas'
+
+import {
   showImagePicker,
   showWalletPicker,
   walletPickerSuccess
@@ -95,10 +99,10 @@ import {
   updateServices
 } from './TextileSagas'
 
-import * as TextileEventsSagas from './TextileEventsSagas'
-
-/*--- NEW SDK ---*/
-import Textile from '@textile/react-native-sdk'
+import {
+  runBackgroundUpdate,
+  startSagas
+} from './TextileEventsSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -107,6 +111,8 @@ export default function * root (dispatch: Dispatch) {
     call(accountSaga),
     call(contactsSaga),
     call(groupsSaga),
+
+    call(startSagas),
 
     call(monitorNewThreadActions),
 
@@ -152,6 +158,11 @@ export default function * root (dispatch: Dispatch) {
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
+    /* ------------- SDK ------------- */
+    takeLatest(getType(TriggersActions.backgroundFetch), runBackgroundUpdate),
+    takeLatest(getType(TriggersActions.locationUpdate), runBackgroundUpdate),
+    /* ------------- End SDK ------------- */
+
     takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),
     takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
     takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
@@ -183,13 +194,6 @@ export default function * root (dispatch: Dispatch) {
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
-    takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard),
-
-    call(TextileEventsSagas.startSagas),
-
-    /* ------------- SDK ------------- */
-    takeLatest(getType(TriggersActions.backgroundFetch), Textile.backgroundFetch),
-    takeLatest(getType(TriggersActions.locationUpdate), Textile.locationUpdate)
-    /* ------------- End SDK ------------- */
+    takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard)
   ])
 }

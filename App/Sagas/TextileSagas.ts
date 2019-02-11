@@ -190,7 +190,7 @@ export function * backgroundLocationPermissionsTrigger () {
 export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
-    yield call(Textile.api.addThreadLike, blockId)
+    yield call(Textile.addThreadLike, blockId)
   } catch (error) {
 
   }

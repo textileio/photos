@@ -27,13 +27,14 @@ import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors } from '../Redux/NotificationsRedux'
 import * as NotificationsServices from '../Services/Notifications'
 import {logNewEvent} from './DeviceLogs'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 
 export function * enable () {
   yield call(NotificationsServices.enable)
 }
 
 export function * readAllNotifications (action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
-  yield call(Textile.api.readAllNotifications)
+  yield call(Textile.readAllNotifications)
 }
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
@@ -86,7 +87,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
   try {
-    yield call(Textile.api.readNotification, notification.id)
+    yield call(Textile.readNotification, notification.id)
     switch (notification.type) {
       case NotificationType.CommentAddedNotification: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
@@ -134,7 +135,7 @@ export function * refreshNotifications () {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(Textile.api.notifications, '', 99) // TODO: offset?
+    const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(Textile.notifications, '', 99) // TODO: offset?
     const typedNotifs = notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
@@ -156,10 +157,10 @@ export function * reviewThreadInvite (action: ActionType<typeof NotificationsAct
 
 export function * waitUntilOnline(ms: number) {
   let ttw = ms
-  let online = yield select(Textile.nodeOnline)
+  let online = yield select(TextileEventsSelectors.online)
   while (!online && 0 < ttw) {
     yield delay(50)
-    online = yield select(Textile.nodeOnline)
+    online = yield select(TextileEventsSelectors.online)
     ttw -= 50
   }
   return online

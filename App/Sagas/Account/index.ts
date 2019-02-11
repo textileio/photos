@@ -11,12 +11,12 @@ import {
 
 export default function * accountSaga () {
   yield all([
+    call(onNodeStarted),
     call(refreshProfile),
     call(refreshPeerId),
     call(setUsername),
     call(setAvatar),
     call(getCafeSessions),
-    call(refreshCafeSessions),
-    call(onNodeStarted)
+    call(refreshCafeSessions)
   ])
 }
