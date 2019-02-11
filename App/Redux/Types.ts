@@ -18,6 +18,7 @@ import { StartupAction } from './StartupRedux'
 import { MigrationAction } from './MigrationRedux'
 import { TextileEventsActions } from './TextileEventsRedux'
 import { GroupsAction } from './GroupsRedux'
+import { ProcessingMessagesAction } from './ProcessingMessagesRedux'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -36,4 +37,5 @@ export type RootAction =
   StartupAction |
   MigrationAction |
   TextileEventsActions |
-  GroupsAction
+  GroupsAction |
+  ProcessingMessagesAction

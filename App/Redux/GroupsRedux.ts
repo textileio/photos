@@ -1,4 +1,4 @@
-import { createAction, createAsyncAction, ActionType, getType } from 'typesafe-actions'
+import { createAsyncAction, ActionType, getType } from 'typesafe-actions'
 import { ThreadFeedItem } from '@textile/react-native-sdk'
 
 export const actions = {
