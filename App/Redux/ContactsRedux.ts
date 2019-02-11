@@ -1,5 +1,4 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { SectionListData } from 'react-native'
 import { ContactInfo } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 

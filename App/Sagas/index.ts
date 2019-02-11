@@ -20,6 +20,7 @@ import ContactsActions from '../Redux/ContactsRedux'
 
 import accountSaga from './Account'
 import contactsSaga from './Contacts'
+import groupsSaga from './Groups'
 
 import { startup } from './StartupSagas'
 
@@ -105,6 +106,7 @@ export default function * root (dispatch: Dispatch) {
   yield all([
     call(accountSaga),
     call(contactsSaga),
+    call(groupsSaga),
 
     call(monitorNewThreadActions),
 

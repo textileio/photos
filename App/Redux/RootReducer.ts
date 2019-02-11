@@ -16,6 +16,7 @@ import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as migrationReducer } from './MigrationRedux'
 import { reducer as textileEventsReducer } from './TextileEventsRedux'
+import { reducer as groupsReducer } from './GroupsRedux'
 
 export default combineReducers({
   auth: authReducer,
@@ -33,5 +34,6 @@ export default combineReducers({
   deviceLogs: deviceLogsReducer,
   migration: migrationReducer,
   account: accountReducer,
-  textile: textileEventsReducer
+  textile: textileEventsReducer,
+  groups: groupsReducer
 })
