@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
     "esModuleInterop": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "skipLibCheck": true,
     "target": "esnext"
   },

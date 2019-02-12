@@ -1,4 +1,7 @@
-import actions, { reducer } from '../ProcessingMessagesRedux'
+import {
+  addMessageReducer as reducer,
+  addMessageActions as actions
+} from './'
 
 const id1 = 'id1'
 const id2 = 'id2'
