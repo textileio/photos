@@ -1,15 +1,17 @@
 import React from 'react'
+import { ViewStyle } from 'react-native'
 import Button from './Button'
 import * as s from '../Themes/Constants'
 
 interface Props {
   text: string
+  style?: ViewStyle
   disabled?: boolean
   onPress?: () => void
 }
 
 const button = (props: Props) => {
-  const { text, onPress } = props
+  const { text, onPress, style } = props
   return (
     <Button
       text={text.toUpperCase()}
@@ -20,6 +22,7 @@ const button = (props: Props) => {
         paddingLeft: 2
       }}
       style={{
+        ...style,
         paddingHorizontal: 8,
         paddingVertical: 4,
         backgroundColor: s.COLOR_BRAND_BLUE
