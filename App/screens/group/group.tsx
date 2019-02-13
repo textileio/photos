@@ -13,6 +13,7 @@ import { Item } from '../../features/group/models'
 import { RootState, RootAction } from '../../Redux/Types'
 import { feedItems } from '../../features/group/selectors'
 import { groupActions } from '../../features/group'
+import UIActions from '../../Redux/UIRedux'
 
 interface StateProps {
   items: ReadonlyArray<Item>,
@@ -22,6 +23,7 @@ interface StateProps {
 interface DispatchProps {
   refresh: () => void
   sendMessage: (message: string) => void
+  showWalletPicker: () => void
 }
 
 interface NavProps {
@@ -66,7 +68,7 @@ class Group extends Component<Props> {
             data={this.props.items}
             renderItem={this.renderRow}
           />
-          <AuthoringInput containerStyle={{ }} onSubmit={this.submit} />
+          <AuthoringInput containerStyle={{ }} onSendMessage={this.submit} onSharePhoto={this.props.showWalletPicker} />
         </KeyboardResponsiveContainer>
       </SafeAreaView>
     )
@@ -119,7 +121,9 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
   const threadId = ownProps.navigation.getParam('threadId')
   return {
     refresh: () => dispatch(groupActions.feed.refreshFeed.request({ id: threadId })),
-    sendMessage: (message: string) => dispatch(groupActions.addMessage.addMessage.request({ id: uuid(), groupId: threadId, body: message }))
+    sendMessage: (message: string) => dispatch(groupActions.addMessage.addMessage.request({ id: uuid(), groupId: threadId, body: message })),
+    // TODO: look at just doing direct navigation for this
+    showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) }
   }
 }
 

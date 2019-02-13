@@ -26,8 +26,9 @@ const ITEM: ViewStyle = {
 interface Props {
   containerStyle?: ViewStyle
   value?: string
-  onUpdate?: (text: string) => void
-  onSubmit?: (text: string) => void
+  onMessageUpdate?: (text: string) => void
+  onSendMessage?: (text: string) => void
+  onSharePhoto?: () => void
 }
 
 interface State {
@@ -57,7 +58,7 @@ class AuthoringInput extends Component<Props, State> {
           value={this.state.textValue}
         />
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <TouchableOpacity style={ITEM}>
+          <TouchableOpacity style={ITEM} onPress={this.props.onSharePhoto}>
             <Icon name='image' color={s.COLOR_GREY_MEDIUM} size={24} />
           </TouchableOpacity>
           <Button style={ITEM} disabled={this.state.disabled} text={'send'} onPress={this.submit} />
@@ -71,14 +72,14 @@ class AuthoringInput extends Component<Props, State> {
       textValue: text,
       disabled: text.length < 1
     })
-    if (this.props.onUpdate) {
-      this.props.onUpdate(text)
+    if (this.props.onMessageUpdate) {
+      this.props.onMessageUpdate(text)
     }
   }
 
   submit = () => {
-    if (this.props.onSubmit) {
-      this.props.onSubmit(this.state.textValue!)
+    if (this.props.onSendMessage) {
+      this.props.onSendMessage(this.state.textValue!)
     }
     this.setState({
       textValue: undefined,
