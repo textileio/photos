@@ -42,3 +42,37 @@ export const body_l: TextStyle = {
   fontSize: fontSize._18,
   color: color.grey_0
 }
+
+export const body_xs_medium: TextStyle = {
+  ...body_xs,
+  fontFamily: fontFamily.medium
+}
+export const body_s_medium: TextStyle = {
+  ...body_s,
+  fontFamily: fontFamily.medium
+}
+export const body_m_medium: TextStyle = {
+  ...body_m,
+  fontFamily: fontFamily.medium
+}
+export const body_l_medium: TextStyle = {
+  ...body_l,
+  fontFamily: fontFamily.medium
+}
+
+export const body_xs_bold: TextStyle = {
+  ...body_xs,
+  fontFamily: fontFamily.bold
+}
+export const body_s_bold: TextStyle = {
+  ...body_s,
+  fontFamily: fontFamily.bold
+}
+export const body_m_bold: TextStyle = {
+  ...body_m,
+  fontFamily: fontFamily.bold
+}
+export const body_l_bold: TextStyle = {
+  ...body_l,
+  fontFamily: fontFamily.bold
+}
