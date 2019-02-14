@@ -5,17 +5,28 @@ import { View, Text, FlatList, ListRenderItemInfo } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
+import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
 import KeyboardResponsiveContainer from '../../Components/KeyboardResponsiveContainer'
-import AuthoringInput from '../../Components/AuthoringInput'
-import Message from '../../Components/Message'
+import AuthoringInput from '../../Components/authoring-input'
+import Message from '../../Components/message'
+import Join from '../../Components/join'
 import { Item } from '../../features/group/models'
 import { RootState, RootAction } from '../../Redux/Types'
 import { feedItems } from '../../features/group/selectors'
 import { groupActions } from '../../features/group'
 import UIActions from '../../Redux/UIRedux'
-import { color } from '../../styles';
+import { color } from '../../styles'
+
+const momentSpec: moment.CalendarSpec = {
+  sameDay: 'LT',
+  nextDay: '[Tomorrow] LT',
+  nextWeek: 'MMM DD LT',
+  lastDay: 'MMM DD LT',
+  lastWeek: 'MMM DD LT',
+  sameElse: 'MMM DD LT'
+}
 
 interface StateProps {
   items: ReadonlyArray<Item>,
@@ -84,15 +95,19 @@ class Group extends Component<Props> {
             avatar={item.data.avatar}
             username={item.data.username || 'unknown'}
             message={item.data.body}
+            time={moment(item.data.date).calendar(undefined, momentSpec)}
           />
         )
       }
+      case 'leave':
       case 'join': {
+        const word = item.type === 'join' ? 'joined' : 'left'
         return (
-          <Message
+          <Join
             avatar={item.data.avatar}
             username={item.data.username || 'unknown'}
-            message={'joined'}
+            message={`${word} ${this.props.groupName}`}
+            time={moment(item.data.date).calendar(undefined, momentSpec)}
           />
         )
       }

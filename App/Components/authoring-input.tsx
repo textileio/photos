@@ -3,7 +3,7 @@ import { View, TextInput, ViewStyle, TextStyle, TouchableOpacity, Dimensions } f
 import Icon from '@textile/react-native-icon'
 
 import Button from './SmallButton'
-import { color, fontFamily, spacing } from '../styles'
+import { color, textStyle, spacing } from '../styles'
 
 const CONTAINER: ViewStyle = {
   justifyContent: 'space-between',
@@ -14,9 +14,9 @@ const CONTAINER: ViewStyle = {
 }
 
 const INPUT: TextStyle = {
+  ...textStyle.body_m,
   paddingTop: 0,
-  paddingBottom: spacing._008,
-  fontFamily: fontFamily.regular
+  paddingBottom: spacing._008
 }
 
 const ITEM: ViewStyle = {

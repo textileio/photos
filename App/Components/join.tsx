@@ -6,7 +6,8 @@ import { spacing, size, textStyle, color } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flexDirection: 'row',
-  padding: spacing.screenEdge
+  padding: spacing.screenEdge,
+  alignItems: 'center'
 }
 
 const AVATAR: ImageStyle = {
@@ -25,8 +26,12 @@ const META: ViewStyle = {
 }
 
 const USERNAME: TextStyle = {
-  ...textStyle.body_m_bold,
-  lineHeight: textStyle.body_m_bold.fontSize
+  ...textStyle.body_m_bold
+}
+
+const MESSAGE: TextStyle = {
+  ...textStyle.body_m,
+  color: color.grey_3
 }
 
 const TIME: TextStyle = {
@@ -36,12 +41,6 @@ const TIME: TextStyle = {
   color: color.grey_3
 }
 
-const MESSAGE: TextStyle = {
-  ...textStyle.body_m,
-  marginTop: spacing._004,
-  lineHeight: textStyle.body_m.fontSize! * 1.3
-}
-
 interface Props {
   avatar?: string
   username: string
@@ -49,19 +48,18 @@ interface Props {
   time: string
 }
 
-const Message = (props: Props) => {
+const Join = (props: Props) => {
   return (
     <View style={CONTAINER}>
       <Avatar style={AVATAR} target={props.avatar} />
       <View style={CONTENT}>
         <View style={META}>
-          <Text style={USERNAME}>{props.username}</Text>
+          <Text style={USERNAME}>{props.username} <Text style={MESSAGE}>{props.message}</Text></Text>
           <Text style={TIME}>{props.time.toUpperCase()}</Text>
         </View>
-        <Text style={MESSAGE}>{props.message}</Text>
       </View>
     </View>
   )
 }
 
-export default Message
+export default Join
