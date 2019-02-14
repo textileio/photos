@@ -6,7 +6,7 @@ export const grey_3 = 'hsl(0, 0%, 50%)'
 export const grey_4 = 'hsl(0, 0%, 77%)'
 export const grey_5 = 'hsl(0, 0%, 95%)'
 export const grey_6 = 'hsl(0, 0%, 99%)'
-export const grey_7 = 'hsl(0, 0%, 100%'
+export const grey_7 = 'hsl(0, 0%, 100%)'
 
 // based on brand blue
 export const action_0 = 'hsl(237, 71%, 11%)'

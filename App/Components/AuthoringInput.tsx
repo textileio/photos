@@ -23,6 +23,15 @@ const ITEM: ViewStyle = {
   marginLeft: spacing._16
 }
 
+const BUTTON: ViewStyle = {
+  ...ITEM,
+  backgroundColor: color.action_3
+}
+
+const BUTTON_TEXT: TextStyle = {
+  color: color.grey_7
+}
+
 interface Props {
   containerStyle?: ViewStyle
   value?: string
@@ -61,7 +70,7 @@ class AuthoringInput extends Component<Props, State> {
           <TouchableOpacity style={ITEM} onPress={this.props.onSharePhoto}>
             <Icon name='image' color={color.grey_4} size={24} />
           </TouchableOpacity>
-          <Button style={ITEM} disabled={this.state.disabled} text={'send'} onPress={this.submit} />
+          <Button style={BUTTON} textStyle={BUTTON_TEXT} disabled={this.state.disabled} text={'send'} onPress={this.submit} />
         </View>
       </View>
     )
