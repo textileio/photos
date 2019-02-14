@@ -15,12 +15,12 @@ const CONTAINER: ViewStyle = {
 
 const INPUT: TextStyle = {
   paddingTop: 0,
-  paddingBottom: spacing._8,
+  paddingBottom: spacing._008,
   fontFamily: fontFamily.regular
 }
 
 const ITEM: ViewStyle = {
-  marginLeft: spacing._16
+  marginLeft: spacing._016
 }
 
 const BUTTON: ViewStyle = {

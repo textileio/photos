@@ -24,8 +24,8 @@ const button = (props: Props) => {
       }}
       style={{
         ...style,
-        paddingHorizontal: spacing._24,
-        paddingVertical: spacing._12,
+        paddingHorizontal: spacing._024,
+        paddingVertical: spacing._012,
         backgroundColor: color.action_3
       }}
       processing={processing}

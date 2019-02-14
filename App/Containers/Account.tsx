@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, ViewStyle } from 'react-native'
-// @ts-ignore
 import { DrawerItems, NavigationScreenProps, NavigationEvents } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 import Avatar from '../Components/Avatar'

@@ -10,16 +10,16 @@ import { color, spacing, textStyle } from '../../../styles'
 const CONTAINER: ViewStyle = {
   flex: 1,
   marginTop: '33%',
-  paddingHorizontal: spacing._16,
+  paddingHorizontal: spacing._016,
   backgroundColor: color.screen_primary
 }
 
 const IMAGE: ImageStyle = {
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const ITEM: ViewStyle = {
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {

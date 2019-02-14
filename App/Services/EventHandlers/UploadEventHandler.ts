@@ -1,6 +1,4 @@
 import { Store } from 'redux'
-// TODO: Create typings
-// @ts-ignore
 import Upload from 'react-native-background-upload'
 
 import { RootState } from '../../Redux/Types'

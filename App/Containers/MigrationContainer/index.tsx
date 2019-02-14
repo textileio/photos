@@ -1,7 +1,6 @@
 import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
-// @ts-ignore
 import { Pages } from 'react-native-pages'
 
 import MigrationScreen from './MigrationScreen'
@@ -53,7 +52,7 @@ export default class MigrationContainer extends React.Component<NavigationScreen
         <Pages
           ref={(pages: any) => { this.pages = pages ? pages : undefined }}
           style={[CONTAINER]}
-          containerStyle={{ marginBottom: spacing._16 }}
+          containerStyle={{ marginBottom: spacing._016 }}
           indicatorColor={color.accent2_2}
           onScrollEnd={this.onScrollEnd}
           startPage={this.state.currentPage}

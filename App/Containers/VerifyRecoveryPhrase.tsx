@@ -9,22 +9,22 @@ import { color, spacing, textStyle, fontFamily } from '../styles'
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'center',
-  paddingHorizontal: spacing._16,
+  paddingHorizontal: spacing._016,
   backgroundColor: color.screen_primary
 }
 
 const IMAGE: ImageStyle = {
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {
   ...textStyle.header_l,
-  marginBottom: spacing._8
+  marginBottom: spacing._008
 }
 
 const SUBTITLE: TextStyle = {
   ...textStyle.body_l,
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const STRONG: TextStyle = {
@@ -37,7 +37,7 @@ const PHRASE: TextStyle = {
   ...textStyle.body_m,
   lineHeight: 18,
   color: color.grey_4,
-  marginBottom: spacing._16,
+  marginBottom: spacing._016,
   height: 18 * 4
 }
 

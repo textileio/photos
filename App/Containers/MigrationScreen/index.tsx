@@ -10,7 +10,7 @@ import { color, textStyle, spacing } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
-  padding: spacing._16,
+  padding: spacing._016,
   backgroundColor: color.screen_primary
 }
 
@@ -19,7 +19,7 @@ const MAIN_GROUP: ViewStyle = {
 }
 
 const ITEM: ViewStyle = {
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {

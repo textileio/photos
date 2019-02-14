@@ -16,25 +16,25 @@ import { color, textStyle, spacing, fontFamily } from '../styles'
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'space-evenly',
-  paddingHorizontal: spacing._16,
+  paddingHorizontal: spacing._016,
   backgroundColor: color.screen_primary
 }
 
 const PLACEHOLDER: TextStyle = {
   width: 120,
   height: 120,
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const IMAGE: ImageStyle = {
   width: 120,
   height: 120,
   borderRadius: 60,
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const ITEM: ViewStyle = {
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {
@@ -59,10 +59,10 @@ const BUTTON: ViewStyle = {
 }
 
 const HIT_SLOP: Insets = {
-  top: spacing._16,
-  left: spacing._16,
-  bottom: spacing._16,
-  right: spacing._16
+  top: spacing._016,
+  left: spacing._016,
+  bottom: spacing._016,
+  right: spacing._016
 }
 
 const LINK: TextStyle = {

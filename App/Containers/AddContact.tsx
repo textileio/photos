@@ -110,10 +110,10 @@ class AddContact extends React.Component<Props> {
         key={key}
         style={{
           ...textStyle.header_xs,
-          paddingTop: spacing._8,
-          paddingBottom: spacing._8,
-          paddingLeft: spacing._12,
-          paddingRight: spacing._12,
+          paddingTop: spacing._008,
+          paddingBottom: spacing._008,
+          paddingLeft: spacing._012,
+          paddingRight: spacing._012,
           color: color.grey_2,
           backgroundColor: color.grey_5
         }}

@@ -6,22 +6,22 @@ import { color, spacing, textStyle } from '../styles'
 const CONTAINER: ViewStyle = {
   flex: 1,
   marginTop: '33%',
-  paddingHorizontal: spacing._16,
+  paddingHorizontal: spacing._016,
   backgroundColor: color.screen_primary
 }
 
 const IMAGE: ImageStyle = {
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {
   ...textStyle.header_l,
-  marginBottom: spacing._8
+  marginBottom: spacing._008
 }
 
 const SUBTITLE: TextStyle = {
   ...textStyle.body_l,
-  marginBottom: spacing._16
+  marginBottom: spacing._016
 }
 
 const BUTTON_WRAPPER: ViewStyle = {

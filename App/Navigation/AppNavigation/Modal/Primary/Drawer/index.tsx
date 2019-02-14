@@ -1,4 +1,3 @@
-// @ts-ignore
 import { createDrawerNavigator } from 'react-navigation'
 import { Dimensions, Platform } from 'react-native'
 import Contacts from './Contacts'

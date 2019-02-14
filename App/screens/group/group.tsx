@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { View, Text, FlatList, ListRenderItemInfo } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
+import ActionSheet from 'react-native-actionsheet'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
 import KeyboardResponsiveContainer from '../../Components/KeyboardResponsiveContainer'

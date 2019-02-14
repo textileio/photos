@@ -25,7 +25,6 @@ import UIActions from '../Redux/UIRedux'
 import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
-// @ts-ignore
 import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'

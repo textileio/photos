@@ -3,7 +3,7 @@ import { View, Text } from 'react-native'
 
 import Avatar from './Avatar'
 import KeyValueText from './KeyValueText'
-import { spacing } from '../styles'
+import { spacing, size } from '../styles'
 
 interface Props {
   avatar?: string
@@ -14,8 +14,8 @@ interface Props {
 const Message = (props: Props) => {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', padding: spacing.screenEdge }}>
-      <Avatar style={{ height: 30, width: 30 }} target={props.avatar} />
-      <KeyValueText style={{ flex: 1, paddingLeft: spacing._8 }} keyString={props.username} value={props.message} />
+      <Avatar style={{ height: size._024, width: size._024 }} target={props.avatar} />
+      <KeyValueText style={{ flex: 1, paddingLeft: spacing._008 }} keyString={props.username} value={props.message} />
     </View>
   )
 }

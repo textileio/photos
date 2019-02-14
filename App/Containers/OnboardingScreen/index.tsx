@@ -1,6 +1,5 @@
 import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
-// @ts-ignore
 import { Pages } from 'react-native-pages'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
@@ -24,8 +23,8 @@ const CONTAINER: ViewStyle = {
 
 const ARROW_FORWARD: ViewStyle = {
   position: 'absolute',
-  bottom: spacing._16,
-  right: spacing._16,
+  bottom: spacing._016,
+  right: spacing._016,
   alignSelf: 'flex-end'
 }
 
@@ -181,7 +180,7 @@ class OnboardingScreen extends React.Component<Props, State> {
           <Pages
             ref={(pages: any) => { this.pages = pages ? pages : undefined }}
             style={[CONTAINER]}
-            containerStyle={{ marginBottom: spacing._16 }}
+            containerStyle={{ marginBottom: spacing._016 }}
             indicatorColor={color.accent2_2}
             startPage={this.state.currentPage}
             scrollEnabled={false}
