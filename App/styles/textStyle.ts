@@ -22,6 +22,27 @@ export const header_l: TextStyle = {
   color: color.grey_0
 }
 
+export const action_xs: TextStyle = {
+  ...header_xs,
+  letterSpacing: 2,
+  paddingLeft: 2
+}
+export const action_s: TextStyle = {
+  ...header_s,
+  letterSpacing: 3,
+  paddingLeft: 3
+}
+export const action_m: TextStyle = {
+  ...header_m,
+  letterSpacing: 3,
+  paddingLeft: 3
+}
+export const action_l: TextStyle = {
+  ...header_l,
+  letterSpacing: 4,
+  paddingLeft: 4
+}
+
 export const body_xs: TextStyle = {
   fontFamily: fontFamily.regular,
   fontSize: fontSize._10,
