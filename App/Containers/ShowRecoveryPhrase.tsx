@@ -3,44 +3,42 @@ import { View, Text, Image, ViewStyle, TextStyle, ImageStyle, Clipboard } from '
 import { connect } from 'react-redux'
 
 import Button from '../Components/Button'
-
-import * as s from '../Themes/Constants'
 import { RootState } from '../Redux/Types'
+import { color, textStyle, spacing, fontFamily } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'center',
-  paddingHorizontal: s.MARGIN_STANDARD,
-  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
+  paddingHorizontal: spacing._16,
+  backgroundColor: color.screen_primary
 }
 
 const IMAGE: ImageStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._16
 }
 
 const TITLE: TextStyle = {
-  ...s.H2,
-  marginBottom: s.ITEM_SPACING_REGULAR
+  ...textStyle.header_l,
+  marginBottom: spacing._8
 }
 
 const SUBTITLE: TextStyle = {
-  ...s.H1,
-  marginBottom: s.ITEM_SPACING_LARGE
+  ...textStyle.body_l,
+  marginBottom: spacing._16
 }
 
 const STRONG: TextStyle = {
   ...SUBTITLE,
   textTransform: 'uppercase',
-  fontFamily: s.FONT_FAMILY_BOLD
+  fontFamily: fontFamily.bold
 }
 
 const PHRASE: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR,
-  fontSize: s.FONT_SIZE_REGULAR,
-  lineHeight: s.FONT_LINE_HEIGHT_REGULAR,
+  ...textStyle.body_m,
+  lineHeight: 18,
   textAlign: 'center',
-  color: s.COLOR_FONT_DARK_ON_LIGHT_LIGHT,
-  marginBottom: s.ITEM_SPACING_LARGE
+  color: color.grey_4,
+  marginBottom: spacing._16
 }
 
 interface StateProps {

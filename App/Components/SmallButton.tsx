@@ -1,7 +1,7 @@
 import React from 'react'
 import { ViewStyle } from 'react-native'
 import Button from './Button'
-import * as s from '../Themes/Constants'
+import { color } from '../styles'
 
 interface Props {
   text: string
@@ -25,7 +25,7 @@ const button = (props: Props) => {
         ...style,
         paddingHorizontal: 8,
         paddingVertical: 4,
-        backgroundColor: s.COLOR_BRAND_BLUE
+        backgroundColor: color.action_3
       }}
       disabled={props.disabled}
       onPress={onPress}

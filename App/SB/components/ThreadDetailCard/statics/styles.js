@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
+import { color } from '../../../../styles'
+
 export default StyleSheet.create({
   titleCard: {
     fontFamily: 'Biotif-Regular',
@@ -96,7 +98,7 @@ export default StyleSheet.create({
     paddingRight: 8
   },
   dateContainer: {
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     paddingBottom: 15
   },
   userPhotosContainer: {

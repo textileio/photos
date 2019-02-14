@@ -1,27 +1,27 @@
 import React from 'react'
 import { Image, ImageSourcePropType, ImageStyle, Text, TextStyle, View, ViewStyle } from 'react-native'
-import * as s from '../Themes/Constants'
 import Button from './LargeButton'
+import { color, spacing, textStyle } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   marginTop: '33%',
-  paddingHorizontal: s.MARGIN_STANDARD,
-  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
+  paddingHorizontal: spacing._16,
+  backgroundColor: color.screen_primary
 }
 
 const IMAGE: ImageStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._16
 }
 
 const TITLE: TextStyle = {
-  ...s.H2,
-  marginBottom: s.ITEM_SPACING_REGULAR
+  ...textStyle.header_l,
+  marginBottom: spacing._8
 }
 
 const SUBTITLE: TextStyle = {
-  ...s.H1,
-  marginBottom: s.ITEM_SPACING_LARGE
+  ...textStyle.body_l,
+  marginBottom: spacing._16
 }
 
 const BUTTON_WRAPPER: ViewStyle = {

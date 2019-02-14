@@ -9,8 +9,10 @@ import { RootState } from '../Redux/Types'
 import ThreadDetailCard from '../SB/components/ThreadDetailCard'
 import {threadDataByThreadId} from '../Redux/PhotoViewingSelectors'
 
+import { color } from '../styles'
+
 const CONTAINER: ViewStyle = {
-  backgroundColor: '#FAFCFE'
+  backgroundColor: color.screen_primary
 }
 
 interface StateProps {

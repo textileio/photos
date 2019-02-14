@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native'
 
+import { color } from '../../../../styles'
+
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFCFE'
+    backgroundColor: color.screen_primary
   },
   toolbarLogo: {
     width: 82.5,

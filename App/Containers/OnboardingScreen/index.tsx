@@ -8,7 +8,6 @@ import { Dispatch } from 'redux'
 import Config from 'react-native-config'
 import Icon from '@textile/react-native-icon'
 
-import { COLOR_BACKGROUND_PRIMARY, COLOR_GREY_LIGHT, COLOR_BRAND_PINK, MARGIN_STANDARD, MARGIN_SMALL } from '../../Themes/Constants'
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import ReferralCode from '../../Components/ReferralCode'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
@@ -16,16 +15,17 @@ import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
 import PrefrencesActions from '../../Redux/PreferencesRedux'
 import { RootAction, RootState } from '../../Redux/Types'
+import { color, spacing } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
-  backgroundColor: COLOR_BACKGROUND_PRIMARY
+  backgroundColor: color.screen_primary
 }
 
 const ARROW_FORWARD: ViewStyle = {
   position: 'absolute',
-  bottom: MARGIN_SMALL,
-  right: MARGIN_STANDARD,
+  bottom: spacing._16,
+  right: spacing._16,
   alignSelf: 'flex-end'
 }
 
@@ -181,8 +181,8 @@ class OnboardingScreen extends React.Component<Props, State> {
           <Pages
             ref={(pages: any) => { this.pages = pages ? pages : undefined }}
             style={[CONTAINER]}
-            containerStyle={{ marginBottom: MARGIN_SMALL }}
-            indicatorColor={COLOR_BRAND_PINK}
+            containerStyle={{ marginBottom: spacing._16 }}
+            indicatorColor={color.accent2_2}
             startPage={this.state.currentPage}
             scrollEnabled={false}
           >

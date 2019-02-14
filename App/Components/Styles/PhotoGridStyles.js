@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet, Platform } from 'react-native'
 import { ApplicationStyles, Colors } from '../../Themes'
+import { color } from '../../styles'
 
 const { width, height } = Dimensions.get('window')
 
@@ -37,7 +38,7 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#FAFCFE'
+    backgroundColor: color.screen_primary
   },
   listContainer: {
     flex: 1,

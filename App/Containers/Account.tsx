@@ -6,8 +6,7 @@ import { DrawerItems, NavigationScreenProps, NavigationEvents } from 'react-navi
 import Icon from '@textile/react-native-icon'
 import Avatar from '../Components/Avatar'
 import { RootState } from '../Redux/Types'
-import * as s from '../Themes/Constants'
-import { Colors } from '../Themes'
+import { textStyle, color } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -30,10 +29,10 @@ class Account extends Component<Props> {
   render() {
     return (
       <View style={CONTAINER}>
-        <Icon style={{ position: 'absolute', top: 11, right: 11 }} color={Colors.charcoal} name='nut' onPress={this.navToSettings} size={24} />
+        <Icon style={{ position: 'absolute', top: 11, right: 11 }} color={color.grey_0} name='nut' onPress={this.navToSettings} size={24} />
         <View style={{ alignItems: 'center' }}>
           <Avatar style={{ width: 120, height: 120 }} self={true} />
-          <Text style={{ ...s.H2, margin: 20 }}>{this.props.username}</Text>
+          <Text style={{ ...textStyle.header_l, margin: 20 }}>{this.props.username}</Text>
         </View>
         <DrawerItems {...this.props} />
       </View>

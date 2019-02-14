@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native'
 
+import { color } from '../../../styles'
+
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     flex: 1
   },
   toast: {

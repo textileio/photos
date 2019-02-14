@@ -1,7 +1,7 @@
 import React from 'react'
 import { ViewStyle } from 'react-native'
 import Button from './Button'
-import * as s from '../Themes/Constants'
+import { color, spacing } from '../styles'
 
 interface Props {
   text: string
@@ -24,9 +24,9 @@ const button = (props: Props) => {
       }}
       style={{
         ...style,
-        paddingHorizontal: s.SPACING_24,
-        paddingVertical: s.SPACING_12,
-        backgroundColor: s.COLOR_BRAND_BLUE
+        paddingHorizontal: spacing._24,
+        paddingVertical: spacing._12,
+        backgroundColor: color.action_3
       }}
       processing={processing}
       disabled={props.disabled}

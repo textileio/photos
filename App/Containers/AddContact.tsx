@@ -23,11 +23,11 @@ import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import { RootState, RootAction } from '../Redux/Types'
 import ContactsActions, { ContactsSelectors, SearchResultsSection, SearchResult } from '../Redux/ContactsRedux'
-import * as s from '../Themes/Constants'
+import { color, textStyle, spacing } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
-  backgroundColor: '#FAFCFE'
+  backgroundColor: color.screen_primary
 }
 
 interface StateProps {
@@ -96,10 +96,10 @@ class AddContact extends React.Component<Props> {
 
   _headerComponent = () => (
     <SearchBar
-      containerStyle={{ backgroundColor: s.COLOR_GREY_LIGHT }}
-      inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: '#FAFCFE' }}
+      containerStyle={{ backgroundColor: color.grey_5 }}
+      inputStyle={{ ...textStyle.body_m, color: color.grey_2, backgroundColor: color.grey_6 }}
       additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false, autoFocus: true }}
-      iconColor={s.COLOR_GREY_MEDIUM}
+      iconColor={color.grey_4}
       onTextChanged={this.updateSearchString}
     />
   )
@@ -109,14 +109,13 @@ class AddContact extends React.Component<Props> {
       <Text
         key={key}
         style={{
-          paddingTop: 8,
-          paddingBottom: 8,
-          paddingLeft: 12,
-          paddingRight: 12,
-          fontFamily: s.FONT_FAMILY_BOLD,
-          fontSize: s.FONT_SIZE_SMALL,
-          color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM,
-          backgroundColor: s.COLOR_GREY_LIGHT
+          ...textStyle.header_xs,
+          paddingTop: spacing._8,
+          paddingBottom: spacing._8,
+          paddingLeft: spacing._12,
+          paddingRight: spacing._12,
+          color: color.grey_2,
+          backgroundColor: color.grey_5
         }}
       >
         {title}
@@ -141,7 +140,7 @@ class AddContact extends React.Component<Props> {
                 disabled={item.data.isContact || item.data.adding}
                 onPress={this.onAdd(item.data.contactInfo)}
               />,
-              <Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />
+              <Icon key='more' name='chevron-right' size={24} color={color.grey_4} />
             ]}
             onPress={this.onPressTextile(item.data.contactInfo)}
           />
@@ -169,7 +168,7 @@ class AddContact extends React.Component<Props> {
         )
     }
     // const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
-    // const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
+    // const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
   }
 
   updateSearchString = (string?: string) => {

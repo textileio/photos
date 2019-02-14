@@ -6,12 +6,12 @@ import Button from '../../Components/Button'
 import MigrationActions from '../../Redux/MigrationRedux'
 import { downloadsCount, completeDownloadsCount, localProcessingTasksCount, completeLocalProcessingTasksCount, overallUploadProgress } from '../../Redux/MigrationSelectors'
 import { RootAction, RootState } from '../../Redux/Types'
-import * as s from '../../Themes/Constants'
+import { color, textStyle, spacing } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
-  padding: s.MARGIN_STANDARD,
-  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
+  padding: spacing._16,
+  backgroundColor: color.screen_primary
 }
 
 const MAIN_GROUP: ViewStyle = {
@@ -19,35 +19,34 @@ const MAIN_GROUP: ViewStyle = {
 }
 
 const ITEM: ViewStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._16
 }
 
 const TITLE: TextStyle = {
   marginTop: '70%',
   ...ITEM,
-  ...s.HEADER
+  ...textStyle.header_m
 }
 
 const SUBTITLE: TextStyle = {
   ...ITEM,
-  ...s.H2
+  ...textStyle.header_l
 }
 
 const TEXT: TextStyle = {
   ...ITEM,
-  ...s.H1
+  ...textStyle.body_l
 }
 
 const ERROR: TextStyle = {
   ...ITEM,
-  ...s.H1,
-  color: s.COLOR_BRAND_RED
+  ...textStyle.body_l,
+  color: color.severe_3
 }
 
 const LINK: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR,
-  fontSize: s.FONT_SIZE_REGULAR,
-  color: s.COLOR_GREY_MEDIUM,
+  ...textStyle.body_m,
+  color: color.grey_4,
   textDecorationLine: 'underline',
   textAlign: 'center'
 }
@@ -85,7 +84,7 @@ class MigrationScreen extends React.Component<Props> {
             </Fragment>
           }
           {!this.props.error &&
-            <ActivityIndicator size='large' animating={true} color={s.COLOR_BRAND_BLUE} style={ITEM} />
+            <ActivityIndicator size='large' animating={true} color={color.action_5} style={ITEM} />
           }
         </View>
         <Text style={LINK} onPress={this.props.cancel}>Cancel</Text>

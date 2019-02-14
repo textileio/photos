@@ -14,6 +14,7 @@ import { RootState, RootAction } from '../../Redux/Types'
 import { feedItems } from '../../features/group/selectors'
 import { groupActions } from '../../features/group'
 import UIActions from '../../Redux/UIRedux'
+import { color } from '../../styles';
 
 interface StateProps {
   items: ReadonlyArray<Item>,
@@ -63,7 +64,7 @@ class Group extends Component<Props> {
       <SafeAreaView style={{ flex: 1 }}>
         <KeyboardResponsiveContainer>
           <FlatList
-            style={{ flex: 1 }}
+            style={{ flex: 1, backgroundColor: color.screen_primary }}
             inverted={true}
             data={this.props.items}
             renderItem={this.renderRow}

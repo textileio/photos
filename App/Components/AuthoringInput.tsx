@@ -1,26 +1,26 @@
 import React, { Component } from 'react'
-import { View, TextInput, ViewStyle, TextStyle, TouchableOpacity } from 'react-native'
+import { View, TextInput, ViewStyle, TextStyle, TouchableOpacity, Dimensions } from 'react-native'
 import Icon from '@textile/react-native-icon'
 
 import Button from './SmallButton'
-import * as s from '../Themes/Constants'
+import { color, fontFamily, spacing } from '../styles'
 
 const CONTAINER: ViewStyle = {
   justifyContent: 'space-between',
   borderStyle: 'solid',
-  borderTopWidth: 1,
-  borderColor: '#EDEDEE',
-  padding: s.MARGIN_EXTRA_SMALL
+  borderTopWidth: Dimensions.get('screen').scale > 1 ? 0.5 : 1,
+  borderColor: color.grey_5,
+  padding: spacing.screenEdge
 }
 
 const INPUT: TextStyle = {
   paddingTop: 0,
-  paddingBottom: s.MARGIN_EXTRA_SMALL,
-  fontFamily: s.FONT_FAMILY_REGULAR
+  paddingBottom: spacing._8,
+  fontFamily: fontFamily.regular
 }
 
 const ITEM: ViewStyle = {
-  marginLeft: s.MARGIN_SMALL
+  marginLeft: spacing._16
 }
 
 interface Props {
@@ -59,7 +59,7 @@ class AuthoringInput extends Component<Props, State> {
         />
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
           <TouchableOpacity style={ITEM} onPress={this.props.onSharePhoto}>
-            <Icon name='image' color={s.COLOR_GREY_MEDIUM} size={24} />
+            <Icon name='image' color={color.grey_4} size={24} />
           </TouchableOpacity>
           <Button style={ITEM} disabled={this.state.disabled} text={'send'} onPress={this.submit} />
         </View>

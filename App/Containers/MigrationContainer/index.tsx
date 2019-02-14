@@ -4,12 +4,12 @@ import { NavigationScreenProps } from 'react-navigation'
 // @ts-ignore
 import { Pages } from 'react-native-pages'
 
-import { COLOR_BACKGROUND_PRIMARY, COLOR_BRAND_PINK, MARGIN_SMALL } from '../../Themes/Constants'
 import MigrationScreen from './MigrationScreen'
+import { color, spacing } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
-  backgroundColor: COLOR_BACKGROUND_PRIMARY
+  backgroundColor: color.screen_primary
 }
 
 interface State {
@@ -53,8 +53,8 @@ export default class MigrationContainer extends React.Component<NavigationScreen
         <Pages
           ref={(pages: any) => { this.pages = pages ? pages : undefined }}
           style={[CONTAINER]}
-          containerStyle={{ marginBottom: MARGIN_SMALL }}
-          indicatorColor={COLOR_BRAND_PINK}
+          containerStyle={{ marginBottom: spacing._16 }}
+          indicatorColor={color.accent2_2}
           onScrollEnd={this.onScrollEnd}
           startPage={this.state.currentPage}
           scrollEnabled={false}
