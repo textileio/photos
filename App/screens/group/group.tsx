@@ -18,6 +18,7 @@ import { RootState, RootAction } from '../../Redux/Types'
 import { feedItems } from '../../features/group/selectors'
 import { groupActions } from '../../features/group'
 import UIActions from '../../Redux/UIRedux'
+import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
 
 const momentSpec: moment.CalendarSpec = {
@@ -32,8 +33,9 @@ const momentSpec: moment.CalendarSpec = {
 const screenWidth = Dimensions.get('screen').width
 
 interface StateProps {
-  items: ReadonlyArray<Item>,
+  items: ReadonlyArray<Item>
   groupName: string
+  selfId: string
 }
 
 interface DispatchProps {
@@ -93,37 +95,55 @@ class Group extends Component<Props> {
   renderRow = ({ item }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
+        const { avatar, username, caption, date, target, files, likes, comments } = item.data
+        const hasLiked = likes.findIndex((likeInfo) => likeInfo.id === this.props.selfId) > -1
+        const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
+          return {
+            id: comment.id,
+            username: comment.username || '?',
+            body: comment.body
+          }
+        })
         return (
           <Photo
-            avatar={item.data.avatar}
-            username={item.data.username || 'unknown'}
-            message={item.data.caption}
-            time={moment(item.data.date).calendar(undefined, momentSpec)}
-            photoId={item.data.target}
-            fileIndex={item.data.files[0].index}
+            avatar={avatar}
+            username={username || 'unknown'}
+            message={caption}
+            time={moment(date).calendar(undefined, momentSpec)}
+            photoId={target}
+            fileIndex={files[0].index}
             photoWidth={screenWidth}
+            hasLiked={hasLiked}
+            numberLikes={likes.length}
+            onLike={this.onLike(target)}
+            onComment={this.onComment(target)}
+            comments={commentsData}
+            commentsDisplayMax={2}
+            onViewComments={this.onViewComments(target)}
           />
         )
       }
       case 'message': {
+        const { avatar, username, body, date } = item.data
         return (
           <Message
-            avatar={item.data.avatar}
-            username={item.data.username || 'unknown'}
-            message={item.data.body}
-            time={moment(item.data.date).calendar(undefined, momentSpec)}
+            avatar={avatar}
+            username={username || 'unknown'}
+            message={body}
+            time={moment(date).calendar(undefined, momentSpec)}
           />
         )
       }
       case 'leave':
       case 'join': {
+        const { avatar, username, date } = item.data
         const word = item.type === 'join' ? 'joined' : 'left'
         return (
           <Join
-            avatar={item.data.avatar}
-            username={item.data.username || 'unknown'}
+            avatar={avatar}
+            username={username || 'unknown'}
             message={`${word} ${this.props.groupName}`}
-            time={moment(item.data.date).calendar(undefined, momentSpec)}
+            time={moment(date).calendar(undefined, momentSpec)}
           />
         )
       }
@@ -137,6 +157,18 @@ class Group extends Component<Props> {
   onFocus = () => {
     this.props.refresh()
   }
+
+  onLike = (target: string) => {
+    return () => console.log('liked:', target)
+  }
+
+  onComment = (target: string) => {
+    return () => console.log('comment:', target)
+  }
+
+  onViewComments = (target: string) => {
+    return () => console.log('view comments:', target)
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
@@ -144,9 +176,11 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const items = feedItems(state.group, threadId) || []
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
+  const selfId = state.account.peerId.value || ''
   return {
     items,
-    groupName
+    groupName,
+    selfId
   }
 }
 

@@ -10,8 +10,8 @@ const CONTAINER = (alignItems: 'center' | 'flex-start'): ViewStyle => {
     alignItems,
     paddingLeft: spacing.screenEdge,
     paddingRight: spacing.screenEdge,
-    paddingTop: spacing._012,
-    paddingBottom: spacing._012
+    paddingTop: spacing._016,
+    paddingBottom: spacing._016
   }
 }
 

@@ -1,3 +1,4 @@
+export const _000 = 0
 export const _004 = 4
 export const _008 = 8
 export const _012 = 12
