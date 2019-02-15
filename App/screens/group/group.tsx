@@ -42,6 +42,8 @@ interface DispatchProps {
   refresh: () => void
   sendMessage: (message: string) => void
   showWalletPicker: () => void
+  addPhotoLike: (block: string) => void
+  navigateToComments: (photoId: string) => void
 }
 
 interface NavProps {
@@ -95,8 +97,8 @@ class Group extends Component<Props> {
   renderRow = ({ item }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
-        const { avatar, username, caption, date, target, files, likes, comments } = item.data
-        const hasLiked = likes.findIndex((likeInfo) => likeInfo.id === this.props.selfId) > -1
+        const { avatar, username, caption, date, target, files, likes, comments, block } = item.data
+        const hasLiked = likes.findIndex((likeInfo) => likeInfo.author_id === this.props.selfId) > -1
         const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
           return {
             id: comment.id,
@@ -115,11 +117,11 @@ class Group extends Component<Props> {
             photoWidth={screenWidth}
             hasLiked={hasLiked}
             numberLikes={likes.length}
-            onLike={this.onLike(target)}
+            onLike={this.onLike(block)}
             onComment={this.onComment(target)}
             comments={commentsData}
-            commentsDisplayMax={2}
-            onViewComments={this.onViewComments(target)}
+            commentsDisplayMax={5}
+            onViewComments={this.onComment(target)}
           />
         )
       }
@@ -158,16 +160,12 @@ class Group extends Component<Props> {
     this.props.refresh()
   }
 
-  onLike = (target: string) => {
-    return () => console.log('liked:', target)
+  onLike = (block: string) => {
+    return () => this.props.addPhotoLike(block)
   }
 
   onComment = (target: string) => {
-    return () => console.log('comment:', target)
-  }
-
-  onViewComments = (target: string) => {
-    return () => console.log('view comments:', target)
+    return () => this.props.navigateToComments(target)
   }
 }
 
@@ -190,7 +188,9 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     refresh: () => dispatch(groupActions.feed.refreshFeed.request({ id: threadId })),
     sendMessage: (message: string) => dispatch(groupActions.addMessage.addMessage.request({ id: uuid(), groupId: threadId, body: message })),
     // TODO: look at just doing direct navigation for this
-    showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) }
+    showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) },
+    addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
+    navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId))
   }
 }
 

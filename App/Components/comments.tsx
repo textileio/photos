@@ -32,7 +32,7 @@ export interface Props {
 const Comments = (props: Props) => {
   const displayCount = props.commentsDisplayMax || props.comments.length
   const index = props.comments.length - Math.min(displayCount, props.comments.length)
-  const comments = props.comments.slice(index, index + displayCount).map((commentData) => {
+  const comments = props.comments.slice().reverse().slice(index, index + displayCount).map((commentData) => {
     return (
       <KeyValueText
         key={commentData.id}
@@ -45,7 +45,7 @@ const Comments = (props: Props) => {
     <View style={[CONTAINER, props.commentsContainerStyle]}>
       {displayCount < props.comments.length &&
         <TouchableOpacity onPress={props.onViewComments}>
-          <Text style={VIEW_ALL}>{`View all ${props.comments.length} comments`}</Text>
+          <Text style={VIEW_ALL}>{`See all ${props.comments.length} comments...`}</Text>
         </TouchableOpacity>
       }
       {comments}
