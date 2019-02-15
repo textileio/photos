@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, FlatList, ListRenderItemInfo } from 'react-native'
+import { View, Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
@@ -10,6 +10,7 @@ import moment from 'moment'
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
 import KeyboardResponsiveContainer from '../../Components/KeyboardResponsiveContainer'
 import AuthoringInput from '../../Components/authoring-input'
+import Photo from '../../Components/photo'
 import Message from '../../Components/message'
 import Join from '../../Components/join'
 import { Item } from '../../features/group/models'
@@ -27,6 +28,8 @@ const momentSpec: moment.CalendarSpec = {
   lastWeek: 'MMM DD LT',
   sameElse: 'MMM DD LT'
 }
+
+const screenWidth = Dimensions.get('screen').width
 
 interface StateProps {
   items: ReadonlyArray<Item>,
@@ -89,6 +92,19 @@ class Group extends Component<Props> {
 
   renderRow = ({ item }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
+      case 'photo': {
+        return (
+          <Photo
+            avatar={item.data.avatar}
+            username={item.data.username || 'unknown'}
+            message={item.data.caption}
+            time={moment(item.data.date).calendar(undefined, momentSpec)}
+            photoId={item.data.target}
+            fileIndex={item.data.files[0].index}
+            photoWidth={screenWidth}
+          />
+        )
+      }
       case 'message': {
         return (
           <Message

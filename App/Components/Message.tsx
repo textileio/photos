@@ -4,9 +4,15 @@ import { View, Text, ViewStyle, ImageStyle, TextStyle } from 'react-native'
 import Avatar from './Avatar'
 import { spacing, size, textStyle, color } from '../styles'
 
-const CONTAINER: ViewStyle = {
-  flexDirection: 'row',
-  padding: spacing.screenEdge
+const CONTAINER = (alignItems: 'center' | 'flex-start'): ViewStyle => {
+  return {
+    flexDirection: 'row',
+    alignItems,
+    paddingLeft: spacing.screenEdge,
+    paddingRight: spacing.screenEdge,
+    paddingTop: spacing._012,
+    paddingBottom: spacing._012
+  }
 }
 
 const AVATAR: ImageStyle = {
@@ -38,27 +44,30 @@ const TIME: TextStyle = {
 
 const MESSAGE: TextStyle = {
   ...textStyle.body_m,
-  marginTop: spacing._004,
   lineHeight: textStyle.body_m.fontSize! * 1.3
 }
 
-interface Props {
+export interface Props {
   avatar?: string
   username: string
-  message: string
+  message?: string
   time: string
+  containerStyle?: ViewStyle
 }
 
 const Message = (props: Props) => {
+  const alignItems = props.message ? 'flex-start' : 'center'
   return (
-    <View style={CONTAINER}>
+    <View style={[CONTAINER(alignItems), props.containerStyle]}>
       <Avatar style={AVATAR} target={props.avatar} />
       <View style={CONTENT}>
         <View style={META}>
           <Text style={USERNAME}>{props.username}</Text>
           <Text style={TIME}>{props.time.toUpperCase()}</Text>
         </View>
-        <Text style={MESSAGE}>{props.message}</Text>
+        {props.message &&
+          <Text style={MESSAGE}>{props.message}</Text>
+        }
       </View>
     </View>
   )

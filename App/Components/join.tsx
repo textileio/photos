@@ -6,7 +6,10 @@ import { spacing, size, textStyle, color } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flexDirection: 'row',
-  padding: spacing.screenEdge,
+  paddingLeft: spacing.screenEdge,
+  paddingRight: spacing.screenEdge,
+  paddingTop: spacing._012,
+  paddingBottom: spacing._012,
   alignItems: 'center'
 }
 
@@ -33,6 +36,7 @@ const MESSAGE: TextStyle = {
   ...textStyle.body_m,
   color: color.grey_3
 }
+
 
 const TIME: TextStyle = {
   ...textStyle.body_xs,

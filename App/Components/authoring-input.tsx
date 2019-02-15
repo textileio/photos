@@ -62,7 +62,7 @@ class AuthoringInput extends Component<Props, State> {
           style={INPUT}
           multiline={true}
           placeholder='Write a message...'
-          placeholderTextColor='#4a4a4a'
+          placeholderTextColor={color.grey_3}
           onChangeText={this.updateText}
           value={this.state.textValue}
         />
