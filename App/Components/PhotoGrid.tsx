@@ -13,7 +13,7 @@ import Toast from 'react-native-easy-toast'
 import { RootAction } from '../Redux/Types'
 import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
 import { IPhotoGridType, ProcessingItemType } from '../Models/TextileTypes'
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { Protobufs } from '@textile/react-native-sdk'
 import ProgressiveImage from './ProgressiveImage'
 import ProcessingWalletImageCard from './ProcessingWalletImage'
 
@@ -28,7 +28,7 @@ interface DispatchProps {
 
 interface ScreenProps {
   items: IPhotoGridType[]
-  onSelect: (photo: ThreadFilesInfo) => () => void
+  onSelect: (photo: Protobufs.IFiles) => () => void
   onRefresh: () => void
   refreshing: boolean
   placeholderText: string
@@ -81,12 +81,12 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
           <TouchableOpacity
             style={styles.item}
             /* tslint:disable-next-line */
-            onPress={this.props.onSelect(row.item.photo as ThreadFilesInfo)}
+            onPress={this.props.onSelect(row.item.photo as Protobufs.IFiles)}
           >
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
-                imageId={item.photo.target}
-                fileIndex={item.photo.files[0].index}
+                imageId={item.photo.target!}
+                fileIndex={item.photo.files![0].index!}
                 showPreview={true}
                 forMinWidth={PRODUCT_ITEM_HEIGHT}
                 style={styles.itemImage}

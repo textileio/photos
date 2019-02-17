@@ -11,7 +11,10 @@ import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
 import Textile, {
   ThreadFilesInfo,
-  ThreadInfo
+  ThreadInfo,
+  ThreadType,
+  ThreadSharing,
+  SchemaType
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
@@ -61,7 +64,7 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
   const { name } = action.payload
   try {
     const key = `textile_photos-shared-${uuid()}`
-    yield call(Textile.addThread, key, name, true)
+    yield call(Textile.addThread, key, name, ThreadType.OPEN, ThreadSharing.SHARED, [], SchemaType.MEDIA)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
   }
@@ -99,7 +102,7 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
 export function * refreshThread (action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
   const { threadId } = action.payload
   try {
-    const photosResult: ReadonlyArray<ThreadFilesInfo> = yield call(Textile.threadFiles, '', -1, threadId)
+    const photosResult: ReadonlyArray<ThreadFilesInfo> = yield call(Textile.files, '', -1, threadId)
     yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
@@ -112,7 +115,7 @@ export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions
     return
   }
   try {
-    yield call(Textile.addThreadComment, result.photo.block, result.comment)
+    yield call(Textile.addComment, result.photo.block, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
     // for now an error will just flush the comment... ideally we can notify the user of a failed comment

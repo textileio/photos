@@ -13,7 +13,12 @@ import { prepare } from './ImageSharingSagas'
 import { getSession } from './Account/AccountSagas'
 
 import Textile, {
-  ThreadInfo, ContactInfo, CafeSession, Protobufs
+  ThreadInfo,
+  ContactInfo,
+  Protobufs,
+  ThreadType,
+  ThreadSharing,
+  SchemaType
  } from '@textile/react-native-sdk'
 
 const PREVIOUS_ID_PATH = () => `${Textile.repoPath}/migration005_peerid.ndjson`
@@ -128,7 +133,7 @@ function * prepareAndAddPhotos() {
   if (downloads.length < 1) {
     return
   }
-  const threadInfo: ThreadInfo = yield call(Textile.addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME, true)
+  const threadInfo: ThreadInfo = yield call(Textile.addThread, MIGRATION_ALBUM_KEY, MIGRATION_ALBUM_NAME, ThreadType.PRIVATE, ThreadSharing.NOT_SHARED, [], SchemaType.MEDIA)
   const effects = downloads.map((download) => call(prepareAndAddPhoto, download, threadInfo.id))
   yield all(effects)
 }
@@ -149,7 +154,7 @@ function * prepareAndAddPhoto(download: PhotoDownload, threadId: string) {
     if (!dir) {
       throw new Error('No dir on MobilePreparedFiles')
     }
-    yield call(Textile.addThreadFiles, dir, threadId)
+    yield call(Textile.addFiles, dir, threadId)
     yield put(MigrationActions.localProcessingTaskComplete(photoId, preparedFiles))
   } catch (error) {
     yield put(MigrationActions.localProcessingTaskError(photoId, error))
@@ -319,7 +324,11 @@ function * uploadPhoto(photoId: string, path: string, dispatch: Dispatch) {
     const size = + stats.size
     yield put(MigrationActions.insertUpload(photoId, path, size))
     const filename = path.split('/').pop()!
-    const session: CafeSession = yield call(getSession)
+    const session: Protobufs.ICafeSession = yield call(getSession)
+    if (!session.cafe) {
+      throw new Error('no cafe object')
+      return
+    }
     const options: FS.UploadFileOptions = {
       toUrl: `${session.cafe.url}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
       files: [{

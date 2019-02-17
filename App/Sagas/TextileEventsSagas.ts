@@ -81,7 +81,7 @@ export function * ignoreFileRequest () {
           action.type === getType(TextileEventsActions.ignoreFileRequest)
         )
 
-      yield call(Textile.addThreadIgnore, action.payload.blockId)
+      yield call(Textile.addIgnore, action.payload.blockId)
 
       yield call(logNewEvent, 'ignoreFile', action.type)
     } catch (error) {

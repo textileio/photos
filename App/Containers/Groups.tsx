@@ -11,7 +11,7 @@ import { ContactsSelectors } from '../Redux/ContactsRedux'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 
-import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'
+import { ContactInfo, Protobufs } from '@textile/react-native-sdk'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
@@ -24,7 +24,7 @@ interface GroupAuthors {
   readonly name: string
   readonly size: number
   readonly members: ContactInfo[]
-  readonly thumb?: ThreadFilesInfo
+  readonly thumb?: Protobufs.IFiles
 }
 
 interface StateProps {
