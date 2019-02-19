@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { SharedImage } from '../Models/TextileTypes'
+import { SharedImage } from '../features/group/add-photo/models'
 import { RootState } from './Types'
 import { ThreadFilesInfo } from '@textile/react-native-sdk'
 

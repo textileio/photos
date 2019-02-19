@@ -70,7 +70,7 @@ class AddThreadScreen extends React.Component {
   _submit (selectForShare) {
     if (selectForShare) {
       this.props.submit(this.state.value, false, true)
-      this.props.navigation.navigate('ThreadSharePhoto', {backTo: 'SharedPhotos'})
+      this.props.navigation.navigate('ThreadSharePhoto', {backTo: 'Groups'})
     } else {
       this.props.submit(this.state.value, true, false)
       this.props.navigation.goBack()

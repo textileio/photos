@@ -17,7 +17,7 @@ interface State {
 
 export default class MigrationContainer extends React.Component<NavigationScreenProps, State> {
 
-  pages?: Pages
+  pages?: any
 
   constructor(props: NavigationScreenProps) {
     super(props)

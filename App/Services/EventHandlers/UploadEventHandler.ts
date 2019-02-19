@@ -2,9 +2,8 @@ import { Store } from 'redux'
 import Upload from 'react-native-background-upload'
 
 import { RootState } from '../../Redux/Types'
-
-import ProcessingImagesActions from '../../Redux/ProcessingImagesRedux'
-import { processingImageForUploadId } from '../../Redux/ProcessingImagesSelectors'
+import { groupActions } from '../../features/group'
+import { groupSelectors } from '../../features/group'
 
 export default class UploadEventHandler {
   store: Store<RootState>
@@ -15,17 +14,17 @@ export default class UploadEventHandler {
   }
 
   uploadProgress (e: any) {
-    this.store.dispatch(ProcessingImagesActions.imageUploadProgress(e.id, e.progress))
+    this.store.dispatch(groupActions.addPhoto.imageUploadProgress(e.id, e.progress))
   }
 
   uploadComplete (e: any) {
     const { responseCode } = e
     if (responseCode >= 200 && responseCode < 300) {
-      this.store.dispatch(ProcessingImagesActions.imageUploadComplete(e.id, e.responseCode, e.responseBody))
+      this.store.dispatch(groupActions.addPhoto.imageUploadComplete(e.id, e.responseCode, e.responseBody))
     } else if (responseCode === 401) {
-      const processingImage = processingImageForUploadId(this.store.getState(), e.id)
+      const processingImage = groupSelectors.addPhotoSelectors.processingImageForUploadId(this.store.getState().group.addPhoto, e.id)
       if (processingImage) {
-        this.store.dispatch(ProcessingImagesActions.error({
+        this.store.dispatch(groupActions.addPhoto.error({
           uuid: processingImage.uuid,
           uploadId: e.id,
           underlyingError: 'expired token',
@@ -33,9 +32,9 @@ export default class UploadEventHandler {
         }))
       }
     } else {
-      const processingImage = processingImageForUploadId(this.store.getState(), e.id)
+      const processingImage = groupSelectors.addPhotoSelectors.processingImageForUploadId(this.store.getState().group.addPhoto, e.id)
       if (processingImage) {
-        this.store.dispatch(ProcessingImagesActions.error({
+        this.store.dispatch(groupActions.addPhoto.error({
           uuid: processingImage.uuid,
           uploadId: e.id,
           underlyingError: `Response code: ${responseCode}`,
@@ -46,9 +45,9 @@ export default class UploadEventHandler {
   }
 
   uploadCancelled (e: any) {
-    const processingImage = processingImageForUploadId(this.store.getState(), e.id)
+    const processingImage = groupSelectors.addPhotoSelectors.processingImageForUploadId(this.store.getState().group.addPhoto, e.id)
     if (processingImage) {
-      this.store.dispatch(ProcessingImagesActions.error({
+      this.store.dispatch(groupActions.addPhoto.error({
         uuid: processingImage.uuid,
         uploadId: e.id,
         underlyingError: 'Cancelled',
@@ -58,9 +57,9 @@ export default class UploadEventHandler {
   }
 
   uploadError (e: any) {
-    const processingImage = processingImageForUploadId(this.store.getState(), e.id)
+    const processingImage = groupSelectors.addPhotoSelectors.processingImageForUploadId(this.store.getState().group.addPhoto, e.id)
     if (processingImage) {
-      this.store.dispatch(ProcessingImagesActions.error({
+      this.store.dispatch(groupActions.addPhoto.error({
         uuid: processingImage.uuid,
         uploadId: e.id,
         underlyingError: e.error,

@@ -48,7 +48,7 @@ interface State {
 
 class OnboardingScreen extends React.Component<Props, State> {
 
-  pages?: Pages
+  pages?: any
 
   constructor(props: Props) {
     super(props)

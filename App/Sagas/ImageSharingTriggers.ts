@@ -3,14 +3,15 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Upload from 'react-native-background-upload'
 
-import { SharedImage } from '../Models/TextileTypes'
+import { SharedImage } from '../features/group/add-photo/models'
 
-import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
+import { groupActions, groupSelectors } from '../features/group'
+import { ProcessingImage } from '../features/group/add-photo/models'
 import AccountActions from '../Redux/AccountRedux'
-import { processingImageForUploadId, processingImageByUuid, allUploadingImages } from '../Redux/ProcessingImagesSelectors'
 import UIActions from '../Redux/UIRedux'
 import { insertImage, prepareImage, uploadPins, monitorForUploadsComplete, shareWalletImage, shareToThread } from './ImageSharingSagas'
 import { logNewEvent } from './DeviceLogs'
+import { RootState } from '../Redux/Types'
 
 export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
@@ -21,12 +22,13 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
   }
 }
 
-export function * handleImageUploadComplete (action: ActionType<typeof ProcessingImagesActions.imageUploadComplete>) {
+export function * handleImageUploadComplete (action: ActionType<typeof groupActions.addPhoto.imageUploadComplete>) {
   // This saga just listens for complete uploads and deletes the source file
   // ImageSharingSagas.monitorForUploadsComplete is what triggers the next step once all uploads are complete
   const { uploadId } = action.payload
   yield call(logNewEvent, 'uploadComplete', uploadId)
-  const processingImage: ProcessingImage | undefined = yield select(processingImageForUploadId, uploadId)
+  const selector = (state: RootState, uploadId: string) => groupSelectors.addPhotoSelectors.processingImageForUploadId(state.group.addPhoto, uploadId)
+  const processingImage: ProcessingImage | undefined = yield select(selector, uploadId)
   if (processingImage) {
     try {
       if (processingImage.uploadData) {
@@ -41,16 +43,17 @@ export function * handleImageUploadComplete (action: ActionType<typeof Processin
 }
 
 export function * startMonitoringExistingUploads () {
-  const uploadingImages: ReadonlyArray<ProcessingImage> = yield select(allUploadingImages)
+  const uploadingImages: ReadonlyArray<ProcessingImage> = yield select((state: RootState) => groupSelectors.addPhotoSelectors.allUploadingImages(state.group.addPhoto))
   for (const uploadingImage of uploadingImages) {
     yield fork(monitorForUploadsComplete, uploadingImage.uuid)
   }
 }
 
-export function * retryImageShare (action: ActionType<typeof ProcessingImagesActions.retry>) {
+export function * retryImageShare (action: ActionType<typeof groupActions.addPhoto.retry>) {
   const { uuid } = action.payload
   yield call(logNewEvent, 'retryImageShare', uuid)
-  const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+  const selector = (state: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(state.group.addPhoto, uuid)(state.group.addPhoto)
+  const processingImage: ProcessingImage | undefined = yield select(selector, uuid)
   if (!processingImage) {
     return
   }
@@ -63,7 +66,7 @@ export function * retryImageShare (action: ActionType<typeof ProcessingImagesAct
   }
 }
 
-export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingImagesActions.error>) {
+export function * retryWithTokenRefresh (action: ActionType<typeof groupActions.addPhoto.error>) {
   if (action.payload.error.type !== 'expiredToken') {
     return
   }
@@ -71,16 +74,17 @@ export function * retryWithTokenRefresh (action: ActionType<typeof ProcessingIma
   try {
     yield put(AccountActions.refreshCafeSessionsRequest())
     yield take(getType(AccountActions.cafeSessionsSuccess))
-    yield put(ProcessingImagesActions.retry(uuid))
+    yield put(groupActions.addPhoto.retry(uuid))
   } catch (error) {
-    yield put(ProcessingImagesActions.error({ uuid, underlyingError: 'unable to refresh tokens', type: 'general' }))
+    yield put(groupActions.addPhoto.error({ uuid, underlyingError: 'unable to refresh tokens', type: 'general' }))
   }
 }
 
-export function * cancelImageShare (action: ActionType<typeof ProcessingImagesActions.cancelRequest>) {
+export function * cancelImageShare (action: ActionType<typeof groupActions.addPhoto.cancelRequest>) {
   const { uuid } = action.payload
   try {
-    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+    const selector = (state: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(state.group.addPhoto, uuid)(state.group.addPhoto)
+    const processingImage: ProcessingImage | undefined = yield select(selector, uuid)
     if (!processingImage) {
       return
     }
@@ -108,10 +112,10 @@ export function * cancelImageShare (action: ActionType<typeof ProcessingImagesAc
     // What else? Undo local add, remote pin, remove from wallet?
 
   } catch (e) {}
-  yield put(ProcessingImagesActions.cancelComplete(uuid))
+  yield put(groupActions.addPhoto.cancelComplete(uuid))
 }
 
-export function * handleImageProcessingError (action: ActionType<typeof ProcessingImagesActions.error>) {
+export function * handleImageProcessingError (action: ActionType<typeof groupActions.addPhoto.error>) {
   const { underlyingError } = action.payload.error
   const message = underlyingError.message as string || underlyingError as string || 'handleImageProcessingError'
   yield call(logNewEvent, 'Image Processing Error', message, true)

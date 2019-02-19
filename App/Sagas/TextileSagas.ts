@@ -29,7 +29,7 @@ import Upload from 'react-native-background-upload'
 import { ThreadData } from '../Redux/PhotoViewingRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PhotoViewingAction from '../Redux/PhotoViewingRedux'
-import { SharedImage } from '../Models/TextileTypes'
+import { SharedImage } from '../features/group/add-photo/models'
 
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield * processAvatarImage(action.payload.image)

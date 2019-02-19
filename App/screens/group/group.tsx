@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
+import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
@@ -10,14 +10,17 @@ import moment from 'moment'
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
 import KeyboardResponsiveContainer from '../../Components/KeyboardResponsiveContainer'
 import AuthoringInput from '../../Components/authoring-input'
+import InviteContactModal from '../../Components/InviteContactModal'
 import Photo from '../../Components/photo'
+import ProcessingImage from '../../Components/ProcessingImage'
 import Message from '../../Components/message'
 import Join from '../../Components/join'
 import { Item } from '../../features/group/models'
 import { RootState, RootAction } from '../../Redux/Types'
-import { feedItems } from '../../features/group/selectors'
+import { groupItems } from '../../features/group/selectors'
 import { groupActions } from '../../features/group'
 import UIActions from '../../Redux/UIRedux'
+import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
 
@@ -44,37 +47,60 @@ interface DispatchProps {
   showWalletPicker: () => void
   addPhotoLike: (block: string) => void
   navigateToComments: (photoId: string) => void
+  leaveThread: () => void
 }
 
 interface NavProps {
   threadId: string,
   groupName: string
+  showActionSheet: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
-class Group extends Component<Props> {
+interface State {
+  showInviteContactModal: boolean
+}
+
+class Group extends Component<Props, State> {
 
   static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     // const openDrawer = navigation.getParam('openDrawer')
     // const addContact = navigation.getParam('addContact')
     const groupName = navigation.getParam('groupName')
+    const showActionSheet = navigation.getParam('showActionSheet')
     const back = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <TextileHeaderButtonsItem title='Back' iconName='arrow-left' onPress={back} />
       </TextileHeaderButtons>
     )
+    const headerRight = (
+      <TextileHeaderButtons>
+        <TextileHeaderButtonsItem title='More' iconName='more-vertical' onPress={showActionSheet} />}
+      </TextileHeaderButtons>
+    )
     return {
       headerLeft,
-      headerTitle: groupName
+      headerTitle: groupName,
+      headerRight
+    }
+  }
+
+  actionSheet: any
+
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      showInviteContactModal: false
     }
   }
 
   componentDidMount() {
     this.props.navigation.addListener('willFocus', this.onFocus)
     this.props.navigation.setParams({
-      groupName: this.props.groupName
+      groupName: this.props.groupName,
+      showActionSheet: this.showActionSheet
     })
   }
 
@@ -89,6 +115,19 @@ class Group extends Component<Props> {
             renderItem={this.renderRow}
           />
           <AuthoringInput containerStyle={{ }} onSendMessage={this.submit} onSharePhoto={this.props.showWalletPicker} />
+          <InviteContactModal
+            isVisible={this.state.showInviteContactModal}
+            cancel={this.hideInviteModal}
+            selectedThreadId={this.props.navigation.getParam('threadId')}
+            selectedThreadName={this.props.groupName}
+          />
+          <ActionSheet
+            ref={(o: any) => { this.actionSheet = o }}
+            title={this.props.groupName + ' options'}
+            options={['Invite Others', 'Leave Group', 'Cancel']}
+            cancelButtonIndex={2}
+            onPress={this.handleActionSheetResponse}
+          />
         </KeyboardResponsiveContainer>
       </SafeAreaView>
     )
@@ -122,6 +161,13 @@ class Group extends Component<Props> {
             comments={commentsData}
             commentsDisplayMax={5}
             onViewComments={this.onComment(target)}
+          />
+        )
+      }
+      case 'addingPhoto': {
+        return (
+          <ProcessingImage
+            {...item.data}
           />
         )
       }
@@ -167,11 +213,31 @@ class Group extends Component<Props> {
   onComment = (target: string) => {
     return () => this.props.navigateToComments(target)
   }
+
+  showActionSheet = () => {
+    this.actionSheet.show()
+  }
+
+  handleActionSheetResponse = (index: number) => {
+    if (index === 0) {
+      this.showInviteModal()
+    } else if (index === 1) {
+      this.props.leaveThread()
+    }
+  }
+
+  showInviteModal = () => {
+    this.setState({ showInviteContactModal: true })
+  }
+
+  hideInviteModal = () => {
+    this.setState({ showInviteContactModal: false })
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
   const threadId = ownProps.navigation.getParam('threadId')
-  const items = feedItems(state.group, threadId) || []
+  const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
   const selfId = state.account.peerId.value || ''
@@ -190,7 +256,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     // TODO: look at just doing direct navigation for this
     showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) },
     addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
-    navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId))
+    navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
+    leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId))
   }
 }
 
