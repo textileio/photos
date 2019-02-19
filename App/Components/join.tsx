@@ -37,7 +37,6 @@ const MESSAGE: TextStyle = {
   color: color.grey_3
 }
 
-
 const TIME: TextStyle = {
   ...textStyle.body_xs,
   lineHeight: textStyle.body_xs.fontSize,
