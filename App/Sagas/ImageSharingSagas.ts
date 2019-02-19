@@ -105,7 +105,7 @@ export function * insertImage (image: SharedImage, threadId: string, comment?: s
 
 export function * prepareImage (uuid: string) {
   try {
-    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(rootState.group.addPhoto, uuid)(rootState.group.addPhoto)
+    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
     const processingImage: ProcessingImage | undefined = yield select(selector)
     if (!processingImage) {
       throw new Error('no ProcessingImage found')
@@ -128,7 +128,7 @@ export function * prepareImage (uuid: string) {
 
 export function * uploadPins (uuid: string) {
   try {
-    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(rootState.group.addPhoto, uuid)(rootState.group.addPhoto)
+    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
     const processingImage: ProcessingImage | undefined = yield select(selector)
     if (!processingImage || ! processingImage.uploadData) {
       throw new Error('no ProcessingImage or uploadData found')
@@ -160,7 +160,7 @@ export function * monitorForUploadsComplete(uuid: string) {
 
 export function * shareToThread (uuid: string) {
   try {
-    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(rootState.group.addPhoto, uuid)(rootState.group.addPhoto)
+    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
     const processingImage: ProcessingImage | undefined = yield select(selector)
     if (!processingImage || !processingImage.preparedFiles || !processingImage.preparedFiles.dir) {
       throw new Error('no ProcessingImage or preparedData or dir found')

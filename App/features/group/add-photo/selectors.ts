@@ -31,7 +31,7 @@ export function getProcessingImages(state: ProcessingImagesState, threadId: stri
 }
 
 export function totalUploadProgress(state: ProcessingImagesState, uuid: string) {
-  const selector = processingImageByUuidFactory(state, uuid)
+  const selector = processingImageByUuidFactory(uuid)
   const processingImage = selector(state)
   if (!processingImage || !processingImage.uploadData) {
     return 0
@@ -48,7 +48,7 @@ export function totalUploadProgress(state: ProcessingImagesState, uuid: string) 
 }
 
 export function allUploadsComplete(state: ProcessingImagesState, uuid: string) {
-  const selector = processingImageByUuidFactory(state, uuid)
+  const selector = processingImageByUuidFactory(uuid)
   const processingImage = selector(state)
   if (!processingImage || !processingImage.uploadData) {
     return false
@@ -56,7 +56,7 @@ export function allUploadsComplete(state: ProcessingImagesState, uuid: string) {
   return allComplete(processingImage.uploadData)
 }
 
-export function processingImageByUuidFactory(state: ProcessingImagesState, uuid: string) {
+export function processingImageByUuidFactory(uuid: string) {
   return (state: ProcessingImagesState) => state.images.find((image) => image.uuid === uuid)
 }
 

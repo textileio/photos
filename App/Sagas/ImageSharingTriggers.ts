@@ -52,7 +52,7 @@ export function * startMonitoringExistingUploads () {
 export function * retryImageShare (action: ActionType<typeof groupActions.addPhoto.retry>) {
   const { uuid } = action.payload
   yield call(logNewEvent, 'retryImageShare', uuid)
-  const selector = (state: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(state.group.addPhoto, uuid)(state.group.addPhoto)
+  const selector = (state: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(state.group.addPhoto)
   const processingImage: ProcessingImage | undefined = yield select(selector, uuid)
   if (!processingImage) {
     return
@@ -83,7 +83,7 @@ export function * retryWithTokenRefresh (action: ActionType<typeof groupActions.
 export function * cancelImageShare (action: ActionType<typeof groupActions.addPhoto.cancelRequest>) {
   const { uuid } = action.payload
   try {
-    const selector = (state: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(state.group.addPhoto, uuid)(state.group.addPhoto)
+    const selector = (state: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(state.group.addPhoto)
     const processingImage: ProcessingImage | undefined = yield select(selector, uuid)
     if (!processingImage) {
       return
