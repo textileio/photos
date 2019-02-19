@@ -20,14 +20,6 @@ export interface ProcessingItemType {
 
 export type IPhotoGridType = PhotoType | ProcessingItemType
 
-export interface SharedImage {
-  isAvatar: boolean,
-  origURL?: string,
-  uri: string,
-  path: string,
-  canDelete: boolean
-}
-
 export interface DeepLinkData {
   readonly href: string,
   readonly protocol: string,

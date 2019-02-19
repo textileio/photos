@@ -1,12 +1,14 @@
 import { StyleSheet } from 'react-native'
 
+import { color } from '../../../../styles'
+
 export default StyleSheet.create({
   container: {
     margin: 20,
     paddingHorizontal: 10,
     paddingTop: 3,
     // marginTop: 100, // <- changed because headers will be outside of Containers now...
-    backgroundColor: '#FAFCFE'
+    backgroundColor: color.screen_primary
   },
   header: {
     flexDirection: 'row',

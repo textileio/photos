@@ -6,16 +6,16 @@ import Textile, {
   BlockInfo,
   Protobufs
 } from '@textile/react-native-sdk'
-import { SharedImage } from '../Models/TextileTypes'
+import { SharedImage, ProcessingImage } from '../features/group/add-photo/models'
 import AccountActions from '../Redux/AccountRedux'
-import ProcessingImagesActions, { ProcessingImage } from '../Redux/ProcessingImagesRedux'
-import { processingImageByUuid, allUploadsComplete } from '../Redux/ProcessingImagesSelectors'
+import { groupActions } from '../features/group'
+import { groupSelectors } from '../features/group'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 import { waitFor } from '@textile/redux-saga-wait-for'
-import { RootAction } from '../Redux/Types'
+import { RootAction, RootState } from '../Redux/Types'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
   const { threadId } = action.payload
@@ -68,7 +68,7 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
         yield put(UIActions.updateSharingPhotoThread(threadId))
         yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
       } else {
-        yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'SharedPhotos' })
+        yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'Groups' })
       }
     } catch (error) {
       yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
@@ -84,7 +84,7 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
   if (threadId) {
     yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
   } else {
-    yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'SharedPhotos' })
+    yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'Groups' })
   }
 }
 
@@ -99,13 +99,14 @@ export function * shareWalletImage (id: string, threadId: string, comment?: stri
 
 export function * insertImage (image: SharedImage, threadId: string, comment?: string) {
   const id = uuid()
-  yield put(ProcessingImagesActions.insertImage(id, image, threadId, comment))
+  yield put(groupActions.addPhoto.insertImage(id, image, threadId, comment))
   yield call(prepareImage, id)
 }
 
 export function * prepareImage (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
+    const processingImage: ProcessingImage | undefined = yield select(selector)
     if (!processingImage) {
       throw new Error('no ProcessingImage found')
     }
@@ -118,37 +119,39 @@ export function * prepareImage (uuid: string) {
       yield put(AccountActions.setAvatarRequest(hash))
       // yield fork(Textile.updateAvatarAndProfile, hash)
     }
-    yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
+    yield put(groupActions.addPhoto.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
   } catch (error) {
-    yield put(ProcessingImagesActions.error({ uuid, underlyingError: error, type: 'general' }))
+    yield put(groupActions.addPhoto.error({ uuid, underlyingError: error, type: 'general' }))
   }
 }
 
 export function * uploadPins (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
+    const processingImage: ProcessingImage | undefined = yield select(selector)
     if (!processingImage || ! processingImage.uploadData) {
       throw new Error('no ProcessingImage or uploadData found')
     }
     yield fork(monitorForUploadsComplete, uuid)
     for (const uploadId in processingImage.uploadData) {
       if (processingImage.uploadData[uploadId] && (processingImage.uploadData[uploadId].status === 'pending' || processingImage.uploadData[uploadId].status === 'error')) {
-        yield put(ProcessingImagesActions.uploadStarted(uuid, uploadId))
+        yield put(groupActions.addPhoto.uploadStarted(uuid, uploadId))
         yield call(uploadFile, uploadId, processingImage.uploadData[uploadId].path)
       }
     }
   } catch (error) {
-    put(ProcessingImagesActions.error({ uuid, underlyingError: error, type: 'general' }))
+    put(groupActions.addPhoto.error({ uuid, underlyingError: error, type: 'general' }))
   }
 }
 
 export function * monitorForUploadsComplete(uuid: string) {
+  const selector = (state: RootState) => groupSelectors.addPhotoSelectors.allUploadsComplete(state.group.addPhoto, uuid)
   const { complete } = yield race({
-    complete: waitFor(select(allUploadsComplete, uuid)),
+    complete: waitFor(select(selector, uuid)),
     // If there is any error related to this image, we want to cancel the uploads complete listener because the image uploads can
     // be retried and we'll created a new listener for that
-    errorAction: take((action: RootAction) => action.type === getType(ProcessingImagesActions.error) && (action.payload.error.uuid === uuid))
+    errorAction: take((action: RootAction) => action.type === getType(groupActions.addPhoto.error) && (action.payload.error.uuid === uuid))
   })
   if (complete) {
     yield call(shareToThread, uuid)
@@ -157,16 +160,17 @@ export function * monitorForUploadsComplete(uuid: string) {
 
 export function * shareToThread (uuid: string) {
   try {
-    const processingImage: ProcessingImage | undefined = yield select(processingImageByUuid, uuid)
+    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
+    const processingImage: ProcessingImage | undefined = yield select(selector)
     if (!processingImage || !processingImage.preparedFiles || !processingImage.preparedFiles.dir) {
       throw new Error('no ProcessingImage or preparedData or dir found')
     }
     const { dir } = processingImage.preparedFiles
     const blockInfo: BlockInfo = yield call(Textile.addThreadFiles, dir, processingImage.destinationThreadId, processingImage.comment)
-    yield put(ProcessingImagesActions.sharedToThread(uuid, blockInfo))
-    yield put(ProcessingImagesActions.complete(uuid))
+    yield put(groupActions.addPhoto.sharedToThread(uuid, blockInfo))
+    yield put(groupActions.addPhoto.complete(uuid))
   } catch (error) {
-    yield put(ProcessingImagesActions.error({ uuid, underlyingError: error, type: 'general' }))
+    yield put(groupActions.addPhoto.error({ uuid, underlyingError: error, type: 'general' }))
   }
 }
 

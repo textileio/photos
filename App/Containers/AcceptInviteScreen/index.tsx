@@ -8,12 +8,13 @@ import ThreadsActions from '../../Redux/ThreadsRedux'
 import Button from '../../Components/Button'
 import Colors from '../../Themes/Colors'
 import { TextileHeaderButtons, Item } from '../../Components/HeaderButtons'
+import { color } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'space-around',
   alignItems: 'center',
-  backgroundColor: '#FAFCFE',
+  backgroundColor: color.screen_primary,
   padding: 11
 }
 

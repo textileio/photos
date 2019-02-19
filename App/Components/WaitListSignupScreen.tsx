@@ -6,41 +6,37 @@ import { Buffer } from 'buffer'
 
 import Input from '../SB/components/Input'
 import Button from '../Components/LargeButton'
-import * as s from '../Themes/Constants'
+import { color, spacing, textStyle, fontFamily } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'space-evenly',
-  paddingHorizontal: s.MARGIN_STANDARD,
-  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
+  paddingHorizontal: spacing._016,
+  backgroundColor: color.screen_primary
 }
 
 const IMAGE: ImageStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const ITEM: ViewStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {
   ...ITEM,
-  ...s.H2
+  ...textStyle.header_l
 }
 
 const SUBTITLE: TextStyle = {
   ...ITEM,
-  ...s.H1
+  ...textStyle.body_l
 }
 
-const TEXT: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR,
-  fontSize: s.FONT_SIZE_MEDIUM,
-  color: s.COLOR_FONT_DARK_ON_LIGHT_DARK
-}
+const TEXT: TextStyle = textStyle.body_l
 
 const LABEL: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR
+  fontFamily: fontFamily.regular
 }
 
 const BUTTON: ViewStyle = {
@@ -49,18 +45,17 @@ const BUTTON: ViewStyle = {
 }
 
 const LINK: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR,
-  fontSize: s.FONT_SIZE_REGULAR,
-  color: s.COLOR_GREY_MEDIUM,
+  ...textStyle.body_m,
+  color: color.grey_4,
   textDecorationLine: 'underline',
   textAlign: 'center'
 }
 
 const HIT_SLOP: Insets = {
-  top: s.ITEM_SPACING_LARGE,
-  left: s.ITEM_SPACING_LARGE,
-  bottom: s.ITEM_SPACING_LARGE,
-  right: s.ITEM_SPACING_LARGE
+  top: spacing._016,
+  left: spacing._016,
+  bottom: spacing._016,
+  right: spacing._016
 }
 
 interface Props {

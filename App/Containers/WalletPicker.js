@@ -22,9 +22,7 @@ class TextileWalletPicker extends React.PureComponent {
         }} />
       </TextileHeaderButtons>
     )
-    const headerTitle = (
-      <Text style={navStyles.headerTitle}>Recent Photos</Text>
-    )
+    const headerTitle = 'Recent Photos'
     const headerRight = (
       <TextileHeaderButtons>
         <Item title='camera' iconName='camera-create' onPress={() => {params.showImagePicker('camera')}} />

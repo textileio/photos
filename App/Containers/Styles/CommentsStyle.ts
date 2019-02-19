@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native'
 
+import { color } from '../../styles'
+
 export default StyleSheet.create({
   safeContainer: {
     backgroundColor: '#FFFFFF',
@@ -7,7 +9,7 @@ export default StyleSheet.create({
   },
   container: {
     marginTop: 0, // <- Removed until header gets reworked, orig = 20
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     flex: 1
   },
   contentContainer: {},

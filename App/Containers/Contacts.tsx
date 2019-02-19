@@ -18,11 +18,11 @@ import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import InviteContactModal from '../Components/InviteContactModal'
 import { RootState } from '../Redux/Types'
-import * as s from '../Themes/Constants'
+import { color, textStyle } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
-  backgroundColor: '#FAFCFE'
+  backgroundColor: color.screen_primary
 }
 
 interface StateProps {
@@ -98,10 +98,10 @@ class Contacts extends React.Component<Props, State> {
           ItemSeparatorComponent={RowSeparator}
           ListHeaderComponent={
             <SearchBar
-              containerStyle={{ backgroundColor: s.COLOR_GREY_LIGHT }}
-              inputStyle={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_REGULAR, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM, backgroundColor: '#FAFCFE' }}
+              containerStyle={{ backgroundColor: color.grey_5 }}
+              inputStyle={{ ...textStyle.body_m, color: color.grey_2, backgroundColor: color.grey_6 }}
               additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false }}
-              iconColor={s.COLOR_GREY_MEDIUM}
+              iconColor={color.grey_4}
               onTextChanged={this.updateSearchString}
             />
           }
@@ -117,7 +117,7 @@ class Contacts extends React.Component<Props, State> {
   renderRow = (row: ListRenderItemInfo<ContactInfo>) => {
     const { item } = row
     const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
-    const rightItems = [<Icon key='more' name='chevron-right' size={24} color={s.COLOR_GREY_MEDIUM} />]
+    const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
     return (
       <ListItem
         title={item.username || item.id}

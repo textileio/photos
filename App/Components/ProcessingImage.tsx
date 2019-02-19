@@ -50,6 +50,7 @@ const ERROR: TextStyle = {
 }
 
 export interface IProcessingImageProps {
+  id: string,
   imageUri: string,
   progress: number,
   message?: string,

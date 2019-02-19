@@ -5,43 +5,39 @@ import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, Vi
 
 import Input from '../SB/components/Input'
 import Button from '../Components/LargeButton'
-import * as s from '../Themes/Constants'
 import { RootAction, RootState } from '../Redux/Types'
 import AccountActions from '../Redux/AccountRedux'
+import { color, textStyle, spacing, fontFamily } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'space-evenly',
-  paddingHorizontal: s.MARGIN_STANDARD,
-  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
+  paddingHorizontal: spacing._016,
+  backgroundColor: color.screen_primary
 }
 
 const IMAGE: ImageStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const ITEM: ViewStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {
   ...ITEM,
-  ...s.H2
+  ...textStyle.header_l
 }
 
 const SUBTITLE: TextStyle = {
   ...ITEM,
-  ...s.H1
+  ...textStyle.body_l
 }
 
-const TEXT: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR,
-  fontSize: s.FONT_SIZE_MEDIUM,
-  color: s.COLOR_FONT_DARK_ON_LIGHT_DARK
-}
+const TEXT: TextStyle = textStyle.body_l
 
 const LABEL: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR
+  fontFamily: fontFamily.regular
 }
 
 const BUTTON: ViewStyle = {

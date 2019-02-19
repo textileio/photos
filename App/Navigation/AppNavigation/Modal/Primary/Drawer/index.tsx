@@ -1,11 +1,10 @@
-// @ts-ignore
 import { createDrawerNavigator } from 'react-navigation'
 import { Dimensions, Platform } from 'react-native'
 import Contacts from './Contacts'
 import Groups from './Groups'
 import Notifications from './Notifications'
 import Drawer from '../../../../../Containers/Drawer'
-import * as s from '../../../../../Themes/Constants'
+import { color, fontSize } from '../../../../../styles'
 
 import styles, { headerTintColor } from '../../../../Styles/NavigationStyles'
 
@@ -23,10 +22,10 @@ const drawer = createDrawerNavigator(
       labelStyle: {
         fontFamily: 'Biotif-Medium',
         fontWeight: Platform.OS === 'ios' ? '600' : 'normal',
-        fontSize: s.FONT_SIZE_MEDIUM
+        fontSize: fontSize._18
       },
       activeLabelStyle: {
-        color: s.COLOR_BRAND_BLUE
+        color: color.action_3
       }
     },
     navigationOptions: {

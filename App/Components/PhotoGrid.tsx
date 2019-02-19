@@ -11,7 +11,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 
 import { RootAction } from '../Redux/Types'
-import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
+import { groupActions } from '../features/group'
 import { IPhotoGridType, ProcessingItemType } from '../Models/TextileTypes'
 import { ThreadFilesInfo } from '@textile/react-native-sdk'
 import ProgressiveImage from './ProgressiveImage'
@@ -176,8 +176,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    retryShare: (uuid: string) => { dispatch(ProcessingImagesActions.retry(uuid)) },
-    cancelShare: (uuid: string) => { dispatch(ProcessingImagesActions.cancelRequest(uuid)) }
+    retryShare: (uuid: string) => { dispatch(groupActions.addPhoto.retry(uuid)) },
+    cancelShare: (uuid: string) => { dispatch(groupActions.addPhoto.cancelRequest(uuid)) }
   }
 }
 

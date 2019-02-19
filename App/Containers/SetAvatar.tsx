@@ -6,55 +6,51 @@ import { NavigationScreenProps, NavigationScreenProp, NavigationRoute } from 're
 import Icon from '@textile/react-native-icon'
 
 import Button from '../Components/LargeButton'
-import * as s from '../Themes/Constants'
 import { RootAction, RootState } from '../Redux/Types'
 import UIActions from '../Redux/UIRedux'
-import { SharedImage } from '../Models/TextileTypes'
+import { SharedImage } from '../features/group/add-photo/models'
 import Avatar from '../Components/Avatar'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import { color, textStyle, spacing, fontFamily } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'space-evenly',
-  paddingHorizontal: s.MARGIN_STANDARD,
-  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
+  paddingHorizontal: spacing._016,
+  backgroundColor: color.screen_primary
 }
 
 const PLACEHOLDER: TextStyle = {
   width: 120,
   height: 120,
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const IMAGE: ImageStyle = {
   width: 120,
   height: 120,
   borderRadius: 60,
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const ITEM: ViewStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {
   ...ITEM,
-  ...s.H2
+  ...textStyle.header_l
 }
 
 const SUBTITLE: TextStyle = {
   ...ITEM,
-  ...s.H1
+  ...textStyle.body_l
 }
 
-const TEXT: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR,
-  fontSize: s.FONT_SIZE_MEDIUM,
-  color: s.COLOR_FONT_DARK_ON_LIGHT_DARK
-}
+const TEXT: TextStyle = textStyle.body_l
 
 const LABEL: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR
+  fontFamily: fontFamily.regular
 }
 
 const BUTTON: ViewStyle = {
@@ -63,16 +59,15 @@ const BUTTON: ViewStyle = {
 }
 
 const HIT_SLOP: Insets = {
-  top: s.ITEM_SPACING_LARGE,
-  left: s.ITEM_SPACING_LARGE,
-  bottom: s.ITEM_SPACING_LARGE,
-  right: s.ITEM_SPACING_LARGE
+  top: spacing._016,
+  left: spacing._016,
+  bottom: spacing._016,
+  right: spacing._016
 }
 
 const LINK: TextStyle = {
-  fontFamily: s.FONT_FAMILY_REGULAR,
-  fontSize: s.FONT_SIZE_REGULAR,
-  color: s.COLOR_GREY_MEDIUM,
+  ...textStyle.body_m,
+  color: color.grey_4,
   textDecorationLine: 'underline',
   textAlign: 'center'
 }
@@ -181,7 +176,7 @@ class SetAvatar extends React.Component<Props> {
     } else if (this.props.accountHasAvatar) {
       return <Avatar style={IMAGE} self={true}/>
     } else {
-      return <Icon style={PLACEHOLDER} name={'question-circle'} size={120} color={s.COLOR_GREY_LIGHT} />
+      return <Icon style={PLACEHOLDER} name={'question-circle'} size={120} color={color.grey_5} />
     }
   }
 

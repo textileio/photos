@@ -1,5 +1,5 @@
 import actions, { reducer } from '../UIRedux'
-import { SharedImage } from '../../Models/TextileTypes'
+import { SharedImage } from '../../features/group/add-photo/models'
 import { ThreadFilesInfo } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)

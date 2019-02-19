@@ -8,7 +8,6 @@ import { CameraRollAction } from './CameraRollRedux'
 import { ContactsAction } from './ContactsRedux'
 import { PhotoViewingAction } from './PhotoViewingRedux'
 import { PreferencesAction } from './PreferencesRedux'
-import { ProcessingImagesAction } from './ProcessingImagesRedux'
 import { NotificationsAction } from './NotificationsRedux'
 import { ThreadsAction } from './ThreadsRedux'
 import { TriggersAction } from './TriggersRedux'
@@ -17,6 +16,7 @@ import { UploadingImagesAction } from './UploadingImagesRedux'
 import { StartupAction } from './StartupRedux'
 import { MigrationAction } from './MigrationRedux'
 import { TextileEventsActions } from './TextileEventsRedux'
+import { GroupAction } from '../features/group'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -26,7 +26,6 @@ export type RootAction =
   ContactsAction |
   PhotoViewingAction |
   PreferencesAction |
-  ProcessingImagesAction |
   NotificationsAction |
   ThreadsAction |
   TriggersAction |
@@ -34,4 +33,5 @@ export type RootAction =
   UploadingImagesAction |
   StartupAction |
   MigrationAction |
-  TextileEventsActions
+  TextileEventsActions |
+  GroupAction
