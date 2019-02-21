@@ -9,6 +9,7 @@ import com.facebook.react.uimanager.ViewManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TextilePackage implements ReactPackage {
@@ -25,6 +26,6 @@ public class TextilePackage implements ReactPackage {
     }
 
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Arrays.<ViewManager>asList(new TextileImageViewManager(reactContext));
+        return Collections.emptyList();
     }
 }
