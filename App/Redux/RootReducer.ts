@@ -13,7 +13,6 @@ import { reducer as uploadingImagesReducer } from './UploadingImagesRedux'
 import { reducer as storageReducer } from './StorageRedux'
 import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
-import { reducer as migrationReducer } from './MigrationRedux'
 import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
 
@@ -30,7 +29,6 @@ export default combineReducers({
   storage: storageReducer,
   startup: startupReducer,
   deviceLogs: deviceLogsReducer,
-  migration: migrationReducer,
   account: accountReducer,
   textile: textileEventsReducer,
   group: groupReducer

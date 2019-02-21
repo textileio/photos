@@ -1,15 +1,16 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 import { getPeerId } from './AccountSelectors'
 import Config from 'react-native-config'
+import { timestampToDate } from '../util'
 
 // temporary filter until we stop getting them from textile-go
 export const BLACKLIST = ['avatars', 'account']
 
 export interface SharedPhoto {
   type: 'photo'
-  photo: ThreadFilesInfo
+  photo: pb.Files.AsObject
   id: string
   original: string
 }
@@ -60,9 +61,8 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
     case 'date':
       return result
         .sort((a, b) => {
-          const aLast = a.photos.length && a.photos[0].date ? Date.parse(a.photos[0].date) : 0
-          const bLast = b.photos.length && b.photos[0].date ? Date.parse(b.photos[0].date) : 0
-
+          const aLast = !!a.photos.length && timestampToDate(a.photos[0].date)
+          const bLast = !!b.photos.length && timestampToDate(b.photos[0].date)
           return !aLast || aLast < bLast ? 1 : -1
         })
     default:
@@ -74,10 +74,11 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
   const selfId = getPeerId(state)
   const photos = getThreads(state)
     .map((thread) => thread.photos
-      .filter((photo) => photo.author_id === selfId)
+      .filter((photo) => photo.author === selfId)
       .map((photo): SharedPhoto => {
-        const files = photo.files.length ? photo.files[0] : undefined
-        const original = files && files.links ? files.links.thumb.checksum : photo.block
+        const file = photo.filesList[0]
+        const thumb = file.linksMap.find((item) => item[0] === 'thumb')
+        const original = thumb ? thumb[1].checksum : photo.block
         return { type: 'photo', photo, id: photo.block, original }
       })
     )
@@ -91,7 +92,7 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
 
 export function getThreadThumbs (state: RootState, byPeerId: string, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadThumbs> {
   return getThreads(state, sortBy)
-    .filter((thread) => thread.photos.some((p) => p.author_id === byPeerId))
+    .filter((thread) => thread.photos.some((p) => p.author === byPeerId))
     .map((thread) => {
       return {
         id: thread.id,

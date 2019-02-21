@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import Config from 'react-native-config'
 
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
@@ -37,7 +37,7 @@ const actions = {
     return (threadId: string) => resolve({ threadId })
   }),
   refreshThreadSuccess: createAction('REFRESH_THREAD_SUCCESS', (resolve) => {
-    return (threadId: string, photos: ReadonlyArray<ThreadFilesInfo>) => resolve({ threadId, photos })
+    return (threadId: string, photos: ReadonlyArray<pb.Files.AsObject>) => resolve({ threadId, photos })
   }),
   refreshThreadError: createAction('REFRESH_THREAD_ERROR', (resolve) => {
     return (threadId: string, error: any) => resolve({ threadId, error })
@@ -66,14 +66,14 @@ export interface ThreadData {
   readonly key: string
   readonly name: string
   readonly querying: boolean
-  readonly photos: ReadonlyArray<ThreadFilesInfo>
+  readonly photos: ReadonlyArray<pb.Files.AsObject>
   readonly error?: string
 }
 
 export interface ThreadThumbs {
   readonly id: string
   readonly name: string
-  readonly thumb?: ThreadFilesInfo
+  readonly thumb?: pb.Files.AsObject
 }
 
 interface ThreadMap {
@@ -98,9 +98,9 @@ interface PhotoViewingState {
     readonly id: string
     readonly error?: string
   }
-  readonly viewingWalletPhoto?: ThreadFilesInfo
+  readonly viewingWalletPhoto?: pb.Files.AsObject
   readonly viewingThreadId?: string
-  readonly viewingPhoto?: ThreadFilesInfo
+  readonly viewingPhoto?: pb.Files.AsObject
   readonly authoringComment?: string
   readonly authoringCommentError?: boolean
 }
@@ -186,7 +186,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       }
       const obj: ThreadData = { ...threadData, querying: false, photos }
       const threads: ThreadMap = { ...state.threads, [threadId]: obj }
-      let viewingPhoto: ThreadFilesInfo | undefined
+      let viewingPhoto: pb.Files.AsObject | undefined
       if (state.viewingThreadId === threadId && state.viewingPhoto) {
         const currentViewingPhoto = state.viewingPhoto
         viewingPhoto = photos.find((photo) => currentViewingPhoto.target === photo.target)

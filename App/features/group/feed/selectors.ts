@@ -1,4 +1,4 @@
-import { ThreadFeedItemType } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 import { FeedState } from './reducer'
 import { FeedItem } from './models'
@@ -19,37 +19,41 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
   }
   const items = feed.items
     .map((feedItem) => {
+      if (!feedItem.payload || typeof feedItem.payload.value === 'string') {
+        return
+      }
       let item: FeedItem | undefined
-      switch (feedItem.type) {
-        case ThreadFeedItemType.join: {
+      switch (feedItem.payload.typeUrl) {
+        // TODO: figure out what these typeUrls can be
+        case 'ThreadFeedItemType.join': {
           item = {
             type: 'join',
             key: feedItem.block,
-            data: feedItem.join!
+            data: pb.Join.deserializeBinary(feedItem.payload.value).toObject()
           }
           break
         }
-        case ThreadFeedItemType.leave: {
+        case 'ThreadFeedItemType.leave': {
           item = {
             type: 'leave',
             key: feedItem.block,
-            data: feedItem.leave!
+            data: pb.Leave.deserializeBinary(feedItem.payload.value).toObject()
           }
           break
         }
-        case ThreadFeedItemType.files: {
+        case 'ThreadFeedItemType.files': {
           item = {
             type: 'photo',
             key: feedItem.block,
-            data: feedItem.files!
+            data: pb.Files.deserializeBinary(feedItem.payload.value).toObject()
           }
           break
         }
-        case ThreadFeedItemType.message: {
+        case 'ThreadFeedItemType.message': {
           item = {
             type: 'message',
             key: feedItem.block,
-            data: feedItem.message!
+            data: pb.Text.deserializeBinary(feedItem.payload.value).toObject()
           }
           break
         }

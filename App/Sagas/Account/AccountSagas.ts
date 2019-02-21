@@ -10,8 +10,9 @@ import Textile, {
   ContactInfo,
   NodeState
 } from '@textile/react-native-sdk'
-import { bestSession, getSessionMillis } from '../../Redux/AccountSelectors'
+import { bestSession } from '../../Redux/AccountSelectors'
 import { logNewEvent } from '../DeviceLogs'
+import { timestampToDate } from '../../util'
 
 export function * onNodeStarted () {
   while (yield take([getType(TextileEventsActions.startNodeFinished), getType(PreferencesActions.onboardingSuccess)])) {
@@ -94,8 +95,8 @@ export function * getSession (depth: number = 0): any {
   if (!session) {
     return undefined
   }
-  const millis = getSessionMillis(session)
-  if (new Date(millis) < new Date()) {
+  const expDate = timestampToDate(session.exp)
+  if (expDate < new Date()) {
     if (depth === 0) {
       yield put(AccountActions.refreshCafeSessionsRequest())
       yield take(getType(AccountActions.cafeSessionsSuccess))

@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import NavigationService from '../Services/NavigationService'
 import { RootState, RootAction } from '../Redux/Types'
 import TriggersActions from '../Redux/TriggersRedux'
-import MigrationScreen from '../Containers/MigrationScreen'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
@@ -16,7 +15,6 @@ import styles from './Styles/RootContainerStyles'
 interface StateProps {
   monitorLocation: boolean
   nodeState: string
-  showMigrationModal: boolean
   verboseUi: boolean
 }
 
@@ -69,9 +67,6 @@ class RootContainer extends Component<StateProps & DispatchProps> {
           <Text style={styles.overlayText}>{overlayMessage}</Text>
         </View>
         }
-        <Modal isVisible={this.props.showMigrationModal} style={{ margin: 0 }}>
-          <MigrationScreen />
-        </Modal>
       </View>
     )
   }
@@ -79,7 +74,6 @@ class RootContainer extends Component<StateProps & DispatchProps> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    showMigrationModal: state.migration.status === 'processing',
     monitorLocation: state.preferences.services.backgroundLocation.status,
     verboseUi: state.preferences.verboseUi,
     nodeState: state.textile.nodeState.state

@@ -1,5 +1,6 @@
 import { RootState } from './Types'
 import { pb } from '@textile/react-native-sdk'
+import { timestampToDate } from '../util'
 
 /**
  * Returns the Account Address
@@ -26,18 +27,11 @@ export function bestSession(state: RootState): pb.CafeSession.AsObject | undefin
     return undefined
   }
   const sorted = values.slice().sort((a, b) => {
-    const aExpiry = new Date(getSessionMillis(a)).getTime()
-    const bExpiry = new Date(getSessionMillis(b)).getTime()
+    const aExpiry = timestampToDate(a.exp).getTime()
+    const bExpiry = timestampToDate(b.exp).getTime()
     return aExpiry - bExpiry
   })
   return sorted.pop()
-}
-
-export function getSessionMillis(session: pb.CafeSession.AsObject): number {
-  if (!session.exp || !session.exp.seconds || !session.exp.nanos) {
-    return 0
-  }
-  return (session.exp.seconds as number) * 1e3 + session.exp.nanos / 1e6
 }
 
 export function initialized(state: RootState) {

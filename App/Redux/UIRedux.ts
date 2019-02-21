@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { SharedImage } from '../features/group/add-photo/models'
 import { RootState } from './Types'
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const actions = {
   chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
@@ -21,7 +21,7 @@ const actions = {
     return () => resolve()
   }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
-    return (image: SharedImage | ThreadFilesInfo) => resolve({ image })
+    return (image: SharedImage | pb.Files.AsObject) => resolve({ image })
   }),
   updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', (resolve) => {
     return (threadId: string) => resolve({ threadId })
@@ -48,7 +48,7 @@ const actions = {
     return (threadId?: string) => resolve({ threadId })
   }),
   walletPickerSuccess: createAction('WALLET_PICKER_SUCCESS', (resolve) => {
-    return (photo: ThreadFilesInfo) => resolve({ photo })
+    return (photo: pb.Files.AsObject) => resolve({ photo })
   }),
   newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', (resolve) => {
     return (threadId: string) => resolve({ threadId })
@@ -88,7 +88,7 @@ export interface UIState {
     readonly error?: Error
   }
   readonly sharingPhoto?: {
-    readonly image?: SharedImage | ThreadFilesInfo
+    readonly image?: SharedImage | pb.Files.AsObject
     readonly threadId?: string
     readonly comment?: string
   },

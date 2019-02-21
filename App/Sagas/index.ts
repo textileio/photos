@@ -24,8 +24,6 @@ import { groupSaga } from '../features/group'
 
 import { startup } from './StartupSagas'
 
-import { runRecurringMigrationTasks, handleMigrationRequest, handleCancelMigration, handleRetryMigration, handleMigrationNeeded } from './Migration'
-
 import {
   onNodeStarted
 } from './Account/AccountSagas'
@@ -117,12 +115,6 @@ export default function * root (dispatch: Dispatch) {
     call(monitorNewThreadActions),
 
     call(startMonitoringExistingUploads),
-
-    call(runRecurringMigrationTasks),
-    call(handleMigrationNeeded),
-    call(handleMigrationRequest, dispatch),
-    call(handleCancelMigration),
-    call(handleRetryMigration, dispatch),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),

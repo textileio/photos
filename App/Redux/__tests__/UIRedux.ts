@@ -1,6 +1,6 @@
 import actions, { reducer } from '../UIRedux'
 import { SharedImage } from '../../features/group/add-photo/models'
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 const threadId: string = 'threadId' as any
@@ -13,15 +13,18 @@ const sharedImage: SharedImage = {
   canDelete: false
 }
 
-const sharedPhoto: ThreadFilesInfo = {
-  author_id: 'a',
+const sharedPhoto: pb.Files.AsObject = {
+  username: 'user',
+  avatar: 'avatar',
+  caption: '',
+  author: 'a',
   block: 'b',
-  comments: [],
-  date: 'c',
-  files: [],
-  likes: [],
+  commentsList: [],
+  date: { seconds: 10, nanos: 20 },
+  filesList: [],
+  likesList: [],
   target: 'd',
-  threads: []
+  threadsList: []
 }
 
 describe('ui stories', () => {

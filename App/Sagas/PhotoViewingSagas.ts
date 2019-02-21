@@ -10,7 +10,7 @@ import { getAddress } from '../Redux/AccountSelectors'
 import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
 import Textile, {
-  ThreadFilesInfo,
+  pb,
   ThreadInfo,
   ThreadType,
   ThreadSharing,
@@ -102,15 +102,15 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
 export function * refreshThread (action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
   const { threadId } = action.payload
   try {
-    const photosResult: ReadonlyArray<ThreadFilesInfo> = yield call(Textile.files, '', -1, threadId)
-    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult))
+    const photosResult: pb.FilesList.AsObject = yield call(Textile.files, '', -1, threadId)
+    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult.itemsList))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
   }
 }
 
 export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions.addCommentRequest>) {
-  const result: { photo: ThreadFilesInfo | undefined, comment: string | undefined } = yield select(photoAndComment)
+  const result: { photo: pb.Files.AsObject | undefined, comment: string | undefined } = yield select(photoAndComment)
   if (!result.photo || !result.comment) {
     return
   }

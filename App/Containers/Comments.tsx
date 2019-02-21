@@ -13,6 +13,7 @@ import CommentBox from '../SB/components/CommentBox/CommentBox'
 import styles from './Styles/CommentsStyle'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
+import { timestampToDate } from '../util'
 
 interface StateProps {
   captionCommentCardProps?: CommentCardProps
@@ -112,21 +113,21 @@ const mapStateToProps = (state: RootState): StateProps  => {
   let captionCommentCardProps: CommentCardProps | undefined
   if (viewingPhoto && viewingPhoto.caption) {
     captionCommentCardProps = {
-      username: viewingPhoto.username || viewingPhoto.author_id,
+      username: viewingPhoto.username || viewingPhoto.author,
       avatar: viewingPhoto.avatar,
       comment: viewingPhoto.caption,
-      date: viewingPhoto.date,
+      date: timestampToDate(viewingPhoto.date),
       isCaption: true
     }
   }
 
-  const comments = viewingPhoto ? viewingPhoto.comments : []
+  const comments = viewingPhoto ? viewingPhoto.commentsList : []
   const commentCardProps = comments.slice().reverse().map((comment) => {
     const props: CommentCardProps = {
       username: comment.username || 'unknown',
       avatar: comment.avatar,
       comment: comment.body,
-      date: comment.date,
+      date: timestampToDate(comment.date),
       isCaption: false
     }
     return props

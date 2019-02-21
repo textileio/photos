@@ -1,6 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { ILocalPhotoResult } from '../Models/TextileTypes'
-import { Overview } from '@textile/react-native-sdk'
+import { Summary } from '@textile/react-native-sdk'
 import { RootState } from './Types'
 
 const actions = {
@@ -14,7 +14,7 @@ const actions = {
     return () => resolve()
   }),
   storeOverview: createAction('STORE_OVERVIEW', (resolve) => {
-    return (overview: Overview) => resolve({ overview })
+    return (overview: Summary) => resolve({ overview })
   })
 }
 
@@ -23,7 +23,7 @@ export type StorageAction = ActionType<typeof actions>
 export interface StorageState {
   readonly lastPhotoRefresh: number // epoch in seconds
   readonly refreshingImages: boolean
-  readonly overview?: Overview
+  readonly overview?: Summary
 }
 
 export const initialState: StorageState = {

@@ -136,9 +136,9 @@ class Group extends Component<Props, State> {
   renderRow = ({ item }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
-        const { avatar, username, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = likes.findIndex((likeInfo) => likeInfo.author_id === this.props.selfId) > -1
-        const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
+        const { avatar, username, caption, date, target, filesList, likesList, commentsList, block } = item.data
+        const hasLiked = likesList.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
+        const commentsData: ReadonlyArray<CommentData> = commentsList.map((comment) => {
           return {
             id: comment.id,
             username: comment.username || '?',
@@ -152,10 +152,10 @@ class Group extends Component<Props, State> {
             message={caption}
             time={moment(date).calendar(undefined, momentSpec)}
             photoId={target}
-            fileIndex={files[0].index}
+            fileIndex={filesList[0].index}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
-            numberLikes={likes.length}
+            numberLikes={likesList.length}
             onLike={this.onLike(block)}
             onComment={this.onComment(target)}
             comments={commentsData}
@@ -178,6 +178,7 @@ class Group extends Component<Props, State> {
             avatar={avatar}
             username={username || 'unknown'}
             message={body}
+            // TODO: deal with pb Timestamp to JS Date!
             time={moment(date).calendar(undefined, momentSpec)}
           />
         )

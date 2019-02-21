@@ -1,16 +1,8 @@
-import {
-  ThreadJoinInfo,
-  ThreadLeaveInfo,
-  ThreadFilesInfo,
-  ThreadMessageInfo,
-  ThreadCommentInfo,
-  ThreadLikeInfo,
-  ThreadFeedItem
-} from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 export interface Feed {
   readonly loading: boolean
-  readonly items: ReadonlyArray<ThreadFeedItem>
+  readonly items: ReadonlyArray<pb.FeedItem.AsObject>
   readonly error?: string
 }
 
@@ -21,37 +13,37 @@ export interface Groups {
 export interface JoinItem {
   readonly type: 'join'
   readonly key: string
-  readonly data: ThreadJoinInfo
+  readonly data: pb.Join.AsObject
 }
 
 export interface LeaveItem {
   readonly type: 'leave'
   readonly key: string
-  readonly data: ThreadLeaveInfo
+  readonly data: pb.Leave.AsObject
 }
 
 export interface PhotoItem {
   readonly type: 'photo'
   readonly key: string
-  readonly data: ThreadFilesInfo // TODO: this can be simplified to just the parts we need
+  readonly data: pb.Files.AsObject // TODO: this can be simplified to just the parts we need
 }
 
 export interface MessageItem {
   readonly type: 'message'
   readonly key: string
-  readonly data: ThreadMessageInfo
+  readonly data: pb.Text.AsObject
 }
 
 export interface CommentsItem {
   readonly type: 'comments'
   readonly key: string
-  readonly data: ReadonlyArray<ThreadCommentInfo>
+  readonly data: ReadonlyArray<pb.Comment.AsObject>
 }
 
 export interface LikesItem {
   readonly type: 'likes'
   readonly key: string
-  readonly data: ReadonlyArray<ThreadLikeInfo>
+  readonly data: ReadonlyArray<pb.Like.AsObject>
 }
 
 export type FeedItem = JoinItem | LeaveItem | PhotoItem | MessageItem | CommentsItem | LikesItem
