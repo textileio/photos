@@ -294,14 +294,24 @@ const migrations: MigrationManifest = {
         initialized: state.preferences.onboarded
       }
     }
+  },
+  18: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      group: {
+        ...state.group,
+        addPhoto: state.processingImages.images
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 17,
-  whitelist: ['account', 'preferences', 'uploadingImages', 'processingImages', 'cameraRoll', 'storage', 'deviceLogs', 'migration'],
+  version: 18,
+  whitelist: ['account', 'preferences', 'uploadingImages', 'group', 'cameraRoll', 'storage', 'deviceLogs', 'migration'],
   migrate: createMigrate(migrations, { debug: false })
 }
 

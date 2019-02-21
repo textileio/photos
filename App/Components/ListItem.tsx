@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 
-import * as s from '../Themes/Constants'
+import { color, textStyle } from '../styles'
 
 interface Props {
   title: string
@@ -26,9 +26,9 @@ class ListItem extends React.PureComponent<Props> {
             this.props.leftItem
           }
           <View style={{ flex: 1, justifyContent: 'center', marginLeft: this.props.leftItem ? 12 : 0 }}>
-            <Text style={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_MEDIUM, color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM }}>{this.props.title}</Text>
+            <Text style={{ ...textStyle.body_l, color: color.grey_2 }}>{this.props.title}</Text>
             {this.props.subtitle &&
-              <Text style={{ fontFamily: s.FONT_FAMILY_REGULAR, fontSize: s.FONT_SIZE_SMALL, color: s.COLOR_FONT_DARK_ON_LIGHT_LIGHT }}>{this.props.subtitle}</Text>
+              <Text style={{ ...textStyle.body_s, color: color.grey_4 }}>{this.props.subtitle}</Text>
             }
           </View>
           {this.props.rightItems &&

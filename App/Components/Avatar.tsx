@@ -5,7 +5,7 @@ import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
 import TextileImage from './TextileImage'
-import * as s from '../Themes/Constants'
+import { color as colors } from '../styles'
 
 interface OwnProps {
   self?: boolean
@@ -72,7 +72,7 @@ class Avatar extends React.Component<Props, State> {
           style={{ ...(this.props.style || {}), width, height, borderRadius: radius }}
           name={icon || 'question-circle'}
           size={heightNumber}
-          color={s.COLOR_GREY_LIGHT}
+          color={colors.grey_5}
           onLayout={this.onImageLayout}
         />
       )

@@ -1,10 +1,12 @@
 import { StyleSheet } from 'react-native'
 import { Colors } from '../../../../Themes'
 
+import { color } from '../../../../styles'
+
 export default StyleSheet.create({
   container: {
     marginTop: 20,
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     flex: 1
   },
   contentContainer: {

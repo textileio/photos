@@ -6,7 +6,7 @@ import { Dispatch } from 'redux'
 
 import StartupActions from '../Redux/StartupRedux'
 import StorageActions from '../Redux/StorageRedux'
-import ProcessingImagesActions from '../Redux/ProcessingImagesRedux'
+import { groupActions } from '../features/group'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
@@ -20,6 +20,7 @@ import ContactsActions from '../Redux/ContactsRedux'
 
 import accountSaga from './Account'
 import contactsSaga from './Contacts'
+import { groupSaga } from '../features/group'
 
 import { startup } from './StartupSagas'
 
@@ -109,6 +110,7 @@ export default function * root (dispatch: Dispatch) {
   yield all([
     call(accountSaga),
     call(contactsSaga),
+    call(groupSaga),
 
     call(startSagas),
 
@@ -126,7 +128,7 @@ export default function * root (dispatch: Dispatch) {
     takeLatest(getType(StartupActions.startup), startup),
 
     // just for logging purposes
-    takeEvery(getType(ProcessingImagesActions.error), handleImageProcessingError),
+    takeEvery(getType(groupActions.addPhoto.error), handleImageProcessingError),
 
     // profile photo
     takeEvery(getType(UIActions.chooseProfilePhotoRequest), chooseProfilePhoto),
@@ -176,10 +178,10 @@ export default function * root (dispatch: Dispatch) {
     takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
-    takeEvery(getType(ProcessingImagesActions.imageUploadComplete), handleImageUploadComplete),
-    takeEvery(getType(ProcessingImagesActions.retry), retryImageShare),
-    takeEvery(getType(ProcessingImagesActions.cancelRequest), cancelImageShare),
-    takeEvery(getType(ProcessingImagesActions.error), retryWithTokenRefresh),
+    takeEvery(getType(groupActions.addPhoto.imageUploadComplete), handleImageUploadComplete),
+    takeEvery(getType(groupActions.addPhoto.retry), retryImageShare),
+    takeEvery(getType(groupActions.addPhoto.cancelRequest), cancelImageShare),
+    takeEvery(getType(groupActions.addPhoto.error), retryWithTokenRefresh),
     takeEvery(getType(StorageActions.newLocalPhoto), newLocalPhoto),
 
     // Notifications

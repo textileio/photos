@@ -1,14 +1,16 @@
 import { StyleSheet } from 'react-native'
 
+import { color } from '../../../../styles'
+
 export default StyleSheet.create({
   container: {
     marginTop: 20,
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     flex: 1
   },
   bodyContainer: {
     marginTop: 0, // <- changed because headers will be outside of Containers now...
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     flex: 1
   },
   photoContainer: {

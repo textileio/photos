@@ -8,7 +8,7 @@ import DeviceLogs from '../../../../SB/views/DeviceLogs'
 import NodeLogsScreen from '../../../../Components/NodeLogsScreen'
 import RecoveryPhrase from '../../../../SB/views/UserProfile/RecoveryPhrase'
 import SetAvatar from '../../../../Containers/SetAvatar'
-import ThreadsList from '../../../../Containers/ThreadsList'
+import Group from '../../../../screens/group'
 import PhotoScreen from '../../../../Containers/PhotoScreen'
 import Comments from '../../../../Containers/Comments'
 import LikesScreen from '../../../../Containers/LikesScreen'
@@ -28,7 +28,7 @@ const nav = createStackNavigator(
     RecoveryPhrase,
     ChangeAvatar: SetAvatar,
 
-    ViewThread: ThreadsList,
+    ViewThread: Group,
     PhotoScreen,
     Comments,
     LikesScreen,

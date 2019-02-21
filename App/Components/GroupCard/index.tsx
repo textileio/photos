@@ -3,10 +3,9 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import Icon from '@textile/react-native-icon'
 import TextileImage from '../TextileImage'
 import Avatar from '../Avatar'
-import * as s from '../../Themes/Constants'
 import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'
-
 import styles, { cardImageStyle, ICON_WIDTH, ROW_COLUMN } from './statics/styles'
+import { color } from '../../styles'
 
 interface ScreenProps {
   id: string
@@ -44,7 +43,7 @@ const GroupCard = (props: ScreenProps) => {
         style={styles.iconStyle}
         name={'image'}
         size={ICON_WIDTH}
-        color={s.COLOR_FONT_DARK_ON_LIGHT_LIGHT}
+        color={color.grey_4}
       />
     )
   }

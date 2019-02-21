@@ -5,15 +5,16 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { RootAction, RootState } from '../../Redux/Types'
 import ThreadsActions from '../../Redux/ThreadsRedux'
-import Button from '../../Components/Button'
+import Button from '../../Components/LargeButton'
 import Colors from '../../Themes/Colors'
 import { TextileHeaderButtons, Item } from '../../Components/HeaderButtons'
+import { color } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'space-around',
   alignItems: 'center',
-  backgroundColor: '#FAFCFE',
+  backgroundColor: color.screen_primary,
   padding: 11
 }
 

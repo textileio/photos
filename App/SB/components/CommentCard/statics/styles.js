@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native'
 
+import { textStyle } from '../../../../styles'
+
 export default StyleSheet.create({
   withDivider: {
     borderStyle: 'solid',
@@ -38,14 +40,12 @@ export default StyleSheet.create({
     flexGrow: 1
   },
   commentDate: {
-    fontFamily: 'Biotif-Regular',
-    fontSize: 12,
+    ...textStyle.body_s,
     color: '#9b9b9b',
     paddingRight: 12
   },
   commentUser: {
-    fontFamily: 'Biotif-Bold',
-    fontSize: 14,
+    ...textStyle.body_m_bold,
     marginBottom: 5
   },
   commentTextWrapper: {
@@ -53,10 +53,8 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   commentText: {
-    fontFamily: 'Biotif-Regular',
-    fontSize: 12,
+    ...textStyle.body_m,
     lineHeight: 16,
-    color: '#4a4a4a',
     flexWrap: 'wrap',
     flex: 1
   },

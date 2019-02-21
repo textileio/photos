@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native'
 
+import { textStyle, color } from '../../../../styles'
+
 export default StyleSheet.create({
   commentFooter: {
     flexDirection: 'row',
@@ -16,6 +18,7 @@ export default StyleSheet.create({
     width: '100%'
   },
   textInput: {
+    ...textStyle.body_m,
     flexGrow: 1
   },
   plus: {

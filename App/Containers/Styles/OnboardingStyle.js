@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native'
 
+import { color } from '../../styles'
+
 export default StyleSheet.create({
   emptyStateContainer: {
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     paddingTop: 75,
     alignItems: 'center',
     position: 'absolute',
