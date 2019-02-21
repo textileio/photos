@@ -5,31 +5,31 @@ import { Dispatch } from 'redux'
 import Button from '../../../Components/Button'
 import { NodeState } from '@textile/react-native-sdk'
 import { RootAction, RootState } from '../../../Redux/Types'
-import * as s from '../../../Themes/Constants'
+import { color, spacing, textStyle } from '../../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   marginTop: '33%',
-  paddingHorizontal: s.MARGIN_STANDARD,
-  backgroundColor: s.COLOR_BACKGROUND_PRIMARY
+  paddingHorizontal: spacing._016,
+  backgroundColor: color.screen_primary
 }
 
 const IMAGE: ImageStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const ITEM: ViewStyle = {
-  marginBottom: s.ITEM_SPACING_LARGE
+  marginBottom: spacing._016
 }
 
 const TITLE: TextStyle = {
   ...ITEM,
-  ...s.H2
+  ...textStyle.header_l
 }
 
 const SUBTITLE: TextStyle = {
   ...ITEM,
-  ...s.H1
+  ...textStyle.body_l
 }
 
 interface OwnProps {

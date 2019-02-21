@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native'
 import { ApplicationStyles } from '../../Themes'
 
+import { color } from '../../styles'
+
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   container: {
@@ -13,6 +15,6 @@ export default StyleSheet.create({
   },
   gridContainer: {
     flex: 1,
-    backgroundColor: '#FAFCFE'
+    backgroundColor: color.screen_primary
   }
 })

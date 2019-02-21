@@ -1,5 +1,5 @@
 import { StyleSheet, ImageStyle } from 'react-native'
-import * as s from '../../../Themes/Constants'
+import { color } from '../../../styles'
 
 export const ROW_HEIGHT = 90
 export const ROW_COLUMN = 60
@@ -11,7 +11,7 @@ export function cardImageStyle (count: number, index: number): ImageStyle {
     margin: 0,
     padding: 0,
     borderWidth: 2,
-    borderColor: s.COLOR_BACKGROUND_PRIMARY
+    borderColor: color.grey_6
     } as ImageStyle
 
   if (index >= 8) {
@@ -41,7 +41,7 @@ export default StyleSheet.create({
     height: ROW_HEIGHT,
     marginHorizontal: 22,
     alignSelf: 'center',
-    borderBottomColor: s.COLOR_GREY_LIGHT,
+    borderBottomColor: color.grey_5,
     borderBottomWidth: 1
   },
   groupRightColumn: {
@@ -68,7 +68,7 @@ export default StyleSheet.create({
     fontFamily: 'Biotif-Regular',
     fontSize: 16,
     lineHeight: ROW_HEIGHT,
-    color: s.COLOR_FONT_DARK_ON_LIGHT_MEDIUM
+    color: color.grey_2
   },
   groupLeftColumn: {
     alignItems: 'center',

@@ -3,13 +3,6 @@ import { Text, TouchableOpacity, ViewStyle, TextStyle, ActivityIndicator } from 
 
 import RoundedCornersView from './RoundedCornersView'
 
-const BUTTON: ViewStyle = {
-  backgroundColor: '#2625FF'
-  // minWidth: 300,
-  // paddingVertical: 18,
-  // paddingHorizontal: 65
-}
-
 const BUTTON_TEXT: TextStyle = {
   fontFamily: 'Biotif-Regular',
   fontSize: 18,
@@ -37,7 +30,7 @@ const button = (props: Props) => {
 
   return (
     <TouchableOpacity disabled={disabled} onPress={onPress}>
-      <RoundedCornersView style={[BUTTON, style, disabled && DISABLED]}>
+      <RoundedCornersView style={[style, disabled && DISABLED]}>
         {processing &&
           <ActivityIndicator />
         }

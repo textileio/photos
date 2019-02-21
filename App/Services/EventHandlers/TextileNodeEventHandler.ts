@@ -17,6 +17,7 @@ import { toTypedNotification } from '../Notifications'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import AccountActions from '../../Redux/AccountRedux'
 import MigrationActions from '../../Redux/MigrationRedux'
+import { groupActions } from '../../features/group'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
@@ -36,6 +37,18 @@ export default class TextileNodeEventHandler {
     })
     Events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
       const { type } = update.block
+
+      if (type === BlockType.MESSAGE ||
+        type === BlockType.COMMENT ||
+        type === BlockType.LIKE ||
+        type === BlockType.FILES ||
+        type === BlockType.IGNORE ||
+        type === BlockType.JOIN ||
+        type === BlockType.LEAVE) {
+        this.store.dispatch(groupActions.feed.refreshFeed.request({ id: update.thread_id }))
+      }
+
+      // TODO: remove this if needed
       if (type === BlockType.COMMENT ||
         type === BlockType.LIKE ||
         type === BlockType.FILES ||
@@ -46,6 +59,7 @@ export default class TextileNodeEventHandler {
         // Enhancement: compare the joiner id with known ids and skip the refresh if known.
         this.store.dispatch(ContactsActions.getContactsRequest())
       }
+
       // create a local log line for the threadUpdate event
       const name = update.thread_name || update.thread_id
       const message = `BlockType ${type} on ${name}`

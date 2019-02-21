@@ -1,10 +1,12 @@
 import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
+import { color } from '../../../../styles'
+
 export default StyleSheet.create({
   container: {
     marginTop: 20,
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     flex: 1
   },
   contentContainer: {},

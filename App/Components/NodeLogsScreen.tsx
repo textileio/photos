@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { ScrollView, TextInput, Platform, Clipboard, ActivityIndicator, View, Text } from 'react-native'
 import FS from 'react-native-fs'
 import { NavigationScreenProps} from 'react-navigation'
-import * as s from '../Themes/Constants'
 import Textile from '@textile/react-native-sdk'
 import { TextileHeaderButtons, Item as TextileItem } from './HeaderButtons'
+import { color, fontSize, spacing } from '../styles'
 
 const LOG_FILE_PATH = `${Textile.repoPath}/logs/textile.log`
 
@@ -90,13 +90,13 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
     const font = Platform.OS === 'ios' ? 'Courier' : 'monospace'
     if (this.state.error) {
       return (
-        <View style={{ flex: 1, backgroundColor: s.COLOR_BACKGROUND_PRIMARY, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: color.screen_primary, justifyContent: 'center', alignItems: 'center' }}>
           <Text>{this.state.error}</Text>
         </View>
       )
     } else if (this.state.refreshing) {
       return (
-        <View style={{ flex: 1, backgroundColor: s.COLOR_BACKGROUND_PRIMARY, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, backgroundColor: color.screen_primary, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator animating={true} size='large' />
         </View>
       )
@@ -104,11 +104,11 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
       return (
         <ScrollView
           ref={(ref) => { this.scrollView = ref ? ref : undefined }}
-          style={{ flex: 1, backgroundColor: s.COLOR_BACKGROUND_PRIMARY }}
+          style={{ flex: 1, backgroundColor: color.screen_primary }}
         >
           <TextInput
             ref={(ref) => { this.textInput = ref ? ref : undefined }}
-            style={{ flex: 1, fontFamily: font, fontSize: s.FONT_SIZE_SMALL, paddingHorizontal: s.MARGIN_EXTRA_SMALL, backgroundColor: s.COLOR_BACKGROUND_PRIMARY }}
+            style={{ flex: 1, fontFamily: font, fontSize: fontSize._12, paddingHorizontal: spacing.screenEdge, backgroundColor: color.screen_primary }}
             editable={false}
             value={this.state.logData}
             multiline={true}

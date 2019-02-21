@@ -4,12 +4,13 @@ import { View, Text, TextStyle, ViewStyle, Dimensions } from 'react-native'
 import Logo from '../SB/components/Logo'
 import ContactModal from '../SB/views/UserProfile/ContactModal'
 import Colors from '../Themes/Colors'
+import { color } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'space-around',
   alignItems: 'center',
-  backgroundColor: '#FAFCFE',
+  backgroundColor: color.screen_primary,
   padding: 11
 }
 

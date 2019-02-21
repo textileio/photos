@@ -6,9 +6,10 @@ import { FlatList, ViewStyle, View, ListRenderItemInfo, Text, TextStyle } from '
 import { RootState } from '../Redux/Types'
 import Avatar from '../Components/Avatar'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import { color } from '../styles'
 
 const CONTAINER: ViewStyle = {
-  backgroundColor: '#FAFCFE'
+  backgroundColor: color.screen_primary
 }
 
 const LIKE_ITEM: ViewStyle = {

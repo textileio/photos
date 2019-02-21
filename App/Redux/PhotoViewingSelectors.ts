@@ -7,15 +7,6 @@ import Config from 'react-native-config'
 // temporary filter until we stop getting them from textile-go
 export const BLACKLIST = ['avatars', 'account']
 
-export interface FeedPhoto {
-  type: 'processingItem' | 'photo'
-  block: string
-  photo?: ThreadFilesInfo
-  threadId?: string
-  threadName?: string
-  props?: any
-}
-
 export interface SharedPhoto {
   type: 'photo'
   photo: ThreadFilesInfo
@@ -77,25 +68,6 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
     default:
       return result
   }
-}
-export function getPhotoFeed (state: RootState, threadId?: string): ReadonlyArray<FeedPhoto> {
-  return getThreads(state)
-  .filter((thread) => threadId ? thread.id === threadId : true)
-  .map((thread) => thread.photos
-    .map((photo): FeedPhoto => {
-      return { type: 'photo', photo, block: photo.block, threadId: thread.id, threadName: thread.name }
-    })
-  )
-  .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
-  .sort((a, b) => {
-    if (!a.photo) {
-      return 1
-    } else if (!b.photo) {
-      return -1
-    } else {
-      return (new Date(b.photo.date)).getTime() - (new Date(a.photo.date)).getTime()
-    }
-  })
 }
 
 export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {

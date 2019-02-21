@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
+import { color } from '../../../../styles'
+
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     flex: 1
   },
   toolBarRight: {
@@ -111,7 +113,7 @@ export default StyleSheet.create({
     color: 'rgb(200,200,200)'
   },
   subScreen: {
-    backgroundColor: '#FAFCFE',
+    backgroundColor: color.screen_primary,
     paddingTop: 75,
     alignItems: 'center',
     position: 'absolute',

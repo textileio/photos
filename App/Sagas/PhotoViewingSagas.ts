@@ -74,7 +74,7 @@ export function * removeThread (action: ActionType<typeof PhotoViewingActions.re
   const { id } = action.payload
   try {
     yield call(Textile.removeThread, id)
-    yield call(NavigationService.navigate, 'SharedPhotos')
+    yield call(NavigationService.navigate, 'Groups')
   } catch (error) {
     yield put(PhotoViewingActions.removeThreadError(error))
   }

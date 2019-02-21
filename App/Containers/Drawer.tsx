@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ViewStyle } from 'react-native'
-// @ts-ignore
 import { SafeAreaView, NavigationScreenProps } from 'react-navigation'
 import Account from './Account'
 
