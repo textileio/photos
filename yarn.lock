@@ -659,8 +659,9 @@
     buffer "^5.2.1"
     prop-types "^15.6.2"
 
-"@textile/react-native-textile-image@file:../TextileImageView":
+"@textile/react-native-textile-image@1.0.0":
   version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-textile-image/-/react-native-textile-image-1.0.0.tgz#e2f3eedb72930230fb976c2bde94a32f2618ef53"
 
 "@textile/redux-saga-wait-for@1.0.1":
   version "1.0.1"

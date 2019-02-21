@@ -9,7 +9,7 @@
     "lint": "tslint -c tslint.json --project ."
   },
   "dependencies": {
-    "@textile/react-native-textile-image": "file:../TextileImageView",
+    "@textile/react-native-textile-image": "1.0.0",
     "@textile/react-native-icon": "^1.0.0",
     "@textile/react-native-protobufs": "^1.1.0",
     "@textile/react-native-screen-control": "1.0.12",
