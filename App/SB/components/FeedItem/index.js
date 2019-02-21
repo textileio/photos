@@ -3,7 +3,7 @@ import moment from 'moment'
 import { View, Text, TouchableOpacity } from 'react-native'
 import * as NotificationServices from '../../../Services/Notifications'
 import Avatar from '../../../Components/Avatar'
-import TextileImage from '../../../Components/TextileImage'
+import TextileImage from '@textile/react-native-textile-image'
 
 import styles from './statics/styles'
 

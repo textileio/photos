@@ -1,4 +1,6 @@
 rootProject.name = 'Textile'
+include ':@textile_react-native-textile-image'
+project(':@textile_react-native-textile-image').projectDir = new File(rootProject.projectDir, '../node_modules/@textile/react-native-textile-image/android')
 
 include ':app'
 include ':@textile_react-native-sdk'

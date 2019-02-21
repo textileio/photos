@@ -173,6 +173,7 @@ android {
 }
 
 dependencies {
+    compile project(':@textile_react-native-textile-image')
     compile project(':@textile_react-native-sdk')
     compile project(':@textile_react-native-screen-control')
     implementation fileTree(dir: "libs", include: ["*.jar"])

@@ -24,6 +24,7 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		551C262884FA47A8B7D59F27 /* libRNScreenControl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DEE29BED9A54C45A984E8CC /* libRNScreenControl.a */; };
+		578322ACFF384A07B9F7C671 /* libTextileImageView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 969F7FA005394B23A7858F86 /* libTextileImageView.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		9356E1EA21F8FEFD00F6FACA /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9356E1E121F8FEDA00F6FACA /* libRNGestureHandler.a */; };
 		9356E2C921F905A200F6FACA /* libRNScreens.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9356E2C221F9059000F6FACA /* libRNScreens.a */; };
@@ -58,8 +59,6 @@
 		93F1805A21FD459700883267 /* Biotif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805721FD459700883267 /* Biotif-Medium.ttf */; };
 		93F1805B21FD459700883267 /* Biotif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805821FD459700883267 /* Biotif-Regular.ttf */; };
 		93F1805D21FD49A900883267 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805C21FD49A900883267 /* icomoon.ttf */; };
-		A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */; };
-		A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		DA1E3E3D7BBB497DB7BBAA5F /* libRNTextile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A241645F9B64ADAAB20F86D /* libRNTextile.a */; };
 /* End PBXBuildFile section */
@@ -471,6 +470,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNScreenControl;
 		};
+		A2B74360221F32FA00E40CC6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85932D6743C74D8FBD1D9095 /* TextileImageView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = TextileImageView;
+		};
 		ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
@@ -506,6 +512,7 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		85932D6743C74D8FBD1D9095 /* TextileImageView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = TextileImageView.xcodeproj; path = "../node_modules/@textile/react-native-textile-image/ios/TextileImageView.xcodeproj"; sourceTree = "<group>"; };
 		9356E1AD21F8FEDA00F6FACA /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		9356E28B21F9058F00F6FACA /* RNScreens.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNScreens.xcodeproj; path = "../node_modules/react-native-screens/ios/RNScreens.xcodeproj"; sourceTree = "<group>"; };
 		93C00470216B1066007786A5 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = "<group>"; };
@@ -541,10 +548,7 @@
 		93F1805721FD459700883267 /* Biotif-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Medium.ttf"; path = "../../App/Fonts/Biotif-Medium.ttf"; sourceTree = "<group>"; };
 		93F1805821FD459700883267 /* Biotif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Regular.ttf"; path = "../../App/Fonts/Biotif-Regular.ttf"; sourceTree = "<group>"; };
 		93F1805C21FD49A900883267 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = "../../node_modules/@textile/react-native-icon/icomoon_gen/fonts/icomoon.ttf"; sourceTree = "<group>"; };
-		A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
-		A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
-		A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
-		A2588A0E21F3F7A0007A1B62 /* TextileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageView.h; sourceTree = "<group>"; };
+		969F7FA005394B23A7858F86 /* libTextileImageView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libTextileImageView.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -592,6 +596,7 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				551C262884FA47A8B7D59F27 /* libRNScreenControl.a in Frameworks */,
 				DA1E3E3D7BBB497DB7BBAA5F /* libRNTextile.a in Frameworks */,
+				578322ACFF384A07B9F7C671 /* libTextileImageView.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -774,6 +779,7 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				2BBDF1D28CBB43F1A775D4FA /* RNScreenControl.xcodeproj */,
 				0817766337CD450883D10692 /* RNTextile.xcodeproj */,
+				85932D6743C74D8FBD1D9095 /* TextileImageView.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -791,7 +797,6 @@
 			isa = PBXGroup;
 			children = (
 				93D769782208C69D00EEB573 /* NativeModules */,
-				A2588A0A21F3F7A0007A1B62 /* NativeViews */,
 				13B07FAE1A68108700A75B9A /* Textile */,
 				93C005D9216C1FB9007786A5 /* Resources */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -962,22 +967,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A2588A0A21F3F7A0007A1B62 /* NativeViews */ = {
-			isa = PBXGroup;
-			children = (
-				A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */,
-				A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */,
-				A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */,
-				A2588A0E21F3F7A0007A1B62 /* TextileImageView.h */,
-			);
-			path = NativeViews;
-			sourceTree = "<group>";
-		};
 		A275529121F28BEB00C603F5 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
 				0DEE29BED9A54C45A984E8CC /* libRNScreenControl.a */,
 				1A241645F9B64ADAAB20F86D /* libRNTextile.a */,
+				969F7FA005394B23A7858F86 /* libTextileImageView.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -986,6 +981,14 @@
 			isa = PBXGroup;
 			children = (
 				A27552CD21F28BED00C603F5 /* libRNScreenControl.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A2B7435D221F32FA00E40CC6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A2B74361221F32FA00E40CC6 /* libTextileImageView.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1182,6 +1185,10 @@
 				{
 					ProductGroup = 93C00538216BD99A007786A5 /* Products */;
 					ProjectRef = 93C00537216BD99A007786A5 /* SMXCrashlytics.xcodeproj */;
+				},
+				{
+					ProductGroup = A2B7435D221F32FA00E40CC6 /* Products */;
+					ProjectRef = 85932D6743C74D8FBD1D9095 /* TextileImageView.xcodeproj */;
 				},
 				{
 					ProductGroup = 93C00493216B2391007786A5 /* Products */;
@@ -1596,6 +1603,13 @@
 			remoteRef = A27552CC21F28BED00C603F5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		A2B74361221F32FA00E40CC6 /* libTextileImageView.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTextileImageView.a;
+			remoteRef = A2B74360221F32FA00E40CC6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1668,9 +1682,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */,
 				93D7697F2208C6FE00EEB573 /* MessageComposer.m in Sources */,
-				A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */,
 				93C00487216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
@@ -1715,12 +1727,14 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/react-native-textile-image/ios",
 				);
 				INFOPLIST_FILE = TextileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1747,12 +1761,14 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/react-native-textile-image/ios",
 				);
 				INFOPLIST_FILE = TextileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1788,6 +1804,7 @@
 					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/react-native-textile-image/ios",
 				);
 				INFOPLIST_FILE = Textile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1826,6 +1843,7 @@
 					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/react-native-textile-image/ios",
 				);
 				INFOPLIST_FILE = Textile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

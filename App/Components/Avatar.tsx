@@ -4,7 +4,7 @@ import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View } from 'react-na
 import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
-import TextileImage from './TextileImage'
+import TextileImage from '@textile/react-native-textile-image'
 import { color as colors } from '../styles'
 
 interface OwnProps {
