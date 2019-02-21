@@ -1,5 +1,5 @@
 import { RootState } from './Types'
-import { Protobufs } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 /**
  * Returns the Account Address
@@ -20,7 +20,7 @@ export function getUsername (state: RootState): string | undefined {
          state.account.profile.value.username
 }
 
-export function bestSession(state: RootState): Protobufs.ICafeSession | undefined {
+export function bestSession(state: RootState): pb.CafeSession.AsObject | undefined {
   const values = state.account.cafeSessions.sessions
   if (values.length === 0) {
     return undefined
@@ -33,7 +33,7 @@ export function bestSession(state: RootState): Protobufs.ICafeSession | undefine
   return sorted.pop()
 }
 
-export function getSessionMillis(session: Protobufs.ICafeSession): number {
+export function getSessionMillis(session: pb.CafeSession.AsObject): number {
   if (!session.exp || !session.exp.seconds || !session.exp.nanos) {
     return 0
   }

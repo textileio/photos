@@ -15,10 +15,10 @@ import { getSession } from './Account/AccountSagas'
 import Textile, {
   ThreadInfo,
   ContactInfo,
-  Protobufs,
   ThreadType,
   ThreadSharing,
-  SchemaType
+  SchemaType,
+  pb
  } from '@textile/react-native-sdk'
 
 const PREVIOUS_ID_PATH = () => `${Textile.repoPath}/migration005_peerid.ndjson`
@@ -149,7 +149,7 @@ function * prepareAndAddPhoto(download: PhotoDownload, threadId: string) {
       canDelete: true
     }
     yield put(MigrationActions.insertLocalProcessingTask(photoId))
-    const preparedFiles: Protobufs.IMobilePreparedFiles = yield call(prepare, img, threadId)
+    const preparedFiles: pb.MobilePreparedFiles.AsObject = yield call(prepare, img, threadId)
     const { dir } = preparedFiles
     if (!dir) {
       throw new Error('No dir on MobilePreparedFiles')
@@ -324,7 +324,7 @@ function * uploadPhoto(photoId: string, path: string, dispatch: Dispatch) {
     const size = + stats.size
     yield put(MigrationActions.insertUpload(photoId, path, size))
     const filename = path.split('/').pop()!
-    const session: Protobufs.ICafeSession = yield call(getSession)
+    const session: pb.CafeSession.AsObject = yield call(getSession)
     if (!session.cafe) {
       throw new Error('no cafe object')
       return

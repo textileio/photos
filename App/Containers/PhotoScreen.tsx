@@ -3,7 +3,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle } from 'react-native'
 
-import { Protobufs } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 import { RootState } from '../Redux/Types'
 
 import ThreadDetailCard from '../SB/components/ThreadDetailCard'
@@ -14,7 +14,7 @@ const CONTAINER: ViewStyle = {
 }
 
 interface StateProps {
-  photo?: Protobufs.IFiles,
+  photo?: pb.Files.AsObject,
   threadName?: string,
   threadId?: string
 }

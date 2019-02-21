@@ -4,7 +4,7 @@ import Icon from '@textile/react-native-icon'
 import TextileImage from '../TextileImage'
 import Avatar from '../Avatar'
 import * as s from '../../Themes/Constants'
-import { ContactInfo, Protobufs } from '@textile/react-native-sdk'
+import { ContactInfo, pb } from '@textile/react-native-sdk'
 
 import styles, { cardImageStyle, ICON_WIDTH, ROW_COLUMN } from './statics/styles'
 
@@ -12,7 +12,7 @@ interface ScreenProps {
   id: string
   name: string
   members: ContactInfo[]
-  thumb?: Protobufs.IFiles
+  thumb?: pb.Files.AsObject
   onPress: (groupCardProps: any) => void
 }
 
@@ -24,7 +24,7 @@ const GroupCard = (props: ScreenProps) => {
     }
   }
   const getThumb = (): JSX.Element => {
-    if (thumb && thumb.target) {
+    if (thumb) {
       return (
         <View style={styles.imageContainer}>
           <View style={styles.imageStretch}>

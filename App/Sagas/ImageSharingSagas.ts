@@ -4,7 +4,7 @@ import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
 import Textile, {
   BlockInfo,
-  Protobufs
+  pb
 } from '@textile/react-native-sdk'
 import { SharedImage } from '../Models/TextileTypes'
 import AccountActions from '../Redux/AccountRedux'
@@ -110,13 +110,16 @@ export function * prepareImage (uuid: string) {
       throw new Error('no ProcessingImage found')
     }
     const { sharedImage, destinationThreadId } = processingImage
-    const preparedFiles: Protobufs.IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
-    if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['raw'] && preparedFiles.dir.files['raw'].hash) {
-      // TODO: This doesn't seem right in here, but ok
-      const hash = preparedFiles.dir.files['raw'].hash as string
-      // TODO: might error if node not online...
-      yield put(AccountActions.setAvatarRequest(hash))
-      // yield fork(Textile.updateAvatarAndProfile, hash)
+    const preparedFiles: pb.MobilePreparedFiles.AsObject = yield call(prepare, sharedImage, destinationThreadId)
+    if (sharedImage.isAvatar && preparedFiles.dir) {
+      const rawItem = preparedFiles.dir.filesMap.find((tuple) => tuple[0] === 'raw')
+      if (rawItem) {
+        // TODO: This doesn't seem right in here, but ok
+        const hash = rawItem[1].hash
+        // TODO: might error if node not online...
+        yield put(AccountActions.setAvatarRequest(hash))
+        // yield fork(Textile.updateAvatarAndProfile, hash)
+      }
     }
     yield put(ProcessingImagesActions.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
@@ -170,7 +173,7 @@ export function * shareToThread (uuid: string) {
   }
 }
 
-export async function prepare (image: SharedImage, destinationThreadId: string): Promise<Protobufs.IMobilePreparedFiles> {
+export async function prepare (image: SharedImage, destinationThreadId: string): Promise<pb.MobilePreparedFiles.AsObject> {
   const addResult = await Textile.prepareFilesAsync(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)

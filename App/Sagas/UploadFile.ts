@@ -4,11 +4,11 @@ import Upload from 'react-native-background-upload'
 import Config from 'react-native-config'
 
 import { getSession } from './Account/AccountSagas'
-import { Protobufs } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 export function * uploadFile (id: string, payloadPath: string) {
-  const session: Protobufs.ICafeSession | undefined = yield call(getSession)
-  if (!session || !session.cafe || !session.cafe.url || !session.access) {
+  const session: pb.CafeSession.AsObject | undefined = yield call(getSession)
+  if (!session || !session.cafe) {
     return
   }
   yield call(

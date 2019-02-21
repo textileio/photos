@@ -6,7 +6,7 @@ import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import TextileEventsActions, { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
 import Textile, {
-  Protobufs,
+  pb,
   ContactInfo,
   NodeState
 } from '@textile/react-native-sdk'
@@ -90,7 +90,7 @@ export function * setAvatar () {
 }
 
 export function * getSession (depth: number = 0): any {
-  const session: Protobufs.ICafeSession | undefined = yield select(bestSession)
+  const session: pb.CafeSession.AsObject | undefined = yield select(bestSession)
   if (!session) {
     return undefined
   }
