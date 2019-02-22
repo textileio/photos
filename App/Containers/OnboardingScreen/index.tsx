@@ -122,6 +122,13 @@ class OnboardingScreen extends React.Component<Props, State> {
         />
       ),
       (
+        <ReferralCode
+          key='referral'
+          referralCode={Config.RN_TEMPORARY_REFERRAL}
+          onSuccess={this.nextPage}
+        />
+      ),
+      (
         <OnboardingUsername
           key='username'
           onSuccess={this.nextPage}
@@ -145,14 +152,9 @@ class OnboardingScreen extends React.Component<Props, State> {
         />
       )
     ]
-    if (!this.props.skipReferralCode) {
-      pages.splice(3, 0, (
-        <ReferralCode
-          key='referral'
-          referralCode={Config.RN_TEMPORARY_REFERRAL}
-          onSuccess={this.nextPage}
-        />
-      ))
+    // remove referral code if needed.
+    if (this.props.skipReferralCode) {
+      pages.splice(3, 1)
     }
     if (this.props.pendingMigration) {
       pages.unshift((
@@ -202,7 +204,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   migrationUsername: state.migration.peerAnnouncement ? state.migration.peerAnnouncement.peerDetails.previousUsername : undefined,
   pendingMigration: state.migration.status === 'pending',
   // No need for a referral challenge if this was a previous install and we're migrating or the user received a thread invite and is getting set up
-  skipReferralCode: state.migration.status === 'pending' || state.auth.invite !== undefined
+  skipReferralCode: state.migration.status === 'pending' || (state.auth.invite !== undefined && state.auth.invite.url !== '')
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
