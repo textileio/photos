@@ -15,7 +15,8 @@ import { Platform, PermissionsAndroid } from 'react-native'
 import Contacts from 'react-native-contacts'
 import Textile, {
   ContactInfo,
-  ContactInfoQueryResult
+  ContactInfoQueryResult,
+  pb
 } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
 
@@ -54,26 +55,40 @@ function * handleAddContactRequest(action: ActionType<typeof ContactsActions.add
 
 function * searchTextile(searchString: string) {
   try {
-    const result: ContactInfoQueryResult = yield call(Textile.findContact, searchString, 20, 3)
-    const isCancelled = yield cancelled()
-    if (!isCancelled) {
-      let results: ContactInfo[] = []
-      if (result.local) {
-        results = results.concat(result.local)
-      }
-      if (result.remote) {
-        results = results.concat(result.remote)
-      }
-      const distinct: ContactInfo[] = []
-      const map = new Map<string, boolean>()
-      for (const item of results) {
-        if (!map.has(item.id)) {
-          map.set(item.id, true)
-          distinct.push(item)
-        }
-      }
-      yield put(ContactsActions.searchResultsTextile(distinct))
+    const query: pb.IContactQuery = {
+      username: searchString,
+      id: '',
+      address: ''
     }
+    const options: pb.IQueryOptions = {
+      local: false,
+      limit: 20,
+      wait: 8,
+      filter: pb.QueryOptions.FilterType.NO_FILTER,
+      exclude: []
+    }
+    const handler = (contact: pb.IContact, local: boolean) => console.log('CONTACT RESULT:', contact)
+    yield call(Textile.searchContacts, query, options, handler)
+    console.log('DONE WITH SEARCH')
+    // const isCancelled = yield cancelled()
+    // if (!isCancelled) {
+    //   let results: ContactInfo[] = []
+    //   if (result.local) {
+    //     results = results.concat(result.local)
+    //   }
+    //   if (result.remote) {
+    //     results = results.concat(result.remote)
+    //   }
+    //   const distinct: ContactInfo[] = []
+    //   const map = new Map<string, boolean>()
+    //   for (const item of results) {
+    //     if (!map.has(item.id)) {
+    //       map.set(item.id, true)
+    //       distinct.push(item)
+    //     }
+    //   }
+    //   yield put(ContactsActions.searchResultsTextile(distinct))
+    // }
   } catch (error) {
     yield put(ContactsActions.searchErrorTextile(error))
   }

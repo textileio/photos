@@ -3,6 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, ScrollView, ViewStyle } from 'react-native'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
+import { util } from '@textile/react-native-sdk'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
@@ -13,7 +14,6 @@ import CommentBox from '../SB/components/CommentBox/CommentBox'
 import styles from './Styles/CommentsStyle'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
-import { timestampToDate } from '../util'
 
 interface StateProps {
   captionCommentCardProps?: CommentCardProps
@@ -116,18 +116,18 @@ const mapStateToProps = (state: RootState): StateProps  => {
       username: viewingPhoto.username || viewingPhoto.author,
       avatar: viewingPhoto.avatar,
       comment: viewingPhoto.caption,
-      date: timestampToDate(viewingPhoto.date),
+      date: util.timestampToDate(viewingPhoto.date),
       isCaption: true
     }
   }
 
-  const comments = viewingPhoto ? viewingPhoto.commentsList : []
+  const comments = viewingPhoto ? viewingPhoto.comments : []
   const commentCardProps = comments.slice().reverse().map((comment) => {
     const props: CommentCardProps = {
       username: comment.username || 'unknown',
       avatar: comment.avatar,
       comment: comment.body,
-      date: timestampToDate(comment.date),
+      date: util.timestampToDate(comment.date),
       isCaption: false
     }
     return props

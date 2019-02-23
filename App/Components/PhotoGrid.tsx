@@ -28,7 +28,7 @@ interface DispatchProps {
 
 interface ScreenProps {
   items: IPhotoGridType[]
-  onSelect: (photo: pb.Files.AsObject) => () => void
+  onSelect: (photo: pb.IFiles) => () => void
   onRefresh: () => void
   refreshing: boolean
   placeholderText: string
@@ -81,12 +81,12 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
           <TouchableOpacity
             style={styles.item}
             /* tslint:disable-next-line */
-            onPress={this.props.onSelect(row.item.photo as pb.Files.AsObject)}
+            onPress={this.props.onSelect(row.item.photo as pb.IFiles)}
           >
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
                 imageId={item.photo.target}
-                fileIndex={item.photo.filesList[0].index}
+                fileIndex={item.photo.files[0].index}
                 showPreview={true}
                 forMinWidth={PRODUCT_ITEM_HEIGHT}
                 style={styles.itemImage}

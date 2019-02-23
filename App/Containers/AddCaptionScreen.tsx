@@ -17,7 +17,7 @@ import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
 interface StateProps {
-  image?: SharedImage | pb.Files.AsObject,
+  image?: SharedImage | pb.IFiles,
   threadId?: string,
   comment?: string,
   selectedThreadId?: string
@@ -87,8 +87,8 @@ class AddCaptionScreen extends React.Component<Props> {
       disableShare: this.props.selectedThreadId === undefined || !this.props.share,
       cancelShare: () => { this.props.cancelShare() },
       share: () => {
-        if (this.props.share && this.props.image && (this.props.image as pb.Files.AsObject).target && this.props.threadId) {
-          const filesInfo = this.props.image as pb.Files.AsObject
+        if (this.props.share && this.props.image && (this.props.image as pb.IFiles).target && this.props.threadId) {
+          const filesInfo = this.props.image as pb.IFiles
           this.props.share(filesInfo.target!, this.props.threadId, this.props.comment)
         } else if (this.props.share && this.props.image && (this.props.image as SharedImage).uri && this.props.threadId) {
           const sharedImage = this.props.image as SharedImage
@@ -106,7 +106,7 @@ class AddCaptionScreen extends React.Component<Props> {
     }
   }
 
-  _shareToNewThread (withPhoto: pb.Files.AsObject, withThreadName: string) {
+  _shareToNewThread (withPhoto: pb.IFiles, withThreadName: string) {
     if (withPhoto.target) {
       this.props.shareNewThread(withPhoto.target, withThreadName, this.props.comment)
     }
@@ -146,13 +146,13 @@ class AddCaptionScreen extends React.Component<Props> {
           style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}
         />
       )
-    } else if (image && (image as pb.Files.AsObject).target) {
-      const filesInfo = image as pb.Files.AsObject
+    } else if (image && (image as pb.IFiles).target) {
+      const filesInfo = image as pb.IFiles
       if (filesInfo.target) {
         return (
           <TextileImage
             target={filesInfo.target}
-            index={filesInfo.filesList[0].index!}
+            index={filesInfo.files[0].index}
             forMinWidth={70}
             resizeMode={'cover'}
             style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}

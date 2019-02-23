@@ -5,6 +5,7 @@ import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
+import { util } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
@@ -136,9 +137,9 @@ class Group extends Component<Props, State> {
   renderRow = ({ item }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
-        const { avatar, username, caption, date, target, filesList, likesList, commentsList, block } = item.data
-        const hasLiked = likesList.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
-        const commentsData: ReadonlyArray<CommentData> = commentsList.map((comment) => {
+        const { avatar, username, caption, date, target, files, likes, comments, block } = item.data
+        const hasLiked = likes.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
+        const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
           return {
             id: comment.id,
             username: comment.username || '?',
@@ -150,12 +151,12 @@ class Group extends Component<Props, State> {
             avatar={avatar}
             username={username || 'unknown'}
             message={caption}
-            time={moment(date).calendar(undefined, momentSpec)}
+            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
             photoId={target}
-            fileIndex={filesList[0].index}
+            fileIndex={files[0].index}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
-            numberLikes={likesList.length}
+            numberLikes={likes.length}
             onLike={this.onLike(block)}
             onComment={this.onComment(target)}
             comments={commentsData}
@@ -179,7 +180,7 @@ class Group extends Component<Props, State> {
             username={username || 'unknown'}
             message={body}
             // TODO: deal with pb Timestamp to JS Date!
-            time={moment(date).calendar(undefined, momentSpec)}
+            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           />
         )
       }
@@ -192,7 +193,7 @@ class Group extends Component<Props, State> {
             avatar={avatar}
             username={username || 'unknown'}
             message={`${word} ${this.props.groupName}`}
-            time={moment(date).calendar(undefined, momentSpec)}
+            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           />
         )
       }

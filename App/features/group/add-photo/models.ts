@@ -51,7 +51,7 @@ export interface ProcessingImage {
   readonly status: 'preparing'  | 'uploading' | 'sharing' | 'complete'
   readonly destinationThreadId: string
   readonly comment?: string
-  readonly preparedFiles?: pb.MobilePreparedFiles.AsObject
+  readonly preparedFiles?: pb.IMobilePreparedFiles
   readonly uploadData?: UploadData
   readonly blockInfo?: BlockInfo
   readonly error?: string

@@ -37,7 +37,7 @@ const actions = {
   getCafeSessionsRequest: createAction('GET_CAFE_SESSIONS_REQUEST'),
   refreshCafeSessionsRequest: createAction('REFRESH_CAFE_SESSIONS_REQUEST'),
   cafeSessionsSuccess: createAction('CAFE_SESSIONS_SUCCESS', (resolve) => {
-    return (sessions: ReadonlyArray<pb.CafeSession.AsObject>) => resolve({ sessions })
+    return (sessions: ReadonlyArray<pb.ICafeSession>) => resolve({ sessions })
   }),
   cafeSessionsError: createAction('CAFE_SESSIONS_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -63,7 +63,7 @@ interface AccountState {
   }
   recoveryPhrase?: string,
   cafeSessions: {
-    sessions: ReadonlyArray<pb.CafeSession.AsObject>
+    sessions: ReadonlyArray<pb.ICafeSession>
     processing: boolean
     error?: string
   }

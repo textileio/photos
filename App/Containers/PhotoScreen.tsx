@@ -3,6 +3,7 @@ import { Dispatch } from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle, Dimensions } from 'react-native'
+import { util } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { pb } from '@textile/react-native-sdk'
@@ -31,7 +32,7 @@ const CONTAINER: ViewStyle = {
 }
 
 interface StateProps {
-  photo?: pb.Files.AsObject,
+  photo?: pb.IFiles,
   selfId: string
   threadName?: string,
   threadId?: string
@@ -67,9 +68,9 @@ class PhotoScreen extends React.Component<Props> {
     if (!this.props.photo) {
       return <ScrollView style={CONTAINER} />
     }
-    const { avatar, username, caption, date, target, filesList, likesList, commentsList, block } = this.props.photo
-    const hasLiked = likesList.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
-    const commentsData: ReadonlyArray<CommentData> = commentsList.map((comment) => {
+    const { avatar, username, caption, date, target, files, likes, comments, block } = this.props.photo
+    const hasLiked = likes.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
+    const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
       return {
         id: comment.id,
         username: comment.username || '?',
@@ -83,12 +84,12 @@ class PhotoScreen extends React.Component<Props> {
           avatar={avatar}
           username={username || 'unknown'}
           message={caption}
-          time={moment(date).calendar(undefined, momentSpec)}
+          time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           photoId={target}
-          fileIndex={filesList[0].index}
+          fileIndex={files[0].index}
           photoWidth={screenWidth}
           hasLiked={hasLiked}
-          numberLikes={likesList.length}
+          numberLikes={likes.length}
           onLike={this.onAddLike}
           onComment={this.onComment}
           comments={commentsData}

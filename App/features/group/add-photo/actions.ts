@@ -8,7 +8,7 @@ export const insertImage = createAction('processingImages/INSERT_IMAGE', (resolv
 })
 
 export const imagePrepared = createAction('processingImages/IMAGE_PREPARED', (resolve) => {
-  return (uuid: string, preparedFiles: pb.MobilePreparedFiles.AsObject) => resolve({ uuid, preparedFiles })
+  return (uuid: string, preparedFiles: pb.IMobilePreparedFiles) => resolve({ uuid, preparedFiles })
 })
 
 export const uploadStarted = createAction('processingImages/UPLOAD_STARTED', (resolve) => {

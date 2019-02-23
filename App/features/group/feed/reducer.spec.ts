@@ -8,14 +8,14 @@ const initialState = reducer(undefined, {} as any)
 
 const group1 = 'group1'
 const group2 = 'group2'
-const items: ReadonlyArray<pb.FeedItem.AsObject> = [
-  { block: 'block1', thread: 'thread1' },
-  { block: 'block2', thread: 'thread1' },
-  { block: 'block3', thread: 'thread1' }
+const items: ReadonlyArray<pb.IFeedItem> = [
+  { block: 'block1', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } },
+  { block: 'block2', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } },
+  { block: 'block3', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } }
 ]
-const otherItems: ReadonlyArray<pb.FeedItem.AsObject> = [
-  { block: 'block4', thread: 'thread1' },
-  { block: 'block5', thread: 'thread1' }
+const otherItems: ReadonlyArray<pb.IFeedItem> = [
+  { block: 'block4', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } },
+  { block: 'block5', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } }
 ]
 
 describe('feed', () => {

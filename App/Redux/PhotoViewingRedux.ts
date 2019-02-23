@@ -37,7 +37,7 @@ const actions = {
     return (threadId: string) => resolve({ threadId })
   }),
   refreshThreadSuccess: createAction('REFRESH_THREAD_SUCCESS', (resolve) => {
-    return (threadId: string, photos: ReadonlyArray<pb.Files.AsObject>) => resolve({ threadId, photos })
+    return (threadId: string, photos: ReadonlyArray<pb.IFiles>) => resolve({ threadId, photos })
   }),
   refreshThreadError: createAction('REFRESH_THREAD_ERROR', (resolve) => {
     return (threadId: string, error: any) => resolve({ threadId, error })
@@ -66,14 +66,14 @@ export interface ThreadData {
   readonly key: string
   readonly name: string
   readonly querying: boolean
-  readonly photos: ReadonlyArray<pb.Files.AsObject>
+  readonly photos: ReadonlyArray<pb.IFiles>
   readonly error?: string
 }
 
 export interface ThreadThumbs {
   readonly id: string
   readonly name: string
-  readonly thumb?: pb.Files.AsObject
+  readonly thumb?: pb.IFiles
 }
 
 interface ThreadMap {
@@ -98,9 +98,9 @@ interface PhotoViewingState {
     readonly id: string
     readonly error?: string
   }
-  readonly viewingWalletPhoto?: pb.Files.AsObject
+  readonly viewingWalletPhoto?: pb.IFiles
   readonly viewingThreadId?: string
-  readonly viewingPhoto?: pb.Files.AsObject
+  readonly viewingPhoto?: pb.IFiles
   readonly authoringComment?: string
   readonly authoringCommentError?: boolean
 }
@@ -186,7 +186,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
       }
       const obj: ThreadData = { ...threadData, querying: false, photos }
       const threads: ThreadMap = { ...state.threads, [threadId]: obj }
-      let viewingPhoto: pb.Files.AsObject | undefined
+      let viewingPhoto: pb.IFiles | undefined
       if (state.viewingThreadId === threadId && state.viewingPhoto) {
         const currentViewingPhoto = state.viewingPhoto
         viewingPhoto = photos.find((photo) => currentViewingPhoto.target === photo.target)

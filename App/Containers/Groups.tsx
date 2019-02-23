@@ -24,7 +24,7 @@ interface GroupAuthors {
   readonly name: string
   readonly size: number
   readonly members: ContactInfo[]
-  readonly thumb?: pb.Files.AsObject
+  readonly thumb?: pb.IFiles
 }
 
 interface StateProps {

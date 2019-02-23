@@ -2,7 +2,7 @@ import { pb } from '@textile/react-native-sdk'
 
 export interface Feed {
   readonly loading: boolean
-  readonly items: ReadonlyArray<pb.FeedItem.AsObject>
+  readonly items: ReadonlyArray<pb.IFeedItem>
   readonly error?: string
 }
 
@@ -13,37 +13,37 @@ export interface Groups {
 export interface JoinItem {
   readonly type: 'join'
   readonly key: string
-  readonly data: pb.Join.AsObject
+  readonly data: pb.IJoin
 }
 
 export interface LeaveItem {
   readonly type: 'leave'
   readonly key: string
-  readonly data: pb.Leave.AsObject
+  readonly data: pb.ILeave
 }
 
 export interface PhotoItem {
   readonly type: 'photo'
   readonly key: string
-  readonly data: pb.Files.AsObject // TODO: this can be simplified to just the parts we need
+  readonly data: pb.IFiles // TODO: this can be simplified to just the parts we need
 }
 
 export interface MessageItem {
   readonly type: 'message'
   readonly key: string
-  readonly data: pb.Text.AsObject
+  readonly data: pb.IText
 }
 
 export interface CommentsItem {
   readonly type: 'comments'
   readonly key: string
-  readonly data: ReadonlyArray<pb.Comment.AsObject>
+  readonly data: ReadonlyArray<pb.IComment>
 }
 
 export interface LikesItem {
   readonly type: 'likes'
   readonly key: string
-  readonly data: ReadonlyArray<pb.Like.AsObject>
+  readonly data: ReadonlyArray<pb.ILike>
 }
 
 export type FeedItem = JoinItem | LeaveItem | PhotoItem | MessageItem | CommentsItem | LikesItem

@@ -8,7 +8,7 @@ import { pb } from '@textile/react-native-sdk'
 
 export interface PhotoType {
   type: 'photo',
-  photo: pb.Files.AsObject
+  photo: pb.IFiles
   id: string
 }
 

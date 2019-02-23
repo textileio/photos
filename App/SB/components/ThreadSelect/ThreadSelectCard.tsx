@@ -12,7 +12,7 @@ import RadioButton from '../../components/RadioButton'
 import styles from './statics/styles'
 
 interface StateProps {
-  thumb?: pb.Files.AsObject
+  thumb?: pb.IFiles
 }
 
 interface ScreenProps {

@@ -1,16 +1,15 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
-import { pb } from '@textile/react-native-sdk'
+import { pb, util } from '@textile/react-native-sdk'
 import { getPeerId } from './AccountSelectors'
 import Config from 'react-native-config'
-import { timestampToDate } from '../util'
 
 // temporary filter until we stop getting them from textile-go
 export const BLACKLIST = ['avatars', 'account']
 
 export interface SharedPhoto {
   type: 'photo'
-  photo: pb.Files.AsObject
+  photo: pb.IFiles
   id: string
   original: string
 }
@@ -61,8 +60,8 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
     case 'date':
       return result
         .sort((a, b) => {
-          const aLast = !!a.photos.length && timestampToDate(a.photos[0].date)
-          const bLast = !!b.photos.length && timestampToDate(b.photos[0].date)
+          const aLast = !!a.photos.length && util.timestampToDate(a.photos[0].date)
+          const bLast = !!b.photos.length && util.timestampToDate(b.photos[0].date)
           return !aLast || aLast < bLast ? 1 : -1
         })
     default:
@@ -76,9 +75,11 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
     .map((thread) => thread.photos
       .filter((photo) => photo.author === selfId)
       .map((photo): SharedPhoto => {
-        const file = photo.filesList[0]
-        const thumb = file.linksMap.find((item) => item[0] === 'thumb')
-        const original = thumb ? thumb[1].checksum : photo.block
+        const file = photo.files[0]
+        const thumb = file.links['thumb']
+        // Types say this thumb is always defined, but we had a fallback
+        // to photo.block here for a reason so I'll leave it
+        const original = thumb ? thumb.checksum : photo.block
         return { type: 'photo', photo, id: photo.block, original }
       })
     )

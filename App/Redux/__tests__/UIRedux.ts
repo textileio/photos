@@ -13,18 +13,18 @@ const sharedImage: SharedImage = {
   canDelete: false
 }
 
-const sharedPhoto: pb.Files.AsObject = {
+const sharedPhoto: pb.IFiles = {
   username: 'user',
   avatar: 'avatar',
   caption: '',
   author: 'a',
   block: 'b',
-  commentsList: [],
+  comments: [],
   date: { seconds: 10, nanos: 20 },
-  filesList: [],
-  likesList: [],
+  files: [],
+  likes: [],
   target: 'd',
-  threadsList: []
+  threads: []
 }
 
 describe('ui stories', () => {

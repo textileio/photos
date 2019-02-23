@@ -111,12 +111,12 @@ export function * prepareImage (uuid: string) {
       throw new Error('no ProcessingImage found')
     }
     const { sharedImage, destinationThreadId } = processingImage
-    const preparedFiles: pb.MobilePreparedFiles.AsObject = yield call(prepare, sharedImage, destinationThreadId)
+    const preparedFiles: pb.IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
     if (sharedImage.isAvatar && preparedFiles.dir) {
-      const rawItem = preparedFiles.dir.filesMap.find((tuple) => tuple[0] === 'raw')
+      const rawItem = preparedFiles.dir.files['raw']
       if (rawItem) {
         // TODO: This doesn't seem right in here, but ok
-        const hash = rawItem[1].hash
+        const hash = rawItem.hash
         // TODO: might error if node not online...
         yield put(AccountActions.setAvatarRequest(hash))
         // yield fork(Textile.updateAvatarAndProfile, hash)
@@ -177,7 +177,7 @@ export function * shareToThread (uuid: string) {
   }
 }
 
-export async function prepare (image: SharedImage, destinationThreadId: string): Promise<pb.MobilePreparedFiles.AsObject> {
+export async function prepare (image: SharedImage, destinationThreadId: string): Promise<pb.IMobilePreparedFiles> {
   const addResult = await Textile.prepareFilesAsync(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)

@@ -12,7 +12,7 @@ interface ScreenProps {
   id: string
   name: string
   members: ContactInfo[]
-  thumb?: pb.Files.AsObject
+  thumb?: pb.IFiles
   onPress: (groupCardProps: any) => void
 }
 

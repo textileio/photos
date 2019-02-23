@@ -21,7 +21,7 @@ const actions = {
     return () => resolve()
   }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
-    return (image: SharedImage | pb.Files.AsObject) => resolve({ image })
+    return (image: SharedImage | pb.IFiles) => resolve({ image })
   }),
   updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', (resolve) => {
     return (threadId: string) => resolve({ threadId })
@@ -48,7 +48,7 @@ const actions = {
     return (threadId?: string) => resolve({ threadId })
   }),
   walletPickerSuccess: createAction('WALLET_PICKER_SUCCESS', (resolve) => {
-    return (photo: pb.Files.AsObject) => resolve({ photo })
+    return (photo: pb.IFiles) => resolve({ photo })
   }),
   newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', (resolve) => {
     return (threadId: string) => resolve({ threadId })
@@ -88,7 +88,7 @@ export interface UIState {
     readonly error?: Error
   }
   readonly sharingPhoto?: {
-    readonly image?: SharedImage | pb.Files.AsObject
+    readonly image?: SharedImage | pb.IFiles
     readonly threadId?: string
     readonly comment?: string
   },

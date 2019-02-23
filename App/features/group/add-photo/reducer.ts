@@ -24,9 +24,9 @@ export default combineReducers<ProcessingImagesState, ProcessingImagesAction>({
         const images = state.map((image) => {
           if (image.uuid === uuid) {
             const uploadData: UploadData = {}
-            for (const tuple of preparedFiles.pinMap) {
-              uploadData[tuple[0]] = { id: tuple[0], path: tuple[1], status: 'pending', uploadProgress: 0 }
-            }
+            Object.keys(preparedFiles.pin).forEach((key) => {
+              uploadData[key] = { id: key, path: preparedFiles.pin[key], status: 'pending', uploadProgress: 0 }
+            })
             const processingImage: ProcessingImage = { ...image, preparedFiles, uploadData, status: 'uploading' }
             return processingImage
           }

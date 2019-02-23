@@ -102,15 +102,15 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
 export function * refreshThread (action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
   const { threadId } = action.payload
   try {
-    const photosResult: pb.FilesList.AsObject = yield call(Textile.files, '', -1, threadId)
-    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult.itemsList))
+    const photosResult: pb.IFilesList = yield call(Textile.files, '', -1, threadId)
+    yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult.items))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
   }
 }
 
 export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions.addCommentRequest>) {
-  const result: { photo: pb.Files.AsObject | undefined, comment: string | undefined } = yield select(photoAndComment)
+  const result: { photo: pb.IFiles | undefined, comment: string | undefined } = yield select(photoAndComment)
   if (!result.photo || !result.comment) {
     return
   }
