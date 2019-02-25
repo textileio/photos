@@ -9,6 +9,7 @@ import { RootState } from '../../Redux/Types'
 
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import ThreadsActions from '../../Redux/ThreadsRedux'
 import ContactsActions from '../../Redux/ContactsRedux'
 import DeviceLogsActions from '../../Redux/DeviceLogsRedux'
 import StorageActions from '../../Redux/StorageRedux'
@@ -37,7 +38,6 @@ export default class TextileNodeEventHandler {
     })
     Events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
       const { type } = update.block
-
       if (type === BlockType.MESSAGE ||
         type === BlockType.COMMENT ||
         type === BlockType.LIKE ||
@@ -52,9 +52,12 @@ export default class TextileNodeEventHandler {
       if (type === BlockType.COMMENT ||
         type === BlockType.LIKE ||
         type === BlockType.FILES ||
-        type === BlockType.IGNORE) {
+        type === BlockType.IGNORE ||
+        type === BlockType.JOIN) {
         this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread_id))
-      } else if (type === BlockType.JOIN) {
+      }
+
+      if (type === BlockType.JOIN) {
         // Every time the a JOIN block is detected, we should refresh our in-mem contact list
         // Enhancement: compare the joiner id with known ids and skip the refresh if known.
         this.store.dispatch(ContactsActions.getContactsRequest())
@@ -66,6 +69,7 @@ export default class TextileNodeEventHandler {
       this.store.dispatch(DeviceLogsActions.logNewEvent( (new Date()).getTime(), 'onThreadUpdate', message, false))
     })
     Events.addListener('onThreadAdded', (payload: Update) => {
+      this.store.dispatch(PhotoViewingActions.viewThread(payload.id))
       this.store.dispatch(PhotoViewingActions.threadAddedNotification(payload.id))
     })
     Events.addListener('onThreadRemoved', (payload: Update) => {

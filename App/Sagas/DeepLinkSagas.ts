@@ -17,6 +17,7 @@ import Config from 'react-native-config'
 import DeepLink from '../Services/DeepLink'
 import NavigationService from '../Services/NavigationService'
 import {initialized} from '../Redux/AccountSelectors'
+import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions, {AuthSelectors} from '../Redux/AuthRedux'
 import StartupActions, {startupSelectors} from '../Redux/StartupRedux'
 
@@ -34,15 +35,14 @@ export function * routeThreadInvite(url: string, hash: string ) {
   if (!reduxStarted) {
     yield take(getType(StartupActions.startup))
   }
-  if (yield select(initialized)) {
+  if (yield select(PreferencesSelectors.onboarded)) {
     NavigationService.navigate('ThreadInvite', { ...DeepLink.getParams(hash) })
   } else {
     // simply store the pending invite information to act on after onboarding success
     const data = DeepLink.getParams(hash)
-    const referral: string = data.referral as string
-    if (referral && referral === Config.RN_TEMPORARY_REFERRAL) {
-      yield put(AuthActions.onboardWithInviteRequest(url, hash, referral))
-    }
+    const code: string = data.referral as string
+    const referral = code === Config.RN_TEMPORARY_REFERRAL ? code : undefined
+    yield put(AuthActions.onboardWithInviteRequest(url, hash, referral))
   }
 }
 
