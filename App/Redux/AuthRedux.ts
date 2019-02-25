@@ -6,7 +6,7 @@ const actions = {
     return () => resolve()
   }),
   onboardWithInviteRequest: createAction('ONBOARD_WITH_INVITE_REQUEST', (resolve) => {
-    return (url: string, hash: string, referral: string ) => resolve( { url, hash, referral } )
+    return (url: string, hash: string, referral?: string ) => resolve( { url, hash, referral } )
   })
 }
 
@@ -19,7 +19,7 @@ export interface AuthState {
   readonly invite?: {
     readonly url: string
     readonly hash: string
-    readonly referral: string
+    readonly referral?: string
   }
 }
 

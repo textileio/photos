@@ -143,6 +143,7 @@ export function reducer (state: PreferencesState = initialState, action: Prefere
 }
 
 export const PreferencesSelectors = {
+  onboarded: (state: RootState) => state.preferences.onboarded,
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
   storage: (state: RootState, name: StorageType) => state.preferences.storage[name],
   verboseUi: (state: RootState) => state.preferences.verboseUi,
