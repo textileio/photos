@@ -69,7 +69,7 @@ export default class TextileNodeEventHandler {
       this.store.dispatch(DeviceLogsActions.logNewEvent( (new Date()).getTime(), 'onThreadUpdate', message, false))
     })
     Events.addListener('onThreadAdded', (payload: Update) => {
-      this.store.dispatch(PhotoViewingActions.viewThread(payload.id))
+      this.store.dispatch(PhotoViewingActions.threadAdded(payload.id, payload.key, payload.name))
       this.store.dispatch(PhotoViewingActions.threadAddedNotification(payload.id))
     })
     Events.addListener('onThreadRemoved', (payload: Update) => {
