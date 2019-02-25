@@ -9,14 +9,15 @@ import {
   race,
   select
 } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { delay, eventChannel, END, Channel } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Contacts from 'react-native-contacts'
 import Textile, {
   ContactInfo,
-  ContactInfoQueryResult,
-  pb
+  ContactSearchEvent,
+  pb,
+  util
 } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
 
@@ -43,18 +44,27 @@ export function * watchForAddContactRequests() {
 }
 
 function * handleAddContactRequest(action: ActionType<typeof ContactsActions.addContactRequest>) {
-  const { contactInfo } = action.payload
+  const { contact } = action.payload
   try {
+    const contactInfo: ContactInfo = {
+      id: contact.id,
+      avatar: contact.avatar,
+      address: contact.address,
+      username: contact.username,
+      inboxes: contact.inboxes,
+      created: util.timestampToDate(contact.created).toISOString(),
+      updated: util.timestampToDate(contact.updated).toISOString()
+    }
     yield call(Textile.addContact, contactInfo)
-    yield put(ContactsActions.addContactSuccess(contactInfo))
+    yield put(ContactsActions.addContactSuccess(contact))
     yield call(refreshContacts)
   } catch (error) {
-    yield put(ContactsActions.addContactError(contactInfo, error))
+    yield put(ContactsActions.addContactError(contact, error))
   }
 }
 
-function * searchTextile(searchString: string) {
-  try {
+function executeTextileSearch(searchString: string) {
+  return eventChannel<ContactSearchEvent>((emitter) => {
     const query: pb.IContactQuery = {
       username: searchString,
       id: '',
@@ -67,30 +77,42 @@ function * searchTextile(searchString: string) {
       filter: pb.QueryOptions.FilterType.NO_FILTER,
       exclude: []
     }
-    const handler = (contact: pb.IContact, local: boolean) => console.log('CONTACT RESULT:', contact)
-    yield call(Textile.searchContacts, query, options, handler)
-    console.log('DONE WITH SEARCH')
-    // const isCancelled = yield cancelled()
-    // if (!isCancelled) {
-    //   let results: ContactInfo[] = []
-    //   if (result.local) {
-    //     results = results.concat(result.local)
-    //   }
-    //   if (result.remote) {
-    //     results = results.concat(result.remote)
-    //   }
-    //   const distinct: ContactInfo[] = []
-    //   const map = new Map<string, boolean>()
-    //   for (const item of results) {
-    //     if (!map.has(item.id)) {
-    //       map.set(item.id, true)
-    //       distinct.push(item)
-    //     }
-    //   }
-    //   yield put(ContactsActions.searchResultsTextile(distinct))
-    // }
+    const handler = (event: ContactSearchEvent) => {
+      if (event.type === 'complete') {
+        emitter(END)
+      } else if (event.type === 'error') {
+        emitter(event)
+        emitter(END)
+      } else if (event.type === 'result') {
+        emitter(event)
+      }
+    }
+    Textile.searchContacts(query, options, handler)
+    return () => {
+      Textile.cancelSearchContacts()
+    }
+  })
+}
+
+function * searchTextile(searchString: string) {
+  const channel: Channel<ContactSearchEvent> = yield call(executeTextileSearch, searchString)
+  try {
+    while (true) {
+      const event: ContactSearchEvent = yield take(channel)
+      if (event.type === 'result') {
+        yield put(ContactsActions.searchResultTextile(event.contact))
+      } else if (event.type === 'error') {
+        yield put(ContactsActions.searchErrorTextile(event.error))
+      }
+    }
   } catch (error) {
     yield put(ContactsActions.searchErrorTextile(error))
+  } finally {
+    if (yield cancelled()) {
+      channel.close()
+    } else {
+      yield put(ContactsActions.textileSearchComplete())
+    }
   }
 }
 

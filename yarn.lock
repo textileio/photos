@@ -646,9 +646,9 @@
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.12.tgz#1be41a4eaa9648fa4766e2489a6c2764d95985e1"
 
-"@textile/react-native-sdk@1.1.0-rc20":
-  version "1.1.0-rc20"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc20.tgz#866a1ca8f4dfcd137e3a3fb05efc137330e02d5c"
+"@textile/react-native-sdk@1.1.0-rc25":
+  version "1.1.0-rc25"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc25.tgz#96917a1470e6973c2513580a2bbd0fe496b81704"
   dependencies:
     "@textile/go-mobile" "1.0.0-rc43"
     buffer "^5.2.1"
