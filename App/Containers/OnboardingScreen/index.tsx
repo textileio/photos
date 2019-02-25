@@ -29,9 +29,9 @@ const ARROW_FORWARD: ViewStyle = {
 }
 
 interface StateProps {
-  migrationUsername?: string
   pendingMigration: boolean
-  skipReferralCode: boolean
+  migrationUsername?: string
+  skipReferralCode?: boolean
 }
 
 interface DispatchProps {
@@ -204,7 +204,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   migrationUsername: state.migration.peerAnnouncement ? state.migration.peerAnnouncement.peerDetails.previousUsername : undefined,
   pendingMigration: state.migration.status === 'pending',
   // No need for a referral challenge if this was a previous install and we're migrating or the user received a thread invite and is getting set up
-  skipReferralCode: state.migration.status === 'pending' || (state.auth.invite !== undefined && state.auth.invite.url !== '')
+  skipReferralCode: state.migration.status === 'pending' || (state.auth.invite && state.auth.invite.url !== '')
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({

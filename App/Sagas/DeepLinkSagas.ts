@@ -40,7 +40,7 @@ export function * routeThreadInvite(url: string, hash: string ) {
     // simply store the pending invite information to act on after onboarding success
     const data = DeepLink.getParams(hash)
     const referral: string = data.referral as string
-    if (referral) {
+    if (referral && referral === Config.RN_TEMPORARY_REFERRAL) {
       yield put(AuthActions.onboardWithInviteRequest(url, hash, referral))
     }
   }
