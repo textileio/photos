@@ -120,6 +120,13 @@ class OnboardingScreen extends React.Component<Props, State> {
         />
       ),
       (
+        <ReferralCode
+          key='referral'
+          referralCode={Config.RN_TEMPORARY_REFERRAL}
+          onSuccess={this.nextPage}
+        />
+      ),
+      (
         <OnboardingUsername
           key='username'
           onSuccess={this.nextPage}
@@ -142,14 +149,9 @@ class OnboardingScreen extends React.Component<Props, State> {
         />
       )
     ]
-    if (!this.props.skipReferralCode) {
-      pages.splice(3, 0, (
-        <ReferralCode
-          key='referral'
-          referralCode={Config.RN_TEMPORARY_REFERRAL}
-          onSuccess={this.nextPage}
-        />
-      ))
+    // remove referral code if needed.
+    if (this.props.skipReferralCode) {
+      pages.splice(3, 1)
     }
     return pages
   }
@@ -182,7 +184,7 @@ class OnboardingScreen extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   // No need for a referral challenge if the user received a thread invite and is getting set up
-  skipReferralCode: state.auth.invite !== undefined
+  skipReferralCode: state.auth.invite !== undefined && state.auth.invite.referral !== undefined
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
