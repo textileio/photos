@@ -7,7 +7,7 @@ import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 import {RootAction, RootState} from '../Redux/Types'
 
 import { getThreads } from '../Redux/PhotoViewingSelectors'
-import { ContactsSelectors } from '../Redux/ContactsRedux'
+import { contactsSelectors } from '../features/contacts'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 
@@ -166,7 +166,8 @@ const mapStateToProps = (state: RootState): StateProps => {
   const profile = state.account.profile.value
   const threads = getThreads(state, 'date')
   .map((thread) => {
-    const members = ContactsSelectors.byThreadId(state, thread.id).filter((contact) => contact.id !== ownId)
+    const selector = contactsSelectors.makeByThreadId(thread.id)
+    const members = selector(state.contacts).filter((contact) => contact.id !== ownId)
     if (profile && members.length < 8) {
       members.unshift(profile)
     }

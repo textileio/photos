@@ -14,12 +14,11 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import TriggersActions from '../Redux/TriggersRedux'
-import ContactsActions from '../Redux/ContactsRedux'
 
 /* ------------- Sagas ------------- */
 
 import accountSaga from './Account'
-import contactsSaga from './Contacts'
+import { contactsSaga } from '../features/contacts'
 import { groupSaga } from '../features/group'
 
 import { startup } from './StartupSagas'

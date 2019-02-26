@@ -22,7 +22,8 @@ import ListItem from '../Components/ListItem'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import { RootState, RootAction } from '../Redux/Types'
-import ContactsActions, { ContactsSelectors, SearchResultsSection, SearchResult } from '../Redux/ContactsRedux'
+import { contactsActions, contactsSelectors } from '../features/contacts'
+import { SearchResultsSection, SearchResult } from '../features/contacts/models'
 import { color, textStyle, spacing } from '../styles'
 
 const CONTAINER: ViewStyle = {
@@ -196,16 +197,16 @@ class AddContact extends React.Component<Props> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    searchResults: ContactsSelectors.searchResults(state)
+    searchResults: contactsSelectors.searchResults(state.contacts)
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    search: (searchString: string) => dispatch(ContactsActions.searchRequest(searchString)),
-    clearSearch: () => dispatch(ContactsActions.clearSearch()),
-    addContact: (contact: pb.IContact) => dispatch(ContactsActions.addContactRequest(contact)),
-    inviteContact: (contact: Contacts.Contact) => dispatch(ContactsActions.authorInviteRequest(contact))
+    search: (searchString: string) => dispatch(contactsActions.searchRequest(searchString)),
+    clearSearch: () => dispatch(contactsActions.clearSearch()),
+    addContact: (contact: pb.IContact) => dispatch(contactsActions.addContactRequest(contact)),
+    inviteContact: (contact: Contacts.Contact) => dispatch(contactsActions.authorInviteRequest(contact))
   }
 }
 

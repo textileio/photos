@@ -12,7 +12,6 @@ import { ContactInfo } from '@textile/react-native-sdk'
 import Avatar from '../Components/Avatar'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
 import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
-import { ContactsSelectors } from '../Redux/ContactsRedux'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
