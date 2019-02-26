@@ -3,7 +3,6 @@ import { ActionType, getType } from 'typesafe-actions'
 import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import AccountActions from '../Redux/AccountRedux'
-import MigrationActions from '../Redux/MigrationRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
@@ -81,7 +80,7 @@ export function * ignoreFileRequest () {
           action.type === getType(TextileEventsActions.ignoreFileRequest)
         )
 
-      yield call(Textile.addThreadIgnore, action.payload.blockId)
+      yield call(Textile.addIgnore, action.payload.blockId)
 
       yield call(logNewEvent, 'ignoreFile', action.type)
     } catch (error) {
@@ -126,9 +125,6 @@ export function * nodeOnline () {
       if (pending) {
         yield call(Textile.setAvatar, pending)
       }
-
-      // Only run this after everything else in the node is running
-      yield put(MigrationActions.requestRunRecurringMigrationTasks())
     } catch (error) {
       yield call(logNewEvent, 'nodeOnline', error.message, true)
     }

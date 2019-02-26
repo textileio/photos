@@ -29,9 +29,7 @@ const ARROW_FORWARD: ViewStyle = {
 }
 
 interface StateProps {
-  pendingMigration: boolean
-  migrationUsername?: string
-  skipReferralCode?: boolean
+  skipReferralCode: boolean
 }
 
 interface DispatchProps {
@@ -132,7 +130,6 @@ class OnboardingScreen extends React.Component<Props, State> {
         <OnboardingUsername
           key='username'
           onSuccess={this.nextPage}
-          suggestion={this.props.migrationUsername}
         />
       ),
       (
@@ -155,21 +152,6 @@ class OnboardingScreen extends React.Component<Props, State> {
     // remove referral code if needed.
     if (this.props.skipReferralCode) {
       pages.splice(3, 1)
-    }
-    if (this.props.pendingMigration) {
-      pages.unshift((
-        <OnboardingMessage
-          key='migration'
-          title='Big Changes Under the Hood'
-          image={require('./statics/secure.png')}
-          showArrow={true}
-        >
-          We're working fast to make Textile Photos even better.
-          Your old data isn't compatible with this new version of the app,
-          so you'll be starting fresh now. Check out your Notifications
-          screen to get started migrating your old data if you'd like.
-        </OnboardingMessage>
-      ))
     }
     return pages
   }
@@ -201,10 +183,8 @@ class OnboardingScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  migrationUsername: state.migration.peerAnnouncement ? state.migration.peerAnnouncement.peerDetails.previousUsername : undefined,
-  pendingMigration: state.migration.status === 'pending',
-  // No need for a referral challenge if this was a previous install and we're migrating or the user received a thread invite and is getting set up
-  skipReferralCode: state.migration.status === 'pending' || (state.auth.invite !== undefined && state.auth.invite.referral !== undefined)
+  // No need for a referral challenge if the user received a thread invite and is getting set up
+  skipReferralCode: state.auth.invite !== undefined && state.auth.invite.referral !== undefined
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({

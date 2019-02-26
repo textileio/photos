@@ -2,20 +2,20 @@ import {
   feedActions as actions,
   feedReducer as reducer
 } from './'
-import { ThreadFeedItem, ThreadFeedItemType } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 
 const group1 = 'group1'
 const group2 = 'group2'
-const items: ReadonlyArray<ThreadFeedItem> = [
-  { type: 'files' as ThreadFeedItemType, block: 'block1' },
-  { type: 'files' as ThreadFeedItemType, block: 'block2' },
-  { type: 'files' as ThreadFeedItemType, block: 'block3' }
+const items: ReadonlyArray<pb.IFeedItem> = [
+  { block: 'block1', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } },
+  { block: 'block2', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } },
+  { block: 'block3', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } }
 ]
-const otherItems: ReadonlyArray<ThreadFeedItem> = [
-  { type: 'files' as ThreadFeedItemType, block: 'block4' },
-  { type: 'files' as ThreadFeedItemType, block: 'block5' }
+const otherItems: ReadonlyArray<pb.IFeedItem> = [
+  { block: 'block4', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } },
+  { block: 'block5', thread: 'thread1', payload: { type_url: 'url', value: new Uint8Array([]) } }
 ]
 
 describe('feed', () => {

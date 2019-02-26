@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { ContactInfo } from '@textile/react-native-sdk'
+import { ContactInfo, pb } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
 import { RootState } from './Types'
@@ -13,9 +13,10 @@ const actions = {
     return (searchString: string) => resolve({ searchString })
   }),
   searchStarted: createAction('@contacts/SEARCH_STARTED'),
-  searchResultsTextile: createAction('@contacts/SEARCH_RESULTS_TEXTILE', (resolve) => {
-    return (results: ReadonlyArray<ContactInfo>) => resolve({ results })
+  searchResultTextile: createAction('@contacts/SEARCH_RESULT_TEXTILE', (resolve) => {
+    return (result: pb.IContact) => resolve({ result })
   }),
+  textileSearchComplete: createAction('@contacts/TEXTILE_SEARCH_COMPLETE'),
   searchResultsAddressBook: createAction('@contacts/SEARCH_RESULTS_ADDRESS_BOOK', (resolve) => {
     return (results: ReadonlyArray<Contacts.Contact>) => resolve({ results })
   }),
@@ -27,16 +28,16 @@ const actions = {
   }),
   clearSearch: createAction('@contacts/CLEAR_SEARCH'),
   addContactRequest: createAction('@contacts/ADD_CONTACT_REQUEST', (resolve) => {
-    return (contactInfo: ContactInfo) => resolve({ contactInfo })
+    return (contact: pb.IContact) => resolve({ contact })
   }),
   addContactSuccess: createAction('@contacts/ADD_CONTACT_SUCCESS', (resolve) => {
-    return (contactInfo: ContactInfo) => resolve({ contactInfo })
+    return (contact: pb.IContact) => resolve({ contact })
   }),
   addContactError: createAction('@contacts/ADD_CONTACT_ERROR', (resolve) => {
-    return (contactInfo: ContactInfo, error: any) => resolve({ contactInfo, error })
+    return (contact: pb.IContact, error: any) => resolve({ contact, error })
   }),
   clearAddContact: createAction('@contacts/CLEAR_ADD_CONTACT_ERROR', (resolve) => {
-    return (contactInfo: ContactInfo) => resolve({ contactInfo })
+    return (contact: pb.IContact) => resolve({ contact })
   }),
   authorInviteRequest: createAction('@contacts/AUTHOR_INVITE_REQUEST', (resolve) => {
     return (contact: Contacts.Contact) => resolve({ contact })
@@ -57,7 +58,7 @@ export interface ContactsState {
   readonly contacts: ReadonlyArray<ContactInfo>
   readonly textileSearchResults: {
     readonly processing: boolean
-    readonly results?: ReadonlyArray<ContactInfo>
+    readonly results?: ReadonlyArray<pb.IContact>
     readonly error?: string
   }
   readonly addressBookSearchResults: {
@@ -105,12 +106,21 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         }
       }
     }
-    case getType(actions.searchResultsTextile): {
+    case getType(actions.searchResultTextile): {
       return {
         ...state,
         textileSearchResults: {
-          processing: false,
-          results: action.payload.results
+          ...state.textileSearchResults,
+          results: [...state.textileSearchResults.results || [], action.payload.result]
+        }
+      }
+    }
+    case getType(actions.textileSearchComplete): {
+      return {
+        ...state,
+        textileSearchResults: {
+          ...state.textileSearchResults,
+          processing: false
         }
       }
     }
@@ -161,26 +171,26 @@ export function reducer (state: ContactsState = initialState, action: ContactsAc
         ...state,
         addingContacts: {
           ...state.addingContacts,
-          [action.payload.contactInfo.id]: {}
+          [action.payload.contact.id]: {}
         }
       }
     }
     case getType(actions.addContactSuccess):
     case getType(actions.clearAddContact): {
-      const { [action.payload.contactInfo.id]: removed, ...addingContacts } = state.addingContacts
+      const { [action.payload.contact.id]: removed, ...addingContacts } = state.addingContacts
       return {
         ...state,
         addingContacts
       }
     }
     case getType(actions.addContactError): {
-      const { contactInfo, error } = action.payload
+      const { contact, error } = action.payload
       const message = error.message as string || error as string || 'unknown'
       return {
         ...state,
         addingContacts: {
           ...state.addingContacts,
-          [contactInfo.id]: {
+          [contact.id]: {
             error: message
           }
         }
@@ -195,7 +205,7 @@ export interface TextileSearchResult {
   readonly key: string
   readonly type: 'textile'
   readonly data: {
-    contactInfo: ContactInfo,
+    contact: pb.IContact,
     isContact: boolean,
     adding: boolean
   }
@@ -239,20 +249,23 @@ export const ContactsSelectors = {
     const sections: SearchResultsSection[] = []
 
     let textileData: SearchResult[] | undefined
-    if (state.contacts.textileSearchResults.processing) {
-      textileData = [{ key: 'textile_loading', type: 'loading' }]
-    } else if (state.contacts.textileSearchResults.error) {
+    if (state.contacts.textileSearchResults.error) {
       textileData = [{ key: 'textile_error', type: 'error', data: state.contacts.textileSearchResults.error }]
     } else if (state.contacts.textileSearchResults.results && state.contacts.textileSearchResults.results.length > 0) {
       textileData = state.contacts.textileSearchResults.results.map((result) => {
         const isContact = ContactsSelectors.isKnown(state, result.id)
         const adding = Object.keys(state.contacts.addingContacts).indexOf(result.id) > -1
-        const textileResult: TextileSearchResult = { key: result.id, type: 'textile', data: { contactInfo: result, isContact, adding } }
+        const textileResult: TextileSearchResult = { key: result.id, type: 'textile', data: { contact: result, isContact, adding } }
         return textileResult
       })
     } else if (state.contacts.textileSearchResults.results && state.contacts.textileSearchResults.results.length === 0) {
       textileData = [{ key: 'textile_empty', type: 'empty' }]
     }
+
+    if (state.contacts.textileSearchResults.processing) {
+      textileData = [{ key: 'textile_loading', type: 'loading' }, ...textileData || []]
+    }
+
     if (textileData) {
       sections.push({ key: 'textile', title: 'Textile Users', data: textileData })
     }

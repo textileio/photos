@@ -79,7 +79,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   const likes = state.photoViewing.viewingPhoto.likes.map((like) => {
     const username: string = like.username || 'unknown'
     return {
-      peerId: like.author_id,
+      peerId: like.author,
       username,
       avatar: like.avatar
     }

@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
-import { ContactInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
 import Button from '../Components/SmallButton'
@@ -41,7 +41,7 @@ interface NavProps {
 interface DispatchProps {
   search: (searchString: string) => void
   clearSearch: () => void
-  addContact: (contactInfo: ContactInfo) => void
+  addContact: (contact: pb.IContact) => void
   inviteContact: (contact: Contacts.Contact) => void
 }
 
@@ -130,19 +130,19 @@ class AddContact extends React.Component<Props> {
       case 'textile':
         return (
           <ListItem
-            leftItem={<Avatar style={{ width: 50 }} target={item.data.contactInfo.avatar} />}
-            title={item.data.contactInfo.username || item.data.contactInfo.id}
-            subtitle={item.data.contactInfo.id.substr(item.data.contactInfo.id.length - 8, 8)}
+            leftItem={<Avatar style={{ width: 50 }} target={item.data.contact.avatar} />}
+            title={item.data.contact.username || item.data.contact.id}
+            subtitle={item.data.contact.id.substr(item.data.contact.id.length - 8, 8)}
             rightItems={[
               <Button
                 key='add'
                 text={item.data.isContact ? 'added' : 'add'}
                 disabled={item.data.isContact || item.data.adding}
-                onPress={this.onAdd(item.data.contactInfo)}
+                onPress={this.onAdd(item.data.contact)}
               />,
               <Icon key='more' name='chevron-right' size={24} color={color.grey_4} />
             ]}
-            onPress={this.onPressTextile(item.data.contactInfo)}
+            onPress={this.onPressTextile(item.data.contact)}
           />
         )
       case 'addressBook':
@@ -179,22 +179,18 @@ class AddContact extends React.Component<Props> {
     }
   }
 
-  onPressTextile = (contactInfo: ContactInfo) => {
-    return () => this.props.navigation.navigate('Contact', { contactInfo })
+  onPressTextile = (contact: pb.IContact) => {
+    return () => this.props.navigation.navigate('Contact', { avatar: contact.avatar, username: contact.username, peerId: contact.id })
   }
 
-  onAdd = (contactInfo: ContactInfo) => {
-    return () => this.props.addContact(contactInfo)
+  onAdd = (contact: pb.IContact) => {
+    return () => this.props.addContact(contact)
   }
 
   onPressAddressBook = (contact: Contacts.Contact) => {
     return () => {
       this.props.inviteContact(contact)
     }
-  }
-
-  onPress = (id: string) => {
-    this.props.navigation.navigate('Contact', { peerId: id })
   }
 }
 
@@ -208,7 +204,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     search: (searchString: string) => dispatch(ContactsActions.searchRequest(searchString)),
     clearSearch: () => dispatch(ContactsActions.clearSearch()),
-    addContact: (contactInfo: ContactInfo) => dispatch(ContactsActions.addContactRequest(contactInfo)),
+    addContact: (contact: pb.IContact) => dispatch(ContactsActions.addContactRequest(contact)),
     inviteContact: (contact: Contacts.Contact) => dispatch(ContactsActions.authorInviteRequest(contact))
   }
 }

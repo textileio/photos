@@ -4,11 +4,11 @@
 // read here: https://basarat.gitbooks.io/typescript/docs/tips/nominalTyping.html#using-enums
 
 import {IProcessingImageProps} from '../Components/ProcessingImage'
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 export interface PhotoType {
   type: 'photo',
-  photo: ThreadFilesInfo
+  photo: pb.IFiles
   id: string
 }
 
