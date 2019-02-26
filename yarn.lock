@@ -867,7 +867,7 @@
     protobufjs "^6.8.8"
 
 "@textile/react-native-camera-roll@file:../CameraRoll":
-  version "1.0.0"
+  version "1.0.1"
 
 "@textile/react-native-icon@^1.0.0":
   version "1.0.0"

@@ -1,7 +1,7 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { ILocalPhotoResult } from '../Models/TextileTypes'
 import { ISummary } from '@textile/react-native-sdk'
 import { RootState } from './Types'
+import { ILocalPhotoResult } from '@textile/react-native-camera-roll'
 
 const actions = {
   newLocalPhoto: createAction('processingImages/NEW_LOCAL_PHOTO', (resolve) => {
