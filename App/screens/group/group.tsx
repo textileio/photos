@@ -149,8 +149,8 @@ class Group extends Component<Props, State> {
         return (
           <Photo
             avatar={avatar}
-            username={username || 'unknown'}
-            message={caption}
+            username={username.length > 0 ? username : 'unknown'}
+            message={caption.length > 0 ? caption : undefined}
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
             photoId={target}
             fileIndex={files[0].index}
