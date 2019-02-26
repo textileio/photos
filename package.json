@@ -13,6 +13,7 @@
     "@textile/react-native-sdk": "1.2.7",
     "@textile/redux-saga-wait-for": "1.0.1",
     "apisauce": "^1.0.2",
+    "@textile/react-native-camera-roll": "@textile/react-native-camera-roll",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "react": "16.6.1",
