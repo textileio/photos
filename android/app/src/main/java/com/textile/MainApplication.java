@@ -3,6 +3,7 @@ package com.textile;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import io.textile.cameraroll.RNCameraRollPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -39,6 +40,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
           new MainReactPackage(),
+            new RNCameraRollPackage(),
           new RNTextilePackage(),
           new RNBackgroundFetchPackage(),
           new ReactNativePushNotificationPackage(),

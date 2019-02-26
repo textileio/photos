@@ -522,6 +522,7 @@
 		93F1805721FD459700883267 /* Biotif-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Medium.ttf"; path = "../../App/Fonts/Biotif-Medium.ttf"; sourceTree = "<group>"; };
 		93F1805821FD459700883267 /* Biotif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Regular.ttf"; path = "../../App/Fonts/Biotif-Regular.ttf"; sourceTree = "<group>"; };
 		93F1805C21FD49A900883267 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = "../../node_modules/@textile/react-native-icon/icomoon_gen/fonts/icomoon.ttf"; sourceTree = "<group>"; };
+		A15F8870A6AA42EFBB5D8B62 /* libRNCameraRoll.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCameraRoll.a; sourceTree = "<group>"; };
 		A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
 		A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
 		A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
@@ -1114,6 +1115,10 @@
 				{
 					ProductGroup = 93C005A0216C15E9007786A5 /* Products */;
 					ProjectRef = 93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */;
+				},
+				{
+					ProductGroup = A2F241592225CA2C0011F88E /* Products */;
+					ProjectRef = 6A35E5ABF6E645EB9B58430C /* RNCameraRoll.xcodeproj */;
 				},
 				{
 					ProductGroup = 93C0049A216B2666007786A5 /* Products */;

@@ -176,6 +176,7 @@ android {
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation project(':@textile_react-native-sdk')
+    implementation project(':@textile_react-native-camera-roll')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
