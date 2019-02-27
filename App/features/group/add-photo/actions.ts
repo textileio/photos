@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { BlockInfo, Protobufs } from '@textile/react-native-sdk'
+import { BlockInfo, pb } from '@textile/react-native-sdk'
 
 import { SharedImage, ProcessingImageError } from './models'
 
@@ -8,7 +8,7 @@ export const insertImage = createAction('processingImages/INSERT_IMAGE', (resolv
 })
 
 export const imagePrepared = createAction('processingImages/IMAGE_PREPARED', (resolve) => {
-  return (uuid: string, preparedFiles: Protobufs.IMobilePreparedFiles) => resolve({ uuid, preparedFiles })
+  return (uuid: string, preparedFiles: pb.IMobilePreparedFiles) => resolve({ uuid, preparedFiles })
 })
 
 export const uploadStarted = createAction('processingImages/UPLOAD_STARTED', (resolve) => {

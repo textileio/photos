@@ -1,10 +1,7 @@
 import { Store } from 'redux'
-import {
-  DeviceEventEmitter
-} from 'react-native'
 
 import { ILocalPhotoResult } from '../../Models/TextileTypes'
-import Textile, { Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
+import { Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
 
 import NotificationActions from '../../Redux/NotificationsRedux'
@@ -16,11 +13,11 @@ import { toTypedNotification } from '../Notifications'
 
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import AccountActions from '../../Redux/AccountRedux'
-import MigrationActions from '../../Redux/MigrationRedux'
 import { groupActions } from '../../features/group'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
+  events = new Events()
 
   constructor(store: Store<RootState>) {
     this.store = store
@@ -28,16 +25,18 @@ export default class TextileNodeEventHandler {
   }
 
   setup () {
-    Events.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
+    this.events.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
+      this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
+    })
+    this.events.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
       this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
     })
     // Now handled internally by sdk
-    Events.addListener('onOnline', () => {
+    this.events.addListener('onOnline', () => {
       this.store.dispatch(TextileEventsActions.nodeOnline())
     })
-    Events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
+    this.events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
       const { type } = update.block
-
       if (type === BlockType.MESSAGE ||
         type === BlockType.COMMENT ||
         type === BlockType.LIKE ||
@@ -52,9 +51,12 @@ export default class TextileNodeEventHandler {
       if (type === BlockType.COMMENT ||
         type === BlockType.LIKE ||
         type === BlockType.FILES ||
-        type === BlockType.IGNORE) {
+        type === BlockType.IGNORE ||
+        type === BlockType.JOIN) {
         this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread_id))
-      } else if (type === BlockType.JOIN) {
+      }
+
+      if (type === BlockType.JOIN) {
         // Every time the a JOIN block is detected, we should refresh our in-mem contact list
         // Enhancement: compare the joiner id with known ids and skip the refresh if known.
         this.store.dispatch(ContactsActions.getContactsRequest())
@@ -65,62 +67,54 @@ export default class TextileNodeEventHandler {
       const message = `BlockType ${type} on ${name}`
       this.store.dispatch(DeviceLogsActions.logNewEvent( (new Date()).getTime(), 'onThreadUpdate', message, false))
     })
-    Events.addListener('onThreadAdded', (payload: Update) => {
+    this.events.addListener('onThreadAdded', (payload: Update) => {
+      this.store.dispatch(PhotoViewingActions.threadAdded(payload.id, payload.key, payload.name))
       this.store.dispatch(PhotoViewingActions.threadAddedNotification(payload.id))
     })
-    Events.addListener('onThreadRemoved', (payload: Update) => {
+    this.events.addListener('onThreadRemoved', (payload: Update) => {
       this.store.dispatch(PhotoViewingActions.threadRemoved(payload.id))
     })
-    Events.addListener('onNotification', (payload: NotificationInfo) => {
+    this.events.addListener('onNotification', (payload: NotificationInfo) => {
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
-
-    /* ----- JS Events from SDK -----*/
-
-    // New Bridge actions
-
-    DeviceEventEmitter.addListener('@textile/newNodeState', (payload) => {
+    // TextileEventsActions
+    this.events.addListener('newNodeState', (payload) => {
       this.store.dispatch(TextileEventsActions.newNodeState(payload.state))
     })
-    DeviceEventEmitter.addListener('@textile/startNodeFinished', () => {
+    this.events.addListener('startNodeFinished', () => {
       this.store.dispatch(TextileEventsActions.startNodeFinished())
     })
-    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayStarting', () => {
+    this.events.addListener('stopNodeAfterDelayStarting', () => {
       this.store.dispatch(TextileEventsActions.stopNodeAfterDelayStarting())
     })
-    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayCancelled', () => {
+    this.events.addListener('stopNodeAfterDelayCancelled', () => {
       this.store.dispatch(TextileEventsActions.stopNodeAfterDelayCancelled())
     })
-    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayFinishing', () => {
+    this.events.addListener('stopNodeAfterDelayFinishing', () => {
       this.store.dispatch(TextileEventsActions.stopNodeAfterDelayFinishing())
     })
-    DeviceEventEmitter.addListener('@textile/stopNodeAfterDelayComplete', () => {
+    this.events.addListener('stopNodeAfterDelayComplete', () => {
       this.store.dispatch(TextileEventsActions.stopNodeAfterDelayComplete())
     })
-    DeviceEventEmitter.addListener('@textile/appStateChange', (payload) => {
+    this.events.addListener('appStateChange', (payload) => {
       this.store.dispatch(TextileEventsActions.appStateChange(payload.previousState, payload.newState))
     })
-    DeviceEventEmitter.addListener('@textile/updateProfile', () => {
+    this.events.addListener('updateProfile', () => {
       this.store.dispatch(TextileEventsActions.updateProfile())
     })
-    DeviceEventEmitter.addListener('@textile/error', (payload) => {
+    this.events.addListener('error', (payload) => {
       this.store.dispatch(TextileEventsActions.newErrorMessage(payload.type, payload.message))
     })
     // Account actions
-    DeviceEventEmitter.addListener('@textile/setRecoveryPhrase', (payload) => {
+    this.events.addListener('setRecoveryPhrase', (payload) => {
       this.store.dispatch(AccountActions.setRecoveryPhrase(payload.recoveryPhrase))
     })
-    DeviceEventEmitter.addListener('@textile/walletInitSuccess', () => {
+    this.events.addListener('walletInitSuccess', () => {
       this.store.dispatch(AccountActions.initSuccess())
-    })
-    // Migration actions
-    DeviceEventEmitter.addListener('@textile/migrationNeeded', (payload) => {
-      this.store.dispatch(MigrationActions.migrationNeeded())
     })
   }
 
   tearDown () {
-    Events.removeAllListeners()
-    DeviceEventEmitter.removeAllListeners()
+    this.events.removeAllListeners()
   }
 }

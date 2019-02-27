@@ -6,7 +6,7 @@ import { addMessage} from './actions'
 export function * handleAddMessageRequest(action: ActionType<typeof addMessage.request>) {
   const { id, groupId, body } = action.payload
   try {
-    yield call(Textile.addThreadMessage, groupId, body)
+    yield call(Textile.addMessage, groupId, body)
     yield put(addMessage.success({ id, groupId }))
   } catch (error) {
     yield put(addMessage.failure({ id, groupId, error }))

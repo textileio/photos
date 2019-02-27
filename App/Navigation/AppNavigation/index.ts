@@ -5,7 +5,6 @@ import {
 
 import OnboardingNavigation from './Onboarding'
 import ModalNavigation from './Modal'
-import MigrationContainer from '../../Containers/MigrationContainer'
 
 import StatusCheck from '../../Containers/StatusCheck'
 
@@ -13,7 +12,6 @@ const nav = createSwitchNavigator(
   {
     StatusCheck,
     OnboardingNavigation,
-    Migration: MigrationContainer,
     ModalNavigation
   },
   {

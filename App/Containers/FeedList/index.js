@@ -6,7 +6,6 @@ import { Item } from 'react-navigation-header-buttons'
 import FeedItem from '../../SB/components/FeedItem'
 
 import NotificationsActions from '../../Redux/NotificationsRedux'
-import MigrationActions from '../../Redux/MigrationRedux'
 
 import styles from './statics/styles'
 import onboardingStyles from '../Styles/OnboardingStyle'
@@ -110,20 +109,10 @@ class Notifications extends React.PureComponent {
     )
   }
 
-  migrationComponent = () => {
-    if (this.props.migration) {
-      return (
-        <CustomFeedItem onClick={this.props.requestMigration} title={'Migration available'} subtitle={'Tap here to get started'} />
-      )
-    }
-    return null // tslint:disable-line
-  }
-
   _renderItems () {
     return (
       <View style={styles.contentContainer}>
         <FlatList
-          ListHeaderComponent={this.migrationComponent}
           data={this.props.notifications}
           keyExtractor={this._keyExtractor.bind(this)}
           renderItem={this._renderItem.bind(this)}
@@ -148,11 +137,9 @@ class Notifications extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   const notifications = state.notifications.notifications
-  const migration = state.migration.status === 'pending'
-  const showOnboarding = state.preferences.tourScreens.feed === true && !migration
+  const showOnboarding = state.preferences.tourScreens.feed === true
 
   return {
-    migration,
     notifications,
     profile: state.account.profile.value,
     showOnboarding
@@ -165,8 +152,7 @@ const mapDispatchToProps = (dispatch) => {
     readAllNotifications: () => dispatch(NotificationsActions.readAllNotificationsRequest()),
     refreshMessages: () => { dispatch(TextileEventsActions.refreshMessagesRequest()) },
     clickNotification: (notification) => dispatch(NotificationsActions.notificationSuccess(notification)),
-    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) },
-    requestMigration: () => { dispatch(MigrationActions.requestMigration()) }
+    completeTourScreen: () => { dispatch(PreferencesActions.completeTourSuccess('feed')) }
   }
 }
 

@@ -3,9 +3,10 @@ import { Dispatch } from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle, Dimensions } from 'react-native'
+import { util } from '@textile/react-native-sdk'
 import moment from 'moment'
 
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 import { RootState, RootAction } from '../Redux/Types'
 
 import UIActions from '../Redux/UIRedux'
@@ -31,8 +32,8 @@ const CONTAINER: ViewStyle = {
 }
 
 interface StateProps {
-  selfId: string,
-  photo?: ThreadFilesInfo,
+  photo?: pb.IFiles,
+  selfId: string
   threadName?: string,
   threadId?: string
 }
@@ -68,7 +69,7 @@ class PhotoScreen extends React.Component<Props> {
       return <ScrollView style={CONTAINER} />
     }
     const { avatar, username, caption, date, target, files, likes, comments, block } = this.props.photo
-    const hasLiked = likes.findIndex((likeInfo) => likeInfo.author_id === this.props.selfId) > -1
+    const hasLiked = likes.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
     const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
       return {
         id: comment.id,
@@ -83,7 +84,7 @@ class PhotoScreen extends React.Component<Props> {
           avatar={avatar}
           username={username || 'unknown'}
           message={caption}
-          time={moment(date).calendar(undefined, momentSpec)}
+          time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           photoId={target}
           fileIndex={files[0].index}
           photoWidth={screenWidth}

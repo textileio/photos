@@ -136,7 +136,7 @@ class Contacts extends React.Component<Props, State> {
 
   onPress = (contactInfo: ContactInfo) => {
     return () => {
-      this.props.navigation.navigate('Contact', { contactInfo })
+      this.props.navigation.navigate('Contact', { avatar: contactInfo.avatar, username: contactInfo.username, peerId: contactInfo.id })
     }
   }
 

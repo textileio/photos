@@ -11,12 +11,12 @@ import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '@textile/react-native-textile-image'
 import { SharedImage } from '../features/group/add-photo/models'
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
 interface StateProps {
-  image?: SharedImage | ThreadFilesInfo,
+  image?: SharedImage | pb.IFiles,
   threadId?: string,
   comment?: string,
   selectedThreadId?: string
@@ -86,9 +86,9 @@ class AddCaptionScreen extends React.Component<Props> {
       disableShare: this.props.selectedThreadId === undefined || !this.props.share,
       cancelShare: () => { this.props.cancelShare() },
       share: () => {
-        if (this.props.share && this.props.image && (this.props.image as ThreadFilesInfo).target && this.props.threadId) {
-          const filesInfo = this.props.image as ThreadFilesInfo
-          this.props.share(filesInfo.target, this.props.threadId, this.props.comment)
+        if (this.props.share && this.props.image && (this.props.image as pb.IFiles).target && this.props.threadId) {
+          const filesInfo = this.props.image as pb.IFiles
+          this.props.share(filesInfo.target!, this.props.threadId, this.props.comment)
         } else if (this.props.share && this.props.image && (this.props.image as SharedImage).uri && this.props.threadId) {
           const sharedImage = this.props.image as SharedImage
           this.props.share(sharedImage, this.props.threadId, this.props.comment)
@@ -105,8 +105,10 @@ class AddCaptionScreen extends React.Component<Props> {
     }
   }
 
-  _shareToNewThread (withPhoto: ThreadFilesInfo, withThreadName: string) {
-    this.props.shareNewThread(withPhoto.target, withThreadName, this.props.comment)
+  _shareToNewThread (withPhoto: pb.IFiles, withThreadName: string) {
+    if (withPhoto.target) {
+      this.props.shareNewThread(withPhoto.target, withThreadName, this.props.comment)
+    }
   }
 
   _createNewThread () {
@@ -143,17 +145,19 @@ class AddCaptionScreen extends React.Component<Props> {
           style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}
         />
       )
-    } else if (image && (image as ThreadFilesInfo).target) {
-      const filesInfo = image as ThreadFilesInfo
-      return (
-        <TextileImage
-          target={filesInfo.target}
-          index={filesInfo.files[0].index}
-          forMinWidth={70}
-          resizeMode={'cover'}
-          style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}
-        />
-      )
+    } else if (image && (image as pb.IFiles).target) {
+      const filesInfo = image as pb.IFiles
+      if (filesInfo.target) {
+        return (
+          <TextileImage
+            target={filesInfo.target}
+            index={filesInfo.files[0].index}
+            forMinWidth={70}
+            resizeMode={'cover'}
+            style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}
+          />
+        )
+      }
     }
   }
 

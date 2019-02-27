@@ -1,16 +1,19 @@
 import actions, { reducer } from '../PhotoViewingRedux'
-import { ThreadFilesInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 
 const threadId = 'threadId'
 const threadKey = 'threadKey'
 const threadName = 'threadName'
-const photos: ThreadFilesInfo[] = [{
+const photos: pb.IFiles[] = [{
+  username: 'username',
+  avatar: 'avatar',
+  caption: '',
   block: 'block_id',
   target: 'target',
-  date: 'now',
-  author_id: 'author_id',
+  date: { seconds: 10, nanos: 20 },
+  author: 'author_id',
   files: [],
   comments: [],
   likes: [],

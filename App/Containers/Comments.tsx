@@ -3,6 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, ScrollView, ViewStyle } from 'react-native'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
+import { util } from '@textile/react-native-sdk'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
@@ -112,10 +113,10 @@ const mapStateToProps = (state: RootState): StateProps  => {
   let captionCommentCardProps: CommentCardProps | undefined
   if (viewingPhoto && viewingPhoto.caption) {
     captionCommentCardProps = {
-      username: viewingPhoto.username || viewingPhoto.author_id,
+      username: viewingPhoto.username || viewingPhoto.author,
       avatar: viewingPhoto.avatar,
       comment: viewingPhoto.caption,
-      date: viewingPhoto.date,
+      date: util.timestampToDate(viewingPhoto.date),
       isCaption: true
     }
   }
@@ -126,7 +127,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
       username: comment.username || 'unknown',
       avatar: comment.avatar,
       comment: comment.body,
-      date: comment.date,
+      date: util.timestampToDate(comment.date),
       isCaption: false
     }
     return props

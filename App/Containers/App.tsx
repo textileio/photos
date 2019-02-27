@@ -40,11 +40,16 @@ class App extends Component {
   }
 
   componentWillMount () {
-    this.textile.setup({
-      RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE,
-      TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
-      TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
-    })
+    this.textile.setup(
+      {
+        RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE
+      },
+      {
+        TEXTILE_CAFE_TOKEN: RNConfig.RN_TEXTILE_CAFE_TOKEN,
+        TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
+        TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
+      }
+    )
   }
 
   componentWillUnmount () {

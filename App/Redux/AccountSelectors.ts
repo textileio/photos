@@ -1,5 +1,6 @@
+import { pb, util } from '@textile/react-native-sdk'
+
 import { RootState } from './Types'
-import { ICafeSession } from '@textile/react-native-protobufs'
 
 /**
  * Returns the Account Address
@@ -20,24 +21,17 @@ export function getUsername (state: RootState): string | undefined {
          state.account.profile.value.username
 }
 
-export function bestSession(state: RootState): ICafeSession | undefined {
+export function bestSession(state: RootState): pb.ICafeSession | undefined {
   const values = state.account.cafeSessions.sessions
   if (values.length === 0) {
     return undefined
   }
   const sorted = values.slice().sort((a, b) => {
-    const aExpiry = new Date(getSessionMillis(a)).getTime()
-    const bExpiry = new Date(getSessionMillis(b)).getTime()
+    const aExpiry = util.timestampToDate(a.exp).getTime()
+    const bExpiry = util.timestampToDate(b.exp).getTime()
     return aExpiry - bExpiry
   })
   return sorted.pop()
-}
-
-export function getSessionMillis(session: ICafeSession): number {
-  if (!session.exp || !session.exp.seconds || !session.exp.nanos) {
-    return 0
-  }
-  return (session.exp.seconds as number) * 1e3 + session.exp.nanos / 1e6
 }
 
 export function initialized(state: RootState) {

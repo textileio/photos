@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import Icon from '@textile/react-native-icon'
 import TextileImage from '@textile/react-native-textile-image'
 import Avatar from '../Avatar'
-import { ContactInfo, ThreadFilesInfo } from '@textile/react-native-sdk'
+import { ContactInfo, pb } from '@textile/react-native-sdk'
+
 import styles, { cardImageStyle, ICON_WIDTH, ROW_COLUMN } from './statics/styles'
 import { color } from '../../styles'
 
@@ -11,7 +12,7 @@ interface ScreenProps {
   id: string
   name: string
   members: ContactInfo[]
-  thumb?: ThreadFilesInfo
+  thumb?: pb.IFiles
   onPress: (groupCardProps: any) => void
 }
 
