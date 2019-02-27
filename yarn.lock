@@ -866,9 +866,9 @@
   dependencies:
     protobufjs "^6.8.8"
 
-"@textile/react-native-camera-roll@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-camera-roll/-/react-native-camera-roll-1.1.0.tgz#f69cd3802cee601e9814013c435dfe58a462cf5f"
+"@textile/react-native-camera-roll@1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-camera-roll/-/react-native-camera-roll-1.1.4.tgz#0d4ca5daa8b6b80d935fb8c1ca91ce380419e2e4"
 
 "@textile/react-native-icon@^1.0.0":
   version "1.0.0"
