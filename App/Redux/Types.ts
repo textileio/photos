@@ -17,6 +17,7 @@ import { UploadingImagesAction } from './UploadingImagesRedux'
 import { StartupAction } from './StartupRedux'
 import { TextileEventsActions } from './TextileEventsRedux'
 import { GroupAction } from '../features/group'
+import { StorageAction } from './StorageRedux'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -34,4 +35,5 @@ export type RootAction =
   UploadingImagesAction |
   StartupAction |
   TextileEventsActions |
-  GroupAction
+  GroupAction |
+  StorageAction
