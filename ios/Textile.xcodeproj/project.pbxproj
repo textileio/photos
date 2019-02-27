@@ -56,6 +56,9 @@
 		93F1805A21FD459700883267 /* Biotif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805721FD459700883267 /* Biotif-Medium.ttf */; };
 		93F1805B21FD459700883267 /* Biotif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805821FD459700883267 /* Biotif-Regular.ttf */; };
 		93F1805D21FD49A900883267 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805C21FD49A900883267 /* icomoon.ttf */; };
+		93F9F51B2226F95A0037A33A /* libRNCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2F2415D2225CA2C0011F88E /* libRNCameraRoll.a */; };
+		93F9F51C2226F9760037A33A /* libRNTextile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2150F0721F3E0C30075B7FF /* libRNTextile.a */; };
+		93F9F51D2226F9930037A33A /* libRNScreenControl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A27552CD21F28BED00C603F5 /* libRNScreenControl.a */; };
 		A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */; };
 		A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
