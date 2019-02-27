@@ -1,4 +1,5 @@
 import {call, put, select, take} from 'redux-saga/effects'
+import CameraRoll, { LocalPhotoResult } from '@textile/react-native-camera-roll'
 import { SharedImage } from '../features/group/add-photo/models'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
 import {ActionType, getType} from 'typesafe-actions'

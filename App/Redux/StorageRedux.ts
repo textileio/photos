@@ -1,11 +1,11 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import { ISummary } from '@textile/react-native-sdk'
 import { RootState } from './Types'
-import { ILocalPhotoResult } from '@textile/react-native-camera-roll'
+import { LocalPhotoResult } from '@textile/react-native-camera-roll'
 
 const actions = {
   newLocalPhoto: createAction('processingImages/NEW_LOCAL_PHOTO', (resolve) => {
-    return (photo: ILocalPhotoResult) => resolve({ photo })
+    return (photo: LocalPhotoResult) => resolve({ photo })
   }),
   setLocalPhotoRefreshEpoch: createAction('processingImages/SET_LOCAL_PHOTO_UPDATE_EPOCH', (resolve) => {
     return (epoch: number) => resolve({ epoch })
