@@ -1,7 +1,7 @@
 import { take, put, call, all, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import AccountActions from '../../Redux/AccountRedux'
-import ContactsActions from '../../Redux/ContactsRedux'
+import { contactsActions } from '../../features/contacts'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import { util } from '@textile/react-native-sdk'
@@ -21,7 +21,7 @@ export function * onNodeStarted () {
       yield put(AccountActions.refreshProfileRequest())
       yield put(AccountActions.refreshPeerIdRequest())
       yield put(AccountActions.getCafeSessionsRequest())
-      yield put(ContactsActions.getContactsRequest())
+      yield put(contactsActions.getContactsRequest())
       yield put(PhotoViewingActions.refreshThreadsRequest())
     } catch (error) {
       // nothing to do here for now

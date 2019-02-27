@@ -21,29 +21,30 @@ import Textile, {
 } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
 
-import ContactsActions from '../../Redux/ContactsRedux'
+import * as actions from './actions'
 import { getPeerId, getUsername } from '../../Redux/AccountSelectors'
 import { composeMessage } from '../../NativeModules/MessageComposer'
+import UIActions from '../../Redux/UIRedux'
 
-export function * addFriends() {
+function * addFriends() {
   yield call(refreshContacts)
 }
 
-export function * refreshContacts() {
+function * refreshContacts() {
   try {
     const contactsResult: ReadonlyArray<ContactInfo> = yield call(Textile.contacts)
-    yield put(ContactsActions.getContactsSuccess(contactsResult))
+    yield put(actions.getContactsSuccess(contactsResult))
 
   } catch (error) {
     // skip for now
   }
 }
 
-export function * watchForAddContactRequests() {
-  yield takeEvery(getType(ContactsActions.addContactRequest), handleAddContactRequest)
+function * watchForAddContactRequests() {
+  yield takeEvery(getType(actions.addContactRequest), handleAddContactRequest)
 }
 
-function * handleAddContactRequest(action: ActionType<typeof ContactsActions.addContactRequest>) {
+function * handleAddContactRequest(action: ActionType<typeof actions.addContactRequest>) {
   const { contact } = action.payload
   try {
     const contactInfo: ContactInfo = {
@@ -56,10 +57,10 @@ function * handleAddContactRequest(action: ActionType<typeof ContactsActions.add
       updated: util.timestampToDate(contact.updated).toISOString()
     }
     yield call(Textile.addContact, contactInfo)
-    yield put(ContactsActions.addContactSuccess(contact))
+    yield put(actions.addContactSuccess(contact))
     yield call(refreshContacts)
   } catch (error) {
-    yield put(ContactsActions.addContactError(contact, error))
+    yield put(actions.addContactError(contact, error))
   }
 }
 
@@ -100,18 +101,18 @@ function * searchTextile(searchString: string) {
     while (true) {
       const event: ContactSearchEvent = yield take(channel)
       if (event.type === 'result') {
-        yield put(ContactsActions.searchResultTextile(event.contact))
+        yield put(actions.searchResultTextile(event.contact))
       } else if (event.type === 'error') {
-        yield put(ContactsActions.searchErrorTextile(event.error))
+        yield put(actions.searchErrorTextile(event.error))
       }
     }
   } catch (error) {
-    yield put(ContactsActions.searchErrorTextile(error))
+    yield put(actions.searchErrorTextile(error))
   } finally {
     if (yield cancelled()) {
       channel.close()
     } else {
-      yield put(ContactsActions.textileSearchComplete())
+      yield put(actions.textileSearchComplete())
     }
   }
 }
@@ -126,39 +127,39 @@ function * searchAddressBook(searchString: string) {
     const contacts: Contacts.Contact[] = yield call(getContactsMatching, searchString)
     const isCancelled = yield cancelled()
     if (!isCancelled) {
-      yield put(ContactsActions.searchResultsAddressBook(contacts))
+      yield put(actions.searchResultsAddressBook(contacts))
     }
   } catch (error) {
-    yield put(ContactsActions.searchErrorAddressBook(error))
+    yield put(actions.searchErrorAddressBook(error))
   }
 }
 
 function * executeSearchRequest(searchString: string) {
-  yield put(ContactsActions.searchStarted())
+  yield put(actions.searchStarted())
   yield race({
     search: all([call(searchTextile, searchString), call(searchAddressBook, searchString)]),
-    cancel: take(getType(ContactsActions.clearSearch))
+    cancel: take(getType(actions.clearSearch))
   })
 }
 
-function * handleSearchRequest(action: ActionType<typeof ContactsActions.searchRequest>) {
+function * handleSearchRequest(action: ActionType<typeof actions.searchRequest>) {
   // debounce it, but cancel if we clear search
   const { debounce } = yield race({
     debounce: call(delay, 1000),
-    cancel: take(getType(ContactsActions.clearSearch))
+    cancel: take(getType(actions.clearSearch))
   })
   if (debounce) {
     yield call(executeSearchRequest, action.payload.searchString)
   }
 }
 
-export function * watchForSearchRequest() {
-  yield takeLatest(getType(ContactsActions.searchRequest), handleSearchRequest)
+function * watchForSearchRequest() {
+  yield takeLatest(getType(actions.searchRequest), handleSearchRequest)
 }
 
-export function * sendInviteMessage() {
+function * sendInviteMessage() {
   while (true) {
-    const action: ActionType<typeof ContactsActions.authorInviteRequest> = yield take(getType(ContactsActions.authorInviteRequest))
+    const action: ActionType<typeof actions.authorInviteRequest> = yield take(getType(actions.authorInviteRequest))
     const { phoneNumbers } = action.payload.contact
     const iphone = phoneNumbers.find((number) => number.label.toLowerCase() === 'iphone')
     const mobile = phoneNumbers.find((number) => number.label.toLowerCase() === 'mobile')
@@ -179,6 +180,16 @@ export function * sendInviteMessage() {
       yield call(composeMessage, sendTo.number, message)
     }
   }
+}
+
+export default function * () {
+  yield all([
+    takeEvery(getType(UIActions.addFriendRequest), addFriends),
+    takeEvery(getType(actions.getContactsRequest), refreshContacts),
+    call(watchForSearchRequest),
+    call(watchForAddContactRequests),
+    call(sendInviteMessage)
+  ])
 }
 
 async function requestPermissionsAndroid() {
