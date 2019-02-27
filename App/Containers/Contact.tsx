@@ -21,7 +21,9 @@ import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
 interface NavProps {
-  contactInfo: ContactInfo
+  avatar: string
+  username: string
+  peerId: string
 }
 
 interface StateProps {
@@ -52,7 +54,8 @@ class ContactModal extends React.Component<Props> {
   }
 
   render () {
-    const { avatar, username } = this.props.navigation.getParam('contactInfo')
+    const avatar = this.props.navigation.getParam('avatar')
+    const username = this.props.navigation.getParam('username')
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
@@ -75,7 +78,7 @@ class ContactModal extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
-  const peerId = ownProps.navigation.getParam('contactInfo').id
+  const peerId = ownProps.navigation.getParam('peerId')
   return {
     threadThumbs: getThreadThumbs(state, peerId, 'name')
   }

@@ -4,7 +4,7 @@ import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
 import Textile, {
   BlockInfo,
-  Protobufs
+  pb
 } from '@textile/react-native-sdk'
 import { SharedImage, ProcessingImage } from '../features/group/add-photo/models'
 import AccountActions from '../Redux/AccountRedux'
@@ -91,7 +91,7 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
 export function * shareWalletImage (id: string, threadId: string, comment?: string) {
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
-    const blockId: string = yield call(Textile.addThreadFilesByTarget, id, threadId, comment)
+    const blockId: string = yield call(Textile.addFilesByTarget, id, threadId, comment)
   } catch (error) {
     yield put(UIActions.imageSharingError(error))
   }
@@ -111,13 +111,16 @@ export function * prepareImage (uuid: string) {
       throw new Error('no ProcessingImage found')
     }
     const { sharedImage, destinationThreadId } = processingImage
-    const preparedFiles: Protobufs.IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
-    if (sharedImage.isAvatar && preparedFiles.dir && preparedFiles.dir.files && preparedFiles.dir.files['raw'] && preparedFiles.dir.files['raw'].hash) {
-      // TODO: This doesn't seem right in here, but ok
-      const hash = preparedFiles.dir.files['raw'].hash as string
-      // TODO: might error if node not online...
-      yield put(AccountActions.setAvatarRequest(hash))
-      // yield fork(Textile.updateAvatarAndProfile, hash)
+    const preparedFiles: pb.IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
+    if (sharedImage.isAvatar && preparedFiles.dir) {
+      const rawItem = preparedFiles.dir.files['raw']
+      if (rawItem) {
+        // TODO: This doesn't seem right in here, but ok
+        const hash = rawItem.hash
+        // TODO: might error if node not online...
+        yield put(AccountActions.setAvatarRequest(hash))
+        // yield fork(Textile.updateAvatarAndProfile, hash)
+      }
     }
     yield put(groupActions.addPhoto.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
@@ -166,7 +169,7 @@ export function * shareToThread (uuid: string) {
       throw new Error('no ProcessingImage or preparedData or dir found')
     }
     const { dir } = processingImage.preparedFiles
-    const blockInfo: BlockInfo = yield call(Textile.addThreadFiles, dir, processingImage.destinationThreadId, processingImage.comment)
+    const blockInfo: BlockInfo = yield call(Textile.addFiles, dir, processingImage.destinationThreadId, processingImage.comment)
     yield put(groupActions.addPhoto.sharedToThread(uuid, blockInfo))
     yield put(groupActions.addPhoto.complete(uuid))
   } catch (error) {
@@ -174,7 +177,7 @@ export function * shareToThread (uuid: string) {
   }
 }
 
-export async function prepare (image: SharedImage, destinationThreadId: string): Promise<Protobufs.IMobilePreparedFiles> {
+export async function prepare (image: SharedImage, destinationThreadId: string): Promise<pb.IMobilePreparedFiles> {
   const addResult = await Textile.prepareFilesAsync(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)

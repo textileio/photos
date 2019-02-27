@@ -4,13 +4,14 @@ import AccountActions from '../../Redux/AccountRedux'
 import ContactsActions from '../../Redux/ContactsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
+import { util } from '@textile/react-native-sdk'
 import TextileEventsActions, { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
 import Textile, {
-  Protobufs,
+  pb,
   ContactInfo,
   NodeState
 } from '@textile/react-native-sdk'
-import { bestSession, getSessionMillis } from '../../Redux/AccountSelectors'
+import { bestSession } from '../../Redux/AccountSelectors'
 import { logNewEvent } from '../DeviceLogs'
 
 export function * onNodeStarted () {
@@ -90,12 +91,12 @@ export function * setAvatar () {
 }
 
 export function * getSession (depth: number = 0): any {
-  const session: Protobufs.ICafeSession | undefined = yield select(bestSession)
+  const session: pb.ICafeSession | undefined = yield select(bestSession)
   if (!session) {
     return undefined
   }
-  const millis = getSessionMillis(session)
-  if (new Date(millis) < new Date()) {
+  const expDate = util.timestampToDate(session.exp)
+  if (expDate < new Date()) {
     if (depth === 0) {
       yield put(AccountActions.refreshCafeSessionsRequest())
       yield take(getType(AccountActions.cafeSessionsSuccess))

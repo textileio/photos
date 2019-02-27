@@ -1,4 +1,4 @@
-import { BlockInfo, Protobufs } from '@textile/react-native-sdk'
+import { BlockInfo, pb } from '@textile/react-native-sdk'
 
 import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
@@ -51,7 +51,7 @@ export interface ProcessingImage {
   readonly status: 'preparing'  | 'uploading' | 'sharing' | 'complete'
   readonly destinationThreadId: string
   readonly comment?: string
-  readonly preparedFiles?: Protobufs.IMobilePreparedFiles
+  readonly preparedFiles?: pb.IMobilePreparedFiles
   readonly uploadData?: UploadData
   readonly blockInfo?: BlockInfo
   readonly error?: string

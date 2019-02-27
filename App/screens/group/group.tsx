@@ -5,6 +5,7 @@ import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
+import { util } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
@@ -137,7 +138,7 @@ class Group extends Component<Props, State> {
     switch (item.type) {
       case 'photo': {
         const { avatar, username, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = likes.findIndex((likeInfo) => likeInfo.author_id === this.props.selfId) > -1
+        const hasLiked = likes.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
         const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
           return {
             id: comment.id,
@@ -148,9 +149,9 @@ class Group extends Component<Props, State> {
         return (
           <Photo
             avatar={avatar}
-            username={username || 'unknown'}
-            message={caption}
-            time={moment(date).calendar(undefined, momentSpec)}
+            username={username.length > 0 ? username : 'unknown'}
+            message={caption.length > 0 ? caption : undefined}
+            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
             photoId={target}
             fileIndex={files[0].index}
             photoWidth={screenWidth}
@@ -178,7 +179,8 @@ class Group extends Component<Props, State> {
             avatar={avatar}
             username={username || 'unknown'}
             message={body}
-            time={moment(date).calendar(undefined, momentSpec)}
+            // TODO: deal with pb Timestamp to JS Date!
+            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           />
         )
       }
@@ -191,7 +193,7 @@ class Group extends Component<Props, State> {
             avatar={avatar}
             username={username || 'unknown'}
             message={`${word} ${this.props.groupName}`}
-            time={moment(date).calendar(undefined, momentSpec)}
+            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           />
         )
       }

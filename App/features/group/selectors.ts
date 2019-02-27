@@ -1,5 +1,3 @@
-import { ThreadFeedItemType } from '@textile/react-native-sdk'
-
 import { GroupState } from './reducer'
 import { Item } from './models'
 import { feedSelectors } from './feed'

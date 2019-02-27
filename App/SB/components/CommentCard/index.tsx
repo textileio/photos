@@ -10,7 +10,7 @@ export interface Props {
   username: string
   avatar?: string,
   comment: string
-  date: string
+  date: Date
   isCaption: boolean
 }
 
