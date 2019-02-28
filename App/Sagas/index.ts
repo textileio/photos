@@ -5,8 +5,6 @@ import { Dispatch } from 'redux'
 /* ------------- Types ------------- */
 
 import StartupActions from '../Redux/StartupRedux'
-import StorageActions from '../Redux/StorageRedux'
-import { groupActions, groupSaga } from '../features/group'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
@@ -19,6 +17,8 @@ import TriggersActions from '../Redux/TriggersRedux'
 
 import { accountSaga } from '../features/account'
 import { contactsSaga } from '../features/contacts'
+import { groupSaga, groupActions } from '../features/group'
+import { photosSaga } from '../features/photos'
 
 import { startup } from './StartupSagas'
 
@@ -63,8 +63,6 @@ import {
 } from './PhotoViewingSagas'
 
 import {
-  newLocalPhoto,
-  refreshLocalImages,
   toggleStorage
 } from './StorageSagas'
 
@@ -99,6 +97,7 @@ export default function * root(dispatch: Dispatch) {
     call(accountSaga),
     call(contactsSaga),
     call(groupSaga),
+    call(photosSaga),
 
     call(startSagas),
 
@@ -129,9 +128,6 @@ export default function * root(dispatch: Dispatch) {
     takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
 
-    // check for new images on camera roll
-    call(refreshLocalImages),
-
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
@@ -159,7 +155,6 @@ export default function * root(dispatch: Dispatch) {
     takeEvery(getType(groupActions.addPhoto.retry), retryImageShare),
     takeEvery(getType(groupActions.addPhoto.cancelRequest), cancelImageShare),
     takeEvery(getType(groupActions.addPhoto.error), retryWithTokenRefresh),
-    takeEvery(getType(StorageActions.newLocalPhoto), newLocalPhoto),
 
     // Notifications
     takeEvery(getType(NotificationsActions.newNotificationRequest), handleNewNotification),

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { RootAction } from '../Redux/Types'
 
-import StorageActions from '../Redux/StorageRedux'
+import { photosActions } from '../features/photos'
 
 interface DispatchProps {
   queryPhotos: () => void
@@ -25,7 +25,7 @@ class CameraRoll extends Component<DispatchProps> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  queryPhotos: () => dispatch(StorageActions.refreshLocalImagesRequest())
+  queryPhotos: () => dispatch(photosActions.queryPhotos.request())
 })
 
 export default connect(undefined, mapDispatchToProps)(CameraRoll)

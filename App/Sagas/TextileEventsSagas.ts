@@ -11,6 +11,7 @@ import Textile, {
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
+import { photosActions } from '../features/photos'
 
 export function * startSagas() {
   yield all([
@@ -147,7 +148,7 @@ export function * stopNodeAfterDelayCancelled() {
       }
 
       // Check for new photos in case user left app and came back after taking one
-      yield put(StorageActions.refreshLocalImagesRequest())
+      yield put(photosActions.queryPhotos.request())
 
     } catch (error) {
       yield call(logNewEvent, 'stopNodeAfterDelayCancelled', error.message, true)
