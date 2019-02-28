@@ -59,7 +59,8 @@ const HIT_SLOP: Insets = {
 }
 
 interface Props {
-  referralCode: string
+  targetReferralCode: string
+  referralCode?: string
   onSuccess?: () => void
 }
 
@@ -77,15 +78,16 @@ export default class ReferralCode extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      valid: false,
-      showWaitlistSignup: false
+      valid: props.referralCode ? props.referralCode.trim().toLowerCase() === this.props.targetReferralCode.trim().toLowerCase() : false,
+      showWaitlistSignup: false,
+      referralCode: props.referralCode
     }
   }
 
   updateText = (text: string) => {
     this.setState({
       referralCode: text,
-      valid: text.trim().toLowerCase() === this.props.referralCode.trim().toLowerCase()
+      valid: text.trim().toLowerCase() === this.props.targetReferralCode.trim().toLowerCase()
     })
   }
 
