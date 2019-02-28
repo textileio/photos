@@ -29,7 +29,7 @@ const ARROW_FORWARD: ViewStyle = {
 }
 
 interface StateProps {
-  skipReferralCode: boolean
+  referralCode?: string
 }
 
 interface DispatchProps {
@@ -39,7 +39,6 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
-  blockNext: boolean
   showArrow: boolean
   currentPage: number
 }
@@ -52,8 +51,7 @@ class OnboardingScreen extends React.Component<Props, State> {
     super(props)
     this.state = {
       showArrow: false,
-      currentPage: 0,
-      blockNext: false
+      currentPage: 0
     }
   }
 
@@ -72,17 +70,18 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   nextPage = () => {
-    if (this.pages && this.pages.props.children.length - 1 > this.state.currentPage && !this.state.blockNext) {
-      this.setState({blockNext: true})
+    if (this.pages && this.pages.props.children.length - 1 > this.state.currentPage) {
+      this.setState({
+        showArrow: this.showArrowForIndex(this.state.currentPage + 1)
+      })
       this.pages.scrollToPage(this.state.currentPage + 1)
-      setTimeout(() => {
-        this.setState({
-          blockNext: false,
-          showArrow: this.showArrowForIndex(this.state.currentPage + 1),
-          currentPage: this.state.currentPage + 1
-        })
-      }, 350)
     }
+  }
+
+  onScrollEnd = () => {
+    this.setState({
+      currentPage: this.state.currentPage + 1
+    })
   }
 
   complete = () => {
@@ -122,7 +121,8 @@ class OnboardingScreen extends React.Component<Props, State> {
       (
         <ReferralCode
           key='referral'
-          referralCode={Config.RN_TEMPORARY_REFERRAL}
+          targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
+          referralCode={this.props.referralCode}
           onSuccess={this.nextPage}
         />
       ),
@@ -149,10 +149,6 @@ class OnboardingScreen extends React.Component<Props, State> {
         />
       )
     ]
-    // remove referral code if needed.
-    if (this.props.skipReferralCode) {
-      pages.splice(3, 1)
-    }
     return pages
   }
 
@@ -166,8 +162,8 @@ class OnboardingScreen extends React.Component<Props, State> {
             style={[CONTAINER]}
             containerStyle={{ marginBottom: spacing._016 }}
             indicatorColor={color.accent2_2}
-            startPage={this.state.currentPage}
             scrollEnabled={false}
+            onScrollEnd={this.onScrollEnd}
           >
             {pages}
           </Pages>
@@ -183,8 +179,7 @@ class OnboardingScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  // No need for a referral challenge if the user received a thread invite and is getting set up
-  skipReferralCode: state.auth.invite !== undefined && state.auth.invite.referral !== undefined
+  referralCode: state.auth.invite !== undefined ? state.auth.invite.referral : undefined
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
