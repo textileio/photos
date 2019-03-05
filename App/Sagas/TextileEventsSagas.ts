@@ -1,6 +1,5 @@
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import { accountActions } from '../features/account'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
