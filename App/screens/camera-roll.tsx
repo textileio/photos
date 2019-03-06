@@ -8,9 +8,14 @@ import { photosActions } from '../features/photos'
 
 interface DispatchProps {
   queryPhotos: () => void
+  refreshPhotos: () => void
 }
 
 class CameraRoll extends Component<DispatchProps> {
+
+  componentDidMount() {
+    this.props.refreshPhotos()
+  }
 
   render() {
     return (
@@ -24,8 +29,9 @@ class CameraRoll extends Component<DispatchProps> {
 
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  queryPhotos: () => dispatch(photosActions.queryPhotos.request())
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
+  queryPhotos: () => dispatch(photosActions.queryCameraRoll.request()),
+  refreshPhotos: () => dispatch(photosActions.refreshPhotos.request(undefined))
 })
 
 export default connect(undefined, mapDispatchToProps)(CameraRoll)

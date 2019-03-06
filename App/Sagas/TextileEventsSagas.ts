@@ -88,7 +88,7 @@ export function * nodeOnline() {
       yield call(logNewEvent, 'Node is:', 'online')
 
       // Check for new photos on every online event
-      yield put(StorageActions.refreshLocalImagesRequest())
+      yield put(photosActions.queryCameraRoll.request())
     } catch (error) {
       yield call(logNewEvent, 'nodeOnline', error.message, true)
     }
@@ -147,7 +147,7 @@ export function * stopNodeAfterDelayCancelled() {
       }
 
       // Check for new photos in case user left app and came back after taking one
-      yield put(photosActions.queryPhotos.request())
+      yield put(photosActions.queryCameraRoll.request())
 
     } catch (error) {
       yield call(logNewEvent, 'stopNodeAfterDelayCancelled', error.message, true)
