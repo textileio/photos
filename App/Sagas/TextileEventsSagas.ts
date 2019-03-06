@@ -7,7 +7,8 @@ import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction } from '../Redux/Types'
 import Textile, {
-  ContactInfo,
+  API,
+  pb,
   BackgroundTask
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
@@ -43,7 +44,7 @@ export function * refreshMessages () {
         yield take((action: RootAction) =>
           action.type === getType(TextileEventsActions.refreshMessagesRequest)
         )
-      yield call(Textile.checkCafeMessages)
+      yield call(API.cafes.checkMessages)
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
       yield call(logNewEvent, 'refreshMessages', error.message, true)
@@ -60,7 +61,7 @@ export function * updateProfile () {
           action.type === getType(TextileEventsActions.updateProfile)
         )
 
-      const profileResult: ContactInfo = yield call(Textile.profile)
+      const profileResult: pb.IContact = yield call(API.profile.get)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
 
       yield call(logNewEvent, 'refreshMessages', action.type)
@@ -80,7 +81,7 @@ export function * ignoreFileRequest () {
           action.type === getType(TextileEventsActions.ignoreFileRequest)
         )
 
-      yield call(Textile.addIgnore, action.payload.blockId)
+      yield call(API.ignores.add, action.payload.blockId)
 
       yield call(logNewEvent, 'ignoreFile', action.type)
     } catch (error) {
@@ -123,7 +124,7 @@ export function * nodeOnline () {
 
       const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
       if (pending) {
-        yield call(Textile.setAvatar, pending)
+        yield call(API.profile.setAvatar, pending)
       }
     } catch (error) {
       yield call(logNewEvent, 'nodeOnline', error.message, true)

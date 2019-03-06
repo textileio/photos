@@ -7,7 +7,7 @@ export function getProcessingImages(state: ProcessingImagesState, threadId: stri
     .filter((image) => image.destinationThreadId === threadId)
     .map((image) => {
       let progress = 0
-      if (image.blockInfo) {
+      if (image.block) {
         progress = 1
       } else if (image.uploadData) {
         progress = 0.1 + (totalUploadProgress(state, image.uuid) * 0.8)

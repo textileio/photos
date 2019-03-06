@@ -7,7 +7,6 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
-import { ContactInfo } from '@textile/react-native-sdk'
 
 import Avatar from '../Components/Avatar'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'

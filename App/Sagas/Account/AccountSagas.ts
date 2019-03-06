@@ -8,7 +8,7 @@ import { util } from '@textile/react-native-sdk'
 import TextileEventsActions, { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
 import Textile, {
   pb,
-  ContactInfo,
+  API,
   NodeState
 } from '@textile/react-native-sdk'
 import { bestSession } from '../../Redux/AccountSelectors'
@@ -33,7 +33,7 @@ export function * refreshProfile () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshProfileRequest))
-      const profileResult: ContactInfo = yield call(Textile.profile)
+      const profileResult: pb.IContact = yield call(API.profile.get)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
       yield call(logNewEvent, 'refreshProfile', error.message, true)
@@ -46,10 +46,22 @@ export function * refreshPeerId () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshPeerIdRequest))
-      const peerIdResult = yield call(Textile.peerId)
+      const peerIdResult = yield call(API.ipfs.peerId)
       yield put(AccountActions.refreshPeerIdSuccess(peerIdResult))
     } catch (error) {
       yield put(AccountActions.refreshPeerIdError(error))
+    }
+  }
+}
+
+export function * refreshAddress () {
+  while (true) {
+    try {
+      yield take(getType(AccountActions.refreshAddressRequest))
+      const addressResult = yield call(API.account.address)
+      yield put(AccountActions.refreshAddressSuccess(addressResult))
+    } catch (error) {
+      yield put(AccountActions.refreshAddressError(error))
     }
   }
 }
@@ -64,7 +76,7 @@ export function * setUsername () {
       }
       // Ideally this could move into the SDK directly so it can manage
       // knowing its own online state
-      yield call(Textile.setUsername, action.payload.username)
+      yield call(API.profile.setUsername, action.payload.username)
       yield put(TextileEventsActions.updateProfile())
     } catch (error) {
       yield put(AccountActions.profileError(error))
@@ -82,7 +94,7 @@ export function * setAvatar () {
       }
       // Ideally this could move into the SDK directly so it can manage
       // knowing its own online state
-      yield call(Textile.setAvatar, action.payload.avatar)
+      yield call(API.profile.setAvatar, action.payload.avatar)
       yield put(TextileEventsActions.updateProfile())
     } catch (error) {
       yield put(AccountActions.setAvatarError(error))

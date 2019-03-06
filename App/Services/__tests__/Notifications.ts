@@ -3,7 +3,7 @@ import {
     toPayload
 } from '../Notifications'
 import { Notification } from '../../Models/Notifications'
-import { NotificationType } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 describe('notifications', () => {
     describe('enable', () => {
@@ -14,10 +14,12 @@ describe('notifications', () => {
     describe('toPayload', () => {
         const base = {
             id: 'noteId',
-            date: '2018-12-11T22:34:26.265Z',
-            actor_id: 'EFG',
+            date: new Date(),
+            actor: 'EFG',
+            block: 'block',
             read: false,
             username: 'mock test',
+            avatar: 'avatar',
             threadId: 'ABC',
             threadName: 'Great Thread',
             target: 'DEF'
@@ -26,7 +28,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'invited you to join',
-                type: 'INVITE_RECEIVED' as NotificationType.InviteReceivedNotification
+                type: pb.Notification.Type.INVITE_RECEIVED
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -34,7 +36,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'joined',
-                type: 'ACCOUNT_PEER_JOINED' as NotificationType.AccountPeerJoinedNotification
+                type: pb.Notification.Type.ACCOUNT_PEER_JOINED
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -42,7 +44,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'joined',
-                type: 'PEER_JOINED' as NotificationType.PeerJoinedNotification
+                type: pb.Notification.Type.PEER_JOINED
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -50,7 +52,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'left',
-                type: 'PEER_LEFT' as NotificationType.PeerLeftNotification
+                type: pb.Notification.Type.PEER_LEFT
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -58,7 +60,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'here is my message!',
-                type: 'MESSAGE_ADDED' as NotificationType.MessageAddedNotification
+                type: pb.Notification.Type.MESSAGE_ADDED
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -66,7 +68,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'added a photo',
-                type: 'FILES_ADDED' as NotificationType.FilesAddedNotification
+                type: pb.Notification.Type.FILES_ADDED
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -74,7 +76,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'commented on a photo: a camel!',
-                type: 'COMMENT_ADDED' as NotificationType.CommentAddedNotification
+                type: pb.Notification.Type.COMMENT_ADDED
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })
@@ -82,7 +84,7 @@ describe('notifications', () => {
             const notification = {
                 ...base,
                 body: 'liked a photo',
-                type: 'LIKE_ADDED' as NotificationType.LikeAddedNotification
+                type: pb.Notification.Type.LIKE_ADDED
             }
             expect(toPayload(notification as Notification)).toMatchSnapshot()
         })

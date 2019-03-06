@@ -73,7 +73,7 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
   const selfId = getPeerId(state)
   const photos = getThreads(state)
     .map((thread) => thread.photos
-      .filter((photo) => photo.author === selfId)
+      .filter((photo) => photo.user.address === selfId)
       .map((photo): SharedPhoto => {
         const file = photo.files[0]
         const thumb = file.links['thumb']
@@ -93,7 +93,7 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
 
 export function getThreadThumbs (state: RootState, byPeerId: string, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadThumbs> {
   return getThreads(state, sortBy)
-    .filter((thread) => thread.photos.some((p) => p.author === byPeerId))
+    .filter((thread) => thread.photos.some((p) => p.user.address === byPeerId))
     .map((thread) => {
       return {
         id: thread.id,

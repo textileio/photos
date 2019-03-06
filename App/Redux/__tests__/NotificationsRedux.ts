@@ -1,33 +1,37 @@
 import actions, { reducer, NotificationsState } from '../NotificationsRedux'
 import { FilesAddedNotification } from '../../Models/Notifications'
-import { NotificationType } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 
 const notification1: FilesAddedNotification = {
-  actor_id: 'PeerId',
-  block_id: 'BlockId',
+  actor: 'PeerId',
+  block: 'BlockId',
   body: 'some photo',
-  date: '1999-01-01T00:00:00Z',
+  date: new Date(),
   id: 'NotificationId1',
   read: false,
-  type: 'FILES_ADDED' as NotificationType.FilesAddedNotification,
+  type: pb.Notification.Type.FILES_ADDED,
   threadId: 'threadId1',
   threadName: 'threadName1',
-  target: 'hash'
+  target: 'hash',
+  username: 'username',
+  avatar: 'avatar'
 }
 
 const notification2: FilesAddedNotification = {
-  actor_id: 'PeerId',
-  block_id: 'BlockId',
+  actor: 'PeerId',
+  block: 'BlockId',
   body: 'some photo',
-  date: '1999-01-01T00:00:00Z',
+  date: new Date(),
   id: 'NotificationId2',
   read: false,
-  type: 'FILES_ADDED' as NotificationType.FilesAddedNotification,
+  type: pb.Notification.Type.FILES_ADDED,
   threadId: 'threadId2',
   threadName: 'threadName2',
-  target: 'hash2'
+  target: 'hash2',
+  username: 'username',
+  avatar: 'avatar'
 }
 
 describe('notifications stories', () => {

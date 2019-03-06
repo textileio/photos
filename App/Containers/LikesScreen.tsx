@@ -77,11 +77,11 @@ const mapStateToProps = (state: RootState): StateProps => {
     throw Error('No viewing photo')
   }
   const likes = state.photoViewing.viewingPhoto.likes.map((like) => {
-    const username: string = like.username || 'unknown'
+    const username: string = like.user.name || 'unknown'
     return {
-      peerId: like.author,
+      peerId: like.user.address,
       username,
-      avatar: like.avatar
+      avatar: like.user.avatar
     }
   })
   return {

@@ -12,7 +12,7 @@ import ThreadsActions, { InviteQRCode } from '../../../Redux/ThreadsRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
 
 import styles from './statics/styles'
-import { ContactInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 interface ScreenProps {
   threadId: string
@@ -57,7 +57,7 @@ class Component extends React.Component<Props> {
     }
   }
 
-  _select (contact: ContactInfo, included: boolean) {
+  _select (contact: pb.IContact, included: boolean) {
     // Toggle the id's selected state in state
     if (included) {
       return // if the user is already part of the thread
@@ -138,9 +138,9 @@ class Component extends React.Component<Props> {
 }
 
 interface StateProps {
-  topFive: ReadonlyArray<ContactInfo>,
+  topFive: ReadonlyArray<pb.IContact>,
   // puts a placeholder row in contacts for adding external invite link
-  contacts: ReadonlyArray<ContactInfo>,
+  contacts: ReadonlyArray<pb.IContact>,
   notInThread: boolean,
   qrCodeInvite?: InviteQRCode
 }
@@ -152,13 +152,13 @@ const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  =
       return {
         ...contact,
         type: 'contact',
-        included: (contact.thread_ids || []).indexOf(threadId) >= 0
+        included: (contact.threads || []).indexOf(threadId) >= 0
       }
     })
     .filter((contact) => contact.username !== '' && contact.username !== undefined)
 
   const notInThread = contacts.filter((c) => !c.included)
-  const popularity = notInThread.sort((a, b) => (b.thread_ids || []).length - (a.thread_ids || []).length)
+  const popularity = notInThread.sort((a, b) => (b.threads || []).length - (a.threads || []).length)
   const topFive = popularity.slice(0, 5)
   const sortedContacts = contacts.sort((a, b) => {
     if (!a.username || a.username === '') {

@@ -1,5 +1,4 @@
 import {call, put, select, take} from 'redux-saga/effects'
-import { CameraRoll } from '@textile/react-native-sdk'
 import { SharedImage } from '../features/group/add-photo/models'
 import StorageActions, { StorageSelectors } from '../Redux/StorageRedux'
 import {ActionType, getType} from 'typesafe-actions'
@@ -31,21 +30,21 @@ export function * toggleStorage (action: ActionType<typeof PreferencesActions.to
 }
 
 export function * refreshLocalImages () {
-  while (yield take(getType(StorageActions.refreshLocalImagesRequest))) {
-    try {
-      const autoPinEnabled = yield select(PreferencesSelectors.autoPinStatus)
-      if (autoPinEnabled) {
-        // get time last checked
-        const lastRefresh = yield select(StorageSelectors.lastPhotoRefresh)
-        // update last time checked to now
-        const currentRefresh = (new Date()).getTime()
-        yield call(CameraRoll.requestLocalPhotos, lastRefresh)
-          // scan for images
-        yield put(StorageActions.setLocalPhotoRefreshEpoch(currentRefresh))
-      }
-      yield call(logNewEvent, 'refreshLocalImages', 'success')
-    } catch (error) {
-      yield call(logNewEvent, 'refreshLocalImages', error.message, true)
-    }
-  }
+  // while (yield take(getType(StorageActions.refreshLocalImagesRequest))) {
+  //   try {
+  //     const autoPinEnabled = yield select(PreferencesSelectors.autoPinStatus)
+  //     if (autoPinEnabled) {
+  //       // get time last checked
+  //       const lastRefresh = yield select(StorageSelectors.lastPhotoRefresh)
+  //       // update last time checked to now
+  //       const currentRefresh = (new Date()).getTime()
+  //       yield call(CameraRoll.requestLocalPhotos, lastRefresh)
+  //         // scan for images
+  //       yield put(StorageActions.setLocalPhotoRefreshEpoch(currentRefresh))
+  //     }
+  //     yield call(logNewEvent, 'refreshLocalImages', 'success')
+  //   } catch (error) {
+  //     yield call(logNewEvent, 'refreshLocalImages', error.message, true)
+  //   }
+  // }
 }

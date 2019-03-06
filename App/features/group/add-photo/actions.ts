@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { BlockInfo, pb } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 import { SharedImage, ProcessingImageError } from './models'
 
@@ -24,7 +24,7 @@ export const imageUploadComplete = createAction('processingImages/IMAGE_UPLOAD_C
 })
 
 export const sharedToThread = createAction('processingImages/SHARED_TO_THREAD', (resolve) => {
-  return (uuid: string, blockInfo: BlockInfo) => resolve({ uuid, blockInfo })
+  return (uuid: string, block: pb.IBlock) => resolve({ uuid, block })
 })
 
 export const complete = createAction('processingImages/COMPLETE', (resolve) => {

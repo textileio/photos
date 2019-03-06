@@ -1,5 +1,5 @@
 import DeepLink from '../DeepLink'
-import { ExternalInvite } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 import { NavigationService } from '../NavigationService'
 import {
     NavigationContainerComponent,
@@ -8,7 +8,7 @@ import {
 
 const params = 'id=QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW&key=VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5&inviter=andrew-dev&name=TRT%20Dev&referral=SOMETHING'
 const link = `www.textile.photos/invites/new#${params}`
-const invite: ExternalInvite = {
+const invite: pb.INewInvite = {
     id: 'QmdNgTtH468cqZFzXCi4sVSWTbJMWQbhYb8cBVyikP9LzW',
     key: 'VsHHHz8bC8fu9k78RaX8ujQsUzGzaUxwKJyLFKKDacUZoWJaouGnzUQwgmh5',
     inviter: 'andrew-dev'

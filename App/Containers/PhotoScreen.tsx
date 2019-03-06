@@ -68,12 +68,12 @@ class PhotoScreen extends React.Component<Props> {
     if (!this.props.photo) {
       return <ScrollView style={CONTAINER} />
     }
-    const { avatar, username, caption, date, target, files, likes, comments, block } = this.props.photo
-    const hasLiked = likes.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
+    const { user, caption, date, target, files, likes, comments, block } = this.props.photo
+    const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfId) > -1
     const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
       return {
         id: comment.id,
-        username: comment.username || '?',
+        username: comment.user.name || '?',
         body: comment.body
       }
     })
@@ -81,8 +81,8 @@ class PhotoScreen extends React.Component<Props> {
       <ScrollView style={CONTAINER}>
       {this.props.photo &&
         <Photo
-          avatar={avatar}
-          username={username || 'unknown'}
+          avatar={user.avatar}
+          username={user.name || 'unknown'}
           message={caption}
           time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           photoId={target}
