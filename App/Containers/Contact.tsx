@@ -21,7 +21,7 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 interface NavProps {
   avatar: string
   username: string
-  peerId: string
+  address: string
 }
 
 interface StateProps {
@@ -76,9 +76,9 @@ class ContactModal extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
-  const peerId = ownProps.navigation.getParam('peerId')
+  const address = ownProps.navigation.getParam('address')
   return {
-    threadThumbs: getThreadThumbs(state, peerId, 'name')
+    threadThumbs: getThreadThumbs(state, address, 'name')
   }
 }
 

@@ -33,7 +33,7 @@ const CONTAINER: ViewStyle = {
 
 interface StateProps {
   photo?: pb.IFiles,
-  selfId: string
+  selfAddress: string
   threadName?: string,
   threadId?: string
 }
@@ -69,7 +69,7 @@ class PhotoScreen extends React.Component<Props> {
       return <ScrollView style={CONTAINER} />
     }
     const { user, caption, date, target, files, likes, comments, block } = this.props.photo
-    const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfId) > -1
+    const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1
     const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
       return {
         id: comment.id,
@@ -109,12 +109,12 @@ const mapStateToProps = (state: RootState): StateProps => {
     const threadData = threadDataByThreadId(state, threadId)
     threadName = threadData ? threadData.name : undefined
   }
-  const selfId = state.account.peerId.value || ''
+  const selfAddress = state.account.address.value || ''
   return {
     photo: state.photoViewing.viewingPhoto,
     threadName,
     threadId,
-    selfId
+    selfAddress
   }
 }
 

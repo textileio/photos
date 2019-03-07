@@ -39,7 +39,7 @@ const screenWidth = Dimensions.get('screen').width
 interface StateProps {
   items: ReadonlyArray<Item>
   groupName: string
-  selfId: string
+  selfAddress: string
 }
 
 interface DispatchProps {
@@ -138,7 +138,7 @@ class Group extends Component<Props, State> {
     switch (item.type) {
       case 'photo': {
         const { user, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfId) > -1
+        const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1
         const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
           return {
             id: comment.id,
@@ -242,11 +242,11 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
-  const selfId = state.account.peerId.value || ''
+  const selfAddress = state.account.address.value || ''
   return {
     items,
     groupName,
-    selfId
+    selfAddress
   }
 }
 

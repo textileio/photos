@@ -22,7 +22,7 @@ import {
 import Config from 'react-native-config'
 
 import * as actions from './actions'
-import { getPeerId, getUsername } from '../../Redux/AccountSelectors'
+import { getAddress, getUsername } from '../../Redux/AccountSelectors'
 import { composeMessage } from '../../NativeModules/MessageComposer'
 import UIActions from '../../Redux/UIRedux'
 
@@ -171,14 +171,14 @@ function * sendInviteMessage() {
     const sendTo = iphone || mobile || home || work
     if (sendTo) {
       const username: string | undefined = yield select(getUsername)
-      const peerId: string | undefined = yield select(getPeerId)
+      const address: string | undefined = yield select(getAddress)
       const url = Platform.OS === 'ios' ? Config.RN_IOS_STORE_LINK : Config.RN_ANDROID_STORE_LINK
       let message = `Join me on Textile Photos: ${url}`
       if (username) {
         message = `${message}\nMy username: ${username}`
       }
-      if (peerId) {
-        message = `${message}\nMy peer id snippet: ${peerId.substr(peerId.length - 8, 8)}`
+      if (address) {
+        message = `${message}\nMy address snippet: ${address.substr(address.length - 8, 8)}`
       }
       yield call(composeMessage, sendTo.number, message)
     }
