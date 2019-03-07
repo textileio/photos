@@ -531,7 +531,7 @@
 		93C005EF216C2034007786A5 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		93C005F0216C2034007786A5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SimpleLineIcons.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		93C00600216C385D007786A5 /* RNVersionNumber.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVersionNumber.xcodeproj; path = "../node_modules/react-native-version-number/ios/RNVersionNumber.xcodeproj"; sourceTree = "<group>"; };
-		93C0060A216C4381007786A5 /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mobile.framework; path = "../node_modules/@textile/go-mobile/ios/Mobile.framework"; sourceTree = "<group>"; };
+		93C0060A216C4381007786A5 /* Mobile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mobile.framework; path = "../node_modules/@textile/go-mobile/dist/ios/Mobile.framework"; sourceTree = "<group>"; };
 		93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93C00621216D385B007786A5 /* Textile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Textile.entitlements; path = Textile/Textile.entitlements; sourceTree = "<group>"; };
 		93CC9FD5220135A300639B38 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
@@ -1781,11 +1781,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/../node_modules/@textile/go-mobile/ios/**",
+					"$(PROJECT_DIR)/../node_modules/@textile/go-mobile/dist/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios",
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
 				);
@@ -1819,11 +1819,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/../node_modules/@textile/go-mobile/ios/**",
+					"$(PROJECT_DIR)/../node_modules/@textile/go-mobile/dist/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios",
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-screen-control/ios",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
 				);
@@ -1875,7 +1875,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1895,12 +1895,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1940,7 +1940,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1953,12 +1953,12 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/@textile/go-mobile/ios/**",
+					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
