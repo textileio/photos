@@ -15,6 +15,7 @@ import { Platform, PermissionsAndroid } from 'react-native'
 import Contacts from 'react-native-contacts'
 import {
   API,
+  Events,
   pb,
   util
 } from '@textile/react-native-sdk'
@@ -55,8 +56,7 @@ function * handleAddContactRequest(action: ActionType<typeof actions.addContactR
 }
 
 function executeTextileSearch(searchString: string) {
-  // TODO: Handle search results over main event bus
-  return eventChannel<{}>((emitter) => {
+  return eventChannel<pb.MobileQueryEvent>((emitter) => {
     const query: pb.IContactQuery = {
       username: searchString,
       id: '',
@@ -69,44 +69,55 @@ function executeTextileSearch(searchString: string) {
       filter: pb.QueryOptions.FilterType.NO_FILTER,
       exclude: []
     }
-    const handler = (event: {}) => {
-      // if (event.type === 'complete') {
-      //   emitter(END)
-      // } else if (event.type === 'error') {
-      //   emitter(event)
-      //   emitter(END)
-      // } else if (event.type === 'result') {
-      //   emitter(event)
-      // }
+    const handler = (base64: string) => {
+      const queryEvent = pb.MobileQueryEvent.decode(Buffer.from(base64, 'base64'))
+      switch (queryEvent.type) {
+        case pb.MobileQueryEvent.Type.DATA: {
+          emitter(queryEvent)
+        }
+        case pb.MobileQueryEvent.Type.DONE: {
+          emitter(END)
+        }
+        case pb.MobileQueryEvent.Type.ERROR: {
+          emitter(queryEvent)
+          emitter(END)
+        }
+      }
     }
+    const events = new Events()
+    events.addListener('QUERY_RESPONSE', handler)
     API.contacts.search(query, options)
     return () => {
       API.contacts.cancelSearch()
+      events.removeListener('QUERY_RESPONSE', handler)
     }
   })
 }
 
 function * searchTextile(searchString: string) {
-  // TODO: Deal with this in the new way
-  // const channel: Channel<ContactSearchEvent> = yield call(executeTextileSearch, searchString)
-  // try {
-  //   while (true) {
-  //     const event: ContactSearchEvent = yield take(channel)
-  //     if (event.type === 'result') {
-  //       yield put(actions.searchResultTextile(event.contact))
-  //     } else if (event.type === 'error') {
-  //       yield put(actions.searchErrorTextile(event.error))
-  //     }
-  //   }
-  // } catch (error) {
-  //   yield put(actions.searchErrorTextile(error))
-  // } finally {
-  //   if (yield cancelled()) {
-  //     channel.close()
-  //   } else {
-  //     yield put(actions.textileSearchComplete())
-  //   }
-  // }
+  const channel: Channel<pb.MobileQueryEvent> = yield call(executeTextileSearch, searchString)
+  try {
+    while (true) {
+      const event: pb.MobileQueryEvent = yield take(channel)
+      if (event.type === pb.MobileQueryEvent.Type.DATA) {
+        if (event.data.value.type_url === '/Contact') {
+          const contact = pb.Contact.decode(event.data.value.value)
+          yield put(actions.searchResultTextile(contact))
+        }
+      } else if (event.type === pb.MobileQueryEvent.Type.ERROR) {
+        yield put(actions.searchErrorTextile(event.error.message))
+      }
+    }
+  } catch (error) {
+    yield put(actions.searchErrorTextile(error))
+  } finally {
+    if (yield cancelled()) {
+      channel.close()
+    } else {
+      yield put(actions.textileSearchComplete())
+      channel.close() // Think we want to do this to remove the event subscription
+    }
+  }
 }
 
 function * searchAddressBook(searchString: string) {
