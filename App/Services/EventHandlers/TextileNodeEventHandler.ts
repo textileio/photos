@@ -1,5 +1,6 @@
 import { Store } from 'redux'
 import { pb } from '@textile/react-native-sdk'
+import { Buffer } from 'buffer'
 
 import { Events } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
@@ -28,7 +29,8 @@ export default class TextileNodeEventHandler {
     this.events.addListener('NODE_ONLINE', () => {
       this.store.dispatch(TextileEventsActions.nodeOnline())
     })
-    this.events.addListener('THREAD_UPDATE', (update: pb.IFeedItem) => {
+    this.events.addListener('THREAD_UPDATE', (base64: string) => {
+      const update = pb.FeedItem.decode(Buffer.from(base64, 'base64'))
       const { type_url } = update.payload
       if (type_url === '/Message' ||
         type_url === '/Comment' ||
@@ -59,7 +61,8 @@ export default class TextileNodeEventHandler {
       const message = `BlockType ${type_url} on ${update.thread}`
       this.store.dispatch(DeviceLogsActions.logNewEvent( (new Date()).getTime(), 'onThreadUpdate', message, false))
     })
-    this.events.addListener('WALLET_UPDATE', (update: pb.IWalletUpdate) => {
+    this.events.addListener('WALLET_UPDATE', (base64: string) => {
+      const update: pb.IWalletUpdate = pb.WalletUpdate.decode(Buffer.from(base64, 'base64'))
       switch (update.type) {
         case pb.WalletUpdate.Type.THREAD_ADDED:
           this.store.dispatch(PhotoViewingActions.threadAddedNotification(update.id))
@@ -70,9 +73,28 @@ export default class TextileNodeEventHandler {
           break
       }
     })
-    this.events.addListener('NOTIFICATION', (payload: pb.INotification) => {
+    this.events.addListener('NOTIFICATION', (base64: string) => {
+      const payload = pb.Notification.decode(Buffer.from(base64, 'base64'))
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
+    this.events.addListener('QUERY_RESPONSE', (base64: string) => {
+      const queryEvent = pb.MobileQueryEvent.decode(Buffer.from(base64, 'base64'))
+      switch (queryEvent.type) {
+        case pb.MobileQueryEvent.Type.DATA: {
+          if (queryEvent.data.value.type_url === '/Contact') {
+            const contact = pb.Contact.decode(queryEvent.data.value.value)
+            this.store.dispatch(contactsActions.searchResultTextile(contact))
+          }
+        }
+        case pb.MobileQueryEvent.Type.DONE: {
+          this.store.dispatch(contactsActions.textileSearchComplete())
+        }
+        case pb.MobileQueryEvent.Type.ERROR: {
+          this.store.dispatch(contactsActions.searchErrorTextile(queryEvent.error.message))
+        }
+      }
+    })
+
     // TextileEventsActions
     this.events.addListener('newNodeState', (payload) => {
       this.store.dispatch(TextileEventsActions.newNodeState(payload.state))
