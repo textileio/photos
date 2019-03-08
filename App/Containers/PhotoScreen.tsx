@@ -83,7 +83,7 @@ class PhotoScreen extends React.Component<Props> {
         <Photo
           avatar={user.avatar}
           username={user.name || 'unknown'}
-          message={caption}
+          message={caption.length > 0 ? caption : undefined}
           time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           photoId={target}
           fileIndex={files[0].index}

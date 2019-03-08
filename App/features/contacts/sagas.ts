@@ -74,13 +74,16 @@ function executeTextileSearch(searchString: string) {
       switch (queryEvent.type) {
         case pb.MobileQueryEvent.Type.DATA: {
           emitter(queryEvent)
+          break
         }
         case pb.MobileQueryEvent.Type.DONE: {
           emitter(END)
+          break
         }
         case pb.MobileQueryEvent.Type.ERROR: {
           emitter(queryEvent)
           emitter(END)
+          break
         }
       }
     }

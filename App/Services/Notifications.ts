@@ -32,7 +32,7 @@ export function toTypedNotification(notificationData: pb.INotification): Notific
         username: user.name,
         avatar: user.avatar,
         type,
-        threadName: subject
+        threadName: subjectDesc
       }
     case pb.Notification.Type.ACCOUNT_PEER_JOINED:
       return {
@@ -49,8 +49,8 @@ export function toTypedNotification(notificationData: pb.INotification): Notific
         username: user.name,
         avatar: user.avatar,
         type,
-        threadId: subjectDesc,
-        threadName: subject
+        threadId: subject,
+        threadName: subjectDesc
       }
     case pb.Notification.Type.PEER_LEFT:
       return {
@@ -59,8 +59,8 @@ export function toTypedNotification(notificationData: pb.INotification): Notific
         username: user.name,
         avatar: user.avatar,
         type,
-        threadId: subjectDesc,
-        threadName: notificationData.subject
+        threadId: subject,
+        threadName: subjectDesc
       }
     case pb.Notification.Type.MESSAGE_ADDED:
       return {
@@ -69,8 +69,8 @@ export function toTypedNotification(notificationData: pb.INotification): Notific
         username: user.name,
         avatar: user.avatar,
         type,
-        threadId: subjectDesc,
-        threadName: subject,
+        threadId: subject,
+        threadName: subjectDesc,
         target
       }
     case pb.Notification.Type.FILES_ADDED:
@@ -80,8 +80,8 @@ export function toTypedNotification(notificationData: pb.INotification): Notific
         username: user.name,
         avatar: user.avatar,
         type,
-        threadId: subjectDesc,
-        threadName: subject,
+        threadId: subject,
+        threadName: subjectDesc,
         target
       }
     case pb.Notification.Type.COMMENT_ADDED:
@@ -91,8 +91,8 @@ export function toTypedNotification(notificationData: pb.INotification): Notific
         username: user.name,
         avatar: user.avatar,
         type,
-        threadId: subjectDesc,
-        threadName: subject,
+        threadId: subject,
+        threadName: subjectDesc,
         target
       }
     case pb.Notification.Type.LIKE_ADDED:
@@ -102,8 +102,8 @@ export function toTypedNotification(notificationData: pb.INotification): Notific
         username: user.name,
         avatar: user.avatar,
         type,
-        threadId: subjectDesc,
-        threadName: subject,
+        threadId: subject,
+        threadName: subjectDesc,
         target
       }
   }

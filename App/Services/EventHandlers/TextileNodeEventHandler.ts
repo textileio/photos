@@ -1,8 +1,7 @@
 import { Store } from 'redux'
-import { pb } from '@textile/react-native-sdk'
+import { pb, Events } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
 
-import { Events } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
 
 import NotificationActions from '../../Redux/NotificationsRedux'
@@ -32,7 +31,7 @@ export default class TextileNodeEventHandler {
     this.events.addListener('THREAD_UPDATE', (base64: string) => {
       const update = pb.FeedItem.decode(Buffer.from(base64, 'base64'))
       const { type_url } = update.payload
-      if (type_url === '/Message' ||
+      if (type_url === '/Text' ||
         type_url === '/Comment' ||
         type_url === '/Like' ||
         type_url === '/Files' ||
@@ -76,23 +75,6 @@ export default class TextileNodeEventHandler {
     this.events.addListener('NOTIFICATION', (base64: string) => {
       const payload = pb.Notification.decode(Buffer.from(base64, 'base64'))
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
-    })
-    this.events.addListener('QUERY_RESPONSE', (base64: string) => {
-      const queryEvent = pb.MobileQueryEvent.decode(Buffer.from(base64, 'base64'))
-      switch (queryEvent.type) {
-        case pb.MobileQueryEvent.Type.DATA: {
-          if (queryEvent.data.value.type_url === '/Contact') {
-            const contact = pb.Contact.decode(queryEvent.data.value.value)
-            this.store.dispatch(contactsActions.searchResultTextile(contact))
-          }
-        }
-        case pb.MobileQueryEvent.Type.DONE: {
-          this.store.dispatch(contactsActions.textileSearchComplete())
-        }
-        case pb.MobileQueryEvent.Type.ERROR: {
-          this.store.dispatch(contactsActions.searchErrorTextile(queryEvent.error.message))
-        }
-      }
     })
 
     // TextileEventsActions
