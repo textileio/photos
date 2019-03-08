@@ -9,7 +9,7 @@ export function * handleRefreshGroupRequest(action: ActionType<typeof refreshFee
   const { id, limit } = action.payload
 
   try {
-    const request: pb.IFeedRequest = { thread: id, offset: '', limit: limit || -1, mode: pb.FeedRequest.Mode.CHRONO } // TODO: Update to STACKS
+    const request: pb.IFeedRequest = { thread: id, offset: '', limit: limit || -1, mode: pb.FeedRequest.Mode.ANNOTATED }
     const list: pb.IFeedItemList = yield call(API.feed.list, request)
     yield put(refreshFeed.success({ id, items: list.items }))
   } catch (error) {
@@ -21,7 +21,7 @@ export function * handleLoadGroupItemsRequest(action: ActionType<typeof loadFeed
   const { id, limit } = action.payload
   try {
     const offset: string | undefined = yield select((state: RootState, id: string) => feedOffsetForGroup(state.group.feed, id), id)
-    const request: pb.IFeedRequest = { thread: id, offset: offset || '', limit: limit || -1, mode: pb.FeedRequest.Mode.CHRONO } // TODO: Update to STACKS
+    const request: pb.IFeedRequest = { thread: id, offset: offset || '', limit: limit || -1, mode: pb.FeedRequest.Mode.ANNOTATED }
     const list: pb.IFeedItemList = yield call(API.feed.list, request)
     yield put(loadFeedItems.success({ id, items: list.items }))
   } catch (error) {
