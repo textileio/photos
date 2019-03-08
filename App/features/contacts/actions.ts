@@ -1,11 +1,11 @@
 import { createAction } from 'typesafe-actions'
-import { ContactInfo, pb } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
 export const getContactsRequest = createAction('GET_CONTACTS_REQUEST')
 
 export const getContactsSuccess = createAction('GET_CONTACT_SUCCESS', (resolve) => {
-  return (contacts: ReadonlyArray<ContactInfo>) => resolve({ contacts })
+  return (contacts: ReadonlyArray<pb.IContact>) => resolve({ contacts })
 })
 
 export const searchRequest = createAction('@contacts/SEARCH_REQUEST', (resolve) => {

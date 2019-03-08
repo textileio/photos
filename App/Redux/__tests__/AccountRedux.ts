@@ -1,8 +1,8 @@
 import actions, { reducer } from '../AccountRedux'
-import { ContactInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
-const profile: ContactInfo = {
+const profile: pb.IContact = {
   id: 'id',
   address: 'address',
   username: 'username',
@@ -16,8 +16,9 @@ const profile: ContactInfo = {
     url: 'url',
     swarm: ['swarm']
   }],
-  created: 'created',
-  updated: 'updated'
+  threads: [],
+  created: { seconds: 0, nanos: 0 },
+  updated: { seconds: 0, nanos: 0 }
 }
 const peerId = 'peerId'
 const error = 'error'

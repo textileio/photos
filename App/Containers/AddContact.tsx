@@ -181,7 +181,7 @@ class AddContact extends React.Component<Props> {
   }
 
   onPressTextile = (contact: pb.IContact) => {
-    return () => this.props.navigation.navigate('Contact', { avatar: contact.avatar, username: contact.username, peerId: contact.id })
+    return () => this.props.navigation.navigate('Contact', { avatar: contact.avatar, username: contact.username, address: contact.address })
   }
 
   onAdd = (contact: pb.IContact) => {

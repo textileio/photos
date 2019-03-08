@@ -14,7 +14,7 @@ import { getPeerId } from '../../../Redux/AccountSelectors'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
-import Textile from '@textile/react-native-sdk'
+import { API } from '@textile/react-native-sdk'
 
 const WIDTH = Dimensions.get('window').width
 
@@ -28,7 +28,7 @@ class UserProfile extends React.PureComponent {
   }
 
   componentWillMount () {
-    Textile.version().then((version) => {
+    API.version().then((version) => {
       this.setState({
         apiVersion: version
       })

@@ -68,15 +68,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       NSError *error;
       UIImage *image;
-      NSString *jsonString;
       NSString *path = [NSString stringWithFormat:@"%@/%d", self.target, self.index];
-      jsonString = [self->_bridge.textileNode _imageFileDataForMinWidth:path minWidth:self.forMinWidth error:&error];
-      if (jsonString) {
-        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-        NSError *error;
-        id json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-        NSDictionary *dict = (NSDictionary *)json;
-        NSString *urlString = [dict objectForKey:@"url"];
+      NSString *urlString = [self->_bridge.textileNode _imageFileDataForMinWidth:path minWidth:self.forMinWidth error:&error];
+      if (urlString) {
         NSURL *url = [NSURL URLWithString:urlString];
         NSData *imageData = [NSData dataWithContentsOfURL:url];
         image = [UIImage imageWithData:imageData scale:1];

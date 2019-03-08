@@ -8,7 +8,7 @@ import {
 
 export const makeIsKnown = (id: string) => (state: ContactsState) => state.contacts.some((p) => p.id === id)
 
-export const makeByThreadId = (id: string) => (state: ContactsState) => state.contacts.filter((contact) => (contact.thread_ids || []).indexOf(id) > -1)
+export const makeByThreadId = (id: string) => (state: ContactsState) => state.contacts.filter((contact) => (contact.threads || []).indexOf(id) > -1)
 
 export const makeContactById = (id: string) => (state: ContactsState) => state.contacts.find((contact) => contact.id === id)
 

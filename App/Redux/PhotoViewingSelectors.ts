@@ -1,7 +1,7 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
 import { pb, util } from '@textile/react-native-sdk'
-import { getPeerId } from './AccountSelectors'
+import { getAddress } from './AccountSelectors'
 import Config from 'react-native-config'
 
 // temporary filter until we stop getting them from textile-go
@@ -70,10 +70,10 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
 }
 
 export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
-  const selfId = getPeerId(state)
+  const selfAddress = getAddress(state)
   const photos = getThreads(state)
     .map((thread) => thread.photos
-      .filter((photo) => photo.author === selfId)
+      .filter((photo) => photo.user.address === selfAddress)
       .map((photo): SharedPhoto => {
         const file = photo.files[0]
         const thumb = file.links['thumb']
@@ -91,9 +91,9 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
   })
 }
 
-export function getThreadThumbs (state: RootState, byPeerId: string, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadThumbs> {
+export function getThreadThumbs (state: RootState, byAddres: string, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadThumbs> {
   return getThreads(state, sortBy)
-    .filter((thread) => thread.photos.some((p) => p.author === byPeerId))
+    .filter((thread) => thread.photos.some((p) => p.user.address === byAddres))
     .map((thread) => {
       return {
         id: thread.id,

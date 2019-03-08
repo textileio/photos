@@ -1,14 +1,13 @@
 import { Store } from 'redux'
+import { pb, Events } from '@textile/react-native-sdk'
+import { Buffer } from 'buffer'
 
-import { ILocalPhotoResult } from '../../Models/TextileTypes'
-import { Events, Update, ThreadUpdate, BlockType, NotificationInfo } from '@textile/react-native-sdk'
 import { RootState } from '../../Redux/Types'
 
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { contactsActions } from '../../features/contacts'
 import DeviceLogsActions from '../../Redux/DeviceLogsRedux'
-import StorageActions from '../../Redux/StorageRedux'
 import { toTypedNotification } from '../Notifications'
 
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
@@ -25,58 +24,59 @@ export default class TextileNodeEventHandler {
   }
 
   setup () {
-    this.events.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
-      this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
-    })
-    this.events.addListener('newLocalPhoto', (localPhoto: ILocalPhotoResult) => {
-      this.store.dispatch(StorageActions.newLocalPhoto(localPhoto))
-    })
     // Now handled internally by sdk
-    this.events.addListener('onOnline', () => {
+    this.events.addListener('NODE_ONLINE', () => {
       this.store.dispatch(TextileEventsActions.nodeOnline())
     })
-    this.events.addListener('onThreadUpdate', (update: ThreadUpdate) => {
-      const { type } = update.block
-      if (type === BlockType.MESSAGE ||
-        type === BlockType.COMMENT ||
-        type === BlockType.LIKE ||
-        type === BlockType.FILES ||
-        type === BlockType.IGNORE ||
-        type === BlockType.JOIN ||
-        type === BlockType.LEAVE) {
-        this.store.dispatch(groupActions.feed.refreshFeed.request({ id: update.thread_id }))
+    this.events.addListener('THREAD_UPDATE', (base64: string) => {
+      const update = pb.FeedItem.decode(Buffer.from(base64, 'base64'))
+      const { type_url } = update.payload
+      if (type_url === '/Text' ||
+        type_url === '/Comment' ||
+        type_url === '/Like' ||
+        type_url === '/Files' ||
+        type_url === '/Ignore' ||
+        type_url === '/Join' ||
+        type_url === '/Leave') {
+        this.store.dispatch(groupActions.feed.refreshFeed.request({ id: update.thread }))
       }
 
       // TODO: remove this if needed
-      if (type === BlockType.COMMENT ||
-        type === BlockType.LIKE ||
-        type === BlockType.FILES ||
-        type === BlockType.IGNORE ||
-        type === BlockType.JOIN) {
-        this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread_id))
+      if (type_url === '/Comment' ||
+        type_url === '/Like' ||
+        type_url === '/Files' ||
+        type_url === '/Ignore' ||
+        type_url === '/Join') {
+        this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
       }
 
-      if (type === BlockType.JOIN) {
+      if (type_url === '/Join') {
         // Every time the a JOIN block is detected, we should refresh our in-mem contact list
         // Enhancement: compare the joiner id with known ids and skip the refresh if known.
         this.store.dispatch(contactsActions.getContactsRequest())
       }
 
       // create a local log line for the threadUpdate event
-      const name = update.thread_name || update.thread_id
-      const message = `BlockType ${type} on ${name}`
+      const message = `BlockType ${type_url} on ${update.thread}`
       this.store.dispatch(DeviceLogsActions.logNewEvent( (new Date()).getTime(), 'onThreadUpdate', message, false))
     })
-    this.events.addListener('onThreadAdded', (payload: Update) => {
-      this.store.dispatch(PhotoViewingActions.threadAdded(payload.id, payload.key, payload.name))
-      this.store.dispatch(PhotoViewingActions.threadAddedNotification(payload.id))
+    this.events.addListener('WALLET_UPDATE', (base64: string) => {
+      const update: pb.IWalletUpdate = pb.WalletUpdate.decode(Buffer.from(base64, 'base64'))
+      switch (update.type) {
+        case pb.WalletUpdate.Type.THREAD_ADDED:
+          this.store.dispatch(PhotoViewingActions.threadAddedNotification(update.id))
+          break
+        case pb.WalletUpdate.Type.THREAD_REMOVED:
+          this.store.dispatch(PhotoViewingActions.threadRemoved(update.id))
+        default:
+          break
+      }
     })
-    this.events.addListener('onThreadRemoved', (payload: Update) => {
-      this.store.dispatch(PhotoViewingActions.threadRemoved(payload.id))
-    })
-    this.events.addListener('onNotification', (payload: NotificationInfo) => {
+    this.events.addListener('NOTIFICATION', (base64: string) => {
+      const payload = pb.Notification.decode(Buffer.from(base64, 'base64'))
       this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
     })
+
     // TextileEventsActions
     this.events.addListener('newNodeState', (payload) => {
       this.store.dispatch(TextileEventsActions.newNodeState(payload.state))

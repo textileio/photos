@@ -39,7 +39,7 @@ const screenWidth = Dimensions.get('screen').width
 interface StateProps {
   items: ReadonlyArray<Item>
   groupName: string
-  selfId: string
+  selfAddress: string
 }
 
 interface DispatchProps {
@@ -137,19 +137,19 @@ class Group extends Component<Props, State> {
   renderRow = ({ item }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
-        const { avatar, username, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = likes.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
+        const { user, caption, date, target, files, likes, comments, block } = item.data
+        const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1
         const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
           return {
             id: comment.id,
-            username: comment.username || '?',
+            username: comment.user.name || '?',
             body: comment.body
           }
         })
         return (
           <Photo
-            avatar={avatar}
-            username={username.length > 0 ? username : 'unknown'}
+            avatar={user.avatar}
+            username={user.name.length > 0 ? user.name : 'unknown'}
             message={caption.length > 0 ? caption : undefined}
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
             photoId={target}
@@ -173,11 +173,11 @@ class Group extends Component<Props, State> {
         )
       }
       case 'message': {
-        const { avatar, username, body, date } = item.data
+        const { user, body, date } = item.data
         return (
           <Message
-            avatar={avatar}
-            username={username || 'unknown'}
+            avatar={user.avatar}
+            username={user.name || 'unknown'}
             message={body}
             // TODO: deal with pb Timestamp to JS Date!
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
@@ -186,12 +186,12 @@ class Group extends Component<Props, State> {
       }
       case 'leave':
       case 'join': {
-        const { avatar, username, date } = item.data
+        const { user, date } = item.data
         const word = item.type === 'join' ? 'joined' : 'left'
         return (
           <Join
-            avatar={avatar}
-            username={username || 'unknown'}
+            avatar={user.avatar}
+            username={user.name || 'unknown'}
             message={`${word} ${this.props.groupName}`}
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           />
@@ -242,11 +242,11 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
-  const selfId = state.account.peerId.value || ''
+  const selfAddress = state.account.address.value || ''
   return {
     items,
     groupName,
-    selfId
+    selfAddress
   }
 }
 
