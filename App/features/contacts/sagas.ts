@@ -16,10 +16,10 @@ import Contacts from 'react-native-contacts'
 import {
   API,
   Events,
-  pb,
-  util
+  pb
 } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
+import { Buffer } from 'buffer'
 
 import * as actions from './actions'
 import { getAddress, getUsername } from '../../Redux/AccountSelectors'
