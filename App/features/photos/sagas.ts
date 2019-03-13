@@ -1,7 +1,7 @@
 import { all, take, select, call, put, fork } from 'redux-saga/effects'
 import { getType, ActionType } from 'typesafe-actions'
 import { requestLocalPhotos, LocalPhotoResult } from '@textile/react-native-camera-roll'
-import Textile, { pb, ThreadInfo } from '@textile/react-native-sdk'
+import { API, pb } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
 import FS from 'react-native-fs'
 
@@ -33,11 +33,11 @@ function * preparePhoto(id: string) {
   try {
     const selector = selectors.makeProcessingPhoto(id)
     const processingPhoto: ProcessingPhoto = yield select((state: RootState) => selector(state.photos))
-    const thread: ThreadInfo | undefined = yield call(getCameraRollThread)
+    const thread: pb.IThread | undefined = yield call(getCameraRollThread)
     if (!thread) {
       throw new Error('no camera roll thread found')
     }
-    const preparedFiles: pb.IMobilePreparedFiles = yield call(Textile.prepareFiles, processingPhoto.photo.path, thread.id)
+    const preparedFiles: pb.IMobilePreparedFiles = yield call(API.files.prepare, processingPhoto.photo.path, thread.id)
     yield put(actions.photoPrepared(id, preparedFiles))
     yield call(addPhoto, id)
   } catch (error) {
@@ -49,14 +49,14 @@ function * addPhoto(id: string) {
   try {
     const selector = selectors.makeProcessingPhoto(id)
     const processingPhoto: ProcessingPhoto = yield select((state: RootState) => selector(state.photos))
-    const thread: ThreadInfo | undefined = yield call(getCameraRollThread)
+    const thread: pb.IThread | undefined = yield call(getCameraRollThread)
     if (!thread) {
       throw new Error('no camera roll thread found')
     }
     if (!processingPhoto.preparedFiles) {
       throw new Error('no prepared files found')
     }
-    yield call(Textile.addFiles, processingPhoto.preparedFiles.dir, thread.id)
+    yield call(API.files.add, processingPhoto.preparedFiles.dir, thread.id)
     yield put(actions.photoAdded(id))
     yield call(cleanup, id)
   } catch (error) {
@@ -121,8 +121,8 @@ export default function * () {
 }
 
 async function getCameraRollThread() {
-  const threads = await Textile.threads()
-  return threads.find((thread) => thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
+  const threads = await API.threads.list()
+  return threads.items.find((thread) => thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
 }
 
 async function files(offset?: string, limit?: number) {
@@ -130,5 +130,5 @@ async function files(offset?: string, limit?: number) {
   if (!thread) {
     throw new Error('no default thread')
   }
-  return await Textile.files(offset || '', limit || -1, thread.id)
+  return await API.files.list(offset || '', limit || -1, thread.id)
 }
