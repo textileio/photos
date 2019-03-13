@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { ViewStyle } from 'react-native'
-import { SafeAreaView, NavigationScreenProps, DrawerItemsProps } from 'react-navigation'
+import { SafeAreaView, DrawerItemsProps } from 'react-navigation'
 import Account from './Account'
 
 const CONTAINER: ViewStyle = {
