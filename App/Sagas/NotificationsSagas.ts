@@ -9,15 +9,16 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import {Platform} from 'react-native'
-import {delay} from 'redux-saga'
+import { Platform , AppState } from 'react-native'
+import { delay } from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
-import Textile, {
-  NotificationType,
-  NotificationInfo
+import {
+  pb,
+  API
 } from '@textile/react-native-sdk'
+import { notificationTypeToString } from '../Services/Notifications'
 import NavigationService from '../Services/NavigationService'
 
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -34,7 +35,7 @@ export function * enable () {
 }
 
 export function * readAllNotifications (action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
-  yield call(Textile.readAllNotifications)
+  yield call(API.notifications.readAll)
 }
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
@@ -46,18 +47,19 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
       return
     }
     const { notification } = action.payload
-    const type = notification.type as string
+    const type = notification.type
 
     // if notifications for this type are not enabled, return
-    const preferences = yield select(PreferencesSelectors.service, type as ServiceType)
+    const typeString = notificationTypeToString(type)
+    const preferences = yield select(PreferencesSelectors.service, typeString as ServiceType)
     if (!preferences || preferences.status !== true) {
       return
     }
 
     // Ensure we aren't in the foreground (Android only req)
     // const queriedAppState = yield select(TextileNodeSelectors.appState)
-    const queriedAppState = yield call(Textile.appState)
-    if (Platform.OS === 'ios' || queriedAppState.match(/background/) || queriedAppState.match(/backgroundFromForeground/)) {
+    const queriedAppState = AppState.currentState
+    if (Platform.OS === 'ios' || queriedAppState.match(/background/)) {
       // fire the notification
       yield call(logNewEvent, 'Notifications', 'creating local')
       yield call(NotificationsServices.createNew, notification)
@@ -87,9 +89,9 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
   try {
-    yield call(Textile.readNotification, notification.id)
+    yield call(API.notifications.read, notification.id)
     switch (notification.type) {
-      case NotificationType.CommentAddedNotification: {
+      case pb.Notification.Type.COMMENT_ADDED: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
@@ -98,8 +100,8 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         }
         break
       }
-      case NotificationType.LikeAddedNotification:
-      case NotificationType.FilesAddedNotification: {
+      case pb.Notification.Type.LIKE_ADDED:
+      case pb.Notification.Type.FILES_ADDED: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
@@ -108,8 +110,8 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         }
         break
       }
-      case NotificationType.PeerJoinedNotification:
-      case NotificationType.PeerLeftNotification: {
+      case pb.Notification.Type.PEER_JOINED:
+      case pb.Notification.Type.PEER_LEFT: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
@@ -117,7 +119,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         }
         break
       }
-      case NotificationType.InviteReceivedNotification: {
+      case pb.Notification.Type.INVITE_RECEIVED: {
         yield * waitUntilOnline(1000)
         yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
         break
@@ -135,8 +137,8 @@ export function * refreshNotifications () {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: ReadonlyArray<NotificationInfo> = yield call(Textile.notifications, '', 99) // TODO: offset?
-    const typedNotifs = notificationResponse.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
+    const notificationResponse: pb.INotificationList = yield call(API.notifications.list, '', 99) // TODO: offset?
+    const typedNotifs = notificationResponse.items.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
     yield put(NotificationsActions.refreshNotificationsFailure())

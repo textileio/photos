@@ -14,12 +14,9 @@ import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import { pendingInviteLink } from '../Redux/ThreadsSelectors'
 import { ActionType } from 'typesafe-actions'
-import Textile, {
-  ExternalInvite,
-  ThreadInfo,
-  ThreadType,
-  ThreadSharing,
-  SchemaType
+import {
+  pb,
+  API
 } from '@textile/react-native-sdk'
 import DeepLink from '../Services/DeepLink'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
@@ -30,7 +27,7 @@ import Config from 'react-native-config'
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
   try {
-    const invite: ExternalInvite = yield call(Textile.addExternalInvite, id)
+    const invite: pb.INewInvite = yield call(API.invites.addExternal, id)
     yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
   } catch (error) {
     yield put(ThreadsActions.addExternalInviteError(id, error))
@@ -40,7 +37,7 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
 export function * displayThreadQRCode (action: ActionType<typeof ThreadsActions.threadQRCodeRequest>) {
   const { id, name } = action.payload
   try {
-    const invite: ExternalInvite = yield call(Textile.addExternalInvite, id)
+    const invite: pb.INewInvite = yield call(API.invites.addExternal, id)
     const link = DeepLink.createInviteLink(invite, name)
     yield put(ThreadsActions.threadQRCodeSuccess(id, name, link))
     // displayThreadQRCode
@@ -62,7 +59,7 @@ export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions
 function * processExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const joinId: string = yield call(Textile.acceptExternalInvite, inviteId, key)
+    const joinId: string = yield call(API.invites.acceptExternal, inviteId, key)
     if (!joinId) {
       throw new Error('invite previously accepted')
     }
@@ -85,10 +82,23 @@ export function * pendingInvitesTask () {
 export function * cameraRollThreadCreateTask () {
   // Update our camera roll
   try {
-    const threadsResult: ReadonlyArray<ThreadInfo> = yield call(Textile.threads)
     const cameraRollThreadName = 'Camera Roll'
     const cameraRollThreadKey = Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
-    yield call(Textile.addThread, cameraRollThreadKey, cameraRollThreadName, ThreadType.PRIVATE, ThreadSharing.NOT_SHARED, [], SchemaType.CAMERA_ROLL)
+    const threadsResult: pb.IThreadList = yield call(API.threads.list)
+    const cameraRollThread = threadsResult.items.find((thread) => thread.key === cameraRollThreadKey)
+    if (cameraRollThread) {
+      return
+    }
+    const config: pb.IAddThreadConfig = {
+      key: cameraRollThreadKey,
+      name: cameraRollThreadName,
+      type: pb.Thread.Type.PRIVATE,
+      sharing: pb.Thread.Sharing.NOT_SHARED,
+      schema: { id: '', json: '', preset: pb.AddThreadConfig.Schema.Preset.CAMERA_ROLL },
+      force: false,
+      members: []
+    }
+    yield call(API.threads.add, config)
   } catch (error) {
     // TODO: the camera sync relies on this tread existing, so if any other besides UNIQUE constraint, we should try again
   }
@@ -97,7 +107,7 @@ export function * cameraRollThreadCreateTask () {
 export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
   const { notificationId, threadName } = action.payload
   try {
-    const threadId = yield call(Textile.acceptInviteViaNotification, notificationId)
+    const threadId = yield call(API.notifications.acceptInvite, notificationId)
     yield put(PhotoViewingActions.refreshThreadsRequest())
     yield put(UIActions.navigateToThreadRequest(threadId, threadName))
   } catch (error) {
@@ -109,7 +119,7 @@ export function * addInternalInvites (action: ActionType<typeof ThreadsActions.a
   const { threadId, addresses } = action.payload
   try {
     for (const address of addresses) {
-      yield call(Textile.addInvite, threadId, address)
+      yield call(API.invites.add, threadId, address)
     }
   } catch (error) {
   }

@@ -1,4 +1,4 @@
-import { NotificationInfo as NotificationData, NotificationType } from '@textile/react-native-sdk'
+import { pb, util } from '@textile/react-native-sdk'
 import { Notification } from '../Models/Notifications'
 import RNPushNotification from 'react-native-push-notification'
 import { Alert } from 'react-native'
@@ -21,65 +21,90 @@ export async function enable(): Promise<void> {
   })
 }
 
-export function toTypedNotification(notificationData: NotificationData): Notification {
-  const { subject_id, subject, target, type, ...baseNotification } = notificationData
+export function toTypedNotification(notificationData: pb.INotification): Notification {
+  const { subjectDesc, subject, target, type, date, user, ...baseNotification } = notificationData
+  const d = util.timestampToDate(date)
   switch (type) {
-    case NotificationType.InviteReceivedNotification:
+    case pb.Notification.Type.INVITE_RECEIVED:
       return {
         ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
         type,
-        threadName: notificationData.subject
+        threadName: subjectDesc
       }
-    case NotificationType.AccountPeerJoinedNotification:
+    case pb.Notification.Type.ACCOUNT_PEER_JOINED:
       return {
         ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
         type
       }
-      case NotificationType.PeerJoinedNotification:
+    case pb.Notification.Type.PEER_JOINED:
       return {
         ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
         type,
-        threadId: notificationData.subject_id,
-        threadName: notificationData.subject
+        threadId: subject,
+        threadName: subjectDesc
       }
-    case NotificationType.PeerLeftNotification:
+    case pb.Notification.Type.PEER_LEFT:
       return {
         ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
         type,
-        threadId: notificationData.subject_id,
-        threadName: notificationData.subject
+        threadId: subject,
+        threadName: subjectDesc
       }
-      case NotificationType.MessageAddedNotification:
+    case pb.Notification.Type.MESSAGE_ADDED:
       return {
         ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
         type,
-        threadId: notificationData.subject_id,
-        threadName: notificationData.subject,
-        target: notificationData.target!
+        threadId: subject,
+        threadName: subjectDesc,
+        target
       }
-      case NotificationType.FilesAddedNotification:
+    case pb.Notification.Type.FILES_ADDED:
       return {
         ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
         type,
-        threadId: notificationData.subject_id,
-        threadName: notificationData.subject,
-        target: notificationData.target!
+        threadId: subject,
+        threadName: subjectDesc,
+        target
       }
-    case NotificationType.CommentAddedNotification:
+    case pb.Notification.Type.COMMENT_ADDED:
       return {
         ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
         type,
-        threadId: notificationData.subject_id,
-        threadName: notificationData.subject,
-        target: notificationData.target!
+        threadId: subject,
+        threadName: subjectDesc,
+        target
       }
-    case NotificationType.LikeAddedNotification:
+    case pb.Notification.Type.LIKE_ADDED:
       return {
         ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
         type,
-        threadId: notificationData.subject_id,
-        threadName: notificationData.subject,
-        target: notificationData.target!
+        threadId: subject,
+        threadName: subjectDesc,
+        target
       }
   }
 }
@@ -87,65 +112,85 @@ export function toTypedNotification(notificationData: NotificationData): Notific
 // Returns blockId if photo type
 export function getPhotoId(notification: Notification): string | undefined {
   switch (notification.type) {
-    case NotificationType.CommentAddedNotification:
-    case NotificationType.FilesAddedNotification:
-    case NotificationType.LikeAddedNotification:
+    case pb.Notification.Type.COMMENT_ADDED:
+    case pb.Notification.Type.FILES_ADDED:
+    case pb.Notification.Type.LIKE_ADDED:
       return notification.target
     default:
       return
   }
 }
 
-export function toPayload(notification: Notification): INotificationsPayload {
-  const typeString = notification.type as string
-  const actor = notification.username || 'A contact' // TODO: We want username here, need to look it up?
+export function notificationTypeToString(type: pb.Notification.Type): string {
+  switch (type) {
+    case pb.Notification.Type.ACCOUNT_PEER_JOINED:
+      return 'ACCOUNT_PEER_JOINED'
+    case pb.Notification.Type.COMMENT_ADDED:
+      return 'COMMENT_ADDED'
+    case pb.Notification.Type.FILES_ADDED:
+      return 'FILES_ADDED'
+    case pb.Notification.Type.INVITE_RECEIVED:
+      return 'INVITE_RECEIVED'
+    case pb.Notification.Type.LIKE_ADDED:
+      return 'LIKE_ADDED'
+    case pb.Notification.Type.MESSAGE_ADDED:
+      return 'MESSAGE_ADDED'
+    case pb.Notification.Type.PEER_JOINED:
+      return 'PEER_JOINED'
+    case pb.Notification.Type.PEER_LEFT:
+      return 'PEER_LEFT'
+  }
+}
 
+export function toPayload(notification: Notification): INotificationsPayload {
+  const typeString = notificationTypeToString(notification.type)
+  const actor = notification.username || 'A contact' // TODO: We want username here, need to look it up?
   switch (notification.type) {
-    case('INVITE_RECEIVED' as NotificationType.InviteReceivedNotification): {
+    case(pb.Notification.Type.INVITE_RECEIVED): {
       const title = 'New Invite'
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case('ACCOUNT_PEER_JOINED' as NotificationType.AccountPeerJoinedNotification): {
+    case(pb.Notification.Type.ACCOUNT_PEER_JOINED): {
       const title = 'New Contact'
       const message = 'You connected to a new account contact'
       const feed = message
       return { title, message, feed, typeString }
     }
-    case('PEER_JOINED' as NotificationType.PeerJoinedNotification): {
+    case(pb.Notification.Type.PEER_JOINED): {
       const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'group', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case('PEER_LEFT' as NotificationType.PeerLeftNotification): {
+    case(pb.Notification.Type.PEER_LEFT): {
       const title = notification.threadName
       const message =  [actor, notification.body].join(' ')
       const feed = [actor, notification.body, 'group', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case('MESSAGE_ADDED' as NotificationType.MessageAddedNotification): {
+    case(pb.Notification.Type.MESSAGE_ADDED): {
       const title = notification.threadName
       const message =  [actor, 'wrote', notification.body].join(' ')
       const feed = message
       return { title, message, feed, typeString }
     }
-    case('FILES_ADDED' as NotificationType.FilesAddedNotification): {
+    case(pb.Notification.Type.FILES_ADDED): {
       const title = notification.threadName
       const body = 'added a photo'
       const message =  [actor, body].join(' ')
       const feed = [actor, body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case('COMMENT_ADDED' as NotificationType.CommentAddedNotification): {
+    case(pb.Notification.Type.COMMENT_ADDED): {
       const title =  notification.threadName
       const message = [actor, notification.body].join(' ')
       const body = 'commented on a photo' // todo: fix "a" vs "your"
       const feed = [actor, body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case('LIKE_ADDED' as NotificationType.LikeAddedNotification): {
+    case(pb.Notification.Type.LIKE_ADDED): {
       const title = notification.threadName
       const body = 'liked a photo' // todo: fix "a" vs "your"
       const message = [actor, body].join(' ')

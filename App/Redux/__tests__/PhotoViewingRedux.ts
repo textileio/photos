@@ -7,13 +7,15 @@ const threadId = 'threadId'
 const threadKey = 'threadKey'
 const threadName = 'threadName'
 const photos: pb.IFiles[] = [{
-  username: 'username',
-  avatar: 'avatar',
+  user: {
+    name: 'username',
+    address: 'address',
+    avatar: 'avatar'
+  },
   caption: '',
   block: 'block_id',
   target: 'target',
   date: { seconds: 10, nanos: 20 },
-  author: 'author_id',
   files: [],
   comments: [],
   likes: [],

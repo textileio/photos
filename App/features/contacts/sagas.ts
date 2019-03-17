@@ -13,16 +13,16 @@ import { delay, eventChannel, END, Channel } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Contacts from 'react-native-contacts'
-import Textile, {
-  ContactInfo,
-  ContactSearchEvent,
-  pb,
-  util
+import {
+  API,
+  Events,
+  pb
 } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
+import { Buffer } from 'buffer'
 
 import * as actions from './actions'
-import { getPeerId, getUsername } from '../../Redux/AccountSelectors'
+import { getAddress, getUsername } from '../../Redux/AccountSelectors'
 import { composeMessage } from '../../NativeModules/MessageComposer'
 import UIActions from '../../Redux/UIRedux'
 
@@ -32,8 +32,8 @@ function * addFriends() {
 
 function * refreshContacts() {
   try {
-    const contactsResult: ReadonlyArray<ContactInfo> = yield call(Textile.contacts)
-    yield put(actions.getContactsSuccess(contactsResult))
+    const contactsResult: pb.IContactList = yield call(API.contacts.list)
+    yield put(actions.getContactsSuccess(contactsResult.items))
 
   } catch (error) {
     // skip for now
@@ -47,16 +47,7 @@ function * watchForAddContactRequests() {
 function * handleAddContactRequest(action: ActionType<typeof actions.addContactRequest>) {
   const { contact } = action.payload
   try {
-    const contactInfo: ContactInfo = {
-      id: contact.id,
-      avatar: contact.avatar,
-      address: contact.address,
-      username: contact.username,
-      inboxes: contact.inboxes,
-      created: util.timestampToDate(contact.created).toISOString(),
-      updated: util.timestampToDate(contact.updated).toISOString()
-    }
-    yield call(Textile.addContact, contactInfo)
+    yield call(API.contacts.add, contact)
     yield put(actions.addContactSuccess(contact))
     yield call(refreshContacts)
   } catch (error) {
@@ -65,7 +56,7 @@ function * handleAddContactRequest(action: ActionType<typeof actions.addContactR
 }
 
 function executeTextileSearch(searchString: string) {
-  return eventChannel<ContactSearchEvent>((emitter) => {
+  return eventChannel<pb.MobileQueryEvent>((emitter) => {
     const query: pb.IContactQuery = {
       username: searchString,
       id: '',
@@ -78,32 +69,46 @@ function executeTextileSearch(searchString: string) {
       filter: pb.QueryOptions.FilterType.NO_FILTER,
       exclude: []
     }
-    const handler = (event: ContactSearchEvent) => {
-      if (event.type === 'complete') {
-        emitter(END)
-      } else if (event.type === 'error') {
-        emitter(event)
-        emitter(END)
-      } else if (event.type === 'result') {
-        emitter(event)
+    const handler = (base64: string) => {
+      const queryEvent = pb.MobileQueryEvent.decode(Buffer.from(base64, 'base64'))
+      switch (queryEvent.type) {
+        case pb.MobileQueryEvent.Type.DATA: {
+          emitter(queryEvent)
+          break
+        }
+        case pb.MobileQueryEvent.Type.DONE: {
+          emitter(END)
+          break
+        }
+        case pb.MobileQueryEvent.Type.ERROR: {
+          emitter(queryEvent)
+          emitter(END)
+          break
+        }
       }
     }
-    Textile.searchContacts(query, options, handler)
+    const events = new Events()
+    events.addListener('QUERY_RESPONSE', handler)
+    API.contacts.search(query, options)
     return () => {
-      Textile.cancelSearchContacts()
+      API.contacts.cancelSearch()
+      events.removeListener('QUERY_RESPONSE', handler)
     }
   })
 }
 
 function * searchTextile(searchString: string) {
-  const channel: Channel<ContactSearchEvent> = yield call(executeTextileSearch, searchString)
+  const channel: Channel<pb.MobileQueryEvent> = yield call(executeTextileSearch, searchString)
   try {
     while (true) {
-      const event: ContactSearchEvent = yield take(channel)
-      if (event.type === 'result') {
-        yield put(actions.searchResultTextile(event.contact))
-      } else if (event.type === 'error') {
-        yield put(actions.searchErrorTextile(event.error))
+      const event: pb.MobileQueryEvent = yield take(channel)
+      if (event.type === pb.MobileQueryEvent.Type.DATA) {
+        if (event.data.value.type_url === '/Contact') {
+          const contact = pb.Contact.decode(event.data.value.value)
+          yield put(actions.searchResultTextile(contact))
+        }
+      } else if (event.type === pb.MobileQueryEvent.Type.ERROR) {
+        yield put(actions.searchErrorTextile(event.error.message))
       }
     }
   } catch (error) {
@@ -113,6 +118,7 @@ function * searchTextile(searchString: string) {
       channel.close()
     } else {
       yield put(actions.textileSearchComplete())
+      channel.close() // Think we want to do this to remove the event subscription
     }
   }
 }
@@ -168,14 +174,14 @@ function * sendInviteMessage() {
     const sendTo = iphone || mobile || home || work
     if (sendTo) {
       const username: string | undefined = yield select(getUsername)
-      const peerId: string | undefined = yield select(getPeerId)
+      const address: string | undefined = yield select(getAddress)
       const url = Platform.OS === 'ios' ? Config.RN_IOS_STORE_LINK : Config.RN_ANDROID_STORE_LINK
       let message = `Join me on Textile Photos: ${url}`
       if (username) {
         message = `${message}\nMy username: ${username}`
       }
-      if (peerId) {
-        message = `${message}\nMy peer id snippet: ${peerId.substr(peerId.length - 8, 8)}`
+      if (address) {
+        message = `${message}\nMy address snippet: ${address.substr(address.length - 8, 8)}`
       }
       yield call(composeMessage, sendTo.number, message)
     }

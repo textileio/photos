@@ -1,6 +1,6 @@
 import { ActionType, getType } from 'typesafe-actions'
 import { call, put, select, takeEvery, all } from 'redux-saga/effects'
-import Textile, { pb } from '@textile/react-native-sdk'
+import { API, pb } from '@textile/react-native-sdk'
 import { refreshFeed, loadFeedItems } from './actions'
 import { feedOffsetForGroup } from './selectors'
 import { RootState } from '../../../Redux/Types'
@@ -9,7 +9,8 @@ export function * handleRefreshGroupRequest(action: ActionType<typeof refreshFee
   const { id, limit } = action.payload
 
   try {
-    const list: pb.IFeedItemList = yield call(Textile.feed, '', limit || -1, 1, id) // TODO: Update to STACKS
+    const request: pb.IFeedRequest = { thread: id, offset: '', limit: limit || -1, mode: pb.FeedRequest.Mode.ANNOTATED }
+    const list: pb.IFeedItemList = yield call(API.feed.list, request)
     yield put(refreshFeed.success({ id, items: list.items }))
   } catch (error) {
     yield put(refreshFeed.failure({ id, error }))
@@ -20,7 +21,8 @@ export function * handleLoadGroupItemsRequest(action: ActionType<typeof loadFeed
   const { id, limit } = action.payload
   try {
     const offset: string | undefined = yield select((state: RootState, id: string) => feedOffsetForGroup(state.group.feed, id), id)
-    const list: pb.IFeedItemList = yield call(Textile.feed, offset || '', limit || -1, 1, id) // TODO: Update to STACKS
+    const request: pb.IFeedRequest = { thread: id, offset: offset || '', limit: limit || -1, mode: pb.FeedRequest.Mode.ANNOTATED }
+    const list: pb.IFeedItemList = yield call(API.feed.list, request)
     yield put(loadFeedItems.success({ id, items: list.items }))
   } catch (error) {
     yield put(loadFeedItems.failure({ id, error }))

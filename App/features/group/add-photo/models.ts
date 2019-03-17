@@ -1,4 +1,4 @@
-import { BlockInfo, pb } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
@@ -53,7 +53,7 @@ export interface ProcessingImage {
   readonly comment?: string
   readonly preparedFiles?: pb.IMobilePreparedFiles
   readonly uploadData?: UploadData
-  readonly blockInfo?: BlockInfo
+  readonly block?: pb.IBlock
   readonly error?: string
 }
 

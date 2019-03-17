@@ -193,7 +193,7 @@ dependencies {
     compile project(':react-native-version-number')
     compile project(':react-native-gesture-handler')
     compile project(':react-native-screens')
-    compile project(':textilego')
+    compile project(':mobile')
 }
 
 // Run this once to be able to run the application with BUCK

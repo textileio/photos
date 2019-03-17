@@ -33,7 +33,7 @@ const CONTAINER: ViewStyle = {
 
 interface StateProps {
   photo?: pb.IFiles,
-  selfId: string
+  selfAddress: string
   threadName?: string,
   threadId?: string
 }
@@ -68,12 +68,12 @@ class PhotoScreen extends React.Component<Props> {
     if (!this.props.photo) {
       return <ScrollView style={CONTAINER} />
     }
-    const { avatar, username, caption, date, target, files, likes, comments, block } = this.props.photo
-    const hasLiked = likes.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
+    const { user, caption, date, target, files, likes, comments, block } = this.props.photo
+    const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1
     const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
       return {
         id: comment.id,
-        username: comment.username || '?',
+        username: comment.user.name || '?',
         body: comment.body
       }
     })
@@ -81,9 +81,9 @@ class PhotoScreen extends React.Component<Props> {
       <ScrollView style={CONTAINER}>
       {this.props.photo &&
         <Photo
-          avatar={avatar}
-          username={username || 'unknown'}
-          message={caption}
+          avatar={user.avatar}
+          username={user.name || 'unknown'}
+          message={caption.length > 0 ? caption : undefined}
           time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           photoId={target}
           fileIndex={files[0].index}
@@ -109,12 +109,12 @@ const mapStateToProps = (state: RootState): StateProps => {
     const threadData = threadDataByThreadId(state, threadId)
     threadName = threadData ? threadData.name : undefined
   }
-  const selfId = state.account.peerId.value || ''
+  const selfAddress = state.account.address.value || ''
   return {
     photo: state.photoViewing.viewingPhoto,
     threadName,
     threadId,
-    selfId
+    selfAddress
   }
 }
 

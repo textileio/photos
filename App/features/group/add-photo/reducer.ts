@@ -75,10 +75,10 @@ export default combineReducers<ProcessingImagesState, ProcessingImagesAction>({
         return images
       }
       case getType(actions.sharedToThread): {
-        const { uuid, blockInfo } = action.payload
+        const { uuid, block } = action.payload
         const images = state.map((image) => {
           if (image.uuid === uuid) {
-            const updated: ProcessingImage = { ...image, blockInfo, status: 'complete' }
+            const updated: ProcessingImage = { ...image, block, status: 'complete' }
             return updated
           }
           return image

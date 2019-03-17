@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
-import { ContactInfo } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 import SearchBar from '../Components/SearchBar'
 import RowSeparator from '../Components/RowSeparator'
@@ -26,7 +26,7 @@ const CONTAINER: ViewStyle = {
 }
 
 interface StateProps {
-  contacts: ReadonlyArray<ContactInfo>
+  contacts: ReadonlyArray<pb.IContact>
 }
 
 interface NavProps {
@@ -80,7 +80,7 @@ class Contacts extends React.Component<Props, State> {
   }
 
   render () {
-    const allContacts: ReadonlyArray<ContactInfo> = this.props.contacts
+    const allContacts: ReadonlyArray<pb.IContact> = this.props.contacts
     let data = allContacts
     if (this.state.searchString !== undefined && this.state.searchString.length > 0) {
       data = data.filter((contact) => {
@@ -112,9 +112,9 @@ class Contacts extends React.Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: ContactInfo) => item.id
+  keyExtractor = (item: pb.IContact) => item.id
 
-  renderRow = (row: ListRenderItemInfo<ContactInfo>) => {
+  renderRow = (row: ListRenderItemInfo<pb.IContact>) => {
     const { item } = row
     const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
     const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
@@ -134,9 +134,9 @@ class Contacts extends React.Component<Props, State> {
     })
   }
 
-  onPress = (contactInfo: ContactInfo) => {
+  onPress = (contactInfo: pb.IContact) => {
     return () => {
-      this.props.navigation.navigate('Contact', { avatar: contactInfo.avatar, username: contactInfo.username, peerId: contactInfo.id })
+      this.props.navigation.navigate('Contact', { avatar: contactInfo.avatar, username: contactInfo.username, address: contactInfo.address })
     }
   }
 

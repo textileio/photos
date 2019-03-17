@@ -1,12 +1,12 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { ExternalInvite } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const actions = {
   addExternalInviteRequest: createAction('ADD_EXTERNAL_INVITE_REQUEST', (resolve) => {
     return (id: string, name: string) => resolve({ id, name })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_INVITE_SUCCESS', (resolve) => {
-    return (id: string, name: string, invite: ExternalInvite) => resolve({ id, name, invite })
+    return (id: string, name: string, invite: pb.INewInvite) => resolve({ id, name, invite })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_INVITE_ERROR', (resolve) => {
     return (id: string, error: Error) => resolve({ id, error })
@@ -54,7 +54,7 @@ export interface InviteQRCode {
 export interface OutboundInvite {
   readonly id: string
   readonly name: string
-  readonly invite?: ExternalInvite
+  readonly invite?: pb.INewInvite
   readonly error?: Error
 }
 
