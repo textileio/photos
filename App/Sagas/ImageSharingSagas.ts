@@ -178,7 +178,7 @@ export function * shareToThread (uuid: string) {
 }
 
 export async function prepare (image: SharedImage, destinationThreadId: string): Promise<pb.IMobilePreparedFiles> {
-  const addResult = await API.files.prepareAsync(image.path, destinationThreadId)
+  const addResult = await API.files.prepareFilesByPath(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {
