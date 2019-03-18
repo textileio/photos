@@ -11,7 +11,7 @@
   "dependencies": {
     "@textile/react-native-icon": "^1.0.0",
     "@textile/react-native-screen-control": "1.0.12",
-    "@textile/react-native-sdk": "1.1.0-rc42",
+    "@textile/react-native-sdk": "1.1.0-rc43",
     "@textile/redux-saga-wait-for": "1.0.1",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
