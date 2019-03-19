@@ -11,3 +11,15 @@ export interface ProcessingPhoto {
 export interface ProcessingPhotos {
   readonly [key: string]: ProcessingPhoto
 }
+
+interface ProcessingItem {
+  type: 'processingItem'
+  processingPhoto: ProcessingPhoto
+}
+
+interface FilesItem {
+  type: 'files'
+  files: pb.IFiles
+}
+
+export type Item = ProcessingItem | FilesItem
