@@ -29,7 +29,6 @@
     "react-native-fs": "^2.11.17",
     "react-native-image-picker": "^0.27.1",
     "react-native-modal": "^6.5.0",
-    "react-native-pages": "^0.7.0",
     "react-native-push-notification": "^3.1.1",
     "react-native-qrcode": "^0.2.7",
     "react-native-scalable-image": "^0.4.0",
