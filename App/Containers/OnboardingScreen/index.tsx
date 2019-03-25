@@ -1,6 +1,5 @@
 import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
-import { Pages } from 'react-native-pages'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
@@ -19,6 +18,14 @@ import { color, spacing } from '../../styles'
 const CONTAINER: ViewStyle = {
   flex: 1,
   backgroundColor: color.screen_primary
+}
+
+const DOT: ViewStyle = {
+  margin: 3,
+  height: 8,
+  width: 8,
+  backgroundColor: color.action_6,
+  borderRadius: 4
 }
 
 const ARROW_FORWARD: ViewStyle = {
@@ -153,6 +160,15 @@ class OnboardingScreen extends React.Component<Props, State> {
             style={[CONTAINER, { marginBottom: spacing._016 }]}
           >
             {this.pages[this.state.currentPage]}
+          </View>
+          <View style={{height: 60, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+            <View style={[DOT, this.pages && this.state.currentPage === 0 && {backgroundColor: color.action_4}]} />
+            <View style={[DOT, this.pages && this.state.currentPage === 1 && {backgroundColor: color.action_4}]} />
+            <View style={[DOT, this.pages && this.state.currentPage === 2 && {backgroundColor: color.action_4}]} />
+            <View style={[DOT, this.pages && this.state.currentPage === 3 && {backgroundColor: color.action_4}]} />
+            <View style={[DOT, this.pages && this.state.currentPage === 4 && {backgroundColor: color.action_4}]} />
+            <View style={[DOT, this.pages && this.state.currentPage === 5 && {backgroundColor: color.action_4}]} />
+            <View style={[DOT, this.pages && this.state.currentPage === 6 && {backgroundColor: color.action_4}]} />
           </View>
           {this.state.showArrow &&
             <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
