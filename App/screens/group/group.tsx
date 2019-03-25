@@ -144,10 +144,7 @@ class Group extends Component<Props, State> {
     }
     switch (previous.type) {
       case 'message': {
-        if (user.name.length <= 0 || previous.data.user.name.length <= 0) {
-          return false
-        }
-        return user.name === previous.data.user.name
+        return user.address === previous.data.user.address
       }
       default: {
         return false
