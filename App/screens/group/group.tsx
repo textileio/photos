@@ -108,6 +108,7 @@ class Group extends Component<Props, State> {
   }
 
   render () {
+    // flexGrow allows android to scroll, however https://github.com/facebook/react-native/issues/19434 is still an issue
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
