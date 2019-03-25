@@ -860,9 +860,9 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-sdk@git://github.com/textileio/react-native-sdk.git#asutula/podspec":
+"@textile/react-native-sdk@1.1.0-rc46":
   version "1.1.0-rc46"
-  resolved "git://github.com/textileio/react-native-sdk.git#c7911df6a3bee0e487604ec271c75977e3ba04ff"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc46.tgz#f0ffe80403440829f27f057cbf608813902961ca"
   dependencies:
     "@textile/go-mobile" "0.1.10-rc3"
     buffer "^5.2.1"

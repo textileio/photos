@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@textile/react-native-icon": "^1.0.0",
-    "@textile/react-native-sdk": "git://github.com/textileio/react-native-sdk.git#asutula/podspec",
+    "@textile/react-native-sdk": "1.1.0-rc46",
     "moment": "^2.24.0",
     "react": "16.8.3",
     "react-native": "0.59.1",
