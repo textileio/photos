@@ -2,7 +2,7 @@ import React from 'react'
 import {Dispatch} from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, View, Text, TouchableOpacity } from 'react-native'
+import { FlatList, View, Text, TouchableOpacity, Alert } from 'react-native'
 
 import {RootAction, RootState} from '../Redux/Types'
 
@@ -10,6 +10,7 @@ import { getThreads } from '../Redux/PhotoViewingSelectors'
 import { contactsSelectors } from '../features/contacts'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
+import PreferencesActions from '../Redux/PreferencesRedux'
 
 import { pb } from '@textile/react-native-sdk'
 
@@ -29,11 +30,14 @@ interface GroupAuthors {
 
 interface StateProps {
   threads: ReadonlyArray<GroupAuthors>
+  showNotificationsPrompt: boolean
 }
 
 interface DispatchProps {
   refreshMessages: () => void
   navigateToThread: (id: string, name: string) => void
+  enableNotifications: () => void
+  completeNotifications: () => void
 }
 
 interface NavProps {
@@ -136,6 +140,13 @@ class Groups extends React.Component<Props, State> {
     })
   }
 
+  componentDidUpdate (prevProps, prevState) {
+    // ensure that it only gets called once by using the first update of the state or a new group add
+    if (this.props.threads.length && this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
+      this.notificationPrompt()
+    }
+  }
+
   render () {
     return (
       <View style={styles.contentContainer} >
@@ -159,11 +170,40 @@ class Groups extends React.Component<Props, State> {
       </View>
     )
   }
+
+  // Simple Alert based prompt to get Notification permissions
+  notificationPrompt () {
+    // never show it again
+    this.props.completeNotifications()
+    // give the user a prompt
+    Alert.alert(
+      'Notifications',
+      'Want to receive notifications when you receive new photos or invites?',
+      [
+        {
+          text: 'Yes please',
+          onPress: () => {
+            this.props.enableNotifications()
+          }
+        },
+        { text: 'Not now', style: 'cancel' },
+        {
+          text: 'Show all options',
+          onPress: () => {
+            this.props.navigation.navigate('Settings')
+          }
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
   const ownAddress = state.account.address.value
   const profile = state.account.profile.value
+  let memberCount = 0
   const threads = getThreads(state, 'date')
   .map((thread) => {
     const selector = contactsSelectors.makeByThreadId(thread.id)
@@ -172,6 +212,8 @@ const mapStateToProps = (state: RootState): StateProps => {
       members.unshift(profile)
     }
     const thumb = thread.photos.length ? thread.photos[0] : undefined
+    // just get a sense of how many group x members there are
+    memberCount += members.length
     return {
       id: thread.id,
       name: thread.name,
@@ -181,8 +223,14 @@ const mapStateToProps = (state: RootState): StateProps => {
       thumb
     }
   })
+
+  const showNotificationsPrompt = state.preferences.tourScreens.notifications &&
+    threads.length > 0 &&
+    memberCount > threads.length
+
   return {
-    threads
+    threads,
+    showNotificationsPrompt
   }
 }
 
@@ -193,6 +241,12 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     },
     navigateToThread: (id: string, name: string) => {
       dispatch(UIActions.navigateToThreadRequest(id, name))
+    },
+    enableNotifications: () => {
+      dispatch(PreferencesActions.toggleServicesRequest('notifications', true))
+    },
+    completeNotifications: () => {
+      dispatch(PreferencesActions.completeTourSuccess('notifications'))
     }
   }
 }
