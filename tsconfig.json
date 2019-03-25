@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "jsx": "react-native",
-    "lib": ["es6"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": false, // false so we can re-export symbols in features index.ts
+    "jsx": "react",
+    "lib": ["es2017"],
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
+    "target": "esnext",
     "noImplicitAny": false,
-    "esModuleInterop": true,
-    "isolatedModules": false,
-    "skipLibCheck": true,
-    "target": "esnext"
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "coverage"]
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }

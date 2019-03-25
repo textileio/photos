@@ -24,9 +24,7 @@ const drawer = createDrawerNavigator(
         fontWeight: Platform.OS === 'ios' ? '600' : 'normal',
         fontSize: fontSize._18
       },
-      activeLabelStyle: {
-        color: color.action_3
-      }
+      activeTintColor: color.action_3
     },
     navigationOptions: {
       // tslint:disable-next-line:no-null-keyword

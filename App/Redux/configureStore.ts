@@ -1,7 +1,7 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
-import Reactotron from 'reactotron-react-native'
+import Reactotron from '../Config/ReactotronConfig'
 
 import DebugConfig from '../Config/DebugConfig'
 import persistConfig from '../Config/ReduxPersist'
@@ -12,11 +12,9 @@ import rootSaga from '../Sagas'
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export default () => {
-  const sagaMonitor = DebugConfig.useReactotron ? Reactotron.createSagaMonitor() : undefined
-  const sagaMiddleware = createSagaMiddleware({ sagaMonitor })
-
-  const createAppropriateStore = DebugConfig.useReactotron ? Reactotron.createStore : createStore
-  const store = createAppropriateStore(persistedReducer, applyMiddleware(sagaMiddleware))
+  const sagaMiddleware = createSagaMiddleware()
+  const enhancers = DebugConfig.useReactotron ? compose(applyMiddleware(sagaMiddleware), Reactotron.createEnhancer!()) : applyMiddleware(sagaMiddleware)
+  const store = createStore(persistedReducer, enhancers)
 
   const bootstrappedCallback = () => store.dispatch(StartupActions.startup())
   const persistor = persistStore(store, undefined, bootstrappedCallback)

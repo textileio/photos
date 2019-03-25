@@ -1,1 +1,4 @@
 *.pbxproj -text
+ios/Pods/Crashlytics/iOS/Crashlytics.framework/Crashlytics filter=lfs diff=lfs merge=lfs -text
+ios/Pods/Fabric/iOS/Fabric.framework/Fabric filter=lfs diff=lfs merge=lfs -text
+ios/Pods/TextileCore/Mobile.framework/Versions/A/Mobile filter=lfs diff=lfs merge=lfs -text

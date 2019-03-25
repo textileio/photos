@@ -1,4 +1,4 @@
-import { call, put, select, fork, take, race } from 'redux-saga/effects'
+import SelectEffect, { call, put, select, fork, take, race } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
@@ -14,7 +14,6 @@ import UIActions, { UISelectors } from '../Redux/UIRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
-import { waitFor } from '@textile/redux-saga-wait-for'
 import { RootAction, RootState } from '../Redux/Types'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
@@ -151,7 +150,7 @@ export function * uploadPins (uuid: string) {
 export function * monitorForUploadsComplete(uuid: string) {
   const selector = (state: RootState) => groupSelectors.addPhotoSelectors.allUploadsComplete(state.group.addPhoto, uuid)
   const { complete } = yield race({
-    complete: waitFor(select(selector, uuid)),
+    complete: waitFor(select(selector)),
     // If there is any error related to this image, we want to cancel the uploads complete listener because the image uploads can
     // be retried and we'll created a new listener for that
     errorAction: take((action: RootAction) => action.type === getType(groupActions.addPhoto.error) && (action.payload.error.uuid === uuid))
@@ -187,4 +186,16 @@ export async function prepare (image: SharedImage, destinationThreadId: string):
   } catch (e) {
   }
   return addResult
+}
+
+function * waitFor (selectEffect: SelectEffect.SimpleEffect<'SELECT', SelectEffect.SelectEffectDescriptor>) {
+  if (yield selectEffect) {
+    return true
+  }
+  while (true) {
+    yield take('*')
+    if (yield selectEffect) {
+      return true
+    }
+  }
 }

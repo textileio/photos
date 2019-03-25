@@ -9,8 +9,7 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import { call, put, select, take } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { call, put, select, take, delay } from 'redux-saga/effects'
 import UIActions from '../Redux/UIRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import Config from 'react-native-config'
@@ -25,7 +24,7 @@ export function * inviteAfterOnboard () {
   const invite = yield select(AuthSelectors.invite)
   if (invite) {
     // ensures this is the last of the knock-on effects of onboarding
-    yield call(delay, 250)
+    yield delay(250)
     NavigationService.navigate('ThreadInvite', { ...DeepLink.getParams(invite.hash) })
   }
 }

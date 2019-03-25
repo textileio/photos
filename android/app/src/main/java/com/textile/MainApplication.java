@@ -2,6 +2,8 @@ package com.textile;
 
 import android.app.Application;
 
+import com.apsl.versionnumber.RNVersionNumberPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -11,23 +13,20 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-import com.apsl.versionnumber.RNVersionNumberPackage;
-import com.crashlytics.android.Crashlytics;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import io.fabric.sdk.android.Fabric;
 import com.imagepicker.ImagePickerPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.smixx.fabric.FabricPackage;
+import com.crashlytics.android.Crashlytics;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
+import com.textile.textilenode.TextilePackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
-import io.textile.rnmobile.RNTextilePackage;
-import io.textile.screencontrol.RNScreenControlPackage;
-import com.textile.textilenode.TextilePackage;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -40,22 +39,20 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-          new RNTextilePackage(),
-          new RNScreenControlPackage(),
-          new RNBackgroundFetchPackage(),
-          new ReactNativePushNotificationPackage(),
-          new UploaderReactPackage(),
-          new RNFSPackage(),
-          new ImagePickerPackage(),
-          new ReactNativeConfigPackage(),
-          new FabricPackage(),
-          new BackgroundTimerPackage(),
-          new RNVersionNumberPackage(),
-          new RNGestureHandlerPackage(),
-          new RNScreensPackage(),
-          new ReactNativeContacts(),
-          new TextilePackage()
+              new RNGestureHandlerPackage(),
+              new RNScreensPackage(),
+              new ReactNativeContacts(),
+              new RNVersionNumberPackage(),
+              new ImagePickerPackage(),
+              new RNFSPackage(),
+              new RNBackgroundFetchPackage(),
+              new BackgroundTimerPackage(),
+              new UploaderReactPackage(),
+              new FabricPackage(),
+              new ReactNativeConfigPackage(),
+              new ReactNativePushNotificationPackage(),
+              new TextilePackage(),
+              new MainReactPackage()
       );
     }
 

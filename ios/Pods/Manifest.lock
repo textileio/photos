@@ -1,0 +1,213 @@
+PODS:
+  - boost-for-react-native (1.63.0)
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
+  - DoubleConversion (1.1.6)
+  - Fabric (1.9.0)
+  - Folly (2018.10.22.00):
+    - boost-for-react-native
+    - DoubleConversion
+    - glog
+  - glog (0.3.5)
+  - Protobuf (3.7.0)
+  - React (0.59.1):
+    - React/Core (= 0.59.1)
+  - react-native-background-timer (2.1.1):
+    - React
+  - react-native-background-upload (5.0.0):
+    - React
+  - react-native-config (0.11.7):
+    - React
+  - react-native-contacts (3.1.4):
+    - React
+  - react-native-image-picker (0.28.0):
+    - React
+  - react-native-version-number (0.3.5):
+    - React
+  - React/Core (0.59.1):
+    - yoga (= 0.59.1.React)
+  - React/CxxBridge (0.59.1):
+    - Folly (= 2018.10.22.00)
+    - React/Core
+    - React/cxxreact
+    - React/jsiexecutor
+  - React/cxxreact (0.59.1):
+    - boost-for-react-native (= 1.63.0)
+    - DoubleConversion
+    - Folly (= 2018.10.22.00)
+    - glog
+    - React/jsinspector
+  - React/DevSupport (0.59.1):
+    - React/Core
+    - React/RCTWebSocket
+  - React/fishhook (0.59.1)
+  - React/jsi (0.59.1):
+    - DoubleConversion
+    - Folly (= 2018.10.22.00)
+    - glog
+  - React/jsiexecutor (0.59.1):
+    - DoubleConversion
+    - Folly (= 2018.10.22.00)
+    - glog
+    - React/cxxreact
+    - React/jsi
+  - React/jsinspector (0.59.1)
+  - React/RCTActionSheet (0.59.1):
+    - React/Core
+  - React/RCTAnimation (0.59.1):
+    - React/Core
+  - React/RCTBlob (0.59.1):
+    - React/Core
+  - React/RCTCameraRoll (0.59.1):
+    - React/Core
+    - React/RCTImage
+  - React/RCTGeolocation (0.59.1):
+    - React/Core
+  - React/RCTImage (0.59.1):
+    - React/Core
+    - React/RCTNetwork
+  - React/RCTLinkingIOS (0.59.1):
+    - React/Core
+  - React/RCTNetwork (0.59.1):
+    - React/Core
+  - React/RCTPushNotification (0.59.1):
+    - React/Core
+  - React/RCTSettings (0.59.1):
+    - React/Core
+  - React/RCTText (0.59.1):
+    - React/Core
+  - React/RCTVibration (0.59.1):
+    - React/Core
+  - React/RCTWebSocket (0.59.1):
+    - React/Core
+    - React/fishhook
+    - React/RCTBlob
+  - ReactNativeFabric (0.5.2):
+    - Crashlytics
+    - Fabric
+    - React
+  - RNBackgroundFetch (2.5.1):
+    - React
+  - RNFS (2.13.3):
+    - React
+  - RNGestureHandler (1.0.17):
+    - React
+  - RNScreens (1.0.0-alpha.22):
+    - React
+  - Textile (0.1.0.pre.3):
+    - Protobuf (~> 3.7)
+    - TextileCore (~> 0.1.10-rc3)
+  - textile-react-native-sdk (1.1.0-rc46):
+    - React
+    - Textile (= 0.1.0.pre.3)
+  - TextileCore (0.1.10-rc3):
+    - Protobuf (~> 3.7)
+  - yoga (0.59.1.React)
+
+DEPENDENCIES:
+  - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
+  - glog (from `../node_modules/react-native/third-party-podspecs/GLog.podspec`)
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
+  - react-native-background-upload (from `../node_modules/react-native-background-upload`)
+  - react-native-config (from `../node_modules/react-native-config`)
+  - react-native-contacts (from `../node_modules/react-native-contacts`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-version-number (from `../node_modules/react-native-version-number`)
+  - React/Core (from `../node_modules/react-native`)
+  - React/CxxBridge (from `../node_modules/react-native`)
+  - React/DevSupport (from `../node_modules/react-native`)
+  - React/RCTActionSheet (from `../node_modules/react-native`)
+  - React/RCTAnimation (from `../node_modules/react-native`)
+  - React/RCTBlob (from `../node_modules/react-native`)
+  - React/RCTCameraRoll (from `../node_modules/react-native`)
+  - React/RCTGeolocation (from `../node_modules/react-native`)
+  - React/RCTImage (from `../node_modules/react-native`)
+  - React/RCTLinkingIOS (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTPushNotification (from `../node_modules/react-native`)
+  - React/RCTSettings (from `../node_modules/react-native`)
+  - React/RCTText (from `../node_modules/react-native`)
+  - React/RCTVibration (from `../node_modules/react-native`)
+  - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativeFabric (from `../node_modules/react-native-fabric`)
+  - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
+  - RNFS (from `../node_modules/react-native-fs`)
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNScreens (from `../node_modules/react-native-screens`)
+  - "textile-react-native-sdk (from `../node_modules/@textile/react-native-sdk`)"
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga/Yoga.podspec`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - boost-for-react-native
+    - Crashlytics
+    - Fabric
+    - Protobuf
+    - Textile
+    - TextileCore
+
+EXTERNAL SOURCES:
+  DoubleConversion:
+    :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  Folly:
+    :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
+  glog:
+    :podspec: "../node_modules/react-native/third-party-podspecs/GLog.podspec"
+  React:
+    :path: "../node_modules/react-native"
+  react-native-background-timer:
+    :path: "../node_modules/react-native-background-timer"
+  react-native-background-upload:
+    :path: "../node_modules/react-native-background-upload"
+  react-native-config:
+    :path: "../node_modules/react-native-config"
+  react-native-contacts:
+    :path: "../node_modules/react-native-contacts"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
+  react-native-version-number:
+    :path: "../node_modules/react-native-version-number"
+  ReactNativeFabric:
+    :path: "../node_modules/react-native-fabric"
+  RNBackgroundFetch:
+    :path: "../node_modules/react-native-background-fetch"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
+  textile-react-native-sdk:
+    :path: "../node_modules/@textile/react-native-sdk"
+  yoga:
+    :path: "../node_modules/react-native/ReactCommon/yoga/Yoga.podspec"
+
+SPEC CHECKSUMS:
+  boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
+  Folly: de497beb10f102453a1afa9edbf8cf8a251890de
+  glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
+  Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
+  React: 34a405ead72252839fdc4afc1f972a7ed984af84
+  react-native-background-timer: 1b6e6b4e10f1b74c367a1fdc3c72b67c619b222b
+  react-native-background-upload: 82ee362e9249d6610e232d15ae3baf0a1a6c63dd
+  react-native-config: 55548054279d92e0e4566ea15a8b9b81028ec342
+  react-native-contacts: fb915a44825952bf618ae35ce09c7b702f3344f3
+  react-native-image-picker: e6e06d4315e3c85bad17e4b2002cd29f11d202c8
+  react-native-version-number: 75301519bb72064ad209a498ed08b128cbcf10e7
+  ReactNativeFabric: d05320ff347d5c72567c115b97edeead111ac4d2
+  RNBackgroundFetch: f123aec9c3fdb946785452a56faae50d28e63aee
+  RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
+  RNGestureHandler: c33871a91c10f7b4df79d1829fc8fe0d8ada0df0
+  RNScreens: 720a9e6968beb73e8196239801e887d8401f86ed
+  Textile: 8291563297df30269dc6112576c9add6b6856cee
+  textile-react-native-sdk: c399972b38aa3c320a661a710001bb714705d971
+  TextileCore: 2e749011caa132f3ea413a16adc43e7efe9704b9
+  yoga: 8fb47f180b19b0dadb285a09e4c74c8a41721d3a
+
+PODFILE CHECKSUM: 48359a233a8e603b489bc698a17f229e010c0bcc
+
+COCOAPODS: 1.6.1

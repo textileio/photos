@@ -1,5 +1,4 @@
-import { delay } from 'redux-saga'
-import { call, put, select, take } from 'redux-saga/effects'
+import { call, put, select, take, delay } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import uuid from 'uuid/v4'
 

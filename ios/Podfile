@@ -1,0 +1,65 @@
+platform :ios, '10.0'
+
+target 'Textile' do
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'Core',
+    'CxxBridge',
+    'DevSupport',
+    # the following ones are the ones taken from "Libraries" in Xcode:
+    'RCTAnimation',
+    'RCTActionSheet',
+    'RCTBlob',
+    'RCTCameraRoll',
+    'RCTGeolocation',
+    'RCTImage',
+    'RCTLinkingIOS',
+    'RCTNetwork',
+    'RCTPushNotification',
+    'RCTSettings',
+    'RCTText',
+    'RCTVibration',
+    'RCTWebSocket'
+  ]
+
+  # the following dependencies are dependencies of React native itself.
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga/Yoga.podspec'
+  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/GLog.podspec'
+
+  # your other libraries will follow here!
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+  pod 'RNScreens', :path => '../node_modules/react-native-screens'
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
+  pod 'react-native-version-number', :path => '../node_modules/react-native-version-number'
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+  pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
+  pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
+  pod 'react-native-background-upload', :path => '../node_modules/react-native-background-upload'
+  pod 'ReactNativeFabric', :path => '../node_modules/react-native-fabric'
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+  pod 'textile-react-native-sdk', :path => '../node_modules/@textile/react-native-sdk'
+end
+
+# The following is needed to ensure the "archive" step works in XCode.
+# It removes React from the Pods project, as it is already included in the main project.
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == "React"
+      target.remove_from_project
+    end
+    # https://github.com/luggit/react-native-config/issues/125
+    if target.name == 'react-native-config'
+      phase = target.project.new(Xcodeproj::Project::Object::PBXShellScriptBuildPhase)
+      phase.shell_script = "cd ../../"\
+                           " && RNC_ROOT=./node_modules/react-native-config/"\
+                           " && export SYMROOT=$RNC_ROOT/ios/ReactNativeConfig"\
+                           " && export BUILD_DIR=$RNC_ROOT/ios/ReactNativeConfig"\
+                           " && ruby $RNC_ROOT/ios/ReactNativeConfig/BuildDotenvConfig.ruby"
+
+      target.build_phases << phase
+      target.build_phases.move(phase,0)
+    end
+  end
+end

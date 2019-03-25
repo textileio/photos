@@ -1,5 +1,6 @@
 import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
+import { Pages } from 'react-native-pages'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
@@ -18,14 +19,6 @@ import { color, spacing } from '../../styles'
 const CONTAINER: ViewStyle = {
   flex: 1,
   backgroundColor: color.screen_primary
-}
-
-const DOT: ViewStyle = {
-  margin: 3,
-  height: 8,
-  width: 8,
-  backgroundColor: color.action_6,
-  borderRadius: 4
 }
 
 const ARROW_FORWARD: ViewStyle = {
@@ -48,7 +41,6 @@ type Props = StateProps & DispatchProps & NavigationScreenProps
 interface State {
   showArrow: boolean
   currentPage: number
-  disableNext: boolean
 }
 
 class OnboardingScreen extends React.Component<Props, State> {
@@ -59,8 +51,7 @@ class OnboardingScreen extends React.Component<Props, State> {
     super(props)
     this.state = {
       showArrow: false,
-      currentPage: 0,
-      disableNext: false
+      currentPage: 0
     }
   }
 
@@ -71,20 +62,26 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   showArrowForIndex = (index: number) => {
-    return index <= 2
+    if (!this.pages || !this.pages.props.children[index]) {
+      return false
+    }
+    const showArrow = this.pages.props.children[index].props.showArrow
+    return showArrow
   }
 
   nextPage = () => {
-    if (!this.state.disableNext && this.pages && this.pages.length - 1 > this.state.currentPage) {
+    if (this.pages && this.pages.props.children.length - 1 > this.state.currentPage) {
       this.setState({
-        showArrow: this.showArrowForIndex(this.state.currentPage + 1),
-        currentPage: this.state.currentPage + 1,
-        disableNext: true
+        showArrow: this.showArrowForIndex(this.state.currentPage + 1)
       })
-      setTimeout(() => {
-        this.setState({disableNext: false})
-      }, 750)
+      this.pages.scrollToPage(this.state.currentPage + 1)
     }
+  }
+
+  onScrollEnd = () => {
+    this.setState({
+      currentPage: this.state.currentPage + 1
+    })
   }
 
   complete = () => {
@@ -156,26 +153,20 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   render() {
-    this.pages = this.pagesArray()
+    const pages = this.pagesArray()
     return (
       <SafeAreaView style={CONTAINER}>
         <View style={CONTAINER}>
-          <View
-            style={[CONTAINER, { marginBottom: spacing._016 }]}
+          <Pages
+            ref={(pages: any) => { this.pages = pages ? pages : undefined }}
+            style={[CONTAINER]}
+            containerStyle={{ marginBottom: spacing._016 }}
+            indicatorColor={color.accent2_2}
+            scrollEnabled={false}
+            onScrollEnd={this.onScrollEnd}
           >
-            {this.pages[this.state.currentPage]}
-          </View>
-          {this.state.currentPage < 7 &&
-            <View style={{height: 60, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-              <View style={[DOT, this.pages && this.state.currentPage === 0 && {backgroundColor: color.action_4}]} />
-              <View style={[DOT, this.pages && this.state.currentPage === 1 && {backgroundColor: color.action_4}]} />
-              <View style={[DOT, this.pages && this.state.currentPage === 2 && {backgroundColor: color.action_4}]} />
-              <View style={[DOT, this.pages && this.state.currentPage === 3 && {backgroundColor: color.action_4}]} />
-              <View style={[DOT, this.pages && this.state.currentPage === 4 && {backgroundColor: color.action_4}]} />
-              <View style={[DOT, this.pages && this.state.currentPage === 5 && {backgroundColor: color.action_4}]} />
-              <View style={[DOT, this.pages && this.state.currentPage === 6 && {backgroundColor: color.action_4}]} />
-            </View>
-          }
+            {pages}
+          </Pages>
           {this.state.showArrow &&
             <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
               <Icon name={'arrow-right'} size={24} />

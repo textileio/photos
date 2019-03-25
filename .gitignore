@@ -1,16 +1,6 @@
-# Android
-
-*.keystore
-*.jks
-android/**/*.settings
-android/**/*.project
-android/**/*.classpath
-
 # OSX
 #
 .DS_Store
-
-.tmp
 
 # Xcode
 #
@@ -39,6 +29,11 @@ build/
 .gradle
 local.properties
 *.iml
+*.keystore
+*.jks
+android/**/*.settings
+android/**/*.project
+android/**/*.classpath
 
 # Visual Studio Code
 #

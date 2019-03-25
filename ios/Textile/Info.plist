@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSContactsUsageDescription</key>
-	<string>Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -66,36 +64,27 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>So you can take a photo and store it in the secure Textile cloud.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We use location changes to trigger auto-uploading of your photos.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We use location changes to trigger auto-uploading of your photos.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We use location changes to trigger auto-uploading of your photos.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>We would like to save photos to your photo gallery</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>So you can pick photos to use in Textile sharing and storage.</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Entypo.ttf</string>
-		<string>EvilIcons.ttf</string>
-		<string>FontAwesome.ttf</string>
-		<string>Foundation.ttf</string>
-		<string>Ionicons.ttf</string>
-		<string>MaterialCommunityIcons.ttf</string>
-		<string>MaterialIcons.ttf</string>
-		<string>Octicons.ttf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>Zocial.ttf</string>
-		<string>Feather.ttf</string>
-		<string>Biotif-Bold.ttf</string>
-		<string>Biotif-Medium.ttf</string>
-		<string>Biotif-Regular.ttf</string>
-		<string>icomoon.ttf</string>
-	</array>
+  <key>NSContactsUsageDescription</key>
+  <string>Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.</string>
+  <key>NSCameraUsageDescription</key>
+  <string>So you can take a photo and store it in the secure Textile cloud.</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>We use location changes to trigger auto-uploading of your photos.</string>
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>We use location changes to trigger auto-uploading of your photos.</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>We use location changes to trigger auto-uploading of your photos.</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>We would like to save photos to your photo gallery</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>So you can pick photos to use in Textile sharing and storage.</string>
+  <key>UIAppFonts</key>
+  <array>
+    <string>Biotif-Bold.ttf</string>
+    <string>Biotif-Medium.ttf</string>
+    <string>Biotif-Regular.ttf</string>
+    <string>icomoon.ttf</string>
+  </array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

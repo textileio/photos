@@ -1,16 +1,16 @@
 buildscript {
-  repositories {
-    maven { url 'https://maven.fabric.io/public' }
-  }
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
 
-  dependencies {
-    // These docs use an open ended version so that our plugin
-    // can be updated quickly in response to Android tooling updates
+    dependencies {
+        // These docs use an open ended version so that our plugin
+        // can be updated quickly in response to Android tooling updates
 
-    // We recommend changing it to the latest version from our changelog:
-    // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
-    classpath 'io.fabric.tools:gradle:1.26.1'
-  }
+        // We recommend changing it to the latest version from our changelog:
+        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
 }
 
 apply plugin: "com.android.application"
@@ -18,7 +18,7 @@ apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.grad
 apply plugin: 'io.fabric'
 
 repositories {
-  maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 import com.android.build.OutputFile
@@ -117,7 +117,11 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "com.textile"
@@ -126,9 +130,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        ndk {
-            abiFilters "armeabi-v7a", "x86"
-        }
         // Added for react-native-config per https://github.com/luggit/react-native-config#advanced-android-setup
         resValue "string", "build_config_package", "com.textile"
     }
@@ -137,7 +138,7 @@ android {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86"
+            include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
     signingConfigs {
@@ -162,7 +163,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3, "x86_64": 4]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -173,27 +174,26 @@ android {
 }
 
 dependencies {
-    compile project(':@textile_react-native-sdk')
-    compile project(':@textile_react-native-screen-control')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation project(':react-native-gesture-handler')
+    implementation project(':react-native-screens')
     implementation project(':react-native-contacts')
-    compile project(':react-native-background-fetch')
-    compile project(':react-native-push-notification')
-    compile project(':react-native-background-upload')
-    compile project(':react-native-fs')
-    compile project(':react-native-image-picker')
-    compile project(':react-native-config')
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
-        transitive = true;
+    implementation project(':react-native-version-number')
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-fs')
+    implementation project(':react-native-background-fetch')
+    implementation project(':react-native-background-timer')
+    implementation project(':react-native-background-upload')
+    implementation project(':react-native-fabric')
+    implementation project(':react-native-config')
+    implementation project(':react-native-push-notification')
+    implementation project(':@textile_react-native-sdk')
+    implementation project(':mobile')
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') {
+        transitive = true
     }
-    compile project(':react-native-fabric')
-    compile project(':react-native-background-timer')
-    compile project(':react-native-version-number')
-    compile project(':react-native-gesture-handler')
-    compile project(':react-native-screens')
-    compile project(':mobile')
 }
 
 // Run this once to be able to run the application with BUCK

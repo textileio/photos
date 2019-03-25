@@ -10,8 +10,7 @@
 *    you'll need to define a constant in that file.
 *************************************************************/
 import { Platform , AppState } from 'react-native'
-import { delay } from 'redux-saga'
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, delay } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
 import {
@@ -77,7 +76,7 @@ export function * handleEngagement (action: ActionType<typeof NotificationsActio
   const data: any = action.payload.engagement.data
   try {
     if (!data || !data.hasOwnProperty('notification')) { return }
-    yield call(delay, 350)
+    yield delay(350)
     yield put(NotificationsActions.notificationSuccess(data.notification))
   } catch (error) {
     // Nothing to do

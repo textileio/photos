@@ -7,9 +7,10 @@ import {
   cancelled,
   all,
   race,
-  select
+  select,
+  delay
 } from 'redux-saga/effects'
-import { delay, eventChannel, END, Channel } from 'redux-saga'
+import { eventChannel, END, Channel } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Contacts from 'react-native-contacts'
@@ -151,7 +152,7 @@ function * executeSearchRequest(searchString: string) {
 function * handleSearchRequest(action: ActionType<typeof actions.searchRequest>) {
   // debounce it, but cancel if we clear search
   const { debounce } = yield race({
-    debounce: call(delay, 1000),
+    debounce: delay(1000),
     cancel: take(getType(actions.clearSearch))
   })
   if (debounce) {
@@ -203,7 +204,8 @@ async function requestPermissionsAndroid() {
     PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
     {
       title: 'Contacts',
-      message: 'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.'
+      message: 'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.',
+      buttonPositive: 'Ok'
     }
   )
   if (result === PermissionsAndroid.RESULTS.GRANTED) {
