@@ -48,6 +48,7 @@ type Props = StateProps & DispatchProps & NavigationScreenProps
 interface State {
   showArrow: boolean
   currentPage: number
+  disableNext: boolean
 }
 
 class OnboardingScreen extends React.Component<Props, State> {
@@ -58,7 +59,8 @@ class OnboardingScreen extends React.Component<Props, State> {
     super(props)
     this.state = {
       showArrow: false,
-      currentPage: 0
+      currentPage: 0,
+      disableNext: false
     }
   }
 
@@ -73,13 +75,15 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   nextPage = () => {
-    if (this.pages && this.pages.length - 1 > this.state.currentPage) {
+    if (!this.state.disableNext && this.pages && this.pages.length - 1 > this.state.currentPage) {
       this.setState({
-        showArrow: this.showArrowForIndex(this.state.currentPage + 1)
+        showArrow: this.showArrowForIndex(this.state.currentPage + 1),
+        currentPage: this.state.currentPage + 1,
+        disableNext: true
       })
-      this.setState({
-        currentPage: this.state.currentPage + 1
-      })
+      setTimeout(() => {
+        this.setState({disableNext: false})
+      }, 750)
     }
   }
 
@@ -161,15 +165,17 @@ class OnboardingScreen extends React.Component<Props, State> {
           >
             {this.pages[this.state.currentPage]}
           </View>
-          <View style={{height: 60, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-            <View style={[DOT, this.pages && this.state.currentPage === 0 && {backgroundColor: color.action_4}]} />
-            <View style={[DOT, this.pages && this.state.currentPage === 1 && {backgroundColor: color.action_4}]} />
-            <View style={[DOT, this.pages && this.state.currentPage === 2 && {backgroundColor: color.action_4}]} />
-            <View style={[DOT, this.pages && this.state.currentPage === 3 && {backgroundColor: color.action_4}]} />
-            <View style={[DOT, this.pages && this.state.currentPage === 4 && {backgroundColor: color.action_4}]} />
-            <View style={[DOT, this.pages && this.state.currentPage === 5 && {backgroundColor: color.action_4}]} />
-            <View style={[DOT, this.pages && this.state.currentPage === 6 && {backgroundColor: color.action_4}]} />
-          </View>
+          {this.state.currentPage < 7 &&
+            <View style={{height: 60, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+              <View style={[DOT, this.pages && this.state.currentPage === 0 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 1 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 2 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 3 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 4 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 5 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 6 && {backgroundColor: color.action_4}]} />
+            </View>
+          }
           {this.state.showArrow &&
             <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
               <Icon name={'arrow-right'} size={24} />
