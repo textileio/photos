@@ -76,3 +76,4 @@ coverage/
 .env.production
 .env.staging
 .env.default
+GeneratedInfoPlistDotEnv.h
