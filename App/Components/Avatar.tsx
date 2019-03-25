@@ -64,7 +64,6 @@ class Avatar extends React.Component<Props, State> {
       }
     }
     const { borderRadius: radius } = this.state
-    console.log('axh', radius)
 
     if (icon || !started || !target) {
       const heightNumber = typeof height === 'number' ? height as number : defaultSize
