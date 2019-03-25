@@ -49,6 +49,8 @@ interface DispatchProps {
   addPhotoLike: (block: string) => void
   navigateToComments: (photoId: string) => void
   leaveThread: () => void
+  retryShare: (key: string) => void
+  cancelShare: (key: string) => void
 }
 
 interface NavProps {
@@ -106,8 +108,9 @@ class Group extends Component<Props, State> {
   }
 
   render () {
+    // flexGrow allows android to scroll, however https://github.com/facebook/react-native/issues/19434 is still an issue
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
           <FlatList
             style={{ flex: 1, backgroundColor: color.screen_primary }}
@@ -169,6 +172,10 @@ class Group extends Component<Props, State> {
         return (
           <ProcessingImage
             {...item.data}
+            /* tslint:disable-next-line */
+            retry={() => {this.props.retryShare(item.key)}}
+            /* tslint:disable-next-line */
+            cancel={() => {this.props.cancelShare(item.key)}}
           />
         )
       }
@@ -259,7 +266,9 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) },
     addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
     navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
-    leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId))
+    leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
+    retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry( key )) },
+    cancelShare: (key: string) => { dispatch(groupActions.addPhoto.cancelRequest( key )) }
   }
 }
 
