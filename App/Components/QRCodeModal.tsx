@@ -6,7 +6,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native'
 import QRCode from 'react-native-qrcode'
 import Modal from 'react-native-modal'
@@ -32,6 +33,10 @@ interface ScreenProps {
 
 class QRCodeModal extends React.Component<DispatchProps & ScreenProps> {
   getLink (link: string): string {
+    if (Platform.OS === 'android') {
+      // issues with Android link getting stolen by chrome... so just going to URL it now
+      return link
+    }
     return link.replace('https://', `${Config.RN_URL_SCHEME}://`)
   }
 
