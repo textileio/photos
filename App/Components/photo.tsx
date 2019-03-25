@@ -36,7 +36,7 @@ class Photo extends Component<Props> {
           fileIndex={this.props.fileIndex}
           showPreview={true}
           forMinWidth={this.props.photoWidth}
-          style={{ width: this.props.photoWidth, height: this.props.photoWidth }}
+          style={{ width: this.props.photoWidth, height: this.props.photoWidth, overflow: 'hidden' }}
           resizeMode={'cover'}
         />
         <LikeAndComment {...this.props} />
