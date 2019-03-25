@@ -200,7 +200,7 @@ class Group extends Component<Props, State> {
       case 'message': {
         const { user, body, date } = item.data
         const isSameUser = this.sameUserAgain(user, this.props.items[(index + 1)])
-        const avatar = !isSameUser ? undefined : user.avatar
+        const avatar = isSameUser ? undefined : user.avatar
         return (
           <Message
             avatar={avatar}
