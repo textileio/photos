@@ -142,7 +142,7 @@ class Groups extends React.Component<Props, State> {
 
   componentDidUpdate (prevProps, prevState) {
     // ensure that it only gets called once by using the first update of the state or a new group add
-    if (this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
+    if (this.props.threads.length && this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
       this.notificationPrompt()
     }
   }
@@ -224,7 +224,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     }
   })
 
-  const showNotificationsPrompt = state.preferences.tourScreens.threads &&
+  const showNotificationsPrompt = state.preferences.tourScreens.notifications &&
     threads.length > 0 &&
     memberCount > threads.length
 
