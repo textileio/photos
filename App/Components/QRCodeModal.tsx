@@ -60,7 +60,7 @@ class QRCodeModal extends React.Component<DispatchProps & ScreenProps> {
               </View>
               <View style={styles.qrCode}>
                 {this.props.invite && <QRCode
-                  value={this.getLink(this.props.invite.link)}
+                  value={this.props.invite.link}
                   size={240}
                   bgColor='transparent'
                   fgColor='white'
