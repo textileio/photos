@@ -62,26 +62,18 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   showArrowForIndex = (index: number) => {
-    if (!this.pages || !this.pages.props.children[index]) {
-      return false
-    }
-    const showArrow = this.pages.props.children[index].props.showArrow
-    return showArrow
+    return index <= 2
   }
 
   nextPage = () => {
-    if (this.pages && this.pages.props.children.length - 1 > this.state.currentPage) {
+    if (this.pages && this.pages.length - 1 > this.state.currentPage) {
       this.setState({
         showArrow: this.showArrowForIndex(this.state.currentPage + 1)
       })
-      this.pages.scrollToPage(this.state.currentPage + 1)
+      this.setState({
+        currentPage: this.state.currentPage + 1
+      })
     }
-  }
-
-  onScrollEnd = () => {
-    this.setState({
-      currentPage: this.state.currentPage + 1
-    })
   }
 
   complete = () => {
@@ -153,20 +145,15 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   render() {
-    const pages = this.pagesArray()
+    this.pages = this.pagesArray()
     return (
       <SafeAreaView style={CONTAINER}>
         <View style={CONTAINER}>
-          <Pages
-            ref={(pages: any) => { this.pages = pages ? pages : undefined }}
-            style={[CONTAINER]}
-            containerStyle={{ marginBottom: spacing._016 }}
-            indicatorColor={color.accent2_2}
-            scrollEnabled={false}
-            onScrollEnd={this.onScrollEnd}
+          <View
+            style={[CONTAINER, { marginBottom: spacing._016 }]}
           >
-            {pages}
-          </Pages>
+            {this.pages[this.state.currentPage]}
+          </View>
           {this.state.showArrow &&
             <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
               <Icon name={'arrow-right'} size={24} />
