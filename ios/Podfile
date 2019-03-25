@@ -38,7 +38,6 @@ target 'Textile' do
   pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
   pod 'react-native-background-upload', :path => '../node_modules/react-native-background-upload'
   pod 'ReactNativeFabric', :path => '../node_modules/react-native-fabric'
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
   pod 'textile-react-native-sdk', :path => '../node_modules/@textile/react-native-sdk'
 end
 
