@@ -42,6 +42,7 @@
 		9328196422492EE0000CBE13 /* MessageComposer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9328196322492EE0000CBE13 /* MessageComposer.m */; };
 		9328196B22493137000CBE13 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9328196A22493117000CBE13 /* libRCTCameraRoll.a */; };
 		9328197522493233000CBE13 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9328197222493219000CBE13 /* libRCTPushNotification.a */; };
+		932819C3224973F3000CBE13 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 932819C0224973CB000CBE13 /* libReactNativeConfig.a */; };
 		93AAAE332242CB9000427AE9 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93AAAE322242CB9000427AE9 /* RNBackgroundFetch+AppDelegate.m */; };
 		93AAAEFC2244383500427AE9 /* Biotif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93AAAEF92244383500427AE9 /* Biotif-Medium.ttf */; };
 		93AAAEFD2244383500427AE9 /* Biotif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93AAAEFA2244383500427AE9 /* Biotif-Regular.ttf */; };
@@ -313,6 +314,20 @@
 			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
 			remoteInfo = "RCTPushNotification-tvOS";
 		};
+		932819BF224973CB000CBE13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93281992224973CB000CBE13 /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EB2648DF1C7BE17A00B8F155;
+			remoteInfo = ReactNativeConfig;
+		};
+		932819C1224973CB000CBE13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93281992224973CB000CBE13 /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3DF7F6AC203AA09B00D0EAB7;
+			remoteInfo = "ReactNativeConfig-tvOS";
+		};
 		93AAAE2A2242CB3300427AE9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -385,6 +400,7 @@
 		9328196322492EE0000CBE13 /* MessageComposer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageComposer.m; sourceTree = "<group>"; };
 		9328196522493116000CBE13 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		9328196C22493219000CBE13 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		93281992224973CB000CBE13 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		93AAAE322242CB9000427AE9 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		93AAAEF52244326B00427AE9 /* Textile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Textile.entitlements; path = Textile/Textile.entitlements; sourceTree = "<group>"; };
 		93AAAEF92244383500427AE9 /* Biotif-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Biotif-Medium.ttf"; path = "../../../App/Fonts/Biotif-Medium.ttf"; sourceTree = "<group>"; };
@@ -411,6 +427,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				932819C3224973F3000CBE13 /* libReactNativeConfig.a in Frameworks */,
 				9328197522493233000CBE13 /* libRCTPushNotification.a in Frameworks */,
 				9328196B22493137000CBE13 /* libRCTCameraRoll.a in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
@@ -616,6 +633,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				93281992224973CB000CBE13 /* ReactNativeConfig.xcodeproj */,
 				9328196C22493219000CBE13 /* RCTPushNotification.xcodeproj */,
 				9328196522493116000CBE13 /* RCTCameraRoll.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -705,6 +723,15 @@
 			children = (
 				9328197222493219000CBE13 /* libRCTPushNotification.a */,
 				9328197422493219000CBE13 /* libRCTPushNotification-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93281993224973CB000CBE13 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				932819C0224973CB000CBE13 /* libReactNativeConfig.a */,
+				932819C2224973CB000CBE13 /* libReactNativeConfig-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -916,6 +943,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 93281993224973CB000CBE13 /* Products */;
+					ProjectRef = 93281992224973CB000CBE13 /* ReactNativeConfig.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1172,6 +1203,20 @@
 			fileType = archive.ar;
 			path = "libRCTPushNotification-tvOS.a";
 			remoteRef = 9328197322493219000CBE13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		932819C0224973CB000CBE13 /* libReactNativeConfig.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeConfig.a;
+			remoteRef = 932819BF224973CB000CBE13 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		932819C2224973CB000CBE13 /* libReactNativeConfig-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libReactNativeConfig-tvOS.a";
+			remoteRef = 932819C1224973CB000CBE13 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		93AAAE2B2242CB3300427AE9 /* libjsi.a */ = {
