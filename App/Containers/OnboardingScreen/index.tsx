@@ -83,7 +83,7 @@ class OnboardingScreen extends React.Component<Props, State> {
       })
       setTimeout(() => {
         this.setState({disableNext: false})
-      }, 450)
+      }, 350)
     }
   }
 
