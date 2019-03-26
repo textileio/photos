@@ -27,6 +27,7 @@ import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
 
 import io.fabric.sdk.android.Fabric;
+import io.textile.rnmobile.RNTextilePackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -51,6 +52,7 @@ public class MainApplication extends Application implements ReactApplication {
               new FabricPackage(),
               new ReactNativeConfigPackage(),
               new ReactNativePushNotificationPackage(),
+              new RNTextilePackage(),
               new TextilePackage(),
               new MainReactPackage()
       );
