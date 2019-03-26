@@ -50,8 +50,9 @@ export default class TextileNodeEventHandler {
         this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
       }
 
-      if (type_url === '/Join') {
-        // Every time the a JOIN block is detected, we should refresh our in-mem contact list
+      if (type_url === '/Join' ||
+          type_url === '/Leave') {
+        // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
         // Enhancement: compare the joiner id with known ids and skip the refresh if known.
         this.store.dispatch(contactsActions.getContactsRequest())
       }
