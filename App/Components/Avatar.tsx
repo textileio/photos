@@ -40,21 +40,6 @@ class Avatar extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount = () => {
-    if (this.state.borderRadius === 0) {
-      const { style } = this.props
-      let width: string | number = this.state.defaultSize
-      if (style) {
-        if (style.width) {
-          width = style.width
-        } else if (style.height) {
-          width = style.height
-        }
-      }
-      this.setState({borderRadius: Number(width) / 2})
-    }
-  }
-
   onImageLayout = (event: LayoutChangeEvent) => {
     this.setState({
       borderRadius: event.nativeEvent.layout.width / 2
