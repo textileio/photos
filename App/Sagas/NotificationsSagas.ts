@@ -110,6 +110,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
         }
         break
       }
+      case pb.Notification.Type.MESSAGE_ADDED:
       case pb.Notification.Type.PEER_JOINED:
       case pb.Notification.Type.PEER_LEFT: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)

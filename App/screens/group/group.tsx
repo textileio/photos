@@ -24,6 +24,7 @@ import UIActions from '../../Redux/UIRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
+import { pb } from '@textile/react-native-sdk'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -137,7 +138,21 @@ class Group extends Component<Props, State> {
     )
   }
 
-  renderRow = ({ item }: ListRenderItemInfo<Item>) => {
+  sameUserAgain = (user: pb.IUser, previous: Item): boolean => {
+    if (!previous || !previous.type) {
+      return false
+    }
+    switch (previous.type) {
+      case 'message': {
+        return user.address === previous.data.user.address
+      }
+      default: {
+        return false
+      }
+    }
+  }
+
+  renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
         const { user, caption, date, target, files, likes, comments, block } = item.data
@@ -181,13 +196,16 @@ class Group extends Component<Props, State> {
       }
       case 'message': {
         const { user, body, date } = item.data
+        const isSameUser = this.sameUserAgain(user, this.props.items[(index + 1)])
+        const avatar = isSameUser ? undefined : user.avatar
         return (
           <Message
-            avatar={user.avatar}
+            avatar={avatar}
             username={user.name || 'unknown'}
             message={body}
             // TODO: deal with pb Timestamp to JS Date!
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            isSameUser={isSameUser}
           />
         )
       }
