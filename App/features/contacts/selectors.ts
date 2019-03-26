@@ -19,13 +19,22 @@ export const searchResults = (state: ContactsState) => {
   if (state.textileSearchResults.error) {
     textileData = [{ key: 'textile_error', type: 'error', data: state.textileSearchResults.error }]
   } else if (state.textileSearchResults.results && state.textileSearchResults.results.length > 0) {
-    textileData = state.textileSearchResults.results.map((result) => {
-      const selector = makeIsKnown(result.id)
-      const isContact = selector(state)
-      const adding = Object.keys(state.addingContacts).indexOf(result.id) > -1
-      const textileResult: TextileSearchResult = { key: result.id, type: 'textile', data: { contact: result, isContact, adding } }
-      return textileResult
-    })
+    textileData = state.textileSearchResults.results
+      .filter((current, index, arr) => {
+        const sames = arr.filter((el) => el.id === current.id)
+        if (sames.length === 1) {
+          return true
+        }
+        // If there is a newer entry, filter this one
+        return !(sames.find((el) => el.updated.seconds > current.updated.seconds || (el.updated.seconds === current.updated.seconds && el.updated.nanos > current.updated.nanos)))
+      })
+      .map((result) => {
+        const selector = makeIsKnown(result.id)
+        const isContact = selector(state)
+        const adding = Object.keys(state.addingContacts).indexOf(result.id) > -1
+        const textileResult: TextileSearchResult = { key: result.id, type: 'textile', data: { contact: result, isContact, adding } }
+        return textileResult
+      })
   } else if (state.textileSearchResults.results && state.textileSearchResults.results.length === 0) {
     textileData = [{ key: 'textile_empty', type: 'empty' }]
   }

@@ -26,6 +26,7 @@ type Props = OwnProps & StateProps & Partial<ImageProps>
 interface State {
   borderRadius: number
   showIcon: boolean
+  defaultSize: number
 }
 
 class Avatar extends React.Component<Props, State> {
@@ -34,7 +35,8 @@ class Avatar extends React.Component<Props, State> {
     super(props)
     this.state = {
       borderRadius: 0,
-      showIcon: false
+      showIcon: false,
+      defaultSize: 100
     }
   }
 
@@ -53,9 +55,8 @@ class Avatar extends React.Component<Props, State> {
   render () {
     const { style, icon, target, local, started, color } = this.props
 
-    const defaultSize = 100
-    let width: string | number = defaultSize
-    let height: string | number = defaultSize
+    let width: string | number = this.state.defaultSize
+    let height: string | number = this.state.defaultSize
     if (style) {
       if (style.width) {
         width = height = style.width
@@ -64,27 +65,55 @@ class Avatar extends React.Component<Props, State> {
       }
     }
     const { borderRadius: radius } = this.state
+    // avoid 0
+    const borderRadius = radius || Number(width) / 2
 
     if (icon || !started || !target) {
-      const heightNumber = typeof height === 'number' ? height as number : defaultSize
+      const heightNumber = typeof height === 'number' ? height as number : this.state.defaultSize
+      const borderWidth = this.props.style && this.props.style.borderWidth ? this.props.style.borderWidth as number : 0
       return (
-        <Icon
-          style={{ ...(this.props.style || {}), width, height, borderRadius: radius }}
-          name={icon || 'question-circle'}
-          size={heightNumber}
-          color={colors.grey_5}
+        <View
+          style={{
+            ...(this.props.style || {}),
+            borderRadius,
+            width,
+            height,
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Icon
+            style={{ width, height, textAlign: 'center' }}
+            name={icon || 'question-circle'}
+            size={heightNumber - borderWidth}
+            color={colors.grey_5}
+            onLayout={this.onImageLayout}
+          />
+        </View>
+      )
+
+      const tintColor = { tintColor: color }
+      return (
+        <Image
+          {...this.props}
+          source={{ uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d` }}
+          style={{ ...(this.props.style || {}), ...tintColor, width, height, borderRadius }}
+          resizeMode={'cover'}
           onLayout={this.onImageLayout}
+          defaultSource={require('../Images/v2/empty.png')}
+          onLoad={this.onIconLoad}
         />
       )
     }
 
     // local means the target belongs to the local node
     if (local) {
-      const widthNumber = typeof width === 'number' ? width as number : defaultSize
+      const widthNumber = typeof width === 'number' ? width as number : this.state.defaultSize
       return (
-        <View style={{ ...(this.props.style || {}), width, height, borderRadius: radius, overflow: 'hidden' }}>
+        <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}>
           <TextileImage
-            style={{ ...(this.props.style || {}), width, height, borderRadius: radius }}
+            style={{ ...(this.props.style || {}), width, height, borderRadius }}
             target={target}
             index={0}
             forMinWidth={widthNumber}
@@ -100,7 +129,7 @@ class Avatar extends React.Component<Props, State> {
       <Image
         {...this.props}
         source={{ uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d` }}
-        style={{ ...(this.props.style || {}), ...tintColor, width, height, borderRadius: radius }}
+        style={{ ...(this.props.style || {}), ...tintColor, width, height, borderRadius }}
         resizeMode={'cover'}
         onLayout={this.onImageLayout}
         defaultSource={require('../Images/v2/empty.png')}
