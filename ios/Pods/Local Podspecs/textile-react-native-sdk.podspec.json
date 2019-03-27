@@ -1,0 +1,32 @@
+{
+  "name": "textile-react-native-sdk",
+  "version": "1.1.0-rc46",
+  "summary": "## Getting started",
+  "description": "## Getting started",
+  "homepage": "https://github.com/textileio/react-native-sdk#readme",
+  "license": "MIT",
+  "authors": "textile.io",
+  "source": {
+    "git": "https://github.com/textileio/react-native-sdk.git",
+    "tag": "v1.1.0-rc46"
+  },
+  "platforms": {
+    "ios": "9.0",
+    "tvos": "9.0"
+  },
+  "dependencies": {
+    "React": [
+
+    ],
+    "Textile": [
+      "0.1.0.pre.3"
+    ]
+  },
+  "preserve_paths": [
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "source_files": "ios/**/*.{h,m}",
+  "exclude_files": "android/**/*"
+}
