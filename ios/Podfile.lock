@@ -6,6 +6,9 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - Protobuf (3.7.0)
+  - React (0.57.2):
+    - React/Core (= 0.57.2)
   - React/Core (0.57.2):
     - yoga (= 0.57.2.React)
   - React/CxxBridge (0.57.2):
@@ -56,6 +59,14 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - Textile (0.1.0.pre.3):
+    - Protobuf (~> 3.7)
+    - TextileCore (~> 0.1.10-rc3)
+  - textile-react-native-sdk (1.1.0-rc46):
+    - React
+    - Textile (= 0.1.0.pre.3)
+  - TextileCore (0.1.10-rc3):
+    - Protobuf (~> 3.7)
   - yoga (0.57.2.React)
 
 DEPENDENCIES:
@@ -78,11 +89,15 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - "textile-react-native-sdk (from `../node_modules/@textile/react-native-sdk`)"
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/Yoga.podspec`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - boost-for-react-native
+    - Protobuf
+    - Textile
+    - TextileCore
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -93,6 +108,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/GLog.podspec"
   React:
     :path: "../node_modules/react-native"
+  textile-react-native-sdk:
+    :path: "../node_modules/@textile/react-native-sdk"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga/Yoga.podspec"
 
@@ -101,9 +118,13 @@ SPEC CHECKSUMS:
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
   glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
+  Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
   React: f5ccb4f1a007ab0fd277417152a368900535bbf3
+  Textile: 8291563297df30269dc6112576c9add6b6856cee
+  textile-react-native-sdk: c399972b38aa3c320a661a710001bb714705d971
+  TextileCore: 2e749011caa132f3ea413a16adc43e7efe9704b9
   yoga: 46538ccbeefa7082c1406e895ae220e4d815c38b
 
-PODFILE CHECKSUM: 295141806799fd4c3ace6aa66b5836c3a06a9765
+PODFILE CHECKSUM: 9ffa31a3059456f9d5ff4de53b82feafaba31d43
 
 COCOAPODS: 1.6.1
