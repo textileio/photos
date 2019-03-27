@@ -292,7 +292,7 @@ jobs:
                     ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/release/*.apk
     ios:
         macos:
-            xcode: "10.2.0"
+            xcode: "10.1.0"
         environment:
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -375,7 +375,7 @@ jobs:
 
     ios-adhoc:
         macos:
-            xcode: "10.2.0"
+            xcode: "10.1.0"
         environment:
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -463,7 +463,7 @@ jobs:
 
     ios-release:
         macos:
-            xcode: "10.2.0"
+            xcode: "10.1.0"
         environment:
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
