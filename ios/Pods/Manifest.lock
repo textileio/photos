@@ -1,0 +1,130 @@
+PODS:
+  - boost-for-react-native (1.63.0)
+  - DoubleConversion (1.1.6)
+  - Folly (2016.10.31.00):
+    - boost-for-react-native
+    - DoubleConversion
+    - glog
+  - glog (0.3.5)
+  - Protobuf (3.7.0)
+  - React (0.57.2):
+    - React/Core (= 0.57.2)
+  - React/Core (0.57.2):
+    - yoga (= 0.57.2.React)
+  - React/CxxBridge (0.57.2):
+    - Folly (= 2016.10.31.00)
+    - React/Core
+    - React/cxxreact
+  - React/cxxreact (0.57.2):
+    - boost-for-react-native (= 1.63.0)
+    - Folly (= 2016.10.31.00)
+    - React/jschelpers
+    - React/jsinspector
+  - React/DevSupport (0.57.2):
+    - React/Core
+    - React/RCTWebSocket
+  - React/fishhook (0.57.2)
+  - React/jschelpers (0.57.2):
+    - Folly (= 2016.10.31.00)
+    - React/PrivateDatabase
+  - React/jsinspector (0.57.2)
+  - React/PrivateDatabase (0.57.2)
+  - React/RCTActionSheet (0.57.2):
+    - React/Core
+  - React/RCTAnimation (0.57.2):
+    - React/Core
+  - React/RCTBlob (0.57.2):
+    - React/Core
+  - React/RCTCameraRoll (0.57.2):
+    - React/Core
+    - React/RCTImage
+  - React/RCTGeolocation (0.57.2):
+    - React/Core
+  - React/RCTImage (0.57.2):
+    - React/Core
+    - React/RCTNetwork
+  - React/RCTLinkingIOS (0.57.2):
+    - React/Core
+  - React/RCTNetwork (0.57.2):
+    - React/Core
+  - React/RCTPushNotification (0.57.2):
+    - React/Core
+  - React/RCTSettings (0.57.2):
+    - React/Core
+  - React/RCTText (0.57.2):
+    - React/Core
+  - React/RCTVibration (0.57.2):
+    - React/Core
+  - React/RCTWebSocket (0.57.2):
+    - React/Core
+    - React/fishhook
+    - React/RCTBlob
+  - Textile (0.1.0.pre.3):
+    - Protobuf (~> 3.7)
+    - TextileCore (~> 0.1.10-rc3)
+  - textile-react-native-sdk (1.1.0-rc46):
+    - React
+    - Textile (= 0.1.0.pre.3)
+  - TextileCore (0.1.10-rc3):
+    - Protobuf (~> 3.7)
+  - yoga (0.57.2.React)
+
+DEPENDENCIES:
+  - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
+  - glog (from `../node_modules/react-native/third-party-podspecs/GLog.podspec`)
+  - React/Core (from `../node_modules/react-native`)
+  - React/CxxBridge (from `../node_modules/react-native`)
+  - React/DevSupport (from `../node_modules/react-native`)
+  - React/RCTActionSheet (from `../node_modules/react-native`)
+  - React/RCTAnimation (from `../node_modules/react-native`)
+  - React/RCTBlob (from `../node_modules/react-native`)
+  - React/RCTCameraRoll (from `../node_modules/react-native`)
+  - React/RCTGeolocation (from `../node_modules/react-native`)
+  - React/RCTImage (from `../node_modules/react-native`)
+  - React/RCTLinkingIOS (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTPushNotification (from `../node_modules/react-native`)
+  - React/RCTSettings (from `../node_modules/react-native`)
+  - React/RCTText (from `../node_modules/react-native`)
+  - React/RCTVibration (from `../node_modules/react-native`)
+  - React/RCTWebSocket (from `../node_modules/react-native`)
+  - "textile-react-native-sdk (from `../node_modules/@textile/react-native-sdk`)"
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga/Yoga.podspec`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - boost-for-react-native
+    - Protobuf
+    - Textile
+    - TextileCore
+
+EXTERNAL SOURCES:
+  DoubleConversion:
+    :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  Folly:
+    :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
+  glog:
+    :podspec: "../node_modules/react-native/third-party-podspecs/GLog.podspec"
+  React:
+    :path: "../node_modules/react-native"
+  textile-react-native-sdk:
+    :path: "../node_modules/@textile/react-native-sdk"
+  yoga:
+    :path: "../node_modules/react-native/ReactCommon/yoga/Yoga.podspec"
+
+SPEC CHECKSUMS:
+  boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
+  Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
+  glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
+  Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
+  React: f5ccb4f1a007ab0fd277417152a368900535bbf3
+  Textile: 8291563297df30269dc6112576c9add6b6856cee
+  textile-react-native-sdk: c399972b38aa3c320a661a710001bb714705d971
+  TextileCore: 2e749011caa132f3ea413a16adc43e7efe9704b9
+  yoga: 46538ccbeefa7082c1406e895ae220e4d815c38b
+
+PODFILE CHECKSUM: 9ffa31a3059456f9d5ff4de53b82feafaba31d43
+
+COCOAPODS: 1.6.1

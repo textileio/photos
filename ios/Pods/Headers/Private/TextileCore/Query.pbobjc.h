@@ -1,0 +1,1 @@
+../../../TextileCore/protos/Query.pbobjc.h
