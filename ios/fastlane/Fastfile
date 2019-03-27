@@ -121,6 +121,11 @@ platform :ios do
         }
       }
     )
+    upload_symbols_to_crashlytics(
+      binary_path: "./Fabric.framework/uploadDSYM",
+      dsym_path: "./Textile.app.dSYM.zip",
+      api_token: ENV['FABRIC_API_TOKEN']
+    )
     deliver(
       force: true,
       app_version: parts[1],
