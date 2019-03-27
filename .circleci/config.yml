@@ -292,7 +292,7 @@ jobs:
                     ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/release/*.apk
     ios:
         macos:
-            xcode: "10.0.0"
+            xcode: "10.2.0"
         environment:
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -375,7 +375,7 @@ jobs:
 
     ios-adhoc:
         macos:
-            xcode: "10.0.0"
+            xcode: "10.2.0"
         environment:
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -453,7 +453,7 @@ jobs:
                 working_directory: ios
 
             - store_artifacts:
-                path: ./ios/TextilePhotos.app.dSYM.zip
+                path: ./ios/Textile.app.dSYM.zip
 
             - store_artifacts:
                 path: ./ios/TextilePhotos.ipa
@@ -463,7 +463,7 @@ jobs:
 
     ios-release:
         macos:
-            xcode: "10.0.0"
+            xcode: "10.2.0"
         environment:
             LC_ALL: en_US.UTF-8
             LANG: en_US.UTF-8
@@ -526,7 +526,7 @@ jobs:
                 working_directory: ios
 
             - store_artifacts:
-                path: ./ios/TextilePhotos.app.dSYM.zip
+                path: ./ios/Textile.app.dSYM.zip
 
             - store_artifacts:
                 path: ./ios/TextilePhotos.ipa
