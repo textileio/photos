@@ -642,13 +642,9 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-screen-control@1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-screen-control/-/react-native-screen-control-1.0.12.tgz#1be41a4eaa9648fa4766e2489a6c2764d95985e1"
-
-"@textile/react-native-sdk@1.1.0-rc45":
-  version "1.1.0-rc45"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc45.tgz#039022045c5d8abcf7e1760595c25b931437a5cf"
+"@textile/react-native-sdk@1.1.0-rc46":
+  version "1.1.0-rc46"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc46.tgz#f0ffe80403440829f27f057cbf608813902961ca"
   dependencies:
     "@textile/go-mobile" "0.1.10-rc3"
     buffer "^5.2.1"

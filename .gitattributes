@@ -1,1 +1,2 @@
 *.pbxproj -text
+ios/Pods/TextileCore/Mobile.framework/Versions/A/Mobile filter=lfs diff=lfs merge=lfs -text
