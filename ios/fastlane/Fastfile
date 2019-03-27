@@ -42,7 +42,7 @@ platform :ios do
       xcodeproj: "Textile.xcodeproj"
     )
     gym(
-      project: "Textile.xcodeproj",
+      workspace: "Textile.xcworkspace",
       scheme: "Textile",
       xcargs: settings_to_override,
       export_method: "ad-hoc",
@@ -84,7 +84,7 @@ platform :ios do
       build_number: newBuildNumber,
       xcodeproj: "Textile.xcodeproj"
     )
-    gym(project: "Textile.xcodeproj", scheme: "Textile", xcargs: "-UseModernBuildSystem=NO")
+    gym(workspace: "Textile.xcworkspace", scheme: "Textile", xcargs: "-UseModernBuildSystem=NO")
     # changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: true)
     upload_symbols_to_crashlytics(dsym_path: "./Textile.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])
@@ -112,7 +112,7 @@ platform :ios do
       xcodeproj: "Textile.xcodeproj"
     )
     gym(
-      project: "Textile.xcodeproj",
+      workspace: "Textile.xcworkspace",
       scheme: "Textile",
       xcargs: settings_to_override,
       export_options: {
