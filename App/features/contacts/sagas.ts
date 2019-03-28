@@ -141,6 +141,7 @@ function * searchAddressBook(searchString: string) {
 }
 
 function * executeSearchRequest(searchString: string) {
+  yield put(actions.clearSearch())
   yield put(actions.searchStarted())
   yield race({
     search: all([call(searchTextile, searchString), call(searchAddressBook, searchString)]),
