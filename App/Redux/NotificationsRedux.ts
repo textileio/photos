@@ -3,8 +3,8 @@ import {
   Notification,
   InviteReceivedNotification
 } from '../Models/Notifications'
-import { PushNotification } from 'react-native-push-notification'
 import { RootState } from './Types'
+import { PushNotification } from '../Services/EventHandlers/NotificationEventHandler'
 
 const actions = {
   readAllNotificationsRequest: createAction('CLEAR_ALL_NOTIFICATIONS_REQUEST', (resolve) => {
