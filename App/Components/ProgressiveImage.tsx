@@ -96,7 +96,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
             target={this.props.imageId}
             index={this.props.fileIndex}
             forMinWidth={this.getSmallWidth()}
-            style={this.props.style}
+            style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
             resizeMode={resizeMode}
             capInsets={this.props.capInsets}
           >
