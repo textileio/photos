@@ -69,12 +69,13 @@ class Photo extends Component<Props> {
     const finalHeight = h * multiplier
 
     return (
-      <ImageZoom 
+      <ImageZoom
         cropWidth={dimW}
         cropHeight={dimH}
         imageWidth={finalWidth}
         imageHeight={finalHeight}
-        minScale={1}
+        minScale={0.9}
+        maxScale={2.5}
         enableCenterFocus={false}
         onClick={this.toggleSelected}
         clickDistance={1}
@@ -86,7 +87,7 @@ class Photo extends Component<Props> {
             justifyContent: 'center'
           }}
         >
-          {this.progressiveElement(finalWidth, finalHeight, w)}
+          {this.progressiveElement(finalWidth, finalHeight, w * 2)}
         </View>
       </ImageZoom>
     )
