@@ -77,6 +77,11 @@ class PhotoScreen extends React.Component<Props> {
         body: comment.body
       }
     })
+
+    // Get full size image constraints
+    const def = screenWidth
+    const pinchWidth = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.width.numberValue
+    const pinchHeight = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.height.numberValue
     return (
       <ScrollView style={CONTAINER}>
       {this.props.photo &&
@@ -95,6 +100,9 @@ class PhotoScreen extends React.Component<Props> {
           comments={commentsData}
           onViewComments={this.onComment}
           commentsDisplayMax={10}
+          pinchZoom={true}
+          pinchWidth={pinchWidth}
+          pinchHeight={pinchHeight}
         />
       }
       </ScrollView>

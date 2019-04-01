@@ -164,6 +164,10 @@ class Group extends Component<Props, State> {
             body: comment.body
           }
         })
+        // Get full size image constraints
+        const def = screenWidth
+        const pinchWidth = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.width.numberValue
+        const pinchHeight = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.height.numberValue
         return (
           <Photo
             avatar={user.avatar}
@@ -180,6 +184,9 @@ class Group extends Component<Props, State> {
             comments={commentsData}
             commentsDisplayMax={5}
             onViewComments={this.onComment(target)}
+            pinchZoom={true}
+            pinchWidth={pinchWidth}
+            pinchHeight={pinchHeight}
           />
         )
       }
