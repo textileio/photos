@@ -60,8 +60,8 @@ class Photo extends Component<Props> {
     const dimH = Dimensions.get('window').height
 
     // Figure out our greatest disproportional direction
-    const proportionalWidth = w/dimW
-    const proportionalHeight = h/dimH
+    const proportionalWidth = w / dimW
+    const proportionalHeight = h / dimH
     const multiplier = 1 / Math.max(proportionalHeight, proportionalWidth)
 
     // Get our display dimensions
@@ -107,10 +107,11 @@ class Photo extends Component<Props> {
   renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
     return (
-      <TouchableOpacity 
-        style={CONTAINER} 
-        activeOpacity={1} 
-        onPress={this.toggleSelected}>
+      <TouchableOpacity
+        style={CONTAINER}
+        activeOpacity={1}
+        onPress={this.toggleSelected}
+      >
         <Modal
           animationType={'fade'}
           transparent={false}
@@ -127,9 +128,9 @@ class Photo extends Component<Props> {
   }
 
   render() {
-    if (this.props.pinchZoom){
+    if (this.props.pinchZoom) {
       return this.renderSelection()
-    } 
+    }
     return this.renderSimple()
   }
 }
