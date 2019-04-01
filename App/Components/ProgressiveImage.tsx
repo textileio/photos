@@ -7,6 +7,7 @@ export interface IProgressiveImageProps {
   imageId: string,
   fileIndex: number,
   forMinWidth: number,
+  schema?: string,
   showPreview?: boolean,
   isVisible?: boolean,
   resizeMode?: ImageResizeMode,
@@ -30,8 +31,19 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     this.setState({ androidPreview: false })
   }
 
-  getPreviewWidth = () => {
+  getThumbWidth = () => {
+     // TextileImage will 3x this
     return 30
+  }
+
+  getSmallWidth = () => {
+     // TextileImage will 3x this
+    return Math.min(100, this.props.forMinWidth)
+  }
+
+  getFullWidth = () => {
+     // TextileImage will 3x this
+    return Math.min(300, this.props.forMinWidth)
   }
 
   android (resizeMode: ImageResizeMode) {
@@ -43,7 +55,15 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
         {this.props.showPreview && <TextileImage
           target={this.props.imageId}
           index={this.props.fileIndex}
-          forMinWidth={this.getPreviewWidth()}
+          forMinWidth={this.getThumbWidth()}
+          style={baseStyle}
+          resizeMode={resizeMode}
+          capInsets={this.props.capInsets}
+        />}
+        {this.props.showPreview && <TextileImage
+          target={this.props.imageId}
+          index={this.props.fileIndex}
+          forMinWidth={this.getSmallWidth()}
           style={baseStyle}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
@@ -51,7 +71,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
         <TextileImage
           target={this.props.imageId}
           index={this.props.fileIndex}
-          forMinWidth={this.props.forMinWidth}
+          forMinWidth={this.getFullWidth()}
           style={previewStyle}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
@@ -67,7 +87,7 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
         <TextileImage
           target={this.props.imageId}
           index={this.props.fileIndex}
-          forMinWidth={this.getPreviewWidth()}
+          forMinWidth={this.getThumbWidth()}
           style={this.props.style}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
@@ -75,11 +95,20 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
           <TextileImage
             target={this.props.imageId}
             index={this.props.fileIndex}
-            forMinWidth={this.props.forMinWidth}
+            forMinWidth={this.getSmallWidth()}
             style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
             resizeMode={resizeMode}
             capInsets={this.props.capInsets}
-          />
+          >
+            <TextileImage
+              target={this.props.imageId}
+              index={this.props.fileIndex}
+              forMinWidth={this.getFullWidth()}
+              style={[{ backgroundColor: 'transparent' }, this.props.style || {}]}
+              resizeMode={resizeMode}
+              capInsets={this.props.capInsets}
+            />
+          </TextileImage>
         </TextileImage>
       )
     }
