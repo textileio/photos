@@ -147,7 +147,13 @@ export const PreferencesSelectors = {
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
   storage: (state: RootState, name: StorageType) => state.preferences.storage[name],
   verboseUi: (state: RootState) => state.preferences.verboseUi,
-  autoPinStatus: (state: RootState) => state.preferences.storage.autoPinPhotos.status
+  autoPinStatus: (state: RootState) => state.preferences.storage.autoPinPhotos.status,
+  showNotificationPrompt: (state: RootState) => state.preferences.tourScreens.notifications,
+  showBackgroundLocationPrompt: (state: RootState) => {
+    return !state.preferences.tourScreens.notifications // completed notification tour
+      && state.preferences.services.notifications.status === true // enabled notifications
+      && state.preferences.tourScreens.location === true // hasn't been prompted for location permission
+  }
 }
 
 export default actions

@@ -7,10 +7,11 @@ import TriggersActions from '../../Redux/TriggersRedux'
 
 export default class LocationEventHandler {
   store: Store<RootState>
+  status: boolean
 
   constructor(store: Store<RootState>) {
     this.store = store
-    this.setup()
+    this.status = false
   }
 
   handleNewPosition () {
@@ -18,10 +19,16 @@ export default class LocationEventHandler {
   }
 
   setup () {
-    if (Platform.OS === 'android') {
-      this.setupAndroid()
-    } else {
-      this.watchPosition()
+    if (!this.status) {
+      const currentState = this.store.getState()
+      if (currentState.preferences.services.backgroundLocation.status === true) {
+        this.status = true
+        if (Platform.OS === 'android') {
+          this.setupAndroid()
+        } else {
+          this.watchPosition()
+        }
+      }
     }
   }
 

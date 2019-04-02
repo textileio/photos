@@ -92,19 +92,6 @@ class Avatar extends React.Component<Props, State> {
           />
         </View>
       )
-
-      const tintColor = { tintColor: color }
-      return (
-        <Image
-          {...this.props}
-          source={{ uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d` }}
-          style={{ ...(this.props.style || {}), ...tintColor, width, height, borderRadius }}
-          resizeMode={'cover'}
-          onLayout={this.onImageLayout}
-          defaultSource={require('../Images/v2/empty.png')}
-          onLoad={this.onIconLoad}
-        />
-      )
     }
 
     // local means the target belongs to the local node
