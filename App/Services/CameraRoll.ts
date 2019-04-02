@@ -27,12 +27,7 @@ export async function chooseProfilePhoto(): Promise<{ image: IPickerImage, data:
       maxWidth: 1200,
       maxHeight: 1200,
       quality: 0.75,
-      cameraType: 'front' as 'front' | 'back' | undefined,
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-        waitUntilSaved: true
-      }
+      cameraType: 'front' as 'front' | 'back' | undefined
     }
     ImagePicker.showImagePicker(options, (response) => {
       if (response.didCancel) {
@@ -43,18 +38,15 @@ export async function chooseProfilePhoto(): Promise<{ image: IPickerImage, data:
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         let path: string
-        let canDelete: boolean
         if (Platform.OS === 'ios') {
           path = response.uri ? response.uri.replace('file://', '') : ''
-          canDelete = true
         } else {
           path = response.path!
-          canDelete = false
         }
         const image: IPickerImage = {
           uri: response.uri,
           path,
-          canDelete,
+          canDelete: true,
           height: response.height,
           width: response.width,
           isVertical: response.isVertical,
