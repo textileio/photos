@@ -73,7 +73,25 @@ export function reducer (state: NotificationsState = initialState, action: Notif
 }
 
 export const NotificationsSelectors = {
-  refreshing: (state: RootState): boolean => state.notifications.refreshing
+  refreshing: (state: RootState): boolean => state.notifications.refreshing,
+  latestAndUnreadFirst: (state: RootState): Notification[] => {
+    return [
+      ...state.notifications.notifications
+    ].sort((n1: Notification, n2: Notification): number => {
+      if (!n1.read && n2.read) {
+        // if n1 is only one not read it should be first
+        return -1
+      } else if (n1.read && !n2.read) {
+        // if n2 is only one not read it should be first
+        return 1
+      } else if (n1.date >= n2.date) {
+        // otherwise if both are read or both are unread, sort by date
+        return -1
+      } else {
+        return 1
+      }
+    })
+  }
 }
 
 export default actions
