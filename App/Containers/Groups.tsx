@@ -144,7 +144,7 @@ class Groups extends React.Component<Props, State> {
     })
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate (prevProps) {
     if (this.props.threads.length && this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()
