@@ -630,10 +630,9 @@
     react-native-safe-area-view "^0.11.0"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@textile/go-mobile@0.1.10-rc4":
-  version "0.1.10-rc4"
-  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-0.1.10-rc4.tgz#ce1a6118a103a39f016bb1454b776f92f78e8164"
-  integrity sha512-3x1CuBZvfnkCA1iwEiMtI9+ftO07GD0KsGPIL8W+YU4JD13vexIbqaS9d7P+EXRiiO92ete6v10tQEwOiBSJEw==
+"@textile/go-mobile@0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-0.1.11.tgz#da3979c226f7b998d07e6b72a6835f6084d492ae"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -643,12 +642,11 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-sdk@1.1.0-rc47":
-  version "1.1.0-rc47"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc47.tgz#c0c1e1f3297fd41d440500610dcc314f5f465e34"
-  integrity sha512-3qc9IHMmb8GReS/nj3/4BdSBQs5C7NAVi29tSoB08IskH5t8HsF1y78D8Uc19iO11SCcdswEJLbVBb3fn6I0dg==
+"@textile/react-native-sdk@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.1.tgz#8138d8b2700be9e97bc8c208dddabc44c088055e"
   dependencies:
-    "@textile/go-mobile" "0.1.10-rc4"
+    "@textile/go-mobile" "0.1.11"
     buffer "^5.2.1"
 
 "@textile/redux-saga-wait-for@1.0.1":
@@ -4644,7 +4642,6 @@ react-native-gesture-handler@^1.0.0:
 react-native-image-pan-zoom@^2.1.11:
   version "2.1.11"
   resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.11.tgz#61bcb69219d95e76a9797d23e4a2e8e0bd654ae9"
-  integrity sha512-ZCisGUFpPchHXsjT7ZI0anlSLPgcTmjRKXqpVnPu3RDWFXfKjuL4zpY57DX4Y8YgGZCpbf9fApN7KjVYody2Mw==
 
 react-native-image-picker@^0.27.1:
   version "0.27.1"

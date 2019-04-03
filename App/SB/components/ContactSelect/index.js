@@ -37,10 +37,10 @@ const ContactSelect = (props) => {
               return (<View />)
             }
 
-            const selectState = !!selected[item.id] || item.included
+            const selectState = !!selected[item.address] || item.included
 
             return (
-              <TouchableOpacity key={item.id} activeOpacity={0.6} style={styles.selectedContact} onPress={() => {
+              <TouchableOpacity key={item.address} activeOpacity={0.6} style={styles.selectedContact} onPress={() => {
                 select(item, item.included)
               }}>
                 <Avatar style={styles.selectedContact} target={item.avatar} />
@@ -90,12 +90,12 @@ export class ContactSelectComponent extends React.Component {
     return (
       <FlatList
       data={this.props.contacts}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.address}
       extraData={this.props.selected}
       ListHeaderComponent={this.renderHeader()}
       renderItem={(contact) => {
         const { item } = contact
-        const selectState = !!this.props.selected[item.id] || item.included
+        const selectState = !!this.props.selected[item.address] || item.included
         return (
           <ContactSelectCard item={item} select={this.props.onSelect} selected={selectState} />
         )

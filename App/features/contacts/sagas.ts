@@ -59,11 +59,11 @@ function executeTextileSearch(searchString: string) {
   return eventChannel<pb.MobileQueryEvent>((emitter) => {
     const query: pb.IContactQuery = {
       username: searchString,
-      id: '',
       address: ''
     }
     const options: pb.IQueryOptions = {
-      local: false,
+      localOnly: false,
+      remoteOnly: false,
       limit: 20,
       wait: 8,
       filter: pb.QueryOptions.FilterType.NO_FILTER,

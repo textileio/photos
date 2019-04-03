@@ -28,7 +28,7 @@
 CF_EXTERN_C_BEGIN
 
 @class CafeMessage;
-@class Contact;
+@class Peer;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -134,30 +134,30 @@ typedef GPB_ENUM(CafeRefreshSession_FieldNumber) {
 
 @end
 
-#pragma mark - CafePublishContact
+#pragma mark - CafePublishPeer
 
-typedef GPB_ENUM(CafePublishContact_FieldNumber) {
-  CafePublishContact_FieldNumber_Token = 1,
-  CafePublishContact_FieldNumber_Contact = 2,
+typedef GPB_ENUM(CafePublishPeer_FieldNumber) {
+  CafePublishPeer_FieldNumber_Token = 1,
+  CafePublishPeer_FieldNumber_Peer = 2,
 };
 
-@interface CafePublishContact : GPBMessage
+@interface CafePublishPeer : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *token;
 
-@property(nonatomic, readwrite, strong, null_resettable) Contact *contact;
-/** Test to see if @c contact has been set. */
-@property(nonatomic, readwrite) BOOL hasContact;
+@property(nonatomic, readwrite, strong, null_resettable) Peer *peer;
+/** Test to see if @c peer has been set. */
+@property(nonatomic, readwrite) BOOL hasPeer;
 
 @end
 
-#pragma mark - CafePublishContactAck
+#pragma mark - CafePublishPeerAck
 
-typedef GPB_ENUM(CafePublishContactAck_FieldNumber) {
-  CafePublishContactAck_FieldNumber_Id_p = 1,
+typedef GPB_ENUM(CafePublishPeerAck_FieldNumber) {
+  CafePublishPeerAck_FieldNumber_Id_p = 1,
 };
 
-@interface CafePublishContactAck : GPBMessage
+@interface CafePublishPeerAck : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 
@@ -173,6 +173,49 @@ typedef GPB_ENUM(CafeStore_FieldNumber) {
 @interface CafeStore : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *token;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *cidsArray;
+/** The number of items in @c cidsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger cidsArray_Count;
+
+@end
+
+#pragma mark - CafeStoreAck
+
+typedef GPB_ENUM(CafeStoreAck_FieldNumber) {
+  CafeStoreAck_FieldNumber_Id_p = 1,
+};
+
+@interface CafeStoreAck : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
+
+@end
+
+#pragma mark - CafeUnstore
+
+typedef GPB_ENUM(CafeUnstore_FieldNumber) {
+  CafeUnstore_FieldNumber_Token = 1,
+  CafeUnstore_FieldNumber_CidsArray = 2,
+};
+
+@interface CafeUnstore : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *token;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *cidsArray;
+/** The number of items in @c cidsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger cidsArray_Count;
+
+@end
+
+#pragma mark - CafeUnstoreAck
+
+typedef GPB_ENUM(CafeUnstoreAck_FieldNumber) {
+  CafeUnstoreAck_FieldNumber_CidsArray = 1,
+};
+
+@interface CafeUnstoreAck : GPBMessage
 
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *cidsArray;
 /** The number of items in @c cidsArray without causing the array to be created. */
@@ -234,13 +277,40 @@ typedef GPB_ENUM(CafeStoreThread_FieldNumber) {
 
 @end
 
-#pragma mark - CafeStoredAck
+#pragma mark - CafeStoreThreadAck
 
-typedef GPB_ENUM(CafeStoredAck_FieldNumber) {
-  CafeStoredAck_FieldNumber_Id_p = 1,
+typedef GPB_ENUM(CafeStoreThreadAck_FieldNumber) {
+  CafeStoreThreadAck_FieldNumber_Id_p = 1,
 };
 
-@interface CafeStoredAck : GPBMessage
+@interface CafeStoreThreadAck : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
+
+@end
+
+#pragma mark - CafeUnstoreThread
+
+typedef GPB_ENUM(CafeUnstoreThread_FieldNumber) {
+  CafeUnstoreThread_FieldNumber_Token = 1,
+  CafeUnstoreThread_FieldNumber_Id_p = 2,
+};
+
+@interface CafeUnstoreThread : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *token;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
+
+@end
+
+#pragma mark - CafeUnstoreThreadAck
+
+typedef GPB_ENUM(CafeUnstoreThreadAck_FieldNumber) {
+  CafeUnstoreThreadAck_FieldNumber_Id_p = 1,
+};
+
+@interface CafeUnstoreThreadAck : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 

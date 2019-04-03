@@ -132,8 +132,8 @@ class AddContact extends React.Component<Props> {
         return (
           <ListItem
             leftItem={<Avatar style={{ width: 50 }} target={item.data.contact.avatar} />}
-            title={item.data.contact.username || item.data.contact.id}
-            subtitle={item.data.contact.id.substr(item.data.contact.id.length - 8, 8)}
+            title={item.data.contact.name || item.data.contact.address}
+            subtitle={item.data.contact.address.substr(item.data.contact.address.length - 8, 8)}
             rightItems={[
               <Button
                 key='add'
@@ -181,7 +181,7 @@ class AddContact extends React.Component<Props> {
   }
 
   onPressTextile = (contact: pb.IContact) => {
-    return () => this.props.navigation.navigate('Contact', { avatar: contact.avatar, username: contact.username, address: contact.address })
+    return () => this.props.navigation.navigate('Contact', { avatar: contact.avatar, username: contact.name, address: contact.address })
   }
 
   onAdd = (contact: pb.IContact) => {

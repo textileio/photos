@@ -3,22 +3,11 @@ import { pb } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 const profile: pb.IContact = {
-  id: 'id',
   address: 'address',
-  username: 'username',
+  name: 'username',
   avatar: 'avatar',
-  inboxes: [{
-    peer: 'peer',
-    address: 'address',
-    api: 'api',
-    protocol: 'protocol',
-    node: 'node',
-    url: 'url',
-    swarm: ['swarm']
-  }],
-  threads: [],
-  created: { seconds: 0, nanos: 0 },
-  updated: { seconds: 0, nanos: 0 }
+  peers: [],
+  threads: []
 }
 const peerId = 'peerId'
 const error = 'error'

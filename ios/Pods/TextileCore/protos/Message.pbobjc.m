@@ -147,16 +147,18 @@ GPBEnumDescriptor *Message_Type_EnumDescriptor(void) {
         "Ping\000Pong\000ThreadEnvelope\000CafeChallenge\000C"
         "afeNonce\000CafeRegistration\000CafeDeregistra"
         "tion\000CafeDeregistrationAck\000CafeSession\000C"
-        "afeRefreshSession\000CafeStore\000CafeObject\000C"
-        "afeObjectList\000CafeStoreThread\000CafeStored"
-        "Ack\000CafeDeliverMessage\000CafeCheckMessages"
-        "\000CafeMessages\000CafeDeleteMessages\000CafeDel"
-        "eteMessagesAck\000CafeYouHaveMail\000CafePubli"
-        "shContact\000CafePublishContactAck\000CafeQuer"
-        "y\000CafeQueryRes\000CafePubsubQuery\000CafePubsu"
-        "bQueryRes\000Error\000CafeContactQuery\000CafeCon"
-        "tactQueryRes\000CafePubsubContactQuery\000Cafe"
-        "PubsubContactQueryRes\000";
+        "afeRefreshSession\000CafeStore\000CafeStoreAck"
+        "\000CafeUnstore\000CafeUnstoreAck\000CafeObject\000C"
+        "afeObjectList\000CafeStoreThread\000CafeStoreT"
+        "hreadAck\000CafeUnstoreThread\000CafeUnstoreTh"
+        "readAck\000CafeDeliverMessage\000CafeCheckMess"
+        "ages\000CafeMessages\000CafeDeleteMessages\000Caf"
+        "eDeleteMessagesAck\000CafeYouHaveMail\000CafeP"
+        "ublishPeer\000CafePublishPeerAck\000CafeQuery\000"
+        "CafeQueryRes\000CafePubsubQuery\000CafePubsubQ"
+        "ueryRes\000Error\000CafeContactQuery\000CafeConta"
+        "ctQueryRes\000CafePubsubContactQuery\000CafePu"
+        "bsubContactQueryRes\000";
     static const int32_t values[] = {
         Message_Type_Ping,
         Message_Type_Pong,
@@ -169,18 +171,23 @@ GPBEnumDescriptor *Message_Type_EnumDescriptor(void) {
         Message_Type_CafeSession,
         Message_Type_CafeRefreshSession,
         Message_Type_CafeStore,
+        Message_Type_CafeStoreAck,
+        Message_Type_CafeUnstore,
+        Message_Type_CafeUnstoreAck,
         Message_Type_CafeObject,
         Message_Type_CafeObjectList,
         Message_Type_CafeStoreThread,
-        Message_Type_CafeStoredAck,
+        Message_Type_CafeStoreThreadAck,
+        Message_Type_CafeUnstoreThread,
+        Message_Type_CafeUnstoreThreadAck,
         Message_Type_CafeDeliverMessage,
         Message_Type_CafeCheckMessages,
         Message_Type_CafeMessages,
         Message_Type_CafeDeleteMessages,
         Message_Type_CafeDeleteMessagesAck,
         Message_Type_CafeYouHaveMail,
-        Message_Type_CafePublishContact,
-        Message_Type_CafePublishContactAck,
+        Message_Type_CafePublishPeer,
+        Message_Type_CafePublishPeerAck,
         Message_Type_CafeQuery,
         Message_Type_CafeQueryRes,
         Message_Type_CafePubsubQuery,
@@ -218,18 +225,23 @@ BOOL Message_Type_IsValidValue(int32_t value__) {
     case Message_Type_CafeSession:
     case Message_Type_CafeRefreshSession:
     case Message_Type_CafeStore:
+    case Message_Type_CafeStoreAck:
+    case Message_Type_CafeUnstore:
+    case Message_Type_CafeUnstoreAck:
     case Message_Type_CafeObject:
     case Message_Type_CafeObjectList:
     case Message_Type_CafeStoreThread:
-    case Message_Type_CafeStoredAck:
+    case Message_Type_CafeStoreThreadAck:
+    case Message_Type_CafeUnstoreThread:
+    case Message_Type_CafeUnstoreThreadAck:
     case Message_Type_CafeDeliverMessage:
     case Message_Type_CafeCheckMessages:
     case Message_Type_CafeMessages:
     case Message_Type_CafeDeleteMessages:
     case Message_Type_CafeDeleteMessagesAck:
     case Message_Type_CafeYouHaveMail:
-    case Message_Type_CafePublishContact:
-    case Message_Type_CafePublishContactAck:
+    case Message_Type_CafePublishPeer:
+    case Message_Type_CafePublishPeerAck:
     case Message_Type_CafeQuery:
     case Message_Type_CafeQueryRes:
     case Message_Type_CafePubsubQuery:

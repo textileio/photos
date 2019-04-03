@@ -37,7 +37,7 @@ static GPBFileDescriptor *CafeServiceRoot_FileDescriptor(void) {
   static GPBFileDescriptor *descriptor = NULL;
   if (!descriptor) {
     GPB_DEBUG_CHECK_RUNTIME_VERSIONS();
-    descriptor = [[GPBFileDescriptor alloc] initWithPackage:@"textile"
+    descriptor = [[GPBFileDescriptor alloc] initWithPackage:@""
                                                      syntax:GPBFileSyntaxProto3];
   }
   return descriptor;
@@ -368,18 +368,18 @@ typedef struct CafeRefreshSession__storage_ {
 
 @end
 
-#pragma mark - CafePublishContact
+#pragma mark - CafePublishPeer
 
-@implementation CafePublishContact
+@implementation CafePublishPeer
 
 @dynamic token;
-@dynamic hasContact, contact;
+@dynamic hasPeer, peer;
 
-typedef struct CafePublishContact__storage_ {
+typedef struct CafePublishPeer__storage_ {
   uint32_t _has_storage_[1];
   NSString *token;
-  Contact *contact;
-} CafePublishContact__storage_;
+  Peer *peer;
+} CafePublishPeer__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -390,29 +390,29 @@ typedef struct CafePublishContact__storage_ {
       {
         .name = "token",
         .dataTypeSpecific.className = NULL,
-        .number = CafePublishContact_FieldNumber_Token,
+        .number = CafePublishPeer_FieldNumber_Token,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(CafePublishContact__storage_, token),
+        .offset = (uint32_t)offsetof(CafePublishPeer__storage_, token),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "contact",
-        .dataTypeSpecific.className = GPBStringifySymbol(Contact),
-        .number = CafePublishContact_FieldNumber_Contact,
+        .name = "peer",
+        .dataTypeSpecific.className = GPBStringifySymbol(Peer),
+        .number = CafePublishPeer_FieldNumber_Peer,
         .hasIndex = 1,
-        .offset = (uint32_t)offsetof(CafePublishContact__storage_, contact),
+        .offset = (uint32_t)offsetof(CafePublishPeer__storage_, peer),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[CafePublishContact class]
+        [GPBDescriptor allocDescriptorForClass:[CafePublishPeer class]
                                      rootClass:[CafeServiceRoot class]
                                           file:CafeServiceRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(CafePublishContact__storage_)
+                                   storageSize:sizeof(CafePublishPeer__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -424,16 +424,16 @@ typedef struct CafePublishContact__storage_ {
 
 @end
 
-#pragma mark - CafePublishContactAck
+#pragma mark - CafePublishPeerAck
 
-@implementation CafePublishContactAck
+@implementation CafePublishPeerAck
 
 @dynamic id_p;
 
-typedef struct CafePublishContactAck__storage_ {
+typedef struct CafePublishPeerAck__storage_ {
   uint32_t _has_storage_[1];
   NSString *id_p;
-} CafePublishContactAck__storage_;
+} CafePublishPeerAck__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -444,20 +444,20 @@ typedef struct CafePublishContactAck__storage_ {
       {
         .name = "id_p",
         .dataTypeSpecific.className = NULL,
-        .number = CafePublishContactAck_FieldNumber_Id_p,
+        .number = CafePublishPeerAck_FieldNumber_Id_p,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(CafePublishContactAck__storage_, id_p),
+        .offset = (uint32_t)offsetof(CafePublishPeerAck__storage_, id_p),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[CafePublishContactAck class]
+        [GPBDescriptor allocDescriptorForClass:[CafePublishPeerAck class]
                                      rootClass:[CafeServiceRoot class]
                                           file:CafeServiceRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(CafePublishContactAck__storage_)
+                                   storageSize:sizeof(CafePublishPeerAck__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -514,6 +514,152 @@ typedef struct CafeStore__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(CafeStore__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CafeStoreAck
+
+@implementation CafeStoreAck
+
+@dynamic id_p;
+
+typedef struct CafeStoreAck__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *id_p;
+} CafeStoreAck__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeStoreAck_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CafeStoreAck__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CafeStoreAck class]
+                                     rootClass:[CafeServiceRoot class]
+                                          file:CafeServiceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CafeStoreAck__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CafeUnstore
+
+@implementation CafeUnstore
+
+@dynamic token;
+@dynamic cidsArray, cidsArray_Count;
+
+typedef struct CafeUnstore__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *token;
+  NSMutableArray *cidsArray;
+} CafeUnstore__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "token",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeUnstore_FieldNumber_Token,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CafeUnstore__storage_, token),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "cidsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeUnstore_FieldNumber_CidsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CafeUnstore__storage_, cidsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CafeUnstore class]
+                                     rootClass:[CafeServiceRoot class]
+                                          file:CafeServiceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CafeUnstore__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CafeUnstoreAck
+
+@implementation CafeUnstoreAck
+
+@dynamic cidsArray, cidsArray_Count;
+
+typedef struct CafeUnstoreAck__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *cidsArray;
+} CafeUnstoreAck__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "cidsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeUnstoreAck_FieldNumber_CidsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CafeUnstoreAck__storage_, cidsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CafeUnstoreAck class]
+                                     rootClass:[CafeServiceRoot class]
+                                          file:CafeServiceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CafeUnstoreAck__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -715,16 +861,16 @@ typedef struct CafeStoreThread__storage_ {
 
 @end
 
-#pragma mark - CafeStoredAck
+#pragma mark - CafeStoreThreadAck
 
-@implementation CafeStoredAck
+@implementation CafeStoreThreadAck
 
 @dynamic id_p;
 
-typedef struct CafeStoredAck__storage_ {
+typedef struct CafeStoreThreadAck__storage_ {
   uint32_t _has_storage_[1];
   NSString *id_p;
-} CafeStoredAck__storage_;
+} CafeStoreThreadAck__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -735,20 +881,121 @@ typedef struct CafeStoredAck__storage_ {
       {
         .name = "id_p",
         .dataTypeSpecific.className = NULL,
-        .number = CafeStoredAck_FieldNumber_Id_p,
+        .number = CafeStoreThreadAck_FieldNumber_Id_p,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(CafeStoredAck__storage_, id_p),
+        .offset = (uint32_t)offsetof(CafeStoreThreadAck__storage_, id_p),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[CafeStoredAck class]
+        [GPBDescriptor allocDescriptorForClass:[CafeStoreThreadAck class]
                                      rootClass:[CafeServiceRoot class]
                                           file:CafeServiceRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(CafeStoredAck__storage_)
+                                   storageSize:sizeof(CafeStoreThreadAck__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CafeUnstoreThread
+
+@implementation CafeUnstoreThread
+
+@dynamic token;
+@dynamic id_p;
+
+typedef struct CafeUnstoreThread__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *token;
+  NSString *id_p;
+} CafeUnstoreThread__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "token",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeUnstoreThread_FieldNumber_Token,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CafeUnstoreThread__storage_, token),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeUnstoreThread_FieldNumber_Id_p,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(CafeUnstoreThread__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CafeUnstoreThread class]
+                                     rootClass:[CafeServiceRoot class]
+                                          file:CafeServiceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CafeUnstoreThread__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CafeUnstoreThreadAck
+
+@implementation CafeUnstoreThreadAck
+
+@dynamic id_p;
+
+typedef struct CafeUnstoreThreadAck__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *id_p;
+} CafeUnstoreThreadAck__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeUnstoreThreadAck_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CafeUnstoreThreadAck__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CafeUnstoreThreadAck class]
+                                     rootClass:[CafeServiceRoot class]
+                                          file:CafeServiceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CafeUnstoreThreadAck__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");

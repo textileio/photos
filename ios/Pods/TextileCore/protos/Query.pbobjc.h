@@ -68,7 +68,7 @@ typedef GPB_ENUM(Query_Type) {
    * of the field.
    **/
   Query_Type_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
-  Query_Type_ThreadBackups = 0,
+  Query_Type_ThreadSnapshots = 0,
   Query_Type_Contacts = 1,
 };
 
@@ -119,16 +119,21 @@ BOOL PubSubQuery_ResponseType_IsValidValue(int32_t value);
 #pragma mark - QueryOptions
 
 typedef GPB_ENUM(QueryOptions_FieldNumber) {
-  QueryOptions_FieldNumber_Local = 1,
+  QueryOptions_FieldNumber_LocalOnly = 1,
   QueryOptions_FieldNumber_Limit = 2,
   QueryOptions_FieldNumber_Wait = 3,
   QueryOptions_FieldNumber_Filter = 4,
   QueryOptions_FieldNumber_ExcludeArray = 5,
+  QueryOptions_FieldNumber_RemoteOnly = 6,
 };
 
 @interface QueryOptions : GPBMessage
 
-@property(nonatomic, readwrite) BOOL local;
+/** local only */
+@property(nonatomic, readwrite) BOOL localOnly;
+
+/** remote only */
+@property(nonatomic, readwrite) BOOL remoteOnly;
 
 @property(nonatomic, readwrite) int32_t limit;
 
@@ -202,6 +207,8 @@ typedef GPB_ENUM(PubSubQuery_FieldNumber) {
   PubSubQuery_FieldNumber_Payload = 3,
   PubSubQuery_FieldNumber_ResponseType = 4,
   PubSubQuery_FieldNumber_ExcludeArray = 5,
+  PubSubQuery_FieldNumber_Topic = 6,
+  PubSubQuery_FieldNumber_Timeout = 7,
 };
 
 @interface PubSubQuery : GPBMessage
@@ -219,6 +226,11 @@ typedef GPB_ENUM(PubSubQuery_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *excludeArray;
 /** The number of items in @c excludeArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger excludeArray_Count;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *topic;
+
+/** pubsub response connect timeout */
+@property(nonatomic, readwrite) int32_t timeout;
 
 @end
 
@@ -320,14 +332,11 @@ typedef GPB_ENUM(PubSubQueryResults_FieldNumber) {
 #pragma mark - ContactQuery
 
 typedef GPB_ENUM(ContactQuery_FieldNumber) {
-  ContactQuery_FieldNumber_Id_p = 1,
-  ContactQuery_FieldNumber_Address = 2,
-  ContactQuery_FieldNumber_Username = 3,
+  ContactQuery_FieldNumber_Address = 1,
+  ContactQuery_FieldNumber_Username = 2,
 };
 
 @interface ContactQuery : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *address;
 
@@ -335,13 +344,13 @@ typedef GPB_ENUM(ContactQuery_FieldNumber) {
 
 @end
 
-#pragma mark - ThreadBackupQuery
+#pragma mark - ThreadSnapshotQuery
 
-typedef GPB_ENUM(ThreadBackupQuery_FieldNumber) {
-  ThreadBackupQuery_FieldNumber_Address = 1,
+typedef GPB_ENUM(ThreadSnapshotQuery_FieldNumber) {
+  ThreadSnapshotQuery_FieldNumber_Address = 1,
 };
 
-@interface ThreadBackupQuery : GPBMessage
+@interface ThreadSnapshotQuery : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *address;
 
