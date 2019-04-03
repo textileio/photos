@@ -99,7 +99,7 @@ export function * appStateChange () {
           action.type === getType(TextileEventsActions.appStateChange)
         )
 
-      if (yield select(PreferencesSelectors.verboseUi)) {
+      if (yield select(PreferencesSelectors.showNodeStateNotification)) {
         yield call(displayNotification, 'App State Change: ' + action.payload.newState)
       }
 
@@ -160,7 +160,7 @@ export function * stopNodeAfterDelayStarting () {
           action.type === getType(TextileEventsActions.stopNodeAfterDelayStarting)
         )
 
-      if (yield select(PreferencesSelectors.verboseUi)) {
+      if (yield select(PreferencesSelectors.showNodeStateNotification)) {
         yield call(displayNotification, 'Running the node for 20 sec. in the background')
       }
     } catch (error) {
@@ -179,7 +179,7 @@ export function * stopNodeAfterDelayCancelled () {
         )
 
       // Let it keep running
-      if (yield select(PreferencesSelectors.verboseUi)) {
+      if (yield select(PreferencesSelectors.showNodeStateNotification)) {
         yield call(displayNotification, 'Delayed stop of node canceled because of foreground event')
       }
 
@@ -200,7 +200,7 @@ export function * stopNodeAfterDelayFinishing () {
           action.type === getType(TextileEventsActions.stopNodeAfterDelayFinishing)
         )
 
-      if (yield select(PreferencesSelectors.verboseUi)) {
+      if (yield select(PreferencesSelectors.showNodeStateNotification)) {
         yield call(displayNotification, 'Stopping node')
       }
     } catch (error) {
@@ -217,7 +217,7 @@ export function * stopNodeAfterDelayComplete () {
           action.type === getType(TextileEventsActions.stopNodeAfterDelayComplete)
         )
 
-      if (yield select(PreferencesSelectors.verboseUi)) {
+      if (yield select(PreferencesSelectors.showNodeStateNotification)) {
         yield call(displayNotification, 'Node stopped')
       }
     } catch (error) {
@@ -234,7 +234,9 @@ export function * newError () {
           action.type === getType(TextileEventsActions.newErrorMessage)
         )
 
-      if (yield select(PreferencesSelectors.verboseUi)) {
+      if (yield select(PreferencesSelectors.showNodeErrorNotification)) {
+        console.log(action.payload.type)
+        console.log(action.payload.message)
         yield call(displayNotification, action.payload.type, action.payload.message)
       }
       yield call(logNewEvent, action.payload.type, action.payload.message, true)
