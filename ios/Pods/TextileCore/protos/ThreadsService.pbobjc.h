@@ -27,9 +27,9 @@
 
 CF_EXTERN_C_BEGIN
 
-@class Contact;
 @class GPBAny;
 @class GPBTimestamp;
+@class Peer;
 @class Thread;
 @class ThreadBlockHeader;
 GPB_ENUM_FWD_DECLARE(Block_BlockType);
@@ -150,7 +150,7 @@ typedef GPB_ENUM(ThreadAdd_FieldNumber) {
  **/
 @interface ThreadAdd : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) Contact *inviter;
+@property(nonatomic, readwrite, strong, null_resettable) Peer *inviter;
 /** Test to see if @c inviter has been set. */
 @property(nonatomic, readwrite) BOOL hasInviter;
 
@@ -188,31 +188,31 @@ typedef GPB_ENUM(ThreadFlag_FieldNumber) {
 
 typedef GPB_ENUM(ThreadJoin_FieldNumber) {
   ThreadJoin_FieldNumber_Inviter = 1,
-  ThreadJoin_FieldNumber_Contact = 2,
+  ThreadJoin_FieldNumber_Peer = 2,
 };
 
 @interface ThreadJoin : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *inviter;
 
-@property(nonatomic, readwrite, strong, null_resettable) Contact *contact;
-/** Test to see if @c contact has been set. */
-@property(nonatomic, readwrite) BOOL hasContact;
+@property(nonatomic, readwrite, strong, null_resettable) Peer *peer;
+/** Test to see if @c peer has been set. */
+@property(nonatomic, readwrite) BOOL hasPeer;
 
 @end
 
 #pragma mark - ThreadAnnounce
 
 typedef GPB_ENUM(ThreadAnnounce_FieldNumber) {
-  ThreadAnnounce_FieldNumber_Contact = 1,
+  ThreadAnnounce_FieldNumber_Peer = 1,
   ThreadAnnounce_FieldNumber_Name = 2,
 };
 
 @interface ThreadAnnounce : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) Contact *contact;
-/** Test to see if @c contact has been set. */
-@property(nonatomic, readwrite) BOOL hasContact;
+@property(nonatomic, readwrite, strong, null_resettable) Peer *peer;
+/** Test to see if @c peer has been set. */
+@property(nonatomic, readwrite) BOOL hasPeer;
 
 /** new thread name */
 @property(nonatomic, readwrite, copy, null_resettable) NSString *name;

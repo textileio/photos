@@ -48,7 +48,8 @@ static GPBFileDescriptor *QueryRoot_FileDescriptor(void) {
 
 @implementation QueryOptions
 
-@dynamic local;
+@dynamic localOnly;
+@dynamic remoteOnly;
 @dynamic limit;
 @dynamic wait;
 @dynamic filter;
@@ -69,19 +70,19 @@ typedef struct QueryOptions__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "local",
+        .name = "localOnly",
         .dataTypeSpecific.className = NULL,
-        .number = QueryOptions_FieldNumber_Local,
+        .number = QueryOptions_FieldNumber_LocalOnly,
         .hasIndex = 0,
         .offset = 1,  // Stored in _has_storage_ to save space.
-        .flags = GPBFieldOptional,
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeBool,
       },
       {
         .name = "limit",
         .dataTypeSpecific.className = NULL,
         .number = QueryOptions_FieldNumber_Limit,
-        .hasIndex = 2,
+        .hasIndex = 4,
         .offset = (uint32_t)offsetof(QueryOptions__storage_, limit),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
@@ -90,7 +91,7 @@ typedef struct QueryOptions__storage_ {
         .name = "wait",
         .dataTypeSpecific.className = NULL,
         .number = QueryOptions_FieldNumber_Wait,
-        .hasIndex = 3,
+        .hasIndex = 5,
         .offset = (uint32_t)offsetof(QueryOptions__storage_, wait),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
@@ -99,7 +100,7 @@ typedef struct QueryOptions__storage_ {
         .name = "filter",
         .dataTypeSpecific.enumDescFunc = QueryOptions_FilterType_EnumDescriptor,
         .number = QueryOptions_FieldNumber_Filter,
-        .hasIndex = 4,
+        .hasIndex = 6,
         .offset = (uint32_t)offsetof(QueryOptions__storage_, filter),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
         .dataType = GPBDataTypeEnum,
@@ -113,6 +114,15 @@ typedef struct QueryOptions__storage_ {
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "remoteOnly",
+        .dataTypeSpecific.className = NULL,
+        .number = QueryOptions_FieldNumber_RemoteOnly,
+        .hasIndex = 2,
+        .offset = 3,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[QueryOptions class]
@@ -122,6 +132,11 @@ typedef struct QueryOptions__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(QueryOptions__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\001\t\000\006\n\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -286,9 +301,9 @@ GPBEnumDescriptor *Query_Type_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "ThreadBackups\000Contacts\000";
+        "ThreadSnapshots\000Contacts\000";
     static const int32_t values[] = {
-        Query_Type_ThreadBackups,
+        Query_Type_ThreadSnapshots,
         Query_Type_Contacts,
     };
     GPBEnumDescriptor *worker =
@@ -307,7 +322,7 @@ GPBEnumDescriptor *Query_Type_EnumDescriptor(void) {
 
 BOOL Query_Type_IsValidValue(int32_t value__) {
   switch (value__) {
-    case Query_Type_ThreadBackups:
+    case Query_Type_ThreadSnapshots:
     case Query_Type_Contacts:
       return YES;
     default:
@@ -324,14 +339,18 @@ BOOL Query_Type_IsValidValue(int32_t value__) {
 @dynamic hasPayload, payload;
 @dynamic responseType;
 @dynamic excludeArray, excludeArray_Count;
+@dynamic topic;
+@dynamic timeout;
 
 typedef struct PubSubQuery__storage_ {
   uint32_t _has_storage_[1];
   Query_Type type;
   PubSubQuery_ResponseType responseType;
+  int32_t timeout;
   NSString *id_p;
   GPBAny *payload;
   NSMutableArray *excludeArray;
+  NSString *topic;
 } PubSubQuery__storage_;
 
 // This method is threadsafe because it is initially called
@@ -384,6 +403,24 @@ typedef struct PubSubQuery__storage_ {
         .offset = (uint32_t)offsetof(PubSubQuery__storage_, excludeArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "topic",
+        .dataTypeSpecific.className = NULL,
+        .number = PubSubQuery_FieldNumber_Topic,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(PubSubQuery__storage_, topic),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "timeout",
+        .dataTypeSpecific.className = NULL,
+        .number = PubSubQuery_FieldNumber_Timeout,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(PubSubQuery__storage_, timeout),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -675,13 +712,11 @@ typedef struct PubSubQueryResults__storage_ {
 
 @implementation ContactQuery
 
-@dynamic id_p;
 @dynamic address;
 @dynamic username;
 
 typedef struct ContactQuery__storage_ {
   uint32_t _has_storage_[1];
-  NSString *id_p;
   NSString *address;
   NSString *username;
 } ContactQuery__storage_;
@@ -693,19 +728,10 @@ typedef struct ContactQuery__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "id_p",
-        .dataTypeSpecific.className = NULL,
-        .number = ContactQuery_FieldNumber_Id_p,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(ContactQuery__storage_, id_p),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
         .name = "address",
         .dataTypeSpecific.className = NULL,
         .number = ContactQuery_FieldNumber_Address,
-        .hasIndex = 1,
+        .hasIndex = 0,
         .offset = (uint32_t)offsetof(ContactQuery__storage_, address),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -714,7 +740,7 @@ typedef struct ContactQuery__storage_ {
         .name = "username",
         .dataTypeSpecific.className = NULL,
         .number = ContactQuery_FieldNumber_Username,
-        .hasIndex = 2,
+        .hasIndex = 1,
         .offset = (uint32_t)offsetof(ContactQuery__storage_, username),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -738,16 +764,16 @@ typedef struct ContactQuery__storage_ {
 
 @end
 
-#pragma mark - ThreadBackupQuery
+#pragma mark - ThreadSnapshotQuery
 
-@implementation ThreadBackupQuery
+@implementation ThreadSnapshotQuery
 
 @dynamic address;
 
-typedef struct ThreadBackupQuery__storage_ {
+typedef struct ThreadSnapshotQuery__storage_ {
   uint32_t _has_storage_[1];
   NSString *address;
-} ThreadBackupQuery__storage_;
+} ThreadSnapshotQuery__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -758,20 +784,20 @@ typedef struct ThreadBackupQuery__storage_ {
       {
         .name = "address",
         .dataTypeSpecific.className = NULL,
-        .number = ThreadBackupQuery_FieldNumber_Address,
+        .number = ThreadSnapshotQuery_FieldNumber_Address,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(ThreadBackupQuery__storage_, address),
+        .offset = (uint32_t)offsetof(ThreadSnapshotQuery__storage_, address),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[ThreadBackupQuery class]
+        [GPBDescriptor allocDescriptorForClass:[ThreadSnapshotQuery class]
                                      rootClass:[QueryRoot class]
                                           file:QueryRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(ThreadBackupQuery__storage_)
+                                   storageSize:sizeof(ThreadSnapshotQuery__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");

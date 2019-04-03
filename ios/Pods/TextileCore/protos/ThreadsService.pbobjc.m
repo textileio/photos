@@ -287,7 +287,7 @@ typedef struct ThreadBlockHeader__storage_ {
 
 typedef struct ThreadAdd__storage_ {
   uint32_t _has_storage_[1];
-  Contact *inviter;
+  Peer *inviter;
   Thread *thread;
 } ThreadAdd__storage_;
 
@@ -299,7 +299,7 @@ typedef struct ThreadAdd__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "inviter",
-        .dataTypeSpecific.className = GPBStringifySymbol(Contact),
+        .dataTypeSpecific.className = GPBStringifySymbol(Peer),
         .number = ThreadAdd_FieldNumber_Inviter,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(ThreadAdd__storage_, inviter),
@@ -429,12 +429,12 @@ typedef struct ThreadFlag__storage_ {
 @implementation ThreadJoin
 
 @dynamic inviter;
-@dynamic hasContact, contact;
+@dynamic hasPeer, peer;
 
 typedef struct ThreadJoin__storage_ {
   uint32_t _has_storage_[1];
   NSString *inviter;
-  Contact *contact;
+  Peer *peer;
 } ThreadJoin__storage_;
 
 // This method is threadsafe because it is initially called
@@ -453,11 +453,11 @@ typedef struct ThreadJoin__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "contact",
-        .dataTypeSpecific.className = GPBStringifySymbol(Contact),
-        .number = ThreadJoin_FieldNumber_Contact,
+        .name = "peer",
+        .dataTypeSpecific.className = GPBStringifySymbol(Peer),
+        .number = ThreadJoin_FieldNumber_Peer,
         .hasIndex = 1,
-        .offset = (uint32_t)offsetof(ThreadJoin__storage_, contact),
+        .offset = (uint32_t)offsetof(ThreadJoin__storage_, peer),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
@@ -484,12 +484,12 @@ typedef struct ThreadJoin__storage_ {
 
 @implementation ThreadAnnounce
 
-@dynamic hasContact, contact;
+@dynamic hasPeer, peer;
 @dynamic name;
 
 typedef struct ThreadAnnounce__storage_ {
   uint32_t _has_storage_[1];
-  Contact *contact;
+  Peer *peer;
   NSString *name;
 } ThreadAnnounce__storage_;
 
@@ -500,11 +500,11 @@ typedef struct ThreadAnnounce__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "contact",
-        .dataTypeSpecific.className = GPBStringifySymbol(Contact),
-        .number = ThreadAnnounce_FieldNumber_Contact,
+        .name = "peer",
+        .dataTypeSpecific.className = GPBStringifySymbol(Peer),
+        .number = ThreadAnnounce_FieldNumber_Peer,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(ThreadAnnounce__storage_, contact),
+        .offset = (uint32_t)offsetof(ThreadAnnounce__storage_, peer),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },

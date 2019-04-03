@@ -45,30 +45,28 @@ static GPBFileDescriptor *ModelRoot_FileDescriptor(void) {
   return descriptor;
 }
 
-#pragma mark - Contact
+#pragma mark - Peer
 
-@implementation Contact
+@implementation Peer
 
 @dynamic id_p;
 @dynamic address;
-@dynamic username;
+@dynamic name;
 @dynamic avatar;
 @dynamic inboxesArray, inboxesArray_Count;
 @dynamic hasCreated, created;
 @dynamic hasUpdated, updated;
-@dynamic threadsArray, threadsArray_Count;
 
-typedef struct Contact__storage_ {
+typedef struct Peer__storage_ {
   uint32_t _has_storage_[1];
   NSString *id_p;
   NSString *address;
-  NSString *username;
+  NSString *name;
   NSString *avatar;
   NSMutableArray *inboxesArray;
   GPBTimestamp *created;
   GPBTimestamp *updated;
-  NSMutableArray *threadsArray;
-} Contact__storage_;
+} Peer__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -79,83 +77,74 @@ typedef struct Contact__storage_ {
       {
         .name = "id_p",
         .dataTypeSpecific.className = NULL,
-        .number = Contact_FieldNumber_Id_p,
+        .number = Peer_FieldNumber_Id_p,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(Contact__storage_, id_p),
+        .offset = (uint32_t)offsetof(Peer__storage_, id_p),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
         .name = "address",
         .dataTypeSpecific.className = NULL,
-        .number = Contact_FieldNumber_Address,
+        .number = Peer_FieldNumber_Address,
         .hasIndex = 1,
-        .offset = (uint32_t)offsetof(Contact__storage_, address),
+        .offset = (uint32_t)offsetof(Peer__storage_, address),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "username",
+        .name = "name",
         .dataTypeSpecific.className = NULL,
-        .number = Contact_FieldNumber_Username,
+        .number = Peer_FieldNumber_Name,
         .hasIndex = 2,
-        .offset = (uint32_t)offsetof(Contact__storage_, username),
+        .offset = (uint32_t)offsetof(Peer__storage_, name),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
         .name = "avatar",
         .dataTypeSpecific.className = NULL,
-        .number = Contact_FieldNumber_Avatar,
+        .number = Peer_FieldNumber_Avatar,
         .hasIndex = 3,
-        .offset = (uint32_t)offsetof(Contact__storage_, avatar),
+        .offset = (uint32_t)offsetof(Peer__storage_, avatar),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
         .name = "inboxesArray",
         .dataTypeSpecific.className = GPBStringifySymbol(Cafe),
-        .number = Contact_FieldNumber_InboxesArray,
+        .number = Peer_FieldNumber_InboxesArray,
         .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(Contact__storage_, inboxesArray),
+        .offset = (uint32_t)offsetof(Peer__storage_, inboxesArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
       },
       {
         .name = "created",
         .dataTypeSpecific.className = GPBStringifySymbol(GPBTimestamp),
-        .number = Contact_FieldNumber_Created,
+        .number = Peer_FieldNumber_Created,
         .hasIndex = 4,
-        .offset = (uint32_t)offsetof(Contact__storage_, created),
+        .offset = (uint32_t)offsetof(Peer__storage_, created),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
       {
         .name = "updated",
         .dataTypeSpecific.className = GPBStringifySymbol(GPBTimestamp),
-        .number = Contact_FieldNumber_Updated,
+        .number = Peer_FieldNumber_Updated,
         .hasIndex = 5,
-        .offset = (uint32_t)offsetof(Contact__storage_, updated),
+        .offset = (uint32_t)offsetof(Peer__storage_, updated),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
-      {
-        .name = "threadsArray",
-        .dataTypeSpecific.className = NULL,
-        .number = Contact_FieldNumber_ThreadsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(Contact__storage_, threadsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeString,
-      },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[Contact class]
+        [GPBDescriptor allocDescriptorForClass:[Peer class]
                                      rootClass:[ModelRoot class]
                                           file:ModelRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(Contact__storage_)
+                                   storageSize:sizeof(Peer__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -167,16 +156,16 @@ typedef struct Contact__storage_ {
 
 @end
 
-#pragma mark - ContactList
+#pragma mark - PeerList
 
-@implementation ContactList
+@implementation PeerList
 
 @dynamic itemsArray, itemsArray_Count;
 
-typedef struct ContactList__storage_ {
+typedef struct PeerList__storage_ {
   uint32_t _has_storage_[1];
   NSMutableArray *itemsArray;
-} ContactList__storage_;
+} PeerList__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -186,21 +175,21 @@ typedef struct ContactList__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "itemsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(Contact),
-        .number = ContactList_FieldNumber_ItemsArray,
+        .dataTypeSpecific.className = GPBStringifySymbol(Peer),
+        .number = PeerList_FieldNumber_ItemsArray,
         .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(ContactList__storage_, itemsArray),
+        .offset = (uint32_t)offsetof(PeerList__storage_, itemsArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[ContactList class]
+        [GPBDescriptor allocDescriptorForClass:[PeerList class]
                                      rootClass:[ModelRoot class]
                                           file:ModelRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(ContactList__storage_)
+                                   storageSize:sizeof(PeerList__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -268,6 +257,140 @@ typedef struct User__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(User__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - Contact
+
+@implementation Contact
+
+@dynamic address;
+@dynamic name;
+@dynamic avatar;
+@dynamic peersArray, peersArray_Count;
+@dynamic threadsArray, threadsArray_Count;
+
+typedef struct Contact__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *address;
+  NSString *name;
+  NSString *avatar;
+  NSMutableArray *peersArray;
+  NSMutableArray *threadsArray;
+} Contact__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "address",
+        .dataTypeSpecific.className = NULL,
+        .number = Contact_FieldNumber_Address,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(Contact__storage_, address),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "name",
+        .dataTypeSpecific.className = NULL,
+        .number = Contact_FieldNumber_Name,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(Contact__storage_, name),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "avatar",
+        .dataTypeSpecific.className = NULL,
+        .number = Contact_FieldNumber_Avatar,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(Contact__storage_, avatar),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "peersArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(Peer),
+        .number = Contact_FieldNumber_PeersArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(Contact__storage_, peersArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "threadsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = Contact_FieldNumber_ThreadsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(Contact__storage_, threadsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[Contact class]
+                                     rootClass:[ModelRoot class]
+                                          file:ModelRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(Contact__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ContactList
+
+@implementation ContactList
+
+@dynamic itemsArray, itemsArray_Count;
+
+typedef struct ContactList__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *itemsArray;
+} ContactList__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "itemsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(Contact),
+        .number = ContactList_FieldNumber_ItemsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(ContactList__storage_, itemsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ContactList class]
+                                     rootClass:[ModelRoot class]
+                                          file:ModelRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ContactList__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -1075,7 +1198,7 @@ typedef struct Invite__storage_ {
   NSString *id_p;
   NSData *block;
   NSString *name;
-  Contact *inviter;
+  Peer *inviter;
   GPBTimestamp *date;
 } Invite__storage_;
 
@@ -1114,7 +1237,7 @@ typedef struct Invite__storage_ {
       },
       {
         .name = "inviter",
-        .dataTypeSpecific.className = GPBStringifySymbol(Contact),
+        .dataTypeSpecific.className = GPBStringifySymbol(Peer),
         .number = Invite_FieldNumber_Inviter,
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(Invite__storage_, inviter),
@@ -2228,10 +2351,13 @@ GPBEnumDescriptor *CafeRequest_Type_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "Store\000StoreThread\000Inbox\000";
+        "Store\000Unstore\000StoreThread\000UnstoreThread\000"
+        "Inbox\000";
     static const int32_t values[] = {
         CafeRequest_Type_Store,
+        CafeRequest_Type_Unstore,
         CafeRequest_Type_StoreThread,
+        CafeRequest_Type_UnstoreThread,
         CafeRequest_Type_Inbox,
     };
     GPBEnumDescriptor *worker =
@@ -2251,7 +2377,9 @@ GPBEnumDescriptor *CafeRequest_Type_EnumDescriptor(void) {
 BOOL CafeRequest_Type_IsValidValue(int32_t value__) {
   switch (value__) {
     case CafeRequest_Type_Store:
+    case CafeRequest_Type_Unstore:
     case CafeRequest_Type_StoreThread:
+    case CafeRequest_Type_UnstoreThread:
     case CafeRequest_Type_Inbox:
       return YES;
     default:

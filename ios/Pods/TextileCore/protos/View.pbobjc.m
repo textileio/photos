@@ -298,6 +298,73 @@ BOOL AddThreadConfig_Schema_Preset_IsValidValue(int32_t value__) {
   }
 }
 
+#pragma mark - BlockViz
+
+@implementation BlockViz
+
+@dynamic dots;
+@dynamic count;
+@dynamic next;
+
+typedef struct BlockViz__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t count;
+  NSString *dots;
+  NSString *next;
+} BlockViz__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "dots",
+        .dataTypeSpecific.className = NULL,
+        .number = BlockViz_FieldNumber_Dots,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(BlockViz__storage_, dots),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "count",
+        .dataTypeSpecific.className = NULL,
+        .number = BlockViz_FieldNumber_Count,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(BlockViz__storage_, count),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "next",
+        .dataTypeSpecific.className = NULL,
+        .number = BlockViz_FieldNumber_Next,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(BlockViz__storage_, next),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[BlockViz class]
+                                     rootClass:[ViewRoot class]
+                                          file:ViewRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(BlockViz__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 #pragma mark - Step
 
 @implementation Step
@@ -323,7 +390,7 @@ typedef struct Step__storage_ {
         .number = Step_FieldNumber_Name,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(Step__storage_, name),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
@@ -344,11 +411,6 @@ typedef struct Step__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(Step__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    static const char *extraTextFormatInfo =
-        "\001\001D\000";
-    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
-#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -494,73 +556,6 @@ typedef struct Keys__storage_ {
 
 @end
 
-#pragma mark - NewInvite
-
-@implementation NewInvite
-
-@dynamic id_p;
-@dynamic key;
-@dynamic inviter;
-
-typedef struct NewInvite__storage_ {
-  uint32_t _has_storage_[1];
-  NSString *id_p;
-  NSString *key;
-  NSString *inviter;
-} NewInvite__storage_;
-
-// This method is threadsafe because it is initially called
-// in +initialize for each subclass.
-+ (GPBDescriptor *)descriptor {
-  static GPBDescriptor *descriptor = nil;
-  if (!descriptor) {
-    static GPBMessageFieldDescription fields[] = {
-      {
-        .name = "id_p",
-        .dataTypeSpecific.className = NULL,
-        .number = NewInvite_FieldNumber_Id_p,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(NewInvite__storage_, id_p),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "key",
-        .dataTypeSpecific.className = NULL,
-        .number = NewInvite_FieldNumber_Key,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(NewInvite__storage_, key),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "inviter",
-        .dataTypeSpecific.className = NULL,
-        .number = NewInvite_FieldNumber_Inviter,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(NewInvite__storage_, inviter),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-    };
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[NewInvite class]
-                                     rootClass:[ViewRoot class]
-                                          file:ViewRoot_FileDescriptor()
-                                        fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(NewInvite__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-    #if defined(DEBUG) && DEBUG
-      NSAssert(descriptor == nil, @"Startup recursed!");
-    #endif  // DEBUG
-    descriptor = localDescriptor;
-  }
-  return descriptor;
-}
-
-@end
-
 #pragma mark - InviteView
 
 @implementation InviteView
@@ -673,6 +668,73 @@ typedef struct InviteViewList__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(InviteViewList__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ExternalInvite
+
+@implementation ExternalInvite
+
+@dynamic id_p;
+@dynamic key;
+@dynamic inviter;
+
+typedef struct ExternalInvite__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *id_p;
+  NSString *key;
+  NSString *inviter;
+} ExternalInvite__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = ExternalInvite_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ExternalInvite__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "key",
+        .dataTypeSpecific.className = NULL,
+        .number = ExternalInvite_FieldNumber_Key,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(ExternalInvite__storage_, key),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "inviter",
+        .dataTypeSpecific.className = NULL,
+        .number = ExternalInvite_FieldNumber_Inviter,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(ExternalInvite__storage_, inviter),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ExternalInvite class]
+                                     rootClass:[ViewRoot class]
+                                          file:ViewRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ExternalInvite__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -2172,17 +2234,21 @@ BOOL WalletUpdate_Type_IsValidValue(int32_t value__) {
 
 @implementation Summary
 
+@dynamic id_p;
+@dynamic address;
 @dynamic accountPeerCount;
 @dynamic threadCount;
-@dynamic fileCount;
+@dynamic filesCount;
 @dynamic contactCount;
 
 typedef struct Summary__storage_ {
   uint32_t _has_storage_[1];
   int32_t accountPeerCount;
   int32_t threadCount;
-  int32_t fileCount;
+  int32_t filesCount;
   int32_t contactCount;
+  NSString *id_p;
+  NSString *address;
 } Summary__storage_;
 
 // This method is threadsafe because it is initially called
@@ -2192,10 +2258,28 @@ typedef struct Summary__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = Summary_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(Summary__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "address",
+        .dataTypeSpecific.className = NULL,
+        .number = Summary_FieldNumber_Address,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(Summary__storage_, address),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
         .name = "accountPeerCount",
         .dataTypeSpecific.className = NULL,
         .number = Summary_FieldNumber_AccountPeerCount,
-        .hasIndex = 0,
+        .hasIndex = 2,
         .offset = (uint32_t)offsetof(Summary__storage_, accountPeerCount),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
@@ -2204,17 +2288,17 @@ typedef struct Summary__storage_ {
         .name = "threadCount",
         .dataTypeSpecific.className = NULL,
         .number = Summary_FieldNumber_ThreadCount,
-        .hasIndex = 1,
+        .hasIndex = 3,
         .offset = (uint32_t)offsetof(Summary__storage_, threadCount),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
       {
-        .name = "fileCount",
+        .name = "filesCount",
         .dataTypeSpecific.className = NULL,
-        .number = Summary_FieldNumber_FileCount,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(Summary__storage_, fileCount),
+        .number = Summary_FieldNumber_FilesCount,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(Summary__storage_, filesCount),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
@@ -2222,7 +2306,7 @@ typedef struct Summary__storage_ {
         .name = "contactCount",
         .dataTypeSpecific.className = NULL,
         .number = Summary_FieldNumber_ContactCount,
-        .hasIndex = 3,
+        .hasIndex = 5,
         .offset = (uint32_t)offsetof(Summary__storage_, contactCount),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,

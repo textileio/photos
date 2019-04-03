@@ -39,6 +39,7 @@ CF_EXTERN_C_BEGIN
 @class Link;
 @class Node;
 @class Notification;
+@class Peer;
 @class Thread;
 @class User;
 
@@ -201,7 +202,9 @@ typedef GPB_ENUM(CafeRequest_Type) {
    **/
   CafeRequest_Type_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
   CafeRequest_Type_Store = 0,
+  CafeRequest_Type_Unstore = 3,
   CafeRequest_Type_StoreThread = 1,
+  CafeRequest_Type_UnstoreThread = 4,
   CafeRequest_Type_Inbox = 2,
 };
 
@@ -228,26 +231,25 @@ BOOL CafeRequest_Type_IsValidValue(int32_t value);
 @interface ModelRoot : GPBRootObject
 @end
 
-#pragma mark - Contact
+#pragma mark - Peer
 
-typedef GPB_ENUM(Contact_FieldNumber) {
-  Contact_FieldNumber_Id_p = 1,
-  Contact_FieldNumber_Address = 2,
-  Contact_FieldNumber_Username = 3,
-  Contact_FieldNumber_Avatar = 4,
-  Contact_FieldNumber_InboxesArray = 5,
-  Contact_FieldNumber_Created = 6,
-  Contact_FieldNumber_Updated = 7,
-  Contact_FieldNumber_ThreadsArray = 8,
+typedef GPB_ENUM(Peer_FieldNumber) {
+  Peer_FieldNumber_Id_p = 1,
+  Peer_FieldNumber_Address = 2,
+  Peer_FieldNumber_Name = 3,
+  Peer_FieldNumber_Avatar = 4,
+  Peer_FieldNumber_InboxesArray = 5,
+  Peer_FieldNumber_Created = 6,
+  Peer_FieldNumber_Updated = 7,
 };
 
-@interface Contact : GPBMessage
+@interface Peer : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *address;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *username;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *name;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *avatar;
 
@@ -263,22 +265,17 @@ typedef GPB_ENUM(Contact_FieldNumber) {
 /** Test to see if @c updated has been set. */
 @property(nonatomic, readwrite) BOOL hasUpdated;
 
-/** view info */
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *threadsArray;
-/** The number of items in @c threadsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger threadsArray_Count;
-
 @end
 
-#pragma mark - ContactList
+#pragma mark - PeerList
 
-typedef GPB_ENUM(ContactList_FieldNumber) {
-  ContactList_FieldNumber_ItemsArray = 1,
+typedef GPB_ENUM(PeerList_FieldNumber) {
+  PeerList_FieldNumber_ItemsArray = 1,
 };
 
-@interface ContactList : GPBMessage
+@interface PeerList : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Contact*> *itemsArray;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Peer*> *itemsArray;
 /** The number of items in @c itemsArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger itemsArray_Count;
 
@@ -299,6 +296,48 @@ typedef GPB_ENUM(User_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *name;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *avatar;
+
+@end
+
+#pragma mark - Contact
+
+typedef GPB_ENUM(Contact_FieldNumber) {
+  Contact_FieldNumber_Address = 1,
+  Contact_FieldNumber_Name = 2,
+  Contact_FieldNumber_Avatar = 3,
+  Contact_FieldNumber_PeersArray = 4,
+  Contact_FieldNumber_ThreadsArray = 5,
+};
+
+@interface Contact : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *address;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *name;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *avatar;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Peer*> *peersArray;
+/** The number of items in @c peersArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger peersArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *threadsArray;
+/** The number of items in @c threadsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger threadsArray_Count;
+
+@end
+
+#pragma mark - ContactList
+
+typedef GPB_ENUM(ContactList_FieldNumber) {
+  ContactList_FieldNumber_ItemsArray = 1,
+};
+
+@interface ContactList : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Contact*> *itemsArray;
+/** The number of items in @c itemsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger itemsArray_Count;
 
 @end
 
@@ -543,7 +582,7 @@ typedef GPB_ENUM(Invite_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *name;
 
-@property(nonatomic, readwrite, strong, null_resettable) Contact *inviter;
+@property(nonatomic, readwrite, strong, null_resettable) Peer *inviter;
 /** Test to see if @c inviter has been set. */
 @property(nonatomic, readwrite) BOOL hasInviter;
 

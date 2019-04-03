@@ -15,12 +15,12 @@
   return [[Contact alloc] initWithData:data error:error];
 }
 
-- (NSString *)username:(NSError * _Nullable __autoreleasing *)error {
-  return [self.node username:error];
+- (NSString *)name:(NSError * _Nullable __autoreleasing *)error {
+  return [self.node name:error];
 }
 
-- (void)setUsername:(NSString *)username error:(NSError * _Nullable __autoreleasing *)error {
-  [self.node setUsername:username error:error];
+- (void)setName:(NSString *)name error:(NSError * _Nullable __autoreleasing *)error {
+  [self.node setName:name error:error];
 }
 
 - (NSString *)avatar:(NSError * _Nullable __autoreleasing *)error {

@@ -8,6 +8,7 @@
 
 #import <TextileCore/Model.pbobjc.h>
 #import <TextileCore/View.pbobjc.h>
+#import <TextileCore/Query.pbobjc.h>
 #import "NodeDependant.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (ThreadList *)list:(NSError **)error;
 - (ContactList *)peers:(NSString *)threadId error:(NSError **)error;
 - (NSString *)remove:(NSString *)threadId error:(NSError **)error;
+- (void)snapshot:(NSError **)error;
+- (MobileSearchHandle *)searchSnapshots:(ThreadSnapshotQuery *)query options:(QueryOptions *)options error:(NSError **)error;
 
 @end
 

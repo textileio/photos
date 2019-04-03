@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)seed;
 - (nullable NSData *)encrypt:(NSData *)data error:(NSError **)error;
 - (nullable NSData *)decrypt:(NSData *)data error:(NSError **)error;
-- (ContactList *)peers:(NSError **)error;
-- (MobileSearchHandle *)findThreadBackups:(ThreadBackupQuery *)query options:(QueryOptions *)options error:(NSError **)error;
+- (Contact *)contact:(NSError **)error;
+- (MobileSearchHandle *)sync:(QueryOptions *)options error:(NSError **)error;
 
 @end
 

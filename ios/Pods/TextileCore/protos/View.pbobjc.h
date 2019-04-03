@@ -243,6 +243,24 @@ int32_t AddThreadConfig_Schema_Preset_RawValue(AddThreadConfig_Schema *message);
  **/
 void SetAddThreadConfig_Schema_Preset_RawValue(AddThreadConfig_Schema *message, int32_t value);
 
+#pragma mark - BlockViz
+
+typedef GPB_ENUM(BlockViz_FieldNumber) {
+  BlockViz_FieldNumber_Dots = 1,
+  BlockViz_FieldNumber_Count = 2,
+  BlockViz_FieldNumber_Next = 3,
+};
+
+@interface BlockViz : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *dots;
+
+@property(nonatomic, readwrite) int32_t count;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *next;
+
+@end
+
 #pragma mark - Step
 
 typedef GPB_ENUM(Step_FieldNumber) {
@@ -302,24 +320,6 @@ typedef GPB_ENUM(Keys_FieldNumber) {
 
 @end
 
-#pragma mark - NewInvite
-
-typedef GPB_ENUM(NewInvite_FieldNumber) {
-  NewInvite_FieldNumber_Id_p = 1,
-  NewInvite_FieldNumber_Key = 2,
-  NewInvite_FieldNumber_Inviter = 3,
-};
-
-@interface NewInvite : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *key;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *inviter;
-
-@end
-
 #pragma mark - InviteView
 
 typedef GPB_ENUM(InviteView_FieldNumber) {
@@ -356,6 +356,24 @@ typedef GPB_ENUM(InviteViewList_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<InviteView*> *itemsArray;
 /** The number of items in @c itemsArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger itemsArray_Count;
+
+@end
+
+#pragma mark - ExternalInvite
+
+typedef GPB_ENUM(ExternalInvite_FieldNumber) {
+  ExternalInvite_FieldNumber_Id_p = 1,
+  ExternalInvite_FieldNumber_Key = 2,
+  ExternalInvite_FieldNumber_Inviter = 3,
+};
+
+@interface ExternalInvite : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *key;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *inviter;
 
 @end
 
@@ -840,19 +858,25 @@ void SetWalletUpdate_Type_RawValue(WalletUpdate *message, int32_t value);
 #pragma mark - Summary
 
 typedef GPB_ENUM(Summary_FieldNumber) {
-  Summary_FieldNumber_AccountPeerCount = 1,
-  Summary_FieldNumber_ThreadCount = 2,
-  Summary_FieldNumber_FileCount = 3,
-  Summary_FieldNumber_ContactCount = 4,
+  Summary_FieldNumber_Id_p = 1,
+  Summary_FieldNumber_Address = 2,
+  Summary_FieldNumber_AccountPeerCount = 3,
+  Summary_FieldNumber_ThreadCount = 4,
+  Summary_FieldNumber_FilesCount = 5,
+  Summary_FieldNumber_ContactCount = 6,
 };
 
 @interface Summary : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *address;
 
 @property(nonatomic, readwrite) int32_t accountPeerCount;
 
 @property(nonatomic, readwrite) int32_t threadCount;
 
-@property(nonatomic, readwrite) int32_t fileCount;
+@property(nonatomic, readwrite) int32_t filesCount;
 
 @property(nonatomic, readwrite) int32_t contactCount;
 
