@@ -17,7 +17,7 @@ export function getAddress (state: RootState): string | undefined {
 
 export function getUsername (state: RootState): string | undefined {
   return state.account.profile.value &&
-         state.account.profile.value.username
+         state.account.profile.value.name
 }
 
 export function bestSession(state: RootState): pb.ICafeSession | undefined {

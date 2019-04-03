@@ -62,9 +62,9 @@ class Component extends React.Component<Props> {
     if (included) {
       return // if the user is already part of the thread
     }
-    const state = !this.state.selected[contact.id]
+    const state = !this.state.selected[contact.address]
     this.setState({
-      selected: { ...this.state.selected, [contact.id]: state }
+      selected: { ...this.state.selected, [contact.address]: state }
     })
   }
 
@@ -76,23 +76,23 @@ class Component extends React.Component<Props> {
     const selected = this.getSelected()
 
     // grab the Pks from the user Ids
-    const ids: string[] = selected.map((id) => {
-      const existing = this.props.contacts.find((ctc) => ctc.id === id)
+    const addresses: string[] = selected.map((address) => {
+      const existing = this.props.contacts.find((ctc) => ctc.address === address)
       if (existing) {
-        return existing.id
+        return existing.address
       }
       return ''
     })
     .filter((id) => id !== '')
 
-    if (ids.length === 0) {
+    if (addresses.length === 0) {
       // @ts-ignore
       this.refs.toast.show('No contacts selected.', 1500)
       return
     }
     // @ts-ignore
     this.refs.toast.show('Success! Your invite(s) were sent.', 2400)
-    this.props.addInternalInvites(this.props.threadId, ids)
+    this.props.addInternalInvites(this.props.threadId, addresses)
     setTimeout(() => { this.props.cancel() }, 2400)
   }
 
@@ -155,19 +155,19 @@ const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  =
         included: (contact.threads || []).indexOf(threadId) >= 0
       }
     })
-    .filter((contact) => contact.username !== '' && contact.username !== undefined)
+    .filter((contact) => contact.name !== '' && contact.name !== undefined)
 
   const notInThread = contacts.filter((c) => !c.included)
   const popularity = notInThread.sort((a, b) => (b.threads || []).length - (a.threads || []).length)
   const topFive = popularity.slice(0, 5)
   const sortedContacts = contacts.sort((a, b) => {
-    if (!a.username || a.username === '') {
+    if (!a.name || a.name === '') {
       return 1
-    } else if (!b.username || b.username === '') {
+    } else if (!b.name || b.name === '') {
       return -1
     }
-    const A = a.username.toString().toUpperCase()
-    const B = b.username.toString().toUpperCase()
+    const A = a.name.toString().toUpperCase()
+    const B = b.name.toString().toUpperCase()
     if (A === B) {
       return 0
     } else {

@@ -151,7 +151,7 @@ class OnboardingUsername extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   processing: state.account.profile.processing,
-  buttonText: state.account.profile.value && state.account.profile.value.username ? 'Success!' : 'Save'
+  buttonText: state.account.profile.value && state.account.profile.value.name ? 'Success!' : 'Save'
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({

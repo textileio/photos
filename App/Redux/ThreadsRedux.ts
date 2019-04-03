@@ -6,7 +6,7 @@ const actions = {
     return (id: string, name: string) => resolve({ id, name })
   }),
   addExternalInviteSuccess: createAction('ADD_EXTERNAL_INVITE_SUCCESS', (resolve) => {
-    return (id: string, name: string, invite: pb.INewInvite) => resolve({ id, name, invite })
+    return (id: string, name: string, invite: pb.IExternalInvite) => resolve({ id, name, invite })
   }),
   addExternalInviteError: createAction('ADD_EXTERNAL_INVITE_ERROR', (resolve) => {
     return (id: string, error: Error) => resolve({ id, error })
@@ -54,7 +54,7 @@ export interface InviteQRCode {
 export interface OutboundInvite {
   readonly id: string
   readonly name: string
-  readonly invite?: pb.INewInvite
+  readonly invite?: pb.IExternalInvite
   readonly error?: Error
 }
 

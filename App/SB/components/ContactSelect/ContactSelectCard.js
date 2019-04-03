@@ -17,7 +17,7 @@ const ContactSelectCard = (props) => {
       select(item, item.included)
     }}>
       <Avatar style={styles.selectedContact} target={item.avatar} />
-      <Text style={styles.contactName}>{item.username || 'peer'}</Text>
+      <Text style={styles.contactName}>{item.name || 'peer'}</Text>
       <View style={styles.contactSelectRadio}>
         <RadioButton disabled={item.included} selected={selected} />
       </View>
