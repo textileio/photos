@@ -11,7 +11,7 @@ import styles from './statics/styles'
 import onboardingStyles from '../Styles/OnboardingStyle'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
-import CustomFeedItem from '../../SB/components/FeedItem/Custom'
+import { NotificationsSelectors } from '../../Redux/NotificationsRedux'
 import { TextileHeaderButtons } from '../../Components/HeaderButtons'
 import Avatar from '../../Components/Avatar'
 
@@ -136,7 +136,7 @@ class Notifications extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  const notifications = state.notifications.notifications
+  const notifications = NotificationsSelectors.latestAndUnreadFirst(state)
   const showOnboarding = state.preferences.tourScreens.feed === true
 
   return {

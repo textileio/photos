@@ -14,10 +14,12 @@ const sharedImage: SharedImage = {
 }
 
 const sharedPhoto: pb.IFiles = {
-  username: 'user',
-  avatar: 'avatar',
+  user: {
+    name: 'user',
+    address: 'address',
+    avatar: 'avatar'
+  },
   caption: '',
-  author: 'a',
   block: 'b',
   comments: [],
   date: { seconds: 10, nanos: 20 },

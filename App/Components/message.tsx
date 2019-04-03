@@ -53,18 +53,22 @@ export interface Props {
   message?: string
   time: string
   containerStyle?: ViewStyle
+  isSameUser?: boolean
 }
 
 const Message = (props: Props) => {
   const alignItems = props.message ? 'flex-start' : 'center'
   return (
-    <View style={[CONTAINER(alignItems), props.containerStyle]}>
-      <Avatar style={AVATAR} target={props.avatar} />
+    <View style={[CONTAINER(alignItems), props.containerStyle, props.isSameUser && {paddingTop: 0}]}>
+      {props.isSameUser && <View style={AVATAR} />}
+      {!props.isSameUser && <Avatar style={AVATAR} target={props.avatar} />}
       <View style={CONTENT}>
-        <View style={META}>
-          <Text style={USERNAME}>{props.username}</Text>
-          <Text style={TIME}>{props.time.toUpperCase()}</Text>
-        </View>
+        {!props.isSameUser &&
+          <View style={META}>
+            <Text style={USERNAME}>{props.username}</Text>
+            <Text style={TIME}>{props.time.toUpperCase()}</Text>
+          </View>
+        }
         {props.message &&
           <Text style={MESSAGE}>{props.message}</Text>
         }

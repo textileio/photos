@@ -2,16 +2,17 @@ import React from 'react'
 import {Dispatch} from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, View, Text, TouchableOpacity } from 'react-native'
+import { FlatList, View, Text, TouchableOpacity, Alert, Platform } from 'react-native'
 
 import {RootAction, RootState} from '../Redux/Types'
 
 import { getThreads } from '../Redux/PhotoViewingSelectors'
-import { ContactsSelectors } from '../Redux/ContactsRedux'
+import { contactsSelectors } from '../features/contacts'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
+import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 
-import { ContactInfo, pb } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
@@ -23,17 +24,24 @@ interface GroupAuthors {
   readonly id: string
   readonly name: string
   readonly size: number
-  readonly members: ContactInfo[]
+  readonly members: pb.IContact[]
   readonly thumb?: pb.IFiles
 }
 
 interface StateProps {
   threads: ReadonlyArray<GroupAuthors>
+  showNotificationsPrompt: boolean
+  showLocationPrompt: boolean
+  itemCount: number
 }
 
 interface DispatchProps {
   refreshMessages: () => void
   navigateToThread: (id: string, name: string) => void
+  enableNotifications: () => void
+  completeNotifications: () => void
+  completeBackgroundLocation: () => void
+  enableLocation: () => void
 }
 
 interface NavProps {
@@ -136,6 +144,16 @@ class Groups extends React.Component<Props, State> {
     })
   }
 
+  componentDidUpdate (prevProps) {
+    if (this.props.threads.length && this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
+      // ensure that it only gets called once by using the first update of the state or a new group add
+      this.notificationPrompt()
+    } else if (this.props.threads.length && this.props.showLocationPrompt) {
+      // ensure it get
+      this.locationPrompt()
+    }
+  }
+
   render () {
     return (
       <View style={styles.contentContainer} >
@@ -159,18 +177,87 @@ class Groups extends React.Component<Props, State> {
       </View>
     )
   }
+
+  // Simple Alert based prompt to get Notification permissions
+  notificationPrompt () {
+    // never show it again
+    this.props.completeNotifications()
+    // give the user a prompt
+    Alert.alert(
+      'Notifications',
+      'Want to receive notifications when you receive new photos or invites?',
+      [
+        {
+          text: 'Yes please',
+          onPress: () => {
+            this.props.enableNotifications()
+          }
+        },
+        { text: 'Not now', style: 'cancel' },
+        {
+          text: 'Show all options',
+          onPress: () => {
+            this.props.navigation.navigate('Settings')
+          }
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
+  // Simple Alert based prompt to get Notification permissions
+  locationPrompt () {
+    // give the user a prompt
+    const platform = Platform.OS === 'android' ? 'Android' : 'iOS'
+    // never show it again
+    this.props.completeBackgroundLocation()
+    Alert.alert(
+      'Location',
+      `Textile can find content shared to you more quickly by having ${platform} wake it up when you change locations. This data is never collected or stored.`,
+      [
+        {
+          text: 'Okay',
+          onPress: () => {
+            // never show it again
+            this.props.enableLocation()
+          }
+        },
+        { text: 'Not now',
+          style: 'cancel',
+          onPress: () => {
+            // never show it again
+          }
+        },
+        {
+          text: 'Show all options',
+          onPress: () => {
+            // take them to settings
+            this.props.navigation.navigate('Settings')
+          }
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const ownId = state.account.peerId.value
+  const ownAddress = state.account.address.value
   const profile = state.account.profile.value
+  let memberCount = 0
+  let itemCount = 0
   const threads = getThreads(state, 'date')
   .map((thread) => {
-    const members = ContactsSelectors.byThreadId(state, thread.id).filter((contact) => contact.id !== ownId)
+    const selector = contactsSelectors.makeByThreadId(thread.id)
+    const members = selector(state.contacts).filter((contact) => contact.address !== ownAddress)
     if (profile && members.length < 8) {
       members.unshift(profile)
     }
     const thumb = thread.photos.length ? thread.photos[0] : undefined
+    // just get a sense of how many group x members there are
+    memberCount += members.length
+    itemCount += thread.photos.length
     return {
       id: thread.id,
       name: thread.name,
@@ -180,8 +267,19 @@ const mapStateToProps = (state: RootState): StateProps => {
       thumb
     }
   })
+
+  const showNotificationsPrompt = PreferencesSelectors.showNotificationPrompt(state)
+    && threads.length > 0
+    && memberCount > threads.length
+
+  const showLocationPrompt = PreferencesSelectors.showBackgroundLocationPrompt(state)
+    && itemCount > 8
+
   return {
-    threads
+    threads,
+    showNotificationsPrompt,
+    showLocationPrompt,
+    itemCount
   }
 }
 
@@ -192,6 +290,18 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     },
     navigateToThread: (id: string, name: string) => {
       dispatch(UIActions.navigateToThreadRequest(id, name))
+    },
+    enableNotifications: () => {
+      dispatch(PreferencesActions.toggleServicesRequest('notifications', true))
+    },
+    enableLocation: () => {
+      dispatch(PreferencesActions.toggleServicesRequest('backgroundLocation', true))
+    },
+    completeNotifications: () => {
+      dispatch(PreferencesActions.completeTourSuccess('notifications'))
+    },
+    completeBackgroundLocation: () => {
+      dispatch(PreferencesActions.completeTourSuccess('location'))
     }
   }
 }

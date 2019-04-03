@@ -1,6 +1,5 @@
 import React from 'react'
 import { SafeAreaView, ViewStyle, View, TouchableOpacity } from 'react-native'
-import { Pages } from 'react-native-pages'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
@@ -21,6 +20,14 @@ const CONTAINER: ViewStyle = {
   backgroundColor: color.screen_primary
 }
 
+const DOT: ViewStyle = {
+  margin: 3,
+  height: 8,
+  width: 8,
+  backgroundColor: color.action_6,
+  borderRadius: 4
+}
+
 const ARROW_FORWARD: ViewStyle = {
   position: 'absolute',
   bottom: spacing._016,
@@ -29,7 +36,7 @@ const ARROW_FORWARD: ViewStyle = {
 }
 
 interface StateProps {
-  skipReferralCode: boolean
+  referralCode?: string
 }
 
 interface DispatchProps {
@@ -39,9 +46,9 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
-  blockNext: boolean
   showArrow: boolean
   currentPage: number
+  disableNext: boolean
 }
 
 class OnboardingScreen extends React.Component<Props, State> {
@@ -53,7 +60,7 @@ class OnboardingScreen extends React.Component<Props, State> {
     this.state = {
       showArrow: false,
       currentPage: 0,
-      blockNext: false
+      disableNext: false
     }
   }
 
@@ -64,23 +71,18 @@ class OnboardingScreen extends React.Component<Props, State> {
   }
 
   showArrowForIndex = (index: number) => {
-    if (!this.pages || !this.pages.props.children[index]) {
-      return false
-    }
-    const showArrow = this.pages.props.children[index].props.showArrow
-    return showArrow
+    return index <= 2
   }
 
   nextPage = () => {
-    if (this.pages && this.pages.props.children.length - 1 > this.state.currentPage && !this.state.blockNext) {
-      this.setState({blockNext: true})
-      this.pages.scrollToPage(this.state.currentPage + 1)
+    if (!this.state.disableNext && this.pages && this.pages.length - 1 > this.state.currentPage) {
+      this.setState({
+        showArrow: this.showArrowForIndex(this.state.currentPage + 1),
+        currentPage: this.state.currentPage + 1,
+        disableNext: true
+      })
       setTimeout(() => {
-        this.setState({
-          blockNext: false,
-          showArrow: this.showArrowForIndex(this.state.currentPage + 1),
-          currentPage: this.state.currentPage + 1
-        })
+        this.setState({disableNext: false})
       }, 350)
     }
   }
@@ -122,7 +124,8 @@ class OnboardingScreen extends React.Component<Props, State> {
       (
         <ReferralCode
           key='referral'
-          referralCode={Config.RN_TEMPORARY_REFERRAL}
+          targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
+          referralCode={this.props.referralCode}
           onSuccess={this.nextPage}
         />
       ),
@@ -149,28 +152,30 @@ class OnboardingScreen extends React.Component<Props, State> {
         />
       )
     ]
-    // remove referral code if needed.
-    if (this.props.skipReferralCode) {
-      pages.splice(3, 1)
-    }
     return pages
   }
 
   render() {
-    const pages = this.pagesArray()
+    this.pages = this.pagesArray()
     return (
       <SafeAreaView style={CONTAINER}>
         <View style={CONTAINER}>
-          <Pages
-            ref={(pages: any) => { this.pages = pages ? pages : undefined }}
-            style={[CONTAINER]}
-            containerStyle={{ marginBottom: spacing._016 }}
-            indicatorColor={color.accent2_2}
-            startPage={this.state.currentPage}
-            scrollEnabled={false}
+          <View
+            style={[CONTAINER, { marginBottom: spacing._016 }]}
           >
-            {pages}
-          </Pages>
+            {this.pages[this.state.currentPage]}
+          </View>
+          {this.state.currentPage < 7 &&
+            <View style={{height: 60, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+              <View style={[DOT, this.pages && this.state.currentPage === 0 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 1 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 2 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 3 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 4 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 5 && {backgroundColor: color.action_4}]} />
+              <View style={[DOT, this.pages && this.state.currentPage === 6 && {backgroundColor: color.action_4}]} />
+            </View>
+          }
           {this.state.showArrow &&
             <TouchableOpacity hitSlop={{ top: 10, left: 10, bottom: 10, right: 10}} style={ARROW_FORWARD} onPress={this.nextPage}>
               <Icon name={'arrow-right'} size={24} />
@@ -183,8 +188,7 @@ class OnboardingScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  // No need for a referral challenge if the user received a thread invite and is getting set up
-  skipReferralCode: state.auth.invite !== undefined && state.auth.invite.referral !== undefined
+  referralCode: state.auth.invite !== undefined ? state.auth.invite.referral : undefined
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({

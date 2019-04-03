@@ -9,12 +9,9 @@ import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
 import { getAddress } from '../Redux/AccountSelectors'
 import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
-import Textile, {
+import {
   pb,
-  ThreadInfo,
-  ThreadType,
-  ThreadSharing,
-  SchemaType
+  API
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
@@ -52,7 +49,7 @@ export function * monitorThreadAddedNotifications (action: ActionType<typeof Pho
   try {
     // We need this one because the callback we get from the node doesn't include key. This queries for the thread and gets
     // all the required data for threadAdded()
-    const thread: ThreadInfo = yield call(Textile.threadInfo, action.payload.id)
+    const thread: pb.IThread = yield call(API.threads.get, action.payload.id)
     const { id, key, name } = thread
     yield put(PhotoViewingActions.threadAdded(id, key, name))
   } catch (error) {
@@ -64,7 +61,16 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
   const { name } = action.payload
   try {
     const key = `textile_photos-shared-${uuid()}`
-    yield call(Textile.addThread, key, name, ThreadType.OPEN, ThreadSharing.SHARED, [], SchemaType.MEDIA)
+    const config: pb.IAddThreadConfig = {
+      key,
+      name,
+      type: pb.Thread.Type.OPEN,
+      sharing: pb.Thread.Sharing.SHARED,
+      schema: { id: '', json: '', preset: pb.AddThreadConfig.Schema.Preset.MEDIA },
+      force: false,
+      members: []
+    }
+    yield call(API.threads.add, config)
   } catch (error) {
     yield put(PhotoViewingActions.addThreadError(error))
   }
@@ -73,7 +79,7 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
 export function * removeThread (action: ActionType<typeof PhotoViewingActions.removeThreadRequest>) {
   const { id } = action.payload
   try {
-    yield call(Textile.removeThread, id)
+    yield call(API.threads.remove, id)
     yield call(NavigationService.navigate, 'Groups')
   } catch (error) {
     yield put(PhotoViewingActions.removeThreadError(error))
@@ -83,8 +89,8 @@ export function * removeThread (action: ActionType<typeof PhotoViewingActions.re
 export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>) {
   try {
     const accountThreadId = yield select(getAddress)
-    const threadsResult: ReadonlyArray<ThreadInfo> = yield call(Textile.threads)
-    for (const thread of threadsResult) {
+    const threadsResult: pb.IThreadList = yield call(API.threads.list)
+    for (const thread of threadsResult.items) {
       /**
        * Filters out the Account thread from PhotoViewing Thread List
        */
@@ -102,7 +108,7 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
 export function * refreshThread (action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
   const { threadId } = action.payload
   try {
-    const photosResult: pb.IFilesList = yield call(Textile.files, '', -1, threadId)
+    const photosResult: pb.IFilesList = yield call(API.files.list, '', -1, threadId)
     yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult.items))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
@@ -115,7 +121,7 @@ export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions
     return
   }
   try {
-    yield call(Textile.addComment, result.photo.block, result.comment)
+    yield call(API.comments.add, result.photo.block, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
     // for now an error will just flush the comment... ideally we can notify the user of a failed comment

@@ -25,7 +25,7 @@ const LIKE_TEXT: TextStyle = {
 
 interface StateProps {
   likes: ReadonlyArray<{
-    peerId: string,
+    address: string,
     username: string,
     avatar?: string
   }>
@@ -46,11 +46,11 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
     }
   }
 
-  keyExtractor = (item: { peerId: string; username: string }, index: number) => {
+  keyExtractor = (item: { address: string, username: string }, index: number) => {
     return item.username + index
   }
 
-  renderItem = (info: ListRenderItemInfo<{ peerId: string; username: string, avatar?: string }>) => {
+  renderItem = (info: ListRenderItemInfo<{ address: string, username: string, avatar?: string }>) => {
     const { username, avatar } = info.item
     return (
       <View style={LIKE_ITEM}>
@@ -77,11 +77,11 @@ const mapStateToProps = (state: RootState): StateProps => {
     throw Error('No viewing photo')
   }
   const likes = state.photoViewing.viewingPhoto.likes.map((like) => {
-    const username: string = like.username || 'unknown'
+    const username: string = like.user.name || 'unknown'
     return {
-      peerId: like.author,
+      address: like.user.address,
       username,
-      avatar: like.avatar
+      avatar: like.user.avatar
     }
   })
   return {

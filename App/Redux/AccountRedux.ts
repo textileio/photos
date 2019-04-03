@@ -1,5 +1,5 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { ContactInfo, pb } from '@textile/react-native-sdk'
+import { pb } from '@textile/react-native-sdk'
 
 const actions = {
   initSuccess: createAction('INITIALIZATION_SUCCESS', (resolve) => {
@@ -7,7 +7,7 @@ const actions = {
   }),
   refreshProfileRequest: createAction('REFRESH_PROFILE_REQUEST'),
   refreshProfileSuccess: createAction('REFRESH_PROFILE_SUCCESS', (resolve) => {
-    return (profile: ContactInfo) => resolve({ profile })
+    return (profile: pb.IContact) => resolve({ profile })
   }),
   profileError: createAction('PROFILE_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -17,6 +17,13 @@ const actions = {
     return (peerId: string) => resolve({ peerId })
   }),
   refreshPeerIdError: createAction('REFRESH_PEER_ID_ERROR', (resolve) => {
+    return (error: any) => resolve({ error })
+  }),
+  refreshAddressRequest: createAction('REFRESH_ADDRESS_REQUEST'),
+  refreshAddressSuccess: createAction('REFRESH_ADDRESS_SUCCESS', (resolve) => {
+    return (address: string) => resolve({ address })
+  }),
+  refreshAddressError: createAction('REFRESH_ADDRESS_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
   }),
   setUsernameRequest: createAction('SET_USERNAME_REQUEST', (resolve) => {
@@ -49,7 +56,7 @@ export type AccountAction = ActionType<typeof actions>
 interface AccountState {
   initialized: boolean, // splitting 'Preferences.onboarded' to within sdk 'initialized' and app specific 'onboarded'
   profile: {
-    value?: ContactInfo
+    value?: pb.IContact
     processing: boolean
     error?: string
   }
@@ -57,6 +64,10 @@ interface AccountState {
     value?: string
     error?: string
   },
+  address: {
+    value?: string
+    error?: string
+  }
   avatar: {
     pending?: string
     error?: string
@@ -75,6 +86,7 @@ const initialState: AccountState = {
     processing: false
   },
   peerId: {},
+  address: {},
   avatar: {},
   cafeSessions: {
     processing: false,
@@ -104,6 +116,14 @@ export function reducer(state: AccountState = initialState, action: AccountActio
       const obj = action.payload.error
       const error = obj.message as string || obj as string || 'unknown error'
       return { ...state, peerId: { ...state.peerId, error } }
+    }
+    case getType(actions.refreshAddressSuccess):
+      const { address } = action.payload
+      return { ...state, address: { value: address } }
+    case getType(actions.refreshAddressError): {
+      const obj = action.payload.error
+      const error = obj.message as string || obj as string || 'unknown error'
+      return { ...state, address: { ...state.address, error } }
     }
     case getType(actions.setAvatarError): {
       const obj = action.payload.error

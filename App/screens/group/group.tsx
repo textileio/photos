@@ -24,6 +24,7 @@ import UIActions from '../../Redux/UIRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
+import { pb } from '@textile/react-native-sdk'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -39,7 +40,7 @@ const screenWidth = Dimensions.get('screen').width
 interface StateProps {
   items: ReadonlyArray<Item>
   groupName: string
-  selfId: string
+  selfAddress: string
 }
 
 interface DispatchProps {
@@ -49,6 +50,8 @@ interface DispatchProps {
   addPhotoLike: (block: string) => void
   navigateToComments: (photoId: string) => void
   leaveThread: () => void
+  retryShare: (key: string) => void
+  cancelShare: (key: string) => void
 }
 
 interface NavProps {
@@ -106,8 +109,9 @@ class Group extends Component<Props, State> {
   }
 
   render () {
+    // flexGrow allows android to scroll, however https://github.com/facebook/react-native/issues/19434 is still an issue
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
           <FlatList
             style={{ flex: 1, backgroundColor: color.screen_primary }}
@@ -134,22 +138,40 @@ class Group extends Component<Props, State> {
     )
   }
 
-  renderRow = ({ item }: ListRenderItemInfo<Item>) => {
+  sameUserAgain = (user: pb.IUser, previous: Item): boolean => {
+    if (!previous || !previous.type) {
+      return false
+    }
+    switch (previous.type) {
+      case 'message': {
+        return user.address === previous.data.user.address
+      }
+      default: {
+        return false
+      }
+    }
+  }
+
+  renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
-        const { avatar, username, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = likes.findIndex((likeInfo) => likeInfo.author === this.props.selfId) > -1
+        const { user, caption, date, target, files, likes, comments, block } = item.data
+        const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1
         const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
           return {
             id: comment.id,
-            username: comment.username || '?',
+            username: comment.user.name || '?',
             body: comment.body
           }
         })
+        // Get full size image constraints
+        const def = screenWidth
+        const pinchWidth = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.width.numberValue
+        const pinchHeight = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.height.numberValue
         return (
           <Photo
-            avatar={avatar}
-            username={username.length > 0 ? username : 'unknown'}
+            avatar={user.avatar}
+            username={user.name.length > 0 ? user.name : 'unknown'}
             message={caption.length > 0 ? caption : undefined}
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
             photoId={target}
@@ -162,6 +184,9 @@ class Group extends Component<Props, State> {
             comments={commentsData}
             commentsDisplayMax={5}
             onViewComments={this.onComment(target)}
+            pinchZoom={true}
+            pinchWidth={pinchWidth}
+            pinchHeight={pinchHeight}
           />
         )
       }
@@ -169,29 +194,36 @@ class Group extends Component<Props, State> {
         return (
           <ProcessingImage
             {...item.data}
+            /* tslint:disable-next-line */
+            retry={() => {this.props.retryShare(item.key)}}
+            /* tslint:disable-next-line */
+            cancel={() => {this.props.cancelShare(item.key)}}
           />
         )
       }
       case 'message': {
-        const { avatar, username, body, date } = item.data
+        const { user, body, date } = item.data
+        const isSameUser = this.sameUserAgain(user, this.props.items[(index + 1)])
+        const avatar = isSameUser ? undefined : user.avatar
         return (
           <Message
             avatar={avatar}
-            username={username || 'unknown'}
+            username={user.name || 'unknown'}
             message={body}
             // TODO: deal with pb Timestamp to JS Date!
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            isSameUser={isSameUser}
           />
         )
       }
       case 'leave':
       case 'join': {
-        const { avatar, username, date } = item.data
+        const { user, date } = item.data
         const word = item.type === 'join' ? 'joined' : 'left'
         return (
           <Join
-            avatar={avatar}
-            username={username || 'unknown'}
+            avatar={user.avatar}
+            username={user.name || 'unknown'}
             message={`${word} ${this.props.groupName}`}
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           />
@@ -242,11 +274,11 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
-  const selfId = state.account.peerId.value || ''
+  const selfAddress = state.account.address.value || ''
   return {
     items,
     groupName,
-    selfId
+    selfAddress
   }
 }
 
@@ -259,7 +291,9 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) },
     addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
     navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
-    leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId))
+    leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
+    retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry( key )) },
+    cancelShare: (key: string) => { dispatch(groupActions.addPhoto.cancelRequest( key )) }
   }
 }
 

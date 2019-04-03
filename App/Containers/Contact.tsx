@@ -7,12 +7,10 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
-import { ContactInfo } from '@textile/react-native-sdk'
 
 import Avatar from '../Components/Avatar'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
 import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
-import { ContactsSelectors } from '../Redux/ContactsRedux'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
@@ -23,7 +21,7 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 interface NavProps {
   avatar: string
   username: string
-  peerId: string
+  address: string
 }
 
 interface StateProps {
@@ -78,9 +76,9 @@ class ContactModal extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
-  const peerId = ownProps.navigation.getParam('peerId')
+  const address = ownProps.navigation.getParam('address')
   return {
-    threadThumbs: getThreadThumbs(state, peerId, 'name')
+    threadThumbs: getThreadThumbs(state, address, 'name')
   }
 }
 
