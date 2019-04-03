@@ -209,6 +209,8 @@ class Groups extends React.Component<Props, State> {
   locationPrompt () {
     // give the user a prompt
     const platform = Platform.OS === 'android' ? 'Android' : 'iOS'
+    // never show it again
+    this.props.completeBackgroundLocation()
     Alert.alert(
       'Location',
       `Textile can find content shared to you more quickly by having ${platform} wake it up when you change locations. This data is never collected or stored.`,
@@ -217,7 +219,6 @@ class Groups extends React.Component<Props, State> {
           text: 'Okay',
           onPress: () => {
             // never show it again
-            this.props.completeBackgroundLocation()
             this.props.enableLocation()
           }
         },
@@ -225,14 +226,11 @@ class Groups extends React.Component<Props, State> {
           style: 'cancel',
           onPress: () => {
             // never show it again
-            this.props.completeBackgroundLocation()
           }
         },
         {
           text: 'Show all options',
           onPress: () => {
-            // never show it again
-            this.props.completeBackgroundLocation()
             // take them to settings
             this.props.navigation.navigate('Settings')
           }
