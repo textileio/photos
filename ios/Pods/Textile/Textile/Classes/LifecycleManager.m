@@ -44,6 +44,9 @@ typedef NS_CLOSED_ENUM(NSInteger, AppState) {
      self.appState = AppStateForeground;
      if ([self.timer isValid]) {
        [self.timer invalidate];
+       if ([self.delegate respondsToSelector:@selector(canceledPendingNodeStop)]) {
+         [self.delegate canceledPendingNodeStop];
+       }
      } else {
        [self startNode];
      }
@@ -89,6 +92,9 @@ typedef NS_CLOSED_ENUM(NSInteger, AppState) {
     [self stopNode];
   }];
   [self.timer invalidate];
+  if ([self.delegate respondsToSelector:@selector(willStopNodeInBackgroundAfterDelay:)]) {
+    [self.delegate willStopNodeInBackgroundAfterDelay:delay];
+  }
   self.timer = [NSTimer scheduledTimerWithTimeInterval:delay repeats:FALSE block:^(NSTimer * _Nonnull timer) {
     [self stopNode];
     [UIApplication.sharedApplication endBackgroundTask:bgTaskId];

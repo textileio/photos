@@ -642,9 +642,9 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-sdk@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0.tgz#763e73cc5d79b63c01b8a4852999c8236a2e9e16"
+"@textile/react-native-sdk@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.1.tgz#8138d8b2700be9e97bc8c208dddabc44c088055e"
   dependencies:
     "@textile/go-mobile" "0.1.11"
     buffer "^5.2.1"

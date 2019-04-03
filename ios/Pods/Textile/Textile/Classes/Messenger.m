@@ -77,11 +77,11 @@
     switch (queryEvent.type) {
       case MobileQueryEvent_Type_Data: {
         NSString *type = queryEvent.data_p.value.typeURL;
-        if ([type isEqualToString:@"/CafeClientThread"]) {
+        if ([type isEqualToString:@"/Thread"]) {
           NSError *error;
-          CafeClientThread *clientThread = [[CafeClientThread alloc] initWithData:queryEvent.data_p.value.value error:&error];
-          if (!error && [self.delegate respondsToSelector:@selector(clientThreadQueryResult:clientThread:)]) {
-            [self.delegate clientThreadQueryResult:queryEvent.id_p clientThread:clientThread];
+          Thread *thread = [[Thread alloc] initWithData:queryEvent.data_p.value.value error:&error];
+          if (!error && [self.delegate respondsToSelector:@selector(clientThreadQueryResult:thread:)]) {
+            [self.delegate clientThreadQueryResult:queryEvent.id_p thread:thread];
           }
         } else if ([type isEqualToString:@"/Contact"]) {
           NSError *error;
