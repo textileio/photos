@@ -71,10 +71,10 @@ class DeviceLogs extends React.PureComponent {
           <Text style={[item.error && styles.failure, styles.item]}>{moment(item.time).format('LTS')}</Text>
         </View>
         <View style={styles.cell} >
-          <Text style={styles.item}>{item.event}</Text>
+          <Text style={[item.error && styles.failure, styles.item]}>{item.event}</Text>
         </View>
         <View style={styles.messageCell} >
-          <Text style={styles.item}>{item.message}</Text>
+          <Text style={[item.error && styles.failure, styles.item]}>{item.message}</Text>
         </View>
       </View>
     )
