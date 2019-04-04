@@ -155,7 +155,8 @@ class Notifications extends React.PureComponent<Props> {
             )}
           </View>
 
-          {this.props.verboseUi && <View style={styles.listContainer}>
+          {this.props.verboseUi &&
+            <View style={styles.listContainer}>
               <View>
                 <SettingsRow
                   service={'StateOverlay'}
@@ -189,7 +190,9 @@ class Notifications extends React.PureComponent<Props> {
             </View>
           }
         </ScrollView>
-        {this.state.infoVisible && <PermissionsInfo isVisible={true} info={this.state.info} close={this.hideInfo} />}
+        {this.state.infoVisible &&
+          <PermissionsInfo isVisible={true} info={this.state.info} close={this.hideInfo} />
+        }
       </View>
     )
   }
