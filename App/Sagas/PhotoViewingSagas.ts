@@ -7,6 +7,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { InboundInvite } from '../Redux/ThreadsRedux'
 import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
 import { getAddress } from '../Redux/AccountSelectors'
+import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
 import {
@@ -53,6 +54,7 @@ export function * monitorThreadAddedNotifications (action: ActionType<typeof Pho
     const { id, key, name } = thread
     yield put(PhotoViewingActions.threadAdded(id, key, name))
   } catch (error) {
+    yield put(TextileEventsActions.newErrorMessage('monitorThreadAddedNotifications', error.message))
     yield put(PhotoViewingActions.addThreadError(error))
   }
 }
@@ -72,6 +74,7 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
     }
     yield call(API.threads.add, config)
   } catch (error) {
+    yield put(TextileEventsActions.newErrorMessage('addThread', error.message))
     yield put(PhotoViewingActions.addThreadError(error))
   }
 }
@@ -82,6 +85,7 @@ export function * removeThread (action: ActionType<typeof PhotoViewingActions.re
     yield call(API.threads.remove, id)
     yield call(NavigationService.navigate, 'Groups')
   } catch (error) {
+    yield put(TextileEventsActions.newErrorMessage('removeThread', error.message))
     yield put(PhotoViewingActions.removeThreadError(error))
   }
 }
@@ -101,6 +105,7 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
       yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
   } catch (error) {
+    yield put(TextileEventsActions.newErrorMessage('refreshThreads', error.message))
     yield put(PhotoViewingActions.refreshThreadsError(error))
   }
 }
@@ -124,6 +129,7 @@ export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions
     yield call(API.comments.add, result.photo.block, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
+    yield put(TextileEventsActions.newErrorMessage('addPhotoComment', error.message))
     // for now an error will just flush the comment... ideally we can notify the user of a failed comment
     yield put(PhotoViewingActions.addCommentError())
   }

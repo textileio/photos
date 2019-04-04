@@ -15,7 +15,7 @@ import styles from './Styles/RootContainerStyles'
 interface StateProps {
   monitorLocation: boolean
   nodeState: string
-  verboseUi: boolean
+  showVerboseUi: boolean
 }
 
 interface DispatchProps {
@@ -62,7 +62,7 @@ class RootContainer extends Component<StateProps & DispatchProps> {
         <AppNavigation
           ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }}
         />
-        {this.props.verboseUi &&
+        {this.props.showVerboseUi &&
         <View style={styles.bottomOverlay} >
           <Text style={styles.overlayText}>{overlayMessage}</Text>
         </View>
@@ -75,7 +75,7 @@ class RootContainer extends Component<StateProps & DispatchProps> {
 const mapStateToProps = (state: RootState): StateProps => {
   return {
     monitorLocation: state.preferences.services.backgroundLocation.status,
-    verboseUi: state.preferences.verboseUi,
+    showVerboseUi: state.preferences.verboseUi && state.preferences.verboseUiOptions.nodeStateOverlay,
     nodeState: state.textile.nodeState.state
   }
 }

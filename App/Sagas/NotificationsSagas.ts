@@ -26,16 +26,20 @@ import PhotoViewingAction, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors } from '../Redux/NotificationsRedux'
+import TextileEventsActions, { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import * as NotificationsServices from '../Services/Notifications'
 import {logNewEvent} from './DeviceLogs'
-import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 
 export function * enable () {
   yield call(NotificationsServices.enable)
 }
 
 export function * readAllNotifications (action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
-  yield call(API.notifications.readAll)
+  try {
+    yield call(API.notifications.readAll)
+  } catch (error) {
+    yield put(TextileEventsActions.newErrorMessage('readAllNotifications', error.message))
+  }
 }
 
 export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
@@ -142,6 +146,7 @@ export function * refreshNotifications () {
     const typedNotifs = notificationResponse.items.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
+    yield put(TextileEventsActions.newErrorMessage('refreshNotifications', error.message))
     yield put(NotificationsActions.refreshNotificationsFailure())
   }
 }
