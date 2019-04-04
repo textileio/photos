@@ -14,8 +14,8 @@
   [self.node addContact:contact.data error:error];
 }
 
-- (Contact *)get:(NSString *)contactId error:(NSError * _Nullable __autoreleasing *)error {
-  NSData *data = [self.node contact:contactId error:error];
+- (Contact *)get:(NSString *)address error:(NSError * _Nullable __autoreleasing *)error {
+  NSData *data = [self.node contact:address error:error];
   return [[Contact alloc] initWithData:data error:error];
 }
 
@@ -24,12 +24,12 @@
   return [[ContactList alloc] initWithData:data error:error];
 }
 
-- (void)remove:(NSString *)contactId error:(NSError * _Nullable __autoreleasing *)error {
-  [self.node removeContact:contactId error:error];
+- (void)remove:(NSString *)address error:(NSError * _Nullable __autoreleasing *)error {
+  [self.node removeContact:address error:error];
 }
 
-- (ThreadList *)threads:(NSString *)contactId error:(NSError * _Nullable __autoreleasing *)error {
-  NSData *data = [self.node contactThreads:contactId error:error];
+- (ThreadList *)threads:(NSString *)address error:(NSError * _Nullable __autoreleasing *)error {
+  NSData *data = [self.node contactThreads:address error:error];
   return [[ThreadList alloc] initWithData:data error:error];
 }
 

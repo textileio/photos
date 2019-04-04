@@ -34,7 +34,7 @@ export function * refreshProfile () {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshProfileRequest))
-      const profileResult: pb.IContact = yield call(API.profile.get)
+      const profileResult: pb.IContact = yield call(API.account.contact)
       yield put(AccountActions.refreshProfileSuccess(profileResult))
     } catch (error) {
       yield call(logNewEvent, 'refreshProfile', error.message, true)
@@ -77,7 +77,7 @@ export function * setUsername () {
       }
       // Ideally this could move into the SDK directly so it can manage
       // knowing its own online state
-      yield call(API.profile.setUsername, action.payload.username)
+      yield call(API.profile.setName, action.payload.username)
       yield put(TextileEventsActions.updateProfile())
     } catch (error) {
       yield put(AccountActions.profileError(error))

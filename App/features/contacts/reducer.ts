@@ -113,12 +113,12 @@ export default combineReducers<ContactsState, ContactsAction>({
       case getType(actions.addContactRequest): {
         return {
           ...state,
-          [action.payload.contact.id]: {}
+          [action.payload.contact.address]: {}
         }
       }
       case getType(actions.addContactSuccess):
       case getType(actions.clearAddContact): {
-        const { [action.payload.contact.id]: removed, ...addingContacts } = state
+        const { [action.payload.contact.address]: removed, ...addingContacts } = state
         return {
           addingContacts
         }
@@ -128,7 +128,7 @@ export default combineReducers<ContactsState, ContactsAction>({
         const message = error.message as string || error as string || 'unknown'
         return {
           ...state,
-          [contact.id]: {
+          [contact.address]: {
             error: message
           }
         }

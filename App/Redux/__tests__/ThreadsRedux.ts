@@ -6,7 +6,7 @@ const name: string = 'myThread' as any
 const error = new Error('an error')
 const inviteId: string = 'invite_id' as any
 const inviteKey: string = 'a_key' as any
-const invite: pb.INewInvite = {id: inviteId, inviter: 'tests' as any, key: inviteKey}
+const invite: pb.IExternalInvite = {id: inviteId, inviter: 'tests' as any, key: inviteKey}
 
 const initialState = reducer(undefined, {} as any)
 

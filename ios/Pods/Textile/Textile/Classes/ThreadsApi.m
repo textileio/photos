@@ -42,4 +42,12 @@
   return [self.node removeThread:threadId error:error];
 }
 
+- (void)snapshot:(NSError * _Nullable __autoreleasing *)error {
+  [self.node snapshotThreads:error];
+}
+
+- (MobileSearchHandle *)searchSnapshots:(ThreadSnapshotQuery *)query options:(QueryOptions *)options error:(NSError * _Nullable __autoreleasing *)error {
+  return [self.node searchThreadSnapshots:query.data options:options.data error:error];
+}
+
 @end

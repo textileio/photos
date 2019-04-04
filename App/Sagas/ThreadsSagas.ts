@@ -27,7 +27,7 @@ import Config from 'react-native-config'
 export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
   try {
-    const invite: pb.INewInvite = yield call(API.invites.addExternal, id)
+    const invite: pb.IExternalInvite = yield call(API.invites.addExternal, id)
     yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
   } catch (error) {
     yield put(ThreadsActions.addExternalInviteError(id, error))
@@ -37,7 +37,7 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
 export function * displayThreadQRCode (action: ActionType<typeof ThreadsActions.threadQRCodeRequest>) {
   const { id, name } = action.payload
   try {
-    const invite: pb.INewInvite = yield call(API.invites.addExternal, id)
+    const invite: pb.IExternalInvite = yield call(API.invites.addExternal, id)
     const link = DeepLink.createInviteLink(invite, name)
     yield put(ThreadsActions.threadQRCodeSuccess(id, name, link))
     // displayThreadQRCode

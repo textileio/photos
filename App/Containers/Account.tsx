@@ -40,7 +40,7 @@ class Account extends Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  username: state.account.profile.value ? state.account.profile.value.username || state.account.profile.value.id : 'unknown'
+  username: state.account.profile.value ? state.account.profile.value.name || state.account.profile.value.address : 'unknown'
 })
 
 export default connect(mapStateToProps, undefined)(Account)

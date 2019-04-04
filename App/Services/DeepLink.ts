@@ -46,7 +46,7 @@ function getData (href: string): DeepLinkData | undefined {
   }
 }
 
-function createInviteLink (invite: pb.INewInvite, threadName: string): string {
+function createInviteLink (invite: pb.IExternalInvite, threadName: string): string {
   const hash: string[] = []
   hash.push(`id=${encodeURIComponent(invite.id)}`)
   hash.push(`key=${encodeURIComponent(invite.key)}`)

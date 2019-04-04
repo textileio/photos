@@ -6,11 +6,11 @@ import {
   AddressBookSearchResult
 } from './models'
 
-export const makeIsKnown = (id: string) => (state: ContactsState) => state.contacts.some((p) => p.id === id)
+export const makeIsKnown = (address: string) => (state: ContactsState) => state.contacts.some((p) => p.address === address)
 
 export const makeByThreadId = (id: string) => (state: ContactsState) => state.contacts.filter((contact) => (contact.threads || []).indexOf(id) > -1)
 
-export const makeContactById = (id: string) => (state: ContactsState) => state.contacts.find((contact) => contact.id === id)
+export const makeContactByAddress = (address: string) => (state: ContactsState) => state.contacts.find((contact) => contact.address === address)
 
 export const searchResults = (state: ContactsState) => {
   const sections: SearchResultsSection[] = []
@@ -21,18 +21,14 @@ export const searchResults = (state: ContactsState) => {
   } else if (state.textileSearchResults.results && state.textileSearchResults.results.length > 0) {
     textileData = state.textileSearchResults.results
       .filter((current, index, arr) => {
-        const sames = arr.filter((el) => el.id === current.id)
-        if (sames.length === 1) {
-          return true
-        }
-        // If there is a newer entry, filter this one
-        return !(sames.find((el) => el.updated.seconds > current.updated.seconds || (el.updated.seconds === current.updated.seconds && el.updated.nanos > current.updated.nanos)))
+        const sames = arr.filter((el) => el.address === current.address)
+        return sames.length === 1
       })
       .map((result) => {
-        const selector = makeIsKnown(result.id)
+        const selector = makeIsKnown(result.address)
         const isContact = selector(state)
-        const adding = Object.keys(state.addingContacts).indexOf(result.id) > -1
-        const textileResult: TextileSearchResult = { key: result.id, type: 'textile', data: { contact: result, isContact, adding } }
+        const adding = Object.keys(state.addingContacts).indexOf(result.address) > -1
+        const textileResult: TextileSearchResult = { key: result.address, type: 'textile', data: { contact: result, isContact, adding } }
         return textileResult
       })
   } else if (state.textileSearchResults.results && state.textileSearchResults.results.length === 0) {

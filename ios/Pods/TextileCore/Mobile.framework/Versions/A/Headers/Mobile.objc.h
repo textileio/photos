@@ -87,7 +87,7 @@ name is the string value of a pb.MobileEvent_Type)
  * AcceptInviteViaNotification call core AcceptInviteViaNotification
  */
 - (NSString* _Nonnull)acceptInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)accountPeers:(NSError* _Nullable*)error;
+- (NSData* _Nullable)accountContact:(NSError* _Nullable*)error;
 - (NSString* _Nonnull)addComment:(NSString* _Nullable)blockId body:(NSString* _Nullable)body error:(NSError* _Nullable*)error;
 - (BOOL)addContact:(NSData* _Nullable)contact error:(NSError* _Nullable*)error;
 - (NSData* _Nullable)addExternalInvite:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
@@ -95,7 +95,7 @@ name is the string value of a pb.MobileEvent_Type)
 - (NSData* _Nullable)addFilesByTarget:(NSString* _Nullable)target threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption error:(NSError* _Nullable*)error;
 - (NSString* _Nonnull)addFlag:(NSString* _Nullable)blockId error:(NSError* _Nullable*)error;
 - (NSString* _Nonnull)addIgnore:(NSString* _Nullable)blockId error:(NSError* _Nullable*)error;
-- (NSString* _Nonnull)addInvite:(NSString* _Nullable)threadId inviteeId:(NSString* _Nullable)inviteeId error:(NSError* _Nullable*)error;
+- (BOOL)addInvite:(NSString* _Nullable)threadId address:(NSString* _Nullable)address error:(NSError* _Nullable*)error;
 - (NSString* _Nonnull)addLike:(NSString* _Nullable)blockId error:(NSError* _Nullable*)error;
 - (NSString* _Nonnull)addMessage:(NSString* _Nullable)threadId body:(NSString* _Nullable)body error:(NSError* _Nullable*)error;
 /**
@@ -118,8 +118,8 @@ name is the string value of a pb.MobileEvent_Type)
 - (NSData* _Nullable)cafeSession:(NSString* _Nullable)peerId error:(NSError* _Nullable*)error;
 - (NSData* _Nullable)cafeSessions:(NSError* _Nullable*)error;
 - (BOOL)checkCafeMessages:(NSError* _Nullable*)error;
-- (NSData* _Nullable)contact:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)contactThreads:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)contact:(NSString* _Nullable)address error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)contactThreads:(NSString* _Nullable)address error:(NSError* _Nullable*)error;
 - (NSData* _Nullable)contacts:(NSError* _Nullable*)error;
 /**
  * CountUnreadNotifications calls core CountUnreadNotifications
@@ -132,7 +132,6 @@ name is the string value of a pb.MobileEvent_Type)
 - (NSData* _Nullable)feed:(NSData* _Nullable)req error:(NSError* _Nullable*)error;
 - (NSString* _Nonnull)fileData:(NSString* _Nullable)hash error:(NSError* _Nullable*)error;
 - (NSData* _Nullable)files:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
-- (MobileSearchHandle* _Nullable)findThreadBackups:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable*)error;
 /**
  * GitSummary returns common GitSummary
  */
@@ -143,6 +142,10 @@ name is the string value of a pb.MobileEvent_Type)
 - (BOOL)ignoreInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
 - (NSString* _Nonnull)imageFileDataForMinWidth:(NSString* _Nullable)pth minWidth:(long)minWidth error:(NSError* _Nullable*)error;
 - (NSData* _Nullable)messages:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
+/**
+ * Name calls core Name
+ */
+- (NSString* _Nonnull)name:(NSError* _Nullable*)error;
 /**
  * Notifications call core Notifications
  */
@@ -168,7 +171,7 @@ name is the string value of a pb.MobileEvent_Type)
 - (BOOL)readNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
 - (NSData* _Nullable)refreshCafeSession:(NSString* _Nullable)peerId error:(NSError* _Nullable*)error;
 - (BOOL)registerCafe:(NSString* _Nullable)host token:(NSString* _Nullable)token error:(NSError* _Nullable*)error;
-- (BOOL)removeContact:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
+- (BOOL)removeContact:(NSString* _Nullable)address error:(NSError* _Nullable*)error;
 /**
  * RemoveThread call core RemoveThread
  */
@@ -178,6 +181,10 @@ name is the string value of a pb.MobileEvent_Type)
  */
 - (BOOL)renameThread:(NSString* _Nullable)id_ name:(NSString* _Nullable)name error:(NSError* _Nullable*)error;
 - (MobileSearchHandle* _Nullable)searchContacts:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable*)error;
+/**
+ * SearchThreadSnapshots calls core SearchThreadSnapshots
+ */
+- (MobileSearchHandle* _Nullable)searchThreadSnapshots:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable*)error;
 - (NSString* _Nonnull)seed;
 /**
  * SetAvatar calls core SetAvatar
@@ -185,9 +192,13 @@ name is the string value of a pb.MobileEvent_Type)
 - (BOOL)setAvatar:(NSString* _Nullable)hash error:(NSError* _Nullable*)error;
 - (BOOL)setLogLevel:(NSData* _Nullable)level error:(NSError* _Nullable*)error;
 /**
- * SetUsername calls core SetUsername
+ * SetName calls core SetName
  */
-- (BOOL)setUsername:(NSString* _Nullable)username error:(NSError* _Nullable*)error;
+- (BOOL)setName:(NSString* _Nullable)username error:(NSError* _Nullable*)error;
+/**
+ * SnapshotThreads calls core SnapshotThreads
+ */
+- (BOOL)snapshotThreads:(NSError* _Nullable*)error;
 /**
  * Start the mobile node
  */
@@ -200,6 +211,7 @@ name is the string value of a pb.MobileEvent_Type)
  * Summary calls core Summary
  */
 - (NSData* _Nullable)summary:(NSError* _Nullable*)error;
+- (MobileSearchHandle* _Nullable)syncAccount:(NSData* _Nullable)options error:(NSError* _Nullable*)error;
 /**
  * Thread calls core Thread
  */
@@ -212,10 +224,6 @@ name is the string value of a pb.MobileEvent_Type)
  * Threads lists all threads
  */
 - (NSData* _Nullable)threads:(NSError* _Nullable*)error;
-/**
- * Username calls core Username
- */
-- (NSString* _Nonnull)username:(NSError* _Nullable*)error;
 /**
  * Version returns common Version
  */

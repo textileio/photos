@@ -84,7 +84,7 @@ class Contacts extends React.Component<Props, State> {
     let data = allContacts
     if (this.state.searchString !== undefined && this.state.searchString.length > 0) {
       data = data.filter((contact) => {
-        const searchKey = (contact.username || contact.id).toLowerCase()
+        const searchKey = (contact.name || contact.address).toLowerCase()
         const index = searchKey.indexOf(this.state.searchString!.toLowerCase())
         return index > -1
       })
@@ -112,7 +112,7 @@ class Contacts extends React.Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: pb.IContact) => item.id
+  keyExtractor = (item: pb.IContact) => item.address
 
   renderRow = (row: ListRenderItemInfo<pb.IContact>) => {
     const { item } = row
@@ -120,7 +120,7 @@ class Contacts extends React.Component<Props, State> {
     const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
     return (
       <ListItem
-        title={item.username || item.id}
+        title={item.name || item.address}
         leftItem={leftItem}
         rightItems={rightItems}
         onPress={this.onPress(item)}
@@ -136,7 +136,7 @@ class Contacts extends React.Component<Props, State> {
 
   onPress = (contactInfo: pb.IContact) => {
     return () => {
-      this.props.navigation.navigate('Contact', { avatar: contactInfo.avatar, username: contactInfo.username, address: contactInfo.address })
+      this.props.navigation.navigate('Contact', { avatar: contactInfo.avatar, username: contactInfo.name, address: contactInfo.address })
     }
   }
 
@@ -152,8 +152,8 @@ class Contacts extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const contacts = state.contacts.contacts.slice().sort((a, b) => {
-    const aSortKey = a.username || a.id
-    const bSortKey = b.username || b.id
+    const aSortKey = a.name || a.address
+    const bSortKey = b.name || b.address
     if (aSortKey < bSortKey) {
       return -1
     } else if (aSortKey > bSortKey) {

@@ -26,13 +26,13 @@
   return [self.node decrypt:data error:error];
 }
 
-- (ContactList *)peers:(NSError * _Nullable __autoreleasing *)error {
-  NSData *data = [self.node accountPeers:error];
-  return [[ContactList alloc] initWithData:data error:error];
+- (Contact *)contact:(NSError * _Nullable __autoreleasing *)error {
+  NSData *data = [self.node accountContact:error];
+  return [[Contact alloc] initWithData:data error:error];
 }
 
-- (MobileSearchHandle *)findThreadBackups:(ThreadBackupQuery *)query options:(QueryOptions *)options error:(NSError * _Nullable __autoreleasing *)error {
-  return [self.node findThreadBackups:query.data options:options.data error:error];
+- (MobileSearchHandle *)sync:(QueryOptions *)options error:(NSError * _Nullable __autoreleasing *)error {
+  return [self.node syncAccount:options.data error:error];
 }
 
 @end
