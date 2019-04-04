@@ -11,6 +11,7 @@ import AccountActions from '../Redux/AccountRedux'
 import { groupActions } from '../features/group'
 import { groupSelectors } from '../features/group'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
+import TextileEventsActions from '../Redux/TextileEventsRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
@@ -93,6 +94,7 @@ export function * shareWalletImage (id: string, threadId: string, comment?: stri
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
     const blockId: string = yield call(API.files.addByTarget, id, threadId, comment)
   } catch (error) {
+    yield put(TextileEventsActions.newErrorMessage('shareWalletImage', error.message))
     yield put(UIActions.imageSharingError(error))
   }
 }

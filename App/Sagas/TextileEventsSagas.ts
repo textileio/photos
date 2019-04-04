@@ -233,10 +233,7 @@ export function * newError () {
         yield take((action: RootAction) =>
           action.type === getType(TextileEventsActions.newErrorMessage)
         )
-
       if (yield select(PreferencesSelectors.showNodeErrorNotification)) {
-        console.log(action.payload.type)
-        console.log(action.payload.message)
         yield call(displayNotification, action.payload.type, action.payload.message)
       }
       yield call(logNewEvent, action.payload.type, action.payload.message, true)
