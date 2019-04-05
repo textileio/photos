@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View } from 'react-native'
+import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View, StyleSheet } from 'react-native'
 import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
@@ -28,6 +28,7 @@ interface State {
   borderRadius: number
   showIcon: boolean
   defaultSize: number
+  httpError?: boolean
 }
 
 class Avatar extends React.Component<Props, State> {
@@ -43,7 +44,7 @@ class Avatar extends React.Component<Props, State> {
 
   shouldComponentUpdate (nextProps, nextState) {
     const refresh = nextProps.target !== this.props.target ||
-      nextState.showIcon !== this.state.showIcon ||
+      // nextState.showIcon !== this.state.showIcon ||
       // node status hasn't changed
       (nextProps.online && !this.props.online) ||
       (nextProps.started && !this.props.started) ||
@@ -66,8 +67,14 @@ class Avatar extends React.Component<Props, State> {
     })
   }
 
+  onHttpError = () => {
+    this.setState({
+      httpError: true
+    })
+  }
+
   render () {
-    const { style, icon, target, local, started, color } = this.props
+    const { style, icon, target, local, started, online, color } = this.props
     let width: string | number = this.state.defaultSize
     let height: string | number = this.state.defaultSize
     if (style) {
@@ -81,7 +88,8 @@ class Avatar extends React.Component<Props, State> {
     // avoid 0
     const borderRadius = radius || Number(width) / 2
 
-    if (icon || !started || !target) {
+    // If requested or if no target is known, show the ( ? ) icon
+    if (icon || !target) {
       const heightNumber = typeof height === 'number' ? height as number : this.state.defaultSize
       const borderWidth = this.props.style && this.props.style.borderWidth ? this.props.style.borderWidth as number : 0
       return (
@@ -107,9 +115,9 @@ class Avatar extends React.Component<Props, State> {
       )
     }
 
-    // local means the target belongs to the local node
+    // If 'local' is requested, it is a local user avatar, so request can be made once 'start'
     const widthNumber = typeof width === 'number' ? width as number : this.state.defaultSize
-    if (local) {
+    if (local && started) {
       return (
         <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}>
           <TextileImage
@@ -124,21 +132,48 @@ class Avatar extends React.Component<Props, State> {
       )
     }
 
-    const tintColor = !this.state.showIcon ? { tintColor: color } : {}
+    // If HTTP error, load it via IPFS
     const file = widthNumber <= 50 ? 'small' : 'large'
+    if (online && this.state.httpError) {
+      return (
+        <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden', position: 'relative' }}>
+          <View
+            style={{backgroundColor: color, ...StyleSheet.absoluteFillObject}}
+          />
+          <TextileImage
+            style={{
+              minHeight: height,
+              minWidth: width,
+              alignSelf: 'center'
+            }}
+            target={`${target}/0/${file}/d`}
+            ipfs={true}
+            index={0}
+            forMinWidth={widthNumber}
+            resizeMode={'cover'}
+            onLayout={this.onImageLayout}
+          />
+        </View>
+      )
+    }
+
+    const tintColor = !this.state.showIcon ? { tintColor: color } : {}
     return (
-      <Image
-        {...this.props}
-        source={{
-          uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/${file}/d`,
-          cache: 'force-cache'
-        }}
-        style={{ ...(this.props.style || {}), ...tintColor, width, height, borderRadius }}
-        resizeMode={'cover'}
-        onLayout={this.onImageLayout}
-        defaultSource={require('../Images/v2/empty.png')}
-        onLoad={this.onIconLoad}
-      />
+      <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden', position: 'relative' }}>        
+        <Image
+          {...this.props}
+          source={{
+            uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/${file}/d`,
+            cache: 'force-cache'
+          }}
+          style={{ ...tintColor, width, height, alignSelf: 'center' }}
+          resizeMode={'cover'}
+          onLayout={this.onImageLayout}
+          defaultSource={require('../Images/v2/empty.png')}
+          onLoad={this.onIconLoad}
+          onError={this.onHttpError}
+        />
+      </View>
     )
   }
 }
