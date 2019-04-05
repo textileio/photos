@@ -77,12 +77,13 @@ class Avatar extends React.Component<Props, State> {
       }
     }
     const { borderRadius: radius } = this.state
-    const borderRadius = radius || Number(width) / 2
+    const borderRadius = style && style.borderRadius ? style.borderRadius : radius || Number(width) / 2
 
     // If requested or if no target is known, show the ( ? ) icon
     if (icon || !target) {
       const heightNumber = typeof height === 'number' ? height as number : this.state.defaultSize
       const borderWidth = this.props.style && this.props.style.borderWidth ? this.props.style.borderWidth as number : 0
+      const fontSize = Math.ceil(this.state.borderRadius * 2)
       return (
         <View
           style={{
@@ -93,13 +94,14 @@ class Avatar extends React.Component<Props, State> {
             overflow: 'hidden',
             alignContent: 'center',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            padding: 0, margin: 0
           }}
         >
           <Icon
-            style={{ fontSize: Math.ceil(this.state.borderRadius * 2), textAlign: 'center' }}
+            style={{ fontSize, lineHeight: fontSize, textAlign: 'center' }}
             name={icon || 'question-circle'}
-            size={heightNumber - borderWidth}
+            size={fontSize}
             color={colors.grey_5}
             onLayout={this.onImageLayout}
           />

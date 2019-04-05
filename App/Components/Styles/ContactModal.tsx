@@ -18,8 +18,8 @@ export default StyleSheet.create({
     backgroundColor: 'white'
   } as ViewStyle,
   profile: {
-    width: '100%',
     flexDirection: 'row',
+    flex: 1,
     alignItems: 'center',
     paddingVertical: 50,
     paddingHorizontal: 19,
@@ -29,6 +29,8 @@ export default StyleSheet.create({
   } as ViewStyle,
   username: {
     marginLeft: 18,
+    marginRight: 6,
+    flex: 1,
     fontFamily: 'Biotif-Bold',
     color: Colors.cover,
     fontSize: 32

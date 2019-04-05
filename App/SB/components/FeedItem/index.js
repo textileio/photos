@@ -35,7 +35,7 @@ const FeedItem = props => {
       style={{...readStyle, justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}
     >
       <Avatar
-        style={{ width: 24, height: 24 }}
+        style={{ width: '100%', height: '100%', borderRadius: 16 }}
         target={notification.avatar}
       />
     </View>

@@ -120,7 +120,7 @@ class Contacts extends React.Component<Props, State> {
     const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
     return (
       <ListItem
-        title={item.name || item.address}
+        title={item.name || item.address.substring(0, 10)}
         leftItem={leftItem}
         rightItems={rightItems}
         onPress={this.onPress(item)}
