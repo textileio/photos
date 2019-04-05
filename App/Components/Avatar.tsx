@@ -170,17 +170,10 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     target = localTarget
   }
 
-  let color = 'hsla(200, 60%, 100%, 0.3)'
-  if (target) {
-    const h = Math.floor(360 * target.charCodeAt(target.length - 1) / 125)
-    const hue = h < 360 ? h > 0 ? h : 0 : 360
-    color = `hsla(${hue},90%,60%,0.3)`
-  }
-
   const started = state.textile.nodeState.state === 'started'
   const online = state.textile.online
 
-  return { target, local, started, color, online }
+  return { target, local, started, online }
 }
 
 export default connect(mapStateToProps)(Avatar)
