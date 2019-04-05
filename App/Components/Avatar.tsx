@@ -19,7 +19,6 @@ interface StateProps {
   local: boolean
   started: boolean
   online: boolean
-  color: string
 }
 
 type Props = OwnProps & StateProps & Partial<ImageProps>
@@ -66,16 +65,10 @@ class Avatar extends React.Component<Props, State> {
   }
 
   render () {
-    const { style, icon, target, local, started, online, color } = this.props
-    let width: string | number = this.state.defaultSize
-    let height: string | number = this.state.defaultSize
-    if (style) {
-      if (style.width) {
-        width = height = style.width
-      } else if (style.height) {
-        width = height = style.height
-      }
-    }
+    const { style, icon, target, local, started, online } = this.props
+    const width = style && style.width ? style.width : this.state.defaultSize
+    const height = style && style.height ? style.height : width
+
     const { borderRadius: radius } = this.state
     const borderRadius = style && style.borderRadius ? style.borderRadius : typeof width === 'number' ? width / 2 : radius
 
