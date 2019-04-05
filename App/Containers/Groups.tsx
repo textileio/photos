@@ -250,10 +250,25 @@ const mapStateToProps = (state: RootState): StateProps => {
   const threads = getThreads(state, 'date')
   .map((thread) => {
     const selector = contactsSelectors.makeByThreadId(thread.id)
-    const members = selector(state.contacts).filter((contact) => contact.address !== ownAddress)
+    const allMembers = selector(state.contacts)
+    // Focus just on contacts with avatars
+    const members = allMembers.filter((contact) => contact.avatar !== '')
+      .filter((contact) => contact.address !== ownAddress)
+
+    // If the row isn't full, use a few contacts without avatars
+    const noAvatars = allMembers.filter((contact) => !contact.avatar || contact.avatar === '')
+    while (noAvatars.length && members.length < 7) {
+      const unknown = noAvatars.pop()
+      if (unknown) {
+        members.unshift(unknown)
+      }
+    }
+
+    // Include our own avatar when space
     if (profile && members.length < 8) {
       members.unshift(profile)
     }
+
     const thumb = thread.photos.length ? thread.photos[0] : undefined
     // just get a sense of how many group x members there are
     memberCount += members.length
