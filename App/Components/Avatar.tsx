@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View, StyleSheet } from 'react-native'
+import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View, ImageBackground } from 'react-native'
 import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
@@ -26,9 +26,8 @@ type Props = OwnProps & StateProps & Partial<ImageProps>
 
 interface State {
   borderRadius: number
-  showIcon: boolean
   defaultSize: number
-  httpError?: boolean
+  ipfsError?: boolean
 }
 
 class Avatar extends React.Component<Props, State> {
@@ -37,14 +36,13 @@ class Avatar extends React.Component<Props, State> {
     super(props)
     this.state = {
       borderRadius: 0,
-      showIcon: false,
       defaultSize: 100
     }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
     const refresh = nextProps.target !== this.props.target ||
-      // nextState.showIcon !== this.state.showIcon ||
+      nextState.ipfsError !== this.state.ipfsError ||
       // node status hasn't changed
       (nextProps.online && !this.props.online) ||
       (nextProps.started && !this.props.started) ||
@@ -61,15 +59,9 @@ class Avatar extends React.Component<Props, State> {
     })
   }
 
-  onIconLoad = () => {
+  onIPFSError = () => {
     this.setState({
-      showIcon: true
-    })
-  }
-
-  onHttpError = () => {
-    this.setState({
-      httpError: true
+      ipfsError: true
     })
   }
 
@@ -85,7 +77,6 @@ class Avatar extends React.Component<Props, State> {
       }
     }
     const { borderRadius: radius } = this.state
-    // avoid 0
     const borderRadius = radius || Number(width) / 2
 
     // If requested or if no target is known, show the ( ? ) icon
@@ -132,47 +123,41 @@ class Avatar extends React.Component<Props, State> {
       )
     }
 
-    // If HTTP error, load it via IPFS
-    const file = widthNumber <= 50 ? 'small' : 'large'
-    if (online && this.state.httpError) {
-      return (
-        <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden', position: 'relative' }}>
-          <View
-            style={{backgroundColor: color, ...StyleSheet.absoluteFillObject}}
-          />
-          <TextileImage
-            style={{
-              minHeight: height,
-              minWidth: width,
-              alignSelf: 'center'
-            }}
-            target={`${target}/0/${file}/d`}
-            ipfs={true}
-            index={0}
-            forMinWidth={widthNumber}
-            resizeMode={'cover'}
-            onLayout={this.onImageLayout}
-          />
-        </View>
-      )
-    }
-
-    const tintColor = !this.state.showIcon ? { tintColor: color } : {}
+    // Progressive HTTP to IPFS avatar
+    const file = widthNumber <= 50 || this.state.ipfsError ? 'small' : 'large'
     return (
-      <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden', position: 'relative' }}>        
-        <Image
-          {...this.props}
+      <View
+        style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}
+      >
+        <ImageBackground
+          style={{
+            minHeight: height,
+            minWidth: width,
+            alignSelf: 'center'
+          }}
           source={{
-            uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/${file}/d`,
+            uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d`,
             cache: 'force-cache'
           }}
-          style={{ ...tintColor, width, height, alignSelf: 'center' }}
           resizeMode={'cover'}
-          onLayout={this.onImageLayout}
-          defaultSource={require('../Images/v2/empty.png')}
-          onLoad={this.onIconLoad}
-          onError={this.onHttpError}
-        />
+        >
+          {online && !this.state.ipfsError &&
+            <TextileImage
+              style={{
+                minHeight: height,
+                minWidth: width,
+                alignSelf: 'center'
+              }}
+              target={`${target}/0/${file}/d`}
+              ipfs={true}
+              index={0}
+              forMinWidth={widthNumber}
+              resizeMode={'cover'}
+              onLayout={this.onImageLayout}
+              onError={this.onIPFSError}
+            />
+          }
+        </ImageBackground>
       </View>
     )
   }
