@@ -152,8 +152,19 @@ class Contacts extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const contacts = state.contacts.contacts.slice().sort((a, b) => {
-    const aSortKey = a.name || a.address
-    const bSortKey = b.name || b.address
+    let aSortKey = a.name
+    let bSortKey = b.name
+    if (a.name && !b.name) {
+      // move b later if no name
+      return -1
+    } else if (!a.name && b.name) {
+      // move a later if no name
+      return 1
+    } else if (!a.name && !b.name) {
+      // if neither have name, use address and continue
+      aSortKey = a.address
+      bSortKey = b.address
+    }
     if (aSortKey < bSortKey) {
       return -1
     } else if (aSortKey > bSortKey) {
