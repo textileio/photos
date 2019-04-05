@@ -9,6 +9,7 @@
 - (instancetype)initWithBridge:(RCTBridge *)bridge NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, strong) NSString *target;
+@property (nonatomic, assign) BOOL ipfs;
 @property (nonatomic, assign) int index;
 @property (nonatomic, assign) int forMinWidth;
 @property (nonatomic, assign) RCTResizeMode resizeMode;

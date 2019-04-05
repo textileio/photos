@@ -37,6 +37,11 @@ public final class TextileImageViewManager extends SimpleViewManager<TextileImag
     public void setTarget(TextileImageView textileImageView, String target) {
         textileImageView.setTarget(target);
     }
+    
+    @ReactProp(name = "ipfs")
+    public void setIpfs(TextileImageView textileImageView, boolean ipfs) {
+        textileImageView.setIpfs(ipfs);
+    }
 
     @ReactProp(name = "index")
     public void setIndex(TextileImageView textileImageView, int index) {
