@@ -14,6 +14,7 @@ class TextileImageView extends AppCompatImageView {
 
     private ThemedReactContext context;
     private String target;
+    private boolean ipfs;
     private int index;
     private int forMinWidth;
     private ScaleType scaleType;
@@ -28,6 +29,13 @@ class TextileImageView extends AppCompatImageView {
     public void setTarget(String target) {
         if (this.target != target) {
             this.target = target;
+            this.needsRenderImage = true;
+        }
+    }
+
+    public void setIpfs(boolean ipfs) {
+        if (this.ipfs != ipfs) {
+            this.ipfs = ipfs;
             this.needsRenderImage = true;
         }
     }
@@ -61,7 +69,7 @@ class TextileImageView extends AppCompatImageView {
         if (this.needsRenderImage) {
             ReactContext reactContext = (ReactContext)getContext();
             RCTEventEmitter eventEmitter = reactContext.getJSModule(RCTEventEmitter.class);
-            new TextileImageTask(getId(), eventEmitter, this.target, this.index, this.forMinWidth, this).execute();
+            new TextileImageTask(getId(), eventEmitter, this.target, this.ipfs, this.index, this.forMinWidth, this).execute();
             this.needsRenderImage = false;
         }
     }
