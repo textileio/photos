@@ -41,6 +41,15 @@ class Avatar extends React.Component<Props, State> {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    const refresh = nextProps.target !== this.props.target ||
+      (nextProps.online && !this.props.online) ||
+      (nextProps.started && !this.props.started) ||
+      nextState !== this.state
+    console.log('refresh', refresh)
+    return refresh
+  }
+
   onImageLayout = (event: LayoutChangeEvent) => {
     this.setState({
       borderRadius: event.nativeEvent.layout.width / 2
@@ -91,13 +100,14 @@ class Avatar extends React.Component<Props, State> {
           {online &&
             <TextileImage
               style={{
-                minHeight: height, minWidth: width, alignSelf: 'center'
+                minHeight: height, minWidth: width, alignSelf: 'center', backgroundColor: 'transparent'
               }}
               target={`${target}/0/${file}/d`}
               ipfs={true}
               index={0}
               forMinWidth={widthNumber}
               resizeMode={'cover'}
+              onLoad={() => {console.log('success')}}
             />
           }
           <Image
@@ -108,7 +118,8 @@ class Avatar extends React.Component<Props, State> {
             style={{
               minHeight: height,
               minWidth: width,
-              alignSelf: 'center'
+              alignSelf: 'center',
+              backgroundColor: 'transparent'
             }}
             resizeMode={'cover'}
             onLayout={this.onImageLayout}
