@@ -131,7 +131,7 @@ class Avatar extends React.Component<Props, State> {
         }}
       >
         <Icon
-          style={{ 
+          style={{
             ...StyleSheet.absoluteFillObject
           }}
           name={icon || 'question-circle'}
