@@ -278,7 +278,8 @@ const mapStateToProps = (state: RootState): StateProps => {
       name: thread.name,
       // total number of images in the thread
       size: thread.photos.length,
-      members,
+      // required to ensure up to date index
+      members: Object.assign([], members),
       thumb
     }
   })
