@@ -90,13 +90,14 @@ class Avatar extends React.Component<Props, State> {
             borderRadius,
             width,
             height,
+            overflow: 'hidden',
             alignContent: 'center',
             alignItems: 'center',
             justifyContent: 'center'
           }}
         >
           <Icon
-            style={{ width, height, textAlign: 'center' }}
+            style={{ fontSize: Math.ceil(this.state.borderRadius * 2), textAlign: 'center' }}
             name={icon || 'question-circle'}
             size={heightNumber - borderWidth}
             color={colors.grey_5}
@@ -112,7 +113,7 @@ class Avatar extends React.Component<Props, State> {
       return (
         <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}>
           <TextileImage
-            style={{ ...(this.props.style || {}), width, height, borderRadius }}
+            style={{ width, height, borderRadius }}
             target={target}
             index={0}
             forMinWidth={widthNumber}
