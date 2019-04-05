@@ -133,7 +133,8 @@ class Avatar extends React.Component<Props, State> {
           style={{
             minHeight: height,
             minWidth: width,
-            alignSelf: 'center'
+            alignSelf: 'center',
+            backgroundColor: 'transparent'
           }}
           source={{
             uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d`,
@@ -146,7 +147,8 @@ class Avatar extends React.Component<Props, State> {
               style={{
                 minHeight: height,
                 minWidth: width,
-                alignSelf: 'center'
+                alignSelf: 'center',
+                backgroundColor: 'transparent'
               }}
               target={`${target}/0/${file}/d`}
               ipfs={true}
