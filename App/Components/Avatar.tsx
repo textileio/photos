@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View } from 'react-native'
+import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View, StyleSheet } from 'react-native'
 import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
@@ -18,6 +18,7 @@ interface StateProps {
   target?: string
   local: boolean
   started: boolean
+  online: boolean
   color: string
 }
 
@@ -52,9 +53,98 @@ class Avatar extends React.Component<Props, State> {
     })
   }
 
-  render () {
-    const { style, icon, target, local, started, color } = this.props
+  nodeImage (target: string, width: number | string, height: number | string, borderRadius: number) {
+    const widthNumber = typeof width === 'number' ? width as number : this.state.defaultSize
+    return (
+      <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}>
+        <TextileImage
+          style={{ minHeight: height, minWidth: width }}
+          target={target}
+          index={0}
+          forMinWidth={widthNumber}
+          resizeMode={'cover'}
+          onLayout={this.onImageLayout}
+        />
+      </View>
+    )
+  }
 
+  ipfsImage (online: boolean, target: string, width: number | string, height: number | string, borderRadius: number) {
+    const widthNumber = typeof width === 'number' ? width : parseInt(width, 10)
+    const file = widthNumber <= 50 ? 'small' : 'large'
+    return (
+      <View
+        style={{
+          ...(this.props.style || {}),
+          width,
+          height,
+          borderRadius,
+          overflow: 'hidden'
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            position: 'relative'
+          }}
+        >
+          {online &&
+            <TextileImage
+              style={{
+                minHeight: height, minWidth: width, alignSelf: 'center'
+              }}
+              target={`${target}/0/${file}/d`}
+              ipfs={true}
+              index={0}
+              forMinWidth={widthNumber}
+              resizeMode={'cover'}
+            />
+          }
+          <Image
+            source={{
+              uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/${file}/d`,
+              cache: 'force-cache'
+            }}
+            style={{
+              minHeight: height,
+              minWidth: width,
+              alignSelf: 'center'
+            }}
+            resizeMode={'cover'}
+            onLayout={this.onImageLayout}
+          />
+        </View>
+      </View>
+    )
+  }
+
+  placeHolder (width: number | string, height: number | string, borderRadius: number, icon?: string) {
+    const heightNumber = typeof height === 'number' ? height as number : this.state.defaultSize
+    const borderWidth = this.props.style && this.props.style.borderWidth ? this.props.style.borderWidth as number : 0
+    return (
+      <View
+        style={{
+          ...(this.props.style || {}),
+          borderRadius,
+          width,
+          height
+        }}
+      >
+        <Icon
+          style={{ 
+            ...StyleSheet.absoluteFillObject
+          }}
+          name={icon || 'question-circle'}
+          size={heightNumber - borderWidth}
+          color={colors.grey_5}
+          onLayout={this.onImageLayout}
+        />
+      </View>
+    )
+  }
+
+  render () {
+    const { style, icon, target, local, started, online, color } = this.props
     let width: string | number = this.state.defaultSize
     let height: string | number = this.state.defaultSize
     if (style) {
@@ -66,63 +156,18 @@ class Avatar extends React.Component<Props, State> {
     }
     const { borderRadius: radius } = this.state
     // avoid 0
-    const borderRadius = radius || Number(width) / 2
+    const borderRadius = radius || (Number(width) / 2) + 4
 
     if (icon || !started || !target) {
-      const heightNumber = typeof height === 'number' ? height as number : this.state.defaultSize
-      const borderWidth = this.props.style && this.props.style.borderWidth ? this.props.style.borderWidth as number : 0
-      return (
-        <View
-          style={{
-            ...(this.props.style || {}),
-            borderRadius,
-            width,
-            height,
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <Icon
-            style={{ width, height, textAlign: 'center' }}
-            name={icon || 'question-circle'}
-            size={heightNumber - borderWidth}
-            color={colors.grey_5}
-            onLayout={this.onImageLayout}
-          />
-        </View>
-      )
+      // returns an icon
+      return this.placeHolder(width, height, borderRadius, icon)
+    } else if (local) {
+      // returns an image from local textile node
+      return this.nodeImage(target, width, height, borderRadius)
+    } else {
+      // returns an image from http request
+      return this.ipfsImage(online, target, width, height, borderRadius)
     }
-
-    // local means the target belongs to the local node
-    if (local) {
-      const widthNumber = typeof width === 'number' ? width as number : this.state.defaultSize
-      return (
-        <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}>
-          <TextileImage
-            style={{ ...(this.props.style || {}), width, height, borderRadius }}
-            target={target}
-            index={0}
-            forMinWidth={widthNumber}
-            resizeMode={'cover'}
-            onLayout={this.onImageLayout}
-          />
-        </View>
-      )
-    }
-
-    const tintColor = !this.state.showIcon ? { tintColor: color } : {}
-    return (
-      <Image
-        {...this.props}
-        source={{ uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d` }}
-        style={{ ...(this.props.style || {}), ...tintColor, width, height, borderRadius }}
-        resizeMode={'cover'}
-        onLayout={this.onImageLayout}
-        defaultSource={require('../Images/v2/empty.png')}
-        onLoad={this.onIconLoad}
-      />
-    )
   }
 }
 
@@ -145,7 +190,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
 
   const started = state.textile.nodeState.state === 'started'
 
-  return { target, local, started, color }
+  const online = state.textile.online
+  return { target, local, started, color, online }
 }
 
 export default connect(mapStateToProps)(Avatar)

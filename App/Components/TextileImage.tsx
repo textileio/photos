@@ -6,6 +6,7 @@ export interface OwnProps {
   index: number,
   forMinWidth: number,
   resizeMode: string,
+  ipfs?: boolean,
   capInsets?: string,
   style?: ImageStyle | ImageStyle[],
   onLoad?: () => void,
@@ -35,6 +36,7 @@ export default class TextileImage extends React.Component<Props> {
   render () {
     const nativeProps = {
       ...this.props,
+      ifps: !!this.props.ipfs,
       forMinWidth: PixelRatio.getPixelSizeForLayoutSize(this.props.forMinWidth),
       onLoad: this._onLoaded.bind(this),
       onError: this._onError.bind(this)
