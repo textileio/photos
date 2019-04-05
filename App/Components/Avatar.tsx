@@ -77,17 +77,16 @@ class Avatar extends React.Component<Props, State> {
       }
     }
     const { borderRadius: radius } = this.state
-    const borderRadius = style && style.borderRadius ? style.borderRadius : radius || Number(width) / 2
+    const borderRadius = style && style.borderRadius ? style.borderRadius : typeof width === 'number' ? width / 2 : radius
 
     // If requested or if no target is known, show the ( ? ) icon
     if (icon || !target) {
-      const heightNumber = typeof height === 'number' ? height as number : this.state.defaultSize
-      const borderWidth = this.props.style && this.props.style.borderWidth ? this.props.style.borderWidth as number : 0
       const fontSize = Math.ceil(this.state.borderRadius * 2)
       return (
         <View
           style={{
             ...(this.props.style || {}),
+            backgroundColor: undefined,
             borderRadius,
             width,
             height,
