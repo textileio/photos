@@ -116,7 +116,7 @@ class Contacts extends React.Component<Props, State> {
 
   renderRow = (row: ListRenderItemInfo<pb.IContact>) => {
     const { item } = row
-    const leftItem = <Avatar style={{ width: 50, height: 50 }} target={item.avatar} />
+    const leftItem = <Avatar style={{ width: 50, height: 50, backgroundColor: color.grey_5 }} target={item.avatar} />
     const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
     return (
       <ListItem

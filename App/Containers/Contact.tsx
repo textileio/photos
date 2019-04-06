@@ -17,6 +17,7 @@ import styles from '../Components/Styles/ContactModal'
 import { RootState } from '../Redux/Types'
 import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import { color } from '../styles'
 
 interface NavProps {
   avatar: string
@@ -58,7 +59,7 @@ class ContactModal extends React.Component<Props> {
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
-          <Avatar style={{ width: 72, height: 72 }} target={avatar} />
+          <Avatar style={{ width: 72, height: 72, backgroundColor: color.grey_5 }} target={avatar} />
           <Text
             adjustsFontSizeToFit={true}
             numberOfLines={1}
