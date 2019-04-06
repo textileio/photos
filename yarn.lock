@@ -630,9 +630,9 @@
     react-native-safe-area-view "^0.11.0"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@textile/go-mobile@0.1.11":
+"@textile/js-types@0.1.11":
   version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-0.1.11.tgz#da3979c226f7b998d07e6b72a6835f6084d492ae"
+  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.1.11.tgz#650247c092cec006634fa5bcb3d199d15e18050d"
   dependencies:
     protobufjs "^6.8.8"
 
@@ -642,11 +642,11 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-sdk@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.1.tgz#8138d8b2700be9e97bc8c208dddabc44c088055e"
+"@textile/react-native-sdk@1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.3.tgz#f02f864ca5946f95063c0e1ea2279f04b033b376"
   dependencies:
-    "@textile/go-mobile" "0.1.11"
+    "@textile/js-types" "0.1.11"
     buffer "^5.2.1"
 
 "@textile/redux-saga-wait-for@1.0.1":
