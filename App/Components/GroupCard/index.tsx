@@ -67,7 +67,7 @@ const GroupCard = (props: ScreenProps) => {
             const imageStyle = cardImageStyle(members.length, i)
             return (
               <View key={mem.address} style={imageStyle} >
-                <Avatar style={{width: '100%', height: '100%'}} target={mem.avatar}/>
+                <Avatar style={{width: '100%', height: '100%', backgroundColor: color.grey_5}} target={mem.avatar}/>
               </View>
             )
           })}

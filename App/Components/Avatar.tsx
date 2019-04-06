@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { ImageProps, Image, ImageStyle, LayoutChangeEvent, View, ImageBackground } from 'react-native'
+import { ImageProps, ImageStyle, LayoutChangeEvent, View, ImageBackground } from 'react-native'
 import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
@@ -129,7 +129,7 @@ class Avatar extends React.Component<Props, State> {
             minHeight: height,
             minWidth: width,
             alignSelf: 'center',
-            backgroundColor: 'transparent'
+            backgroundColor: this.props.style && this.props.style.backgroundColor ? this.props.style.backgroundColor : 'transparent'
           }}
           source={{
             uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d`,
