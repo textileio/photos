@@ -6,7 +6,7 @@ import Avatar from '../../../Components/Avatar'
 import TextileImage from '../../../Components/TextileImage'
 
 import styles from './statics/styles'
-import { color } from '../../../styles';
+import { color } from '../../../styles'
 
 const FeedItem = props => {
   const { notification, onClick } = props
