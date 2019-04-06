@@ -106,14 +106,34 @@ class Avatar extends React.Component<Props, State> {
     if (local && started) {
       return (
         <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}>
-          <TextileImage
-            style={{ width, height, borderRadius }}
-            target={target}
-            index={0}
-            forMinWidth={widthNumber}
+          <ImageBackground
+            style={{
+              minHeight: height,
+              minWidth: width,
+              alignSelf: 'center',
+              backgroundColor: this.props.style && this.props.style.backgroundColor ? this.props.style.backgroundColor : 'transparent'
+            }}
+            source={{
+              uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d`,
+              cache: 'force-cache'
+            }}
             resizeMode={'cover'}
-            onLayout={this.onImageLayout}
-          />
+          >
+            <TextileImage
+              style={{
+                minHeight: height,
+                minWidth: width,
+                alignSelf: 'center',
+                backgroundColor: 'transparent',
+                borderRadius
+              }}
+              target={target}
+              index={0}
+              forMinWidth={widthNumber}
+              resizeMode={'cover'}
+              onLayout={this.onImageLayout}
+            />
+          </ImageBackground>
         </View>
       )
     }
