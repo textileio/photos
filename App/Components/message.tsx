@@ -17,7 +17,9 @@ const CONTAINER = (alignItems: 'center' | 'flex-start'): ViewStyle => {
 
 const AVATAR: ImageStyle = {
   height: size._024,
-  width: size._024
+  width: size._024,
+  backgroundColor: color.grey_5,
+  borderRadius: size._024 / 2
 }
 
 const CONTENT: ViewStyle = {

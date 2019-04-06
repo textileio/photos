@@ -19,7 +19,6 @@ interface StateProps {
   local: boolean
   started: boolean
   online: boolean
-  color: string
 }
 
 type Props = OwnProps & StateProps & Partial<ImageProps>
@@ -66,39 +65,35 @@ class Avatar extends React.Component<Props, State> {
   }
 
   render () {
-    const { style, icon, target, local, started, online, color } = this.props
-    let width: string | number = this.state.defaultSize
-    let height: string | number = this.state.defaultSize
-    if (style) {
-      if (style.width) {
-        width = height = style.width
-      } else if (style.height) {
-        width = height = style.height
-      }
-    }
+    const { style, icon, target, local, started, online } = this.props
+    const width = style && style.width ? style.width : this.state.defaultSize
+    const height = style && style.height ? style.height : width
+
     const { borderRadius: radius } = this.state
-    const borderRadius = radius || Number(width) / 2
+    const borderRadius = style && style.borderRadius ? style.borderRadius : typeof width === 'number' ? width / 2 : radius
 
     // If requested or if no target is known, show the ( ? ) icon
     if (icon || !target) {
-      const heightNumber = typeof height === 'number' ? height as number : this.state.defaultSize
-      const borderWidth = this.props.style && this.props.style.borderWidth ? this.props.style.borderWidth as number : 0
+      const fontSize = Math.ceil(this.state.borderRadius * 2)
       return (
         <View
           style={{
             ...(this.props.style || {}),
+            backgroundColor: undefined,
             borderRadius,
             width,
             height,
+            overflow: 'hidden',
             alignContent: 'center',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            padding: 0, margin: 0
           }}
         >
           <Icon
-            style={{ width, height, textAlign: 'center' }}
+            style={{ fontSize, lineHeight: fontSize, textAlign: 'center' }}
             name={icon || 'question-circle'}
-            size={heightNumber - borderWidth}
+            size={fontSize}
             color={colors.grey_5}
             onLayout={this.onImageLayout}
           />
@@ -112,7 +107,7 @@ class Avatar extends React.Component<Props, State> {
       return (
         <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}>
           <TextileImage
-            style={{ ...(this.props.style || {}), width, height, borderRadius }}
+            style={{ width, height, borderRadius }}
             target={target}
             index={0}
             forMinWidth={widthNumber}
@@ -175,17 +170,10 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     target = localTarget
   }
 
-  let color = 'hsla(200, 60%, 100%, 0.3)'
-  if (target) {
-    const h = Math.floor(360 * target.charCodeAt(target.length - 1) / 125)
-    const hue = h < 360 ? h > 0 ? h : 0 : 360
-    color = `hsla(${hue},90%,60%,0.3)`
-  }
-
   const started = state.textile.nodeState.state === 'started'
   const online = state.textile.online
 
-  return { target, local, started, color, online }
+  return { target, local, started, online }
 }
 
 export default connect(mapStateToProps)(Avatar)
