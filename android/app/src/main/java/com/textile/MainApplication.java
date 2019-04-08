@@ -1,6 +1,7 @@
 package com.textile;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -28,7 +29,7 @@ import com.vydia.RNUploader.UploaderReactPackage;
 import io.textile.rnmobile.RNTextilePackage;
 import com.textile.textilenode.TextilePackage;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends MultiDexApplication implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override

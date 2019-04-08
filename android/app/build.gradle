@@ -131,6 +131,7 @@ android {
         }
         // Added for react-native-config per https://github.com/luggit/react-native-config#advanced-android-setup
         resValue "string", "build_config_package", "com.textile"
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -173,6 +174,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
     implementation project(':@textile_react-native-sdk')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
