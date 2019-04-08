@@ -1,4 +1,8 @@
 import React from 'react'
+import { connect } from 'react-redux'
+
+import {RootAction, RootState} from '../Redux/Types'
+
 import { View, ImageResizeMode } from 'react-native'
 import { ImageStyle, Platform } from 'react-native'
 import TextileImage from './TextileImage'
@@ -16,19 +20,35 @@ export interface IProgressiveImageProps {
 }
 
 export interface IProgressiveImageState {
-  androidPreview: boolean
+  largeSuccess: boolean
+  thumbSuccess: boolean
+  smallSuccess: boolean
 }
 
-export default class ProgressiveImage extends React.Component<IProgressiveImageProps, IProgressiveImageState> {
-  constructor (props: IProgressiveImageProps) {
-    super(props)
-    this.state  = {
-      androidPreview: true
-    }
+class ProgressiveImage extends React.Component<IProgressiveImageProps & IProgressiveImageState & StateProps> {
+
+  state  = {
+    largeSuccess: false,
+    smallSuccess: false,
+    thumbSuccess: false
   }
 
-  androidLoad = () => {
-    this.setState({ androidPreview: false })
+  shouldComponentUpdate (nextProps, nextState) {
+    return this.props.started !== nextProps.started ||
+    this.state.largeSuccess !== nextState.largeSuccess ||
+    this.state.smallSuccess !== nextState.smallSuccess ||
+    this.state.thumbSuccess !== nextState.thumbSuccess
+  }
+
+  largeOnLoad = () => {
+    this.setState({ largeSuccess: true })
+  }
+
+  thumbOnLoad = () => {
+    this.setState({ thumbSuccess: true })
+  }
+  smallOnLoad = () => {
+    this.setState({ smallSuccess: true })
   }
 
   getThumbWidth = () => {
@@ -47,36 +67,39 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
   }
 
   android (resizeMode: ImageResizeMode) {
-    const baseStyle: ImageStyle = {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }
-    const previewStyle: ImageStyle[] = [{ backgroundColor: 'transparent'}, baseStyle, this.state.androidPreview ? { height: 0 } : {}]
+    const thumbStyle: ImageStyle = {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }
+    const smallStyle: ImageStyle[] = [{ backgroundColor: 'transparent'}, thumbStyle, !this.state.smallSuccess ? { height: 0 } : {}]
+    const previewStyle: ImageStyle[] = [{ backgroundColor: 'transparent'}, thumbStyle, !this.state.largeSuccess ? { height: 0 } : {}]
     // if no previewPath, don't try and render it here
     return (
       <View style={this.props.style} >
-        {this.props.showPreview && <TextileImage
+        {this.props.started && <TextileImage
           target={this.props.imageId}
           index={this.props.fileIndex}
           forMinWidth={this.getThumbWidth()}
-          style={baseStyle}
+          style={thumbStyle}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
+          onLoad={this.thumbOnLoad}
         />}
-        {this.props.showPreview && <TextileImage
+        {this.state.thumbSuccess && <TextileImage
           target={this.props.imageId}
           index={this.props.fileIndex}
           forMinWidth={this.getSmallWidth()}
-          style={baseStyle}
+          style={smallStyle}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
+          onLoad={this.smallOnLoad}
         />}
-        <TextileImage
+        {(this.state.smallSuccess) && <TextileImage
           target={this.props.imageId}
           index={this.props.fileIndex}
           forMinWidth={this.getFullWidth()}
           style={previewStyle}
           resizeMode={resizeMode}
           capInsets={this.props.capInsets}
-          onLoad={this.androidLoad}
-        />
+          onLoad={this.largeOnLoad}
+        />}
       </View>
     )
   }
@@ -146,3 +169,14 @@ export default class ProgressiveImage extends React.Component<IProgressiveImageP
     return this.android(resizeMode)
   }
 }
+
+interface StateProps {
+  started: boolean
+}
+const mapStateToProps = (state: RootState): StateProps => {
+  return {
+    started: state.textile.nodeState.state === 'started'
+  }
+}
+
+export default connect(mapStateToProps, undefined)(ProgressiveImage)
