@@ -62,7 +62,7 @@ PODS:
   - Textile (0.1.2):
     - Protobuf (~> 3.7)
     - TextileCore (~> 0.1.11)
-  - textile-react-native-sdk (1.1.3):
+  - textile-react-native-sdk (1.1.4):
     - React
     - Textile (= 0.1.2)
   - TextileCore (0.1.11):
@@ -121,7 +121,7 @@ SPEC CHECKSUMS:
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
   React: 67899bbb285ceb9b4ee1c88b3991602ba5772ad2
   Textile: 4462e40398b52323f719a7f7c7eec065e9152c07
-  textile-react-native-sdk: dc3b5eab09b58426bc2962f0bc276d5e7165fb87
+  textile-react-native-sdk: ea8634cce28b7866e6300efcd2b8487b37cfe5bd
   TextileCore: c483f3a6f8efa8e7efa2595a8de13948b3716636
   yoga: 192d724e53380b783e09b7d687a55cd8ed5188be
 
