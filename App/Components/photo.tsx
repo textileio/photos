@@ -116,6 +116,7 @@ class Photo extends Component<Props> {
           animationType={'fade'}
           transparent={false}
           visible={this.state.selected}
+          onRequestClose={this.toggleSelected}
         >
           {this.zoomableElement()}
         </Modal>

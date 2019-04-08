@@ -67,12 +67,7 @@ export async function launchCamera (): Promise<IPickerImage> {
     const options = {
       title: 'Camera',
       mediaType: 'photo' as 'photo',
-      noData: true,
-      storageOptions: {
-        path: 'images',
-        skipBackup: true,
-        waitUntilSaved: true
-      }
+      noData: true
     }
     ImagePicker.launchCamera(options, (response) => {
       let path: string
@@ -106,12 +101,7 @@ export async function launchImageLibrary (): Promise<IPickerImage> {
     const options = {
       title: 'Camera',
       mediaType: 'photo' as 'photo',
-      noData: true,
-      storageOptions: {
-        path: 'images',
-        skipBackup: true,
-        waitUntilSaved: true
-      }
+      noData: true
     }
     ImagePicker.launchImageLibrary(options, (response) => {
       let path: string

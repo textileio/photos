@@ -65,7 +65,11 @@ const GroupCard = (props: ScreenProps) => {
         <View style={styles.avatarContainer}>
           { members.slice(0, 8).map((mem: pb.IContact, i: number) => {
             const imageStyle = cardImageStyle(members.length, i)
-            return (<Avatar key={mem.address} style={imageStyle} target={mem.avatar}/>)
+            return (
+              <View key={mem.address} style={imageStyle} >
+                <Avatar style={{width: '100%', height: '100%', backgroundColor: color.grey_5}} target={mem.avatar}/>
+              </View>
+            )
           })}
         </View>
       </View>

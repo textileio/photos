@@ -17,6 +17,7 @@ import styles from '../Components/Styles/ContactModal'
 import { RootState } from '../Redux/Types'
 import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import { color } from '../styles'
 
 interface NavProps {
   avatar: string
@@ -25,6 +26,7 @@ interface NavProps {
 }
 
 interface StateProps {
+  displayName: string
   threadThumbs: ReadonlyArray<ThreadThumbs>
 }
 
@@ -53,12 +55,18 @@ class ContactModal extends React.Component<Props> {
 
   render () {
     const avatar = this.props.navigation.getParam('avatar')
-    const username = this.props.navigation.getParam('username')
+    // const username = this.props.navigation.getParam('username')
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
-          <Avatar style={{ width: 72, height: 72 }} target={avatar} />
-          <Text style={styles.username}>{username}</Text>
+          <Avatar style={{ width: 72, height: 72, backgroundColor: color.grey_5 }} target={avatar} />
+          <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
+            style={styles.username}
+          >
+            {this.props.displayName}
+          </Text>
         </View>
         <ScrollView style={styles.threadsList}>
           <Text style={styles.threadsTitle}>
@@ -76,8 +84,10 @@ class ContactModal extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
+  const username = ownProps.navigation.getParam('username')
   const address = ownProps.navigation.getParam('address')
   return {
+    displayName: username ? username : address.substring(0, 12),
     threadThumbs: getThreadThumbs(state, address, 'name')
   }
 }

@@ -6,6 +6,7 @@ import Avatar from '../../../Components/Avatar'
 import TextileImage from '../../../Components/TextileImage'
 
 import styles from './statics/styles'
+import { color } from '../../../styles'
 
 const FeedItem = props => {
   const { notification, onClick } = props
@@ -35,7 +36,7 @@ const FeedItem = props => {
       style={{...readStyle, justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}
     >
       <Avatar
-        style={{ width: 24, height: 24 }}
+        style={{ width: '100%', height: '100%', borderRadius: 16, backgroundColor: color.grey_5 }}
         target={notification.avatar}
       />
     </View>

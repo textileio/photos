@@ -310,13 +310,27 @@ const migrations: MigrationManifest = {
     const state = persistedState as any
     const { migration, ...rest } = state
     return rest
+  },
+  20: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        verboseUiOptions: {
+          nodeStateOverlay: true,
+          nodeStateNotifications: true,
+          nodeErrorNotifications: true
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 19,
+  version: 20,
   whitelist: ['account', 'preferences', 'uploadingImages', 'group', 'cameraRoll', 'storage', 'deviceLogs'],
   migrate: createMigrate(migrations, { debug: false })
 }

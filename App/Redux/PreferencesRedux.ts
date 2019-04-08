@@ -19,6 +19,16 @@ const actions = {
   }),
   updateViewSetting: createAction('TOGGLE_VIEW_SETTING', (resolve) => {
     return (name: string, value: string) => resolve({ name, value })
+  }),
+  // Verbose UI options
+  toggleNodeStateNotifications: createAction('TOGGLE_NODE_STATE_NOTIFICATIONS', (resolve) => {
+    return () => resolve()
+  }),
+  toggleNodeStateOverlay: createAction('TOGGLE_NODE_STATE_OVERLAY', (resolve) => {
+    return () => resolve()
+  }),
+  toggleNodeErrorNotifications: createAction('TOGGLE_NODE_ERROR_NOTIFICATIONS', (resolve) => {
+    return () => resolve()
   })
 }
 
@@ -45,17 +55,21 @@ export interface ViewSettings {
   selectedWalletTab: 'Photos' | 'Groups' | 'Contacts',
 }
 export interface PreferencesState {
-  verboseUi: boolean
   readonly services: {readonly [k in ServiceType]: Service}
   readonly storage: {readonly [k in StorageType]: Service}
   readonly tourScreens: {readonly [k in TourScreens]: boolean} // true = still need to show, false = no need
   viewSettings: ViewSettings
   onboarded: boolean
+  verboseUi: boolean
+  verboseUiOptions: {
+    nodeStateOverlay: boolean
+    nodeStateNotifications: boolean
+    nodeErrorNotifications: boolean
+  }
 }
 
 export const initialState: PreferencesState = {
   onboarded: false,
-  verboseUi: false,
   tourScreens: {
     wallet: true,
     threads: true,
@@ -113,11 +127,23 @@ export const initialState: PreferencesState = {
   },
   viewSettings: {
     selectedWalletTab: 'Groups'
+  },
+  verboseUi: false,
+  verboseUiOptions: {
+    nodeStateOverlay: true,
+    nodeStateNotifications: true,
+    nodeErrorNotifications: true
   }
 }
 
 export function reducer (state: PreferencesState = initialState, action: PreferencesAction): PreferencesState {
   switch (action.type) {
+    case getType(actions.toggleNodeErrorNotifications):
+      return { ...state, verboseUiOptions: {...state.verboseUiOptions, nodeErrorNotifications: !state.verboseUiOptions.nodeErrorNotifications} }
+    case getType(actions.toggleNodeStateNotifications):
+      return { ...state, verboseUiOptions: {...state.verboseUiOptions, nodeStateNotifications: !state.verboseUiOptions.nodeStateNotifications} }
+    case getType(actions.toggleNodeStateOverlay):
+      return { ...state, verboseUiOptions: {...state.verboseUiOptions, nodeStateOverlay: !state.verboseUiOptions.nodeStateOverlay} }
     case getType(actions.onboardingSuccess):
       return { ...state, onboarded: true }
     case getType(actions.toggleVerboseUi):
@@ -147,6 +173,8 @@ export const PreferencesSelectors = {
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
   storage: (state: RootState, name: StorageType) => state.preferences.storage[name],
   verboseUi: (state: RootState) => state.preferences.verboseUi,
+  showNodeStateNotification: (state: RootState) => state.preferences.verboseUi && state.preferences.verboseUiOptions.nodeStateNotifications,
+  showNodeErrorNotification: (state: RootState) => state.preferences.verboseUi && state.preferences.verboseUiOptions.nodeErrorNotifications,
   autoPinStatus: (state: RootState) => state.preferences.storage.autoPinPhotos.status,
   showNotificationPrompt: (state: RootState) => state.preferences.tourScreens.notifications,
   showBackgroundLocationPrompt: (state: RootState) => {

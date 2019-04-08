@@ -59,6 +59,11 @@ Object {
     "wallet": true,
   },
   "verboseUi": false,
+  "verboseUiOptions": Object {
+    "nodeErrorNotifications": true,
+    "nodeStateNotifications": true,
+    "nodeStateOverlay": true,
+  },
   "viewSettings": Object {
     "selectedWalletTab": "Groups",
   },

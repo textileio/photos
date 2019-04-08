@@ -6,7 +6,6 @@ import { PersistGate } from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import configureStore from '../Redux/configureStore'
 import { useScreens } from 'react-native-screens'
-import LocationEventHandler from '../Services/EventHandlers/LocationEventHandler'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
@@ -27,7 +26,6 @@ class App extends Component {
   textileNodeEventHandler = new TextileNodeEventHandler(store)
   uploadEventHandler = new UploadEventHandler(store)
   deepLinkEventHandler = new DeepLinkEventHandler(store)
-  backgroundLocationEventHandler = new LocationEventHandler(store)
   textile = Textile
 
   render () {
@@ -39,14 +37,6 @@ class App extends Component {
       </Provider>
     )
   }
-
-  componentDidMount () {
-    // Allows restore of persisted data (preferences) before running location setup
-    setTimeout(() => {
-      this.backgroundLocationEventHandler.setup()
-    }, 10)
-  }
-
   componentWillMount () {
     this.textile.setup(
       {
@@ -69,7 +59,6 @@ class App extends Component {
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
     this.backgroundFetchEventHandler.tearDown()
-    this.backgroundLocationEventHandler.tearDown()
     this.textile.tearDown()
   }
 

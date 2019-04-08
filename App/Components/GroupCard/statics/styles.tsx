@@ -26,6 +26,9 @@ export function cardImageStyle (count: number, index: number): ImageStyle {
   return {
     ...baseStyle,
     width: ROW_COLUMN * 0.66,
+    height: ROW_COLUMN * 0.66,
+    borderRadius: (ROW_COLUMN * 0.66) / 2,
+    overflow: 'hidden',
     backgroundColor: 'white', // avoids any transparencies blending
     marginBottom,
     marginLeft,

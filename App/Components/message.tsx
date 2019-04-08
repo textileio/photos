@@ -15,9 +15,15 @@ const CONTAINER = (alignItems: 'center' | 'flex-start'): ViewStyle => {
   }
 }
 
-const AVATAR: ImageStyle = {
+const AVATAR_PLACEHOLDER: ImageStyle = {
   height: size._024,
-  width: size._024
+  width: size._024,
+  borderRadius: size._024 / 2
+}
+
+const AVATAR: ImageStyle = {
+  ...AVATAR_PLACEHOLDER,
+  backgroundColor: color.grey_5
 }
 
 const CONTENT: ViewStyle = {
@@ -60,7 +66,7 @@ const Message = (props: Props) => {
   const alignItems = props.message ? 'flex-start' : 'center'
   return (
     <View style={[CONTAINER(alignItems), props.containerStyle, props.isSameUser && {paddingTop: 0}]}>
-      {props.isSameUser && <View style={AVATAR} />}
+      {props.isSameUser && <View style={AVATAR_PLACEHOLDER} />}
       {!props.isSameUser && <Avatar style={AVATAR} target={props.avatar} />}
       <View style={CONTENT}>
         {!props.isSameUser &&
