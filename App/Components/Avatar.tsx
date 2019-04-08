@@ -26,6 +26,7 @@ type Props = OwnProps & StateProps & Partial<ImageProps>
 interface State {
   borderRadius: number
   defaultSize: number
+  httpSuccess: boolean
   ipfsError?: boolean
 }
 
@@ -35,12 +36,13 @@ class Avatar extends React.Component<Props, State> {
     super(props)
     this.state = {
       borderRadius: 0,
-      defaultSize: 100
+      defaultSize: 50,
+      httpSuccess: false
     }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    const refresh = nextProps.target !== this.props.target ||
+    return nextProps.target !== this.props.target ||
       nextState.ipfsError !== this.state.ipfsError ||
       // node status hasn't changed
       (nextProps.online && !this.props.online) ||
@@ -49,7 +51,6 @@ class Avatar extends React.Component<Props, State> {
       nextState.borderRadius !== this.state.borderRadius ||
       (nextProps.style && !this.props.style) ||
       (nextProps.style !== undefined && this.props.style !== undefined && nextProps.style.width !== this.props.style.width)
-    return refresh
   }
 
   onImageLayout = (event: LayoutChangeEvent) => {
@@ -62,6 +63,17 @@ class Avatar extends React.Component<Props, State> {
     this.setState({
       ipfsError: true
     })
+  }
+  onHTTPLoad = () => {
+    // allow app to skip iPFS request if HTTP has already completed
+    this.setState({
+      httpSuccess: true
+    })
+  }
+
+  shouldShowIPFS = (resolution: string) => {
+    // Node should be online, no IPFS error already, and HTTP shouldn't have allready succeeded
+    return this.props.online && !this.state.ipfsError && (!this.state.httpSuccess || resolution !== 'small')
   }
 
   render () {
@@ -139,7 +151,8 @@ class Avatar extends React.Component<Props, State> {
     }
 
     // Progressive HTTP to IPFS avatar
-    const file = widthNumber <= 50 || this.state.ipfsError ? 'small' : 'large'
+    const resolution = widthNumber <= 50 || this.state.ipfsError ? 'small' : 'large'
+    const shouldShowIPFS = this.shouldShowIPFS(resolution)
     return (
       <View
         style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}
@@ -156,8 +169,9 @@ class Avatar extends React.Component<Props, State> {
             cache: 'force-cache'
           }}
           resizeMode={'cover'}
+          onLoad={this.onHTTPLoad}
         >
-          {online && !this.state.ipfsError &&
+          {shouldShowIPFS &&
             <TextileImage
               style={{
                 minHeight: height,
@@ -165,7 +179,7 @@ class Avatar extends React.Component<Props, State> {
                 alignSelf: 'center',
                 backgroundColor: 'transparent'
               }}
-              target={`${target}/0/${file}/d`}
+              target={`${target}/0/${resolution}/d`}
               ipfs={true}
               index={0}
               forMinWidth={widthNumber}
