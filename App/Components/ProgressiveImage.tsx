@@ -19,15 +19,15 @@ export interface IProgressiveImageProps {
   style?: ImageStyle
 }
 
-export interface IProgressiveImageState {
+interface IProgressiveImageState {
   largeSuccess: boolean
   thumbSuccess: boolean
   smallSuccess: boolean
 }
 
-class ProgressiveImage extends React.Component<IProgressiveImageProps & IProgressiveImageState & StateProps> {
+class ProgressiveImage extends React.Component<IProgressiveImageProps & StateProps> {
 
-  state  = {
+  state: IProgressiveImageState = {
     largeSuccess: false,
     smallSuccess: false,
     thumbSuccess: false
