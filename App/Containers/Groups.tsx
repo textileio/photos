@@ -2,7 +2,7 @@ import React from 'react'
 import {Dispatch} from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, View, Text, TouchableOpacity, Alert, Platform } from 'react-native'
+import { FlatList, View, Text, TouchableOpacity, Alert, Platform, ListRenderItemInfo } from 'react-native'
 
 import {RootAction, RootState} from '../Redux/Types'
 
@@ -100,7 +100,7 @@ class Groups extends React.Component<Props, State> {
     this.props.navigation.openDrawer()
   }
 
-  _renderItem = (rowData: any) => {
+  _renderItem = (rowData: ListRenderItemInfo<GroupAuthors>) => {
     const item: GroupAuthors = rowData.item
     return (
       <GroupCard id={item.id} {...item} onPress={this._onPressItem} />
