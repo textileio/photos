@@ -54,11 +54,9 @@ class App extends Component {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
     }
-    this.notificationEventHandler.tearDown()
     this.textileNodeEventHandler.tearDown()
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
-    this.backgroundFetchEventHandler.tearDown()
     this.textile.tearDown()
   }
 
