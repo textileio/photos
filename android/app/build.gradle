@@ -131,6 +131,7 @@ android {
         }
         // Added for react-native-config per https://github.com/luggit/react-native-config#advanced-android-setup
         resValue "string", "build_config_package", "com.textile"
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -173,26 +174,26 @@ android {
 }
 
 dependencies {
-    compile project(':@textile_react-native-sdk')
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation project(':@textile_react-native-sdk')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-contacts')
-    compile project(':react-native-background-fetch')
-    compile project(':react-native-push-notification')
-    compile project(':react-native-background-upload')
-    compile project(':react-native-fs')
-    compile project(':react-native-image-picker')
-    compile project(':react-native-config')
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+    implementation project(':react-native-background-fetch')
+    implementation project(':react-native-push-notification')
+    implementation project(':react-native-background-upload')
+    implementation project(':react-native-fs')
+    implementation project(':react-native-image-picker')
+    implementation project(':react-native-config')
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true;
     }
-    compile project(':react-native-fabric')
-    compile project(':react-native-background-timer')
-    compile project(':react-native-version-number')
-    compile project(':react-native-gesture-handler')
-    compile project(':react-native-screens')
-    compile project(':mobile')
+    implementation project(':react-native-fabric')
+    implementation project(':react-native-background-timer')
+    implementation project(':react-native-version-number')
+    implementation project(':react-native-gesture-handler')
+    implementation project(':react-native-screens')
 }
 
 // Run this once to be able to run the application with BUCK
