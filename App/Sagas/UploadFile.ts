@@ -5,7 +5,7 @@ import Config from 'react-native-config'
 import { getSession } from './Account/AccountSagas'
 import { pb } from '@textile/react-native-sdk'
 
-export function * uploadFile (id: string, payloadPath: string) {
+export function * uploadFile(id: string, payloadPath: string) {
   const session: pb.ICafeSession | undefined = yield call(getSession)
   if (!session || !session.cafe) {
     return

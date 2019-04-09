@@ -13,7 +13,7 @@ export function * handleAddMessageRequest(action: ActionType<typeof addMessage.r
   }
 }
 
-export default function * () {
+export default function *() {
   yield all([
     takeEvery(getType(addMessage.request), handleAddMessageRequest)
   ])

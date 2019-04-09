@@ -5,7 +5,7 @@ import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
-import { util } from '@textile/react-native-sdk'
+import { pb, util } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
@@ -24,7 +24,6 @@ import UIActions from '../../Redux/UIRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
-import { pb } from '@textile/react-native-sdk'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -108,7 +107,7 @@ class Group extends React.PureComponent<Props, State> {
     })
   }
 
-  render () {
+  render() {
     // flexGrow allows android to scroll, however https://github.com/facebook/react-native/issues/19434 is still an issue
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
@@ -296,8 +295,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
     navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
     leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
-    retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry( key )) },
-    cancelShare: (key: string) => { dispatch(groupActions.addPhoto.cancelRequest( key )) }
+    retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry(key)) },
+    cancelShare: (key: string) => { dispatch(groupActions.addPhoto.cancelRequest(key)) }
   }
 }
 

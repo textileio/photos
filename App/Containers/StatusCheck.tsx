@@ -18,7 +18,7 @@ type Props = StateProps & NavigationScreenProps<{}>
 
 class StatusCheck extends React.Component<Props, {}> {
 
-  static getDerivedStateFromProps (props: Props, state: {}) {
+  static getDerivedStateFromProps(props: Props, state: {}) {
     if (!props.nodeError && props.nodeStarted && !props.onboarded) {
       props.navigation.navigate('OnboardingNavigation')
     } else if (!props.nodeError && props.nodeStarted) {
@@ -28,12 +28,12 @@ class StatusCheck extends React.Component<Props, {}> {
     return null
   }
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {}
   }
 
-  render () {
+  render() {
     if (this.props.nodeError) {
       return (
         <FatalErrorView message={this.props.nodeError} />

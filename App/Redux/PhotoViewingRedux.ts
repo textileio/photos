@@ -111,7 +111,7 @@ const initialState: PhotoViewingState = {
   threads: {}
 }
 
-export function reducer (state: PhotoViewingState = initialState, action: PhotoViewingAction): PhotoViewingState {
+export function reducer(state: PhotoViewingState = initialState, action: PhotoViewingAction): PhotoViewingState {
   switch (action.type) {
     case getType(actions.insertThread): {
       const { id, key, name } = action.payload
@@ -210,7 +210,7 @@ export function reducer (state: PhotoViewingState = initialState, action: PhotoV
     case getType(actions.viewWalletPhoto): {
       const { photoId } = action.payload
       const defaultThreadData = Object.keys(state.threads)
-        .map((key) => state.threads[key]! )
+        .map((key) => state.threads[key]!)
         .find((threadData) => threadData.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
       if (!defaultThreadData) {
         return state

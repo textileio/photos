@@ -3,10 +3,9 @@ import { Dispatch } from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle, Dimensions } from 'react-native'
-import { util } from '@textile/react-native-sdk'
+import { pb, util } from '@textile/react-native-sdk'
 import moment from 'moment'
 
-import { pb } from '@textile/react-native-sdk'
 import { RootState, RootAction } from '../Redux/Types'
 
 import UIActions from '../Redux/UIRedux'
@@ -64,7 +63,7 @@ class PhotoScreen extends React.Component<Props> {
     }
   }
 
-  render () {
+  render() {
     if (!this.props.photo) {
       return <ScrollView style={CONTAINER} />
     }

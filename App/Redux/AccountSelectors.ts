@@ -7,15 +7,15 @@ import { RootState } from './Types'
  * Used to filter Account Thread out of Thread lists for display
  * Account Thread Key === Account Address
  */
-export function getPeerId (state: RootState): string | undefined {
+export function getPeerId(state: RootState): string | undefined {
   return state.account.peerId.value
 }
 
-export function getAddress (state: RootState): string | undefined {
+export function getAddress(state: RootState): string | undefined {
   return state.account.address.value
 }
 
-export function getUsername (state: RootState): string | undefined {
+export function getUsername(state: RootState): string | undefined {
   return state.account.profile.value &&
          state.account.profile.value.name
 }

@@ -81,7 +81,7 @@ class AddCaptionScreen extends React.Component<Props> {
     this.props.updateComment(text)
   }
 
-  componentWillMount () {
+  componentWillMount() {
     // TODO: Investigate why share would ever be null? https://github.com/textileio/textile-mobile/issues/888
     this.props.navigation.setParams({
       disableShare: this.props.selectedThreadId === undefined || !this.props.share,
@@ -98,7 +98,7 @@ class AddCaptionScreen extends React.Component<Props> {
       shareToNewThread: this._shareToNewThread.bind(this)
     })
   }
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.selectedThreadId !== this.props.selectedThreadId) {
       this.props.navigation.setParams({
         disableShare: this.props.selectedThreadId === undefined
@@ -106,35 +106,35 @@ class AddCaptionScreen extends React.Component<Props> {
     }
   }
 
-  _shareToNewThread (withPhoto: pb.IFiles, withThreadName: string) {
+  _shareToNewThread(withPhoto: pb.IFiles, withThreadName: string) {
     if (withPhoto.target) {
       this.props.shareNewThread(withPhoto.target, withThreadName, this.props.comment)
     }
   }
 
-  _createNewThread () {
+  _createNewThread() {
     this.props.navigation.navigate('AddThread', {selectForShare: true, backTo: 'ThreadSharePhoto'})
   }
 
-  openThreadModal () {
+  openThreadModal() {
     return () => {
       this.setState({showCreateGroupModal: true})
     }
   }
 
-  cancelCreateThread () {
+  cancelCreateThread() {
     return () => {
       this.setState({showCreateGroupModal: false})
     }
   }
 
-  completeCreateThread () {
+  completeCreateThread() {
     return () => {
       this.setState({showCreateGroupModal: false})
     }
   }
 
-  _renderImage () {
+  _renderImage() {
     const { image } = this.props
     if (image && (image as SharedImage).uri) {
       const sharedImage = image as SharedImage
@@ -162,7 +162,7 @@ class AddCaptionScreen extends React.Component<Props> {
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.contentContainer}>
         <View style={styles.topRow}>

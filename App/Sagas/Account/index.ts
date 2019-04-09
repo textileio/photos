@@ -10,7 +10,7 @@ import {
   onNodeStarted
 } from './AccountSagas'
 
-export default function * accountSaga () {
+export default function * accountSaga() {
   yield all([
     call(onNodeStarted),
     call(refreshProfile),

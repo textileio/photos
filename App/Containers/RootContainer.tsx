@@ -23,11 +23,11 @@ interface DispatchProps {
 }
 
 class RootContainer extends Component<StateProps & DispatchProps> {
-  handleNewPosition () {
+  handleNewPosition() {
     this.props.locationUpdate()
   }
 
-  setupLocationMonitoring () {
+  setupLocationMonitoring() {
     if (Platform.OS === 'android') {
       this.setupAndroid()
     } else {
@@ -42,18 +42,18 @@ class RootContainer extends Component<StateProps & DispatchProps> {
     }
   }
 
-  watchPosition () {
+  watchPosition() {
     // Only watchPosition if the user has enabled it in settings
     if (this.props.monitorLocation) {
       navigator.geolocation.watchPosition(this.handleNewPosition.bind(this), undefined, { useSignificantChanges: true })
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setupLocationMonitoring()
   }
 
-  render () {
+  render() {
     const barStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content'
     const overlayMessage = this.props.nodeState
     return (

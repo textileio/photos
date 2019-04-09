@@ -29,7 +29,7 @@ export function * handleLoadGroupItemsRequest(action: ActionType<typeof loadFeed
   }
 }
 
-export default function * () {
+export default function *() {
   yield all([
     takeEvery(getType(refreshFeed.request), handleRefreshGroupRequest),
     takeEvery(getType(loadFeedItems.request), handleLoadGroupItemsRequest)

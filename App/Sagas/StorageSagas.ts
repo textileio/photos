@@ -5,7 +5,7 @@ import {ActionType, getType} from 'typesafe-actions'
 import PreferencesActions, {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import { logNewEvent } from './DeviceLogs'
 
-export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLocalPhoto>) {
+export function * newLocalPhoto(action: ActionType<typeof StorageActions.newLocalPhoto>) {
   const { photo } = action.payload
   const sharedImage: SharedImage = {
     isAvatar: false,
@@ -18,7 +18,7 @@ export function * newLocalPhoto (action: ActionType<typeof StorageActions.newLoc
   yield call(logNewEvent, 'newLocalPhoto', photo.path)
 }
 
-export function * toggleStorage (action: ActionType<typeof PreferencesActions.toggleStorageRequest>) {
+export function * toggleStorage(action: ActionType<typeof PreferencesActions.toggleStorageRequest>) {
   const {name} = action.payload
   const storageOption = yield select(PreferencesSelectors.storage, name)
   const storageStatus = !storageOption ? false : storageOption.status
@@ -29,7 +29,7 @@ export function * toggleStorage (action: ActionType<typeof PreferencesActions.to
   }
 }
 
-export function * refreshLocalImages () {
+export function * refreshLocalImages() {
   // while (yield take(getType(StorageActions.refreshLocalImagesRequest))) {
   //   try {
   //     const autoPinEnabled = yield select(PreferencesSelectors.autoPinStatus)

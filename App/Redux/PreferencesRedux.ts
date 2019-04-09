@@ -136,7 +136,7 @@ export const initialState: PreferencesState = {
   }
 }
 
-export function reducer (state: PreferencesState = initialState, action: PreferencesAction): PreferencesState {
+export function reducer(state: PreferencesState = initialState, action: PreferencesAction): PreferencesState {
   switch (action.type) {
     case getType(actions.toggleNodeErrorNotifications):
       return { ...state, verboseUiOptions: {...state.verboseUiOptions, nodeErrorNotifications: !state.verboseUiOptions.nodeErrorNotifications} }

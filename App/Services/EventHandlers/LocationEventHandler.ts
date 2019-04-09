@@ -14,11 +14,11 @@ export default class LocationEventHandler {
     this.status = false
   }
 
-  handleNewPosition () {
+  handleNewPosition() {
     this.store.dispatch(TriggersActions.locationUpdate())
   }
 
-  setup () {
+  setup() {
     if (!this.status) {
       const currentState = this.store.getState()
       if (currentState.preferences.services.backgroundLocation.status === true) {
@@ -39,11 +39,7 @@ export default class LocationEventHandler {
     }
   }
 
-  watchPosition () {
+  watchPosition() {
     navigator.geolocation.watchPosition(this.handleNewPosition.bind(this), undefined, { useSignificantChanges: true })
-  }
-
-  tearDown () {
-
   }
 }

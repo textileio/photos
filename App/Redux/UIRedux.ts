@@ -99,7 +99,7 @@ export const initialState: UIState = {
   chosenProfilePhoto: {}
 }
 
-export function reducer (state: UIState = initialState, action: UIAction): UIState {
+export function reducer(state: UIState = initialState, action: UIAction): UIState {
   switch (action.type) {
     case getType(actions.chooseProfilePhotoSuccess):
     case getType(actions.chooseProfilePhotoError):
@@ -119,7 +119,7 @@ export function reducer (state: UIState = initialState, action: UIAction): UISta
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment } }
     case getType(actions.sharePhotoRequest):
     case getType(actions.cancelSharingPhoto):
-      return { ... state, sharingPhoto: undefined }
+      return { ...state, sharingPhoto: undefined }
     case getType(actions.newImagePickerError):
       const msg = action.payload.message || action.payload.error.message
       return { ...state, imagePickerError:  msg}

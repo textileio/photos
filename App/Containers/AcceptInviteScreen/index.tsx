@@ -83,7 +83,7 @@ class AcceptInviteScreen extends React.Component<StateProps & DispatchProps & Na
     this.props.acceptExternalInvite()
   }
 
-  render () {
+  render() {
     const inviter = this.props.navigation.getParam('inviter') || 'unknown user'
     const threadName = this.props.navigation.getParam('name') || 'unknown thread'
     return (

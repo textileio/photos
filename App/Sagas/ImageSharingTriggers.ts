@@ -3,17 +3,16 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNFS from 'react-native-fs'
 import Upload from 'react-native-background-upload'
 
-import { SharedImage } from '../features/group/add-photo/models'
+import { SharedImage, ProcessingImage } from '../features/group/add-photo/models'
 
 import { groupActions, groupSelectors } from '../features/group'
-import { ProcessingImage } from '../features/group/add-photo/models'
 import AccountActions from '../Redux/AccountRedux'
 import UIActions from '../Redux/UIRedux'
 import { insertImage, prepareImage, uploadPins, monitorForUploadsComplete, shareWalletImage, shareToThread } from './ImageSharingSagas'
 import { logNewEvent } from './DeviceLogs'
 import { RootState } from '../Redux/Types'
 
-export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.sharePhotoRequest>) {
+export function * handleSharePhotoRequest(action: ActionType<typeof UIActions.sharePhotoRequest>) {
   const { image, threadId, comment } = action.payload
   if (typeof image === 'string' && threadId) {
     yield call(shareWalletImage, image, threadId, comment)
@@ -22,7 +21,7 @@ export function * handleSharePhotoRequest (action: ActionType<typeof UIActions.s
   }
 }
 
-export function * handleImageUploadComplete (action: ActionType<typeof groupActions.addPhoto.imageUploadComplete>) {
+export function * handleImageUploadComplete(action: ActionType<typeof groupActions.addPhoto.imageUploadComplete>) {
   // This saga just listens for complete uploads and deletes the source file
   // ImageSharingSagas.monitorForUploadsComplete is what triggers the next step once all uploads are complete
   const { uploadId } = action.payload
@@ -38,18 +37,20 @@ export function * handleImageUploadComplete (action: ActionType<typeof groupActi
           yield call(RNFS.unlink, path)
         }
       }
-    } catch (e) {}
+    } catch (error) {
+      yield call(logNewEvent, 'handleImageUploadComplete', error.message, true)
+    }
   }
 }
 
-export function * startMonitoringExistingUploads () {
+export function * startMonitoringExistingUploads() {
   const uploadingImages: ReadonlyArray<ProcessingImage> = yield select((state: RootState) => groupSelectors.addPhotoSelectors.allUploadingImages(state.group.addPhoto))
   for (const uploadingImage of uploadingImages) {
     yield fork(monitorForUploadsComplete, uploadingImage.uuid)
   }
 }
 
-export function * retryImageShare (action: ActionType<typeof groupActions.addPhoto.retry>) {
+export function * retryImageShare(action: ActionType<typeof groupActions.addPhoto.retry>) {
   const { uuid } = action.payload
   yield call(logNewEvent, 'retryImageShare', uuid)
   const selector = (state: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(state.group.addPhoto)
@@ -66,7 +67,7 @@ export function * retryImageShare (action: ActionType<typeof groupActions.addPho
   }
 }
 
-export function * retryWithTokenRefresh (action: ActionType<typeof groupActions.addPhoto.error>) {
+export function * retryWithTokenRefresh(action: ActionType<typeof groupActions.addPhoto.error>) {
   if (action.payload.error.type !== 'expiredToken') {
     return
   }
@@ -80,7 +81,7 @@ export function * retryWithTokenRefresh (action: ActionType<typeof groupActions.
   }
 }
 
-export function * cancelImageShare (action: ActionType<typeof groupActions.addPhoto.cancelRequest>) {
+export function * cancelImageShare(action: ActionType<typeof groupActions.addPhoto.cancelRequest>) {
   const { uuid } = action.payload
   try {
     const selector = (state: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(state.group.addPhoto)
@@ -111,11 +112,13 @@ export function * cancelImageShare (action: ActionType<typeof groupActions.addPh
 
     // What else? Undo local add, remote pin, remove from wallet?
 
-  } catch (e) {}
+  } catch (error) {
+    yield call(logNewEvent, 'cancelImageShare', error.message, true)
+  }
   yield put(groupActions.addPhoto.cancelComplete(uuid))
 }
 
-export function * handleImageProcessingError (action: ActionType<typeof groupActions.addPhoto.error>) {
+export function * handleImageProcessingError(action: ActionType<typeof groupActions.addPhoto.error>) {
   const { underlyingError } = action.payload.error
   const message = underlyingError.message as string || underlyingError as string || 'handleImageProcessingError'
   yield call(logNewEvent, 'Image Processing Error', message, true)

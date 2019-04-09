@@ -18,7 +18,6 @@ import {
   pb,
   API
 } from '@textile/react-native-sdk'
-import { notificationTypeToString } from '../Services/Notifications'
 import NavigationService from '../Services/NavigationService'
 
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -30,11 +29,11 @@ import TextileEventsActions, { TextileEventsSelectors } from '../Redux/TextileEv
 import * as NotificationsServices from '../Services/Notifications'
 import {logNewEvent} from './DeviceLogs'
 
-export function * enable () {
+export function * enable() {
   yield call(NotificationsServices.enable)
 }
 
-export function * readAllNotifications (action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
+export function * readAllNotifications(action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
   try {
     yield call(API.notifications.readAll)
   } catch (error) {
@@ -42,7 +41,7 @@ export function * readAllNotifications (action: ActionType<typeof NotificationsA
   }
 }
 
-export function * handleNewNotification (action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
+export function * handleNewNotification(action: ActionType<typeof NotificationsActions.newNotificationRequest>) {
   yield call(logNewEvent, 'Notifications', 'new request')
   try {
     const service = yield select(PreferencesSelectors.service, 'notifications')
@@ -54,7 +53,7 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
     const type = notification.type
 
     // if notifications for this type are not enabled, return
-    const typeString = notificationTypeToString(type)
+    const typeString = NotificationsServices.notificationTypeToString(type)
     const preferences = yield select(PreferencesSelectors.service, typeString as ServiceType)
     if (!preferences || preferences.status !== true) {
       return
@@ -76,7 +75,7 @@ export function * handleNewNotification (action: ActionType<typeof Notifications
   }
 }
 
-export function * handleEngagement (action: ActionType<typeof NotificationsActions.notificationEngagement>) {
+export function * handleEngagement(action: ActionType<typeof NotificationsActions.notificationEngagement>) {
   // Deals with the Engagement response from clicking a native notification
   const data: any = action.payload.engagement.data
   try {
@@ -88,7 +87,7 @@ export function * handleEngagement (action: ActionType<typeof NotificationsActio
   }
 }
 
-export function * notificationView (action: ActionType<typeof NotificationsActions.notificationSuccess>) {
+export function * notificationView(action: ActionType<typeof NotificationsActions.notificationSuccess>) {
   // Handles a view request for in App notification clicking or Engagement notification clicking
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
@@ -135,7 +134,7 @@ export function * notificationView (action: ActionType<typeof NotificationsActio
   }
 }
 
-export function * refreshNotifications () {
+export function * refreshNotifications() {
   try {
     const busy = yield select(NotificationsSelectors.refreshing)
     // skip multi-request back to back
@@ -151,7 +150,7 @@ export function * refreshNotifications () {
   }
 }
 
-export function * reviewThreadInvite (action: ActionType<typeof NotificationsActions.reviewNotificationThreadInvite>) {
+export function * reviewThreadInvite(action: ActionType<typeof NotificationsActions.reviewNotificationThreadInvite>) {
   const { notification } = action.payload
   try {
     const payload = NotificationsServices.toPayload(notification)

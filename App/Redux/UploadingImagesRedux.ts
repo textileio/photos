@@ -71,7 +71,7 @@ export const UploadingImagesSelectors = {
   }
 }
 
-export function reducer (state: UploadingImagesState = initialState, action: UploadingImagesAction): UploadingImagesState {
+export function reducer(state: UploadingImagesState = initialState, action: UploadingImagesAction): UploadingImagesState {
   switch (action.type) {
     case getType(actions.addImage): {
       const { path, dataId, attempts } = action.payload
