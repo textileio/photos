@@ -5,18 +5,18 @@ import { RootState } from '../../Redux/Types'
 import { groupActions, groupSelectors } from '../../features/group'
 
 export default class UploadEventHandler {
-  public store: Store<RootState>
+  store: Store<RootState>
 
   constructor(store: Store<RootState>) {
     this.store = store
     this.setup()
   }
 
-  public uploadProgress(e: any) {
+  uploadProgress(e: any) {
     this.store.dispatch(groupActions.addPhoto.imageUploadProgress(e.id, e.progress))
   }
 
-  public uploadComplete(e: any) {
+  uploadComplete(e: any) {
     const { responseCode } = e
     if (responseCode >= 200 && responseCode < 300) {
       this.store.dispatch(groupActions.addPhoto.imageUploadComplete(e.id, e.responseCode, e.responseBody))
@@ -43,7 +43,7 @@ export default class UploadEventHandler {
     }
   }
 
-  public uploadCancelled(e: any) {
+  uploadCancelled(e: any) {
     const processingImage = groupSelectors.addPhotoSelectors.processingImageForUploadId(this.store.getState().group.addPhoto, e.id)
     if (processingImage) {
       this.store.dispatch(groupActions.addPhoto.error({
@@ -55,7 +55,7 @@ export default class UploadEventHandler {
     }
   }
 
-  public uploadError(e: any) {
+  uploadError(e: any) {
     const processingImage = groupSelectors.addPhotoSelectors.processingImageForUploadId(this.store.getState().group.addPhoto, e.id)
     if (processingImage) {
       this.store.dispatch(groupActions.addPhoto.error({
@@ -67,14 +67,14 @@ export default class UploadEventHandler {
     }
   }
 
-  public setup() {
+  setup() {
     Upload.addListener('progress', undefined, this.uploadProgress.bind(this))
     Upload.addListener('completed', undefined, this.uploadComplete.bind(this))
     Upload.addListener('cancelled', undefined, this.uploadCancelled.bind(this))
     Upload.addListener('error', undefined, this.uploadError.bind(this))
   }
 
-  public tearDown() {
+  tearDown() {
     // TODO: Do we need to unsubscribe?
   }
 }

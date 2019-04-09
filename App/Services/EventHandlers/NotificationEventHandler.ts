@@ -23,14 +23,14 @@ export interface PushNotification {
 }
 
 export default class NotificationEventHandler {
-  public store: Store<RootState>
+  store: Store<RootState>
 
   constructor(store: Store<RootState>) {
     this.store = store
     this.setup()
   }
 
-  public onNotification(notification: PushNotification) {
+  onNotification(notification: PushNotification) {
     if (notification.userInteraction) {
       if (notification.userInfo && notification.userInfo.notification) {
         this.store.dispatch(NotificationsActions.notificationSuccess(notification.userInfo.notification))
@@ -43,7 +43,7 @@ export default class NotificationEventHandler {
     }
   }
 
-  public setup() {
+  setup() {
     RNPushNotification.configure({
       // (required) Called when a remote or local notification is opened or received
       onNotification: this.onNotification.bind(this),

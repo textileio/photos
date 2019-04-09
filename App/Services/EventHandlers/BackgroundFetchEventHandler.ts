@@ -6,14 +6,14 @@ import { RootState } from '../../Redux/Types'
 import TriggersActions from '../../Redux/TriggersRedux'
 
 export default class BackgroundFetchEventHandler {
-  public store: Store<RootState>
+  store: Store<RootState>
 
   constructor(store: Store<RootState>) {
     this.store = store
     this.setup()
   }
 
-  public setup() {
+  setup() {
     BackgroundFetch.configure({}, () => {
       this.store.dispatch(TriggersActions.backgroundFetch())
     }, (error) => {
