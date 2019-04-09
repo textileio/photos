@@ -8,8 +8,7 @@ import Textile, {
 } from '@textile/react-native-sdk'
 import { SharedImage, ProcessingImage } from '../features/group/add-photo/models'
 import AccountActions from '../Redux/AccountRedux'
-import { groupActions } from '../features/group'
-import { groupSelectors } from '../features/group'
+import { groupActions, groupSelectors } from '../features/group'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import { ActionType, getType } from 'typesafe-actions'
@@ -17,6 +16,7 @@ import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 import { waitFor } from '@textile/redux-saga-wait-for'
 import { RootAction, RootState } from '../Redux/Types'
+import { logNewEvent } from './DeviceLogs'
 
 export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
   const { threadId } = action.payload
@@ -89,7 +89,7 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
   }
 }
 
-export function * shareWalletImage (id: string, threadId: string, comment?: string) {
+export function * shareWalletImage(id: string, threadId: string, comment?: string) {
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
     const blockId: string = yield call(API.files.addByTarget, id, threadId, comment)
@@ -99,13 +99,13 @@ export function * shareWalletImage (id: string, threadId: string, comment?: stri
   }
 }
 
-export function * insertImage (image: SharedImage, threadId: string, comment?: string) {
+export function * insertImage(image: SharedImage, threadId: string, comment?: string) {
   const id = uuid()
   yield put(groupActions.addPhoto.insertImage(id, image, threadId, comment))
   yield call(prepareImage, id)
 }
 
-export function * prepareImage (uuid: string) {
+export function * prepareImage(uuid: string) {
   try {
     const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
     const processingImage: ProcessingImage | undefined = yield select(selector)
@@ -131,7 +131,7 @@ export function * prepareImage (uuid: string) {
   }
 }
 
-export function * uploadPins (uuid: string) {
+export function * uploadPins(uuid: string) {
   try {
     const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
     const processingImage: ProcessingImage | undefined = yield select(selector)
@@ -163,7 +163,7 @@ export function * monitorForUploadsComplete(uuid: string) {
   }
 }
 
-export function * shareToThread (uuid: string) {
+export function * shareToThread(uuid: string) {
   try {
     const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
     const processingImage: ProcessingImage | undefined = yield select(selector)
@@ -179,14 +179,15 @@ export function * shareToThread (uuid: string) {
   }
 }
 
-export async function prepare (image: SharedImage, destinationThreadId: string): Promise<pb.IMobilePreparedFiles> {
+export async function prepare(image: SharedImage, destinationThreadId: string): Promise<pb.IMobilePreparedFiles> {
   const addResult = await API.files.prepareFilesByPath(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {
       await RNFS.unlink(image.path)
     }
-  } catch (e) {
+  } catch (error) {
+    await logNewEvent('refreshMessages', error.message, true)
   }
   return addResult
 }

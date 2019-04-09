@@ -60,7 +60,7 @@ export class ThreadSelectComponent extends React.Component<ComponentProps> {
     )
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.body}>
         {this.renderHeader()}
@@ -101,7 +101,7 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
     )
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.contentContainer}>
         <View style={styles.header}>

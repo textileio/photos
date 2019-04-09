@@ -72,14 +72,14 @@ class Contacts extends React.Component<Props, State> {
     this.state = {}
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
       addContact: this.inviteContactRequest
     })
   }
 
-  render () {
+  render() {
     const allContacts: ReadonlyArray<pb.IContact> = this.props.contacts
     let data = allContacts
     if (this.state.searchString !== undefined && this.state.searchString.length > 0) {

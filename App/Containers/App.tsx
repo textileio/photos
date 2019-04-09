@@ -28,7 +28,7 @@ class App extends Component {
   deepLinkEventHandler = new DeepLinkEventHandler(store)
   textile = Textile
 
-  render () {
+  render() {
     return (
       <Provider store={store}>
         <PersistGate loading={undefined} persistor={persistor}>
@@ -37,7 +37,7 @@ class App extends Component {
       </Provider>
     )
   }
-  componentWillMount () {
+  componentWillMount() {
     this.textile.setup(
       {
         RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE
@@ -50,7 +50,7 @@ class App extends Component {
     )
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
     }

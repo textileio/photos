@@ -52,7 +52,7 @@ class ThreadSelector extends React.Component<ScreenProps & StateProps & Dispatch
 
   _keyExtractor = (item: GroupAuthors) => item.id
 
-  render () {
+  render() {
     return (
       <View style={styles.contentContainer} >
         <FlatList

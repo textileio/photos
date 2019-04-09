@@ -45,7 +45,7 @@ type Props = DispatchProps & StateProps & ScreenProps
 
 class InviteContactModal extends React.Component<Props, State> {
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       submitted: false,
@@ -56,25 +56,25 @@ class InviteContactModal extends React.Component<Props, State> {
     }
   }
 
-  openThreadModal () {
+  openThreadModal() {
     return () => {
       this.setState({showCreateGroupModal: true, threadId: undefined, threadName: undefined})
     }
   }
 
-  cancelCreateThread () {
+  cancelCreateThread() {
     return () => {
       this.setState({showCreateGroupModal: false})
     }
   }
 
-  completeCreateThread () {
+  completeCreateThread() {
     return () => {
       this.setState({showCreateGroupModal: false})
     }
   }
 
-  selectThread () {
+  selectThread() {
     return (threadId: string) => {
       const thread = this.props.threads.find((t) => t.id === threadId)
       const threadName = thread ? thread.name : 'thread'
@@ -82,19 +82,19 @@ class InviteContactModal extends React.Component<Props, State> {
     }
   }
 
-  cancel () {
+  cancel() {
     return () => {
       this.props.cancel()
     }
   }
 
-  continue () {
+  continue() {
     return () => {
       this.setState({threadSelected: true})
     }
   }
 
-  cancelPeerRequest () {
+  cancelPeerRequest() {
     return () => {
       this.setState({
         threadId: this.props.selectedThreadId,
@@ -105,7 +105,7 @@ class InviteContactModal extends React.Component<Props, State> {
     }
   }
 
-  renderThreadSelect () {
+  renderThreadSelect() {
     return (
       <View style={styles.content}>
         <View style={styles.title}>
@@ -131,7 +131,7 @@ class InviteContactModal extends React.Component<Props, State> {
     )
   }
 
-  renderPeerSelect (threadId: string, threadName: string) {
+  renderPeerSelect(threadId: string, threadName: string) {
     return (
       <ThreadsEditFriendsComponent
         threadId={threadId}
@@ -141,7 +141,7 @@ class InviteContactModal extends React.Component<Props, State> {
     )
   }
 
-  renderCreateThread () {
+  renderCreateThread() {
     return (
       <CreateThreadComponent
         fullScreen={true}
@@ -153,7 +153,7 @@ class InviteContactModal extends React.Component<Props, State> {
     )
   }
 
-  renderBody () {
+  renderBody() {
     if (this.state.showCreateGroupModal) {
       return this.renderCreateThread()
     } else if (this.state.threadSelected && this.state.threadId && this.state.threadName) {
@@ -162,7 +162,7 @@ class InviteContactModal extends React.Component<Props, State> {
     return this.renderThreadSelect()
   }
 
-  render () {
+  render() {
     return (
       <Modal
         isVisible={this.props.isVisible}

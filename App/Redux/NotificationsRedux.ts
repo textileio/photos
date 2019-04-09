@@ -51,7 +51,7 @@ export const initialState: NotificationsState = {
   refreshing: false
 }
 
-export function reducer (state: NotificationsState = initialState, action: NotificationsAction): NotificationsState {
+export function reducer(state: NotificationsState = initialState, action: NotificationsAction): NotificationsState {
   switch (action.type) {
     case getType(actions.newNotificationRequest): {
       // Useful so that new notifications you receive while staring at the Feed will just pop in

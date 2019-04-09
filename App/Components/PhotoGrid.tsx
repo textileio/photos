@@ -42,14 +42,14 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
 
   toast?: Toast
 
-  _getToast (errorMessage?: string) {
+  _getToast(errorMessage?: string) {
     return () => {
       if (errorMessage && this.toast) {
         this.toast.show(errorMessage, 2000)
       }
     }
   }
-  _getOverlay (item: ProcessingItemType) {
+  _getOverlay(item: ProcessingItemType) {
     const processing = item.photo
     const id = item.id as string // We know this is a processing image so the id is a string
     return (
@@ -73,7 +73,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   * e.g.
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
-  renderRow (row: ListRenderItemInfo<IPhotoGridType>) {
+  renderRow(row: ListRenderItemInfo<IPhotoGridType>) {
     const { item } = row
     switch (item.type) {
       case 'photo':
@@ -140,7 +140,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // e.g. itemLayout={(data, index) => (
   //   {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
   // )}
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         {

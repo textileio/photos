@@ -117,7 +117,7 @@ class OnboardingUsername extends React.Component<Props, State> {
     return username.length > 0
   }
 
-  render () {
+  render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
           <View>

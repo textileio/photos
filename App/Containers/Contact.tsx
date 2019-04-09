@@ -47,13 +47,13 @@ class ContactModal extends React.Component<Props> {
     }
   }
 
-  navigate (id: string) {
+  navigate(id: string) {
     return () => {
       this.props.navigation.navigate('ViewThread', { threadId: id })
     }
   }
 
-  render () {
+  render() {
     const avatar = this.props.navigation.getParam('avatar')
     // const username = this.props.navigation.getParam('username')
     return (

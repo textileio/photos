@@ -5,18 +5,16 @@ import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import AccountActions from '../Redux/AccountRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
-import { RootAction } from '../Redux/Types'
-import Textile, {
+import { RootAction, RootState } from '../Redux/Types'
+import {
   API,
   pb,
   BackgroundTask
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
-import { RootState } from '../Redux/Types'
-import { AsyncStorage } from 'react-native'
 
-export function * startSagas () {
+export function * startSagas() {
   yield all([
     call(appStateChange),
     call(startNodeFinished),
@@ -32,11 +30,11 @@ export function * startSagas () {
   ])
 }
 
-export function * runBackgroundUpdate () {
+export function * runBackgroundUpdate() {
   yield call(BackgroundTask)
 }
 
-export function * refreshMessages () {
+export function * refreshMessages() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -52,7 +50,7 @@ export function * refreshMessages () {
   }
 }
 
-export function * updateProfile () {
+export function * updateProfile() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -72,7 +70,7 @@ export function * updateProfile () {
   }
 }
 
-export function * ignoreFileRequest () {
+export function * ignoreFileRequest() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -90,7 +88,7 @@ export function * ignoreFileRequest () {
   }
 }
 
-export function * appStateChange () {
+export function * appStateChange() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -109,7 +107,7 @@ export function * appStateChange () {
     }
   }
 }
-export function * nodeOnline () {
+export function * nodeOnline() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -132,7 +130,7 @@ export function * nodeOnline () {
   }
 }
 
-export function * startNodeFinished () {
+export function * startNodeFinished() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -151,7 +149,7 @@ export function * startNodeFinished () {
   }
 }
 
-export function * stopNodeAfterDelayStarting () {
+export function * stopNodeAfterDelayStarting() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -169,7 +167,7 @@ export function * stopNodeAfterDelayStarting () {
   }
 }
 
-export function * stopNodeAfterDelayCancelled () {
+export function * stopNodeAfterDelayCancelled() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -191,7 +189,7 @@ export function * stopNodeAfterDelayCancelled () {
     }
   }
 }
-export function * stopNodeAfterDelayFinishing () {
+export function * stopNodeAfterDelayFinishing() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -208,7 +206,7 @@ export function * stopNodeAfterDelayFinishing () {
     }
   }
 }
-export function * stopNodeAfterDelayComplete () {
+export function * stopNodeAfterDelayComplete() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -225,7 +223,7 @@ export function * stopNodeAfterDelayComplete () {
     }
   }
 }
-export function * newError () {
+export function * newError() {
   while (true) {
     try {
       // Block until we get an active or background app state
@@ -243,7 +241,7 @@ export function * newError () {
   }
 }
 
-function displayNotification (message: string, title?: string) {
+function displayNotification(message: string, title?: string) {
   RNPushNotification.localNotification({
     title,
     message,

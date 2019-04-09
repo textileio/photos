@@ -41,10 +41,11 @@
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.1",
     "stacktrace-js": "^2.0.0",
-    "typesafe-actions": "^2.0.4",
+    "typesafe-actions": "3.4.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@textile/tslint-rules": "1.0.3",
     "@types/enzyme": "^3.1.14",
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/jest": "^23.3.3",
@@ -54,7 +55,7 @@
     "@types/react-native-fs": "^2.8.2",
     "@types/react-native-push-notification": "^3.0.3",
     "@types/react-native-qrcode": "^0.2.2",
-    "@types/react-redux": "^6.0.9",
+    "@types/react-redux": "7.0.6",
     "@types/react-test-renderer": "^16.0.3",
     "@types/uuid": "^3.4.4",
     "babel-jest": "23.6.0",

@@ -4,17 +4,17 @@ import AccountActions from '../../Redux/AccountRedux'
 import { contactsActions } from '../../features/contacts'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
-import { util } from '@textile/react-native-sdk'
 import TextileEventsActions, { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
 import Textile, {
   pb,
   API,
-  NodeState
+  NodeState,
+  util
 } from '@textile/react-native-sdk'
 import { bestSession } from '../../Redux/AccountSelectors'
 import { logNewEvent } from '../DeviceLogs'
 
-export function * onNodeStarted () {
+export function * onNodeStarted() {
   while (yield take([getType(TextileEventsActions.startNodeFinished), getType(PreferencesActions.onboardingSuccess)])) {
     yield call(logNewEvent, 'onNodeStarted', 'refresh account data')
     try {
@@ -30,7 +30,7 @@ export function * onNodeStarted () {
   }
 }
 
-export function * refreshProfile () {
+export function * refreshProfile() {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshProfileRequest))
@@ -43,7 +43,7 @@ export function * refreshProfile () {
   }
 }
 
-export function * refreshPeerId () {
+export function * refreshPeerId() {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshPeerIdRequest))
@@ -55,7 +55,7 @@ export function * refreshPeerId () {
   }
 }
 
-export function * refreshAddress () {
+export function * refreshAddress() {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshAddressRequest))
@@ -67,7 +67,7 @@ export function * refreshAddress () {
   }
 }
 
-export function * setUsername () {
+export function * setUsername() {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setUsernameRequest> = yield take(getType(AccountActions.setUsernameRequest))
@@ -85,7 +85,7 @@ export function * setUsername () {
   }
 }
 
-export function * setAvatar () {
+export function * setAvatar() {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setAvatarRequest> = yield take(getType(AccountActions.setAvatarRequest))
@@ -103,7 +103,7 @@ export function * setAvatar () {
   }
 }
 
-export function * getSession (depth: number = 0): any {
+export function * getSession(depth: number = 0): any {
   const session: pb.ICafeSession | undefined = yield select(bestSession)
   if (!session) {
     return undefined
@@ -122,7 +122,7 @@ export function * getSession (depth: number = 0): any {
   }
 }
 
-export function * getCafeSessions () {
+export function * getCafeSessions() {
   while (true) {
     try {
       yield take(getType(AccountActions.getCafeSessionsRequest))
@@ -135,7 +135,7 @@ export function * getCafeSessions () {
   }
 }
 
-export function * refreshCafeSessions () {
+export function * refreshCafeSessions() {
   while (true) {
     try {
       yield take(getType(AccountActions.refreshCafeSessionsRequest))

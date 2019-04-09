@@ -41,7 +41,7 @@ class Avatar extends React.Component<Props, State> {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     return nextProps.target !== this.props.target ||
       nextState.ipfsError !== this.state.ipfsError ||
       // node status hasn't changed
@@ -76,7 +76,7 @@ class Avatar extends React.Component<Props, State> {
     return this.props.online && !this.state.ipfsError && (!this.state.httpSuccess || resolution !== 'small')
   }
 
-  render () {
+  render() {
     const { style, icon, target, local, started, online } = this.props
     const width = style && style.width ? style.width : this.state.defaultSize
     const height = style && style.height ? style.height : width

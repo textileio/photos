@@ -45,7 +45,7 @@ export const cameraRollSelectors = {
   queriedPhotos: (state: RootState) => state.cameraRoll.queriedPhotos
 }
 
-export function reducer (state: CameraRollState = initialState, action: CameraRollAction): CameraRollState {
+export function reducer(state: CameraRollState = initialState, action: CameraRollAction): CameraRollState {
   switch (action.type) {
     case getType(actions.initialzePhotos): {
       const queriedPhotos = action.payload.ids.reduce(

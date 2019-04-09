@@ -6,20 +6,19 @@ import { RootState } from '../../Redux/Types'
 import TriggersActions from '../../Redux/TriggersRedux'
 
 export default class BackgroundFetchEventHandler {
-  store: Store<RootState>
+  public store: Store<RootState>
 
   constructor(store: Store<RootState>) {
     this.store = store
     this.setup()
   }
 
-  setup () {
+  public setup() {
     BackgroundFetch.configure({}, () => {
       this.store.dispatch(TriggersActions.backgroundFetch())
     }, (error) => {
+      // TODO - handle error
+      console.info('backgroundFetch error')
     })
-  }
-
-  tearDown () {
   }
 }
