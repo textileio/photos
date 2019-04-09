@@ -128,7 +128,7 @@ class SetAvatar extends React.Component<Props> {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.navigation) {
       this.props.navigation.setParams({
         cancel: this.props.cancel
@@ -169,7 +169,7 @@ class SetAvatar extends React.Component<Props> {
     return username.length > 0
   }
 
-  renderImage () {
+  renderImage() {
     if (this.props.data) {
       const source = { uri: 'data:image/jpeg;base64,' + this.props.data }
       return <Image style={IMAGE} source={source} />
@@ -180,7 +180,7 @@ class SetAvatar extends React.Component<Props> {
     }
   }
 
-  render () {
+  render() {
     const action = this.props.image ? this.submit : this.choosePhoto
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>

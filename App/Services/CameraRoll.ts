@@ -14,7 +14,7 @@ export interface IPickerImage {
   error?: string
 }
 
-export async function getPhotos (first: number = -1): Promise<string[]> {
+export async function getPhotos(first: number = -1): Promise<string[]> {
   const result = await CameraRoll.getPhotos({ first })
   const items = result.edges.map((edge) => edge.node.image.uri)
   return items
@@ -37,12 +37,8 @@ export async function chooseProfilePhoto(): Promise<{ image: IPickerImage, data:
       } else {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        let path: string
-        if (Platform.OS === 'ios') {
-          path = response.uri ? response.uri.replace('file://', '') : ''
-        } else {
-          path = response.path!
-        }
+        const path: string = Platform.OS !== 'ios' ? response.path! : response.uri ? response.uri.replace('file://', '') : ''
+
         const image: IPickerImage = {
           uri: response.uri,
           path,
@@ -62,7 +58,7 @@ export async function chooseProfilePhoto(): Promise<{ image: IPickerImage, data:
   })
 }
 
-export async function launchCamera (): Promise<IPickerImage> {
+export async function launchCamera(): Promise<IPickerImage> {
   return new Promise<IPickerImage>((resolve, reject) => {
     const options = {
       title: 'Camera',
@@ -96,7 +92,7 @@ export async function launchCamera (): Promise<IPickerImage> {
   })
 }
 
-export async function launchImageLibrary (): Promise<IPickerImage> {
+export async function launchImageLibrary(): Promise<IPickerImage> {
   return new Promise<IPickerImage>((resolve, reject) => {
     const options = {
       title: 'Camera',

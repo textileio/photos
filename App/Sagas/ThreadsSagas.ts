@@ -23,8 +23,9 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import Config from 'react-native-config'
+import { logNewEvent } from './DeviceLogs'
 
-export function * addExternalInvite (action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
+export function * addExternalInvite(action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
   try {
     const invite: pb.IExternalInvite = yield call(API.invites.addExternal, id)
@@ -34,7 +35,7 @@ export function * addExternalInvite (action: ActionType<typeof ThreadsActions.ad
   }
 }
 
-export function * displayThreadQRCode (action: ActionType<typeof ThreadsActions.threadQRCodeRequest>) {
+export function * displayThreadQRCode(action: ActionType<typeof ThreadsActions.threadQRCodeRequest>) {
   const { id, name } = action.payload
   try {
     const invite: pb.IExternalInvite = yield call(API.invites.addExternal, id)
@@ -52,11 +53,11 @@ export function * presentShareInterface(action: ActionType<typeof ThreadsActions
   yield call(Share.share, { title: 'Join my thread on Textile!', message: link })
 }
 
-export function * acceptExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
+export function * acceptExternalInvite(action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   yield fork(processExternalInvite, action)
 }
 
-function * processExternalInvite (action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
+function * processExternalInvite(action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
     const joinId: string = yield call(API.invites.acceptExternal, inviteId, key)
@@ -70,7 +71,7 @@ function * processExternalInvite (action: ActionType<typeof ThreadsActions.accep
   }
 }
 
-export function * pendingInvitesTask () {
+export function * pendingInvitesTask() {
   // Process any pending external invites created while user wasn't logged in
   const inviteLink: string | undefined = yield select(pendingInviteLink)
   if (inviteLink) {
@@ -79,7 +80,7 @@ export function * pendingInvitesTask () {
   }
 }
 
-export function * cameraRollThreadCreateTask () {
+export function * cameraRollThreadCreateTask() {
   // Update our camera roll
   try {
     const cameraRollThreadName = 'Camera Roll'
@@ -104,7 +105,7 @@ export function * cameraRollThreadCreateTask () {
   }
 }
 
-export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
+export function * acceptInvite(action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
   const { notificationId, threadName } = action.payload
   try {
     const threadId = yield call(API.notifications.acceptInvite, notificationId)
@@ -115,12 +116,13 @@ export function * acceptInvite (action: ActionType<typeof ThreadsActions.acceptI
   }
 }
 
-export function * addInternalInvites (action: ActionType<typeof ThreadsActions.addInternalInvitesRequest>) {
+export function * addInternalInvites(action: ActionType<typeof ThreadsActions.addInternalInvitesRequest>) {
   const { threadId, addresses } = action.payload
   try {
     for (const address of addresses) {
       yield call(API.invites.add, threadId, address)
     }
   } catch (error) {
+    yield call(logNewEvent, 'addInternalInvites', error.message, true)
   }
 }

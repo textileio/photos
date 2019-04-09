@@ -60,7 +60,7 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
     )
   }
 
-  render () {
+  render() {
     return (
       <FlatList
         style={CONTAINER}

@@ -66,7 +66,7 @@ export const initialState: TextileEventsState = {
   online: false
 }
 
-export function reducer (state: TextileEventsState = initialState, action: TextileEventsActions): TextileEventsState {
+export function reducer(state: TextileEventsState = initialState, action: TextileEventsActions): TextileEventsState {
   switch (action.type) {
     case getType(actions.newNodeState):
       return { ...state, nodeState: {state: action.payload.state }}

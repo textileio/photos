@@ -16,12 +16,12 @@ import { ActionType, getType } from 'typesafe-actions'
 import Config from 'react-native-config'
 import DeepLink from '../Services/DeepLink'
 import NavigationService from '../Services/NavigationService'
-import {initialized} from '../Redux/AccountSelectors'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import AuthActions, {AuthSelectors} from '../Redux/AuthRedux'
 import StartupActions, {startupSelectors} from '../Redux/StartupRedux'
+import { logNewEvent } from './DeviceLogs'
 
-export function * inviteAfterOnboard () {
+export function * inviteAfterOnboard() {
   const invite = yield select(AuthSelectors.invite)
   if (invite) {
     // ensures this is the last of the knock-on effects of onboarding
@@ -30,7 +30,7 @@ export function * inviteAfterOnboard () {
   }
 }
 
-export function * routeThreadInvite(url: string, hash: string ) {
+export function * routeThreadInvite(url: string, hash: string) {
   const reduxStarted: boolean = yield select(startupSelectors.started)
   if (!reduxStarted) {
     yield take(getType(StartupActions.startup))
@@ -46,7 +46,7 @@ export function * routeThreadInvite(url: string, hash: string ) {
   }
 }
 
-export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLinkRequest>) {
+export function * routeDeepLink(action: ActionType<typeof UIActions.routeDeepLinkRequest>) {
   const { url } = action.payload
   if (!url) { return }
   try {
@@ -67,5 +67,6 @@ export function * routeDeepLink (action: ActionType<typeof UIActions.routeDeepLi
       }
     }
   } catch (error) {
+    yield call(logNewEvent, 'routeDeepLink', error.message, true)
   }
 }
