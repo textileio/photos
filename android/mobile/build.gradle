@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('../../node_modules/@textile/go-mobile/dist/android/mobile.aar'))
