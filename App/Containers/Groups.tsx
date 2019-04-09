@@ -55,7 +55,7 @@ interface State {
   showCreateGroupModal: boolean
 }
 
-class Groups extends React.Component<Props, State> {
+class Groups extends React.PureComponent<Props, State> {
 
   static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
@@ -163,7 +163,6 @@ class Groups extends React.Component<Props, State> {
           renderItem={this._renderItem}
           refreshing={false}
           onRefresh={this._onRefresh}
-          initialNumToRender={4}
           ListFooterComponent={this._renderFooter}
         />
         <CreateThreadModal

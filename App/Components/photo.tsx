@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, ViewStyle, TouchableOpacity, Dimensions, Modal } from 'react-native'
-import { connect } from 'react-redux'
 
 import Message, { Props as MessageProps } from './message'
 import ProgressiveImage from './ProgressiveImage'
@@ -28,7 +27,7 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
   pinchWidth?: number
 }
 
-class Photo extends Component<Props> {
+export default class Photo extends React.PureComponent<Props> {
   state = {
     selected: false
   }
@@ -135,5 +134,3 @@ class Photo extends Component<Props> {
     return this.renderSimple()
   }
 }
-
-export default connect(undefined, undefined)(Photo)

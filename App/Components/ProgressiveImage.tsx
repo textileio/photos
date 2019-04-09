@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {RootAction, RootState} from '../Redux/Types'
+import {RootState} from '../Redux/Types'
 
 import { View, ImageResizeMode } from 'react-native'
 import { ImageStyle, Platform } from 'react-native'
