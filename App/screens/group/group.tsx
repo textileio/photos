@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
@@ -65,7 +65,7 @@ interface State {
   showInviteContactModal: boolean
 }
 
-class Group extends Component<Props, State> {
+class Group extends React.PureComponent<Props, State> {
 
   static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     // const openDrawer = navigation.getParam('openDrawer')
@@ -117,6 +117,10 @@ class Group extends Component<Props, State> {
             inverted={true}
             data={this.props.items}
             renderItem={this.renderRow}
+            initialNumToRender={5}
+            windowSize={5}
+            onEndReachedThreshold={5}
+            maxToRenderPerBatch={5}
           />
           <AuthoringInput containerStyle={{ }} onSendMessage={this.submit} onSharePhoto={this.props.showWalletPicker} />
           <InviteContactModal

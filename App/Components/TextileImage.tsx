@@ -15,9 +15,10 @@ export interface OwnProps {
 
 type Props = OwnProps & Partial<ImageProps>
 
-export default class TextileImage extends React.Component<Props> {
+export default class TextileImage extends React.PureComponent<Props> {
   static propTypes = {}
   static defaultProps = {}
+
   _onLoaded() {
     if (!this.props.onLoad) {
       return

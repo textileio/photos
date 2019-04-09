@@ -66,6 +66,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
       />
     )
   }
+
   /* ***********************************************************
   * `renderRow` function. How each cell/row should be rendered
   * It's our best practice to place a single component here:
@@ -80,7 +81,6 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
         return (
           <TouchableOpacity
             style={styles.item}
-            /* tslint:disable-next-line */
             onPress={this.props.onSelect(row.item.photo as pb.IFiles)}
           >
             <View style={styles.itemBackgroundContainer}>
