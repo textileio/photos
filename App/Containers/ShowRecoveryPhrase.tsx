@@ -61,7 +61,7 @@ class ShowRecoveryPhrase extends React.Component<StateProps, State> {
     }
   }
 
-  copyRecoveryPhrase = () => {
+  public copyRecoveryPhrase = () => {
     const { recoveryPhrase } = this.props
     if (recoveryPhrase) {
       Clipboard.setString(recoveryPhrase)
@@ -70,7 +70,7 @@ class ShowRecoveryPhrase extends React.Component<StateProps, State> {
     }
   }
 
-  render() {
+  public render() {
     return (
       <View style={CONTAINER}>
         <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/secure.png')} />

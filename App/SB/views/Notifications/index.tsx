@@ -58,7 +58,7 @@ interface OwnProps {
 type Props = DispatchProps & StateProps & OwnProps
 
 class Notifications extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }: NavigationScreenProps<{}>) => {
+  public static navigationOptions = ({ navigation }: NavigationScreenProps<{}>) => {
     return {
       headerTitle: 'Notifications',
       headerLeft: (
@@ -85,7 +85,7 @@ class Notifications extends React.PureComponent<Props> {
     }
   }
 
-  state: OwnProps = {
+  public state: OwnProps = {
     complete: false,
     iOS: Platform.OS === 'ios',
     cameraRoll: false,
@@ -93,7 +93,7 @@ class Notifications extends React.PureComponent<Props> {
     infoVisible: false
   }
 
-  toggleService = (name: string) => {
+  public toggleService = (name: string) => {
     if (name === 'notifications') {
       // never prompt the user later to get those
       this.props.completeScreen(name)
@@ -101,16 +101,16 @@ class Notifications extends React.PureComponent<Props> {
     this.props.toggleServicesRequest(name as ServiceType)
   }
 
-  hideInfo = () => {
+  public hideInfo = () => {
     this.setState({ infoVisible: false })
   }
 
-  showInfo = (service: string) => {
+  public showInfo = (service: string) => {
     const info = GetServiceInfo(service)
     this.setState({ infoVisible: true, info })
   }
 
-  render () {
+  public render() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>

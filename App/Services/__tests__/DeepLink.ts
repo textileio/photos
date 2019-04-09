@@ -20,8 +20,8 @@ const navigationMock: NavigationService = {
     navigate: (routeName: string, params?: NavigationParams) => {
         navigateTo = routeName
     },
-    setTopLevelNavigator: (navigatorRef: NavigationContainerComponent) => {},
-    goBack: () => {}
+    setTopLevelNavigator: (navigatorRef: NavigationContainerComponent) => { return },
+    goBack: () => { return }
 }
 
 describe('deeplink', () => {

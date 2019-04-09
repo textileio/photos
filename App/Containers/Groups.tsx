@@ -57,7 +57,7 @@ interface State {
 
 class Groups extends React.Component<Props, State> {
 
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  public static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
     const openThreadModal = navigation.getParam('openThreadModal')
     const headerLeft = (
@@ -91,23 +91,23 @@ class Groups extends React.Component<Props, State> {
     }
   }
 
-  _onPressItem = (threadCardProps: any) => {
+  public _onPressItem = (threadCardProps: any) => {
     const { id, name } = threadCardProps
     this.props.navigateToThread(id, name)
   }
 
-  openDrawer = () => {
+  public openDrawer = () => {
     this.props.navigation.openDrawer()
   }
 
-  _renderItem = (rowData: any) => {
+  public _renderItem = (rowData: any) => {
     const item: GroupAuthors = rowData.item
     return (
       <GroupCard id={item.id} {...item} onPress={this._onPressItem} />
     )
   }
 
-  _renderFooter = () => {
+  public _renderFooter = () => {
     return (
       <TouchableOpacity
         activeOpacity={0.95}
@@ -119,32 +119,32 @@ class Groups extends React.Component<Props, State> {
     )
   }
 
-  _onRefresh = () => {
+  public _onRefresh = () => {
     this.props.refreshMessages()
   }
 
-  _keyExtractor = (item: GroupAuthors) => item.id
+  public _keyExtractor = (item: GroupAuthors) => item.id
 
-  openThreadModal = () => {
+  public openThreadModal = () => {
     this.setState({ showCreateGroupModal: true })
   }
 
-  cancelCreateThread = () => {
+  public cancelCreateThread = () => {
     this.setState({ showCreateGroupModal: false })
   }
 
-  completeCreateThread = () => {
+  public completeCreateThread = () => {
     this.setState({ showCreateGroupModal: false })
   }
 
-  componentDidMount () {
+  public componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
       openThreadModal: this.openThreadModal
     })
   }
 
-  componentDidUpdate (prevProps) {
+  public componentDidUpdate(prevProps) {
     if (this.props.threads.length && this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()
@@ -154,7 +154,7 @@ class Groups extends React.Component<Props, State> {
     }
   }
 
-  render () {
+  public render() {
     return (
       <View style={styles.contentContainer} >
         <FlatList
@@ -179,7 +179,7 @@ class Groups extends React.Component<Props, State> {
   }
 
   // Simple Alert based prompt to get Notification permissions
-  notificationPrompt () {
+  public notificationPrompt() {
     // never show it again
     this.props.completeNotifications()
     // give the user a prompt
@@ -206,7 +206,7 @@ class Groups extends React.Component<Props, State> {
   }
 
   // Simple Alert based prompt to get Notification permissions
-  locationPrompt () {
+  public locationPrompt() {
     // give the user a prompt
     const platform = Platform.OS === 'android' ? 'Android' : 'iOS'
     // never show it again
@@ -279,7 +279,7 @@ const mapStateToProps = (state: RootState): StateProps => {
       // total number of images in the thread
       size: thread.photos.length,
       // required to ensure up to date index
-      members: Object.assign([], members),
+      members: {...[], ...members},
       thumb
     }
   })

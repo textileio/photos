@@ -100,7 +100,7 @@ type Props = OwnProps & StateProps & DispatchProps
 
 class SetAvatar extends React.Component<Props> {
 
-  static navigationOptions = ({ navigation }: NavigationScreenProps) => {
+  public static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const params = navigation.state.params || {}
     return {
       headerTitle: '',
@@ -128,7 +128,7 @@ class SetAvatar extends React.Component<Props> {
     }
   }
 
-  componentDidMount () {
+  public componentDidMount() {
     if (this.props.navigation) {
       this.props.navigation.setParams({
         cancel: this.props.cancel
@@ -136,11 +136,11 @@ class SetAvatar extends React.Component<Props> {
     }
   }
 
-  choosePhoto = () => {
+  public choosePhoto = () => {
     this.props.displayPhotoChooser()
   }
 
-  submit = () => {
+  public submit = () => {
     if (this.props.image) {
       this.props.submitAvatar(this.props.image)
     }
@@ -155,21 +155,21 @@ class SetAvatar extends React.Component<Props> {
     }
   }
 
-  updateText = (text: string) => {
+  public updateText = (text: string) => {
     this.setState({
       username: text,
       valid: this.valid(text)
     })
   }
 
-  valid = (username?: string) => {
+  public valid = (username?: string) => {
     if (!username) {
       return false
     }
     return username.length > 0
   }
 
-  renderImage () {
+  public renderImage() {
     if (this.props.data) {
       const source = { uri: 'data:image/jpeg;base64,' + this.props.data }
       return <Image style={IMAGE} source={source} />
@@ -180,7 +180,7 @@ class SetAvatar extends React.Component<Props> {
     }
   }
 
-  render () {
+  public render() {
     const action = this.props.image ? this.submit : this.choosePhoto
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>

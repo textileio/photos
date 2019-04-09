@@ -50,7 +50,7 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 class AddContact extends React.Component<Props> {
 
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  public static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     const close = () => {
       navigation.getParam('clearSearch')()
       navigation.dispatch(NavigationActions.back())
@@ -72,13 +72,13 @@ class AddContact extends React.Component<Props> {
     // this.updateSearchString = this.updateSearchString.bind(this)
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     this.props.navigation.setParams({
       clearSearch: this.props.clearSearch
     })
   }
 
-  render () {
+  public render() {
     return (
       <View style={CONTAINER}>
         {this._headerComponent()}
@@ -95,7 +95,7 @@ class AddContact extends React.Component<Props> {
     )
   }
 
-  _headerComponent = () => (
+  public _headerComponent = () => (
     <SearchBar
       containerStyle={{ backgroundColor: color.grey_5 }}
       inputStyle={{ ...textStyle.body_m, color: color.grey_2, backgroundColor: color.grey_6 }}
@@ -105,7 +105,7 @@ class AddContact extends React.Component<Props> {
     />
   )
 
-  renderSectionHeader = ({section: { key, title }}: { section: SectionListData<SearchResultsSection> }) => {
+  public renderSectionHeader = ({section: { key, title }}: { section: SectionListData<SearchResultsSection> }) => {
     return (
       <Text
         key={key}
@@ -124,7 +124,7 @@ class AddContact extends React.Component<Props> {
     )
   }
 
-  renderRow = ({ item, index, section }: SectionListRenderItemInfo<SearchResult>) => {
+  public renderRow = ({ item, index, section }: SectionListRenderItemInfo<SearchResult>) => {
     switch (item.type) {
       case 'loading':
         return <ActivityIndicator size='small' style={{ padding: 11 }} />
@@ -172,7 +172,7 @@ class AddContact extends React.Component<Props> {
     // const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
   }
 
-  updateSearchString = (string?: string) => {
+  public updateSearchString = (string?: string) => {
     if (string !== undefined && string.length > 0) {
       this.props.search(string)
     } else {
@@ -180,15 +180,15 @@ class AddContact extends React.Component<Props> {
     }
   }
 
-  onPressTextile = (contact: pb.IContact) => {
+  public onPressTextile = (contact: pb.IContact) => {
     return () => this.props.navigation.navigate('Contact', { avatar: contact.avatar, username: contact.name, address: contact.address })
   }
 
-  onAdd = (contact: pb.IContact) => {
+  public onAdd = (contact: pb.IContact) => {
     return () => this.props.addContact(contact)
   }
 
-  onPressAddressBook = (contact: Contacts.Contact) => {
+  public onPressAddressBook = (contact: Contacts.Contact) => {
     return () => {
       this.props.inviteContact(contact)
     }

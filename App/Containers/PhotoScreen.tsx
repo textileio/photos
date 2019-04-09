@@ -3,10 +3,9 @@ import { Dispatch } from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle, Dimensions } from 'react-native'
-import { util } from '@textile/react-native-sdk'
+import { pb, util } from '@textile/react-native-sdk'
 import moment from 'moment'
 
-import { pb } from '@textile/react-native-sdk'
 import { RootState, RootAction } from '../Redux/Types'
 
 import UIActions from '../Redux/UIRedux'
@@ -46,25 +45,25 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<{}>
 
 class PhotoScreen extends React.Component<Props> {
 
-  static navigationOptions = {
+  public static navigationOptions = {
     title: 'Photo'
   }
 
-  onComment = () => {
+  public onComment = () => {
     this.props.navigation.navigate('Comments')
   }
 
-  onLikes = () => {
+  public onLikes = () => {
     this.props.navigation.navigate('LikesScreen')
   }
 
-  onAddLike = () => {
+  public onAddLike = () => {
     if (this.props.photo) {
       this.props.addLike(this.props.photo.block)
     }
   }
 
-  render () {
+  public render() {
     if (!this.props.photo) {
       return <ScrollView style={CONTAINER} />
     }

@@ -14,25 +14,25 @@ export interface SharedPhoto {
   original: string
 }
 
-export function defaultThreadData (state: RootState): ThreadData | undefined {
+export function defaultThreadData(state: RootState): ThreadData | undefined {
   return Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
     .find((threadData) => threadData.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
 }
 
-export function threadDataByThreadId (state: RootState, id: string): ThreadData | undefined {
+export function threadDataByThreadId(state: RootState, id: string): ThreadData | undefined {
   const threadData = state.photoViewing.threads[id]
   return threadData
 }
 
-export function photoAndComment (state: RootState) {
+export function photoAndComment(state: RootState) {
   return {
     photo: state.photoViewing.viewingPhoto,
     comment: state.photoViewing.authoringComment
   }
 }
 
-export function getThreads (state: RootState, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadData> {
+export function getThreads(state: RootState, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadData> {
   const result = Object.keys(state.photoViewing.threads)
     .map((key) => state.photoViewing.threads[key]!)
     .filter((thread) => {
@@ -69,7 +69,7 @@ export function getThreads (state: RootState, sortBy?: 'name' | 'date'): Readonl
   }
 }
 
-export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
+export function getSharedPhotos(state: RootState): ReadonlyArray<SharedPhoto> {
   const selfAddress = getAddress(state)
   const photos = getThreads(state)
     .map((thread) => thread.photos
@@ -91,7 +91,7 @@ export function getSharedPhotos (state: RootState): ReadonlyArray<SharedPhoto> {
   })
 }
 
-export function getThreadThumbs (state: RootState, byAddres: string, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadThumbs> {
+export function getThreadThumbs(state: RootState, byAddres: string, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadThumbs> {
   return getThreads(state, sortBy)
     .filter((thread) => thread.photos.some((p) => p.user.address === byAddres))
     .map((thread) => {
@@ -103,14 +103,14 @@ export function getThreadThumbs (state: RootState, byAddres: string, sortBy?: 'n
     })
 }
 
-export function shouldNavigateToNewThread (state: RootState) {
+export function shouldNavigateToNewThread(state: RootState) {
   return state.photoViewing.navigateToNewThread
 }
 
-export function shouldSelectNewThread (state: RootState) {
+export function shouldSelectNewThread(state: RootState) {
   return state.photoViewing.selectToShare
 }
 
-export function photoToShareToNewThread (state: RootState) {
+export function photoToShareToNewThread(state: RootState) {
   return state.photoViewing.shareToNewThread
 }

@@ -6,13 +6,13 @@ export const ROW_COLUMN = 60
 
 export const ICON_WIDTH = ROW_COLUMN * 0.5
 
-export function cardImageStyle (count: number, index: number): ImageStyle {
-  const baseStyle = {
+export function cardImageStyle(count: number, index: number): ImageStyle {
+  const baseStyle: ImageStyle = {
     margin: 0,
     padding: 0,
     borderWidth: 2,
     borderColor: color.grey_6
-    } as ImageStyle
+    }
 
   if (index >= 8) {
     return {

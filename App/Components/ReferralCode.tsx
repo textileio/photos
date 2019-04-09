@@ -73,7 +73,7 @@ interface State {
 
 export default class ReferralCode extends React.Component<Props, State> {
 
-  toast?: Toast
+  public toast?: Toast
 
   constructor(props: Props) {
     super(props)
@@ -84,26 +84,26 @@ export default class ReferralCode extends React.Component<Props, State> {
     }
   }
 
-  updateText = (text: string) => {
+  public updateText = (text: string) => {
     this.setState({
       referralCode: text,
       valid: text.trim().toLowerCase() === this.props.targetReferralCode.trim().toLowerCase()
     })
   }
 
-  showWaitlistSignup = () => {
+  public showWaitlistSignup = () => {
     this.setState({
       showWaitlistSignup: true
     })
   }
 
-  hideWaitlistSignup = () => {
+  public hideWaitlistSignup = () => {
     this.setState({
       showWaitlistSignup: false
     })
   }
 
-  render () {
+  public render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
           <View>

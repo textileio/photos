@@ -29,15 +29,15 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
 }
 
 class Photo extends Component<Props> {
-  state = {
+  public state = {
     selected: false
   }
 
-  toggleSelected = () => {
+  public toggleSelected = () => {
     this.setState({selected: !this.state.selected})
   }
 
-  progressiveElement(width: number, height: number, minWidth) {
+  public progressiveElement(width: number, height: number, minWidth) {
     return (
       <ProgressiveImage
         imageId={this.props.photoId}
@@ -50,7 +50,7 @@ class Photo extends Component<Props> {
     )
   }
 
-  zoomableElement() {
+  public zoomableElement() {
     // Width and height should be supplied from metadata
     const w = this.props.pinchWidth || this.props.photoWidth
     const h = this.props.pinchHeight || this.props.photoWidth
@@ -93,7 +93,7 @@ class Photo extends Component<Props> {
     )
   }
 
-  renderSimple() {
+  public renderSimple() {
     return (
       <View style={CONTAINER}>
         <Message {...this.props} containerStyle={MESSAGE_CONTAINER} />
@@ -104,7 +104,7 @@ class Photo extends Component<Props> {
     )
   }
 
-  renderSelection() {
+  public renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
     return (
       <TouchableOpacity
@@ -128,7 +128,7 @@ class Photo extends Component<Props> {
     )
   }
 
-  render() {
+  public render() {
     if (this.props.pinchZoom) {
       return this.renderSelection()
     }

@@ -61,23 +61,23 @@ const SUCCESS: TextStyle = {
 }
 
 class ProcessingThread extends React.Component<InboundInvite & DispatchProps & StateProps> {
-  dismiss (inviteId: string) {
+  public dismiss(inviteId: string) {
     return () => {
       this.props.dismiss(inviteId)
     }
   }
-  retry (inviteId: string, key: string) {
+  public retry(inviteId: string, key: string) {
     return () => {
       this.props.retry(inviteId, key)
     }
   }
-  view (threadId: string, name: string) {
+  public view(threadId: string, name: string) {
     return () => {
       this.props.navigateToThread(threadId, name)
     }
   }
 
-  getImage () {
+  public getImage() {
     switch (this.props.stage) {
       case ('error'):
         return (
@@ -94,14 +94,14 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
     }
   }
 
-  getMessage (stage: string, threadName?: string) {
+  public getMessage(stage: string, threadName?: string) {
     const name = threadName || 'new thread'
     const body = stage === 'complete' ? 'Successfully joined' : stage[0].toUpperCase() + stage.substr(1).toLowerCase()
     const message = `${body} ${name}`
     return message
   }
 
-  render () {
+  public render() {
     const props = this.props
     const dismiss = this.dismiss(this.props.inviteId)
     const retry = this.retry(this.props.inviteId, this.props.inviteKey)
@@ -120,7 +120,7 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
         </Fragment>
       )
     } else if (props.stage === 'complete') {
-      let view = () => {}
+      let view = () => { return }
       if (this.props.id && this.props.name) {
         view = this.view(this.props.id, this.props.name)
       }

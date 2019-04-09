@@ -22,19 +22,19 @@ interface ScreenProps {
 
 class ThreadSelector extends React.Component<ScreenProps & StateProps & DispatchProps & NavigationScreenProps<{}>> {
 
-  _onPressItem = (threadCardProps: any) => {
+  public _onPressItem = (threadCardProps: any) => {
     const { id, name } = threadCardProps
     this.props.navigateToThread(id, name)
   }
 
-  _renderItem = (rowData: any) => {
+  public _renderItem = (rowData: any) => {
     const item: GroupAuthors = rowData.item
     return (
       <GroupCard id={item.id} {...item} onPress={this._onPressItem} />
     )
   }
 
-  _renderFooter = () => {
+  public _renderFooter = () => {
     return (
       <TouchableOpacity
         activeOpacity={0.95}
@@ -46,13 +46,13 @@ class ThreadSelector extends React.Component<ScreenProps & StateProps & Dispatch
     )
   }
 
-  _onRefresh = () => {
+  public _onRefresh = () => {
     this.props.refreshMessages()
   }
 
-  _keyExtractor = (item: GroupAuthors) => item.id
+  public _keyExtractor = (item: GroupAuthors) => item.id
 
-  render () {
+  public render() {
     return (
       <View style={styles.contentContainer} >
         <FlatList

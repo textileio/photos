@@ -11,7 +11,7 @@ interface Props extends ViewProps {
 
 class RoundedCornersView extends Component<Props, State> {
 
-  static defaultProps: Props = {
+  public static defaultProps: Props = {
     radiusToHeightRatio: 0.2
   }
 
@@ -22,14 +22,14 @@ class RoundedCornersView extends Component<Props, State> {
     }
   }
 
-  onLayout = (event: LayoutChangeEvent) => {
+  public onLayout = (event: LayoutChangeEvent) => {
     const height = event.nativeEvent.layout.height
     this.setState({
       borderRadius: height * this.props.radiusToHeightRatio
     })
   }
 
-  render() {
+  public render() {
     return (
       <View {...this.props} onLayout={this.onLayout} style={[this.props.style, { borderRadius: this.state.borderRadius }]}>
         {this.props.children}

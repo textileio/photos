@@ -67,7 +67,7 @@ class VerifyRecoveryPhrase extends React.Component<Props, State> {
     }
   }
 
-  onChangeText = (text?: string) => {
+  public onChangeText = (text?: string) => {
     this.setState({
       valid: text === this.props.recoveryPhrase
     })
@@ -75,7 +75,7 @@ class VerifyRecoveryPhrase extends React.Component<Props, State> {
 
   // TODO: Clear Clipboard when this screen comes into focus
 
-  render() {
+  public render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
         <View>

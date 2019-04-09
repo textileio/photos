@@ -35,7 +35,7 @@ type Props = StateProps & DispatchProps
 
 class Comments extends Component<Props, ComponentState> {
   // @ts-ignore
-  static navigationOptions = ({ navigation }) => {
+  public static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         {/* tslint:disable-next-line jsx-no-lambda */}
@@ -48,7 +48,7 @@ class Comments extends Component<Props, ComponentState> {
     }
   }
 
-  scrollView?: ScrollView
+  public scrollView?: ScrollView
 
   constructor(props: Props) {
     super(props)
@@ -57,13 +57,13 @@ class Comments extends Component<Props, ComponentState> {
     }
   }
 
-  scrollToEnd = () => {
+  public scrollToEnd = () => {
     if (this.scrollView) {
       this.scrollView.scrollToEnd()
     }
   }
 
-  componentDidUpdate (previousProps: Props) {
+  public componentDidUpdate(previousProps: Props) {
     if (this.props.commentCardProps.length > previousProps.commentCardProps.length) {
       // New comment added, scroll down, need timeout to allow rendering
       setTimeout(this.scrollToEnd, 100)
@@ -77,7 +77,7 @@ class Comments extends Component<Props, ComponentState> {
     }
   }
 
-  onSubmit = () => {
+  public onSubmit = () => {
     if (this.state.submitting) {
       return
     }
@@ -86,7 +86,7 @@ class Comments extends Component<Props, ComponentState> {
     this.props.submitComment()
   }
 
-  render () {
+  public render() {
     return (
       <SafeAreaView style={styles.safeContainer}>
         <KeyboardResponsiveContainer style={styles.container as ViewStyle}>

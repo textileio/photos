@@ -33,7 +33,7 @@ interface StateProps {
 
 class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>> {
   // @ts-ignore
-  static navigationOptions = ({ navigation }) => {
+  public static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         {/* tslint:disable-next-line jsx-no-lambda */}
@@ -46,11 +46,11 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
     }
   }
 
-  keyExtractor = (item: { address: string, username: string }, index: number) => {
+  public keyExtractor = (item: { address: string, username: string }, index: number) => {
     return item.username + index
   }
 
-  renderItem = (info: ListRenderItemInfo<{ address: string, username: string, avatar?: string }>) => {
+  public renderItem = (info: ListRenderItemInfo<{ address: string, username: string, avatar?: string }>) => {
     const { username, avatar } = info.item
     return (
       <View style={LIKE_ITEM}>
@@ -60,7 +60,7 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
     )
   }
 
-  render () {
+  public render() {
     return (
       <FlatList
         style={CONTAINER}

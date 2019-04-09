@@ -21,14 +21,14 @@ const { store, persistor } = configureStore()
 
 class App extends Component {
 
-  backgroundFetchEventHandler = new BackgroundFetchEventHandler(store)
-  notificationEventHandler = new NotificationEventHandler(store)
-  textileNodeEventHandler = new TextileNodeEventHandler(store)
-  uploadEventHandler = new UploadEventHandler(store)
-  deepLinkEventHandler = new DeepLinkEventHandler(store)
-  textile = Textile
+  public backgroundFetchEventHandler = new BackgroundFetchEventHandler(store)
+  public notificationEventHandler = new NotificationEventHandler(store)
+  public textileNodeEventHandler = new TextileNodeEventHandler(store)
+  public uploadEventHandler = new UploadEventHandler(store)
+  public deepLinkEventHandler = new DeepLinkEventHandler(store)
+  public textile = Textile
 
-  render () {
+  public render() {
     return (
       <Provider store={store}>
         <PersistGate loading={undefined} persistor={persistor}>
@@ -37,7 +37,7 @@ class App extends Component {
       </Provider>
     )
   }
-  componentWillMount () {
+  public componentWillMount() {
     this.textile.setup(
       {
         RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE
@@ -50,19 +50,17 @@ class App extends Component {
     )
   }
 
-  componentWillUnmount () {
+  public componentWillUnmount() {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
     }
-    this.notificationEventHandler.tearDown()
     this.textileNodeEventHandler.tearDown()
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
-    this.backgroundFetchEventHandler.tearDown()
     this.textile.tearDown()
   }
 
-  componentDidCatch(error: any, info: any) {
+  public componentDidCatch(error: any, info: any) {
     // TODO: Render some UI
     errorHandler(error, false)
   }

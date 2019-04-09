@@ -20,7 +20,7 @@ interface State {
 
 class SearchBar extends Component<Props, State> {
 
-  static defaultProps: Props = {
+  public static defaultProps: Props = {
     containerStyle: {
       paddingTop: 8,
       paddingBottom: 8,
@@ -48,7 +48,7 @@ class SearchBar extends Component<Props, State> {
     }
   }
 
-  textChanged = (text?: string) => {
+  public textChanged = (text?: string) => {
     this.setState({
       value: text,
       showClear: text !== undefined && text.length > 0
@@ -58,11 +58,11 @@ class SearchBar extends Component<Props, State> {
     }
   }
 
-  clear = () => {
+  public clear = () => {
     this.textChanged(undefined)
   }
 
-  render() {
+  public render() {
     // const borderRadius = (this.props.inputStyle.fontSize || SearchBar.defaultProps.inputStyle.fontSize!) / 3
     const inputColor = this.props.inputStyle.backgroundColor || SearchBar.defaultProps.inputStyle.backgroundColor!
     return (

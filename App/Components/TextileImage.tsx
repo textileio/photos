@@ -16,16 +16,16 @@ export interface OwnProps {
 type Props = OwnProps & Partial<ImageProps>
 
 export default class TextileImage extends React.Component<Props> {
-  static propTypes = {}
-  static defaultProps = {}
-  _onLoaded () {
+  public static propTypes = {}
+  public static defaultProps = {}
+  public _onLoaded() {
     if (!this.props.onLoad) {
       return
     }
     this.props.onLoad()
   }
 
-  _onError (event: any) {
+  public _onError(event: any) {
     // TODO: need the real type for Event here...
     if (!this.props.onError || !event.nativeEvent || !event.nativeEvent.message) {
       return
@@ -33,7 +33,7 @@ export default class TextileImage extends React.Component<Props> {
     this.props.onError(event.nativeEvent.message)
   }
 
-  render () {
+  public render() {
     const nativeProps = {
       ...this.props,
       forMinWidth: PixelRatio.getPixelSizeForLayoutSize(this.props.forMinWidth),

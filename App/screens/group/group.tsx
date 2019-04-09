@@ -5,7 +5,7 @@ import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
-import { util } from '@textile/react-native-sdk'
+import { pb, util } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
@@ -24,7 +24,6 @@ import UIActions from '../../Redux/UIRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
-import { pb } from '@textile/react-native-sdk'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -68,7 +67,7 @@ interface State {
 
 class Group extends Component<Props, State> {
 
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  public static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     // const openDrawer = navigation.getParam('openDrawer')
     // const addContact = navigation.getParam('addContact')
     const groupName = navigation.getParam('groupName')
@@ -91,7 +90,7 @@ class Group extends Component<Props, State> {
     }
   }
 
-  actionSheet: any
+  public actionSheet: any
 
   constructor(props: Props) {
     super(props)
@@ -100,7 +99,7 @@ class Group extends Component<Props, State> {
     }
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     this.props.navigation.addListener('willFocus', this.onFocus)
     this.props.navigation.setParams({
       groupName: this.props.groupName,
@@ -108,7 +107,7 @@ class Group extends Component<Props, State> {
     })
   }
 
-  render () {
+  public render() {
     // flexGrow allows android to scroll, however https://github.com/facebook/react-native/issues/19434 is still an issue
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
@@ -138,7 +137,7 @@ class Group extends Component<Props, State> {
     )
   }
 
-  sameUserAgain = (user: pb.IUser, previous: Item): boolean => {
+  public sameUserAgain = (user: pb.IUser, previous: Item): boolean => {
     if (!previous || !previous.type) {
       return false
     }
@@ -152,7 +151,7 @@ class Group extends Component<Props, State> {
     }
   }
 
-  renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
+  public renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
         const { user, caption, date, target, files, likes, comments, block } = item.data
@@ -234,25 +233,25 @@ class Group extends Component<Props, State> {
     }
   }
 
-  submit = (message: string) => this.props.sendMessage(message)
+  public submit = (message: string) => this.props.sendMessage(message)
 
-  onFocus = () => {
+  public onFocus = () => {
     this.props.refresh()
   }
 
-  onLike = (block: string) => {
+  public onLike = (block: string) => {
     return () => this.props.addPhotoLike(block)
   }
 
-  onComment = (target: string) => {
+  public onComment = (target: string) => {
     return () => this.props.navigateToComments(target)
   }
 
-  showActionSheet = () => {
+  public showActionSheet = () => {
     this.actionSheet.show()
   }
 
-  handleActionSheetResponse = (index: number) => {
+  public handleActionSheetResponse = (index: number) => {
     if (index === 0) {
       this.showInviteModal()
     } else if (index === 1) {
@@ -260,11 +259,11 @@ class Group extends Component<Props, State> {
     }
   }
 
-  showInviteModal = () => {
+  public showInviteModal = () => {
     this.setState({ showInviteContactModal: true })
   }
 
-  hideInviteModal = () => {
+  public hideInviteModal = () => {
     this.setState({ showInviteContactModal: false })
   }
 }
@@ -292,8 +291,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
     navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
     leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
-    retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry( key )) },
-    cancelShare: (key: string) => { dispatch(groupActions.addPhoto.cancelRequest( key )) }
+    retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry(key)) },
+    cancelShare: (key: string) => { dispatch(groupActions.addPhoto.cancelRequest(key)) }
   }
 }
 

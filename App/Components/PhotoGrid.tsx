@@ -38,18 +38,18 @@ interface ScreenProps {
 
 class PhotoGrid extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
   // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 20
+  public oneScreensWorth = 20
 
-  toast?: Toast
+  public toast?: Toast
 
-  _getToast (errorMessage?: string) {
+  public _getToast(errorMessage?: string) {
     return () => {
       if (errorMessage && this.toast) {
         this.toast.show(errorMessage, 2000)
       }
     }
   }
-  _getOverlay (item: ProcessingItemType) {
+  public _getOverlay(item: ProcessingItemType) {
     const processing = item.photo
     const id = item.id as string // We know this is a processing image so the id is a string
     return (
@@ -73,7 +73,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   * e.g.
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
-  renderRow (row: ListRenderItemInfo<IPhotoGridType>) {
+  public renderRow(row: ListRenderItemInfo<IPhotoGridType>) {
     const { item } = row
     switch (item.type) {
       case 'photo':
@@ -113,7 +113,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
     }
   }
 
-  _getItemLayout = (length: any, index: number) => {
+  public _getItemLayout = (length: any, index: number) => {
     const productHeight = PRODUCT_ITEM_HEIGHT + PRODUCT_ITEM_MARGIN
     return {
       length: productHeight,
@@ -125,7 +125,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
-  keyExtractor = (item: IPhotoGridType) => item.id
+  public keyExtractor = (item: IPhotoGridType) => item.id
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -140,7 +140,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
   // e.g. itemLayout={(data, index) => (
   //   {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
   // )}
-  render () {
+  public render() {
     return (
       <View style={styles.container}>
         {

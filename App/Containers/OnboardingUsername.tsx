@@ -77,7 +77,7 @@ class OnboardingUsername extends React.Component<Props, State> {
     }
   }
 
-  submit = () => {
+  public submit = () => {
     const { username } = this.state
     if (username) {
       this.props.submitUsername(username)
@@ -97,27 +97,27 @@ class OnboardingUsername extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount = () => {
+  public componentDidMount = () => {
     if (this.props.suggestion) {
       this.updateText(this.props.suggestion)
     }
   }
 
-  updateText = (text: string) => {
+  public updateText = (text: string) => {
     this.setState({
       username: text,
       valid: this.valid(text)
     })
   }
 
-  valid = (username?: string) => {
+  public valid = (username?: string) => {
     if (!username) {
       return false
     }
     return username.length > 0
   }
 
-  render () {
+  public render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
           <View>

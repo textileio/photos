@@ -15,7 +15,6 @@ import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
 import { API } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
-import { getPhotos } from '../Services/CameraRoll'
 import * as NotificationsSagas from './NotificationsSagas'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
@@ -24,10 +23,9 @@ import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
 import Upload from 'react-native-background-upload'
-import { ThreadData } from '../Redux/PhotoViewingRedux'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import PhotoViewingAction from '../Redux/PhotoViewingRedux'
+import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { SharedImage } from '../features/group/add-photo/models'
+import { logNewEvent } from './DeviceLogs'
 
 export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
   yield * processAvatarImage(action.payload.image)
@@ -46,29 +44,30 @@ function * processAvatarImage(image: SharedImage) {
     yield put(UIActions.sharePhotoRequest(image, defaultThread.id))
   } catch (error) {
     // TODO: What do to if adding profile photo fails?
+      yield call(logNewEvent, 'handleProfilePhotoUpdated', error.message, true)
   }
 }
 
-export function * navigateToThread ( action: ActionType<typeof UIActions.navigateToThreadRequest> ) {
+export function * navigateToThread(action: ActionType<typeof UIActions.navigateToThreadRequest>) {
   yield put(PhotoViewingActions.viewThread(action.payload.threadId))
   yield call(NavigationService.navigate, 'ViewThread', { threadId: action.payload.threadId })
 }
 
-export function * navigateToComments ( action: ActionType<typeof UIActions.navigateToCommentsRequest> ) {
+export function * navigateToComments(action: ActionType<typeof UIActions.navigateToCommentsRequest>) {
   const { photoId, threadId } = action.payload
   if (threadId) {
     // Required to navigate to a thread photo's comments from the all threads screen
-    yield put(PhotoViewingAction.viewThread(threadId))
+    yield put(PhotoViewingActions.viewThread(threadId))
   }
   yield put(PhotoViewingActions.viewPhoto(photoId))
   yield call(NavigationService.navigate, 'Comments')
 }
 
-export function * navigateToLikes ( action: ActionType<typeof UIActions.navigateToLikesRequest> ) {
+export function * navigateToLikes(action: ActionType<typeof UIActions.navigateToLikesRequest>) {
   const { photoId, threadId } = action.payload
   if (threadId) {
     // Required to navigate to a thread photo's likes from the all threads screen
-    yield put(PhotoViewingAction.viewThread(threadId))
+    yield put(PhotoViewingActions.viewThread(threadId))
   }
   yield put(PhotoViewingActions.viewPhoto(photoId))
   yield call(NavigationService.navigate, 'LikesScreen')
@@ -96,7 +95,7 @@ export function * synchronizeNativeUploads() {
   }
 }
 
-export function * chooseProfilePhoto () {
+export function * chooseProfilePhoto() {
   try {
     const result: { image: CameraRoll.IPickerImage, data: string } = yield call(CameraRoll.chooseProfilePhoto)
     const image: SharedImage = {
@@ -112,7 +111,7 @@ export function * chooseProfilePhoto () {
   }
 }
 
-export function * removePayloadFile (action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
+export function * removePayloadFile(action: ActionType<typeof UploadingImagesActions.imageUploadComplete>) {
   // TODO: Seeing an error here where the file is sometimes not found on disk...
   const { dataId } = action.payload
   const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
@@ -125,14 +124,16 @@ export function * removePayloadFile (action: ActionType<typeof UploadingImagesAc
   }
 }
 
-export function * handleUploadError (action: ActionType<typeof UploadingImagesActions.imageUploadError>) {
+export function * handleUploadError(action: ActionType<typeof UploadingImagesActions.imageUploadError>) {
   const { dataId } = action.payload
   const uploadingImage: UploadingImage = yield select(UploadingImagesSelectors.uploadingImageById, dataId)
   // If there are no more upload attempts, delete the payload file to free up disk space
   if (uploadingImage.remainingUploadAttempts === 0) {
     try {
       yield call(RNFS.unlink, uploadingImage.path)
-    } catch (error) { }
+    } catch (error) {
+      yield call(logNewEvent, 'handleUploadError', error.message, true)
+    }
     // Commenting this out for now so we can always see the last error that happend,
     // even though we're not going to retry the upload again.
     // yield put(UploadingImagesActions.imageRemovalComplete(dataId))
@@ -144,10 +145,12 @@ export function * presentPublicLinkInterface(action: ActionType<typeof UIActions
   try {
     const link = Config.RN_TEXTILE_CAFE_GATEWAY_URL + '/ipfs/' + path
     yield call(Share.share, {title: '', message: link})
-  } catch (error) {}
+  } catch (error) {
+    yield call(logNewEvent, 'refreshMessages', error.message, true)
+  }
 }
 
-export function * updateServices (action: ActionType<typeof PreferencesActions.toggleServicesRequest>) {
+export function * updateServices(action: ActionType<typeof PreferencesActions.toggleServicesRequest>) {
   const {name} = action.payload
   let currentStatus = action.payload.status
   if (!currentStatus) {
@@ -161,7 +164,7 @@ export function * updateServices (action: ActionType<typeof PreferencesActions.t
   }
 }
 
-export function * cameraPermissionsTrigger () {
+export function * cameraPermissionsTrigger() {
   // Will trigger a camera permission request
   if (Platform.OS === 'android') {
     const permission = yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE, {
@@ -169,11 +172,11 @@ export function * cameraPermissionsTrigger () {
         message: 'Textile accesses your photo storage to import any new photos you take after you install the app.'
       })
   } else {
-    getPhotos(1)
+    CameraRoll.getPhotos(1)
   }
 }
 
-export function * backgroundLocationPermissionsTrigger () {
+export function * backgroundLocationPermissionsTrigger() {
   if (Platform.OS === 'android') {
     yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
       title: 'Location Please',
@@ -184,11 +187,11 @@ export function * backgroundLocationPermissionsTrigger () {
   }
 }
 
-export function * addPhotoLike (action: ActionType<typeof UIActions.addLikeRequest>) {
+export function * addPhotoLike(action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
     yield call(API.likes.add, blockId)
   } catch (error) {
-
+    yield call(logNewEvent, 'addPhotoLike', error.message, true)
   }
 }

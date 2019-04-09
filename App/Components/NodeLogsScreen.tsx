@@ -21,7 +21,7 @@ interface State {
 
 export default class NodeLogsScreen  extends Component<NavigationScreenProps<NavProps>, State> {
 
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  public static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     const refresh = navigation.getParam('refresh')
     const copy = navigation.getParam('copy')
     const goBack = () => navigation.goBack()
@@ -41,12 +41,12 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
     }
   }
 
-  state: State = { refreshing: false }
+  public state: State = { refreshing: false }
 
-  textInput?: TextInput
-  scrollView?: ScrollView
+  public textInput?: TextInput
+  public scrollView?: ScrollView
 
-  refreshLogData = async () => {
+  public refreshLogData = async () => {
     this.setState({ refreshing: true, logData: undefined, error: undefined })
     try {
       const exists = await FS.exists(LOG_FILE_PATH)
@@ -66,19 +66,19 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
     }
   }
 
-  copyLogData = () => {
+  public copyLogData = () => {
     if (this.state.logData) {
       Clipboard.setString(this.state.logData)
     }
   }
 
-  scrollToBottom = () => {
+  public scrollToBottom = () => {
     if (this.scrollView) {
       this.scrollView!.scrollToEnd({animated: true})
     }
   }
 
-  componentWillMount() {
+  public componentWillMount() {
     this.props.navigation.setParams({
       refresh: this.refreshLogData,
       copy: this.copyLogData
@@ -86,7 +86,7 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
     this.refreshLogData()
   }
 
-  render() {
+  public render() {
     const font = Platform.OS === 'ios' ? 'Courier' : 'monospace'
     if (this.state.error) {
       return (

@@ -15,15 +15,15 @@ import AccountActions from '../../Redux/AccountRedux'
 import { groupActions } from '../../features/group'
 
 export default class TextileNodeEventHandler {
-  store: Store<RootState>
-  events = new Events()
+  public store: Store<RootState>
+  public events = new Events()
 
   constructor(store: Store<RootState>) {
     this.store = store
     this.setup()
   }
 
-  setup () {
+  public setup() {
     // Now handled internally by sdk
     this.events.addListener('NODE_ONLINE', () => {
       this.store.dispatch(TextileEventsActions.nodeOnline())
@@ -59,7 +59,7 @@ export default class TextileNodeEventHandler {
 
       // create a local log line for the threadUpdate event
       const message = `BlockType ${type_url} on ${update.thread}`
-      this.store.dispatch(DeviceLogsActions.logNewEvent( (new Date()).getTime(), 'onThreadUpdate', message, false))
+      this.store.dispatch(DeviceLogsActions.logNewEvent((new Date()).getTime(), 'onThreadUpdate', message, false))
     })
     this.events.addListener('WALLET_UPDATE', (base64: string) => {
       const update: pb.IWalletUpdate = pb.WalletUpdate.decode(Buffer.from(base64, 'base64'))
@@ -115,7 +115,7 @@ export default class TextileNodeEventHandler {
     })
   }
 
-  tearDown () {
+  public tearDown() {
     this.events.removeAllListeners()
   }
 }

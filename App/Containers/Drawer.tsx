@@ -9,7 +9,7 @@ const CONTAINER: ViewStyle = {
 }
 
 class Drawer extends Component<NavigationScreenProps> {
-  render() {
+  public render() {
     return (
       <SafeAreaView style={CONTAINER} forceInset={{ top: 'always', horizontal: 'never' }}>
         <Account {...this.props} />

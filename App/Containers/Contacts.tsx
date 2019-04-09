@@ -42,7 +42,7 @@ interface State {
 
 class Contacts extends React.Component<Props, State> {
 
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  public static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
     const addContact = navigation.getParam('addContact')
     const headerLeft = (
@@ -72,14 +72,14 @@ class Contacts extends React.Component<Props, State> {
     this.state = {}
   }
 
-  componentDidMount () {
+  public componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
       addContact: this.inviteContactRequest
     })
   }
 
-  render () {
+  public render() {
     const allContacts: ReadonlyArray<pb.IContact> = this.props.contacts
     let data = allContacts
     if (this.state.searchString !== undefined && this.state.searchString.length > 0) {
@@ -112,9 +112,9 @@ class Contacts extends React.Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: pb.IContact) => item.address
+  public keyExtractor = (item: pb.IContact) => item.address
 
-  renderRow = (row: ListRenderItemInfo<pb.IContact>) => {
+  public renderRow = (row: ListRenderItemInfo<pb.IContact>) => {
     const { item } = row
     const leftItem = <Avatar style={{ width: 50, height: 50, backgroundColor: color.grey_5 }} target={item.avatar} />
     const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
@@ -128,23 +128,23 @@ class Contacts extends React.Component<Props, State> {
     )
   }
 
-  updateSearchString = (string?: string) => {
+  public updateSearchString = (string?: string) => {
     this.setState({
       searchString: string
     })
   }
 
-  onPress = (contactInfo: pb.IContact) => {
+  public onPress = (contactInfo: pb.IContact) => {
     return () => {
       this.props.navigation.navigate('Contact', { avatar: contactInfo.avatar, username: contactInfo.name, address: contactInfo.address })
     }
   }
 
-  inviteContactRequest = () => {
+  public inviteContactRequest = () => {
     this.props.navigation.navigate('AddContact')
   }
 
-  openDrawer = () => {
+  public openDrawer = () => {
     this.props.navigation.openDrawer()
     Keyboard.dismiss()
   }

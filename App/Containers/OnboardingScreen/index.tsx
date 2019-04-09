@@ -53,7 +53,7 @@ interface State {
 
 class OnboardingScreen extends React.Component<Props, State> {
 
-  pages?: any
+  public pages?: any
 
   constructor(props: Props) {
     super(props)
@@ -64,17 +64,17 @@ class OnboardingScreen extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     this.setState({
       showArrow: this.showArrowForIndex(0)
     })
   }
 
-  showArrowForIndex = (index: number) => {
+  public showArrowForIndex = (index: number) => {
     return index <= 2
   }
 
-  nextPage = () => {
+  public nextPage = () => {
     if (!this.state.disableNext && this.pages && this.pages.length - 1 > this.state.currentPage) {
       this.setState({
         showArrow: this.showArrowForIndex(this.state.currentPage + 1),
@@ -87,12 +87,12 @@ class OnboardingScreen extends React.Component<Props, State> {
     }
   }
 
-  complete = () => {
+  public complete = () => {
     this.props.complete()
     this.props.navigation.navigate('StatusCheck')
   }
 
-  pagesArray = () => {
+  public pagesArray = () => {
     const pages = [
       (
         <OnboardingMessage
@@ -155,7 +155,7 @@ class OnboardingScreen extends React.Component<Props, State> {
     return pages
   }
 
-  render() {
+  public render() {
     this.pages = this.pagesArray()
     return (
       <SafeAreaView style={CONTAINER}>

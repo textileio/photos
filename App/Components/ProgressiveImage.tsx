@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {RootAction, RootState} from '../Redux/Types'
+import {RootState} from '../Redux/Types'
 
-import { View, ImageResizeMode } from 'react-native'
-import { ImageStyle, Platform } from 'react-native'
+import { ImageStyle, Platform, View, ImageResizeMode } from 'react-native'
 import TextileImage from './TextileImage'
 
 export interface IProgressiveImageProps {
@@ -27,46 +26,46 @@ interface IProgressiveImageState {
 
 class ProgressiveImage extends React.Component<IProgressiveImageProps & StateProps> {
 
-  state: IProgressiveImageState = {
+  public state: IProgressiveImageState = {
     largeSuccess: false,
     smallSuccess: false,
     thumbSuccess: false
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
+  public shouldComponentUpdate(nextProps, nextState) {
     return this.props.started !== nextProps.started ||
     this.state.largeSuccess !== nextState.largeSuccess ||
     this.state.smallSuccess !== nextState.smallSuccess ||
     this.state.thumbSuccess !== nextState.thumbSuccess
   }
 
-  largeOnLoad = () => {
+  public largeOnLoad = () => {
     this.setState({ largeSuccess: true })
   }
 
-  thumbOnLoad = () => {
+  public thumbOnLoad = () => {
     this.setState({ thumbSuccess: true })
   }
-  smallOnLoad = () => {
+  public smallOnLoad = () => {
     this.setState({ smallSuccess: true })
   }
 
-  getThumbWidth = () => {
+  public getThumbWidth = () => {
      // TextileImage will 3x this
     return 30
   }
 
-  getSmallWidth = () => {
+  public getSmallWidth = () => {
      // TextileImage will 3x this
     return Math.min(100, this.props.forMinWidth)
   }
 
-  getFullWidth = () => {
+  public getFullWidth = () => {
      // TextileImage will 3x this
     return Math.min(300, this.props.forMinWidth)
   }
 
-  android (resizeMode: ImageResizeMode) {
+  public android(resizeMode: ImageResizeMode) {
     const thumbStyle: ImageStyle = {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }
     const smallStyle: ImageStyle[] = [{ backgroundColor: 'transparent'}, thumbStyle, !this.state.smallSuccess ? { height: 0 } : {}]
     const previewStyle: ImageStyle[] = [{ backgroundColor: 'transparent'}, thumbStyle, !this.state.largeSuccess ? { height: 0 } : {}]
@@ -104,7 +103,7 @@ class ProgressiveImage extends React.Component<IProgressiveImageProps & StatePro
     )
   }
 
-  ios(resizeMode: ImageResizeMode) {
+  public ios(resizeMode: ImageResizeMode) {
     if (this.props.showPreview) {
       return (
         <TextileImage
@@ -148,7 +147,7 @@ class ProgressiveImage extends React.Component<IProgressiveImageProps & StatePro
     )
   }
 
-  render () {
+  public render() {
     const isVisible = this.props.isVisible !== undefined ? this.props.isVisible : true
     const resizeMode = this.props.resizeMode || 'center'
     if (!this.props.showPreview || !isVisible) {

@@ -32,7 +32,7 @@ interface ScreenProps {
 }
 
 class QRCodeModal extends React.Component<DispatchProps & ScreenProps> {
-  getLink (link: string): string {
+  public getLink(link: string): string {
     if (Platform.OS === 'android') {
       // issues with Android link getting stolen by chrome... so just going to URL it now
       return link
@@ -40,7 +40,7 @@ class QRCodeModal extends React.Component<DispatchProps & ScreenProps> {
     return link.replace('https://', `${Config.RN_URL_SCHEME}://`)
   }
 
-  render () {
+  public render() {
     const title = this.props.invite ? `Invite to ${this.props.invite.name}` : 'Generating Invite...'
     const subTitle = this.props.invite ? 'Have your friend point their mobile camera above.' : 'please wait'
     return (

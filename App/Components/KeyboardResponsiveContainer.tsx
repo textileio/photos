@@ -11,21 +11,21 @@ interface State {
 
 export default class KeyboardResponsiveContainer extends React.Component<Props, State> {
 
-  initialized = false
-  bottomViewY = 0
-  bottomView?: View
-  keyboardWillShowSub?: EmitterSubscription
-  keyboardWillHideSub?: EmitterSubscription
-  keyboardWillChangeFrameSub?: EmitterSubscription
+  public initialized = false
+  public bottomViewY = 0
+  public bottomView?: View
+  public keyboardWillShowSub?: EmitterSubscription
+  public keyboardWillHideSub?: EmitterSubscription
+  public keyboardWillChangeFrameSub?: EmitterSubscription
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       height: 0
     }
   }
 
-  keyboardWillChangeFrame = (event: any) => {
+  public keyboardWillChangeFrame = (event: any) => {
     LayoutAnimation.configureNext({
       duration: event.duration,
       update: {
@@ -38,7 +38,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     })
   }
 
-  keyboardWillAppear = (event: any) => {
+  public keyboardWillAppear = (event: any) => {
     LayoutAnimation.configureNext({
       duration: event.duration,
       update: {
@@ -51,7 +51,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     })
   }
 
-  keyboardWillHide = (event: any) => {
+  public keyboardWillHide = (event: any) => {
     LayoutAnimation.configureNext({
       duration: event.duration,
       update: {
@@ -64,7 +64,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     })
   }
 
-  onLayout = (event: any) => {
+  public onLayout = (event: any) => {
     if (!this.initialized && this.bottomView) {
       this.initialized = true
       this.bottomView.measure((x, y, width, height, pageX, pageY) => {
@@ -73,13 +73,13 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     }
   }
 
-  componentDidMount () {
+  public componentDidMount() {
     this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillAppear)
     this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
     // this.keyboardWillChangeFrameSub = Keyboard.addListener('keyboardWillChangeFrame', this.keyboardWillChangeFrame)
   }
 
-  componentWillUnmount () {
+  public componentWillUnmount() {
     if (this.keyboardWillShowSub) {
       this.keyboardWillShowSub.remove()
     }
@@ -91,7 +91,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     }
   }
 
-  render () {
+  public render() {
     const { style } = this.props
     return (
       <View style={{ flex: 1 }}>

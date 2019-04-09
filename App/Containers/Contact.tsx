@@ -34,7 +34,7 @@ type Props = StateProps & NavigationScreenProps<NavProps>
 
 class ContactModal extends React.Component<Props> {
 
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  public static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     const back = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>
@@ -47,13 +47,13 @@ class ContactModal extends React.Component<Props> {
     }
   }
 
-  navigate (id: string) {
+  public navigate(id: string) {
     return () => {
       this.props.navigation.navigate('ViewThread', { threadId: id })
     }
   }
 
-  render () {
+  public render() {
     const avatar = this.props.navigation.getParam('avatar')
     // const username = this.props.navigation.getParam('username')
     return (

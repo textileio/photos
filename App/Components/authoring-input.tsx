@@ -55,7 +55,7 @@ class AuthoringInput extends Component<Props, State> {
     }
   }
 
-  render() {
+  public render() {
     return (
       <View style={[this.props.containerStyle, CONTAINER]}>
         <TextInput
@@ -76,7 +76,7 @@ class AuthoringInput extends Component<Props, State> {
     )
   }
 
-  updateText = (text: string) => {
+  public updateText = (text: string) => {
     this.setState({
       textValue: text,
       disabled: text.length < 1
@@ -86,7 +86,7 @@ class AuthoringInput extends Component<Props, State> {
     }
   }
 
-  submit = () => {
+  public submit = () => {
     if (this.props.onSendMessage) {
       this.props.onSendMessage(this.state.textValue!)
     }

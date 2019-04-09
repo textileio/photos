@@ -21,13 +21,13 @@ interface ComponentProps {
 }
 
 export class ThreadSelectComponent extends React.Component<ComponentProps> {
-  renderCreateThread = () => {
+  public renderCreateThread = () => {
     return (
       <ThreadCreateCard onSelect={this.props.createNew} />
     )
   }
 
-  renderRow = (data: ListRenderItemInfo<ThreadData>) => {
+  public renderRow = (data: ListRenderItemInfo<ThreadData>) => {
     const thread = data.item
     return (
       <ThreadSelectCard
@@ -39,7 +39,7 @@ export class ThreadSelectComponent extends React.Component<ComponentProps> {
     )
   }
 
-  renderHeader = () => {
+  public renderHeader = () => {
     if (this.props.threads.length < 4) {
       // Only freeze a top row if the list is on the longer side
       return (<View/>)
@@ -60,7 +60,7 @@ export class ThreadSelectComponent extends React.Component<ComponentProps> {
     )
   }
 
-  render () {
+  public render() {
     return (
       <View style={styles.body}>
         {this.renderHeader()}
@@ -95,13 +95,13 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps
 
 class ThreadSelect extends React.Component<ScreenProps & Props> {
-  renderCreateThread = () => {
+  public renderCreateThread = () => {
     return (
       <ThreadCreateCard onSelect={this.props.createNew} />
     )
   }
 
-  render () {
+  public render() {
     return (
       <View style={styles.contentContainer}>
         <View style={styles.header}>

@@ -3,7 +3,7 @@ import Config from 'react-native-config'
 import { DeepLinkData} from '../Models/TextileTypes'
 import { pb } from '@textile/react-native-sdk'
 
-function getParams (hash: string): { [key: string]: (string | string[]) } {
+function getParams(hash: string): { [key: string]: (string | string[]) } {
   const query = hash.replace('#', '')
   const vars = query.split('&').map((expression) => expression.split('='))
   const queryString: { [key: string]: (string | string[]) } = {}
@@ -22,7 +22,7 @@ function getParams (hash: string): { [key: string]: (string | string[]) } {
   return queryString
 }
 
-function getData (href: string): DeepLinkData | undefined {
+function getData(href: string): DeepLinkData | undefined {
   const regex = new RegExp([
     '^(http|https|textile|textile-beta|textile-dev)://',
     '(([^:/?#]*)(?::([0-9]+))?)',
@@ -46,7 +46,7 @@ function getData (href: string): DeepLinkData | undefined {
   }
 }
 
-function createInviteLink (invite: pb.IExternalInvite, threadName: string): string {
+function createInviteLink(invite: pb.IExternalInvite, threadName: string): string {
   const hash: string[] = []
   hash.push(`id=${encodeURIComponent(invite.id)}`)
   hash.push(`key=${encodeURIComponent(invite.key)}`)
@@ -58,7 +58,7 @@ function createInviteLink (invite: pb.IExternalInvite, threadName: string): stri
   return `https://www.textile.photos/invites/new#${hash.join('&')}`
 }
 
-function route (link: string, navigation: NavigationService) {
+function route(link: string, navigation: NavigationService) {
   const data = getData(link)
   if (data) {
     if (data.path === '/invites/device' && data.hash !== '') {

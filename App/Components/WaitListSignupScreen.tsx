@@ -72,7 +72,7 @@ interface State {
 
 export default class WaitListSignupScreen extends React.Component<Props, State> {
 
-  toast?: Toast
+  public toast?: Toast
 
   constructor(props: Props) {
     super(props)
@@ -83,18 +83,18 @@ export default class WaitListSignupScreen extends React.Component<Props, State> 
     }
   }
 
-  submit = () => {
+  public submit = () => {
     this.postData()
   }
 
-  updateText = (text: string) => {
+  public updateText = (text: string) => {
     this.setState({
       emailAddress: text,
       valid: this.emailValid(text)
     })
   }
 
-  emailValid = (email?: string) => {
+  public emailValid = (email?: string) => {
     if (!email) {
       return false
     }
@@ -107,7 +107,7 @@ export default class WaitListSignupScreen extends React.Component<Props, State> 
     }
   }
 
-  render () {
+  public render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
           <View>
@@ -145,7 +145,7 @@ export default class WaitListSignupScreen extends React.Component<Props, State> 
     )
   }
 
-  async postData() {
+  public async postData() {
     if (this.state.emailAddress) {
       this.setState({ processing: true })
       const baseUrl: string = Config.RN_MAILCHIMP_API_URL

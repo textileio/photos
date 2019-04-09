@@ -84,28 +84,20 @@ export const initialState: ThreadsState = {
   inboundInvites: []
 }
 
-export function reducer (state: ThreadsState = initialState, action: ThreadsAction): ThreadsState {
+export function reducer(state: ThreadsState = initialState, action: ThreadsAction): ThreadsState {
   switch (action.type) {
     case getType(actions.threadQRCodeSuccess): {
       return { ...state, qrCodeInvite: action.payload }
     }
     case getType(actions.addExternalInviteRequest): {
       const { id, name } = action.payload
-      const existing = state.outboundInvites.find((invite) => invite.id === id )
+      const existing = state.outboundInvites.find((invite) => invite.id === id)
       if (existing && !existing.error) {
         // if the invite already exists and hasn't error'd, return
         return state
       }
       const outboundInvite = { id, name }
       const outboundInvites = state.outboundInvites.filter((inv) => inv.id !== id).concat([outboundInvite])
-      return { ...state, outboundInvites }
-    }
-    case getType(actions.addExternalInviteSuccess): {
-      const { id, invite } = action.payload
-      // update the outbound invite with the new Invite object
-      const outboundInvites = state.outboundInvites.map((outbound) => {
-        return outbound.id === id ? { ...outbound, invite } : outbound
-      })
       return { ...state, outboundInvites }
     }
     case getType(actions.addExternalInviteSuccess): {

@@ -19,13 +19,13 @@ interface StateProps {
 type Props = StateProps & NavigationScreenProps
 
 class Account extends Component<Props> {
-  state = {  }
+  public state = {  }
 
-  navToSettings = () => {
+  public navToSettings = () => {
     this.props.navigation.navigate('Account')
   }
 
-  render() {
+  public render() {
     return (
       <View style={CONTAINER}>
         <Icon style={{ position: 'absolute', top: 11, right: 11 }} color={color.grey_0} name='nut' onPress={this.navToSettings} size={24} />

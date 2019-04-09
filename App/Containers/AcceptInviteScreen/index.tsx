@@ -63,7 +63,7 @@ interface DispatchProps {
 class AcceptInviteScreen extends React.Component<StateProps & DispatchProps & NavigationScreenProps<NavProps>> {
 
   // @ts-ignore
-  static navigationOptions = ({ navigation }) => {
+  public static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         {/* tslint:disable-next-line jsx-no-lambda */}
@@ -78,12 +78,12 @@ class AcceptInviteScreen extends React.Component<StateProps & DispatchProps & Na
 
   }
 
-  accept = () => {
+  public accept = () => {
     this.props.navigation.goBack()
     this.props.acceptExternalInvite()
   }
 
-  render () {
+  public render() {
     const inviter = this.props.navigation.getParam('inviter') || 'unknown user'
     const threadName = this.props.navigation.getParam('name') || 'unknown thread'
     return (

@@ -11,7 +11,7 @@ interface OwnProps {
 }
 
 class CustomFeedItem extends React.PureComponent<OwnProps> {
-  render () {
+  public render() {
     const readStyle = {
       width: 29,
       height: 29,

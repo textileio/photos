@@ -24,7 +24,7 @@ export const initialState: DeviceLogsState = {
   logs: []
 }
 
-export function reducer (state: DeviceLogsState = initialState, action: DeviceLogsAction): DeviceLogsState {
+export function reducer(state: DeviceLogsState = initialState, action: DeviceLogsAction): DeviceLogsState {
   switch (action.type) {
     case getType(actions.logNewEvent): {
       const logRow: DeviceLogsRow = {

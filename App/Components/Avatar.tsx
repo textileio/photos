@@ -41,7 +41,7 @@ class Avatar extends React.Component<Props, State> {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
+  public shouldComponentUpdate(nextProps, nextState) {
     return nextProps.target !== this.props.target ||
       nextState.ipfsError !== this.state.ipfsError ||
       // node status hasn't changed
@@ -53,30 +53,30 @@ class Avatar extends React.Component<Props, State> {
       (nextProps.style !== undefined && this.props.style !== undefined && nextProps.style.width !== this.props.style.width)
   }
 
-  onImageLayout = (event: LayoutChangeEvent) => {
+  public onImageLayout = (event: LayoutChangeEvent) => {
     this.setState({
       borderRadius: event.nativeEvent.layout.width / 2
     })
   }
 
-  onIPFSError = () => {
+  public onIPFSError = () => {
     this.setState({
       ipfsError: true
     })
   }
-  onHTTPLoad = () => {
+  public onHTTPLoad = () => {
     // allow app to skip iPFS request if HTTP has already completed
     this.setState({
       httpSuccess: true
     })
   }
 
-  shouldShowIPFS = (resolution: string) => {
+  public shouldShowIPFS = (resolution: string) => {
     // Node should be online, no IPFS error already, and HTTP shouldn't have allready succeeded
     return this.props.online && !this.state.ipfsError && (!this.state.httpSuccess || resolution !== 'small')
   }
 
-  render () {
+  public render() {
     const { style, icon, target, local, started, online } = this.props
     const width = style && style.width ? style.width : this.state.defaultSize
     const height = style && style.height ? style.height : width
