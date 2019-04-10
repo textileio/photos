@@ -88,7 +88,7 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
 
   render() {
     const font = Platform.OS === 'ios' ? 'Courier' : 'monospace'
-    if (this.state.error) {
+    if (this.state.error && this.state.error !== '') {
       return (
         <View style={{ flex: 1, backgroundColor: color.screen_primary, justifyContent: 'center', alignItems: 'center' }}>
           <Text>{this.state.error}</Text>
