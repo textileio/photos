@@ -11,7 +11,6 @@ import Avatar from '../../Components/Avatar'
 import FeedItem from '../../SB/components/FeedItem'
 import { TextileHeaderButtons } from '../../Components/HeaderButtons'
 
-import { getProfile } from '../../Redux/AccountSelectors'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import NotificationsActions, { NotificationsSelectors } from '../../Redux/NotificationsRedux'
@@ -112,7 +111,10 @@ class Notifications extends React.PureComponent<Props> {
 
   _renderItem = ({ item }) => {
     return (
-      <FeedItem profile={this.props.profile} notification={item} onClick={this._onClick} />
+      <FeedItem
+        notification={item}
+        onClick={this._onClick}
+      />
     )
   }
 
@@ -165,7 +167,6 @@ class Notifications extends React.PureComponent<Props> {
 
 interface StateProps {
   notifications: Notification[]
-  profile: pb.IContact | undefined
   showOnboarding: boolean
 }
 
@@ -175,7 +176,6 @@ const mapStateToProps = (state: RootState): StateProps => {
 
   return {
     notifications,
-    profile: getProfile(state),
     showOnboarding
   }
 }
