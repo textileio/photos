@@ -5,17 +5,32 @@ import Icon from '@textile/react-native-icon'
 import Avatar from '../../../Components/Avatar'
 import ImageSc from 'react-native-scalable-image'
 
-import RadioButton from '../../components/RadioButton'
+import RadioButton from '../RadioButton'
 
 import styles from './statics/styles'
+import { IncludedContact } from '.'
 
-const ContactSelectCard = (props) => {
+interface ContactLinkCardProps {
+  text: string
+  icon: string
+  select: () => void
+}
+
+interface ContactSelectCardProps {
+  item: IncludedContact
+  select: (item: IncludedContact, included: boolean) => void
+  selected: boolean
+}
+
+const ContactSelectCard = (props: ContactSelectCardProps) => {
   const { item, select, selected } = props
 
+  const onPress = () => {
+    select(item, item.included)
+  }
+
   return (
-    <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={() => {
-      select(item, item.included)
-    }}>
+    <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={onPress}>
       <Avatar style={styles.selectedContact} target={item.avatar} />
       <Text style={styles.contactName}>{item.name || 'peer'}</Text>
       <View style={styles.contactSelectRadio}>
@@ -25,12 +40,10 @@ const ContactSelectCard = (props) => {
   )
 }
 
-export const ContactLinkCard = (props) => {
+export const ContactLinkCard = (props: ContactLinkCardProps) => {
   const { text, icon, select } = props
   return (
-    <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={() => {
-      select()
-    }}>
+    <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={select}>
       {icon === 'qr-code' && <ImageSc
         source={require('../../../Images/v2/qr.png')}
         width={20}

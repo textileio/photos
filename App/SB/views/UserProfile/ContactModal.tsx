@@ -26,7 +26,7 @@ const ContactModal = (props) => {
         <View style={styles.header}>
           <Text style={styles.title}>Contact Textile:</Text>
           <TouchableOpacity style={styles.closeIconPadding} onPress={onClose}>
-            <Image style={styles.closeIcon} source={require('../../components/BottomDrawerPhotos/statics/icon-cancel.png')} />
+            <Image style={styles.closeIcon} source={require('../../../Images/v2/icon-cancel.png')} />
           </TouchableOpacity>
         </View>
         <View style={styles.listContainer}>

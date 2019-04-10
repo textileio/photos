@@ -4,7 +4,11 @@ import ImageSc from 'react-native-scalable-image'
 
 import styles from './statics/styles'
 
-const Logo = props => {
+interface LogoProps {
+  children: Element
+}
+
+const Logo = (props: LogoProps) => {
   const { children } = props
 
   return (
