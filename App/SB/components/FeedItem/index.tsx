@@ -17,6 +17,7 @@ interface FeedItemProps {
 const FeedItem = (props: FeedItemProps) => {
   const { notification, onClick } = props
   const date = moment(notification.date).fromNow()
+  const dateText = date.toString() === '' || date.toString() === undefined ? 'now' : date.toString()
   const payload = NotificationServices.toPayload(notification)
   const clickFunction = () => { onClick(notification) }
   if (!payload) {
@@ -37,18 +38,7 @@ const FeedItem = (props: FeedItemProps) => {
     borderColor: 'rgba(255, 28, 63, 0.2)'
   }
 
-  const leftSource = (
-    <View
-      style={{...readStyle, justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}
-    >
-      <Avatar
-        style={{ width: '100%', height: '100%', borderRadius: 16, backgroundColor: color.grey_5 }}
-        target={notification.avatar}
-      />
-    </View>
-  )
-
-  const feedText = payload.feed && payload.feed !== '' ? payload.feed : undefined
+  const feedText = payload.feed && payload.feed !== '' ? payload.feed : `${payload.title} ${payload.feed} ${payload.message}`
 
   // TODO: Update textile image props to target and index
   return (
@@ -59,12 +49,19 @@ const FeedItem = (props: FeedItemProps) => {
     >
       <View style={styles.headerIconUser}>
         <View style={styles.iconContainer}>
-          {leftSource}
+          <View
+            style={{...readStyle, justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}
+          >
+            <Avatar
+              style={{ width: '100%', height: '100%', borderRadius: 16, backgroundColor: color.grey_5 }}
+              target={notification.avatar}
+            />
+          </View>
         </View>
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.text}>{feedText}</Text>
-        <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
+        <Text style={[styles.timestamp, !notification.read && styles.unread]}>{dateText}</Text>
       </View>
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
         {photoId && <TextileImage
