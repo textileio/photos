@@ -1,7 +1,37 @@
-import { StyleSheet, ImageStyle } from 'react-native'
+import { StyleSheet, ImageStyle, ViewStyle, TextStyle } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
-export default StyleSheet.create({
+type Styles = {
+  contentContainer: ViewStyle
+  link: TextStyle
+  inactive: TextStyle
+  header: ViewStyle
+  headerTitle: ViewStyle
+  title: TextStyle
+  small: TextStyle
+  subtitle: TextStyle
+  selectedContact: ImageStyle
+  selectedContactList: ViewStyle
+  selectedContactIcon: ImageStyle
+  contactIcon: ImageStyle
+  body: ViewStyle
+  searchBoxContainer: ViewStyle
+  searchBoxPlaceholder: ViewStyle
+  searchBoxIcon: ImageStyle
+  searchBoxInput: TextStyle
+  contactList: ViewStyle
+  inviteItem: ViewStyle
+  inviteLink: TextStyle
+  inviteLessImage: ImageStyle
+  inviteLess: ViewStyle
+  contactItem: ViewStyle
+  contactName: TextStyle
+  contactSelectRadio: ViewStyle
+  linkIcon: ImageStyle
+  linkText: TextStyle
+}
+
+export default StyleSheet.create<Styles>({
   contentContainer: {
     flex: 1,
     flexDirection: 'column',
@@ -46,7 +76,7 @@ export default StyleSheet.create({
     width: 43,
     position: 'relative',
     marginRight: 15
-  } as ImageStyle,
+  },
   selectedContactList: {
     flexDirection: 'row'
   },
@@ -56,11 +86,11 @@ export default StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     right: -5
-  } as ImageStyle,
+  },
   contactIcon: {
     height: 43,
     width: 43
-  } as ImageStyle,
+  },
   body: {},
   searchBoxContainer: {
     flexDirection: 'row',
@@ -134,7 +164,7 @@ export default StyleSheet.create({
     width: 20,
     margin: 12,
     marginRight: 15
-  } as ImageStyle,
+  },
   linkText: {
     fontFamily: 'Biotif-Regular',
     fontSize: 14,
