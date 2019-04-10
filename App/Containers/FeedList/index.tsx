@@ -70,7 +70,7 @@ class Notifications extends React.PureComponent<Props> {
     this.props.readAllNotifications()
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // on mount, set listeners for enter and exit of the tab
     const willFocus = this.props.navigation.addListener('willFocus', this._onFocus)
     const willBlur = this.props.navigation.addListener('willBlur', this._onBlur)
@@ -83,14 +83,14 @@ class Notifications extends React.PureComponent<Props> {
     })
   }
 
-  componentDidUpdate (prevProps, prevState, snapShot) {
+  componentDidUpdate(prevProps, prevState, snapShot) {
     // Will clear the onboarding only after the first feed item appears
     if (this.props.showOnboarding && this.props.notifications !== prevProps.notifications && this.props.notifications.length > 0) {
       this.props.completeTourScreen()
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     // remove the listeners for enter / exit the tab
     if (this.state.willFocus) {
       this.state.willFocus.remove()
@@ -100,7 +100,7 @@ class Notifications extends React.PureComponent<Props> {
     }
   }
 
-  _onClick (notification) {
+  _onClick = (notification) => {
     this.props.clickNotification(notification)
   }
 
@@ -112,11 +112,11 @@ class Notifications extends React.PureComponent<Props> {
 
   _renderItem = ({ item }) => {
     return (
-      <FeedItem profile={this.props.profile} notification={item} onClick={this._onClick.bind(this)} />
+      <FeedItem profile={this.props.profile} notification={item} onClick={this._onClick} />
     )
   }
 
-  _renderOnboarding () {
+  _renderOnboarding() {
     // needed a dynamic width for the blurb to fit without scroll
     const containerWidth = (Dimensions.get('window').width) * 0.92
     const fontSize = Math.min(containerWidth / (32 * 0.5476) - 5, 16)
@@ -124,7 +124,8 @@ class Notifications extends React.PureComponent<Props> {
       <View style={onboardingStyles.emptyStateContainer}>
         <Image
           style={onboardingStyles.emptyStateImage3}
-          source={require('../../Images/v2/notifications.png')} />
+          source={require('../../Images/v2/notifications.png')}
+        />
         <Text style={[onboardingStyles.emptyStateText, {fontSize}]}>
           This is your notification feed where
           you'll be able to quickly view all
@@ -136,7 +137,7 @@ class Notifications extends React.PureComponent<Props> {
     )
   }
 
-  _renderItems () {
+  _renderItems() {
     return (
       <View style={styles.contentContainer}>
         <FlatList
@@ -151,7 +152,7 @@ class Notifications extends React.PureComponent<Props> {
     )
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
