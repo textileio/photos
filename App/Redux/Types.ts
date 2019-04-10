@@ -6,6 +6,7 @@ import { AccountAction } from './AccountRedux'
 import { AuthAction } from './AuthRedux'
 import { CameraRollAction } from './CameraRollRedux'
 import { ContactsAction } from '../features/contacts'
+import { DeviceLogsAction } from './DeviceLogsRedux'
 import { PhotoViewingAction } from './PhotoViewingRedux'
 import { PreferencesAction } from './PreferencesRedux'
 import { NotificationsAction } from './NotificationsRedux'
@@ -23,6 +24,7 @@ export type RootAction =
   AuthAction |
   CameraRollAction |
   ContactsAction |
+  DeviceLogsAction |
   PhotoViewingAction |
   PreferencesAction |
   NotificationsAction |
