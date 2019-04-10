@@ -36,7 +36,7 @@ class ReduxState extends React.PureComponent {
   }
 
   renderRow ({ item }) {
-    const text = item && item != '' ? item : undefined
+    const text = item && item !== '' ? item : undefined
     return (
       <Text>{text}</Text>
     )
