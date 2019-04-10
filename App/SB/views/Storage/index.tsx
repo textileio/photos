@@ -16,6 +16,15 @@ import { RootState, RootAction } from '../../../Redux/Types'
 import { Dispatch } from 'redux'
 
 type Props = DispatchProps & StateProps
+
+interface PropState {
+  complete: boolean
+  iOS: boolean
+  cameraRoll: boolean
+  locationBackground: boolean
+  infoVisible: boolean
+  info?: StorageDescription
+}
 class Storage extends React.PureComponent<Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps<{}>) => {
     const goBack = () => { navigation.dispatch(NavigationActions.back()) }
@@ -37,13 +46,12 @@ class Storage extends React.PureComponent<Props> {
       )
     }
   }
-  state = {
+  state: PropState = {
     complete: false,
     iOS: Platform.OS === 'ios',
     cameraRoll: false,
     locationBackground: false,
-    infoVisible: false,
-    info: { }
+    infoVisible: false
   }
   toggleOption = (name: string) => {
     this.props.toggleStorageRequest(name as StorageType)
@@ -85,7 +93,7 @@ class Storage extends React.PureComponent<Props> {
             }
           </View>
         </ScrollView>
-        {this.state.infoVisible && <PermissionsInfo isVisible={true} info={this.state.info} close={this.hideInfo} />}
+        {this.state.infoVisible && this.state.info && <PermissionsInfo info={this.state.info} close={this.hideInfo} />}
       </View>
     )
   }

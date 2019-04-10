@@ -1,7 +1,14 @@
-import { StyleSheet, ImageStyle } from 'react-native'
+import { StyleSheet, ImageStyle, ViewStyle, TextStyle } from 'react-native'
 import { Colors } from '../../../../Themes'
 
-export default StyleSheet.create({
+type Styles = {
+  itemContainer: ViewStyle
+  itemBox: ViewStyle
+  itemText: TextStyle
+  itemBoxPlus: ImageStyle
+}
+
+export default StyleSheet.create<Styles>({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -1,8 +1,19 @@
-import { StyleSheet, ImageStyle } from 'react-native'
+import { StyleSheet, ImageStyle, ViewStyle, TextStyle } from 'react-native'
 
 import { color } from '../../../../styles'
 
-export default StyleSheet.create({
+type Styles = {
+  container: ViewStyle
+  header: ViewStyle
+  title: TextStyle
+  closeIconPadding: ViewStyle
+  closeIcon: ImageStyle
+  listContainer: ViewStyle
+  row: ViewStyle
+  photoElement: ViewStyle
+}
+
+export default StyleSheet.create<Styles>({
   container: {
     paddingHorizontal: 10,
     paddingTop: 3,

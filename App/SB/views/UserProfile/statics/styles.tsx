@@ -1,9 +1,37 @@
-import { StyleSheet, ImageStyle } from 'react-native'
+import { StyleSheet, ImageStyle, ViewStyle, TextStyle } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
 import { color } from '../../../../styles'
 
-export default StyleSheet.create({
+type Styles = {
+  container: ViewStyle
+  toolBarRight: ViewStyle
+  toolbarBack: ViewStyle
+  toolbarBackIcon: ViewStyle
+  toolbarUserName: TextStyle
+  toolbarThreadsQty: TextStyle
+  toolbarBottom: ViewStyle
+  toolbarImage: ViewStyle
+  strong: TextStyle
+  title: TextStyle
+  contentContainer: ViewStyle
+  listItemFirst: ViewStyle
+  listItem: ViewStyle
+  listText: TextStyle
+  warning: TextStyle
+  servers: ViewStyle
+  serversText: TextStyle
+  activeIcon: ViewStyle
+  inActiveIcon: ViewStyle
+  activatingIcon: ViewStyle
+  logoContainer: ViewStyle
+  versionDescription: TextStyle
+  subScreen: ViewStyle
+  headerImage: ImageStyle
+  subScreenText: TextStyle
+}
+
+export default StyleSheet.create<Styles>({
   container: {
     backgroundColor: color.screen_primary,
     flex: 1

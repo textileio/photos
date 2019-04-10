@@ -1,6 +1,11 @@
-import { StyleSheet, ImageStyle } from 'react-native'
+import { StyleSheet, ImageStyle, ViewStyle } from 'react-native'
 
-export default StyleSheet.create({
+type Styles = {
+  container: ViewStyle
+  image: ImageStyle
+}
+
+export default StyleSheet.create<Styles>({
   container: {
     alignItems: 'center',
     marginTop: 39

@@ -1,6 +1,14 @@
-import { StyleSheet, ImageStyle } from 'react-native'
+import { StyleSheet, ImageStyle, ViewStyle } from 'react-native'
 
-export default StyleSheet.create({
+type Styles = {
+  button: ViewStyle
+  disabled: ViewStyle
+  buttonSelected: ViewStyle
+  buttonImage: ImageStyle
+  buttonDisabled: ViewStyle
+}
+
+export default StyleSheet.create<Styles>({
   button: {
     height: 17,
     width: 17,
