@@ -77,6 +77,8 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
     const { item } = row
     switch (item.type) {
       case 'photo':
+        const files = item.photo.files
+        const fileIndex = files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <TouchableOpacity
             style={styles.item}
@@ -86,7 +88,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps & Navigation
             <View style={styles.itemBackgroundContainer}>
               <ProgressiveImage
                 imageId={item.photo.target}
-                fileIndex={item.photo.files[0].index}
+                fileIndex={fileIndex}
                 showPreview={true}
                 forMinWidth={PRODUCT_ITEM_HEIGHT}
                 style={styles.itemImage}

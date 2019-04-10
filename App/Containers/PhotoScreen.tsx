@@ -82,6 +82,7 @@ class PhotoScreen extends React.Component<Props> {
     const def = screenWidth
     const pinchWidth = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.width.numberValue
     const pinchHeight = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.height.numberValue
+    const fileIndex = files && files.length > 0 && files[0].index ? files[0].index : 0
     return (
       <ScrollView style={CONTAINER}>
       {this.props.photo &&
@@ -91,7 +92,7 @@ class PhotoScreen extends React.Component<Props> {
           message={caption.length > 0 ? caption : undefined}
           time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
           photoId={target}
-          fileIndex={files[0].index}
+          fileIndex={fileIndex}
           photoWidth={screenWidth}
           hasLiked={hasLiked}
           numberLikes={likes.length}

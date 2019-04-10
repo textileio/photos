@@ -149,10 +149,12 @@ class AddCaptionScreen extends React.Component<Props> {
     } else if (image && (image as pb.IFiles).target) {
       const filesInfo = image as pb.IFiles
       if (filesInfo.target) {
+        const files = filesInfo.files
+        const fileIndex = files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <TextileImage
             target={filesInfo.target}
-            index={filesInfo.files[0].index}
+            index={fileIndex}
             forMinWidth={70}
             resizeMode={'cover'}
             style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}
