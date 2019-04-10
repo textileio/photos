@@ -15,6 +15,7 @@ import { pb } from '@textile/react-native-sdk'
 
 import GroupCard from './GroupCard'
 import styles from './Styles/ThreadSelectorStyles'
+import { getAddress } from '../Redux/AccountSelectors'
 
 interface ScreenProps {
   createNewThread: () => void
@@ -82,7 +83,7 @@ interface StateProps {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const ownAddress = state.account.address.value
+  const ownAddress = getAddress(state)
   const profile = state.account.profile.value
   const threads = getThreads(state, 'date')
   .map((thread) => {

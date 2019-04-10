@@ -19,6 +19,7 @@ import Avatar from '../Components/Avatar'
 import GroupCard from '../Components/GroupCard'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import styles from './Styles/GroupsStyles'
+import { getAddress } from '../Redux/AccountSelectors'
 
 interface GroupAuthors {
   readonly id: string
@@ -243,7 +244,7 @@ class Groups extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const ownAddress = state.account.address.value
+  const ownAddress = getAddress(state)
   const profile = state.account.profile.value
   let memberCount = 0
   let itemCount = 0
