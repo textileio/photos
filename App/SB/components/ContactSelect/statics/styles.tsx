@@ -60,7 +60,7 @@ export default StyleSheet.create({
   contactIcon: {
     height: 43,
     width: 43
-  },
+  } as ImageStyle,
   body: {},
   searchBoxContainer: {
     flexDirection: 'row',
