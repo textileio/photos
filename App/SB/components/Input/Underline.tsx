@@ -1,43 +1,40 @@
 import React, { Component } from 'react'
-import { View, Animated } from 'react-native'
+import { View, Animated, LayoutChangeEvent } from 'react-native'
 import PropTypes from 'prop-types'
 
 import styles from './statics/styles'
 
-class Underline extends Component {
-  static propTypes = {
-    duration: PropTypes.number,
-    highlightColor: PropTypes.string,
-    borderColor: PropTypes.string
+interface UnderlineProps {
+  duration: number
+  highlightColor: string
+  borderColor: string
+}
+class Underline extends Component<UnderlineProps> {
+  state = {
+    lineLength: new Animated.Value(0),
+    wrapperWidth: 0
   }
 
-  constructor (props) {
-    super(props)
-    this.state = {
-      lineLength: new Animated.Value(0)
-    }
-    this.wrapperWidth = 0
-  }
-
-  expandLine () {
+  expandLine() {
     Animated.timing(this.state.lineLength, {
-      toValue: this.wrapperWidth,
+      toValue: this.state.wrapperWidth,
       duration: this.props.duration
     }).start()
   }
 
-  shrinkLine () {
+  shrinkLine() {
     Animated.timing(this.state.lineLength, {
       toValue: 0,
       duration: this.props.duration
     }).start()
   }
 
-  render () {
+  onLayout = (e: LayoutChangeEvent) => { this.state.wrapperWidth = e.nativeEvent.layout.width }
+  render() {
     const { borderColor, highlightColor } = this.props
     return (
       <View
-        onLayout={(e) => { this.wrapperWidth = e.nativeEvent.layout.width }}
+        onLayout={this.onLayout}
         style={[styles.underlineWrapper, {
           backgroundColor: borderColor
         }]}
