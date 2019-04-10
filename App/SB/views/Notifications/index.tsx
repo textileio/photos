@@ -191,7 +191,10 @@ class Notifications extends React.PureComponent<Props> {
           }
         </ScrollView>
         {this.state.infoVisible &&
-          <PermissionsInfo isVisible={true} info={this.state.info} close={this.hideInfo} />
+          <PermissionsInfo
+            info={this.state.info || {title: 'Unknown Permission', subtitle: 'unknown'}}
+            close={this.hideInfo}
+          />
         }
       </View>
     )

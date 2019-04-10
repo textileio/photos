@@ -74,7 +74,7 @@ class ContactModal extends React.Component<Props> {
           </Text>
           {this.props.threadThumbs.map((thread, i) => (
             <TouchableOpacity key={i} onPress={this.navigate(thread.id)}>
-              <PhotoWithTextBox key={i} text={thread.name} photo={thread.thumb} />
+            <PhotoWithTextBox key={i} text={thread.name} photo={thread.thumb} />
             </TouchableOpacity>
           ))}
         </ScrollView>

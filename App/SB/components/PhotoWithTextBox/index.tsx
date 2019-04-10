@@ -8,7 +8,7 @@ import { pb } from '@textile/react-native-sdk'
 
 interface PhotoWithTextBoxProps {
   text: string
-  photo: pb.IFiles
+  photo?: pb.IFiles
   style?: ViewStyle
 }
 
@@ -20,14 +20,14 @@ const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
       {photo &&
       <View style={styles.item}>
         <View style={styles.itemBackgroundContainer}>
-          <TextileImage
+          {photo && <TextileImage
             target={photo.target}
             index={photo.files[0].index}
             forMinWidth={70}
             style={{width: 70, height: 50}}
             resizeMode={'cover'}
             capInsets={'true'}
-          />
+          />}
         </View>
       </View>
       }

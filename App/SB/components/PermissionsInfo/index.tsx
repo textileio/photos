@@ -5,6 +5,7 @@ import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions } from 'rea
 import Modal from 'react-native-modal'
 
 import styles from './statics/styles'
+import { ServiceInfo } from '../../views/Notifications';
 
 const WIDTH = Dimensions.get('window').width
 
@@ -15,7 +16,7 @@ interface PermissionsInfoProps {
   info: {
     title: string
     details: string
-  }
+  } | ServiceInfo
   close: () => void
 }
 class PermissionsInfo extends Component<PermissionsInfoProps> {
