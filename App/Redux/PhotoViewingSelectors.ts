@@ -1,8 +1,9 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
 import { pb, util } from '@textile/react-native-sdk'
-import { getAddress } from './AccountSelectors'
+import { getAddress, getProfile } from './AccountSelectors'
 import Config from 'react-native-config'
+import { contactsSelectors } from '../features/contacts'
 
 // temporary filter until we stop getting them from textile-go
 export const BLACKLIST = ['avatars', 'account']
@@ -12,6 +13,15 @@ export interface SharedPhoto {
   photo: pb.IFiles
   id: string
   original: string
+}
+
+export interface GroupAuthors {
+  readonly id: string
+  readonly name: string
+  readonly size: number
+  readonly members: pb.IContact[]
+  readonly memberCount: number
+  readonly thumb?: pb.IFiles
 }
 
 export function defaultThreadData(state: RootState): ThreadData | undefined {
@@ -69,7 +79,48 @@ export function getThreads(state: RootState, sortBy?: 'name' | 'date'): Readonly
   }
 }
 
-export function getSharedPhotos(state: RootState): ReadonlyArray<SharedPhoto> {
+export function getThreadsAndMembers(state: RootState, limit: number): GroupAuthors[] {
+  const memberLimit = limit || 8
+  const ownAddress = getAddress(state)
+  const profile = getProfile(state)
+  const threads = getThreads(state, 'date')
+    .map((thread) => {
+      const selector = contactsSelectors.makeByThreadId(thread.id)
+      const allMembers = selector(state.contacts)
+      // Focus just on contacts with avatars
+      const members = allMembers.filter((contact) => contact.avatar !== '')
+        .filter((contact) => contact.address !== ownAddress)
+
+      // If the row isn't full, use a few contacts without avatars
+      const noAvatars = allMembers.filter((contact) => !contact.avatar || contact.avatar === '')
+      while (noAvatars.length && members.length < (memberLimit - 1)) {
+        const unknown = noAvatars.pop()
+        if (unknown) {
+          members.unshift(unknown)
+        }
+      }
+
+      // Include our own avatar first if still room in the array
+      if (profile && members.length < memberLimit) {
+        members.unshift(profile)
+      }
+
+      const thumb = thread.photos.length ? thread.photos[0] : undefined
+      return {
+        id: thread.id,
+        name: thread.name,
+        // total number of images in the thread
+        size: thread.photos.length,
+        // required to ensure up to date index
+        members: {...[], ...members},
+        memberCount: allMembers.length,
+        thumb
+      }
+    })
+  return threads
+}
+
+export function getSharedPhotos(state: RootState, sortBy?: 'date'): SharedPhoto[] {
   const selfAddress = getAddress(state)
   const photos = getThreads(state)
     .map((thread) => thread.photos
@@ -84,11 +135,22 @@ export function getSharedPhotos(state: RootState): ReadonlyArray<SharedPhoto> {
       })
     )
     .reduce((accumulator, currentValue) => accumulator.concat(currentValue), [])
-  return photos.filter((s1, pos, arr) => {
+  const filtered = photos.filter((s1, pos, arr) => {
     return arr.findIndex((s2) => {
       return s2.original === s1.original
     }) === pos
   })
+  switch (sortBy) {
+    case 'date':
+      return filtered.sort((a: SharedPhoto, b: SharedPhoto) => {
+        if (a.photo.date.seconds > b.photo.date.seconds) {
+          return -1
+        }
+        return 1
+      })
+    default:
+      return filtered
+  }
 }
 
 export function getThreadThumbs(state: RootState, byAddres: string, sortBy?: 'name' | 'date'): ReadonlyArray<ThreadThumbs> {

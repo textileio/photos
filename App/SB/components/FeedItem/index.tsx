@@ -7,12 +7,18 @@ import TextileImage from '../../../Components/TextileImage'
 
 import styles from './statics/styles'
 import { color } from '../../../styles'
+import { Notification } from '../../../Models/Notifications'
 
-const FeedItem = props => {
+interface FeedItemProps {
+  notification: Notification
+  onClick: (notification: Notification) => void
+}
+
+const FeedItem = (props: FeedItemProps) => {
   const { notification, onClick } = props
   const date = moment(notification.date).fromNow()
   const payload = NotificationServices.toPayload(notification)
-
+  const clickFunction = () => { onClick(notification) }
   if (!payload) {
     return (<View />)
   }
@@ -43,9 +49,11 @@ const FeedItem = props => {
   )
 
   return (
-    <TouchableOpacity activeOpacity={0.6} style={styles.itemContainer} onPress={() => {
-      onClick(notification)
-    }}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      style={styles.itemContainer}
+      onPress={clickFunction}
+    >
       <View style={styles.headerIconUser}>
         <View style={styles.iconContainer}>
           {leftSource}
@@ -57,7 +65,13 @@ const FeedItem = props => {
       </View>
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
         {/* TODO: Update textile image props to target and index */}
-        {photoId && <TextileImage style={{width: 40, height: 40}} target={photoId} forMinWidth={40} resizeMode={'cover'} />}
+        {photoId && <TextileImage
+          style={{width: 40, height: 40}}
+          target={photoId}
+          index={0}
+          forMinWidth={40}
+          resizeMode={'cover'}
+        />}
       </View>
     </TouchableOpacity>
   )

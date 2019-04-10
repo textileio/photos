@@ -20,6 +20,10 @@ export function getUsername(state: RootState): string | undefined {
          state.account.profile.value.name
 }
 
+export function getProfile(state: RootState): pb.IContact | undefined {
+  return state.account.profile.value
+}
+
 export function bestSession(state: RootState): pb.ICafeSession | undefined {
   const values = state.account.cafeSessions.sessions
   if (values.length === 0) {

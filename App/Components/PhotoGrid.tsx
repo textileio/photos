@@ -36,7 +36,7 @@ interface ScreenProps {
   verboseUi: boolean
 }
 
-class PhotoGrid extends React.Component<ScreenProps & DispatchProps & NavigationScreenProps<{}>> {
+class PhotoGrid extends React.Component<ScreenProps & DispatchProps> {
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 20
 
