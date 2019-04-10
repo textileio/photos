@@ -21,7 +21,7 @@ class   ThreadSelectCard extends Component<ScreenProps> {
       >
         <PhotoBoxEmpty title={'Create New Group'} />
         <View style={styles.threadSelectRadio}>
-          <RadioButton selected={false} />
+          <RadioButton disabled={false} selected={false} />
         </View>
       </TouchableOpacity>
     )

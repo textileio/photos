@@ -6,7 +6,7 @@ import Toast from 'react-native-easy-toast'
 import Modal from 'react-native-modal'
 
 import ModalButtons from '../../../Components/ModalButtons'
-import ContactSelect from '../../components/ContactSelect'
+import ContactSelect, { IncludedContact } from '../../components/ContactSelect'
 import QRCodeModal from '../../../Components/QRCodeModal'
 import ThreadsActions, { InviteQRCode } from '../../../Redux/ThreadsRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
@@ -138,9 +138,9 @@ class Component extends React.Component<Props> {
 }
 
 interface StateProps {
-  topFive: ReadonlyArray<pb.IContact>,
+  topFive: IncludedContact[]
   // puts a placeholder row in contacts for adding external invite link
-  contacts: ReadonlyArray<pb.IContact>,
+  contacts: IncludedContact[]
   notInThread: boolean,
   qrCodeInvite?: InviteQRCode
 }
