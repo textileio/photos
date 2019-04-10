@@ -48,6 +48,9 @@ const FeedItem = (props: FeedItemProps) => {
     </View>
   )
 
+  const feedText = payload.feed && payload.feed !== '' ? payload.feed : undefined
+
+  // TODO: Update textile image props to target and index
   return (
     <TouchableOpacity
       activeOpacity={0.6}
@@ -60,11 +63,10 @@ const FeedItem = (props: FeedItemProps) => {
         </View>
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.text}>{payload.feed}</Text>
+        <Text style={styles.text}>{feedText}</Text>
         <Text style={[styles.timestamp, !notification.read && styles.unread]}>{date}</Text>
       </View>
       <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
-        {/* TODO: Update textile image props to target and index */}
         {photoId && <TextileImage
           style={{width: 40, height: 40}}
           target={photoId}
