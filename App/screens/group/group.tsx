@@ -24,6 +24,7 @@ import UIActions from '../../Redux/UIRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
+import { getAddress } from '../../Redux/AccountSelectors'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -171,6 +172,7 @@ class Group extends React.PureComponent<Props, State> {
         const def = screenWidth
         const pinchWidth = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.width.numberValue
         const pinchHeight = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.height.numberValue
+        const fileIndex = files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <Photo
             avatar={user.avatar}
@@ -178,7 +180,7 @@ class Group extends React.PureComponent<Props, State> {
             message={caption.length > 0 ? caption : undefined}
             time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
             photoId={target}
-            fileIndex={files[0].index}
+            fileIndex={fileIndex}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
             numberLikes={likes.length}
@@ -277,7 +279,7 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
-  const selfAddress = state.account.address.value || ''
+  const selfAddress = getAddress(state) || ''
   return {
     items,
     groupName,
