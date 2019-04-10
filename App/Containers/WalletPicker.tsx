@@ -11,7 +11,7 @@ import { NavigationActions, NavigationScreenProps } from 'react-navigation'
 import { defaultThreadData, getSharedPhotos, SharedPhoto } from '../Redux/PhotoViewingSelectors'
 import { RootState, RootAction } from '../Redux/Types'
 import { Dispatch } from 'redux'
-import { pb } from '@textile/react-native-sdk';
+import { pb } from '@textile/react-native-sdk'
 
 interface NavProps {
   cancelSharingPhoto: () => void
@@ -55,7 +55,7 @@ class TextileWalletPicker extends React.PureComponent<Props> {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.navigation.setParams({
       cancelSharingPhoto: this.props.cancelSharingPhoto,
       showImagePicker: this.props.showImagePicker
@@ -74,7 +74,7 @@ class TextileWalletPicker extends React.PureComponent<Props> {
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={style.container}>
         <PhotoGrid

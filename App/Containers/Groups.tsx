@@ -6,28 +6,16 @@ import { FlatList, View, Text, TouchableOpacity, Alert, Platform, ListRenderItem
 
 import {RootAction, RootState} from '../Redux/Types'
 
-import { getThreads } from '../Redux/PhotoViewingSelectors'
-import { contactsSelectors } from '../features/contacts'
+import { getThreadsAndMembers, GroupAuthors } from '../Redux/PhotoViewingSelectors'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-
-import { pb } from '@textile/react-native-sdk'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import GroupCard from '../Components/GroupCard'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import styles from './Styles/GroupsStyles'
-import { getAddress } from '../Redux/AccountSelectors'
-
-interface GroupAuthors {
-  readonly id: string
-  readonly name: string
-  readonly size: number
-  readonly members: pb.IContact[]
-  readonly thumb?: pb.IFiles
-}
 
 interface StateProps {
   threads: ReadonlyArray<GroupAuthors>
@@ -243,46 +231,13 @@ class Groups extends React.PureComponent<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const ownAddress = getAddress(state)
-  const profile = state.account.profile.value
-  let memberCount = 0
-  let itemCount = 0
-  const threads = getThreads(state, 'date')
-  .map((thread) => {
-    const selector = contactsSelectors.makeByThreadId(thread.id)
-    const allMembers = selector(state.contacts)
-    // Focus just on contacts with avatars
-    const members = allMembers.filter((contact) => contact.avatar !== '')
-      .filter((contact) => contact.address !== ownAddress)
-
-    // If the row isn't full, use a few contacts without avatars
-    const noAvatars = allMembers.filter((contact) => !contact.avatar || contact.avatar === '')
-    while (noAvatars.length && members.length < 7) {
-      const unknown = noAvatars.pop()
-      if (unknown) {
-        members.unshift(unknown)
-      }
-    }
-
-    // Include our own avatar when space
-    if (profile && members.length < 8) {
-      members.unshift(profile)
-    }
-
-    const thumb = thread.photos.length ? thread.photos[0] : undefined
-    // just get a sense of how many group x members there are
-    memberCount += members.length
-    itemCount += thread.photos.length
-    return {
-      id: thread.id,
-      name: thread.name,
-      // total number of images in the thread
-      size: thread.photos.length,
-      // required to ensure up to date index
-      members: {...[], ...members},
-      thumb
-    }
-  })
+  const threads = getThreadsAndMembers(state, 8)
+  const memberCount = threads.reduce((prev, thread) => {
+    return prev + thread.memberCount
+  }, 0)
+  const itemCount = threads.reduce((prev, thread) => {
+    return prev + thread.size
+  }, 0)
 
   const showNotificationsPrompt = PreferencesSelectors.showNotificationPrompt(state)
     && threads.length > 0
