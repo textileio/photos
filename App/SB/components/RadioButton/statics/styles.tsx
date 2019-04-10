@@ -1,6 +1,6 @@
 import { StyleSheet, ImageStyle, ViewStyle } from 'react-native'
 
-type Styles = {
+interface Styles {
   button: ViewStyle
   disabled: ViewStyle
   buttonSelected: ViewStyle

@@ -1,7 +1,7 @@
 import { StyleSheet, ImageStyle, ViewStyle, TextStyle } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
-type Styles = {
+interface Styles {
   contentContainer: ViewStyle
   link: TextStyle
   inactive: TextStyle

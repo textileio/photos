@@ -6,7 +6,7 @@ import Modal from 'react-native-modal'
 
 import styles from './statics/styles'
 import { ServiceInfo } from '../../views/Notifications'
-import { StorageDescription } from '../../views/Storage/GetServiceInfo';
+import { StorageDescription } from '../../views/Storage/GetServiceInfo'
 
 const WIDTH = Dimensions.get('window').width
 

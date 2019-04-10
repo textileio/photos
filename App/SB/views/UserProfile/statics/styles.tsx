@@ -3,7 +3,7 @@ import { BentonSansBold } from '../../../util/fonts'
 
 import { color } from '../../../../styles'
 
-type Styles = {
+interface Styles {
   container: ViewStyle
   toolBarRight: ViewStyle
   toolbarBack: ViewStyle

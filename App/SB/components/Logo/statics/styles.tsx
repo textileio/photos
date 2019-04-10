@@ -1,6 +1,6 @@
 import { StyleSheet, ImageStyle, ViewStyle } from 'react-native'
 
-type Styles = {
+interface Styles {
   container: ViewStyle
   image: ImageStyle
 }
