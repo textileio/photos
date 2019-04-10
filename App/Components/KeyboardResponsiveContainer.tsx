@@ -18,7 +18,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
   keyboardWillHideSub?: EmitterSubscription
   keyboardWillChangeFrameSub?: EmitterSubscription
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       height: 0
@@ -73,13 +73,13 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillAppear)
     this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
     // this.keyboardWillChangeFrameSub = Keyboard.addListener('keyboardWillChangeFrame', this.keyboardWillChangeFrame)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.keyboardWillShowSub) {
       this.keyboardWillShowSub.remove()
     }
@@ -91,7 +91,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     }
   }
 
-  render () {
+  render() {
     const { style } = this.props
     return (
       <View style={{ flex: 1 }}>

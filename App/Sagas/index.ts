@@ -6,7 +6,7 @@ import { Dispatch } from 'redux'
 
 import StartupActions from '../Redux/StartupRedux'
 import StorageActions from '../Redux/StorageRedux'
-import { groupActions } from '../features/group'
+import { groupActions, groupSaga } from '../features/group'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
@@ -19,13 +19,8 @@ import TriggersActions from '../Redux/TriggersRedux'
 
 import accountSaga from './Account'
 import { contactsSaga } from '../features/contacts'
-import { groupSaga } from '../features/group'
 
 import { startup } from './StartupSagas'
-
-import {
-  onNodeStarted
-} from './Account/AccountSagas'
 
 import {
   showImagePicker,
@@ -103,7 +98,7 @@ import {
 
 /* ------------- Connect Types To Sagas ------------- */
 
-export default function * root (dispatch: Dispatch) {
+export default function * root(dispatch: Dispatch) {
   yield all([
     call(accountSaga),
     call(contactsSaga),

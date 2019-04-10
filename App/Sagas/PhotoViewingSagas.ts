@@ -17,7 +17,7 @@ import {
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
 
-export function * monitorNewThreadActions () {
+export function * monitorNewThreadActions() {
   while (true) {
     const action: ActionType<typeof PhotoViewingActions.threadAdded> = yield take(getType(PhotoViewingActions.threadAdded))
     const { id, name } = action.payload
@@ -46,7 +46,7 @@ export function * monitorNewThreadActions () {
   }
 }
 
-export function * monitorThreadAddedNotifications (action: ActionType<typeof PhotoViewingActions.threadAddedNotification>) {
+export function * monitorThreadAddedNotifications(action: ActionType<typeof PhotoViewingActions.threadAddedNotification>) {
   try {
     // We need this one because the callback we get from the node doesn't include key. This queries for the thread and gets
     // all the required data for threadAdded()
@@ -59,7 +59,7 @@ export function * monitorThreadAddedNotifications (action: ActionType<typeof Pho
   }
 }
 
-export function * addThread (action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
+export function * addThread(action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
   const { name } = action.payload
   try {
     const key = `textile_photos-shared-${uuid()}`
@@ -79,7 +79,7 @@ export function * addThread (action: ActionType<typeof PhotoViewingActions.addTh
   }
 }
 
-export function * removeThread (action: ActionType<typeof PhotoViewingActions.removeThreadRequest>) {
+export function * removeThread(action: ActionType<typeof PhotoViewingActions.removeThreadRequest>) {
   const { id } = action.payload
   try {
     yield call(API.threads.remove, id)
@@ -90,7 +90,7 @@ export function * removeThread (action: ActionType<typeof PhotoViewingActions.re
   }
 }
 
-export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>) {
+export function * refreshThreads(action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>) {
   try {
     const accountThreadId = yield select(getAddress)
     const threadsResult: pb.IThreadList = yield call(API.threads.list)
@@ -110,7 +110,7 @@ export function * refreshThreads (action: ActionType<typeof PhotoViewingActions.
   }
 }
 
-export function * refreshThread (action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
+export function * refreshThread(action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
   const { threadId } = action.payload
   try {
     const photosResult: pb.IFilesList = yield call(API.files.list, '', -1, threadId)
@@ -120,7 +120,7 @@ export function * refreshThread (action: ActionType<typeof PhotoViewingActions.r
   }
 }
 
-export function * addPhotoComment (action: ActionType<typeof PhotoViewingActions.addCommentRequest>) {
+export function * addPhotoComment(action: ActionType<typeof PhotoViewingActions.addCommentRequest>) {
   const result: { photo: pb.IFiles | undefined, comment: string | undefined } = yield select(photoAndComment)
   if (!result.photo || !result.comment) {
     return

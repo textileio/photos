@@ -107,7 +107,7 @@ export default class MailListSignupScreen extends React.Component<Props, State> 
     }
   }
 
-  render () {
+  render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
           <View>

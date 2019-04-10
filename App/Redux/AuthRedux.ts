@@ -6,7 +6,7 @@ const actions = {
     return () => resolve()
   }),
   onboardWithInviteRequest: createAction('ONBOARD_WITH_INVITE_REQUEST', (resolve) => {
-    return (url: string, hash: string, referral?: string ) => resolve( { url, hash, referral } )
+    return (url: string, hash: string, referral?: string) => resolve({ url, hash, referral })
   })
 }
 
@@ -26,7 +26,7 @@ export interface AuthState {
 export const initialState: AuthState = {
 }
 
-export function reducer (state: AuthState = initialState, action: AuthAction): AuthState {
+export function reducer(state: AuthState = initialState, action: AuthAction): AuthState {
   switch (action.type) {
     case getType(actions.onboardWithInviteRequest):
       return { ...state, invite: action.payload }

@@ -78,7 +78,7 @@ class AddContact extends React.Component<Props> {
     })
   }
 
-  render () {
+  render() {
     return (
       <View style={CONTAINER}>
         {this._headerComponent()}

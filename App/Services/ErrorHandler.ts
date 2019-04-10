@@ -4,14 +4,14 @@ import { Crashlytics } from 'react-native-fabric'
 
 const originalHandler = ErrorUtils.getGlobalHandler()
 
-export function initErrorHandler () {
+export function initErrorHandler() {
   if (__DEV__) {
     return
   }
   ErrorUtils.setGlobalHandler(errorHandler)
 }
 
-export function errorHandler (error: any, isFatal?: boolean) {
+export function errorHandler(error: any, isFatal?: boolean) {
   if (__DEV__) {
     return
   }

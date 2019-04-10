@@ -13,7 +13,7 @@ export interface UserInfo {
 export interface PushNotification {
   foreground: boolean
   userInteraction: boolean
-  message: string|object
+  message: string | object
   data: object
   badge: number
   alert: object
@@ -30,7 +30,7 @@ export default class NotificationEventHandler {
     this.setup()
   }
 
-  onNotification (notification: PushNotification) {
+  onNotification(notification: PushNotification) {
     if (notification.userInteraction) {
       if (notification.userInfo && notification.userInfo.notification) {
         this.store.dispatch(NotificationsActions.notificationSuccess(notification.userInfo.notification))
@@ -43,7 +43,7 @@ export default class NotificationEventHandler {
     }
   }
 
-  setup () {
+  setup() {
     RNPushNotification.configure({
       // (required) Called when a remote or local notification is opened or received
       onNotification: this.onNotification.bind(this),
@@ -52,8 +52,5 @@ export default class NotificationEventHandler {
       popInitialNotification: true,
       requestPermissions: false
     })
-  }
-
-  tearDown () {
   }
 }

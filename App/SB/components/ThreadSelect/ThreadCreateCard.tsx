@@ -11,7 +11,7 @@ interface ScreenProps {
 }
 
 class   ThreadSelectCard extends Component<ScreenProps> {
-  render () {
+  render() {
     return (
       <TouchableOpacity
         activeOpacity={0.6}

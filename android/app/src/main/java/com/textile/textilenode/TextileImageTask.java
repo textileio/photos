@@ -12,8 +12,6 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 import io.textile.rnmobile.TextileNode;
 
-import org.json.JSONObject;
-
 public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
     private int viewId;

@@ -43,14 +43,14 @@ interface State {
 
 export default class FatalErrorView extends React.Component<Props, State> {
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = { showContactModal: false }
   }
 
   contact = () => this.setState({ showContactModal: !this.state.showContactModal })
 
-  render () {
+  render() {
     return (
       <View style={CONTAINER}>
         <Logo>

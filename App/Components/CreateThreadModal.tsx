@@ -44,7 +44,7 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
     this.setState({ value: text })
   }
 
-  create () {
+  create() {
     return () => {
       if (this.state.submitted) {
         return
@@ -60,7 +60,7 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
     }
   }
 
-  render () {
+  render() {
     const submitDisabled = !(this.state.value.length > 0)
     return (
       <KeyboardAvoidingView behavior={'height'} style={styles.modal}>
@@ -110,7 +110,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
 export const CreateThreadComponent = connect(undefined, mapDispatchToProps)(Component)
 
 export default class CreateThreadModal extends React.Component<ScreenProps & ModalProps> {
-  render () {
+  render() {
     return (
       <Modal
         isVisible={this.props.isVisible}

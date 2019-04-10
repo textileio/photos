@@ -189,7 +189,7 @@ function * sendInviteMessage() {
   }
 }
 
-export default function * () {
+export default function *() {
   yield all([
     takeEvery(getType(UIActions.addFriendRequest), addFriends),
     takeEvery(getType(actions.getContactsRequest), refreshContacts),

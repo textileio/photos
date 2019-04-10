@@ -110,7 +110,7 @@ class Notifications extends React.PureComponent<Props> {
     this.setState({ infoVisible: true, info })
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>

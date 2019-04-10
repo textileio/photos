@@ -34,7 +34,7 @@ class Component extends React.Component<Props> {
     showQrCode: false
   }
 
-  _getPublicLink () {
+  _getPublicLink() {
     // Generate a link dialog
     this.props.invite(
       this.props.threadId,
@@ -42,7 +42,7 @@ class Component extends React.Component<Props> {
     )
   }
 
-  _displayThreadQRCode () {
+  _displayThreadQRCode() {
     // Generate a link dialog
     this.props.threadQRCodeRequest(
       this.props.threadId,
@@ -51,13 +51,13 @@ class Component extends React.Component<Props> {
     this.setState({showQrCode: true})
   }
 
-  _hideQRCode () {
+  _hideQRCode() {
     return () => {
       this.setState({showQrCode: false})
     }
   }
 
-  _select (contact: pb.IContact, included: boolean) {
+  _select(contact: pb.IContact, included: boolean) {
     // Toggle the id's selected state in state
     if (included) {
       return // if the user is already part of the thread
@@ -68,11 +68,11 @@ class Component extends React.Component<Props> {
     })
   }
 
-  getSelected () {
+  getSelected() {
     return Object.keys(this.state.selected).filter((id) => this.state.selected[id] === true)
   }
 
-  _updateThread () {
+  _updateThread() {
     const selected = this.getSelected()
 
     // grab the Pks from the user Ids
@@ -96,7 +96,7 @@ class Component extends React.Component<Props> {
     setTimeout(() => { this.props.cancel() }, 2400)
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <View style={{flex: 1, zIndex: 10}}>
@@ -199,7 +199,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
 export const ThreadsEditFriendsComponent = connect(mapStateToProps, mapDispatchToProps)(Component)
 
 export default class ThreadsEditFriends extends React.Component<ScreenProps> {
-  render () {
+  render() {
     return (
       <Modal
         isVisible={!!this.props.isVisible}

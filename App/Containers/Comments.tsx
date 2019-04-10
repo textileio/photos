@@ -63,7 +63,7 @@ class Comments extends Component<Props, ComponentState> {
     }
   }
 
-  componentDidUpdate (previousProps: Props) {
+  componentDidUpdate(previousProps: Props) {
     if (this.props.commentCardProps.length > previousProps.commentCardProps.length) {
       // New comment added, scroll down, need timeout to allow rendering
       setTimeout(this.scrollToEnd, 100)
@@ -86,7 +86,7 @@ class Comments extends Component<Props, ComponentState> {
     this.props.submitComment()
   }
 
-  render () {
+  render() {
     return (
       <SafeAreaView style={styles.safeContainer}>
         <KeyboardResponsiveContainer style={styles.container as ViewStyle}>

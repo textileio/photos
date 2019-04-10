@@ -2,7 +2,7 @@ import React from 'react'
 import {Dispatch} from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, View, Text, TouchableOpacity, Alert, Platform } from 'react-native'
+import { FlatList, View, Text, TouchableOpacity, Alert, Platform, ListRenderItemInfo } from 'react-native'
 
 import {RootAction, RootState} from '../Redux/Types'
 
@@ -56,7 +56,7 @@ interface State {
   showCreateGroupModal: boolean
 }
 
-class Groups extends React.Component<Props, State> {
+class Groups extends React.PureComponent<Props, State> {
 
   static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
@@ -101,7 +101,7 @@ class Groups extends React.Component<Props, State> {
     this.props.navigation.openDrawer()
   }
 
-  _renderItem = (rowData: any) => {
+  _renderItem = (rowData: ListRenderItemInfo<GroupAuthors>) => {
     const item: GroupAuthors = rowData.item
     return (
       <GroupCard id={item.id} {...item} onPress={this._onPressItem} />
@@ -138,14 +138,14 @@ class Groups extends React.Component<Props, State> {
     this.setState({ showCreateGroupModal: false })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
       openThreadModal: this.openThreadModal
     })
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.threads.length && this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()
@@ -155,7 +155,7 @@ class Groups extends React.Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.contentContainer} >
         <FlatList
@@ -164,7 +164,6 @@ class Groups extends React.Component<Props, State> {
           renderItem={this._renderItem}
           refreshing={false}
           onRefresh={this._onRefresh}
-          initialNumToRender={4}
           ListFooterComponent={this._renderFooter}
         />
         <CreateThreadModal
@@ -180,7 +179,7 @@ class Groups extends React.Component<Props, State> {
   }
 
   // Simple Alert based prompt to get Notification permissions
-  notificationPrompt () {
+  notificationPrompt() {
     // never show it again
     this.props.completeNotifications()
     // give the user a prompt
@@ -207,7 +206,7 @@ class Groups extends React.Component<Props, State> {
   }
 
   // Simple Alert based prompt to get Notification permissions
-  locationPrompt () {
+  locationPrompt() {
     // give the user a prompt
     const platform = Platform.OS === 'android' ? 'Android' : 'iOS'
     // never show it again
@@ -280,7 +279,7 @@ const mapStateToProps = (state: RootState): StateProps => {
       // total number of images in the thread
       size: thread.photos.length,
       // required to ensure up to date index
-      members: Object.assign([], members),
+      members: {...[], ...members},
       thumb
     }
   })

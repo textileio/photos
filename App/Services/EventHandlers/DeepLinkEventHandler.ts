@@ -11,22 +11,22 @@ export default class DeepLinkEventHandler {
     this.setup()
   }
 
-  handleIOS (event: any) {
+  handleIOS(event: any) {
     this.handleUrl(event.url)
   }
 
-  handleUrl (url: string) {
+  handleUrl(url: string) {
     if (url) {
       this.store.dispatch(UIActions.routeDeepLinkRequest(url))
     }
   }
 
-  setup () {
+  setup() {
     Linking.addEventListener('url', this.handleIOS.bind(this))
     Linking.getInitialURL().then(this.handleUrl.bind(this))
   }
 
-  tearDown () {
+  tearDown() {
     if (Platform.OS !== 'android') {
       Linking.removeEventListener('url', this.handleIOS)
     }
