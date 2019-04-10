@@ -23,7 +23,7 @@ interface DispatchProps {
   toggleNodeStateOverlay: () => void
 }
 
-interface ServiceInfo {
+export interface ServiceInfo {
   title: string,
   subtitle: string,
   dependsOn?: string
@@ -160,30 +160,30 @@ class Notifications extends React.PureComponent<Props> {
               <View>
                 <SettingsRow
                   service={'StateOverlay'}
-                  info={{title: 'State Overlay'}}
+                  info={{title: 'State Overlay', subtitle: 'Banner indicating Node State'}}
                   value={this.props.verboseUiOptions.nodeStateOverlay}
                   /* tslint:disable-next-line */
-                  infoPres={() => {}}
+                  infoPress={() => {}}
                   onChange={this.props.toggleNodeStateOverlay}
                 />
               </View>
               <View>
                 <SettingsRow
                   service={'NodeState'}
-                  info={{title: 'Node State Change'}}
+                  info={{title: 'Node State Change', subtitle: 'Local notifications'}}
                   value={this.props.verboseUiOptions.nodeStateNotifications}
                   /* tslint:disable-next-line */
-                  infoPres={() => {}}
+                  infoPress={() => {}}
                   onChange={this.props.toggleNodeState}
                 />
               </View>
               <View>
                 <SettingsRow
                   service={'NodeErrors'}
-                  info={{title: 'Node Errors'}}
+                  info={{title: 'Node Errors', subtitle: 'Local notifications'}}
                   value={this.props.verboseUiOptions.nodeErrorNotifications}
                   /* tslint:disable-next-line */
-                  infoPres={() => {}}
+                  infoPress={() => {}}
                   onChange={this.props.toggleNodeErrors}
                 />
               </View>

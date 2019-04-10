@@ -45,15 +45,15 @@ class Storage extends React.PureComponent<Props> {
     infoVisible: false,
     info: { }
   }
-  toggleOption = (name: StorageType) => {
-    this.props.toggleStorageRequest(name)
+  toggleOption = (name: string) => {
+    this.props.toggleStorageRequest(name as StorageType)
   }
 
   hideInfo = () => {
     this.setState({ infoVisible: false })
   }
 
-  showInfo = (service: StorageType) => {
+  showInfo = (service: string) => {
     const info = GetServiceInfo(service)
     this.setState({ infoVisible: true, info })
   }
@@ -69,9 +69,16 @@ class Storage extends React.PureComponent<Props> {
             {Object.keys(this.props.mainOptions)
               .map((option, i) => {
                 const value = !!this.props.mainOptions[option].status
+                const info = this.props.mainOptions[option].info || {title: 'unknown', subtitle: 'unknown'}
                 return (
                   <View key={i} >
-                    <SettingsRow service={option} info={this.props.mainOptions[option].info} value={value} infoPress={this.showInfo} onChange={this.toggleOption} />
+                    <SettingsRow
+                      service={option}
+                      info={info}
+                      value={value}
+                      infoPress={this.showInfo}
+                      onChange={this.toggleOption}
+                    />
                   </View>
                 )
               })

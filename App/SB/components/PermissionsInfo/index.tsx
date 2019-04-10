@@ -11,23 +11,27 @@ const WIDTH = Dimensions.get('window').width
 // may be off on some Android devices
 const HEIGHT = Dimensions.get('window').height
 
-// Placeholder made by AXH without any SB stuff
-class PermissionsInfo extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      isVisible: true
-    }
+interface PermissionsInfoProps {
+  info: {
+    title: string
+    details: string
   }
-
-  render () {
+  close: () => void
+}
+class PermissionsInfo extends Component<PermissionsInfoProps> {
+  state = {
+    isVisible: true
+  }
+  render() {
     return (
       <Modal
-        isVisible
+        isVisible={true}
         animationIn={'fadeInUp'}
         animationOut={'fadeOutDown'}
-        avoidKeyboard backdropColor={'#E1E1E1'}
-        backdropOpacity={0.5} style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }}
+        avoidKeyboard={true}
+        backdropColor={'#E1E1E1'}
+        backdropOpacity={0.5}
+        style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }}
       >
         <View style={styles.container} >
           <View style={styles.header}>
@@ -45,14 +49,4 @@ class PermissionsInfo extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PermissionsInfo)
+export default connect(undefined, undefined)(PermissionsInfo)

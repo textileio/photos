@@ -1,11 +1,18 @@
 import React from 'react'
 import propTypes from 'prop-types'
-import { View, Image, Text } from 'react-native'
+import { View, Image, Text, ViewStyle } from 'react-native'
 import TextileImage from '../../../Components/TextileImage'
 
 import styles from './statics/styles'
+import { pb } from '@textile/react-native-sdk'
 
-const PhotoWithTextBox = props => {
+interface PhotoWithTextBoxProps {
+  text: string
+  photo: pb.IFiles
+  style?: ViewStyle
+}
+
+const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
   const { photo, text, style } = props
 
   return (
@@ -17,7 +24,7 @@ const PhotoWithTextBox = props => {
             target={photo.target}
             index={photo.files[0].index}
             forMinWidth={70}
-            style={{...styles.itemPhoto, width: 70, height: 50}}
+            style={{width: 70, height: 50}}
             resizeMode={'cover'}
             capInsets={'true'}
           />
@@ -32,11 +39,6 @@ const PhotoWithTextBox = props => {
       <Text numberOfLines={1} style={styles.itemText}>{text}</Text>
     </View>
   )
-}
-
-PhotoWithTextBox.propTypes = {
-  photo: propTypes.object,
-  text: propTypes.string.isRequired
 }
 
 export default PhotoWithTextBox
