@@ -38,7 +38,7 @@ const FeedItem = (props: FeedItemProps) => {
     borderColor: 'rgba(255, 28, 63, 0.2)'
   }
 
-  const feedText = payload.feed && payload.feed !== '' ? payload.feed : `${payload.title} ${payload.feed} ${payload.message}`
+  const feedText = payload.feed && payload.feed !== '' ? payload.feed : '   '
 
   // TODO: Update textile image props to target and index
   return (

@@ -5,8 +5,6 @@ import { View, Text, FlatList, Image, Dimensions } from 'react-native'
 import { NavigationScreenProps, NavigationEventSubscription } from 'react-navigation'
 import Buttons from 'react-navigation-header-buttons'
 
-import { pb } from '@textile/react-native-sdk'
-
 import Avatar from '../../Components/Avatar'
 import FeedItem from '../../SB/components/FeedItem'
 import { TextileHeaderButtons } from '../../Components/HeaderButtons'
@@ -134,7 +132,7 @@ class Notifications extends React.PureComponent<Props> {
           activity in your groups, such as likes,
           comments, and new photo shares. There's
           nothing here yet, so go invite some friends!
-          </Text>
+        </Text>
       </View>
     )
   }
@@ -159,7 +157,6 @@ class Notifications extends React.PureComponent<Props> {
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
         {!this.props.showOnboarding && this._renderItems()}
-        {/* <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} /> */}
       </View>
     )
   }
