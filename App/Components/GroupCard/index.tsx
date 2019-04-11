@@ -18,7 +18,6 @@ interface ScreenProps {
 
 const GroupCard = (props: ScreenProps) => {
   const { name, members, thumb } = props
-  const memberArray: pb.IContact[] = members.map((member) => member)
   const getCallback = () => {
     return () => {
       props.onPress(props)
@@ -64,8 +63,8 @@ const GroupCard = (props: ScreenProps) => {
       </View>
       <View style={styles.groupRightColumn}>
         <View style={styles.avatarContainer}>
-          { memberArray.slice(0, 8).map((mem: pb.IContact, i: number) => {
-            const imageStyle = cardImageStyle(memberArray.length, i)
+          { members.slice(0, 8).map((mem: pb.IContact, i: number) => {
+            const imageStyle = cardImageStyle(members.length, i)
             return (
               <View key={mem.address} style={imageStyle} >
                 <Avatar style={{width: '100%', height: '100%', backgroundColor: color.grey_5}} target={mem.avatar}/>
