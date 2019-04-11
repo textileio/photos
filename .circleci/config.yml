@@ -13,7 +13,7 @@ jobs:
     lint:
         working_directory: ~/textile-mobile
         docker:
-            - image: circleci/node:8
+            - image: circleci/node:11.9.0
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:
@@ -58,7 +58,7 @@ jobs:
     tests:
         working_directory: ~/textile-mobile
         docker:
-            - image: circleci/node:8
+            - image: circleci/node:11.9.0
         steps:
             - restore_cache: # If any cache exists, it'll way speedup these checkouts
                 keys:

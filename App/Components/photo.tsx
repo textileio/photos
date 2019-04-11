@@ -36,7 +36,7 @@ export default class Photo extends React.PureComponent<Props> {
     this.setState({selected: !this.state.selected})
   }
 
-  progressiveElement(width: number, height: number, minWidth) {
+  progressiveElement(width: number, height: number, minWidth: number) {
     return (
       <ProgressiveImage
         imageId={this.props.photoId}

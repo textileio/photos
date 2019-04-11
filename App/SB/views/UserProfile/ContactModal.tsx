@@ -5,7 +5,14 @@ import Modal from 'react-native-modal'
 import styles from './statics/modalStyle'
 import { buttonColor1, buttonColor2, buttonColor4 } from '../../../Containers/Styles/InfoViewStyle'
 
-const ContactModal = (props) => {
+interface ContactModalProps {
+  width: number
+  height: number
+  isVisible: boolean
+  onClose: () => void
+}
+
+const ContactModal = (props: ContactModalProps) => {
   const { width, height, isVisible, onClose } = props
 
   const openTelegram = () => Linking.openURL('https://t.me/joinchat/AAAAAEfVwD37Wh0OpnlXKA')

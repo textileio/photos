@@ -1,11 +1,6 @@
-export interface ServiceDescription {
-  title: string
-  subtitle: string
-  details?: string
-  dependsOn?: string
-}
+import { ServiceInfo } from '.'
 
-export default function(service: string): ServiceDescription | undefined {
+export default function(service: string): ServiceInfo | undefined {
   switch (service) {
     case 'backgroundLocation':
       return {

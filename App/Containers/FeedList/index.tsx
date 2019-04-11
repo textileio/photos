@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, FlatList, Image, Dimensions } from 'react-native'
+import { View, Text, FlatList, Image, Dimensions, ListRenderItemInfo } from 'react-native'
 import { NavigationScreenProps, NavigationEventSubscription } from 'react-navigation'
 import Buttons from 'react-navigation-header-buttons'
 
@@ -80,7 +80,7 @@ class Notifications extends React.PureComponent<Props> {
     })
   }
 
-  componentDidUpdate(prevProps, prevState, snapShot) {
+  componentDidUpdate(prevProps: Props) {
     // Will clear the onboarding only after the first feed item appears
     if (this.props.showOnboarding && this.props.notifications !== prevProps.notifications && this.props.notifications.length > 0) {
       this.props.completeTourScreen()
@@ -97,17 +97,17 @@ class Notifications extends React.PureComponent<Props> {
     }
   }
 
-  _onClick = (notification) => {
+  _onClick = (notification: Notification) => {
     this.props.clickNotification(notification)
   }
 
-  _keyExtractor = (item, index) => item.id + '_' + index
+  _keyExtractor = (item: Notification, index: number) => item.id + '_' + index
 
   openDrawer = () => {
     this.props.navigation.openDrawer()
   }
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item }: ListRenderItemInfo<Notification>) => {
     return (
       <FeedItem
         notification={item}

@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, Text, ScrollView, Platform } from 'react-native'
 import { RootAction, RootState } from '../../../Redux/Types'
-import PreferencesActions, { ServiceType, TourScreens } from '../../../Redux/PreferencesRedux'
+import PreferencesActions, { ServiceType, TourScreens, PreferencesSelectors } from '../../../Redux/PreferencesRedux'
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons from 'react-navigation-header-buttons'
 import SettingsRow from '../../components/SettingsRow'
@@ -31,7 +31,7 @@ export interface ServiceInfo {
 }
 
 interface ServiceSummary {
-  [key: string]: {status: boolean, info: ServiceInfo}
+  [key: string]: {status: boolean, info?: ServiceInfo}
 }
 
 interface StateProps {
@@ -122,17 +122,20 @@ class Notifications extends React.PureComponent<Props> {
               .map((service, i) => {
                 const value = !!this.props.services[service].status
                 const children = Object.keys(this.props.children)
-                  .filter((key) => this.props.children[key].info.dependsOn === service)
+                  .filter((key) => {
+                    const info = this.props.children[key].info
+                    return info && info.dependsOn === service
+                  })
                   .reduce((previous, current) => {
                     previous[current] = this.props.children[current]
                     return previous
-                  }, {})
+                  }, {} as ServiceSummary)
 
                 return (
                   <View key={i} >
                     <SettingsRow
                       service={service}
-                      info={this.props.services[service].info}
+                      info={this.props.services[service].info || {title: 'unknown', subtitle: 'unknown'}}
                       value={value}
                       infoPress={this.showInfo}
                       onChange={this.toggleService}
@@ -142,7 +145,7 @@ class Notifications extends React.PureComponent<Props> {
                         key={i * 33}
                         child={child}
                         service={child}
-                        info={this.props.children[child].info}
+                        info={this.props.children[child].info || {title: 'unknown', subtitle: 'unknown'}}
                         disabled={!value}
                         value={!!this.props.children[child].status}
                         infoPress={this.showInfo}
@@ -206,27 +209,33 @@ const mapStateToProps = (state: RootState): StateProps => {
   const allServices = Object.keys(state.preferences.services)
     .reduce((previous, current) => {
       const basic = {
-        status: state.preferences.services[current].status,
+        status: PreferencesSelectors.serviceStatus(state, current as ServiceType),
         info: GetServiceInfo(current)
       }
       previous[current] = basic
       return previous
-    }, {})
+    }, {} as ServiceSummary)
 
   const services = Object.keys(allServices)
-    .filter((key) => allServices[key].info !== undefined && allServices[key].info.dependsOn === undefined)
+    .filter((key) => {
+      const info = allServices[key].info
+      return info !== undefined && info.dependsOn === undefined
+    })
     .reduce((previous, current) => {
       previous[current] = allServices[current]
       return previous
-    }, {})
+    }, {} as ServiceSummary)
 
   // get any services that depend on top level services
   const children = Object.keys(allServices)
-    .filter((key) => allServices[key].info !== undefined && allServices[key].info.dependsOn !== undefined)
+    .filter((key) => {
+      const info = allServices[key].info
+      return info !== undefined && info.dependsOn !== undefined
+    })
     .reduce((previous, current) => {
       previous[current] = allServices[current]
       return previous
-    }, {})
+    }, {} as ServiceSummary)
 
   return {
     allServices,

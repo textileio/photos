@@ -18,8 +18,7 @@ interface ScreenProps {
 
 const GroupCard = (props: ScreenProps) => {
   const { name, members, thumb } = props
-  const keys = Object.keys(members)
-  const memberArray = keys.map((key) => members[key])
+  const memberArray: pb.IContact[] = members.map((member) => member)
   const getCallback = () => {
     return () => {
       props.onPress(props)

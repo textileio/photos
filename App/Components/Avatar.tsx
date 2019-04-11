@@ -32,16 +32,13 @@ interface State {
 
 class Avatar extends React.Component<Props, State> {
 
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      borderRadius: 0,
-      defaultSize: 50,
-      httpSuccess: false
-    }
+  state: State = {
+    borderRadius: 0,
+    defaultSize: 50,
+    httpSuccess: false
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
     return nextProps.target !== this.props.target ||
       nextState.ipfsError !== this.state.ipfsError ||
       // node status hasn't changed

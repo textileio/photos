@@ -133,7 +133,7 @@ class Groups extends React.PureComponent<Props, State> {
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (this.props.threads.length && this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()

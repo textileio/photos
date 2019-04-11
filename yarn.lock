@@ -4733,9 +4733,9 @@ react-native-vector-icons@^6.2.0:
     prop-types "^15.6.2"
     yargs "^8.0.2"
 
-"react-native-version-number@https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f":
+"react-native-version-number@https://github.com/textileio/react-native-version-number#79b2c34746a170fe11cc8bc151b4015ed6e59148":
   version "0.3.4"
-  resolved "https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f"
+  resolved "https://github.com/textileio/react-native-version-number#79b2c34746a170fe11cc8bc151b4015ed6e59148"
 
 react-native@0.57.7:
   version "0.57.7"

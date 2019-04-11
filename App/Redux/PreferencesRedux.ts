@@ -171,6 +171,7 @@ export function reducer(state: PreferencesState = initialState, action: Preferen
 export const PreferencesSelectors = {
   onboarded: (state: RootState) => state.preferences.onboarded,
   service: (state: RootState, name: ServiceType) => state.preferences.services[name],
+  serviceStatus: (state: RootState, name: ServiceType) => state.preferences.services[name] && state.preferences.services[name].status,
   storage: (state: RootState, name: StorageType) => state.preferences.storage[name],
   verboseUi: (state: RootState) => state.preferences.verboseUi,
   showNodeStateNotification: (state: RootState) => state.preferences.verboseUi && state.preferences.verboseUiOptions.nodeStateNotifications,

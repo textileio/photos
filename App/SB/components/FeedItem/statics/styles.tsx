@@ -1,7 +1,18 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, ViewStyle, TextStyle } from 'react-native'
 import { BentonSansBold } from '../../../util/fonts'
 
-export default StyleSheet.create({
+interface Styles {
+  itemContainer: ViewStyle
+  textContainer: ViewStyle
+  text: TextStyle
+  timestamp: TextStyle
+  unread: ViewStyle
+  readImage: ViewStyle
+  headerIconUser: ViewStyle
+  iconContainer: ViewStyle
+  strong: TextStyle
+}
+export default StyleSheet.create<Styles>({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',

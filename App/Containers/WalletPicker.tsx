@@ -62,7 +62,7 @@ class TextileWalletPicker extends React.PureComponent<Props> {
     })
   }
 
-  onSelect = (photo) => {
+  onSelect = (photo: pb.IFiles) => {
     return () => {
       this.props.success(photo)
     }
