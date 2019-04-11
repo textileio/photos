@@ -15,7 +15,7 @@ import { RootState } from '../../../Redux/Types'
 
 type Props = StateProps & NavigationScreenProps<{}>
 class RecoveryPhrase extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = ({navigation}: NavigationScreenProps) => {
     const goBack = () => { navigation.dispatch(NavigationActions.back()) }
     return {
       headerLeft: (

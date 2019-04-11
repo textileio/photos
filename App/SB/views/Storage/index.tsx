@@ -103,12 +103,12 @@ interface StorageOption {status: boolean, info?: StorageDescription}
 interface StateProps {
   allOptions: {[key: string]: StorageOption}
   mainOptions: {[key: string]: StorageOption}
-  children: {[key: string]: StorageOption}
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
   // get all top level options
-  const allOptions = Object.keys(state.preferences.storage)
+  const input: {[key: string]: StorageOption} = {}
+  const allOptions: {[key: string]: StorageOption} = Object.keys(state.preferences.storage)
     .reduce((previous, current) => {
       const basic: StorageOption = {
         status: PreferencesSelectors.storage(state, current as StorageType).status,
@@ -116,27 +116,15 @@ const mapStateToProps = (state: RootState): StateProps => {
       }
       previous[current] = basic
       return previous
-    }, {})
+    }, input)
 
-  const mainOptions = Object.keys(allOptions)
-    .filter((key) => allOptions[key].info !== undefined && allOptions[key].info.dependsOn === undefined)
-    .reduce((previous, current) => {
-      previous[current] = allOptions[current]
-      return previous
-    }, {})
+  const mainOptions = allOptions
 
   // get any storage options that depend on top level options
-  const children = Object.keys(allOptions)
-    .filter((key) => allOptions[key].info !== undefined && allOptions[key].info.dependsOn !== undefined)
-    .reduce((previous, current) => {
-      previous[current] = allOptions[current]
-      return previous
-    }, {})
 
   return {
     allOptions,
-    mainOptions,
-    children
+    mainOptions
   }
 }
 

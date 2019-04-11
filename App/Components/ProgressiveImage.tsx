@@ -24,7 +24,8 @@ interface IProgressiveImageState {
   smallSuccess: boolean
 }
 
-class ProgressiveImage extends React.Component<IProgressiveImageProps & StateProps> {
+type Props = IProgressiveImageProps & StateProps
+class ProgressiveImage extends React.Component<Props> {
 
   state: IProgressiveImageState = {
     largeSuccess: false,
@@ -32,7 +33,7 @@ class ProgressiveImage extends React.Component<IProgressiveImageProps & StatePro
     thumbSuccess: false
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: Props, nextState: IProgressiveImageState) {
     return this.props.started !== nextProps.started ||
     this.state.largeSuccess !== nextState.largeSuccess ||
     this.state.smallSuccess !== nextState.smallSuccess ||

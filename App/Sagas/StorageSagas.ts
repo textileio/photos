@@ -30,7 +30,7 @@ export function * toggleStorage(action: ActionType<typeof PreferencesActions.tog
 }
 
 export function * refreshLocalImages() {
-  // while (yield take(getType(StorageActions.refreshLocalImagesRequest))) {
+  while (yield take(getType(StorageActions.refreshLocalImagesRequest))) {
   //   try {
   //     const autoPinEnabled = yield select(PreferencesSelectors.autoPinStatus)
   //     if (autoPinEnabled) {
@@ -46,5 +46,5 @@ export function * refreshLocalImages() {
   //   } catch (error) {
   //     yield call(logNewEvent, 'refreshLocalImages', error.message, true)
   //   }
-  // }
+  }
 }

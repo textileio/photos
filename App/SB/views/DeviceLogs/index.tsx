@@ -89,7 +89,7 @@ class DeviceLogs extends React.PureComponent<Props> {
     )
   }
 
-  keyExtractor = (item, index: number) => index.toString() + item.time
+  keyExtractor = (item: DeviceLogsRow, index: number) => index.toString() + item.time
 
   render() {
     return (

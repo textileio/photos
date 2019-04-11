@@ -4639,9 +4639,10 @@ react-native-contacts@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-3.1.2.tgz#44ca24046d3ddfcaeba70da06e7e5c750fdbd7e4"
 
-"react-native-easy-toast@https://github.com/Darmody/react-native-easy-toast#927679d85ee241318b7296280bbf083fc910b75d":
+react-native-easy-toast@1.2.0:
   version "1.2.0"
-  resolved "https://github.com/Darmody/react-native-easy-toast#927679d85ee241318b7296280bbf083fc910b75d"
+  resolved "https://registry.yarnpkg.com/react-native-easy-toast/-/react-native-easy-toast-1.2.0.tgz#0f70bcb99e3306cda4800c244bfb4a67d42276ed"
+  integrity sha512-UtpxnRn1ME+035Uey4VR+9K0P4aVoTcWNOx5QkioWBe3LBKMPb/kZjrQ1LtvWzOyeGP4TeTUTtMX3IOPWv5MtA==
   dependencies:
     prop-types "^15.5.10"
 
@@ -4732,9 +4733,9 @@ react-native-vector-icons@^6.2.0:
     prop-types "^15.6.2"
     yargs "^8.0.2"
 
-"react-native-version-number@https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f":
+"react-native-version-number@https://github.com/textileio/react-native-version-number#79b2c34746a170fe11cc8bc151b4015ed6e59148":
   version "0.3.4"
-  resolved "https://github.com/textileio/react-native-version-number#6023fea24bc5865389fd938e99d8f86685543c4f"
+  resolved "https://github.com/textileio/react-native-version-number#79b2c34746a170fe11cc8bc151b4015ed6e59148"
 
 react-native@0.57.7:
   version "0.57.7"

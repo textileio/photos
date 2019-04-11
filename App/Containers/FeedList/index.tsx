@@ -1,11 +1,9 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, FlatList, Image, Dimensions } from 'react-native'
+import { View, Text, FlatList, Image, Dimensions, ListRenderItemInfo } from 'react-native'
 import { NavigationScreenProps, NavigationEventSubscription } from 'react-navigation'
 import Buttons from 'react-navigation-header-buttons'
-
-import { pb } from '@textile/react-native-sdk'
 
 import Avatar from '../../Components/Avatar'
 import FeedItem from '../../SB/components/FeedItem'
@@ -82,7 +80,7 @@ class Notifications extends React.PureComponent<Props> {
     })
   }
 
-  componentDidUpdate(prevProps, prevState, snapShot) {
+  componentDidUpdate(prevProps: Props) {
     // Will clear the onboarding only after the first feed item appears
     if (this.props.showOnboarding && this.props.notifications !== prevProps.notifications && this.props.notifications.length > 0) {
       this.props.completeTourScreen()
@@ -99,17 +97,17 @@ class Notifications extends React.PureComponent<Props> {
     }
   }
 
-  _onClick = (notification) => {
+  _onClick = (notification: Notification) => {
     this.props.clickNotification(notification)
   }
 
-  _keyExtractor = (item, index) => item.id + '_' + index
+  _keyExtractor = (item: Notification, index: number) => item.id + '_' + index
 
   openDrawer = () => {
     this.props.navigation.openDrawer()
   }
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item }: ListRenderItemInfo<Notification>) => {
     return (
       <FeedItem
         notification={item}
@@ -134,7 +132,7 @@ class Notifications extends React.PureComponent<Props> {
           activity in your groups, such as likes,
           comments, and new photo shares. There's
           nothing here yet, so go invite some friends!
-          </Text>
+        </Text>
       </View>
     )
   }
@@ -159,7 +157,6 @@ class Notifications extends React.PureComponent<Props> {
       <View style={styles.container}>
         {this.props.showOnboarding && this._renderOnboarding()}
         {!this.props.showOnboarding && this._renderItems()}
-        {/* <Toast ref='toast' position='top' fadeInDuration={50} style={styles.toast} textStyle={styles.toastText} /> */}
       </View>
     )
   }

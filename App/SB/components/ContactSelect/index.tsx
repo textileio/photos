@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, Image, FlatList, TouchableOpacity, ListRenderItemInfo } from 'react-native'
 import Avatar from '../../../Components/Avatar'
 
 import ContactSelectCard, {ContactLinkCard} from './ContactSelectCard'
@@ -7,10 +7,10 @@ import ContactSelectCard, {ContactLinkCard} from './ContactSelectCard'
 import styles from './statics/styles'
 import { pb } from '@textile/react-native-sdk'
 
-function getSubTitle(contacts, topFive, notInThread) {
+function getSubTitle(contacts: IncludedContact[], topFive: IncludedContact[], notInThread: boolean) {
   if (contacts.length === 0) {
     return 'You don\'t have any contacts.'
-  } else if (topFive.length > 0 && topFive.length > notInThread) {
+  } else if (topFive.length > 0 && topFive.length > 0 && notInThread) {
     return 'Suggested:'
   }
   return 'Invite existing contacts or generate an external invite link or QR code.'
@@ -108,7 +108,7 @@ export class ContactSelectComponent extends React.Component<ContactSelectCompone
     )
   }
 
-  renderRow = (contact) => {
+  renderRow = (contact: ListRenderItemInfo<IncludedContact>) => {
     const { item } = contact
     const selectState = !!this.props.selected[item.address] || item.included
     return (
