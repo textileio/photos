@@ -12,7 +12,7 @@ export function getPeerId(state: RootState): string | undefined {
 }
 
 export function getAddress(state: RootState): string | undefined {
-  return state.account.address.value
+  return state.account.address && state.account.address.value
 }
 
 export function getUsername(state: RootState): string | undefined {
