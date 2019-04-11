@@ -112,7 +112,7 @@ export function getThreadsAndMembers(state: RootState, limit: number): GroupAuth
         // total number of images in the thread
         size: thread.photos.length,
         // required to ensure up to date index
-        members: {...[], ...members},
+        members: [...members],
         memberCount: allMembers.length,
         thumb
       }
