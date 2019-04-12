@@ -5,7 +5,6 @@
 #import <React/RCTConvert.h>
 
 #import "TextileImageView.h"
-#import "TextileNode.h"
 
 @implementation TextileImageViewManager
 

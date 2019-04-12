@@ -1,6 +1,6 @@
 #import "TextileImageView.h"
 #import <React/RCTBridge.h>
-#import "TextileNode.h"
+#import <Textile/TextileApi.h>
 
 @interface TextileImageView ()
 
@@ -76,13 +76,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
       NSError *error;
       UIImage *image;
       if (self.ipfs) {
-        NSData *imageData = [self->_bridge.textileNode _dataAtPath:self.target error:&error];
+        NSData *imageData = [Textile.instance.ipfs dataAtPath:self.target error:&error];
         if (imageData) {
           image = [UIImage imageWithData:imageData scale:1];
         }
       } else {
         NSString *path = [NSString stringWithFormat:@"%@/%d", self.target, self.index];
-        NSString *urlString = [self->_bridge.textileNode _imageFileDataForMinWidth:path minWidth:self.forMinWidth error:&error];
+        NSString *urlString = [Textile.instance.files imageDataForMinWidth:path minWidth:self.forMinWidth error:&error];
         if (urlString) {
           NSURL *url = [NSURL URLWithString:urlString];
           NSData *imageData = [NSData dataWithContentsOfURL:url];
