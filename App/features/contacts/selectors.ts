@@ -41,7 +41,7 @@ export const orderedContacts = (state: ContactsState) => {
     } else {
       return 0
     }
-  }
+  })
 }
 
 export const searchResults = (state: ContactsState) => {
