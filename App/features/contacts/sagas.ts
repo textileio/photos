@@ -176,7 +176,7 @@ function * sendInviteMessage() {
     if (sendTo) {
       const username: string | undefined = yield select(getUsername)
       const address: string | undefined = yield select(getAddress)
-      const url = Platform.OS === 'ios' ? Config.RN_IOS_STORE_LINK : Config.RN_ANDROID_STORE_LINK
+      const url = `https://www.textile.photos/invites/new#name=new&inviter=${username}&referral=${Config.RN_TEMPORARY_REFERRAL}`
       let message = `Join me on Textile Photos: ${url}`
       if (username) {
         message = `${message}\nMy username: ${username}`
