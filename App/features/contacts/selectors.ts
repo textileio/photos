@@ -12,6 +12,38 @@ export const makeByThreadId = (id: string) => (state: ContactsState) => state.co
 
 export const makeContactByAddress = (address: string) => (state: ContactsState) => state.contacts.find((contact) => contact.address === address)
 
+export const orderedContacts = (state: ContactsState) => {
+  return state.contacts.slice().sort((a, b) => {
+    const aExists: boolean = a.name !== undefined && a.name !== ''
+    const bExists: boolean = b.name !== undefined && b.name !== ''
+
+    let aSortKey = a.name
+    let bSortKey = b.name
+
+    if (aExists && !bExists) {
+      // move b later if no name
+      return -1
+    } else if (!aExists && bExists) {
+      // move a later if no name
+      return 1
+    } else if (!aExists && !bExists) {
+      // if neither have name, use address and continue
+      aSortKey = a.address
+      bSortKey = b.address
+    }
+
+    aSortKey = aSortKey.toLowerCase()
+    bSortKey = bSortKey.toLowerCase()
+    if (aSortKey < bSortKey) {
+      return -1
+    } else if (aSortKey > bSortKey) {
+      return 1
+    } else {
+      return 0
+    }
+  })
+}
+
 export const searchResults = (state: ContactsState) => {
   const sections: SearchResultsSection[] = []
 
