@@ -10,13 +10,13 @@ import {
 import { NavigationScreenProps } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 import { pb } from '@textile/react-native-sdk'
+import { orderedContacts } from '../features/contacts/selectors'
 
 import SearchBar from '../Components/SearchBar'
 import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
-import InviteContactModal from '../Components/InviteContactModal'
 import { RootState } from '../Redux/Types'
 import { color, textStyle } from '../styles'
 
@@ -151,30 +151,8 @@ class Contacts extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const contacts = state.contacts.contacts.slice().sort((a, b) => {
-    let aSortKey = a.name
-    let bSortKey = b.name
-    if (a.name && !b.name) {
-      // move b later if no name
-      return -1
-    } else if (!a.name && b.name) {
-      // move a later if no name
-      return 1
-    } else if (!a.name && !b.name) {
-      // if neither have name, use address and continue
-      aSortKey = a.address
-      bSortKey = b.address
-    }
-    if (aSortKey < bSortKey) {
-      return -1
-    } else if (aSortKey > bSortKey) {
-      return 1
-    } else {
-      return 0
-    }
-  })
   return {
-    contacts
+    contacts: orderedContacts(state.contacts)
   }
 }
 

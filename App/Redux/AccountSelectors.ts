@@ -24,6 +24,10 @@ export function getProfile(state: RootState): pb.IContact | undefined {
   return state.account.profile.value
 }
 
+export function getRecoveryPhrase(state: RootState): string | undefined {
+  return state.account.recoveryPhrase
+}
+
 export function bestSession(state: RootState): pb.ICafeSession | undefined {
   const values = state.account.cafeSessions.sessions
   if (values.length === 0) {

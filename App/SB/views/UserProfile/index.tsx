@@ -9,7 +9,7 @@ import VersionNumber from 'react-native-version-number'
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
 import PreferencesActions from '../../../Redux/PreferencesRedux'
-import { getPeerId, getUsername } from '../../../Redux/AccountSelectors'
+import { getPeerId, getUsername, getRecoveryPhrase } from '../../../Redux/AccountSelectors'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
@@ -71,10 +71,11 @@ class UserProfile extends React.PureComponent<Props> {
   _contact = () => {
     this.setState({ contactModal: this.state.contactModal === false })
   }
-  _recoveryPhrase = () => {
-    this.props.navigation.navigate('RecoveryPhrase', {
-      username: this.props.name
-    })
+  copyRecoveryPhrase = () => {
+    Clipboard.setString(this.props.recoveryPhrase)
+    if (this.toast) {
+      this.toast.show('Copied Phrase to Clipboard', 5000)
+    }
   }
   openPrivacy = () => {
     Linking.openURL('https://github.com/textileio/textile-mobile/blob/master/PRIVACY.md')
@@ -142,6 +143,11 @@ class UserProfile extends React.PureComponent<Props> {
           <TouchableOpacity style={styles.listItem} onPress={this._peerId}>
             <Text style={styles.listText}>Copy PeerId</Text>
           </TouchableOpacity>
+          {this.props.peerId &&
+            <TouchableOpacity style={styles.listItem} onPress={this.copyRecoveryPhrase}>
+              <Text style={styles.listText}>Copy Recovery Phrase</Text>
+            </TouchableOpacity>
+          }
           <TouchableOpacity style={styles.listItem} onPress={this.openPrivacy}>
             <Text style={styles.listText}>Privacy</Text>
           </TouchableOpacity>
@@ -178,7 +184,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   return {
     name: getUsername(state),
     verboseUi,
-    recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',
+    recoveryPhrase: getRecoveryPhrase(state) || 'sorry, there was an error',
     peerId: getPeerId(state) || 'sorry, there was an error',
     online,
     nodeRunning
