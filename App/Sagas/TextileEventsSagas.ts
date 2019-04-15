@@ -16,11 +16,9 @@ import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 
 export function * startSagas() {
   yield all([
-    call(appStateChange),
     call(startNodeFinished),
     call(stopNodeAfterDelayStarting),
     call(stopNodeAfterDelayCancelled),
-    call(stopNodeAfterDelayFinishing),
     call(stopNodeAfterDelayComplete),
     call(updateProfile),
     call(refreshMessages),
@@ -88,25 +86,6 @@ export function * ignoreFileRequest() {
   }
 }
 
-export function * appStateChange() {
-  while (true) {
-    try {
-      // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.appStateChange> =
-        yield take((action: RootAction) =>
-          action.type === getType(TextileEventsActions.appStateChange)
-        )
-
-      if (yield select(PreferencesSelectors.showNodeStateNotification)) {
-        yield call(displayNotification, 'App State Change: ' + action.payload.newState)
-      }
-
-      yield call(logNewEvent, 'State Change', action.payload.newState)
-    } catch (error) {
-      yield call(logNewEvent, 'appStateChange', error.message, true)
-    }
-  }
-}
 export function * nodeOnline() {
   while (true) {
     try {
@@ -134,9 +113,9 @@ export function * startNodeFinished() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.startNodeFinished> =
+      const action: ActionType<typeof TextileEventsActions.nodeStarted> =
         yield take((action: RootAction) =>
-          action.type === getType(TextileEventsActions.startNodeFinished)
+          action.type === getType(TextileEventsActions.nodeStarted)
         )
 
       // Handle any pending invites now that we are finished
@@ -159,7 +138,7 @@ export function * stopNodeAfterDelayStarting() {
         )
 
       if (yield select(PreferencesSelectors.showNodeStateNotification)) {
-        yield call(displayNotification, 'Running the node for 20 sec. in the background')
+        yield call(displayNotification, `Running the node for ${action.payload.delay} sec. in the background`)
       }
     } catch (error) {
       yield call(logNewEvent, 'stopNodeAfterDelayStarting', error.message, true)
@@ -189,30 +168,14 @@ export function * stopNodeAfterDelayCancelled() {
     }
   }
 }
-export function * stopNodeAfterDelayFinishing() {
-  while (true) {
-    try {
-      // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.stopNodeAfterDelayFinishing> =
-        yield take((action: RootAction) =>
-          action.type === getType(TextileEventsActions.stopNodeAfterDelayFinishing)
-        )
 
-      if (yield select(PreferencesSelectors.showNodeStateNotification)) {
-        yield call(displayNotification, 'Stopping node')
-      }
-    } catch (error) {
-      yield call(logNewEvent, 'stopNodeAfterDelayFinishing', error.message, true)
-    }
-  }
-}
 export function * stopNodeAfterDelayComplete() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.stopNodeAfterDelayComplete> =
+      const action: ActionType<typeof TextileEventsActions.nodeStopped> =
         yield take((action: RootAction) =>
-          action.type === getType(TextileEventsActions.stopNodeAfterDelayComplete)
+          action.type === getType(TextileEventsActions.nodeStopped)
         )
 
       if (yield select(PreferencesSelectors.showNodeStateNotification)) {
@@ -223,6 +186,7 @@ export function * stopNodeAfterDelayComplete() {
     }
   }
 }
+
 export function * newError() {
   while (true) {
     try {

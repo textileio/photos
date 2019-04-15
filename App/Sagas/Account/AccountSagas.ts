@@ -15,8 +15,8 @@ import { bestSession } from '../../Redux/AccountSelectors'
 import { logNewEvent } from '../DeviceLogs'
 
 export function * onNodeStarted() {
-  while (yield take([getType(TextileEventsActions.startNodeFinished), getType(PreferencesActions.onboardingSuccess)])) {
-    yield call(logNewEvent, 'onNodeStarted', 'refresh account data')
+  while (yield take([getType(TextileEventsActions.nodeStarted), getType(PreferencesActions.onboardingSuccess)])) {
+    yield call(logNewEvent, 'nodeStarted', 'refresh account data')
     try {
       yield put(AccountActions.refreshProfileRequest())
       yield put(AccountActions.refreshPeerIdRequest())
@@ -71,9 +71,9 @@ export function * setUsername() {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setUsernameRequest> = yield take(getType(AccountActions.setUsernameRequest))
-      const nodeState = yield select(TextileEventsSelectors.nodeState)
-      if (!nodeState || nodeState.state !== NodeState.started) {
-        yield take(getType(TextileEventsActions.startNodeFinished))
+      const started = yield select(TextileEventsSelectors.started)
+      if (!started) {
+        yield take(getType(TextileEventsActions.nodeStarted))
       }
       // Ideally this could move into the SDK directly so it can manage
       // knowing its own online state
@@ -89,9 +89,9 @@ export function * setAvatar() {
   while (true) {
     try {
       const action: ActionType<typeof AccountActions.setAvatarRequest> = yield take(getType(AccountActions.setAvatarRequest))
-      const nodeState = yield select(TextileEventsSelectors.nodeState)
-      if (!nodeState || nodeState.state !== NodeState.started) {
-        yield take(getType(TextileEventsActions.startNodeFinished))
+      const started = yield select(TextileEventsSelectors.started)
+      if (!started) {
+        yield take(getType(TextileEventsActions.nodeStarted))
       }
       // Ideally this could move into the SDK directly so it can manage
       // knowing its own online state

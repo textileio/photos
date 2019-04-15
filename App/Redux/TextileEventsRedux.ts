@@ -1,42 +1,34 @@
 import { createAction, getType, ActionType } from 'typesafe-actions'
-import { NodeState } from '@textile/react-native-sdk'
 import { RootState } from './Types'
 
+export enum NodeState {
+  stopped = 'stopped',
+  started = 'started',
+  online = 'online'
+}
+
 const actions = {
-  newNodeState: createAction('@bridge/NEW_NODE_STATE', (resolve) => {
-    return (state: NodeState) => resolve({ state })
+  nodeStarted: createAction('NODE_STARTED'),
+  nodeStopped: createAction('NODE_STOPPED'),
+  nodeOnline: createAction('NODE_ONLINE'),
+  nodeFailedToStart: createAction('NODE_FAILED_TO_START', (resolve) => {
+    return (error: string) => resolve({ error })
   }),
-  appStateChange: createAction(
-    '@bridge/APP_STATE_CHANGE',
-    (resolve) => (previousState: string, newState: string) => resolve({ previousState, newState })
-  ),
-  newErrorMessage: createAction(
-    '@bridge/NEW_ERROR_MESSAGE',
-    (resolve) => (type: string, message: string) => resolve({ type, message })
-  ),
-  startNodeFinished: createAction(
-    '@bridge/startNodeFinished',
-    (resolve) => () => resolve()
-  ),
+  nodeFailedToStop: createAction('NODE_FAILED_TO_STOP', (resolve) => {
+    return (error: string) => resolve({ error })
+  }),
   stopNodeAfterDelayStarting: createAction(
     '@bridge/stopNodeAfterDelayStarting',
-    (resolve) => () => resolve()
+    (resolve) => (delay: number) => resolve({ delay })
   ),
   stopNodeAfterDelayCancelled: createAction(
     '@bridge/stopNodeAfterDelayCancelled',
     (resolve) => () => resolve()
   ),
-  stopNodeAfterDelayFinishing: createAction(
-    '@bridge/stopNodeAfterDelayFinishing',
-    (resolve) => () => resolve()
+  newErrorMessage: createAction(
+    '@bridge/NEW_ERROR_MESSAGE',
+    (resolve) => (type: string, message: string) => resolve({ type, message })
   ),
-  stopNodeAfterDelayComplete: createAction(
-    '@bridge/stopNodeAfterDelayComplete',
-    (resolve) => () => resolve()
-  ),
-  nodeOnline: createAction('@bridge/NODE_ONLINE', (resolve) => {
-    return () => resolve()
-  }),
   refreshMessagesRequest: createAction('@bridge/REFRESH_MESSAGES', (resolve) => {
     return () => resolve()
   }),
@@ -56,22 +48,26 @@ interface TextileEventsState {
     readonly state: NodeState
     readonly error?: string
   }
-  readonly online: boolean
 }
 
 export const initialState: TextileEventsState = {
   nodeState: {
-    state: NodeState.nonexistent
-  },
-  online: false
+    state: NodeState.stopped
+  }
 }
 
 export function reducer(state: TextileEventsState = initialState, action: TextileEventsActions): TextileEventsState {
   switch (action.type) {
-    case getType(actions.newNodeState):
-      return { ...state, nodeState: {state: action.payload.state }}
+    case getType(actions.nodeStarted):
+      return { ...state, nodeState: { state: NodeState.started } }
+    case getType(actions.nodeStopped):
+      return { ...state, nodeState: { state: NodeState.stopped } }
     case getType(actions.nodeOnline):
-      return { ...state, online: true }
+      return { ...state, nodeState: { state: NodeState.online } }
+    case getType(actions.nodeFailedToStart):
+    case getType(actions.nodeFailedToStop):
+      const { error } = action.payload
+      return { ...state, nodeState: { ...state.nodeState, error } }
     default:
       return state
   }
@@ -79,7 +75,8 @@ export function reducer(state: TextileEventsState = initialState, action: Textil
 
 export const TextileEventsSelectors = {
   nodeState: (state: RootState) => state.textile.nodeState,
-  online: (state: RootState) => state.textile.online
+  started: (state: RootState) => state.textile.nodeState.state === NodeState.started || state.textile.nodeState.state === NodeState.online,
+  online: (state: RootState) => state.textile.nodeState.state === NodeState.online
 }
 
 export default actions

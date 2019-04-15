@@ -1,5 +1,4 @@
 import '../Config'
-import RNConfig from 'react-native-config'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -12,6 +11,7 @@ import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler
 import BackgroundFetchEventHandler from '../Services/EventHandlers/BackgroundFetchEventHandler'
 import NotificationEventHandler from '../Services/EventHandlers/NotificationEventHandler'
 import { errorHandler } from '../Services/ErrorHandler'
+import AccountActions from '../Redux/AccountRedux'
 
 import Textile from '@textile/react-native-sdk'
 
@@ -37,18 +37,6 @@ class App extends Component {
       </Provider>
     )
   }
-  componentWillMount() {
-    this.textile.setup(
-      {
-        RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE
-      },
-      {
-        TEXTILE_CAFE_TOKEN: RNConfig.RN_TEXTILE_CAFE_TOKEN,
-        TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
-        TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
-      }
-    )
-  }
 
   componentWillUnmount() {
     if (super.componentWillUnmount) {
@@ -57,12 +45,19 @@ class App extends Component {
     this.textileNodeEventHandler.tearDown()
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
-    this.textile.tearDown()
   }
 
   componentDidCatch(error: any, info: any) {
     // TODO: Render some UI
     errorHandler(error, false)
+  }
+
+  setup = async () => {
+    // TODO: Move to a saga
+    const phrase = await Textile.initialize(false, false)
+    if (phrase) {
+      store.dispatch(AccountActions.setRecoveryPhrase(phrase))
+    }
   }
 }
 

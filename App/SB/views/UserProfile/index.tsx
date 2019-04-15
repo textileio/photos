@@ -16,6 +16,7 @@ import ContactModal from './ContactModal'
 import { API } from '@textile/react-native-sdk'
 import { Dispatch } from 'redux'
 import { RootAction, RootState } from '../../../Redux/Types'
+import { TextileEventsSelectors } from '../../../Redux/TextileEventsRedux'
 
 const WIDTH = Dimensions.get('window').width
 
@@ -171,8 +172,8 @@ interface StateProps {
   nodeRunning: boolean
 }
 const mapStateToProps = (state: RootState): StateProps => {
-  const online = state.textile.online
-  const nodeRunning = state.textile.nodeState.state ? state.textile.nodeState.state === 'started' : false
+  const online = TextileEventsSelectors.online(state)
+  const nodeRunning = TextileEventsSelectors.started(state)
   const verboseUi = state.preferences.verboseUi
   return {
     name: getUsername(state),

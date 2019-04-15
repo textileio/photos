@@ -2,9 +2,6 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { pb } from '@textile/react-native-sdk'
 
 const actions = {
-  initSuccess: createAction('INITIALIZATION_SUCCESS', (resolve) => {
-    return () => resolve()
-  }),
   refreshProfileRequest: createAction('REFRESH_PROFILE_REQUEST'),
   refreshProfileSuccess: createAction('REFRESH_PROFILE_SUCCESS', (resolve) => {
     return (profile: pb.IContact) => resolve({ profile })
@@ -96,8 +93,6 @@ const initialState: AccountState = {
 
 export function reducer(state: AccountState = initialState, action: AccountAction): AccountState {
   switch (action.type) {
-    case getType(actions.initSuccess):
-      return { ...state, initialized: true }
     case getType(actions.setUsernameRequest):
     case getType(actions.refreshProfileRequest):
       return { ...state, profile: { ...state.profile, processing: true } }

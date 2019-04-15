@@ -36,7 +36,3 @@ export function bestSession(state: RootState): pb.ICafeSession | undefined {
   })
   return sorted.pop()
 }
-
-export function initialized(state: RootState) {
-  return state.account.initialized
-}

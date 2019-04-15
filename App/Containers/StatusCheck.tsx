@@ -6,7 +6,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import FatalErrorView from '../Components/FatalErrorView'
 
 import { RootState } from '../Redux/Types'
-import { NodeState } from '@textile/react-native-sdk'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 
 interface StateProps {
   onboarded: boolean
@@ -51,7 +51,7 @@ class StatusCheck extends React.Component<Props, {}> {
 const mapStateToProps = (state: RootState): StateProps => {
   return {
     onboarded: state.preferences.onboarded,
-    nodeStarted: state.textile.nodeState.state === NodeState.started,
+    nodeStarted: TextileEventsSelectors.started(state),
     nodeError: state.textile.nodeState.error
   }
 }

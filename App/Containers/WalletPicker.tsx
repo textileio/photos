@@ -9,6 +9,7 @@ import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import { NavigationActions, NavigationScreenProps } from 'react-navigation'
 import { defaultThreadData, getSharedPhotos, SharedPhoto } from '../Redux/PhotoViewingSelectors'
+import {TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { Dispatch } from 'redux'
 import { pb } from '@textile/react-native-sdk'
@@ -107,11 +108,13 @@ const mapStateToProps = (state: RootState): StateProps => {
 
   const refreshing = defaultData ? defaultData.querying : false
 
+  const started = TextileEventsSelectors.started(state)
+
   const nodeStatus = state.textile.nodeState.error
     ? 'Error - ' + state.textile.nodeState.error
     : state.textile.nodeState.state
 
-  const placeholderText = state.textile.nodeState.state !== 'started'
+  const placeholderText = !started
     ? 'Wallet Status:\n' + nodeStatus
     : 'You need to add some photos first.'
 
@@ -119,7 +122,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     threadId,
     items,
     refreshing,
-    displayImages: state.textile.nodeState.state === 'started',
+    displayImages: started,
     placeholderText,
     verboseUi: state.preferences.verboseUi
   }
