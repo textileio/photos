@@ -92,7 +92,6 @@ import {
 } from './TextileSagas'
 
 import {
-  runBackgroundUpdate,
   startSagas
 } from './TextileEventsSagas'
 
@@ -145,8 +144,8 @@ export default function * root(dispatch: Dispatch) {
     // takeEvery(getType(UploadingImagesActions.imageUploadError), handleUploadError),
 
     /* ------------- SDK ------------- */
-    takeLatest(getType(TriggersActions.backgroundFetch), runBackgroundUpdate),
-    takeLatest(getType(TriggersActions.locationUpdate), runBackgroundUpdate),
+    // takeLatest(getType(TriggersActions.backgroundFetch), runBackgroundUpdate),
+    // takeLatest(getType(TriggersActions.locationUpdate), runBackgroundUpdate),
     /* ------------- End SDK ------------- */
 
     takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),

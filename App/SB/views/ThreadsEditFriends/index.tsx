@@ -12,7 +12,7 @@ import ThreadsActions, { InviteQRCode } from '../../../Redux/ThreadsRedux'
 import { RootState, RootAction } from '../../../Redux/Types'
 
 import styles from './statics/styles'
-import { pb } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 
 interface ScreenProps {
   threadId: string
@@ -57,7 +57,7 @@ class Component extends React.Component<Props> {
     }
   }
 
-  _select(contact: pb.IContact, included: boolean) {
+  _select(contact: IContact, included: boolean) {
     // Toggle the id's selected state in state
     if (included) {
       return // if the user is already part of the thread

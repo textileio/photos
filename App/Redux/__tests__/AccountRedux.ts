@@ -1,8 +1,8 @@
 import actions, { reducer } from '../AccountRedux'
-import { pb } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
-const profile: pb.IContact = {
+const profile: IContact = {
   address: 'address',
   name: 'username',
   avatar: 'avatar',

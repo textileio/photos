@@ -1,10 +1,10 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { pb } from '@textile/react-native-sdk'
+import { IContact, ICafeSession } from '@textile/react-native-sdk'
 
 const actions = {
   refreshProfileRequest: createAction('REFRESH_PROFILE_REQUEST'),
   refreshProfileSuccess: createAction('REFRESH_PROFILE_SUCCESS', (resolve) => {
-    return (profile: pb.IContact) => resolve({ profile })
+    return (profile: IContact) => resolve({ profile })
   }),
   profileError: createAction('PROFILE_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -41,7 +41,7 @@ const actions = {
   getCafeSessionsRequest: createAction('GET_CAFE_SESSIONS_REQUEST'),
   refreshCafeSessionsRequest: createAction('REFRESH_CAFE_SESSIONS_REQUEST'),
   cafeSessionsSuccess: createAction('CAFE_SESSIONS_SUCCESS', (resolve) => {
-    return (sessions: ReadonlyArray<pb.ICafeSession>) => resolve({ sessions })
+    return (sessions: ReadonlyArray<ICafeSession>) => resolve({ sessions })
   }),
   cafeSessionsError: createAction('CAFE_SESSIONS_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -53,7 +53,7 @@ export type AccountAction = ActionType<typeof actions>
 interface AccountState {
   initialized: boolean, // splitting 'Preferences.onboarded' to within sdk 'initialized' and app specific 'onboarded'
   profile: {
-    value?: pb.IContact
+    value?: IContact
     processing: boolean
     error?: string
   }
@@ -71,7 +71,7 @@ interface AccountState {
   }
   recoveryPhrase?: string,
   cafeSessions: {
-    sessions: ReadonlyArray<pb.ICafeSession>
+    sessions: ReadonlyArray<ICafeSession>
     processing: boolean
     error?: string
   }

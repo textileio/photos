@@ -1,23 +1,9 @@
-/* ***********************************************************
-* A short word on how to use this automagically generated file.
-* We're often asked in the ignite gitter channel how to connect
-* to a to a third party api, so we thought we'd demonstrate - but
-* you should know you can use sagas for other flow control too.
-*
-* Other points:
-*  - You'll need to add this saga to sagas/index.js
-*  - This template uses the api declared in sagas/index.js, so
-*    you'll need to define a constant in that file.
-*************************************************************/
 import { Platform , AppState } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select } from 'redux-saga/effects'
 import { ActionType } from 'typesafe-actions'
 
-import {
-  pb,
-  API
-} from '@textile/react-native-sdk'
+import Textile, { Notification, INotificationList } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -35,7 +21,7 @@ export function * enable() {
 
 export function * readAllNotifications(action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>) {
   try {
-    yield call(API.notifications.readAll)
+    yield call(Textile.notifications.readAll)
   } catch (error) {
     yield put(TextileEventsActions.newErrorMessage('readAllNotifications', error.message))
   }
@@ -92,9 +78,9 @@ export function * notificationView(action: ActionType<typeof NotificationsAction
   // Avoids duplicating the below logic about where to send people for each notification type
   const { notification } = action.payload
   try {
-    yield call(API.notifications.read, notification.id)
+    yield call(Textile.notifications.read, notification.id)
     switch (notification.type) {
-      case pb.Notification.Type.COMMENT_ADDED: {
+      case Notification.Type.COMMENT_ADDED: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
@@ -103,8 +89,8 @@ export function * notificationView(action: ActionType<typeof NotificationsAction
         }
         break
       }
-      case pb.Notification.Type.LIKE_ADDED:
-      case pb.Notification.Type.FILES_ADDED: {
+      case Notification.Type.LIKE_ADDED:
+      case Notification.Type.FILES_ADDED: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
@@ -113,9 +99,9 @@ export function * notificationView(action: ActionType<typeof NotificationsAction
         }
         break
       }
-      case pb.Notification.Type.MESSAGE_ADDED:
-      case pb.Notification.Type.PEER_JOINED:
-      case pb.Notification.Type.PEER_LEFT: {
+      case Notification.Type.MESSAGE_ADDED:
+      case Notification.Type.PEER_JOINED:
+      case Notification.Type.PEER_LEFT: {
         const threadData: ThreadData | undefined = yield select(threadDataByThreadId, notification.threadId)
         if (threadData) {
           yield put(PhotoViewingAction.viewThread(threadData.id))
@@ -123,7 +109,7 @@ export function * notificationView(action: ActionType<typeof NotificationsAction
         }
         break
       }
-      case pb.Notification.Type.INVITE_RECEIVED: {
+      case Notification.Type.INVITE_RECEIVED: {
         yield * waitUntilOnline(1000)
         yield put(NotificationsActions.reviewNotificationThreadInvite(notification))
         break
@@ -141,7 +127,7 @@ export function * refreshNotifications() {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: pb.INotificationList = yield call(API.notifications.list, '', 99) // TODO: offset?
+    const notificationResponse: INotificationList = yield call(Textile.notifications.list, '', 99) // TODO: offset?
     const typedNotifs = notificationResponse.items.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {

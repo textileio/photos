@@ -6,10 +6,8 @@ import AccountActions from '../Redux/AccountRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction, RootState } from '../Redux/Types'
-import {
-  API,
-  pb,
-  BackgroundTask
+import Textile, {
+  IContact
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
@@ -28,9 +26,11 @@ export function * startSagas() {
   ])
 }
 
-export function * runBackgroundUpdate() {
-  yield call(BackgroundTask)
-}
+// export function * runBackgroundUpdate() {
+  // This used to be some exported function from the SDK
+  // TODO: Remove all this, make sure background triggers are handled in native SDKs
+  // yield call(BackgroundTask)
+// }
 
 export function * refreshMessages() {
   while (true) {
@@ -40,7 +40,7 @@ export function * refreshMessages() {
         yield take((action: RootAction) =>
           action.type === getType(TextileEventsActions.refreshMessagesRequest)
         )
-      yield call(API.cafes.checkMessages)
+      yield call(Textile.cafes.checkMessages)
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
       yield call(logNewEvent, 'refreshMessages', error.message, true)
@@ -56,11 +56,11 @@ export function * updateProfile() {
         yield take((action: RootAction) =>
           action.type === getType(TextileEventsActions.updateProfile)
         )
-
-      const profileResult: pb.IContact = yield call(API.profile.get)
-      yield put(AccountActions.refreshProfileSuccess(profileResult))
-
-      yield call(logNewEvent, 'refreshMessages', action.type)
+      const profileResult: IContact | undefined = yield call(Textile.account.contact)
+      if (profileResult) {
+        yield put(AccountActions.refreshProfileSuccess(profileResult))
+        yield call(logNewEvent, 'updateProfile', action.type)
+      }
     } catch (error) {
       yield call(logNewEvent, 'updateProfile', error.message, true)
       yield put(AccountActions.profileError(error))
@@ -77,7 +77,7 @@ export function * ignoreFileRequest() {
           action.type === getType(TextileEventsActions.ignoreFileRequest)
         )
 
-      yield call(API.ignores.add, action.payload.blockId)
+      yield call(Textile.ignores.add, action.payload.blockId)
 
       yield call(logNewEvent, 'ignoreFile', action.type)
     } catch (error) {
@@ -101,7 +101,7 @@ export function * nodeOnline() {
 
       const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
       if (pending) {
-        yield call(API.profile.setAvatar, pending)
+        yield call(Textile.profile.setAvatar, pending)
       }
     } catch (error) {
       yield call(logNewEvent, 'nodeOnline', error.message, true)

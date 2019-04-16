@@ -1,6 +1,6 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
-import { pb, util } from '@textile/react-native-sdk'
+import Textile, { IContact, IFiles } from '@textile/react-native-sdk'
 import { getAddress, getProfile } from './AccountSelectors'
 import Config from 'react-native-config'
 import { contactsSelectors } from '../features/contacts'
@@ -10,7 +10,7 @@ export const BLACKLIST = ['avatars', 'account']
 
 export interface SharedPhoto {
   type: 'photo'
-  photo: pb.IFiles
+  photo: IFiles
   id: string
   original: string
 }
@@ -19,9 +19,9 @@ export interface GroupAuthors {
   readonly id: string
   readonly name: string
   readonly size: number
-  readonly members: pb.IContact[]
+  readonly members: IContact[]
   readonly memberCount: number
-  readonly thumb?: pb.IFiles
+  readonly thumb?: IFiles
 }
 
 export function defaultThreadData(state: RootState): ThreadData | undefined {
@@ -70,8 +70,8 @@ export function getThreads(state: RootState, sortBy?: 'name' | 'date'): Readonly
     case 'date':
       return result
         .sort((a, b) => {
-          const aLast = !!a.photos.length && util.timestampToDate(a.photos[0].date)
-          const bLast = !!b.photos.length && util.timestampToDate(b.photos[0].date)
+          const aLast = !!a.photos.length && Textile.util.timestampToDate(a.photos[0].date)
+          const bLast = !!b.photos.length && Textile.util.timestampToDate(b.photos[0].date)
           return !aLast || aLast < bLast ? 1 : -1
         })
     default:

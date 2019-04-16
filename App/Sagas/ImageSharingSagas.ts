@@ -3,8 +3,8 @@ import RNFS from 'react-native-fs'
 import uuid from 'uuid/v4'
 import { uploadFile } from './UploadFile'
 import Textile, {
-  API,
-  pb
+  IMobilePreparedFiles,
+  IBlock
 } from '@textile/react-native-sdk'
 import { SharedImage, ProcessingImage } from '../features/group/add-photo/models'
 import AccountActions from '../Redux/AccountRedux'
@@ -92,7 +92,7 @@ export function * walletPickerSuccess(action: ActionType<typeof UIActions.wallet
 export function * shareWalletImage(id: string, threadId: string, comment?: string) {
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
-    const blockId: string = yield call(API.files.addByTarget, id, threadId, comment)
+    const block: IBlock = yield call(Textile.files.addByTarget, id, threadId, comment)
   } catch (error) {
     yield put(TextileEventsActions.newErrorMessage('shareWalletImage', error.message))
     yield put(UIActions.imageSharingError(error))
@@ -113,7 +113,7 @@ export function * prepareImage(uuid: string) {
       throw new Error('no ProcessingImage found')
     }
     const { sharedImage, destinationThreadId } = processingImage
-    const preparedFiles: pb.IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
+    const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
     if (sharedImage.isAvatar && preparedFiles.dir) {
       const rawItem = preparedFiles.dir.files['raw']
       if (rawItem) {
@@ -171,7 +171,7 @@ export function * shareToThread(uuid: string) {
       throw new Error('no ProcessingImage or preparedData or dir found')
     }
     const { dir } = processingImage.preparedFiles
-    const blockInfo: pb.Block = yield call(API.files.add, dir, processingImage.destinationThreadId, processingImage.comment)
+    const blockInfo: IBlock = yield call(Textile.files.add, dir, processingImage.destinationThreadId, processingImage.comment)
     yield put(groupActions.addPhoto.sharedToThread(uuid, blockInfo))
     yield put(groupActions.addPhoto.complete(uuid))
   } catch (error) {
@@ -179,8 +179,8 @@ export function * shareToThread(uuid: string) {
   }
 }
 
-export async function prepare(image: SharedImage, destinationThreadId: string): Promise<pb.IMobilePreparedFiles> {
-  const addResult = await API.files.prepareFilesByPath(image.path, destinationThreadId)
+export async function prepare(image: SharedImage, destinationThreadId: string): Promise<IMobilePreparedFiles> {
+  const addResult = await Textile.files.prepareByPath(image.path, destinationThreadId)
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {

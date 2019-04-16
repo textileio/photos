@@ -1,7 +1,7 @@
 import { NavigationService } from './NavigationService'
 import Config from 'react-native-config'
 import { DeepLinkData} from '../Models/TextileTypes'
-import { pb } from '@textile/react-native-sdk'
+import { IExternalInvite } from '@textile/react-native-sdk'
 
 function getParams(hash: string): { [key: string]: (string | string[]) } {
   const query = hash.replace('#', '')
@@ -46,7 +46,7 @@ function getData(href: string): DeepLinkData | undefined {
   }
 }
 
-function createInviteLink(invite: pb.IExternalInvite, threadName: string): string {
+function createInviteLink(invite: IExternalInvite, threadName: string): string {
   const hash: string[] = []
   hash.push(`id=${encodeURIComponent(invite.id)}`)
   hash.push(`key=${encodeURIComponent(invite.key)}`)

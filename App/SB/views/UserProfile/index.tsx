@@ -13,7 +13,7 @@ import { getPeerId, getUsername, getRecoveryPhrase } from '../../../Redux/Accoun
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
-import { API } from '@textile/react-native-sdk'
+import Textile from '@textile/react-native-sdk'
 import { Dispatch } from 'redux'
 import { RootAction, RootState } from '../../../Redux/Types'
 import { TextileEventsSelectors } from '../../../Redux/TextileEventsRedux'
@@ -40,7 +40,7 @@ class UserProfile extends React.PureComponent<Props> {
   }
   toast?: Toast
   componentWillMount() {
-    API.version().then((version) => {
+    Textile.version().then((version) => {
       this.setState({
         apiVersion: version
       })

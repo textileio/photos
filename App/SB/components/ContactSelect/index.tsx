@@ -5,7 +5,7 @@ import Avatar from '../../../Components/Avatar'
 import ContactSelectCard, {ContactLinkCard} from './ContactSelectCard'
 
 import styles from './statics/styles'
-import { pb } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 
 function getSubTitle(contacts: IncludedContact[], topFive: IncludedContact[], notInThread: boolean) {
   if (contacts.length === 0) {
@@ -16,7 +16,7 @@ function getSubTitle(contacts: IncludedContact[], topFive: IncludedContact[], no
   return 'Invite existing contacts or generate an external invite link or QR code.'
 }
 
-export interface IncludedContact extends pb.IContact {
+export interface IncludedContact extends IContact {
   type: string
   included: boolean
 }

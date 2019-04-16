@@ -4,11 +4,11 @@ import { View, Image, Text, ViewStyle } from 'react-native'
 import TextileImage from '../../../Components/TextileImage'
 
 import styles from './statics/styles'
-import { pb } from '@textile/react-native-sdk'
+import { IFiles } from '@textile/react-native-sdk'
 
 interface PhotoWithTextBoxProps {
   text: string
-  photo?: pb.IFiles
+  photo?: IFiles
   style?: ViewStyle
 }
 

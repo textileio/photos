@@ -1,4 +1,4 @@
-import { pb } from '@textile/react-native-sdk'
+import { Join, Leave, Files, Text } from '@textile/react-native-sdk'
 
 import { FeedState } from './reducer'
 import { FeedItem } from './models'
@@ -29,7 +29,7 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
           item = {
             type: 'join',
             key: feedItem.block,
-            data: pb.Join.decode(feedItem.payload.value)
+            data: Join.decode(feedItem.payload.value)
           }
           break
         }
@@ -37,7 +37,7 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
           item = {
             type: 'leave',
             key: feedItem.block,
-            data: pb.Leave.decode(feedItem.payload.value)
+            data: Leave.decode(feedItem.payload.value)
           }
           break
         }
@@ -45,7 +45,7 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
           item = {
             type: 'photo',
             key: feedItem.block,
-            data: pb.Files.decode(feedItem.payload.value)
+            data: Files.decode(feedItem.payload.value)
           }
           break
         }
@@ -53,7 +53,7 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
           item = {
             type: 'message',
             key: feedItem.block,
-            data: pb.Text.decode(feedItem.payload.value)
+            data: Text.decode(feedItem.payload.value)
           }
           break
         }

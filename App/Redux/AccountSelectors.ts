@@ -1,4 +1,4 @@
-import { pb, util } from '@textile/react-native-sdk'
+import Textile, { IContact, ICafeSession } from '@textile/react-native-sdk'
 
 import { RootState } from './Types'
 
@@ -20,7 +20,7 @@ export function getUsername(state: RootState): string | undefined {
          state.account.profile.value.name
 }
 
-export function getProfile(state: RootState): pb.IContact | undefined {
+export function getProfile(state: RootState): IContact | undefined {
   return state.account.profile.value
 }
 
@@ -28,14 +28,14 @@ export function getRecoveryPhrase(state: RootState): string | undefined {
   return state.account.recoveryPhrase
 }
 
-export function bestSession(state: RootState): pb.ICafeSession | undefined {
+export function bestSession(state: RootState): ICafeSession | undefined {
   const values = state.account.cafeSessions.sessions
   if (values.length === 0) {
     return undefined
   }
   const sorted = values.slice().sort((a, b) => {
-    const aExpiry = util.timestampToDate(a.exp).getTime()
-    const bExpiry = util.timestampToDate(b.exp).getTime()
+    const aExpiry = Textile.util.timestampToDate(a.exp).getTime()
+    const bExpiry = Textile.util.timestampToDate(b.exp).getTime()
     return aExpiry - bExpiry
   })
   return sorted.pop()
