@@ -1,1 +1,0 @@
-../../../../../node_modules/@textile/react-native-sdk/ios/Events.h

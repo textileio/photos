@@ -19,8 +19,21 @@
   return [[ExternalInvite alloc] initWithData:data error:error];
 }
 
+- (InviteViewList *)list:(NSError * _Nullable __autoreleasing *)error {
+  NSData *data = [self.node invites:error];
+  return [[InviteViewList alloc] initWithData:data error:error];
+}
+
+- (NSString *)accept:(NSString *)inviteId error:(NSError * _Nullable __autoreleasing *)error {
+  return [self.node acceptInvite:inviteId error:error];
+}
+
 - (NSString *)acceptExternal:(NSString *)inviteId key:(NSString *)key error:(NSError * _Nullable __autoreleasing *)error {
   return [self.node acceptExternalInvite:inviteId key:key error:error];
+}
+
+- (void)ignore:(NSString *)inviteId error:(NSError * _Nullable __autoreleasing *)error {
+  [self.node ignoreInvite:inviteId error:error];
 }
 
 @end

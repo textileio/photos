@@ -52,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, strong) ProfileApi *profile;
 @property (nonatomic, readonly, strong) SchemasApi *schemas;
 @property (nonatomic, readonly, strong) ThreadsApi *threads;
+@property (nonatomic, readonly, strong) NSString *repoPath;
 
 - (NSString *)version;
 - (NSString *)gitSummary;

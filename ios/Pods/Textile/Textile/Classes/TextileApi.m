@@ -33,6 +33,7 @@
 @property (nonatomic, strong) ProfileApi *profile;
 @property (nonatomic, strong) SchemasApi *schemas;
 @property (nonatomic, strong) ThreadsApi *threads;
+@property (nonatomic, strong) NSString *repoPath;
 
 @property (nonatomic, strong) LifecycleManager *lifecycleManager;
 
@@ -51,6 +52,7 @@
 + (NSString *)initializeWithDebug:(BOOL)debug logToDisk:(BOOL)logToDisk error:(NSError * _Nullable __autoreleasing *)error {
   NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   NSString *repoPath = [documents stringByAppendingPathComponent:@"textile-go"];
+  Textile.instance.repoPath = repoPath;
   [Textile.instance newTextile:repoPath debug:debug error:error];
   if (*error && (*error).code == 1) {
     NSString *recoveryPhrase = [Textile.instance newWallet:12 error:error];

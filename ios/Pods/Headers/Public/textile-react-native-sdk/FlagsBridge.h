@@ -1,0 +1,1 @@
+../../../../../node_modules/@textile/react-native-sdk/ios/FlagsBridge.h

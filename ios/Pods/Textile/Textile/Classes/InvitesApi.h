@@ -15,7 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)add:(NSString *)threadId address:(NSString *)address error:(NSError **)error;
 - (ExternalInvite *)addExternal:(NSString *)threadId error:(NSError **)error;
+- (InviteViewList *)list:(NSError **)error;
+- (NSString *)accept:(NSString *)inviteId error:(NSError **)error;
 - (NSString *)acceptExternal:(NSString *)inviteId key:(NSString *)key error:(NSError **)error;
+- (void)ignore:(NSString *)inviteId error:(NSError **)error;
 
 @end
 
