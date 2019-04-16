@@ -1,4 +1,4 @@
-import { pb } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
 export interface AddingContact {
@@ -9,11 +9,23 @@ export interface AddingContacts {
   readonly [key: string]: AddingContact
 }
 
+interface ContactSearchEvent {
+  type: 'contact'
+  contact: IContact
+}
+
+interface ErrorSearchEvent {
+  type: 'error'
+  error: any
+}
+
+export type SearchEvent = ContactSearchEvent | ErrorSearchEvent
+
 export interface TextileSearchResult {
   readonly key: string
   readonly type: 'textile'
   readonly data: {
-    contact: pb.IContact,
+    contact: IContact,
     isContact: boolean,
     adding: boolean
   }

@@ -1,8 +1,8 @@
-import { pb } from '@textile/react-native-sdk'
+import { IFeedItem, IJoin, ILeave, IFiles, IText, IComment, ILike } from '@textile/react-native-sdk'
 
 export interface Feed {
   readonly loading: boolean
-  readonly items: ReadonlyArray<pb.IFeedItem>
+  readonly items: ReadonlyArray<IFeedItem>
   readonly error?: string
 }
 
@@ -13,37 +13,37 @@ export interface Groups {
 export interface JoinItem {
   readonly type: 'join'
   readonly key: string
-  readonly data: pb.IJoin
+  readonly data: IJoin
 }
 
 export interface LeaveItem {
   readonly type: 'leave'
   readonly key: string
-  readonly data: pb.ILeave
+  readonly data: ILeave
 }
 
 export interface PhotoItem {
   readonly type: 'photo'
   readonly key: string
-  readonly data: pb.IFiles // TODO: this can be simplified to just the parts we need
+  readonly data: IFiles // TODO: this can be simplified to just the parts we need
 }
 
 export interface MessageItem {
   readonly type: 'message'
   readonly key: string
-  readonly data: pb.IText
+  readonly data: IText
 }
 
 export interface CommentsItem {
   readonly type: 'comments'
   readonly key: string
-  readonly data: ReadonlyArray<pb.IComment>
+  readonly data: ReadonlyArray<IComment>
 }
 
 export interface LikesItem {
   readonly type: 'likes'
   readonly key: string
-  readonly data: ReadonlyArray<pb.ILike>
+  readonly data: ReadonlyArray<ILike>
 }
 
 export type FeedItem = JoinItem | LeaveItem | PhotoItem | MessageItem | CommentsItem | LikesItem

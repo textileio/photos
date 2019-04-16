@@ -12,12 +12,12 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../Components/TextileImage'
 
 import { SharedImage } from '../features/group/add-photo/models'
-import { pb } from '@textile/react-native-sdk'
+import { IFiles } from '@textile/react-native-sdk'
 import {RootAction, RootState} from '../Redux/Types'
 import {Dispatch} from 'redux'
 
 interface StateProps {
-  image?: SharedImage | pb.IFiles,
+  image?: SharedImage | IFiles,
   threadId?: string,
   comment?: string,
   selectedThreadId?: string
@@ -87,8 +87,8 @@ class AddCaptionScreen extends React.Component<Props> {
       disableShare: this.props.selectedThreadId === undefined || !this.props.share,
       cancelShare: () => { this.props.cancelShare() },
       share: () => {
-        if (this.props.share && this.props.image && (this.props.image as pb.IFiles).target && this.props.threadId) {
-          const filesInfo = this.props.image as pb.IFiles
+        if (this.props.share && this.props.image && (this.props.image as IFiles).target && this.props.threadId) {
+          const filesInfo = this.props.image as IFiles
           this.props.share(filesInfo.target!, this.props.threadId, this.props.comment)
         } else if (this.props.share && this.props.image && (this.props.image as SharedImage).uri && this.props.threadId) {
           const sharedImage = this.props.image as SharedImage
@@ -106,7 +106,7 @@ class AddCaptionScreen extends React.Component<Props> {
     }
   }
 
-  _shareToNewThread(withPhoto: pb.IFiles, withThreadName: string) {
+  _shareToNewThread(withPhoto: IFiles, withThreadName: string) {
     if (withPhoto.target) {
       this.props.shareNewThread(withPhoto.target, withThreadName, this.props.comment)
     }
@@ -146,8 +146,8 @@ class AddCaptionScreen extends React.Component<Props> {
           style={{ justifyContent: 'center', alignItems: 'center', width: 70, height: 70}}
         />
       )
-    } else if (image && (image as pb.IFiles).target) {
-      const filesInfo = image as pb.IFiles
+    } else if (image && (image as IFiles).target) {
+      const filesInfo = image as IFiles
       if (filesInfo.target) {
         const files = filesInfo.files
         const fileIndex = files && files.length > 0 && files[0].index ? files[0].index : 0

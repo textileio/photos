@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, ScrollView, ViewStyle } from 'react-native'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
-import { util } from '@textile/react-native-sdk'
+import Textile from '@textile/react-native-sdk'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
@@ -116,7 +116,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
       username: viewingPhoto.user.name || viewingPhoto.user.address,
       avatar: viewingPhoto.user.avatar,
       comment: viewingPhoto.caption,
-      date: util.timestampToDate(viewingPhoto.date),
+      date: Textile.util.timestampToDate(viewingPhoto.date),
       isCaption: true
     }
   }
@@ -127,7 +127,7 @@ const mapStateToProps = (state: RootState): StateProps  => {
       username: comment.user.name || 'unknown',
       avatar: comment.user.avatar,
       comment: comment.body,
-      date: util.timestampToDate(comment.date),
+      date: Textile.util.timestampToDate(comment.date),
       isCaption: false
     }
     return props

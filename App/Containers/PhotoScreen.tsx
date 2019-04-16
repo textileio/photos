@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { ScrollView, ViewStyle, Dimensions } from 'react-native'
-import { pb, util } from '@textile/react-native-sdk'
+import Textile, { IFiles } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { RootState, RootAction } from '../Redux/Types'
@@ -32,7 +32,7 @@ const CONTAINER: ViewStyle = {
 }
 
 interface StateProps {
-  photo?: pb.IFiles,
+  photo?: IFiles,
   selfAddress: string
   threadName?: string,
   threadId?: string
@@ -90,7 +90,7 @@ class PhotoScreen extends React.Component<Props> {
           avatar={user.avatar}
           username={user.name || 'unknown'}
           message={caption.length > 0 ? caption : undefined}
-          time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
+          time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
           photoId={target}
           fileIndex={fileIndex}
           photoWidth={screenWidth}

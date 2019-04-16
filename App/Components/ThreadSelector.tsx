@@ -11,7 +11,7 @@ import { contactsSelectors } from '../features/contacts'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
 
-import { pb } from '@textile/react-native-sdk'
+import { IContact, IFiles } from '@textile/react-native-sdk'
 
 import GroupCard from './GroupCard'
 import styles from './Styles/ThreadSelectorStyles'
@@ -74,8 +74,8 @@ interface GroupAuthors {
   readonly id: string
   readonly name: string
   readonly size: number
-  readonly members: pb.IContact[]
-  readonly thumb?: pb.IFiles
+  readonly members: IContact[]
+  readonly thumb?: IFiles
 }
 
 interface StateProps {

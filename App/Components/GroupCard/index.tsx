@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import Icon from '@textile/react-native-icon'
 import TextileImage from '../TextileImage'
 import Avatar from '../Avatar'
-import { pb } from '@textile/react-native-sdk'
+import { IContact, IFiles } from '@textile/react-native-sdk'
 
 import styles, { cardImageStyle, ICON_WIDTH, ROW_COLUMN } from './statics/styles'
 import { color } from '../../styles'
@@ -11,8 +11,8 @@ import { color } from '../../styles'
 interface ScreenProps {
   id: string
   name: string
-  members: pb.IContact[]
-  thumb?: pb.IFiles
+  members: IContact[]
+  thumb?: IFiles
   onPress: (groupCardProps: any) => void
 }
 
@@ -63,7 +63,7 @@ const GroupCard = (props: ScreenProps) => {
       </View>
       <View style={styles.groupRightColumn}>
         <View style={styles.avatarContainer}>
-          { members.slice(0, 8).map((mem: pb.IContact, i: number) => {
+          { members.slice(0, 8).map((mem: IContact, i: number) => {
             const imageStyle = cardImageStyle(members.length, i)
             return (
               <View key={mem.address} style={imageStyle} >

@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
-import { pb } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
 import * as actions from './actions'
 import { AddingContacts } from './models'
 
 export interface ContactsState {
-  readonly contacts: ReadonlyArray<pb.IContact>
+  readonly contacts: ReadonlyArray<IContact>
   readonly textileSearchResults: {
     readonly processing: boolean
-    readonly results?: ReadonlyArray<pb.IContact>
+    readonly results?: ReadonlyArray<IContact>
     readonly error?: string
   }
   readonly addressBookSearchResults: {

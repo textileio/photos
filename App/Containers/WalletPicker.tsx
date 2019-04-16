@@ -12,7 +12,7 @@ import { defaultThreadData, getSharedPhotos, SharedPhoto } from '../Redux/PhotoV
 import {TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { Dispatch } from 'redux'
-import { pb } from '@textile/react-native-sdk'
+import { IFiles } from '@textile/react-native-sdk'
 
 interface NavProps {
   cancelSharingPhoto: () => void
@@ -63,7 +63,7 @@ class TextileWalletPicker extends React.PureComponent<Props> {
     })
   }
 
-  onSelect = (photo: pb.IFiles) => {
+  onSelect = (photo: IFiles) => {
     return () => {
       this.props.success(photo)
     }
@@ -129,7 +129,7 @@ const mapStateToProps = (state: RootState): StateProps => {
 }
 
 interface DispatchProps {
-  success: (photo: pb.IFiles) => void
+  success: (photo: IFiles) => void
   cancelSharingPhoto: () => void
   refresh: (threadId: string) => void
   showImagePicker: (type: string) => void
