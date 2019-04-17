@@ -59,12 +59,12 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - Textile (0.1.3):
+  - Textile (0.1.4):
     - Protobuf (~> 3.7)
     - TextileCore (~> 0.1.12-rc1)
   - textile-react-native-sdk (1.1.4):
     - React
-    - Textile (= 0.1.3)
+    - Textile (= 0.1.4)
   - TextileCore (0.1.12-rc1):
     - Protobuf (~> 3.7)
   - yoga (0.57.7.React)
@@ -120,8 +120,8 @@ SPEC CHECKSUMS:
   glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
   React: 67899bbb285ceb9b4ee1c88b3991602ba5772ad2
-  Textile: f7d6e74fe0d8f3f943b5e1731eb619b46ffe14ed
-  textile-react-native-sdk: f9b7534dab630c9c210c167d55c63b50fc4ea6fe
+  Textile: fe81daa7378b71d2e75ba734b0a66513d0f70ca8
+  textile-react-native-sdk: aa4e2cbaa457b4e7b38889a66534fb4e1f9a7470
   TextileCore: 1f0e510cf99eb5c52cc275383fccddcdd640787d
   yoga: 192d724e53380b783e09b7d687a55cd8ed5188be
 

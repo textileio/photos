@@ -26,54 +26,72 @@ typedef NS_CLOSED_ENUM(NSInteger, AppState) {
 
 - (instancetype)initWithNode:(MobileMobile *)node {
   if(self = [super initWithNode:node]) {
-    self.appState = AppStateNone;
     [self setup];
   }
   return self;
 }
 
 - (void)setup {
-  [NSNotificationCenter.defaultCenter
-   addObserverForName:UIApplicationDidBecomeActiveNotification
-   object:nil
-   queue:nil
-   usingBlock:^(NSNotification *notification) {
-     if (self.appState == AppStateForeground) {
-       return;
-     }
-     self.appState = AppStateForeground;
-     if ([self.timer isValid]) {
-       [self.timer invalidate];
-       if ([self.delegate respondsToSelector:@selector(canceledPendingNodeStop)]) {
-         [self.delegate canceledPendingNodeStop];
-       }
-     } else {
-       [self startNode];
-     }
-   }
-  ];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    self.appState = AppStateNone;
 
-  [NSNotificationCenter.defaultCenter
-   addObserverForName:UIApplicationDidEnterBackgroundNotification
-   object:nil
-   queue:nil
-   usingBlock:^(NSNotification *notification) {
-     NSTimeInterval remaining = UIApplication.sharedApplication.backgroundTimeRemaining;
-     NSTimeInterval runFor = MAX(remaining - 10, 0);
-     if (self.appState == AppStateNone) {
-       self.appState = AppStateBackground;
-       if ([self.timer isValid]) {
-         [self stopNodeAfterDelay:runFor];
-       } else {
-         [self startNode];
-         [self stopNodeAfterDelay:runFor];
-       }
-     } else if(self.appState == AppStateForeground) {
-       self.appState = AppStateNone;
-       [self stopNodeAfterDelay:runFor];
-     }
-   }
-  ];
+    UIApplicationState state = UIApplication.sharedApplication.applicationState;
+    if (state == UIApplicationStateActive) {
+      [self processNewState:AppStateForeground];
+    } else if (state == UIApplicationStateBackground) {
+      [self processNewState:AppStateBackground];
+    }
+
+    [NSNotificationCenter.defaultCenter
+     addObserverForName:UIApplicationDidBecomeActiveNotification
+     object:nil
+     queue:nil
+     usingBlock:^(NSNotification *notification) {
+       [self processNewState:AppStateForeground];
+     }];
+
+    [NSNotificationCenter.defaultCenter
+     addObserverForName:UIApplicationDidEnterBackgroundNotification
+     object:nil
+     queue:nil
+     usingBlock:^(NSNotification *notification) {
+       [self processNewState:AppStateBackground];
+     }];
+  });
+}
+
+- (void)processNewState:(AppState)newState {
+  if (self.appState == newState) {
+    // bail if the state isn't changing
+    return;
+  }
+  // TODO: consioldate/optimize this logic
+  if (newState == AppStateForeground) {
+    self.appState = AppStateForeground;
+    if ([self.timer isValid]) {
+      [self.timer invalidate];
+      if ([self.delegate respondsToSelector:@selector(canceledPendingNodeStop)]) {
+        [self.delegate canceledPendingNodeStop];
+      }
+    } else {
+      [self startNode];
+    }
+  } else if (newState == AppStateBackground) {
+    NSTimeInterval remaining = UIApplication.sharedApplication.backgroundTimeRemaining;
+    NSTimeInterval runFor = MAX(remaining - 10, 0);
+    if (self.appState == AppStateNone) {
+      self.appState = AppStateBackground;
+      if ([self.timer isValid]) {
+        [self stopNodeAfterDelay:runFor];
+      } else {
+        [self startNode];
+        [self stopNodeAfterDelay:runFor];
+      }
+    } else if(self.appState == AppStateForeground) {
+      self.appState = AppStateNone;
+      [self stopNodeAfterDelay:runFor];
+    }
+  }
 }
 
 - (void)startNode {
