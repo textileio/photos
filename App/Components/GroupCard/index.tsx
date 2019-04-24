@@ -5,6 +5,8 @@ import TextileImage from '../TextileImage'
 import Avatar from '../Avatar'
 import { pb } from '@textile/react-native-sdk'
 
+import Members from './Members'
+
 import styles, { cardImageStyle, ICON_WIDTH, ROW_COLUMN } from './statics/styles'
 import { color } from '../../styles'
 
@@ -62,16 +64,7 @@ const GroupCard = (props: ScreenProps) => {
         <Text numberOfLines={1} style={styles.groupName}>{name}</Text>
       </View>
       <View style={styles.groupRightColumn}>
-        <View style={styles.avatarContainer}>
-          { members.slice(0, 8).map((mem: pb.IContact, i: number) => {
-            const imageStyle = cardImageStyle(members.length, i)
-            return (
-              <View key={mem.address} style={imageStyle} >
-                <Avatar style={{width: '100%', height: '100%', backgroundColor: color.grey_5}} target={mem.avatar}/>
-              </View>
-            )
-          })}
-        </View>
+        <Members members={members} />
       </View>
     </TouchableOpacity>
   )
