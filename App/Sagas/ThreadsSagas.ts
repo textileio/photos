@@ -67,6 +67,7 @@ export function * acceptInvite(action: ActionType<typeof ThreadsActions.acceptIn
     yield put(ThreadsActions.acceptInviteScanning(notificationId))
     // Refresh in case the head is available
     yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield call(NavigationService.navigate, 'Groups')
   } catch (error) {
     yield put(ThreadsActions.acceptInviteError(notificationId, error))
   }
@@ -77,6 +78,8 @@ function * joinInternalOnFork(notificationId: string, threadName?: string) {
     const threadId = yield call(API.notifications.acceptInvite, notificationId)
     yield put(PhotoViewingActions.refreshThreadsRequest())
     yield put(ThreadsActions.acceptInviteSuccess(notificationId, threadId))
+    // nice with a bit of delay so the app can grab some blocks
+    yield call(delay, 500)
     yield put(UIActions.navigateToThreadRequest(threadId, threadName || 'Processing...'))
   } catch (error) {
     yield put(ThreadsActions.acceptInviteError(notificationId, error))
