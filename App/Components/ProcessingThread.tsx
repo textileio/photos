@@ -123,7 +123,7 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
         return`${body} ${name}`
       case 'scanning':
       default:
-        return`Scanning ${name} history...`
+        return`Collecting ${name} history...`
 
     }
   }
