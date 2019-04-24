@@ -10,6 +10,7 @@
 *    you'll need to define a constant in that file.
 *************************************************************/
 import {Share} from 'react-native'
+import { delay } from 'redux-saga'
 import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import { pendingInviteLink } from '../Redux/ThreadsSelectors'
@@ -24,6 +25,7 @@ import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import Config from 'react-native-config'
 import { logNewEvent } from './DeviceLogs'
+import { waitUntilOnline } from './NotificationsSagas'
 
 export function * addExternalInvite(action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
@@ -57,14 +59,29 @@ export function * acceptExternalInvite(action: ActionType<typeof ThreadsActions.
   yield fork(processExternalInvite, action)
 }
 
+function * joinOnFork(inviteId: string, key: string) {
+  try {
+    // our forked job needs to stay alive so we can get any error message
+    const joinId = yield call(API.invites.acceptExternal, inviteId, key)
+    // if success, trigger complete and update ui
+    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, joinId))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
+  } catch (error) {
+    yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
+  }
+}
+
 function * processExternalInvite(action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const joinId: string = yield call(API.invites.acceptExternal, inviteId, key)
-    if (!joinId) {
-      throw new Error('invite previously accepted')
-    }
-    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, joinId))
+    // don't wait for the join event here...
+    yield call(waitUntilOnline, 5000)
+    // We'll fork this so that we can Update the UI so user can perceive progress
+    yield fork(joinOnFork, inviteId, key)
+    yield call(delay, 900)
+    // After delay, we'll assume we are walking back through the thread... enhancement later
+    yield put(ThreadsActions.acceptExternalInviteScanning(inviteId))
+    // Refresh in case the head is available
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))

@@ -38,7 +38,7 @@ describe('ui stories', () => {
       const match0 = [{ inviteId, inviteKey }]
       expect(state0.inboundInvites).toMatchObject(match0)
       const state1 = reducer(state0, actions.acceptExternalInviteSuccess(inviteId, id))
-      const match1 = [{ id, inviteId, inviteKey }]
+      const match1 = [{ inviteId, inviteKey, id }]
       expect(state1.inboundInvites).toMatchObject(match1)
     })
     it('should fail at accepting an invite', () => {

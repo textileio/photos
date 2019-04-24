@@ -87,18 +87,10 @@ export function getThreadsAndMembers(state: RootState, limit: number): GroupAuth
     .map((thread) => {
       const selector = contactsSelectors.makeByThreadId(thread.id)
       const allMembers = selector(state.contacts)
-      // Focus just on contacts with avatars
+
+      // Focus just on contacts with avatars. Ideally should show, "2+ others" or something
       const members = allMembers.filter((contact) => contact.avatar !== '')
         .filter((contact) => contact.address !== ownAddress)
-
-      // If the row isn't full, use a few contacts without avatars
-      const noAvatars = allMembers.filter((contact) => !contact.avatar || contact.avatar === '')
-      while (noAvatars.length && members.length < (memberLimit - 1)) {
-        const unknown = noAvatars.pop()
-        if (unknown) {
-          members.unshift(unknown)
-        }
-      }
 
       // Include our own avatar first if still room in the array
       if (profile && members.length < memberLimit) {

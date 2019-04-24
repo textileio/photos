@@ -144,7 +144,7 @@ class UserProfile extends React.PureComponent<Props> {
           </TouchableOpacity>
           {this.props.peerId &&
             <TouchableOpacity style={styles.listItem} onPress={this.copyRecoveryPhrase}>
-              <Text style={styles.listText}>Copy Recovery Phrase</Text>
+              <Text style={styles.listText}>Copy Secret Phrase</Text>
             </TouchableOpacity>
           }
           <TouchableOpacity style={styles.listItem} onPress={this.openPrivacy}>

@@ -4,6 +4,7 @@ import { Buffer } from 'buffer'
 
 import { RootState } from '../../Redux/Types'
 
+import ThreadsActions from '../../Redux/ThreadsRedux'
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { contactsActions } from '../../features/contacts'
@@ -55,6 +56,8 @@ export default class TextileNodeEventHandler {
         // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
         // Enhancement: compare the joiner id with known ids and skip the refresh if known.
         this.store.dispatch(contactsActions.getContactsRequest())
+        // Temporary: to ensure that our UI udpates after a self-join or a self-leave
+        this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
       }
 
       // create a local log line for the threadUpdate event

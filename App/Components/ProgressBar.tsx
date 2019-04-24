@@ -18,15 +18,17 @@ const PROGRESS: ViewStyle = {
 
 export interface IProgressBarProps {
   style?: ViewStyle
+  lineColor?: string
   progress: number
 }
 
 const ProgressBar = (props: IProgressBarProps) => {
-  const { style, progress } = props
+  const { style, progress, lineColor} = props
   const progressPercentage =  `${Math.max(progress, 0.02) * 100}%`
+  const progressStyle = lineColor ? {...PROGRESS, backgroundColor: lineColor} : PROGRESS
   return (
     <View style={{ ...TRACK, ...style }} >
-      <View style={{ ...PROGRESS, width: progressPercentage }} />
+      <View style={{ ...progressStyle, width: progressPercentage }} />
     </View>
   )
 }
