@@ -91,7 +91,9 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
         this.props.retry(inviteId, key, threadName, inviter)
       }
     } else {
+      return () => {
         this.props.retryInternal(inviteId, threadName)
+      }
     }
   }
   view(inviteId: string, threadId: string, name: string) {
@@ -135,7 +137,7 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
   render() {
     const props = this.props
     const dismiss = this.dismiss(this.props.inviteId)
-    const retry = this.retry(this.props.inviteId, this.props.inviteKey, this.props.name, this.props.inviter)
+    const retry = this.retry(this.props.inviteId, this.props.inviteKey, this.props.type, this.props.name, this.props.inviter)
 
     const errorMessage = props.errorMessage
     const message = this.getMessage(props.stage, props.name)
