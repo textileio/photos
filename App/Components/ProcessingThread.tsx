@@ -85,9 +85,9 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
       this.props.dismiss(inviteId)
     }
   }
-  retry(inviteId: string, key: string) {
+  retry(inviteId: string, key: string, threadName?: string, inviter?: string) {
     return () => {
-      this.props.retry(inviteId, key)
+      this.props.retry(inviteId, key, threadName, inviter)
     }
   }
   view(inviteId: string, threadId: string, name: string) {
@@ -131,7 +131,7 @@ class ProcessingThread extends React.Component<InboundInvite & DispatchProps & S
   render() {
     const props = this.props
     const dismiss = this.dismiss(this.props.inviteId)
-    const retry = this.retry(this.props.inviteId, this.props.inviteKey)
+    const retry = this.retry(this.props.inviteId, this.props.inviteKey, this.props.name, this.props.inviter)
 
     const errorMessage = props.errorMessage
     const message = this.getMessage(props.stage, props.name)
@@ -197,14 +197,14 @@ const mapStateToProps = (state: RootState, ownProps: InboundInvite): StateProps 
 
 export interface DispatchProps {
   navigateToThread: (id: string, name: string) => void,
-  retry: (inviteId: string, key: string) => void,
+  retry: (inviteId: string, key: string, threadName?: string, inviter?: string) => void,
   dismiss: (inviteId: string) => void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     navigateToThread: (id: string, name: string) => {dispatch(UIActions.navigateToThreadRequest(id, name))},
-    retry: (inviteId: string, key: string) => {dispatch(ThreadsActions.acceptExternalInviteRequest(inviteId, key))},
+    retry: (inviteId: string, key: string, threadName?: string, inviter?: string) => {dispatch(ThreadsActions.acceptExternalInviteRequest(inviteId, key, threadName, inviter))},
     dismiss: (inviteId: string) => {dispatch(ThreadsActions.acceptExternalInviteDismiss(inviteId))}
   }
 }

@@ -124,8 +124,12 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
       const { inviteId, key, name, inviter } = action.payload
       const existing = state.inboundInvites.find((obj) => obj.inviteId === inviteId)
       if (existing && !existing.error) {
-        // if the invite already exists and hasn't error'd, return
-        return state
+        // if the invite already exists and hasn't error'd, return ensuring undismiss
+        const inboundInvite = {...existing, dismissed: false}
+        const inboundInvites = state.inboundInvites
+          .filter((inv) => inv.inviteId !== inviteId)
+          .concat([inboundInvite])
+        return { ...state, inboundInvites }
       }
       const stage: InviteStage = 'joining'
       const inboundInvite: InboundInvite = {inviteId, inviteKey: key, name, inviter, stage}
