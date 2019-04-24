@@ -23,13 +23,13 @@ const actions = {
   acceptExternalInviteDismiss: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_DISMISS', (resolve) => {
     return (inviteId: string) => resolve({inviteId})
   }),
-  acceptExternalInviteScanning: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SCANNING', (resolve) => {
+  acceptInviteScanning: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SCANNING', (resolve) => {
     return (inviteId: string) => resolve({inviteId})
   }),
-  acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
+  acceptInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
     return (inviteId: string, id: string) => resolve({inviteId, id})
   }),
-  acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
+  acceptInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
     return (inviteId: string, error: Error) => resolve({ inviteId, error })
   }),
   storeExternalInviteLink: createAction('STORE_EXTERNAL_INVITE_LINK', (resolve) => {
@@ -38,7 +38,7 @@ const actions = {
   removeExternalInviteLink: createAction('REMOVE_EXTERNAL_INVITE_LINK', (resolve) => {
     return () => resolve()
   }),
-  acceptInviteRequest: createAction('ACCEPT_THREAD_INVITE', (resolve) => {
+  acceptInviteRequest: createAction('ACCEPT_THREAD_NOTIFICATION_INVITE', (resolve) => {
     return (notificationId: string, threadName: string) => resolve({ notificationId, threadName  })
   }),
   addInternalInvitesRequest: createAction('ADD_INTERNAL_INVITES_REQUEST', (resolve) => {
@@ -67,6 +67,7 @@ export interface InboundInvite {
   readonly inviteId: string
   readonly inviteKey: string
   readonly stage: InviteStage
+  readonly type: 'external' | 'notification'
 
   readonly dismissed?: boolean // track if UI has dismissed the invite status
   readonly id?: string
@@ -119,6 +120,25 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
       })
       return { ...state, outboundInvites }
     }
+    case getType(actions.acceptInviteRequest): {
+      const { notificationId, threadName } = action.payload
+
+      const existing = state.inboundInvites.find((obj) => obj.inviteId === notificationId)
+      if (existing && !existing.error) {
+        // if the invite already exists and hasn't error'd, return ensuring undismiss
+        const inboundInvite = {...existing, dismissed: false}
+        const inboundInvites = state.inboundInvites
+          .filter((inv) => inv.inviteId !== notificationId)
+          .concat([inboundInvite])
+        return { ...state, inboundInvites }
+      }
+      const stage: InviteStage = 'joining'
+      const inboundInvite: InboundInvite = {inviteId: notificationId, name: threadName, inviteKey: '', stage, type: 'notification'}
+      const inboundInvites = state.inboundInvites
+        .filter((inv) => inv.inviteId !== notificationId)
+        .concat([inboundInvite])
+      return { ...state, inboundInvites }
+    }
     case getType(actions.acceptExternalInviteRequest): {
       // Store the external invite link in memory
       const { inviteId, key, name, inviter } = action.payload
@@ -132,13 +152,13 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
         return { ...state, inboundInvites }
       }
       const stage: InviteStage = 'joining'
-      const inboundInvite: InboundInvite = {inviteId, inviteKey: key, name, inviter, stage}
+      const inboundInvite: InboundInvite = {inviteId, inviteKey: key, name, inviter, stage, type: 'external'}
       const inboundInvites = state.inboundInvites
         .filter((inv) => inv.inviteId !== inviteId)
         .concat([inboundInvite])
       return { ...state, inboundInvites }
     }
-    case getType(actions.acceptExternalInviteScanning): {
+    case getType(actions.acceptInviteScanning): {
       const { inviteId } = action.payload
       // update the inbound invite with the new thread id object
       const inboundInvites = state.inboundInvites.map(
@@ -152,7 +172,7 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
       )
       return { ...state, inboundInvites }
     }
-    case getType(actions.acceptExternalInviteSuccess): {
+    case getType(actions.acceptInviteSuccess): {
       const { inviteId, id } = action.payload
       // update the inbound invite with the new thread id object
       const inboundInvites = state.inboundInvites.map(
@@ -181,7 +201,7 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
       )
       return { ...state, inboundInvites }
     }
-    case getType(actions.acceptExternalInviteError): {
+    case getType(actions.acceptInviteError): {
       const { inviteId, error } = action.payload
       // update the inbound invite with the new error
       const inboundInvites = state.inboundInvites.map(
