@@ -150,10 +150,9 @@ export function * refreshNotifications() {
                             if (threadId === undefined) {
                               // These are device adds or new thread invites (not easy to know which app yet)
                               return true
-                            } else if (appThreadIds.indexOf(threadId) > -1) {
-                              return true
+                            } else {
+                              return appThreadIds.indexOf(threadId) > -1
                             }
-                            return false
                           })
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
