@@ -35,6 +35,10 @@ export function threadDataByThreadId(state: RootState, id: string): ThreadData |
   return threadData
 }
 
+export function allThreadIds(state: RootState): string[] {
+  return Object.keys(state.photoViewing.threads)
+}
+
 export function photoAndComment(state: RootState) {
   return {
     photo: state.photoViewing.viewingPhoto,

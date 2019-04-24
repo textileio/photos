@@ -100,6 +100,9 @@ export function * refreshThreads(action: ActionType<typeof PhotoViewingActions.r
        */
       if (thread.key === accountThreadId) {
         continue
+      } else if (thread.key.lastIndexOf('textile_photos-shared', 0) !== 0) {
+        // The thread wasn't created by Textile photos
+        continue
       }
       yield put(PhotoViewingActions.insertThread(thread.id, thread.key, thread.name))
       yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
