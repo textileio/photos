@@ -1,5 +1,5 @@
 import { pb, util } from '@textile/react-native-sdk'
-import { Notification } from '../Models/Notifications'
+import { Notification, InviteReceivedNotification, PeerLeftNotification, PeerJoinedNotification, MessageAddedNotification, FilesAddedNotification, CommentAddedNotification, LikeAddedNotification } from '../Models/Notifications'
 import RNPushNotification from 'react-native-push-notification'
 import { Alert } from 'react-native'
 
