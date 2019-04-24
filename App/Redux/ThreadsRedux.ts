@@ -155,7 +155,8 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
         (inbound) => {
           if (inbound.inviteId === inviteId) {
             const stage: InviteStage = 'complete'
-            return {...inbound, stage, id}
+            // dismissed to just hide complete joins from the ui
+            return {...inbound, stage, id, dismissed: true}
           }
           return inbound
         }

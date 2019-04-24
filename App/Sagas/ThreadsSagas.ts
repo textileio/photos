@@ -61,7 +61,9 @@ export function * acceptExternalInvite(action: ActionType<typeof ThreadsActions.
 
 function * joinOnFork(inviteId: string, key: string) {
   try {
+    // our forked job needs to stay alive so we can get any error message
     const joinId = yield call(API.invites.acceptExternal, inviteId, key)
+    // if success, trigger complete and update ui
     yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, joinId))
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
@@ -74,9 +76,12 @@ function * processExternalInvite(action: ActionType<typeof ThreadsActions.accept
   try {
     // don't wait for the join event here...
     yield call(waitUntilOnline, 5000)
+    // We'll fork this so that we can Update the UI so user can perceive progress
     yield fork(joinOnFork, inviteId, key)
-    yield call(delay, 500)
+    yield call(delay, 900)
+    // After delay, we'll assume we are walking back through the thread... enhancement later
     yield put(ThreadsActions.acceptExternalInviteScanning(inviteId))
+    // Refresh in case the head is available
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
