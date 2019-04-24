@@ -9,9 +9,9 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import {Share,} from 'react-native'
+import {Share} from 'react-native'
 import { delay } from 'redux-saga'
-import { race, call, put, select, fork, } from 'redux-saga/effects'
+import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import { pendingInviteLink } from '../Redux/ThreadsSelectors'
 import { ActionType } from 'typesafe-actions'
@@ -25,7 +25,7 @@ import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import Config from 'react-native-config'
 import { logNewEvent } from './DeviceLogs'
-import { waitUntilOnline } from './NotificationsSagas';
+import { waitUntilOnline } from './NotificationsSagas'
 
 export function * addExternalInvite(action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload

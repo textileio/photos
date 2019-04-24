@@ -7,6 +7,7 @@ import { FlatList, View, Text, TouchableOpacity, Alert, Platform, ListRenderItem
 import {RootAction, RootState} from '../Redux/Types'
 
 import { inboundInvites } from '../Redux/ThreadsSelectors'
+import { InboundInvite } from '../Redux/ThreadsRedux'
 import { getThreadsAndMembers, GroupAuthors } from '../Redux/PhotoViewingSelectors'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
@@ -16,9 +17,8 @@ import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import GroupCard from '../Components/GroupCard'
 import CreateThreadModal from '../Components/CreateThreadModal'
+import ProcessingThread from '../Components/ProcessingThread'
 import styles from './Styles/GroupsStyles'
-import { InboundInvite, InviteStage } from '../Redux/ThreadsRedux';
-import ProcessingThread from '../Components/ProcessingThread';
 
 interface StateProps {
   groups: ReadonlyArray<GroupRows>
@@ -103,7 +103,7 @@ class Groups extends React.PureComponent<Props, State> {
           {...item.invite}
         />
       )
-    } 
+    }
     return (
       <View/>
     )
