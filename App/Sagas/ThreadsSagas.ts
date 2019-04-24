@@ -72,12 +72,12 @@ export function * acceptInvite(action: ActionType<typeof ThreadsActions.acceptIn
   }
 }
 
-function * joinInternalOnFork(notificationId: string, threadName: string) {
+function * joinInternalOnFork(notificationId: string, threadName?: string) {
   try {
     const threadId = yield call(API.notifications.acceptInvite, notificationId)
     yield put(PhotoViewingActions.refreshThreadsRequest())
     yield put(ThreadsActions.acceptInviteSuccess(notificationId, threadId))
-    yield put(UIActions.navigateToThreadRequest(threadId, threadName))
+    yield put(UIActions.navigateToThreadRequest(threadId, threadName || 'Processing...'))
   } catch (error) {
     yield put(ThreadsActions.acceptInviteError(notificationId, error))
   }

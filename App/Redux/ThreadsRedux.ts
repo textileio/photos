@@ -39,7 +39,7 @@ const actions = {
     return () => resolve()
   }),
   acceptInviteRequest: createAction('ACCEPT_THREAD_NOTIFICATION_INVITE', (resolve) => {
-    return (notificationId: string, threadName: string) => resolve({ notificationId, threadName  })
+    return (notificationId: string, threadName?: string) => resolve({ notificationId, threadName  })
   }),
   addInternalInvitesRequest: createAction('ADD_INTERNAL_INVITES_REQUEST', (resolve) => {
     return (threadId: string, addresses: string[]) => resolve({ threadId, addresses  })

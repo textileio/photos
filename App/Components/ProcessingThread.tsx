@@ -202,7 +202,7 @@ const mapStateToProps = (state: RootState, ownProps: InboundInvite): StateProps 
 export interface DispatchProps {
   navigateToThread: (id: string, name: string) => void,
   retry: (inviteId: string, key: string, threadName?: string, inviter?: string) => void,
-  retryInternal: (inviteId: string, threadName: string) => void,
+  retryInternal: (inviteId: string, threadName?: string) => void,
   dismiss: (inviteId: string) => void
 }
 
@@ -210,7 +210,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     navigateToThread: (id: string, name: string) => {dispatch(UIActions.navigateToThreadRequest(id, name))},
     retry: (inviteId: string, key: string, threadName?: string, inviter?: string) => {dispatch(ThreadsActions.acceptExternalInviteRequest(inviteId, key, threadName, inviter))},
-    retryInternal: (inviteId, threadName) => {dispatch(ThreadsActions.acceptInviteRequest(inviteId, threadName))},
+    retryInternal: (inviteId: string, threadName?: string) => {dispatch(ThreadsActions.acceptInviteRequest(inviteId, threadName))},
     dismiss: (inviteId: string) => {dispatch(ThreadsActions.acceptInviteDismiss(inviteId))}
   }
 }
