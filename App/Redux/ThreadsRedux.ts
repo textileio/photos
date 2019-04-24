@@ -20,7 +20,7 @@ const actions = {
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', (resolve) => {
     return (inviteId: string, key: string, name?: string, inviter?: string) => resolve({ inviteId, key, name, inviter })
   }),
-  acceptExternalInviteDismiss: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_DISMISS', (resolve) => {
+  acceptInviteDismiss: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_DISMISS', (resolve) => {
     return (inviteId: string) => resolve({inviteId})
   }),
   acceptInviteScanning: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SCANNING', (resolve) => {
@@ -187,7 +187,7 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
       )
       return { ...state, inboundInvites }
     }
-    case getType(actions.acceptExternalInviteDismiss): {
+    case getType(actions.acceptInviteDismiss): {
       const { inviteId } = action.payload
       // update the inbound invite with the new thread id object
       const inboundInvites = state.inboundInvites.map(

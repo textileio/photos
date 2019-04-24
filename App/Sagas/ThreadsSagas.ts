@@ -55,7 +55,6 @@ export function * presentShareInterface(action: ActionType<typeof ThreadsActions
   yield call(Share.share, { title: 'Join my thread on Textile!', message: link })
 }
 
-
 export function * acceptInvite(action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
   const { notificationId, threadName } = action.payload
   try {
