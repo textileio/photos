@@ -9,8 +9,9 @@
 *  - This template uses the api declared in sagas/index.js, so
 *    you'll need to define a constant in that file.
 *************************************************************/
-import {Share} from 'react-native'
-import { call, put, select, fork } from 'redux-saga/effects'
+import {Share,} from 'react-native'
+import { delay } from 'redux-saga'
+import { race, call, put, select, fork, } from 'redux-saga/effects'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import { pendingInviteLink } from '../Redux/ThreadsSelectors'
 import { ActionType } from 'typesafe-actions'
@@ -24,6 +25,7 @@ import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import Config from 'react-native-config'
 import { logNewEvent } from './DeviceLogs'
+import { waitUntilOnline } from './NotificationsSagas';
 
 export function * addExternalInvite(action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
@@ -57,14 +59,24 @@ export function * acceptExternalInvite(action: ActionType<typeof ThreadsActions.
   yield fork(processExternalInvite, action)
 }
 
+function * joinOnFork(inviteId: string, key: string) {
+  try {
+    const joinId = yield call(API.invites.acceptExternal, inviteId, key)
+    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, joinId))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
+  } catch (error) {
+    yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
+  }
+}
+
 function * processExternalInvite(action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const joinId: string = yield call(API.invites.acceptExternal, inviteId, key)
-    if (!joinId) {
-      throw new Error('invite previously accepted')
-    }
-    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, joinId))
+    // don't wait for the join event here...
+    yield call(waitUntilOnline, 5000)
+    yield fork(joinOnFork, inviteId, key)
+    yield call(delay, 500)
+    yield put(ThreadsActions.acceptExternalInviteScanning(inviteId))
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))

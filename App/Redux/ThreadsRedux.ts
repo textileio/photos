@@ -23,6 +23,9 @@ const actions = {
   acceptExternalInviteDismiss: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_DISMISS', (resolve) => {
     return (inviteId: string) => resolve({inviteId})
   }),
+  acceptExternalInviteScanning: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SCANNING', (resolve) => {
+    return (inviteId: string) => resolve({inviteId})
+  }),
   acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
     return (inviteId: string, id: string) => resolve({inviteId, id})
   }),
@@ -58,7 +61,7 @@ export interface OutboundInvite {
   readonly error?: Error
 }
 
-export type InviteStage = 'joining' | 'complete' | 'error'
+export type InviteStage = 'joining' | 'scanning' | 'complete' | 'error'
 
 export interface InboundInvite {
   readonly inviteId: string
@@ -131,6 +134,20 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
         .concat([inboundInvite])
       return { ...state, inboundInvites }
     }
+    case getType(actions.acceptExternalInviteScanning): {
+      const { inviteId } = action.payload
+      // update the inbound invite with the new thread id object
+      const inboundInvites = state.inboundInvites.map(
+        (inbound) => {
+          if (inbound.inviteId === inviteId && inbound.stage === 'joining') {
+            const stage: InviteStage = 'scanning'
+            return {...inbound, stage}
+          }
+          return inbound
+        }
+      )
+      return { ...state, inboundInvites }
+    }
     case getType(actions.acceptExternalInviteSuccess): {
       const { inviteId, id } = action.payload
       // update the inbound invite with the new thread id object
@@ -138,7 +155,7 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
         (inbound) => {
           if (inbound.inviteId === inviteId) {
             const stage: InviteStage = 'complete'
-            return {...inbound, id, stage}
+            return {...inbound, stage, id}
           }
           return inbound
         }
@@ -151,8 +168,8 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
       const inboundInvites = state.inboundInvites.map(
         (inbound) => {
           if (inbound.inviteId === inviteId) {
-            const dismiss = true
-            return {...inbound, dismiss}
+            const dismissed = true
+            return {...inbound, dismissed}
           }
           return inbound
         }

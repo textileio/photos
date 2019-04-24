@@ -6,6 +6,7 @@ import { FlatList, View, Text, TouchableOpacity, Alert, Platform, ListRenderItem
 
 import {RootAction, RootState} from '../Redux/Types'
 
+import { inboundInvites } from '../Redux/ThreadsSelectors'
 import { getThreadsAndMembers, GroupAuthors } from '../Redux/PhotoViewingSelectors'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
@@ -16,9 +17,11 @@ import Avatar from '../Components/Avatar'
 import GroupCard from '../Components/GroupCard'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import styles from './Styles/GroupsStyles'
+import { InboundInvite, InviteStage } from '../Redux/ThreadsRedux';
+import ProcessingThread from '../Components/ProcessingThread';
 
 interface StateProps {
-  threads: ReadonlyArray<GroupAuthors>
+  groups: ReadonlyArray<GroupRows>
   showNotificationsPrompt: boolean
   showLocationPrompt: boolean
   itemCount: number
@@ -37,7 +40,6 @@ interface NavProps {
   openDrawer: () => void,
   openThreadModal: () => void
 }
-
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 interface State {
@@ -89,10 +91,21 @@ class Groups extends React.PureComponent<Props, State> {
     this.props.navigation.openDrawer()
   }
 
-  _renderItem = (rowData: ListRenderItemInfo<GroupAuthors>) => {
-    const item: GroupAuthors = rowData.item
+  _renderItem = (rowData: ListRenderItemInfo<GroupRows>) => {
+    const item: GroupRows = rowData.item
+    if (item.group) {
+      return (
+        <GroupCard id={item.group.id} {...item.group} onPress={this._onPressItem} />
+      )
+    } else if (item.invite) {
+      return (
+        <ProcessingThread
+          {...item.invite}
+        />
+      )
+    } 
     return (
-      <GroupCard id={item.id} {...item} onPress={this._onPressItem} />
+      <View/>
     )
   }
 
@@ -112,7 +125,7 @@ class Groups extends React.PureComponent<Props, State> {
     this.props.refreshMessages()
   }
 
-  _keyExtractor = (item: GroupAuthors) => item.id
+  _keyExtractor = (item: GroupRows) => item.id
 
   openThreadModal = () => {
     this.setState({ showCreateGroupModal: true })
@@ -134,10 +147,10 @@ class Groups extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.threads.length && this.props.threads.length !== prevProps.threads.length && this.props.showNotificationsPrompt) {
+    if (this.props.groups.length && this.props.groups.length !== prevProps.groups.length && this.props.showNotificationsPrompt) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()
-    } else if (this.props.threads.length && this.props.showLocationPrompt) {
+    } else if (this.props.groups.length && this.props.showLocationPrompt) {
       // ensure it get
       this.locationPrompt()
     }
@@ -147,7 +160,7 @@ class Groups extends React.PureComponent<Props, State> {
     return (
       <View style={styles.contentContainer} >
         <FlatList
-          data={this.props.threads}
+          data={this.props.groups}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           refreshing={false}
@@ -230,8 +243,14 @@ class Groups extends React.PureComponent<Props, State> {
 
 }
 
+interface GroupRows {
+  group?: GroupAuthors
+  invite?: InboundInvite
+  id: string
+}
+
 const mapStateToProps = (state: RootState): StateProps => {
-  const threads = getThreadsAndMembers(state, 8)
+  const threads: GroupAuthors[] = getThreadsAndMembers(state, 8)
   const memberCount = threads.reduce((prev, thread) => {
     return prev + thread.memberCount
   }, 0)
@@ -246,8 +265,14 @@ const mapStateToProps = (state: RootState): StateProps => {
   const showLocationPrompt = PreferencesSelectors.showBackgroundLocationPrompt(state)
     && itemCount > 8
 
+  const invites: GroupRows[] = inboundInvites(state)
+    .map((inbound) => ({invite: inbound, id: inbound.inviteId}))
+
+  const nestedThreads = threads.map((thread) => ({group: thread, id: thread.id}))
+  const groups: ReadonlyArray<GroupRows> = [...invites, ...nestedThreads]
+
   return {
-    threads,
+    groups,
     showNotificationsPrompt,
     showLocationPrompt,
     itemCount
