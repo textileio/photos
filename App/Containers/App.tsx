@@ -47,7 +47,10 @@ class App extends Component {
         TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
         TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
       }
-    )
+    ).catch((error) => {
+      // isFatal = true
+      errorHandler(error, true)
+    })
   }
 
   componentWillUnmount() {
