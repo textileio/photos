@@ -12,3 +12,7 @@ export function inboundInviteByThreadId(state: RootState, threadId: string): Inb
 export function inboundInviteByThreadName(state: RootState, threadName: string): InboundInvite | undefined {
   return state.threads.inboundInvites.find((invite) => invite.name === threadName)
 }
+
+export function inboundInvites(state: RootState): ReadonlyArray<InboundInvite> {
+  return state.threads.inboundInvites.filter((invite) => !invite.dismissed)
+}

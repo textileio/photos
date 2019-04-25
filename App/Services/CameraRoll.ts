@@ -24,10 +24,11 @@ export async function chooseProfilePhoto(): Promise<{ image: IPickerImage, data:
   return new Promise<{ image: IPickerImage, data: string}>((resolve, reject) => {
     const options = {
       title: 'Choose a Profile Picture',
-      maxWidth: 1200,
-      maxHeight: 1200,
+      maxWidth: 800,
+      maxHeight: 800,
       quality: 0.75,
-      cameraType: 'front' as 'front' | 'back' | undefined
+      cameraType: 'front' as 'front' | 'back' | undefined,
+      noData: false // just making this explicit
     }
     ImagePicker.showImagePicker(options, (response) => {
       if (response.didCancel) {
@@ -37,12 +38,21 @@ export async function chooseProfilePhoto(): Promise<{ image: IPickerImage, data:
       } else {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        const path: string = Platform.OS !== 'ios' ? response.path! : response.uri ? response.uri.replace('file://', '') : ''
+        let path: string
+        let canDelete: boolean
+        if (Platform.OS === 'ios') {
+          path = response.uri ? response.uri.replace('file://', '') : ''
+          canDelete = true
+        } else {
+          path = response.path!
+          // currently needs a fix in Android to store in temp via https://github.com/react-native-community/react-native-image-picker/pull/1063
+          canDelete = false
+        }
 
         const image: IPickerImage = {
           uri: response.uri,
           path,
-          canDelete: true,
+          canDelete,
           height: response.height,
           width: response.width,
           isVertical: response.isVertical,
@@ -65,6 +75,7 @@ export async function launchCamera(): Promise<IPickerImage> {
       mediaType: 'photo' as 'photo',
       noData: true
     }
+
     ImagePicker.launchCamera(options, (response) => {
       let path: string
       let canDelete: boolean
@@ -99,7 +110,11 @@ export async function launchImageLibrary(): Promise<IPickerImage> {
       mediaType: 'photo' as 'photo',
       noData: true
     }
+
     ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.error) {
+        reject(response.error)
+      }
       let path: string
       let canDelete: boolean
       if (Platform.OS === 'ios') {

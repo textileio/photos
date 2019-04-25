@@ -84,14 +84,13 @@ class AcceptInviteScreen extends React.Component<StateProps & DispatchProps & Na
   }
 
   render() {
-    const inviter = this.props.navigation.getParam('inviter') || 'unknown user'
     const threadName = this.props.navigation.getParam('name') || 'unknown thread'
     return (
       <SafeAreaView style={CONTAINER}>
         <Image style={IMAGE} source={require('./image.png')} />
         {this.props.valid &&
           <Fragment>
-            <Text style={TEXT}>You've been invited by <Text style={TEXT_EMPHASIS_1}>{inviter}</Text> to join <Text style={TEXT_EMPHASIS_2}>{threadName}</Text>!</Text>
+            <Text style={TEXT}>You've been invited to join <Text style={TEXT_EMPHASIS_2}>{threadName}</Text>!</Text>
             <Button text={'Accept Invite'} onPress={this.accept} />
           </Fragment>
         }

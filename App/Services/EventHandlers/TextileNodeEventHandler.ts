@@ -9,7 +9,7 @@ import { contactsActions } from '../../features/contacts'
 import DeviceLogsActions from '../../Redux/DeviceLogsRedux'
 import { toTypedNotification } from '../Notifications'
 
-import TextileEventsActions, { NodeState } from '../../Redux/TextileEventsRedux'
+import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import { groupActions } from '../../features/group'
 
 export default class TextileNodeEventHandler {
@@ -49,6 +49,8 @@ export default class TextileNodeEventHandler {
           // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
           // Enhancement: compare the joiner id with known ids and skip the refresh if known.
           this.store.dispatch(contactsActions.getContactsRequest())
+          // Temporary: to ensure that our UI udpates after a self-join or a self-leave
+          this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
         }
 
         // create a local log line for the threadUpdate event

@@ -20,13 +20,16 @@ const actions = {
   acceptExternalInviteRequest: createAction('ACCEPT_EXTERNAL_THREAD_INVITE', (resolve) => {
     return (inviteId: string, key: string, name?: string, inviter?: string) => resolve({ inviteId, key, name, inviter })
   }),
-  acceptExternalInviteDismiss: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_DISMISS', (resolve) => {
+  acceptInviteDismiss: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_DISMISS', (resolve) => {
     return (inviteId: string) => resolve({inviteId})
   }),
-  acceptExternalInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
+  acceptInviteScanning: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SCANNING', (resolve) => {
+    return (inviteId: string) => resolve({inviteId})
+  }),
+  acceptInviteSuccess: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_SUCCESS', (resolve) => {
     return (inviteId: string, id: string) => resolve({inviteId, id})
   }),
-  acceptExternalInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
+  acceptInviteError: createAction('ACCEPT_EXTERNAL_THREAD_INVITE_ERROR', (resolve) => {
     return (inviteId: string, error: Error) => resolve({ inviteId, error })
   }),
   storeExternalInviteLink: createAction('STORE_EXTERNAL_INVITE_LINK', (resolve) => {
@@ -35,8 +38,8 @@ const actions = {
   removeExternalInviteLink: createAction('REMOVE_EXTERNAL_INVITE_LINK', (resolve) => {
     return () => resolve()
   }),
-  acceptInviteRequest: createAction('ACCEPT_THREAD_INVITE', (resolve) => {
-    return (notificationId: string, threadName: string) => resolve({ notificationId, threadName  })
+  acceptInviteRequest: createAction('ACCEPT_THREAD_NOTIFICATION_INVITE', (resolve) => {
+    return (notificationId: string, threadName?: string) => resolve({ notificationId, threadName  })
   }),
   addInternalInvitesRequest: createAction('ADD_INTERNAL_INVITES_REQUEST', (resolve) => {
     return (threadId: string, addresses: string[]) => resolve({ threadId, addresses  })
@@ -58,12 +61,13 @@ export interface OutboundInvite {
   readonly error?: Error
 }
 
-export type InviteStage = 'joining' | 'complete' | 'error'
+export type InviteStage = 'joining' | 'scanning' | 'complete' | 'error'
 
 export interface InboundInvite {
   readonly inviteId: string
   readonly inviteKey: string
   readonly stage: InviteStage
+  readonly type: 'external' | 'notification'
 
   readonly dismissed?: boolean // track if UI has dismissed the invite status
   readonly id?: string
@@ -116,50 +120,88 @@ export function reducer(state: ThreadsState = initialState, action: ThreadsActio
       })
       return { ...state, outboundInvites }
     }
+    case getType(actions.acceptInviteRequest): {
+      const { notificationId, threadName } = action.payload
+
+      const existing = state.inboundInvites.find((obj) => obj.inviteId === notificationId)
+      if (existing && !existing.error) {
+        // if the invite already exists and hasn't error'd, return ensuring undismiss
+        const inboundInvite = {...existing, dismissed: false}
+        const inboundInvites = state.inboundInvites
+          .filter((inv) => inv.inviteId !== notificationId)
+          .concat([inboundInvite])
+        return { ...state, inboundInvites }
+      }
+      const stage: InviteStage = 'joining'
+      const inboundInvite: InboundInvite = {inviteId: notificationId, name: threadName, inviteKey: '', stage, type: 'notification'}
+      const inboundInvites = state.inboundInvites
+        .filter((inv) => inv.inviteId !== notificationId)
+        .concat([inboundInvite])
+      return { ...state, inboundInvites }
+    }
     case getType(actions.acceptExternalInviteRequest): {
       // Store the external invite link in memory
       const { inviteId, key, name, inviter } = action.payload
       const existing = state.inboundInvites.find((obj) => obj.inviteId === inviteId)
       if (existing && !existing.error) {
-        // if the invite already exists and hasn't error'd, return
-        return state
+        // if the invite already exists and hasn't error'd, return ensuring undismiss
+        const inboundInvite = {...existing, dismissed: false}
+        const inboundInvites = state.inboundInvites
+          .filter((inv) => inv.inviteId !== inviteId)
+          .concat([inboundInvite])
+        return { ...state, inboundInvites }
       }
       const stage: InviteStage = 'joining'
-      const inboundInvite: InboundInvite = {inviteId, inviteKey: key, name, inviter, stage}
+      const inboundInvite: InboundInvite = {inviteId, inviteKey: key, name, inviter, stage, type: 'external'}
       const inboundInvites = state.inboundInvites
         .filter((inv) => inv.inviteId !== inviteId)
         .concat([inboundInvite])
       return { ...state, inboundInvites }
     }
-    case getType(actions.acceptExternalInviteSuccess): {
+    case getType(actions.acceptInviteScanning): {
+      const { inviteId } = action.payload
+      // update the inbound invite with the new thread id object
+      const inboundInvites = state.inboundInvites.map(
+        (inbound) => {
+          if (inbound.inviteId === inviteId && inbound.stage === 'joining') {
+            const stage: InviteStage = 'scanning'
+            return {...inbound, stage}
+          }
+          return inbound
+        }
+      )
+      return { ...state, inboundInvites }
+    }
+    case getType(actions.acceptInviteSuccess): {
       const { inviteId, id } = action.payload
       // update the inbound invite with the new thread id object
       const inboundInvites = state.inboundInvites.map(
         (inbound) => {
           if (inbound.inviteId === inviteId) {
             const stage: InviteStage = 'complete'
-            return {...inbound, id, stage}
+            // dismissed to just hide complete joins from the ui
+            return {...inbound, stage, id, dismissed: true}
           }
           return inbound
         }
       )
       return { ...state, inboundInvites }
     }
-    case getType(actions.acceptExternalInviteDismiss): {
+    case getType(actions.acceptInviteDismiss): {
       const { inviteId } = action.payload
       // update the inbound invite with the new thread id object
       const inboundInvites = state.inboundInvites.map(
         (inbound) => {
           if (inbound.inviteId === inviteId) {
-            const dismiss = true
-            return {...inbound, dismiss}
+            const dismissed = true
+            return {...inbound, dismissed}
           }
           return inbound
         }
       )
       return { ...state, inboundInvites }
     }
-    case getType(actions.acceptExternalInviteError): {
+    case getType(actions.acceptInviteError): {
       const { inviteId, error } = action.payload
       // update the inbound invite with the new error
       const inboundInvites = state.inboundInvites.map(

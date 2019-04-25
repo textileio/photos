@@ -1,4 +1,5 @@
 import {Share} from 'react-native'
+import { delay } from 'redux-saga'
 import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import { pendingInviteLink } from '../Redux/ThreadsSelectors'
@@ -16,6 +17,7 @@ import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import Config from 'react-native-config'
 import { logNewEvent } from './DeviceLogs'
+import { waitUntilOnline } from './NotificationsSagas'
 
 export function * addExternalInvite(action: ActionType<typeof ThreadsActions.addExternalInviteRequest>) {
   const { id, name } = action.payload
@@ -45,21 +47,63 @@ export function * presentShareInterface(action: ActionType<typeof ThreadsActions
   yield call(Share.share, { title: 'Join my thread on Textile!', message: link })
 }
 
-export function * acceptExternalInvite(action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
-  yield fork(processExternalInvite, action)
+export function * acceptInvite(action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
+  const { notificationId, threadName } = action.payload
+  try {
+    // don't wait for the join event here...
+    yield call(waitUntilOnline, 5000)
+    // We'll fork this so that we can Update the UI so user can perceive progress
+    yield fork(joinInternalOnFork, notificationId, threadName)
+    yield call(delay, 900)
+    // After delay, we'll assume we are walking back through the thread... enhancement later
+    yield put(ThreadsActions.acceptInviteScanning(notificationId))
+    // Refresh in case the head is available
+    yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield call(NavigationService.navigate, 'Groups')
+  } catch (error) {
+    yield put(ThreadsActions.acceptInviteError(notificationId, error))
+  }
 }
 
-function * processExternalInvite(action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
+function * joinInternalOnFork(notificationId: string, threadName?: string) {
+  try {
+    const threadId = yield call(Textile.notifications.acceptInvite, notificationId)
+    yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield put(ThreadsActions.acceptInviteSuccess(notificationId, threadId))
+    // nice with a bit of delay so the app can grab some blocks
+    yield call(delay, 500)
+    yield put(UIActions.navigateToThreadRequest(threadId, threadName || 'Processing...'))
+  } catch (error) {
+    yield put(ThreadsActions.acceptInviteError(notificationId, error))
+  }
+}
+
+export function * acceptExternalInvite(action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>) {
   const { inviteId, key } = action.payload
   try {
-    const joinId: string = yield call(Textile.invites.acceptExternal, inviteId, key)
-    if (!joinId) {
-      throw new Error('invite previously accepted')
-    }
-    yield put(ThreadsActions.acceptExternalInviteSuccess(inviteId, joinId))
+    // don't wait for the join event here...
+    yield call(waitUntilOnline, 5000)
+    // We'll fork this so that we can Update the UI so user can perceive progress
+    yield fork(joinOnFork, inviteId, key)
+    yield call(delay, 900)
+    // After delay, we'll assume we are walking back through the thread... enhancement later
+    yield put(ThreadsActions.acceptInviteScanning(inviteId))
+    // Refresh in case the head is available
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
-    yield put(ThreadsActions.acceptExternalInviteError(inviteId, error))
+    yield put(ThreadsActions.acceptInviteError(inviteId, error))
+  }
+}
+
+function * joinOnFork(inviteId: string, key: string) {
+  try {
+    // our forked job needs to stay alive so we can get any error message
+    const joinId = yield call(Textile.invites.acceptExternal, inviteId, key)
+    // if success, trigger complete and update ui
+    yield put(ThreadsActions.acceptInviteSuccess(inviteId, joinId))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
+  } catch (error) {
+    yield put(ThreadsActions.acceptInviteError(inviteId, error))
   }
 }
 
@@ -94,17 +138,6 @@ export function * cameraRollThreadCreateTask() {
     yield call(Textile.threads.add, config)
   } catch (error) {
     // TODO: the camera sync relies on this tread existing, so if any other besides UNIQUE constraint, we should try again
-  }
-}
-
-export function * acceptInvite(action: ActionType<typeof ThreadsActions.acceptInviteRequest>) {
-  const { notificationId, threadName } = action.payload
-  try {
-    const threadId = yield call(Textile.notifications.acceptInvite, notificationId)
-    yield put(PhotoViewingActions.refreshThreadsRequest())
-    yield put(UIActions.navigateToThreadRequest(threadId, threadName))
-  } catch (error) {
-    // TODO: it would be nice to tell the user when they've already joined the thread
   }
 }
 

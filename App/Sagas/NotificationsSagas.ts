@@ -8,7 +8,7 @@ import NavigationService from '../Services/NavigationService'
 
 import ThreadsActions from '../Redux/ThreadsRedux'
 import PhotoViewingAction, { ThreadData } from '../Redux/PhotoViewingRedux'
-import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
+import { threadDataByThreadId, allThreadIds } from '../Redux/PhotoViewingSelectors'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, { NotificationsSelectors } from '../Redux/NotificationsRedux'
 import TextileEventsActions, { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
@@ -127,8 +127,19 @@ export function * refreshNotifications() {
     if (busy) { return }
     yield * waitUntilOnline(1000)
     yield put(NotificationsActions.refreshNotificationsStart())
-    const notificationResponse: INotificationList = yield call(Textile.notifications.list, '', 99) // TODO: offset?
+    const notificationResponse: INotificationList = yield call(Textile.notifications.list, '', 50) // TODO: offset?
+    const appThreadIds = yield select(allThreadIds)
     const typedNotifs = notificationResponse.items.map((notificationData) => NotificationsServices.toTypedNotification(notificationData))
+                          .filter((notification) => {
+                            // converts the notification to Any since not all notifications have a threadId
+                            const { threadId } = notification as any
+                            if (threadId === undefined) {
+                              // These are device adds or new thread invites (not easy to know which app yet)
+                              return true
+                            } else {
+                              return appThreadIds.indexOf(threadId) > -1
+                            }
+                          })
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
     yield put(TextileEventsActions.newErrorMessage('refreshNotifications', error.message))
