@@ -40,14 +40,17 @@ class App extends Component {
   componentWillMount() {
     this.textile.setup(
       {
-        RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE
+        RELEASE_TYPE: 'bort' //RNConfig.RN_RELEASE_TYPE
       },
       {
         TEXTILE_CAFE_TOKEN: RNConfig.RN_TEXTILE_CAFE_TOKEN,
-        TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
-        TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
+        TEXTILE_CAFE_GATEWAY_URL: 'blarg', //RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
+        TEXTILE_CAFE_OVERRIDE: 'hoodie' //RNConfig.RN_TEXTILE_CAFE_OVERRIDE
       }
-    )
+    ).catch((error) => {
+      // isFatal = true
+      errorHandler(error, true)
+    })
   }
 
   componentWillUnmount() {
