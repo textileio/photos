@@ -38,6 +38,10 @@ class App extends Component {
     )
   }
 
+  componentDidMount() {
+    this.setup()
+  }
+
   componentWillUnmount() {
     if (super.componentWillUnmount) {
       super.componentWillUnmount()
@@ -54,6 +58,7 @@ class App extends Component {
 
   setup = async () => {
     // TODO: Move to a saga
+    console.log('SETTING UP')
     const phrase = await Textile.initialize(false, false)
     if (phrase) {
       store.dispatch(AccountActions.setRecoveryPhrase(phrase))
