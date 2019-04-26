@@ -42,12 +42,14 @@ typedef NS_CLOSED_ENUM(NSInteger, AppState) {
       [self processNewState:AppStateBackground];
     }
 
+    __weak LifecycleManager *weakSelf = self;
+
     [NSNotificationCenter.defaultCenter
      addObserverForName:UIApplicationDidBecomeActiveNotification
      object:nil
      queue:nil
      usingBlock:^(NSNotification *notification) {
-       [self processNewState:AppStateForeground];
+       [weakSelf processNewState:AppStateForeground];
      }];
 
     [NSNotificationCenter.defaultCenter
@@ -55,7 +57,7 @@ typedef NS_CLOSED_ENUM(NSInteger, AppState) {
      object:nil
      queue:nil
      usingBlock:^(NSNotification *notification) {
-       [self processNewState:AppStateBackground];
+       [weakSelf processNewState:AppStateBackground];
      }];
   });
 }
@@ -106,15 +108,16 @@ typedef NS_CLOSED_ENUM(NSInteger, AppState) {
 }
 
 - (void)stopNodeAfterDelay:(NSTimeInterval)delay {
+  __weak LifecycleManager *weakSelf = self;
   UIBackgroundTaskIdentifier bgTaskId = [UIApplication.sharedApplication beginBackgroundTaskWithName:@"RunNode" expirationHandler:^{
-    [self stopNode];
+    [weakSelf stopNode];
   }];
   [self.timer invalidate];
   if ([self.delegate respondsToSelector:@selector(willStopNodeInBackgroundAfterDelay:)]) {
     [self.delegate willStopNodeInBackgroundAfterDelay:delay];
   }
   self.timer = [NSTimer scheduledTimerWithTimeInterval:delay repeats:FALSE block:^(NSTimer * _Nonnull timer) {
-    [self stopNode];
+    [weakSelf stopNode];
     [UIApplication.sharedApplication endBackgroundTask:bgTaskId];
   }];
 }

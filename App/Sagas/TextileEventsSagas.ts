@@ -11,9 +11,11 @@ import Textile, {
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
+import PhotoGrid from '../Components/PhotoGrid';
 
 export function * startSagas() {
   yield all([
+    call(initializeTextile),
     call(startNodeFinished),
     call(stopNodeAfterDelayStarting),
     call(stopNodeAfterDelayCancelled),
@@ -31,6 +33,13 @@ export function * startSagas() {
   // TODO: Remove all this, make sure background triggers are handled in native SDKs
   // yield call(BackgroundTask)
 // }
+
+function * initializeTextile() {
+  const phrase: string | undefined = yield call(Textile.initialize, false, false)
+  if (phrase) {
+    yield put(AccountActions.setRecoveryPhrase(phrase))
+  }
+}
 
 export function * refreshMessages() {
   while (true) {

@@ -56,16 +56,16 @@ typedef GPB_ENUM(Thread_Type) {
    * of the field.
    **/
   Thread_Type_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
-  /** initiator: RAW, members: */
+  /** initiator: RAW, whitelist: */
   Thread_Type_Private = 0,
 
-  /** initiator: RAW, members: R */
+  /** initiator: RAW, whitelist: R */
   Thread_Type_ReadOnly = 1,
 
-  /** initiator: RAW, members: RA */
+  /** initiator: RAW, whitelist: RA */
   Thread_Type_Public = 2,
 
-  /** initiator: RAW, members: RAW */
+  /** initiator: RAW, whitelist: RAW */
   Thread_Type_Open = 3,
 };
 
@@ -87,13 +87,13 @@ typedef GPB_ENUM(Thread_Sharing) {
    * of the field.
    **/
   Thread_Sharing_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
-  /** initiator: N, members: N */
+  /** initiator: N, whitelist: N */
   Thread_Sharing_NotShared = 0,
 
-  /** initiator: Y, members: N */
+  /** initiator: Y, whitelist: N */
   Thread_Sharing_InviteOnly = 1,
 
-  /** initiator: Y, members: Y */
+  /** initiator: Y, whitelist: Y */
   Thread_Sharing_Shared = 2,
 };
 
@@ -397,7 +397,7 @@ typedef GPB_ENUM(Thread_FieldNumber) {
   Thread_FieldNumber_Initiator = 6,
   Thread_FieldNumber_Type = 7,
   Thread_FieldNumber_Sharing = 8,
-  Thread_FieldNumber_MembersArray = 9,
+  Thread_FieldNumber_WhitelistArray = 9,
   Thread_FieldNumber_State = 10,
   Thread_FieldNumber_Head = 11,
   Thread_FieldNumber_HeadBlock = 101,
@@ -424,9 +424,9 @@ typedef GPB_ENUM(Thread_FieldNumber) {
 
 @property(nonatomic, readwrite) Thread_Sharing sharing;
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *membersArray;
-/** The number of items in @c membersArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger membersArray_Count;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *whitelistArray;
+/** The number of items in @c whitelistArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger whitelistArray_Count;
 
 @property(nonatomic, readwrite) Thread_State state;
 
@@ -851,7 +851,6 @@ typedef GPB_ENUM(Cafe_FieldNumber) {
   Cafe_FieldNumber_Protocol = 4,
   Cafe_FieldNumber_Node = 5,
   Cafe_FieldNumber_URL = 6,
-  Cafe_FieldNumber_SwarmArray = 7,
 };
 
 @interface Cafe : GPBMessage
@@ -867,10 +866,6 @@ typedef GPB_ENUM(Cafe_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *node;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *URL;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *swarmArray;
-/** The number of items in @c swarmArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger swarmArray_Count;
 
 @end
 

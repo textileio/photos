@@ -162,7 +162,7 @@ typedef GPB_ENUM(AddThreadConfig_FieldNumber) {
   AddThreadConfig_FieldNumber_Schema = 3,
   AddThreadConfig_FieldNumber_Type = 4,
   AddThreadConfig_FieldNumber_Sharing = 5,
-  AddThreadConfig_FieldNumber_MembersArray = 6,
+  AddThreadConfig_FieldNumber_WhitelistArray = 6,
   AddThreadConfig_FieldNumber_Force = 7,
 };
 
@@ -180,9 +180,9 @@ typedef GPB_ENUM(AddThreadConfig_FieldNumber) {
 
 @property(nonatomic, readwrite) enum Thread_Sharing sharing;
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *membersArray;
-/** The number of items in @c membersArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger membersArray_Count;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *whitelistArray;
+/** The number of items in @c whitelistArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger whitelistArray_Count;
 
 /** force key by auto-incrementing */
 @property(nonatomic, readwrite) BOOL force;

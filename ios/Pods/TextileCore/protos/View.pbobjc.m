@@ -54,7 +54,7 @@ static GPBFileDescriptor *ViewRoot_FileDescriptor(void) {
 @dynamic hasSchema, schema;
 @dynamic type;
 @dynamic sharing;
-@dynamic membersArray, membersArray_Count;
+@dynamic whitelistArray, whitelistArray_Count;
 @dynamic force;
 
 typedef struct AddThreadConfig__storage_ {
@@ -64,7 +64,7 @@ typedef struct AddThreadConfig__storage_ {
   NSString *key;
   NSString *name;
   AddThreadConfig_Schema *schema;
-  NSMutableArray *membersArray;
+  NSMutableArray *whitelistArray;
 } AddThreadConfig__storage_;
 
 // This method is threadsafe because it is initially called
@@ -119,11 +119,11 @@ typedef struct AddThreadConfig__storage_ {
         .dataType = GPBDataTypeEnum,
       },
       {
-        .name = "membersArray",
+        .name = "whitelistArray",
         .dataTypeSpecific.className = NULL,
-        .number = AddThreadConfig_FieldNumber_MembersArray,
+        .number = AddThreadConfig_FieldNumber_WhitelistArray,
         .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(AddThreadConfig__storage_, membersArray),
+        .offset = (uint32_t)offsetof(AddThreadConfig__storage_, whitelistArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeString,
       },

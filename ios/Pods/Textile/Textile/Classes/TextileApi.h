@@ -57,6 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)version;
 - (NSString *)gitSummary;
 - (Summary *)summary:(NSError **)error;
+- (void)destroy:(NSError **)error;
 
 @end
 

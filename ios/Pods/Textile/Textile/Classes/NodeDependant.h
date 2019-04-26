@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NodeDependant : NSObject
 
-@property (nonatomic, strong) MobileMobile *node;
+@property (nonatomic, weak) MobileMobile *node;
 
 - (instancetype)initWithNode:(MobileMobile *)node;
 

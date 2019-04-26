@@ -191,7 +191,6 @@
 @property (nonatomic) BOOL logToDisk;
 @property (nonatomic) BOOL debug;
 @property (nonatomic) BOOL cafeOpen;
-@property (nonatomic) NSString* _Nonnull cafePublicIP;
 @property (nonatomic) NSString* _Nonnull cafeURL;
 @property (nonatomic) NSString* _Nonnull cafeNeighborURL;
 @end
@@ -497,6 +496,8 @@ bcrypt hashed equivalent
 @property (nonatomic) NSString* _Nonnull id_;
 @property (nonatomic) NSString* _Nonnull key;
 @property (nonatomic) NSString* _Nonnull name;
+// skipped field Thread.PrivKey with unsupported type: github.com/textileio/go-textile/vendor/github.com/libp2p/go-libp2p-crypto.PrivKey
+
 // skipped field Thread.Schema with unsupported type: *github.com/textileio/go-textile/pb.Node
 
 // skipped method Thread.AddComment with unsupported parameter or return types

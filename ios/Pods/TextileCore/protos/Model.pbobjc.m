@@ -414,7 +414,7 @@ typedef struct ContactList__storage_ {
 @dynamic initiator;
 @dynamic type;
 @dynamic sharing;
-@dynamic membersArray, membersArray_Count;
+@dynamic whitelistArray, whitelistArray_Count;
 @dynamic state;
 @dynamic head;
 @dynamic hasHeadBlock, headBlock;
@@ -435,7 +435,7 @@ typedef struct Thread__storage_ {
   NSString *name;
   NSString *schema;
   NSString *initiator;
-  NSMutableArray *membersArray;
+  NSMutableArray *whitelistArray;
   NSString *head;
   Block *headBlock;
   Node *schemaNode;
@@ -520,11 +520,11 @@ typedef struct Thread__storage_ {
         .dataType = GPBDataTypeEnum,
       },
       {
-        .name = "membersArray",
+        .name = "whitelistArray",
         .dataTypeSpecific.className = NULL,
-        .number = Thread_FieldNumber_MembersArray,
+        .number = Thread_FieldNumber_WhitelistArray,
         .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(Thread__storage_, membersArray),
+        .offset = (uint32_t)offsetof(Thread__storage_, whitelistArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeString,
       },
@@ -1960,7 +1960,6 @@ typedef struct NotificationList__storage_ {
 @dynamic protocol;
 @dynamic node;
 @dynamic URL;
-@dynamic swarmArray, swarmArray_Count;
 
 typedef struct Cafe__storage_ {
   uint32_t _has_storage_[1];
@@ -1970,7 +1969,6 @@ typedef struct Cafe__storage_ {
   NSString *protocol;
   NSString *node;
   NSString *URL;
-  NSMutableArray *swarmArray;
 } Cafe__storage_;
 
 // This method is threadsafe because it is initially called
@@ -2031,15 +2029,6 @@ typedef struct Cafe__storage_ {
         .hasIndex = 5,
         .offset = (uint32_t)offsetof(Cafe__storage_, URL),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "swarmArray",
-        .dataTypeSpecific.className = NULL,
-        .number = Cafe_FieldNumber_SwarmArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(Cafe__storage_, swarmArray),
-        .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeString,
       },
     };

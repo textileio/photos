@@ -33,6 +33,7 @@
 @property (nonatomic, strong) ProfileApi *profile;
 @property (nonatomic, strong) SchemasApi *schemas;
 @property (nonatomic, strong) ThreadsApi *threads;
+
 @property (nonatomic, strong) NSString *repoPath;
 
 @property (nonatomic, strong) LifecycleManager *lifecycleManager;
@@ -50,9 +51,13 @@
 @implementation Textile
 
 + (NSString *)initializeWithDebug:(BOOL)debug logToDisk:(BOOL)logToDisk error:(NSError * _Nullable __autoreleasing *)error {
+  if (Textile.instance.node) {
+    return nil;
+  }
   NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   NSString *repoPath = [documents stringByAppendingPathComponent:@"textile-go"];
   Textile.instance.repoPath = repoPath;
+  Textile.instance.messenger = [[Messenger alloc] init];
   [Textile.instance newTextile:repoPath debug:debug error:error];
   if (*error && (*error).code == 1) {
     NSString *recoveryPhrase = [Textile.instance newWallet:12 error:error];
@@ -73,13 +78,6 @@
     instnace = [[self alloc] init];
   });
   return instnace;
-}
-
-- (instancetype)init {
-  if (self = [super init]) {
-    self.messenger = [[Messenger alloc] init];
-  }
-  return self;
 }
 
 - (void)setDelegate:(id<TextileDelegate>)delegate {
@@ -115,12 +113,10 @@
 }
 
 - (void)newTextile:(NSString *)repoPath debug:(BOOL)debug error:(NSError *__autoreleasing *)error {
-  if (!self.node) {
-    MobileRunConfig *config = [[MobileRunConfig alloc] init];
-    config.repoPath = repoPath;
-    config.debug = debug;
-    self.node = MobileNewTextile(config, self.messenger, error);
-  }
+  MobileRunConfig *config = [[MobileRunConfig alloc] init];
+  config.repoPath = repoPath;
+  config.debug = debug;
+  self.node = MobileNewTextile(config, self.messenger, error);
 }
 
 - (void)start:(NSError *__autoreleasing *)error {
@@ -142,6 +138,37 @@
 - (Summary *)summary:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node summary:error];
   return [[Summary alloc] initWithData:data error:error];
+}
+
+- (void)destroy:(NSError * _Nullable __autoreleasing *)error {
+  [self.node stop:error];
+  if (!*error) {
+    self.delegate = nil;
+    self.node = nil;
+    self.messenger = nil;
+
+    self.account = nil;
+    self.cafes = nil;
+    self.comments = nil;
+    self.contacts = nil;
+    self.feed = nil;
+    self.files = nil;
+    self.flags = nil;
+    self.ignores = nil;
+    self.invites = nil;
+    self.ipfs = nil;
+    self.likes = nil;
+    self.logs = nil;
+    self.messages = nil;
+    self.notifications = nil;
+    self.profile = nil;
+    self.schemas = nil;
+    self.threads = nil;
+
+    self.repoPath = nil;
+
+    self.lifecycleManager = nil;
+  }
 }
 
 - (void)createNodeDependants {
