@@ -27,6 +27,7 @@
 		8E44FDACD1EC3A88233594F4 /* libPods-Textile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */; };
 		9356E1EA21F8FEFD00F6FACA /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9356E1E121F8FEDA00F6FACA /* libRNGestureHandler.a */; };
 		9356E2C921F905A200F6FACA /* libRNScreens.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9356E2C221F9059000F6FACA /* libRNScreens.a */; };
+		9370EF6F2273B3AB006FB028 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9370EF362273B3AB006FB028 /* JavaScriptCore.framework */; };
 		93C00481216B12A1007786A5 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00480216B1276007786A5 /* libRNBackgroundFetch.a */; };
 		93C00482216B12C8007786A5 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00470216B1066007786A5 /* TSBackgroundFetch.framework */; };
 		93C00487216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C00485216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m */; };
@@ -490,6 +491,7 @@
 		889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Textile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9356E1AD21F8FEDA00F6FACA /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		9356E28B21F9058F00F6FACA /* RNScreens.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNScreens.xcodeproj; path = "../node_modules/react-native-screens/ios/RNScreens.xcodeproj"; sourceTree = "<group>"; };
+		9370EF362273B3AB006FB028 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		93C00470216B1066007786A5 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = "<group>"; };
 		93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		93C00485216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
@@ -543,6 +545,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9370EF6F2273B3AB006FB028 /* JavaScriptCore.framework in Frameworks */,
 				93CCA014220135C700639B38 /* libRCTContacts.a in Frameworks */,
 				9356E2C921F905A200F6FACA /* libRNScreens.a in Frameworks */,
 				9356E1EA21F8FEFD00F6FACA /* libRNGestureHandler.a in Frameworks */,
@@ -698,6 +701,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9370EF362273B3AB006FB028 /* JavaScriptCore.framework */,
 				93C00532216BB8F2007786A5 /* Crashlytics.framework */,
 				93C00533216BB8F2007786A5 /* Fabric.framework */,
 				93C00470216B1066007786A5 /* TSBackgroundFetch.framework */,

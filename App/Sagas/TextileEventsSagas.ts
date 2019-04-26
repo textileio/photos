@@ -34,9 +34,14 @@ export function * startSagas() {
 // }
 
 function * initializeTextile() {
-  const phrase: string | undefined = yield call(Textile.initialize, false, false)
-  if (phrase) {
-    yield put(AccountActions.setRecoveryPhrase(phrase))
+  try {
+    const phrase: string | undefined = yield call(Textile.initialize, false, false)
+    if (phrase) {
+      yield put(AccountActions.setRecoveryPhrase(phrase))
+    }
+  } catch (error) {
+    console.log('INITIALIZE ERROR:', error)
+    console.log('--- ERROR DONE ---')
   }
 }
 
