@@ -11,7 +11,6 @@ import Textile, {
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
-import PhotoGrid from '../Components/PhotoGrid';
 
 export function * startSagas() {
   yield all([
