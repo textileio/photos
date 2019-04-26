@@ -1,22 +1,26 @@
-import { take, put, call, all, select } from 'redux-saga/effects'
+import { take, put, call, all, select, fork } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import AccountActions from '../../Redux/AccountRedux'
-import { contactsActions } from '../../features/contacts'
-import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
-import PreferencesActions from '../../Redux/PreferencesRedux'
-import TextileEventsActions, { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
+import Config from 'react-native-config'
 import Textile, {
   IContact,
   ICafeSession,
   ICafeSessionList
 } from '@textile/react-native-sdk'
+
+import AccountActions from '../../Redux/AccountRedux'
+import { contactsActions } from '../../features/contacts'
+import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import PreferencesActions from '../../Redux/PreferencesRedux'
+import TextileEventsActions, { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
 import { bestSession } from '../../Redux/AccountSelectors'
 import { logNewEvent } from '../DeviceLogs'
+import CafeGatewayApi from '../../Services/cafe-gateway-api'
 
 export function * onNodeStarted() {
   while (yield take([getType(TextileEventsActions.nodeStarted), getType(PreferencesActions.onboardingSuccess)])) {
     yield call(logNewEvent, 'nodeStarted', 'refresh account data')
     try {
+      yield fork(registerCafesIfNeeded)
       yield put(AccountActions.refreshProfileRequest())
       yield put(AccountActions.refreshPeerIdRequest())
       yield put(AccountActions.refreshAddressRequest())
@@ -160,5 +164,28 @@ export function * refreshCafeSessions() {
     } catch (error) {
       yield put(AccountActions.cafeSessionsError(error))
     }
+  }
+}
+
+function * registerCafesIfNeeded() {
+  try {
+    const list: ICafeSessionList | undefined = yield call(Textile.cafes.sessions)
+    if (!list || list.items.length < 1) {
+      yield call(registerCafes)
+      yield put(AccountActions.getCafeSessionsRequest())
+    }
+  } catch (error) {
+    yield call(logNewEvent, 'registerCafesIfNeeded', error.message, true)
+  }
+}
+
+async function registerCafes() {
+  const cafes = await CafeGatewayApi.discoveredCafes()
+  const token = Config.RN_TEXTILE_CAFE_TOKEN
+  if (cafes.primary) {
+    await Textile.cafes.register(cafes.primary.url, token)
+  }
+  if (cafes.secondary) {
+    await Textile.cafes.register(cafes.secondary.url, token)
   }
 }
