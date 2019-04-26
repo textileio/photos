@@ -2,6 +2,7 @@ import { delay } from 'redux-saga'
 import { call, put, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import uuid from 'uuid/v4'
+import Config from 'react-native-config'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { InboundInvite } from '../Redux/ThreadsRedux'
@@ -103,14 +104,13 @@ export function * refreshThreads(action: ActionType<typeof PhotoViewingActions.r
       /**
        * Filters out the Account thread from PhotoViewing Thread List
        */
-      if (thread.key === accountThreadId) {
-        continue
-      } else if (thread.key.lastIndexOf('textile_photos-shared', 0) !== 0) {
-        // The thread wasn't created by Textile photos
-        continue
+      const isNotAccountThread = thread.key !== accountThreadId
+      const isSharedThread = thread.key.indexOf('textile_photos-shared') === 0
+      const isCameraRollThread = thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
+      if (isNotAccountThread && (isSharedThread || isCameraRollThread)) {
+        yield put(PhotoViewingActions.insertThread(thread.id, thread.key, thread.name))
+        yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
       }
-      yield put(PhotoViewingActions.insertThread(thread.id, thread.key, thread.name))
-      yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
     }
   } catch (error) {
     yield put(TextileEventsActions.newErrorMessage('refreshThreads', error.message))
