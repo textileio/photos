@@ -34,7 +34,7 @@
     "react-native-qrcode": "^0.2.7",
     "react-native-scalable-image": "^0.4.0",
     "react-native-screens": "^1.0.0-alpha.22",
-    "react-native-version-number": "^0.3.5",
+    "react-native-version-number": "textileio/react-native-version-number",
     "react-navigation": "^3.0.0",
     "react-navigation-header-buttons": "^2.1.0",
     "react-redux": "6.0.1",
