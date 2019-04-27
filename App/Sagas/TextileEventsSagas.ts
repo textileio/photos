@@ -40,8 +40,7 @@ function * initializeTextile() {
       yield put(AccountActions.setRecoveryPhrase(phrase))
     }
   } catch (error) {
-    console.log('INITIALIZE ERROR:', error)
-    console.log('--- ERROR DONE ---')
+    yield put(TextileEventsActions.failedToInitializeNode(error))
   }
 }
 
