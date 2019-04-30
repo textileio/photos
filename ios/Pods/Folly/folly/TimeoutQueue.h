@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,12 @@
 
 #pragma once
 
-#include <cstdint>
+#include <stdint.h>
 #include <functional>
-
-#include <boost/multi_index/indexed_by.hpp>
-#include <boost/multi_index/member.hpp>
-#include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index_container.hpp>
+#include <boost/multi_index/indexed_by.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/member.hpp>
 
 namespace folly {
 
@@ -42,7 +41,7 @@ class TimeoutQueue {
   typedef int64_t Id;
   typedef std::function<void(Id, int64_t)> Callback;
 
-  TimeoutQueue() : nextId_(1) {}
+  TimeoutQueue() : nextId_(1) { }
 
   /**
    * Add a one-time timeout event that will fire "delay" time units from "now"
@@ -84,12 +83,8 @@ class TimeoutQueue {
    * Return the time that the next event will be due (same as
    * nextExpiration(), below)
    */
-  int64_t runOnce(int64_t now) {
-    return runInternal(now, true);
-  }
-  int64_t runLoop(int64_t now) {
-    return runInternal(now, false);
-  }
+  int64_t runOnce(int64_t now) { return runInternal(now, true); }
+  int64_t runLoop(int64_t now) { return runInternal(now, false); }
 
   /**
    * Return the time that the next event will be due.
@@ -110,21 +105,24 @@ class TimeoutQueue {
   };
 
   typedef boost::multi_index_container<
-      Event,
-      boost::multi_index::indexed_by<
-          boost::multi_index::ordered_unique<
-              boost::multi_index::member<Event, Id, &Event::id>>,
-          boost::multi_index::ordered_non_unique<
-              boost::multi_index::member<Event, int64_t, &Event::expiration>>>>
-      Set;
+    Event,
+    boost::multi_index::indexed_by<
+      boost::multi_index::ordered_unique<boost::multi_index::member<
+        Event, Id, &Event::id
+      >>,
+      boost::multi_index::ordered_non_unique<boost::multi_index::member<
+        Event, int64_t, &Event::expiration
+      >>
+    >
+  > Set;
 
   enum {
-    BY_ID = 0,
-    BY_EXPIRATION = 1,
+    BY_ID=0,
+    BY_EXPIRATION=1
   };
 
   Set timeouts_;
   Id nextId_;
 };
 
-} // namespace folly
+}  // namespace folly

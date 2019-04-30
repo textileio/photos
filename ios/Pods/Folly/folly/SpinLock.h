@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,46 +34,34 @@
 
 #include <type_traits>
 
-#include <boost/noncopyable.hpp>
-
-#include <folly/Portability.h>
-#include <folly/synchronization/SmallLocks.h>
+#include <folly/detail/SpinLockImpl.h>
 
 namespace folly {
 
-class SpinLock {
- public:
-  FOLLY_ALWAYS_INLINE SpinLock() {
-    lock_.init();
-  }
-  FOLLY_ALWAYS_INLINE void lock() const {
-    lock_.lock();
-  }
-  FOLLY_ALWAYS_INLINE void unlock() const {
-    lock_.unlock();
-  }
-  FOLLY_ALWAYS_INLINE bool try_lock() const {
-    return lock_.try_lock();
-  }
-
- private:
-  mutable folly::MicroSpinLock lock_;
-};
+#if __x86_64__
+typedef SpinLockMslImpl SpinLock;
+#elif __APPLE__
+typedef SpinLockAppleImpl SpinLock;
+#elif FOLLY_HAVE_PTHREAD_SPINLOCK_T
+typedef SpinLockPthreadImpl SpinLock;
+#else
+typedef SpinLockPthreadMutexImpl SpinLock;
+#endif
 
 template <typename LOCK>
 class SpinLockGuardImpl : private boost::noncopyable {
  public:
-  FOLLY_ALWAYS_INLINE explicit SpinLockGuardImpl(LOCK& lock) : lock_(lock) {
+  FOLLY_ALWAYS_INLINE explicit SpinLockGuardImpl(LOCK& lock) :
+    lock_(lock) {
     lock_.lock();
   }
   FOLLY_ALWAYS_INLINE ~SpinLockGuardImpl() {
     lock_.unlock();
   }
-
  private:
   LOCK& lock_;
 };
 
 typedef SpinLockGuardImpl<SpinLock> SpinLockGuard;
 
-} // namespace folly
+}

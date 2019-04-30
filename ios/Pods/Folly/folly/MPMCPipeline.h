@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 
 #include <glog/logging.h>
 
-#include <folly/Portability.h>
 #include <folly/detail/MPMCPipelineDetail.h>
 
 namespace folly {
@@ -28,8 +27,7 @@ namespace folly {
 /**
  * Helper tag template to use amplification > 1
  */
-template <class T, size_t Amp>
-class MPMCPipelineStage;
+template <class T, size_t Amp> class MPMCPipelineStage;
 
 /**
  * Multi-Producer, Multi-Consumer pipeline.
@@ -93,46 +91,15 @@ class MPMCPipelineStage;
  * all slots are filled (and therefore the queue doesn't freeze) because
  * we require that each step produces exactly K outputs for every input.
  */
-template <class In, class... Stages>
-class MPMCPipeline {
+template <class In, class... Stages> class MPMCPipeline {
   typedef std::tuple<detail::PipelineStageInfo<Stages>...> StageInfos;
   typedef std::tuple<
-      detail::MPMCPipelineStageImpl<In>,
-      detail::MPMCPipelineStageImpl<
-          typename detail::PipelineStageInfo<Stages>::value_type>...>
-      StageTuple;
+             detail::MPMCPipelineStageImpl<In>,
+             detail::MPMCPipelineStageImpl<
+                 typename detail::PipelineStageInfo<Stages>::value_type>...>
+    StageTuple;
   static constexpr size_t kAmplification =
-      detail::AmplificationProduct<StageInfos>::value;
-
-  class TicketBaseDebug {
-   public:
-    TicketBaseDebug() noexcept : owner_(nullptr), value_(0xdeadbeeffaceb00c) {}
-    TicketBaseDebug(TicketBaseDebug&& other) noexcept
-        : owner_(std::exchange(other.owner_, nullptr)),
-          value_(std::exchange(other.value_, 0xdeadbeeffaceb00c)) {}
-    explicit TicketBaseDebug(MPMCPipeline* owner, uint64_t value) noexcept
-        : owner_(owner), value_(value) {}
-    void check_owner(MPMCPipeline* owner) const {
-      CHECK(owner == owner_);
-    }
-
-    MPMCPipeline* owner_;
-    uint64_t value_;
-  };
-
-  class TicketBaseNDebug {
-   public:
-    TicketBaseNDebug() = default;
-    TicketBaseNDebug(TicketBaseNDebug&&) = default;
-    explicit TicketBaseNDebug(MPMCPipeline*, uint64_t value) noexcept
-        : value_(value) {}
-    void check_owner(MPMCPipeline*) const {}
-
-    uint64_t value_;
-  };
-
-  using TicketBase =
-      std::conditional_t<kIsDebug, TicketBaseDebug, TicketBaseNDebug>;
+    detail::AmplificationProduct<StageInfos>::value;
 
  public:
   /**
@@ -140,17 +107,35 @@ class MPMCPipeline {
    * blockingWriteStage. Tickets are not thread-safe.
    */
   template <size_t Stage>
-  class Ticket : TicketBase {
+  class Ticket {
    public:
     ~Ticket() noexcept {
       CHECK_EQ(remainingUses_, 0) << "All tickets must be completely used!";
     }
 
-    Ticket() noexcept : remainingUses_(0) {}
+#ifndef NDEBUG
+    Ticket() noexcept
+      : owner_(nullptr),
+        remainingUses_(0),
+        value_(0xdeadbeeffaceb00c) {
+    }
+#else
+    Ticket() noexcept : remainingUses_(0) { }
+#endif
 
     Ticket(Ticket&& other) noexcept
-        : TicketBase(static_cast<TicketBase&&>(other)),
-          remainingUses_(std::exchange(other.remainingUses_, 0)) {}
+      :
+#ifndef NDEBUG
+        owner_(other.owner_),
+#endif
+        remainingUses_(other.remainingUses_),
+        value_(other.value_) {
+      other.remainingUses_ = 0;
+#ifndef NDEBUG
+      other.owner_ = nullptr;
+      other.value_ = 0xdeadbeeffaceb00c;
+#endif
+    }
 
     Ticket& operator=(Ticket&& other) noexcept {
       if (this != &other) {
@@ -162,16 +147,31 @@ class MPMCPipeline {
 
    private:
     friend class MPMCPipeline;
+#ifndef NDEBUG
+    MPMCPipeline* owner_;
+#endif
     size_t remainingUses_;
+    uint64_t value_;
+
 
     Ticket(MPMCPipeline* owner, size_t amplification, uint64_t value) noexcept
-        : TicketBase(owner, value * amplification),
-          remainingUses_(amplification) {}
+      :
+#ifndef NDEBUG
+        owner_(owner),
+#endif
+        remainingUses_(amplification),
+        value_(value * amplification) {
+      (void)owner; // -Wunused-parameter
+    }
 
     uint64_t use(MPMCPipeline* owner) {
       CHECK_GT(remainingUses_--, 0);
-      TicketBase::check_owner(owner);
-      return TicketBase::value_++;
+#ifndef NDEBUG
+      CHECK(owner == owner_);
+#else
+      (void)owner; // -Wunused-parameter
+#endif
+      return value_++;
     }
   };
 
@@ -185,7 +185,7 @@ class MPMCPipeline {
    * Construct a pipeline with N+1 queue sizes.
    */
   template <class... Sizes>
-  explicit MPMCPipeline(Sizes... sizes) : stages_(sizes...) {}
+  explicit MPMCPipeline(Sizes... sizes) : stages_(sizes...) { }
 
   /**
    * Push an element into (the first stage of) the pipeline. Blocking.
@@ -241,15 +241,18 @@ class MPMCPipeline {
    */
   template <size_t Stage, class... Args>
   void blockingWriteStage(Ticket<Stage>& ticket, Args&&... args) {
-    std::get<Stage + 1>(stages_).blockingWriteWithTicket(
-        ticket.use(this), std::forward<Args>(args)...);
+    std::get<Stage+1>(stages_).blockingWriteWithTicket(
+        ticket.use(this),
+        std::forward<Args>(args)...);
   }
 
   /**
    * Pop an element from (the final stage of) the pipeline. Blocking.
    */
-  void blockingRead(typename std::tuple_element<sizeof...(Stages), StageTuple>::
-                        type::value_type& elem) {
+  void blockingRead(
+      typename std::tuple_element<
+          sizeof...(Stages),
+          StageTuple>::type::value_type& elem) {
     std::get<sizeof...(Stages)>(stages_).blockingRead(elem);
   }
 
@@ -257,8 +260,10 @@ class MPMCPipeline {
    * Try to pop an element from (the final stage of) the pipeline.
    * Non-blocking.
    */
-  bool read(typename std::tuple_element<sizeof...(Stages), StageTuple>::type::
-                value_type& elem) {
+  bool read(
+      typename std::tuple_element<
+          sizeof...(Stages),
+          StageTuple>::type::value_type& elem) {
     return std::get<sizeof...(Stages)>(stages_).read(elem);
   }
 
@@ -270,13 +275,13 @@ class MPMCPipeline {
    * in any queue) are also counted.
    */
   ssize_t sizeGuess() const noexcept {
-    return ssize_t(
-        std::get<0>(stages_).writeCount() * kAmplification -
-        std::get<sizeof...(Stages)>(stages_).readCount());
+    return (std::get<0>(stages_).writeCount() * kAmplification -
+            std::get<sizeof...(Stages)>(stages_).readCount());
   }
 
  private:
   StageTuple stages_;
 };
 
-} // namespace folly
+
+}  // namespaces

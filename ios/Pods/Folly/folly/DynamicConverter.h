@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,11 @@
 
 #pragma once
 
-#include <iterator>
-#include <type_traits>
-
-#include <boost/iterator/iterator_adaptor.hpp>
-#include <boost/mpl/has_xxx.hpp>
-
-#include <folly/Likely.h>
-#include <folly/Optional.h>
-#include <folly/Traits.h>
 #include <folly/dynamic.h>
-
 namespace folly {
-template <typename T>
-T convertTo(const dynamic&);
-template <typename T>
-dynamic toDynamic(const T&);
-} // namespace folly
+  template <typename T> T convertTo(const dynamic&);
+  template <typename T> dynamic toDynamic(const T&);
+}
 
 /**
  * convertTo returns a well-typed representation of the input dynamic.
@@ -49,6 +37,13 @@ dynamic toDynamic(const T&);
  * See docs/DynamicConverter.md for supported types and customization
  */
 
+
+#include <type_traits>
+#include <iterator>
+#include <boost/iterator/iterator_adaptor.hpp>
+#include <boost/mpl/has_xxx.hpp>
+#include <folly/Likely.h>
+
 namespace folly {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,35 +51,49 @@ namespace folly {
 
 namespace dynamicconverter_detail {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(iterator)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(mapped_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(key_type)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type);
+BOOST_MPL_HAS_XXX_TRAIT_DEF(iterator);
+BOOST_MPL_HAS_XXX_TRAIT_DEF(mapped_type);
 
-template <typename T>
-struct iterator_class_is_container {
+template <typename T> struct iterator_class_is_container {
   typedef std::reverse_iterator<typename T::iterator> some_iterator;
-  enum {
-    value = has_value_type<T>::value &&
-        std::is_constructible<T, some_iterator, some_iterator>::value
-  };
+  enum { value = has_value_type<T>::value &&
+              std::is_constructible<T, some_iterator, some_iterator>::value };
 };
 
 template <typename T>
-using class_is_container =
-    Conjunction<has_iterator<T>, iterator_class_is_container<T>>;
+using class_is_container = typename
+  std::conditional<
+    has_iterator<T>::value,
+    iterator_class_is_container<T>,
+    std::false_type
+  >::type;
 
-template <typename T>
-using is_range = StrictConjunction<has_value_type<T>, has_iterator<T>>;
+template <typename T> struct class_is_range {
+  enum { value = has_value_type<T>::value &&
+                 has_iterator<T>::value };
+};
 
-template <typename T>
-using is_container = StrictConjunction<std::is_class<T>, class_is_container<T>>;
 
-template <typename T>
-using is_map = StrictConjunction<is_range<T>, has_mapped_type<T>>;
+template <typename T> struct is_container
+  : std::conditional<
+      std::is_class<T>::value,
+      class_is_container<T>,
+      std::false_type
+    >::type {};
 
-template <typename T>
-using is_associative = StrictConjunction<is_range<T>, has_key_type<T>>;
+template <typename T> struct is_range
+  : std::conditional<
+      std::is_class<T>::value,
+      class_is_range<T>,
+      std::false_type
+    >::type {};
+
+template <typename T> struct is_map
+  : std::integral_constant<
+      bool,
+      is_range<T>::value && has_mapped_type<T>::value
+    > {};
 
 } // namespace dynamicconverter_detail
 
@@ -105,67 +114,70 @@ using is_associative = StrictConjunction<is_range<T>, has_key_type<T>>;
 
 namespace dynamicconverter_detail {
 
-template <typename T>
+template<typename T>
 struct Dereferencer {
   static inline void derefToCache(
-      Optional<T>* /* mem */,
-      const dynamic::const_item_iterator& /* it */) {
+      T* /* mem */, const dynamic::const_item_iterator& /* it */) {
     throw TypeError("array", dynamic::Type::OBJECT);
   }
 
-  static inline void derefToCache(
-      Optional<T>* mem,
-      const dynamic::const_iterator& it) {
-    mem->emplace(convertTo<T>(*it));
+  static inline void derefToCache(T* mem, const dynamic::const_iterator& it) {
+    new (mem) T(convertTo<T>(*it));
   }
 };
 
-template <typename F, typename S>
+template<typename F, typename S>
 struct Dereferencer<std::pair<F, S>> {
-  static inline void derefToCache(
-      Optional<std::pair<F, S>>* mem,
-      const dynamic::const_item_iterator& it) {
-    mem->emplace(convertTo<F>(it->first), convertTo<S>(it->second));
+  static inline void
+  derefToCache(std::pair<F, S>* mem, const dynamic::const_item_iterator& it) {
+    new (mem) std::pair<F, S>(
+        convertTo<F>(it->first), convertTo<S>(it->second)
+    );
   }
 
   // Intentional duplication of the code in Dereferencer
   template <typename T>
-  static inline void derefToCache(
-      Optional<T>* mem,
-      const dynamic::const_iterator& it) {
-    mem->emplace(convertTo<T>(*it));
+  static inline void derefToCache(T* mem, const dynamic::const_iterator& it) {
+    new (mem) T(convertTo<T>(*it));
   }
 };
 
 template <typename T, typename It>
-class Transformer
-    : public boost::
-          iterator_adaptor<Transformer<T, It>, It, typename T::value_type> {
+class Transformer : public boost::iterator_adaptor<
+                             Transformer<T, It>,
+                             It,
+                             typename T::value_type
+                           > {
   friend class boost::iterator_core_access;
 
   typedef typename T::value_type ttype;
 
-  mutable Optional<ttype> cache_;
+  mutable ttype cache_;
+  mutable bool valid_;
 
   void increment() {
     ++this->base_reference();
-    cache_ = none;
+    valid_ = false;
   }
 
   ttype& dereference() const {
-    if (!cache_) {
+    if (LIKELY(!valid_)) {
+      cache_.~ttype();
       Dereferencer<ttype>::derefToCache(&cache_, this->base_reference());
+      valid_ = true;
     }
-    return cache_.value();
+    return cache_;
   }
 
- public:
-  explicit Transformer(const It& it) : Transformer::iterator_adaptor_(it) {}
+public:
+  explicit Transformer(const It& it)
+    : Transformer::iterator_adaptor_(it), valid_(false) {}
 };
 
 // conversion factory
 template <typename T, typename It>
-inline std::move_iterator<Transformer<T, It>> conversionIterator(const It& it) {
+inline std::move_iterator<Transformer<T, It>>
+conversionIterator(const It& it) {
   return std::make_move_iterator(Transformer<T, It>(it));
 }
 
@@ -180,8 +192,7 @@ inline std::move_iterator<Transformer<T, It>> conversionIterator(const It& it) {
  */
 
 // default - intentionally unimplemented
-template <typename T, typename Enable = void>
-struct DynamicConverter;
+template <typename T, typename Enable = void> struct DynamicConverter;
 
 // boolean
 template <>
@@ -193,10 +204,9 @@ struct DynamicConverter<bool> {
 
 // integrals
 template <typename T>
-struct DynamicConverter<
-    T,
-    typename std::enable_if<
-        std::is_integral<T>::value && !std::is_same<T, bool>::value>::type> {
+struct DynamicConverter<T,
+    typename std::enable_if<std::is_integral<T>::value &&
+                            !std::is_same<T, bool>::value>::type> {
   static T convert(const dynamic& d) {
     return folly::to<T>(d.asInt());
   }
@@ -204,9 +214,8 @@ struct DynamicConverter<
 
 // enums
 template <typename T>
-struct DynamicConverter<
-    T,
-    typename std::enable_if<std::is_enum<T>::value>::type> {
+struct DynamicConverter<T,
+                        typename std::enable_if<std::is_enum<T>::value>::type> {
   static T convert(const dynamic& d) {
     using type = typename std::underlying_type<T>::type;
     return static_cast<T>(DynamicConverter<type>::convert(d));
@@ -215,8 +224,7 @@ struct DynamicConverter<
 
 // floating point
 template <typename T>
-struct DynamicConverter<
-    T,
+struct DynamicConverter<T,
     typename std::enable_if<std::is_floating_point<T>::value>::type> {
   static T convert(const dynamic& d) {
     return folly::to<T>(d.asDouble());
@@ -241,7 +249,7 @@ struct DynamicConverter<std::string> {
 
 // std::pair
 template <typename F, typename S>
-struct DynamicConverter<std::pair<F, S>> {
+struct DynamicConverter<std::pair<F,S>> {
   static std::pair<F, S> convert(const dynamic& d) {
     if (d.isArray() && d.size() == 2) {
       return std::make_pair(convertTo<F>(d[0]), convertTo<S>(d[1]));
@@ -254,50 +262,23 @@ struct DynamicConverter<std::pair<F, S>> {
   }
 };
 
-// non-associative containers
+// containers
 template <typename C>
-struct DynamicConverter<
-    C,
+struct DynamicConverter<C,
     typename std::enable_if<
-        dynamicconverter_detail::is_container<C>::value &&
-        !dynamicconverter_detail::is_associative<C>::value>::type> {
+      dynamicconverter_detail::is_container<C>::value>::type> {
   static C convert(const dynamic& d) {
     if (d.isArray()) {
-      return C(
-          dynamicconverter_detail::conversionIterator<C>(d.begin()),
-          dynamicconverter_detail::conversionIterator<C>(d.end()));
+      return C(dynamicconverter_detail::conversionIterator<C>(d.begin()),
+               dynamicconverter_detail::conversionIterator<C>(d.end()));
     } else if (d.isObject()) {
-      return C(
-          dynamicconverter_detail::conversionIterator<C>(d.items().begin()),
-          dynamicconverter_detail::conversionIterator<C>(d.items().end()));
+      return C(dynamicconverter_detail::conversionIterator<C>
+                 (d.items().begin()),
+               dynamicconverter_detail::conversionIterator<C>
+                 (d.items().end()));
     } else {
       throw TypeError("object or array", d.type());
     }
-  }
-};
-
-// associative containers
-template <typename C>
-struct DynamicConverter<
-    C,
-    typename std::enable_if<
-        dynamicconverter_detail::is_container<C>::value &&
-        dynamicconverter_detail::is_associative<C>::value>::type> {
-  static C convert(const dynamic& d) {
-    C ret; // avoid direct initialization due to unordered_map's constructor
-           // causing memory corruption if the iterator throws an exception
-    if (d.isArray()) {
-      ret.insert(
-          dynamicconverter_detail::conversionIterator<C>(d.begin()),
-          dynamicconverter_detail::conversionIterator<C>(d.end()));
-    } else if (d.isObject()) {
-      ret.insert(
-          dynamicconverter_detail::conversionIterator<C>(d.items().begin()),
-          dynamicconverter_detail::conversionIterator<C>(d.items().end()));
-    } else {
-      throw TypeError("object or array", d.type());
-    }
-    return ret;
   }
 };
 
@@ -317,26 +298,14 @@ struct DynamicConstructor {
   }
 };
 
-// identity
-template <typename C>
-struct DynamicConstructor<
-    C,
-    typename std::enable_if<std::is_same<C, dynamic>::value>::type> {
-  static dynamic construct(const C& x) {
-    return x;
-  }
-};
-
 // maps
-template <typename C>
-struct DynamicConstructor<
-    C,
+template<typename C>
+struct DynamicConstructor<C,
     typename std::enable_if<
-        !std::is_same<C, dynamic>::value &&
-        dynamicconverter_detail::is_map<C>::value>::type> {
+      dynamicconverter_detail::is_map<C>::value>::type> {
   static dynamic construct(const C& x) {
     dynamic d = dynamic::object;
-    for (const auto& pair : x) {
+    for (auto& pair : x) {
       d.insert(toDynamic(pair.first), toDynamic(pair.second));
     }
     return d;
@@ -344,17 +313,15 @@ struct DynamicConstructor<
 };
 
 // other ranges
-template <typename C>
-struct DynamicConstructor<
-    C,
+template<typename C>
+struct DynamicConstructor<C,
     typename std::enable_if<
-        !std::is_same<C, dynamic>::value &&
-        !dynamicconverter_detail::is_map<C>::value &&
-        !std::is_constructible<StringPiece, const C&>::value &&
-        dynamicconverter_detail::is_range<C>::value>::type> {
+      !dynamicconverter_detail::is_map<C>::value &&
+      !std::is_constructible<StringPiece, const C&>::value &&
+      dynamicconverter_detail::is_range<C>::value>::type> {
   static dynamic construct(const C& x) {
     dynamic d = dynamic::array;
-    for (const auto& item : x) {
+    for (auto& item : x) {
       d.push_back(toDynamic(item));
     }
     return d;
@@ -362,27 +329,12 @@ struct DynamicConstructor<
 };
 
 // pair
-template <typename A, typename B>
+template<typename A, typename B>
 struct DynamicConstructor<std::pair<A, B>, void> {
   static dynamic construct(const std::pair<A, B>& x) {
     dynamic d = dynamic::array;
     d.push_back(toDynamic(x.first));
     d.push_back(toDynamic(x.second));
-    return d;
-  }
-};
-
-// vector<bool>
-template <>
-struct DynamicConstructor<std::vector<bool>, void> {
-  static dynamic construct(const std::vector<bool>& x) {
-    dynamic d = dynamic::array;
-    // Intentionally specifying the type as bool here.
-    // std::vector<bool>'s iterators return a proxy which is a prvalue
-    // and hence cannot bind to an lvalue reference such as auto&
-    for (bool item : x) {
-      d.push_back(toDynamic(item));
-    }
     return d;
   }
 };
@@ -395,7 +347,7 @@ T convertTo(const dynamic& d) {
   return DynamicConverter<typename std::remove_cv<T>::type>::convert(d);
 }
 
-template <typename T>
+template<typename T>
 dynamic toDynamic(const T& x) {
   return DynamicConstructor<typename std::remove_cv<T>::type>::construct(x);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,15 +28,13 @@
 
 #include <limits>
 #include <stdexcept>
-
 #include <glog/logging.h>
-
 #include <folly/Likely.h>
 #include <folly/Portability.h>
 #include <folly/detail/DiscriminatedPtrDetail.h>
 
-#if !FOLLY_X64 && !FOLLY_AARCH64 && !FOLLY_PPC64
-#error "DiscriminatedPtr is x64, arm64 and ppc64 specific code."
+#if !FOLLY_X64 && !FOLLY_A64 && !FOLLY_PPC64
+# error "DiscriminatedPtr is x64, arm64 and ppc64 specific code."
 #endif
 
 namespace folly {
@@ -56,15 +54,15 @@ namespace folly {
 template <typename... Types>
 class DiscriminatedPtr {
   // <, not <=, as our indexes are 1-based (0 means "empty")
-  static_assert(
-      sizeof...(Types) < std::numeric_limits<uint16_t>::max(),
-      "too many types");
+  static_assert(sizeof...(Types) < std::numeric_limits<uint16_t>::max(),
+                "too many types");
 
  public:
   /**
    * Create an empty DiscriminatedPtr.
    */
-  DiscriminatedPtr() : data_(0) {}
+  DiscriminatedPtr() : data_(0) {
+  }
 
   /**
    * Create a DiscriminatedPtr that points to an object of type T.
@@ -173,22 +171,18 @@ class DiscriminatedPtr {
   template <typename V>
   typename dptr_detail::VisitorResult<V, Types...>::type apply(V&& visitor) {
     size_t n = index();
-    if (n == 0) {
-      throw std::invalid_argument("Empty DiscriminatedPtr");
-    }
+    if (n == 0) throw std::invalid_argument("Empty DiscriminatedPtr");
     return dptr_detail::ApplyVisitor<V, Types...>()(
-        n, std::forward<V>(visitor), ptr());
+      n, std::forward<V>(visitor), ptr());
   }
 
   template <typename V>
-  typename dptr_detail::ConstVisitorResult<V, Types...>::type apply(
-      V&& visitor) const {
+  typename dptr_detail::ConstVisitorResult<V, Types...>::type apply(V&& visitor)
+  const {
     size_t n = index();
-    if (n == 0) {
-      throw std::invalid_argument("Empty DiscriminatedPtr");
-    }
+    if (n == 0) throw std::invalid_argument("Empty DiscriminatedPtr");
     return dptr_detail::ApplyConstVisitor<V, Types...>()(
-        n, std::forward<V>(visitor), ptr());
+      n, std::forward<V>(visitor), ptr());
   }
 
  private:
@@ -196,13 +190,11 @@ class DiscriminatedPtr {
    * Get the 1-based type index of T in Types.
    */
   template <typename T>
-  uint16_t typeIndex() const {
-    return uint16_t(dptr_detail::GetTypeIndex<T, Types...>::value);
+  size_t typeIndex() const {
+    return dptr_detail::GetTypeIndex<T, Types...>::value;
   }
 
-  uint16_t index() const {
-    return data_ >> 48;
-  }
+  uint16_t index() const { return data_ >> 48; }
   void* ptr() const {
     return reinterpret_cast<void*>(data_ & ((1ULL << 48) - 1));
   }
@@ -223,25 +215,4 @@ class DiscriminatedPtr {
   uintptr_t data_;
 };
 
-template <typename Visitor, typename... Args>
-decltype(auto) apply_visitor(
-    Visitor&& visitor,
-    const DiscriminatedPtr<Args...>& variant) {
-  return variant.apply(std::forward<Visitor>(visitor));
-}
-
-template <typename Visitor, typename... Args>
-decltype(auto) apply_visitor(
-    Visitor&& visitor,
-    DiscriminatedPtr<Args...>& variant) {
-  return variant.apply(std::forward<Visitor>(visitor));
-}
-
-template <typename Visitor, typename... Args>
-decltype(auto) apply_visitor(
-    Visitor&& visitor,
-    DiscriminatedPtr<Args...>&& variant) {
-  return variant.apply(std::forward<Visitor>(visitor));
-}
-
-} // namespace folly
+}  // namespace folly

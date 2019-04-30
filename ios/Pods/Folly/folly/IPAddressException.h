@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,37 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #pragma once
 
 #include <exception>
 #include <string>
 #include <utility>
 
-#include <folly/CPortability.h>
 #include <folly/detail/IPAddress.h>
 
 namespace folly {
 
 /**
- * Error codes for non-throwing interface of IPAddress family of functions.
- */
-enum class IPAddressFormatError { INVALID_IP, UNSUPPORTED_ADDR_FAMILY };
-
-/**
- * Wraps error from parsing IP/MASK string
- */
-enum class CIDRNetworkError {
-  INVALID_DEFAULT_CIDR,
-  INVALID_IP_SLASH_CIDR,
-  INVALID_IP,
-  INVALID_CIDR,
-  CIDR_MISMATCH,
-};
-
-/**
  * Exception for invalid IP addresses.
  */
-class FOLLY_EXPORT IPAddressFormatException : public std::exception {
+class IPAddressFormatException : public std::exception {
  public:
   explicit IPAddressFormatException(std::string msg) noexcept
       : msg_(std::move(msg)) {}
@@ -53,8 +37,8 @@ class FOLLY_EXPORT IPAddressFormatException : public std::exception {
       default;
   IPAddressFormatException& operator=(IPAddressFormatException&&) = default;
 
-  ~IPAddressFormatException() noexcept override {}
-  const char* what() const noexcept override {
+  virtual ~IPAddressFormatException() noexcept {}
+  virtual const char *what(void) const noexcept {
     return msg_.c_str();
   }
 
@@ -62,8 +46,7 @@ class FOLLY_EXPORT IPAddressFormatException : public std::exception {
   std::string msg_;
 };
 
-class FOLLY_EXPORT InvalidAddressFamilyException
-    : public IPAddressFormatException {
+class InvalidAddressFamilyException : public IPAddressFormatException {
  public:
   explicit InvalidAddressFamilyException(std::string msg) noexcept
       : IPAddressFormatException(std::move(msg)) {}
@@ -79,4 +62,4 @@ class FOLLY_EXPORT InvalidAddressFamilyException
       default;
 };
 
-} // namespace folly
+}  // folly

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 
 #pragma once
 
-#include <cassert>
-#include <type_traits>
 #include <utility>
-
-#include <folly/Traits.h>
+#include <glog/logging.h>
+#include <folly/Likely.h>
+#include <folly/Portability.h>
 
 namespace folly {
 
@@ -59,61 +58,12 @@ namespace folly {
 
 template <typename T>
 class Indestructible final {
+
  public:
-  template <typename S = T, typename = decltype(S())>
-  constexpr Indestructible() noexcept(noexcept(T())) {}
-
-  /**
-   * Constructor accepting a single argument by forwarding reference, this
-   * allows using list initialzation without the overhead of things like
-   * in_place, etc and also works with std::initializer_list constructors
-   * which can't be deduced, the default parameter helps there.
-   *
-   *    auto i = folly::Indestructible<std::map<int, int>>{{{1, 2}}};
-   *
-   * This provides convenience
-   *
-   * There are two versions of this constructor - one for when the element is
-   * implicitly constructible from the given argument and one for when the
-   * type is explicitly but not implicitly constructible from the given
-   * argument.
-   */
-  template <
-      typename U = T,
-      _t<std::enable_if<std::is_constructible<T, U&&>::value>>* = nullptr,
-      _t<std::enable_if<
-          !std::is_same<Indestructible<T>, remove_cvref_t<U>>::value>>* =
-          nullptr,
-      _t<std::enable_if<!std::is_convertible<U&&, T>::value>>* = nullptr>
-  explicit constexpr Indestructible(U&& u) noexcept(
-      noexcept(T(std::declval<U>())))
-      : storage_(std::forward<U>(u)) {}
-  template <
-      typename U = T,
-      _t<std::enable_if<std::is_constructible<T, U&&>::value>>* = nullptr,
-      _t<std::enable_if<
-          !std::is_same<Indestructible<T>, remove_cvref_t<U>>::value>>* =
-          nullptr,
-      _t<std::enable_if<std::is_convertible<U&&, T>::value>>* = nullptr>
-  /* implicit */ constexpr Indestructible(U&& u) noexcept(
-      noexcept(T(std::declval<U>())))
-      : storage_(std::forward<U>(u)) {}
-
-  template <typename... Args, typename = decltype(T(std::declval<Args>()...))>
+  template <typename... Args>
   explicit constexpr Indestructible(Args&&... args) noexcept(
-      noexcept(T(std::declval<Args>()...)))
-      : storage_(std::forward<Args>(args)...) {}
-  template <
-      typename U,
-      typename... Args,
-      typename = decltype(
-          T(std::declval<std::initializer_list<U>&>(),
-            std::declval<Args>()...))>
-  explicit constexpr Indestructible(std::initializer_list<U> il, Args... args) noexcept(
-      noexcept(
-          T(std::declval<std::initializer_list<U>&>(),
-            std::declval<Args>()...)))
-      : storage_(il, std::forward<Args>(args)...) {}
+      std::is_nothrow_constructible<T, Args&&...>::value)
+      : storage_(std::forward<Args>(args)...), inited_(true) {}
 
   ~Indestructible() = default;
 
@@ -121,57 +71,51 @@ class Indestructible final {
   Indestructible& operator=(Indestructible const&) = delete;
 
   Indestructible(Indestructible&& other) noexcept(
-      noexcept(T(std::declval<T>())))
+      std::is_nothrow_move_constructible<T>::value)
       : storage_(std::move(other.storage_.value)) {
-    other.erased_ = true;
+    other.inited_ = false;
   }
   Indestructible& operator=(Indestructible&& other) noexcept(
-      noexcept(T(std::declval<T>()))) {
+      std::is_nothrow_move_assignable<T>::value) {
     storage_.value = std::move(other.storage_.value);
-    other.erased_ = true;
+    other.inited_ = false;
   }
 
-  T* get() noexcept {
+  T* get() {
     check();
     return &storage_.value;
   }
-  T const* get() const noexcept {
+  T const* get() const {
     check();
     return &storage_.value;
   }
-  T& operator*() noexcept {
-    return *get();
-  }
-  T const& operator*() const noexcept {
-    return *get();
-  }
-  T* operator->() noexcept {
-    return get();
-  }
-  T const* operator->() const noexcept {
-    return get();
-  }
+  T& operator*() { return *get(); }
+  T const& operator*() const { return *get(); }
+  T* operator->() { return get(); }
+  T const* operator->() const { return get(); }
 
  private:
-  void check() const noexcept {
-    assert(!erased_);
+  void check() const {
+    if (UNLIKELY(!inited_)) {
+      fail();
+    }
+  }
+
+  [[noreturn]] FOLLY_NOINLINE static void fail() {
+    LOG(FATAL) << "Indestructible is not initialized";
   }
 
   union Storage {
     T value;
 
-    template <typename S = T, typename = decltype(S())>
-    constexpr Storage() noexcept(noexcept(T())) : value() {}
-
-    template <typename... Args, typename = decltype(T(std::declval<Args>()...))>
-    explicit constexpr Storage(Args&&... args) noexcept(
-        noexcept(T(std::declval<Args>()...)))
+    template <typename... Args>
+    explicit constexpr Storage(Args&&... args)
         : value(std::forward<Args>(args)...) {}
 
     ~Storage() {}
   };
 
-  Storage storage_{};
-  bool erased_{false};
+  Storage storage_;
+  bool inited_{false};
 };
-} // namespace folly
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@
 
 #pragma once
 
-#include <type_traits>
 #include <utility>
-
-#include <folly/functional/Invoke.h>
+#include <type_traits>
 
 namespace folly {
 namespace dptr_detail {
@@ -32,8 +30,7 @@ namespace dptr_detail {
  * GetIndex<int, void, char, int>::value == 3
  * GetIndex<int, void, char>::value -> fails to compile
  */
-template <typename... Types>
-struct GetTypeIndex;
+template <typename... Types> struct GetTypeIndex;
 
 // When recursing, we never reach the 0- or 1- template argument base case
 // unless the target type is not in the list.  If the target type is in the
@@ -66,7 +63,7 @@ struct IsSameType<T> {
 template <typename T, typename U, typename... Types>
 struct IsSameType<T, U, Types...> {
   static const bool value =
-      std::is_same<T, U>::value && IsSameType<U, Types...>::value;
+    std::is_same<T,U>::value && IsSameType<U, Types...>::value;
 };
 
 // Define type as the type of all T in (non-empty) Types..., asserting that
@@ -77,23 +74,22 @@ struct SameType;
 template <typename T, typename... Types>
 struct SameType<T, Types...> {
   typedef T type;
-  static_assert(
-      IsSameType<T, Types...>::value,
-      "Not all types in pack are the same");
+  static_assert(IsSameType<T, Types...>::value,
+                "Not all types in pack are the same");
 };
 
 // Determine the result type of applying a visitor of type V on a pointer
 // to type T.
 template <typename V, typename T>
 struct VisitorResult1 {
-  typedef invoke_result_t<V, T*> type;
+  typedef typename std::result_of<V (T*)>::type type;
 };
 
 // Determine the result type of applying a visitor of type V on a const pointer
 // to type T.
 template <typename V, typename T>
 struct ConstVisitorResult1 {
-  typedef invoke_result_t<V, const T*> type;
+  typedef typename std::result_of<V (const T*)>::type type;
 };
 
 // Determine the result type of applying a visitor of type V on pointers of
@@ -101,8 +97,8 @@ struct ConstVisitorResult1 {
 // in Types...
 template <typename V, typename... Types>
 struct VisitorResult {
-  typedef
-      typename SameType<typename VisitorResult1<V, Types>::type...>::type type;
+  typedef typename SameType<
+    typename VisitorResult1<V,Types>::type...>::type type;
 };
 
 // Determine the result type of applying a visitor of type V on const pointers
@@ -110,9 +106,8 @@ struct VisitorResult {
 // in Types...
 template <typename V, typename... Types>
 struct ConstVisitorResult {
-  typedef
-      typename SameType<typename ConstVisitorResult1<V, Types>::type...>::type
-          type;
+  typedef typename SameType<
+    typename ConstVisitorResult1<V,Types>::type...>::type type;
 };
 
 template <size_t index, typename V, typename R, typename... Types>
@@ -169,5 +164,5 @@ using ApplyConstVisitor = ApplyConstVisitor1<
     typename ConstVisitorResult<V, Types...>::type,
     Types...>;
 
-} // namespace dptr_detail
-} // namespace folly
+}  // namespace dptr_detail
+}  // namespace folly

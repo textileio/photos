@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,9 @@
 #include <functional>
 #include <iosfwd>
 
-#include <folly/Expected.h>
-#include <folly/FBString.h>
-#include <folly/IPAddressException.h>
+#include <folly/Hash.h>
 #include <folly/Range.h>
 #include <folly/detail/IPAddress.h>
-#include <folly/hash/Hash.h>
 
 namespace folly {
 
@@ -57,12 +54,8 @@ typedef std::array<uint8_t, 4> ByteArray4;
  */
 class IPAddressV4 {
  public:
-  // Max size of std::string returned by toFullyQualified.
-  static constexpr size_t kMaxToFullyQualifiedSize =
-      4 /*words*/ * 3 /*max chars per word*/ + 3 /*separators*/;
-
   // returns true iff the input string can be parsed as an ipv4-address
-  static bool validate(StringPiece ip) noexcept;
+  static bool validate(StringPiece ip);
 
   // create an IPAddressV4 instance from a uint32_t (network byte order)
   static IPAddressV4 fromLong(uint32_t src);
@@ -73,35 +66,18 @@ class IPAddressV4 {
    * Create a new IPAddress instance from the provided binary data.
    * @throws IPAddressFormatException if the input length is not 4 bytes.
    */
-  static IPAddressV4 fromBinary(ByteRange bytes);
-
-  /**
-   * Non-throwing version of fromBinary().
-   * On failure returns IPAddressFormatError.
-   */
-  static Expected<IPAddressV4, IPAddressFormatError> tryFromBinary(
-      ByteRange bytes) noexcept;
-
-  /**
-   * Tries to create a new IPAddressV4 instance from provided string and
-   * returns it on success. Returns IPAddressFormatError on failure.
-   */
-  static Expected<IPAddressV4, IPAddressFormatError> tryFromString(
-      StringPiece str) noexcept;
+  static IPAddressV4 fromBinary(ByteRange bytes) {
+    IPAddressV4 addr;
+    addr.setFromBinary(bytes);
+    return addr;
+  }
 
   /**
    * Returns the address as a Range.
    */
   ByteRange toBinary() const {
-    return ByteRange((const unsigned char*)&addr_.inAddr_.s_addr, 4);
+    return ByteRange((const unsigned char *) &addr_.inAddr_.s_addr, 4);
   }
-
-  /**
-   * Create a new IPAddress instance from the in-addr.arpa representation.
-   * @throws IPAddressFormatException if the input is not a valid in-addr.arpa
-   * representation
-   */
-  static IPAddressV4 fromInverseArpaName(const std::string& arpaname);
 
   /**
    * Convert a IPv4 address string to a long in network byte order.
@@ -125,10 +101,10 @@ class IPAddressV4 {
   explicit IPAddressV4(StringPiece ip);
 
   // ByteArray4 constructor
-  explicit IPAddressV4(const ByteArray4& src) noexcept;
+  explicit IPAddressV4(const ByteArray4& src);
 
   // in_addr constructor
-  explicit IPAddressV4(const in_addr src) noexcept;
+  explicit IPAddressV4(const in_addr src);
 
   // Return the V6 mapped representation of the address.
   IPAddressV6 createIPv6() const;
@@ -153,9 +129,7 @@ class IPAddressV4 {
    * @see IPAddress#bitCount
    * @returns 32
    */
-  static constexpr size_t bitCount() {
-    return 32;
-  }
+  static size_t bitCount() { return 32; }
 
   /**
    * @See IPAddress#toJson
@@ -209,12 +183,8 @@ class IPAddressV4 {
   // @see IPAddress#str
   std::string str() const;
 
-  std::string toInverseArpaName() const;
-
   // return underlying in_addr structure
-  in_addr toAddr() const {
-    return addr_.inAddr_;
-  }
+  in_addr toAddr() const { return addr_.inAddr_; }
 
   sockaddr_in toSockAddr() const {
     sockaddr_in addr;
@@ -231,17 +201,10 @@ class IPAddressV4 {
   }
 
   // @see IPAddress#toFullyQualified
-  std::string toFullyQualified() const {
-    return str();
-  }
-
-  // @see IPAddress#toFullyQualifiedAppend
-  void toFullyQualifiedAppend(std::string& out) const;
+  std::string toFullyQualified() const { return str(); }
 
   // @see IPAddress#version
-  uint8_t version() const {
-    return 4;
-  }
+  size_t version() const { return 4; }
 
   /**
    * Return the mask associated with the given number of bits.
@@ -259,48 +222,44 @@ class IPAddressV4 {
       const CIDRNetworkV4& one,
       const CIDRNetworkV4& two);
   // Number of bytes in the address representation.
-  static size_t byteCount() {
-    return 4;
-  }
-  // get nth most significant bit - 0 indexed
+  static size_t byteCount() { return 4; }
+  //get nth most significant bit - 0 indexed
   bool getNthMSBit(size_t bitIndex) const {
     return detail::getNthMSBitImpl(*this, bitIndex, AF_INET);
   }
-  // get nth most significant byte - 0 indexed
+  //get nth most significant byte - 0 indexed
   uint8_t getNthMSByte(size_t byteIndex) const;
-  // get nth bit - 0 indexed
+  //get nth bit - 0 indexed
   bool getNthLSBit(size_t bitIndex) const {
     return getNthMSBit(bitCount() - bitIndex - 1);
   }
-  // get nth byte - 0 indexed
+  //get nth byte - 0 indexed
   uint8_t getNthLSByte(size_t byteIndex) const {
     return getNthMSByte(byteCount() - byteIndex - 1);
   }
 
-  const unsigned char* bytes() const {
-    return addr_.bytes_.data();
-  }
+  const unsigned char* bytes() const { return addr_.bytes_.data(); }
 
  private:
   union AddressStorage {
-    static_assert(
-        sizeof(in_addr) == sizeof(ByteArray4),
-        "size of in_addr and ByteArray4 are different");
+    static_assert(sizeof(in_addr) == sizeof(ByteArray4),
+                  "size of in_addr and ByteArray4 are different");
     in_addr inAddr_;
     ByteArray4 bytes_;
     AddressStorage() {
       std::memset(this, 0, sizeof(AddressStorage));
     }
-    explicit AddressStorage(const ByteArray4 bytes) : bytes_(bytes) {}
-    explicit AddressStorage(const in_addr addr) : inAddr_(addr) {}
+    explicit AddressStorage(const ByteArray4 bytes): bytes_(bytes) {}
+    explicit AddressStorage(const in_addr addr): inAddr_(addr) {}
   } addr_;
+
+  static const std::array<ByteArray4, 33> masks_;
 
   /**
    * Set the current IPAddressV4 object to have the address specified by bytes.
-   * Returns IPAddressFormatError if bytes.size() is not 4.
+   * @throws IPAddressFormatException if bytes.size() is not 4.
    */
-  Expected<Unit, IPAddressFormatError> trySetFromBinary(
-      ByteRange bytes) noexcept;
+  void setFromBinary(ByteRange bytes);
 };
 
 // boost::hash uses hash_value() so this allows boost::hash to work
@@ -335,13 +294,13 @@ inline bool operator>=(const IPAddressV4& a, const IPAddressV4& b) {
   return !(a < b);
 }
 
-} // namespace folly
+}  // folly
 
 namespace std {
-template <>
+template<>
 struct hash<folly::IPAddressV4> {
   size_t operator()(const folly::IPAddressV4 addr) const {
     return addr.hash();
   }
 };
-} // namespace std
+}  // std

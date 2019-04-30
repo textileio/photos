@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@
 #include <cstdint>
 
 #include <folly/portability/SysTime.h>
-
-#define PRIO_PROCESS 1
 
 #define RLIMIT_CORE 0
 #define RLIMIT_NOFILE 0
@@ -64,8 +62,5 @@ extern "C" {
 int getrlimit(int type, rlimit* dst);
 int getrusage(int who, rusage* usage);
 int setrlimit(int type, rlimit* src);
-
-int getpriority(int which, int who);
-int setpriority(int which, int who, int value);
 }
 #endif

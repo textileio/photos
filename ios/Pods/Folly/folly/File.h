@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,7 @@
 #include <sys/types.h>
 
 #include <string>
-#include <system_error>
 
-#include <folly/ExceptionWrapper.h>
-#include <folly/Expected.h>
 #include <folly/Portability.h>
 #include <folly/Range.h>
 #include <folly/portability/Unistd.h>
@@ -39,38 +36,21 @@ class File {
   /**
    * Creates an empty File object, for late initialization.
    */
-  File() noexcept;
+  File();
 
   /**
    * Create a File object from an existing file descriptor.
    * Takes ownership of the file descriptor if ownsFd is true.
    */
-  explicit File(int fd, bool ownsFd = false) noexcept;
+  explicit File(int fd, bool ownsFd = false);
 
   /**
    * Open and create a file object.  Throws on error.
-   * Owns the file descriptor implicitly.
    */
   explicit File(const char* name, int flags = O_RDONLY, mode_t mode = 0666);
   explicit File(
-      const std::string& name,
-      int flags = O_RDONLY,
-      mode_t mode = 0666);
+      const std::string& name, int flags = O_RDONLY, mode_t mode = 0666);
   explicit File(StringPiece name, int flags = O_RDONLY, mode_t mode = 0666);
-
-  /**
-   * All the constructors that are not noexcept can throw std::system_error.
-   * This is a helper method to use folly::Expected to chain a file open event
-   * to something else you want to do with the open fd.
-   */
-  template <typename... Args>
-  static Expected<File, exception_wrapper> makeFile(Args&&... args) noexcept {
-    try {
-      return File(std::forward<Args>(args)...);
-    } catch (const std::system_error& se) {
-      return makeUnexpected(exception_wrapper(std::current_exception(), se));
-    }
-  }
 
   ~File();
 
@@ -82,9 +62,7 @@ class File {
   /**
    * Return the file descriptor, or -1 if the file was closed.
    */
-  int fd() const {
-    return fd_;
-  }
+  int fd() const { return fd_; }
 
   /**
    * Returns 'true' iff the file was successfully opened.
@@ -119,7 +97,7 @@ class File {
   /**
    * Swap this File with another.
    */
-  void swap(File& other) noexcept;
+  void swap(File& other);
 
   // movable
   File(File&&) noexcept;
@@ -153,6 +131,7 @@ class File {
   bool ownsFd_;
 };
 
-void swap(File& a, File& b) noexcept;
+void swap(File& a, File& b);
 
-} // namespace folly
+
+}  // namespace folly

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,21 @@
 #include <chrono>
 
 #include <folly/Likely.h>
-#include <folly/concurrency/CacheLocality.h>
+#include <folly/detail/CacheLocality.h>
 
 namespace folly {
+
+/**
+ * Default clock class used by ParameterizedDynamicTokenBucket and derived
+ * classes. User-defined clock classes must be steady (monotonic) and define a
+ * static function std::chrono::duration<> timeSinceEpoch().
+ */
+struct DefaultTokenBucketClock {
+  static auto timeSinceEpoch() noexcept
+      -> decltype(std::chrono::steady_clock::now().time_since_epoch()) {
+    return std::chrono::steady_clock::now().time_since_epoch();
+  }
+};
 
 /**
  * Thread-safe (atomic) token bucket implementation.
@@ -42,12 +54,10 @@ namespace folly {
  * The "dynamic" base variant allows the token generation rate and maximum
  * burst size to change with every token consumption.
  *
- * @tparam Clock Clock type, must be steady i.e. monotonic.
+ * @tparam ClockT Clock type, must be steady i.e. monotonic.
  */
-template <typename Clock = std::chrono::steady_clock>
-class BasicDynamicTokenBucket {
-  static_assert(Clock::is_steady, "clock must be steady");
-
+template <typename ClockT = DefaultTokenBucketClock>
+class ParameterizedDynamicTokenBucket {
  public:
   /**
    * Constructor.
@@ -56,7 +66,7 @@ class BasicDynamicTokenBucket {
    *                 starting to fill. Defaults to 0, so by default token
    *                 buckets are "full" after construction.
    */
-  explicit BasicDynamicTokenBucket(double zeroTime = 0) noexcept
+  explicit ParameterizedDynamicTokenBucket(double zeroTime = 0) noexcept
       : zeroTime_(zeroTime) {}
 
   /**
@@ -65,7 +75,8 @@ class BasicDynamicTokenBucket {
    * Thread-safe. (Copy constructors of derived classes may not be thread-safe
    * however.)
    */
-  BasicDynamicTokenBucket(const BasicDynamicTokenBucket& other) noexcept
+  ParameterizedDynamicTokenBucket(
+      const ParameterizedDynamicTokenBucket& other) noexcept
       : zeroTime_(other.zeroTime_.load()) {}
 
   /**
@@ -74,8 +85,8 @@ class BasicDynamicTokenBucket {
    * Warning: not thread safe for the object being assigned to (including
    * self-assignment). Thread-safe for the other object.
    */
-  BasicDynamicTokenBucket& operator=(
-      const BasicDynamicTokenBucket& other) noexcept {
+  ParameterizedDynamicTokenBucket& operator=(
+      const ParameterizedDynamicTokenBucket& other) noexcept {
     zeroTime_ = other.zeroTime_.load();
     return *this;
   }
@@ -91,15 +102,6 @@ class BasicDynamicTokenBucket {
    */
   void reset(double zeroTime = 0) noexcept {
     zeroTime_ = zeroTime;
-  }
-
-  /**
-   * Returns the current time in seconds since Epoch.
-   */
-  static double defaultClockNow() noexcept {
-    using dur = std::chrono::duration<double>;
-    auto const now = Clock::now().time_since_epoch();
-    return std::chrono::duration_cast<dur>(now).count();
   }
 
   /**
@@ -126,7 +128,7 @@ class BasicDynamicTokenBucket {
     assert(rate > 0);
     assert(burstSize > 0);
 
-    return consumeImpl(
+    return this->consumeImpl(
         rate, burstSize, nowInSeconds, [toConsume](double& tokens) {
           if (tokens < toConsume) {
             return false;
@@ -160,7 +162,7 @@ class BasicDynamicTokenBucket {
     assert(burstSize > 0);
 
     double consumed;
-    consumeImpl(
+    this->consumeImpl(
         rate, burstSize, nowInSeconds, [&consumed, toConsume](double& tokens) {
           if (tokens < toConsume) {
             consumed = tokens;
@@ -189,6 +191,15 @@ class BasicDynamicTokenBucket {
     return std::min((nowInSeconds - this->zeroTime_) * rate, burstSize);
   }
 
+  /**
+   * Returns the current time in seconds since Epoch.
+   */
+  static double defaultClockNow() noexcept(noexcept(ClockT::timeSinceEpoch())) {
+    return std::chrono::duration_cast<std::chrono::duration<double>>(
+               ClockT::timeSinceEpoch())
+        .count();
+  }
+
  private:
   template <typename TCallback>
   bool consumeImpl(
@@ -210,19 +221,17 @@ class BasicDynamicTokenBucket {
     return true;
   }
 
-  alignas(hardware_destructive_interference_size) std::atomic<double> zeroTime_;
+  FOLLY_ALIGN_TO_AVOID_FALSE_SHARING std::atomic<double> zeroTime_;
 };
 
 /**
- * Specialization of BasicDynamicTokenBucket with a fixed token
+ * Specialization of ParameterizedDynamicTokenBucket with a fixed token
  * generation rate and a fixed maximum burst size.
  */
-template <typename Clock = std::chrono::steady_clock>
-class BasicTokenBucket {
-  static_assert(Clock::is_steady, "clock must be steady");
-
+template <typename ClockT = DefaultTokenBucketClock>
+class ParameterizedTokenBucket {
  private:
-  using Impl = BasicDynamicTokenBucket<Clock>;
+  using Impl = ParameterizedDynamicTokenBucket<ClockT>;
 
  public:
   /**
@@ -234,7 +243,7 @@ class BasicTokenBucket {
    *                 starting to fill. Defaults to 0, so by default token
    *                 bucket is "full" after construction.
    */
-  BasicTokenBucket(
+  ParameterizedTokenBucket(
       double genRate,
       double burstSize,
       double zeroTime = 0) noexcept
@@ -248,21 +257,16 @@ class BasicTokenBucket {
    *
    * Warning: not thread safe!
    */
-  BasicTokenBucket(const BasicTokenBucket& other) noexcept = default;
+  ParameterizedTokenBucket(const ParameterizedTokenBucket& other) noexcept =
+      default;
 
   /**
    * Copy-assignment operator.
    *
    * Warning: not thread safe!
    */
-  BasicTokenBucket& operator=(const BasicTokenBucket& other) noexcept = default;
-
-  /**
-   * Returns the current time in seconds since Epoch.
-   */
-  static double defaultClockNow() noexcept(noexcept(Impl::defaultClockNow())) {
-    return Impl::defaultClockNow();
-  }
+  ParameterizedTokenBucket& operator=(
+      const ParameterizedTokenBucket& other) noexcept = default;
 
   /**
    * Change rate and burst size.
@@ -281,7 +285,7 @@ class BasicTokenBucket {
       double nowInSeconds = defaultClockNow()) noexcept {
     assert(genRate > 0);
     assert(burstSize > 0);
-    const double availTokens = available(nowInSeconds);
+    double availTokens = available(nowInSeconds);
     rate_ = genRate;
     burstSize_ = burstSize;
     setCapacity(availTokens, nowInSeconds);
@@ -366,13 +370,19 @@ class BasicTokenBucket {
     return burstSize_;
   }
 
+  /**
+   * Returns the current time in seconds since Epoch.
+   */
+  static double defaultClockNow() noexcept(noexcept(Impl::defaultClockNow())) {
+    return Impl::defaultClockNow();
+  }
+
  private:
   Impl tokenBucket_;
   double rate_;
   double burstSize_;
 };
 
-using TokenBucket = BasicTokenBucket<>;
-using DynamicTokenBucket = BasicDynamicTokenBucket<>;
-
-} // namespace folly
+using TokenBucket = ParameterizedTokenBucket<>;
+using DynamicTokenBucket = ParameterizedDynamicTokenBucket<>;
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /*
  * AtomicHashMap --
  *
@@ -85,16 +86,15 @@
 #include <boost/noncopyable.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
-#include <atomic>
-#include <functional>
 #include <stdexcept>
+#include <functional>
+#include <atomic>
 
 #include <folly/AtomicHashArray.h>
-#include <folly/CPortability.h>
+#include <folly/Foreach.h>
+#include <folly/Hash.h>
 #include <folly/Likely.h>
 #include <folly/ThreadCachedInt.h>
-#include <folly/container/Foreach.h>
-#include <folly/hash/Hash.h>
 
 namespace folly {
 
@@ -149,57 +149,47 @@ namespace folly {
 
 // Thrown when insertion fails due to running out of space for
 // submaps.
-struct FOLLY_EXPORT AtomicHashMapFullError : std::runtime_error {
+struct AtomicHashMapFullError : std::runtime_error {
   explicit AtomicHashMapFullError()
-      : std::runtime_error("AtomicHashMap is full") {}
+    : std::runtime_error("AtomicHashMap is full")
+  {}
 };
 
-template <
-    class KeyT,
-    class ValueT,
-    class HashFcn,
-    class EqualFcn,
-    class Allocator,
-    class ProbeFcn,
-    class KeyConvertFcn>
+template<class KeyT, class ValueT, class HashFcn, class EqualFcn,
+         class Allocator, class ProbeFcn, class KeyConvertFcn>
 class AtomicHashMap : boost::noncopyable {
-  typedef AtomicHashArray<
-      KeyT,
-      ValueT,
-      HashFcn,
-      EqualFcn,
-      Allocator,
-      ProbeFcn,
-      KeyConvertFcn>
-      SubMap;
+typedef AtomicHashArray<KeyT, ValueT, HashFcn, EqualFcn,
+                        Allocator, ProbeFcn, KeyConvertFcn>
+    SubMap;
 
  public:
-  typedef KeyT key_type;
-  typedef ValueT mapped_type;
+  typedef KeyT                key_type;
+  typedef ValueT              mapped_type;
   typedef std::pair<const KeyT, ValueT> value_type;
-  typedef HashFcn hasher;
-  typedef EqualFcn key_equal;
-  typedef KeyConvertFcn key_convert;
-  typedef value_type* pointer;
-  typedef value_type& reference;
-  typedef const value_type& const_reference;
-  typedef std::ptrdiff_t difference_type;
-  typedef std::size_t size_type;
+  typedef HashFcn             hasher;
+  typedef EqualFcn            key_equal;
+  typedef KeyConvertFcn       key_convert;
+  typedef value_type*         pointer;
+  typedef value_type&         reference;
+  typedef const value_type&   const_reference;
+  typedef std::ptrdiff_t      difference_type;
+  typedef std::size_t         size_type;
   typedef typename SubMap::Config Config;
 
-  template <class ContT, class IterVal, class SubIt>
+  template<class ContT, class IterVal, class SubIt>
   struct ahm_iterator;
 
-  typedef ahm_iterator<
-      const AtomicHashMap,
-      const value_type,
-      typename SubMap::const_iterator>
-      const_iterator;
-  typedef ahm_iterator<AtomicHashMap, value_type, typename SubMap::iterator>
-      iterator;
+  typedef ahm_iterator<const AtomicHashMap,
+                       const value_type,
+                       typename SubMap::const_iterator>
+    const_iterator;
+  typedef ahm_iterator<AtomicHashMap,
+                       value_type,
+                       typename SubMap::iterator>
+    iterator;
 
  public:
-  const float kGrowthFrac_; // How much to grow when we run out of capacity.
+  const float kGrowthFrac_;  // How much to grow when we run out of capacity.
 
   // The constructor takes a finalSizeEst which is the optimal
   // number of elements to maximize space utilization and performance,
@@ -207,8 +197,7 @@ class AtomicHashMap : boost::noncopyable {
   explicit AtomicHashMap(size_t finalSizeEst, const Config& c = Config());
 
   ~AtomicHashMap() {
-    const unsigned int numMaps =
-        numMapsAllocated_.load(std::memory_order_relaxed);
+    const int numMaps = numMapsAllocated_.load(std::memory_order_relaxed);
     FOR_EACH_RANGE (i, 0, numMaps) {
       SubMap* thisMap = subMaps_[i].load(std::memory_order_relaxed);
       DCHECK(thisMap);
@@ -216,12 +205,8 @@ class AtomicHashMap : boost::noncopyable {
     }
   }
 
-  key_equal key_eq() const {
-    return key_equal();
-  }
-  hasher hash_function() const {
-    return hasher();
-  }
+  key_equal key_eq() const { return key_equal(); }
+  hasher hash_function() const { return hasher(); }
 
   /*
    * insert --
@@ -238,16 +223,16 @@ class AtomicHashMap : boost::noncopyable {
    *   all sub maps are full, no element is inserted, and
    *   AtomicHashMapFullError is thrown.
    */
-  std::pair<iterator, bool> insert(const value_type& r) {
+  std::pair<iterator,bool> insert(const value_type& r) {
     return emplace(r.first, r.second);
   }
-  std::pair<iterator, bool> insert(key_type k, const mapped_type& v) {
+  std::pair<iterator,bool> insert(key_type k, const mapped_type& v) {
     return emplace(k, v);
   }
-  std::pair<iterator, bool> insert(value_type&& r) {
+  std::pair<iterator,bool> insert(value_type&& r) {
     return emplace(r.first, std::move(r.second));
   }
-  std::pair<iterator, bool> insert(key_type k, mapped_type&& v) {
+  std::pair<iterator,bool> insert(key_type k, mapped_type&& v) {
     return emplace(k, std::move(v));
   }
 
@@ -262,13 +247,12 @@ class AtomicHashMap : boost::noncopyable {
    *   equal key is already present, this method converts 'key_in' to a key of
    *   type KeyT using the provided LookupKeyToKeyFcn.
    */
-  template <
-      typename LookupKeyT = key_type,
-      typename LookupHashFcn = hasher,
-      typename LookupEqualFcn = key_equal,
-      typename LookupKeyToKeyFcn = key_convert,
-      typename... ArgTs>
-  std::pair<iterator, bool> emplace(LookupKeyT k, ArgTs&&... vCtorArg);
+  template <typename LookupKeyT = key_type,
+            typename LookupHashFcn = hasher,
+            typename LookupEqualFcn = key_equal,
+            typename LookupKeyToKeyFcn = key_convert,
+            typename... ArgTs>
+  std::pair<iterator,bool> emplace(LookupKeyT k, ArgTs&&... vCtorArg);
 
   /*
    * find --
@@ -286,16 +270,14 @@ class AtomicHashMap : boost::noncopyable {
    *
    *   See folly/test/ArrayHashMapTest.cpp for sample usage.
    */
-  template <
-      typename LookupKeyT = key_type,
-      typename LookupHashFcn = hasher,
-      typename LookupEqualFcn = key_equal>
+  template <typename LookupKeyT = key_type,
+            typename LookupHashFcn = hasher,
+            typename LookupEqualFcn = key_equal>
   iterator find(LookupKeyT k);
 
-  template <
-      typename LookupKeyT = key_type,
-      typename LookupHashFcn = hasher,
-      typename LookupEqualFcn = key_equal>
+  template <typename LookupKeyT = key_type,
+            typename LookupHashFcn = hasher,
+            typename LookupEqualFcn = key_equal>
   const_iterator find(LookupKeyT k) const;
 
   /*
@@ -327,13 +309,12 @@ class AtomicHashMap : boost::noncopyable {
    */
   size_t size() const;
 
-  bool empty() const {
-    return size() == 0;
-  }
+  bool empty() const { return size() == 0; }
 
   size_type count(key_type k) const {
     return find(k) == end() ? 0 : 1;
   }
+
 
   /*
    * findAt --
@@ -347,10 +328,8 @@ class AtomicHashMap : boost::noncopyable {
   iterator findAt(uint32_t idx) {
     SimpleRetT ret = findAtInternal(idx);
     DCHECK_LT(ret.i, numSubMaps());
-    return iterator(
-        this,
-        ret.i,
-        subMaps_[ret.i].load(std::memory_order_relaxed)->makeIter(ret.j));
+    return iterator(this, ret.i,
+      subMaps_[ret.i].load(std::memory_order_relaxed)->makeIter(ret.j));
   }
   const_iterator findAt(uint32_t idx) const {
     return const_cast<AtomicHashMap*>(this)->findAt(idx);
@@ -377,14 +356,15 @@ class AtomicHashMap : boost::noncopyable {
   }
 
   iterator begin() {
-    iterator it(this, 0, subMaps_[0].load(std::memory_order_relaxed)->begin());
+    iterator it(this, 0,
+      subMaps_[0].load(std::memory_order_relaxed)->begin());
     it.checkAdvanceToNextSubmap();
     return it;
   }
 
   const_iterator begin() const {
-    const_iterator it(
-        this, 0, subMaps_[0].load(std::memory_order_relaxed)->begin());
+    const_iterator it(this, 0,
+      subMaps_[0].load(std::memory_order_relaxed)->begin());
     it.checkAdvanceToNextSubmap();
     return it;
   }
@@ -400,26 +380,26 @@ class AtomicHashMap : boost::noncopyable {
   /* Advanced functions for direct access: */
 
   inline uint32_t recToIdx(const value_type& r, bool mayInsert = true) {
-    SimpleRetT ret =
-        mayInsert ? insertInternal(r.first, r.second) : findInternal(r.first);
+    SimpleRetT ret = mayInsert ?
+      insertInternal(r.first, r.second) : findInternal(r.first);
     return encodeIndex(ret.i, ret.j);
   }
 
   inline uint32_t recToIdx(value_type&& r, bool mayInsert = true) {
-    SimpleRetT ret = mayInsert ? insertInternal(r.first, std::move(r.second))
-                               : findInternal(r.first);
+    SimpleRetT ret = mayInsert ?
+      insertInternal(r.first, std::move(r.second)) : findInternal(r.first);
     return encodeIndex(ret.i, ret.j);
   }
 
-  inline uint32_t
-  recToIdx(key_type k, const mapped_type& v, bool mayInsert = true) {
+  inline uint32_t recToIdx(key_type k, const mapped_type& v,
+    bool mayInsert = true) {
     SimpleRetT ret = mayInsert ? insertInternal(k, v) : findInternal(k);
     return encodeIndex(ret.i, ret.j);
   }
 
   inline uint32_t recToIdx(key_type k, mapped_type&& v, bool mayInsert = true) {
-    SimpleRetT ret =
-        mayInsert ? insertInternal(k, std::move(v)) : findInternal(k);
+    SimpleRetT ret = mayInsert ?
+      insertInternal(k, std::move(v)) : findInternal(k);
     return encodeIndex(ret.i, ret.j);
   }
 
@@ -438,33 +418,28 @@ class AtomicHashMap : boost::noncopyable {
   // This limits primary submap size to 2^31 ~= 2 billion, secondary submap
   // size to 2^(32 - kNumSubMapBits_ - 1) = 2^27 ~= 130 million, and num subMaps
   // to 2^kNumSubMapBits_ = 16.
-  static const uint32_t kNumSubMapBits_ = 4;
-  static const uint32_t kSecondaryMapBit_ = 1u << 31; // Highest bit
-  static const uint32_t kSubMapIndexShift_ = 32 - kNumSubMapBits_ - 1;
-  static const uint32_t kSubMapIndexMask_ = (1 << kSubMapIndexShift_) - 1;
-  static const uint32_t kNumSubMaps_ = 1 << kNumSubMapBits_;
-  static const uintptr_t kLockedPtr_ = 0x88ULL << 48; // invalid pointer
+  static const uint32_t  kNumSubMapBits_     = 4;
+  static const uint32_t  kSecondaryMapBit_   = 1u << 31; // Highest bit
+  static const uint32_t  kSubMapIndexShift_  = 32 - kNumSubMapBits_ - 1;
+  static const uint32_t  kSubMapIndexMask_   = (1 << kSubMapIndexShift_) - 1;
+  static const uint32_t  kNumSubMaps_        = 1 << kNumSubMapBits_;
+  static const uintptr_t kLockedPtr_         = 0x88ULL << 48; // invalid pointer
 
-  struct SimpleRetT {
-    uint32_t i;
-    size_t j;
-    bool success;
+  struct SimpleRetT { uint32_t i; size_t j; bool success;
     SimpleRetT(uint32_t ii, size_t jj, bool s) : i(ii), j(jj), success(s) {}
     SimpleRetT() = default;
   };
 
-  template <
-      typename LookupKeyT = key_type,
-      typename LookupHashFcn = hasher,
-      typename LookupEqualFcn = key_equal,
-      typename LookupKeyToKeyFcn = key_convert,
-      typename... ArgTs>
+  template <typename LookupKeyT = key_type,
+            typename LookupHashFcn = hasher,
+            typename LookupEqualFcn = key_equal,
+            typename LookupKeyToKeyFcn = key_convert,
+            typename... ArgTs>
   SimpleRetT insertInternal(LookupKeyT key, ArgTs&&... value);
 
-  template <
-      typename LookupKeyT = key_type,
-      typename LookupHashFcn = hasher,
-      typename LookupEqualFcn = key_equal>
+  template <typename LookupKeyT = key_type,
+            typename LookupHashFcn = hasher,
+            typename LookupEqualFcn = key_equal>
   SimpleRetT findInternal(const LookupKeyT k) const;
 
   SimpleRetT findAtInternal(uint32_t idx) const;
@@ -472,29 +447,28 @@ class AtomicHashMap : boost::noncopyable {
   std::atomic<SubMap*> subMaps_[kNumSubMaps_];
   std::atomic<uint32_t> numMapsAllocated_;
 
-  inline bool tryLockMap(unsigned int idx) {
+  inline bool tryLockMap(int idx) {
     SubMap* val = nullptr;
-    return subMaps_[idx].compare_exchange_strong(
-        val, (SubMap*)kLockedPtr_, std::memory_order_acquire);
+    return subMaps_[idx].compare_exchange_strong(val, (SubMap*)kLockedPtr_,
+      std::memory_order_acquire);
   }
 
   static inline uint32_t encodeIndex(uint32_t subMap, uint32_t subMapIdx);
 
 }; // AtomicHashMap
 
-template <
-    class KeyT,
-    class ValueT,
-    class HashFcn = std::hash<KeyT>,
-    class EqualFcn = std::equal_to<KeyT>,
-    class Allocator = std::allocator<char>>
-using QuadraticProbingAtomicHashMap = AtomicHashMap<
-    KeyT,
-    ValueT,
-    HashFcn,
-    EqualFcn,
-    Allocator,
-    AtomicHashArrayQuadraticProbeFcn>;
+template <class KeyT,
+          class ValueT,
+          class HashFcn = std::hash<KeyT>,
+          class EqualFcn = std::equal_to<KeyT>,
+          class Allocator = std::allocator<char>>
+using QuadraticProbingAtomicHashMap =
+    AtomicHashMap<KeyT,
+                  ValueT,
+                  HashFcn,
+                  EqualFcn,
+                  Allocator,
+                  AtomicHashArrayQuadraticProbeFcn>;
 } // namespace folly
 
 #include <folly/AtomicHashMap-inl.h>

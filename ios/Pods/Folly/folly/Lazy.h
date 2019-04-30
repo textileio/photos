@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 
 #pragma once
 
-#include <type_traits>
 #include <utility>
+#include <type_traits>
 
 #include <folly/Optional.h>
-#include <folly/functional/Invoke.h>
 
 namespace folly {
 
@@ -87,58 +86,48 @@ namespace folly {
 
 namespace detail {
 
-template <class Func>
+template<class Func>
 struct Lazy {
-  typedef invoke_result_t<Func> result_type;
-
-  static_assert(
-      !std::is_const<Func>::value,
-      "Func should not be a const-qualified type");
-  static_assert(
-      !std::is_reference<Func>::value,
-      "Func should not be a reference type");
+  typedef typename std::result_of<Func()>::type result_type;
 
   explicit Lazy(Func&& f) : func_(std::move(f)) {}
-  explicit Lazy(const Func& f) : func_(f) {}
+  explicit Lazy(Func& f)  : func_(f) {}
 
-  Lazy(Lazy&& o) : value_(std::move(o.value_)), func_(std::move(o.func_)) {}
+  Lazy(Lazy&& o)
+    : value_(std::move(o.value_))
+    , func_(std::move(o.func_))
+  {}
 
   Lazy(const Lazy&) = delete;
   Lazy& operator=(const Lazy&) = delete;
   Lazy& operator=(Lazy&&) = delete;
 
   const result_type& operator()() const {
-    ensure_initialized();
-
-    return *value_;
+    return const_cast<Lazy&>(*this)();
   }
 
   result_type& operator()() {
-    ensure_initialized();
-
+    if (!value_) value_ = func_();
     return *value_;
   }
 
- private:
-  void ensure_initialized() const {
-    if (!value_) {
-      value_ = func_();
-    }
-  }
-
-  mutable Optional<result_type> value_;
-  mutable Func func_;
+private:
+  Optional<result_type> value_;
+  Func func_;
 };
 
-} // namespace detail
-
-//////////////////////////////////////////////////////////////////////
-
-template <class Func>
-auto lazy(Func&& fun) {
-  return detail::Lazy<remove_cvref_t<Func>>(std::forward<Func>(fun));
 }
 
 //////////////////////////////////////////////////////////////////////
 
-} // namespace folly
+template<class Func>
+detail::Lazy<typename std::remove_reference<Func>::type>
+lazy(Func&& fun) {
+  return detail::Lazy<typename std::remove_reference<Func>::type>(
+    std::forward<Func>(fun)
+  );
+}
+
+//////////////////////////////////////////////////////////////////////
+
+}

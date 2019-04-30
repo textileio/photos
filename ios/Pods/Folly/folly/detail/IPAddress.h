@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-present Facebook, Inc.
+ * Copyright 2016 Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,11 @@
 
 #pragma once
 
-#include <sys/types.h>
-
 #include <string>
-
+#include <sys/types.h>
 #include <folly/portability/Sockets.h>
 
-namespace folly {
-namespace detail {
+namespace folly { namespace detail {
 
 std::string familyNameStrDefault(sa_family_t family);
 
@@ -46,12 +43,12 @@ inline std::string familyNameStr(sa_family_t family) {
 
 template <typename IPAddrType>
 inline bool
-getNthMSBitImpl(const IPAddrType& ip, size_t bitIndex, sa_family_t family) {
+getNthMSBitImpl(const IPAddrType& ip, uint8_t bitIndex, sa_family_t family) {
   if (bitIndex >= ip.bitCount()) {
     getNthMSBitImplThrow(ip.bitCount(), family);
   }
-  // Underlying bytes are in n/w byte order
+  //Underlying bytes are in n/w byte order
   return (ip.getNthMSByte(bitIndex / 8) & (0x80 >> (bitIndex % 8))) != 0;
 }
-} // namespace detail
-} // namespace folly
+
+}}  // folly::detail
