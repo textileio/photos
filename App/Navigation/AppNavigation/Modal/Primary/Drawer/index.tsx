@@ -6,8 +6,6 @@ import Notifications from './Notifications'
 import Drawer from '../../../../../Containers/Drawer'
 import { color, fontSize } from '../../../../../styles'
 
-import styles, { headerTintColor } from '../../../../Styles/NavigationStyles'
-
 const drawer = createDrawerNavigator(
   {
     Groups,
@@ -24,9 +22,7 @@ const drawer = createDrawerNavigator(
         fontWeight: Platform.OS === 'ios' ? '600' : 'normal',
         fontSize: fontSize._18
       },
-      activeLabelStyle: {
-        color: color.action_3
-      }
+      activeTintColor: color.action_3
     },
     navigationOptions: {
       // tslint:disable-next-line:no-null-keyword

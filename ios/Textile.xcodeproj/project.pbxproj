@@ -25,6 +25,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8E44FDACD1EC3A88233594F4 /* libPods-Textile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */; };
+		93247E602278F1C1001C6381 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93247E5D2278F1B0001C6381 /* libRNGestureHandler.a */; };
 		9370EF6F2273B3AB006FB028 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9370EF362273B3AB006FB028 /* JavaScriptCore.framework */; };
 		93C00481216B12A1007786A5 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00480216B1276007786A5 /* libRNBackgroundFetch.a */; };
 		93C00482216B12C8007786A5 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00470216B1066007786A5 /* TSBackgroundFetch.framework */; };
@@ -321,6 +322,20 @@
 			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
 			remoteInfo = "jsiexecutor-tvOS";
 		};
+		93247E5C2278F1B0001C6381 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93247E572278F1B0001C6381 /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNGestureHandler;
+		};
+		93247E5E2278F1B0001C6381 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93247E572278F1B0001C6381 /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B5C32A36220C603B000FFB8D;
+			remoteInfo = "RNGestureHandler-tvOS";
+		};
 		93C0047F216B1276007786A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */;
@@ -473,6 +488,7 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Textile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		93247E572278F1B0001C6381 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		9370EF362273B3AB006FB028 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		93C00470216B1066007786A5 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = "<group>"; };
 		93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
@@ -527,6 +543,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93247E602278F1C1001C6381 /* libRNGestureHandler.a in Frameworks */,
 				9370EF6F2273B3AB006FB028 /* JavaScriptCore.framework in Frameworks */,
 				93CCA014220135C700639B38 /* libRCTContacts.a in Frameworks */,
 				93C00620216D3334007786A5 /* libRCTCameraRoll.a in Frameworks */,
@@ -711,6 +728,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				93247E572278F1B0001C6381 /* RNGestureHandler.xcodeproj */,
 				93CC9FD5220135A300639B38 /* RCTContacts.xcodeproj */,
 				93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */,
 				93C00600216C385D007786A5 /* RNVersionNumber.xcodeproj */,
@@ -771,6 +789,15 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* Textile.app */,
 				00E356EE1AD99517003FC87E /* TextileTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93247E582278F1B0001C6381 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93247E5D2278F1B0001C6381 /* libRNGestureHandler.a */,
+				93247E5F2278F1B0001C6381 /* libRNGestureHandler-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1093,6 +1120,10 @@
 					ProjectRef = 93C00499216B2666007786A5 /* RNFS.xcodeproj */;
 				},
 				{
+					ProductGroup = 93247E582278F1B0001C6381 /* Products */;
+					ProjectRef = 93247E572278F1B0001C6381 /* RNGestureHandler.xcodeproj */;
+				},
+				{
 					ProductGroup = 93C004A4216BAD0C007786A5 /* Products */;
 					ProjectRef = 93C004A3216BAD0C007786A5 /* RNImagePicker.xcodeproj */;
 				},
@@ -1368,6 +1399,20 @@
 			fileType = archive.ar;
 			path = "libjsiexecutor-tvOS.a";
 			remoteRef = 93247E482278EE9C001C6381 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		93247E5D2278F1B0001C6381 /* libRNGestureHandler.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGestureHandler.a;
+			remoteRef = 93247E5C2278F1B0001C6381 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		93247E5F2278F1B0001C6381 /* libRNGestureHandler-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNGestureHandler-tvOS.a";
+			remoteRef = 93247E5E2278F1B0001C6381 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		93C00480216B1276007786A5 /* libRNBackgroundFetch.a */ = {

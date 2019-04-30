@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, ViewStyle } from 'react-native'
-import { DrawerItems, NavigationScreenProps, NavigationEvents } from 'react-navigation'
+import { DrawerItems, NavigationScreenProps, NavigationEvents, DrawerItemsProps } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 import Avatar from '../Components/Avatar'
 import { RootState } from '../Redux/Types'
@@ -16,7 +16,7 @@ interface StateProps {
   username: string
 }
 
-type Props = StateProps & NavigationScreenProps
+type Props = StateProps & DrawerItemsProps
 
 class Account extends Component<Props> {
   state = {  }

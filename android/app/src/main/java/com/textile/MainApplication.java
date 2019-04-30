@@ -1,6 +1,5 @@
 package com.textile;
 
-import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
@@ -38,7 +37,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
+      return Arrays.asList(
           new MainReactPackage(),
           new RNTextilePackage(),
           new RNBackgroundFetchPackage(),
