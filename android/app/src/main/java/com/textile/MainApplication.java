@@ -23,7 +23,6 @@ import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.smixx.fabric.FabricPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.swmansion.rnscreens.RNScreensPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.vydia.RNUploader.UploaderReactPackage;
 import io.textile.rnmobile.RNTextilePackage;
@@ -52,7 +51,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
           new BackgroundTimerPackage(),
           new RNVersionNumberPackage(),
           new RNGestureHandlerPackage(),
-          new RNScreensPackage(),
           new ReactNativeContacts(),
           new TextilePackage()
       );

@@ -4,7 +4,6 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import configureStore from '../Redux/configureStore'
-import { useScreens } from 'react-native-screens'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
@@ -13,8 +12,6 @@ import NotificationEventHandler from '../Services/EventHandlers/NotificationEven
 import { errorHandler } from '../Services/ErrorHandler'
 
 import Textile from '@textile/react-native-sdk'
-
-useScreens()
 
 const { store, persistor } = configureStore()
 
