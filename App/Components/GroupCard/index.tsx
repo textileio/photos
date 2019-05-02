@@ -2,8 +2,7 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import Icon from '@textile/react-native-icon'
 import TextileImage from '../TextileImage'
-import Avatar from '../Avatar'
-import { pb } from '@textile/react-native-sdk'
+import { IContact, IFiles } from '@textile/react-native-sdk'
 
 import Members from './Members'
 
@@ -13,8 +12,8 @@ import { color } from '../../styles'
 interface ScreenProps {
   id: string
   name: string
-  members: pb.IContact[]
-  thumb?: pb.IFiles
+  members: IContact[]
+  thumb?: IFiles
   onPress: (groupCardProps: any) => void
 }
 

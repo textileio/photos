@@ -10,7 +10,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
-import io.textile.rnmobile.TextileNode;
+import io.textile.textile.Textile;
 
 public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
@@ -36,12 +36,12 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
     protected Bitmap doInBackground(Void... params) {
         try {
             if (this.ipfs) {
-                byte[] decodedString = TextileNode.node.dataAtPath(this.target);
+                byte[] decodedString = Textile.instance().ipfs.dataAtPath(this.target);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 return bitmap;
             } else {
                 String path = String.format("%s/%d", this.target, this.index);
-                String dataUrl = TextileNode.node.imageFileDataForMinWidth(path, this.forMinWidth);
+                String dataUrl = Textile.instance().files.imageDataForMinWidth(path, this.forMinWidth);
                 String encodingPrefix = "base64,";
                 int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
                 byte[] decodedString = Base64.decode(dataUrl.substring(contentStartIndex), Base64.DEFAULT);

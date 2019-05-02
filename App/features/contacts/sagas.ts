@@ -13,15 +13,16 @@ import { delay, eventChannel, END, Channel } from 'redux-saga'
 import { ActionType, getType } from 'typesafe-actions'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Contacts from 'react-native-contacts'
-import {
-  API,
-  Events,
-  pb
+import Textile, {
+  IContactList,
+  IContactQuery,
+  IQueryOptions,
+  QueryOptions
 } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
-import { Buffer } from 'buffer'
 
 import * as actions from './actions'
+import { SearchEvent } from './models'
 import { getAddress, getUsername } from '../../Redux/AccountSelectors'
 import { composeMessage } from '../../NativeModules/MessageComposer'
 import UIActions from '../../Redux/UIRedux'
@@ -32,7 +33,7 @@ function * addFriends() {
 
 function * refreshContacts() {
   try {
-    const contactsResult: pb.IContactList = yield call(API.contacts.list)
+    const contactsResult: IContactList = yield call(Textile.contacts.list)
     yield put(actions.getContactsSuccess(contactsResult.items))
 
   } catch (error) {
@@ -47,7 +48,7 @@ function * watchForAddContactRequests() {
 function * handleAddContactRequest(action: ActionType<typeof actions.addContactRequest>) {
   const { contact } = action.payload
   try {
-    yield call(API.contacts.add, contact)
+    yield call(Textile.contacts.add, contact)
     yield put(actions.addContactSuccess(contact))
     yield call(refreshContacts)
   } catch (error) {
@@ -55,60 +56,58 @@ function * handleAddContactRequest(action: ActionType<typeof actions.addContactR
   }
 }
 
-function executeTextileSearch(searchString: string) {
-  return eventChannel<pb.MobileQueryEvent>((emitter) => {
-    const query: pb.IContactQuery = {
-      username: searchString,
-      address: ''
-    }
-    const options: pb.IQueryOptions = {
-      localOnly: false,
-      remoteOnly: false,
-      limit: 20,
-      wait: 8,
-      filter: pb.QueryOptions.FilterType.NO_FILTER,
-      exclude: []
-    }
-    const handler = (base64: string) => {
-      const queryEvent = pb.MobileQueryEvent.decode(Buffer.from(base64, 'base64'))
-      switch (queryEvent.type) {
-        case pb.MobileQueryEvent.Type.DATA: {
-          emitter(queryEvent)
-          break
-        }
-        case pb.MobileQueryEvent.Type.DONE: {
-          emitter(END)
-          break
-        }
-        case pb.MobileQueryEvent.Type.ERROR: {
-          emitter(queryEvent)
-          emitter(END)
-          break
-        }
+async function executeTextileSearch(searchString: string) {
+  const query: IContactQuery = {
+    username: searchString,
+    address: ''
+  }
+  const options: IQueryOptions = {
+    localOnly: false,
+    remoteOnly: false,
+    limit: 20,
+    wait: 8,
+    filter: QueryOptions.FilterType.NO_FILTER,
+    exclude: []
+  }
+  const queryId = await Textile.contacts.search(query, options)
+  return eventChannel<SearchEvent>((emitter) => {
+    const resultsSub = Textile.events.addContactQueryResultListener((receivedQueryId, contact) => {
+      if (receivedQueryId === queryId) {
+        emitter({ contact, type: 'contact' })
       }
-    }
-    const events = new Events()
-    events.addListener('QUERY_RESPONSE', handler)
-    API.contacts.search(query, options)
+    })
+    const errorSub = Textile.events.addQueryErrorListener((receivedQueryId, error) => {
+      if (receivedQueryId === queryId) {
+        emitter({ error, type: 'error' })
+        emitter(END)
+      }
+    })
+    const doneSub = Textile.events.addQueryDoneListener((receivedQueryId) => {
+      if (receivedQueryId === queryId) {
+        emitter(END)
+      }
+    })
     return () => {
-      API.contacts.cancelSearch()
-      events.removeListener('QUERY_RESPONSE', handler)
+      Textile.contacts.cancelSearch()
+      resultsSub.cancel()
+      errorSub.cancel()
+      doneSub.cancel()
     }
   })
 }
 
 function * searchTextile(searchString: string) {
-  const channel: Channel<pb.MobileQueryEvent> = yield call(executeTextileSearch, searchString)
+  const channel: Channel<SearchEvent> = yield call(executeTextileSearch, searchString)
   try {
     while (true) {
-      const event: pb.MobileQueryEvent = yield take(channel)
-      if (event.type === pb.MobileQueryEvent.Type.DATA) {
-        if (event.data.value.type_url === '/Contact') {
-          const contact = pb.Contact.decode(event.data.value.value)
-          yield put(actions.searchResultTextile(contact))
-        }
-      } else if (event.type === pb.MobileQueryEvent.Type.ERROR) {
-        yield put(actions.searchErrorTextile(event.error.message))
+      const event: SearchEvent = yield take(channel)
+      switch (event.type) {
+        case 'contact':
+          yield put(actions.searchResultTextile(event.contact))
+          break
+        case 'error':
+          yield put(actions.searchErrorTextile(event.error))
+          break
       }
     }
   } catch (error) {

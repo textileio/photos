@@ -1,8 +1,8 @@
 import actions, { reducer } from '../AccountRedux'
-import { pb } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
-const profile: pb.IContact = {
+const profile: IContact = {
   address: 'address',
   name: 'username',
   avatar: 'avatar',
@@ -18,13 +18,6 @@ describe('account', () => {
   describe('initial state', () => {
     it('should match snapshot', () => {
       expect(initialState).toMatchSnapshot()
-    })
-  })
-  describe('init', () => {
-    it('should become initialized', () => {
-      expect(initialState.initialized).toBe(false)
-      const state = reducer(initialState, actions.initSuccess())
-      expect(state.initialized).toBe(true)
     })
   })
   describe('profile', () => {

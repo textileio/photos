@@ -5,6 +5,7 @@ import {RootState} from '../Redux/Types'
 
 import { View, ImageResizeMode, ImageStyle, Platform } from 'react-native'
 import TextileImage from './TextileImage'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 
 export interface IProgressiveImageProps {
   imageId: string,
@@ -175,7 +176,7 @@ interface StateProps {
 }
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    started: state.textile.nodeState.state === 'started'
+    started: TextileEventsSelectors.started(state)
   }
 }
 

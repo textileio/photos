@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { pb } from '@textile/react-native-sdk'
+import { IMobilePreparedFiles, IBlock } from '@textile/react-native-sdk'
 
 import { SharedImage, ProcessingImageError } from './models'
 
@@ -8,7 +8,7 @@ export const insertImage = createAction('processingImages/INSERT_IMAGE', (resolv
 })
 
 export const imagePrepared = createAction('processingImages/IMAGE_PREPARED', (resolve) => {
-  return (uuid: string, preparedFiles: pb.IMobilePreparedFiles) => resolve({ uuid, preparedFiles })
+  return (uuid: string, preparedFiles: IMobilePreparedFiles) => resolve({ uuid, preparedFiles })
 })
 
 export const uploadStarted = createAction('processingImages/UPLOAD_STARTED', (resolve) => {
@@ -24,7 +24,7 @@ export const imageUploadComplete = createAction('processingImages/IMAGE_UPLOAD_C
 })
 
 export const sharedToThread = createAction('processingImages/SHARED_TO_THREAD', (resolve) => {
-  return (uuid: string, block: pb.IBlock) => resolve({ uuid, block })
+  return (uuid: string, block: IBlock) => resolve({ uuid, block })
 })
 
 export const complete = createAction('processingImages/COMPLETE', (resolve) => {

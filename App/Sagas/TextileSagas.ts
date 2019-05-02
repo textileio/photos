@@ -13,7 +13,7 @@ import { Share, PermissionsAndroid, Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
-import { API } from '@textile/react-native-sdk'
+import Textile from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import * as NotificationsSagas from './NotificationsSagas'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
@@ -190,7 +190,7 @@ export function * backgroundLocationPermissionsTrigger() {
 export function * addPhotoLike(action: ActionType<typeof UIActions.addLikeRequest>) {
   const { blockId } = action.payload
   try {
-    yield call(API.likes.add, blockId)
+    yield call(Textile.likes.add, blockId)
   } catch (error) {
     yield call(logNewEvent, 'addPhotoLike', error.message, true)
   }

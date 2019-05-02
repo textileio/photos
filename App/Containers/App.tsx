@@ -1,11 +1,9 @@
 import '../Config'
-import RNConfig from 'react-native-config'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import RootContainer from './RootContainer'
 import configureStore from '../Redux/configureStore'
-import { useScreens } from 'react-native-screens'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
 import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler'
@@ -14,8 +12,6 @@ import NotificationEventHandler from '../Services/EventHandlers/NotificationEven
 import { errorHandler } from '../Services/ErrorHandler'
 
 import Textile from '@textile/react-native-sdk'
-
-useScreens()
 
 const { store, persistor } = configureStore()
 
@@ -37,21 +33,6 @@ class App extends Component {
       </Provider>
     )
   }
-  componentWillMount() {
-    this.textile.setup(
-      {
-        RELEASE_TYPE: RNConfig.RN_RELEASE_TYPE
-      },
-      {
-        TEXTILE_CAFE_TOKEN: RNConfig.RN_TEXTILE_CAFE_TOKEN,
-        TEXTILE_CAFE_GATEWAY_URL: RNConfig.RN_TEXTILE_CAFE_GATEWAY_URL,
-        TEXTILE_CAFE_OVERRIDE: RNConfig.RN_TEXTILE_CAFE_OVERRIDE
-      }
-    ).catch((error) => {
-      // isFatal = true
-      errorHandler(error, true)
-    })
-  }
 
   componentWillUnmount() {
     if (super.componentWillUnmount) {
@@ -60,7 +41,6 @@ class App extends Component {
     this.textileNodeEventHandler.tearDown()
     this.uploadEventHandler.tearDown()
     this.deepLinkEventHandler.tearDown()
-    this.textile.tearDown()
   }
 
   componentDidCatch(error: any, info: any) {

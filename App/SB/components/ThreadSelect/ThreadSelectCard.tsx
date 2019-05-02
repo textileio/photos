@@ -5,14 +5,14 @@ import { View, TouchableOpacity } from 'react-native'
 import { RootState } from '../../../Redux/Types'
 
 import {ThreadData} from '../../../Redux/PhotoViewingRedux'
-import { pb } from '@textile/react-native-sdk'
+import { IFiles } from '@textile/react-native-sdk'
 import PhotoWithTextBox from '../PhotoWithTextBox'
 import RadioButton from '../../components/RadioButton'
 
 import styles from './statics/styles'
 
 interface StateProps {
-  thumb?: pb.IFiles
+  thumb?: IFiles
 }
 
 interface ScreenProps {

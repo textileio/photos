@@ -1,10 +1,8 @@
 import { Store } from 'redux'
-import { pb, Events } from '@textile/react-native-sdk'
-import { Buffer } from 'buffer'
+import Textile, { EventSubscription } from '@textile/react-native-sdk'
 
 import { RootState } from '../../Redux/Types'
 
-import ThreadsActions from '../../Redux/ThreadsRedux'
 import NotificationActions from '../../Redux/NotificationsRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { contactsActions } from '../../features/contacts'
@@ -12,12 +10,11 @@ import DeviceLogsActions from '../../Redux/DeviceLogsRedux'
 import { toTypedNotification } from '../Notifications'
 
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
-import AccountActions from '../../Redux/AccountRedux'
 import { groupActions } from '../../features/group'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
-  events = new Events()
+  subscriptions: EventSubscription[] = []
 
   constructor(store: Store<RootState>) {
     this.store = store
@@ -25,100 +22,97 @@ export default class TextileNodeEventHandler {
   }
 
   setup() {
-    // Now handled internally by sdk
-    this.events.addListener('NODE_ONLINE', () => {
-      this.store.dispatch(TextileEventsActions.nodeOnline())
-    })
-    this.events.addListener('THREAD_UPDATE', (base64: string) => {
-      const update = pb.FeedItem.decode(Buffer.from(base64, 'base64'))
-      const { type_url } = update.payload
-      if (type_url === '/Text' ||
-        type_url === '/Comment' ||
-        type_url === '/Like' ||
-        type_url === '/Files' ||
-        type_url === '/Ignore' ||
-        type_url === '/Join' ||
-        type_url === '/Leave') {
-        this.store.dispatch(groupActions.feed.refreshFeed.request({ id: update.thread }))
-      }
-
-      // TODO: remove this if needed
-      if (type_url === '/Comment' ||
-        type_url === '/Like' ||
-        type_url === '/Files' ||
-        type_url === '/Ignore' ||
-        type_url === '/Join') {
-        this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
-      }
-
-      if (type_url === '/Join' ||
+    this.subscriptions.push(
+      Textile.events.addThreadUpdateReceivedListener((update) => {
+        const { type_url } = update.payload
+        if (type_url === '/Text' ||
+          type_url === '/Comment' ||
+          type_url === '/Like' ||
+          type_url === '/Files' ||
+          type_url === '/Ignore' ||
+          type_url === '/Join' ||
           type_url === '/Leave') {
-        // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
-        // Enhancement: compare the joiner id with known ids and skip the refresh if known.
-        this.store.dispatch(contactsActions.getContactsRequest())
-        // Temporary: to ensure that our UI udpates after a self-join or a self-leave
-        this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
-      }
+          this.store.dispatch(groupActions.feed.refreshFeed.request({ id: update.thread }))
+        }
 
-      // create a local log line for the threadUpdate event
-      const message = `BlockType ${type_url} on ${update.thread}`
-      this.store.dispatch(DeviceLogsActions.logNewEvent((new Date()).getTime(), 'onThreadUpdate', message, false))
-    })
-    this.events.addListener('WALLET_UPDATE', (base64: string) => {
-      const update: pb.IWalletUpdate = pb.WalletUpdate.decode(Buffer.from(base64, 'base64'))
-      switch (update.type) {
-        case pb.WalletUpdate.Type.THREAD_ADDED:
-          this.store.dispatch(PhotoViewingActions.threadAddedNotification(update.id))
-          break
-        case pb.WalletUpdate.Type.THREAD_REMOVED:
-          this.store.dispatch(PhotoViewingActions.threadRemoved(update.id))
-        default:
-          break
-      }
-    })
-    this.events.addListener('NOTIFICATION', (base64: string) => {
-      const payload = pb.Notification.decode(Buffer.from(base64, 'base64'))
-      this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(payload)))
-    })
+        // TODO: remove this if needed
+        if (type_url === '/Comment' ||
+          type_url === '/Like' ||
+          type_url === '/Files' ||
+          type_url === '/Ignore' ||
+          type_url === '/Join') {
+          this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
+        }
 
-    // TextileEventsActions
-    this.events.addListener('newNodeState', (payload) => {
-      this.store.dispatch(TextileEventsActions.newNodeState(payload.state))
-    })
-    this.events.addListener('startNodeFinished', () => {
-      this.store.dispatch(TextileEventsActions.startNodeFinished())
-    })
-    this.events.addListener('stopNodeAfterDelayStarting', () => {
-      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayStarting())
-    })
-    this.events.addListener('stopNodeAfterDelayCancelled', () => {
-      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayCancelled())
-    })
-    this.events.addListener('stopNodeAfterDelayFinishing', () => {
-      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayFinishing())
-    })
-    this.events.addListener('stopNodeAfterDelayComplete', () => {
-      this.store.dispatch(TextileEventsActions.stopNodeAfterDelayComplete())
-    })
-    this.events.addListener('appStateChange', (payload) => {
-      this.store.dispatch(TextileEventsActions.appStateChange(payload.previousState, payload.newState))
-    })
-    this.events.addListener('updateProfile', () => {
-      this.store.dispatch(TextileEventsActions.updateProfile())
-    })
-    this.events.addListener('error', (payload) => {
-      this.store.dispatch(TextileEventsActions.newErrorMessage(payload.type, payload.message))
-    })
-    // Account actions
-    this.events.addListener('setRecoveryPhrase', (payload) => {
-      this.store.dispatch(AccountActions.setRecoveryPhrase(payload.recoveryPhrase))
-    })
-    this.events.addListener('walletInitSuccess', () => {
-      this.store.dispatch(AccountActions.initSuccess())
-    })
+        if (type_url === '/Join' ||
+            type_url === '/Leave') {
+          // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
+          // Enhancement: compare the joiner id with known ids and skip the refresh if known.
+          this.store.dispatch(contactsActions.getContactsRequest())
+          // Temporary: to ensure that our UI udpates after a self-join or a self-leave
+          this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
+        }
+
+        // create a local log line for the threadUpdate event
+        const message = `BlockType ${type_url} on ${update.thread}`
+        this.store.dispatch(DeviceLogsActions.logNewEvent((new Date()).getTime(), 'onThreadUpdate', message, false))
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addThreadAddedListener((threadId) => {
+        this.store.dispatch(PhotoViewingActions.threadAddedNotification(threadId))
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addThreadRemovedListener((threadId) => {
+        this.store.dispatch(PhotoViewingActions.threadRemoved(threadId))
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addNotificationReceivedListener((notification) => {
+        this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(notification)))
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addNodeStartedListener(() => {
+        this.store.dispatch(TextileEventsActions.nodeStarted())
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addNodeStoppedListener(() => {
+        this.store.dispatch(TextileEventsActions.nodeStopped())
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addNodeOnlineListener(() => {
+        this.store.dispatch(TextileEventsActions.nodeOnline())
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addNodeFailedToStartListener((error) => {
+        this.store.dispatch(TextileEventsActions.nodeFailedToStart(error))
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addNodeFailedToStopListener((error) => {
+        this.store.dispatch(TextileEventsActions.nodeFailedToStop(error))
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addWillStopNodeInBackgroundAfterDelayListener((delay) => {
+        this.store.dispatch(TextileEventsActions.stopNodeAfterDelayStarting(delay))
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addCanceledPendingNodeStopListener(() => {
+        this.store.dispatch(TextileEventsActions.stopNodeAfterDelayCancelled())
+      })
+    )
   }
 
   tearDown() {
-    this.events.removeAllListeners()
+    for (const subscription of this.subscriptions) {
+      subscription.cancel()
+    }
   }
 }

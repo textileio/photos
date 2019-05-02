@@ -76,7 +76,8 @@ const mapStateToProps = (state: RootState): StateProps => {
   if (!state.photoViewing.viewingPhoto) {
     throw Error('No viewing photo')
   }
-  const likes = state.photoViewing.viewingPhoto.likes.map((like) => {
+  const viewingPhotoLikes = state.photoViewing.viewingPhoto ? state.photoViewing.viewingPhoto.likes : []
+  const likes = viewingPhotoLikes.map((like) => {
     const username: string = like.user.name || 'unknown'
     return {
       address: like.user.address,

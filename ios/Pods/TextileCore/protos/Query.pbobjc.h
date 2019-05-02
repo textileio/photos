@@ -333,14 +333,14 @@ typedef GPB_ENUM(PubSubQueryResults_FieldNumber) {
 
 typedef GPB_ENUM(ContactQuery_FieldNumber) {
   ContactQuery_FieldNumber_Address = 1,
-  ContactQuery_FieldNumber_Username = 2,
+  ContactQuery_FieldNumber_Name = 2,
 };
 
 @interface ContactQuery : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *address;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *username;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *name;
 
 @end
 

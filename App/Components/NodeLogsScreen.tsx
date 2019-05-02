@@ -6,8 +6,6 @@ import Textile from '@textile/react-native-sdk'
 import { TextileHeaderButtons, Item as TextileItem } from './HeaderButtons'
 import { color, fontSize, spacing } from '../styles'
 
-const LOG_FILE_PATH = `${Textile.repoPath}/logs/textile.log`
-
 interface NavProps {
   refresh: () => void
   copy: () => void
@@ -49,13 +47,15 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
   refreshLogData = async () => {
     this.setState({ refreshing: true, logData: undefined, error: undefined })
     try {
-      const exists = await FS.exists(LOG_FILE_PATH)
+      const repoPath = await Textile.repoPath
+      const logFilePath = `${repoPath}/logs/textile.log`
+      const exists = await FS.exists(logFilePath)
       if (exists) {
-        const stats = await FS.stat(LOG_FILE_PATH)
+        const stats = await FS.stat(logFilePath)
         const size = stats.size as unknown as number
         const bytesToRead = 1024 * 300 // 300KB
         const offset = Math.max(size, bytesToRead) - bytesToRead
-        const contents = await FS.read(LOG_FILE_PATH, bytesToRead, offset, 'utf8')
+        const contents = await FS.read(logFilePath, bytesToRead, offset, 'utf8')
         this.setState({ logData: contents, error: undefined })
       }
     } catch (error) {

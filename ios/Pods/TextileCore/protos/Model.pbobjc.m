@@ -414,7 +414,7 @@ typedef struct ContactList__storage_ {
 @dynamic initiator;
 @dynamic type;
 @dynamic sharing;
-@dynamic membersArray, membersArray_Count;
+@dynamic whitelistArray, whitelistArray_Count;
 @dynamic state;
 @dynamic head;
 @dynamic hasHeadBlock, headBlock;
@@ -435,7 +435,7 @@ typedef struct Thread__storage_ {
   NSString *name;
   NSString *schema;
   NSString *initiator;
-  NSMutableArray *membersArray;
+  NSMutableArray *whitelistArray;
   NSString *head;
   Block *headBlock;
   Node *schemaNode;
@@ -520,11 +520,11 @@ typedef struct Thread__storage_ {
         .dataType = GPBDataTypeEnum,
       },
       {
-        .name = "membersArray",
+        .name = "whitelistArray",
         .dataTypeSpecific.className = NULL,
-        .number = Thread_FieldNumber_MembersArray,
+        .number = Thread_FieldNumber_WhitelistArray,
         .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(Thread__storage_, membersArray),
+        .offset = (uint32_t)offsetof(Thread__storage_, whitelistArray),
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeString,
       },
@@ -1960,7 +1960,6 @@ typedef struct NotificationList__storage_ {
 @dynamic protocol;
 @dynamic node;
 @dynamic URL;
-@dynamic swarmArray, swarmArray_Count;
 
 typedef struct Cafe__storage_ {
   uint32_t _has_storage_[1];
@@ -1970,7 +1969,6 @@ typedef struct Cafe__storage_ {
   NSString *protocol;
   NSString *node;
   NSString *URL;
-  NSMutableArray *swarmArray;
 } Cafe__storage_;
 
 // This method is threadsafe because it is initially called
@@ -2031,15 +2029,6 @@ typedef struct Cafe__storage_ {
         .hasIndex = 5,
         .offset = (uint32_t)offsetof(Cafe__storage_, URL),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "swarmArray",
-        .dataTypeSpecific.className = NULL,
-        .number = Cafe_FieldNumber_SwarmArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(Cafe__storage_, swarmArray),
-        .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeString,
       },
     };
@@ -2242,16 +2231,22 @@ typedef struct CafeSessionList__storage_ {
 @dynamic target;
 @dynamic hasCafe, cafe;
 @dynamic type;
+@dynamic size;
+@dynamic group;
 @dynamic hasDate, date;
+@dynamic status;
 
 typedef struct CafeRequest__storage_ {
   uint32_t _has_storage_[1];
   CafeRequest_Type type;
+  CafeRequest_Status status;
   NSString *id_p;
   NSString *peer;
   NSString *target;
   Cafe *cafe;
   GPBTimestamp *date;
+  NSString *group;
+  int64_t size;
 } CafeRequest__storage_;
 
 // This method is threadsafe because it is initially called
@@ -2309,10 +2304,37 @@ typedef struct CafeRequest__storage_ {
         .name = "date",
         .dataTypeSpecific.className = GPBStringifySymbol(GPBTimestamp),
         .number = CafeRequest_FieldNumber_Date,
-        .hasIndex = 5,
+        .hasIndex = 7,
         .offset = (uint32_t)offsetof(CafeRequest__storage_, date),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "size",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequest_FieldNumber_Size,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(CafeRequest__storage_, size),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "group",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequest_FieldNumber_Group,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(CafeRequest__storage_, group),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "status",
+        .dataTypeSpecific.enumDescFunc = CafeRequest_Status_EnumDescriptor,
+        .number = CafeRequest_FieldNumber_Status,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(CafeRequest__storage_, status),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -2342,6 +2364,18 @@ int32_t CafeRequest_Type_RawValue(CafeRequest *message) {
 void SetCafeRequest_Type_RawValue(CafeRequest *message, int32_t value) {
   GPBDescriptor *descriptor = [CafeRequest descriptor];
   GPBFieldDescriptor *field = [descriptor fieldWithNumber:CafeRequest_FieldNumber_Type];
+  GPBSetInt32IvarWithFieldInternal(message, field, value, descriptor.file.syntax);
+}
+
+int32_t CafeRequest_Status_RawValue(CafeRequest *message) {
+  GPBDescriptor *descriptor = [CafeRequest descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:CafeRequest_FieldNumber_Status];
+  return GPBGetMessageInt32Field(message, field);
+}
+
+void SetCafeRequest_Status_RawValue(CafeRequest *message, int32_t value) {
+  GPBDescriptor *descriptor = [CafeRequest descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:CafeRequest_FieldNumber_Status];
   GPBSetInt32IvarWithFieldInternal(message, field, value, descriptor.file.syntax);
 }
 
@@ -2381,6 +2415,320 @@ BOOL CafeRequest_Type_IsValidValue(int32_t value__) {
     case CafeRequest_Type_StoreThread:
     case CafeRequest_Type_UnstoreThread:
     case CafeRequest_Type_Inbox:
+      return YES;
+    default:
+      return NO;
+  }
+}
+
+#pragma mark - Enum CafeRequest_Status
+
+GPBEnumDescriptor *CafeRequest_Status_EnumDescriptor(void) {
+  static _Atomic(GPBEnumDescriptor*) descriptor = nil;
+  if (!descriptor) {
+    static const char *valueNames =
+        "New\000Pending\000Complete\000";
+    static const int32_t values[] = {
+        CafeRequest_Status_New,
+        CafeRequest_Status_Pending,
+        CafeRequest_Status_Complete,
+    };
+    GPBEnumDescriptor *worker =
+        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(CafeRequest_Status)
+                                       valueNames:valueNames
+                                           values:values
+                                            count:(uint32_t)(sizeof(values) / sizeof(int32_t))
+                                     enumVerifier:CafeRequest_Status_IsValidValue];
+    GPBEnumDescriptor *expected = nil;
+    if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
+      [worker release];
+    }
+  }
+  return descriptor;
+}
+
+BOOL CafeRequest_Status_IsValidValue(int32_t value__) {
+  switch (value__) {
+    case CafeRequest_Status_New:
+    case CafeRequest_Status_Pending:
+    case CafeRequest_Status_Complete:
+      return YES;
+    default:
+      return NO;
+  }
+}
+
+#pragma mark - CafeRequestList
+
+@implementation CafeRequestList
+
+@dynamic itemsArray, itemsArray_Count;
+
+typedef struct CafeRequestList__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *itemsArray;
+} CafeRequestList__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "itemsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(CafeRequest),
+        .number = CafeRequestList_FieldNumber_ItemsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CafeRequestList__storage_, itemsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CafeRequestList class]
+                                     rootClass:[ModelRoot class]
+                                          file:ModelRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CafeRequestList__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CafeRequestGroupStatus
+
+@implementation CafeRequestGroupStatus
+
+@dynamic numTotal;
+@dynamic numPending;
+@dynamic numComplete;
+@dynamic sizeTotal;
+@dynamic sizePending;
+@dynamic sizeComplete;
+
+typedef struct CafeRequestGroupStatus__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t numTotal;
+  int32_t numPending;
+  int32_t numComplete;
+  int64_t sizeTotal;
+  int64_t sizePending;
+  int64_t sizeComplete;
+} CafeRequestGroupStatus__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "numTotal",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequestGroupStatus_FieldNumber_NumTotal,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, numTotal),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "numPending",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequestGroupStatus_FieldNumber_NumPending,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, numPending),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "numComplete",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequestGroupStatus_FieldNumber_NumComplete,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, numComplete),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "sizeTotal",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequestGroupStatus_FieldNumber_SizeTotal,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, sizeTotal),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "sizePending",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequestGroupStatus_FieldNumber_SizePending,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, sizePending),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "sizeComplete",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequestGroupStatus_FieldNumber_SizeComplete,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, sizeComplete),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CafeRequestGroupStatus class]
+                                     rootClass:[ModelRoot class]
+                                          file:ModelRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CafeRequestGroupStatus__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CafeHTTPRequest
+
+@implementation CafeHTTPRequest
+
+@dynamic type;
+@dynamic URL;
+@dynamic headers, headers_Count;
+@dynamic body;
+
+typedef struct CafeHTTPRequest__storage_ {
+  uint32_t _has_storage_[1];
+  CafeHTTPRequest_Type type;
+  NSString *URL;
+  NSMutableDictionary *headers;
+  NSData *body;
+} CafeHTTPRequest__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "type",
+        .dataTypeSpecific.enumDescFunc = CafeHTTPRequest_Type_EnumDescriptor,
+        .number = CafeHTTPRequest_FieldNumber_Type,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CafeHTTPRequest__storage_, type),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
+      },
+      {
+        .name = "URL",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeHTTPRequest_FieldNumber_URL,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(CafeHTTPRequest__storage_, URL),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "headers",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeHTTPRequest_FieldNumber_Headers,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CafeHTTPRequest__storage_, headers),
+        .flags = GPBFieldMapKeyString,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "body",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeHTTPRequest_FieldNumber_Body,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(CafeHTTPRequest__storage_, body),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBytes,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CafeHTTPRequest class]
+                                     rootClass:[ModelRoot class]
+                                          file:ModelRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CafeHTTPRequest__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\002!!!\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+int32_t CafeHTTPRequest_Type_RawValue(CafeHTTPRequest *message) {
+  GPBDescriptor *descriptor = [CafeHTTPRequest descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:CafeHTTPRequest_FieldNumber_Type];
+  return GPBGetMessageInt32Field(message, field);
+}
+
+void SetCafeHTTPRequest_Type_RawValue(CafeHTTPRequest *message, int32_t value) {
+  GPBDescriptor *descriptor = [CafeHTTPRequest descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:CafeHTTPRequest_FieldNumber_Type];
+  GPBSetInt32IvarWithFieldInternal(message, field, value, descriptor.file.syntax);
+}
+
+#pragma mark - Enum CafeHTTPRequest_Type
+
+GPBEnumDescriptor *CafeHTTPRequest_Type_EnumDescriptor(void) {
+  static _Atomic(GPBEnumDescriptor*) descriptor = nil;
+  if (!descriptor) {
+    static const char *valueNames =
+        "Put\000Post\000Delete\000";
+    static const int32_t values[] = {
+        CafeHTTPRequest_Type_Put,
+        CafeHTTPRequest_Type_Post,
+        CafeHTTPRequest_Type_Delete,
+    };
+    GPBEnumDescriptor *worker =
+        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(CafeHTTPRequest_Type)
+                                       valueNames:valueNames
+                                           values:values
+                                            count:(uint32_t)(sizeof(values) / sizeof(int32_t))
+                                     enumVerifier:CafeHTTPRequest_Type_IsValidValue];
+    GPBEnumDescriptor *expected = nil;
+    if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
+      [worker release];
+    }
+  }
+  return descriptor;
+}
+
+BOOL CafeHTTPRequest_Type_IsValidValue(int32_t value__) {
+  switch (value__) {
+    case CafeHTTPRequest_Type_Put:
+    case CafeHTTPRequest_Type_Post:
+    case CafeHTTPRequest_Type_Delete:
       return YES;
     default:
       return NO;

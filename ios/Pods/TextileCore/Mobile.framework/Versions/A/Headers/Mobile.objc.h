@@ -10,6 +10,7 @@
 #include "ref.h"
 #include "Universe.objc.h"
 
+#include "Core.objc.h"
 
 @class MobileEvent;
 @class MobileInitConfig;
@@ -36,9 +37,9 @@ name is the string value of a pb.MobileEvent_Type)
  */
 @interface MobileEvent : NSObject <goSeqRefInterface> {
 }
-@property(strong, readonly) id _ref;
+@property(strong, readonly) _Nonnull id _ref;
 
-- (nonnull instancetype)initWithRef:(id)ref;
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 @property (nonatomic) NSString* _Nonnull name;
 @property (nonatomic) int32_t type;
@@ -50,9 +51,9 @@ name is the string value of a pb.MobileEvent_Type)
  */
 @interface MobileInitConfig : NSObject <goSeqRefInterface> {
 }
-@property(strong, readonly) id _ref;
+@property(strong, readonly) _Nonnull id _ref;
 
-- (nonnull instancetype)initWithRef:(id)ref;
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 @property (nonatomic) NSString* _Nonnull seed;
 @property (nonatomic) NSString* _Nonnull repoPath;
@@ -65,9 +66,9 @@ name is the string value of a pb.MobileEvent_Type)
  */
 @interface MobileMigrateConfig : NSObject <goSeqRefInterface> {
 }
-@property(strong, readonly) id _ref;
+@property(strong, readonly) _Nonnull id _ref;
 
-- (nonnull instancetype)initWithRef:(id)ref;
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 @property (nonatomic) NSString* _Nonnull repoPath;
 @end
@@ -77,153 +78,162 @@ name is the string value of a pb.MobileEvent_Type)
  */
 @interface MobileMobile : NSObject <goSeqRefInterface> {
 }
-@property(strong, readonly) id _ref;
+@property(strong, readonly) _Nonnull id _ref;
 
-- (nonnull instancetype)initWithRef:(id)ref;
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 @property (nonatomic) NSString* _Nonnull repoPath;
-- (NSString* _Nonnull)acceptExternalInvite:(NSString* _Nullable)id_ key:(NSString* _Nullable)key error:(NSError* _Nullable*)error;
+- (NSString* _Nonnull)acceptExternalInvite:(NSString* _Nullable)id_ key:(NSString* _Nullable)key error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)acceptInvite:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 /**
  * AcceptInviteViaNotification call core AcceptInviteViaNotification
  */
-- (NSString* _Nonnull)acceptInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)accountContact:(NSError* _Nullable*)error;
-- (NSString* _Nonnull)addComment:(NSString* _Nullable)blockId body:(NSString* _Nullable)body error:(NSError* _Nullable*)error;
-- (BOOL)addContact:(NSData* _Nullable)contact error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)addExternalInvite:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)addFiles:(NSData* _Nullable)dir threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)addFilesByTarget:(NSString* _Nullable)target threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption error:(NSError* _Nullable*)error;
-- (NSString* _Nonnull)addFlag:(NSString* _Nullable)blockId error:(NSError* _Nullable*)error;
-- (NSString* _Nonnull)addIgnore:(NSString* _Nullable)blockId error:(NSError* _Nullable*)error;
-- (BOOL)addInvite:(NSString* _Nullable)threadId address:(NSString* _Nullable)address error:(NSError* _Nullable*)error;
-- (NSString* _Nonnull)addLike:(NSString* _Nullable)blockId error:(NSError* _Nullable*)error;
-- (NSString* _Nonnull)addMessage:(NSString* _Nullable)threadId body:(NSString* _Nullable)body error:(NSError* _Nullable*)error;
+- (NSString* _Nonnull)acceptInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)accountContact:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)addComment:(NSString* _Nullable)blockId body:(NSString* _Nullable)body error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)addContact:(NSData* _Nullable)contact error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)addExternalInvite:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)addFiles:(NSData* _Nullable)dir threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)addFilesByTarget:(NSString* _Nullable)target threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)addFlag:(NSString* _Nullable)blockId error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)addIgnore:(NSString* _Nullable)blockId error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)addInvite:(NSString* _Nullable)threadId address:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)addLike:(NSString* _Nullable)blockId error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)addMessage:(NSString* _Nullable)threadId body:(NSString* _Nullable)body error:(NSError* _Nullable* _Nullable)error;
 /**
  * AddOrUpdateThread calls core AddOrUpdateThread
  */
-- (BOOL)addOrUpdateThread:(NSData* _Nullable)thrd error:(NSError* _Nullable*)error;
+- (BOOL)addOrUpdateThread:(NSData* _Nullable)thrd error:(NSError* _Nullable* _Nullable)error;
 /**
  * AddSchema adds a new schema via schema mill
  */
-- (NSData* _Nullable)addSchema:(NSData* _Nullable)node error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)addSchema:(NSData* _Nullable)node error:(NSError* _Nullable* _Nullable)error;
 /**
  * AddThread adds a new thread with the given name
  */
-- (NSData* _Nullable)addThread:(NSData* _Nullable)config error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)addThread:(NSData* _Nullable)config error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)address;
 /**
  * Avatar calls core Avatar
  */
-- (NSString* _Nonnull)avatar:(NSError* _Nullable*)error;
-- (NSData* _Nullable)cafeSession:(NSString* _Nullable)peerId error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)cafeSessions:(NSError* _Nullable*)error;
-- (BOOL)checkCafeMessages:(NSError* _Nullable*)error;
-- (NSData* _Nullable)contact:(NSString* _Nullable)address error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)contactThreads:(NSString* _Nullable)address error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)contacts:(NSError* _Nullable*)error;
+- (NSString* _Nonnull)avatar:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)cafeHTTPRequest:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)cafeRequestGroupStatus:(NSString* _Nullable)group error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)cafeRequests:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)cafeSession:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)cafeSessions:(NSError* _Nullable* _Nullable)error;
+- (BOOL)checkCafeMessages:(NSError* _Nullable* _Nullable)error;
+- (BOOL)cleanupCafeRequests:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)contact:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)contactThreads:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)contacts:(NSError* _Nullable* _Nullable)error;
 /**
  * CountUnreadNotifications calls core CountUnreadNotifications
  */
 - (long)countUnreadNotifications;
-- (NSData* _Nullable)dataAtPath:(NSString* _Nullable)pth error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)decrypt:(NSData* _Nullable)input error:(NSError* _Nullable*)error;
-- (BOOL)deregisterCafe:(NSString* _Nullable)peerId error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)encrypt:(NSData* _Nullable)input error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)feed:(NSData* _Nullable)req error:(NSError* _Nullable*)error;
-- (NSString* _Nonnull)fileData:(NSString* _Nullable)hash error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)files:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)dataAtPath:(NSString* _Nullable)pth error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)decrypt:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)deregisterCafe:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)encrypt:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)feed:(NSData* _Nullable)req error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)fileData:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)files:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
 /**
  * GitSummary returns common GitSummary
  */
 - (NSString* _Nonnull)gitSummary;
+- (BOOL)ignoreInvite:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 /**
  * IgnoreInviteViaNotification call core IgnoreInviteViaNotification
  */
-- (BOOL)ignoreInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
-- (NSString* _Nonnull)imageFileDataForMinWidth:(NSString* _Nullable)pth minWidth:(long)minWidth error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)messages:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
+- (BOOL)ignoreInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)imageFileDataForMinWidth:(NSString* _Nullable)pth minWidth:(long)minWidth error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)invites:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)messages:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
 /**
  * Name calls core Name
  */
-- (NSString* _Nonnull)name:(NSError* _Nullable*)error;
+- (NSString* _Nonnull)name:(NSError* _Nullable* _Nullable)error;
 /**
  * Notifications call core Notifications
  */
-- (NSData* _Nullable)notifications:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)notifications:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
 // skipped method Mobile.OnlineCh with unsupported parameter or return types
 
-- (NSString* _Nonnull)peerId:(NSError* _Nullable*)error;
+- (NSString* _Nonnull)peerId:(NSError* _Nullable* _Nullable)error;
 - (void)prepareFiles:(NSString* _Nullable)data threadId:(NSString* _Nullable)threadId cb:(id<MobileCallback> _Nullable)cb;
 - (void)prepareFilesByPath:(NSString* _Nullable)path threadId:(NSString* _Nullable)threadId cb:(id<MobileCallback> _Nullable)cb;
-- (NSData* _Nullable)prepareFilesByPathSync:(NSString* _Nullable)path threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)prepareFilesSync:(NSString* _Nullable)data threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)prepareFilesByPathSync:(NSString* _Nullable)path threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)prepareFilesSync:(NSString* _Nullable)data threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
 /**
  * Profile calls core Profile
  */
-- (NSData* _Nullable)profile:(NSError* _Nullable*)error;
+- (NSData* _Nullable)profile:(NSError* _Nullable* _Nullable)error;
 /**
  * ReadAllNotifications calls core ReadAllNotifications
  */
-- (BOOL)readAllNotifications:(NSError* _Nullable*)error;
+- (BOOL)readAllNotifications:(NSError* _Nullable* _Nullable)error;
 /**
  * ReadNotification calls core ReadNotification
  */
-- (BOOL)readNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
-- (NSData* _Nullable)refreshCafeSession:(NSString* _Nullable)peerId error:(NSError* _Nullable*)error;
-- (BOOL)registerCafe:(NSString* _Nullable)host token:(NSString* _Nullable)token error:(NSError* _Nullable*)error;
-- (BOOL)removeContact:(NSString* _Nullable)address error:(NSError* _Nullable*)error;
+- (BOOL)readNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)refreshCafeSession:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)registerCafe:(NSString* _Nullable)host token:(NSString* _Nullable)token error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)removeContact:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
 /**
  * RemoveThread call core RemoveThread
  */
-- (NSString* _Nonnull)removeThread:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
+- (NSString* _Nonnull)removeThread:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 /**
  * RenameThread call core RenameThread
  */
-- (BOOL)renameThread:(NSString* _Nullable)id_ name:(NSString* _Nullable)name error:(NSError* _Nullable*)error;
-- (MobileSearchHandle* _Nullable)searchContacts:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable*)error;
+- (BOOL)renameThread:(NSString* _Nullable)id_ name:(NSString* _Nullable)name error:(NSError* _Nullable* _Nullable)error;
+- (MobileSearchHandle* _Nullable)searchContacts:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
 /**
  * SearchThreadSnapshots calls core SearchThreadSnapshots
  */
-- (MobileSearchHandle* _Nullable)searchThreadSnapshots:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable*)error;
+- (MobileSearchHandle* _Nullable)searchThreadSnapshots:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)seed;
 /**
  * SetAvatar calls core SetAvatar
  */
-- (BOOL)setAvatar:(NSString* _Nullable)hash error:(NSError* _Nullable*)error;
-- (BOOL)setLogLevel:(NSData* _Nullable)level error:(NSError* _Nullable*)error;
+- (BOOL)setAvatar:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)setCafeRequestComplete:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)setCafeRequestPending:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)setLogLevel:(NSData* _Nullable)level error:(NSError* _Nullable* _Nullable)error;
 /**
  * SetName calls core SetName
  */
-- (BOOL)setName:(NSString* _Nullable)username error:(NSError* _Nullable*)error;
+- (BOOL)setName:(NSString* _Nullable)username error:(NSError* _Nullable* _Nullable)error;
 /**
  * SnapshotThreads calls core SnapshotThreads
  */
-- (BOOL)snapshotThreads:(NSError* _Nullable*)error;
+- (BOOL)snapshotThreads:(NSError* _Nullable* _Nullable)error;
 /**
  * Start the mobile node
  */
-- (BOOL)start:(NSError* _Nullable*)error;
+- (BOOL)start:(NSError* _Nullable* _Nullable)error;
 /**
  * Stop the mobile node
  */
-- (BOOL)stop:(NSError* _Nullable*)error;
+- (BOOL)stop:(NSError* _Nullable* _Nullable)error;
 /**
  * Summary calls core Summary
  */
-- (NSData* _Nullable)summary:(NSError* _Nullable*)error;
-- (MobileSearchHandle* _Nullable)syncAccount:(NSData* _Nullable)options error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)summary:(NSError* _Nullable* _Nullable)error;
+- (MobileSearchHandle* _Nullable)syncAccount:(NSData* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
 /**
  * Thread calls core Thread
  */
-- (NSData* _Nullable)thread:(NSString* _Nullable)threadId error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)thread:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 /**
  * ThreadPeers calls core ThreadPeers
  */
-- (NSData* _Nullable)threadPeers:(NSString* _Nullable)id_ error:(NSError* _Nullable*)error;
+- (NSData* _Nullable)threadPeers:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 /**
  * Threads lists all threads
  */
-- (NSData* _Nullable)threads:(NSError* _Nullable*)error;
+- (NSData* _Nullable)threads:(NSError* _Nullable* _Nullable)error;
 /**
  * Version returns common Version
  */
@@ -235,12 +245,13 @@ name is the string value of a pb.MobileEvent_Type)
  */
 @interface MobileRunConfig : NSObject <goSeqRefInterface> {
 }
-@property(strong, readonly) id _ref;
+@property(strong, readonly) _Nonnull id _ref;
 
-- (nonnull instancetype)initWithRef:(id)ref;
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 @property (nonatomic) NSString* _Nonnull repoPath;
 @property (nonatomic) BOOL debug;
+@property (nonatomic) id<CoreCafeOutboxHandler> _Nullable cafeOutboxHandler;
 @end
 
 /**
@@ -248,9 +259,9 @@ name is the string value of a pb.MobileEvent_Type)
  */
 @interface MobileSearchHandle : NSObject <goSeqRefInterface> {
 }
-@property(strong, readonly) id _ref;
+@property(strong, readonly) _Nonnull id _ref;
 
-- (nonnull instancetype)initWithRef:(id)ref;
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 @property (nonatomic) NSString* _Nonnull id_;
 /**
@@ -262,27 +273,27 @@ name is the string value of a pb.MobileEvent_Type)
 /**
  * InitRepo calls core InitRepo
  */
-FOUNDATION_EXPORT BOOL MobileInitRepo(MobileInitConfig* _Nullable config, NSError* _Nullable* error);
+FOUNDATION_EXPORT BOOL MobileInitRepo(MobileInitConfig* _Nullable config, NSError* _Nullable* _Nullable error);
 
 /**
  * MigrateRepo calls core MigrateRepo
  */
-FOUNDATION_EXPORT BOOL MobileMigrateRepo(MobileMigrateConfig* _Nullable config, NSError* _Nullable* error);
+FOUNDATION_EXPORT BOOL MobileMigrateRepo(MobileMigrateConfig* _Nullable config, NSError* _Nullable* _Nullable error);
 
 /**
  * Create a gomobile compatible wrapper around Textile
  */
-FOUNDATION_EXPORT MobileMobile* _Nullable MobileNewTextile(MobileRunConfig* _Nullable config, id<MobileMessenger> _Nullable messenger, NSError* _Nullable* error);
+FOUNDATION_EXPORT MobileMobile* _Nullable MobileNewTextile(MobileRunConfig* _Nullable config, id<MobileMessenger> _Nullable messenger, NSError* _Nullable* _Nullable error);
 
 /**
  * NewWallet creates a brand new wallet and returns its recovery phrase
  */
-FOUNDATION_EXPORT NSString* _Nonnull MobileNewWallet(long wordCount, NSError* _Nullable* error);
+FOUNDATION_EXPORT NSString* _Nonnull MobileNewWallet(long wordCount, NSError* _Nullable* _Nullable error);
 
 /**
  * WalletAccountAt derives the account at the given index
  */
-FOUNDATION_EXPORT NSData* _Nullable MobileWalletAccountAt(NSString* _Nullable phrase, long index, NSString* _Nullable password, NSError* _Nullable* error);
+FOUNDATION_EXPORT NSData* _Nullable MobileWalletAccountAt(NSString* _Nullable phrase, long index, NSString* _Nullable password, NSError* _Nullable* _Nullable error);
 
 @class MobileCallback;
 
@@ -293,9 +304,9 @@ FOUNDATION_EXPORT NSData* _Nullable MobileWalletAccountAt(NSString* _Nullable ph
  */
 @interface MobileCallback : NSObject <goSeqRefInterface, MobileCallback> {
 }
-@property(strong, readonly) id _ref;
+@property(strong, readonly) _Nonnull id _ref;
 
-- (instancetype)initWithRef:(id)ref;
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (void)call:(NSData* _Nullable)data err:(NSError* _Nullable)err;
 @end
 
@@ -304,9 +315,9 @@ FOUNDATION_EXPORT NSData* _Nullable MobileWalletAccountAt(NSString* _Nullable ph
  */
 @interface MobileMessenger : NSObject <goSeqRefInterface, MobileMessenger> {
 }
-@property(strong, readonly) id _ref;
+@property(strong, readonly) _Nonnull id _ref;
 
-- (instancetype)initWithRef:(id)ref;
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (void)notify:(MobileEvent* _Nullable)event;
 @end
 

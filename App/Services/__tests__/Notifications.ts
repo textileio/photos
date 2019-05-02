@@ -3,7 +3,7 @@ import {
     toPayload
 } from '../Notifications'
 import { Notification } from '../../Models/Notifications'
-import { pb } from '@textile/react-native-sdk'
+import { Notification as SdkNotification } from '@textile/react-native-sdk'
 
 describe('notifications', () => {
     describe('enable', () => {
@@ -28,7 +28,7 @@ describe('notifications', () => {
         //     const notification = {
         //         ...base,
         //         body: 'invited you to join',
-        //         type: pb.Notification.Type.INVITE_RECEIVED
+        //         type: SdkNotification.Type.INVITE_RECEIVED
         //     }
         //     expect(toPayload(notification as Notification)).toMatchSnapshot()
         // })
@@ -36,7 +36,7 @@ describe('notifications', () => {
         //     const notification = {
         //         ...base,
         //         body: 'joined',
-        //         type: pb.Notification.Type.ACCOUNT_PEER_JOINED
+        //         type: SdkNotification.Type.ACCOUNT_PEER_JOINED
         //     }
         //     expect(toPayload(notification as Notification)).toMatchSnapshot()
         // })
@@ -44,7 +44,7 @@ describe('notifications', () => {
         //     const notification = {
         //         ...base,
         //         body: 'joined',
-        //         type: pb.Notification.Type.PEER_JOINED
+        //         type: SdkNotification.Type.PEER_JOINED
         //     }
         //     expect(toPayload(notification as Notification)).toMatchSnapshot()
         // })
@@ -52,7 +52,7 @@ describe('notifications', () => {
         //     const notification = {
         //         ...base,
         //         body: 'left',
-        //         type: pb.Notification.Type.PEER_LEFT
+        //         type: SdkNotification.Type.PEER_LEFT
         //     }
         //     expect(toPayload(notification as Notification)).toMatchSnapshot()
         // })
@@ -60,7 +60,7 @@ describe('notifications', () => {
         //     const notification = {
         //         ...base,
         //         body: 'here is my message!',
-        //         type: pb.Notification.Type.MESSAGE_ADDED
+        //         type: SdkNotification.Type.MESSAGE_ADDED
         //     }
         //     expect(toPayload(notification as Notification)).toMatchSnapshot()
         // })
@@ -68,7 +68,7 @@ describe('notifications', () => {
         //     const notification = {
         //         ...base,
         //         body: 'added a photo',
-        //         type: pb.Notification.Type.FILES_ADDED
+        //         type: SdkNotification.Type.FILES_ADDED
         //     }
         //     expect(toPayload(notification as Notification)).toMatchSnapshot()
         // })
@@ -76,7 +76,7 @@ describe('notifications', () => {
         //     const notification = {
         //         ...base,
         //         body: 'commented on a photo: a camel!',
-        //         type: pb.Notification.Type.COMMENT_ADDED
+        //         type: SdkNotification.Type.COMMENT_ADDED
         //     }
         //     expect(toPayload(notification as Notification)).toMatchSnapshot()
         // })
@@ -84,7 +84,7 @@ describe('notifications', () => {
         //     const notification = {
         //         ...base,
         //         body: 'liked a photo',
-        //         type: pb.Notification.Type.LIKE_ADDED
+        //         type: SdkNotification.Type.LIKE_ADDED
         //     }
         //     expect(toPayload(notification as Notification)).toMatchSnapshot()
         // })

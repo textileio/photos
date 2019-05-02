@@ -5,7 +5,7 @@ import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
-import { pb, util } from '@textile/react-native-sdk'
+import Textile, { IUser } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
@@ -142,7 +142,7 @@ class Group extends React.PureComponent<Props, State> {
     )
   }
 
-  sameUserAgain = (user: pb.IUser, previous: Item): boolean => {
+  sameUserAgain = (user: IUser, previous: Item): boolean => {
     if (!previous || !previous.type) {
       return false
     }
@@ -178,7 +178,7 @@ class Group extends React.PureComponent<Props, State> {
             avatar={user.avatar}
             username={user.name.length > 0 ? user.name : 'unknown'}
             message={caption.length > 0 ? caption : undefined}
-            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
             photoId={target}
             fileIndex={fileIndex}
             photoWidth={screenWidth}
@@ -216,7 +216,7 @@ class Group extends React.PureComponent<Props, State> {
             username={user.name || 'unknown'}
             message={body}
             // TODO: deal with pb Timestamp to JS Date!
-            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
             isSameUser={isSameUser}
           />
         )
@@ -230,7 +230,7 @@ class Group extends React.PureComponent<Props, State> {
             avatar={user.avatar}
             username={user.name || 'unknown'}
             message={`${word} ${this.props.groupName}`}
-            time={moment(util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
           />
         )
       }

@@ -1,6 +1,6 @@
 import actions, { reducer } from '../UIRedux'
 import { SharedImage } from '../../features/group/add-photo/models'
-import { pb } from '@textile/react-native-sdk'
+import { IFiles } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 const threadId: string = 'threadId' as any
@@ -13,7 +13,7 @@ const sharedImage: SharedImage = {
   canDelete: false
 }
 
-const sharedPhoto: pb.IFiles = {
+const sharedPhoto: IFiles = {
   user: {
     name: 'user',
     address: 'address',

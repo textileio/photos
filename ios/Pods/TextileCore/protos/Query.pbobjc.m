@@ -713,12 +713,12 @@ typedef struct PubSubQueryResults__storage_ {
 @implementation ContactQuery
 
 @dynamic address;
-@dynamic username;
+@dynamic name;
 
 typedef struct ContactQuery__storage_ {
   uint32_t _has_storage_[1];
   NSString *address;
-  NSString *username;
+  NSString *name;
 } ContactQuery__storage_;
 
 // This method is threadsafe because it is initially called
@@ -737,11 +737,11 @@ typedef struct ContactQuery__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "username",
+        .name = "name",
         .dataTypeSpecific.className = NULL,
-        .number = ContactQuery_FieldNumber_Username,
+        .number = ContactQuery_FieldNumber_Name,
         .hasIndex = 1,
-        .offset = (uint32_t)offsetof(ContactQuery__storage_, username),
+        .offset = (uint32_t)offsetof(ContactQuery__storage_, name),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },

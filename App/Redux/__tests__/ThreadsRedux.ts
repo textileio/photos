@@ -1,12 +1,12 @@
 import actions, { reducer } from '../ThreadsRedux'
-import { pb, API } from '@textile/react-native-sdk'
+import Textile, { IExternalInvite } from '@textile/react-native-sdk'
 
 const id: string = 'id' as any
 const name: string = 'myThread' as any
 const error = new Error('an error')
 const inviteId: string = 'invite_id' as any
 const inviteKey: string = 'a_key' as any
-const invite: pb.IExternalInvite = {id: inviteId, inviter: 'tests' as any, key: inviteKey}
+const invite: IExternalInvite = {id: inviteId, inviter: 'tests' as any, key: inviteKey}
 
 const initialState = reducer(undefined, {} as any)
 

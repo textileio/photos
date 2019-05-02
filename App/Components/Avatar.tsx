@@ -5,6 +5,7 @@ import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
 import TextileImage from './TextileImage'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { color as colors } from '../styles'
 
 interface OwnProps {
@@ -201,8 +202,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     target = localTarget
   }
 
-  const started = state.textile.nodeState.state === 'started'
-  const online = state.textile.online
+  const started = TextileEventsSelectors.started(state)
+  const online = TextileEventsSelectors.online(state)
 
   return { target, local, started, online }
 }

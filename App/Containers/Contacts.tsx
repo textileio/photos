@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
-import { pb } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 import { orderedContacts } from '../features/contacts/selectors'
 
 import SearchBar from '../Components/SearchBar'
@@ -26,7 +26,7 @@ const CONTAINER: ViewStyle = {
 }
 
 interface StateProps {
-  contacts: ReadonlyArray<pb.IContact>
+  contacts: ReadonlyArray<IContact>
 }
 
 interface NavProps {
@@ -80,7 +80,7 @@ class Contacts extends React.Component<Props, State> {
   }
 
   render() {
-    const allContacts: ReadonlyArray<pb.IContact> = this.props.contacts
+    const allContacts: ReadonlyArray<IContact> = this.props.contacts
     let data = allContacts
     if (this.state.searchString !== undefined && this.state.searchString.length > 0) {
       data = data.filter((contact) => {
@@ -112,9 +112,9 @@ class Contacts extends React.Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: pb.IContact) => item.address
+  keyExtractor = (item: IContact) => item.address
 
-  renderRow = (row: ListRenderItemInfo<pb.IContact>) => {
+  renderRow = (row: ListRenderItemInfo<IContact>) => {
     const { item } = row
     const leftItem = <Avatar style={{ width: 50, height: 50, backgroundColor: color.grey_5 }} target={item.avatar} />
     const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
@@ -134,7 +134,7 @@ class Contacts extends React.Component<Props, State> {
     })
   }
 
-  onPress = (contactInfo: pb.IContact) => {
+  onPress = (contactInfo: IContact) => {
     return () => {
       this.props.navigation.navigate('Contact', { avatar: contactInfo.avatar, username: contactInfo.name, address: contactInfo.address })
     }

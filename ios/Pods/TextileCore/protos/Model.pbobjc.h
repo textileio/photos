@@ -30,6 +30,7 @@ CF_EXTERN_C_BEGIN
 @class Block;
 @class Cafe;
 @class CafeClient;
+@class CafeRequest;
 @class CafeSession;
 @class Contact;
 @class Envelope;
@@ -55,16 +56,16 @@ typedef GPB_ENUM(Thread_Type) {
    * of the field.
    **/
   Thread_Type_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
-  /** initiator: RAW, members: */
+  /** initiator: RAW, whitelist: */
   Thread_Type_Private = 0,
 
-  /** initiator: RAW, members: R */
+  /** initiator: RAW, whitelist: R */
   Thread_Type_ReadOnly = 1,
 
-  /** initiator: RAW, members: RA */
+  /** initiator: RAW, whitelist: RA */
   Thread_Type_Public = 2,
 
-  /** initiator: RAW, members: RAW */
+  /** initiator: RAW, whitelist: RAW */
   Thread_Type_Open = 3,
 };
 
@@ -86,13 +87,13 @@ typedef GPB_ENUM(Thread_Sharing) {
    * of the field.
    **/
   Thread_Sharing_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
-  /** initiator: N, members: N */
+  /** initiator: N, whitelist: N */
   Thread_Sharing_NotShared = 0,
 
-  /** initiator: Y, members: N */
+  /** initiator: Y, whitelist: N */
   Thread_Sharing_InviteOnly = 1,
 
-  /** initiator: Y, members: Y */
+  /** initiator: Y, whitelist: Y */
   Thread_Sharing_Shared = 2,
 };
 
@@ -215,6 +216,50 @@ GPBEnumDescriptor *CafeRequest_Type_EnumDescriptor(void);
  * the time this source was generated.
  **/
 BOOL CafeRequest_Type_IsValidValue(int32_t value);
+
+#pragma mark - Enum CafeRequest_Status
+
+typedef GPB_ENUM(CafeRequest_Status) {
+  /**
+   * Value used if any message's field encounters a value that is not defined
+   * by this enum. The message will also have C functions to get/set the rawValue
+   * of the field.
+   **/
+  CafeRequest_Status_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
+  CafeRequest_Status_New = 0,
+  CafeRequest_Status_Pending = 1,
+  CafeRequest_Status_Complete = 2,
+};
+
+GPBEnumDescriptor *CafeRequest_Status_EnumDescriptor(void);
+
+/**
+ * Checks to see if the given value is defined by the enum or was not known at
+ * the time this source was generated.
+ **/
+BOOL CafeRequest_Status_IsValidValue(int32_t value);
+
+#pragma mark - Enum CafeHTTPRequest_Type
+
+typedef GPB_ENUM(CafeHTTPRequest_Type) {
+  /**
+   * Value used if any message's field encounters a value that is not defined
+   * by this enum. The message will also have C functions to get/set the rawValue
+   * of the field.
+   **/
+  CafeHTTPRequest_Type_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
+  CafeHTTPRequest_Type_Put = 0,
+  CafeHTTPRequest_Type_Post = 1,
+  CafeHTTPRequest_Type_Delete = 2,
+};
+
+GPBEnumDescriptor *CafeHTTPRequest_Type_EnumDescriptor(void);
+
+/**
+ * Checks to see if the given value is defined by the enum or was not known at
+ * the time this source was generated.
+ **/
+BOOL CafeHTTPRequest_Type_IsValidValue(int32_t value);
 
 #pragma mark - ModelRoot
 
@@ -352,7 +397,7 @@ typedef GPB_ENUM(Thread_FieldNumber) {
   Thread_FieldNumber_Initiator = 6,
   Thread_FieldNumber_Type = 7,
   Thread_FieldNumber_Sharing = 8,
-  Thread_FieldNumber_MembersArray = 9,
+  Thread_FieldNumber_WhitelistArray = 9,
   Thread_FieldNumber_State = 10,
   Thread_FieldNumber_Head = 11,
   Thread_FieldNumber_HeadBlock = 101,
@@ -379,9 +424,9 @@ typedef GPB_ENUM(Thread_FieldNumber) {
 
 @property(nonatomic, readwrite) Thread_Sharing sharing;
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *membersArray;
-/** The number of items in @c membersArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger membersArray_Count;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *whitelistArray;
+/** The number of items in @c whitelistArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger whitelistArray_Count;
 
 @property(nonatomic, readwrite) Thread_State state;
 
@@ -806,7 +851,6 @@ typedef GPB_ENUM(Cafe_FieldNumber) {
   Cafe_FieldNumber_Protocol = 4,
   Cafe_FieldNumber_Node = 5,
   Cafe_FieldNumber_URL = 6,
-  Cafe_FieldNumber_SwarmArray = 7,
 };
 
 @interface Cafe : GPBMessage
@@ -822,10 +866,6 @@ typedef GPB_ENUM(Cafe_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *node;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *URL;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *swarmArray;
-/** The number of items in @c swarmArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger swarmArray_Count;
 
 @end
 
@@ -891,6 +931,9 @@ typedef GPB_ENUM(CafeRequest_FieldNumber) {
   CafeRequest_FieldNumber_Cafe = 4,
   CafeRequest_FieldNumber_Type = 5,
   CafeRequest_FieldNumber_Date = 6,
+  CafeRequest_FieldNumber_Size = 7,
+  CafeRequest_FieldNumber_Group = 8,
+  CafeRequest_FieldNumber_Status = 9,
 };
 
 @interface CafeRequest : GPBMessage
@@ -907,9 +950,15 @@ typedef GPB_ENUM(CafeRequest_FieldNumber) {
 
 @property(nonatomic, readwrite) CafeRequest_Type type;
 
+@property(nonatomic, readwrite) int64_t size;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *group;
+
 @property(nonatomic, readwrite, strong, null_resettable) GPBTimestamp *date;
 /** Test to see if @c date has been set. */
 @property(nonatomic, readwrite) BOOL hasDate;
+
+@property(nonatomic, readwrite) CafeRequest_Status status;
 
 @end
 
@@ -924,6 +973,94 @@ int32_t CafeRequest_Type_RawValue(CafeRequest *message);
  * was generated.
  **/
 void SetCafeRequest_Type_RawValue(CafeRequest *message, int32_t value);
+
+/**
+ * Fetches the raw value of a @c CafeRequest's @c status property, even
+ * if the value was not defined by the enum at the time the code was generated.
+ **/
+int32_t CafeRequest_Status_RawValue(CafeRequest *message);
+/**
+ * Sets the raw value of an @c CafeRequest's @c status property, allowing
+ * it to be set to a value that was not defined by the enum at the time the code
+ * was generated.
+ **/
+void SetCafeRequest_Status_RawValue(CafeRequest *message, int32_t value);
+
+#pragma mark - CafeRequestList
+
+typedef GPB_ENUM(CafeRequestList_FieldNumber) {
+  CafeRequestList_FieldNumber_ItemsArray = 1,
+};
+
+@interface CafeRequestList : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<CafeRequest*> *itemsArray;
+/** The number of items in @c itemsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger itemsArray_Count;
+
+@end
+
+#pragma mark - CafeRequestGroupStatus
+
+typedef GPB_ENUM(CafeRequestGroupStatus_FieldNumber) {
+  CafeRequestGroupStatus_FieldNumber_NumTotal = 1,
+  CafeRequestGroupStatus_FieldNumber_NumPending = 2,
+  CafeRequestGroupStatus_FieldNumber_NumComplete = 3,
+  CafeRequestGroupStatus_FieldNumber_SizeTotal = 4,
+  CafeRequestGroupStatus_FieldNumber_SizePending = 5,
+  CafeRequestGroupStatus_FieldNumber_SizeComplete = 6,
+};
+
+@interface CafeRequestGroupStatus : GPBMessage
+
+@property(nonatomic, readwrite) int32_t numTotal;
+
+@property(nonatomic, readwrite) int32_t numPending;
+
+@property(nonatomic, readwrite) int32_t numComplete;
+
+@property(nonatomic, readwrite) int64_t sizeTotal;
+
+@property(nonatomic, readwrite) int64_t sizePending;
+
+@property(nonatomic, readwrite) int64_t sizeComplete;
+
+@end
+
+#pragma mark - CafeHTTPRequest
+
+typedef GPB_ENUM(CafeHTTPRequest_FieldNumber) {
+  CafeHTTPRequest_FieldNumber_Type = 1,
+  CafeHTTPRequest_FieldNumber_URL = 2,
+  CafeHTTPRequest_FieldNumber_Headers = 3,
+  CafeHTTPRequest_FieldNumber_Body = 4,
+};
+
+@interface CafeHTTPRequest : GPBMessage
+
+@property(nonatomic, readwrite) CafeHTTPRequest_Type type;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *URL;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *headers;
+/** The number of items in @c headers without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger headers_Count;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSData *body;
+
+@end
+
+/**
+ * Fetches the raw value of a @c CafeHTTPRequest's @c type property, even
+ * if the value was not defined by the enum at the time the code was generated.
+ **/
+int32_t CafeHTTPRequest_Type_RawValue(CafeHTTPRequest *message);
+/**
+ * Sets the raw value of an @c CafeHTTPRequest's @c type property, allowing
+ * it to be set to a value that was not defined by the enum at the time the code
+ * was generated.
+ **/
+void SetCafeHTTPRequest_Type_RawValue(CafeHTTPRequest *message, int32_t value);
 
 #pragma mark - CafeMessage
 

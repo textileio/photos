@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
-import { pb } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
 import Button from '../Components/SmallButton'
@@ -42,7 +42,7 @@ interface NavProps {
 interface DispatchProps {
   search: (searchString: string) => void
   clearSearch: () => void
-  addContact: (contact: pb.IContact) => void
+  addContact: (contact: IContact) => void
   inviteContact: (contact: Contacts.Contact) => void
 }
 
@@ -180,11 +180,11 @@ class AddContact extends React.Component<Props> {
     }
   }
 
-  onPressTextile = (contact: pb.IContact) => {
+  onPressTextile = (contact: IContact) => {
     return () => this.props.navigation.navigate('Contact', { avatar: contact.avatar, username: contact.name, address: contact.address })
   }
 
-  onAdd = (contact: pb.IContact) => {
+  onAdd = (contact: IContact) => {
     return () => this.props.addContact(contact)
   }
 
@@ -205,7 +205,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     search: (searchString: string) => dispatch(contactsActions.searchRequest(searchString)),
     clearSearch: () => dispatch(contactsActions.clearSearch()),
-    addContact: (contact: pb.IContact) => dispatch(contactsActions.addContactRequest(contact)),
+    addContact: (contact: IContact) => dispatch(contactsActions.addContactRequest(contact)),
     inviteContact: (contact: Contacts.Contact) => dispatch(contactsActions.authorInviteRequest(contact))
   }
 }
