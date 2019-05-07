@@ -12,6 +12,9 @@
 
 - (Thread *)add:(AddThreadConfig *)config error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node addThread:config.data error:error];
+  if (*error) {
+    return nil;
+  }
   return [[Thread alloc] initWithData:data error:error];
 }
 
@@ -27,10 +30,8 @@
   /*
    * thread returns an error if no thread is found.
    */
-  NSError *nodeError;
-  NSData *data = [self.node thread:threadId error:&nodeError];
-  if (nodeError) {
-    *error = nodeError;
+  NSData *data = [self.node thread:threadId error:error];
+  if (*error) {
     return nil;
   }
   return [[Thread alloc] initWithData:data error:error];
@@ -38,11 +39,17 @@
 
 - (ThreadList *)list:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node threads:error];
+  if (*error) {
+    return nil;
+  }
   return [[ThreadList alloc] initWithData:data error:error];
 }
 
 - (ContactList *)peers:(NSString *)threadId error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node threadPeers:threadId error:error];
+  if (*error) {
+    return nil;
+  }
   return [[ContactList alloc] initWithData:data error:error];
 }
 

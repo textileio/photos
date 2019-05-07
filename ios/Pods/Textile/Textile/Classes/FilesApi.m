@@ -39,37 +39,50 @@
 
 - (MobilePreparedFiles *)prepareSync:(NSString *)data threadId:(NSString *)threadId error:(NSError * _Nullable __autoreleasing *)error {
   NSData *result = [self.node prepareFilesSync:data threadId:threadId error:error];
+  if (*error) {
+    return nil;
+  }
   return [[MobilePreparedFiles alloc] initWithData:result error:error];
 }
 
 - (MobilePreparedFiles *)prepareByPathSync:(NSString *)path threadId:(NSString *)threadId error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node prepareFilesByPathSync:path threadId:threadId error:error];
+  if (*error) {
+    return nil;
+  }
   return [[MobilePreparedFiles alloc] initWithData:data error:error];
 }
 
 - (Block *)add:(Directory *)directory threadId:(NSString *)threadId caption:(NSString *)caption error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node addFiles:directory.data threadId:threadId caption:caption != nil ? caption : @"" error:error];
+  if (*error) {
+    return nil;
+  }
   return [[Block alloc] initWithData:data error:error];
 }
 
 - (Block *)addByTarget:(NSString *)target threadId:(NSString *)threadId caption:(NSString *)caption error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node addFilesByTarget:target threadId:threadId caption:caption != nil ? caption : @"" error:error];
+  if (*error) {
+    return nil;
+  }
   return [[Block alloc] initWithData:data error:error];
 }
 
-- (FilesList *)list:(NSString *)offset limit:(long)limit threadId:(NSString *)threadId error:(NSError * _Nullable __autoreleasing *)error {
+- (FilesList *)list:(NSString *)threadId offset:(NSString *)offset limit:(long)limit error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node files:offset != nil ? offset : @"" limit:limit threadId:threadId error:error];
+  if (*error) {
+    return nil;
+  }
   return [[FilesList alloc] initWithData:data error:error];
 }
 
 - (NSString *)data:(NSString *)hash error:(NSError * _Nullable __autoreleasing *)error {
-  NSString *data = [self.node fileData:hash error:error];
-  return data;
+  return [self.node fileData:hash error:error];
 }
 
 - (NSString *)imageDataForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError * _Nullable __autoreleasing *)error {
-  NSString *data = [self.node imageFileDataForMinWidth:path minWidth:minWidth error:error];
-  return data;
+  return [self.node imageFileDataForMinWidth:path minWidth:minWidth error:error];
 }
 
 @end

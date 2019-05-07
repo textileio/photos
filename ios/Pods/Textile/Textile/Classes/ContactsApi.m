@@ -18,10 +18,8 @@
   /*
    * contact returns an error if no contact is found.
    */
-  NSError *nodeError;
-  NSData *data = [self.node contact:address error:&nodeError];
-  if (nodeError) {
-    *error = nodeError;
+  NSData *data = [self.node contact:address error:error];
+  if (*error) {
     return nil;
   }
   return [[Contact alloc] initWithData:data error:error];
@@ -29,6 +27,9 @@
 
 - (ContactList *)list:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node contacts:error];
+  if (*error) {
+    return nil;
+  }
   return [[ContactList alloc] initWithData:data error:error];
 }
 
@@ -38,6 +39,9 @@
 
 - (ThreadList *)threads:(NSString *)address error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node contactThreads:address error:error];
+  if (*error) {
+    return nil;
+  }
   return [[ThreadList alloc] initWithData:data error:error];
 }
 

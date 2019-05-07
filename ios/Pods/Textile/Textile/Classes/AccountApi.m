@@ -28,6 +28,9 @@
 
 - (Contact *)contact:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node accountContact:error];
+  if (*error) {
+    return nil;
+  }
   return [[Contact alloc] initWithData:data error:error];
 }
 

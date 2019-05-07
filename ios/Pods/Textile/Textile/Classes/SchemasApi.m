@@ -12,6 +12,9 @@
 
 - (FileIndex *)add:(Node *)schemaNode error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node addSchema:schemaNode.data error:error];
+  if (*error) {
+    return nil;
+  }
   return [[FileIndex alloc] initWithData:data error:error];
 }
 

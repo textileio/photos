@@ -12,6 +12,9 @@
 
 - (NotificationList *)list:(NSString *)offset limit:(long)limit error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node notifications:offset != nil ? offset : @"" limit:limit error:error];
+  if (*error) {
+    return nil;
+  }
   return [[NotificationList alloc] initWithData:data error:error];
 }
 

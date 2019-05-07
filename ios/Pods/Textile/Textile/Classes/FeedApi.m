@@ -12,6 +12,9 @@
 
 - (FeedItemList *)list:(FeedRequest *)request error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node feed:request.data error:error];
+  if (*error) {
+    return nil;
+  }
   return [[FeedItemList alloc] initWithData:data error:error];
 }
 

@@ -16,11 +16,17 @@
 
 - (ExternalInvite *)addExternal:(NSString *)threadId error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node addExternalInvite:threadId error:error];
+  if (*error) {
+    return nil;
+  }
   return [[ExternalInvite alloc] initWithData:data error:error];
 }
 
 - (InviteViewList *)list:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node invites:error];
+  if (*error) {
+    return nil;
+  }
   return [[InviteViewList alloc] initWithData:data error:error];
 }
 

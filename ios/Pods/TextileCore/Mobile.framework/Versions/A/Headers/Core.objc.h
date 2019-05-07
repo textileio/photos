@@ -186,6 +186,7 @@
 @property (nonatomic) NSString* _Nonnull apiAddr;
 @property (nonatomic) NSString* _Nonnull cafeApiAddr;
 @property (nonatomic) NSString* _Nonnull gatewayAddr;
+@property (nonatomic) NSString* _Nonnull profilingAddr;
 @property (nonatomic) BOOL isMobile;
 @property (nonatomic) BOOL isServer;
 @property (nonatomic) BOOL logToDisk;
@@ -419,9 +420,13 @@ Note: Only thread initiators can update the thread's name
 // skipped method Textile.SearchThreadSnapshots with unsupported parameter or return types
 
 /**
+ * Server returns whether or not node is configured for a server
+ */
+- (BOOL)server;
+/**
  * SetAvatar updates profile with a new avatar at the given file hash.
  */
-- (BOOL)setAvatar:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)setAvatar:(NSError* _Nullable* _Nullable)error;
 // skipped method Textile.SetLogLevel with unsupported parameter or return types
 
 /**
@@ -528,8 +533,14 @@ bcrypt hashed equivalent
  * Head returns content id of the latest update
  */
 - (NSString* _Nonnull)head:(NSError* _Nullable* _Nullable)error;
+// skipped method Thread.LatestFiles with unsupported parameter or return types
+
 // skipped method Thread.Peers with unsupported parameter or return types
 
+/**
+ * UpdateSchema sets a new schema hash on the model and loads its node
+ */
+- (BOOL)updateSchema:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
 @end
 
 /**
@@ -589,8 +600,8 @@ with annotations amongst a group of peers
 - (void)start;
 @end
 
-FOUNDATION_EXPORT NSString* _Nonnull const CoreDataLinkName;
-FOUNDATION_EXPORT NSString* _Nonnull const CoreFileLinkName;
+FOUNDATION_EXPORT NSString* _Nonnull const CoreContentLinkName;
+FOUNDATION_EXPORT NSString* _Nonnull const CoreMetaLinkName;
 
 @interface Core : NSObject
 /**
@@ -644,11 +655,11 @@ FOUNDATION_EXPORT NSString* _Nonnull const CoreFileLinkName;
 + (NSError* _Nullable) errJsonSchemaRequired;
 + (void) setErrJsonSchemaRequired:(NSError* _Nullable)v;
 
-+ (NSError* _Nullable) errMissingDataLink;
-+ (void) setErrMissingDataLink:(NSError* _Nullable)v;
++ (NSError* _Nullable) errMissingContentLink;
++ (void) setErrMissingContentLink:(NSError* _Nullable)v;
 
-+ (NSError* _Nullable) errMissingFileLink;
-+ (void) setErrMissingFileLink:(NSError* _Nullable)v;
++ (NSError* _Nullable) errMissingMetaLink;
++ (void) setErrMissingMetaLink:(NSError* _Nullable)v;
 
 /**
  * ErrNotAnnotatable indicates the thread is not annotatable (comments/likes)
@@ -706,6 +717,10 @@ FOUNDATION_EXPORT NSString* _Nonnull const CoreFileLinkName;
  */
 + (NSError* _Nullable) errThreadSchemaRequired;
 + (void) setErrThreadSchemaRequired:(NSError* _Nullable)v;
+
+// skipped variable ValidContentLinkNames with unsupported type: []string
+
+// skipped variable ValidMetaLinkNames with unsupported type: []string
 
 @end
 

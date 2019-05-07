@@ -61,11 +61,25 @@
   [Textile.instance newTextile:repoPath debug:debug error:error];
   if (*error && (*error).code == 1) {
     NSString *recoveryPhrase = [Textile.instance newWallet:12 error:error];
+    if (*error) {
+      return nil;
+    }
     MobileWalletAccount *account = [Textile.instance walletAccountAt:recoveryPhrase index:0 password:@"" error:error];
+    if (*error) {
+      return nil;
+    }
     [Textile.instance initRepo:account.seed repoPath:repoPath logToDisk:logToDisk debug:debug error:error];
+    if (*error) {
+      return nil;
+    }
     [Textile.instance newTextile:repoPath debug:debug error:error];
+    if (*error) {
+      return nil;
+    }
     [Textile.instance createNodeDependants];
     return recoveryPhrase;
+  } else if (*error) {
+    return nil;
   }
   [Textile.instance createNodeDependants];
   return nil;
@@ -93,6 +107,9 @@
 
 - (MobileWalletAccount *)walletAccountAt:(NSString *)phrase index:(NSInteger)index password:(NSString *)password error:(NSError *__autoreleasing *)error {
   NSData *data = MobileWalletAccountAt(phrase, index, password, error);
+  if (*error) {
+    return nil;
+  }
   MobileWalletAccount *account = [[MobileWalletAccount alloc] initWithData:data error:error];
   return account;
 }
@@ -137,6 +154,9 @@
 
 - (Summary *)summary:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node summary:error];
+  if (*error) {
+    return nil;
+  }
   return [[Summary alloc] initWithData:data error:error];
 }
 
