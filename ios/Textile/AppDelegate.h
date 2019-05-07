@@ -10,6 +10,6 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
-@property (nonatomic, copy, nullable) void (^backgroundCompletionHandler)();
+@property (nonatomic, copy, nullable) void (^backgroundCompletionHandler)(void);
 
 @end
