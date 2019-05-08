@@ -20,7 +20,7 @@
    * If we get no data back or there was an error, return nil.
    */
   NSData *data = [self.node cafeSession:peerId error:error];
-  if (!data || error) {
+  if (!data || *error) {
     return nil;
   }
   return [[CafeSession alloc] initWithData:data error:error];
@@ -28,6 +28,9 @@
 
 - (CafeSessionList *)sessions:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node cafeSessions:error];
+  if (*error) {
+    return nil;
+  }
   return [[CafeSessionList alloc] initWithData:data error:error];
 }
 
@@ -37,7 +40,7 @@
    * If we get no data back or there was an error, return nil.
    */
   NSData *data = [self.node refreshCafeSession:peerId error:error];
-  if (!data || error) {
+  if (!data || *error) {
     return nil;
   }
   return [[CafeSession alloc] initWithData:data error:error];

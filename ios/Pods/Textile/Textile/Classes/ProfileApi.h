@@ -7,6 +7,7 @@
 //
 
 #import <TextileCore/Model.pbobjc.h>
+#import <TextileCore/View.pbobjc.h>
 #import "NodeDependant.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,7 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)name:(NSError **)error;
 - (void)setName:(NSString *)name error:(NSError **)error;
 - (NSString *)avatar:(NSError **)error;
-- (void)setAvatar:(NSString *)hash error:(NSError **)error;
+- (Block *)setAvatar:(Directory *)directory error:(NSError **)error;
+- (Block *)setAvatarByTarget:(NSString *)hash error:(NSError **)error;
 
 @end
 

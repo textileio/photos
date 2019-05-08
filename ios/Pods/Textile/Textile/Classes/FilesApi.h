@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (MobilePreparedFiles *)prepareByPathSync:(NSString *)path threadId:(NSString *)threadId error:(NSError **)error;
 - (Block *)add:(Directory *)directory threadId:(NSString *)threadId caption:(nullable NSString *)caption error:(NSError **)error;
 - (Block *)addByTarget:(NSString *)target threadId:(NSString *)threadId caption:(nullable NSString *)caption error:(NSError **)error;
-- (FilesList *)list:(nullable NSString *)offset limit:(long)limit threadId:(NSString *)threadId error:(NSError **)error;
+- (FilesList *)list:(NSString *)threadId offset:(nullable NSString *)offset limit:(long)limit error:(NSError **)error;
 - (NSString *)data:(NSString *)hash error:(NSError **)error;
 - (NSString *)imageDataForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError **)error;
 

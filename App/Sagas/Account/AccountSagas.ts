@@ -100,7 +100,7 @@ export function * setAvatar() {
       }
       // Ideally this could move into the SDK directly so it can manage
       // knowing its own online state
-      yield call(Textile.profile.setAvatar, action.payload.avatar)
+      yield call(Textile.profile.setAvatarByTarget, action.payload.avatar)
       yield put(TextileEventsActions.updateProfile())
     } catch (error) {
       yield put(AccountActions.setAvatarError(error))

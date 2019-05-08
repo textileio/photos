@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@textile/react-native-icon": "^1.0.0",
-    "@textile/react-native-sdk": "1.2.1",
+    "@textile/react-native-sdk": "1.2.3",
     "@textile/redux-saga-wait-for": "1.0.1",
     "apisauce": "^1.0.2",
     "moment": "^2.22.2",

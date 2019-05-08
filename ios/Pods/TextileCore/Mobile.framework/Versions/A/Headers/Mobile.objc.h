@@ -90,6 +90,7 @@ name is the string value of a pb.MobileEvent_Type)
  */
 - (NSString* _Nonnull)acceptInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)accountContact:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)accountThread:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)addComment:(NSString* _Nullable)blockId body:(NSString* _Nullable)body error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)addContact:(NSData* _Nullable)contact error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)addExternalInvite:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
@@ -137,7 +138,7 @@ name is the string value of a pb.MobileEvent_Type)
 - (NSData* _Nullable)encrypt:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)feed:(NSData* _Nullable)req error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)fileData:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)files:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)files:(NSString* _Nullable)threadId offset:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
 /**
  * GitSummary returns common GitSummary
  */
@@ -194,10 +195,6 @@ name is the string value of a pb.MobileEvent_Type)
  */
 - (MobileSearchHandle* _Nullable)searchThreadSnapshots:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)seed;
-/**
- * SetAvatar calls core SetAvatar
- */
-- (BOOL)setAvatar:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)setCafeRequestComplete:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)setCafeRequestPending:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)setLogLevel:(NSData* _Nullable)level error:(NSError* _Nullable* _Nullable)error;

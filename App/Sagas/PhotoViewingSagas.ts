@@ -76,7 +76,7 @@ export function * addThread(action: ActionType<typeof PhotoViewingActions.addThr
       sharing: Thread.Sharing.SHARED,
       schema: { id: '', json: '', preset: AddThreadConfig.Schema.Preset.MEDIA },
       force: false,
-      members: []
+      whitelist: []
     }
     yield call(Textile.threads.add, config)
   } catch (error) {
@@ -121,7 +121,7 @@ export function * refreshThreads(action: ActionType<typeof PhotoViewingActions.r
 export function * refreshThread(action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>) {
   const { threadId } = action.payload
   try {
-    const photosResult: IFilesList = yield call(Textile.files.list, '', -1, threadId)
+    const photosResult: IFilesList = yield call(Textile.files.list, threadId, '', -1)
     yield put(PhotoViewingActions.refreshThreadSuccess(threadId, photosResult.items))
   } catch (error) {
     yield put(PhotoViewingActions.refreshThreadError(threadId, error))
