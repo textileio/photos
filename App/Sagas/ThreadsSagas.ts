@@ -133,7 +133,7 @@ export function * cameraRollThreadCreateTask() {
       sharing: Thread.Sharing.NOT_SHARED,
       schema: { id: '', json: '', preset: AddThreadConfig.Schema.Preset.CAMERA_ROLL },
       force: false,
-      members: []
+      whitelist: []
     }
     yield call(Textile.threads.add, config)
   } catch (error) {

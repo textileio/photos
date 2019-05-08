@@ -60,6 +60,7 @@
   Textile.instance.messenger = [[Messenger alloc] init];
   [Textile.instance newTextile:repoPath debug:debug error:error];
   if (*error && (*error).code == 1) {
+    *error = nil;
     NSString *recoveryPhrase = [Textile.instance newWallet:12 error:error];
     if (*error) {
       return nil;

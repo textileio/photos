@@ -58,7 +58,7 @@ function * handleAddContactRequest(action: ActionType<typeof actions.addContactR
 
 async function executeTextileSearch(searchString: string) {
   const query: IContactQuery = {
-    username: searchString,
+    name: searchString,
     address: ''
   }
   const options: IQueryOptions = {

@@ -138,7 +138,7 @@ name is the string value of a pb.MobileEvent_Type)
 - (NSData* _Nullable)encrypt:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)feed:(NSData* _Nullable)req error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)fileData:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)files:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)files:(NSString* _Nullable)threadId offset:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
 /**
  * GitSummary returns common GitSummary
  */
