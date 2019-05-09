@@ -113,7 +113,7 @@ export function * nodeOnline() {
 
       const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
       if (pending) {
-        yield call(Textile.profile.setAvatarByTarget, pending)
+        // yield call(Textile.profile.setAvatarByTarget, pending)
       }
     } catch (error) {
       yield call(logNewEvent, 'nodeOnline', error.message, true)

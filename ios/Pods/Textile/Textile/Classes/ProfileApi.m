@@ -31,22 +31,6 @@
   return [self.node avatar:error];
 }
 
-- (Block *)setAvatar:(Directory *)directory error:(NSError * _Nullable __autoreleasing *)error {
-  Thread *accountThread = [self accountThread:error];
-  if (*error) {
-    return nil;
-  }
-  return [Textile.instance.files add:directory threadId:accountThread.id_p caption:nil error:error];
-}
-
-- (Block *)setAvatarByTarget:(NSString *)hash error:(NSError * _Nullable __autoreleasing *)error {
-  Thread *accountThread = [self accountThread:error];
-  if (*error) {
-    return nil;
-  }
-  return [Textile.instance.files addByTarget:hash threadId:accountThread.id_p caption:nil error:error];
-}
-
 - (Thread *)accountThread:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node accountThread:error];
   if (*error) {
