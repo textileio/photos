@@ -1,7 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ui stories initial state should match snapshot 1`] = `
-Object {
-  "chosenProfilePhoto": Object {},
-}
-`;
+exports[`ui stories initial state should match snapshot 1`] = `Object {}`;

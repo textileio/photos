@@ -4,22 +4,6 @@ import { RootState } from './Types'
 import { IFiles } from '@textile/react-native-sdk'
 
 const actions = {
-  chooseProfilePhotoRequest: createAction('CHOOSE_PROFILE_PHOTO_REQUEST'),
-  chooseProfilePhotoSuccess: createAction('CHOOSE_PROFILE_PHOTO_SUCCESS', (resolve) => {
-    return (image: SharedImage, data: string) => resolve({ image, data })
-  }),
-  chooseProfilePhotoError: createAction('CHOOSE_PROFILE_PHOTO_ERROR', (resolve) => {
-    return (error: Error) => resolve({ error })
-  }),
-  selectProfilePicture: createAction('SELECT_PROFILE_PICTURE', (resolve) => {
-    return (image: SharedImage) => resolve({ image })
-  }),
-  updateProfilePicture: createAction('UPDATE_PROFILE_PICTURE', (resolve) => {
-    return (image: SharedImage) => resolve({ image })
-  }),
-  cancelProfileUpdate: createAction('CANCEL_PROFILE_UPDATE', (resolve) => {
-    return () => resolve()
-  }),
   updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
     return (image: SharedImage | IFiles) => resolve({ image })
   }),
@@ -82,11 +66,6 @@ const actions = {
 export type UIAction = ActionType<typeof actions>
 
 export interface UIState {
-  readonly chosenProfilePhoto: {
-    readonly image?: SharedImage
-    readonly data?: string
-    readonly error?: Error
-  }
   readonly sharingPhoto?: {
     readonly image?: SharedImage | IFiles
     readonly threadId?: string
@@ -96,17 +75,10 @@ export interface UIState {
 }
 
 export const initialState: UIState = {
-  chosenProfilePhoto: {}
 }
 
 export function reducer(state: UIState = initialState, action: UIAction): UIState {
   switch (action.type) {
-    case getType(actions.chooseProfilePhotoSuccess):
-    case getType(actions.chooseProfilePhotoError):
-      return { ...state, chosenProfilePhoto: { ...state.chosenProfilePhoto, ...action.payload } }
-    case getType(actions.updateProfilePicture):
-    case getType(actions.cancelProfileUpdate):
-      return { ...state, chosenProfilePhoto: {} }
     case getType(actions.updateSharingPhotoImage):
       const { image } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, image } }

@@ -9,7 +9,7 @@ import VersionNumber from 'react-native-version-number'
 import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
 
 import PreferencesActions from '../../../Redux/PreferencesRedux'
-import { getPeerId, getUsername, getRecoveryPhrase } from '../../../Redux/AccountSelectors'
+import { accountSelectors } from '../../../features/account'
 
 import styles from './statics/styles'
 import ContactModal from './ContactModal'
@@ -182,10 +182,10 @@ const mapStateToProps = (state: RootState): StateProps => {
   const nodeRunning = TextileEventsSelectors.started(state)
   const verboseUi = state.preferences.verboseUi
   return {
-    name: getUsername(state),
+    name: accountSelectors.getUsername(state.account),
     verboseUi,
-    recoveryPhrase: getRecoveryPhrase(state) || 'sorry, there was an error',
-    peerId: getPeerId(state) || 'sorry, there was an error',
+    recoveryPhrase: accountSelectors.getRecoveryPhrase(state.account) || 'sorry, there was an error',
+    peerId: accountSelectors.getPeerId(state.account) || 'sorry, there was an error',
     online,
     nodeRunning
   }

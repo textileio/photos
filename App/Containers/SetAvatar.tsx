@@ -7,7 +7,7 @@ import Icon from '@textile/react-native-icon'
 
 import Button from '../Components/LargeButton'
 import { RootAction, RootState } from '../Redux/Types'
-import UIActions from '../Redux/UIRedux'
+import { accountActions } from '../features/account'
 import { SharedImage } from '../features/group/add-photo/models'
 import Avatar from '../Components/Avatar'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
@@ -208,17 +208,17 @@ class SetAvatar extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  buttonText: state.ui.chosenProfilePhoto.image ? 'Save' : 'Choose Photo',
-  displaySubButton: state.ui.chosenProfilePhoto.image !== undefined,
-  image: state.ui.chosenProfilePhoto.image,
-  data: state.ui.chosenProfilePhoto.data,
+  buttonText: state.account.chosenProfilePhoto.image ? 'Save' : 'Choose Photo',
+  displaySubButton: state.account.chosenProfilePhoto.image !== undefined,
+  image: state.account.chosenProfilePhoto.image,
+  data: state.account.chosenProfilePhoto.data,
   accountHasAvatar: state.account.profile.value ? state.account.profile.value.avatar !== undefined : false
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  displayPhotoChooser: () => dispatch(UIActions.chooseProfilePhotoRequest()),
-  submitAvatar: (image: SharedImage) => dispatch(UIActions.updateProfilePicture(image)),
-  cancel: () => dispatch(UIActions.cancelProfileUpdate())
+  displayPhotoChooser: () => dispatch(accountActions.chooseProfilePhoto.request()),
+  submitAvatar: (image: SharedImage) => dispatch(accountActions.setAvatar.request(image)),
+  cancel: () => dispatch(accountActions.cancelProfilePhotoUpdate())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SetAvatar)

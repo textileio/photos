@@ -7,7 +7,7 @@ import Config from 'react-native-config'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { InboundInvite } from '../Redux/ThreadsRedux'
 import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
-import { getAddress } from '../Redux/AccountSelectors'
+import { accountSelectors } from '../features/account'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
 import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
@@ -22,6 +22,7 @@ import Textile, {
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
+import { RootState } from '../Redux/Types'
 
 export function * monitorNewThreadActions() {
   while (true) {
@@ -98,7 +99,7 @@ export function * removeThread(action: ActionType<typeof PhotoViewingActions.rem
 
 export function * refreshThreads(action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>) {
   try {
-    const accountThreadId = yield select(getAddress)
+    const accountThreadId = yield select((state: RootState) => accountSelectors.getAddress(state.account))
     const threadsResult: IThreadList = yield call(Textile.threads.list)
     for (const thread of threadsResult.items) {
       /**

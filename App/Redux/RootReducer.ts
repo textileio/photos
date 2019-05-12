@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { reducer as accountReducer } from './AccountRedux'
+import { accountReducer } from '../features/account'
 import { reducer as authReducer } from './AuthRedux'
 import { reducer as cameraRollReducer } from './CameraRollRedux'
 import { contactsReducer } from '../features/contacts'

@@ -17,7 +17,7 @@ import TriggersActions from '../Redux/TriggersRedux'
 
 /* ------------- Sagas ------------- */
 
-import accountSaga from './Account'
+import { accountSaga } from '../features/account'
 import { contactsSaga } from '../features/contacts'
 
 import { startup } from './StartupSagas'
@@ -84,9 +84,6 @@ import {
   navigateToLikes,
   addPhotoLike,
   cameraPermissionsTrigger,
-  chooseProfilePhoto,
-  handleProfilePhotoSelected,
-  handleProfilePhotoUpdated,
   presentPublicLinkInterface,
   updateServices
 } from './TextileSagas'
@@ -114,11 +111,6 @@ export default function * root(dispatch: Dispatch) {
 
     // just for logging purposes
     takeEvery(getType(groupActions.addPhoto.error), handleImageProcessingError),
-
-    // profile photo
-    takeEvery(getType(UIActions.chooseProfilePhotoRequest), chooseProfilePhoto),
-    takeEvery(getType(UIActions.selectProfilePicture), handleProfilePhotoSelected),
-    takeEvery(getType(UIActions.updateProfilePicture), handleProfilePhotoUpdated),
 
     // permissions request events
     takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
