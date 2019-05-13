@@ -118,7 +118,10 @@ typedef NS_CLOSED_ENUM(NSInteger, AppState) {
   }
   self.timer = [NSTimer scheduledTimerWithTimeInterval:delay repeats:FALSE block:^(NSTimer * _Nonnull timer) {
     [weakSelf stopNode];
-    [UIApplication.sharedApplication endBackgroundTask:bgTaskId];
+    // Dispatch this after a slight delay to allow consumers of the stop node event to process the event before app suspension
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      [UIApplication.sharedApplication endBackgroundTask:bgTaskId];
+    });
   }];
 }
 

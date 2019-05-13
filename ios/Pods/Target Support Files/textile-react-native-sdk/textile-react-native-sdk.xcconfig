@@ -2,6 +2,7 @@ CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/textile-react-native-s
 FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/TextileCore"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/textile-react-native-sdk" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/DoubleConversion" "${PODS_ROOT}/Headers/Public/Protobuf" "${PODS_ROOT}/Headers/Public/React" "${PODS_ROOT}/Headers/Public/Textile" "${PODS_ROOT}/Headers/Public/TextileCore" "${PODS_ROOT}/Headers/Public/glog" "${PODS_ROOT}/Headers/Public/textile-react-native-sdk" "${PODS_ROOT}/Headers/Public/yoga"
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/DoubleConversion" "${PODS_CONFIGURATION_BUILD_DIR}/Folly" "${PODS_CONFIGURATION_BUILD_DIR}/Protobuf" "${PODS_CONFIGURATION_BUILD_DIR}/React" "${PODS_CONFIGURATION_BUILD_DIR}/Textile" "${PODS_CONFIGURATION_BUILD_DIR}/TextileCore" "${PODS_CONFIGURATION_BUILD_DIR}/glog" "${PODS_CONFIGURATION_BUILD_DIR}/yoga"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_ROOT = ${SRCROOT}

@@ -59,13 +59,13 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - Textile (0.1.12):
+  - Textile (0.1.13):
     - Protobuf (~> 3.7)
-    - TextileCore (~> 0.1.13-rc8)
-  - textile-react-native-sdk (1.2.5):
+    - TextileCore (~> 0.1.13)
+  - textile-react-native-sdk (1.2.6):
     - React
-    - Textile (= 0.1.12)
-  - TextileCore (0.1.13-rc8):
+    - Textile (= 0.1.13)
+  - TextileCore (0.1.13):
     - Protobuf (~> 3.7)
   - yoga (0.57.7.React)
 
@@ -119,12 +119,12 @@ SPEC CHECKSUMS:
   Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
   glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
-  React: 67899bbb285ceb9b4ee1c88b3991602ba5772ad2
-  Textile: f77122f803d6b1d4ba58caf87d16662d1601da85
-  textile-react-native-sdk: a3445f99600573025fec45d931b696ed003b128c
-  TextileCore: 8bcd47848261fcbcd9caf8cb7f8ffbadd3c7a8ae
-  yoga: 192d724e53380b783e09b7d687a55cd8ed5188be
+  React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
+  Textile: 07cb4c8c2c4b5eabe69a4762e169f33c0c28d201
+  textile-react-native-sdk: fe150add3b64639a10c75e0da61696c5f6d745f5
+  TextileCore: 489a524028209f36d638568d4797f65b4eadc92b
+  yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
 PODFILE CHECKSUM: 36d0150b986daae4a635027f71c1d7bc737bd29e
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.5.3
