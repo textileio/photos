@@ -859,10 +859,10 @@
     react-native-safe-area-view "^0.13.0"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@textile/js-types@0.1.13-rc4":
-  version "0.1.13-rc4"
-  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.1.13-rc4.tgz#3a6f62371716ed284132645657116fd2128c1dfc"
-  integrity sha512-09wHUTqyKSyHztAvwkVRYMxwHTCTv/SC34y0xEmeXPLNV1BmB4/v/OpY8psjkk5JUeegH1Ks8pY8qbkTWQWwtg==
+"@textile/js-types@0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.1.13.tgz#2650beaae018a3213d594732348b4d7a040436bf"
+  integrity sha512-/xurrs4GBR2JQSNUv6I0QSSJchZA+cyGZb18jd6WjrAFdJZvR7YEkjz4mr6ZhvX9LAaZAesmC4dAMKt1+0OZsQ==
   dependencies:
     protobufjs "^6.8.8"
 
@@ -872,12 +872,12 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-sdk@1.2.6":
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.6.tgz#0b7472a401ab41dfe7cdf5d5faa30e98a36100a6"
-  integrity sha512-XkrGC5UwUJKuLoIwD1VIcEoeSkBYZpOeCs3s2115HMYyE8XL5v7LqV1uPGrv+etpf9dpxns+7beU9Ih7+0Wifw==
+"@textile/react-native-sdk@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.7.tgz#21e75dea3cc04fa40571ca78f751a63c281e4fc1"
+  integrity sha512-omAKkCWDc8HJHhXWi/irES4gQFtnFgZFr0ZLSNOHm2kWOpYji4tVCB9J5tud+e2bBEu0x99+CIlmZ6cot73k9A==
   dependencies:
-    "@textile/js-types" "0.1.13-rc4"
+    "@textile/js-types" "0.1.13"
     buffer "^5.2.1"
 
 "@textile/redux-saga-wait-for@1.0.1":
