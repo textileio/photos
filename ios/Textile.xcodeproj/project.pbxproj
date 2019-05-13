@@ -1721,7 +1721,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8AF863B7C065E68291276D09 /* Pods-Textile.debug.xcconfig */;
+			baseConfigurationReference = EAD6563C03CBE718FB42E49A /* Pods-Textile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Textile/Textile.entitlements;
@@ -1755,7 +1755,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49EE1F092DEC53DDF831811A /* Pods-Textile.release.xcconfig */;
+			baseConfigurationReference = 6693AB6E05B41B65F2F6D712 /* Pods-Textile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Textile/Textile.entitlements;

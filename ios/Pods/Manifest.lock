@@ -119,12 +119,12 @@ SPEC CHECKSUMS:
   Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
   glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
-  React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
+  React: 67899bbb285ceb9b4ee1c88b3991602ba5772ad2
   Textile: 07cb4c8c2c4b5eabe69a4762e169f33c0c28d201
-  textile-react-native-sdk: fe150add3b64639a10c75e0da61696c5f6d745f5
+  textile-react-native-sdk: c5d6899b4f2b5a6c0c9b74e226b5ae11dbaa5ee9
   TextileCore: 489a524028209f36d638568d4797f65b4eadc92b
-  yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
+  yoga: 192d724e53380b783e09b7d687a55cd8ed5188be
 
 PODFILE CHECKSUM: 36d0150b986daae4a635027f71c1d7bc737bd29e
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.1
