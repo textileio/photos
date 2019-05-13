@@ -1,7 +1,7 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
 import Textile, { IContact, IFiles } from '@textile/react-native-sdk'
-import { getAddress, getProfile } from './AccountSelectors'
+import { accountSelectors } from '../features/account'
 import Config from 'react-native-config'
 import { contactsSelectors } from '../features/contacts'
 
@@ -85,8 +85,8 @@ export function getThreads(state: RootState, sortBy?: 'name' | 'date'): Readonly
 
 export function getThreadsAndMembers(state: RootState, limit: number): GroupAuthors[] {
   const memberLimit = limit || 8
-  const ownAddress = getAddress(state)
-  const profile = getProfile(state)
+  const ownAddress = accountSelectors.getAddress(state.account)
+  const profile = accountSelectors.getProfile(state.account)
   const threads = getThreads(state, 'date')
     .map((thread) => {
       const selector = contactsSelectors.makeByThreadId(thread.id)
@@ -117,7 +117,7 @@ export function getThreadsAndMembers(state: RootState, limit: number): GroupAuth
 }
 
 export function getSharedPhotos(state: RootState, sortBy?: 'date'): SharedPhoto[] {
-  const selfAddress = getAddress(state)
+  const selfAddress = accountSelectors.getAddress(state.account)
   const photos = getThreads(state)
     .map((thread) => thread.photos
       .filter((photo) => photo.user.address === selfAddress)

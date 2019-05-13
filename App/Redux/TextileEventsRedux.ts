@@ -35,9 +35,6 @@ const actions = {
   refreshMessagesRequest: createAction('@bridge/REFRESH_MESSAGES', (resolve) => {
     return () => resolve()
   }),
-  updateProfile: createAction('@bridge/UPDATE_PROFILE', (resolve) => {
-    return () => resolve()
-  }),
   ignoreFileRequest: createAction(
     '@bridge/IGNORE_FILE_REQUEST',
     (resolve) => (blockId: string) => resolve({ blockId })

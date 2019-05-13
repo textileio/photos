@@ -18,8 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)name:(NSError **)error;
 - (void)setName:(NSString *)name error:(NSError **)error;
 - (NSString *)avatar:(NSError **)error;
-- (Block *)setAvatar:(Directory *)directory error:(NSError **)error;
-- (Block *)setAvatarByTarget:(NSString *)hash error:(NSError **)error;
+- (Thread *)accountThread:(NSError **)error;
 
 @end
 

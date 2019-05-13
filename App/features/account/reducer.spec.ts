@@ -1,5 +1,8 @@
-import actions, { reducer } from '../AccountRedux'
 import { IContact } from '@textile/react-native-sdk'
+
+import * as actions from './actions'
+import reducer from './reducer'
+import { SharedImage } from '../group/add-photo/models'
 
 const initialState = reducer(undefined, {} as any)
 const profile: IContact = {
@@ -11,7 +14,6 @@ const profile: IContact = {
 }
 const peerId = 'peerId'
 const error = 'error'
-const avatar = 'avatar'
 const recoveryPhrase = 'recoveryPhrase'
 
 describe('account', () => {
@@ -56,16 +58,12 @@ describe('account', () => {
   })
   describe('avatar', () => {
     it('should not change state for request', () => {
-      const state0 = reducer(initialState, actions.setAvatarRequest('avatar'))
+      const state0 = reducer(initialState, actions.setAvatar.request({} as SharedImage))
       expect(state0).toEqual(initialState)
     })
     it('should track avatar error', () => {
-      const state0 = reducer(initialState, actions.setAvatarError(error))
+      const state0 = reducer(initialState, actions.setAvatar.failure(error))
       expect(state0.avatar.error).toEqual(error)
-    })
-    it('should track pending avatar', () => {
-      const state0 = reducer(initialState, actions.setPendingAvatar(avatar))
-      expect(state0.avatar.pending).toEqual(avatar)
     })
   })
   describe('recovery phrase', () => {

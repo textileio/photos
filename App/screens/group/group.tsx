@@ -24,7 +24,7 @@ import UIActions from '../../Redux/UIRedux'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
-import { getAddress } from '../../Redux/AccountSelectors'
+import { accountSelectors } from '../../features/account'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -279,7 +279,7 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
-  const selfAddress = getAddress(state) || ''
+  const selfAddress = accountSelectors.getAddress(state.account) || ''
   return {
     items,
     groupName,

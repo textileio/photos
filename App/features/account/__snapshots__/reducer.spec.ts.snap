@@ -8,10 +8,12 @@ Object {
     "processing": false,
     "sessions": Array [],
   },
+  "chosenProfilePhoto": Object {},
   "initialized": false,
   "peerId": Object {},
   "profile": Object {
-    "processing": false,
+    "processing": true,
   },
+  "recoveryPhrase": "",
 }
 `;

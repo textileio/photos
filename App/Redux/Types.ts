@@ -2,7 +2,7 @@ import { StateType } from 'typesafe-actions'
 import { PersistPartial } from 'redux-persist'
 
 import RootReducer from './RootReducer'
-import { AccountAction } from './AccountRedux'
+import { AccountAction } from '../features/account'
 import { AuthAction } from './AuthRedux'
 import { CameraRollAction } from './CameraRollRedux'
 import { ContactsAction } from '../features/contacts'

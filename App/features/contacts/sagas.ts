@@ -23,9 +23,10 @@ import Config from 'react-native-config'
 
 import * as actions from './actions'
 import { SearchEvent } from './models'
-import { getAddress, getUsername } from '../../Redux/AccountSelectors'
+import { accountSelectors } from '../account'
 import { composeMessage } from '../../NativeModules/MessageComposer'
 import UIActions from '../../Redux/UIRedux'
+import { RootState } from '../../Redux/Types'
 
 function * addFriends() {
   yield call(refreshContacts)
@@ -173,8 +174,8 @@ function * sendInviteMessage() {
     const work = phoneNumbers.find((number) => number.label.toLowerCase() === 'work')
     const sendTo = iphone || mobile || home || work
     if (sendTo) {
-      const username: string | undefined = yield select(getUsername)
-      const address: string | undefined = yield select(getAddress)
+      const username: string | undefined = yield select((state: RootState) => accountSelectors.getUsername(state.account))
+      const address: string | undefined = yield select((state: RootState) => accountSelectors.getAddress(state.account))
       const url = `https://www.textile.photos/invites/new#name=new&inviter=${username}&referral=${Config.RN_TEMPORARY_REFERRAL}`
       let message = `Join me on Textile Photos: ${url}`
       if (username) {

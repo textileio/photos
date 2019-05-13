@@ -2,7 +2,7 @@ import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
-import AccountActions from '../Redux/AccountRedux'
+import { accountActions } from '../features/account'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction, RootState } from '../Redux/Types'
@@ -19,7 +19,6 @@ export function * startSagas() {
     call(stopNodeAfterDelayStarting),
     call(stopNodeAfterDelayCancelled),
     call(stopNodeAfterDelayComplete),
-    call(updateProfile),
     call(refreshMessages),
     call(ignoreFileRequest),
     call(nodeOnline),
@@ -37,7 +36,7 @@ function * initializeTextile() {
   try {
     const phrase: string | undefined = yield call(Textile.initialize, false, false)
     if (phrase) {
-      yield put(AccountActions.setRecoveryPhrase(phrase))
+      yield put(accountActions.setRecoveryPhrase(phrase))
     }
   } catch (error) {
     yield put(TextileEventsActions.failedToInitializeNode(error))
@@ -56,26 +55,6 @@ export function * refreshMessages() {
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
       yield call(logNewEvent, 'refreshMessages', error.message, true)
-    }
-  }
-}
-
-export function * updateProfile() {
-  while (true) {
-    try {
-      // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.updateProfile> =
-        yield take((action: RootAction) =>
-          action.type === getType(TextileEventsActions.updateProfile)
-        )
-      const profileResult: IContact | undefined = yield call(Textile.account.contact)
-      if (profileResult) {
-        yield put(AccountActions.refreshProfileSuccess(profileResult))
-        yield call(logNewEvent, 'updateProfile', action.type)
-      }
-    } catch (error) {
-      yield call(logNewEvent, 'updateProfile', error.message, true)
-      yield put(AccountActions.profileError(error))
     }
   }
 }
@@ -110,11 +89,6 @@ export function * nodeOnline() {
 
       // Check for new photos on every online event
       yield put(StorageActions.refreshLocalImagesRequest())
-
-      const pending: string | undefined = yield select((state: RootState) => state.account.avatar.pending)
-      if (pending) {
-        yield call(Textile.profile.setAvatarByTarget, pending)
-      }
     } catch (error) {
       yield call(logNewEvent, 'nodeOnline', error.message, true)
     }

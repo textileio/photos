@@ -14,7 +14,7 @@ import {threadDataByThreadId} from '../Redux/PhotoViewingSelectors'
 
 import { color } from '../styles'
 import { CommentData } from '../Components/comments'
-import { getAddress } from '../Redux/AccountSelectors'
+import { accountSelectors } from '../features/account'
 
 const screenWidth = Dimensions.get('screen').width
 
@@ -118,7 +118,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     const threadData = threadDataByThreadId(state, threadId)
     threadName = threadData ? threadData.name : undefined
   }
-  const selfAddress = getAddress(state) || ''
+  const selfAddress = accountSelectors.getAddress(state.account) || ''
   return {
     photo: state.photoViewing.viewingPhoto,
     threadName,

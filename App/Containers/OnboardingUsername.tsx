@@ -6,7 +6,7 @@ import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, Vi
 import Input from '../SB/components/Input'
 import Button from '../Components/LargeButton'
 import { RootAction, RootState } from '../Redux/Types'
-import AccountActions from '../Redux/AccountRedux'
+import { accountActions } from '../features/account'
 import { color, textStyle, spacing, fontFamily } from '../styles'
 
 const CONTAINER: ViewStyle = {
@@ -155,7 +155,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  submitUsername: (username: string) => dispatch(AccountActions.setUsernameRequest(username))
+  submitUsername: (username: string) => dispatch(accountActions.setUsernameRequest(username))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingUsername)

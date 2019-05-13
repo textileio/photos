@@ -13,40 +13,17 @@ import { Share, PermissionsAndroid, Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
-import Textile from '@textile/react-native-sdk'
+import Textile, { IThread } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import * as NotificationsSagas from './NotificationsSagas'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
-import { defaultThreadData } from '../Redux/PhotoViewingSelectors'
 import { ActionType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
 import Upload from 'react-native-background-upload'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
-import { SharedImage } from '../features/group/add-photo/models'
 import { logNewEvent } from './DeviceLogs'
-
-export function * handleProfilePhotoSelected(action: ActionType<typeof UIActions.selectProfilePicture>) {
-  yield * processAvatarImage(action.payload.image)
-}
-
-export function * handleProfilePhotoUpdated(action: ActionType<typeof UIActions.updateProfilePicture>) {
-  yield * processAvatarImage(action.payload.image)
-}
-
-function * processAvatarImage(image: SharedImage) {
-  try {
-    const defaultThread: ThreadData | undefined = yield select(defaultThreadData)
-    if (!defaultThread) {
-      throw new Error('no default thread')
-    }
-    yield put(UIActions.sharePhotoRequest(image, defaultThread.id))
-  } catch (error) {
-    // TODO: What do to if adding profile photo fails?
-      yield call(logNewEvent, 'handleProfilePhotoUpdated', error.message, true)
-  }
-}
 
 export function * navigateToThread(action: ActionType<typeof UIActions.navigateToThreadRequest>) {
   yield put(PhotoViewingActions.viewThread(action.payload.threadId))
@@ -92,22 +69,6 @@ export function * synchronizeNativeUploads() {
     }
   } catch (error) {
     yield put(UploadingImagesActions.synchronizeNativeUploadsError(error))
-  }
-}
-
-export function * chooseProfilePhoto() {
-  try {
-    const result: { image: CameraRoll.IPickerImage, data: string } = yield call(CameraRoll.chooseProfilePhoto)
-    const image: SharedImage = {
-      isAvatar: true,
-      origURL: result.image.origURL,
-      uri: result.image.uri,
-      path: result.image.path,
-      canDelete: result.image.canDelete
-    }
-    yield put(UIActions.chooseProfilePhotoSuccess(image, result.data))
-  } catch (error) {
-    yield put(UIActions.chooseProfilePhotoError(error))
   }
 }
 

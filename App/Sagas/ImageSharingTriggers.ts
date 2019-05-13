@@ -6,7 +6,7 @@ import Upload from 'react-native-background-upload'
 import { SharedImage, ProcessingImage } from '../features/group/add-photo/models'
 
 import { groupActions, groupSelectors } from '../features/group'
-import AccountActions from '../Redux/AccountRedux'
+import { accountActions } from '../features/account'
 import UIActions from '../Redux/UIRedux'
 import { insertImage, prepareImage, uploadPins, monitorForUploadsComplete, shareWalletImage, shareToThread } from './ImageSharingSagas'
 import { logNewEvent } from './DeviceLogs'
@@ -73,8 +73,8 @@ export function * retryWithTokenRefresh(action: ActionType<typeof groupActions.a
   }
   const { uuid } = action.payload.error
   try {
-    yield put(AccountActions.refreshCafeSessionsRequest())
-    yield take(getType(AccountActions.cafeSessionsSuccess))
+    yield put(accountActions.refreshCafeSessionsRequest())
+    yield take(getType(accountActions.cafeSessionsSuccess))
     yield put(groupActions.addPhoto.retry(uuid))
   } catch (error) {
     yield put(groupActions.addPhoto.error({ uuid, underlyingError: 'unable to refresh tokens', type: 'general' }))

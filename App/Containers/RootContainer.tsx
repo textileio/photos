@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import Redux, { Dispatch } from 'redux'
+import { Dispatch } from 'redux'
 import { View, StatusBar, Platform, PermissionsAndroid, Text } from 'react-native'
-import Modal from 'react-native-modal'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
@@ -73,10 +72,14 @@ class RootContainer extends Component<StateProps & DispatchProps> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  let nodeState: string = state.textile.nodeState.state
+  if (state.textile.nodeState.error) {
+    nodeState = `${nodeState}: ${state.textile.nodeState.error}`
+  }
   return {
     monitorLocation: state.preferences.services.backgroundLocation.status,
     showVerboseUi: state.preferences.verboseUi && state.preferences.verboseUiOptions.nodeStateOverlay,
-    nodeState: state.textile.nodeState.state
+    nodeState
   }
 }
 

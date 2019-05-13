@@ -7,7 +7,6 @@ import Textile, {
   IBlock
 } from '@textile/react-native-sdk'
 import { SharedImage, ProcessingImage } from '../features/group/add-photo/models'
-import AccountActions from '../Redux/AccountRedux'
 import { groupActions, groupSelectors } from '../features/group'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
@@ -114,16 +113,6 @@ export function * prepareImage(uuid: string) {
     }
     const { sharedImage, destinationThreadId } = processingImage
     const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
-    if (sharedImage.isAvatar && preparedFiles.dir) {
-      const rawItem = preparedFiles.dir.files['raw']
-      if (rawItem) {
-        // TODO: This doesn't seem right in here, but ok
-        const hash = rawItem.hash
-        // TODO: might error if node not online...
-        yield put(AccountActions.setAvatarRequest(hash))
-        // yield fork(Textile.updateAvatarAndProfile, hash)
-      }
-    }
     yield put(groupActions.addPhoto.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
   } catch (error) {

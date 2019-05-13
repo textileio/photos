@@ -3,6 +3,7 @@ import Upload from 'react-native-background-upload'
 
 import { RootState } from '../../Redux/Types'
 import { groupActions, groupSelectors } from '../../features/group'
+import { fileSyncActions } from '../../features/file-sync'
 
 export default class UploadEventHandler {
   store: Store<RootState>
@@ -14,12 +15,14 @@ export default class UploadEventHandler {
 
   uploadProgress(e: any) {
     this.store.dispatch(groupActions.addPhoto.imageUploadProgress(e.id, e.progress))
+    this.store.dispatch(fileSyncActions.uploadProgress(e.id, e.progress))
   }
 
   uploadComplete(e: any) {
     const { responseCode } = e
     if (responseCode >= 200 && responseCode < 300) {
       this.store.dispatch(groupActions.addPhoto.imageUploadComplete(e.id, e.responseCode, e.responseBody))
+      this.store.dispatch(fileSyncActions.uploadComplete(e.id, e.responseCode, e.responseBody))
     } else if (responseCode === 401) {
       const processingImage = groupSelectors.addPhotoSelectors.processingImageForUploadId(this.store.getState().group.addPhoto, e.id)
       if (processingImage) {
@@ -30,6 +33,7 @@ export default class UploadEventHandler {
           type: 'expiredToken'
         }))
       }
+      this.store.dispatch(fileSyncActions.error(e.id, 'expired token'))
     } else {
       const processingImage = groupSelectors.addPhotoSelectors.processingImageForUploadId(this.store.getState().group.addPhoto, e.id)
       if (processingImage) {
@@ -40,6 +44,7 @@ export default class UploadEventHandler {
           type: 'upload'
         }))
       }
+      this.store.dispatch(fileSyncActions.error(e.id, `Response code: ${responseCode}`))
     }
   }
 
@@ -53,6 +58,7 @@ export default class UploadEventHandler {
         type: 'upload'
       }))
     }
+    this.store.dispatch(fileSyncActions.error(e.id, 'Cancelled'))
   }
 
   uploadError(e: any) {
@@ -65,6 +71,7 @@ export default class UploadEventHandler {
         type: 'upload'
       }))
     }
+    this.store.dispatch(fileSyncActions.error(e.id, e.error))
   }
 
   setup() {
