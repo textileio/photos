@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
-import { pb } from '@textile/react-native-sdk'
+import { IFiles } from '@textile/react-native-sdk'
 
 import * as actions from './actions'
 import { ProcessingPhotos, ProcessingPhoto } from './models'
@@ -15,7 +15,7 @@ export interface PhotosState {
   readonly photosData: {
     readonly querying: boolean
     readonly error?: string
-    readonly items: ReadonlyArray<pb.IFiles>
+    readonly items: ReadonlyArray<IFiles>
   }
 }
 
@@ -46,7 +46,7 @@ export default combineReducers<PhotosState, PhotosAction>({
     switch (action.type) {
       case getType(actions.queryCameraRoll.success): {
         return action.payload
-          .map((photo): ProcessingPhoto => ({ photo, state: 'preparing' }) )
+          .map((photo): ProcessingPhoto => ({ photo, state: 'preparing' }))
           .reduce((accum, processingPhoto): ProcessingPhotos => ({ ...accum, [processingPhoto.photo.assetId]: processingPhoto }), state)
       }
       case getType(actions.photoPrepared): {

@@ -1,10 +1,10 @@
 import { LocalPhotoResult } from '@textile/react-native-camera-roll'
-import { pb } from '@textile/react-native-sdk'
+import { IMobilePreparedFiles, IFiles } from '@textile/react-native-sdk'
 
 export interface ProcessingPhoto {
   readonly photo: LocalPhotoResult
   readonly state: 'preparing' | 'adding' | 'complete'
-  readonly preparedFiles?: pb.IMobilePreparedFiles
+  readonly preparedFiles?: IMobilePreparedFiles
   readonly error?: string
 }
 
@@ -19,7 +19,7 @@ interface ProcessingItem {
 
 interface FilesItem {
   type: 'files'
-  files: pb.IFiles
+  files: IFiles
 }
 
 export type Item = ProcessingItem | FilesItem

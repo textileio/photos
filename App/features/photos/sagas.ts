@@ -1,7 +1,7 @@
 import { all, take, select, call, put, fork } from 'redux-saga/effects'
 import { getType, ActionType } from 'typesafe-actions'
 import { requestLocalPhotos, LocalPhotoResult } from '@textile/react-native-camera-roll'
-import { API, pb } from '@textile/react-native-sdk'
+import Textile, { IThread, IMobilePreparedFiles, IFilesList } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
 import FS from 'react-native-fs'
 
@@ -33,11 +33,11 @@ function * preparePhoto(id: string) {
   try {
     const selector = selectors.makeProcessingPhoto(id)
     const processingPhoto: ProcessingPhoto = yield select((state: RootState) => selector(state.photos))
-    const thread: pb.IThread | undefined = yield call(getCameraRollThread)
+    const thread: IThread | undefined = yield call(getCameraRollThread)
     if (!thread) {
       throw new Error('no camera roll thread found')
     }
-    const preparedFiles: pb.IMobilePreparedFiles = yield call(API.files.prepare, processingPhoto.photo.path, thread.id)
+    const preparedFiles: IMobilePreparedFiles = yield call(Textile.files.prepare, processingPhoto.photo.path, thread.id)
     yield put(actions.photoPrepared(id, preparedFiles))
     yield call(addPhoto, id)
   } catch (error) {
@@ -49,14 +49,14 @@ function * addPhoto(id: string) {
   try {
     const selector = selectors.makeProcessingPhoto(id)
     const processingPhoto: ProcessingPhoto = yield select((state: RootState) => selector(state.photos))
-    const thread: pb.IThread | undefined = yield call(getCameraRollThread)
+    const thread: IThread | undefined = yield call(getCameraRollThread)
     if (!thread) {
       throw new Error('no camera roll thread found')
     }
     if (!processingPhoto.preparedFiles) {
       throw new Error('no prepared files found')
     }
-    yield call(API.files.add, processingPhoto.preparedFiles.dir, thread.id)
+    yield call(Textile.files.add, processingPhoto.preparedFiles.dir, thread.id)
     yield put(actions.photoAdded(id))
     yield call(cleanup, id)
   } catch (error) {
@@ -71,6 +71,7 @@ function * cleanup(id: string) {
     try {
       yield call(FS.unlink, processingPhoto.photo.path)
     } catch {
+      // TODO: somthing?
     }
   }
   if (processingPhoto.preparedFiles) {
@@ -79,6 +80,7 @@ function * cleanup(id: string) {
       try {
         yield call(FS.unlink, path)
       } catch {
+        // TODO: somthing?
       }
     }
   }
@@ -92,7 +94,7 @@ function * watchForLoadPhotosRequests() {
     switch (action.type) {
       case getType(actions.refreshPhotos.request): {
         try {
-          const filesList: pb.IFilesList = yield call(files, undefined, action.payload)
+          const filesList: IFilesList = yield call(files, undefined, action.payload)
           yield put(actions.refreshPhotos.success(filesList.items))
         } catch (error) {
           yield put(actions.refreshPhotos.failure({ error }))
@@ -102,7 +104,7 @@ function * watchForLoadPhotosRequests() {
       case getType(actions.loadMorePhotos.request): {
         try {
           // TODO: use selector to get offset
-          const filesList: pb.IFilesList = yield call(files, undefined, action.payload)
+          const filesList: IFilesList = yield call(files, undefined, action.payload)
           yield put(actions.loadMorePhotos.success(filesList.items))
         } catch (error) {
           yield put(actions.loadMorePhotos.failure({ error }))
@@ -113,7 +115,7 @@ function * watchForLoadPhotosRequests() {
   }
 }
 
-export default function * () {
+export default function *() {
   yield all([
     call(queryForNewPhotos),
     call(watchForLoadPhotosRequests)
@@ -121,7 +123,7 @@ export default function * () {
 }
 
 async function getCameraRollThread() {
-  const threads = await API.threads.list()
+  const threads = await Textile.threads.list()
   return threads.items.find((thread) => thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
 }
 
@@ -130,5 +132,5 @@ async function files(offset?: string, limit?: number) {
   if (!thread) {
     throw new Error('no default thread')
   }
-  return await API.files.list(offset || '', limit || -1, thread.id)
+  return Textile.files.list(thread.id, offset || '', limit || -1)
 }
