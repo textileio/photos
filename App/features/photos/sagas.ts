@@ -1,14 +1,33 @@
-import { all, take, select, call, put, fork } from 'redux-saga/effects'
+import { all, take, select, call, put, fork, takeEvery } from 'redux-saga/effects'
 import { getType, ActionType } from 'typesafe-actions'
 import { requestLocalPhotos, LocalPhotoResult } from '@textile/react-native-camera-roll'
 import Textile, { IThread, IMobilePreparedFiles, IFilesList } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
 import FS from 'react-native-fs'
 
+import PreferencesActions, { PreferencesSelectors } from '../../Redux/PreferencesRedux'
+import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import * as actions from './actions'
 import * as selectors from './selectors'
 import { RootState } from '../../Redux/Types'
 import { ProcessingPhoto } from './models'
+
+function * toggleStorage(action: ActionType<typeof PreferencesActions.toggleStorageRequest>) {
+  const { name } = action.payload
+  const storageOption = yield select(PreferencesSelectors.storage, name)
+  const storageStatus = !storageOption ? false : storageOption.status
+  if (name === 'autoPinPhotos' && storageStatus === true) {
+    // Always start autoPinning only from the date of the latest toggle-on
+    const now = (new Date()).getTime()
+    yield put(actions.updateLastQueriedTime(now))
+  }
+}
+
+function * nodeOnline() {
+  while (yield take([getType(TextileEventsActions.nodeOnline), getType(TextileEventsActions.stopNodeAfterDelayCancelled)])) {
+    yield put(actions.queryCameraRoll.request())
+  }
+}
 
 function * queryForNewPhotos() {
   while (yield take(getType(actions.queryCameraRoll.request))) {
@@ -37,7 +56,7 @@ function * preparePhoto(id: string) {
     if (!thread) {
       throw new Error('no camera roll thread found')
     }
-    const preparedFiles: IMobilePreparedFiles = yield call(Textile.files.prepare, processingPhoto.photo.path, thread.id)
+    const preparedFiles: IMobilePreparedFiles = yield call(Textile.files.prepareByPath, processingPhoto.photo.path, thread.id)
     yield put(actions.photoPrepared(id, preparedFiles))
     yield call(addPhoto, id)
   } catch (error) {
@@ -117,6 +136,8 @@ function * watchForLoadPhotosRequests() {
 
 export default function *() {
   yield all([
+    takeEvery(getType(PreferencesActions.toggleStorageRequest), toggleStorage),
+    call(nodeOnline),
     call(queryForNewPhotos),
     call(watchForLoadPhotosRequests)
   ])
