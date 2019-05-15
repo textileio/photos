@@ -6,8 +6,15 @@ export const lastQueriedTime = (state: PhotosState) => state.queryData.lastQueri
 export const makeProcessingPhoto = (id: string) => (state: PhotosState) => state.processingPhotos[id]
 
 export const items = (state: PhotosState) => {
-  return Object.keys(state.processingPhotos).map((key): Item => {
-    const processingPhoto = state.processingPhotos[key]
-    return { type: 'processingItem', processingPhoto }
-  })
+  const filesItems = state.photosData.items
+    .map((files): Item => {
+      return { type: 'files', files }
+    })
+    .reverse()
+  return filesItems
+
+  // return Object.keys(state.processingPhotos).map((key): Item => {
+  //   const processingPhoto = state.processingPhotos[key]
+  //   return { type: 'processingItem', processingPhoto }
+  // })
 }

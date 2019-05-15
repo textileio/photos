@@ -1,6 +1,6 @@
 import { createStackNavigator } from 'react-navigation'
 
-import Photos from '../../../../../../screens/camera-roll'
+import Photos from '../../../../../../screens/photos'
 
 import styles, { headerTintColor } from '../../../../../Styles/NavigationStyles'
 
