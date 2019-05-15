@@ -65,13 +65,10 @@ class ContactModal extends React.Component<Props> {
 
   render() {
     const avatar = this.props.navigation.getParam('contact').avatar
-    let buttonText: string
-    if (this.props.isContact) {
-      buttonText = this.props.removing ? 'Removing' : 'Remove'
-    } else {
-      buttonText = this.props.adding ? 'Adding' : 'Add'
-    }
-    let buttonDisabled = this.props.adding || this.props.removing
+    const removingText = this.props.removing ? 'Removing' : 'Remove'
+    const addingText = this.props.adding ? 'Adding' : 'Add'
+    const buttonText = this.props.isContact ? removingText : addingText
+    const buttonDisabled = this.props.adding || this.props.removing
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
@@ -131,7 +128,7 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) : DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     removeContact: (address: string) => dispatch(contactsActions.removeContactRequest(address)),
     addContact: (contact: IContact) => dispatch(contactsActions.addContactRequest(contact))
