@@ -57,6 +57,16 @@ function * handleAddContactRequest(action: ActionType<typeof actions.addContactR
   }
 }
 
+function * watchForRemoveContactRequests() {
+  yield takeEvery(getType(actions.removeContactRequest), handleRemoveContactRequest)
+}
+
+function * handleRemoveContactRequest(action: ActionType<typeof actions.removeContactRequest>) {
+  const { address } = action.payload
+  yield call(Textile.contacts.remove, address)
+  yield call(refreshContacts)
+}
+
 async function executeTextileSearch(searchString: string) {
   const query: IContactQuery = {
     name: searchString,
@@ -195,6 +205,7 @@ export default function *() {
     takeEvery(getType(actions.getContactsRequest), refreshContacts),
     call(watchForSearchRequest),
     call(watchForAddContactRequests),
+    call(watchForRemoveContactRequests),
     call(sendInviteMessage)
   ])
 }

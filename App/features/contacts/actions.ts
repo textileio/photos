@@ -50,6 +50,14 @@ export const clearAddContact = createAction('@contacts/CLEAR_ADD_CONTACT_ERROR',
   return (contact: IContact) => resolve({ contact })
 })
 
+export const removeContactRequest = createAction('@contacts/REMOVE_CONTACT_REQUEST', (resolve) => {
+  return (address: string) => resolve({ address })
+})
+
+export const removeContactSuccess = createAction('@contacts/REMOVE_CONTACT_SUCCESS', (resolve) => {
+  return (address: string) => resolve ({ address })
+})
+
 export const authorInviteRequest = createAction('@contacts/AUTHOR_INVITE_REQUEST', (resolve) => {
   return (contact: Contacts.Contact) => resolve({ contact })
 })

@@ -4,7 +4,7 @@ import { IContact } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
 import * as actions from './actions'
-import { AddingContacts } from './models'
+import { AddingContacts, RemovingContacts } from './models'
 
 export interface ContactsState {
   readonly contacts: ReadonlyArray<IContact>
@@ -19,6 +19,7 @@ export interface ContactsState {
     readonly error?: string
   }
   readonly addingContacts: AddingContacts
+  readonly removingContacts: RemovingContacts
 }
 
 export type ContactsAction = ActionType<typeof actions>
@@ -131,6 +132,24 @@ export default combineReducers<ContactsState, ContactsAction>({
           [contact.address]: {
             error: message
           }
+        }
+      }
+      default:
+        return state
+    }
+  },
+  removingContacts: (state = {}, action) => {
+    switch (action.type) {
+      case getType(actions.removeContactRequest): {
+        return {
+          ...state,
+          [action.payload.address]: {}
+        }
+      }
+      case getType(actions.removeContactSuccess): {
+        const { [action.payload.address]: removed, ...removingContacts } = state
+        return {
+          ...removingContacts
         }
       }
       default:
