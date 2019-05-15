@@ -36,8 +36,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  removeContact: (address: string) => void
-  addContact: (contact: IContact) => void
+  removeContact: () => void
+  addContact: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -101,11 +101,11 @@ class ContactModal extends React.Component<Props> {
   }
 
   onRemove = () => {
-    this.props.removeContact(this.props.navigation.getParam('contact').address)
+    this.props.removeContact()
   }
 
   onAdd = () => {
-    this.props.addContact(this.props.navigation.getParam('contact'))
+    this.props.addContact()
   }
 }
 
