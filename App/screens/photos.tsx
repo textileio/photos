@@ -1,7 +1,16 @@
 import React, { Component } from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, Text, FlatList, ListRenderItemInfo, ViewStyle, Dimensions } from 'react-native'
+import {
+  View,
+  FlatList,
+  Image,
+  ListRenderItemInfo,
+  ViewStyle,
+  Dimensions,
+  TouchableOpacity
+} from 'react-native'
+import Toast from 'react-native-easy-toast'
 import { NavigationScreenProps } from 'react-navigation'
 
 import Avatar from '../Components/Avatar'
@@ -63,6 +72,8 @@ class Photos extends Component<Props> {
     }
   }
 
+  toast?: Toast
+
   componentDidMount() {
     this.props.refreshPhotos()
     this.props.navigation.setParams({
@@ -71,19 +82,22 @@ class Photos extends Component<Props> {
   }
 
   render() {
-
     return (
       <View style={CONTAINER}>
         <FlatList
           data={this.props.items}
           renderItem={this.renderRow}
+          keyExtractor={this.keyExtractor}
           onRefresh={this.props.refreshPhotos}
           refreshing={this.props.refreshing}
           numColumns={3}
         />
+        <Toast position={'center'} ref={(ref) => this.toast = ref ? ref : undefined} />
       </View>
     )
   }
+
+  keyExtractor = (item: Item) => item.type === 'files' ? item.files.target : item.processingPhoto.photo.assetId
 
   renderRow = (row: ListRenderItemInfo<Item>) => {
     if (row.item.type === 'files') {
@@ -99,9 +113,36 @@ class Photos extends Component<Props> {
         />
       )
     } else {
-      return <Text>{row.item.type}</Text>
+      const { photo, error } = row.item.processingPhoto
+      const uri = `file://${photo.path}`
+      return (
+        <View style={{ width: itemSize, height: itemSize }}>
+          <Image
+            key={photo.assetId}
+            style={{ width: itemSize, height: itemSize }}
+            source={{ uri }}
+          />
+          {error &&
+            <TouchableOpacity onPress={this.showToast(error)} hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}>
+              <View style={{ width: 12, height: 12, backgroundColor: 'red', borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
+            </TouchableOpacity>
+          }
+          {!error &&
+            <View style={{ width: 12, height: 12, backgroundColor: 'white', borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
+          }
+        </View>
+
+      )
     }
 
+  }
+
+  showToast = (message: string) => {
+    return () => {
+      if (this.toast) {
+        this.toast.show(message)
+      }
+    }
   }
 
   openDrawer = () => {
