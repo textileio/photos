@@ -40,7 +40,7 @@ interface DispatchProps {
   addContact: (contact: IContact) => void
 }
 
-type Props = StateProps & NavigationScreenProps<NavProps>
+type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 class ContactModal extends React.Component<Props> {
 
