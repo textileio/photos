@@ -11,7 +11,6 @@ export const items = (state: PhotosState) => {
     .map((files): Item => {
       return { type: 'files', files }
     })
-    .reverse()
 
   const processingItems = Object.keys(state.processingPhotos).map((key): Item => {
     const processingPhoto = state.processingPhotos[key]
@@ -20,11 +19,12 @@ export const items = (state: PhotosState) => {
 
   const items = filesItems.concat(processingItems)
 
-  items.sort((a, b) => {
-    const aDate = a.type === 'files' ? Textile.util.timestampToDate(a.files.date) : new Date(a.processingPhoto.photo.creationDate)
-    const bDate = b.type === 'files' ? Textile.util.timestampToDate(b.files.date) : new Date(b.processingPhoto.photo.creationDate)
-    return bDate.getUTCMilliseconds() - aDate.getUTCMilliseconds()
-  })
+  items
+    .sort((a, b) => {
+      const aDate = a.type === 'files' ? Textile.util.timestampToDate(a.files.date) : new Date(a.processingPhoto.photo.creationDate)
+      const bDate = b.type === 'files' ? Textile.util.timestampToDate(b.files.date) : new Date(b.processingPhoto.photo.creationDate)
+      return aDate.getTime() - bDate.getTime()
+    })
 
   return items
 }

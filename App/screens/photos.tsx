@@ -131,7 +131,6 @@ class Photos extends Component<Props> {
             <View style={{ width: 12, height: 12, backgroundColor: 'white', borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
           }
         </View>
-
       )
     }
 
