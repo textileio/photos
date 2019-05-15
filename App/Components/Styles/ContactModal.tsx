@@ -18,7 +18,7 @@ export default StyleSheet.create({
     backgroundColor: 'white'
   } as ViewStyle,
   profile: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     flex: 1,
     alignItems: 'center',
     paddingVertical: 50,

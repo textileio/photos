@@ -8,6 +8,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
+import { IContact } from '@textile/react-native-sdk'
 
 import Avatar from '../Components/Avatar'
 import Button from '../Components/LargeButton'
@@ -23,20 +24,20 @@ import { contactsActions } from '../features/contacts'
 import { color } from '../styles'
 
 interface NavProps {
-  avatar: string
-  username: string
-  address: string
+  contact: IContact
 }
 
 interface StateProps {
   displayName: string
   threadThumbs: ReadonlyArray<ThreadThumbs>
-  address: string
+  isContact: boolean
   removing: boolean
+  adding: boolean
 }
 
 interface DispatchProps {
   removeContact: (address: string) => void
+  addContact: (contact: IContact) => void
 }
 
 type Props = StateProps & NavigationScreenProps<NavProps>
@@ -63,8 +64,14 @@ class ContactModal extends React.Component<Props> {
   }
 
   render() {
-    const avatar = this.props.navigation.getParam('avatar')
-    // const username = this.props.navigation.getParam('username')
+    const avatar = this.props.navigation.getParam('contact').avatar
+    let buttonText: string
+    if (this.props.isContact) {
+      buttonText = this.props.removing ? 'Removing' : 'Remove'
+    } else {
+      buttonText = this.props.adding ? 'Adding' : 'Add'
+    }
+    let buttonDisabled = this.props.adding || this.props.removing
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
@@ -77,9 +84,9 @@ class ContactModal extends React.Component<Props> {
             {this.props.displayName}
           </Text>
           <Button
-            text={this.props.removing ? 'Removing' : 'Remove Contact'}
-            disabled={this.props.removing}
-            onPress={this.onRemove}
+            text={buttonText}
+            disabled={buttonDisabled}
+            onPress={this.props.isContact ? this.onRemove : this.onAdd}
           />
         </View>
         <ScrollView style={styles.threadsList}>
@@ -97,26 +104,37 @@ class ContactModal extends React.Component<Props> {
   }
 
   onRemove = () => {
-    this.props.removeContact(this.props.address)
-    this.props.navigation.goBack()
+    this.props.removeContact(this.props.navigation.getParam('contact').address)
+  }
+
+  onAdd = () => {
+    this.props.addContact(this.props.navigation.getParam('contact'))
   }
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
-  const username = ownProps.navigation.getParam('username')
-  const address = ownProps.navigation.getParam('address')
+  const contact = ownProps.navigation.getParam('contact')
+  const username = contact.name
+  const address = contact.address
+  // Check if this contact is already added
+  const isContact = state.contacts.contacts.some((c) => c.address === address)
+  // Check if this contact is currently being removed
   const removing = Object.keys(state.contacts.removingContacts).indexOf(address) > -1
+  // Check if this contact is currently being added
+  const adding = Object.keys(state.contacts.addingContacts).indexOf(address) > -1
   return {
     displayName: username ? username : address.substring(0, 12),
     threadThumbs: getThreadThumbs(state, address, 'name'),
-    address,
-    removing
+    isContact,
+    removing,
+    adding
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) : DispatchProps => {
   return {
-    removeContact: (address: string) => dispatch(contactsActions.removeContactRequest(address))
+    removeContact: (address: string) => dispatch(contactsActions.removeContactRequest(address)),
+    addContact: (contact: IContact) => dispatch(contactsActions.addContactRequest(contact))
   }
 }
 

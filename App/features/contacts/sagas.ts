@@ -63,8 +63,13 @@ function * watchForRemoveContactRequests() {
 
 function * handleRemoveContactRequest(action: ActionType<typeof actions.removeContactRequest>) {
   const { address } = action.payload
-  yield call(Textile.contacts.remove, address)
-  yield call(refreshContacts)
+  try {
+    yield call(Textile.contacts.remove, address)
+    yield put(actions.removeContactSuccess(address))
+    yield call(refreshContacts)
+  } catch (error) {
+    yield put(actions.removeContactError(address, error))
+  }
 }
 
 async function executeTextileSearch(searchString: string) {

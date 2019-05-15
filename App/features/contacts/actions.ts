@@ -58,6 +58,14 @@ export const removeContactSuccess = createAction('@contacts/REMOVE_CONTACT_SUCCE
   return (address: string) => resolve ({ address })
 })
 
+export const removeContactError = createAction('@contacts/REMOVE_CONTACT_ERROR', (resolve) => {
+  return (address: string, error: any) => resolve({ address, error })
+})
+
+export const clearRemoveContactError = createAction('@contacts/CLEAR_REMOVE_CONTACT_ERROR', (resolve) => {
+  return (address: string) => resolve({ address })
+})
+
 export const authorInviteRequest = createAction('@contacts/AUTHOR_INVITE_REQUEST', (resolve) => {
   return (contact: Contacts.Contact) => resolve({ contact })
 })
