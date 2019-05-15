@@ -57,6 +57,23 @@ function * handleAddContactRequest(action: ActionType<typeof actions.addContactR
   }
 }
 
+function * watchForRemoveContactRequests() {
+  yield takeEvery(getType(actions.removeContact.request), handleRemoveContactRequest)
+}
+
+function * handleRemoveContactRequest(action: ActionType<typeof actions.removeContact.request>) {
+  // The address is the payload, except for the failure action, because it
+  // must also pass an error
+  const address = action.payload
+  try {
+    yield call(Textile.contacts.remove, address)
+    yield put(actions.removeContact.success(address))
+    yield call(refreshContacts)
+  } catch (error) {
+    yield put(actions.removeContact.failure({ address, error }))
+  }
+}
+
 async function executeTextileSearch(searchString: string) {
   const query: IContactQuery = {
     name: searchString,
@@ -195,6 +212,7 @@ export default function *() {
     takeEvery(getType(actions.getContactsRequest), refreshContacts),
     call(watchForSearchRequest),
     call(watchForAddContactRequests),
+    call(watchForRemoveContactRequests),
     call(sendInviteMessage)
   ])
 }

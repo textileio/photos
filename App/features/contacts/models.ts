@@ -9,6 +9,14 @@ export interface AddingContacts {
   readonly [key: string]: AddingContact
 }
 
+export interface RemovingContact {
+  readonly error?: string
+}
+
+export interface RemovingContacts {
+  readonly [key: string]: RemovingContact
+}
+
 interface ContactSearchEvent {
   type: 'contact'
   contact: IContact

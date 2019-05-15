@@ -4,7 +4,7 @@ import { IContact } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
 import * as actions from './actions'
-import { AddingContacts } from './models'
+import { AddingContacts, RemovingContacts } from './models'
 
 export interface ContactsState {
   readonly contacts: ReadonlyArray<IContact>
@@ -19,6 +19,7 @@ export interface ContactsState {
     readonly error?: string
   }
   readonly addingContacts: AddingContacts
+  readonly removingContacts: RemovingContacts
 }
 
 export type ContactsAction = ActionType<typeof actions>
@@ -119,9 +120,7 @@ export default combineReducers<ContactsState, ContactsAction>({
       case getType(actions.addContactSuccess):
       case getType(actions.clearAddContact): {
         const { [action.payload.contact.address]: removed, ...addingContacts } = state
-        return {
-          addingContacts
-        }
+        return addingContacts
       }
       case getType(actions.addContactError): {
         const { contact, error } = action.payload
@@ -130,6 +129,32 @@ export default combineReducers<ContactsState, ContactsAction>({
           ...state,
           [contact.address]: {
             error: message
+          }
+        }
+      }
+      default:
+        return state
+    }
+  },
+  removingContacts: (state = {}, action) => {
+    switch (action.type) {
+      case getType(actions.removeContact.request): {
+        return {
+          ...state,
+          [action.payload]: {}
+        }
+      }
+      case getType(actions.removeContact.success): {
+        const { [action.payload]: removed, ...removingContacts } = state
+        return removingContacts
+      }
+      case getType(actions.removeContact.failure): {
+        const { address, error } = action.payload
+        const errorMessage = error.message as string || error as string || 'unknown'
+        return {
+          ...state,
+          [address]: {
+            error: errorMessage
           }
         }
       }
