@@ -1,4 +1,4 @@
-import { createAction } from 'typesafe-actions'
+import { createAction, createAsyncAction } from 'typesafe-actions'
 import { IContact } from '@textile/react-native-sdk'
 import Contacts from 'react-native-contacts'
 
@@ -50,21 +50,14 @@ export const clearAddContact = createAction('@contacts/CLEAR_ADD_CONTACT_ERROR',
   return (contact: IContact) => resolve({ contact })
 })
 
-export const removeContactRequest = createAction('@contacts/REMOVE_CONTACT_REQUEST', (resolve) => {
-  return (address: string) => resolve({ address })
-})
-
-export const removeContactSuccess = createAction('@contacts/REMOVE_CONTACT_SUCCESS', (resolve) => {
-  return (address: string) => resolve ({ address })
-})
-
-export const removeContactError = createAction('@contacts/REMOVE_CONTACT_ERROR', (resolve) => {
-  return (address: string, error: any) => resolve({ address, error })
-})
-
-export const clearRemoveContactError = createAction('@contacts/CLEAR_REMOVE_CONTACT_ERROR', (resolve) => {
-  return (address: string) => resolve({ address })
-})
+// The address is the payload
+// The cancel action is currently broken
+// TODO: Add cancel action
+export const removeContact = createAsyncAction(
+  'contacts/REMOVE_CONTACT_REQUEST',
+  'contacts/REMOVE_CONTACT_SUCCESS',
+  'contacts/REMOVE_CONTACT_ERROR'
+)<string, string, { address: string, error: any }>()
 
 export const authorInviteRequest = createAction('@contacts/AUTHOR_INVITE_REQUEST', (resolve) => {
   return (contact: Contacts.Contact) => resolve({ contact })

@@ -58,17 +58,19 @@ function * handleAddContactRequest(action: ActionType<typeof actions.addContactR
 }
 
 function * watchForRemoveContactRequests() {
-  yield takeEvery(getType(actions.removeContactRequest), handleRemoveContactRequest)
+  yield takeEvery(getType(actions.removeContact.request), handleRemoveContactRequest)
 }
 
-function * handleRemoveContactRequest(action: ActionType<typeof actions.removeContactRequest>) {
-  const { address } = action.payload
+function * handleRemoveContactRequest(action: ActionType<typeof actions.removeContact.request>) {
+  // The address is the payload, except for the failure action, because it
+  // must also pass an error
+  const address = action.payload
   try {
     yield call(Textile.contacts.remove, address)
-    yield put(actions.removeContactSuccess(address))
+    yield put(actions.removeContact.success(address))
     yield call(refreshContacts)
   } catch (error) {
-    yield put(actions.removeContactError(address, error))
+    yield put(actions.removeContact.failure({ address, error }))
   }
 }
 

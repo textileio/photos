@@ -132,7 +132,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
   const contact = ownProps.navigation.getParam('contact')
   const address = contact.address
   return {
-    removeContact: () => dispatch(contactsActions.removeContactRequest(address)),
+    removeContact: () => dispatch(contactsActions.removeContact.request(address)),
     addContact: () => dispatch(contactsActions.addContactRequest(contact))
   }
 }

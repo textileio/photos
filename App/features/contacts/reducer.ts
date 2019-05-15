@@ -138,18 +138,17 @@ export default combineReducers<ContactsState, ContactsAction>({
   },
   removingContacts: (state = {}, action) => {
     switch (action.type) {
-      case getType(actions.removeContactRequest): {
+      case getType(actions.removeContact.request): {
         return {
           ...state,
-          [action.payload.address]: {}
+          [action.payload]: {}
         }
       }
-      case getType(actions.removeContactSuccess):
-      case getType(actions.clearRemoveContactError): {
-        const { [action.payload.address]: removed, ...removingContacts } = state
+      case getType(actions.removeContact.success): {
+        const { [action.payload]: removed, ...removingContacts } = state
         return removingContacts
       }
-      case getType(actions.removeContactError): {
+      case getType(actions.removeContact.failure): {
         const { address, error } = action.payload
         const errorMessage = error.message as string || error as string || 'unknown'
         return {
