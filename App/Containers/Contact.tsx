@@ -128,10 +128,12 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>): DispatchProps => {
+  const contact = ownProps.navigation.getParam('contact')
+  const address = contact.address
   return {
-    removeContact: (address: string) => dispatch(contactsActions.removeContactRequest(address)),
-    addContact: (contact: IContact) => dispatch(contactsActions.addContactRequest(contact))
+    removeContact: () => dispatch(contactsActions.removeContactRequest(address)),
+    addContact: () => dispatch(contactsActions.addContactRequest(contact))
   }
 }
 
