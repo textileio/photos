@@ -1,4 +1,6 @@
 rootProject.name = 'Textile'
+include ':@textile_react-native-camera-roll'
+project(':@textile_react-native-camera-roll').projectDir = new File(rootProject.projectDir, '../node_modules/@textile/react-native-camera-roll/android')
 
 include ':app'
 include ':@textile_react-native-sdk'

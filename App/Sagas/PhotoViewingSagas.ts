@@ -2,15 +2,18 @@ import { delay } from 'redux-saga'
 import { call, put, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import uuid from 'uuid/v4'
-import Config from 'react-native-config'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { InboundInvite } from '../Redux/ThreadsRedux'
 import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
-import { accountSelectors } from '../features/account'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
-import { photoAndComment, shouldNavigateToNewThread, shouldSelectNewThread, photoToShareToNewThread } from '../Redux/PhotoViewingSelectors'
+import {
+  photoAndComment,
+  shouldNavigateToNewThread,
+  shouldSelectNewThread,
+  photoToShareToNewThread
+} from '../Redux/PhotoViewingSelectors'
 import Textile, {
   IThread,
   Thread,
@@ -22,7 +25,6 @@ import Textile, {
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
-import { RootState } from '../Redux/Types'
 
 export function * monitorNewThreadActions() {
   while (true) {
@@ -99,16 +101,13 @@ export function * removeThread(action: ActionType<typeof PhotoViewingActions.rem
 
 export function * refreshThreads(action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>) {
   try {
-    const accountThreadId = yield select((state: RootState) => accountSelectors.getAddress(state.account))
     const threadsResult: IThreadList = yield call(Textile.threads.list)
     for (const thread of threadsResult.items) {
       /**
-       * Filters out the Account thread from PhotoViewing Thread List
+       * Filters to only shared threads
        */
-      const isNotAccountThread = thread.key !== accountThreadId
       const isSharedThread = thread.key.indexOf('textile_photos-shared') === 0
-      const isCameraRollThread = thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
-      if (isNotAccountThread && (isSharedThread || isCameraRollThread)) {
+      if (isSharedThread) {
         yield put(PhotoViewingActions.insertThread(thread.id, thread.key, thread.name))
         yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
       }

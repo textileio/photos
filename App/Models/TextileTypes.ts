@@ -30,13 +30,3 @@ export interface DeepLinkData {
   readonly search: string
   readonly hash: string
 }
-
-export interface ILocalPhotoResult {
-  assetId: string,
-  creationDate: string,
-  modificationDate: string,
-  orientation: number,
-  path: string,
-  uri: string,
-  canDelete: boolean
-}

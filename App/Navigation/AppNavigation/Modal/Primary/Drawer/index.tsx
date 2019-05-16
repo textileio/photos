@@ -3,6 +3,7 @@ import { Dimensions, Platform } from 'react-native'
 import Contacts from './Contacts'
 import Groups from './Groups'
 import Notifications from './Notifications'
+import Photos from './Photos'
 import Drawer from '../../../../../Containers/Drawer'
 import { color, fontSize } from '../../../../../styles'
 
@@ -10,6 +11,7 @@ const drawer = createDrawerNavigator(
   {
     Groups,
     Contacts,
+    Photos,
     Notifications
   },
   {

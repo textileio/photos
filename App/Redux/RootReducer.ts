@@ -10,11 +10,11 @@ import { reducer as notificationsReducer } from './NotificationsRedux'
 import { reducer as threadsReducer } from './ThreadsRedux'
 import { reducer as uiReducer } from './UIRedux'
 import { reducer as uploadingImagesReducer } from './UploadingImagesRedux'
-import { reducer as storageReducer } from './StorageRedux'
 import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
+import { photosReducer } from '../features/photos'
 
 export default combineReducers({
   auth: authReducer,
@@ -26,10 +26,10 @@ export default combineReducers({
   threads: threadsReducer,
   ui: uiReducer,
   uploadingImages: uploadingImagesReducer,
-  storage: storageReducer,
   startup: startupReducer,
   deviceLogs: deviceLogsReducer,
   account: accountReducer,
   textile: textileEventsReducer,
-  group: groupReducer
+  group: groupReducer,
+  photos: photosReducer
 })

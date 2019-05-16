@@ -11,6 +11,7 @@ import { toTypedNotification } from '../Notifications'
 
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import { groupActions } from '../../features/group'
+import { photosActions } from '../../features/photos'
 
 export default class TextileNodeEventHandler {
   store: Store<RootState>
@@ -33,6 +34,9 @@ export default class TextileNodeEventHandler {
           type_url === '/Join' ||
           type_url === '/Leave') {
           this.store.dispatch(groupActions.feed.refreshFeed.request({ id: update.thread }))
+          // FIXME: This is a hack. We need to examine the thread id and dispatch one or the other.
+          // Or this needs to send the whole Thread or at least the addition of key
+          this.store.dispatch(photosActions.refreshPhotos.request(undefined))
         }
 
         // TODO: remove this if needed

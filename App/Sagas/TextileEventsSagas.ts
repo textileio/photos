@@ -1,6 +1,5 @@
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import StorageActions from '../Redux/StorageRedux'
 import {PreferencesSelectors} from '../Redux/PreferencesRedux'
 import { accountActions } from '../features/account'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
@@ -11,6 +10,7 @@ import Textile, {
  } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
+import { photosActions } from '../features/photos'
 
 export function * startSagas() {
   yield all([
@@ -78,20 +78,8 @@ export function * ignoreFileRequest() {
 }
 
 export function * nodeOnline() {
-  while (true) {
-    try {
-      // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.nodeOnline> =
-        yield take((action: RootAction) =>
-          action.type === getType(TextileEventsActions.nodeOnline)
-        )
-      yield call(logNewEvent, 'Node is:', 'online')
-
-      // Check for new photos on every online event
-      yield put(StorageActions.refreshLocalImagesRequest())
-    } catch (error) {
-      yield call(logNewEvent, 'nodeOnline', error.message, true)
-    }
+  while (yield take(getType(TextileEventsActions.nodeOnline))) {
+    yield call(logNewEvent, 'Node is:', 'online')
   }
 }
 
@@ -145,10 +133,6 @@ export function * stopNodeAfterDelayCancelled() {
       if (yield select(PreferencesSelectors.showNodeStateNotification)) {
         yield call(displayNotification, 'Delayed stop of node canceled because of foreground event')
       }
-
-      // Check for new photos in case user left app and came back after taking one
-      yield put(StorageActions.refreshLocalImagesRequest())
-
     } catch (error) {
       yield call(logNewEvent, 'stopNodeAfterDelayCancelled', error.message, true)
     }
