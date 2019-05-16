@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
+import { Text, FlatList, ListRenderItemInfo, Dimensions, Alert } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
@@ -109,7 +109,6 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   render() {
-    // flexGrow allows android to scroll, however https://github.com/facebook/react-native/issues/19434 is still an issue
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -133,8 +132,8 @@ class Group extends React.PureComponent<Props, State> {
           <ActionSheet
             ref={(o: any) => { this.actionSheet = o }}
             title={this.props.groupName + ' options'}
-            options={['Invite Others', 'Leave Group', 'Cancel']}
-            cancelButtonIndex={2}
+            options={['Invite Others', 'Rename Group', 'Leave Group', 'Cancel']}
+            cancelButtonIndex={3}
             onPress={this.handleActionSheetResponse}
           />
         </KeyboardResponsiveContainer>
@@ -261,6 +260,8 @@ class Group extends React.PureComponent<Props, State> {
     if (index === 0) {
       this.showInviteModal()
     } else if (index === 1) {
+      Alert.alert("You want to rename it", "You pressed the rename button")
+    } else if (index === 2) {
       this.props.leaveThread()
     }
   }
