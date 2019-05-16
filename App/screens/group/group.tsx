@@ -260,7 +260,8 @@ class Group extends React.PureComponent<Props, State> {
     if (index === 0) {
       this.showInviteModal()
     } else if (index === 1) {
-      Alert.alert("You want to rename it", "You pressed the rename button")
+      const threadId = this.props.navigation.getParam('threadId')
+      this.props.navigation.navigate('RenameGroup', { threadId,  groupName: this.props.groupName })
     } else if (index === 2) {
       this.props.leaveThread()
     }

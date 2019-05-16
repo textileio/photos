@@ -59,7 +59,7 @@ class RenameGroup extends React.Component<Props, State> {
     )
     return {
       headerLeft,
-      headerTitle: groupName
+      headerTitle: `Rename ${groupName}`
     }
   }
 
