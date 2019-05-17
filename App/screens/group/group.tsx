@@ -271,9 +271,7 @@ class Group extends React.PureComponent<Props, State> {
     if (index === 0) {
       this.showInviteModal()
     } else if (index === 1) {
-      this.setState({
-        showRenameGroupModal: true
-      })
+      this.showRenameGroupModal()
     } else if (index === 2) {
       this.props.leaveThread()
     }
@@ -287,13 +285,21 @@ class Group extends React.PureComponent<Props, State> {
     this.setState({ showInviteContactModal: false })
   }
 
-  cancelRenameGroup = () => {
-    this.setState({
-      showRenameGroupModal: false
-    })
+  showRenameGroupModal = () => {
+    this.setState({ showRenameGroupModal: true })
   }
 
-  completeRenameGroup = () => {}
+  hideRenameGroupModal = () => {
+    this.setState({ showRenameGroupModal: false })
+  }
+
+  cancelRenameGroup = () => {
+    this.hideRenameGroupModal()
+  }
+
+  completeRenameGroup = () => {
+    this.hideRenameGroupModal()
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {

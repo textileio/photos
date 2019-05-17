@@ -79,6 +79,7 @@ class RenameGroupScreen extends React.Component<ScreenProps & StateProps & Dispa
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonContainer}
+            disabled={this.state.newName === ''}
             onPress={this.rename}
           >
             <Text style={styles.confirmButtonText}>Rename</Text>
@@ -96,7 +97,7 @@ class RenameGroupScreen extends React.Component<ScreenProps & StateProps & Dispa
 
   rename = () => {
     this.props.rename(this.state.newName)
-    this.props.navigation.goBack()
+    this.props.complete()
   }
 }
 
