@@ -25,7 +25,7 @@ import Button from '../Components/LargeButton'
 import Input from '../SB/components/Input'
 
 import { RootState, RootAction } from '../Redux/Types'
-import { groupActions } from '../features/groups'
+import { groupActions } from '../features/group'
 
 import styles from './Styles/RenameGroup'
 import { color } from '../styles'
@@ -86,7 +86,6 @@ class RenameGroup extends React.Component<Props, State> {
           style={styles.buttonContainer}
           disabled={this.props.adding}
           onPress={this.rename}
-          onPress={() => {}}
         >
           <Text style={styles.buttonText}>Rename</Text>
         </TouchableOpacity>
@@ -117,8 +116,9 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>) : DispatchProps => {
+  const threadId = ownProps.navigation.getParam('threadId')
   return {
-    rename: (newName: string) => {}
+    rename: (newName: string) => { dispatch(groupActions.renameGroup.renameGroup.request({ threadId, name: newName })) }
   }
 }
 
