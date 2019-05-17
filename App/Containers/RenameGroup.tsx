@@ -14,13 +14,15 @@ import { connect } from 'react-redux'
 
 import {
   View,
-  Text
+  Text,
+  TouchableOpacity
 } from 'react-native'
 
 import { NavigationScreenProps } from 'react-navigation'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../Components/HeaderButtons'
 import Button from '../Components/LargeButton'
+import Input from '../SB/components/Input'
 
 import { RootState, RootAction } from '../Redux/Types'
 import { groupActions } from '../features/groups'
@@ -66,21 +68,40 @@ class RenameGroup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      newName: ''
+      newName: props.navigation.getParam('groupName')
     }
   }
 
   render() {
     const groupName = this.props.navigation.getParam('groupName')
     return (
-      <View>
-        <Text>{groupName}</Text>
-        <Button
-          text="Rename"
-          onPress={() => {}}
+      <View style={styles.container}>
+        <Input
+          style={styles.inputStyle}
+          value={this.state.newName}
+          label={this.state.newName === '' ? 'Change the group name' : ''}
+          onChangeText={this.handleNewText}
         />
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          disabled={this.props.adding}
+          onPress={this.rename}
+          onPress={() => {}}
+        >
+          <Text style={styles.buttonText}>Rename</Text>
+        </TouchableOpacity>
       </View>
     )
+  }
+
+  handleNewText = (text: string) => {
+    this.setState({
+      newName: text
+    })
+  }
+
+  rename = () => {
+    this.props.rename(this.state.newName)
   }
 }
 
@@ -88,9 +109,10 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const threadId = ownProps.navigation.getParam('threadId')
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
+  const adding = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   return {
     groupName,
-    adding: false
+    adding
   }
 }
 
