@@ -124,7 +124,7 @@ class Avatar extends React.Component<Props, State> {
               backgroundColor: this.props.style && this.props.style.backgroundColor ? this.props.style.backgroundColor : 'transparent'
             }}
             source={{
-              uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d`,
+              uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/content`,
               cache: 'force-cache'
             }}
             resizeMode={'cover'}
@@ -163,7 +163,7 @@ class Avatar extends React.Component<Props, State> {
             backgroundColor: this.props.style && this.props.style.backgroundColor ? this.props.style.backgroundColor : 'transparent'
           }}
           source={{
-            uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/d`,
+            uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/content`,
             cache: 'force-cache'
           }}
           resizeMode={'cover'}
