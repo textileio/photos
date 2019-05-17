@@ -84,7 +84,6 @@ class RenameGroup extends React.Component<Props, State> {
         />
         <TouchableOpacity
           style={styles.buttonContainer}
-          disabled={this.props.adding}
           onPress={this.rename}
         >
           <Text style={styles.buttonText}>Rename</Text>
@@ -101,6 +100,7 @@ class RenameGroup extends React.Component<Props, State> {
 
   rename = () => {
     this.props.rename(this.state.newName)
+    this.props.navigation.goBack()
   }
 }
 
