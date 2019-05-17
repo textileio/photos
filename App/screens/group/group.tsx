@@ -25,6 +25,7 @@ import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
 import { accountSelectors } from '../../features/account'
+import RenameGroupModal from '../../Containers/RenameGroupModal'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -64,6 +65,7 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 interface State {
   showInviteContactModal: boolean
+  showRenameGroupModal: boolean
 }
 
 class Group extends React.PureComponent<Props, State> {
@@ -96,7 +98,8 @@ class Group extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      showInviteContactModal: false
+      showInviteContactModal: false,
+      showRenameGroupModal: false
     }
   }
 
@@ -109,6 +112,7 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   render() {
+    const threadId = this.props.navigation.getParam('threadId');
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -126,7 +130,7 @@ class Group extends React.PureComponent<Props, State> {
           <InviteContactModal
             isVisible={this.state.showInviteContactModal}
             cancel={this.hideInviteModal}
-            selectedThreadId={this.props.navigation.getParam('threadId')}
+            selectedThreadId={threadId}
             selectedThreadName={this.props.groupName}
           />
           <ActionSheet
@@ -135,6 +139,13 @@ class Group extends React.PureComponent<Props, State> {
             options={['Invite Others', 'Rename Group', 'Leave Group', 'Cancel']}
             cancelButtonIndex={3}
             onPress={this.handleActionSheetResponse}
+          />
+          <RenameGroupModal
+            isVisible={this.state.showRenameGroupModal}
+            threadId={threadId}
+            groupName={this.props.groupName}
+            cancel={this.cancelRenameGroup}
+            complete={this.completeRenameGroup}
           />
         </KeyboardResponsiveContainer>
       </SafeAreaView>
@@ -260,8 +271,9 @@ class Group extends React.PureComponent<Props, State> {
     if (index === 0) {
       this.showInviteModal()
     } else if (index === 1) {
-      const threadId = this.props.navigation.getParam('threadId')
-      this.props.navigation.navigate('RenameGroup', { threadId,  groupName: this.props.groupName })
+      this.setState({
+        showRenameGroupModal: true
+      })
     } else if (index === 2) {
       this.props.leaveThread()
     }
@@ -274,6 +286,14 @@ class Group extends React.PureComponent<Props, State> {
   hideInviteModal = () => {
     this.setState({ showInviteContactModal: false })
   }
+
+  cancelRenameGroup = () => {
+    this.setState({
+      showRenameGroupModal: false
+    })
+  }
+
+  completeRenameGroup = () => {}
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {

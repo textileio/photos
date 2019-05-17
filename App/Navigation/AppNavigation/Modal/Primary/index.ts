@@ -30,7 +30,6 @@ const nav = createStackNavigator(
     ChangeAvatar: SetAvatar,
 
     ViewThread: Group,
-    RenameGroup,
     PhotoScreen,
     Comments,
     LikesScreen,

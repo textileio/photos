@@ -17,8 +17,7 @@ import {
   Text,
   TouchableOpacity
 } from 'react-native'
-
-import { NavigationScreenProps } from 'react-navigation'
+import Modal from 'react-native-modal'
 
 import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../Components/HeaderButtons'
 import Button from '../Components/LargeButton'
@@ -30,11 +29,6 @@ import { groupActions } from '../features/group'
 import styles from './Styles/RenameGroup'
 import { color } from '../styles'
 
-interface NavProps {
-  threadId: string
-  groupName: string
-}
-
 interface StateProps {
   groupName: string
   adding: boolean
@@ -44,36 +38,30 @@ interface DispatchProps {
   rename: (newName: string) => void
 }
 
-type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
+interface ScreenProps {
+  cancel: () => void
+  complete: () => void
+}
+
+interface ModalProps {
+  isVisible: boolean
+}
 
 interface State {
   newName: string
 }
 
-class RenameGroup extends React.Component<Props, State> {
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
-    const groupName = navigation.getParam('groupName')
-    const back = () => navigation.goBack()
-    const headerLeft = (
-      <TextileHeaderButtons left={true}>
-        <TextileHeaderButtonsItem title='Back' iconName='arrow-left' onPress={back} />
-      </TextileHeaderButtons>
-    )
-    return {
-      headerLeft,
-      headerTitle: `Rename ${groupName}`
-    }
-  }
+class RenameGroupScreen extends React.Component<ScreenProps & StateProps & DispatchProps, State> {
 
   constructor(props: Props) {
     super(props)
     this.state = {
-      newName: props.navigation.getParam('groupName')
+      newName: props.groupName
     }
   }
 
   render() {
-    const groupName = this.props.navigation.getParam('groupName')
+    const groupName = this.props.groupName
     return (
       <View style={styles.container}>
         <Input
@@ -82,12 +70,20 @@ class RenameGroup extends React.Component<Props, State> {
           label={this.state.newName === '' ? 'Change the group name' : ''}
           onChangeText={this.handleNewText}
         />
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={this.rename}
-        >
-          <Text style={styles.buttonText}>Rename</Text>
-        </TouchableOpacity>
+        <View style={styles.buttons}>
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={this.props.cancel}
+          >
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={this.rename}
+          >
+            <Text style={styles.confirmButtonText}>Rename</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -105,7 +101,7 @@ class RenameGroup extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
-  const threadId = ownProps.navigation.getParam('threadId')
+  const threadId = ownProps.threadId
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
   const adding = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
@@ -116,10 +112,27 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>) : DispatchProps => {
-  const threadId = ownProps.navigation.getParam('threadId')
+  const threadId = ownProps.threadId
   return {
     rename: (newName: string) => { dispatch(groupActions.renameGroup.renameGroup.request({ threadId, name: newName })) }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RenameGroup)
+export const RenameGroupComponent = connect(mapStateToProps, mapDispatchToProps)(RenameGroupScreen)
+
+export default class RenameGroupModal extends React.Component<ScreenProps & ModalProps> {
+  render () {
+    return (
+      <Modal
+        isVisible={this.props.isVisible}
+        animationIn={'fadeInUp'}
+        animationOut={'fadeOutDown'}
+        avoidKeyboard={true}
+        backdropOpacity={0}
+        style={{margin: 0, padding: 0}}
+      >
+        <RenameGroupComponent {...this.props} />
+      </Modal>
+    )
+  }
+}
