@@ -148,38 +148,27 @@ export default class WaitListSignupScreen extends React.Component<Props, State> 
   async postData() {
     if (this.state.emailAddress) {
       this.setState({ processing: true })
-      const baseUrl: string = Config.RN_MAILCHIMP_API_URL
-      const listId: string = Config.RN_MAILCHIMP_WAITLIST_ID
-      const url = baseUrl + '/3.0/lists/' + listId + '/members'
-
-      const apiKey: string = Config.RN_MAILCHIMP_API_KEY
-      const credentialsString = 'user:' + apiKey
-      const credentialsBase64 = new Buffer(credentialsString).toString('base64')
-
-      const headers = new Headers()
-      headers.append('Authorization', 'Basic ' + credentialsBase64)
-
+      const url = Config.RN_EMAIL_API_URL
       const body = {
-        email_address: this.state.emailAddress,
-        status: 'subscribed'
+        email: this.state.emailAddress,
+        token: Config.RN_EMAIL_API_TOKEN
       }
-
       try {
-        const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) })
-        const responseJson = await response.json()
+        const response = await fetch(url, { method: 'POST', body: JSON.stringify(body) })
+        const responseText = await response.text()
         this.setState({ processing: false })
-        const validStatus = responseJson.status >= 200 && responseJson.status < 300
-        const memberExists = !validStatus && responseJson.title === 'Member Exists'
-        if (validStatus || memberExists) {
+        const validStatus = response.status >= 200 && response.status < 300
+        if (validStatus) {
           this.setState({ buttonText: 'Success!', valid: false })
           // Set a timer and navigate
           if (this.props.onSuccess) {
             setTimeout(this.props.onSuccess, 1000)
           }
         } else {
-          this.setState({ error: responseJson.title, buttonText: 'Retry', processing: false })
+          const error = responseText.length > 0 ? responseText : `${response.status}`
+          this.setState({ error, buttonText: 'Retry', processing: false })
           if (this.toast) {
-            this.toast.show(`Error: ${responseJson.title}`, 2000)
+            this.toast.show(`Error: ${error}`, 2000)
           }
         }
       } catch (error) {
