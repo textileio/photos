@@ -727,6 +727,9 @@ FOUNDATION_EXPORT NSString* _Nonnull const CoreMetaLinkName;
 // skipped function CafeRequestOptions with unsupported parameter or return types
 
 
+// skipped function ConvertHeadersToCorsOptions with unsupported parameter or return types
+
+
 // skipped function FeedItemType with unsupported parameter or return types
 
 
