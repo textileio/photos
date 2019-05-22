@@ -28,13 +28,17 @@ export interface Props {
   likesAndCommentsContainerStyle?: ViewStyle
   hasLiked: boolean
   numberLikes: number
+  numberComments: number
   onLike: () => void
   onComment: () => void
 }
 
 const LikeAndComment = (props: Props) => {
-  const { likesAndCommentsContainerStyle, hasLiked, numberLikes, onLike, onComment } = props
+  const { likesAndCommentsContainerStyle, hasLiked, numberLikes, numberComments, onLike, onComment } = props
   const likesWord = numberLikes === 0 || numberLikes > 1 ? 'likes' : 'like'
+  const commentsWord = numberComments === 0 || numberComments > 1 ? 'comments' : 'comment'
+  const displayLikesCount = ((!hasLiked && numberLikes > 0) || (hasLiked && numberLikes > 1))
+  const displayCommentsCount = (numberComments > 0)
   return (
     <View style={[CONTAINER, likesAndCommentsContainerStyle]}>
       <View style={ICONS}>
@@ -50,8 +54,8 @@ const LikeAndComment = (props: Props) => {
           <Icon name='comment' size={24} style={ICON} />
         </TouchableOpacity>
       </View>
-      {((!hasLiked && numberLikes > 0) || (hasLiked && numberLikes > 1)) &&
-        <Text style={TEXT}>{`${numberLikes} ${likesWord}`}</Text>
+      {displayLikesCount || displayCommentsCount &&
+        <Text style={TEXT}>{displayCommentsCount && `${numberComments} ${commentsWord}`}{displayLikesCount && displayCommentsCount && ` | `}{displayLikesCount && `${numberLikes} ${likesWord}`}</Text>
       }
     </View>
 
