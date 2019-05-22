@@ -42,6 +42,7 @@ interface StateProps {
   items: ReadonlyArray<Item>
   groupName: string
   selfAddress: string
+  renaming: boolean
 }
 
 interface DispatchProps {
@@ -308,10 +309,12 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
   const selfAddress = accountSelectors.getAddress(state.account) || ''
+  const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   return {
     items,
     groupName,
-    selfAddress
+    selfAddress,
+    renaming
   }
 }
 

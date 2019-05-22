@@ -31,7 +31,7 @@ import { color } from '../styles'
 
 interface StateProps {
   groupName: string
-  adding: boolean
+  renaming: boolean
 }
 
 interface DispatchProps {
@@ -48,7 +48,8 @@ interface ModalProps {
 }
 
 interface State {
-  newName: string
+  newName: string,
+  startedRename: false
 }
 
 class RenameGroupScreen extends React.Component<ScreenProps & StateProps & DispatchProps, State> {
@@ -56,7 +57,17 @@ class RenameGroupScreen extends React.Component<ScreenProps & StateProps & Dispa
   constructor(props: Props) {
     super(props)
     this.state = {
-      newName: props.groupName
+      newName: props.groupName,
+      startedRename: false
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.state.startedRename && !this.props.renaming) {
+      this.setState({
+        startedRename: false
+      })
+      this.props.complete()
     }
   }
 
@@ -79,7 +90,7 @@ class RenameGroupScreen extends React.Component<ScreenProps & StateProps & Dispa
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonContainer}
-            disabled={this.state.newName === ''}
+            disabled={this.state.newName === '' || this.state.renaming}
             onPress={this.rename}
           >
             <Text style={styles.confirmButtonText}>Rename</Text>
@@ -97,7 +108,9 @@ class RenameGroupScreen extends React.Component<ScreenProps & StateProps & Dispa
 
   rename = () => {
     this.props.rename(this.state.newName)
-    this.props.complete()
+    this.setState({
+      startedRename: true
+    })
   }
 }
 
@@ -105,10 +118,10 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const threadId = ownProps.threadId
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
-  const adding = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
+  const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   return {
     groupName,
-    adding
+    renaming
   }
 }
 
