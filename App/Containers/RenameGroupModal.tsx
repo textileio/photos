@@ -126,7 +126,7 @@ const mapStateToProps = (state: RootState, ownProps: ScreenProps & ModalProps): 
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: ScreenProps & ModalProps) : DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: ScreenProps & ModalProps): DispatchProps => {
   const threadId = ownProps.threadId
   return {
     rename: (newName: string) => { dispatch(groupActions.renameGroup.renameGroup.request({ threadId, name: newName })) }
@@ -136,7 +136,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: ScreenProp
 export const RenameGroupComponent = connect(mapStateToProps, mapDispatchToProps)(RenameGroupScreen)
 
 export default class RenameGroupModal extends React.Component<ScreenProps & ModalProps> {
-  render () {
+  render() {
     return (
       <Modal
         isVisible={this.props.isVisible}

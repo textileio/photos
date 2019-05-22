@@ -113,7 +113,7 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const threadId = this.props.navigation.getParam('threadId');
+    const threadId = this.props.navigation.getParam('threadId')
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
