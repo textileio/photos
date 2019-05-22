@@ -26,6 +26,7 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8E44FDACD1EC3A88233594F4 /* libPods-Textile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */; };
 		93247E602278F1C1001C6381 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93247E5D2278F1B0001C6381 /* libRNGestureHandler.a */; };
+		932DF5DA2294C58E002683AB /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 932DF5A02294C58E002683AB /* JavaScriptCore.framework */; };
 		934C823A228B644D00EC996D /* libRNCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 934C822F228B640800EC996D /* libRNCameraRoll.a */; };
 		93C00481216B12A1007786A5 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00480216B1276007786A5 /* libRNBackgroundFetch.a */; };
 		93C00482216B12C8007786A5 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00470216B1066007786A5 /* TSBackgroundFetch.framework */; };
@@ -498,6 +499,7 @@
 		889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Textile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AF863B7C065E68291276D09 /* Pods-Textile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Textile/Pods-Textile.debug.xcconfig"; sourceTree = "<group>"; };
 		93247E572278F1B0001C6381 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
+		932DF5A02294C58E002683AB /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		934C81F4228B640800EC996D /* RNCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCameraRoll.xcodeproj; path = "../node_modules/@textile/react-native-camera-roll/ios/RNCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93C00470216B1066007786A5 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = "<group>"; };
 		93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
@@ -552,6 +554,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				932DF5DA2294C58E002683AB /* JavaScriptCore.framework in Frameworks */,
 				934C823A228B644D00EC996D /* libRNCameraRoll.a in Frameworks */,
 				93247E602278F1C1001C6381 /* libRNGestureHandler.a in Frameworks */,
 				93CCA014220135C700639B38 /* libRCTContacts.a in Frameworks */,
@@ -707,6 +710,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				932DF5A02294C58E002683AB /* JavaScriptCore.framework */,
 				93C00532216BB8F2007786A5 /* Crashlytics.framework */,
 				93C00533216BB8F2007786A5 /* Fabric.framework */,
 				93C00470216B1066007786A5 /* TSBackgroundFetch.framework */,
