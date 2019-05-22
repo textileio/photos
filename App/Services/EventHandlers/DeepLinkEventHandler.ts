@@ -15,7 +15,7 @@ export default class DeepLinkEventHandler {
     this.handleUrl(event.url)
   }
 
-  handleUrl(url: string) {
+  handleUrl(url: string | null) {
     if (url) {
       this.store.dispatch(UIActions.routeDeepLinkRequest(url))
     }

@@ -130,7 +130,8 @@ export function * cameraPermissionsTrigger() {
   if (Platform.OS === 'android') {
     const permission = yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE, {
         title: 'Textile Photos Photos Permission',
-        message: 'Textile accesses your photo storage to import any new photos you take after you install the app.'
+        message: 'Textile accesses your photo storage to import any new photos you take after you install the app.',
+        buttonPositive: 'Ok'
       })
   } else {
     CameraRoll.getPhotos(1)
@@ -141,7 +142,8 @@ export function * backgroundLocationPermissionsTrigger() {
   if (Platform.OS === 'android') {
     yield call(PermissionsAndroid.request, PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
       title: 'Location Please',
-      message: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.'
+      message: 'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.',
+      buttonPositive: 'Ok'
     })
   } else {
     yield call(navigator.geolocation.requestAuthorization)
