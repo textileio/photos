@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, ViewStyle, ImageStyle, TextStyle } from 'react-native'
+import Hyperlink from 'react-native-hyperlink'
 
 import Avatar from './Avatar'
 import { spacing, size, textStyle, color } from '../styles'
@@ -62,6 +63,10 @@ export interface Props {
   isSameUser?: boolean
 }
 
+const linkifyMessage = (message: string) => {
+
+}
+
 const Message = (props: Props) => {
   const alignItems = props.message ? 'flex-start' : 'center'
   return (
@@ -76,7 +81,9 @@ const Message = (props: Props) => {
           </View>
         }
         {props.message &&
-          <Text style={MESSAGE}>{props.message}</Text>
+          <Hyperlink linkDefault={true}>
+            <Text style={MESSAGE}>{props.message}</Text>
+          </Hyperlink>
         }
       </View>
     </View>
