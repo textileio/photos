@@ -54,6 +54,10 @@ const MESSAGE: TextStyle = {
   lineHeight: textStyle.body_m.fontSize! * 1.3
 }
 
+const LINK: TextStyle = {
+  color: color.action_2
+}
+
 export interface Props {
   avatar?: string
   username: string
@@ -61,10 +65,6 @@ export interface Props {
   time: string
   containerStyle?: ViewStyle
   isSameUser?: boolean
-}
-
-const linkifyMessage = (message: string) => {
-
 }
 
 const Message = (props: Props) => {
@@ -81,7 +81,7 @@ const Message = (props: Props) => {
           </View>
         }
         {props.message &&
-          <Hyperlink linkDefault={true}>
+          <Hyperlink linkDefault={true} linkStyle={LINK}>
             <Text style={MESSAGE}>{props.message}</Text>
           </Hyperlink>
         }
