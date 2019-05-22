@@ -10,6 +10,7 @@ group screen.
 */
 
 import React from 'react'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
 import {
@@ -30,7 +31,6 @@ import styles from './Styles/RenameGroup'
 import { color } from '../styles'
 
 interface StateProps {
-  groupName: string
   renaming: boolean
 }
 
@@ -39,6 +39,8 @@ interface DispatchProps {
 }
 
 interface ScreenProps {
+  threadId: string
+  groupName: string
   cancel: () => void
   complete: () => void
 }
@@ -49,10 +51,12 @@ interface ModalProps {
 
 interface State {
   newName: string,
-  startedRename: false
+  startedRename: boolean
 }
 
-class RenameGroupScreen extends React.Component<ScreenProps & StateProps & DispatchProps, State> {
+type Props = ScreenProps & StateProps & DispatchProps
+
+class RenameGroupScreen extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
@@ -90,7 +94,7 @@ class RenameGroupScreen extends React.Component<ScreenProps & StateProps & Dispa
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonContainer}
-            disabled={this.state.newName === '' || this.state.renaming}
+            disabled={this.state.newName === '' || this.props.renaming}
             onPress={this.rename}
           >
             <Text style={styles.confirmButtonText}>Rename</Text>
@@ -114,18 +118,15 @@ class RenameGroupScreen extends React.Component<ScreenProps & StateProps & Dispa
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
+const mapStateToProps = (state: RootState, ownProps: ScreenProps & ModalProps): StateProps => {
   const threadId = ownProps.threadId
-  const threadData = state.photoViewing.threads[threadId]
-  const groupName = threadData ? threadData.name : 'Unknown'
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   return {
-    groupName,
     renaming
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>) : DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: ScreenProps & ModalProps) : DispatchProps => {
   const threadId = ownProps.threadId
   return {
     rename: (newName: string) => { dispatch(groupActions.renameGroup.renameGroup.request({ threadId, name: newName })) }
