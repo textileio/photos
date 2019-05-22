@@ -1,78 +1,80 @@
 PODS:
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
-  - Folly (2016.10.31.00):
+  - Folly (2018.10.22.00):
     - boost-for-react-native
     - DoubleConversion
     - glog
   - glog (0.3.5)
   - Protobuf (3.7.0)
-  - React (0.57.7):
-    - React/Core (= 0.57.7)
-  - React/Core (0.57.7):
-    - yoga (= 0.57.7.React)
-  - React/CxxBridge (0.57.7):
-    - Folly (= 2016.10.31.00)
+  - React (0.58.6):
+    - React/Core (= 0.58.6)
+  - React/Core (0.58.6):
+    - yoga (= 0.58.6.React)
+  - React/CxxBridge (0.58.6):
+    - Folly (= 2018.10.22.00)
     - React/Core
     - React/cxxreact
-  - React/cxxreact (0.57.7):
+    - React/jsiexecutor
+  - React/cxxreact (0.58.6):
     - boost-for-react-native (= 1.63.0)
-    - Folly (= 2016.10.31.00)
-    - React/jschelpers
+    - Folly (= 2018.10.22.00)
     - React/jsinspector
-  - React/DevSupport (0.57.7):
+  - React/DevSupport (0.58.6):
     - React/Core
     - React/RCTWebSocket
-  - React/fishhook (0.57.7)
-  - React/jschelpers (0.57.7):
-    - Folly (= 2016.10.31.00)
-    - React/PrivateDatabase
-  - React/jsinspector (0.57.7)
-  - React/PrivateDatabase (0.57.7)
-  - React/RCTActionSheet (0.57.7):
+  - React/fishhook (0.58.6)
+  - React/jsi (0.58.6):
+    - Folly (= 2018.10.22.00)
+  - React/jsiexecutor (0.58.6):
+    - Folly (= 2018.10.22.00)
+    - React/cxxreact
+    - React/jsi
+  - React/jsinspector (0.58.6)
+  - React/RCTActionSheet (0.58.6):
     - React/Core
-  - React/RCTAnimation (0.57.7):
+  - React/RCTAnimation (0.58.6):
     - React/Core
-  - React/RCTBlob (0.57.7):
+  - React/RCTBlob (0.58.6):
     - React/Core
-  - React/RCTCameraRoll (0.57.7):
+  - React/RCTCameraRoll (0.58.6):
     - React/Core
     - React/RCTImage
-  - React/RCTGeolocation (0.57.7):
+  - React/RCTGeolocation (0.58.6):
     - React/Core
-  - React/RCTImage (0.57.7):
+  - React/RCTImage (0.58.6):
     - React/Core
     - React/RCTNetwork
-  - React/RCTLinkingIOS (0.57.7):
+  - React/RCTLinkingIOS (0.58.6):
     - React/Core
-  - React/RCTNetwork (0.57.7):
+  - React/RCTNetwork (0.58.6):
     - React/Core
-  - React/RCTPushNotification (0.57.7):
+  - React/RCTPushNotification (0.58.6):
     - React/Core
-  - React/RCTSettings (0.57.7):
+  - React/RCTSettings (0.58.6):
     - React/Core
-  - React/RCTText (0.57.7):
+  - React/RCTText (0.58.6):
     - React/Core
-  - React/RCTVibration (0.57.7):
+  - React/RCTVibration (0.58.6):
     - React/Core
-  - React/RCTWebSocket (0.57.7):
+  - React/RCTWebSocket (0.58.6):
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - Textile (0.1.13):
+  - Textile (0.1.14):
     - Protobuf (~> 3.7)
-    - TextileCore (~> 0.1.13)
-  - textile-react-native-sdk (1.2.7):
+    - TextileCore (~> 0.1.14)
+  - textile-react-native-sdk (1.2.8):
     - React
-    - Textile (= 0.1.13)
-  - TextileCore (0.1.13):
+    - Textile (= 0.1.14)
+  - TextileCore (0.1.14):
     - Protobuf (~> 3.7)
-  - yoga (0.57.7.React)
+  - yoga (0.58.6.React)
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
-  - glog (from `../node_modules/react-native/third-party-podspecs/GLog.podspec`)
+  - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -90,7 +92,7 @@ DEPENDENCIES:
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - "textile-react-native-sdk (from `../node_modules/@textile/react-native-sdk`)"
-  - yoga (from `../node_modules/react-native/ReactCommon/yoga/Yoga.podspec`)
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -105,26 +107,26 @@ EXTERNAL SOURCES:
   Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
-    :podspec: "../node_modules/react-native/third-party-podspecs/GLog.podspec"
+    :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
   textile-react-native-sdk:
     :path: "../node_modules/@textile/react-native-sdk"
   yoga:
-    :path: "../node_modules/react-native/ReactCommon/yoga/Yoga.podspec"
+    :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
-  Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
-  glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
+  Folly: de497beb10f102453a1afa9edbf8cf8a251890de
+  glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
-  React: 67899bbb285ceb9b4ee1c88b3991602ba5772ad2
-  Textile: 07cb4c8c2c4b5eabe69a4762e169f33c0c28d201
-  textile-react-native-sdk: 08eeee083f2901b057f891515e71d28da20136e1
-  TextileCore: 489a524028209f36d638568d4797f65b4eadc92b
-  yoga: 192d724e53380b783e09b7d687a55cd8ed5188be
+  React: 130b87b2d5e2baac646954282cab87be986d98fc
+  Textile: 29c6e830baecee5cb43ab9129c1b7c9612e45d2e
+  textile-react-native-sdk: 9631befcc6918ff051e94559423366c7a33e29d1
+  TextileCore: 25e8c7e1988b3729e9d241f3a5c0bd0cd2e85f9f
+  yoga: 32d7ef1081951e9a35a4c72a7be797598b138a48
 
-PODFILE CHECKSUM: 36d0150b986daae4a635027f71c1d7bc737bd29e
+PODFILE CHECKSUM: 78f4f1a9d275d82c8fa3fd08d680c648bf70849c
 
 COCOAPODS: 1.6.1

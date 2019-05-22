@@ -5,7 +5,7 @@ import Textile, { IThread, IMobilePreparedFiles, IFilesList } from '@textile/rea
 import Config from 'react-native-config'
 import FS from 'react-native-fs'
 
-import PreferencesActions, { PreferencesSelectors } from '../../Redux/PreferencesRedux'
+import PreferencesActions, { PreferencesSelectors, Service } from '../../Redux/PreferencesRedux'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import * as actions from './actions'
 import * as selectors from './selectors'
@@ -14,9 +14,8 @@ import { ProcessingPhoto } from './models'
 
 function * toggleStorage(action: ActionType<typeof PreferencesActions.toggleStorageRequest>) {
   const { name } = action.payload
-  const storageOption = yield select(PreferencesSelectors.storage, name)
-  const storageStatus = !storageOption ? false : storageOption.status
-  if (name === 'autoPinPhotos' && storageStatus === true) {
+  const storageOption: Service = yield select(PreferencesSelectors.storage, name)
+  if (name === 'autoPinPhotos' && storageOption.status === true) {
     // Always start autoPinning only from the date of the latest toggle-on
     const now = (new Date()).getTime()
     yield put(actions.updateLastQueriedTime(now))
@@ -25,7 +24,10 @@ function * toggleStorage(action: ActionType<typeof PreferencesActions.toggleStor
 
 function * nodeOnline() {
   while (yield take([getType(TextileEventsActions.nodeOnline), getType(TextileEventsActions.stopNodeAfterDelayCancelled)])) {
-    yield put(actions.queryCameraRoll.request())
+    const autoPinService: Service = yield select(PreferencesSelectors.storage, 'autoPinPhotos')
+    if (autoPinService.status) {
+      yield put(actions.queryCameraRoll.request())
+    }
   }
 }
 

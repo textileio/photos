@@ -222,7 +222,8 @@ async function requestPermissionsAndroid() {
     PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
     {
       title: 'Contacts',
-      message: 'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.'
+      message: 'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.',
+      buttonPositive: 'Ok'
     }
   )
   if (result === PermissionsAndroid.RESULTS.GRANTED) {
