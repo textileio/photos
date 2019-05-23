@@ -8,8 +8,8 @@ export function *handleRenameGroupRequest(action: ActionType<typeof renameGroup.
   const { threadId, name } = action.payload
   try {
     yield call(Textile.threads.rename, threadId, name)
+    yield put(PhotoViewingActions.updateThreadName(threadId, name))
     yield put(renameGroup.success({ threadId }))
-    yield put(PhotoViewingActions.refreshThreadRequest(threadId))
   } catch (error) {
     yield put(renameGroup.failure({ threadId, error }))
   }

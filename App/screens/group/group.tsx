@@ -300,6 +300,10 @@ class Group extends React.PureComponent<Props, State> {
 
   completeRenameGroup = () => {
     this.hideRenameGroupModal()
+    // Update navigation params in case groupName changed
+    this.props.navigation.setParams({
+      groupName: this.props.groupName
+    })
   }
 }
 

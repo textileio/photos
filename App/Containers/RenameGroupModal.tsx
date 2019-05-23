@@ -27,7 +27,7 @@ import Input from '../SB/components/Input'
 import { RootState, RootAction } from '../Redux/Types'
 import { groupActions } from '../features/group'
 
-import styles from './Styles/RenameGroup'
+import * as styles from './Styles/RenameGroup'
 import { color } from '../styles'
 
 interface StateProps {
@@ -74,6 +74,7 @@ class RenameGroupModal extends React.Component<Props, State> {
 
   render() {
     const groupName = this.props.groupName
+    const disabled = this.state.newName === '' || this.props.renaming
     return (
       <Modal
         isVisible={this.props.isVisible}
@@ -98,8 +99,8 @@ class RenameGroupModal extends React.Component<Props, State> {
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.buttonContainer}
-              disabled={this.state.newName === '' || this.props.renaming}
+              style={[styles.buttonContainer, disabled ? { opacity: 0.5 } : {}]}
+              disabled={disabled}
               onPress={this.rename}
             >
               <Text style={styles.confirmButtonText}>Rename</Text>
@@ -132,7 +133,7 @@ const mapStateToProps = (state: RootState, ownProps: ModalProps): StateProps => 
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ModalProps): DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: ModalProps): DispatchProps => {
   const threadId = ownProps.threadId
   return {
     rename: (newName: string) => { dispatch(groupActions.renameGroup.renameGroup.request({ threadId, name: newName })) }
