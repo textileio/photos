@@ -15,12 +15,8 @@ export function *handleRenameGroupRequest(action: ActionType<typeof renameGroup.
   }
 }
 
-export function *watchForRenameGroupRequests() {
-  yield takeEvery(getType(renameGroup.request), handleRenameGroupRequest)
-}
-
 export default function *() {
   yield all([
-    call(watchForRenameGroupRequests)
+    takeEvery(getType(renameGroup.request), handleRenameGroupRequest)
   ])
 }
