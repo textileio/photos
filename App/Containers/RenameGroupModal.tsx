@@ -99,7 +99,7 @@ class RenameGroupModal extends React.Component<Props, State> {
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.buttonContainer, disabled ? { opacity: 0.5 } : {}]}
+              style={[styles.buttonContainer, disabled ? { opacity: 0.2 } : {}]}
               disabled={disabled}
               onPress={this.rename}
             >
