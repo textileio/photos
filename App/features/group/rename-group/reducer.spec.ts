@@ -17,7 +17,7 @@ describe('renaming groups', () => {
     it('should manage async renaming the group', () => {
       const state0 = reducer(initialState, actions.renameGroup.request({ threadId, name }))
       expect(state0[threadId]).toBeDefined()
-      const state1 = reducer(state0, actions.renameGroup.success)
+      const state1 = reducer(state0, actions.renameGroup.success({ threadId }))
       expect(state0[threadId]).toBeUndefined()
     })
   })
