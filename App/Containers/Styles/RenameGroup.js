@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 
-import { color, spacing, size, fontSize } from '../../styles'
+import { color, spacing, size, fontSize, fontFamily } from '../../styles'
 
 export const container = {
   flex: 1,
@@ -33,13 +33,13 @@ export const buttons = {
 export const cancelButtonText = {
   color: color.grey_2,
   fontSize: fontSize._20,
-  fontFamily: 'Biotif-Regular',
+  fontFamily: fontFamily.regular,
   textAlign: 'center'
 }
 
 export const confirmButtonText = {
   color: color.action_2,
   fontSize: fontSize._20,
-  fontFamily: 'Biotif-Regular',
+  fontFamily: fontFamily.regular,
   textAlign: 'center'
 }
