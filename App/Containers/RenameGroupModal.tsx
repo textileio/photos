@@ -72,7 +72,6 @@ const confirmButtonText: TextStyle = {
   textAlign: 'center'
 }
 
-
 interface StateProps {
   renaming: boolean
 }
