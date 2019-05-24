@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, ViewStyle, ImageStyle, TextStyle } from 'react-native'
+import Hyperlink from 'react-native-hyperlink'
 
 import Avatar from './Avatar'
 import { spacing, size, textStyle, color } from '../styles'
@@ -53,6 +54,10 @@ const MESSAGE: TextStyle = {
   lineHeight: textStyle.body_m.fontSize! * 1.3
 }
 
+const LINK: TextStyle = {
+  color: color.action_2
+}
+
 export interface Props {
   avatar?: string
   username: string
@@ -76,7 +81,9 @@ const Message = (props: Props) => {
           </View>
         }
         {props.message &&
-          <Text style={MESSAGE}>{props.message}</Text>
+          <Hyperlink linkDefault={true} linkStyle={LINK}>
+            <Text style={MESSAGE}>{props.message}</Text>
+          </Hyperlink>
         }
       </View>
     </View>
