@@ -184,6 +184,7 @@ class Group extends React.PureComponent<Props, State> {
             photoWidth={screenWidth}
             hasLiked={hasLiked}
             numberLikes={likes.length}
+            numberComments={comments.length}
             onLike={this.onLike(block)}
             onComment={this.onComment(target)}
             comments={commentsData}
