@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { Text, FlatList, ListRenderItemInfo, Dimensions } from 'react-native'
+import { Text, FlatList, ListRenderItemInfo, Dimensions, Alert } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
@@ -25,6 +25,7 @@ import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
 import { accountSelectors } from '../../features/account'
+import RenameGroupModal from '../../Containers/RenameGroupModal'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -41,6 +42,7 @@ interface StateProps {
   items: ReadonlyArray<Item>
   groupName: string
   selfAddress: string
+  renaming: boolean
 }
 
 interface DispatchProps {
@@ -64,6 +66,7 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 interface State {
   showInviteContactModal: boolean
+  showRenameGroupModal: boolean
 }
 
 class Group extends React.PureComponent<Props, State> {
@@ -96,7 +99,8 @@ class Group extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      showInviteContactModal: false
+      showInviteContactModal: false,
+      showRenameGroupModal: false
     }
   }
 
@@ -109,7 +113,7 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   render() {
-    // flexGrow allows android to scroll, however https://github.com/facebook/react-native/issues/19434 is still an issue
+    const threadId = this.props.navigation.getParam('threadId')
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -127,15 +131,22 @@ class Group extends React.PureComponent<Props, State> {
           <InviteContactModal
             isVisible={this.state.showInviteContactModal}
             cancel={this.hideInviteModal}
-            selectedThreadId={this.props.navigation.getParam('threadId')}
+            selectedThreadId={threadId}
             selectedThreadName={this.props.groupName}
           />
           <ActionSheet
             ref={(o: any) => { this.actionSheet = o }}
             title={this.props.groupName + ' options'}
-            options={['Invite Others', 'Leave Group', 'Cancel']}
-            cancelButtonIndex={2}
+            options={['Invite Others', 'Rename Group', 'Leave Group', 'Cancel']}
+            cancelButtonIndex={3}
             onPress={this.handleActionSheetResponse}
+          />
+          <RenameGroupModal
+            isVisible={this.state.showRenameGroupModal}
+            threadId={threadId}
+            groupName={this.props.groupName}
+            cancel={this.cancelRenameGroup}
+            complete={this.completeRenameGroup}
           />
         </KeyboardResponsiveContainer>
       </SafeAreaView>
@@ -262,6 +273,8 @@ class Group extends React.PureComponent<Props, State> {
     if (index === 0) {
       this.showInviteModal()
     } else if (index === 1) {
+      this.showRenameGroupModal()
+    } else if (index === 2) {
       this.props.leaveThread()
     }
   }
@@ -273,6 +286,26 @@ class Group extends React.PureComponent<Props, State> {
   hideInviteModal = () => {
     this.setState({ showInviteContactModal: false })
   }
+
+  showRenameGroupModal = () => {
+    this.setState({ showRenameGroupModal: true })
+  }
+
+  hideRenameGroupModal = () => {
+    this.setState({ showRenameGroupModal: false })
+  }
+
+  cancelRenameGroup = () => {
+    this.hideRenameGroupModal()
+  }
+
+  completeRenameGroup = () => {
+    this.hideRenameGroupModal()
+    // Update navigation params in case groupName changed
+    this.props.navigation.setParams({
+      groupName: this.props.groupName
+    })
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
@@ -281,10 +314,12 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const threadData = state.photoViewing.threads[threadId]
   const groupName = threadData ? threadData.name : 'Unknown'
   const selfAddress = accountSelectors.getAddress(state.account) || ''
+  const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   return {
     items,
     groupName,
-    selfAddress
+    selfAddress,
+    renaming
   }
 }
 
