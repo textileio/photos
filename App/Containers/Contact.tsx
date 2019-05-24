@@ -5,14 +5,19 @@ import {
   View,
   ScrollView,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  ViewStyle
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
-import { IContact } from '@textile/react-native-sdk'
+import {
+  IContact,
+  Thread
+} from '@textile/react-native-sdk'
 
 import Avatar from '../Components/Avatar'
 import Button from '../Components/LargeButton'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
 
 // Styles
@@ -21,7 +26,17 @@ import { RootState, RootAction } from '../Redux/Types'
 import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import { contactsActions } from '../features/contacts'
-import { color } from '../styles'
+import { color, spacing } from '../styles'
+
+const buttons: ViewStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center'
+}
+
+const button: ViewStyle = {
+  marginRight: spacing._012
+}
 
 interface NavProps {
   contact: IContact
@@ -40,6 +55,7 @@ interface StateProps {
 interface DispatchProps {
   removeContact: () => void
   addContact: () => void
+  createDirectMessageThread: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -82,15 +98,18 @@ class ContactModal extends React.Component<Props> {
           >
             {this.props.displayName}
           </Text>
-          <Button
-            text={buttonText}
-            disabled={buttonDisabled}
-            onPress={this.props.isContact ? this.onRemove : this.onAdd}
-          />
-          <Button
-            text={"Send Message"}
-            onPress={this.directMessage}
-          />
+          <View style={buttons}>
+            <Button
+              text={buttonText}
+              style={button}
+              disabled={buttonDisabled}
+              onPress={this.props.isContact ? this.onRemove : this.onAdd}
+            />
+            <Button
+              text={"Send Message"}
+              onPress={this.props.createDirectMessageThread}
+            />
+          </View>
         </View>
         <ScrollView style={styles.threadsList}>
           <Text style={styles.threadsTitle}>
@@ -112,9 +131,6 @@ class ContactModal extends React.Component<Props> {
 
   onAdd = () => {
     this.props.addContact()
-  }
-
-  directMessage = () => {
   }
 }
 
@@ -139,10 +155,11 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>): DispatchProps => {
   const contact = ownProps.navigation.getParam('contact')
-  const address = contact.address
+  const { address, name } = contact
   return {
     removeContact: () => dispatch(contactsActions.removeContact.request(address)),
-    addContact: () => dispatch(contactsActions.addContactRequest(contact))
+    addContact: () => dispatch(contactsActions.addContactRequest(contact)),
+    createDirectMessageThread: () => { dispatch(PhotoViewingActions.addThreadRequest({ name, whitelist: [address], sharing: Thread.Sharing.not_shared }, { navigate: true })) }
   }
 }
 

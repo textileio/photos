@@ -1,7 +1,14 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
 import Config from 'react-native-config'
 
-import { IFiles } from '@textile/react-native-sdk'
+import { IFiles, Thread } from '@textile/react-native-sdk'
+
+interface threadConfig {
+  name: string
+  whitelist?: ReadonlyArray<string>
+  type?: Thread.Type
+  sharing?: Thread.Sharing
+}
 
 interface threadOptions {
   navigate?: boolean
@@ -17,7 +24,7 @@ const actions = {
     return (id: string, key: string, name: string) => resolve({ id, key, name })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
-    return (name: string, whitelist?: ReadonlyArray<string>, options?: threadOptions) => resolve({ name, whitelist }, options)
+    return (config: threadConfig, options?: threadOptions) => resolve(config, options)
   }),
   threadAddedNotification: createAction('THREAD_ADDED_NOTIFICATION', (resolve) => {
     return (id: string) => resolve({ id })

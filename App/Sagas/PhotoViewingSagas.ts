@@ -69,14 +69,14 @@ export function * monitorThreadAddedNotifications(action: ActionType<typeof Phot
 }
 
 export function * addThread(action: ActionType<typeof PhotoViewingActions.addThreadRequest>) {
-  const { name, whitelist } = action.payload
+  const { name, whitelist, type, sharing } = action.payload
   try {
     const key = `textile_photos-shared-${uuid()}`
     const config: IAddThreadConfig = {
       key,
       name,
-      type: Thread.Type.OPEN,
-      sharing: Thread.Sharing.SHARED,
+      type: type ? type : Thread.Type.OPEN,
+      sharing: sharing ? sharing : Thread.Sharing.SHARED,
       schema: { id: '', json: '', preset: AddThreadConfig.Schema.Preset.MEDIA },
       force: false,
       whitelist: whitelist ? whitelist : []
