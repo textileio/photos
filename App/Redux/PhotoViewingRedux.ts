@@ -5,9 +5,9 @@ import { IFiles, Thread } from '@textile/react-native-sdk'
 
 interface threadConfig {
   name: string
+  type: Thread.Type
+  sharing: Thread.Sharing
   whitelist?: ReadonlyArray<string>
-  type?: Thread.Type
-  sharing?: Thread.Sharing
 }
 
 interface threadOptions {
@@ -21,7 +21,7 @@ interface threadOptions {
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
-    return (id: string, key: string, name: string, type: Thread.Type, sharing: Thread.sharing) => resolve({ id, key, name, type, sharing })
+    return (id: string, key: string, name: string, type: Thread.Type, sharing: Thread.sharing, whitelist: ReadonlyArray<string>) => resolve({ id, key, name, type, sharing, whitelist })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
     return (config: threadConfig, options?: threadOptions) => resolve(config, options)
@@ -30,7 +30,7 @@ const actions = {
     return (id: string) => resolve({ id })
   }),
   threadAdded: createAction('THREAD_ADDED', (resolve) => {
-    return (id: string, key: string, name: string, type: Thread.Type, sharing: Thread.Sharing) => resolve({ id, key, name, type, sharing })
+    return (id: string, key: string, name: string, type: Thread.Type, sharing: Thread.Sharing, whitelist: ReadonlyArray<string>) => resolve({ id, key, name, type, sharing, whitelist })
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', (resolve) => {
     return (error: any) => resolve({ error })
@@ -88,6 +88,7 @@ export interface ThreadData {
   readonly photos: ReadonlyArray<IFiles>
   readonly type: Thread.Type
   readonly sharing: Thread.Sharing
+  readonly whitelist: ReadonlyArray<string>
   readonly error?: string
 }
 
@@ -135,11 +136,11 @@ const initialState: PhotoViewingState = {
 export function reducer(state: PhotoViewingState = initialState, action: PhotoViewingAction): PhotoViewingState {
   switch (action.type) {
     case getType(actions.insertThread): {
-      const { id, key, name, type, sharing } = action.payload
+      const { id, key, name, type, sharing, whitelist } = action.payload
       if (state.threads[id]) {
         return state
       }
-      return { ...state, threads: { ...state.threads, [id]: { id, key, name, type, sharing, querying: false, photos: [] } } }
+      return { ...state, threads: { ...state.threads, [id]: { id, key, name, type, sharing, whitelist, querying: false, photos: [] } } }
     }
     case getType(actions.addThreadRequest): {
       const { name } = action.payload
@@ -148,11 +149,11 @@ export function reducer(state: PhotoViewingState = initialState, action: PhotoVi
       return { ...state, navigateToNewThread: navigate || false, selectToShare: selectToShare || false, shareToNewThread, addingThread: { name }}
     }
     case getType(actions.threadAdded): {
-      const { id, key, name, type, sharing } = action.payload
+      const { id, key, name, type, sharing, whitelist } = action.payload
       if (state.threads[id]) {
         return state
       }
-      const newThreadData: ThreadData = { id, key, name, type, sharing, querying: false, photos: [] }
+      const newThreadData: ThreadData = { id, key, name, type, sharing, whitelist, querying: false, photos: [] }
       return { ...state, addingThread: undefined, threads: { ...state.threads, [id]: newThreadData } }
     }
     case getType(actions.addThreadError): {

@@ -273,11 +273,12 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   handleActionSheetResponse = (index: number) => {
-    if (index === 0) {
+    const startingIndex = this.props.canInvite ? 1 : 0
+    if (this.props.canInvite && index === 0) {
       this.showInviteModal()
-    } else if (index === 1) {
+    } else if (index === startingIndex) {
       this.showRenameGroupModal()
-    } else if (index === 2) {
+    } else if (index === startingIndex + 1) {
       this.props.leaveThread()
     }
   }

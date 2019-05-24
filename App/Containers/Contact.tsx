@@ -34,7 +34,7 @@ const buttons: ViewStyle = {
   justifyContent: 'center'
 }
 
-const button: ViewStyle = {
+const addOrRemoveButton: ViewStyle = {
   marginRight: spacing._012
 }
 
@@ -101,7 +101,10 @@ class ContactModal extends React.Component<Props> {
           <View style={buttons}>
             <Button
               text={buttonText}
-              style={button}
+              style={{
+                ...addOrRemoveButton,
+                backgroundColor: this.props.isContact ? color.severe_3 : color.action_3
+              }}
               disabled={buttonDisabled}
               onPress={this.props.isContact ? this.onRemove : this.onAdd}
             />
@@ -156,10 +159,16 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>): DispatchProps => {
   const contact = ownProps.navigation.getParam('contact')
   const { address, name } = contact
+  const threadConfig = {
+    name,
+    whitelist: [address],
+    type: Thread.Type.OPEN,
+    sharing: Thread.Sharing.NOT_SHARED
+  }
   return {
     removeContact: () => dispatch(contactsActions.removeContact.request(address)),
     addContact: () => dispatch(contactsActions.addContactRequest(contact)),
-    createDirectMessageThread: () => { dispatch(PhotoViewingActions.addThreadRequest({ name, whitelist: [address], sharing: Thread.Sharing.NOT_SHARED }, { navigate: true })) }
+    createDirectMessageThread: () => { dispatch(PhotoViewingActions.addThreadRequest(threadConfig, { navigate: true })) }
   }
 }
 
