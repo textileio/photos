@@ -96,6 +96,7 @@ class PhotoScreen extends React.Component<Props> {
           photoWidth={screenWidth}
           hasLiked={hasLiked}
           numberLikes={likes.length}
+          numberComments={comments.length}
           onLike={this.onAddLike}
           onComment={this.onComment}
           comments={commentsData}

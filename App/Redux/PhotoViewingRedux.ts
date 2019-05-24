@@ -51,6 +51,9 @@ const actions = {
   refreshThreadError: createAction('REFRESH_THREAD_ERROR', (resolve) => {
     return (threadId: string, error: any) => resolve({ threadId, error })
   }),
+  updateThreadName: createAction('UPDATE_THREAD_NAME', (resolve) => {
+    return (threadId: string, name: string) => resolve({ threadId, name })
+  }),
   viewWalletPhoto: createAction('VIEW_WALLET_PHOTO', (resolve) => {
     return (photoId: string) => resolve({ photoId })
   }),
@@ -214,6 +217,16 @@ export function reducer(state: PhotoViewingState = initialState, action: PhotoVi
       }
       const threadError = (error.message as string) || (error as string) || 'unknown'
       const threads = { ...state.threads, [threadId]: { ...threadData, querying: false, error: threadError } }
+      return { ...state, threads }
+    }
+    case getType(actions.updateThreadName): {
+      const { threadId, name } = action.payload
+      const threadData = state.threads[threadId]
+      if (!threadData) {
+        // We should always have threadData before renaming a thread, but just make sure.
+        return state
+      }
+      const threads = { ...state.threads, [threadId]: { ...threadData, name } }
       return { ...state, threads }
     }
     case getType(actions.viewWalletPhoto): {
