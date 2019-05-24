@@ -33,6 +33,8 @@ interface StateProps {
   isContact: boolean
   removing: boolean
   adding: boolean
+  directMessageThreadExists: boolean
+  directMessageThreadId?: string
 }
 
 interface DispatchProps {
@@ -85,6 +87,10 @@ class ContactModal extends React.Component<Props> {
             disabled={buttonDisabled}
             onPress={this.props.isContact ? this.onRemove : this.onAdd}
           />
+          <Button
+            text={"Send Message"}
+            onPress={this.directMessage}
+          />
         </View>
         <ScrollView style={styles.threadsList}>
           <Text style={styles.threadsTitle}>
@@ -106,6 +112,9 @@ class ContactModal extends React.Component<Props> {
 
   onAdd = () => {
     this.props.addContact()
+  }
+
+  directMessage = () => {
   }
 }
 
