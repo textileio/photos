@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
   return {
     removeContact: () => dispatch(contactsActions.removeContact.request(address)),
     addContact: () => dispatch(contactsActions.addContactRequest(contact)),
-    createDirectMessageThread: () => { dispatch(PhotoViewingActions.addThreadRequest({ name, whitelist: [address], sharing: Thread.Sharing.not_shared }, { navigate: true })) }
+    createDirectMessageThread: () => { dispatch(PhotoViewingActions.addThreadRequest({ name, whitelist: [address], sharing: Thread.Sharing.NOT_SHARED }, { navigate: true })) }
   }
 }
 
