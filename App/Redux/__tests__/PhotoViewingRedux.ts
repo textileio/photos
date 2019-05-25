@@ -6,9 +6,9 @@ const initialState = reducer(undefined, {} as any)
 const threadId = 'threadId'
 const threadKey = 'threadKey'
 const threadName = 'threadName'
-const threadType = Thread.Type.OPEN
-const threadSharing = Thread.Sharing.NOT_SHARED
-const threadWhitelist = [] as ReadonlyArray<string>
+const threadType = 2
+const threadSharing = 0
+const threadWhitelist: ReadonlyArray<string> = []
 const photos: IFiles[] = [{
   user: {
     name: 'username',
