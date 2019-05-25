@@ -1,5 +1,15 @@
 import React from 'react'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View, TouchableOpacity, Insets } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Image,
+  Text,
+  ViewStyle,
+  ImageStyle,
+  TextStyle,
+  View,
+  TouchableOpacity,
+  Insets
+} from 'react-native'
 import Toast from 'react-native-easy-toast'
 import Modal from 'react-native-modal'
 
@@ -72,13 +82,15 @@ interface State {
 }
 
 export default class ReferralCode extends React.Component<Props, State> {
-
   toast?: Toast
 
   constructor(props: Props) {
     super(props)
     this.state = {
-      valid: props.referralCode ? props.referralCode.trim().toLowerCase() === this.props.targetReferralCode.trim().toLowerCase() : false,
+      valid: props.referralCode
+        ? props.referralCode.trim().toLowerCase() ===
+          this.props.targetReferralCode.trim().toLowerCase()
+        : false,
       showWaitlistSignup: false,
       referralCode: props.referralCode
     }
@@ -87,7 +99,9 @@ export default class ReferralCode extends React.Component<Props, State> {
   updateText = (text: string) => {
     this.setState({
       referralCode: text,
-      valid: text.trim().toLowerCase() === this.props.targetReferralCode.trim().toLowerCase()
+      valid:
+        text.trim().toLowerCase() ===
+        this.props.targetReferralCode.trim().toLowerCase()
     })
   }
 
@@ -106,43 +120,55 @@ export default class ReferralCode extends React.Component<Props, State> {
   render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
-          <View>
-            <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/secure.png')} />
-            <Text style={TITLE}>Referral Code</Text>
-            <Text style={SUBTITLE}>
-              As we're ramping up Textile Photos, you'll need a referral code to proceed.
-              {'\n\n'}
-              Enter your referral code or request one below.
-            </Text>
-            <Input
-              label={'Referral Code'}
-              keyboardType='default'
-              autoCapitalize='none'
-              autoCorrect={false}
-              style={{ height: 40 }}
-              inputStyle={TEXT}
-              labelStyle={LABEL}
-              onChangeText={this.updateText}
-              value={this.state.referralCode}
-              wrapperStyle={ITEM}
-            />
-            <Button
-              text='Next'
-              disabled={!this.state.valid}
-              onPress={this.props.onSuccess}
-              style={BUTTON}
-            />
-            <TouchableOpacity onPress={this.showWaitlistSignup} hitSlop={HIT_SLOP}>
-              <Text style={LINK}>Request a referral code</Text>
-            </TouchableOpacity>
-            <Toast
-              ref={(toast) => { this.toast = toast ? toast : undefined }}
-              position='center'
-            />
-          </View>
-          <Modal style={{ flex: 1, margin: 0 }} isVisible={this.state.showWaitlistSignup}>
-            <WaitListSignupScreen onSuccess={this.hideWaitlistSignup} />
-          </Modal>
+        <View>
+          <Image
+            style={IMAGE}
+            source={require('../Containers/OnboardingScreen/statics/secure.png')}
+          />
+          <Text style={TITLE}>Referral Code</Text>
+          <Text style={SUBTITLE}>
+            As we're ramping up Textile Photos, you'll need a referral code to
+            proceed.
+            {'\n\n'}
+            Enter your referral code or request one below.
+          </Text>
+          <Input
+            label={'Referral Code'}
+            keyboardType="default"
+            autoCapitalize="none"
+            autoCorrect={false}
+            style={{ height: 40 }}
+            inputStyle={TEXT}
+            labelStyle={LABEL}
+            onChangeText={this.updateText}
+            value={this.state.referralCode}
+            wrapperStyle={ITEM}
+          />
+          <Button
+            text="Next"
+            disabled={!this.state.valid}
+            onPress={this.props.onSuccess}
+            style={BUTTON}
+          />
+          <TouchableOpacity
+            onPress={this.showWaitlistSignup}
+            hitSlop={HIT_SLOP}
+          >
+            <Text style={LINK}>Request a referral code</Text>
+          </TouchableOpacity>
+          <Toast
+            ref={toast => {
+              this.toast = toast ? toast : undefined
+            }}
+            position="center"
+          />
+        </View>
+        <Modal
+          style={{ flex: 1, margin: 0 }}
+          isVisible={this.state.showWaitlistSignup}
+        >
+          <WaitListSignupScreen onSuccess={this.hideWaitlistSignup} />
+        </Modal>
       </KeyboardAvoidingView>
     )
   }

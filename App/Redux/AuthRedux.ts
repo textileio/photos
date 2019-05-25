@@ -2,12 +2,19 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
 
 const actions = {
-  requestCameraPermissions: createAction('REQUEST_CAMERA_PERMISSIONS', (resolve) => {
-    return () => resolve()
-  }),
-  onboardWithInviteRequest: createAction('ONBOARD_WITH_INVITE_REQUEST', (resolve) => {
-    return (url: string, hash: string, referral?: string) => resolve({ url, hash, referral })
-  })
+  requestCameraPermissions: createAction(
+    'REQUEST_CAMERA_PERMISSIONS',
+    resolve => {
+      return () => resolve()
+    }
+  ),
+  onboardWithInviteRequest: createAction(
+    'ONBOARD_WITH_INVITE_REQUEST',
+    resolve => {
+      return (url: string, hash: string, referral?: string) =>
+        resolve({ url, hash, referral })
+    }
+  )
 }
 
 export type AuthAction = ActionType<typeof actions>
@@ -23,10 +30,12 @@ export interface AuthState {
   }
 }
 
-export const initialState: AuthState = {
-}
+export const initialState: AuthState = {}
 
-export function reducer(state: AuthState = initialState, action: AuthAction): AuthState {
+export function reducer(
+  state: AuthState = initialState,
+  action: AuthAction
+): AuthState {
   switch (action.type) {
     case getType(actions.onboardWithInviteRequest):
       return { ...state, invite: action.payload }

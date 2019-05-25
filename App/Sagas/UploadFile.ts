@@ -7,29 +7,28 @@ import Textile, { ICafeSession } from '@textile/react-native-sdk'
 import { accountSelectors, accountActions } from '../features/account'
 import { RootState } from '../Redux/Types'
 
-export function * uploadFile(id: string, payloadPath: string) {
+export function* uploadFile(id: string, payloadPath: string) {
   const session: ICafeSession | undefined = yield call(getSession)
   if (!session || !session.cafe) {
     return
   }
-  yield call(
-    Upload.startUpload,
-    {
-      customUploadId: id,
-      path: payloadPath,
-      url: `${session.cafe.url}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
-      method: 'POST',
-      type: 'raw',
-      headers: {
-        'Authorization': `Bearer ${session.access}`,
-        'Content-Type': 'application/octet-stream'
-      }
+  yield call(Upload.startUpload, {
+    customUploadId: id,
+    path: payloadPath,
+    url: `${session.cafe.url}${Config.RN_TEXTILE_CAFE_API_PIN_PATH}`,
+    method: 'POST',
+    type: 'raw',
+    headers: {
+      Authorization: `Bearer ${session.access}`,
+      'Content-Type': 'application/octet-stream'
     }
-  )
+  })
 }
 
-function * getSession(depth: number = 0): any {
-  const session: ICafeSession | undefined = yield select((state: RootState) => accountSelectors.bestSession(state.account))
+function* getSession(depth: number = 0): any {
+  const session: ICafeSession | undefined = yield select((state: RootState) =>
+    accountSelectors.bestSession(state.account)
+  )
   if (!session) {
     return undefined
   }

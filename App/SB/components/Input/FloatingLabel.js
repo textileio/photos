@@ -14,7 +14,7 @@ class FloatingLabel extends Component {
     style: PropTypes.object
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     if (props.dense) {
       this.posTop = 12
@@ -27,19 +27,19 @@ class FloatingLabel extends Component {
       this.fontLarge = 16
       this.fontSmall = 12
     }
-    const posTop = (props.hasValue) ? this.posTop : this.posBottom
-    const fontSize = (props.hasValue) ? this.fontSmall : this.fontLarge
+    const posTop = props.hasValue ? this.posTop : this.posBottom
+    const fontSize = props.hasValue ? this.fontSmall : this.fontLarge
     this.state = {
       top: new Animated.Value(posTop),
       fontSize: new Animated.Value(fontSize)
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     return this.props.hasValue === nextProps.hasValue
   }
 
-  floatLabel () {
+  floatLabel() {
     Animated.parallel([
       Animated.timing(this.state.top, {
         toValue: this.posTop,
@@ -52,7 +52,7 @@ class FloatingLabel extends Component {
     ]).start()
   }
 
-  sinkLabel () {
+  sinkLabel() {
     Animated.parallel([
       Animated.timing(this.state.top, {
         toValue: this.posBottom,
@@ -65,17 +65,22 @@ class FloatingLabel extends Component {
     ]).start()
   }
 
-  render () {
+  render() {
     const { label, labelColor, highlightColor, style } = this.props
     return (
       <Animated.Text
-        style={[{
-          fontSize: this.state.fontSize,
-          top: this.state.top,
-          color: labelColor
-        }, styles.labelText, this.props.isFocused && {
-          color: highlightColor
-        }, style]}
+        style={[
+          {
+            fontSize: this.state.fontSize,
+            top: this.state.top,
+            color: labelColor
+          },
+          styles.labelText,
+          this.props.isFocused && {
+            color: highlightColor
+          },
+          style
+        ]}
         onPress={() => {
           this.props.focusHandler()
         }}

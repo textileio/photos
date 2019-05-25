@@ -1,5 +1,13 @@
 import React from 'react'
-import { Image, ImageSourcePropType, ImageStyle, Text, TextStyle, View, ViewStyle } from 'react-native'
+import {
+  Image,
+  ImageSourcePropType,
+  ImageStyle,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle
+} from 'react-native'
 import Button from './LargeButton'
 import { color, spacing, textStyle } from '../styles'
 
@@ -47,11 +55,11 @@ const onboardingMessage = (props: Props) => {
       <Image style={IMAGE} source={props.image} />
       <Text style={TITLE}>{props.title}</Text>
       <Text style={SUBTITLE}>{props.subtitle || props.children}</Text>
-      {props.buttonText &&
+      {props.buttonText && (
         <View style={BUTTON_WRAPPER}>
           <Button text={props.buttonText} onPress={props.onButtonPress} />
         </View>
-      }
+      )}
     </View>
   )
 }

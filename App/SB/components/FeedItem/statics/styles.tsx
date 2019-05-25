@@ -38,12 +38,12 @@ export default StyleSheet.create<Styles>({
     fontSize: 11,
     color: '#9B9B9B'
   },
-  unread: { },
+  unread: {},
   readImage: {
     position: 'absolute',
     left: 0,
     top: 0,
-    opacity: 0.70,
+    opacity: 0.7,
     backgroundColor: '#ECEDEE',
     width: 40,
     height: 40

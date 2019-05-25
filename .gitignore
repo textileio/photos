@@ -1,20 +1,134 @@
-# Android
+# 2019 May 25
 
+# =====================================
+# Bevry
+# https://github.com/bevry/base
+
+# System Files
+**/.DS_Store
+
+# Temp Files
+**/.tmp
+**/*.log
+**/*.cpuprofile
+**/*.heapsnapshot
+
+# Editor Files
+.c9/
+.vscode/
+.idea/
+launch.json
+
+# Private Files
+.env
+.env.*
+.cake_task_cache
+
+# Build Caches
+build/
+bower_components/
+node_modules/
+.next/
+.pnp/
+.pnp.js
+
+# Build Outputs
+**/out.*
+**/*.out
+**/*.out.*
+**/out/
+**/output/
+**/dist/
+edition*/
+coffeejs/
+coffee/
+es5/
+es2015/
+esnext/
+docs/
+
+# =====================================
+# Textile
+# https://github.com/textileio/base
+
+# Caches
+.glide/
+.gx/
+__pycache__
+
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+**/*.o
+**/*.a
+**/*.so
+**/*.pyc
+**/*.dylib
+**/*.dll
+**/*.exe
+**/*.syso
+**/*.test
+**/*.prof
+.ipfs
+.textile*
+
+# Architecture specific extensions/prefixes
+**/*.[568vq]
+
+# Local Development Files
+.ackrc
+.tags*
+*.sw?
+
+# Mobile
+**/*.aar
+**/*.jar
+**/*.framework
+
+# Keys
+**/*.pem
+
+# Swarm
+docker-compose.swarm.yml
+
+# Other
+_obj
+_test
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+_testmain.go
+local.properties
 *.keystore
+*.iml
+
+# Buck
+buck-out/
+.buckd/
+*.keystore
+
+# Gradle
+.gradle
+
+# Android
 *.jks
 android/**/*.settings
 android/**/*.project
 android/**/*.classpath
 
-# OSX
-#
-.DS_Store
-
-.tmp
-
 # Xcode
-#
-build/
+ios/Podfile.lock
+ios/Pods/
+DerivedData
+xcuserdata
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcworkspace
+*.hmap
+*.ipa
+
+# Xcode Advanced
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -23,61 +137,24 @@ build/
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-project.xcworkspace
-
-# Android/IntelliJ
-#
-build/
-.idea
-.gradle
-local.properties
-*.iml
-
-# Visual Studio Code
-#
-.vscode/
-
-# node.js
-#
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# BUCK
-buck-out/
-\.buckd/
-*.keystore
 
 # fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
+# It is recommended to not store the screenshots in the git repo.
+# Instead, use fastlane to re-generate the screenshots whenever they are needed.
 # For more information about the recommended setup visit:
 # https://docs.fastlane.tools/best-practices/source-control/
-
 **/fastlane/report.xml
 **/fastlane/Preview.html
 **/fastlane/screenshots
 **/fastlane/test_output
 
-# Bundle artifact
+# Bundle Artifact
 *.jsbundle
 sourcemap.js
 
 # Jest
-#
 .jest/
 coverage/
 
-# React Native Config
-.env
-.env.production
-.env.staging
-.env.default
+# =====================================
+# Repository

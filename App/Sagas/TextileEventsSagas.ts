@@ -1,18 +1,16 @@
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import {PreferencesSelectors} from '../Redux/PreferencesRedux'
+import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { accountActions } from '../features/account'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
 import { RootAction, RootState } from '../Redux/Types'
-import Textile, {
-  IContact
- } from '@textile/react-native-sdk'
+import Textile, { IContact } from '@textile/react-native-sdk'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { photosActions } from '../features/photos'
 
-export function * startSagas() {
+export function* startSagas() {
   yield all([
     call(initializeTextile),
     call(startNodeFinished),
@@ -27,14 +25,18 @@ export function * startSagas() {
 }
 
 // export function * runBackgroundUpdate() {
-  // This used to be some exported function from the SDK
-  // TODO: Remove all this, make sure background triggers are handled in native SDKs
-  // yield call(BackgroundTask)
+// This used to be some exported function from the SDK
+// TODO: Remove all this, make sure background triggers are handled in native SDKs
+// yield call(BackgroundTask)
 // }
 
-function * initializeTextile() {
+function* initializeTextile() {
   try {
-    const phrase: string | undefined = yield call(Textile.initialize, false, false)
+    const phrase: string | undefined = yield call(
+      Textile.initialize,
+      false,
+      false
+    )
     if (phrase) {
       yield put(accountActions.setRecoveryPhrase(phrase))
     }
@@ -43,14 +45,16 @@ function * initializeTextile() {
   }
 }
 
-export function * refreshMessages() {
+export function* refreshMessages() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.refreshMessagesRequest> =
-        yield take((action: RootAction) =>
+      const action: ActionType<
+        typeof TextileEventsActions.refreshMessagesRequest
+      > = yield take(
+        (action: RootAction) =>
           action.type === getType(TextileEventsActions.refreshMessagesRequest)
-        )
+      )
       yield call(Textile.cafes.checkMessages)
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
@@ -59,14 +63,16 @@ export function * refreshMessages() {
   }
 }
 
-export function * ignoreFileRequest() {
+export function* ignoreFileRequest() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.ignoreFileRequest> =
-        yield take((action: RootAction) =>
+      const action: ActionType<
+        typeof TextileEventsActions.ignoreFileRequest
+      > = yield take(
+        (action: RootAction) =>
           action.type === getType(TextileEventsActions.ignoreFileRequest)
-        )
+      )
 
       yield call(Textile.ignores.add, action.payload.blockId)
 
@@ -77,42 +83,49 @@ export function * ignoreFileRequest() {
   }
 }
 
-export function * nodeOnline() {
+export function* nodeOnline() {
   while (yield take(getType(TextileEventsActions.nodeOnline))) {
     yield call(logNewEvent, 'Node is:', 'online')
   }
 }
 
-export function * startNodeFinished() {
+export function* startNodeFinished() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.nodeStarted> =
-        yield take((action: RootAction) =>
+      const action: ActionType<
+        typeof TextileEventsActions.nodeStarted
+      > = yield take(
+        (action: RootAction) =>
           action.type === getType(TextileEventsActions.nodeStarted)
-        )
+      )
 
       // Handle any pending invites now that we are finished
       yield call(pendingInvitesTask)
       yield call(cameraRollThreadCreateTask)
-
     } catch (error) {
       yield call(logNewEvent, 'startNodeFinished', error.message, true)
     }
   }
 }
 
-export function * stopNodeAfterDelayStarting() {
+export function* stopNodeAfterDelayStarting() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.stopNodeAfterDelayStarting> =
-        yield take((action: RootAction) =>
-          action.type === getType(TextileEventsActions.stopNodeAfterDelayStarting)
-        )
+      const action: ActionType<
+        typeof TextileEventsActions.stopNodeAfterDelayStarting
+      > = yield take(
+        (action: RootAction) =>
+          action.type ===
+          getType(TextileEventsActions.stopNodeAfterDelayStarting)
+      )
 
       if (yield select(PreferencesSelectors.showNodeStateNotification)) {
-        yield call(displayNotification, `Running the node for ${action.payload.delay} sec. in the background`)
+        yield call(
+          displayNotification,
+          `Running the node for ${action.payload.delay} sec. in the background`
+        )
       }
     } catch (error) {
       yield call(logNewEvent, 'stopNodeAfterDelayStarting', error.message, true)
@@ -120,33 +133,46 @@ export function * stopNodeAfterDelayStarting() {
   }
 }
 
-export function * stopNodeAfterDelayCancelled() {
+export function* stopNodeAfterDelayCancelled() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.stopNodeAfterDelayCancelled> =
-        yield take((action: RootAction) =>
-          action.type === getType(TextileEventsActions.stopNodeAfterDelayCancelled)
-        )
+      const action: ActionType<
+        typeof TextileEventsActions.stopNodeAfterDelayCancelled
+      > = yield take(
+        (action: RootAction) =>
+          action.type ===
+          getType(TextileEventsActions.stopNodeAfterDelayCancelled)
+      )
 
       // Let it keep running
       if (yield select(PreferencesSelectors.showNodeStateNotification)) {
-        yield call(displayNotification, 'Delayed stop of node canceled because of foreground event')
+        yield call(
+          displayNotification,
+          'Delayed stop of node canceled because of foreground event'
+        )
       }
     } catch (error) {
-      yield call(logNewEvent, 'stopNodeAfterDelayCancelled', error.message, true)
+      yield call(
+        logNewEvent,
+        'stopNodeAfterDelayCancelled',
+        error.message,
+        true
+      )
     }
   }
 }
 
-export function * stopNodeAfterDelayComplete() {
+export function* stopNodeAfterDelayComplete() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.nodeStopped> =
-        yield take((action: RootAction) =>
+      const action: ActionType<
+        typeof TextileEventsActions.nodeStopped
+      > = yield take(
+        (action: RootAction) =>
           action.type === getType(TextileEventsActions.nodeStopped)
-        )
+      )
 
       if (yield select(PreferencesSelectors.showNodeStateNotification)) {
         yield call(displayNotification, 'Node stopped')
@@ -157,16 +183,22 @@ export function * stopNodeAfterDelayComplete() {
   }
 }
 
-export function * newError() {
+export function* newError() {
   while (true) {
     try {
       // Block until we get an active or background app state
-      const action: ActionType<typeof TextileEventsActions.newErrorMessage> =
-        yield take((action: RootAction) =>
+      const action: ActionType<
+        typeof TextileEventsActions.newErrorMessage
+      > = yield take(
+        (action: RootAction) =>
           action.type === getType(TextileEventsActions.newErrorMessage)
-        )
+      )
       if (yield select(PreferencesSelectors.showNodeErrorNotification)) {
-        yield call(displayNotification, action.payload.type, action.payload.message)
+        yield call(
+          displayNotification,
+          action.payload.type,
+          action.payload.message
+        )
       }
       yield call(logNewEvent, action.payload.type, action.payload.message, true)
     } catch (error) {

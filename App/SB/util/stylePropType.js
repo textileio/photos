@@ -4,9 +4,6 @@ PropTypes.oneOfType([
   PropTypes.number,
   PropTypes.shape({}),
   PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.shape({})
-    ])
+    PropTypes.oneOfType([PropTypes.number, PropTypes.shape({})])
   )
 ])

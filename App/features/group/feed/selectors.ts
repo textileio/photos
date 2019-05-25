@@ -12,13 +12,16 @@ export function feedOffsetForGroup(state: FeedState, groupId: string) {
   return last.block
 }
 
-export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<FeedItem> => {
+export const feedItems = (
+  state: FeedState,
+  groupId: string
+): ReadonlyArray<FeedItem> => {
   const feed = state.groups[groupId]
   if (!feed) {
     return []
   }
   const items = feed.items
-    .map((feedItem) => {
+    .map(feedItem => {
       if (!feedItem.payload || typeof feedItem.payload.value === 'string') {
         return
       }

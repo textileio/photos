@@ -2,7 +2,7 @@ import { AsyncStorage } from 'react-native'
 import { createMigrate, PersistConfig, MigrationManifest } from 'redux-persist'
 
 const migrations: MigrationManifest = {
-  0: (persistedState) => {
+  0: persistedState => {
     const state = persistedState as any
     // Migration to add user preferences with option for verboseUi
     return {
@@ -16,7 +16,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  1: (persistedState) => {
+  1: persistedState => {
     const state = persistedState as any
     // Migration to add remaining retry attempts to any persisted image data
     const updatedItems = state.textile.images.items.map((item: any) => {
@@ -33,9 +33,12 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  2: (persistedState) => {
+  2: persistedState => {
     const state = persistedState as any
-    const uris = state.textile.camera && state.textile.camera.processed ? state.textile.camera.processed : []
+    const uris =
+      state.textile.camera && state.textile.camera.processed
+        ? state.textile.camera.processed
+        : []
     const processed: { [key: string]: 'complete' } = {}
     for (const uri of uris) {
       processed[uri] = 'complete'
@@ -48,7 +51,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  3: (persistedState) => {
+  3: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -58,7 +61,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  4: (persistedState) => {
+  4: persistedState => {
     const state = persistedState as any
     // Not migrating devices because we didn't previously have meaningful device data
     return {
@@ -69,7 +72,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  5: (persistedState) => {
+  5: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -79,7 +82,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  6: (persistedState) => {
+  6: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -91,7 +94,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  7: (persistedState) => {
+  7: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -104,7 +107,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  8: (persistedState) => {
+  8: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -148,7 +151,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  9: (persistedState) => {
+  9: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -174,7 +177,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  10: (persistedState) => {
+  10: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -187,7 +190,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  11: (persistedState) => {
+  11: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -200,7 +203,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  12: (persistedState) => {
+  12: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -213,7 +216,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  13: (persistedState) => {
+  13: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -225,7 +228,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  14: (persistedState) => {
+  14: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -235,7 +238,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  15: (persistedState) => {
+  15: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -273,7 +276,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  16: (persistedState) => {
+  16: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -285,7 +288,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  17: (persistedState) => {
+  17: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -295,7 +298,7 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  18: (persistedState) => {
+  18: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -305,13 +308,13 @@ const migrations: MigrationManifest = {
       }
     }
   },
-  19: (persistedState) => {
+  19: persistedState => {
     // Remove migration key from persisted state
     const state = persistedState as any
     const { migration, ...rest } = state
     return rest
   },
-  20: (persistedState) => {
+  20: persistedState => {
     const state = persistedState as any
     return {
       ...state,
@@ -331,7 +334,15 @@ const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
   version: 20,
-  whitelist: ['account', 'preferences', 'uploadingImages', 'group', 'cameraRoll', 'deviceLogs', 'photos'],
+  whitelist: [
+    'account',
+    'preferences',
+    'uploadingImages',
+    'group',
+    'cameraRoll',
+    'deviceLogs',
+    'photos'
+  ],
   migrate: createMigrate(migrations, { debug: false })
 }
 

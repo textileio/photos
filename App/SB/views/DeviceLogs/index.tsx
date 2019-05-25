@@ -4,9 +4,14 @@ import { View, Text, FlatList, Share, ListRenderItemInfo } from 'react-native'
 import { NavigationActions, NavigationScreenProps } from 'react-navigation'
 import moment from 'moment'
 
-import DeviceLogsActions, { DeviceLogsRow } from '../../../Redux/DeviceLogsRedux'
+import DeviceLogsActions, {
+  DeviceLogsRow
+} from '../../../Redux/DeviceLogsRedux'
 
-import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
+import {
+  TextileHeaderButtons,
+  Item as TextileItem
+} from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
 import { RootState, RootAction } from '../../../Redux/Types'
@@ -18,20 +23,24 @@ interface NavProps {
 }
 type Props = DispatchProps & StateProps & NavigationScreenProps<NavProps>
 class DeviceLogs extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const params = navigation.state.params || {}
-    const goBack = () => { navigation.dispatch(NavigationActions.back()) }
+    const goBack = () => {
+      navigation.dispatch(NavigationActions.back())
+    }
     return {
       headerTitle: '',
       headerLeft: (
         <TextileHeaderButtons left={true}>
-          <TextileItem title='Back' iconName='arrow-left' onPress={goBack} />
+          <TextileItem title="Back" iconName="arrow-left" onPress={goBack} />
         </TextileHeaderButtons>
       ),
       headerRight: (
         <TextileHeaderButtons right={true}>
-          <TextileItem title='Share' onPress={navigation.getParam('share')} />
-          <TextileItem title='Clear' onPress={navigation.getParam('clear')} />
+          <TextileItem title="Share" onPress={navigation.getParam('share')} />
+          <TextileItem title="Clear" onPress={navigation.getParam('clear')} />
         </TextileHeaderButtons>
       )
     }
@@ -40,32 +49,40 @@ class DeviceLogs extends React.PureComponent<Props> {
   componentDidMount() {
     this.props.navigation.setParams({
       share: this._share,
-      clear: () => { this.props.clearLogs() }
+      clear: () => {
+        this.props.clearLogs()
+      }
     })
   }
 
   _share = () => {
-    const stringified = '```\n' + this.props.logs.slice(0, 60).map((item) => {
-      return [
-        moment(item.time).format('LTS'),
-        item.event,
-        item.message,
-        item.error
-      ].join(', \t')
-    }).join(' \n') + '\n```'
+    const stringified =
+      '```\n' +
+      this.props.logs
+        .slice(0, 60)
+        .map(item => {
+          return [
+            moment(item.time).format('LTS'),
+            item.event,
+            item.message,
+            item.error
+          ].join(', \t')
+        })
+        .join(' \n') +
+      '\n```'
     Share.share({ title: '', message: stringified })
   }
 
   renderHeader() {
     return (
       <View style={styles.headerRow}>
-        <View style={styles.timeCell} >
+        <View style={styles.timeCell}>
           <Text style={styles.header}>Time</Text>
         </View>
-        <View style={styles.cell} >
+        <View style={styles.cell}>
           <Text style={styles.header}>Event</Text>
         </View>
-        <View style={styles.messageCell} >
+        <View style={styles.messageCell}>
           <Text style={styles.header}>Message</Text>
         </View>
       </View>
@@ -76,20 +93,27 @@ class DeviceLogs extends React.PureComponent<Props> {
     const { item } = row
     return (
       <View style={styles.row}>
-        <View style={styles.timeCell} >
-          <Text style={[item.error && styles.failure, styles.item]}>{moment(item.time).format('LTS')}</Text>
+        <View style={styles.timeCell}>
+          <Text style={[item.error && styles.failure, styles.item]}>
+            {moment(item.time).format('LTS')}
+          </Text>
         </View>
-        <View style={styles.cell} >
-          <Text style={[item.error && styles.failure, styles.item]}>{item.event}</Text>
+        <View style={styles.cell}>
+          <Text style={[item.error && styles.failure, styles.item]}>
+            {item.event}
+          </Text>
         </View>
-        <View style={styles.messageCell} >
-          <Text style={[item.error && styles.failure, styles.item]}>{item.message}</Text>
+        <View style={styles.messageCell}>
+          <Text style={[item.error && styles.failure, styles.item]}>
+            {item.message}
+          </Text>
         </View>
       </View>
     )
   }
 
-  keyExtractor = (item: DeviceLogsRow, index: number) => index.toString() + item.time
+  keyExtractor = (item: DeviceLogsRow, index: number) =>
+    index.toString() + item.time
 
   render() {
     return (
@@ -125,8 +149,13 @@ interface DispatchProps {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    clearLogs: () => { dispatch(DeviceLogsActions.clearLogs()) }
+    clearLogs: () => {
+      dispatch(DeviceLogsActions.clearLogs())
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeviceLogs)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DeviceLogs)

@@ -16,7 +16,6 @@ import Textile from '@textile/react-native-sdk'
 const { store, persistor } = configureStore()
 
 class App extends Component {
-
   backgroundFetchEventHandler = new BackgroundFetchEventHandler(store)
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)

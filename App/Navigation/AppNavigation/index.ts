@@ -1,7 +1,4 @@
-import {
-  createAppContainer,
-  createSwitchNavigator
-} from 'react-navigation'
+import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 
 import OnboardingNavigation from './Onboarding'
 import ModalNavigation from './Modal'

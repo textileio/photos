@@ -7,8 +7,8 @@ import { View, Text, FlatList, ListRenderItemInfo } from 'react-native'
 import { RootState, RootAction } from '../../../Redux/Types'
 import ThreadSelectCard from './ThreadSelectCard'
 import ThreadCreateCard from './ThreadCreateCard'
-import {getThreads} from '../../../Redux/PhotoViewingSelectors'
-import {ThreadData} from '../../../Redux/PhotoViewingRedux'
+import { getThreads } from '../../../Redux/PhotoViewingSelectors'
+import { ThreadData } from '../../../Redux/PhotoViewingRedux'
 import UIActions from '../../../Redux/UIRedux'
 
 import styles from './statics/styles'
@@ -22,9 +22,7 @@ interface ComponentProps {
 
 export class ThreadSelectComponent extends React.Component<ComponentProps> {
   renderCreateThread = () => {
-    return (
-      <ThreadCreateCard onSelect={this.props.createNew} />
-    )
+    return <ThreadCreateCard onSelect={this.props.createNew} />
   }
 
   renderRow = (data: ListRenderItemInfo<ThreadData>) => {
@@ -33,7 +31,9 @@ export class ThreadSelectComponent extends React.Component<ComponentProps> {
       <ThreadSelectCard
         thread={thread}
         selected={this.props.selected === thread.id}
-        disabled={this.props.threads.length >= 4 && this.props.selected === thread.id}
+        disabled={
+          this.props.threads.length >= 4 && this.props.selected === thread.id
+        }
         onSelect={this.props.select}
       />
     )
@@ -42,13 +42,11 @@ export class ThreadSelectComponent extends React.Component<ComponentProps> {
   renderHeader = () => {
     if (this.props.threads.length < 4) {
       // Only freeze a top row if the list is on the longer side
-      return (<View/>)
+      return <View />
     } else if (this.props.selected) {
-      const thread = this.props.threads.find((t) => t.id === this.props.selected)
+      const thread = this.props.threads.find(t => t.id === this.props.selected)
       if (thread) {
-        return (
-          <ThreadSelectCard thread={thread} selected={true} />
-        )
+        return <ThreadSelectCard thread={thread} selected={true} />
       }
     }
     return (
@@ -96,9 +94,7 @@ type Props = StateProps & DispatchProps
 
 class ThreadSelect extends React.Component<ScreenProps & Props> {
   renderCreateThread = () => {
-    return (
-      <ThreadCreateCard onSelect={this.props.createNew} />
-    )
+    return <ThreadCreateCard onSelect={this.props.createNew} />
   }
 
   render() {
@@ -109,7 +105,7 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
             <Text style={styles.title}>Select Group</Text>
           </View>
         </View>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <ThreadSelectComponent
             createNew={this.props.createNew}
             select={this.props.selectThread}
@@ -122,9 +118,10 @@ class ThreadSelect extends React.Component<ScreenProps & Props> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps  => {
-
-  const selectedThreadId = state.ui.sharingPhoto ? state.ui.sharingPhoto.threadId : undefined
+const mapStateToProps = (state: RootState): StateProps => {
+  const selectedThreadId = state.ui.sharingPhoto
+    ? state.ui.sharingPhoto.threadId
+    : undefined
 
   return {
     threads: getThreads(state, 'name'),
@@ -133,7 +130,12 @@ const mapStateToProps = (state: RootState): StateProps  => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  selectThread: (threadId: string) => { dispatch(UIActions.updateSharingPhotoThread(threadId)) }
+  selectThread: (threadId: string) => {
+    dispatch(UIActions.updateSharingPhotoThread(threadId))
+  }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadSelect)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ThreadSelect)

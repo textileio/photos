@@ -13,7 +13,11 @@ const Logo = (props: LogoProps) => {
 
   return (
     <View style={styles.container}>
-      <ImageSc width={132} style={styles.image} source={require('./statics/logo.png')} />
+      <ImageSc
+        width={132}
+        style={styles.image}
+        source={require('./statics/logo.png')}
+      />
       {children}
     </View>
   )

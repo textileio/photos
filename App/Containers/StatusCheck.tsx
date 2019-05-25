@@ -10,14 +10,13 @@ import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 
 interface StateProps {
   onboarded: boolean
-  nodeStarted: boolean,
+  nodeStarted: boolean
   nodeError?: string
 }
 
 type Props = StateProps & NavigationScreenProps<{}>
 
 class StatusCheck extends React.Component<Props, {}> {
-
   static getDerivedStateFromProps(props: Props, state: {}) {
     if (!props.nodeError && props.nodeStarted && !props.onboarded) {
       props.navigation.navigate('OnboardingNavigation')
@@ -35,13 +34,13 @@ class StatusCheck extends React.Component<Props, {}> {
 
   render() {
     if (this.props.nodeError) {
-      return (
-        <FatalErrorView message={this.props.nodeError} />
-      )
+      return <FatalErrorView message={this.props.nodeError} />
     } else {
       return (
-        <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size='large' />
+        <View
+          style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}
+        >
+          <ActivityIndicator size="large" />
         </View>
       )
     }
@@ -56,4 +55,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-export default connect(mapStateToProps, undefined)(StatusCheck)
+export default connect(
+  mapStateToProps,
+  undefined
+)(StatusCheck)

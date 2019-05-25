@@ -10,7 +10,7 @@ export interface PhotosState {
     readonly lastQueriedTime?: number
     readonly querying: boolean
     readonly error?: string
-  },
+  }
   readonly processingPhotos: ProcessingPhotos
   readonly photosData: {
     readonly querying: boolean
@@ -32,7 +32,8 @@ export default combineReducers<PhotosState, PhotosAction>({
       }
       case getType(actions.queryCameraRoll.failure): {
         const { error } = action.payload
-        const message = error.message as string || error as string || 'unknown error'
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
         return { ...state, querying: false, error: message }
       }
       case getType(actions.updateLastQueriedTime): {
@@ -47,18 +48,31 @@ export default combineReducers<PhotosState, PhotosAction>({
       case getType(actions.queryCameraRoll.success): {
         return action.payload
           .map((photo): ProcessingPhoto => ({ photo, state: 'preparing' }))
-          .reduce((accum, processingPhoto): ProcessingPhotos => ({ ...accum, [processingPhoto.photo.assetId]: processingPhoto }), state)
+          .reduce(
+            (accum, processingPhoto): ProcessingPhotos => ({
+              ...accum,
+              [processingPhoto.photo.assetId]: processingPhoto
+            }),
+            state
+          )
       }
       case getType(actions.photoPrepared): {
         const { id, preparedFiles } = action.payload
         const processingPhoto = state[id]
-        const updated: ProcessingPhoto = { ...processingPhoto, state: 'adding', preparedFiles }
+        const updated: ProcessingPhoto = {
+          ...processingPhoto,
+          state: 'adding',
+          preparedFiles
+        }
         return { ...state, [id]: updated }
       }
       case getType(actions.photoAdded): {
         const { id } = action.payload
         const processingPhoto = state[id]
-        const updated: ProcessingPhoto = { ...processingPhoto, state: 'complete' }
+        const updated: ProcessingPhoto = {
+          ...processingPhoto,
+          state: 'complete'
+        }
         return { ...state, [id]: updated }
       }
       case getType(actions.photoCleanedUp): {
@@ -68,7 +82,8 @@ export default combineReducers<PhotosState, PhotosAction>({
       }
       case getType(actions.photoProcessingError): {
         const { id, error } = action.payload
-        const message = error.message as string || error as string || 'unknown error'
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
         const processingPhoto = state[id]
         const updated: ProcessingPhoto = { ...processingPhoto, error: message }
         return { ...state, [id]: updated }
@@ -92,7 +107,8 @@ export default combineReducers<PhotosState, PhotosAction>({
       case getType(actions.refreshPhotos.failure):
       case getType(actions.loadMorePhotos.failure): {
         const { error } = action.payload
-        const message = error.message as string || error as string || 'unknown error'
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
         return { ...state, querying: false, error: message }
       }
       default:

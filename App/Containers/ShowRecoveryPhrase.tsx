@@ -1,5 +1,13 @@
 import React from 'react'
-import { View, Text, Image, ViewStyle, TextStyle, ImageStyle, Clipboard } from 'react-native'
+import {
+  View,
+  Text,
+  Image,
+  ViewStyle,
+  TextStyle,
+  ImageStyle,
+  Clipboard
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import Button from '../Components/Button'
@@ -53,7 +61,6 @@ const BUTTON_TEXT_COPY = 'Copy Recovery Phrase'
 const BUTTON_TEXT_COPIED = 'Copied!'
 
 class ShowRecoveryPhrase extends React.Component<StateProps, State> {
-
   constructor(props: StateProps) {
     super(props)
     this.state = {
@@ -73,16 +80,23 @@ class ShowRecoveryPhrase extends React.Component<StateProps, State> {
   render() {
     return (
       <View style={CONTAINER}>
-        <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/secure.png')} />
+        <Image
+          style={IMAGE}
+          source={require('../Containers/OnboardingScreen/statics/secure.png')}
+        />
         <Text style={TITLE}>Important!</Text>
         <Text style={SUBTITLE}>
-          Displayed below is your recovery phrase that uniquely identifies
-          and encrypts your account. You <Text style={STRONG}>must</Text> save it somewhere safe. It is
-          the only way to recover your account. No one, not even Textile,
-          can help you if you loose it. Save it somewhere safe right now.
+          Displayed below is your recovery phrase that uniquely identifies and
+          encrypts your account. You <Text style={STRONG}>must</Text> save it
+          somewhere safe. It is the only way to recover your account. No one,
+          not even Textile, can help you if you loose it. Save it somewhere safe
+          right now.
         </Text>
         <Text style={PHRASE}>{this.props.recoveryPhrase}</Text>
-        <Button text={this.state.buttonText} onPress={this.copyRecoveryPhrase} />
+        <Button
+          text={this.state.buttonText}
+          onPress={this.copyRecoveryPhrase}
+        />
       </View>
     )
   }
@@ -94,4 +108,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-export default connect(mapStateToProps, undefined)(ShowRecoveryPhrase)
+export default connect(
+  mapStateToProps,
+  undefined
+)(ShowRecoveryPhrase)

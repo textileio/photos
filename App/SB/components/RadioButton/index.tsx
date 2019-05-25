@@ -12,11 +12,23 @@ interface RadioProps {
 const RadioButton = (props: RadioProps) => {
   const { selected, style, disabled } = props
 
-  const shouldDisable = !!disabled
+  const shouldDisable = Boolean(disabled)
   return (
     <View style={[styles.button, style, shouldDisable && styles.disabled]}>
-      {selected && <Image style={styles.buttonImage} source={require('./statics/check.png')} />}
-      {selected && <View style={[styles.buttonSelected, shouldDisable && styles.buttonDisabled]} />}
+      {selected && (
+        <Image
+          style={styles.buttonImage}
+          source={require('./statics/check.png')}
+        />
+      )}
+      {selected && (
+        <View
+          style={[
+            styles.buttonSelected,
+            shouldDisable && styles.buttonDisabled
+          ]}
+        />
+      )}
     </View>
   )
 }

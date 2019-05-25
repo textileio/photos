@@ -59,7 +59,9 @@ const Join = (props: Props) => {
       <Avatar style={AVATAR} target={props.avatar} />
       <View style={CONTENT}>
         <View style={META}>
-          <Text style={USERNAME}>{props.username} <Text style={MESSAGE}>{props.message}</Text></Text>
+          <Text style={USERNAME}>
+            {props.username} <Text style={MESSAGE}>{props.message}</Text>
+          </Text>
           <Text style={TIME}>{props.time.toUpperCase()}</Text>
         </View>
       </View>

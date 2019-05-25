@@ -1,7 +1,15 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Image,
+  Text,
+  ViewStyle,
+  ImageStyle,
+  TextStyle,
+  View
+} from 'react-native'
 
 import Input from '../SB/components/Input'
 import Button from '../Components/LargeButton'
@@ -120,30 +128,35 @@ class OnboardingUsername extends React.Component<Props, State> {
   render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
-          <View>
-            <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/share.png')} />
-            <Text style={TITLE}>Choose a display name</Text>
-            <Text style={SUBTITLE}>It will be shown when you share, comment, or like a photo.</Text>
-            <Input
-              label={'Display name'}
-              keyboardType='default'
-              autoCapitalize='none'
-              autoCorrect={false}
-              style={{ height: 40 }}
-              inputStyle={TEXT}
-              labelStyle={LABEL}
-              value={this.state.username}
-              onChangeText={this.updateText}
-              wrapperStyle={ITEM}
-            />
-            <Button
-              text={this.props.buttonText}
-              disabled={!this.state.valid || this.state.nextDisabled}
-              processing={this.props.processing}
-              onPress={this.submit}
-              style={BUTTON}
-            />
-          </View>
+        <View>
+          <Image
+            style={IMAGE}
+            source={require('../Containers/OnboardingScreen/statics/share.png')}
+          />
+          <Text style={TITLE}>Choose a display name</Text>
+          <Text style={SUBTITLE}>
+            It will be shown when you share, comment, or like a photo.
+          </Text>
+          <Input
+            label={'Display name'}
+            keyboardType="default"
+            autoCapitalize="none"
+            autoCorrect={false}
+            style={{ height: 40 }}
+            inputStyle={TEXT}
+            labelStyle={LABEL}
+            value={this.state.username}
+            onChangeText={this.updateText}
+            wrapperStyle={ITEM}
+          />
+          <Button
+            text={this.props.buttonText}
+            disabled={!this.state.valid || this.state.nextDisabled}
+            processing={this.props.processing}
+            onPress={this.submit}
+            style={BUTTON}
+          />
+        </View>
       </KeyboardAvoidingView>
     )
   }
@@ -151,11 +164,18 @@ class OnboardingUsername extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   processing: state.account.profile.processing,
-  buttonText: state.account.profile.value && state.account.profile.value.name ? 'Success!' : 'Save'
+  buttonText:
+    state.account.profile.value && state.account.profile.value.name
+      ? 'Success!'
+      : 'Save'
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  submitUsername: (username: string) => dispatch(accountActions.setUsernameRequest(username))
+  submitUsername: (username: string) =>
+    dispatch(accountActions.setUsernameRequest(username))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingUsername)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OnboardingUsername)

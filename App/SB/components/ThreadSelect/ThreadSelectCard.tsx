@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, TouchableOpacity } from 'react-native'
 
 import { RootState } from '../../../Redux/Types'
 
-import {ThreadData} from '../../../Redux/PhotoViewingRedux'
+import { ThreadData } from '../../../Redux/PhotoViewingRedux'
 import { IFiles } from '@textile/react-native-sdk'
 import PhotoWithTextBox from '../PhotoWithTextBox'
 import RadioButton from '../../components/RadioButton'
@@ -37,22 +37,37 @@ class ThreadSelectCard extends Component<Props> {
           }
         }}
       >
-        <PhotoWithTextBox text={this.props.thread.name} photo={this.props.thumb} />
+        <PhotoWithTextBox
+          text={this.props.thread.name}
+          photo={this.props.thumb}
+        />
         <View style={styles.threadSelectRadio}>
-          <RadioButton selected={this.props.selected} disabled={this.props.disabled}/>
+          <RadioButton
+            selected={this.props.selected}
+            disabled={this.props.disabled}
+          />
         </View>
       </TouchableOpacity>
     )
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: ScreenProps
+): StateProps => {
   const t = ownProps.thread.id
   const thread = state.photoViewing.threads[t]
-  const thumb =  thread && thread.photos && thread.photos.length > 0 ? thread.photos[0] : undefined
+  const thumb =
+    thread && thread.photos && thread.photos.length > 0
+      ? thread.photos[0]
+      : undefined
   return {
     thumb
   }
 }
 
-export default connect(mapStateToProps, undefined)(ThreadSelectCard)
+export default connect(
+  mapStateToProps,
+  undefined
+)(ThreadSelectCard)

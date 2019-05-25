@@ -1,7 +1,14 @@
 import React from 'react'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, ViewStyle, View, ListRenderItemInfo, Text, TextStyle } from 'react-native'
+import {
+  FlatList,
+  ViewStyle,
+  View,
+  ListRenderItemInfo,
+  Text,
+  TextStyle
+} from 'react-native'
 
 import { RootState } from '../Redux/Types'
 import Avatar from '../Components/Avatar'
@@ -25,19 +32,27 @@ const LIKE_TEXT: TextStyle = {
 
 interface StateProps {
   likes: ReadonlyArray<{
-    address: string,
-    username: string,
+    address: string
+    username: string
     avatar?: string
   }>
 }
 
-class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>> {
+class LikesScreen extends React.Component<
+  StateProps & NavigationScreenProps<{}>
+> {
   // @ts-ignore
   static navigationOptions = ({ navigation }) => {
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         {/* tslint:disable-next-line jsx-no-lambda */}
-        <Item title='Back' iconName='arrow-left' onPress={() => { navigation.goBack() }} />
+        <Item
+          title="Back"
+          iconName="arrow-left"
+          onPress={() => {
+            navigation.goBack()
+          }}
+        />
       </TextileHeaderButtons>
     )
     return {
@@ -46,11 +61,20 @@ class LikesScreen extends React.Component<StateProps & NavigationScreenProps<{}>
     }
   }
 
-  keyExtractor = (item: { address: string, username: string }, index: number) => {
+  keyExtractor = (
+    item: { address: string; username: string },
+    index: number
+  ) => {
     return item.username + index
   }
 
-  renderItem = (info: ListRenderItemInfo<{ address: string, username: string, avatar?: string }>) => {
+  renderItem = (
+    info: ListRenderItemInfo<{
+      address: string
+      username: string
+      avatar?: string
+    }>
+  ) => {
     const { username, avatar } = info.item
     return (
       <View style={LIKE_ITEM}>
@@ -76,8 +100,10 @@ const mapStateToProps = (state: RootState): StateProps => {
   if (!state.photoViewing.viewingPhoto) {
     throw Error('No viewing photo')
   }
-  const viewingPhotoLikes = state.photoViewing.viewingPhoto ? state.photoViewing.viewingPhoto.likes : []
-  const likes = viewingPhotoLikes.map((like) => {
+  const viewingPhotoLikes = state.photoViewing.viewingPhoto
+    ? state.photoViewing.viewingPhoto.likes
+    : []
+  const likes = viewingPhotoLikes.map(like => {
     const username: string = like.user.name || 'unknown'
     return {
       address: like.user.address,

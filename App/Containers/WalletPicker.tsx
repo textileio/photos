@@ -8,8 +8,12 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import { NavigationActions, NavigationScreenProps } from 'react-navigation'
-import { defaultThreadData, getSharedPhotos, SharedPhoto } from '../Redux/PhotoViewingSelectors'
-import {TextileEventsSelectors } from '../Redux/TextileEventsRedux'
+import {
+  defaultThreadData,
+  getSharedPhotos,
+  SharedPhoto
+} from '../Redux/PhotoViewingSelectors'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { Dispatch } from 'redux'
 import { IFiles } from '@textile/react-native-sdk'
@@ -22,12 +26,18 @@ interface NavProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 class TextileWalletPicker extends React.PureComponent<Props> {
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const cancelSharingPhoto = navigation.getParam('cancelSharingPhoto')
     const showImagePicker = navigation.getParam('showImagePicker')
 
-    const cameraRoll = () => {showImagePicker('camera-roll')}
-    const camera = () => {showImagePicker('camera')}
+    const cameraRoll = () => {
+      showImagePicker('camera-roll')
+    }
+    const camera = () => {
+      showImagePicker('camera')
+    }
     const onPress = () => {
       cancelSharingPhoto()
       navigation.dispatch(NavigationActions.back())
@@ -35,18 +45,14 @@ class TextileWalletPicker extends React.PureComponent<Props> {
 
     const headerLeft = (
       <TextileHeaderButtons left={true}>
-        <Item
-          title='Back'
-          iconName='arrow-left'
-          onPress={onPress}
-        />
+        <Item title="Back" iconName="arrow-left" onPress={onPress} />
       </TextileHeaderButtons>
     )
     const headerTitle = 'Recent Photos'
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='camera' iconName='camera-create' onPress={camera} />
-        <Item title='camera roll' iconName='image' onPress={cameraRoll} />
+        <Item title="camera" iconName="camera-create" onPress={camera} />
+        <Item title="camera roll" iconName="image" onPress={cameraRoll} />
       </TextileHeaderButtons>
     )
     return {
@@ -137,11 +143,24 @@ interface DispatchProps {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  success: (photo) => { dispatch(UIActions.walletPickerSuccess(photo)) },
-  cancelSharingPhoto: () => { dispatch(UIActions.cancelSharingPhoto()) },
-  refresh: (threadId) => { dispatch(PhotoViewingActions.refreshThreadRequest(threadId)) },
-  showImagePicker: (type) => { dispatch(UIActions.showImagePicker(type)) },
-  toggleVerboseUi: () => { dispatch(PreferencesActions.toggleVerboseUi()) }
+  success: photo => {
+    dispatch(UIActions.walletPickerSuccess(photo))
+  },
+  cancelSharingPhoto: () => {
+    dispatch(UIActions.cancelSharingPhoto())
+  },
+  refresh: threadId => {
+    dispatch(PhotoViewingActions.refreshThreadRequest(threadId))
+  },
+  showImagePicker: type => {
+    dispatch(UIActions.showImagePicker(type))
+  },
+  toggleVerboseUi: () => {
+    dispatch(PreferencesActions.toggleVerboseUi())
+  }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(TextileWalletPicker)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TextileWalletPicker)

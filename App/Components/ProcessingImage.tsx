@@ -1,5 +1,13 @@
 import React, { Fragment } from 'react'
-import { View, Image, Button, ViewStyle, ImageStyle, Text, TextStyle } from 'react-native'
+import {
+  View,
+  Image,
+  Button,
+  ViewStyle,
+  ImageStyle,
+  Text,
+  TextStyle
+} from 'react-native'
 
 import ProgressBar from './ProgressBar'
 
@@ -50,12 +58,12 @@ const ERROR: TextStyle = {
 }
 
 export interface IProcessingImageProps {
-  id: string,
-  imageUri: string,
-  progress: number,
-  message?: string,
-  errorMessage?: string,
-  retry?: () => void,
+  id: string
+  imageUri: string
+  progress: number
+  message?: string
+  errorMessage?: string
+  retry?: () => void
   cancel?: () => void
 }
 

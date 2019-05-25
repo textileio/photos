@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
-import { ScrollView, TextInput, Platform, Clipboard, ActivityIndicator, View, Text } from 'react-native'
+import {
+  ScrollView,
+  TextInput,
+  Platform,
+  Clipboard,
+  ActivityIndicator,
+  View,
+  Text
+} from 'react-native'
 import FS from 'react-native-fs'
-import { NavigationScreenProps} from 'react-navigation'
+import { NavigationScreenProps } from 'react-navigation'
 import Textile from '@textile/react-native-sdk'
 import { TextileHeaderButtons, Item as TextileItem } from './HeaderButtons'
 import { color, fontSize, spacing } from '../styles'
@@ -17,9 +25,13 @@ interface State {
   error?: string
 }
 
-export default class NodeLogsScreen  extends Component<NavigationScreenProps<NavProps>, State> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+export default class NodeLogsScreen extends Component<
+  NavigationScreenProps<NavProps>,
+  State
+> {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const refresh = navigation.getParam('refresh')
     const copy = navigation.getParam('copy')
     const goBack = () => navigation.goBack()
@@ -27,15 +39,19 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
       headerTitle: 'Node Logs',
       headerLeft: (
         <TextileHeaderButtons left={true}>
-          <TextileItem title='Back' iconName='arrow-left' onPress={goBack} />
+          <TextileItem title="Back" iconName="arrow-left" onPress={goBack} />
         </TextileHeaderButtons>
       ),
-      headerRight: ((
+      headerRight: (
         <TextileHeaderButtons>
-          <TextileItem title='Copy' iconName='clipboard-plus' onPress={copy} />
-          <TextileItem title='Refresh' iconName='refresh-ccw' onPress={refresh} />
+          <TextileItem title="Copy" iconName="clipboard-plus" onPress={copy} />
+          <TextileItem
+            title="Refresh"
+            iconName="refresh-ccw"
+            onPress={refresh}
+          />
         </TextileHeaderButtons>
-      ))
+      )
     }
   }
 
@@ -52,14 +68,15 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
       const exists = await FS.exists(logFilePath)
       if (exists) {
         const stats = await FS.stat(logFilePath)
-        const size = stats.size as unknown as number
+        const size = (stats.size as unknown) as number
         const bytesToRead = 1024 * 300 // 300KB
         const offset = Math.max(size, bytesToRead) - bytesToRead
         const contents = await FS.read(logFilePath, bytesToRead, offset, 'utf8')
         this.setState({ logData: contents, error: undefined })
       }
     } catch (error) {
-      const message = error.message as string || error as string || 'unknown error'
+      const message =
+        (error.message as string) || (error as string) || 'unknown error'
       this.setState({ error: message })
     } finally {
       this.setState({ refreshing: false })
@@ -74,7 +91,7 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
 
   scrollToBottom = () => {
     if (this.scrollView) {
-      this.scrollView!.scrollToEnd({animated: true})
+      this.scrollView!.scrollToEnd({ animated: true })
     }
   }
 
@@ -90,25 +107,49 @@ export default class NodeLogsScreen  extends Component<NavigationScreenProps<Nav
     const font = Platform.OS === 'ios' ? 'Courier' : 'monospace'
     if (this.state.error && this.state.error !== '') {
       return (
-        <View style={{ flex: 1, backgroundColor: color.screen_primary, justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: color.screen_primary,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
           <Text>{this.state.error}</Text>
         </View>
       )
     } else if (this.state.refreshing) {
       return (
-        <View style={{ flex: 1, backgroundColor: color.screen_primary, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator animating={true} size='large' />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: color.screen_primary,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <ActivityIndicator animating={true} size="large" />
         </View>
       )
     } else {
       return (
         <ScrollView
-          ref={(ref) => { this.scrollView = ref ? ref : undefined }}
+          ref={ref => {
+            this.scrollView = ref ? ref : undefined
+          }}
           style={{ flex: 1, backgroundColor: color.screen_primary }}
         >
           <TextInput
-            ref={(ref) => { this.textInput = ref ? ref : undefined }}
-            style={{ flex: 1, fontFamily: font, fontSize: fontSize._12, paddingHorizontal: spacing.screenEdge, backgroundColor: color.screen_primary }}
+            ref={ref => {
+              this.textInput = ref ? ref : undefined
+            }}
+            style={{
+              flex: 1,
+              fontFamily: font,
+              fontSize: fontSize._12,
+              paddingHorizontal: spacing.screenEdge,
+              backgroundColor: color.screen_primary
+            }}
             editable={false}
             value={this.state.logData}
             multiline={true}

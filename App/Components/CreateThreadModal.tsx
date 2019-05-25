@@ -49,12 +49,12 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
       if (this.state.submitted) {
         return
       }
-      this.setState({submitted: true})
+      this.setState({ submitted: true })
       this.props.completeScreen(this.state.value)
       this.props.submit(
         this.state.value,
-        !!this.props.navigateTo,
-        !!this.props.selectToShare
+        Boolean(this.props.navigateTo),
+        Boolean(this.props.selectToShare)
       )
       this.props.complete()
     }
@@ -64,52 +64,76 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
     const submitDisabled = !(this.state.value.length > 0)
     return (
       <KeyboardAvoidingView behavior={'height'} style={styles.modal}>
-          <View style={styles.container}>
-            <View style={styles.content}>
-              {this.props.fullScreen && <View style={styles.title}>
+        <View style={styles.container}>
+          <View style={styles.content}>
+            {this.props.fullScreen && (
+              <View style={styles.title}>
                 <Text style={styles.titleText}>New Group</Text>
-              </View>}
-              {!this.props.fullScreen && <View style={styles.header}>
+              </View>
+            )}
+            {!this.props.fullScreen && (
+              <View style={styles.header}>
                 <Text style={styles.headerText}>New Group</Text>
-              </View>}
-              <View style={styles.topRow}>
-                <Input
-                  style={styles.inputStyle}
-                  value={this.state.value}
-                  label={this.state.value === '' ? 'Add title...' : ''}
-                  onChangeText={this.handleNewText}
-                />
               </View>
-              <View style={[styles.bottomRow, !this.props.fullScreen && styles.bottomRowMargin]}>
-                <TouchableOpacity
-                  onPress={this.props.cancel}
+            )}
+            <View style={styles.topRow}>
+              <Input
+                style={styles.inputStyle}
+                value={this.state.value}
+                label={this.state.value === '' ? 'Add title...' : ''}
+                onChangeText={this.handleNewText}
+              />
+            </View>
+            <View
+              style={[
+                styles.bottomRow,
+                !this.props.fullScreen && styles.bottomRowMargin
+              ]}
+            >
+              <TouchableOpacity onPress={this.props.cancel}>
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={submitDisabled}
+                onPress={this.create()}
+              >
+                <Text
+                  style={[styles.buttonText, submitDisabled && styles.disabled]}
                 >
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  disabled={submitDisabled}
-                  onPress={this.create()}
-                >
-                  <Text style={[styles.buttonText, submitDisabled && styles.disabled]}>Submit</Text>
-                </TouchableOpacity>
-              </View>
+                  Submit
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </View>
+      </KeyboardAvoidingView>
     )
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })) }
+    completeScreen: () => {
+      dispatch(
+        PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)
+      )
+    },
+    submit: (name, navigate, selectToShare) => {
+      dispatch(
+        PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })
+      )
+    }
   }
 }
 
-export const CreateThreadComponent = connect(undefined, mapDispatchToProps)(Component)
+export const CreateThreadComponent = connect(
+  undefined,
+  mapDispatchToProps
+)(Component)
 
-export default class CreateThreadModal extends React.Component<ScreenProps & ModalProps> {
+export default class CreateThreadModal extends React.Component<
+  ScreenProps & ModalProps
+> {
   render() {
     return (
       <Modal
@@ -118,7 +142,7 @@ export default class CreateThreadModal extends React.Component<ScreenProps & Mod
         animationOut={'fadeOutDown'}
         avoidKeyboard={true}
         backdropOpacity={0.5}
-        style={{margin: 0, padding: 0}}
+        style={{ margin: 0, padding: 0 }}
       >
         <CreateThreadComponent {...this.props} />
       </Modal>

@@ -3,13 +3,20 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, Text, ScrollView, Platform } from 'react-native'
 import { RootAction, RootState } from '../../../Redux/Types'
-import PreferencesActions, { ServiceType, TourScreens, PreferencesSelectors } from '../../../Redux/PreferencesRedux'
+import PreferencesActions, {
+  ServiceType,
+  TourScreens,
+  PreferencesSelectors
+} from '../../../Redux/PreferencesRedux'
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons from 'react-navigation-header-buttons'
 import SettingsRow from '../../components/SettingsRow'
 import GetServiceInfo from './GetServiceInfo'
 
-import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
+import {
+  TextileHeaderButtons,
+  Item as TextileItem
+} from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
 import Avatar from '../../../Components/Avatar'
@@ -24,14 +31,14 @@ interface DispatchProps {
 }
 
 export interface ServiceInfo {
-  title: string,
-  subtitle: string,
+  title: string
+  subtitle: string
   dependsOn?: string
   details?: string
 }
 
 interface ServiceSummary {
-  [key: string]: {status: boolean, info?: ServiceInfo}
+  [key: string]: { status: boolean; info?: ServiceInfo }
 }
 
 interface StateProps {
@@ -64,8 +71,8 @@ class Notifications extends React.PureComponent<Props> {
       headerLeft: (
         <TextileHeaderButtons left={true}>
           <TextileItem
-            title='Back'
-            iconName='arrow-left'
+            title="Back"
+            iconName="arrow-left"
             /* tslint:disable-next-line */
             onPress={() => {
               navigation.dispatch(NavigationActions.back())
@@ -76,7 +83,7 @@ class Notifications extends React.PureComponent<Props> {
       headerRight: (
         <HeaderButtons>
           <HeaderButtons.Item
-            title='Avatar'
+            title="Avatar"
             buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
             ButtonElement={<Avatar style={{ width: 32, height: 32 }} />}
           />
@@ -114,56 +121,73 @@ class Notifications extends React.PureComponent<Props> {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Choose the types of notifications you want to receive.</Text>
+          <Text style={styles.title}>
+            Choose the types of notifications you want to receive.
+          </Text>
         </View>
         <ScrollView style={styles.contentContainer}>
           <View style={styles.listContainer}>
-            {Object.keys(this.props.services)
-              .map((service, i) => {
-                const value = !!this.props.services[service].status
-                const children = Object.keys(this.props.children)
-                  .filter((key) => {
-                    const info = this.props.children[key].info
-                    return info && info.dependsOn === service
-                  })
-                  .reduce((previous, current) => {
+            {Object.keys(this.props.services).map((service, i) => {
+              const value = Boolean(this.props.services[service].status)
+              const children = Object.keys(this.props.children)
+                .filter(key => {
+                  const info = this.props.children[key].info
+                  return info && info.dependsOn === service
+                })
+                .reduce(
+                  (previous, current) => {
                     previous[current] = this.props.children[current]
                     return previous
-                  }, {} as ServiceSummary)
+                  },
+                  {} as ServiceSummary
+                )
 
-                return (
-                  <View key={i} >
-                    <SettingsRow
-                      service={service}
-                      info={this.props.services[service].info || {title: 'unknown', subtitle: 'unknown'}}
-                      value={value}
-                      infoPress={this.showInfo}
-                      onChange={this.toggleService}
-                    />
-                    {children && Object.keys(children).map((child, i) =>
+              return (
+                <View key={i}>
+                  <SettingsRow
+                    service={service}
+                    info={
+                      this.props.services[service].info || {
+                        title: 'unknown',
+                        subtitle: 'unknown'
+                      }
+                    }
+                    value={value}
+                    infoPress={this.showInfo}
+                    onChange={this.toggleService}
+                  />
+                  {children &&
+                    Object.keys(children).map((child, i) => (
                       <SettingsRow
                         key={i * 33}
                         child={child}
                         service={child}
-                        info={this.props.children[child].info || {title: 'unknown', subtitle: 'unknown'}}
+                        info={
+                          this.props.children[child].info || {
+                            title: 'unknown',
+                            subtitle: 'unknown'
+                          }
+                        }
                         disabled={!value}
-                        value={!!this.props.children[child].status}
+                        value={Boolean(this.props.children[child].status)}
                         infoPress={this.showInfo}
                         onChange={this.toggleService}
                       />
-                    )}
-                  </View>
-                )
-              }
-            )}
+                    ))}
+                </View>
+              )
+            })}
           </View>
 
-          {this.props.verboseUi &&
+          {this.props.verboseUi && (
             <View style={styles.listContainer}>
               <View>
                 <SettingsRow
                   service={'StateOverlay'}
-                  info={{title: 'State Overlay', subtitle: 'Banner indicating Node State'}}
+                  info={{
+                    title: 'State Overlay',
+                    subtitle: 'Banner indicating Node State'
+                  }}
                   value={this.props.verboseUiOptions.nodeStateOverlay}
                   /* tslint:disable-next-line */
                   infoPress={() => {}}
@@ -173,7 +197,10 @@ class Notifications extends React.PureComponent<Props> {
               <View>
                 <SettingsRow
                   service={'NodeState'}
-                  info={{title: 'Node State Change', subtitle: 'Local notifications'}}
+                  info={{
+                    title: 'Node State Change',
+                    subtitle: 'Local notifications'
+                  }}
                   value={this.props.verboseUiOptions.nodeStateNotifications}
                   /* tslint:disable-next-line */
                   infoPress={() => {}}
@@ -183,7 +210,10 @@ class Notifications extends React.PureComponent<Props> {
               <View>
                 <SettingsRow
                   service={'NodeErrors'}
-                  info={{title: 'Node Errors', subtitle: 'Local notifications'}}
+                  info={{
+                    title: 'Node Errors',
+                    subtitle: 'Local notifications'
+                  }}
                   value={this.props.verboseUiOptions.nodeErrorNotifications}
                   /* tslint:disable-next-line */
                   infoPress={() => {}}
@@ -191,14 +221,19 @@ class Notifications extends React.PureComponent<Props> {
                 />
               </View>
             </View>
-          }
+          )}
         </ScrollView>
-        {this.state.infoVisible &&
+        {this.state.infoVisible && (
           <PermissionsInfo
-            info={this.state.info || {title: 'Unknown Permission', subtitle: 'unknown'}}
+            info={
+              this.state.info || {
+                title: 'Unknown Permission',
+                subtitle: 'unknown'
+              }
+            }
             close={this.hideInfo}
           />
-        }
+        )}
       </View>
     )
   }
@@ -206,36 +241,47 @@ class Notifications extends React.PureComponent<Props> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   // get all top level services
-  const allServices = Object.keys(state.preferences.services)
-    .reduce((previous, current) => {
+  const allServices = Object.keys(state.preferences.services).reduce(
+    (previous, current) => {
       const basic = {
-        status: PreferencesSelectors.serviceStatus(state, current as ServiceType),
+        status: PreferencesSelectors.serviceStatus(
+          state,
+          current as ServiceType
+        ),
         info: GetServiceInfo(current)
       }
       previous[current] = basic
       return previous
-    }, {} as ServiceSummary)
+    },
+    {} as ServiceSummary
+  )
 
   const services = Object.keys(allServices)
-    .filter((key) => {
+    .filter(key => {
       const info = allServices[key].info
       return info !== undefined && info.dependsOn === undefined
     })
-    .reduce((previous, current) => {
-      previous[current] = allServices[current]
-      return previous
-    }, {} as ServiceSummary)
+    .reduce(
+      (previous, current) => {
+        previous[current] = allServices[current]
+        return previous
+      },
+      {} as ServiceSummary
+    )
 
   // get any services that depend on top level services
   const children = Object.keys(allServices)
-    .filter((key) => {
+    .filter(key => {
       const info = allServices[key].info
       return info !== undefined && info.dependsOn !== undefined
     })
-    .reduce((previous, current) => {
-      previous[current] = allServices[current]
-      return previous
-    }, {} as ServiceSummary)
+    .reduce(
+      (previous, current) => {
+        previous[current] = allServices[current]
+        return previous
+      },
+      {} as ServiceSummary
+    )
 
   return {
     allServices,
@@ -248,12 +294,25 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    toggleServicesRequest: (name) => { dispatch(PreferencesActions.toggleServicesRequest(name)) },
-    completeScreen: (name) => { dispatch(PreferencesActions.completeTourSuccess(name)) },
-    toggleNodeState: () => { dispatch(PreferencesActions.toggleNodeStateNotifications()) },
-    toggleNodeErrors: () => { dispatch(PreferencesActions.toggleNodeErrorNotifications()) },
-    toggleNodeStateOverlay: () => { dispatch(PreferencesActions.toggleNodeStateOverlay()) }
+    toggleServicesRequest: name => {
+      dispatch(PreferencesActions.toggleServicesRequest(name))
+    },
+    completeScreen: name => {
+      dispatch(PreferencesActions.completeTourSuccess(name))
+    },
+    toggleNodeState: () => {
+      dispatch(PreferencesActions.toggleNodeStateNotifications())
+    },
+    toggleNodeErrors: () => {
+      dispatch(PreferencesActions.toggleNodeErrorNotifications())
+    },
+    toggleNodeStateOverlay: () => {
+      dispatch(PreferencesActions.toggleNodeStateOverlay())
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notifications)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Notifications)

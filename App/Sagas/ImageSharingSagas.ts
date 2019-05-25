@@ -6,7 +6,10 @@ import Textile, {
   IMobilePreparedFiles,
   IBlock
 } from '@textile/react-native-sdk'
-import { SharedImage, ProcessingImage } from '../features/group/add-photo/models'
+import {
+  SharedImage,
+  ProcessingImage
+} from '../features/group/add-photo/models'
 import { groupActions, groupSelectors } from '../features/group'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
@@ -17,7 +20,9 @@ import { waitFor } from '@textile/redux-saga-wait-for'
 import { RootAction, RootState } from '../Redux/Types'
 import { logNewEvent } from './DeviceLogs'
 
-export function * showWalletPicker(action: ActionType<typeof UIActions.showWalletPicker>) {
+export function* showWalletPicker(
+  action: ActionType<typeof UIActions.showWalletPicker>
+) {
   const { threadId } = action.payload
   if (threadId) {
     // only set if shared directly to a thread
@@ -27,7 +32,9 @@ export function * showWalletPicker(action: ActionType<typeof UIActions.showWalle
 }
 
 // Called whenever someone clicks the share button
-export function * showImagePicker(action: ActionType<typeof UIActions.showImagePicker>) {
+export function* showImagePicker(
+  action: ActionType<typeof UIActions.showImagePicker>
+) {
   const { pickerType } = action.payload
   // Present image picker
   let pickerResponse: CameraRoll.IPickerImage
@@ -51,7 +58,12 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
   } else if (pickerResponse.error) {
     // pickerResponse.error is a string... i think all the time
     const error = new Error('Image picker error')
-    yield put(UIActions.newImagePickerError(error, 'There was an issue with the photo picker. Please try again.'))
+    yield put(
+      UIActions.newImagePickerError(
+        error,
+        'There was an issue with the photo picker. Please try again.'
+      )
+    )
   } else {
     try {
       const image: SharedImage = {
@@ -66,110 +78,202 @@ export function * showImagePicker(action: ActionType<typeof UIActions.showImageP
       if (threadId) {
         // only set if shared directly to a thread
         yield put(UIActions.updateSharingPhotoThread(threadId))
-        yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
+        yield call(NavigationService.navigate, 'ThreadSharePhoto', {
+          backTo: 'ViewThread'
+        })
       } else {
-        yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'Groups' })
+        yield call(NavigationService.navigate, 'ThreadSharePhoto', {
+          backTo: 'Groups'
+        })
       }
     } catch (error) {
-      yield put(UIActions.newImagePickerError(error, 'There was an issue with your photo selection. Please try again.'))
+      yield put(
+        UIActions.newImagePickerError(
+          error,
+          'There was an issue with your photo selection. Please try again.'
+        )
+      )
     }
   }
 }
 
 // Called whenever someone selects to share from the wallet and then picks a photo
-export function * walletPickerSuccess(action: ActionType<typeof UIActions.walletPickerSuccess>) {
+export function* walletPickerSuccess(
+  action: ActionType<typeof UIActions.walletPickerSuccess>
+) {
   yield put(UIActions.updateSharingPhotoImage(action.payload.photo))
   // indicates if request was made from merged main feed or from a specific thread
   const threadId = yield select(UISelectors.sharingPhotoThread)
   if (threadId) {
-    yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'ViewThread' })
+    yield call(NavigationService.navigate, 'ThreadSharePhoto', {
+      backTo: 'ViewThread'
+    })
   } else {
-    yield call(NavigationService.navigate, 'ThreadSharePhoto', { backTo: 'Groups' })
+    yield call(NavigationService.navigate, 'ThreadSharePhoto', {
+      backTo: 'Groups'
+    })
   }
 }
 
-export function * shareWalletImage(id: string, threadId: string, comment?: string) {
+export function* shareWalletImage(
+  id: string,
+  threadId: string,
+  comment?: string
+) {
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
-    const block: IBlock = yield call(Textile.files.addByTarget, id, threadId, comment)
+    const block: IBlock = yield call(
+      Textile.files.addByTarget,
+      id,
+      threadId,
+      comment
+    )
   } catch (error) {
-    yield put(TextileEventsActions.newErrorMessage('shareWalletImage', error.message))
+    yield put(
+      TextileEventsActions.newErrorMessage('shareWalletImage', error.message)
+    )
     yield put(UIActions.imageSharingError(error))
   }
 }
 
-export function * insertImage(image: SharedImage, threadId: string, comment?: string) {
+export function* insertImage(
+  image: SharedImage,
+  threadId: string,
+  comment?: string
+) {
   const id = uuid()
   yield put(groupActions.addPhoto.insertImage(id, image, threadId, comment))
   yield call(prepareImage, id)
 }
 
-export function * prepareImage(uuid: string) {
+export function* prepareImage(uuid: string) {
   try {
-    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
+    const selector = (rootState: RootState) =>
+      groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(
+        rootState.group.addPhoto
+      )
     const processingImage: ProcessingImage | undefined = yield select(selector)
     if (!processingImage) {
       throw new Error('no ProcessingImage found')
     }
     const { sharedImage, destinationThreadId } = processingImage
-    const preparedFiles: IMobilePreparedFiles = yield call(prepare, sharedImage, destinationThreadId)
+    const preparedFiles: IMobilePreparedFiles = yield call(
+      prepare,
+      sharedImage,
+      destinationThreadId
+    )
     yield put(groupActions.addPhoto.imagePrepared(uuid, preparedFiles))
     yield call(uploadPins, uuid)
   } catch (error) {
-    yield put(groupActions.addPhoto.error({ uuid, underlyingError: error, type: 'general' }))
+    yield put(
+      groupActions.addPhoto.error({
+        uuid,
+        underlyingError: error,
+        type: 'general'
+      })
+    )
   }
 }
 
-export function * uploadPins(uuid: string) {
+export function* uploadPins(uuid: string) {
   try {
-    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
+    const selector = (rootState: RootState) =>
+      groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(
+        rootState.group.addPhoto
+      )
     const processingImage: ProcessingImage | undefined = yield select(selector)
-    if (!processingImage || ! processingImage.uploadData) {
+    if (!processingImage || !processingImage.uploadData) {
       throw new Error('no ProcessingImage or uploadData found')
     }
     yield fork(monitorForUploadsComplete, uuid)
     for (const uploadId in processingImage.uploadData) {
-      if (processingImage.uploadData[uploadId] && (processingImage.uploadData[uploadId].status === 'pending' || processingImage.uploadData[uploadId].status === 'error')) {
+      if (
+        processingImage.uploadData[uploadId] &&
+        (processingImage.uploadData[uploadId].status === 'pending' ||
+          processingImage.uploadData[uploadId].status === 'error')
+      ) {
         yield put(groupActions.addPhoto.uploadStarted(uuid, uploadId))
-        yield call(uploadFile, uploadId, processingImage.uploadData[uploadId].path)
+        yield call(
+          uploadFile,
+          uploadId,
+          processingImage.uploadData[uploadId].path
+        )
       }
     }
   } catch (error) {
-    put(groupActions.addPhoto.error({ uuid, underlyingError: error, type: 'general' }))
+    put(
+      groupActions.addPhoto.error({
+        uuid,
+        underlyingError: error,
+        type: 'general'
+      })
+    )
   }
 }
 
-export function * monitorForUploadsComplete(uuid: string) {
-  const selector = (state: RootState) => groupSelectors.addPhotoSelectors.allUploadsComplete(state.group.addPhoto, uuid)
+export function* monitorForUploadsComplete(uuid: string) {
+  const selector = (state: RootState) =>
+    groupSelectors.addPhotoSelectors.allUploadsComplete(
+      state.group.addPhoto,
+      uuid
+    )
   const { complete } = yield race({
     complete: waitFor(select(selector, uuid)),
     // If there is any error related to this image, we want to cancel the uploads complete listener because the image uploads can
     // be retried and we'll created a new listener for that
-    errorAction: take((action: RootAction) => action.type === getType(groupActions.addPhoto.error) && (action.payload.error.uuid === uuid))
+    errorAction: take(
+      (action: RootAction) =>
+        action.type === getType(groupActions.addPhoto.error) &&
+        action.payload.error.uuid === uuid
+    )
   })
   if (complete) {
     yield call(shareToThread, uuid)
   }
 }
 
-export function * shareToThread(uuid: string) {
+export function* shareToThread(uuid: string) {
   try {
-    const selector = (rootState: RootState) => groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
+    const selector = (rootState: RootState) =>
+      groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(
+        rootState.group.addPhoto
+      )
     const processingImage: ProcessingImage | undefined = yield select(selector)
-    if (!processingImage || !processingImage.preparedFiles || !processingImage.preparedFiles.dir) {
+    if (
+      !processingImage ||
+      !processingImage.preparedFiles ||
+      !processingImage.preparedFiles.dir
+    ) {
       throw new Error('no ProcessingImage or preparedData or dir found')
     }
     const { dir } = processingImage.preparedFiles
-    const blockInfo: IBlock = yield call(Textile.files.add, dir, processingImage.destinationThreadId, processingImage.comment)
+    const blockInfo: IBlock = yield call(
+      Textile.files.add,
+      dir,
+      processingImage.destinationThreadId,
+      processingImage.comment
+    )
     yield put(groupActions.addPhoto.sharedToThread(uuid, blockInfo))
     yield put(groupActions.addPhoto.complete(uuid))
   } catch (error) {
-    yield put(groupActions.addPhoto.error({ uuid, underlyingError: error, type: 'general' }))
+    yield put(
+      groupActions.addPhoto.error({
+        uuid,
+        underlyingError: error,
+        type: 'general'
+      })
+    )
   }
 }
 
-export async function prepare(image: SharedImage, destinationThreadId: string): Promise<IMobilePreparedFiles> {
-  const addResult = await Textile.files.prepareByPath(image.path, destinationThreadId)
+export async function prepare(
+  image: SharedImage,
+  destinationThreadId: string
+): Promise<IMobilePreparedFiles> {
+  const addResult = await Textile.files.prepareByPath(
+    image.path,
+    destinationThreadId
+  )
   try {
     const exists = await RNFS.exists(image.path)
     if (exists && image.canDelete) {

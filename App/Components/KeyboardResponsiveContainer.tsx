@@ -1,5 +1,11 @@
 import React from 'react'
-import { Keyboard, EmitterSubscription, View, ViewStyle, LayoutAnimation } from 'react-native'
+import {
+  Keyboard,
+  EmitterSubscription,
+  View,
+  ViewStyle,
+  LayoutAnimation
+} from 'react-native'
 
 interface Props {
   style?: ViewStyle
@@ -9,8 +15,10 @@ interface State {
   height: number
 }
 
-export default class KeyboardResponsiveContainer extends React.Component<Props, State> {
-
+export default class KeyboardResponsiveContainer extends React.Component<
+  Props,
+  State
+> {
   initialized = false
   bottomViewY = 0
   bottomView?: View
@@ -34,7 +42,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
       }
     })
     this.setState({
-        height: this.bottomViewY - event.endCoordinates.screenY
+      height: this.bottomViewY - event.endCoordinates.screenY
     })
   }
 
@@ -47,7 +55,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
       }
     })
     this.setState({
-        height: this.bottomViewY - event.endCoordinates.screenY
+      height: this.bottomViewY - event.endCoordinates.screenY
     })
   }
 
@@ -60,7 +68,7 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
       }
     })
     this.setState({
-        height: 0
+      height: 0
     })
   }
 
@@ -74,8 +82,14 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
   }
 
   componentDidMount() {
-    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillAppear)
-    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
+    this.keyboardWillShowSub = Keyboard.addListener(
+      'keyboardWillShow',
+      this.keyboardWillAppear
+    )
+    this.keyboardWillHideSub = Keyboard.addListener(
+      'keyboardWillHide',
+      this.keyboardWillHide
+    )
     // this.keyboardWillChangeFrameSub = Keyboard.addListener('keyboardWillChangeFrame', this.keyboardWillChangeFrame)
   }
 
@@ -95,13 +109,19 @@ export default class KeyboardResponsiveContainer extends React.Component<Props, 
     const { style } = this.props
     return (
       <View style={{ flex: 1 }}>
-        <View style={[style, { flex: 1 }]} >
-          {this.props.children}
-        </View>
+        <View style={[style, { flex: 1 }]}>{this.props.children}</View>
         <View
           onLayout={this.onLayout}
-          ref={(view) => { this.bottomView = view ? view : undefined }}
-          style={{ position: 'relative', bottom: 0, width: '100%', height: this.state.height, backgroundColor: style ? style.backgroundColor : 'transparent' }}
+          ref={view => {
+            this.bottomView = view ? view : undefined
+          }}
+          style={{
+            position: 'relative',
+            bottom: 0,
+            width: '100%',
+            height: this.state.height,
+            backgroundColor: style ? style.backgroundColor : 'transparent'
+          }}
         />
       </View>
     )

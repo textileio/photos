@@ -1,13 +1,24 @@
 import React, { Fragment } from 'react'
-import { View, Text, Image, FlatList, TouchableOpacity, ListRenderItemInfo } from 'react-native'
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  ListRenderItemInfo
+} from 'react-native'
 import Avatar from '../../../Components/Avatar'
 
-import ContactSelectCard, {ContactLinkCard} from './ContactSelectCard'
+import ContactSelectCard, { ContactLinkCard } from './ContactSelectCard'
 
 import styles from './statics/styles'
 import { IContact } from '@textile/react-native-sdk'
 
-function getSubTitle(contacts: IncludedContact[], topFive: IncludedContact[], notInThread: boolean) {
+function getSubTitle(
+  contacts: IncludedContact[],
+  topFive: IncludedContact[],
+  notInThread: boolean
+) {
   if (contacts.length === 0) {
     return 'You don\'t have any contacts.'
   } else if (topFive.length > 0 && topFive.length > 0 && notInThread) {
@@ -25,7 +36,7 @@ interface ContactSelectComponentProps {
   getPublicLink: () => void
   displayQRCode: () => void
   select: (item: IncludedContact, included: boolean) => void
-  selected: {[key: string]: boolean}
+  selected: { [key: string]: boolean }
   contacts: IncludedContact[]
 }
 
@@ -37,11 +48,23 @@ interface ContactSelectProps extends ContactSelectComponentProps {
 
 // puts a placeholder row in contacts for adding external invite link
 const ContactSelect = (props: ContactSelectProps) => {
-  const { getPublicLink, displayQRCode, contacts, select, selected, topFive, notInThread, threadName } = props
+  const {
+    getPublicLink,
+    displayQRCode,
+    contacts,
+    select,
+    selected,
+    topFive,
+    notInThread,
+    threadName
+  } = props
   const subTitle = getSubTitle(contacts, topFive, notInThread)
   const showSuggested = topFive.length > 0 && notInThread
 
-  const title = threadName && threadName !== '' ? `Invite to ${threadName}` : 'Invite others'
+  const title =
+    threadName && threadName !== ''
+      ? `Invite to ${threadName}`
+      : 'Invite others'
 
   const onPress = (item: IncludedContact) => {
     return () => {
@@ -58,23 +81,36 @@ const ContactSelect = (props: ContactSelectProps) => {
 
         {subTitle && <Text style={styles.subtitle}>{subTitle}</Text>}
 
-        {showSuggested && <View style={styles.selectedContactList}>
-          {topFive.map((item) => {
-            // const item = contacts.find(c => c.id === id)
-            if (!item) {
-              return (<View />)
-            }
+        {showSuggested && (
+          <View style={styles.selectedContactList}>
+            {topFive.map(item => {
+              // const item = contacts.find(c => c.id === id)
+              if (!item) {
+                return <View />
+              }
 
-            const selectState = !!selected[item.address] || item.included
+              const selectState =
+                Boolean(selected[item.address]) || item.included
 
-            return (
-              <TouchableOpacity key={item.address} activeOpacity={0.6} style={styles.selectedContact} onPress={onPress(item)}>
-                <Avatar style={styles.selectedContact} target={item.avatar} />
-                {selectState && <Image style={styles.selectedContactIcon} source={require('./statics/icon-select.png')} />}
-              </TouchableOpacity>
-            )
-          })}
-        </View>}
+              return (
+                <TouchableOpacity
+                  key={item.address}
+                  activeOpacity={0.6}
+                  style={styles.selectedContact}
+                  onPress={onPress(item)}
+                >
+                  <Avatar style={styles.selectedContact} target={item.avatar} />
+                  {selectState && (
+                    <Image
+                      style={styles.selectedContactIcon}
+                      source={require('./statics/icon-select.png')}
+                    />
+                  )}
+                </TouchableOpacity>
+              )
+            })}
+          </View>
+        )}
       </View>
       <View style={styles.body}>
         <View style={styles.searchBoxPlaceholder} />
@@ -90,7 +126,9 @@ const ContactSelect = (props: ContactSelectProps) => {
   )
 }
 
-export class ContactSelectComponent extends React.Component<ContactSelectComponentProps> {
+export class ContactSelectComponent extends React.Component<
+  ContactSelectComponentProps
+> {
   renderHeader = () => {
     return (
       <Fragment>
@@ -110,9 +148,14 @@ export class ContactSelectComponent extends React.Component<ContactSelectCompone
 
   renderRow = (contact: ListRenderItemInfo<IncludedContact>) => {
     const { item } = contact
-    const selectState = !!this.props.selected[item.address] || item.included
+    const selectState =
+      Boolean(this.props.selected[item.address]) || item.included
     return (
-      <ContactSelectCard item={item} select={this.props.select} selected={selectState} />
+      <ContactSelectCard
+        item={item}
+        select={this.props.select}
+        selected={selectState}
+      />
     )
   }
 
