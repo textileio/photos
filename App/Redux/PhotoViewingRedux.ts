@@ -3,14 +3,14 @@ import Config from 'react-native-config'
 
 import { IFiles, Thread } from '@textile/react-native-sdk'
 
-interface threadConfig {
+interface ThreadConfig {
   name: string
   type: Thread.Type
   sharing: Thread.Sharing
   whitelist?: ReadonlyArray<string>
 }
 
-interface threadOptions {
+interface ThreadOptions {
   navigate?: boolean
   selectToShare?: boolean
   sharePhoto?: {
@@ -21,10 +21,10 @@ interface threadOptions {
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
-    return (id: string, key: string, name: string, type: Thread.Type, sharing: Thread.sharing, whitelist: ReadonlyArray<string>) => resolve({ id, key, name, type, sharing, whitelist })
+    return (id: string, key: string, name: string, type: Thread.Type, sharing: Thread.Sharing, whitelist: ReadonlyArray<string>) => resolve({ id, key, name, type, sharing, whitelist })
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
-    return (config: threadConfig, options?: threadOptions) => resolve(config, options)
+    return (config: ThreadConfig, options?: ThreadOptions) => resolve(config, options)
   }),
   threadAddedNotification: createAction('THREAD_ADDED_NOTIFICATION', (resolve) => {
     return (id: string) => resolve({ id })

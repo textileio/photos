@@ -161,21 +161,21 @@ export function getThreadThumbs(state: RootState, byAddres: string, sortBy?: 'na
     })
 }
 
-export function directMessageThreadExists(state: RootState, address: string): boolean {
-  return getThreads(state).some((thread) => {
-    return thread.whitelist.includes(address) &&
+function isDirectMessageThread(address: string): (thread: ThreadData) => boolean {
+  return (thread) => {
+    return thread.whitelist.indexOf(address) !== -1 &&
            thread.sharing === Thread.Sharing.NOT_SHARED &&
            thread.type === Thread.Type.OPEN
-  })
+  }
 }
 
-// Returns the thread object
-export function getDirectMessageThread(state: RootState, address: string): ThreadData {
-  return getThreads(state).find(thread => {
-    return thread.whitelist.includes(address) &&
-           thread.sharing === Thread.Sharing.NOT_SHARED &&
-           thread.type === Thread.Type.OPEN
-  })
+export function directMessageThreadExists(state: RootState, address: string): boolean {
+  return getThreads(state).some(isDirectMessageThread(address))
+}
+
+// Returns the thread object or undefined if it isn't found
+export function getDirectMessageThread(state: RootState, address: string): ThreadData | undefined {
+  return getThreads(state).find(isDirectMessageThread(address))
 }
 
 export function shouldNavigateToNewThread(state: RootState) {

@@ -79,7 +79,7 @@ export function * addThread(action: ActionType<typeof PhotoViewingActions.addThr
       sharing,
       schema: { id: '', json: '', preset: AddThreadConfig.Schema.Preset.MEDIA },
       force: false,
-      whitelist: whitelist ? whitelist : []
+      whitelist: whitelist ? whitelist as string[] : []
     }
     yield call(Textile.threads.add, config)
   } catch (error) {
