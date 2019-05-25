@@ -18,12 +18,12 @@ import Avatar from '../Components/Avatar'
 import Button from '../Components/LargeButton'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
+import { getThreadThumbs, directMessageThreadExists, getDirectMessageThread } from '../Redux/PhotoViewingSelectors'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
 import { RootState, RootAction } from '../Redux/Types'
-import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
+import { ThreadThumbs, ThreadData } from '../Redux/PhotoViewingRedux'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import { contactsActions } from '../features/contacts'
 import { color, spacing } from '../styles'
@@ -48,8 +48,8 @@ interface StateProps {
   isContact: boolean
   removing: boolean
   adding: boolean
-  directMessageThreadExists: boolean
-  directMessageThreadId?: string
+  doesDirectMessageThreadExist: boolean
+  directMessageThread?: ThreadData
 }
 
 interface DispatchProps {
@@ -110,7 +110,7 @@ class ContactModal extends React.Component<Props> {
             />
             <Button
               text={"Send Message"}
-              onPress={this.props.createDirectMessageThread}
+              onPress={this.createOrNavigateToDirectMessageThread}
             />
           </View>
         </View>
@@ -135,6 +135,15 @@ class ContactModal extends React.Component<Props> {
   onAdd = () => {
     this.props.addContact()
   }
+
+  createOrNavigateToDirectMessageThread = () => {
+    if (this.props.doesDirectMessageThreadExist) {
+      const { id, name } = this.props.directMessageThread
+      this.props.navigation.navigate('ViewThread', { threadId: id, groupName: name })
+    } else {
+      this.props.createDirectMessageThread()
+    }
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
@@ -147,13 +156,16 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const removing = Object.keys(state.contacts.removingContacts).indexOf(address) > -1
   // Check if this contact is currently being added
   const adding = Object.keys(state.contacts.addingContacts).indexOf(address) > -1
-  return {
+  const doesDirectMessageThreadExist = directMessageThreadExists(state, address)
+  const directMessageThread = getDirectMessageThread(state, address)
+  return Object.assign(doesDirectMessageThreadExist ? { directMessageThread } : {}, {
     displayName: username ? username : address.substring(0, 12),
     threadThumbs: getThreadThumbs(state, address, 'name'),
     isContact,
     removing,
-    adding
-  }
+    adding,
+    doesDirectMessageThreadExist
+  })
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>): DispatchProps => {
@@ -168,7 +180,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
   return {
     removeContact: () => dispatch(contactsActions.removeContact.request(address)),
     addContact: () => dispatch(contactsActions.addContactRequest(contact)),
-    createDirectMessageThread: () => { dispatch(PhotoViewingActions.addThreadRequest(threadConfig, { navigate: true })) }
+    createDirectMessageThread: () => dispatch(PhotoViewingActions.addThreadRequest(threadConfig, { navigate: true }))
   }
 }
 
