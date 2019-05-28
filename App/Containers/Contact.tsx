@@ -139,6 +139,7 @@ class ContactModal extends React.Component<Props> {
   }
 
   navigateToDirectMessageThread = () => {
+    // Could be strange bug where directMessageThreadExists is true but the thread is undefined
     if (this.props.directMessageThread) {
       const { id, name } = this.props.directMessageThread
       this.props.navigation.navigate('ViewThread', { threadId: id, groupName: name })

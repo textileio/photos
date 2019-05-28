@@ -7,7 +7,12 @@ interface ThreadConfig {
   name: string
   type: Thread.Type
   sharing: Thread.Sharing
-  whitelist?: ReadonlyArray<string>
+  whitelist: ReadonlyArray<string>
+}
+
+interface ThreadDescription extends ThreadConfig {
+  id: string
+  key: string
 }
 
 interface ThreadOptions {
@@ -21,7 +26,7 @@ interface ThreadOptions {
 
 const actions = {
   insertThread: createAction('INSERT_THREAD', (resolve) => {
-    return (id: string, key: string, name: string, type: Thread.Type, sharing: Thread.Sharing, whitelist: ReadonlyArray<string>) => resolve({ id, key, name, type, sharing, whitelist })
+    return (config: ThreadDescription) => resolve(config)
   }),
   addThreadRequest: createAction('ADD_THREAD_REQUEST', (resolve) => {
     return (config: ThreadConfig, options?: ThreadOptions) => resolve(config, options)
@@ -30,7 +35,7 @@ const actions = {
     return (id: string) => resolve({ id })
   }),
   threadAdded: createAction('THREAD_ADDED', (resolve) => {
-    return (id: string, key: string, name: string, type: Thread.Type, sharing: Thread.Sharing, whitelist: ReadonlyArray<string>) => resolve({ id, key, name, type, sharing, whitelist })
+    return (config: ThreadDescription) => resolve(config)
   }),
   addThreadError: createAction('ADD_THREAD_ERROR', (resolve) => {
     return (error: any) => resolve({ error })

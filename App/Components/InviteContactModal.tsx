@@ -192,7 +192,8 @@ const mapStateToProps = (state: RootState): StateProps  => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   const threadConfig = {
     type: Thread.Type.OPEN,
-    sharing: Thread.Sharing.SHARED
+    sharing: Thread.Sharing.SHARED,
+    whitelist: []
   }
   return {
     completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
