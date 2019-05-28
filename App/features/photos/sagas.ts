@@ -56,7 +56,7 @@ function * nodeStarted() {
   }
 }
 
-function * processPending(addTaskChannel: any) {
+function * processPending(addTaskChannel: Channel<{}>) {
   const pendingPhotos: ProcessingPhoto[] = yield select((state: RootState) => selectors.pendingPhotos(state.photos))
   yield all(
     pendingPhotos.map((photo) =>
