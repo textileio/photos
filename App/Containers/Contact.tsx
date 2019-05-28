@@ -27,7 +27,7 @@ import { color, spacing } from '../styles'
 // Redux
 import { RootState, RootAction } from '../Redux/Types'
 import PhotoViewingActions, { ThreadThumbs, ThreadData } from '../Redux/PhotoViewingRedux'
-import { getThreadThumbs, directMessageThreadExists, getDirectMessageThread } from '../Redux/PhotoViewingSelectors'
+import { getThreadThumbs, getDirectMessageThread } from '../Redux/PhotoViewingSelectors'
 import { contactsActions } from '../features/contacts'
 
 const buttons: ViewStyle = {
@@ -50,7 +50,6 @@ interface StateProps {
   isContact: boolean
   removing: boolean
   adding: boolean
-  doesDirectMessageThreadExist: boolean
   directMessageThread: ThreadData | undefined
 }
 
@@ -138,17 +137,11 @@ class ContactModal extends React.Component<Props> {
     this.props.addContact()
   }
 
-  navigateToDirectMessageThread = () => {
-    // Could be strange bug where directMessageThreadExists is true but the thread is undefined
+  createOrNavigateToDirectMessageThread = () => {
     if (this.props.directMessageThread) {
+      // Navigate to direct message thread
       const { id, name } = this.props.directMessageThread
       this.props.navigation.navigate('ViewThread', { threadId: id, groupName: name })
-    }
-  }
-
-  createOrNavigateToDirectMessageThread = () => {
-    if (this.props.doesDirectMessageThreadExist) {
-      this.navigateToDirectMessageThread()
     } else {
       this.props.createDirectMessageThread()
     }
@@ -165,7 +158,6 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const removing = Object.keys(state.contacts.removingContacts).indexOf(address) > -1
   // Check if this contact is currently being added
   const adding = Object.keys(state.contacts.addingContacts).indexOf(address) > -1
-  const doesDirectMessageThreadExist = directMessageThreadExists(state, address)
   const directMessageThread = getDirectMessageThread(state, address)
   return {
     displayName: username ? username : address.substring(0, 12),
@@ -173,7 +165,6 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
     isContact,
     removing,
     adding,
-    doesDirectMessageThreadExist,
     directMessageThread
   }
 }

@@ -169,10 +169,6 @@ function isDirectMessageThread(address: string): (thread: ThreadData) => boolean
   }
 }
 
-export function directMessageThreadExists(state: RootState, address: string) {
-  return getThreads(state).some(isDirectMessageThread(address))
-}
-
 // Returns the thread object or undefined if it isn't found
 export function getDirectMessageThread(state: RootState, address: string) {
   return getThreads(state).find(isDirectMessageThread(address))
