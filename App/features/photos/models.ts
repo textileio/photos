@@ -3,7 +3,7 @@ import { IMobilePreparedFiles, IFiles } from '@textile/react-native-sdk'
 
 export interface ProcessingPhoto {
   readonly photo: LocalPhotoResult
-  readonly state: 'preparing' | 'adding' | 'complete'
+  readonly state: 'pending' | 'preparing' | 'adding' | 'complete'
   readonly preparedFiles?: IMobilePreparedFiles
   readonly error?: string
 }
