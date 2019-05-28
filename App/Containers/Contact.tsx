@@ -51,7 +51,7 @@ interface StateProps {
   removing: boolean
   adding: boolean
   doesDirectMessageThreadExist: boolean
-  navigateToDirectMessageThread: () => void
+  directMessageThread: ThreadData | undefined
 }
 
 interface DispatchProps {
@@ -138,9 +138,16 @@ class ContactModal extends React.Component<Props> {
     this.props.addContact()
   }
 
+  navigateToDirectMessageThread = () => {
+    if (this.props.directMessageThread) {
+      const { id, name } = this.props.directMessageThread
+      this.props.navigation.navigate('ViewThread', { threadId: id, groupName: name })
+    }
+  }
+
   createOrNavigateToDirectMessageThread = () => {
     if (this.props.doesDirectMessageThreadExist) {
-      this.props.navigateToDirectMessageThread()
+      this.navigateToDirectMessageThread()
     } else {
       this.props.createDirectMessageThread()
     }
@@ -158,6 +165,7 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   // Check if this contact is currently being added
   const adding = Object.keys(state.contacts.addingContacts).indexOf(address) > -1
   const doesDirectMessageThreadExist = directMessageThreadExists(state, address)
+  const directMessageThread = getDirectMessageThread(state, address)
   return {
     displayName: username ? username : address.substring(0, 12),
     threadThumbs: getThreadThumbs(state, address, 'name'),
@@ -165,11 +173,7 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
     removing,
     adding,
     doesDirectMessageThreadExist,
-    navigateToDirectMessageThread: () => {
-      const directMessageThread = getDirectMessageThread(state, address) as ThreadData
-      const { id, name } = directMessageThread
-      ownProps.navigation.navigate('ViewThread', { threadId: id, groupName: name })
-    }
+    directMessageThread
   }
 }
 
