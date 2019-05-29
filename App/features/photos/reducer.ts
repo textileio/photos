@@ -46,8 +46,14 @@ export default combineReducers<PhotosState, PhotosAction>({
     switch (action.type) {
       case getType(actions.queryCameraRoll.success): {
         return action.payload
-          .map((photo): ProcessingPhoto => ({ photo, state: 'preparing' }))
+          .map((photo): ProcessingPhoto => ({ photo, state: 'pending' }))
           .reduce((accum, processingPhoto): ProcessingPhotos => ({ ...accum, [processingPhoto.photo.assetId]: processingPhoto }), state)
+      }
+      case getType(actions.photoProcessingBegan): {
+        const { id } = action.payload
+        const processingPhoto = state[id]
+        const updated: ProcessingPhoto = { ...processingPhoto, state: 'preparing' }
+        return { ...state, [id]: updated }
       }
       case getType(actions.photoPrepared): {
         const { id, preparedFiles } = action.payload
