@@ -43,6 +43,7 @@ interface StateProps {
   groupName: string
   selfAddress: string
   renaming: boolean
+  liking: ReadonlyArray<string>
 }
 
 interface DispatchProps {
@@ -171,7 +172,7 @@ class Group extends React.PureComponent<Props, State> {
     switch (item.type) {
       case 'photo': {
         const { user, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1
+        const hasLiked = (likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1) || this.liking(block)
         const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
           return {
             id: comment.id,
@@ -306,6 +307,10 @@ class Group extends React.PureComponent<Props, State> {
       groupName: this.props.groupName
     })
   }
+
+  liking = (blockId: string) => {
+    return this.props.liking.indexOf(blockId) !== -1
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
@@ -315,11 +320,13 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const groupName = threadData ? threadData.name : 'Unknown'
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
+  const liking = Object.keys(state.ui.likingPhotos)
   return {
     items,
     groupName,
     selfAddress,
-    renaming
+    renaming,
+    liking
   }
 }
 
