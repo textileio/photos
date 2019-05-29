@@ -101,6 +101,7 @@ platform :ios do
       "-UseModernBuildSystem" => "NO"
     }
     match(type: "appstore") # more information: https://codesigning.guide
+    set_info_plist_value(path: "./Textile/Info.plist", key: "UIFileSharingEnabled", value: false)
     tag = ENV['CIRCLE_TAG'] # looks like ios_1.2.3_456
     parts = tag.split("_")
     increment_version_number(
