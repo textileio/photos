@@ -155,7 +155,7 @@ export function * addPhotoLike(action: ActionType<typeof UIActions.addLike.reque
   try {
     const likingPhotos = yield select(UISelectors.likingPhotos)
     // If photos is already being liked, don't let the user like it again
-    if (Object.keys(likingPhotos).indexOf(blockId) !== -1) {
+    if (Object.keys(likingPhotos).indexOf(blockId) === -1) {
       yield call(Textile.likes.add, blockId)
       yield put(UIActions.addLike.success({ blockId }))
     }
