@@ -18,7 +18,7 @@ import NavigationService from '../Services/NavigationService'
 import * as NotificationsSagas from './NotificationsSagas'
 import UploadingImagesActions, { UploadingImagesSelectors, UploadingImage } from '../Redux/UploadingImagesRedux'
 import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import UIActions from '../Redux/UIRedux'
+import UIActions, { UISelectors } from '../Redux/UIRedux'
 import { ActionType } from 'typesafe-actions'
 import * as CameraRoll from '../Services/CameraRoll'
 import Upload from 'react-native-background-upload'
@@ -150,11 +150,17 @@ export function * backgroundLocationPermissionsTrigger() {
   }
 }
 
-export function * addPhotoLike(action: ActionType<typeof UIActions.addLikeRequest>) {
+export function * addPhotoLike(action: ActionType<typeof UIActions.addLike.request>) {
   const { blockId } = action.payload
   try {
-    yield call(Textile.likes.add, blockId)
+    const likingPhotos = yield select(UISelectors.likingPhotos)
+    // If photos is already being liked, don't let the user like it again
+    if (Object.keys(likingPhotos).indexOf(blockId) !== -1) {
+      yield call(Textile.likes.add, blockId)
+      yield put(UIActions.addLike.success({ blockId }))
+    }
   } catch (error) {
+    yield put(UIActions.addLike.failure({ blockId, error: error.message }))
     yield call(logNewEvent, 'addPhotoLike', error.message, true)
   }
 }

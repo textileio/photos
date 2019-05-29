@@ -330,7 +330,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     sendMessage: (message: string) => dispatch(groupActions.addMessage.addMessage.request({ id: uuid(), groupId: threadId, body: message })),
     // TODO: look at just doing direct navigation for this
     showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) },
-    addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
+    addPhotoLike: (block: string) => dispatch(UIActions.addLike.request({ blockId: block })),
     navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
     leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
     retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry(key)) },
