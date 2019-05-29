@@ -72,12 +72,21 @@ const confirmButtonText: TextStyle = {
   textAlign: 'center'
 }
 
+const errorText: TextStyle = {
+  color: color.severe_3,
+  fontSize: fontSize._20,
+  fontFamily: fontFamily.regular,
+  paddingTop: spacing._024
+}
+
 interface StateProps {
   renaming: boolean
+  error?: string
 }
 
 interface DispatchProps {
   rename: (newName: string) => void
+  cancelRenameGroup: () => void
 }
 
 interface ModalProps {
@@ -116,7 +125,7 @@ class RenameGroupModal extends React.Component<Props, State> {
 
   render() {
     const groupName = this.props.groupName
-    const disabled = this.state.newName === '' || this.props.renaming
+    const disabled = this.state.newName === '' || (this.props.renaming && !this.props.error)
     return (
       <Modal
         isVisible={this.props.isVisible}
@@ -136,7 +145,7 @@ class RenameGroupModal extends React.Component<Props, State> {
           <View style={buttons}>
             <TouchableOpacity
               style={buttonContainer}
-              onPress={this.props.cancel}
+              onPress={this.cancel}
             >
               <Text style={cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
@@ -148,6 +157,9 @@ class RenameGroupModal extends React.Component<Props, State> {
               <Text style={confirmButtonText}>Rename</Text>
             </TouchableOpacity>
           </View>
+          {this.props.renaming && this.props.error && (
+            <Text style={errorText}>{this.props.error}</Text>
+          )}
         </View>
       </Modal>
     )
@@ -165,20 +177,28 @@ class RenameGroupModal extends React.Component<Props, State> {
       startedRename: true
     })
   }
+
+  cancel = () => {
+    this.props.cancelRenameGroup()
+    this.props.cancel()
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: ModalProps): StateProps => {
   const threadId = ownProps.threadId
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
+  const error = renaming ? state.group.renameGroup[threadId].error : undefined
   return {
-    renaming
+    renaming,
+    error
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: ModalProps): DispatchProps => {
   const threadId = ownProps.threadId
   return {
-    rename: (newName: string) => { dispatch(groupActions.renameGroup.renameGroup.request({ threadId, name: newName })) }
+    rename: (newName: string) => { dispatch(groupActions.renameGroup.renameGroup.request({ threadId, name: newName })) },
+    cancelRenameGroup: () => { dispatch(groupActions.renameGroup.cancelRenameGroup(threadId))}
   }
 }
 
