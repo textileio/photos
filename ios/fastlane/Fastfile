@@ -37,6 +37,7 @@ platform :ios do
       "-UseModernBuildSystem" => "NO"
     }
     match(type: "adhoc")
+    set_info_plist_value(path: "./Textile/Info.plist", key: "UIFileSharingEnabled", value: true)
     increment_build_number(
       build_number: ENV['CIRCLE_BUILD_NUM'],
       xcodeproj: "Textile.xcodeproj"
