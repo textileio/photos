@@ -12,6 +12,10 @@ export const updateLastQueriedTime = createAction('photos/UPDATE_LAST_QUERIED_TI
   return (epochSeconds: number) => resolve({ epochSeconds })
 })
 
+export const photoProcessingBegan = createAction('photo/PHOTO_PROCESSING_BEGAN', (resolve) => {
+  return (id: string) => resolve({ id })
+})
+
 export const photoPrepared = createAction('photos/PHOTO_PREPARED', (resolve) => {
   return (id: string, preparedFiles: IMobilePreparedFiles) => resolve({ id, preparedFiles })
 })

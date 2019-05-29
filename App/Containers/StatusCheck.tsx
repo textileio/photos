@@ -3,10 +3,12 @@ import { ActivityIndicator, View } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
 
+import Loading from '../Components/Loading'
 import FatalErrorView from '../Components/FatalErrorView'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
+import { color } from '../styles'
 
 interface StateProps {
   onboarded: boolean
@@ -40,9 +42,7 @@ class StatusCheck extends React.Component<Props, {}> {
       )
     } else {
       return (
-        <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size='large' />
-        </View>
+        <Loading color={color.brandBlue} />
       )
     }
   }

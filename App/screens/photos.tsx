@@ -113,7 +113,8 @@ class Photos extends Component<Props> {
         />
       )
     } else {
-      const { photo, error } = row.item.processingPhoto
+      const { photo, state, error } = row.item.processingPhoto
+      const color = state === 'pending' ? 'white' : 'blue'
       const uri = `file://${photo.path}`
       return (
         <View style={{ width: itemSize, height: itemSize }}>
@@ -128,7 +129,7 @@ class Photos extends Component<Props> {
             </TouchableOpacity>
           }
           {!error &&
-            <View style={{ width: 12, height: 12, backgroundColor: 'white', borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
+            <View style={{ width: 12, height: 12, backgroundColor: color, borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
           }
         </View>
       )
