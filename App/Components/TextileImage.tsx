@@ -55,8 +55,9 @@ export default class TextileImage extends React.PureComponent<Props> {
     return <TextileImageView {...nativeProps} />
   }
 }
-// @ts-ignore
+
 const TextileImageView = requireNativeComponent(
   'TextileImageView',
+  // @ts-ignore - react native documenntation says this is possible, so seems types are wrong
   TextileImage
 )

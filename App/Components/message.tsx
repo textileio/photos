@@ -4,7 +4,6 @@ import Hyperlink from 'react-native-hyperlink'
 
 import Avatar from './Avatar'
 import { spacing, size, textStyle, color } from '../styles'
-import console = require('console')
 
 const containerStyles = (alignItems: 'center' | 'flex-start'): ViewStyle => {
   return {
