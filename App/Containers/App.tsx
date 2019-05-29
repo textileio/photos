@@ -2,7 +2,10 @@ import '../Config'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import Textile from '@textile/react-native-sdk'
+
 import RootContainer from './RootContainer'
+import Loading from '../Components/Loading'
 import configureStore from '../Redux/configureStore'
 import TextileNodeEventHandler from '../Services/EventHandlers/TextileNodeEventHandler'
 import UploadEventHandler from '../Services/EventHandlers/UploadEventHandler'
@@ -10,8 +13,7 @@ import DeepLinkEventHandler from '../Services/EventHandlers/DeepLinkEventHandler
 import BackgroundFetchEventHandler from '../Services/EventHandlers/BackgroundFetchEventHandler'
 import NotificationEventHandler from '../Services/EventHandlers/NotificationEventHandler'
 import { errorHandler } from '../Services/ErrorHandler'
-
-import Textile from '@textile/react-native-sdk'
+import { color } from '../styles'
 
 const { store, persistor } = configureStore()
 
@@ -27,7 +29,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <PersistGate loading={undefined} persistor={persistor}>
+        <PersistGate loading={<Loading color={color.brandRed} />} persistor={persistor}>
           <RootContainer />
         </PersistGate>
       </Provider>
