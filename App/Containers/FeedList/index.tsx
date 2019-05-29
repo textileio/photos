@@ -145,9 +145,10 @@ class Notifications extends React.PureComponent<Props> {
           source={require('../../Images/v2/notifications.png')}
         />
         <Text style={[onboardingStyles.emptyStateText, { fontSize }]}>
-          This is your notification feed where you'll be able to quickly view
-          all activity in your groups, such as likes, comments, and new photo
-          shares. There's nothing here yet, so go invite some friends!
+          This is your notification feed where you&apos;ll be able to quickly
+          view all activity in your groups, such as likes, comments, and new
+          photo shares. There&apos;s nothing here yet, so go invite some
+          friends!
         </Text>
       </View>
     )

@@ -57,9 +57,10 @@ export function reducer(
       }, state.queriedPhotos)
       return { ...state, initialized: true, queriedPhotos }
     }
-    case getType(actions.updateQuerying):
+    case getType(actions.updateQuerying): {
       const { querying } = action.payload
       return { ...state, querying }
+    }
     case getType(actions.trackPhoto):
       return {
         ...state,

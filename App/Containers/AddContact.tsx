@@ -67,12 +67,6 @@ class AddContact extends React.Component<Props> {
     }
   }
 
-  constructor(props: Props) {
-    super(props)
-    // this._headerComponent = this._headerComponent.bind(this)
-    // this.updateSearchString = this.updateSearchString.bind(this)
-  }
-
   componentDidMount() {
     this.props.navigation.setParams({
       clearSearch: this.props.clearSearch

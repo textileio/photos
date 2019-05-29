@@ -8,7 +8,7 @@ import PreferencesActions, {
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons from 'react-navigation-header-buttons'
 import SettingsRow from '../../components/SettingsRow'
-import GetServiceInfo, { StorageDescription } from './GetServiceInfo'
+import getServiceInfo, { StorageDescription } from './GetServiceInfo'
 
 import {
   TextileHeaderButtons,
@@ -70,7 +70,7 @@ class Storage extends React.PureComponent<Props> {
   }
 
   showInfo = (service: string) => {
-    const info = GetServiceInfo(service)
+    const info = getServiceInfo(service)
     this.setState({ infoVisible: true, info })
   }
 
@@ -128,7 +128,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     const basic: StorageOption = {
       status: PreferencesSelectors.storage(state, current as StorageType)
         .status,
-      info: GetServiceInfo(current)
+      info: getServiceInfo(current)
     }
     previous[current] = basic
     return previous

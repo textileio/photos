@@ -2,6 +2,31 @@ import { ProcessingImagesState } from './reducer'
 import { AddingPhotoItem } from './models'
 import { allComplete } from './utils'
 
+export function processingImageByUuidFactory(uuid: string) {
+  return (state: ProcessingImagesState) =>
+    state.images.find(image => image.uuid === uuid)
+}
+
+export function totalUploadProgress(
+  state: ProcessingImagesState,
+  uuid: string
+) {
+  const selector = processingImageByUuidFactory(uuid)
+  const processingImage = selector(state)
+  if (!processingImage || !processingImage.uploadData) {
+    return 0
+  }
+  let numberUploads = 0
+  let progress = 0
+  for (const uploadId in processingImage.uploadData) {
+    if (processingImage.uploadData[uploadId]) {
+      numberUploads += 1
+      progress += processingImage.uploadData[uploadId].uploadProgress
+    }
+  }
+  return progress / numberUploads
+}
+
 export function getProcessingImages(
   state: ProcessingImagesState,
   threadId: string
@@ -33,26 +58,6 @@ export function getProcessingImages(
     })
 }
 
-export function totalUploadProgress(
-  state: ProcessingImagesState,
-  uuid: string
-) {
-  const selector = processingImageByUuidFactory(uuid)
-  const processingImage = selector(state)
-  if (!processingImage || !processingImage.uploadData) {
-    return 0
-  }
-  let numberUploads = 0
-  let progress = 0
-  for (const uploadId in processingImage.uploadData) {
-    if (processingImage.uploadData[uploadId]) {
-      numberUploads += 1
-      progress += processingImage.uploadData[uploadId].uploadProgress
-    }
-  }
-  return progress / numberUploads
-}
-
 export function allUploadsComplete(state: ProcessingImagesState, uuid: string) {
   const selector = processingImageByUuidFactory(uuid)
   const processingImage = selector(state)
@@ -60,11 +65,6 @@ export function allUploadsComplete(state: ProcessingImagesState, uuid: string) {
     return false
   }
   return allComplete(processingImage.uploadData)
-}
-
-export function processingImageByUuidFactory(uuid: string) {
-  return (state: ProcessingImagesState) =>
-    state.images.find(image => image.uuid === uuid)
 }
 
 export function processingImageForUploadId(

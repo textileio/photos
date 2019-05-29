@@ -30,8 +30,11 @@ class Underline extends Component<UnderlineProps> {
   }
 
   onLayout = (e: LayoutChangeEvent) => {
-    this.state.wrapperWidth = e.nativeEvent.layout.width
+    this.setState({
+      wrapperWidth: e.nativeEvent.layout.width
+    })
   }
+
   render() {
     const { borderColor, highlightColor } = this.props
     return (

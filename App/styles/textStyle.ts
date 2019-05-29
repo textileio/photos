@@ -1,3 +1,5 @@
+/* eslint camelcase:0 */
+
 import { TextStyle } from 'react-native'
 import { fontFamily, fontSize, color } from './'
 

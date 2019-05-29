@@ -103,7 +103,6 @@ class Group extends React.PureComponent<Props, State> {
           iconName="more-vertical"
           onPress={showActionSheet}
         />
-        }
       </TextileHeaderButtons>
     )
     return {

@@ -30,6 +30,21 @@ import * as selectors from './selectors'
 import { RootState } from '../../Redux/Types'
 import { ProcessingPhoto } from './models'
 
+async function getCameraRollThread() {
+  const threads = await Textile.threads.list()
+  return threads.items.find(
+    thread => thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
+  )
+}
+
+async function files(offset?: string, limit?: number) {
+  const thread = await getCameraRollThread()
+  if (!thread) {
+    throw new Error('no default thread')
+  }
+  return Textile.files.list(thread.id, offset || '', limit || -1)
+}
+
 function* toggleStorage(
   action: ActionType<typeof PreferencesActions.toggleStorageRequest>
 ) {
@@ -62,24 +77,49 @@ function* nodeOnline() {
   }
 }
 
-function* queryForNewPhotos() {
-  while (yield take(getType(actions.queryCameraRoll.request))) {
+function* cleanup(id: string) {
+  const selector = selectors.makeProcessingPhoto(id)
+  const processingPhoto: ProcessingPhoto = yield select((state: RootState) =>
+    selector(state.photos)
+  )
+  if (processingPhoto.photo.canDelete) {
     try {
-      const lastRefresh: number | undefined = yield select((state: RootState) =>
-        selectors.lastQueriedTime(state.photos)
-      )
-      const currentRefresh = new Date().getTime()
-      // TODO: if we've never queried before, doing this for now until we decide we want to query back in time
-      const since = lastRefresh || currentRefresh
-      const results: LocalPhotoResult[] = yield call(requestLocalPhotos, since)
-      yield put(actions.queryCameraRoll.success(results))
-      yield put(actions.updateLastQueriedTime(currentRefresh))
-      for (const localPhotoResult of results) {
-        yield fork(preparePhoto, localPhotoResult.assetId)
-      }
-    } catch (error) {
-      yield put(actions.queryCameraRoll.failure(error))
+      yield call(FS.unlink, processingPhoto.photo.path)
+    } catch {
+      // TODO: somthing?
     }
+  }
+  if (processingPhoto.preparedFiles) {
+    for (const key of Object.keys(processingPhoto.preparedFiles.pin)) {
+      const path = processingPhoto.preparedFiles.pin[key]
+      try {
+        yield call(FS.unlink, path)
+      } catch {
+        // TODO: somthing?
+      }
+    }
+  }
+  yield put(actions.photoCleanedUp(id))
+}
+
+function* addPhoto(id: string) {
+  try {
+    const selector = selectors.makeProcessingPhoto(id)
+    const processingPhoto: ProcessingPhoto = yield select((state: RootState) =>
+      selector(state.photos)
+    )
+    const thread: IThread | undefined = yield call(getCameraRollThread)
+    if (!thread) {
+      throw new Error('no camera roll thread found')
+    }
+    if (!processingPhoto.preparedFiles) {
+      throw new Error('no prepared files found')
+    }
+    yield call(Textile.files.add, processingPhoto.preparedFiles.dir, thread.id)
+    yield put(actions.photoAdded(id))
+    yield call(cleanup, id)
+  } catch (error) {
+    yield put(actions.photoProcessingError(id, error))
   }
 }
 
@@ -105,50 +145,25 @@ function* preparePhoto(id: string) {
   }
 }
 
-function* addPhoto(id: string) {
-  try {
-    const selector = selectors.makeProcessingPhoto(id)
-    const processingPhoto: ProcessingPhoto = yield select((state: RootState) =>
-      selector(state.photos)
-    )
-    const thread: IThread | undefined = yield call(getCameraRollThread)
-    if (!thread) {
-      throw new Error('no camera roll thread found')
-    }
-    if (!processingPhoto.preparedFiles) {
-      throw new Error('no prepared files found')
-    }
-    yield call(Textile.files.add, processingPhoto.preparedFiles.dir, thread.id)
-    yield put(actions.photoAdded(id))
-    yield call(cleanup, id)
-  } catch (error) {
-    yield put(actions.photoProcessingError(id, error))
-  }
-}
-
-function* cleanup(id: string) {
-  const selector = selectors.makeProcessingPhoto(id)
-  const processingPhoto: ProcessingPhoto = yield select((state: RootState) =>
-    selector(state.photos)
-  )
-  if (processingPhoto.photo.canDelete) {
+function* queryForNewPhotos() {
+  while (yield take(getType(actions.queryCameraRoll.request))) {
     try {
-      yield call(FS.unlink, processingPhoto.photo.path)
-    } catch {
-      // TODO: somthing?
-    }
-  }
-  if (processingPhoto.preparedFiles) {
-    for (const key of Object.keys(processingPhoto.preparedFiles.pin)) {
-      const path = processingPhoto.preparedFiles.pin[key]
-      try {
-        yield call(FS.unlink, path)
-      } catch {
-        // TODO: somthing?
+      const lastRefresh: number | undefined = yield select((state: RootState) =>
+        selectors.lastQueriedTime(state.photos)
+      )
+      const currentRefresh = new Date().getTime()
+      // TODO: if we've never queried before, doing this for now until we decide we want to query back in time
+      const since = lastRefresh || currentRefresh
+      const results: LocalPhotoResult[] = yield call(requestLocalPhotos, since)
+      yield put(actions.queryCameraRoll.success(results))
+      yield put(actions.updateLastQueriedTime(currentRefresh))
+      for (const localPhotoResult of results) {
+        yield fork(preparePhoto, localPhotoResult.assetId)
       }
+    } catch (error) {
+      yield put(actions.queryCameraRoll.failure(error))
     }
   }
-  yield put(actions.photoCleanedUp(id))
 }
 
 function* watchForLoadPhotosRequests() {
@@ -198,19 +213,4 @@ export default function*() {
     call(queryForNewPhotos),
     call(watchForLoadPhotosRequests)
   ])
-}
-
-async function getCameraRollThread() {
-  const threads = await Textile.threads.list()
-  return threads.items.find(
-    thread => thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
-  )
-}
-
-async function files(offset?: string, limit?: number) {
-  const thread = await getCameraRollThread()
-  if (!thread) {
-    throw new Error('no default thread')
-  }
-  return Textile.files.list(thread.id, offset || '', limit || -1)
 }

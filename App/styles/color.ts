@@ -1,3 +1,5 @@
+/* eslint camelcase:0 */
+
 // almost black through pure white
 export const grey_0 = 'hsl(0, 0%, 9%)'
 export const grey_1 = 'hsl(0, 0%, 23%)'

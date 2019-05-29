@@ -138,9 +138,10 @@ class ProcessingThread extends React.Component<
     switch (stage) {
       case 'complete':
         return `'Successfully joined' ${name}`
-      case 'joining':
+      case 'joining': {
         const body = stage[0].toUpperCase() + stage.substr(1).toLowerCase()
         return `${body} ${name}`
+      }
       case 'scanning':
       default:
         return `Collecting ${name} history...`

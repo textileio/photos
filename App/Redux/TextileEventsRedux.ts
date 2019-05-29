@@ -74,9 +74,10 @@ export function reducer(
     case getType(actions.nodeOnline):
       return { ...state, nodeState: { state: NodeState.online } }
     case getType(actions.nodeFailedToStart):
-    case getType(actions.nodeFailedToStop):
+    case getType(actions.nodeFailedToStop): {
       const { error } = action.payload
       return { ...state, nodeState: { ...state.nodeState, error } }
+    }
     default:
       return state
   }

@@ -83,10 +83,11 @@ export function reducer(
     }
     case getType(actions.refreshNotificationsStart):
       return { ...state, refreshing: true }
-    case getType(actions.refreshNotificationsSuccess):
+    case getType(actions.refreshNotificationsSuccess): {
       // Add it to our list for display
       const { notifications } = action.payload
       return { ...state, notifications, refreshing: false }
+    }
     case getType(actions.refreshNotificationsFailure):
       return { ...state, refreshing: false }
     default:

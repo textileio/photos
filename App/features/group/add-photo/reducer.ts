@@ -155,7 +155,7 @@ export default combineReducers<ProcessingImagesState, ProcessingImagesAction>({
               case 'general':
                 return { ...image, error: e }
               case 'expiredToken':
-              case 'upload':
+              case 'upload': {
                 const { uploadId } = error
                 if (image.uploadData && image.uploadData[uploadId]) {
                   const upload: Upload = {
@@ -180,6 +180,7 @@ export default combineReducers<ProcessingImagesState, ProcessingImagesAction>({
                 } else {
                   return { ...image, error: e } // TODO: and here?
                 }
+              }
             }
           }
           return image

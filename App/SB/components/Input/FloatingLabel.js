@@ -6,6 +6,9 @@ import styles from './statics/styles'
 
 class FloatingLabel extends Component {
   static propTypes = {
+    hasValue: PropTypes.bool,
+    isFocused: PropTypes.bool,
+    focusHandler: PropTypes.func,
     duration: PropTypes.number,
     label: PropTypes.string,
     labelColor: PropTypes.string,

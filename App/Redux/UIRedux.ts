@@ -107,22 +107,25 @@ export function reducer(
   action: UIAction
 ): UIState {
   switch (action.type) {
-    case getType(actions.updateSharingPhotoImage):
+    case getType(actions.updateSharingPhotoImage): {
       const { image } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, image } }
+    }
     case getType(actions.updateSharingPhotoThread): {
       const { threadId } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, threadId } }
     }
-    case getType(actions.updateSharingPhotoComment):
+    case getType(actions.updateSharingPhotoComment): {
       const { comment } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment } }
+    }
     case getType(actions.sharePhotoRequest):
     case getType(actions.cancelSharingPhoto):
       return { ...state, sharingPhoto: undefined }
-    case getType(actions.newImagePickerError):
+    case getType(actions.newImagePickerError): {
       const msg = action.payload.message || action.payload.error.message
       return { ...state, imagePickerError: msg }
+    }
     case getType(actions.dismissImagePickerError):
       return { ...state, imagePickerError: undefined }
     default:

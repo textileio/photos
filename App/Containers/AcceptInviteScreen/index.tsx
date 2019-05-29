@@ -104,7 +104,7 @@ class AcceptInviteScreen extends React.Component<
         {this.props.valid && (
           <Fragment>
             <Text style={TEXT}>
-              You've been invited to join{' '}
+              You&apos;ve been invited to join{' '}
               <Text style={TEXT_EMPHASIS_2}>{threadName}</Text>!
             </Text>
             <Button text={'Accept Invite'} onPress={this.accept} />

@@ -4,8 +4,9 @@ import Hyperlink from 'react-native-hyperlink'
 
 import Avatar from './Avatar'
 import { spacing, size, textStyle, color } from '../styles'
+import console = require('console')
 
-const CONTAINER = (alignItems: 'center' | 'flex-start'): ViewStyle => {
+const containerStyles = (alignItems: 'center' | 'flex-start'): ViewStyle => {
   return {
     flexDirection: 'row',
     alignItems,
@@ -67,12 +68,12 @@ export interface Props {
   isSameUser?: boolean
 }
 
-const Message = (props: Props) => {
+function Message(props: Props) {
   const alignItems = props.message ? 'flex-start' : 'center'
   return (
     <View
       style={[
-        CONTAINER(alignItems),
+        containerStyles(alignItems),
         props.containerStyle,
         props.isSameUser && { paddingTop: 0 }
       ]}

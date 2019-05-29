@@ -28,10 +28,6 @@ import { composeMessage } from '../../NativeModules/MessageComposer'
 import UIActions from '../../Redux/UIRedux'
 import { RootState } from '../../Redux/Types'
 
-function* addFriends() {
-  yield call(refreshContacts)
-}
-
 function* refreshContacts() {
   try {
     const contactsResult: IContactList = yield call(Textile.contacts.list)
@@ -41,8 +37,8 @@ function* refreshContacts() {
   }
 }
 
-function* watchForAddContactRequests() {
-  yield takeEvery(getType(actions.addContactRequest), handleAddContactRequest)
+function* addFriends() {
+  yield call(refreshContacts)
 }
 
 function* handleAddContactRequest(
@@ -58,11 +54,8 @@ function* handleAddContactRequest(
   }
 }
 
-function* watchForRemoveContactRequests() {
-  yield takeEvery(
-    getType(actions.removeContact.request),
-    handleRemoveContactRequest
-  )
+function* watchForAddContactRequests() {
+  yield takeEvery(getType(actions.addContactRequest), handleAddContactRequest)
 }
 
 function* handleRemoveContactRequest(
@@ -78,6 +71,13 @@ function* handleRemoveContactRequest(
   } catch (error) {
     yield put(actions.removeContact.failure({ address, error }))
   }
+}
+
+function* watchForRemoveContactRequests() {
+  yield takeEvery(
+    getType(actions.removeContact.request),
+    handleRemoveContactRequest
+  )
 }
 
 async function executeTextileSearch(searchString: string) {
@@ -150,6 +150,60 @@ function* searchTextile(searchString: string) {
       yield put(actions.textileSearchComplete())
       channel.close() // Think we want to do this to remove the event subscription
     }
+  }
+}
+
+async function getContactsMatching(searchString: string) {
+  return new Promise<Contacts.Contact[]>((resolve, reject) => {
+    Contacts.getContactsMatchingString(searchString, (err, contacts) => {
+      if (err) {
+        reject(err)
+        return
+      }
+      resolve(contacts)
+    })
+  })
+}
+
+async function requestPermissionsIOS() {
+  return new Promise<'undefined' | 'authorized' | 'denied'>(
+    (resolve, reject) => {
+      Contacts.checkPermission((err, permission) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        if (permission === 'undefined') {
+          Contacts.requestPermission((err, permission) => {
+            if (err) {
+              reject(err)
+              return
+            } else {
+              resolve(permission)
+            }
+          })
+        } else {
+          resolve(permission)
+        }
+      })
+    }
+  )
+}
+
+async function requestPermissionsAndroid() {
+  const result = await PermissionsAndroid.request(
+    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+    {
+      title: 'Contacts',
+      message:
+        'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.',
+      buttonPositive: 'Ok'
+    }
+  )
+  if (result === PermissionsAndroid.RESULTS.GRANTED) {
+    return 'authorized'
+  } else {
+    return 'denied'
   }
 }
 
@@ -258,58 +312,4 @@ export default function*() {
     call(watchForRemoveContactRequests),
     call(sendInviteMessage)
   ])
-}
-
-async function requestPermissionsAndroid() {
-  const result = await PermissionsAndroid.request(
-    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-    {
-      title: 'Contacts',
-      message:
-        'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.',
-      buttonPositive: 'Ok'
-    }
-  )
-  if (result === PermissionsAndroid.RESULTS.GRANTED) {
-    return 'authorized'
-  } else {
-    return 'denied'
-  }
-}
-
-async function requestPermissionsIOS() {
-  return new Promise<'undefined' | 'authorized' | 'denied'>(
-    (resolve, reject) => {
-      Contacts.checkPermission((err, permission) => {
-        if (err) {
-          reject(err)
-          return
-        }
-        if (permission === 'undefined') {
-          Contacts.requestPermission((err, permission) => {
-            if (err) {
-              reject(err)
-              return
-            } else {
-              resolve(permission)
-            }
-          })
-        } else {
-          resolve(permission)
-        }
-      })
-    }
-  )
-}
-
-async function getContactsMatching(searchString: string) {
-  return new Promise<Contacts.Contact[]>((resolve, reject) => {
-    Contacts.getContactsMatchingString(searchString, (err, contacts) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      resolve(contacts)
-    })
-  })
 }

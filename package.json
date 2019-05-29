@@ -121,6 +121,11 @@
       "ecmaFeatures": {
         "jsx": true
       }
+    },
+    "rules": {
+      "no-undefined": 0,
+      "default-case": 1,
+      "react/no-string-refs": 1
     }
   },
   "prettier": {

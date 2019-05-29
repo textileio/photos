@@ -29,6 +29,31 @@ import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
 import { prepareAndAdd } from '../../Services/textile-helper'
 
+async function registerCafes() {
+  const cafes = await CafeGatewayApi.discoveredCafes()
+  const token = Config.RN_TEXTILE_CAFE_TOKEN
+  if (cafes.primary) {
+    await Textile.cafes.register(cafes.primary.url, token)
+  }
+  if (cafes.secondary) {
+    await Textile.cafes.register(cafes.secondary.url, token)
+  }
+}
+
+function* registerCafesIfNeeded() {
+  try {
+    const list: ICafeSessionList | undefined = yield call(
+      Textile.cafes.sessions
+    )
+    if (!list || list.items.length < 1) {
+      yield call(registerCafes)
+      yield put(actions.getCafeSessionsRequest())
+    }
+  } catch (error) {
+    yield call(logNewEvent, 'registerCafesIfNeeded', error.message, true)
+  }
+}
+
 function* onNodeStarted() {
   while (
     yield take([
@@ -193,31 +218,6 @@ function* refreshCafeSessions() {
     } catch (error) {
       yield put(actions.cafeSessionsError(error))
     }
-  }
-}
-
-function* registerCafesIfNeeded() {
-  try {
-    const list: ICafeSessionList | undefined = yield call(
-      Textile.cafes.sessions
-    )
-    if (!list || list.items.length < 1) {
-      yield call(registerCafes)
-      yield put(actions.getCafeSessionsRequest())
-    }
-  } catch (error) {
-    yield call(logNewEvent, 'registerCafesIfNeeded', error.message, true)
-  }
-}
-
-async function registerCafes() {
-  const cafes = await CafeGatewayApi.discoveredCafes()
-  const token = Config.RN_TEXTILE_CAFE_TOKEN
-  if (cafes.primary) {
-    await Textile.cafes.register(cafes.primary.url, token)
-  }
-  if (cafes.secondary) {
-    await Textile.cafes.register(cafes.secondary.url, token)
   }
 }
 

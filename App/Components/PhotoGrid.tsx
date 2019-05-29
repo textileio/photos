@@ -86,7 +86,7 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps> {
   renderRow(row: ListRenderItemInfo<IPhotoGridType>) {
     const { item } = row
     switch (item.type) {
-      case 'photo':
+      case 'photo': {
         const files = item.photo.files
         const fileIndex =
           files && files.length > 0 && files[0].index ? files[0].index : 0
@@ -106,10 +106,11 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps> {
               />
             </View>
             <View style={styles.itemOverlay}>
-              {/* TODO: Add verbose back */}
+              {/* @todo: Add verbose back */}
             </View>
           </TouchableOpacity>
         )
+      }
       case 'processingItem':
         return <View style={styles.item}>{this._getOverlay(item)}</View>
       default:

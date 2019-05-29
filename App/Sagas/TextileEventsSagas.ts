@@ -10,18 +10,13 @@ import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { photosActions } from '../features/photos'
 
-export function* startSagas() {
-  yield all([
-    call(initializeTextile),
-    call(startNodeFinished),
-    call(stopNodeAfterDelayStarting),
-    call(stopNodeAfterDelayCancelled),
-    call(stopNodeAfterDelayComplete),
-    call(refreshMessages),
-    call(ignoreFileRequest),
-    call(nodeOnline),
-    call(newError)
-  ])
+function displayNotification(message: string, title?: string) {
+  RNPushNotification.localNotification({
+    title,
+    message,
+    playSound: false,
+    vibrate: false
+  })
 }
 
 // export function * runBackgroundUpdate() {
@@ -207,11 +202,16 @@ export function* newError() {
   }
 }
 
-function displayNotification(message: string, title?: string) {
-  RNPushNotification.localNotification({
-    title,
-    message,
-    playSound: false,
-    vibrate: false
-  })
+export function* startSagas() {
+  yield all([
+    call(initializeTextile),
+    call(startNodeFinished),
+    call(stopNodeAfterDelayStarting),
+    call(stopNodeAfterDelayCancelled),
+    call(stopNodeAfterDelayComplete),
+    call(refreshMessages),
+    call(ignoreFileRequest),
+    call(nodeOnline),
+    call(newError)
+  ])
 }

@@ -58,9 +58,10 @@ export default combineReducers<AccountState, AccountAction>({
     switch (action.type) {
       case getType(actions.refreshProfileRequest):
         return { ...state, processing: true }
-      case getType(actions.refreshProfileSuccess):
+      case getType(actions.refreshProfileSuccess): {
         const { profile } = action.payload
         return { value: profile, processing: false }
+      }
       case getType(actions.profileError): {
         const obj = action.payload.error
         const error =
@@ -73,9 +74,10 @@ export default combineReducers<AccountState, AccountAction>({
   },
   peerId: (state = {}, action) => {
     switch (action.type) {
-      case getType(actions.refreshPeerIdSuccess):
+      case getType(actions.refreshPeerIdSuccess): {
         const { peerId } = action.payload
         return { value: peerId }
+      }
       case getType(actions.refreshPeerIdError): {
         const obj = action.payload.error
         const error =
@@ -88,9 +90,10 @@ export default combineReducers<AccountState, AccountAction>({
   },
   address: (state = {}, action) => {
     switch (action.type) {
-      case getType(actions.refreshAddressSuccess):
+      case getType(actions.refreshAddressSuccess): {
         const { address } = action.payload
         return { value: address }
+      }
       case getType(actions.refreshAddressError): {
         const obj = action.payload.error
         const error =
@@ -131,11 +134,12 @@ export default combineReducers<AccountState, AccountAction>({
           processing: false,
           error: undefined
         }
-      case getType(actions.cafeSessionsError):
+      case getType(actions.cafeSessionsError): {
         const obj = action.payload.error
         const error =
           (obj.message as string) || (obj as string) || 'unknown error'
         return { ...state, processing: false, error }
+      }
       default:
         return state
     }

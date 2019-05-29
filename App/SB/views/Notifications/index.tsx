@@ -11,7 +11,7 @@ import PreferencesActions, {
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons from 'react-navigation-header-buttons'
 import SettingsRow from '../../components/SettingsRow'
-import GetServiceInfo from './GetServiceInfo'
+import getServiceInfo from './GetServiceInfo'
 
 import {
   TextileHeaderButtons,
@@ -113,7 +113,7 @@ class Notifications extends React.PureComponent<Props> {
   }
 
   showInfo = (service: string) => {
-    const info = GetServiceInfo(service)
+    const info = getServiceInfo(service)
     this.setState({ infoVisible: true, info })
   }
 
@@ -248,7 +248,7 @@ const mapStateToProps = (state: RootState): StateProps => {
           state,
           current as ServiceType
         ),
-        info: GetServiceInfo(current)
+        info: getServiceInfo(current)
       }
       previous[current] = basic
       return previous

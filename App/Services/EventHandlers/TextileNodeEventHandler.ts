@@ -1,3 +1,5 @@
+/* eslint camelcase:0 */
+
 import { Store } from 'redux'
 import Textile, { EventSubscription } from '@textile/react-native-sdk'
 

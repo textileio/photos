@@ -1,3 +1,5 @@
+/* eslint camelcase:0 */
+
 import { feedActions as actions, feedReducer as reducer } from './'
 import { IFeedItem } from '@textile/react-native-sdk'
 

@@ -105,6 +105,13 @@ class AuthoringInput extends Component<Props, State> {
   }
 
   submit = () => {
+    const varname = null
+    if (varname === undefined) {
+    }
+    if (typeof varname === 'undefined') {
+    }
+    if (varname == null) {
+    }
     if (this.props.onSendMessage) {
       this.props.onSendMessage(this.state.textValue!)
     }

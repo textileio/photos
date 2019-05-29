@@ -19,6 +19,35 @@ import Config from 'react-native-config'
 import { logNewEvent } from './DeviceLogs'
 import { waitUntilOnline } from './NotificationsSagas'
 
+function* joinInternalOnFork(notificationId: string, threadName?: string) {
+  try {
+    const threadId = yield call(
+      Textile.notifications.acceptInvite,
+      notificationId
+    )
+    yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield put(ThreadsActions.acceptInviteSuccess(notificationId, threadId))
+    // nice with a bit of delay so the app can grab some blocks
+    yield call(delay, 500)
+    yield put(
+      UIActions.navigateToThreadRequest(threadId, threadName || 'Processing...')
+    )
+  } catch (error) {
+    yield put(ThreadsActions.acceptInviteError(notificationId, error))
+  }
+}
+
+function* joinOnFork(inviteId: string, key: string) {
+  try {
+    // our forked job needs to stay alive so we can get any error message
+    const joinId = yield call(Textile.invites.acceptExternal, inviteId, key)
+    // if success, trigger complete and update ui
+    yield put(ThreadsActions.acceptInviteSuccess(inviteId, joinId))
+    yield put(PhotoViewingActions.refreshThreadsRequest())
+  } catch (error) {
+    yield put(ThreadsActions.acceptInviteError(inviteId, error))
+  }
+}
 export function* addExternalInvite(
   action: ActionType<typeof ThreadsActions.addExternalInviteRequest>
 ) {
@@ -76,24 +105,6 @@ export function* acceptInvite(
   }
 }
 
-function* joinInternalOnFork(notificationId: string, threadName?: string) {
-  try {
-    const threadId = yield call(
-      Textile.notifications.acceptInvite,
-      notificationId
-    )
-    yield put(PhotoViewingActions.refreshThreadsRequest())
-    yield put(ThreadsActions.acceptInviteSuccess(notificationId, threadId))
-    // nice with a bit of delay so the app can grab some blocks
-    yield call(delay, 500)
-    yield put(
-      UIActions.navigateToThreadRequest(threadId, threadName || 'Processing...')
-    )
-  } catch (error) {
-    yield put(ThreadsActions.acceptInviteError(notificationId, error))
-  }
-}
-
 export function* acceptExternalInvite(
   action: ActionType<typeof ThreadsActions.acceptExternalInviteRequest>
 ) {
@@ -107,18 +118,6 @@ export function* acceptExternalInvite(
     // After delay, we'll assume we are walking back through the thread... enhancement later
     yield put(ThreadsActions.acceptInviteScanning(inviteId))
     // Refresh in case the head is available
-    yield put(PhotoViewingActions.refreshThreadsRequest())
-  } catch (error) {
-    yield put(ThreadsActions.acceptInviteError(inviteId, error))
-  }
-}
-
-function* joinOnFork(inviteId: string, key: string) {
-  try {
-    // our forked job needs to stay alive so we can get any error message
-    const joinId = yield call(Textile.invites.acceptExternal, inviteId, key)
-    // if success, trigger complete and update ui
-    yield put(ThreadsActions.acceptInviteSuccess(inviteId, joinId))
     yield put(PhotoViewingActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptInviteError(inviteId, error))

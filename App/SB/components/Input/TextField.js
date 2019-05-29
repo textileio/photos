@@ -9,11 +9,14 @@ import styles from './statics/styles'
 
 class TextField extends Component {
   static propTypes = {
+    errorMsg: PropTypes.string,
+    errorBorderColor: PropTypes.string,
     duration: PropTypes.number,
     label: PropTypes.string,
     highlightColor: PropTypes.string,
     labelColor: PropTypes.string,
     borderColor: PropTypes.string,
+    text: PropTypes.string,
     textColor: PropTypes.string,
     textFocusColor: PropTypes.string,
     textBlurColor: PropTypes.string,
@@ -51,9 +54,11 @@ class TextField extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.text !== nextProps.value) {
-      nextProps.value.length !== 0
-        ? this.refs.floatingLabel.floatLabel()
-        : this.refs.floatingLabel.sinkLabel()
+      if (nextProps.value.length !== 0) {
+        this.refs.floatingLabel.floatLabel()
+      } else {
+        this.refs.floatingLabel.sinkLabel()
+      }
       this.setState({ text: nextProps.value })
     }
   }

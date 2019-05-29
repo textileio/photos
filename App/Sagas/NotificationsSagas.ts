@@ -25,6 +25,17 @@ import TextileEventsActions, {
 import * as NotificationsServices from '../Services/Notifications'
 import { logNewEvent } from './DeviceLogs'
 
+export function* waitUntilOnline(ms: number) {
+  let ttw = ms
+  let online = yield select(TextileEventsSelectors.online)
+  while (!online && ttw > 0) {
+    yield delay(50)
+    online = yield select(TextileEventsSelectors.online)
+    ttw -= 50
+  }
+  return online
+}
+
 export function* enable() {
   yield call(NotificationsServices.enable)
 }
@@ -221,15 +232,4 @@ export function* reviewThreadInvite(
   } catch (error) {
     // Ignore invite
   }
-}
-
-export function* waitUntilOnline(ms: number) {
-  let ttw = ms
-  let online = yield select(TextileEventsSelectors.online)
-  while (!online && ttw > 0) {
-    yield delay(50)
-    online = yield select(TextileEventsSelectors.online)
-    ttw -= 50
-  }
-  return online
 }

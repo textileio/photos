@@ -143,6 +143,23 @@ export function* presentPublicLinkInterface(
   }
 }
 
+export function* backgroundLocationPermissionsTrigger() {
+  if (Platform.OS === 'android') {
+    yield call(
+      PermissionsAndroid.request,
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'Location Please',
+        message:
+          'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.',
+        buttonPositive: 'Ok'
+      }
+    )
+  } else {
+    yield call(navigator.geolocation.requestAuthorization)
+  }
+}
+
 export function* updateServices(
   action: ActionType<typeof PreferencesActions.toggleServicesRequest>
 ) {
@@ -174,23 +191,6 @@ export function* cameraPermissionsTrigger() {
     )
   } else {
     CameraRoll.getPhotos(1)
-  }
-}
-
-export function* backgroundLocationPermissionsTrigger() {
-  if (Platform.OS === 'android') {
-    yield call(
-      PermissionsAndroid.request,
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: 'Location Please',
-        message:
-          'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.',
-        buttonPositive: 'Ok'
-      }
-    )
-  } else {
-    yield call(navigator.geolocation.requestAuthorization)
   }
 }
 

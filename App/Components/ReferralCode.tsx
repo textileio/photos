@@ -127,8 +127,8 @@ export default class ReferralCode extends React.Component<Props, State> {
           />
           <Text style={TITLE}>Referral Code</Text>
           <Text style={SUBTITLE}>
-            As we're ramping up Textile Photos, you'll need a referral code to
-            proceed.
+            As we&apos;re ramping up Textile Photos, you&apos;ll need a referral
+            code to proceed.
             {'\n\n'}
             Enter your referral code or request one below.
           </Text>

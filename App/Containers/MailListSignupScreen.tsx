@@ -17,6 +17,7 @@ import { Buffer } from 'buffer'
 import Input from '../SB/components/Input'
 import Button from '../Components/LargeButton'
 import { color, textStyle, fontFamily, spacing } from '../styles'
+import { emailValid } from '../Services/email'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -102,23 +103,8 @@ export default class MailListSignupScreen extends React.Component<
   updateText = (text: string) => {
     this.setState({
       emailAddress: text,
-      valid: this.emailValid(text)
+      valid: emailValid(text)
     })
-  }
-
-  emailValid = (email?: string) => {
-    if (!email) {
-      return false
-    }
-    const regexp = new RegExp(
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )
-    const results = email.match(regexp)
-    if (results && results.length > 0) {
-      return true
-    } else {
-      return false
-    }
   }
 
   render() {
@@ -131,7 +117,7 @@ export default class MailListSignupScreen extends React.Component<
           />
           <Text style={TITLE}>Keep in touch!</Text>
           <Text style={SUBTITLE}>
-            If you'd like to receive periodic updates and information from
+            If you&apos;d like to receive periodic updates and information from
             Textile, enter your email address below.
           </Text>
           <Input

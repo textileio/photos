@@ -85,6 +85,7 @@ class Component extends React.Component<Props> {
       .filter(id => id !== '')
 
     if (addresses.length === 0) {
+      // @todo -- fix all this.refs so that typescript can introspect the types correctly
       // @ts-ignore
       this.refs.toast.show('No contacts selected.', 1500)
       return
