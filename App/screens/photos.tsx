@@ -125,7 +125,8 @@ class Photos extends Component<Props> {
         />
       )
     } else {
-      const { photo, error } = row.item.processingPhoto
+      const { photo, state, error } = row.item.processingPhoto
+      const color = state === 'pending' ? 'white' : 'blue'
       const uri = `file://${photo.path}`
       return (
         <View style={{ width: itemSize, height: itemSize }}>
@@ -159,7 +160,7 @@ class Photos extends Component<Props> {
               style={{
                 width: 12,
                 height: 12,
-                backgroundColor: 'white',
+                backgroundColor: color,
                 borderColor: 'black',
                 borderWidth: 1,
                 borderRadius: 6,

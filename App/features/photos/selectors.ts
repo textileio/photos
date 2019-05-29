@@ -5,6 +5,11 @@ import Textile from '@textile/react-native-sdk'
 export const lastQueriedTime = (state: PhotosState) =>
   state.queryData.lastQueriedTime
 
+export const pendingPhotos = (state: PhotosState) =>
+  Object.keys(state.processingPhotos)
+    .map(key => state.processingPhotos[key])
+    .filter(photo => photo.state === 'pending')
+
 export const makeProcessingPhoto = (id: string) => (state: PhotosState) =>
   state.processingPhotos[id]
 
