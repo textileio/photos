@@ -19,7 +19,8 @@ export default (state: RenameGroupState = {}, action: RenameGroupAction) => {
         [action.payload.threadId]: {}
       }
     }
-    case getType(actions.renameGroup.success): {
+    case getType(actions.renameGroup.success):
+    case getType(actions.cancelRenameGroup): {
       const { [action.payload.threadId]: renamed, ...renameGroup } = state
       return renameGroup
     }
