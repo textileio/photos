@@ -172,6 +172,11 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
+    let alreadyJoined: string[] = []
+    const hasAlreadyJoined = (address: string) => {
+      return alreadyJoined.indexOf(address) !== -1
+    }
+
     switch (item.type) {
       case 'photo': {
         const { user, caption, date, target, files, likes, comments, block } = item.data
@@ -241,6 +246,23 @@ class Group extends React.PureComponent<Props, State> {
       case 'join': {
         const { user, date } = item.data
         const word = item.type === 'join' ? 'joined' : 'left'
+        if (item.type === 'join') {
+          // Render a Join item if they
+          if (hasAlreadyJoined(user.address)) {
+            // Don't render anything
+            return null
+          } else {
+            alreadyJoined.push(user.address)
+            return (
+              <Join
+                avatar={user.avatar}
+                username={user.name || 'unknown'}
+                message={`${word} ${this.props.groupName}`}
+                time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
+              />
+            )
+          }
+        }
         return (
           <Join
             avatar={user.avatar}
