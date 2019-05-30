@@ -44,6 +44,7 @@ interface StateProps {
   selfAddress: string
   renaming: boolean
   canInvite: boolean
+  liking: ReadonlyArray<string>
 }
 
 interface DispatchProps {
@@ -174,7 +175,7 @@ class Group extends React.PureComponent<Props, State> {
     switch (item.type) {
       case 'photo': {
         const { user, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1
+        const hasLiked = (likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1) || this.liking(block)
         const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
           return {
             id: comment.id,
@@ -310,6 +311,10 @@ class Group extends React.PureComponent<Props, State> {
       groupName: this.props.groupName
     })
   }
+
+  liking = (blockId: string) => {
+    return this.props.liking.indexOf(blockId) !== -1
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
@@ -321,12 +326,14 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   const groupName = threadData ? threadData.name : 'Unknown'
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
+  const liking = Object.keys(state.ui.likingPhotos)
   return {
     items,
     groupName,
     selfAddress,
     renaming,
-    canInvite
+    canInvite,
+    liking
   }
 }
 
@@ -337,7 +344,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     sendMessage: (message: string) => dispatch(groupActions.addMessage.addMessage.request({ id: uuid(), groupId: threadId, body: message })),
     // TODO: look at just doing direct navigation for this
     showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) },
-    addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
+    addPhotoLike: (block: string) => dispatch(UIActions.addLike.request({ blockId: block })),
     navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
     leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
     retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry(key)) },
