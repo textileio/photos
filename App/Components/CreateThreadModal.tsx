@@ -69,8 +69,13 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
       }
       this.setState({submitted: true})
       this.props.completeScreen(this.state.value)
+      const config = {
+        name: this.state.value,
+        type: this.state.type,
+        sharing: this.state.sharing
+      }
       this.props.submit(
-        this.state.value,
+        config,
         !!this.props.navigateTo,
         !!this.props.selectToShare
       )
@@ -119,14 +124,9 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
-  const threadConfig = {
-    type: Thread.Type.OPEN,
-    sharing: Thread.Sharing.SHARED,
-    whitelist: []
-  }
   return {
     completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest({ ...threadConfig, name }, { navigate, selectToShare })) }
+    submit: (config, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest({ ...config, whitelist: [] }, { navigate, selectToShare })) }
   }
 }
 
