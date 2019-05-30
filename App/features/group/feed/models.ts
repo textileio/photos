@@ -1,4 +1,12 @@
-import { IFeedItem, IJoin, ILeave, IFiles, IText, IComment, ILike } from '@textile/react-native-sdk'
+import {
+  IFeedItem,
+  IJoin,
+  ILeave,
+  IFiles,
+  IText,
+  IComment,
+  ILike
+} from '@textile/react-native-sdk'
 
 export interface Feed {
   readonly loading: boolean
@@ -46,4 +54,10 @@ export interface LikesItem {
   readonly data: ReadonlyArray<ILike>
 }
 
-export type FeedItem = JoinItem | LeaveItem | PhotoItem | MessageItem | CommentsItem | LikesItem
+export type FeedItem =
+  | JoinItem
+  | LeaveItem
+  | PhotoItem
+  | MessageItem
+  | CommentsItem
+  | LikesItem

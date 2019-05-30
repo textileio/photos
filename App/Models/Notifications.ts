@@ -61,11 +61,11 @@ export type LikeAddedNotification = BaseNotification & {
 }
 
 export type Notification =
-  InviteReceivedNotification |
-  AccountPeerJoinedNotification |
-  PeerJoinedNotification |
-  PeerLeftNotification |
-  MessageAddedNotification |
-  FilesAddedNotification |
-  CommentAddedNotification |
-  LikeAddedNotification
+  | InviteReceivedNotification
+  | AccountPeerJoinedNotification
+  | PeerJoinedNotification
+  | PeerLeftNotification
+  | MessageAddedNotification
+  | FilesAddedNotification
+  | CommentAddedNotification
+  | LikeAddedNotification

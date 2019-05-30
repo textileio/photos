@@ -18,7 +18,6 @@ import { color } from '../styles'
 const { store, persistor } = configureStore()
 
 class App extends Component {
-
   backgroundFetchEventHandler = new BackgroundFetchEventHandler(store)
   notificationEventHandler = new NotificationEventHandler(store)
   textileNodeEventHandler = new TextileNodeEventHandler(store)
@@ -29,7 +28,10 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <PersistGate loading={<Loading color={color.brandRed} />} persistor={persistor}>
+        <PersistGate
+          loading={<Loading color={color.brandRed} />}
+          persistor={persistor}
+        >
           <RootContainer />
         </PersistGate>
       </Provider>

@@ -5,7 +5,10 @@ import { NavigationActions, NavigationScreenProps } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 import HeaderButtons from 'react-navigation-header-buttons'
 
-import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
+import {
+  TextileHeaderButtons,
+  Item as TextileItem
+} from '../../../Components/HeaderButtons'
 
 import Avatar from '../../../Components/Avatar'
 import Button from '../../../Components/Button'
@@ -16,18 +19,20 @@ import { TextileEventsSelectors } from '../../../Redux/TextileEventsRedux'
 
 type Props = StateProps & NavigationScreenProps<{}>
 class RecoveryPhrase extends React.PureComponent<Props> {
-  static navigationOptions = ({navigation}: NavigationScreenProps) => {
-    const goBack = () => { navigation.dispatch(NavigationActions.back()) }
+  static navigationOptions = ({ navigation }: NavigationScreenProps) => {
+    const goBack = () => {
+      navigation.dispatch(NavigationActions.back())
+    }
     return {
       headerLeft: (
         <TextileHeaderButtons left={true}>
-          <TextileItem title='Back' iconName='arrow-left' onPress={goBack} />
+          <TextileItem title="Back" iconName="arrow-left" onPress={goBack} />
         </TextileHeaderButtons>
       ),
       headerRight: (
         <HeaderButtons>
           <HeaderButtons.Item
-            title='Avatar'
+            title="Avatar"
             buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
             ButtonElement={<Avatar style={{ width: 32, height: 32 }} />}
           />
@@ -52,16 +57,19 @@ class RecoveryPhrase extends React.PureComponent<Props> {
           source={require('../../../Images/v2/permissions.png')}
         />
         <Text style={styles.subScreenText}>
-          Your recovery phrase is the key to your
-          entire account. Keep it totally
-          secure. As it was created here
-          on your device, no server has a
+          Your recovery phrase is the key to your entire account. Keep it
+          totally secure. As it was created here on your device, no server has a
           copy of it or ever should.
         </Text>
-        <Button text='Copy Recovery Phrase' onPress={this._copyRecoveryPhrase} />
+        <Button
+          text="Copy Recovery Phrase"
+          onPress={this._copyRecoveryPhrase}
+        />
         <Toast
-          ref={(toast) => { this.toast = toast ? toast : undefined }}
-          position='center'
+          ref={toast => {
+            this.toast = toast ? toast : undefined
+          }}
+          position="center"
         />
       </View>
     )
@@ -84,4 +92,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-export default connect(mapStateToProps, undefined)(RecoveryPhrase)
+export default connect(
+  mapStateToProps,
+  undefined
+)(RecoveryPhrase)

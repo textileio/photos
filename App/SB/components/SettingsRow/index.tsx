@@ -20,19 +20,40 @@ const SettingsRow = (props: SettingsRowProps) => {
   const onValueChange = () => {
     onChange(service)
   }
-  const onPress = () => { infoPress(service) }
+  const onPress = () => {
+    infoPress(service)
+  }
   return (
     <View style={[styles.listItem, child !== undefined && styles.childItem]}>
       <View>
-        <Text style={[child === undefined && styles.itemTitle, child !== undefined && styles.childTitle, disabled && styles.disabledTitle]}>{info.title}</Text>
-        { !child && <View style={styles.itemTexts}>
-          <Text style={styles.itemDescription}>{info.subtitle}</Text>
-          {info.hasOwnProperty('details') && <TouchableOpacity onPress={onPress}>
-            <ImageSc width={15} source={require('./statics/icon-info.png')} />
-          </TouchableOpacity>}
-        </View>}
+        <Text
+          style={[
+            child === undefined && styles.itemTitle,
+            child !== undefined && styles.childTitle,
+            disabled && styles.disabledTitle
+          ]}
+        >
+          {info.title}
+        </Text>
+        {!child && (
+          <View style={styles.itemTexts}>
+            <Text style={styles.itemDescription}>{info.subtitle}</Text>
+            {info.hasOwnProperty('details') && (
+              <TouchableOpacity onPress={onPress}>
+                <ImageSc
+                  width={15}
+                  source={require('./statics/icon-info.png')}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </View>
-      <Switch disabled={disabled} value={!disabled && value} onValueChange={onValueChange} />
+      <Switch
+        disabled={disabled}
+        value={!disabled && value}
+        onValueChange={onValueChange}
+      />
     </View>
   )
 }

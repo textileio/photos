@@ -1,5 +1,14 @@
 import React from 'react'
-import { View, Image, Button, ViewStyle, ImageStyle, Text, TextStyle, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Image,
+  Button,
+  ViewStyle,
+  ImageStyle,
+  Text,
+  TextStyle,
+  TouchableOpacity
+} from 'react-native'
 
 import ProgressBar from './ProgressBar'
 
@@ -47,31 +56,46 @@ const BUTTON: TextStyle = {
 }
 
 export interface IProcessingWalletImageProps {
-  imageUri: string,
-  progress: number,
-  message?: string,
-  errorMessage?: string,
-  retry?: () => void,
-  cancel?: () => void,
+  imageUri: string
+  progress: number
+  message?: string
+  errorMessage?: string
+  retry?: () => void
+  cancel?: () => void
   displayError?: () => void
   height: number
   width: number
 }
 
 const ProcessingWalletImage = (props: IProcessingWalletImageProps) => {
-  const { imageUri, progress, message, errorMessage, cancel, displayError, width, height } = props
+  const {
+    imageUri,
+    progress,
+    message,
+    errorMessage,
+    cancel,
+    displayError,
+    width,
+    height
+  } = props
 
   let content: JSX.Element
   if (errorMessage) {
     content = (
       <View style={STACK}>
-        {displayError && <TouchableOpacity
-          /* tslint:disable-next-line */
-          onPress={displayError}
-        >
-          <Text style={BUTTON}>error</Text>
-        </TouchableOpacity>}
-        {cancel && <TouchableOpacity onPress={cancel}><Text style={BUTTON}>cancel</Text></TouchableOpacity>}
+        {displayError && (
+          <TouchableOpacity
+            /* tslint:disable-next-line */
+            onPress={displayError}
+          >
+            <Text style={BUTTON}>error</Text>
+          </TouchableOpacity>
+        )}
+        {cancel && (
+          <TouchableOpacity onPress={cancel}>
+            <Text style={BUTTON}>cancel</Text>
+          </TouchableOpacity>
+        )}
       </View>
     )
   } else {
@@ -80,14 +104,22 @@ const ProcessingWalletImage = (props: IProcessingWalletImageProps) => {
         <Text style={STATUS} />
         <ProgressBar progress={progress} />
         <Text style={STATUS}>{message}</Text>
-        {cancel && <TouchableOpacity onPress={cancel}><Text style={BUTTON}>cancel</Text></TouchableOpacity>}
+        {cancel && (
+          <TouchableOpacity onPress={cancel}>
+            <Text style={BUTTON}>cancel</Text>
+          </TouchableOpacity>
+        )}
       </View>
     )
   }
 
   return (
     <View style={CONTAINER}>
-      <Image style={{...IMAGE, width, height}} source={{ uri: imageUri }} resizeMode={'cover'} />
+      <Image
+        style={{ ...IMAGE, width, height }}
+        source={{ uri: imageUri }}
+        resizeMode={'cover'}
+      />
       {content}
     </View>
   )

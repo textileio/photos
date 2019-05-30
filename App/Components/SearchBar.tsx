@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, TextInput, ViewStyle, TextStyle, TouchableOpacity, TextInputProps } from 'react-native'
+import {
+  View,
+  TextInput,
+  ViewStyle,
+  TextStyle,
+  TouchableOpacity,
+  TextInputProps
+} from 'react-native'
 import Icon from '@textile/react-native-icon'
 
 import RoundedCornersView from './RoundedCornersView'
@@ -19,7 +26,6 @@ interface State {
 }
 
 class SearchBar extends Component<Props, State> {
-
   static defaultProps: Props = {
     containerStyle: {
       paddingTop: 8,
@@ -64,10 +70,23 @@ class SearchBar extends Component<Props, State> {
 
   render() {
     // const borderRadius = (this.props.inputStyle.fontSize || SearchBar.defaultProps.inputStyle.fontSize!) / 3
-    const inputColor = this.props.inputStyle.backgroundColor || SearchBar.defaultProps.inputStyle.backgroundColor!
+    const inputColor =
+      this.props.inputStyle.backgroundColor ||
+      SearchBar.defaultProps.inputStyle.backgroundColor!
     return (
-      <View style={[SearchBar.defaultProps.containerStyle, this.props.containerStyle]}>
-        <RoundedCornersView style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: inputColor }}>
+      <View
+        style={[
+          SearchBar.defaultProps.containerStyle,
+          this.props.containerStyle
+        ]}
+      >
+        <RoundedCornersView
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: inputColor
+          }}
+        >
           <Icon
             name={'search_16'}
             size={16}
@@ -78,11 +97,11 @@ class SearchBar extends Component<Props, State> {
             {...this.props.additionalInputProps}
             style={[SearchBar.defaultProps.inputStyle, this.props.inputStyle]}
             placeholder={this.props.placeholder}
-            underlineColorAndroid='transparent'
+            underlineColorAndroid="transparent"
             onChangeText={this.textChanged}
             value={this.state.value}
           />
-          {this.state.showClear &&
+          {this.state.showClear && (
             <TouchableOpacity onPress={this.clear}>
               <Icon
                 name={'x_16'}
@@ -91,7 +110,7 @@ class SearchBar extends Component<Props, State> {
                 style={{ margin: 6 }}
               />
             </TouchableOpacity>
-          }
+          )}
         </RoundedCornersView>
       </View>
     )

@@ -5,7 +5,8 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity, ListRenderItemInfo
+  TouchableOpacity,
+  ListRenderItemInfo
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
@@ -19,7 +20,11 @@ import ProcessingWalletImageCard from './ProcessingWalletImage'
 
 // Styles
 import { Colors } from '../Themes'
-import styles, { PRODUCT_ITEM_HEIGHT, PRODUCT_ITEM_MARGIN, numColumns } from './Styles/PhotoGridStyles'
+import styles, {
+  PRODUCT_ITEM_HEIGHT,
+  PRODUCT_ITEM_MARGIN,
+  numColumns
+} from './Styles/PhotoGridStyles'
 
 interface DispatchProps {
   retryShare: (uuid: string) => void
@@ -56,9 +61,13 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps> {
       <ProcessingWalletImageCard
         {...processing}
         /* tslint:disable-next-line */
-        retry={() => { this.props.retryShare(id) }}
+        retry={() => {
+          this.props.retryShare(id)
+        }}
         /* tslint:disable-next-line */
-        cancel={() => { this.props.cancelShare(id) }}
+        cancel={() => {
+          this.props.cancelShare(id)
+        }}
         /* tslint:disable-next-line */
         displayError={this._getToast(processing.errorMessage)}
         height={PRODUCT_ITEM_HEIGHT}
@@ -77,9 +86,10 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps> {
   renderRow(row: ListRenderItemInfo<IPhotoGridType>) {
     const { item } = row
     switch (item.type) {
-      case 'photo':
+      case 'photo': {
         const files = item.photo.files
-        const fileIndex = files && files.length > 0 && files[0].index ? files[0].index : 0
+        const fileIndex =
+          files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <TouchableOpacity
             style={styles.item}
@@ -96,19 +106,16 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps> {
               />
             </View>
             <View style={styles.itemOverlay}>
-              {/* TODO: Add verbose back */}
+              {/* @todo: Add verbose back */}
             </View>
           </TouchableOpacity>
         )
+      }
       case 'processingItem':
-        return (
-          <View style={styles.item}>
-            {this._getOverlay(item)}
-          </View>
-        )
+        return <View style={styles.item}>{this._getOverlay(item)}</View>
       default:
         return (
-          <View style={styles.item} >
+          <View style={styles.item}>
             <View style={styles.itemBackgroundContainer} />
           </View>
         )
@@ -145,31 +152,31 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps> {
   render() {
     return (
       <View style={styles.container}>
-        {
-          this.props.items.length ? (
-            <FlatList
-              style={styles.listContainer}
-              data={this.props.items}
-              keyExtractor={this.keyExtractor}
-              /* tslint:disable-next-line */
-              renderItem={this.renderRow.bind(this)}
-              getItemLayout={this._getItemLayout}
-              numColumns={numColumns}
-              windowSize={this.oneScreensWorth}
-              initialNumToRender={this.oneScreensWorth}
-              onEndReachedThreshold={0.55}
-              onRefresh={this.props.onRefresh}
-              refreshing={this.props.refreshing}
-            />
-          ) : (
-            <View style={styles.emptyListStyle}>
-              <Text style={styles.noPhotos}>{this.props.placeholderText}</Text>
-            </View>
-          )
-        }
+        {this.props.items.length ? (
+          <FlatList
+            style={styles.listContainer}
+            data={this.props.items}
+            keyExtractor={this.keyExtractor}
+            /* tslint:disable-next-line */
+            renderItem={this.renderRow.bind(this)}
+            getItemLayout={this._getItemLayout}
+            numColumns={numColumns}
+            windowSize={this.oneScreensWorth}
+            initialNumToRender={this.oneScreensWorth}
+            onEndReachedThreshold={0.55}
+            onRefresh={this.props.onRefresh}
+            refreshing={this.props.refreshing}
+          />
+        ) : (
+          <View style={styles.emptyListStyle}>
+            <Text style={styles.noPhotos}>{this.props.placeholderText}</Text>
+          </View>
+        )}
         <Toast
-          ref={(toast) => { this.toast = toast ? toast : undefined }}
-          position='center'
+          ref={toast => {
+            this.toast = toast ? toast : undefined
+          }}
+          position="center"
         />
       </View>
     )
@@ -178,9 +185,16 @@ class PhotoGrid extends React.Component<ScreenProps & DispatchProps> {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    retryShare: (uuid: string) => { dispatch(groupActions.addPhoto.retry(uuid)) },
-    cancelShare: (uuid: string) => { dispatch(groupActions.addPhoto.cancelRequest(uuid)) }
+    retryShare: (uuid: string) => {
+      dispatch(groupActions.addPhoto.retry(uuid))
+    },
+    cancelShare: (uuid: string) => {
+      dispatch(groupActions.addPhoto.cancelRequest(uuid))
+    }
   }
 }
 
-export default connect(undefined, mapDispatchToProps)(PhotoGrid)
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(PhotoGrid)

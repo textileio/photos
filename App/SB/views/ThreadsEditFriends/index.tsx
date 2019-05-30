@@ -22,7 +22,7 @@ interface ScreenProps {
 }
 
 interface State {
-  selected: {[key: string]: boolean}
+  selected: { [key: string]: boolean }
   showQrCode: boolean
 }
 
@@ -36,24 +36,18 @@ class Component extends React.Component<Props> {
 
   _getPublicLink() {
     // Generate a link dialog
-    this.props.invite(
-      this.props.threadId,
-      this.props.threadName
-    )
+    this.props.invite(this.props.threadId, this.props.threadName)
   }
 
   _displayThreadQRCode() {
     // Generate a link dialog
-    this.props.threadQRCodeRequest(
-      this.props.threadId,
-      this.props.threadName
-    )
-    this.setState({showQrCode: true})
+    this.props.threadQRCodeRequest(this.props.threadId, this.props.threadName)
+    this.setState({ showQrCode: true })
   }
 
   _hideQRCode() {
     return () => {
-      this.setState({showQrCode: false})
+      this.setState({ showQrCode: false })
     }
   }
 
@@ -69,23 +63,29 @@ class Component extends React.Component<Props> {
   }
 
   getSelected() {
-    return Object.keys(this.state.selected).filter((id) => this.state.selected[id] === true)
+    return Object.keys(this.state.selected).filter(
+      id => this.state.selected[id] === true
+    )
   }
 
   _updateThread() {
     const selected = this.getSelected()
 
     // grab the Pks from the user Ids
-    const addresses: string[] = selected.map((address) => {
-      const existing = this.props.contacts.find((ctc) => ctc.address === address)
-      if (existing) {
-        return existing.address
-      }
-      return ''
-    })
-    .filter((id) => id !== '')
+    const addresses: string[] = selected
+      .map(address => {
+        const existing = this.props.contacts.find(
+          ctc => ctc.address === address
+        )
+        if (existing) {
+          return existing.address
+        }
+        return ''
+      })
+      .filter(id => id !== '')
 
     if (addresses.length === 0) {
+      // @todo -- fix all this.refs so that typescript can introspect the types correctly
       // @ts-ignore
       this.refs.toast.show('No contacts selected.', 1500)
       return
@@ -93,13 +93,15 @@ class Component extends React.Component<Props> {
     // @ts-ignore
     this.refs.toast.show('Success! Your invite(s) were sent.', 2400)
     this.props.addInternalInvites(this.props.threadId, addresses)
-    setTimeout(() => { this.props.cancel() }, 2400)
+    setTimeout(() => {
+      this.props.cancel()
+    }, 2400)
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={{flex: 1, zIndex: 10}}>
+        <View style={{ flex: 1, zIndex: 10 }}>
           <ContactSelect
             /* tslint:disable-next-line jsx-no-bind */
             displayQRCode={this._displayThreadQRCode.bind(this)}
@@ -123,11 +125,15 @@ class Component extends React.Component<Props> {
           cancelText={'Exit'}
           style={styles.bottomRow}
         />
-        <QRCodeModal isVisible={this.state.showQrCode} invite={this.props.qrCodeInvite} cancel={this._hideQRCode()} />
+        <QRCodeModal
+          isVisible={this.state.showQrCode}
+          invite={this.props.qrCodeInvite}
+          cancel={this._hideQRCode()}
+        />
         <Toast
           /* tslint:disable-next-line jsx-no-string-ref */
-          ref='toast'
-          position='top'
+          ref="toast"
+          position="top"
           fadeInDuration={50}
           style={styles.toast}
           textStyle={styles.toastText}
@@ -141,24 +147,29 @@ interface StateProps {
   topFive: IncludedContact[]
   // puts a placeholder row in contacts for adding external invite link
   contacts: IncludedContact[]
-  notInThread: boolean,
+  notInThread: boolean
   qrCodeInvite?: InviteQRCode
 }
 
-const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: ScreenProps
+): StateProps => {
   const threadId = ownProps.threadId
   const contacts = state.contacts.contacts
-    .map((contact) => {
+    .map(contact => {
       return {
         ...contact,
         type: 'contact',
         included: (contact.threads || []).indexOf(threadId) >= 0
       }
     })
-    .filter((contact) => contact.name !== '' && contact.name !== undefined)
+    .filter(contact => contact.name !== '' && contact.name !== undefined)
 
-  const notInThread = contacts.filter((c) => !c.included)
-  const popularity = notInThread.sort((a, b) => (b.threads || []).length - (a.threads || []).length)
+  const notInThread = contacts.filter(c => !c.included)
+  const popularity = notInThread.sort(
+    (a, b) => (b.threads || []).length - (a.threads || []).length
+  )
   const topFive = popularity.slice(0, 5)
   const sortedContacts = contacts.sort((a, b) => {
     if (!a.name || a.name === '') {
@@ -179,8 +190,11 @@ const mapStateToProps = (state: RootState, ownProps: ScreenProps): StateProps  =
     topFive,
     // puts a placeholder row in contacts for adding external invite link
     contacts: sortedContacts,
-    notInThread: !!notInThread.length,
-    qrCodeInvite: (state.threads.qrCodeInvite && state.threads.qrCodeInvite.id === threadId) ? state.threads.qrCodeInvite : undefined
+    notInThread: Boolean(notInThread.length),
+    qrCodeInvite:
+      state.threads.qrCodeInvite && state.threads.qrCodeInvite.id === threadId
+        ? state.threads.qrCodeInvite
+        : undefined
   }
 }
 
@@ -191,25 +205,34 @@ interface DispatchProps {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  invite: (threadId: string, threadName: string) => { dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName)) },
-  threadQRCodeRequest: (threadId: string, threadName: string) => { dispatch(ThreadsActions.threadQRCodeRequest(threadId, threadName)) },
-  addInternalInvites: (threadId: string, inviteePks: string[]) => { dispatch(ThreadsActions.addInternalInvitesRequest(threadId, inviteePks)) }
+  invite: (threadId: string, threadName: string) => {
+    dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName))
+  },
+  threadQRCodeRequest: (threadId: string, threadName: string) => {
+    dispatch(ThreadsActions.threadQRCodeRequest(threadId, threadName))
+  },
+  addInternalInvites: (threadId: string, inviteePks: string[]) => {
+    dispatch(ThreadsActions.addInternalInvitesRequest(threadId, inviteePks))
+  }
 })
 
-export const ThreadsEditFriendsComponent = connect(mapStateToProps, mapDispatchToProps)(Component)
+export const ThreadsEditFriendsComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component)
 
 export default class ThreadsEditFriends extends React.Component<ScreenProps> {
   render() {
     return (
       <Modal
-        isVisible={!!this.props.isVisible}
+        isVisible={Boolean(this.props.isVisible)}
         animationIn={'fadeInUp'}
         animationOut={'fadeOutDown'}
         avoidKeyboard={true}
         backdropOpacity={0.5}
-        style={{margin: 0, padding: 0}}
+        style={{ margin: 0, padding: 0 }}
       >
-        <ThreadsEditFriendsComponent {...this.props}/>
+        <ThreadsEditFriendsComponent {...this.props} />
       </Modal>
     )
   }

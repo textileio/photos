@@ -14,11 +14,15 @@ export default class BackgroundFetchEventHandler {
   }
 
   setup() {
-    BackgroundFetch.configure({}, () => {
-      this.store.dispatch(TriggersActions.backgroundFetch())
-    }, (error) => {
-      // TODO - handle error
-      console.info('backgroundFetch error')
-    })
+    BackgroundFetch.configure(
+      {},
+      () => {
+        this.store.dispatch(TriggersActions.backgroundFetch())
+      },
+      error => {
+        // @todo - handle error
+        console.info('backgroundFetch error')
+      }
+    )
   }
 }

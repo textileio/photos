@@ -1,70 +1,105 @@
-import { createAction, createAsyncAction, ActionType, getType } from 'typesafe-actions'
+import {
+  createAction,
+  createAsyncAction,
+  ActionType,
+  getType
+} from 'typesafe-actions'
 import { SharedImage } from '../features/group/add-photo/models'
 import { RootState } from './Types'
 import { IFiles } from '@textile/react-native-sdk'
 
 const actions = {
-  updateSharingPhotoImage: createAction('UPDATE_SHARING_PHOTO_IMAGE', (resolve) => {
-    return (image: SharedImage | IFiles) => resolve({ image })
+  updateSharingPhotoImage: createAction(
+    'UPDATE_SHARING_PHOTO_IMAGE',
+    resolve => {
+      return (image: SharedImage | IFiles) => resolve({ image })
+    }
+  ),
+  updateSharingPhotoThread: createAction(
+    'UPDATE_SHARING_PHOTO_THREAD',
+    resolve => {
+      return (threadId: string) => resolve({ threadId })
+    }
+  ),
+  updateSharingPhotoComment: createAction(
+    'UPDATE_SHARING_PHOTO_COMMENT',
+    resolve => {
+      return (comment: string) => resolve({ comment })
+    }
+  ),
+  sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
+    return (image: SharedImage | string, threadId: string, comment?: string) =>
+      resolve({ image, threadId, comment })
   }),
-  updateSharingPhotoThread: createAction('UPDATE_SHARING_PHOTO_THREAD', (resolve) => {
-    return (threadId: string) => resolve({ threadId })
-  }),
-  updateSharingPhotoComment: createAction('UPDATE_SHARING_PHOTO_COMMENT', (resolve) => {
-    return (comment: string) => resolve({ comment })
-  }),
-  sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', (resolve) => {
-    return (image: SharedImage | string, threadId: string, comment?: string) => resolve({ image, threadId, comment })
-  }),
-  cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', (resolve) => {
+  cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', resolve => {
     return () => resolve()
   }),
-  imageSharingError: createAction('IMAGE_SHARING_ERROR', (resolve) => {
+  imageSharingError: createAction('IMAGE_SHARING_ERROR', resolve => {
     return (error: Error) => resolve(error)
   }),
-  shareByLink: createAction('SHARE_BY_LINK', (resolve) => {
+  shareByLink: createAction('SHARE_BY_LINK', resolve => {
     return (path: string) => resolve({ path })
   }),
-  showImagePicker: createAction('SHOW_IMAGE_PICKER', (resolve) => {
+  showImagePicker: createAction('SHOW_IMAGE_PICKER', resolve => {
     return (pickerType?: string) => resolve({ pickerType })
   }),
-  showWalletPicker: createAction('SHOW_WALLET_PICKER', (resolve) => {
+  showWalletPicker: createAction('SHOW_WALLET_PICKER', resolve => {
     return (threadId?: string) => resolve({ threadId })
   }),
-  walletPickerSuccess: createAction('WALLET_PICKER_SUCCESS', (resolve) => {
+  walletPickerSuccess: createAction('WALLET_PICKER_SUCCESS', resolve => {
     return (photo: IFiles) => resolve({ photo })
   }),
-  newImagePickerSelection: createAction('NEW_IMAGE_PICKER_SELECTION', (resolve) => {
-    return (threadId: string) => resolve({ threadId })
-  }),
-  newImagePickerError: createAction('NEW_IMAGE_PICKER_ERROR', (resolve) => {
+  newImagePickerSelection: createAction(
+    'NEW_IMAGE_PICKER_SELECTION',
+    resolve => {
+      return (threadId: string) => resolve({ threadId })
+    }
+  ),
+  newImagePickerError: createAction('NEW_IMAGE_PICKER_ERROR', resolve => {
     return (error: Error, message?: string) => resolve({ error, message })
   }),
-  dismissImagePickerError: createAction('DISMISS_IMAGE_PICKER_ERROR', (resolve) => {
-    return () => resolve()
+  dismissImagePickerError: createAction(
+    'DISMISS_IMAGE_PICKER_ERROR',
+    resolve => {
+      return () => resolve()
+    }
+  ),
+  routeDeepLinkRequest: createAction('ROUTE_DEEP_LINK_REQUEST', resolve => {
+    return (url: string) => resolve({ url })
   }),
-  routeDeepLinkRequest: createAction('ROUTE_DEEP_LINK_REQUEST', (resolve) => {
-    return (url: string) => resolve({url})
+  addFriendRequest: createAction('ADD_FRIEND_REQUEST', resolve => {
+    return (threadId: string, threadName: string) =>
+      resolve({ threadId, threadName })
   }),
-  addFriendRequest: createAction('ADD_FRIEND_REQUEST', (resolve) => {
-    return (threadId: string, threadName: string) => resolve({ threadId, threadName })
-  }),
-  addLikeRequest: createAction('ADD_LIKE_REQUEST', (resolve) => {
-    return (blockId: string) => resolve({blockId})
+  addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
+    return (blockId: string) => resolve({ blockId })
   }),
   addLike: createAsyncAction(
     'ADD_LIKE_REQUEST',
     'ADD_LIKE_SUCCESS',
     'ADD_LIKE_FAILURE'
-  )<{ blockId: string }, { blockId: string }, { blockId: string, error: any }>(),
-  navigateToThreadRequest: createAction('NAVIGATE_TO_THREAD_REQUEST', (resolve) => {
-    return (threadId: string, threadName: string) => resolve({ threadId, threadName })
-  }),
-  navigateToCommentsRequest: createAction('NAVIGATE_TO_COMMENTS_REQUEST', (resolve) => {
-    return (photoId: string, threadId?: string) => resolve({ photoId, threadId })
-  }),
-  navigateToLikesRequest: createAction('NAVIGATE_TO_LIKES_REQUEST', (resolve) => {
-    return (photoId: string, threadId?: string) => resolve({ photoId, threadId })
+  )<
+    { blockId: string },
+    { blockId: string },
+    { blockId: string; error: any }
+  >(),
+  navigateToThreadRequest: createAction(
+    'NAVIGATE_TO_THREAD_REQUEST',
+    resolve => {
+      return (threadId: string, threadName: string) =>
+        resolve({ threadId, threadName })
+    }
+  ),
+  navigateToCommentsRequest: createAction(
+    'NAVIGATE_TO_COMMENTS_REQUEST',
+    resolve => {
+      return (photoId: string, threadId?: string) =>
+        resolve({ photoId, threadId })
+    }
+  ),
+  navigateToLikesRequest: createAction('NAVIGATE_TO_LIKES_REQUEST', resolve => {
+    return (photoId: string, threadId?: string) =>
+      resolve({ photoId, threadId })
   })
 }
 
@@ -75,12 +110,12 @@ export interface UIState {
     readonly image?: SharedImage | IFiles
     readonly threadId?: string
     readonly comment?: string
-  },
+  }
   readonly likingPhotos: {
     [blockId: string]: {
       error?: string
     }
-  },
+  }
   readonly imagePickerError?: string // used to notify the user of any error during photo picking
 }
 
@@ -88,38 +123,50 @@ export const initialState: UIState = {
   likingPhotos: {}
 }
 
-export function reducer(state: UIState = initialState, action: UIAction): UIState {
+export function reducer(
+  state: UIState = initialState,
+  action: UIAction
+): UIState {
   switch (action.type) {
-    case getType(actions.updateSharingPhotoImage):
+    case getType(actions.updateSharingPhotoImage): {
       const { image } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, image } }
+    }
     case getType(actions.updateSharingPhotoThread): {
       const { threadId } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, threadId } }
     }
-    case getType(actions.updateSharingPhotoComment):
+    case getType(actions.updateSharingPhotoComment): {
       const { comment } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment } }
+    }
     case getType(actions.sharePhotoRequest):
     case getType(actions.cancelSharingPhoto):
       return { ...state, sharingPhoto: undefined }
-    case getType(actions.newImagePickerError):
+    case getType(actions.newImagePickerError): {
       const msg = action.payload.message || action.payload.error.message
-      return { ...state, imagePickerError:  msg}
+      return { ...state, imagePickerError: msg }
+    }
     case getType(actions.dismissImagePickerError):
       return { ...state, imagePickerError: undefined }
     case getType(actions.addLike.request): {
       const { likingPhotos } = state
       const { blockId } = action.payload
-      return { ...state, likingPhotos: {
-        ...likingPhotos,
-        [blockId]: {}
-      }}
+      return {
+        ...state,
+        likingPhotos: {
+          ...likingPhotos,
+          [blockId]: {}
+        }
+      }
     }
     case getType(actions.addLike.success):
     case getType(actions.addLike.failure): {
       const { likingPhotos } = state
-      const { [action.payload.blockId]: liked, ...newLikingPhotos } = likingPhotos
+      const {
+        [action.payload.blockId]: liked,
+        ...newLikingPhotos
+      } = likingPhotos
       return {
         ...state,
         likingPhotos: newLikingPhotos

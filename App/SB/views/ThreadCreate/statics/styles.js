@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { BentonSansBold } from '../../../util/fonts'
+import { bentonSansBold } from '../../../util/fonts'
 
 import { color } from '../../../../styles'
 
@@ -53,7 +53,7 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   link: {
-    ...BentonSansBold(),
+    ...bentonSansBold(),
     fontSize: 16,
     color: '#2625ff'
   },

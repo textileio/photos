@@ -41,23 +41,26 @@ interface State {
 }
 
 class Contacts extends React.Component<Props, State> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
     const addContact = navigation.getParam('addContact')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item
-          title='Account'
+          title="Account"
           onPress={openDrawer}
-          ButtonElement={<Avatar style={{ width: 24, height: 24 }} self={true} />}
+          ButtonElement={
+            <Avatar style={{ width: 24, height: 24 }} self={true} />
+          }
           buttonWrapperStyle={{ margin: 11 }}
         />
       </TextileHeaderButtons>
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Contact' iconName='plus' onPress={addContact} />
+        <Item title="Add Contact" iconName="plus" onPress={addContact} />
       </TextileHeaderButtons>
     )
     return {
@@ -82,8 +85,11 @@ class Contacts extends React.Component<Props, State> {
   render() {
     const allContacts: ReadonlyArray<IContact> = this.props.contacts
     let data = allContacts
-    if (this.state.searchString !== undefined && this.state.searchString.length > 0) {
-      data = data.filter((contact) => {
+    if (
+      this.state.searchString !== undefined &&
+      this.state.searchString.length > 0
+    ) {
+      data = data.filter(contact => {
         const searchKey = (contact.name || contact.address).toLowerCase()
         const index = searchKey.indexOf(this.state.searchString!.toLowerCase())
         return index > -1
@@ -99,14 +105,22 @@ class Contacts extends React.Component<Props, State> {
           ListHeaderComponent={
             <SearchBar
               containerStyle={{ backgroundColor: color.grey_5 }}
-              inputStyle={{ ...textStyle.body_m, color: color.grey_2, backgroundColor: color.grey_6 }}
-              additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false }}
+              inputStyle={{
+                ...textStyle.body_m,
+                color: color.grey_2,
+                backgroundColor: color.grey_6
+              }}
+              additionalInputProps={{
+                autoCapitalize: 'none',
+                autoCorrect: false,
+                spellCheck: false
+              }}
               iconColor={color.grey_4}
               onTextChanged={this.updateSearchString}
             />
           }
-          keyboardShouldPersistTaps='handled'
-          keyboardDismissMode='on-drag'
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
         />
       </View>
     )
@@ -116,8 +130,15 @@ class Contacts extends React.Component<Props, State> {
 
   renderRow = (row: ListRenderItemInfo<IContact>) => {
     const { item } = row
-    const leftItem = <Avatar style={{ width: 50, height: 50, backgroundColor: color.grey_5 }} target={item.avatar} />
-    const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
+    const leftItem = (
+      <Avatar
+        style={{ width: 50, height: 50, backgroundColor: color.grey_5 }}
+        target={item.avatar}
+      />
+    )
+    const rightItems = [
+      <Icon key="more" name="chevron-right" size={24} color={color.grey_4} />
+    ]
     return (
       <ListItem
         title={item.name || item.address.substring(0, 10)}
@@ -156,4 +177,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-export default connect(mapStateToProps, undefined)(Contacts)
+export default connect(
+  mapStateToProps,
+  undefined
+)(Contacts)

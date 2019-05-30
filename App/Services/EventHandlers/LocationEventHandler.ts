@@ -21,7 +21,9 @@ export default class LocationEventHandler {
   setup() {
     if (!this.status) {
       const currentState = this.store.getState()
-      if (currentState.preferences.services.backgroundLocation.status === true) {
+      if (
+        currentState.preferences.services.backgroundLocation.status === true
+      ) {
         this.status = true
         if (Platform.OS === 'android') {
           this.setupAndroid()
@@ -33,13 +35,19 @@ export default class LocationEventHandler {
   }
 
   async setupAndroid() {
-    const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
     if (hasPermission) {
       this.watchPosition()
     }
   }
 
   watchPosition() {
-    navigator.geolocation.watchPosition(this.handleNewPosition.bind(this), undefined, { useSignificantChanges: true })
+    navigator.geolocation.watchPosition(
+      this.handleNewPosition.bind(this),
+      undefined,
+      { useSignificantChanges: true }
+    )
   }
 }

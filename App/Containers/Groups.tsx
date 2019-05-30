@@ -1,17 +1,30 @@
 import React from 'react'
-import {Dispatch} from 'redux'
+import { Dispatch } from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, View, Text, TouchableOpacity, Alert, Platform, ListRenderItemInfo } from 'react-native'
+import {
+  FlatList,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Platform,
+  ListRenderItemInfo
+} from 'react-native'
 
-import {RootAction, RootState} from '../Redux/Types'
+import { RootAction, RootState } from '../Redux/Types'
 
 import { inboundInvites } from '../Redux/ThreadsSelectors'
 import { InboundInvite } from '../Redux/ThreadsRedux'
-import { getThreadsAndMembers, GroupAuthors } from '../Redux/PhotoViewingSelectors'
+import {
+  getThreadsAndMembers,
+  GroupAuthors
+} from '../Redux/PhotoViewingSelectors'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
-import PreferencesActions, { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import PreferencesActions, {
+  PreferencesSelectors
+} from '../Redux/PreferencesRedux'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
@@ -37,7 +50,7 @@ interface DispatchProps {
 }
 
 interface NavProps {
-  openDrawer: () => void,
+  openDrawer: () => void
   openThreadModal: () => void
 }
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -47,16 +60,19 @@ interface State {
 }
 
 class Groups extends React.PureComponent<Props, State> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
     const openThreadModal = navigation.getParam('openThreadModal')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item
-          title='Account'
+          title="Account"
           onPress={openDrawer}
-          ButtonElement={<Avatar style={{ width: 24, height: 24 }} self={true} />}
+          ButtonElement={
+            <Avatar style={{ width: 24, height: 24 }} self={true} />
+          }
           buttonWrapperStyle={{ margin: 11 }}
         />
       </TextileHeaderButtons>
@@ -64,7 +80,7 @@ class Groups extends React.PureComponent<Props, State> {
 
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Add Group' iconName='plus' onPress={openThreadModal} />
+        <Item title="Add Group" iconName="plus" onPress={openThreadModal} />
       </TextileHeaderButtons>
     )
 
@@ -95,18 +111,16 @@ class Groups extends React.PureComponent<Props, State> {
     const item: GroupRows = rowData.item
     if (item.group) {
       return (
-        <GroupCard id={item.group.id} {...item.group} onPress={this._onPressItem} />
-      )
-    } else if (item.invite) {
-      return (
-        <ProcessingThread
-          {...item.invite}
+        <GroupCard
+          id={item.group.id}
+          {...item.group}
+          onPress={this._onPressItem}
         />
       )
+    } else if (item.invite) {
+      return <ProcessingThread {...item.invite} />
     }
-    return (
-      <View/>
-    )
+    return <View />
   }
 
   _renderFooter = () => {
@@ -147,7 +161,11 @@ class Groups extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.groups.length && this.props.groups.length !== prevProps.groups.length && this.props.showNotificationsPrompt) {
+    if (
+      this.props.groups.length &&
+      this.props.groups.length !== prevProps.groups.length &&
+      this.props.showNotificationsPrompt
+    ) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()
     } else if (this.props.groups.length && this.props.showLocationPrompt) {
@@ -158,7 +176,7 @@ class Groups extends React.PureComponent<Props, State> {
 
   render() {
     return (
-      <View style={styles.contentContainer} >
+      <View style={styles.contentContainer}>
         <FlatList
           data={this.props.groups}
           keyExtractor={this._keyExtractor}
@@ -223,7 +241,8 @@ class Groups extends React.PureComponent<Props, State> {
             this.props.enableLocation()
           }
         },
-        { text: 'Not now',
+        {
+          text: 'Not now',
           style: 'cancel',
           onPress: () => {
             // never show it again
@@ -240,7 +259,6 @@ class Groups extends React.PureComponent<Props, State> {
       { cancelable: false }
     )
   }
-
 }
 
 interface GroupRows {
@@ -258,17 +276,23 @@ const mapStateToProps = (state: RootState): StateProps => {
     return prev + thread.size
   }, 0)
 
-  const showNotificationsPrompt = PreferencesSelectors.showNotificationPrompt(state)
-    && threads.length > 0
-    && memberCount > threads.length
+  const showNotificationsPrompt =
+    PreferencesSelectors.showNotificationPrompt(state) &&
+    threads.length > 0 &&
+    memberCount > threads.length
 
-  const showLocationPrompt = PreferencesSelectors.showBackgroundLocationPrompt(state)
-    && itemCount > 8
+  const showLocationPrompt =
+    PreferencesSelectors.showBackgroundLocationPrompt(state) && itemCount > 8
 
-  const invites: GroupRows[] = inboundInvites(state)
-    .map((inbound) => ({invite: inbound, id: inbound.inviteId}))
+  const invites: GroupRows[] = inboundInvites(state).map(inbound => ({
+    invite: inbound,
+    id: inbound.inviteId
+  }))
 
-  const nestedThreads = threads.map((thread) => ({group: thread, id: thread.id}))
+  const nestedThreads = threads.map(thread => ({
+    group: thread,
+    id: thread.id
+  }))
   const groups: ReadonlyArray<GroupRows> = [...invites, ...nestedThreads]
 
   return {
@@ -291,7 +315,9 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
       dispatch(PreferencesActions.toggleServicesRequest('notifications', true))
     },
     enableLocation: () => {
-      dispatch(PreferencesActions.toggleServicesRequest('backgroundLocation', true))
+      dispatch(
+        PreferencesActions.toggleServicesRequest('backgroundLocation', true)
+      )
     },
     completeNotifications: () => {
       dispatch(PreferencesActions.completeTourSuccess('notifications'))
@@ -302,4 +328,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Groups)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Groups)

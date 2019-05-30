@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ScrollView, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
+import {
+  ScrollView,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Dimensions
+} from 'react-native'
 
 import Modal from 'react-native-modal'
 
@@ -14,10 +21,13 @@ const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
 
 interface PermissionsInfoProps {
-  info: {
-    title: string
-    details: string
-  } | ServiceInfo | StorageDescription
+  info:
+    | {
+        title: string
+        details: string
+      }
+    | ServiceInfo
+    | StorageDescription
   close: () => void
 }
 class PermissionsInfo extends Component<PermissionsInfoProps> {
@@ -35,11 +45,14 @@ class PermissionsInfo extends Component<PermissionsInfoProps> {
         backdropOpacity={0.5}
         style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }}
       >
-        <View style={styles.container} >
+        <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>{this.props.info.title}</Text>
             <TouchableOpacity onPress={this.props.close}>
-              <Image style={styles.closeIcon} source={require('./statics/icon-cancel.png')} />
+              <Image
+                style={styles.closeIcon}
+                source={require('./statics/icon-cancel.png')}
+              />
             </TouchableOpacity>
           </View>
           <ScrollView style={styles.detailsContainer}>
@@ -51,4 +64,7 @@ class PermissionsInfo extends Component<PermissionsInfoProps> {
   }
 }
 
-export default connect(undefined, undefined)(PermissionsInfo)
+export default connect(
+  undefined,
+  undefined
+)(PermissionsInfo)

@@ -1,4 +1,4 @@
 export default {
-    requestPermissions: jest.fn(),
-    localNotification: jest.fn()
+  requestPermissions: jest.fn(),
+  localNotification: jest.fn()
 }

@@ -24,15 +24,21 @@ describe('account', () => {
   })
   describe('profile', () => {
     it('should be processing from refresh', () => {
-      const state0 =  reducer(initialState, actions.refreshProfileRequest())
+      const state0 = reducer(initialState, actions.refreshProfileRequest())
       expect(state0.profile.processing).toBeTruthy()
     })
     it('should be processing from setUsername', () => {
-      const state0 =  reducer(initialState, actions.setUsernameRequest('username'))
+      const state0 = reducer(
+        initialState,
+        actions.setUsernameRequest('username')
+      )
       expect(state0.profile.processing).toBeTruthy()
     })
     it('should update profile', () => {
-      const state0 = reducer(initialState, actions.refreshProfileSuccess(profile))
+      const state0 = reducer(
+        initialState,
+        actions.refreshProfileSuccess(profile)
+      )
       expect(state0.profile.value).toEqual(profile)
       expect(state0.profile.processing).toBeFalsy()
     })
@@ -44,7 +50,7 @@ describe('account', () => {
   })
   describe('peer id', () => {
     it('should not change state for request', () => {
-      const state0 =  reducer(initialState, actions.refreshPeerIdRequest())
+      const state0 = reducer(initialState, actions.refreshPeerIdRequest())
       expect(state0).toEqual(initialState)
     })
     it('should update peer id', () => {
@@ -58,7 +64,10 @@ describe('account', () => {
   })
   describe('avatar', () => {
     it('should not change state for request', () => {
-      const state0 = reducer(initialState, actions.setAvatar.request({} as SharedImage))
+      const state0 = reducer(
+        initialState,
+        actions.setAvatar.request({} as SharedImage)
+      )
       expect(state0).toEqual(initialState)
     })
     it('should track avatar error', () => {
@@ -68,7 +77,10 @@ describe('account', () => {
   })
   describe('recovery phrase', () => {
     it('should track revocery phrase', () => {
-      const state0 = reducer(initialState, actions.setRecoveryPhrase(recoveryPhrase))
+      const state0 = reducer(
+        initialState,
+        actions.setRecoveryPhrase(recoveryPhrase)
+      )
       expect(state0.recoveryPhrase).toEqual(recoveryPhrase)
     })
   })

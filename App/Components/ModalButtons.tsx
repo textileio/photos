@@ -54,10 +54,7 @@ const ModalButtons = (props: ScreenProps) => {
   const style = props.style ? props.style : styles.bottomRow
   return (
     <View style={style}>
-      <TouchableOpacity
-        onPress={props.cancel}
-        style={styles.button}
-      >
+      <TouchableOpacity onPress={props.cancel} style={styles.button}>
         <Text style={styles.buttonText}>{cancelText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -65,7 +62,11 @@ const ModalButtons = (props: ScreenProps) => {
         onPress={props.continue}
         style={styles.button}
       >
-        <Text style={[styles.buttonText, !props.continueEnabled && styles.disabled]}>{continueText}</Text>
+        <Text
+          style={[styles.buttonText, !props.continueEnabled && styles.disabled]}
+        >
+          {continueText}
+        </Text>
       </TouchableOpacity>
     </View>
   )

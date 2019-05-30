@@ -6,7 +6,8 @@ export const getPeerId = (state: AccountState) => state.peerId.value
 
 export const getAddress = (state: AccountState) => state.address.value
 
-export const getUsername = (state: AccountState) => state.profile.value && state.profile.value.name
+export const getUsername = (state: AccountState) =>
+  state.profile.value && state.profile.value.name
 
 export const getProfile = (state: AccountState) => state.profile.value
 

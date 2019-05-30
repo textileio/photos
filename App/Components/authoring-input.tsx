@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, TextInput, ViewStyle, TextStyle, TouchableOpacity, Dimensions } from 'react-native'
+import {
+  View,
+  TextInput,
+  ViewStyle,
+  TextStyle,
+  TouchableOpacity,
+  Dimensions
+} from 'react-native'
 import Icon from '@textile/react-native-icon'
 
 import Button from './SmallButton'
@@ -41,12 +48,11 @@ interface Props {
 }
 
 interface State {
-  textValue?: string,
+  textValue?: string
   disabled: boolean
 }
 
 class AuthoringInput extends Component<Props, State> {
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -61,16 +67,28 @@ class AuthoringInput extends Component<Props, State> {
         <TextInput
           style={INPUT}
           multiline={true}
-          placeholder='Write a message...'
+          placeholder="Write a message..."
           placeholderTextColor={color.grey_3}
           onChangeText={this.updateText}
           value={this.state.textValue}
         />
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center'
+          }}
+        >
           <TouchableOpacity style={ITEM} onPress={this.props.onSharePhoto}>
-            <Icon name='image' color={color.grey_4} size={24} />
+            <Icon name="image" color={color.grey_4} size={24} />
           </TouchableOpacity>
-          <Button style={BUTTON} textStyle={BUTTON_TEXT} disabled={this.state.disabled} text={'send'} onPress={this.submit} />
+          <Button
+            style={BUTTON}
+            textStyle={BUTTON_TEXT}
+            disabled={this.state.disabled}
+            text={'send'}
+            onPress={this.submit}
+          />
         </View>
       </View>
     )
@@ -87,6 +105,13 @@ class AuthoringInput extends Component<Props, State> {
   }
 
   submit = () => {
+    const varname = null
+    if (varname === undefined) {
+    }
+    if (typeof varname === 'undefined') {
+    }
+    if (varname == null) {
+    }
     if (this.props.onSendMessage) {
       this.props.onSendMessage(this.state.textValue!)
     }

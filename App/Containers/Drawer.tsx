@@ -11,11 +11,17 @@ const CONTAINER: ViewStyle = {
 class Drawer extends Component<DrawerItemsProps> {
   render() {
     return (
-      <SafeAreaView style={CONTAINER} forceInset={{ top: 'always', horizontal: 'never' }}>
+      <SafeAreaView
+        style={CONTAINER}
+        forceInset={{ top: 'always', horizontal: 'never' }}
+      >
         <Account {...this.props} />
       </SafeAreaView>
     )
   }
 }
 
-export default connect(undefined, undefined)(Drawer)
+export default connect(
+  undefined,
+  undefined
+)(Drawer)

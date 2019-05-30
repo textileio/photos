@@ -1,4 +1,12 @@
-import { take, put, call, all, select, fork, takeEvery } from 'redux-saga/effects'
+import {
+  take,
+  put,
+  call,
+  all,
+  select,
+  fork,
+  takeEvery
+} from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import Config from 'react-native-config'
 import Textile, {
@@ -12,15 +20,47 @@ import * as actions from './actions'
 import { contactsActions } from '../../features/contacts'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
-import TextileEventsActions, { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
+import TextileEventsActions, {
+  TextileEventsSelectors
+} from '../../Redux/TextileEventsRedux'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
 import CafeGatewayApi from '../../Services/cafe-gateway-api'
 import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
 import { prepareAndAdd } from '../../Services/textile-helper'
 
-function * onNodeStarted() {
-  while (yield take([getType(TextileEventsActions.nodeStarted), getType(PreferencesActions.onboardingSuccess)])) {
+async function registerCafes() {
+  const cafes = await CafeGatewayApi.discoveredCafes()
+  const token = Config.RN_TEXTILE_CAFE_TOKEN
+  if (cafes.primary) {
+    await Textile.cafes.register(cafes.primary.url, token)
+  }
+  if (cafes.secondary) {
+    await Textile.cafes.register(cafes.secondary.url, token)
+  }
+}
+
+function* registerCafesIfNeeded() {
+  try {
+    const list: ICafeSessionList | undefined = yield call(
+      Textile.cafes.sessions
+    )
+    if (!list || list.items.length < 1) {
+      yield call(registerCafes)
+      yield put(actions.getCafeSessionsRequest())
+    }
+  } catch (error) {
+    yield call(logNewEvent, 'registerCafesIfNeeded', error.message, true)
+  }
+}
+
+function* onNodeStarted() {
+  while (
+    yield take([
+      getType(TextileEventsActions.nodeStarted),
+      getType(PreferencesActions.onboardingSuccess)
+    ])
+  ) {
     yield call(logNewEvent, 'nodeStarted', 'refresh account data')
     try {
       yield fork(registerCafesIfNeeded)
@@ -36,9 +76,11 @@ function * onNodeStarted() {
   }
 }
 
-export function * chooseProfilePhoto() {
+export function* chooseProfilePhoto() {
   try {
-    const result: { image: CameraRoll.IPickerImage, data: string } = yield call(CameraRoll.chooseProfilePhoto)
+    const result: { image: CameraRoll.IPickerImage; data: string } = yield call(
+      CameraRoll.chooseProfilePhoto
+    )
     const image: SharedImage = {
       isAvatar: true,
       origURL: result.image.origURL,
@@ -52,11 +94,13 @@ export function * chooseProfilePhoto() {
   }
 }
 
-function * refreshProfile() {
+function* refreshProfile() {
   while (true) {
     try {
       yield take(getType(actions.refreshProfileRequest))
-      const profileResult: IContact | undefined = yield call(Textile.account.contact)
+      const profileResult: IContact | undefined = yield call(
+        Textile.account.contact
+      )
       if (profileResult) {
         yield put(actions.refreshProfileSuccess(profileResult))
       }
@@ -67,7 +111,7 @@ function * refreshProfile() {
   }
 }
 
-function * refreshPeerId() {
+function* refreshPeerId() {
   while (true) {
     try {
       yield take(getType(actions.refreshPeerIdRequest))
@@ -79,7 +123,7 @@ function * refreshPeerId() {
   }
 }
 
-function * refreshAddress() {
+function* refreshAddress() {
   while (true) {
     try {
       yield take(getType(actions.refreshAddressRequest))
@@ -91,10 +135,12 @@ function * refreshAddress() {
   }
 }
 
-function * setUsername() {
+function* setUsername() {
   while (true) {
     try {
-      const action: ActionType<typeof actions.setUsernameRequest> = yield take(getType(actions.setUsernameRequest))
+      const action: ActionType<typeof actions.setUsernameRequest> = yield take(
+        getType(actions.setUsernameRequest)
+      )
       const started = yield select(TextileEventsSelectors.started)
       if (!started) {
         yield take(getType(TextileEventsActions.nodeStarted))
@@ -109,10 +155,12 @@ function * setUsername() {
   }
 }
 
-function * setAvatar() {
+function* setAvatar() {
   while (true) {
     try {
-      const action: ActionType<typeof actions.setAvatar.request> = yield take(getType(actions.setAvatar.request))
+      const action: ActionType<typeof actions.setAvatar.request> = yield take(
+        getType(actions.setAvatar.request)
+      )
       const started = yield select(TextileEventsSelectors.started)
       if (!started) {
         yield take(getType(TextileEventsActions.nodeStarted))
@@ -127,11 +175,13 @@ function * setAvatar() {
   }
 }
 
-function * getCafeSessions() {
+function* getCafeSessions() {
   while (true) {
     try {
       yield take(getType(actions.getCafeSessionsRequest))
-      const list: ICafeSessionList | undefined = yield call(Textile.cafes.sessions)
+      const list: ICafeSessionList | undefined = yield call(
+        Textile.cafes.sessions
+      )
       if (list) {
         yield put(actions.cafeSessionsSuccess(list.items))
       }
@@ -142,17 +192,21 @@ function * getCafeSessions() {
   }
 }
 
-function * refreshCafeSessions() {
+function* refreshCafeSessions() {
   while (true) {
     try {
       yield take(getType(actions.refreshCafeSessionsRequest))
       let sessions: ICafeSession[] = []
-      const list: ICafeSessionList | undefined = yield call(Textile.cafes.sessions)
+      const list: ICafeSessionList | undefined = yield call(
+        Textile.cafes.sessions
+      )
       if (list) {
-        const refreshEffcts = list.items.map((session) => {
+        const refreshEffcts = list.items.map(session => {
           return call(Textile.cafes.refreshSession, session.id)
         })
-        const results: Array<ICafeSession | undefined> = yield all(refreshEffcts)
+        const results: Array<ICafeSession | undefined> = yield all(
+          refreshEffcts
+        )
         sessions = results.reduce<ICafeSession[]>((acc, val) => {
           if (val) {
             acc.push(val)
@@ -167,30 +221,7 @@ function * refreshCafeSessions() {
   }
 }
 
-function * registerCafesIfNeeded() {
-  try {
-    const list: ICafeSessionList | undefined = yield call(Textile.cafes.sessions)
-    if (!list || list.items.length < 1) {
-      yield call(registerCafes)
-      yield put(actions.getCafeSessionsRequest())
-    }
-  } catch (error) {
-    yield call(logNewEvent, 'registerCafesIfNeeded', error.message, true)
-  }
-}
-
-async function registerCafes() {
-  const cafes = await CafeGatewayApi.discoveredCafes()
-  const token = Config.RN_TEXTILE_CAFE_TOKEN
-  if (cafes.primary) {
-    await Textile.cafes.register(cafes.primary.url, token)
-  }
-  if (cafes.secondary) {
-    await Textile.cafes.register(cafes.secondary.url, token)
-  }
-}
-
-export default function *() {
+export default function*() {
   yield all([
     call(onNodeStarted),
     call(refreshProfile),

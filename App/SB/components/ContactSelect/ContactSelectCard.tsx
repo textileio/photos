@@ -30,7 +30,11 @@ const ContactSelectCard = (props: ContactSelectCardProps) => {
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={onPress}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      style={styles.contactItem}
+      onPress={onPress}
+    >
       <Avatar style={styles.selectedContact} target={item.avatar} />
       <Text style={styles.contactName}>{item.name || 'peer'}</Text>
       <View style={styles.contactSelectRadio}>
@@ -43,15 +47,23 @@ const ContactSelectCard = (props: ContactSelectCardProps) => {
 export const ContactLinkCard = (props: ContactLinkCardProps) => {
   const { text, icon, select } = props
   return (
-    <TouchableOpacity activeOpacity={0.6} style={styles.contactItem} onPress={select}>
-      {icon === 'qr-code' && <ImageSc
-        source={require('../../../Images/v2/qr.png')}
-        width={20}
-        height={20}
-        resizeMode={'cover'}
-        style={styles.linkIcon}
-      />}
-      {icon !== 'qr-code' && <Icon name={icon} size={20} color={'#2E8BFE'} style={styles.linkIcon}/>}
+    <TouchableOpacity
+      activeOpacity={0.6}
+      style={styles.contactItem}
+      onPress={select}
+    >
+      {icon === 'qr-code' && (
+        <ImageSc
+          source={require('../../../Images/v2/qr.png')}
+          width={20}
+          height={20}
+          resizeMode={'cover'}
+          style={styles.linkIcon}
+        />
+      )}
+      {icon !== 'qr-code' && (
+        <Icon name={icon} size={20} color={'#2E8BFE'} style={styles.linkIcon} />
+      )}
       <Text style={styles.linkText}>{text}</Text>
     </TouchableOpacity>
   )

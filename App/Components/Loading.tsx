@@ -8,10 +8,19 @@ interface Props extends ActivityIndicatorProps {
 }
 
 const loading = (props: Props) => {
-  const backgroundColor = props.backgroundColor ? props.backgroundColor : color.screen_primary
+  const backgroundColor = props.backgroundColor
+    ? props.backgroundColor
+    : color.screen_primary
   const indicatorProps: ActivityIndicatorProps = { size: 'large', ...props }
   return (
-    <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center', backgroundColor }}>
+    <View
+      style={{
+        flex: 1,
+        alignContent: 'center',
+        justifyContent: 'center',
+        backgroundColor
+      }}
+    >
       <ActivityIndicator {...indicatorProps} />
     </View>
   )

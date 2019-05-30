@@ -4,19 +4,40 @@ import { ApplicationStyles, Colors } from '../../Themes'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   container: {
-    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   key: {
-    marginBottom: 14, alignSelf: 'center', fontSize: 8, fontFamily: 'Biotif-Regular'
+    marginBottom: 14,
+    alignSelf: 'center',
+    fontSize: 8,
+    fontFamily: 'Biotif-Regular'
   },
   status: {
-    padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 28, textAlign: 'justify'
+    padding: 30,
+    marginBottom: 20,
+    alignSelf: 'center',
+    fontFamily: 'Biotif-Regular',
+    fontSize: 28,
+    textAlign: 'justify'
   },
   message: {
-    padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 12, textAlign: 'justify'
+    padding: 30,
+    marginBottom: 20,
+    alignSelf: 'center',
+    fontFamily: 'Biotif-Regular',
+    fontSize: 12,
+    textAlign: 'justify'
   },
   error: {
-    padding: 30, marginBottom: 20, alignSelf: 'center', fontFamily: 'Biotif-Regular', fontSize: 12, textAlign: 'left'
+    padding: 30,
+    marginBottom: 20,
+    alignSelf: 'center',
+    fontFamily: 'Biotif-Regular',
+    fontSize: 12,
+    textAlign: 'left'
   },
   button: {
     fontFamily: 'Biotif-Regular',
@@ -26,6 +47,7 @@ export default StyleSheet.create({
     textAlign: 'justify'
   },
   buttonMargin: {
-    backgroundColor: 'transparent', height: 22
+    backgroundColor: 'transparent',
+    height: 22
   }
 })

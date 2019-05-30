@@ -1,3 +1,5 @@
+/* eslint camelcase:0 */
+
 import { Store } from 'redux'
 import Textile, { EventSubscription } from '@textile/react-native-sdk'
 
@@ -24,57 +26,79 @@ export default class TextileNodeEventHandler {
 
   setup() {
     this.subscriptions.push(
-      Textile.events.addThreadUpdateReceivedListener((update) => {
+      Textile.events.addThreadUpdateReceivedListener(update => {
         const { type_url } = update.payload
-        if (type_url === '/Text' ||
+        if (
+          type_url === '/Text' ||
           type_url === '/Comment' ||
           type_url === '/Like' ||
           type_url === '/Files' ||
           type_url === '/Ignore' ||
           type_url === '/Join' ||
-          type_url === '/Leave') {
-          this.store.dispatch(groupActions.feed.refreshFeed.request({ id: update.thread }))
+          type_url === '/Leave'
+        ) {
+          this.store.dispatch(
+            groupActions.feed.refreshFeed.request({ id: update.thread })
+          )
           // FIXME: This is a hack. We need to examine the thread id and dispatch one or the other.
           // Or this needs to send the whole Thread or at least the addition of key
           this.store.dispatch(photosActions.refreshPhotos.request(undefined))
         }
 
         // TODO: remove this if needed
-        if (type_url === '/Comment' ||
+        if (
+          type_url === '/Comment' ||
           type_url === '/Like' ||
           type_url === '/Files' ||
           type_url === '/Ignore' ||
-          type_url === '/Join') {
-          this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
+          type_url === '/Join'
+        ) {
+          this.store.dispatch(
+            PhotoViewingActions.refreshThreadRequest(update.thread)
+          )
         }
 
-        if (type_url === '/Join' ||
-            type_url === '/Leave') {
+        if (type_url === '/Join' || type_url === '/Leave') {
           // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
           // Enhancement: compare the joiner id with known ids and skip the refresh if known.
           this.store.dispatch(contactsActions.getContactsRequest())
           // Temporary: to ensure that our UI udpates after a self-join or a self-leave
-          this.store.dispatch(PhotoViewingActions.refreshThreadRequest(update.thread))
+          this.store.dispatch(
+            PhotoViewingActions.refreshThreadRequest(update.thread)
+          )
         }
 
         // create a local log line for the threadUpdate event
         const message = `BlockType ${type_url} on ${update.thread}`
-        this.store.dispatch(DeviceLogsActions.logNewEvent((new Date()).getTime(), 'onThreadUpdate', message, false))
+        this.store.dispatch(
+          DeviceLogsActions.logNewEvent(
+            new Date().getTime(),
+            'onThreadUpdate',
+            message,
+            false
+          )
+        )
       })
     )
     this.subscriptions.push(
-      Textile.events.addThreadAddedListener((threadId) => {
-        this.store.dispatch(PhotoViewingActions.threadAddedNotification(threadId))
+      Textile.events.addThreadAddedListener(threadId => {
+        this.store.dispatch(
+          PhotoViewingActions.threadAddedNotification(threadId)
+        )
       })
     )
     this.subscriptions.push(
-      Textile.events.addThreadRemovedListener((threadId) => {
+      Textile.events.addThreadRemovedListener(threadId => {
         this.store.dispatch(PhotoViewingActions.threadRemoved(threadId))
       })
     )
     this.subscriptions.push(
-      Textile.events.addNotificationReceivedListener((notification) => {
-        this.store.dispatch(NotificationActions.newNotificationRequest(toTypedNotification(notification)))
+      Textile.events.addNotificationReceivedListener(notification => {
+        this.store.dispatch(
+          NotificationActions.newNotificationRequest(
+            toTypedNotification(notification)
+          )
+        )
       })
     )
     this.subscriptions.push(
@@ -93,18 +117,20 @@ export default class TextileNodeEventHandler {
       })
     )
     this.subscriptions.push(
-      Textile.events.addNodeFailedToStartListener((error) => {
+      Textile.events.addNodeFailedToStartListener(error => {
         this.store.dispatch(TextileEventsActions.nodeFailedToStart(error))
       })
     )
     this.subscriptions.push(
-      Textile.events.addNodeFailedToStopListener((error) => {
+      Textile.events.addNodeFailedToStopListener(error => {
         this.store.dispatch(TextileEventsActions.nodeFailedToStop(error))
       })
     )
     this.subscriptions.push(
-      Textile.events.addWillStopNodeInBackgroundAfterDelayListener((delay) => {
-        this.store.dispatch(TextileEventsActions.stopNodeAfterDelayStarting(delay))
+      Textile.events.addWillStopNodeInBackgroundAfterDelayListener(delay => {
+        this.store.dispatch(
+          TextileEventsActions.stopNodeAfterDelayStarting(delay)
+        )
       })
     )
     this.subscriptions.push(

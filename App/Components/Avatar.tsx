@@ -1,6 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { ImageProps, ImageStyle, LayoutChangeEvent, View, ImageBackground } from 'react-native'
+import {
+  ImageProps,
+  ImageStyle,
+  LayoutChangeEvent,
+  View,
+  ImageBackground
+} from 'react-native'
 import Icon from '@textile/react-native-icon'
 import { RootState } from '../Redux/Types'
 import Config from 'react-native-config'
@@ -32,7 +38,6 @@ interface State {
 }
 
 class Avatar extends React.Component<Props, State> {
-
   state: State = {
     borderRadius: 0,
     defaultSize: 50,
@@ -40,7 +45,8 @@ class Avatar extends React.Component<Props, State> {
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
-    return nextProps.target !== this.props.target ||
+    return (
+      nextProps.target !== this.props.target ||
       nextState.ipfsError !== this.state.ipfsError ||
       // node status hasn't changed
       (nextProps.online && !this.props.online) ||
@@ -48,7 +54,10 @@ class Avatar extends React.Component<Props, State> {
       // display dimensions haven't changed
       nextState.borderRadius !== this.state.borderRadius ||
       (nextProps.style && !this.props.style) ||
-      (nextProps.style !== undefined && this.props.style !== undefined && nextProps.style.width !== this.props.style.width)
+      (nextProps.style !== undefined &&
+        this.props.style !== undefined &&
+        nextProps.style.width !== this.props.style.width)
+    )
   }
 
   onImageLayout = (event: LayoutChangeEvent) => {
@@ -71,7 +80,11 @@ class Avatar extends React.Component<Props, State> {
 
   shouldShowIPFS = (resolution: string) => {
     // Node should be online, no IPFS error already, and HTTP shouldn't have allready succeeded
-    return this.props.online && !this.state.ipfsError && (!this.state.httpSuccess || resolution !== 'small')
+    return (
+      this.props.online &&
+      !this.state.ipfsError &&
+      (!this.state.httpSuccess || resolution !== 'small')
+    )
   }
 
   render() {
@@ -80,7 +93,12 @@ class Avatar extends React.Component<Props, State> {
     const height = style && style.height ? style.height : width
 
     const { borderRadius: radius } = this.state
-    const borderRadius = style && style.borderRadius ? style.borderRadius : typeof width === 'number' ? width / 2 : radius
+    const borderRadius =
+      style && style.borderRadius
+        ? style.borderRadius
+        : typeof width === 'number'
+        ? width / 2
+        : radius
 
     // If requested or if no target is known, show the ( ? ) icon
     if (icon || !target) {
@@ -97,7 +115,8 @@ class Avatar extends React.Component<Props, State> {
             alignContent: 'center',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: 0, margin: 0
+            padding: 0,
+            margin: 0
           }}
         >
           <Icon
@@ -112,19 +131,33 @@ class Avatar extends React.Component<Props, State> {
     }
 
     // If 'local' is requested, it is a local user avatar, so request can be made once 'start'
-    const widthNumber = typeof width === 'number' ? width as number : this.state.defaultSize
+    const widthNumber =
+      typeof width === 'number' ? (width as number) : this.state.defaultSize
     if (local && started) {
       return (
-        <View style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}>
+        <View
+          style={{
+            ...(this.props.style || {}),
+            width,
+            height,
+            borderRadius,
+            overflow: 'hidden'
+          }}
+        >
           <ImageBackground
             style={{
               minHeight: height,
               minWidth: width,
               alignSelf: 'center',
-              backgroundColor: this.props.style && this.props.style.backgroundColor ? this.props.style.backgroundColor : 'transparent'
+              backgroundColor:
+                this.props.style && this.props.style.backgroundColor
+                  ? this.props.style.backgroundColor
+                  : 'transparent'
             }}
             source={{
-              uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/content`,
+              uri: `${
+                Config.RN_TEXTILE_CAFE_GATEWAY_URL
+              }/ipfs/${target}/0/small/content`,
               cache: 'force-cache'
             }}
             resizeMode={'cover'}
@@ -149,27 +182,39 @@ class Avatar extends React.Component<Props, State> {
     }
 
     // Progressive HTTP to IPFS avatar
-    const resolution = widthNumber <= 50 || this.state.ipfsError ? 'small' : 'large'
+    const resolution =
+      widthNumber <= 50 || this.state.ipfsError ? 'small' : 'large'
     const shouldShowIPFS = this.shouldShowIPFS(resolution)
     return (
       <View
-        style={{ ...(this.props.style || {}), width, height, borderRadius, overflow: 'hidden' }}
+        style={{
+          ...(this.props.style || {}),
+          width,
+          height,
+          borderRadius,
+          overflow: 'hidden'
+        }}
       >
         <ImageBackground
           style={{
             minHeight: height,
             minWidth: width,
             alignSelf: 'center',
-            backgroundColor: this.props.style && this.props.style.backgroundColor ? this.props.style.backgroundColor : 'transparent'
+            backgroundColor:
+              this.props.style && this.props.style.backgroundColor
+                ? this.props.style.backgroundColor
+                : 'transparent'
           }}
           source={{
-            uri: `${Config.RN_TEXTILE_CAFE_GATEWAY_URL}/ipfs/${target}/0/small/content`,
+            uri: `${
+              Config.RN_TEXTILE_CAFE_GATEWAY_URL
+            }/ipfs/${target}/0/small/content`,
             cache: 'force-cache'
           }}
           resizeMode={'cover'}
           onLoad={this.onHTTPLoad}
         >
-          {shouldShowIPFS &&
+          {shouldShowIPFS && (
             <TextileImage
               style={{
                 minHeight: height,
@@ -185,7 +230,7 @@ class Avatar extends React.Component<Props, State> {
               onLayout={this.onImageLayout}
               onError={this.onIPFSError}
             />
-          }
+          )}
         </ImageBackground>
       </View>
     )
