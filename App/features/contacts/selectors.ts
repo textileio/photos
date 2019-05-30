@@ -47,11 +47,11 @@ export const orderedContacts = (state: ContactsState) => {
 export const searchResults = (state: ContactsState) => {
   const sections: SearchResultsSection[] = []
 
-  let textileData: SearchResult[] | undefined = []
+  let textileData: SearchResult[] | undefined
 
   // If the results are still loading, indicate that
   if (state.textileSearchResults.processing) {
-    textileData = [{ key: 'textile_loading', type: 'loading' }, ...textileData || []]
+    textileData = [{ key: 'textile_loading', type: 'loading' }]
   } else if (state.textileSearchResults.error) {
     // By definition, if there is an error the results stop loading
     // 1. Anytime there is an error, we want it to be the first result
