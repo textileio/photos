@@ -247,7 +247,8 @@ class Group extends React.PureComponent<Props, State> {
         const { user, date } = item.data
         const word = item.type === 'join' ? 'joined' : 'left'
         if (item.type === 'join') {
-          // Render a Join item if they
+          // Render a Join item only if we haven't already rendered one
+          // So that the same user joining with multiple devices doesn't clog chat
           if (hasAlreadyJoined(user.address)) {
             // Don't render anything
             return null
