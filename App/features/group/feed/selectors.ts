@@ -17,7 +17,26 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
   if (!feed) {
     return []
   }
+  const alreadyJoined: string[] = []
+  const hasAlreadyJoined = (address: string) => {
+    return alreadyJoined.indexOf(address) !== -1
+  }
+
+  // Filter out duplicate join requests
   const items = feed.items
+    .filter((feedItem) => {
+      if (feedItem.payload && typeof feedItem.payload.value !== string) {
+        if (feedItem.payload.type_url == '/Join') {
+          const { user } = Join.decode(feedItem.payload.value)
+          if (hasAlreadyJoined(user.address)) {
+            return false
+          } else {
+            alreadyJoined.push(user.address)
+            return true
+          }
+        })
+      }
+    })
     .map((feedItem) => {
       if (!feedItem.payload || typeof feedItem.payload.value === 'string') {
         return
