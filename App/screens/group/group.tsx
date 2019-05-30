@@ -11,7 +11,7 @@ import {
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
-import Textile, { IUser } from '@textile/react-native-sdk'
+import Textile, { IUser, Thread } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import {
@@ -52,6 +52,8 @@ interface StateProps {
   groupName: string
   selfAddress: string
   renaming: boolean
+  canInvite: boolean
+  liking: ReadonlyArray<string>
 }
 
 interface DispatchProps {
@@ -132,6 +134,12 @@ class Group extends React.PureComponent<Props, State> {
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
+    const options = (this.props.canInvite ? ['Invite Others'] : []).concat([
+      'Rename Group',
+      'Leave Group',
+      'Cancel'
+    ])
+    const cancelButtonIndex = this.props.canInvite ? 3 : 2
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -161,8 +169,8 @@ class Group extends React.PureComponent<Props, State> {
               this.actionSheet = o
             }}
             title={this.props.groupName + ' options'}
-            options={['Invite Others', 'Rename Group', 'Leave Group', 'Cancel']}
-            cancelButtonIndex={3}
+            options={options}
+            cancelButtonIndex={cancelButtonIndex}
             onPress={this.handleActionSheetResponse}
           />
           <RenameGroupModal
@@ -207,7 +215,7 @@ class Group extends React.PureComponent<Props, State> {
         const hasLiked =
           likes.findIndex(
             likeInfo => likeInfo.user.address === this.props.selfAddress
-          ) > -1
+          ) > -1 || this.liking(block)
         const commentsData: ReadonlyArray<CommentData> = comments.map(
           comment => {
             return {
@@ -330,11 +338,12 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   handleActionSheetResponse = (index: number) => {
-    if (index === 0) {
+    const startingIndex = this.props.canInvite ? 1 : 0
+    if (this.props.canInvite && index === 0) {
       this.showInviteModal()
-    } else if (index === 1) {
+    } else if (index === startingIndex) {
       this.showRenameGroupModal()
-    } else if (index === 2) {
+    } else if (index === startingIndex + 1) {
       this.props.leaveThread()
     }
   }
@@ -366,6 +375,10 @@ class Group extends React.PureComponent<Props, State> {
       groupName: this.props.groupName
     })
   }
+
+  liking = (blockId: string) => {
+    return this.props.liking.indexOf(blockId) !== -1
+  }
 }
 
 const mapStateToProps = (
@@ -375,14 +388,19 @@ const mapStateToProps = (
   const threadId = ownProps.navigation.getParam('threadId')
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
+  const sharing = threadData ? threadData.sharing : Thread.Sharing.NOT_SHARED
+  const canInvite = sharing !== Thread.Sharing.NOT_SHARED
   const groupName = threadData ? threadData.name : 'Unknown'
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
+  const liking = Object.keys(state.ui.likingPhotos)
   return {
     items,
     groupName,
     selfAddress,
-    renaming
+    renaming,
+    canInvite,
+    liking
   }
 }
 
@@ -406,7 +424,8 @@ const mapDispatchToProps = (
     showWalletPicker: () => {
       dispatch(UIActions.showWalletPicker(threadId))
     },
-    addPhotoLike: (block: string) => dispatch(UIActions.addLikeRequest(block)),
+    addPhotoLike: (block: string) =>
+      dispatch(UIActions.addLike.request({ blockId: block })),
     navigateToComments: (id: string) =>
       dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
     leaveThread: () =>

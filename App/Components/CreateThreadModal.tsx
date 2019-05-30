@@ -9,6 +9,8 @@ import {
 } from 'react-native'
 import Modal from 'react-native-modal'
 
+import { Thread } from '@textile/react-native-sdk'
+
 import { RootAction } from '../Redux/Types'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
@@ -112,6 +114,11 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+  const threadConfig = {
+    type: Thread.Type.OPEN,
+    sharing: Thread.Sharing.SHARED,
+    whitelist: []
+  }
   return {
     completeScreen: () => {
       dispatch(
@@ -120,7 +127,10 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     },
     submit: (name, navigate, selectToShare) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })
+        PhotoViewingActions.addThreadRequest(
+          { ...threadConfig, name },
+          { navigate, selectToShare }
+        )
       )
     }
   }

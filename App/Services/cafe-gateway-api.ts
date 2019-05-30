@@ -20,7 +20,7 @@ const api = create({
   timeout: 2000
 })
 
-const discoveredCafes = async () => {
+async function discoveredCafes() {
   const response = await api.get<DiscoveredCafes>('/cafes')
   if (response.ok) {
     if (response.data) {

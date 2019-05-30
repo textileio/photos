@@ -1,4 +1,9 @@
-import { createAction, ActionType, getType } from 'typesafe-actions'
+import {
+  createAction,
+  createAsyncAction,
+  ActionType,
+  getType
+} from 'typesafe-actions'
 import { SharedImage } from '../features/group/add-photo/models'
 import { RootState } from './Types'
 import { IFiles } from '@textile/react-native-sdk'
@@ -69,6 +74,15 @@ const actions = {
   addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
     return (blockId: string) => resolve({ blockId })
   }),
+  addLike: createAsyncAction(
+    'ADD_LIKE_REQUEST',
+    'ADD_LIKE_SUCCESS',
+    'ADD_LIKE_FAILURE'
+  )<
+    { blockId: string },
+    { blockId: string },
+    { blockId: string; error: any }
+  >(),
   navigateToThreadRequest: createAction(
     'NAVIGATE_TO_THREAD_REQUEST',
     resolve => {
@@ -97,10 +111,17 @@ export interface UIState {
     readonly threadId?: string
     readonly comment?: string
   }
+  readonly likingPhotos: {
+    [blockId: string]: {
+      error?: string
+    }
+  }
   readonly imagePickerError?: string // used to notify the user of any error during photo picking
 }
 
-export const initialState: UIState = {}
+export const initialState: UIState = {
+  likingPhotos: {}
+}
 
 export function reducer(
   state: UIState = initialState,
@@ -128,6 +149,29 @@ export function reducer(
     }
     case getType(actions.dismissImagePickerError):
       return { ...state, imagePickerError: undefined }
+    case getType(actions.addLike.request): {
+      const { likingPhotos } = state
+      const { blockId } = action.payload
+      return {
+        ...state,
+        likingPhotos: {
+          ...likingPhotos,
+          [blockId]: {}
+        }
+      }
+    }
+    case getType(actions.addLike.success):
+    case getType(actions.addLike.failure): {
+      const { likingPhotos } = state
+      const {
+        [action.payload.blockId]: liked,
+        ...newLikingPhotos
+      } = likingPhotos
+      return {
+        ...state,
+        likingPhotos: newLikingPhotos
+      }
+    }
     default:
       return state
   }
@@ -140,7 +184,8 @@ export const UISelectors = {
       return state.ui.sharingPhoto.threadId
     }
     return
-  }
+  },
+  likingPhotos: (state: RootState) => state.ui.likingPhotos
 }
 
 export default actions

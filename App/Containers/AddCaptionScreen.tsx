@@ -12,7 +12,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../Components/TextileImage'
 
 import { SharedImage } from '../features/group/add-photo/models'
-import { IFiles } from '@textile/react-native-sdk'
+import { IFiles, Thread } from '@textile/react-native-sdk'
 import { RootAction, RootState } from '../Redux/Types'
 import { Dispatch } from 'redux'
 
@@ -266,6 +266,11 @@ const mapStateToProps = (state: RootState): StateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+  const threadConfig = {
+    type: Thread.Type.OPEN,
+    sharing: Thread.Sharing.SHARED,
+    whitelist: []
+  }
   return {
     updateComment: (text: string) => {
       dispatch(UIActions.updateSharingPhotoComment(text))
@@ -282,9 +287,10 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     },
     shareNewThread: (imageId: string, threadName: string, comment?: string) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(threadName, {
-          sharePhoto: { imageId, comment }
-        })
+        PhotoViewingActions.addThreadRequest(
+          { ...threadConfig, name: threadName },
+          { sharePhoto: { imageId, comment } }
+        )
       )
     }
   }

@@ -20,7 +20,7 @@ export default class BackgroundFetchEventHandler {
         this.store.dispatch(TriggersActions.backgroundFetch())
       },
       error => {
-        // TODO - handle error
+        // @todo - handle error
         console.info('backgroundFetch error')
       }
     )

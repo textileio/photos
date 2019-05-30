@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux/index'
 import { View, Text } from 'react-native'
 import Modal from 'react-native-modal'
+import { Thread } from '@textile/react-native-sdk'
 
 import ModalButtons from './ModalButtons'
 import { CreateThreadComponent } from './CreateThreadModal'
@@ -195,6 +196,11 @@ const mapStateToProps = (state: RootState): StateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+  const threadConfig = {
+    type: Thread.Type.OPEN,
+    sharing: Thread.Sharing.SHARED,
+    whitelist: []
+  }
   return {
     completeScreen: () => {
       dispatch(
@@ -203,7 +209,10 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     },
     submit: (name, navigate, selectToShare) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(name, { navigate, selectToShare })
+        PhotoViewingActions.addThreadRequest(
+          { ...threadConfig, name },
+          { navigate, selectToShare }
+        )
       )
     }
   }

@@ -1,4 +1,4 @@
-import { createAsyncAction } from 'typesafe-actions'
+import { createAsyncAction, createAction } from 'typesafe-actions'
 
 export const renameGroup = createAsyncAction(
   'group/rename-group/RENAME_GROUP_REQUEST',
@@ -9,3 +9,10 @@ export const renameGroup = createAsyncAction(
   { threadId: string },
   { threadId: string; error: any }
 >()
+
+export const cancelRenameGroup = createAction(
+  'group/rename-group/RENAME_GROUP_CANCEL',
+  resolve => {
+    return (threadId: string) => resolve({ threadId })
+  }
+)

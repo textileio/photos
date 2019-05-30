@@ -1,22 +1,47 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
+import {
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  ViewStyle
+} from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
-import { IContact } from '@textile/react-native-sdk'
+import { IContact, Thread } from '@textile/react-native-sdk'
 
+// Components
 import Avatar from '../Components/Avatar'
 import Button from '../Components/LargeButton'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
-import { getThreadThumbs } from '../Redux/PhotoViewingSelectors'
+import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
+import { color, spacing } from '../styles'
+
+// Redux
 import { RootState, RootAction } from '../Redux/Types'
-import { ThreadThumbs } from '../Redux/PhotoViewingRedux'
-import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import PhotoViewingActions, {
+  ThreadThumbs,
+  ThreadData
+} from '../Redux/PhotoViewingRedux'
+import {
+  getThreadThumbs,
+  getDirectMessageThread
+} from '../Redux/PhotoViewingSelectors'
 import { contactsActions } from '../features/contacts'
-import { color } from '../styles'
+
+const buttons: ViewStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center'
+}
+
+const addOrRemoveButton: ViewStyle = {
+  marginRight: spacing._012
+}
 
 interface NavProps {
   contact: IContact
@@ -28,11 +53,13 @@ interface StateProps {
   isContact: boolean
   removing: boolean
   adding: boolean
+  directMessageThread: ThreadData | undefined
 }
 
 interface DispatchProps {
   removeContact: () => void
   addContact: () => void
+  createDirectMessageThread: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -79,11 +106,23 @@ class ContactModal extends React.Component<Props> {
           >
             {this.props.displayName}
           </Text>
-          <Button
-            text={buttonText}
-            disabled={buttonDisabled}
-            onPress={this.props.isContact ? this.onRemove : this.onAdd}
-          />
+          <View style={buttons}>
+            <Button
+              text={buttonText}
+              style={{
+                ...addOrRemoveButton,
+                backgroundColor: this.props.isContact
+                  ? color.severe_3
+                  : color.action_3
+              }}
+              disabled={buttonDisabled}
+              onPress={this.props.isContact ? this.onRemove : this.onAdd}
+            />
+            <Button
+              text={'Send Message'}
+              onPress={this.createOrNavigateToDirectMessageThread}
+            />
+          </View>
         </View>
         <ScrollView style={styles.threadsList}>
           <Text style={styles.threadsTitle}>
@@ -115,6 +154,19 @@ class ContactModal extends React.Component<Props> {
   onAdd = () => {
     this.props.addContact()
   }
+
+  createOrNavigateToDirectMessageThread = () => {
+    if (this.props.directMessageThread) {
+      // Navigate to direct message thread
+      const { id, name } = this.props.directMessageThread
+      this.props.navigation.navigate('ViewThread', {
+        threadId: id,
+        groupName: name
+      })
+    } else {
+      this.props.createDirectMessageThread()
+    }
+  }
 }
 
 const mapStateToProps = (
@@ -132,12 +184,14 @@ const mapStateToProps = (
   // Check if this contact is currently being added
   const adding =
     Object.keys(state.contacts.addingContacts).indexOf(address) > -1
+  const directMessageThread = getDirectMessageThread(state, address)
   return {
     displayName: username ? username : address.substring(0, 12),
     threadThumbs: getThreadThumbs(state, address, 'name'),
     isContact,
     removing,
-    adding
+    adding,
+    directMessageThread
   }
 }
 
@@ -146,11 +200,21 @@ const mapDispatchToProps = (
   ownProps: NavigationScreenProps<NavProps>
 ): DispatchProps => {
   const contact = ownProps.navigation.getParam('contact')
-  const address = contact.address
+  const { address, name } = contact
+  const threadConfig = {
+    name,
+    whitelist: [address],
+    type: Thread.Type.OPEN,
+    sharing: Thread.Sharing.NOT_SHARED
+  }
   return {
     removeContact: () =>
       dispatch(contactsActions.removeContact.request(address)),
-    addContact: () => dispatch(contactsActions.addContactRequest(contact))
+    addContact: () => dispatch(contactsActions.addContactRequest(contact)),
+    createDirectMessageThread: () =>
+      dispatch(
+        PhotoViewingActions.addThreadRequest(threadConfig, { navigate: true })
+      )
   }
 }
 

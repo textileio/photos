@@ -1,11 +1,22 @@
 import actions, { reducer } from '../PhotoViewingRedux'
-import { IFiles } from '@textile/react-native-sdk'
+import { IFiles, Thread } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 
 const threadId = 'threadId'
 const threadKey = 'threadKey'
 const threadName = 'threadName'
+const threadType = 2
+const threadSharing = 0
+const threadWhitelist: ReadonlyArray<string> = []
+const thread = {
+  id: threadId,
+  key: threadKey,
+  name: threadName,
+  type: threadType,
+  sharing: threadSharing,
+  whitelist: threadWhitelist
+}
 const photos: IFiles[] = [
   {
     user: {
@@ -32,10 +43,7 @@ describe('photo viewing stories', () => {
   })
   describe('refresh thread', () => {
     it('should refresh', () => {
-      const state0 = reducer(
-        initialState,
-        actions.insertThread(threadId, threadKey, threadName)
-      )
+      const state0 = reducer(initialState, actions.insertThread(thread))
       expect(state0.threads[threadId]).toBeDefined()
       const state1 = reducer(state0, actions.refreshThreadRequest(threadId))
       expect(state1.threads[threadId]).toBeDefined()
