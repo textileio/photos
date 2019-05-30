@@ -23,10 +23,10 @@ const button = (props: Props) => {
         paddingLeft: 3
       }}
       style={{
-        ...style,
         paddingHorizontal: spacing._024,
         paddingVertical: spacing._012,
-        backgroundColor: color.action_3
+        backgroundColor: color.action_3,
+        ...style
       }}
       processing={processing}
       disabled={props.disabled}
