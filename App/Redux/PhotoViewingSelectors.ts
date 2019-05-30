@@ -1,6 +1,6 @@
 import { RootState } from './Types'
 import { ThreadData, ThreadThumbs } from './PhotoViewingRedux'
-import Textile, { IContact, IFiles } from '@textile/react-native-sdk'
+import Textile, { IContact, IFiles, Thread } from '@textile/react-native-sdk'
 import { accountSelectors } from '../features/account'
 import Config from 'react-native-config'
 import { contactsSelectors } from '../features/contacts'
@@ -159,6 +159,19 @@ export function getThreadThumbs(state: RootState, byAddres: string, sortBy?: 'na
         name: thread.name
       }
     })
+}
+
+function isDirectMessageThread(address: string): (thread: ThreadData) => boolean {
+  return (thread) => {
+    return thread.whitelist.indexOf(address) !== -1 &&
+           thread.sharing === Thread.Sharing.NOT_SHARED &&
+           thread.type === Thread.Type.OPEN
+  }
+}
+
+// Returns the thread object or undefined if it isn't found
+export function getDirectMessageThread(state: RootState, address: string) {
+  return getThreads(state).find(isDirectMessageThread(address))
 }
 
 export function shouldNavigateToNewThread(state: RootState) {
