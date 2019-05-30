@@ -25,8 +25,8 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
   // Filter out duplicate join requests
   const items = feed.items
     .filter((feedItem) => {
-      if (feedItem.payload && typeof feedItem.payload.value !== string) {
-        if (feedItem.payload.type_url == '/Join') {
+      if (feedItem.payload && typeof feedItem.payload.value !== 'string') {
+        if (feedItem.payload.type_url === '/Join') {
           const { user } = Join.decode(feedItem.payload.value)
           if (hasAlreadyJoined(user.address)) {
             return false
@@ -34,7 +34,7 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
             alreadyJoined.push(user.address)
             return true
           }
-        })
+        }
       }
     })
     .map((feedItem) => {
