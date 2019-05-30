@@ -5,9 +5,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Picker
 } from 'react-native'
 import Modal from 'react-native-modal'
+import { Thread } from '@textile/react-native-sdk'
 
 import { RootAction } from '../Redux/Types'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
@@ -37,11 +39,25 @@ interface ScreenProps {
 class Component extends React.Component<DispatchProps & ScreenProps> {
   state = {
     value: '',
-    submitted: false
+    submitted: false,
+    type: Thread.Type.OPEN,
+    sharing: Thread.Sharing.SHARED
   }
 
   handleNewText = (text: string) => {
     this.setState({ value: text })
+  }
+
+  handleNewSharing = (val, index) => {
+    this.setState({
+      sharing: val
+    })
+  }
+
+  handleNewType = (val, index) => {
+    this.setState({
+      type: val
+    })
   }
 
   create() {
