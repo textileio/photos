@@ -3,6 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {
   View,
+  Text,
   FlatList,
   ListRenderItemInfo,
   Keyboard,
@@ -20,7 +21,11 @@ import { Contact } from 'react-native-contacts'
 import { RootState, RootAction } from '../Redux/Types'
 
 import { contactsActions, contactsSelectors } from '../features/contacts'
-import { SearchResultsSection, SearchResult } from '../features/contacts/models'
+import {
+  SearchResultsSection,
+  SearchResult,
+  ContactSearchResult
+} from '../features/contacts/models'
 import { orderedContacts } from '../features/contacts/selectors'
 
 import Button from '../Components/SmallButton'
@@ -30,6 +35,7 @@ import ListItem from '../Components/ListItem'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import { color, textStyle, spacing } from '../styles'
+import { contact } from '@textile/react-native-sdk/dist/account'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -95,43 +101,71 @@ class Contacts extends React.Component<Props, State> {
     })
   }
 
-  render() {
-    const allContacts: ReadonlyArray<IContact> = this.props.contacts
-    let data = allContacts
-    if (
-      this.state.searchString !== undefined &&
-      this.state.searchString.length > 0
-    ) {
-      data = data.filter(contact => {
-        const searchKey = (contact.name || contact.address).toLowerCase()
-        const index = searchKey.indexOf(this.state.searchString!.toLowerCase())
-        return index > -1
+  contactsSearchResultSection = () => {
+    const contacts: SearchResult[] = this.props.contacts
+      .filter(contact => {
+        if (
+          this.state.searchString !== undefined &&
+          this.state.searchString.length > 0
+        ) {
+          const searchKey = (contact.name || contact.address).toLowerCase()
+          const index = searchKey.indexOf(
+            this.state.searchString!.toLowerCase()
+          )
+          return index > -1
+        } else {
+          return true
+        }
       })
+      .map(contact => {
+        const contactResult: ContactSearchResult = {
+          key: contact.address,
+          type: 'contact',
+          data: contact
+        }
+        return contactResult
+      })
+    return {
+      key: 'contacts',
+      title: 'Your Contacts',
+      data:
+        contacts.length > 0
+          ? contacts
+          : [
+              {
+                key: 'textile_empty',
+                type: 'empty'
+              }
+            ]
     }
+  }
+
+  render() {
     return (
       <View style={CONTAINER}>
-        <FlatList
-          data={data}
-          keyExtractor={this.keyExtractor}
+        <SearchBar
+          containerStyle={{ backgroundColor: color.grey_5 }}
+          inputStyle={{
+            ...textStyle.body_m,
+            color: color.grey_2,
+            backgroundColor: color.grey_6
+          }}
+          additionalInputProps={{
+            autoCapitalize: 'none',
+            autoCorrect: false,
+            spellCheck: false
+          }}
+          iconColor={color.grey_4}
+          onTextChanged={this.updateSearchString}
+        />
+        <SectionList
+          sections={[
+            this.contactsSearchResultSection(),
+            ...this.props.searchResults
+          ]}
+          renderSectionHeader={this.renderSectionHeader}
           renderItem={this.renderRow}
           ItemSeparatorComponent={RowSeparator}
-          ListHeaderComponent={
-            <SearchBar
-              containerStyle={{ backgroundColor: color.grey_5 }}
-              inputStyle={{
-                ...textStyle.body_m,
-                color: color.grey_2,
-                backgroundColor: color.grey_6
-              }}
-              additionalInputProps={{
-                autoCapitalize: 'none',
-                autoCorrect: false,
-                spellCheck: false
-              }}
-              iconColor={color.grey_4}
-              onTextChanged={this.updateSearchString}
-            />
-          }
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
         />
@@ -139,43 +173,136 @@ class Contacts extends React.Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: IContact) => item.address
-
-  renderRow = (row: ListRenderItemInfo<IContact>) => {
-    const { item } = row
-    const leftItem = (
-      <Avatar
-        style={{ width: 50, height: 50, backgroundColor: color.grey_5 }}
-        target={item.avatar}
-      />
-    )
-    const rightItems = [
-      <Icon key="more" name="chevron-right" size={24} color={color.grey_4} />
-    ]
+  renderSectionHeader = ({
+    section: { key, title }
+  }: {
+    section: SectionListData<SearchResultsSection>
+  }) => {
     return (
-      <ListItem
-        title={item.name || item.address.substring(0, 10)}
-        leftItem={leftItem}
-        rightItems={rightItems}
-        onPress={this.onPress(item)}
-      />
+      <Text
+        key={key}
+        style={{
+          ...textStyle.header_xs,
+          paddingTop: spacing._008,
+          paddingBottom: spacing._008,
+          paddingLeft: spacing._012,
+          paddingRight: spacing._012,
+          color: color.grey_2,
+          backgroundColor: color.grey_5
+        }}
+      >
+        {title}
+      </Text>
     )
+  }
+
+  renderRow = ({
+    item,
+    index,
+    section
+  }: SectionListRenderItemInfo<SearchResult>) => {
+    switch (item.type) {
+      case 'loading':
+        return <ActivityIndicator size="small" style={{ padding: 11 }} />
+      case 'contact': {
+        const contact = item.data
+        const leftItem = (
+          <Avatar
+            style={{ width: 50, height: 50, backgroundColor: color.grey_5 }}
+            target={contact.avatar}
+          />
+        )
+        const rightItems = [
+          <Icon
+            key="more"
+            name="chevron-right"
+            size={24}
+            color={color.grey_4}
+          />
+        ]
+        return (
+          <ListItem
+            title={contact.name || contact.address.substring(0, 10)}
+            leftItem={leftItem}
+            rightItems={rightItems}
+            onPress={this.onPressTextile(contact)}
+          />
+        )
+      }
+      case 'textile':
+        return (
+          <ListItem
+            leftItem={
+              <Avatar style={{ width: 50 }} target={item.data.contact.avatar} />
+            }
+            title={item.data.contact.name || item.data.contact.address}
+            subtitle={item.data.contact.address.substr(
+              item.data.contact.address.length - 8,
+              8
+            )}
+            rightItems={[
+              <Button
+                key="add"
+                text={item.data.isContact ? 'added' : 'add'}
+                disabled={item.data.isContact || item.data.adding}
+                onPress={this.onAdd(item.data.contact)}
+              />,
+              <Icon
+                key="more"
+                name="chevron-right"
+                size={24}
+                color={color.grey_4}
+              />
+            ]}
+            onPress={this.onPressTextile(item.data.contact)}
+          />
+        )
+      case 'addressBook':
+        return (
+          <ListItem
+            title={`${item.data.givenName} ${item.data.familyName}`.trim()}
+            rightItems={[
+              <Button
+                key="invite"
+                text="invite"
+                onPress={this.onPressAddressBook(item.data)}
+              />
+            ]}
+            onPress={this.onPressAddressBook(item.data)}
+          />
+        )
+      case 'empty':
+        return <ListItem title="No results" />
+      case 'error':
+        return <ListItem title="Error" subtitle={item.data} />
+    }
   }
 
   updateSearchString = (string?: string) => {
     this.setState({
       searchString: string
     })
+    if (string !== undefined && string.length > 0) {
+      this.props.search(string)
+    } else {
+      this.props.clearSearch()
+    }
   }
 
-  onPress = (contactInfo: IContact) => {
+  onPressTextile = (contactInfo: IContact) => {
     return () => {
       this.props.navigation.navigate('Contact', { contact: contactInfo })
     }
   }
 
-  inviteContactRequest = () => {
-    this.props.navigation.navigate('AddContact')
+  onPressAddressBook = (contact: Contact) => {
+    return () => {
+      this.props.inviteContact(contact)
+    }
+  }
+
+  onAdd = (contact: IContact) => {
+    return () => this.props.addContact(contact)
   }
 
   openDrawer = () => {
@@ -198,7 +325,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     clearSearch: () => dispatch(contactsActions.clearSearch()),
     addContact: (contact: IContact) =>
       dispatch(contactsActions.addContactRequest(contact)),
-    inviteContact: (contact: Contacts.Contact) =>
+    inviteContact: (contact: Contact) =>
       dispatch(contactsActions.authorInviteRequest(contact))
   }
 }
