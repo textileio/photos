@@ -136,7 +136,7 @@ export function* presentPublicLinkInterface(
 ) {
   const { path } = action.payload
   try {
-    const link = Config.RN_TEXTILE_CAFE_GATEWAY_URL + '/ipfs/' + path
+    const link = Config.RN_TEXTILE_GATEWAY_URL + '/ipfs/' + path
     yield call(Share.share, { title: '', message: link })
   } catch (error) {
     yield call(logNewEvent, 'refreshMessages', error.message, true)
