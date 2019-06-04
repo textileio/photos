@@ -24,20 +24,26 @@ import TextileEventsActions, {
   TextileEventsSelectors
 } from '../../Redux/TextileEventsRedux'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
-import CafeGatewayApi from '../../Services/cafe-gateway-api'
+import lbApi from '../../Services/textile-lb-api'
 import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
 import { prepareAndAdd } from '../../Services/textile-helper'
 
 async function registerCafes() {
-  const cafes = await CafeGatewayApi.discoveredCafes()
+  let cafeUrl: string | undefined = Config.RN_TEXTILE_CAFE_URL
+  if (!cafeUrl) {
+    const lbUrl: string | undefined = Config.RN_TEXTILE_LB_URL
+    if (!lbUrl) {
+      throw new Error('no cafe or lb url specified')
+    }
+    const cafes = await lbApi(lbUrl).discoveredCafes()
+    if (!cafes.primary && !cafes.secondary) {
+      throw new Error('discovered cafes response does not not include any cafes')
+    }
+    cafeUrl = cafes.primary ? cafes.primary.url : cafes.secondary!.url
+  }
   const token = Config.RN_TEXTILE_CAFE_TOKEN
-  if (cafes.primary) {
-    await Textile.cafes.register(cafes.primary.url, token)
-  }
-  if (cafes.secondary) {
-    await Textile.cafes.register(cafes.secondary.url, token)
-  }
+  await Textile.cafes.register(cafeUrl, token)
 }
 
 function* registerCafesIfNeeded() {

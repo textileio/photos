@@ -156,7 +156,7 @@ class Avatar extends React.Component<Props, State> {
             }}
             source={{
               uri: `${
-                Config.RN_TEXTILE_CAFE_GATEWAY_URL
+                Config.RN_TEXTILE_GATEWAY_URL
               }/ipfs/${target}/0/small/content`,
               cache: 'force-cache'
             }}
@@ -207,7 +207,7 @@ class Avatar extends React.Component<Props, State> {
           }}
           source={{
             uri: `${
-              Config.RN_TEXTILE_CAFE_GATEWAY_URL
+              Config.RN_TEXTILE_GATEWAY_URL
             }/ipfs/${target}/0/small/content`,
             cache: 'force-cache'
           }}
