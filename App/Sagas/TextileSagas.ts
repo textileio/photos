@@ -13,7 +13,9 @@ import { Share, PermissionsAndroid, Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
-import Textile, { IThread } from '@textile/react-native-sdk'
+import Textile from '@textile/react-native-sdk'
+
+import { cameraPermissionsTrigger } from '../Services/CameraRoll'
 import NavigationService from '../Services/NavigationService'
 import * as NotificationsSagas from './NotificationsSagas'
 import UploadingImagesActions, {
@@ -25,7 +27,6 @@ import PreferencesActions, {
 } from '../Redux/PreferencesRedux'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
 import { ActionType } from 'typesafe-actions'
-import * as CameraRoll from '../Services/CameraRoll'
 import Upload from 'react-native-background-upload'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import { logNewEvent } from './DeviceLogs'
@@ -176,22 +177,8 @@ export function* updateServices(
   }
 }
 
-export function* cameraPermissionsTrigger() {
-  // Will trigger a camera permission request
-  if (Platform.OS === 'android') {
-    const permission = yield call(
-      PermissionsAndroid.request,
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      {
-        title: 'Textile Photos Photos Permission',
-        message:
-          'Textile accesses your photo storage to import any new photos you take after you install the app.',
-        buttonPositive: 'Ok'
-      }
-    )
-  } else {
-    CameraRoll.getPhotos(1)
-  }
+export function* triggerCameraRollPermission() {
+  yield call(cameraPermissionsTrigger)
 }
 
 export function* addPhotoLike(

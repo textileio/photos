@@ -1,4 +1,4 @@
-import { CameraRoll, Platform } from 'react-native'
+import { CameraRoll, Platform, PermissionsAndroid } from 'react-native'
 import ImagePicker from 'react-native-image-picker'
 
 export interface IPickerImage {
@@ -144,4 +144,21 @@ export async function launchImageLibrary(): Promise<IPickerImage> {
       resolve(result)
     })
   })
+}
+
+export async function cameraPermissionsTrigger() {
+  // Will trigger a camera permission request
+  if (Platform.OS === 'android') {
+    return await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      {
+        title: 'Textile Photos Photos Permission',
+        message:
+          'Textile accesses your photo storage to import any new photos you take after you install the app.',
+        buttonPositive: 'Ok'
+      }
+    )
+  } else {
+    return await getPhotos(1)
+  }
 }
