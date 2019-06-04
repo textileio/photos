@@ -452,7 +452,7 @@ jobs:
                 path: ./ios/Textile.app.dSYM.zip
 
             - store_artifacts:
-                path: ./ios/TextilePhotos.ipa
+                path: ./ios/Textile.ipa
 
             - store_artifacts:
                 path: ./ios/sourcemap.js
