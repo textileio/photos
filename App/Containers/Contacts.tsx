@@ -1,24 +1,35 @@
 import React from 'react'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {
   View,
   FlatList,
   ListRenderItemInfo,
   Keyboard,
-  ViewStyle
+  ViewStyle,
+  SectionList,
+  SectionListRenderItemInfo,
+  SectionListData,
+  ActivityIndicator
 } from 'react-native'
-import { NavigationScreenProps } from 'react-navigation'
+import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 import { IContact } from '@textile/react-native-sdk'
+import { Contact } from 'react-native-contacts'
+
+import { RootState, RootAction } from '../Redux/Types'
+
+import { contactsActions, contactsSelectors } from '../features/contacts'
+import { SearchResultsSection, SearchResult } from '../features/contacts/models'
 import { orderedContacts } from '../features/contacts/selectors'
 
+import Button from '../Components/SmallButton'
 import SearchBar from '../Components/SearchBar'
 import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
-import { RootState } from '../Redux/Types'
-import { color, textStyle } from '../styles'
+import { color, textStyle, spacing } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -27,14 +38,23 @@ const CONTAINER: ViewStyle = {
 
 interface StateProps {
   contacts: ReadonlyArray<IContact>
+  searchResults: SearchResultsSection[]
 }
 
 interface NavProps {
   openDrawer: () => void
   addContact: () => void
+  clearSearch: () => void
 }
 
-type Props = StateProps & NavigationScreenProps<NavProps>
+interface DispatchProps {
+  search: (searchString: string) => void
+  clearSearch: () => void
+  addContact: (contact: IContact) => void
+  inviteContact: (contact: Contact) => void
+}
+
+type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 interface State {
   searchString?: string
@@ -45,7 +65,6 @@ class Contacts extends React.Component<Props, State> {
     navigation
   }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
-    const addContact = navigation.getParam('addContact')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item
@@ -58,15 +77,9 @@ class Contacts extends React.Component<Props, State> {
         />
       </TextileHeaderButtons>
     )
-    const headerRight = (
-      <TextileHeaderButtons>
-        <Item title="Add Contact" iconName="plus" onPress={addContact} />
-      </TextileHeaderButtons>
-    )
     return {
       headerTitle: 'Contacts',
-      headerLeft,
-      headerRight
+      headerLeft
     }
   }
 
@@ -78,7 +91,7 @@ class Contacts extends React.Component<Props, State> {
   componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
-      addContact: this.inviteContactRequest
+      clearSearch: this.props.clearSearch
     })
   }
 
@@ -173,11 +186,24 @@ class Contacts extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    contacts: orderedContacts(state.contacts)
+    contacts: orderedContacts(state.contacts),
+    searchResults: contactsSelectors.searchResults(state.contacts)
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+  return {
+    search: (searchString: string) =>
+      dispatch(contactsActions.searchRequest(searchString)),
+    clearSearch: () => dispatch(contactsActions.clearSearch()),
+    addContact: (contact: IContact) =>
+      dispatch(contactsActions.addContactRequest(contact)),
+    inviteContact: (contact: Contacts.Contact) =>
+      dispatch(contactsActions.authorInviteRequest(contact))
   }
 }
 
 export default connect(
   mapStateToProps,
-  undefined
+  mapDispatchToProps
 )(Contacts)
