@@ -74,7 +74,7 @@ import {
   navigateToComments,
   navigateToLikes,
   addPhotoLike,
-  cameraPermissionsTrigger,
+  triggerCameraRollPermission,
   presentPublicLinkInterface,
   updateServices
 } from './TextileSagas'
@@ -105,7 +105,7 @@ export default function* root(dispatch: Dispatch) {
     // permissions request events
     takeLatest(
       getType(AuthActions.requestCameraPermissions),
-      cameraPermissionsTrigger
+      triggerCameraRollPermission
     ),
     takeLatest(
       getType(PreferencesActions.toggleServicesRequest),
