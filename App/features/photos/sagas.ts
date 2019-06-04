@@ -22,6 +22,7 @@ import Textile, {
 import Config from 'react-native-config'
 import FS from 'react-native-fs'
 
+import { cameraPermissionsTrigger } from '../../Services/CameraRoll'
 import PreferencesActions, {
   PreferencesSelectors,
   Service
@@ -53,6 +54,7 @@ function* toggleStorage(
     // Always start autoPinning only from the date of the latest toggle-on
     const now = new Date().getTime()
     yield put(actions.updateLastQueriedTime(now))
+    yield call(cameraPermissionsTrigger)
   }
 }
 
