@@ -6,7 +6,8 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  ViewStyle
+  ViewStyle,
+  TextStyle
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import { IContact, Thread } from '@textile/react-native-sdk'
@@ -19,7 +20,7 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
-import { color, spacing } from '../styles'
+import { color, spacing, fontFamily, fontSize } from '../styles'
 
 // Redux
 import { RootState, RootAction } from '../Redux/Types'
@@ -42,6 +43,25 @@ const buttons: ViewStyle = {
 
 const addOrRemoveButton: ViewStyle = {
   marginRight: spacing._012
+}
+
+const cafesList: ViewStyle = {
+  width: '100%',
+  flex: 0,
+  paddingHorizontal: spacing._016,
+  paddingTop: spacing._024
+}
+
+const cafesHeader: TextStyle = {
+  fontFamily: fontFamily.bold,
+  fontSize: fontSize._16,
+  marginBottom: spacing._012
+}
+
+const cafesTitle: TextStyle = {
+  fontFamily: fontFamily.regular,
+  fontSize: fontSize._14,
+  marginBottom: spacing._012
 }
 
 interface NavProps {
@@ -102,8 +122,6 @@ class ContactModal extends React.Component<Props> {
             target={avatar}
           />
           <Text
-            adjustsFontSizeToFit={true}
-            numberOfLines={1}
             style={styles.username}
           >
             {this.props.displayName}
@@ -145,11 +163,12 @@ class ContactModal extends React.Component<Props> {
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <ScrollView>
-          <Text>Cafes</Text>
+        <ScrollView style={cafesList}>
+          <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
           {cafes(contact).map((cafe, i) => (
             <Text
               key={i}
+              style={cafesTitle}
             >
               {cafe.address}
             </Text>
