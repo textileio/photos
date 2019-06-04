@@ -32,6 +32,7 @@ import {
   getDirectMessageThread
 } from '../Redux/PhotoViewingSelectors'
 import { contactsActions } from '../features/contacts'
+import { cafes } from '../features/contacts/selectors'
 
 const buttons: ViewStyle = {
   flexDirection: 'row',
@@ -87,7 +88,8 @@ class ContactModal extends React.Component<Props> {
   }
 
   render() {
-    const avatar = this.props.navigation.getParam('contact').avatar
+    const contact = this.props.navigation.getParam('contact')
+    const avatar = contact.avatar
     const removingText = this.props.removing ? 'Removing' : 'Remove'
     const addingText = this.props.adding ? 'Adding' : 'Add'
     const buttonText = this.props.isContact ? removingText : addingText
@@ -141,6 +143,16 @@ class ContactModal extends React.Component<Props> {
                 photo={thread.thumb}
               />
             </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <ScrollView>
+          <Text>Cafes</Text>
+          {cafes(contact).map((cafe, i) => (
+            <Text
+              key={i}
+            >
+              {cafe.address}
+            </Text>
           ))}
         </ScrollView>
       </View>

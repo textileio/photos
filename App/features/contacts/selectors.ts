@@ -5,6 +5,7 @@ import {
   TextileSearchResult,
   AddressBookSearchResult
 } from './models'
+import { IContact, ICafe } from '@textile/react-native-sdk'
 
 export const makeIsKnown = (address: string) => (state: ContactsState) =>
   state.contacts.some(p => p.address === address)
@@ -137,4 +138,10 @@ export const searchResults = (state: ContactsState) => {
   }
 
   return sections
+}
+
+export const cafes = (contact: IContact) => {
+  return contact.peers.reduce((acc: ICafe[], peer) => {
+    return [...acc, ...peer.inboxes]
+  }, [])
 }
