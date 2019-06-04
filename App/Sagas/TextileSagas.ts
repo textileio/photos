@@ -13,7 +13,7 @@ import { Share, PermissionsAndroid, Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import Config from 'react-native-config'
-import Textile from '@textile/react-native-sdk'
+import Textile, { ILogLevel, LogLevel } from '@textile/react-native-sdk'
 
 import { cameraPermissionsTrigger } from '../Services/CameraRoll'
 import NavigationService from '../Services/NavigationService'
@@ -158,6 +158,29 @@ export function* backgroundLocationPermissionsTrigger() {
     )
   } else {
     yield call(navigator.geolocation.requestAuthorization)
+  }
+}
+
+export function* handleToggleVerboseUi(
+  action: ActionType<typeof PreferencesActions.toggleVerboseUi>
+) {
+  try {
+    const verbose: boolean = yield select(PreferencesSelectors.verboseUi)
+    const level = verbose ? LogLevel.Level.DEBUG : LogLevel.Level.ERROR
+    const logLevel: ILogLevel = {
+      systems: {
+        'tex-broadcast': level,
+        'tex-core': level,
+        'tex-datastore': level,
+        'tex-ipfs': level,
+        'tex-mill': level,
+        'tex-repo': level,
+        'tex-service': level
+      }
+    }
+    yield call(Textile.logs.setLevel, logLevel)
+  } catch (error) {
+    // @todo: nothing for now
   }
 }
 
