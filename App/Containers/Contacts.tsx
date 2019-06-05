@@ -132,11 +132,11 @@ class Contacts extends React.Component<Props, State> {
         contacts.length > 0
           ? contacts
           : [
-              {
-                key: 'textile_empty',
-                type: 'empty'
-              }
-            ]
+            {
+              key: 'textile_empty',
+              type: 'empty'
+            }
+          ]
     }
   }
 
@@ -157,6 +157,7 @@ class Contacts extends React.Component<Props, State> {
           }}
           iconColor={color.grey_4}
           onTextChanged={this.updateSearchString}
+          placeholder="Search or add new contact..."
         />
         <SectionList
           sections={[
