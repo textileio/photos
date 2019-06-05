@@ -7,6 +7,7 @@ import DeviceLogs from '../../../../SB/views/DeviceLogs'
 import NodeLogsScreen from '../../../../Components/NodeLogsScreen'
 import RecoveryPhrase from '../../../../SB/views/UserProfile/RecoveryPhrase'
 import SetAvatar from '../../../../Containers/SetAvatar'
+import Cafes from '../../../../Containers/Cafes'
 
 import styles, { headerTintColor } from '../../../Styles/NavigationStyles'
 
@@ -18,7 +19,8 @@ const nav = createStackNavigator(
     RecoveryPhrase,
     ChangeAvatar: SetAvatar,
     DeviceLogs,
-    NodeLogsScreen
+    NodeLogsScreen,
+    Cafes
   },
   {
     defaultNavigationOptions: {

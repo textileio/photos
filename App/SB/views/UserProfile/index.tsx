@@ -91,6 +91,9 @@ class UserProfile extends React.PureComponent<Props> {
   _contact = () => {
     this.setState({ contactModal: this.state.contactModal === false })
   }
+  _showCafes = () => {
+    this.props.navigation.navigate('Cafes')
+  }
   copyRecoveryPhrase = () => {
     Clipboard.setString(this.props.recoveryPhrase)
     if (this.toast) {
@@ -196,6 +199,12 @@ class UserProfile extends React.PureComponent<Props> {
               <Text style={styles.listText}>Copy Secret Phrase</Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            style={styles.listItem}
+            onPress={this._showCafes}
+          >
+            <Text style={styles.listText}>View My Cafes</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this.openPrivacy}>
             <Text style={styles.listText}>Privacy</Text>
           </TouchableOpacity>
