@@ -9,6 +9,7 @@ import {
   Keyboard,
   ViewStyle,
   TextStyle,
+  ImageStyle,
   SectionList,
   SectionListRenderItemInfo,
   SectionListData,
@@ -44,6 +45,12 @@ const CONTAINER: ViewStyle = {
   backgroundColor: color.screen_primary
 }
 
+const avatarStyle: ImageStyle = {
+  width: 50,
+  height: 50,
+  backgroundColor: color.grey_5
+}
+
 const selectingText: TextStyle = {
   paddingRight: 15,
   fontFamily: fontFamily.medium
@@ -71,8 +78,10 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
+// Store the addresses of currently selected contacts (for new group multi-select UI)
 interface State {
   searchString?: string
+  selected: ReadonlyArray<string>
 }
 
 class Contacts extends React.Component<Props, State> {
@@ -108,7 +117,9 @@ class Contacts extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = {}
+    this.state = {
+      selected: []
+    }
   }
 
   componentDidMount() {
@@ -228,11 +239,16 @@ class Contacts extends React.Component<Props, State> {
         const contact = item.data
         const leftItem = (
           <Avatar
-            style={{ width: 50, height: 50, backgroundColor: color.grey_5 }}
+            style={avatarStyle}
             target={contact.avatar}
           />
         )
         const rightItems = [
+          ... this.props.navigation.getParam('selecting') ? [<Button
+            key="select"
+            text={this.selected(contact.address) ? 'Deselect' : 'Select'}
+            onPress={() => this.toggleSelected(contact.address)}
+          />] : [],
           <Icon
             key="more"
             name="chevron-right"
@@ -330,9 +346,33 @@ class Contacts extends React.Component<Props, State> {
     Keyboard.dismiss()
   }
 
+  // Toggles whether the select UI is active
   toggleSelect = () => {
+    // If we're canceling the multi-select action, reset the array of selected contacts
+    if (this.props.navigation.getParam('selecting')) {
+      this.setState({
+        selected: []
+      })
+    }
     this.props.navigation.setParams({
       selecting: !this.props.navigation.getParam('selecting')
+    })
+  }
+
+  // Check whether a contact is currently selected
+  selected = (address: string) => {
+    return this.state.selected.indexOf(address) > -1
+  }
+
+  // Toggles whether a contact is selected
+  toggleSelected = (address: string) => {
+    this.setState((state, props) => {
+      return {
+        selected: this.selected(address) ? state.selected.filter(add => add != address) : [
+          ...state.selected,
+          address
+        ]
+      }
     })
   }
 }
