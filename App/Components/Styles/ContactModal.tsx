@@ -23,23 +23,25 @@ export default StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 50,
     paddingHorizontal: 19,
+    paddingBottom: 178,
     borderBottomColor: Colors.text,
     borderBottomWidth: 1,
     backgroundColor: 'white'
   } as ViewStyle,
   username: {
-    marginLeft: 18,
-    marginRight: 6,
-    flex: 1,
+    textAlign: 'center',
+    paddingVertical: 14,
     fontFamily: 'Biotif-Bold',
-    color: Colors.cover,
     fontSize: 32
   } as TextStyle,
   threadsList: {
     width: '100%',
     flex: 0,
     paddingHorizontal: 19,
-    paddingTop: 24
+    paddingTop: 24,
+    borderBottomColor: Colors.text,
+    borderBottomWidth: 1,
+    backgroundColor: 'white'
   } as TextStyle,
   threadsTitle: {
     fontFamily: 'Biotif-Regular',
