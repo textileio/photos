@@ -29,6 +29,12 @@ interface ErrorSearchEvent {
 
 export type SearchEvent = ContactSearchEvent | ErrorSearchEvent
 
+export interface ContactSearchResult {
+  readonly key: string
+  readonly type: 'contact'
+  readonly data: IContact
+}
+
 export interface TextileSearchResult {
   readonly key: string
   readonly type: 'textile'
@@ -67,6 +73,7 @@ export type SearchResult =
   | ErrorSearchResult
   | LoadingSearchResult
   | EmptySearchResult
+  | ContactSearchResult
 
 export interface SearchResultsSection {
   readonly key: string
