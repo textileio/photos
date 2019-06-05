@@ -199,10 +199,7 @@ class UserProfile extends React.PureComponent<Props> {
               <Text style={styles.listText}>Copy Secret Phrase</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            style={styles.listItem}
-            onPress={this._showCafes}
-          >
+          <TouchableOpacity style={styles.listItem} onPress={this._showCafes}>
             <Text style={styles.listText}>View My Cafes</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this.openPrivacy}>
