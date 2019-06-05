@@ -38,7 +38,9 @@ async function registerCafes() {
     }
     const cafes = await lbApi(lbUrl).discoveredCafes()
     if (!cafes.primary && !cafes.secondary) {
-      throw new Error('discovered cafes response does not not include any cafes')
+      throw new Error(
+        'discovered cafes response does not not include any cafes'
+      )
     }
     cafeUrl = cafes.primary ? cafes.primary.url : cafes.secondary!.url
   }

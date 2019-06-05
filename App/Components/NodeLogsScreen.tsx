@@ -63,7 +63,7 @@ export default class NodeLogsScreen extends Component<
   refreshLogData = async () => {
     this.setState({ refreshing: true, logData: undefined, error: undefined })
     try {
-      const repoPath = await Textile.repoPath
+      const repoPath = await Textile.repoPath()
       const logFilePath = `${repoPath}/logs/textile.log`
       const exists = await FS.exists(logFilePath)
       if (exists) {

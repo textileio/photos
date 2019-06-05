@@ -76,7 +76,8 @@ import {
   addPhotoLike,
   triggerCameraRollPermission,
   presentPublicLinkInterface,
-  updateServices
+  updateServices,
+  handleToggleVerboseUi
 } from './TextileSagas'
 
 import { startSagas } from './TextileEventsSagas'
@@ -110,6 +111,12 @@ export default function* root(dispatch: Dispatch) {
     takeLatest(
       getType(PreferencesActions.toggleServicesRequest),
       updateServices
+    ),
+
+    // verbose ui
+    takeEvery(
+      getType(PreferencesActions.toggleVerboseUi),
+      handleToggleVerboseUi
     ),
 
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
