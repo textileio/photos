@@ -141,7 +141,9 @@ export const searchResults = (state: ContactsState) => {
 }
 
 export const cafes = (contact: IContact) => {
-  return contact.peers.reduce((acc: ICafe[], peer) => {
-    return [...acc, ...peer.inboxes]
+  return contact.peers.reduce((peerAcc: ICafe[], peer) => {
+    return peer.inboxes.reduce((inboxAcc: ICafe[], inbox) => {
+      return inboxAcc.indexOf(inbox) === -1 ? [...inboxAcc, inbox] : inboxAcc
+    }, peerAcc)
   }, [])
 }
