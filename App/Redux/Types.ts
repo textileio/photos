@@ -15,7 +15,7 @@ import { TriggersAction } from './TriggersRedux'
 import { UIAction } from './UIRedux'
 import { UploadingImagesAction } from './UploadingImagesRedux'
 import { StartupAction } from './StartupRedux'
-import { TextileEventsActions } from './TextileEventsRedux'
+import { TextileEventsAction } from './TextileEventsRedux'
 import { GroupAction } from '../features/group'
 import { PhotosAction } from '../features/photos'
 
@@ -34,6 +34,6 @@ export type RootAction =
   | UIAction
   | UploadingImagesAction
   | StartupAction
-  | TextileEventsActions
+  | TextileEventsAction
   | GroupAction
   | PhotosAction

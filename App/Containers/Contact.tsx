@@ -121,11 +121,7 @@ class ContactModal extends React.Component<Props> {
             style={{ width: 72, height: 72, backgroundColor: color.grey_5 }}
             target={avatar}
           />
-          <Text
-            style={styles.username}
-          >
-            {this.props.displayName}
-          </Text>
+          <Text style={styles.username}>{this.props.displayName}</Text>
           <View style={buttons}>
             <Button
               text={buttonText}
@@ -166,10 +162,7 @@ class ContactModal extends React.Component<Props> {
         <ScrollView style={cafesList}>
           <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
           {cafes(contact).map((cafe, i) => (
-            <Text
-              key={i}
-              style={cafesTitle}
-            >
+            <Text key={i} style={cafesTitle}>
               {cafe.address}
             </Text>
           ))}
