@@ -1,14 +1,28 @@
+import { eventChannel } from 'redux-saga'
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import { PreferencesSelectors } from '../Redux/PreferencesRedux'
-import { accountActions } from '../features/account'
-import TextileEventsActions from '../Redux/TextileEventsRedux'
 import RNPushNotification from 'react-native-push-notification'
-import { RootAction, RootState } from '../Redux/Types'
-import Textile, { IContact } from '@textile/react-native-sdk'
+import Textile, { EventSubscription } from '@textile/react-native-sdk'
+
+import { toTypedNotification } from '../Services/Notifications'
 import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
-import { photosActions } from '../features/photos'
+import { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import { RootAction } from '../Redux/Types'
+import { accountActions } from '../features/account'
+import TextileEventsActions, {
+  TextileEventsAction
+} from '../Redux/TextileEventsRedux'
+import { photosActions, PhotosAction } from '../features/photos'
+import NotificationActions, {
+  NotificationsAction
+} from '../Redux/NotificationsRedux'
+import PhotoViewingActions, {
+  PhotoViewingAction
+} from '../Redux/PhotoViewingRedux'
+import { contactsActions, ContactsAction } from '../features/contacts'
+import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
+import { groupActions, GroupAction } from '../features/group'
 
 function displayNotification(message: string, title?: string) {
   RNPushNotification.localNotification({
@@ -19,11 +33,140 @@ function displayNotification(message: string, title?: string) {
   })
 }
 
-// export function * runBackgroundUpdate() {
-// This used to be some exported function from the SDK
-// TODO: Remove all this, make sure background triggers are handled in native SDKs
-// yield call(BackgroundTask)
-// }
+function nodeEvents() {
+  return eventChannel<
+    | GroupAction
+    | PhotosAction
+    | PhotoViewingAction
+    | ContactsAction
+    | DeviceLogsAction
+    | NotificationsAction
+    | TextileEventsAction
+  >(emitter => {
+    const subscriptions: EventSubscription[] = []
+    subscriptions.push(
+      Textile.events.addThreadUpdateReceivedListener(update => {
+        const { type_url } = update.payload
+        if (
+          type_url === '/Text' ||
+          type_url === '/Comment' ||
+          type_url === '/Like' ||
+          type_url === '/Files' ||
+          type_url === '/Ignore' ||
+          type_url === '/Join' ||
+          type_url === '/Leave'
+        ) {
+          emitter(groupActions.feed.refreshFeed.request({ id: update.thread }))
+          // FIXME: This is a hack. We need to examine the thread id and dispatch one or the other.
+          // Or this needs to send the whole Thread or at least the addition of key
+          emitter(photosActions.refreshPhotos.request(undefined))
+        }
+
+        // TODO: remove this if needed
+        if (
+          type_url === '/Comment' ||
+          type_url === '/Like' ||
+          type_url === '/Files' ||
+          type_url === '/Ignore' ||
+          type_url === '/Join'
+        ) {
+          emitter(PhotoViewingActions.refreshThreadRequest(update.thread))
+        }
+
+        if (type_url === '/Join' || type_url === '/Leave') {
+          // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
+          // Enhancement: compare the joiner id with known ids and skip the refresh if known.
+          emitter(contactsActions.getContactsRequest())
+          // Temporary: to ensure that our UI udpates after a self-join or a self-leave
+          emitter(PhotoViewingActions.refreshThreadRequest(update.thread))
+        }
+
+        // create a local log line for the threadUpdate event
+        const message = `BlockType ${type_url} on ${update.thread}`
+        emitter(
+          DeviceLogsActions.logNewEvent(
+            new Date().getTime(),
+            'onThreadUpdate',
+            message,
+            false
+          )
+        )
+      })
+    )
+    subscriptions.push(
+      Textile.events.addThreadAddedListener(threadId => {
+        emitter(PhotoViewingActions.threadAddedNotification(threadId))
+      })
+    )
+    subscriptions.push(
+      Textile.events.addThreadRemovedListener(threadId => {
+        emitter(PhotoViewingActions.threadRemoved(threadId))
+      })
+    )
+    subscriptions.push(
+      Textile.events.addNotificationReceivedListener(notification => {
+        emitter(
+          NotificationActions.newNotificationRequest(
+            toTypedNotification(notification)
+          )
+        )
+      })
+    )
+    subscriptions.push(
+      Textile.events.addNodeStartedListener(() => {
+        emitter(TextileEventsActions.nodeStarted())
+      })
+    )
+    subscriptions.push(
+      Textile.events.addNodeStoppedListener(() => {
+        emitter(TextileEventsActions.nodeStopped())
+      })
+    )
+    subscriptions.push(
+      Textile.events.addNodeOnlineListener(() => {
+        emitter(TextileEventsActions.nodeOnline())
+      })
+    )
+    subscriptions.push(
+      Textile.events.addNodeFailedToStartListener(error => {
+        emitter(TextileEventsActions.nodeFailedToStart(error))
+      })
+    )
+    subscriptions.push(
+      Textile.events.addNodeFailedToStopListener(error => {
+        emitter(TextileEventsActions.nodeFailedToStop(error))
+      })
+    )
+    subscriptions.push(
+      Textile.events.addWillStopNodeInBackgroundAfterDelayListener(delay => {
+        emitter(TextileEventsActions.stopNodeAfterDelayStarting(delay))
+      })
+    )
+    subscriptions.push(
+      Textile.events.addCanceledPendingNodeStopListener(() => {
+        emitter(TextileEventsActions.stopNodeAfterDelayCancelled())
+      })
+    )
+    return () => {
+      for (const subscription of subscriptions) {
+        subscription.cancel()
+      }
+    }
+  })
+}
+
+function* handleNodeEvents() {
+  const chan = yield call(nodeEvents)
+  try {
+    while (true) {
+      // take(END) will cause the saga to terminate by jumping to the finally block
+      let action = yield take(chan)
+      yield put(action)
+    }
+  } finally {
+    // should never terminate
+  }
+}
 
 function* initializeTextile() {
   try {
@@ -205,6 +348,7 @@ export function* newError() {
 
 export function* startSagas() {
   yield all([
+    call(handleNodeEvents),
     call(initializeTextile),
     call(startNodeFinished),
     call(stopNodeAfterDelayStarting),

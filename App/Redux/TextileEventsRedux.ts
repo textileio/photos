@@ -41,7 +41,7 @@ const actions = {
   )
 }
 
-export type TextileEventsActions = ActionType<typeof actions>
+export type TextileEventsAction = ActionType<typeof actions>
 
 interface TextileEventsState {
   readonly nodeState: {
@@ -58,7 +58,7 @@ export const initialState: TextileEventsState = {
 
 export function reducer(
   state: TextileEventsState = initialState,
-  action: TextileEventsActions
+  action: TextileEventsAction
 ): TextileEventsState {
   switch (action.type) {
     case getType(actions.failedToInitializeNode): {
