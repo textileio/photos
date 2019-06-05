@@ -8,6 +8,7 @@ import {
   ListRenderItemInfo,
   Keyboard,
   ViewStyle,
+  TextStyle,
   SectionList,
   SectionListRenderItemInfo,
   SectionListData,
@@ -35,12 +36,17 @@ import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
-import { color, textStyle, spacing } from '../styles'
+import { color, textStyle, fontFamily, spacing } from '../styles'
 import { contact } from '@textile/react-native-sdk/dist/account'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   backgroundColor: color.screen_primary
+}
+
+const selectingText: TextStyle = {
+  paddingRight: 15,
+  fontFamily: fontFamily.medium
 }
 
 interface StateProps {
@@ -53,7 +59,7 @@ interface NavProps {
   addContact: () => void
   clearSearch: () => void
   toggleSelect: () => void
-  getSelecting: () => boolean
+  selecting: boolean
 }
 
 interface DispatchProps {
@@ -67,7 +73,6 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 interface State {
   searchString?: string
-  selecting: boolean
 }
 
 class Contacts extends React.Component<Props, State> {
@@ -75,7 +80,7 @@ class Contacts extends React.Component<Props, State> {
     navigation
   }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
-    const selecting = navigation.getParam('getSelecting')()
+    const selecting = navigation.getParam('selecting')
     const toggleSelect = navigation.getParam('toggleSelect')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
@@ -91,7 +96,7 @@ class Contacts extends React.Component<Props, State> {
     )
     const headerRight = (
       <TouchableOpacity onPress={toggleSelect}>
-        <Text>{selecting ? 'Cancel' : 'New Group'}</Text>
+        <Text style={selectingText}>{selecting ? 'Cancel' : 'New Group'}</Text>
       </TouchableOpacity>
     )
     return {
@@ -103,9 +108,7 @@ class Contacts extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = {
-      selecting: false
-    }
+    this.state = {}
   }
 
   componentDidMount() {
@@ -113,7 +116,7 @@ class Contacts extends React.Component<Props, State> {
       openDrawer: this.openDrawer,
       clearSearch: this.props.clearSearch,
       toggleSelect: this.toggleSelect,
-      getSelecting: this.getSelecting
+      selecting: false
     })
   }
 
@@ -328,14 +331,10 @@ class Contacts extends React.Component<Props, State> {
   }
 
   toggleSelect = () => {
-    this.setState((state, props) => {
-      return {
-        selecting: !state.selecting
-      }
+    this.props.navigation.setParams({
+      selecting: !this.props.navigation.getParam('selecting')
     })
   }
-
-  getSelecting = () => this.state.selecting
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
