@@ -1,3 +1,4 @@
+/* eslint camelcase: 0 */
 import { eventChannel } from 'redux-saga'
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
@@ -160,7 +161,7 @@ function* handleNodeEvents() {
   try {
     while (true) {
       // take(END) will cause the saga to terminate by jumping to the finally block
-      let action = yield take(chan)
+      const action = yield take(chan)
       yield put(action)
     }
   } finally {
