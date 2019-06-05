@@ -1,602 +1,602 @@
 version: 2.1
 
 install-android-tools: &install-android-tools
-    run:
-        name: install android tools
-        command: |
-            sdkmanager --licenses
-            echo y | sdkmanager "build-tools;27.0.3"
-            echo y | sdkmanager "platforms;android-27"
-            echo y | sdkmanager "build-tools;28.0.3"
-            echo y | sdkmanager "platforms;android-28"
+  run:
+    name: install android tools
+    command: |
+      sdkmanager --licenses
+      echo y | sdkmanager "build-tools;27.0.3"
+      echo y | sdkmanager "platforms;android-27"
+      echo y | sdkmanager "build-tools;28.0.3"
+      echo y | sdkmanager "platforms;android-28"
 jobs:
-    lint:
-        working_directory: ~/textile-mobile
-        docker:
-            - image: circleci/node:11.9.0
-        steps:
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                keys:
-                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v2-{{ arch }}-{{ .Branch }}-
-                    - source-v2-{{ arch }}-
-
-            - checkout
-
-            - save_cache:
-                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            - run: yarn install
-
-            - run:
-                name: tsc
-                command: |
-                    yarn tsc
-            - run:
-                name: lint
-                command: |
-                    yarn lint
-            # cache our yarn cache
-            - save_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-                paths:
-                    - ~/.cache/yarn
-
-            # cache our node_modules
-            - save_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-                paths:
-                    - node_modules
-    tests:
-        working_directory: ~/textile-mobile
-        docker:
-            - image: circleci/node:11.9.0
-        steps:
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                keys:
-                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v2-{{ arch }}-{{ .Branch }}-
-                    - source-v2-{{ arch }}-
-
-            - checkout
-
-            - save_cache:
-                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            - run: yarn install
-
-            - run:
-                name: jest tests
-                command: |
-                    mkdir -p test-results/jest
-                    yarn run test
-                environment:
-                    JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
-
-            - store_test_results:
-                path: test-results
-
-            - store_artifacts:
-                path: test-results
-
-    android:
-        environment:
-            LC_ALL: en_US.UTF-8
-            LANG: en_US.UTF-8
-        working_directory: ~/textile-mobile
-        docker:
-            - image: circleci/android:api-28-node8-alpha
-        resource_class: large
-        steps:
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                keys:
-                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v2-{{ arch }}-{{ .Branch }}-
-                    - source-v2-{{ arch }}-
-
-            - checkout:
-                path: ~/textile-mobile
-
-            - save_cache:
-                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            - run: yarn install
-
-            - restore_cache:
-                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
-
-            - run:
-                command: bundle install
-                working_directory: android
-
-            - save_cache:
-                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
-                paths:
-                    - vendor/bundle
-
-            - *install-android-tools
-
-            - run:
-                name: fastlane tests
-                working_directory: android
-                command: |
-                    mkdir -p test-results/fastlane
-                    bundle exec fastlane test
-                    mv fastlane/report.xml test-results/fastlane
-            - store_test_results:
-                path: android/test-results
-
-            - store_artifacts:
-                path: android/test-results
-
-    android-adhoc:
-        environment:
-            LC_ALL: en_US.UTF-8
-            LANG: en_US.UTF-8
-        working_directory: ~/textile-mobile
-        docker:
-            - image: circleci/android:api-28-node8-alpha
-        resource_class: large
-        steps:
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                keys:
-                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v2-{{ arch }}-{{ .Branch }}-
-                    - source-v2-{{ arch }}-
-
-            - checkout:
-                path: ~/textile-mobile
-
-            - save_cache:
-                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            - run: yarn install
-
-            - run:
-                name: Write .env
-                command: ./scripts/create-rn-env.sh
-
-            - run:
-                command: bundle install
-
-            - *install-android-tools
-
-            - run:
-                command: bundle exec fastlane prep_release
-
-            - restore_cache:
-                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
-
-            - run:
-                command: bundle install
-                working_directory: android
-
-            - save_cache:
-                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
-                paths:
-                    - vendor/bundle
-
-            - run:
-                command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
-                working_directory: android
-
-            - run:
-                command: bundle exec fastlane adhoc
-                working_directory: android
-
-            - store_artifacts:
-                path: ./android/sourcemap.js
-
-    android-release:
-        environment:
-            LC_ALL: en_US.UTF-8
-            LANG: en_US.UTF-8
-        working_directory: ~/textile-mobile
-        docker:
-            - image: circleci/android:api-28-node8-alpha
-        resource_class: large
-        steps:
-            - checkout:
-                path: ~/textile-mobile
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            - run: yarn install
-
-            - run:
-                name: Write .env
-                command: ./scripts/create-rn-env.sh
-
-            - run:
-                command: bundle install
-
-            - run:
-                command: bundle exec fastlane prep_release
-
-            - restore_cache:
-                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
-
-            - run:
-                command: bundle install
-                working_directory: android
-
-            - save_cache:
-                key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
-                paths:
-                    - vendor/bundle
-
-            - run:
-                command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
-                working_directory: android
-
-            - *install-android-tools
-
-            - run:
-                command: bundle exec fastlane release
-                working_directory: android
-
-            - store_artifacts:
-                path: ./android/sourcemap.js
-
-            - persist_to_workspace:
-                root: ~/textile-mobile
-                paths:
-                    - ./android/app/build/outputs/apk/release/
-
-    android-apk-release:
-        working_directory: ~/textile-mobile
-        docker:
-            - image: cibuilds/github:0.10
-        steps:
-            - attach_workspace:
-                at: ~/textile-mobile
-            - deploy:
-                name: release apk
-                command: |
-                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/release/*.apk
-    ios:
-        macos:
-            xcode: "10.2.1"
-        environment:
-            LC_ALL: en_US.UTF-8
-            LANG: en_US.UTF-8
-        working_directory: ~/textile-mobile
-
-        # use a --login shell so our "set Ruby version" command gets picked up for later steps
-        shell: /bin/bash --login -o pipefail
-
-        steps:
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                keys:
-                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v2-{{ arch }}-{{ .Branch }}-
-                    - source-v2-{{ arch }}-
-
-            - checkout
-
-            - save_cache:
-                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
-
-            - run:
-                name: set Ruby version
-                command:  echo "ruby-2.4" > ~/.ruby-version
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            # not using a workspace here as Node and Yarn versions
-            # differ between our macOS executor image and the Docker containers above
-            - run: yarn install --ignore-engines
-
-            - save_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-                paths:
-                    - ~/.cache/yarn
-
-            - save_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-                paths:
-                    - node_modules
-
-            - run:
-                name: Write .env
-                command: ./scripts/create-rn-env.sh
-
-            - restore_cache:
-                key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
-
-            - run:
-                command: bundle install
-                working_directory: ios
-
-            - save_cache:
-                key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
-                paths:
-                    - vendor/bundle
-
-            - run:
-                command: bundle exec fastlane test
-                working_directory: ios
-
-            - run:
-                name: set up test results
-                working_directory: ios
-                when: always
-                command: |
-                    mkdir -p test-results/fastlane test-results/xcode
-                    mv fastlane/report.xml test-results/fastlane
-                    mv fastlane/test_output/report.junit test-results/xcode/junit.xml
-            - store_test_results:
-                path: ios/test-results
-
-            - store_artifacts:
-                path: ios/test-results
-
-    ios-adhoc:
-        macos:
-            xcode: "10.2.1"
-        environment:
-            LC_ALL: en_US.UTF-8
-            LANG: en_US.UTF-8
-        working_directory: ~/textile-mobile
-
-        # use a --login shell so our "set Ruby version" command gets picked up for later steps
-        shell: /bin/bash --login -o pipefail
-
-        steps:
-            - run:
-                name: set Ruby version
-                command:  echo "ruby-2.4" > ~/.ruby-version
-
-            - restore_cache: # If any cache exists, it'll way speedup these checkouts
-                keys:
-                    - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                    - source-v2-{{ arch }}-{{ .Branch }}-
-                    - source-v2-{{ arch }}-
-
-            - checkout
-
-            - save_cache:
-                key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-                paths:
-                    - ".git"
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            # not using a workspace here as Node and Yarn versions
-            # differ between our macOS executor image and the Docker containers above
-            - run: yarn install --ignore-engines
-
-            - save_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-                paths:
-                    - ~/.cache/yarn
-
-            - save_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-                paths:
-                    - node_modules
-
-            - run:
-                name: Write .env
-                command: ./scripts/create-rn-env.sh
-
-            - run:
-                command: bundle install
-
-            - run:
-                command: bundle exec fastlane prep_release
-
-            - restore_cache:
-                key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
-
-            - run:
-                command: bundle install
-                working_directory: ios
-
-            - save_cache:
-                key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
-                paths:
-                    - vendor/bundle
-
-            - run:
-                command: bundle exec fastlane adhoc
-                working_directory: ios
-
-            - store_artifacts:
-                path: ./ios/Textile.app.dSYM.zip
-
-            - store_artifacts:
-                path: ./ios/Textile.ipa
-
-            - store_artifacts:
-                path: ./ios/sourcemap.js
-
-    ios-release:
-        macos:
-            xcode: "10.2.1"
-        environment:
-            LC_ALL: en_US.UTF-8
-            LANG: en_US.UTF-8
-        working_directory: ~/textile-mobile
-
-        # use a --login shell so our "set Ruby version" command gets picked up for later steps
-        shell: /bin/bash --login -o pipefail
-
-        steps:
-            - run:
-                name: set Ruby version
-                command:  echo "ruby-2.4" > ~/.ruby-version
-
-            - checkout
-
-            - restore_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-
-            - restore_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-
-            # not using a workspace here as Node and Yarn versions
-            # differ between our macOS executor image and the Docker containers above
-            - run: yarn install --ignore-engines
-
-            - save_cache:
-                key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-                paths:
-                    - ~/.cache/yarn
-
-            - save_cache:
-                key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-                paths:
-                    - node_modules
-
-            - run:
-                name: Write .env
-                command: ./scripts/create-rn-env.sh
-
-            - run:
-                command: bundle install
-
-            - run:
-                command: bundle exec fastlane prep_release
-
-            - restore_cache:
-                key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
-
-            - run:
-                command: bundle install
-                working_directory: ios
-
-            - save_cache:
-                key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
-                paths:
-                    - vendor/bundle
-
-            - run:
-                command: bundle exec fastlane release
-                working_directory: ios
-
-            - store_artifacts:
-                path: ./ios/Textile.app.dSYM.zip
-
-            - store_artifacts:
-                path: ./ios/TextilePhotos.ipa
-
-            - store_artifacts:
-                path: ./ios/sourcemap.js
+  lint:
+    working_directory: ~/textile-mobile
+    docker:
+      - image: circleci/node:11.9.0
+    steps:
+      - restore_cache: # If any cache exists, it'll way speedup these checkouts
+          keys:
+            - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+            - source-v2-{{ arch }}-{{ .Branch }}-
+            - source-v2-{{ arch }}-
+
+      - checkout
+
+      - save_cache:
+          key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - '.git'
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      - run: yarn install
+
+      - run:
+          name: tsc
+          command: |
+            yarn tsc
+      - run:
+          name: lint
+          command: |
+            yarn lint
+      # cache our yarn cache
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+
+      # cache our node_modules
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
+  tests:
+    working_directory: ~/textile-mobile
+    docker:
+      - image: circleci/node:11.9.0
+    steps:
+      - restore_cache: # If any cache exists, it'll way speedup these checkouts
+          keys:
+            - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+            - source-v2-{{ arch }}-{{ .Branch }}-
+            - source-v2-{{ arch }}-
+
+      - checkout
+
+      - save_cache:
+          key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - '.git'
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      - run: yarn install
+
+      - run:
+          name: jest tests
+          command: |
+            mkdir -p test-results/jest
+            yarn run test
+          environment:
+            JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+
+      - store_test_results:
+          path: test-results
+
+      - store_artifacts:
+          path: test-results
+
+  android:
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    working_directory: ~/textile-mobile
+    docker:
+      - image: circleci/android:api-28-node8-alpha
+    resource_class: large
+    steps:
+      - restore_cache: # If any cache exists, it'll way speedup these checkouts
+          keys:
+            - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+            - source-v2-{{ arch }}-{{ .Branch }}-
+            - source-v2-{{ arch }}-
+
+      - checkout:
+          path: ~/textile-mobile
+
+      - save_cache:
+          key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - '.git'
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      - run: yarn install
+
+      - restore_cache:
+          key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+
+      - run:
+          command: bundle install
+          working_directory: android
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - *install-android-tools
+
+      - run:
+          name: fastlane tests
+          working_directory: android
+          command: |
+            mkdir -p test-results/fastlane
+            bundle exec fastlane test
+            mv fastlane/report.xml test-results/fastlane
+      - store_test_results:
+          path: android/test-results
+
+      - store_artifacts:
+          path: android/test-results
+
+  android-adhoc:
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    working_directory: ~/textile-mobile
+    docker:
+      - image: circleci/android:api-28-node8-alpha
+    resource_class: large
+    steps:
+      - restore_cache: # If any cache exists, it'll way speedup these checkouts
+          keys:
+            - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+            - source-v2-{{ arch }}-{{ .Branch }}-
+            - source-v2-{{ arch }}-
+
+      - checkout:
+          path: ~/textile-mobile
+
+      - save_cache:
+          key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - '.git'
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      - run: yarn install
+
+      - run:
+          name: Write .env
+          command: ./scripts/create-rn-env.sh
+
+      - run:
+          command: bundle install
+
+      - *install-android-tools
+
+      - run:
+          command: bundle exec fastlane prep_release
+
+      - restore_cache:
+          key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+
+      - run:
+          command: bundle install
+          working_directory: android
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
+          working_directory: android
+
+      - run:
+          command: bundle exec fastlane adhoc
+          working_directory: android
+
+      - store_artifacts:
+          path: ./android/sourcemap.js
+
+  android-release:
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    working_directory: ~/textile-mobile
+    docker:
+      - image: circleci/android:api-28-node8-alpha
+    resource_class: large
+    steps:
+      - checkout:
+          path: ~/textile-mobile
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      - run: yarn install
+
+      - run:
+          name: Write .env
+          command: ./scripts/create-rn-env.sh
+
+      - run:
+          command: bundle install
+
+      - run:
+          command: bundle exec fastlane prep_release
+
+      - restore_cache:
+          key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+
+      - run:
+          command: bundle install
+          working_directory: android
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "android/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
+          working_directory: android
+
+      - *install-android-tools
+
+      - run:
+          command: bundle exec fastlane release
+          working_directory: android
+
+      - store_artifacts:
+          path: ./android/sourcemap.js
+
+      - persist_to_workspace:
+          root: ~/textile-mobile
+          paths:
+            - ./android/app/build/outputs/apk/release/
+
+  android-apk-release:
+    working_directory: ~/textile-mobile
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ~/textile-mobile
+      - deploy:
+          name: release apk
+          command: |
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/release/*.apk
+  ios:
+    macos:
+      xcode: '10.2.1'
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    working_directory: ~/textile-mobile
+
+    # use a --login shell so our "set Ruby version" command gets picked up for later steps
+    shell: /bin/bash --login -o pipefail
+
+    steps:
+      - restore_cache: # If any cache exists, it'll way speedup these checkouts
+          keys:
+            - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+            - source-v2-{{ arch }}-{{ .Branch }}-
+            - source-v2-{{ arch }}-
+
+      - checkout
+
+      - save_cache:
+          key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - '.git'
+
+      - run:
+          name: set Ruby version
+          command: echo "ruby-2.4" > ~/.ruby-version
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      # not using a workspace here as Node and Yarn versions
+      # differ between our macOS executor image and the Docker containers above
+      - run: yarn install --ignore-engines
+
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
+
+      - run:
+          name: Write .env
+          command: ./scripts/create-rn-env.sh
+
+      - restore_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+
+      - run:
+          command: bundle install
+          working_directory: ios
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          command: bundle exec fastlane test
+          working_directory: ios
+
+      - run:
+          name: set up test results
+          working_directory: ios
+          when: always
+          command: |
+            mkdir -p test-results/fastlane test-results/xcode
+            mv fastlane/report.xml test-results/fastlane
+            mv fastlane/test_output/report.junit test-results/xcode/junit.xml
+      - store_test_results:
+          path: ios/test-results
+
+      - store_artifacts:
+          path: ios/test-results
+
+  ios-adhoc:
+    macos:
+      xcode: '10.2.0' #keeping this on 10.2.0 for now because 10.2.1 isn't able to generate the RN js bundle file
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    working_directory: ~/textile-mobile
+
+    # use a --login shell so our "set Ruby version" command gets picked up for later steps
+    shell: /bin/bash --login -o pipefail
+
+    steps:
+      - run:
+          name: set Ruby version
+          command: echo "ruby-2.4" > ~/.ruby-version
+
+      - restore_cache: # If any cache exists, it'll way speedup these checkouts
+          keys:
+            - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+            - source-v2-{{ arch }}-{{ .Branch }}-
+            - source-v2-{{ arch }}-
+
+      - checkout
+
+      - save_cache:
+          key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - '.git'
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      # not using a workspace here as Node and Yarn versions
+      # differ between our macOS executor image and the Docker containers above
+      - run: yarn install --ignore-engines
+
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
+
+      - run:
+          name: Write .env
+          command: ./scripts/create-rn-env.sh
+
+      - run:
+          command: bundle install
+
+      - run:
+          command: bundle exec fastlane prep_release
+
+      - restore_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+
+      - run:
+          command: bundle install
+          working_directory: ios
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          command: bundle exec fastlane adhoc
+          working_directory: ios
+
+      - store_artifacts:
+          path: ./ios/Textile.app.dSYM.zip
+
+      - store_artifacts:
+          path: ./ios/Textile.ipa
+
+      - store_artifacts:
+          path: ./ios/sourcemap.js
+
+  ios-release:
+    macos:
+      xcode: '10.2.1'
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    working_directory: ~/textile-mobile
+
+    # use a --login shell so our "set Ruby version" command gets picked up for later steps
+    shell: /bin/bash --login -o pipefail
+
+    steps:
+      - run:
+          name: set Ruby version
+          command: echo "ruby-2.4" > ~/.ruby-version
+
+      - checkout
+
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      # not using a workspace here as Node and Yarn versions
+      # differ between our macOS executor image and the Docker containers above
+      - run: yarn install --ignore-engines
+
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
+
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
+
+      - run:
+          name: Write .env
+          command: ./scripts/create-rn-env.sh
+
+      - run:
+          command: bundle install
+
+      - run:
+          command: bundle exec fastlane prep_release
+
+      - restore_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+
+      - run:
+          command: bundle install
+          working_directory: ios
+
+      - save_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          command: bundle exec fastlane release
+          working_directory: ios
+
+      - store_artifacts:
+          path: ./ios/Textile.app.dSYM.zip
+
+      - store_artifacts:
+          path: ./ios/TextilePhotos.ipa
+
+      - store_artifacts:
+          path: ./ios/sourcemap.js
 
 workflows:
-    version: 2
-    dev:
-        jobs:
-            - lint:
-                filters:
-                    branches:
-                        ignore:
-                            - master
-            - tests:
-                filters:
-                    branches:
-                        ignore:
-                            - master
-            - android:
-                requires:
-                    - lint
-                    - tests
-                filters:
-                    branches:
-                        ignore:
-                            - master
-            - ios:
-                requires:
-                    - lint
-                    - tests
-                filters:
-                    branches:
-                        ignore:
-                            - master
-    adhoc:
-        jobs:
-            - ios-adhoc:
-                context: textile-mobile-beta
-                filters:
-                    branches:
-                        only:
-                            - master
-            - android-adhoc:
-                context: textile-mobile-beta
-                filters:
-                    branches:
-                        only:
-                            - master
-    release-ios:
-        jobs:
-            - ios-release:
-                context: textile-mobile-release
-                filters:
-                    tags:
-                        only: /^ios_[0-9.]+_[0-9]+/
-                    branches:
-                        ignore: /.*/
-    release-android:
-        jobs:
-            - android-release:
-                context: textile-mobile-release
-                filters:
-                    tags:
-                        only: /^android_[0-9.]+_[0-9]+/
-                    branches:
-                        ignore: /.*/
-            - android-apk-release:
-                requires:
-                    - android-release
-                filters:
-                    tags:
-                        only: /^android_[0-9.]+_[0-9]+/
-                    branches:
-                        ignore: /.*/
+  version: 2
+  dev:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              ignore:
+                - master
+      - tests:
+          filters:
+            branches:
+              ignore:
+                - master
+      - android:
+          requires:
+            - lint
+            - tests
+          filters:
+            branches:
+              ignore:
+                - master
+      - ios:
+          requires:
+            - lint
+            - tests
+          filters:
+            branches:
+              ignore:
+                - master
+  adhoc:
+    jobs:
+      - ios-adhoc:
+          context: textile-mobile-beta
+          filters:
+            branches:
+              only:
+                - master
+      - android-adhoc:
+          context: textile-mobile-beta
+          filters:
+            branches:
+              only:
+                - master
+  release-ios:
+    jobs:
+      - ios-release:
+          context: textile-mobile-release
+          filters:
+            tags:
+              only: /^ios_[0-9.]+_[0-9]+/
+            branches:
+              ignore: /.*/
+  release-android:
+    jobs:
+      - android-release:
+          context: textile-mobile-release
+          filters:
+            tags:
+              only: /^android_[0-9.]+_[0-9]+/
+            branches:
+              ignore: /.*/
+      - android-apk-release:
+          requires:
+            - android-release
+          filters:
+            tags:
+              only: /^android_[0-9.]+_[0-9]+/
+            branches:
+              ignore: /.*/
