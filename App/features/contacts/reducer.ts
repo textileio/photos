@@ -62,6 +62,7 @@ export default combineReducers<ContactsState, ContactsAction>({
         const message =
           (error.message as string) || (error as string) || 'unknown'
         return {
+          ...state,
           processing: false,
           error: message
         }
@@ -89,6 +90,7 @@ export default combineReducers<ContactsState, ContactsAction>({
       }
       case getType(actions.searchResultsAddressBook): {
         return {
+          ...state,
           processing: false,
           results: action.payload.results
         }

@@ -6,7 +6,8 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  ViewStyle
+  ViewStyle,
+  TextStyle
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import { IContact, Thread } from '@textile/react-native-sdk'
@@ -19,7 +20,7 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
-import { color, spacing } from '../styles'
+import { color, spacing, fontFamily, fontSize } from '../styles'
 
 // Redux
 import { RootState, RootAction } from '../Redux/Types'
@@ -32,6 +33,7 @@ import {
   getDirectMessageThread
 } from '../Redux/PhotoViewingSelectors'
 import { contactsActions } from '../features/contacts'
+import { cafes } from '../features/contacts/selectors'
 
 const buttons: ViewStyle = {
   flexDirection: 'row',
@@ -41,6 +43,25 @@ const buttons: ViewStyle = {
 
 const addOrRemoveButton: ViewStyle = {
   marginRight: spacing._012
+}
+
+const cafesList: ViewStyle = {
+  width: '100%',
+  flex: 0,
+  paddingHorizontal: spacing._016,
+  paddingTop: spacing._024
+}
+
+const cafesHeader: TextStyle = {
+  fontFamily: fontFamily.bold,
+  fontSize: fontSize._16,
+  marginBottom: spacing._012
+}
+
+const cafesTitle: TextStyle = {
+  fontFamily: fontFamily.regular,
+  fontSize: fontSize._14,
+  marginBottom: spacing._012
 }
 
 interface NavProps {
@@ -87,7 +108,8 @@ class ContactModal extends React.Component<Props> {
   }
 
   render() {
-    const avatar = this.props.navigation.getParam('contact').avatar
+    const contact = this.props.navigation.getParam('contact')
+    const avatar = contact.avatar
     const removingText = this.props.removing ? 'Removing' : 'Remove'
     const addingText = this.props.adding ? 'Adding' : 'Add'
     const buttonText = this.props.isContact ? removingText : addingText
@@ -100,8 +122,6 @@ class ContactModal extends React.Component<Props> {
             target={avatar}
           />
           <Text
-            adjustsFontSizeToFit={true}
-            numberOfLines={1}
             style={styles.username}
           >
             {this.props.displayName}
@@ -141,6 +161,17 @@ class ContactModal extends React.Component<Props> {
                 photo={thread.thumb}
               />
             </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <ScrollView style={cafesList}>
+          <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
+          {cafes(contact).map((cafe, i) => (
+            <Text
+              key={i}
+              style={cafesTitle}
+            >
+              {cafe.address}
+            </Text>
           ))}
         </ScrollView>
       </View>
