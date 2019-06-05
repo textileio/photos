@@ -12,11 +12,18 @@ import rootSaga from '../Sagas'
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export default () => {
-  const sagaMonitor = DebugConfig.useReactotron ? Reactotron.createSagaMonitor() : undefined
+  const sagaMonitor = DebugConfig.useReactotron
+    ? Reactotron.createSagaMonitor()
+    : undefined
   const sagaMiddleware = createSagaMiddleware({ sagaMonitor })
 
-  const createAppropriateStore = DebugConfig.useReactotron ? Reactotron.createStore : createStore
-  const store = createAppropriateStore(persistedReducer, applyMiddleware(sagaMiddleware))
+  const createAppropriateStore = DebugConfig.useReactotron
+    ? Reactotron.createStore
+    : createStore
+  const store = createAppropriateStore(
+    persistedReducer,
+    applyMiddleware(sagaMiddleware)
+  )
 
   const bootstrappedCallback = () => store.dispatch(StartupActions.startup())
   const persistor = persistStore(store, undefined, bootstrappedCallback)

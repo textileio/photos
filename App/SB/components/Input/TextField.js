@@ -9,11 +9,14 @@ import styles from './statics/styles'
 
 class TextField extends Component {
   static propTypes = {
+    errorMsg: PropTypes.string,
+    errorBorderColor: PropTypes.string,
     duration: PropTypes.number,
     label: PropTypes.string,
     highlightColor: PropTypes.string,
     labelColor: PropTypes.string,
     borderColor: PropTypes.string,
+    text: PropTypes.string,
     textColor: PropTypes.string,
     textFocusColor: PropTypes.string,
     textBlurColor: PropTypes.string,
@@ -41,7 +44,7 @@ class TextField extends Component {
     underlineColorAndroid: 'rgba(0,0,0,0)'
   }
 
-  constructor (props, context) {
+  constructor(props, context) {
     super(props, context)
     this.state = {
       isFocused: false,
@@ -49,28 +52,30 @@ class TextField extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (this.props.text !== nextProps.value) {
-      nextProps.value.length !== 0
-        ? this.refs.floatingLabel.floatLabel()
-        : this.refs.floatingLabel.sinkLabel()
+      if (nextProps.value.length !== 0) {
+        this.refs.floatingLabel.floatLabel()
+      } else {
+        this.refs.floatingLabel.sinkLabel()
+      }
       this.setState({ text: nextProps.value })
     }
   }
 
-  focus () {
+  focus() {
     this.refs.input.focus()
   }
 
-  blur () {
+  blur() {
     this.refs.input.blur()
   }
 
-  isFocused () {
+  isFocused() {
     return this.state.isFocused
   }
 
-  render () {
+  render() {
     const {
       label,
       highlightColor,
@@ -95,15 +100,28 @@ class TextField extends Component {
       ...props
     } = this.props
     return (
-      <View style={[dense ? styles.denseWrapper : styles.wrapper, wrapperStyle]} ref='wrapper'>
+      <View
+        style={[dense ? styles.denseWrapper : styles.wrapper, wrapperStyle]}
+        ref="wrapper"
+      >
         <TextInput
-          style={[dense ? styles.denseTextInput : styles.textInput, {
-            color: textColor
-          }, (this.state.isFocused && textFocusColor) ? {
-            color: textFocusColor
-          } : {}, (!this.state.isFocused && textBlurColor) ? {
-            color: textBlurColor
-          } : {}, inputStyle]}
+          style={[
+            dense ? styles.denseTextInput : styles.textInput,
+            {
+              color: textColor
+            },
+            this.state.isFocused && textFocusColor
+              ? {
+                  color: textFocusColor
+                }
+              : {},
+            !this.state.isFocused && textBlurColor
+              ? {
+                  color: textBlurColor
+                }
+              : {},
+            inputStyle
+          ]}
           onFocus={() => {
             this.setState({ isFocused: true })
             this.refs.floatingLabel.floatLabel()
@@ -129,27 +147,27 @@ class TextField extends Component {
             }
           }}
           editable={!disabled}
-          ref='input'
+          ref="input"
           value={this.state.text}
           {...props}
         />
         <Underline
-          ref='underline'
+          ref="underline"
           highlightColor={highlightColor}
           duration={duration}
           borderColor={error ? errorBorderColor : borderColor}
         />
-        { error && <Text style={styles.errorMsg}>{errorMsg}</Text> }
+        {error && <Text style={styles.errorMsg}>{errorMsg}</Text>}
         <FloatingLabel
           isFocused={this.state.isFocused}
-          ref='floatingLabel'
+          ref="floatingLabel"
           focusHandler={this.focus.bind(this)}
           label={label}
           labelColor={labelColor}
           highlightColor={highlightColor}
           duration={duration}
           dense={dense}
-          hasValue={!!(this.state.text.length)}
+          hasValue={Boolean(this.state.text.length)}
           style={labelStyle}
         />
       </View>

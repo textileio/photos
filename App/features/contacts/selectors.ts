@@ -6,11 +6,15 @@ import {
   AddressBookSearchResult
 } from './models'
 
-export const makeIsKnown = (address: string) => (state: ContactsState) => state.contacts.some((p) => p.address === address)
+export const makeIsKnown = (address: string) => (state: ContactsState) =>
+  state.contacts.some(p => p.address === address)
 
-export const makeByThreadId = (id: string) => (state: ContactsState) => state.contacts.filter((contact) => (contact.threads || []).indexOf(id) > -1)
+export const makeByThreadId = (id: string) => (state: ContactsState) =>
+  state.contacts.filter(contact => (contact.threads || []).indexOf(id) > -1)
 
-export const makeContactByAddress = (address: string) => (state: ContactsState) => state.contacts.find((contact) => contact.address === address)
+export const makeContactByAddress = (address: string) => (
+  state: ContactsState
+) => state.contacts.find(contact => contact.address === address)
 
 export const orderedContacts = (state: ContactsState) => {
   return state.contacts.slice().sort((a, b) => {
@@ -56,27 +60,47 @@ export const searchResults = (state: ContactsState) => {
     // By definition, if there is an error the results stop loading
     // 1. Anytime there is an error, we want it to be the first result
     // 2. If there is no error and no results, we want an empty type to be the first result
-    textileData = [{ key: 'textile_error', type: 'error', data: state.textileSearchResults.error }]
-  } else if (state.textileSearchResults.results && state.textileSearchResults.results.length === 0) {
+    textileData = [
+      {
+        key: 'textile_error',
+        type: 'error',
+        data: state.textileSearchResults.error
+      }
+    ]
+  } else if (
+    state.textileSearchResults.results &&
+    state.textileSearchResults.results.length === 0
+  ) {
     textileData = [{ key: 'textile_empty', type: 'empty' }]
   }
 
   // Regardless of whether there is an error or not, we want to display the results already retrieved
   // By definition, this code won't execute if there are no results, so there will never be a textile_empty
   // object and actual search results rendered at teh same time.
-  if (state.textileSearchResults.results && state.textileSearchResults.results.length > 0) {
-    textileData = [...textileData || [], ...state.textileSearchResults.results
-      .filter((current, index, arr) => {
-        const sames = arr.filter((el) => el.address === current.address)
-        return sames.length === 1
-      })
-      .map((result) => {
-        const selector = makeIsKnown(result.address)
-        const isContact = selector(state)
-        const adding = Object.keys(state.addingContacts).indexOf(result.address) > -1
-        const textileResult: TextileSearchResult = { key: result.address, type: 'textile', data: { contact: result, isContact, adding } }
-        return textileResult
-      })]
+  if (
+    state.textileSearchResults.results &&
+    state.textileSearchResults.results.length > 0
+  ) {
+    textileData = [
+      ...(textileData || []),
+      ...state.textileSearchResults.results
+        .filter((current, index, arr) => {
+          const sames = arr.filter(el => el.address === current.address)
+          return sames.length === 1
+        })
+        .map(result => {
+          const selector = makeIsKnown(result.address)
+          const isContact = selector(state)
+          const adding =
+            Object.keys(state.addingContacts).indexOf(result.address) > -1
+          const textileResult: TextileSearchResult = {
+            key: result.address,
+            type: 'textile',
+            data: { contact: result, isContact, adding }
+          }
+          return textileResult
+        })
+    ]
   }
 
   if (textileData) {
@@ -89,20 +113,43 @@ export const searchResults = (state: ContactsState) => {
   if (state.addressBookSearchResults.processing) {
     addressBookData = [{ key: 'addressBook_loading', type: 'loading' }]
   } else if (state.addressBookSearchResults.error) {
-    addressBookData = [{ key: 'addressBook_error', type: 'error', data: state.addressBookSearchResults.error }]
-  } else if (state.addressBookSearchResults.results && state.addressBookSearchResults.results.length === 0) {
+    addressBookData = [
+      {
+        key: 'addressBook_error',
+        type: 'error',
+        data: state.addressBookSearchResults.error
+      }
+    ]
+  } else if (
+    state.addressBookSearchResults.results &&
+    state.addressBookSearchResults.results.length === 0
+  ) {
     addressBookData = [{ key: 'addressBook_empty', type: 'empty' }]
   }
 
-  if (state.addressBookSearchResults.results && state.addressBookSearchResults.results.length > 0) {
-    addressBookData = [...addressBookData || [], ...state.addressBookSearchResults.results.map((result) => {
-      const addressBookResult: AddressBookSearchResult = { key: result.recordID, type: 'addressBook', data: result }
-      return addressBookResult
-    })]
+  if (
+    state.addressBookSearchResults.results &&
+    state.addressBookSearchResults.results.length > 0
+  ) {
+    addressBookData = [
+      ...(addressBookData || []),
+      ...state.addressBookSearchResults.results.map(result => {
+        const addressBookResult: AddressBookSearchResult = {
+          key: result.recordID,
+          type: 'addressBook',
+          data: result
+        }
+        return addressBookResult
+      })
+    ]
   }
 
   if (addressBookData) {
-    sections.push({ key: 'addressBook', title: 'Address Book', data: addressBookData })
+    sections.push({
+      key: 'addressBook',
+      title: 'Address Book',
+      data: addressBookData
+    })
   }
 
   return sections

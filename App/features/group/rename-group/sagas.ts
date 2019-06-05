@@ -4,7 +4,9 @@ import Textile from '@textile/react-native-sdk'
 import { renameGroup } from './actions'
 import PhotoViewingActions from '../../../Redux/PhotoViewingRedux'
 
-export function *handleRenameGroupRequest(action: ActionType<typeof renameGroup.request>) {
+export function* handleRenameGroupRequest(
+  action: ActionType<typeof renameGroup.request>
+) {
   const { threadId, name } = action.payload
   try {
     yield call(Textile.threads.rename, threadId, name)
@@ -15,8 +17,6 @@ export function *handleRenameGroupRequest(action: ActionType<typeof renameGroup.
   }
 }
 
-export default function *() {
-  yield all([
-    takeEvery(getType(renameGroup.request), handleRenameGroupRequest)
-  ])
+export default function*() {
+  yield all([takeEvery(getType(renameGroup.request), handleRenameGroupRequest)])
 }

@@ -13,7 +13,10 @@ describe('device logs stories', () => {
       expect(initialState.logs.length).toEqual(0)
     })
     it('should log an entry', () => {
-      const state0 = reducer(initialState, actions.logNewEvent(0, 'event', 'message', false))
+      const state0 = reducer(
+        initialState,
+        actions.logNewEvent(0, 'event', 'message', false)
+      )
       expect(state0.logs.length).toEqual(1)
     })
   })

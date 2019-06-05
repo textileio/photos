@@ -21,19 +21,19 @@ import { PhotosAction } from '../features/photos'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
-  AccountAction |
-  AuthAction |
-  CameraRollAction |
-  ContactsAction |
-  DeviceLogsAction |
-  PhotoViewingAction |
-  PreferencesAction |
-  NotificationsAction |
-  ThreadsAction |
-  TriggersAction |
-  UIAction |
-  UploadingImagesAction |
-  StartupAction |
-  TextileEventsActions |
-  GroupAction |
-  PhotosAction
+  | AccountAction
+  | AuthAction
+  | CameraRollAction
+  | ContactsAction
+  | DeviceLogsAction
+  | PhotoViewingAction
+  | PreferencesAction
+  | NotificationsAction
+  | ThreadsAction
+  | TriggersAction
+  | UIAction
+  | UploadingImagesAction
+  | StartupAction
+  | TextileEventsActions
+  | GroupAction
+  | PhotosAction

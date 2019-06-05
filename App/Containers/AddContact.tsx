@@ -49,27 +49,22 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 class AddContact extends React.Component<Props> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const close = () => {
       navigation.getParam('clearSearch')()
       navigation.dispatch(NavigationActions.back())
     }
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title='Close' iconName='chevron-bottom' onPress={close} />
+        <Item title="Close" iconName="chevron-bottom" onPress={close} />
       </TextileHeaderButtons>
     )
     return {
       headerTitle: 'Add Contact',
       headerRight
     }
-  }
-
-  constructor(props: Props) {
-    super(props)
-    // this._headerComponent = this._headerComponent.bind(this)
-    // this.updateSearchString = this.updateSearchString.bind(this)
   }
 
   componentDidMount() {
@@ -88,8 +83,8 @@ class AddContact extends React.Component<Props> {
           renderItem={this.renderRow}
           ItemSeparatorComponent={RowSeparator}
           // ListHeaderComponent={this._headerComponent}
-          keyboardShouldPersistTaps='handled'
-          keyboardDismissMode='on-drag'
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
         />
       </View>
     )
@@ -98,14 +93,27 @@ class AddContact extends React.Component<Props> {
   _headerComponent = () => (
     <SearchBar
       containerStyle={{ backgroundColor: color.grey_5 }}
-      inputStyle={{ ...textStyle.body_m, color: color.grey_2, backgroundColor: color.grey_6 }}
-      additionalInputProps={{ autoCapitalize: 'none', autoCorrect: false, spellCheck: false, autoFocus: true }}
+      inputStyle={{
+        ...textStyle.body_m,
+        color: color.grey_2,
+        backgroundColor: color.grey_6
+      }}
+      additionalInputProps={{
+        autoCapitalize: 'none',
+        autoCorrect: false,
+        spellCheck: false,
+        autoFocus: true
+      }}
       iconColor={color.grey_4}
       onTextChanged={this.updateSearchString}
     />
   )
 
-  renderSectionHeader = ({section: { key, title }}: { section: SectionListData<SearchResultsSection> }) => {
+  renderSectionHeader = ({
+    section: { key, title }
+  }: {
+    section: SectionListData<SearchResultsSection>
+  }) => {
     return (
       <Text
         key={key}
@@ -124,24 +132,38 @@ class AddContact extends React.Component<Props> {
     )
   }
 
-  renderRow = ({ item, index, section }: SectionListRenderItemInfo<SearchResult>) => {
+  renderRow = ({
+    item,
+    index,
+    section
+  }: SectionListRenderItemInfo<SearchResult>) => {
     switch (item.type) {
       case 'loading':
-        return <ActivityIndicator size='small' style={{ padding: 11 }} />
+        return <ActivityIndicator size="small" style={{ padding: 11 }} />
       case 'textile':
         return (
           <ListItem
-            leftItem={<Avatar style={{ width: 50 }} target={item.data.contact.avatar} />}
+            leftItem={
+              <Avatar style={{ width: 50 }} target={item.data.contact.avatar} />
+            }
             title={item.data.contact.name || item.data.contact.address}
-            subtitle={item.data.contact.address.substr(item.data.contact.address.length - 8, 8)}
+            subtitle={item.data.contact.address.substr(
+              item.data.contact.address.length - 8,
+              8
+            )}
             rightItems={[
               <Button
-                key='add'
+                key="add"
                 text={item.data.isContact ? 'added' : 'add'}
                 disabled={item.data.isContact || item.data.adding}
                 onPress={this.onAdd(item.data.contact)}
               />,
-              <Icon key='more' name='chevron-right' size={24} color={color.grey_4} />
+              <Icon
+                key="more"
+                name="chevron-right"
+                size={24}
+                color={color.grey_4}
+              />
             ]}
             onPress={this.onPressTextile(item.data.contact)}
           />
@@ -150,23 +172,20 @@ class AddContact extends React.Component<Props> {
         return (
           <ListItem
             title={`${item.data.givenName} ${item.data.familyName}`.trim()}
-            rightItems={[<Button key='invite' text='invite' onPress={this.onPressAddressBook(item.data)} />]}
+            rightItems={[
+              <Button
+                key="invite"
+                text="invite"
+                onPress={this.onPressAddressBook(item.data)}
+              />
+            ]}
             onPress={this.onPressAddressBook(item.data)}
           />
         )
       case 'empty':
-        return (
-          <ListItem
-            title='No results'
-          />
-        )
+        return <ListItem title="No results" />
       case 'error':
-        return (
-          <ListItem
-            title='Error'
-            subtitle={item.data}
-          />
-        )
+        return <ListItem title="Error" subtitle={item.data} />
     }
     // const leftItem = <Avatar style={{ width: 50 }} target={item.avatar} />
     // const rightItems = [<Icon key='more' name='chevron-right' size={24} color={color.grey_4} />]
@@ -203,11 +222,17 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    search: (searchString: string) => dispatch(contactsActions.searchRequest(searchString)),
+    search: (searchString: string) =>
+      dispatch(contactsActions.searchRequest(searchString)),
     clearSearch: () => dispatch(contactsActions.clearSearch()),
-    addContact: (contact: IContact) => dispatch(contactsActions.addContactRequest(contact)),
-    inviteContact: (contact: Contacts.Contact) => dispatch(contactsActions.authorInviteRequest(contact))
+    addContact: (contact: IContact) =>
+      dispatch(contactsActions.addContactRequest(contact)),
+    inviteContact: (contact: Contacts.Contact) =>
+      dispatch(contactsActions.authorInviteRequest(contact))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddContact)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddContact)

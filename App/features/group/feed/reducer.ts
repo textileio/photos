@@ -21,7 +21,10 @@ export default combineReducers<FeedState, FeedAction>({
       case getType(actions.loadFeedItems.request): {
         const { id } = action.payload
         const prev = state[id]
-        return { ...state, [id]: { ...(prev || { items: [] }), loading: true, error: undefined } }
+        return {
+          ...state,
+          [id]: { ...(prev || { items: [] }), loading: true, error: undefined }
+        }
       }
       case getType(actions.refreshFeed.success): {
         const { id, items } = action.payload
@@ -31,14 +34,21 @@ export default combineReducers<FeedState, FeedAction>({
         const { id, items } = action.payload
         const prev = state[id]
         const prevItems = prev ? prev.items : []
-        return { ...state, [id]: { items: [...prevItems, ...items], loading: false } }
+        return {
+          ...state,
+          [id]: { items: [...prevItems, ...items], loading: false }
+        }
       }
       case getType(actions.refreshFeed.failure):
       case getType(actions.loadFeedItems.failure): {
         const { id, error } = action.payload
-        const message = error.message as string || error as string || 'unknown'
+        const message =
+          (error.message as string) || (error as string) || 'unknown'
         const prev = state[id]
-        return { ...state, [id]: { ...(prev || { items: [] }), loading: false, error: message } }
+        return {
+          ...state,
+          [id]: { ...(prev || { items: [] }), loading: false, error: message }
+        }
       }
       default:
         return state

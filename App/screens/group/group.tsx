@@ -1,14 +1,23 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { Text, FlatList, ListRenderItemInfo, Dimensions, Alert } from 'react-native'
+import {
+  Text,
+  FlatList,
+  ListRenderItemInfo,
+  Dimensions,
+  Alert
+} from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
 import Textile, { IUser, Thread } from '@textile/react-native-sdk'
 import moment from 'moment'
 
-import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
+import {
+  TextileHeaderButtons,
+  Item as TextileHeaderButtonsItem
+} from '../../Components/HeaderButtons'
 import KeyboardResponsiveContainer from '../../Components/KeyboardResponsiveContainer'
 import AuthoringInput from '../../Components/authoring-input'
 import InviteContactModal from '../../Components/InviteContactModal'
@@ -59,7 +68,7 @@ interface DispatchProps {
 }
 
 interface NavProps {
-  threadId: string,
+  threadId: string
   groupName: string
   showActionSheet: () => void
 }
@@ -72,8 +81,9 @@ interface State {
 }
 
 class Group extends React.PureComponent<Props, State> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     // const openDrawer = navigation.getParam('openDrawer')
     // const addContact = navigation.getParam('addContact')
     const groupName = navigation.getParam('groupName')
@@ -81,12 +91,20 @@ class Group extends React.PureComponent<Props, State> {
     const back = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>
-        <TextileHeaderButtonsItem title='Back' iconName='arrow-left' onPress={back} />
+        <TextileHeaderButtonsItem
+          title="Back"
+          iconName="arrow-left"
+          onPress={back}
+        />
       </TextileHeaderButtons>
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <TextileHeaderButtonsItem title='More' iconName='more-vertical' onPress={showActionSheet} />}
+        <TextileHeaderButtonsItem
+          title="More"
+          iconName="more-vertical"
+          onPress={showActionSheet}
+        />
       </TextileHeaderButtons>
     )
     return {
@@ -116,7 +134,11 @@ class Group extends React.PureComponent<Props, State> {
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
-    const options = (this.props.canInvite ? ['Invite Others'] : []).concat(['Rename Group', 'Leave Group', 'Cancel'])
+    const options = (this.props.canInvite ? ['Invite Others'] : []).concat([
+      'Rename Group',
+      'Leave Group',
+      'Cancel'
+    ])
     const cancelButtonIndex = this.props.canInvite ? 3 : 2
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
@@ -131,7 +153,11 @@ class Group extends React.PureComponent<Props, State> {
             onEndReachedThreshold={5}
             maxToRenderPerBatch={5}
           />
-          <AuthoringInput containerStyle={{ }} onSendMessage={this.submit} onSharePhoto={this.props.showWalletPicker} />
+          <AuthoringInput
+            containerStyle={{}}
+            onSendMessage={this.submit}
+            onSharePhoto={this.props.showWalletPicker}
+          />
           <InviteContactModal
             isVisible={this.state.showInviteContactModal}
             cancel={this.hideInviteModal}
@@ -139,7 +165,9 @@ class Group extends React.PureComponent<Props, State> {
             selectedThreadName={this.props.groupName}
           />
           <ActionSheet
-            ref={(o: any) => { this.actionSheet = o }}
+            ref={(o: any) => {
+              this.actionSheet = o
+            }}
             title={this.props.groupName + ' options'}
             options={options}
             cancelButtonIndex={cancelButtonIndex}
@@ -174,26 +202,52 @@ class Group extends React.PureComponent<Props, State> {
   renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case 'photo': {
-        const { user, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = (likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1) || this.liking(block)
-        const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
-          return {
-            id: comment.id,
-            username: comment.user.name || '?',
-            body: comment.body
+        const {
+          user,
+          caption,
+          date,
+          target,
+          files,
+          likes,
+          comments,
+          block
+        } = item.data
+        const hasLiked =
+          likes.findIndex(
+            likeInfo => likeInfo.user.address === this.props.selfAddress
+          ) > -1 || this.liking(block)
+        const commentsData: ReadonlyArray<CommentData> = comments.map(
+          comment => {
+            return {
+              id: comment.id,
+              username: comment.user.name || '?',
+              body: comment.body
+            }
           }
-        })
+        )
         // Get full size image constraints
         const def = screenWidth
-        const pinchWidth = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.width.numberValue
-        const pinchHeight = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.height.numberValue
-        const fileIndex = files && files.length > 0 && files[0].index ? files[0].index : 0
+        const pinchWidth = !files.length
+          ? def
+          : !files[0].links.large
+          ? def
+          : files[0].links.large.meta.fields.width.numberValue
+        const pinchHeight = !files.length
+          ? def
+          : !files[0].links.large
+          ? def
+          : files[0].links.large.meta.fields.height.numberValue
+        const fileIndex =
+          files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <Photo
             avatar={user.avatar}
             username={user.name.length > 0 ? user.name : 'unknown'}
             message={caption.length > 0 ? caption : undefined}
-            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            time={moment(Textile.util.timestampToDate(date)).calendar(
+              undefined,
+              momentSpec
+            )}
             photoId={target}
             fileIndex={fileIndex}
             photoWidth={screenWidth}
@@ -216,15 +270,19 @@ class Group extends React.PureComponent<Props, State> {
           <ProcessingImage
             {...item.data}
             /* tslint:disable-next-line */
-            retry={() => {this.props.retryShare(item.key)}}
+            retry={() => {
+              this.props.retryShare(item.key)
+            }}
             /* tslint:disable-next-line */
-            cancel={() => {this.props.cancelShare(item.key)}}
+            cancel={() => {
+              this.props.cancelShare(item.key)
+            }}
           />
         )
       }
       case 'message': {
         const { user, body, date } = item.data
-        const isSameUser = this.sameUserAgain(user, this.props.items[(index + 1)])
+        const isSameUser = this.sameUserAgain(user, this.props.items[index + 1])
         const avatar = isSameUser ? undefined : user.avatar
         return (
           <Message
@@ -232,7 +290,10 @@ class Group extends React.PureComponent<Props, State> {
             username={user.name || 'unknown'}
             message={body}
             // TODO: deal with pb Timestamp to JS Date!
-            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            time={moment(Textile.util.timestampToDate(date)).calendar(
+              undefined,
+              momentSpec
+            )}
             isSameUser={isSameUser}
           />
         )
@@ -246,7 +307,10 @@ class Group extends React.PureComponent<Props, State> {
             avatar={user.avatar}
             username={user.name || 'unknown'}
             message={`${word} ${this.props.groupName}`}
-            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            time={moment(Textile.util.timestampToDate(date)).calendar(
+              undefined,
+              momentSpec
+            )}
           />
         )
       }
@@ -317,7 +381,10 @@ class Group extends React.PureComponent<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: NavigationScreenProps<NavProps>
+): StateProps => {
   const threadId = ownProps.navigation.getParam('threadId')
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
@@ -337,19 +404,42 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>): DispatchProps => {
+const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>,
+  ownProps: NavigationScreenProps<NavProps>
+): DispatchProps => {
   const threadId = ownProps.navigation.getParam('threadId')
   return {
-    refresh: () => dispatch(groupActions.feed.refreshFeed.request({ id: threadId })),
-    sendMessage: (message: string) => dispatch(groupActions.addMessage.addMessage.request({ id: uuid(), groupId: threadId, body: message })),
+    refresh: () =>
+      dispatch(groupActions.feed.refreshFeed.request({ id: threadId })),
+    sendMessage: (message: string) =>
+      dispatch(
+        groupActions.addMessage.addMessage.request({
+          id: uuid(),
+          groupId: threadId,
+          body: message
+        })
+      ),
     // TODO: look at just doing direct navigation for this
-    showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) },
-    addPhotoLike: (block: string) => dispatch(UIActions.addLike.request({ blockId: block })),
-    navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
-    leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
-    retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry(key)) },
-    cancelShare: (key: string) => { dispatch(groupActions.addPhoto.cancelRequest(key)) }
+    showWalletPicker: () => {
+      dispatch(UIActions.showWalletPicker(threadId))
+    },
+    addPhotoLike: (block: string) =>
+      dispatch(UIActions.addLike.request({ blockId: block })),
+    navigateToComments: (id: string) =>
+      dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
+    leaveThread: () =>
+      dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
+    retryShare: (key: string) => {
+      dispatch(groupActions.addPhoto.retry(key))
+    },
+    cancelShare: (key: string) => {
+      dispatch(groupActions.addPhoto.cancelRequest(key))
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Group)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Group)

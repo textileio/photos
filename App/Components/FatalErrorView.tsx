@@ -42,22 +42,33 @@ interface State {
 }
 
 export default class FatalErrorView extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props)
     this.state = { showContactModal: false }
   }
 
-  contact = () => this.setState({ showContactModal: !this.state.showContactModal })
+  contact = () =>
+    this.setState({ showContactModal: !this.state.showContactModal })
 
   render() {
     return (
       <View style={CONTAINER}>
         <Logo>
-          <Text style={TEXT}>Oops, something went very wrong!{'\n'}Please <Text style={LINK} onPress={this.contact}>contact us</Text> and let us know:</Text>
+          <Text style={TEXT}>
+            Oops, something went very wrong!{'\n'}Please{' '}
+            <Text style={LINK} onPress={this.contact}>
+              contact us
+            </Text>{' '}
+            and let us know:
+          </Text>
         </Logo>
         <Text style={ERROR}>{this.props.message}</Text>
-        <ContactModal height={200} width={WIDTH} onClose={this.contact} isVisible={this.state.showContactModal} />
+        <ContactModal
+          height={200}
+          width={WIDTH}
+          onClose={this.contact}
+          isVisible={this.state.showContactModal}
+        />
       </View>
     )
   }

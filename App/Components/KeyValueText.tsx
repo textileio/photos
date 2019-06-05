@@ -27,7 +27,7 @@ const keyValueText = (props: Props) => {
   const { keyString, value, ...rest } = props
   return (
     <Text style={VALUE} {...rest}>
-      <Text style={KEY}>{keyString}</Text>{' '}{value}
+      <Text style={KEY}>{keyString}</Text> {value}
     </Text>
   )
 }

@@ -12,17 +12,20 @@ export function feedOffsetForGroup(state: FeedState, groupId: string) {
   return last.block
 }
 
-export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<FeedItem> => {
+export function feedItems(
+  state: FeedState,
+  groupId: string
+): ReadonlyArray<FeedItem> {
   const feed = state.groups[groupId]
   if (!feed) {
     return []
   }
   const items = feed.items
-    .map((feedItem) => {
-      if (!feedItem.payload || typeof feedItem.payload.value === 'string') {
-        return
-      }
+    .map(feedItem => {
       let item: FeedItem | undefined
+      if (!feedItem.payload || typeof feedItem.payload.value === 'string') {
+        return item // bail
+      }
       switch (feedItem.payload.type_url) {
         // TODO: figure out what these typeUrls can be
         case '/Join': {
@@ -57,6 +60,10 @@ export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<Feed
           }
           break
         }
+        default:
+          throw new Error(
+            'Unexpected payload type_url:' + feedItem.payload.type_url
+          )
       }
       return item
     })

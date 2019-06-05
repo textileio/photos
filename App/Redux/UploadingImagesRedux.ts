@@ -2,27 +2,33 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
 
 const actions = {
-  addImage: createAction('ADD_IMAGE', (resolve) => {
-    return (path: string, dataId: string, attempts: number) => resolve({ path, dataId, attempts })
+  addImage: createAction('ADD_IMAGE', resolve => {
+    return (path: string, dataId: string, attempts: number) =>
+      resolve({ path, dataId, attempts })
   }),
-  imageUploadProgress: createAction('IMAGE_UPLOAD_PROGRESS', (resolve) => {
+  imageUploadProgress: createAction('IMAGE_UPLOAD_PROGRESS', resolve => {
     return (dataId: string, progress: number) => resolve({ dataId, progress })
   }),
-  imageUploadComplete: createAction('IMAGE_UPLOAD_COMPLETE', (resolve) => {
-    return (dataId: string, responseCode: string, responseBody: string) => resolve({ dataId, responseCode, responseBody })
+  imageUploadComplete: createAction('IMAGE_UPLOAD_COMPLETE', resolve => {
+    return (dataId: string, responseCode: string, responseBody: string) =>
+      resolve({ dataId, responseCode, responseBody })
   }),
-  imageUploadError: createAction('IMAGE_UPLOAD_ERROR', (resolve) => {
-    return (dataId: string, errorMessage: string) => resolve({ dataId, errorMessage })
+  imageUploadError: createAction('IMAGE_UPLOAD_ERROR', resolve => {
+    return (dataId: string, errorMessage: string) =>
+      resolve({ dataId, errorMessage })
   }),
-  imageUploadRetried: createAction('IMAGE_UPLOAD_RETRIED', (resolve) => {
+  imageUploadRetried: createAction('IMAGE_UPLOAD_RETRIED', resolve => {
     return (dataId: string) => resolve({ dataId })
   }),
-  imageRemovalComplete: createAction('IMAGE_REMOVAL_COMPLETE', (resolve) => {
+  imageRemovalComplete: createAction('IMAGE_REMOVAL_COMPLETE', resolve => {
     return (dataId: string) => resolve({ dataId })
   }),
-  synchronizeNativeUploadsError: createAction('SYNCHRONIZE_NATIVE_UPLOADS_ERROR', (resolve) => {
-    return (error: Error) => resolve(error)
-  })
+  synchronizeNativeUploadsError: createAction(
+    'SYNCHRONIZE_NATIVE_UPLOADS_ERROR',
+    resolve => {
+      return (error: Error) => resolve(error)
+    }
+  )
 }
 
 export type UploadingImagesAction = ActionType<typeof actions>
@@ -51,11 +57,14 @@ export const initialState: UploadingImagesState = {
 }
 
 export const UploadingImagesSelectors = {
-  uploadingImageById: (state: RootState, id: string) => state.uploadingImages.images[id],
+  uploadingImageById: (state: RootState, id: string) =>
+    state.uploadingImages.images[id],
   imagesForRetry: (state: RootState) => {
     return Object.keys(state.uploadingImages.images)
-      .map((key) => state.uploadingImages.images[key])
-      .filter((image) => image.state === 'error' && image.remainingUploadAttempts > 0)
+      .map(key => state.uploadingImages.images[key])
+      .filter(
+        image => image.state === 'error' && image.remainingUploadAttempts > 0
+      )
   },
   uploadingImageIds: (state: RootState) => {
     const keys: string[] = []
@@ -71,7 +80,10 @@ export const UploadingImagesSelectors = {
   }
 }
 
-export function reducer(state: UploadingImagesState = initialState, action: UploadingImagesAction): UploadingImagesState {
+export function reducer(
+  state: UploadingImagesState = initialState,
+  action: UploadingImagesAction
+): UploadingImagesState {
   switch (action.type) {
     case getType(actions.addImage): {
       const { path, dataId, attempts } = action.payload
@@ -92,13 +104,22 @@ export function reducer(state: UploadingImagesState = initialState, action: Uplo
     case getType(actions.imageUploadProgress): {
       const { dataId, progress } = action.payload
       const image = state.images[dataId]
-      const updated: UploadingImage = { ...image, state: 'uploading', uploadProgress: progress / 100 }
+      const updated: UploadingImage = {
+        ...image,
+        state: 'uploading',
+        uploadProgress: progress / 100
+      }
       return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageUploadComplete): {
       const { dataId, responseCode, responseBody } = action.payload
       const image = state.images[dataId]
-      const updated: UploadingImage = { ...image, state: 'complete', responseCode, responseBody }
+      const updated: UploadingImage = {
+        ...image,
+        state: 'complete',
+        responseCode,
+        responseBody
+      }
       return { ...state, images: { ...state.images, [dataId]: updated } }
     }
     case getType(actions.imageUploadError): {
@@ -125,11 +146,14 @@ export function reducer(state: UploadingImagesState = initialState, action: Uplo
     }
     case getType(actions.imageRemovalComplete): {
       const { dataId } = action.payload
-      const { [dataId as unknown as string]: removed, ...images } = state.images
+      const {
+        [(dataId as unknown) as string]: removed,
+        ...images
+      } = state.images
       return { ...state, images }
     }
     default:
-     return state
+      return state
   }
 }
 

@@ -1,5 +1,15 @@
 import React from 'react'
-import { KeyboardAvoidingView, View, Text, Image, ViewStyle, TextStyle, ImageStyle, Clipboard, TextInput } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  View,
+  Text,
+  Image,
+  ViewStyle,
+  TextStyle,
+  ImageStyle,
+  Clipboard,
+  TextInput
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import Button from '../Components/Button'
@@ -59,7 +69,6 @@ const BUTTON_TEXT_COPY = 'Copy Recovery Phrase'
 const BUTTON_TEXT_COPIED = 'Copied!'
 
 class VerifyRecoveryPhrase extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -79,20 +88,28 @@ class VerifyRecoveryPhrase extends React.Component<Props, State> {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
         <View>
-          <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/secure.png')} />
+          <Image
+            style={IMAGE}
+            source={require('../Containers/OnboardingScreen/statics/secure.png')}
+          />
           <Text style={TITLE}>Did you save it?</Text>
           <Text style={SUBTITLE}>
-            Enter your recovery phrase below to prove that you saved it somewhere safe.
+            Enter your recovery phrase below to prove that you saved it
+            somewhere safe.
           </Text>
           <TextInput
             style={PHRASE}
             multiline={true}
-            placeholder='Recovery phrase...'
-            autoCapitalize='none'
+            placeholder="Recovery phrase..."
+            autoCapitalize="none"
             autoCorrect={false}
             onChangeText={this.onChangeText}
           />
-          <Button text={'Continue'} disabled={!this.state.valid} onPress={this.props.onSuccess} />
+          <Button
+            text={'Continue'}
+            disabled={!this.state.valid}
+            onPress={this.props.onSuccess}
+          />
         </View>
       </KeyboardAvoidingView>
     )
@@ -105,4 +122,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-export default connect(mapStateToProps, undefined)(VerifyRecoveryPhrase)
+export default connect(
+  mapStateToProps,
+  undefined
+)(VerifyRecoveryPhrase)

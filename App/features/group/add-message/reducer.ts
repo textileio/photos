@@ -16,7 +16,10 @@ export default combineReducers<AddMessageState, AddMessageAction>({
       case getType(actions.addMessage.request): {
         const { id, groupId, body } = action.payload
         const groupMessages = state[groupId] || {}
-        const updatedGroupMessages: Messages = { ...groupMessages, [id]: { body } }
+        const updatedGroupMessages: Messages = {
+          ...groupMessages,
+          [id]: { body }
+        }
         return { ...state, [groupId]: updatedGroupMessages }
       }
       case getType(actions.addMessage.success): {
@@ -27,10 +30,14 @@ export default combineReducers<AddMessageState, AddMessageAction>({
       }
       case getType(actions.addMessage.failure): {
         const { id, groupId, error } = action.payload
-        const errorMessage = error.message as string || error as string || 'unknown error'
+        const errorMessage =
+          (error.message as string) || (error as string) || 'unknown error'
         const groupMessages = state[groupId] || {}
         const message = groupMessages[id]
-        const updatedGroupMessages: Messages = { ...groupMessages, [id]: { ...message, error: errorMessage } }
+        const updatedGroupMessages: Messages = {
+          ...groupMessages,
+          [id]: { ...message, error: errorMessage }
+        }
         return { ...state, [groupId]: updatedGroupMessages }
       }
       default:

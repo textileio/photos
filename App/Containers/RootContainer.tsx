@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import { Dispatch } from 'redux'
-import { View, StatusBar, Platform, PermissionsAndroid, Text } from 'react-native'
+import {
+  View,
+  StatusBar,
+  Platform,
+  PermissionsAndroid,
+  Text
+} from 'react-native'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
@@ -35,7 +41,9 @@ class RootContainer extends Component<StateProps & DispatchProps> {
   }
 
   async setupAndroid() {
-    const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
     if (hasPermission) {
       this.watchPosition()
     }
@@ -44,7 +52,11 @@ class RootContainer extends Component<StateProps & DispatchProps> {
   watchPosition() {
     // Only watchPosition if the user has enabled it in settings
     if (this.props.monitorLocation) {
-      navigator.geolocation.watchPosition(this.handleNewPosition.bind(this), undefined, { useSignificantChanges: true })
+      navigator.geolocation.watchPosition(
+        this.handleNewPosition.bind(this),
+        undefined,
+        { useSignificantChanges: true }
+      )
     }
   }
 
@@ -59,13 +71,15 @@ class RootContainer extends Component<StateProps & DispatchProps> {
       <View style={styles.applicationView}>
         <StatusBar barStyle={barStyle} />
         <AppNavigation
-          ref={(navRef: NavigationContainerComponent) => { NavigationService.setTopLevelNavigator(navRef) }}
+          ref={(navRef: NavigationContainerComponent) => {
+            NavigationService.setTopLevelNavigator(navRef)
+          }}
         />
-        {this.props.showVerboseUi &&
-        <View style={styles.bottomOverlay} >
-          <Text style={styles.overlayText}>{overlayMessage}</Text>
-        </View>
-        }
+        {this.props.showVerboseUi && (
+          <View style={styles.bottomOverlay}>
+            <Text style={styles.overlayText}>{overlayMessage}</Text>
+          </View>
+        )}
       </View>
     )
   }
@@ -78,7 +92,9 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
   return {
     monitorLocation: state.preferences.services.backgroundLocation.status,
-    showVerboseUi: state.preferences.verboseUi && state.preferences.verboseUiOptions.nodeStateOverlay,
+    showVerboseUi:
+      state.preferences.verboseUi &&
+      state.preferences.verboseUiOptions.nodeStateOverlay,
     nodeState
   }
 }
@@ -88,4 +104,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   locationUpdate: () => dispatch(TriggersActions.locationUpdate())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(RootContainer)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RootContainer)

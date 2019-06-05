@@ -6,7 +6,7 @@ import { SharedImage } from '../group/add-photo/models'
 import * as actions from './actions'
 
 export interface AccountState {
-  readonly initialized: boolean, // splitting 'Preferences.onboarded' to within sdk 'initialized' and app specific 'onboarded'
+  readonly initialized: boolean // splitting 'Preferences.onboarded' to within sdk 'initialized' and app specific 'onboarded'
   readonly chosenProfilePhoto: {
     readonly image?: SharedImage
     readonly data?: string
@@ -20,7 +20,7 @@ export interface AccountState {
   readonly peerId: {
     readonly value?: string
     readonly error?: string
-  },
+  }
   readonly address: {
     readonly value?: string
     readonly error?: string
@@ -28,7 +28,7 @@ export interface AccountState {
   readonly avatar: {
     readonly error?: string
   }
-  readonly recoveryPhrase: string,
+  readonly recoveryPhrase: string
   readonly cafeSessions: {
     readonly sessions: ReadonlyArray<ICafeSession>
     readonly processing: boolean
@@ -58,12 +58,14 @@ export default combineReducers<AccountState, AccountAction>({
     switch (action.type) {
       case getType(actions.refreshProfileRequest):
         return { ...state, processing: true }
-      case getType(actions.refreshProfileSuccess):
+      case getType(actions.refreshProfileSuccess): {
         const { profile } = action.payload
         return { value: profile, processing: false }
+      }
       case getType(actions.profileError): {
         const obj = action.payload.error
-        const error = obj.message as string || obj as string || 'unknown error'
+        const error =
+          (obj.message as string) || (obj as string) || 'unknown error'
         return { ...state, processing: false, error }
       }
       default:
@@ -72,12 +74,14 @@ export default combineReducers<AccountState, AccountAction>({
   },
   peerId: (state = {}, action) => {
     switch (action.type) {
-      case getType(actions.refreshPeerIdSuccess):
+      case getType(actions.refreshPeerIdSuccess): {
         const { peerId } = action.payload
         return { value: peerId }
+      }
       case getType(actions.refreshPeerIdError): {
         const obj = action.payload.error
-        const error = obj.message as string || obj as string || 'unknown error'
+        const error =
+          (obj.message as string) || (obj as string) || 'unknown error'
         return { ...state, error }
       }
       default:
@@ -86,12 +90,14 @@ export default combineReducers<AccountState, AccountAction>({
   },
   address: (state = {}, action) => {
     switch (action.type) {
-      case getType(actions.refreshAddressSuccess):
+      case getType(actions.refreshAddressSuccess): {
         const { address } = action.payload
         return { value: address }
+      }
       case getType(actions.refreshAddressError): {
         const obj = action.payload.error
-        const error = obj.message as string || obj as string || 'unknown error'
+        const error =
+          (obj.message as string) || (obj as string) || 'unknown error'
         return { ...state, error }
       }
       default:
@@ -102,7 +108,8 @@ export default combineReducers<AccountState, AccountAction>({
     switch (action.type) {
       case getType(actions.setAvatar.failure): {
         const obj = action.payload
-        const error = obj.message as string || obj as string || 'unknown error'
+        const error =
+          (obj.message as string) || (obj as string) || 'unknown error'
         return { ...state, error }
       }
       default:
@@ -122,11 +129,17 @@ export default combineReducers<AccountState, AccountAction>({
       case getType(actions.refreshCafeSessionsRequest):
         return { ...state, processing: true, error: undefined }
       case getType(actions.cafeSessionsSuccess):
-        return { sessions: action.payload.sessions , processing: false, error: undefined }
-      case getType(actions.cafeSessionsError):
+        return {
+          sessions: action.payload.sessions,
+          processing: false,
+          error: undefined
+        }
+      case getType(actions.cafeSessionsError): {
         const obj = action.payload.error
-        const error = obj.message as string || obj as string || 'unknown error'
+        const error =
+          (obj.message as string) || (obj as string) || 'unknown error'
         return { ...state, processing: false, error }
+      }
       default:
         return state
     }

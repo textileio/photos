@@ -1,8 +1,22 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View, TouchableOpacity, Insets } from 'react-native'
-import { NavigationScreenProps, NavigationScreenProp, NavigationRoute } from 'react-navigation'
+import {
+  KeyboardAvoidingView,
+  Image,
+  Text,
+  ViewStyle,
+  ImageStyle,
+  TextStyle,
+  View,
+  TouchableOpacity,
+  Insets
+} from 'react-native'
+import {
+  NavigationScreenProps,
+  NavigationScreenProp,
+  NavigationRoute
+} from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 
 import Button from '../Components/LargeButton'
@@ -79,7 +93,10 @@ interface NavigationParams {
 
 interface OwnProps {
   onSuccess?: () => void
-  navigation?: NavigationScreenProp<NavigationRoute<NavigationParams>, NavigationParams>
+  navigation?: NavigationScreenProp<
+    NavigationRoute<NavigationParams>,
+    NavigationParams
+  >
 }
 
 interface StateProps {
@@ -99,7 +116,6 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps
 
 class SetAvatar extends React.Component<Props> {
-
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const params = navigation.state.params || {}
     return {
@@ -107,8 +123,8 @@ class SetAvatar extends React.Component<Props> {
       headerLeft: (
         <TextileHeaderButtons left={true}>
           <Item
-            title='Back'
-            iconName='arrow-left'
+            title="Back"
+            iconName="arrow-left"
             /* tslint:disable-next-line */
             onPress={() => {
               const cancel = navigation.getParam('cancel')
@@ -174,9 +190,16 @@ class SetAvatar extends React.Component<Props> {
       const source = { uri: 'data:image/jpeg;base64,' + this.props.data }
       return <Image style={IMAGE} source={source} />
     } else if (this.props.accountHasAvatar) {
-      return <Avatar style={IMAGE} self={true}/>
+      return <Avatar style={IMAGE} self={true} />
     } else {
-      return <Icon style={PLACEHOLDER} name={'question-circle'} size={120} color={color.grey_5} />
+      return (
+        <Icon
+          style={PLACEHOLDER}
+          name={'question-circle'}
+          size={120}
+          color={color.grey_5}
+        />
+      )
     }
   }
 
@@ -184,24 +207,26 @@ class SetAvatar extends React.Component<Props> {
     const action = this.props.image ? this.submit : this.choosePhoto
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
-          <View>
-            {this.renderImage()}
-            <Text style={TITLE}>Your Avatar</Text>
-            <Text style={SUBTITLE}>It will be shown along with your display name.</Text>
-            <Button
-              text={this.props.buttonText}
-              onPress={action}
-              style={BUTTON}
-            />
-            <TouchableOpacity
-              disabled={!this.props.displaySubButton}
-              style={{ opacity: this.props.displaySubButton ? 1 : 0 }}
-              onPress={this.props.displayPhotoChooser}
-              hitSlop={HIT_SLOP}
-            >
-              <Text style={LINK}>Choose Another</Text>
-            </TouchableOpacity>
-          </View>
+        <View>
+          {this.renderImage()}
+          <Text style={TITLE}>Your Avatar</Text>
+          <Text style={SUBTITLE}>
+            It will be shown along with your display name.
+          </Text>
+          <Button
+            text={this.props.buttonText}
+            onPress={action}
+            style={BUTTON}
+          />
+          <TouchableOpacity
+            disabled={!this.props.displaySubButton}
+            style={{ opacity: this.props.displaySubButton ? 1 : 0 }}
+            onPress={this.props.displayPhotoChooser}
+            hitSlop={HIT_SLOP}
+          >
+            <Text style={LINK}>Choose Another</Text>
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     )
   }
@@ -212,13 +237,20 @@ const mapStateToProps = (state: RootState): StateProps => ({
   displaySubButton: state.account.chosenProfilePhoto.image !== undefined,
   image: state.account.chosenProfilePhoto.image,
   data: state.account.chosenProfilePhoto.data,
-  accountHasAvatar: state.account.profile.value ? state.account.profile.value.avatar !== undefined : false
+  accountHasAvatar: state.account.profile.value
+    ? state.account.profile.value.avatar !== undefined
+    : false
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  displayPhotoChooser: () => dispatch(accountActions.chooseProfilePhoto.request()),
-  submitAvatar: (image: SharedImage) => dispatch(accountActions.setAvatar.request(image)),
+  displayPhotoChooser: () =>
+    dispatch(accountActions.chooseProfilePhoto.request()),
+  submitAvatar: (image: SharedImage) =>
+    dispatch(accountActions.setAvatar.request(image)),
   cancel: () => dispatch(accountActions.cancelProfilePhotoUpdate())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SetAvatar)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SetAvatar)

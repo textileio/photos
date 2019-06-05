@@ -1,9 +1,17 @@
 import React from 'react'
-import { View, ViewStyle, TouchableOpacity, Dimensions, Modal } from 'react-native'
+import {
+  View,
+  ViewStyle,
+  TouchableOpacity,
+  Dimensions,
+  Modal
+} from 'react-native'
 
 import Message, { Props as MessageProps } from './message'
 import ProgressiveImage from './ProgressiveImage'
-import LikeAndComment, { Props as LikeAndCommentProps } from './like-and-comment'
+import LikeAndComment, {
+  Props as LikeAndCommentProps
+} from './like-and-comment'
 import { spacing } from '../styles'
 import Comments, { Props as CommentsProps } from './comments'
 import ImageZoom from 'react-native-image-pan-zoom'
@@ -33,7 +41,7 @@ export default class Photo extends React.PureComponent<Props> {
   }
 
   toggleSelected = () => {
-    this.setState({selected: !this.state.selected})
+    this.setState({ selected: !this.state.selected })
   }
 
   progressiveElement(width: number, height: number, minWidth: number) {
@@ -96,7 +104,11 @@ export default class Photo extends React.PureComponent<Props> {
     return (
       <View style={CONTAINER}>
         <Message {...this.props} containerStyle={MESSAGE_CONTAINER} />
-          {this.progressiveElement(this.props.photoWidth, this.props.photoWidth, this.props.photoWidth)}
+        {this.progressiveElement(
+          this.props.photoWidth,
+          this.props.photoWidth,
+          this.props.photoWidth
+        )}
         <LikeAndComment {...this.props} />
         <Comments {...this.props} />
       </View>
@@ -120,7 +132,11 @@ export default class Photo extends React.PureComponent<Props> {
           {this.zoomableElement()}
         </Modal>
         <Message {...this.props} containerStyle={MESSAGE_CONTAINER} />
-         {this.progressiveElement(this.props.photoWidth, this.props.photoWidth, this.props.photoWidth)}
+        {this.progressiveElement(
+          this.props.photoWidth,
+          this.props.photoWidth,
+          this.props.photoWidth
+        )}
         <LikeAndComment {...this.props} />
         <Comments {...this.props} />
       </TouchableOpacity>

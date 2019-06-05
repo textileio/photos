@@ -15,7 +15,10 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import Avatar from '../Components/Avatar'
 import TextileImage from '../Components/TextileImage'
-import { Item as HeaderItem, TextileHeaderButtons } from '../Components/HeaderButtons'
+import {
+  Item as HeaderItem,
+  TextileHeaderButtons
+} from '../Components/HeaderButtons'
 import { RootAction, RootState } from '../Redux/Types'
 import { photosActions, photosSelectors } from '../features/photos'
 import { Item } from '../features/photos/models'
@@ -46,15 +49,18 @@ interface NavProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 class Photos extends Component<Props> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <HeaderItem
-          title='Account'
+          title="Account"
           onPress={openDrawer}
-          ButtonElement={<Avatar style={{ width: 24, height: 24 }} self={true} />}
+          ButtonElement={
+            <Avatar style={{ width: 24, height: 24 }} self={true} />
+          }
           buttonWrapperStyle={{ margin: 11 }}
         />
       </TextileHeaderButtons>
@@ -62,7 +68,7 @@ class Photos extends Component<Props> {
 
     const headerRight = (
       <TextileHeaderButtons>
-        <HeaderItem title='Add Group' iconName='plus' />
+        <HeaderItem title="Add Group" iconName="plus" />
       </TextileHeaderButtons>
     )
     return {
@@ -92,12 +98,18 @@ class Photos extends Component<Props> {
           refreshing={this.props.refreshing}
           numColumns={3}
         />
-        <Toast position={'center'} ref={(ref) => this.toast = ref ? ref : undefined} />
+        <Toast
+          position={'center'}
+          ref={ref => (this.toast = ref ? ref : undefined)}
+        />
       </View>
     )
   }
 
-  keyExtractor = (item: Item) => item.type === 'files' ? item.files.target : item.processingPhoto.photo.assetId
+  keyExtractor = (item: Item) =>
+    item.type === 'files'
+      ? item.files.target
+      : item.processingPhoto.photo.assetId
 
   renderRow = (row: ListRenderItemInfo<Item>) => {
     if (row.item.type === 'files') {
@@ -108,7 +120,7 @@ class Photos extends Component<Props> {
           target={target}
           index={fileIndex}
           forMinWidth={itemSize}
-          resizeMode='cover'
+          resizeMode="cover"
           style={{ width: itemSize, height: itemSize }}
         />
       )
@@ -123,18 +135,44 @@ class Photos extends Component<Props> {
             style={{ width: itemSize, height: itemSize }}
             source={{ uri }}
           />
-          {error &&
-            <TouchableOpacity onPress={this.showToast(error)} hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}>
-              <View style={{ width: 12, height: 12, backgroundColor: 'red', borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
+          {error && (
+            <TouchableOpacity
+              onPress={this.showToast(error)}
+              hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
+            >
+              <View
+                style={{
+                  width: 12,
+                  height: 12,
+                  backgroundColor: 'red',
+                  borderColor: 'black',
+                  borderWidth: 1,
+                  borderRadius: 6,
+                  position: 'absolute',
+                  right: 5,
+                  bottom: 5
+                }}
+              />
             </TouchableOpacity>
-          }
-          {!error &&
-            <View style={{ width: 12, height: 12, backgroundColor: color, borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
-          }
+          )}
+          {!error && (
+            <View
+              style={{
+                width: 12,
+                height: 12,
+                backgroundColor: color,
+                borderColor: 'black',
+                borderWidth: 1,
+                borderRadius: 6,
+                position: 'absolute',
+                right: 5,
+                bottom: 5
+              }}
+            />
+          )}
         </View>
       )
     }
-
   }
 
   showToast = (message: string) => {
@@ -148,7 +186,6 @@ class Photos extends Component<Props> {
   openDrawer = () => {
     this.props.navigation.openDrawer()
   }
-
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -163,4 +200,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   refreshPhotos: () => dispatch(photosActions.refreshPhotos.request(undefined))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Photos)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Photos)

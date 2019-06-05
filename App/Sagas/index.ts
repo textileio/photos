@@ -38,10 +38,7 @@ import {
   startMonitoringExistingUploads
 } from './ImageSharingTriggers'
 
-import {
-  inviteAfterOnboard,
-  routeDeepLink
-} from './DeepLinkSagas'
+import { inviteAfterOnboard, routeDeepLink } from './DeepLinkSagas'
 
 import {
   handleNewNotification,
@@ -77,18 +74,17 @@ import {
   navigateToComments,
   navigateToLikes,
   addPhotoLike,
-  cameraPermissionsTrigger,
+  triggerCameraRollPermission,
   presentPublicLinkInterface,
-  updateServices
+  updateServices,
+  handleToggleVerboseUi
 } from './TextileSagas'
 
-import {
-  startSagas
-} from './TextileEventsSagas'
+import { startSagas } from './TextileEventsSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
 
-export default function * root(dispatch: Dispatch) {
+export default function* root(dispatch: Dispatch) {
   yield all([
     call(accountSaga),
     call(contactsSaga),
@@ -108,8 +104,20 @@ export default function * root(dispatch: Dispatch) {
     takeEvery(getType(groupActions.addPhoto.error), handleImageProcessingError),
 
     // permissions request events
-    takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
-    takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
+    takeLatest(
+      getType(AuthActions.requestCameraPermissions),
+      triggerCameraRollPermission
+    ),
+    takeLatest(
+      getType(PreferencesActions.toggleServicesRequest),
+      updateServices
+    ),
+
+    // verbose ui
+    takeEvery(
+      getType(PreferencesActions.toggleVerboseUi),
+      handleToggleVerboseUi
+    ),
 
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
@@ -117,9 +125,15 @@ export default function * root(dispatch: Dispatch) {
     takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
-    takeEvery(getType(PhotoViewingActions.threadAddedNotification), monitorThreadAddedNotifications),
+    takeEvery(
+      getType(PhotoViewingActions.threadAddedNotification),
+      monitorThreadAddedNotifications
+    ),
     takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),
-    takeEvery(getType(PhotoViewingActions.refreshThreadsRequest), refreshThreads),
+    takeEvery(
+      getType(PhotoViewingActions.refreshThreadsRequest),
+      refreshThreads
+    ),
     takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
 
@@ -132,10 +146,22 @@ export default function * root(dispatch: Dispatch) {
     /* ------------- End SDK ------------- */
 
     takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),
-    takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
-    takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
-    takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
-    takeEvery(getType(ThreadsActions.addInternalInvitesRequest), addInternalInvites),
+    takeEvery(
+      getType(ThreadsActions.addExternalInviteRequest),
+      addExternalInvite
+    ),
+    takeEvery(
+      getType(ThreadsActions.addExternalInviteSuccess),
+      presentShareInterface
+    ),
+    takeEvery(
+      getType(ThreadsActions.acceptExternalInviteRequest),
+      acceptExternalInvite
+    ),
+    takeEvery(
+      getType(ThreadsActions.addInternalInvitesRequest),
+      addInternalInvites
+    ),
 
     takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),
 
@@ -146,18 +172,39 @@ export default function * root(dispatch: Dispatch) {
     takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
-    takeEvery(getType(groupActions.addPhoto.imageUploadComplete), handleImageUploadComplete),
+    takeEvery(
+      getType(groupActions.addPhoto.imageUploadComplete),
+      handleImageUploadComplete
+    ),
     takeEvery(getType(groupActions.addPhoto.retry), retryImageShare),
     takeEvery(getType(groupActions.addPhoto.cancelRequest), cancelImageShare),
     takeEvery(getType(groupActions.addPhoto.error), retryWithTokenRefresh),
 
     // Notifications
-    takeEvery(getType(NotificationsActions.newNotificationRequest), handleNewNotification),
-    takeEvery(getType(NotificationsActions.notificationEngagement), handleEngagement),
-    takeEvery(getType(NotificationsActions.notificationSuccess), notificationView),
-    takeEvery(getType(NotificationsActions.refreshNotificationsRequest), refreshNotifications),
-    takeEvery(getType(NotificationsActions.reviewNotificationThreadInvite), reviewThreadInvite),
-    takeEvery(getType(NotificationsActions.readAllNotificationsRequest), readAllNotifications),
+    takeEvery(
+      getType(NotificationsActions.newNotificationRequest),
+      handleNewNotification
+    ),
+    takeEvery(
+      getType(NotificationsActions.notificationEngagement),
+      handleEngagement
+    ),
+    takeEvery(
+      getType(NotificationsActions.notificationSuccess),
+      notificationView
+    ),
+    takeEvery(
+      getType(NotificationsActions.refreshNotificationsRequest),
+      refreshNotifications
+    ),
+    takeEvery(
+      getType(NotificationsActions.reviewNotificationThreadInvite),
+      reviewThreadInvite
+    ),
+    takeEvery(
+      getType(NotificationsActions.readAllNotificationsRequest),
+      readAllNotifications
+    ),
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),

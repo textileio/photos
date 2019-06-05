@@ -12,14 +12,13 @@ import { color } from '../styles'
 
 interface StateProps {
   onboarded: boolean
-  nodeStarted: boolean,
+  nodeStarted: boolean
   nodeError?: string
 }
 
 type Props = StateProps & NavigationScreenProps<{}>
 
 class StatusCheck extends React.Component<Props, {}> {
-
   static getDerivedStateFromProps(props: Props, state: {}) {
     if (!props.nodeError && props.nodeStarted && !props.onboarded) {
       props.navigation.navigate('OnboardingNavigation')
@@ -37,13 +36,9 @@ class StatusCheck extends React.Component<Props, {}> {
 
   render() {
     if (this.props.nodeError) {
-      return (
-        <FatalErrorView message={this.props.nodeError} />
-      )
+      return <FatalErrorView message={this.props.nodeError} />
     } else {
-      return (
-        <Loading color={color.brandBlue} />
-      )
+      return <Loading color={color.brandBlue} />
     }
   }
 }
@@ -56,4 +51,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-export default connect(mapStateToProps, undefined)(StatusCheck)
+export default connect(
+  mapStateToProps,
+  undefined
+)(StatusCheck)

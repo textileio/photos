@@ -3,10 +3,10 @@ import { IMobilePreparedFiles, IBlock } from '@textile/react-native-sdk'
 import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
 export interface SharedImage {
-  isAvatar: boolean,
-  origURL?: string,
-  uri: string,
-  path: string,
+  isAvatar: boolean
+  origURL?: string
+  uri: string
+  path: string
   canDelete: boolean
 }
 
@@ -30,7 +30,10 @@ interface UploadError {
   type: 'upload'
 }
 
-export type ProcessingImageError = GeneralError | ExpiredTokenError | UploadError
+export type ProcessingImageError =
+  | GeneralError
+  | ExpiredTokenError
+  | UploadError
 
 export interface Upload {
   readonly id: string
@@ -46,9 +49,9 @@ export interface UploadData {
 }
 
 export interface ProcessingImage {
-  readonly uuid: string,
+  readonly uuid: string
   readonly sharedImage: SharedImage
-  readonly status: 'preparing'  | 'uploading' | 'sharing' | 'complete'
+  readonly status: 'preparing' | 'uploading' | 'sharing' | 'complete'
   readonly destinationThreadId: string
   readonly comment?: string
   readonly preparedFiles?: IMobilePreparedFiles

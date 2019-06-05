@@ -12,7 +12,7 @@ export function cardImageStyle(count: number, index: number): ImageStyle {
     padding: 0,
     borderWidth: 2,
     borderColor: color.grey_6
-    } as ImageStyle
+  } as ImageStyle
 
   if (index >= 8) {
     return {

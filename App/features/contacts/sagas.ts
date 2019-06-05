@@ -28,25 +28,22 @@ import { composeMessage } from '../../NativeModules/MessageComposer'
 import UIActions from '../../Redux/UIRedux'
 import { RootState } from '../../Redux/Types'
 
-function * addFriends() {
-  yield call(refreshContacts)
-}
-
-function * refreshContacts() {
+function* refreshContacts() {
   try {
     const contactsResult: IContactList = yield call(Textile.contacts.list)
     yield put(actions.getContactsSuccess(contactsResult.items))
-
   } catch (error) {
     // skip for now
   }
 }
 
-function * watchForAddContactRequests() {
-  yield takeEvery(getType(actions.addContactRequest), handleAddContactRequest)
+function* addFriends() {
+  yield call(refreshContacts)
 }
 
-function * handleAddContactRequest(action: ActionType<typeof actions.addContactRequest>) {
+function* handleAddContactRequest(
+  action: ActionType<typeof actions.addContactRequest>
+) {
   const { contact } = action.payload
   try {
     yield call(Textile.contacts.add, contact)
@@ -57,11 +54,13 @@ function * handleAddContactRequest(action: ActionType<typeof actions.addContactR
   }
 }
 
-function * watchForRemoveContactRequests() {
-  yield takeEvery(getType(actions.removeContact.request), handleRemoveContactRequest)
+function* watchForAddContactRequests() {
+  yield takeEvery(getType(actions.addContactRequest), handleAddContactRequest)
 }
 
-function * handleRemoveContactRequest(action: ActionType<typeof actions.removeContact.request>) {
+function* handleRemoveContactRequest(
+  action: ActionType<typeof actions.removeContact.request>
+) {
   // The address is the payload, except for the failure action, because it
   // must also pass an error
   const address = action.payload
@@ -72,6 +71,13 @@ function * handleRemoveContactRequest(action: ActionType<typeof actions.removeCo
   } catch (error) {
     yield put(actions.removeContact.failure({ address, error }))
   }
+}
+
+function* watchForRemoveContactRequests() {
+  yield takeEvery(
+    getType(actions.removeContact.request),
+    handleRemoveContactRequest
+  )
 }
 
 async function executeTextileSearch(searchString: string) {
@@ -88,19 +94,23 @@ async function executeTextileSearch(searchString: string) {
     exclude: []
   }
   const queryId = await Textile.contacts.search(query, options)
-  return eventChannel<SearchEvent>((emitter) => {
-    const resultsSub = Textile.events.addContactQueryResultListener((receivedQueryId, contact) => {
-      if (receivedQueryId === queryId) {
-        emitter({ contact, type: 'contact' })
+  return eventChannel<SearchEvent>(emitter => {
+    const resultsSub = Textile.events.addContactQueryResultListener(
+      (receivedQueryId, contact) => {
+        if (receivedQueryId === queryId) {
+          emitter({ contact, type: 'contact' })
+        }
       }
-    })
-    const errorSub = Textile.events.addQueryErrorListener((receivedQueryId, error) => {
-      if (receivedQueryId === queryId) {
-        emitter({ error, type: 'error' })
-        emitter(END)
+    )
+    const errorSub = Textile.events.addQueryErrorListener(
+      (receivedQueryId, error) => {
+        if (receivedQueryId === queryId) {
+          emitter({ error, type: 'error' })
+          emitter(END)
+        }
       }
-    })
-    const doneSub = Textile.events.addQueryDoneListener((receivedQueryId) => {
+    )
+    const doneSub = Textile.events.addQueryDoneListener(receivedQueryId => {
       if (receivedQueryId === queryId) {
         emitter(END)
       }
@@ -114,8 +124,11 @@ async function executeTextileSearch(searchString: string) {
   })
 }
 
-function * searchTextile(searchString: string) {
-  const channel: Channel<SearchEvent> = yield call(executeTextileSearch, searchString)
+function* searchTextile(searchString: string) {
+  const channel: Channel<SearchEvent> = yield call(
+    executeTextileSearch,
+    searchString
+  )
   try {
     while (true) {
       const event: SearchEvent = yield take(channel)
@@ -140,122 +153,6 @@ function * searchTextile(searchString: string) {
   }
 }
 
-function * searchAddressBook(searchString: string) {
-  try {
-    const permissions = Platform.OS === 'ios' ? requestPermissionsIOS : requestPermissionsAndroid
-    const result: 'undefined' | 'authorized' | 'denied' = yield call(permissions)
-    if (result !== 'authorized') {
-      return
-    }
-    const contacts: Contacts.Contact[] = yield call(getContactsMatching, searchString)
-    const isCancelled = yield cancelled()
-    if (!isCancelled) {
-      yield put(actions.searchResultsAddressBook(contacts))
-    }
-  } catch (error) {
-    yield put(actions.searchErrorAddressBook(error))
-  }
-}
-
-function * executeSearchRequest(searchString: string) {
-  yield put(actions.clearSearch())
-  yield put(actions.searchStarted())
-  yield race({
-    search: all([call(searchTextile, searchString), call(searchAddressBook, searchString)]),
-    cancel: take(getType(actions.clearSearch))
-  })
-}
-
-function * handleSearchRequest(action: ActionType<typeof actions.searchRequest>) {
-  // debounce it, but cancel if we clear search
-  const { debounce } = yield race({
-    debounce: call(delay, 1000),
-    cancel: take(getType(actions.clearSearch))
-  })
-  if (debounce) {
-    yield call(executeSearchRequest, action.payload.searchString)
-  }
-}
-
-function * watchForSearchRequest() {
-  yield takeLatest(getType(actions.searchRequest), handleSearchRequest)
-}
-
-function * sendInviteMessage() {
-  while (true) {
-    const action: ActionType<typeof actions.authorInviteRequest> = yield take(getType(actions.authorInviteRequest))
-    const { phoneNumbers } = action.payload.contact
-    const iphone = phoneNumbers.find((number) => number.label.toLowerCase() === 'iphone')
-    const mobile = phoneNumbers.find((number) => number.label.toLowerCase() === 'mobile')
-    const home = phoneNumbers.find((number) => number.label.toLowerCase() === 'home')
-    const work = phoneNumbers.find((number) => number.label.toLowerCase() === 'work')
-    const sendTo = iphone || mobile || home || work
-    if (sendTo) {
-      const username: string | undefined = yield select((state: RootState) => accountSelectors.getUsername(state.account))
-      const address: string | undefined = yield select((state: RootState) => accountSelectors.getAddress(state.account))
-      const url = `https://www.textile.photos/invites/new#name=new&inviter=${username}&referral=${Config.RN_TEMPORARY_REFERRAL}`
-      let message = `Join me on Textile Photos: ${url}`
-      if (username) {
-        message = `${message}\nMy username: ${username}`
-      }
-      if (address) {
-        message = `${message}\nMy address snippet: ${address.substr(address.length - 8, 8)}`
-      }
-      yield call(composeMessage, sendTo.number, message)
-    }
-  }
-}
-
-export default function *() {
-  yield all([
-    takeEvery(getType(UIActions.addFriendRequest), addFriends),
-    takeEvery(getType(actions.getContactsRequest), refreshContacts),
-    call(watchForSearchRequest),
-    call(watchForAddContactRequests),
-    call(watchForRemoveContactRequests),
-    call(sendInviteMessage)
-  ])
-}
-
-async function requestPermissionsAndroid() {
-  const result = await PermissionsAndroid.request(
-    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-    {
-      title: 'Contacts',
-      message: 'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.',
-      buttonPositive: 'Ok'
-    }
-  )
-  if (result === PermissionsAndroid.RESULTS.GRANTED) {
-    return 'authorized'
-  } else {
-    return 'denied'
-  }
-}
-
-async function requestPermissionsIOS() {
-  return new Promise<'undefined' |  'authorized' | 'denied'>((resolve, reject) => {
-    Contacts.checkPermission((err, permission) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      if (permission === 'undefined') {
-        Contacts.requestPermission((err, permission) => {
-          if (err) {
-            reject(err)
-            return
-          } else {
-            resolve(permission)
-          }
-        })
-      } else {
-        resolve(permission)
-      }
-    })
-  })
-}
-
 async function getContactsMatching(searchString: string) {
   return new Promise<Contacts.Contact[]>((resolve, reject) => {
     Contacts.getContactsMatchingString(searchString, (err, contacts) => {
@@ -266,4 +163,153 @@ async function getContactsMatching(searchString: string) {
       resolve(contacts)
     })
   })
+}
+
+async function requestPermissionsIOS() {
+  return new Promise<'undefined' | 'authorized' | 'denied'>(
+    (resolve, reject) => {
+      Contacts.checkPermission((err, permission) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        if (permission === 'undefined') {
+          Contacts.requestPermission((err, permission) => {
+            if (err) {
+              reject(err)
+              return
+            } else {
+              resolve(permission)
+            }
+          })
+        } else {
+          resolve(permission)
+        }
+      })
+    }
+  )
+}
+
+async function requestPermissionsAndroid() {
+  const result = await PermissionsAndroid.request(
+    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+    {
+      title: 'Contacts',
+      message:
+        'Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.',
+      buttonPositive: 'Ok'
+    }
+  )
+  if (result === PermissionsAndroid.RESULTS.GRANTED) {
+    return 'authorized'
+  } else {
+    return 'denied'
+  }
+}
+
+function* searchAddressBook(searchString: string) {
+  try {
+    const permissions =
+      Platform.OS === 'ios' ? requestPermissionsIOS : requestPermissionsAndroid
+    const result: 'undefined' | 'authorized' | 'denied' = yield call(
+      permissions
+    )
+    if (result !== 'authorized') {
+      return
+    }
+    const contacts: Contacts.Contact[] = yield call(
+      getContactsMatching,
+      searchString
+    )
+    const isCancelled = yield cancelled()
+    if (!isCancelled) {
+      yield put(actions.searchResultsAddressBook(contacts))
+    }
+  } catch (error) {
+    yield put(actions.searchErrorAddressBook(error))
+  }
+}
+
+function* executeSearchRequest(searchString: string) {
+  yield put(actions.clearSearch())
+  yield put(actions.searchStarted())
+  yield race({
+    search: all([
+      call(searchTextile, searchString),
+      call(searchAddressBook, searchString)
+    ]),
+    cancel: take(getType(actions.clearSearch))
+  })
+}
+
+function* handleSearchRequest(
+  action: ActionType<typeof actions.searchRequest>
+) {
+  // debounce it, but cancel if we clear search
+  const { debounce } = yield race({
+    debounce: call(delay, 1000),
+    cancel: take(getType(actions.clearSearch))
+  })
+  if (debounce) {
+    yield call(executeSearchRequest, action.payload.searchString)
+  }
+}
+
+function* watchForSearchRequest() {
+  yield takeLatest(getType(actions.searchRequest), handleSearchRequest)
+}
+
+function* sendInviteMessage() {
+  while (true) {
+    const action: ActionType<typeof actions.authorInviteRequest> = yield take(
+      getType(actions.authorInviteRequest)
+    )
+    const { phoneNumbers } = action.payload.contact
+    const iphone = phoneNumbers.find(
+      number => number.label.toLowerCase() === 'iphone'
+    )
+    const mobile = phoneNumbers.find(
+      number => number.label.toLowerCase() === 'mobile'
+    )
+    const home = phoneNumbers.find(
+      number => number.label.toLowerCase() === 'home'
+    )
+    const work = phoneNumbers.find(
+      number => number.label.toLowerCase() === 'work'
+    )
+    const sendTo = iphone || mobile || home || work
+    if (sendTo) {
+      const username: string | undefined = yield select((state: RootState) =>
+        accountSelectors.getUsername(state.account)
+      )
+      const address: string | undefined = yield select((state: RootState) =>
+        accountSelectors.getAddress(state.account)
+      )
+      const url = `https://www.textile.photos/invites/new#name=new&inviter=${username}&referral=${
+        Config.RN_TEMPORARY_REFERRAL
+      }`
+      let message = `Join me on Textile Photos: ${url}`
+      if (username) {
+        message = `${message}\nMy username: ${username}`
+      }
+      if (address) {
+        message = `${message}\nMy address snippet: ${address.substr(
+          address.length - 8,
+          8
+        )}`
+      }
+      yield call(composeMessage, sendTo.number, message)
+    }
+  }
+}
+
+export default function*() {
+  yield all([
+    takeEvery(getType(UIActions.addFriendRequest), addFriends),
+    takeEvery(getType(actions.getContactsRequest), refreshContacts),
+    call(watchForSearchRequest),
+    call(watchForAddContactRequests),
+    call(watchForRemoveContactRequests),
+    call(sendInviteMessage)
+  ])
 }
