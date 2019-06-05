@@ -11,7 +11,8 @@ import {
   SectionList,
   SectionListRenderItemInfo,
   SectionListData,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableOpacity
 } from 'react-native'
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
@@ -51,6 +52,8 @@ interface NavProps {
   openDrawer: () => void
   addContact: () => void
   clearSearch: () => void
+  toggleSelect: () => void
+  getSelecting: () => boolean
 }
 
 interface DispatchProps {
@@ -64,6 +67,7 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 interface State {
   searchString?: string
+  selecting: boolean
 }
 
 class Contacts extends React.Component<Props, State> {
@@ -71,6 +75,8 @@ class Contacts extends React.Component<Props, State> {
     navigation
   }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
+    const selecting = navigation.getParam('getSelecting')()
+    const toggleSelect = navigation.getParam('toggleSelect')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item
@@ -83,21 +89,31 @@ class Contacts extends React.Component<Props, State> {
         />
       </TextileHeaderButtons>
     )
+    const headerRight = (
+      <TouchableOpacity onPress={toggleSelect}>
+        <Text>{selecting ? 'Cancel' : 'New Group'}</Text>
+      </TouchableOpacity>
+    )
     return {
       headerTitle: 'Contacts',
-      headerLeft
+      headerLeft,
+      headerRight
     }
   }
 
   constructor(props: Props) {
     super(props)
-    this.state = {}
+    this.state = {
+      selecting: false
+    }
   }
 
   componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
-      clearSearch: this.props.clearSearch
+      clearSearch: this.props.clearSearch,
+      toggleSelect: this.toggleSelect,
+      getSelecting: this.getSelecting
     })
   }
 
@@ -132,11 +148,11 @@ class Contacts extends React.Component<Props, State> {
         contacts.length > 0
           ? contacts
           : [
-              {
-                key: 'textile_empty',
-                type: 'empty'
-              }
-            ]
+            {
+              key: 'textile_empty',
+              type: 'empty'
+            }
+          ]
     }
   }
 
@@ -310,6 +326,16 @@ class Contacts extends React.Component<Props, State> {
     this.props.navigation.openDrawer()
     Keyboard.dismiss()
   }
+
+  toggleSelect = () => {
+    this.setState((state, props) => {
+      return {
+        selecting: !state.selecting
+      }
+    })
+  }
+
+  getSelecting = () => this.state.selecting
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
