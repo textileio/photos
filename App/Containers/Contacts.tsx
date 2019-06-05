@@ -37,7 +37,7 @@ import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
-import { color, textStyle, fontFamily, spacing } from '../styles'
+import { color, textStyle, fontFamily, fontSize, spacing } from '../styles'
 import { contact } from '@textile/react-native-sdk/dist/account'
 
 const CONTAINER: ViewStyle = {
@@ -54,6 +54,20 @@ const avatarStyle: ImageStyle = {
 const selectingText: TextStyle = {
   paddingRight: 15,
   fontFamily: fontFamily.medium
+}
+
+const newGroupButton: ViewStyle = {
+  width: '100%',
+  paddingVertical: spacing._024,
+  borderTopColor: color.grey_4,
+  borderTopWidth: 1,
+  backgroundColor: color.screen_primary
+}
+
+const newGroupText: TextStyle = {
+  textAlign: 'center',
+  fontFamily: fontFamily.bold,
+  fontSize: fontSize._18
 }
 
 interface StateProps {
@@ -200,6 +214,12 @@ class Contacts extends React.Component<Props, State> {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
         />
+        {this.props.navigation.getParam('selecting') && <TouchableOpacity
+          onPress={this.openNewGroupModal}
+          style={newGroupButton}
+        >
+          <Text style={newGroupText}>Create New Group From Contacts</Text>
+        </TouchableOpacity>}
       </View>
     )
   }
@@ -243,6 +263,7 @@ class Contacts extends React.Component<Props, State> {
             target={contact.avatar}
           />
         )
+        // Only render select / deselect button if the multi-select new group UI is active
         const rightItems = [
           ... this.props.navigation.getParam('selecting') ? [<Button
             key="select"
@@ -348,7 +369,7 @@ class Contacts extends React.Component<Props, State> {
 
   // Toggles whether the select UI is active
   toggleSelect = () => {
-    // If we're canceling the multi-select action, reset the array of selected contacts
+    // If we're canceling the multi-select action, reset the array of selected contacts to empty
     if (this.props.navigation.getParam('selecting')) {
       this.setState({
         selected: []
@@ -375,6 +396,8 @@ class Contacts extends React.Component<Props, State> {
       }
     })
   }
+
+  openNewGroupModal = () => { }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
