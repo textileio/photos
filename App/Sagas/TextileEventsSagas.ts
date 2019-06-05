@@ -27,10 +27,11 @@ function displayNotification(message: string, title?: string) {
 
 function* initializeTextile() {
   try {
+    const verbose = yield select(PreferencesSelectors.verboseUi)
     const phrase: string | undefined = yield call(
       Textile.initialize,
-      false,
-      false
+      verbose,
+      true
     )
     if (phrase) {
       yield put(accountActions.setRecoveryPhrase(phrase))
