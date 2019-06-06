@@ -11,8 +11,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * Provides access to Textile logs related APIs
+ */
 @interface LogsApi : NodeDependant
 
+/**
+ * Set the log level for the Textile node
+ * @param level Object containing a dictionary of log level for each logging system
+ * @param error A reference to an error pointer that will be set in the case of an error
+ */
 - (void)setLevel:(LogLevel *)level error:(NSError **)error;
 
 @end

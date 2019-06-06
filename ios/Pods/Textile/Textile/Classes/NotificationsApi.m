@@ -30,12 +30,12 @@
   [self.node readAllNotifications:error];
 }
 
-- (NSString *)acceptInvite:(NSString *)id_ error:(NSError * _Nullable __autoreleasing *)error {
-  return [self.node acceptInviteViaNotification:id_ error:error];
+- (NSString *)acceptInvite:(NSString *)notificationId error:(NSError * _Nullable __autoreleasing *)error {
+  return [self.node acceptInviteViaNotification:notificationId error:error];
 }
 
-- (void)ignoreInvite:(NSString *)id_ error:(NSError * _Nullable __autoreleasing *)error {
-  [self.node ignoreInviteViaNotification:id_ error:error];
+- (void)ignoreInvite:(NSString *)notificationId error:(NSError * _Nullable __autoreleasing *)error {
+  [self.node ignoreInviteViaNotification:notificationId error:error];
 }
 
 @end
