@@ -28,7 +28,7 @@ import ContactModal from './ContactModal'
 import Textile from '@textile/react-native-sdk'
 import { Dispatch } from 'redux'
 import { RootAction, RootState } from '../../../Redux/Types'
-import { TextileEventsSelectors } from '../../../Redux/TextileEventsRedux'
+import { nodeStatusSelectors } from '../../../features/node-status'
 
 const WIDTH = Dimensions.get('window').width
 
@@ -233,8 +233,8 @@ interface StateProps {
   nodeRunning: boolean
 }
 const mapStateToProps = (state: RootState): StateProps => {
-  const online = TextileEventsSelectors.online(state)
-  const nodeRunning = TextileEventsSelectors.started(state)
+  const online = nodeStatusSelectors.online(state.nodeStatus)
+  const nodeRunning = nodeStatusSelectors.started(state.nodeStatus)
   const verboseUi = state.preferences.verboseUi
   return {
     name: accountSelectors.getUsername(state.account),

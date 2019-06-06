@@ -12,8 +12,8 @@ import { reducer as uiReducer } from './UIRedux'
 import { reducer as uploadingImagesReducer } from './UploadingImagesRedux'
 import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
-import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
+import { nodeStatusReducer } from '../features/node-status'
 import { photosReducer } from '../features/photos'
 
 export default combineReducers({
@@ -29,7 +29,7 @@ export default combineReducers({
   startup: startupReducer,
   deviceLogs: deviceLogsReducer,
   account: accountReducer,
-  textile: textileEventsReducer,
   group: groupReducer,
+  nodeStatus: nodeStatusReducer,
   photos: photosReducer
 })

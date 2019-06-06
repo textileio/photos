@@ -18,6 +18,7 @@ import TriggersActions from '../Redux/TriggersRedux'
 import { accountSaga } from '../features/account'
 import { contactsSaga } from '../features/contacts'
 import { groupSaga, groupActions } from '../features/group'
+import { nodeStatusSaga } from '../features/node-status'
 import { photosSaga } from '../features/photos'
 
 import { startup } from './StartupSagas'
@@ -89,6 +90,7 @@ export default function* root(dispatch: Dispatch) {
     call(accountSaga),
     call(contactsSaga),
     call(groupSaga),
+    call(nodeStatusSaga),
     call(photosSaga),
 
     call(startSagas),

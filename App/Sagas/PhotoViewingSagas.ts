@@ -71,12 +71,6 @@ export function* monitorThreadAddedNotifications(
     const thread: IThread = yield call(Textile.threads.get, action.payload.id)
     yield put(PhotoViewingActions.threadAdded(thread))
   } catch (error) {
-    yield put(
-      TextileEventsActions.newErrorMessage(
-        'monitorThreadAddedNotifications',
-        error.message
-      )
-    )
     yield put(PhotoViewingActions.addThreadError(error))
   }
 }
@@ -98,7 +92,6 @@ export function* addThread(
     }
     yield call(Textile.threads.add, config)
   } catch (error) {
-    yield put(TextileEventsActions.newErrorMessage('addThread', error.message))
     yield put(PhotoViewingActions.addThreadError(error))
   }
 }
@@ -111,9 +104,6 @@ export function* removeThread(
     yield call(Textile.threads.remove, id)
     yield call(NavigationService.navigate, 'Groups')
   } catch (error) {
-    yield put(
-      TextileEventsActions.newErrorMessage('removeThread', error.message)
-    )
     yield put(PhotoViewingActions.removeThreadError(error))
   }
 }
@@ -134,9 +124,6 @@ export function* refreshThreads(
       }
     }
   } catch (error) {
-    yield put(
-      TextileEventsActions.newErrorMessage('refreshThreads', error.message)
-    )
     yield put(PhotoViewingActions.refreshThreadsError(error))
   }
 }
@@ -174,9 +161,6 @@ export function* addPhotoComment(
     yield call(Textile.comments.add, result.photo.block, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
-    yield put(
-      TextileEventsActions.newErrorMessage('addPhotoComment', error.message)
-    )
     // for now an error will just flush the comment... ideally we can notify the user of a failed comment
     yield put(PhotoViewingActions.addCommentError())
   }

@@ -229,6 +229,18 @@ function* refreshCafeSessions() {
   }
 }
 
+function* refreshMessages() {
+  while (true) {
+    try {
+      const action = yield take(getType(actions.refreshMessagesRequest))
+      yield call(Textile.cafes.checkMessages)
+      yield call(logNewEvent, 'refreshMessages', action.type)
+    } catch (error) {
+      yield call(logNewEvent, 'refreshMessages', error.message, true)
+    }
+  }
+}
+
 export default function*() {
   yield all([
     call(onNodeStarted),
@@ -239,6 +251,7 @@ export default function*() {
     call(setAvatar),
     call(getCafeSessions),
     call(refreshCafeSessions),
+    call(refreshMessages),
     takeEvery(getType(actions.chooseProfilePhoto.request), chooseProfilePhoto)
   ])
 }

@@ -15,7 +15,7 @@ import Button from '../../../Components/Button'
 
 import styles from './statics/styles'
 import { RootState } from '../../../Redux/Types'
-import { TextileEventsSelectors } from '../../../Redux/TextileEventsRedux'
+import { nodeStatusSelectors } from '../../../features/node-status'
 
 type Props = StateProps & NavigationScreenProps<{}>
 class RecoveryPhrase extends React.PureComponent<Props> {
@@ -82,8 +82,8 @@ interface StateProps {
   nodeRunning: boolean
 }
 const mapStateToProps = (state: RootState): StateProps => {
-  const online = TextileEventsSelectors.online(state)
-  const nodeRunning = TextileEventsSelectors.started(state)
+  const online = nodeStatusSelectors.online(state.nodeStatus)
+  const nodeRunning = nodeStatusSelectors.started(state.nodeStatus)
 
   return {
     recoveryPhrase: state.account.recoveryPhrase || 'sorry, there was an error',

@@ -267,9 +267,6 @@ export function* shareWalletImage(
       comment
     )
   } catch (error) {
-    yield put(
-      TextileEventsActions.newErrorMessage('shareWalletImage', error.message)
-    )
     yield put(UIActions.imageSharingError(error))
   }
 }

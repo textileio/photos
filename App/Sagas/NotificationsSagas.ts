@@ -46,12 +46,7 @@ export function* readAllNotifications(
   try {
     yield call(Textile.notifications.readAll)
   } catch (error) {
-    yield put(
-      TextileEventsActions.newErrorMessage(
-        'readAllNotifications',
-        error.message
-      )
-    )
+    // @todo
   }
 }
 
@@ -203,12 +198,6 @@ export function* refreshNotifications() {
       })
     yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
-    yield put(
-      TextileEventsActions.newErrorMessage(
-        'refreshNotifications',
-        error.message
-      )
-    )
     yield put(NotificationsActions.refreshNotificationsFailure())
   }
 }

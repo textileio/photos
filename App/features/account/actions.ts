@@ -108,3 +108,5 @@ export const cafeSessionsError = createAction(
     return (error: any) => resolve({ error })
   }
 )
+
+export const refreshMessagesRequest = createAction('account/REFRESH_MESSAGES')

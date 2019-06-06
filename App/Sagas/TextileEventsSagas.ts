@@ -2,7 +2,6 @@
 import { eventChannel } from 'redux-saga'
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import RNPushNotification from 'react-native-push-notification'
 import Textile, { EventSubscription } from '@textile/react-native-sdk'
 
 import { toTypedNotification } from '../Services/Notifications'
@@ -11,9 +10,6 @@ import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { RootAction } from '../Redux/Types'
 import { accountActions } from '../features/account'
-import TextileEventsActions, {
-  TextileEventsAction
-} from '../Redux/TextileEventsRedux'
 import { photosActions, PhotosAction } from '../features/photos'
 import NotificationActions, {
   NotificationsAction
@@ -25,15 +21,6 @@ import { contactsActions, ContactsAction } from '../features/contacts'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'
 
-function displayNotification(message: string, title?: string) {
-  RNPushNotification.localNotification({
-    title,
-    message,
-    playSound: false,
-    vibrate: false
-  })
-}
-
 function nodeEvents() {
   return eventChannel<
     | GroupAction
@@ -42,7 +29,6 @@ function nodeEvents() {
     | ContactsAction
     | DeviceLogsAction
     | NotificationsAction
-    | TextileEventsAction
   >(emitter => {
     const subscriptions: EventSubscription[] = []
     subscriptions.push(
@@ -113,41 +99,6 @@ function nodeEvents() {
         )
       })
     )
-    subscriptions.push(
-      Textile.events.addNodeStartedListener(() => {
-        emitter(TextileEventsActions.nodeStarted())
-      })
-    )
-    subscriptions.push(
-      Textile.events.addNodeStoppedListener(() => {
-        emitter(TextileEventsActions.nodeStopped())
-      })
-    )
-    subscriptions.push(
-      Textile.events.addNodeOnlineListener(() => {
-        emitter(TextileEventsActions.nodeOnline())
-      })
-    )
-    subscriptions.push(
-      Textile.events.addNodeFailedToStartListener(error => {
-        emitter(TextileEventsActions.nodeFailedToStart(error))
-      })
-    )
-    subscriptions.push(
-      Textile.events.addNodeFailedToStopListener(error => {
-        emitter(TextileEventsActions.nodeFailedToStop(error))
-      })
-    )
-    subscriptions.push(
-      Textile.events.addWillStopNodeInBackgroundAfterDelayListener(delay => {
-        emitter(TextileEventsActions.stopNodeAfterDelayStarting(delay))
-      })
-    )
-    subscriptions.push(
-      Textile.events.addCanceledPendingNodeStopListener(() => {
-        emitter(TextileEventsActions.stopNodeAfterDelayCancelled())
-      })
-    )
     return () => {
       for (const subscription of subscriptions) {
         subscription.cancel()
@@ -182,44 +133,6 @@ function* initializeTextile() {
     }
   } catch (error) {
     yield put(TextileEventsActions.failedToInitializeNode(error))
-  }
-}
-
-export function* refreshMessages() {
-  while (true) {
-    try {
-      // Block until we get an active or background app state
-      const action: ActionType<
-        typeof TextileEventsActions.refreshMessagesRequest
-      > = yield take(
-        (action: RootAction) =>
-          action.type === getType(TextileEventsActions.refreshMessagesRequest)
-      )
-      yield call(Textile.cafes.checkMessages)
-      yield call(logNewEvent, 'refreshMessages', action.type)
-    } catch (error) {
-      yield call(logNewEvent, 'refreshMessages', error.message, true)
-    }
-  }
-}
-
-export function* ignoreFileRequest() {
-  while (true) {
-    try {
-      // Block until we get an active or background app state
-      const action: ActionType<
-        typeof TextileEventsActions.ignoreFileRequest
-      > = yield take(
-        (action: RootAction) =>
-          action.type === getType(TextileEventsActions.ignoreFileRequest)
-      )
-
-      yield call(Textile.ignores.add, action.payload.blockId)
-
-      yield call(logNewEvent, 'ignoreFile', action.type)
-    } catch (error) {
-      yield call(logNewEvent, 'ignoreFileRequest', error.message, true)
-    }
   }
 }
 
@@ -264,7 +177,9 @@ export function* stopNodeAfterDelayStarting() {
       if (yield select(PreferencesSelectors.showNodeStateNotification)) {
         yield call(
           displayNotification,
-          `Running the node for ${action.payload.delay} sec. in the background`
+          `Running the node for ${Math.round(
+            action.payload.delay
+          )} sec. in the background`
         )
       }
     } catch (error) {
@@ -323,30 +238,6 @@ export function* stopNodeAfterDelayComplete() {
   }
 }
 
-export function* newError() {
-  while (true) {
-    try {
-      // Block until we get an active or background app state
-      const action: ActionType<
-        typeof TextileEventsActions.newErrorMessage
-      > = yield take(
-        (action: RootAction) =>
-          action.type === getType(TextileEventsActions.newErrorMessage)
-      )
-      if (yield select(PreferencesSelectors.showNodeErrorNotification)) {
-        yield call(
-          displayNotification,
-          action.payload.type,
-          action.payload.message
-        )
-      }
-      yield call(logNewEvent, action.payload.type, action.payload.message, true)
-    } catch (error) {
-      yield call(logNewEvent, 'newError error', error.message, true)
-    }
-  }
-}
-
 export function* startSagas() {
   yield all([
     call(handleNodeEvents),
@@ -355,9 +246,6 @@ export function* startSagas() {
     call(stopNodeAfterDelayStarting),
     call(stopNodeAfterDelayCancelled),
     call(stopNodeAfterDelayComplete),
-    call(refreshMessages),
-    call(ignoreFileRequest),
-    call(nodeOnline),
-    call(newError)
+    call(nodeOnline)
   ])
 }
