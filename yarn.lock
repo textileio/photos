@@ -859,10 +859,10 @@
     react-native-safe-area-view "^0.13.0"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@textile/js-types@0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.1.14.tgz#ba4002c2ca43968413ba9670a6e54c1fd20d32f9"
-  integrity sha512-9d4hKDejLL4RWjbxnRfRe6LbWGdvfrLd7K21DfaP465knjG5PIkSIdbNZqeYVjUgh78rPZxWwJyY+tgIvWpNzQ==
+"@textile/js-types@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.2.4.tgz#73c28984b09368c219665c59e55331a977d29785"
+  integrity sha512-faDQGU+XzPZbiXEoDwYZR8E2jHC4cvCD7nResfpYfgD94KeCTIOISSuoRBG034gY/7uREbTh1uuNkmctUNkOsQ==
   dependencies:
     protobufjs "^6.8.8"
 
@@ -877,12 +877,12 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-sdk@1.2.8":
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.8.tgz#01bd975fa3e94fa07ecd50149825f7b20d56e9ed"
-  integrity sha512-VsnqaPARJFrOpEMYUKeZLJe/d1U/yw2uu9ELYN7PtqWKFEq7JN6ZoBgfg+bBbpWZYz7jHEKgVpNZlzqzm6iIZQ==
+"@textile/react-native-sdk@1.2.9":
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.9.tgz#b6213005be8927ac86764b8525daa9d87332acd2"
+  integrity sha512-yMruu/cjHAF0ZU+lwNaxiyDts3gHwjUu5qwlc9c6c7h9aa9VNs/vTS+5KWInRn3NMUEMvAYPOAT2yUYUxTT27A==
   dependencies:
-    "@textile/js-types" "0.1.14"
+    "@textile/js-types" "0.2.4"
     buffer "^5.2.1"
 
 "@textile/redux-saga-wait-for@1.0.1":
@@ -2285,13 +2285,6 @@ escodegen@^1.9.1:
     optionator "^0.8.1"
   optionalDependencies:
     source-map "~0.6.1"
-
-eslint-config-bevry@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-bevry/-/eslint-config-bevry-1.2.0.tgz#4762adefd9c94ee4a0ef88ffaedcb72a7c0a026d"
-  integrity sha512-rKia79mwLRaYIRq4jJPHLbuxVqYqiGGDnVoQi8Onwcze6YqHTOk4wixdi1N0gk7K0Y5KkhSLZsB0VIcvNET6ZA==
-  dependencies:
-    semver "^5.6.0"
 
 eslint-config-prettier@^4.2.0:
   version "4.3.0"
