@@ -1,5 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ViewStyle
+} from 'react-native'
 
 import { color, textStyle } from '../styles'
 
@@ -8,6 +13,7 @@ interface Props {
   subtitle?: string
   leftItem?: JSX.Element
   rightItems?: JSX.Element[]
+  style?: ViewStyle
   onPress?: () => void
 }
 
@@ -34,7 +40,8 @@ class ListItem extends React.PureComponent<Props> {
             paddingLeft: 12,
             paddingRight: 12,
             paddingTop: 12,
-            paddingBottom: 12
+            paddingBottom: 12,
+            ...this.props.style
           }}
         >
           {this.props.leftItem && this.props.leftItem}

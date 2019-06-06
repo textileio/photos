@@ -38,6 +38,7 @@ import ListItem from '../Components/ListItem'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
+import Checkbox from '../Components/Checkbox'
 import { color, textStyle, fontFamily, fontSize, spacing } from '../styles'
 import { contact } from '@textile/react-native-sdk/dist/account'
 
@@ -69,6 +70,18 @@ const newGroupText: TextStyle = {
   textAlign: 'center',
   fontFamily: fontFamily.bold,
   fontSize: fontSize._18
+}
+
+const leftItemsStyle: ViewStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center'
+}
+
+const selectedStyle: ViewStyle = {
+}
+
+const unselectedStyle: ViewStyle = {
 }
 
 interface StateProps {
@@ -221,7 +234,7 @@ class Contacts extends React.Component<Props, State> {
           onPress={this.openCreateThreadModal}
           style={newGroupButton}
         >
-          <Text style={newGroupText}>Create New Group From Contacts</Text>
+          <Text style={newGroupText}>Create New Group With {this.state.selected.length} {this.state.selected.length > 1 ? 'Contacts' : 'Contact'}</Text>
         </TouchableOpacity>}
         <CreateThreadModal
           isVisible={this.state.showCreateGroupModal}
@@ -264,24 +277,24 @@ class Contacts extends React.Component<Props, State> {
     index,
     section
   }: SectionListRenderItemInfo<SearchResult>) => {
+    const selecting = this.props.navigation.getParam('selecting')
     switch (item.type) {
       case 'loading':
         return <ActivityIndicator size="small" style={{ padding: 11 }} />
       case 'contact': {
         const contact = item.data
         const leftItem = (
-          <Avatar
-            style={avatarStyle}
-            target={contact.avatar}
-          />
+          <View style={leftItemsStyle}>
+            {selecting && <Checkbox checked={this.selected(contact.address)} />}
+            <Avatar
+              style={avatarStyle}
+              target={contact.avatar}
+            />
+          </View>
         )
         // Only render select / deselect button if the multi-select new group UI is active
-        const rightItems = [
-          ... this.props.navigation.getParam('selecting') ? [<Button
-            key="select"
-            text={this.selected(contact.address) ? 'Deselect' : 'Select'}
-            onPress={() => this.toggleSelected(contact.address)}
-          />] : [],
+        // If the multi-select new group UI is active, don't display more info button
+        const rightItems = selecting ? [] : [
           <Icon
             key="more"
             name="chevron-right"
@@ -294,7 +307,8 @@ class Contacts extends React.Component<Props, State> {
             title={contact.name || contact.address.substring(0, 10)}
             leftItem={leftItem}
             rightItems={rightItems}
-            onPress={this.onPressTextile(contact)}
+            style={this.selected(contact.address) ? selectedStyle : unselectedStyle}
+            onPress={selecting ? () => this.toggleSelected(contact.address) : this.onPressTextile(contact)}
           />
         )
       }
