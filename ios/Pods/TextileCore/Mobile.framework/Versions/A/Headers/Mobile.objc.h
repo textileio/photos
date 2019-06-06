@@ -137,7 +137,7 @@ name is the string value of a pb.MobileEvent_Type)
 - (BOOL)deregisterCafe:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)encrypt:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)feed:(NSData* _Nullable)req error:(NSError* _Nullable* _Nullable)error;
-- (NSString* _Nonnull)fileData:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)fileContent:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)files:(NSString* _Nullable)threadId offset:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
 /**
  * GitSummary returns common GitSummary
@@ -148,7 +148,7 @@ name is the string value of a pb.MobileEvent_Type)
  * IgnoreInviteViaNotification call core IgnoreInviteViaNotification
  */
 - (BOOL)ignoreInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
-- (NSString* _Nonnull)imageFileDataForMinWidth:(NSString* _Nullable)pth minWidth:(long)minWidth error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)imageFileContentForMinWidth:(NSString* _Nullable)pth minWidth:(long)minWidth error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)invites:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)messages:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
 /**

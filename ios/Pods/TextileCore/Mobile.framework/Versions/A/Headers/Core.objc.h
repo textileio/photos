@@ -330,9 +330,13 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
 
 // skipped method Textile.File with unsupported parameter or return types
 
-// skipped method Textile.FileData with unsupported parameter or return types
+// skipped method Textile.FileContent with unsupported parameter or return types
 
 // skipped method Textile.FileIndex with unsupported parameter or return types
+
+// skipped method Textile.FileIndexContent with unsupported parameter or return types
+
+// skipped method Textile.FileMeta with unsupported parameter or return types
 
 // skipped method Textile.Files with unsupported parameter or return types
 

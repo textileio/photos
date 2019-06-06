@@ -77,12 +77,12 @@
   return [[FilesList alloc] initWithData:data error:error];
 }
 
-- (NSString *)data:(NSString *)hash error:(NSError * _Nullable __autoreleasing *)error {
-  return [self.node fileData:hash error:error];
+- (NSString *)content:(NSString *)hash error:(NSError * _Nullable __autoreleasing *)error {
+  return [self.node fileContent:hash error:error];
 }
 
-- (NSString *)imageDataForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError * _Nullable __autoreleasing *)error {
-  return [self.node imageFileDataForMinWidth:path minWidth:minWidth error:error];
+- (NSString *)imageContentForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError * _Nullable __autoreleasing *)error {
+  return [self.node imageFileContentForMinWidth:path minWidth:minWidth error:error];
 }
 
 @end
