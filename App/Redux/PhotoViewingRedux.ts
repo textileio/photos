@@ -13,6 +13,7 @@ interface ThreadConfig {
 interface ThreadDescription extends ThreadConfig {
   id: string
   key: string
+  initiator: string
 }
 
 interface ThreadOptions {
@@ -99,6 +100,7 @@ export interface ThreadData {
   readonly type: Thread.Type
   readonly sharing: Thread.Sharing
   readonly whitelist: ReadonlyArray<string>
+  readonly initiator: string
   readonly error?: string
 }
 
@@ -149,7 +151,7 @@ export function reducer(
 ): PhotoViewingState {
   switch (action.type) {
     case getType(actions.insertThread): {
-      const { id, key, name, type, sharing, whitelist } = action.payload
+      const { id, key, name, type, sharing, whitelist, initiator } = action.payload
       if (state.threads[id]) {
         return state
       }
@@ -164,6 +166,7 @@ export function reducer(
             type,
             sharing,
             whitelist,
+            initiator,
             querying: false,
             photos: []
           }
@@ -185,7 +188,7 @@ export function reducer(
       }
     }
     case getType(actions.threadAdded): {
-      const { id, key, name, type, sharing, whitelist } = action.payload
+      const { id, key, name, type, sharing, whitelist, initiator } = action.payload
       if (state.threads[id]) {
         return state
       }
@@ -196,6 +199,7 @@ export function reducer(
         type,
         sharing,
         whitelist,
+        initiator,
         querying: false,
         photos: []
       }
