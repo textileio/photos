@@ -78,10 +78,6 @@ const leftItemsStyle: ViewStyle = {
   justifyContent: 'center'
 }
 
-const selectedStyle: ViewStyle = {}
-
-const unselectedStyle: ViewStyle = {}
-
 interface StateProps {
   contacts: ReadonlyArray<IContact>
   searchResults: SearchResultsSection[]
@@ -310,9 +306,6 @@ class Contacts extends React.Component<Props, State> {
             title={contact.name || contact.address.substring(0, 10)}
             leftItem={leftItem}
             rightItems={rightItems}
-            style={
-              this.selected(contact.address) ? selectedStyle : unselectedStyle
-            }
             onPress={
               selecting
                 ? () => this.toggleSelected(contact.address)
