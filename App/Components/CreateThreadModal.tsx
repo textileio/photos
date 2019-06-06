@@ -29,7 +29,7 @@ interface ScreenProps {
   selectToShare?: boolean
   navigateTo?: boolean
   fullScreen?: boolean
-  contacts?: ReadonlyArray<string>
+  invites?: ReadonlyArray<string>
   cancel: () => void
   complete: () => void
 }
@@ -142,7 +142,7 @@ const mapDispatchToProps = (
           {
             navigate,
             selectToShare,
-            invites: ownProps.contacts
+            invites: ownProps.invites
           }
         )
       )

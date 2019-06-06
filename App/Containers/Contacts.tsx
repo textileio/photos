@@ -35,6 +35,7 @@ import Button from '../Components/SmallButton'
 import SearchBar from '../Components/SearchBar'
 import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
+import CreateThreadModal from '../Components/CreateThreadModal'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
 import { color, textStyle, fontFamily, fontSize, spacing } from '../styles'
@@ -96,6 +97,7 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 interface State {
   searchString?: string
   selected: ReadonlyArray<string>
+  showCreateGroupModal: boolean
 }
 
 class Contacts extends React.Component<Props, State> {
@@ -132,7 +134,8 @@ class Contacts extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      selected: []
+      selected: [],
+      showCreateGroupModal: false
     }
   }
 
@@ -215,11 +218,20 @@ class Contacts extends React.Component<Props, State> {
           keyboardDismissMode="on-drag"
         />
         {this.props.navigation.getParam('selecting') && this.state.selected.length > 0 && <TouchableOpacity
-          onPress={this.openNewGroupModal}
+          onPress={this.openCreateThreadModal}
           style={newGroupButton}
         >
           <Text style={newGroupText}>Create New Group From Contacts</Text>
         </TouchableOpacity>}
+        <CreateThreadModal
+          isVisible={this.state.showCreateGroupModal}
+          fullScreen={false}
+          selectToShare={false}
+          navigateTo={true}
+          invites={this.state.selected}
+          cancel={this.cancelCreateThread}
+          complete={this.completeCreateThread}
+        />
       </View>
     )
   }
@@ -397,7 +409,23 @@ class Contacts extends React.Component<Props, State> {
     })
   }
 
-  openNewGroupModal = () => { }
+  openCreateThreadModal = () => {
+    this.setState({
+      showCreateGroupModal: true
+    })
+  }
+
+  cancelCreateThread = () => {
+    this.setState({
+      showCreateGroupModal: false
+    })
+  }
+
+  completeCreateThread = () => {
+    this.setState({
+      showCreateGroupModal: false
+    })
+  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
