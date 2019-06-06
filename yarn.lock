@@ -2286,6 +2286,13 @@ escodegen@^1.9.1:
   optionalDependencies:
     source-map "~0.6.1"
 
+eslint-config-bevry@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-bevry/-/eslint-config-bevry-1.2.0.tgz#4762adefd9c94ee4a0ef88ffaedcb72a7c0a026d"
+  integrity sha512-rKia79mwLRaYIRq4jJPHLbuxVqYqiGGDnVoQi8Onwcze6YqHTOk4wixdi1N0gk7K0Y5KkhSLZsB0VIcvNET6ZA==
+  dependencies:
+    semver "^5.6.0"
+
 eslint-config-prettier@^4.2.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-4.3.0.tgz#c55c1fcac8ce4518aeb77906984e134d9eb5a4f0"
