@@ -29,6 +29,7 @@ interface ScreenProps {
   selectToShare?: boolean
   navigateTo?: boolean
   fullScreen?: boolean
+  contacts?: ReadonlyArray<string>
   cancel: () => void
   complete: () => void
 }
@@ -119,7 +120,10 @@ class CreateThreadComponent extends React.Component<DispatchProps & ScreenProps>
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>,
+  ownProps: ScreenProps
+): DispatchProps => {
   const threadConfig = {
     type: Thread.Type.OPEN,
     sharing: Thread.Sharing.SHARED,
@@ -135,7 +139,11 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
       dispatch(
         PhotoViewingActions.addThreadRequest(
           { ...threadConfig, name },
-          { navigate, selectToShare }
+          {
+            navigate,
+            selectToShare,
+            invites: ownProps.contacts
+          }
         )
       )
     }
