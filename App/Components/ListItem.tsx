@@ -1,10 +1,5 @@
 import React, { Component } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ViewStyle
-} from 'react-native'
+import { View, Text, TouchableOpacity, ViewStyle } from 'react-native'
 
 import { color, textStyle } from '../styles'
 

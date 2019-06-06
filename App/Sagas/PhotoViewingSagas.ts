@@ -99,7 +99,12 @@ export function* addThread(
     }
     const threadId: IThread = yield call(Textile.threads.add, config)
     if (invites) {
-      yield put(ThreadsActions.addInternalInvitesRequest(threadId.id, invites as string[]))
+      yield put(
+        ThreadsActions.addInternalInvitesRequest(
+          threadId.id,
+          invites as string[]
+        )
+      )
     }
   } catch (error) {
     yield put(TextileEventsActions.newErrorMessage('addThread', error.message))

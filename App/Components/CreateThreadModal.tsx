@@ -34,7 +34,9 @@ interface ScreenProps {
   complete: () => void
 }
 
-class CreateThreadComponent extends React.Component<DispatchProps & ScreenProps> {
+class CreateThreadComponent extends React.Component<
+  DispatchProps & ScreenProps
+> {
   state = {
     value: '',
     submitted: false
@@ -106,7 +108,10 @@ class CreateThreadComponent extends React.Component<DispatchProps & ScreenProps>
                   onPress={this.create()}
                 >
                   <Text
-                    style={[styles.buttonText, submitDisabled && styles.disabled]}
+                    style={[
+                      styles.buttonText,
+                      submitDisabled && styles.disabled
+                    ]}
                   >
                     Submit
                   </Text>

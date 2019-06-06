@@ -78,11 +78,9 @@ const leftItemsStyle: ViewStyle = {
   justifyContent: 'center'
 }
 
-const selectedStyle: ViewStyle = {
-}
+const selectedStyle: ViewStyle = {}
 
-const unselectedStyle: ViewStyle = {
-}
+const unselectedStyle: ViewStyle = {}
 
 interface StateProps {
   contacts: ReadonlyArray<IContact>
@@ -192,11 +190,11 @@ class Contacts extends React.Component<Props, State> {
         contacts.length > 0
           ? contacts
           : [
-            {
-              key: 'textile_empty',
-              type: 'empty'
-            }
-          ]
+              {
+                key: 'textile_empty',
+                type: 'empty'
+              }
+            ]
     }
   }
 
@@ -230,12 +228,18 @@ class Contacts extends React.Component<Props, State> {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
         />
-        {this.props.navigation.getParam('selecting') && this.state.selected.length > 0 && <TouchableOpacity
-          onPress={this.openCreateThreadModal}
-          style={newGroupButton}
-        >
-          <Text style={newGroupText}>Create New Group With {this.state.selected.length} {this.state.selected.length > 1 ? 'Contacts' : 'Contact'}</Text>
-        </TouchableOpacity>}
+        {this.props.navigation.getParam('selecting') &&
+          this.state.selected.length > 0 && (
+            <TouchableOpacity
+              onPress={this.openCreateThreadModal}
+              style={newGroupButton}
+            >
+              <Text style={newGroupText}>
+                Create New Group With {this.state.selected.length}{' '}
+                {this.state.selected.length > 1 ? 'Contacts' : 'Contact'}
+              </Text>
+            </TouchableOpacity>
+          )}
         <CreateThreadModal
           isVisible={this.state.showCreateGroupModal}
           fullScreen={false}
@@ -286,29 +290,34 @@ class Contacts extends React.Component<Props, State> {
         const leftItem = (
           <View style={leftItemsStyle}>
             {selecting && <Checkbox checked={this.selected(contact.address)} />}
-            <Avatar
-              style={avatarStyle}
-              target={contact.avatar}
-            />
+            <Avatar style={avatarStyle} target={contact.avatar} />
           </View>
         )
         // Only render select / deselect button if the multi-select new group UI is active
         // If the multi-select new group UI is active, don't display more info button
-        const rightItems = selecting ? [] : [
-          <Icon
-            key="more"
-            name="chevron-right"
-            size={24}
-            color={color.grey_4}
-          />
-        ]
+        const rightItems = selecting
+          ? []
+          : [
+              <Icon
+                key="more"
+                name="chevron-right"
+                size={24}
+                color={color.grey_4}
+              />
+            ]
         return (
           <ListItem
             title={contact.name || contact.address.substring(0, 10)}
             leftItem={leftItem}
             rightItems={rightItems}
-            style={this.selected(contact.address) ? selectedStyle : unselectedStyle}
-            onPress={selecting ? () => this.toggleSelected(contact.address) : this.onPressTextile(contact)}
+            style={
+              this.selected(contact.address) ? selectedStyle : unselectedStyle
+            }
+            onPress={
+              selecting
+                ? () => this.toggleSelected(contact.address)
+                : this.onPressTextile(contact)
+            }
           />
         )
       }
@@ -415,10 +424,9 @@ class Contacts extends React.Component<Props, State> {
   toggleSelected = (address: string) => {
     this.setState((state, props) => {
       return {
-        selected: this.selected(address) ? state.selected.filter(add => add != address) : [
-          ...state.selected,
-          address
-        ]
+        selected: this.selected(address)
+          ? state.selected.filter(add => add !== address)
+          : [...state.selected, address]
       }
     })
   }

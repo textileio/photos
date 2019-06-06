@@ -1,9 +1,5 @@
 import React, { PureComponent } from 'react'
-import {
-  View,
-  ViewStyle,
-  TouchableOpacity
-} from 'react-native'
+import { View, ViewStyle, TouchableOpacity } from 'react-native'
 
 import { color, spacing } from '../styles'
 
@@ -22,11 +18,13 @@ const checkboxStyle: ViewStyle = {
 export default class Checkbox extends PureComponent<Props> {
   render() {
     return (
-      <View style={{
-        ...checkboxStyle,
-        backgroundColor: this.props.checked ? color.action_5 : 'transparent',
-        borderColor: this.props.checked ? color.action_5 : color.grey_3
-      }}></View>
+      <View
+        style={{
+          ...checkboxStyle,
+          backgroundColor: this.props.checked ? color.action_5 : 'transparent',
+          borderColor: this.props.checked ? color.action_5 : color.grey_3
+        }}
+      />
     )
   }
 }
