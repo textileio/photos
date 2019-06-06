@@ -4,7 +4,6 @@ import { PersistPartial } from 'redux-persist'
 import RootReducer from './RootReducer'
 import { AccountAction } from '../features/account'
 import { AuthAction } from './AuthRedux'
-import { CameraRollAction } from './CameraRollRedux'
 import { ContactsAction } from '../features/contacts'
 import { DeviceLogsAction } from './DeviceLogsRedux'
 import { PhotoViewingAction } from './PhotoViewingRedux'
@@ -23,7 +22,6 @@ export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
   | AccountAction
   | AuthAction
-  | CameraRollAction
   | ContactsAction
   | DeviceLogsAction
   | PhotoViewingAction

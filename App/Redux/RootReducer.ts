@@ -2,7 +2,6 @@ import { combineReducers } from 'redux'
 
 import { accountReducer } from '../features/account'
 import { reducer as authReducer } from './AuthRedux'
-import { reducer as cameraRollReducer } from './CameraRollRedux'
 import { contactsReducer } from '../features/contacts'
 import { reducer as photoViewingReducer } from './PhotoViewingRedux'
 import { reducer as prefrencesReducer } from './PreferencesRedux'
@@ -18,7 +17,6 @@ import { photosReducer } from '../features/photos'
 
 export default combineReducers({
   auth: authReducer,
-  cameraRoll: cameraRollReducer,
   contacts: contactsReducer,
   photoViewing: photoViewingReducer,
   preferences: prefrencesReducer,
