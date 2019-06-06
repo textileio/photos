@@ -214,7 +214,7 @@ class Contacts extends React.Component<Props, State> {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
         />
-        {this.props.navigation.getParam('selecting') && <TouchableOpacity
+        {this.props.navigation.getParam('selecting') && this.state.selected.length > 0 && <TouchableOpacity
           onPress={this.openNewGroupModal}
           style={newGroupButton}
         >
