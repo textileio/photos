@@ -135,16 +135,21 @@ class Group extends React.PureComponent<Props, State> {
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
-    const options = (this.props.canInvite ? ['Invite Others'] : []).concat(
-      this.props.selfAddress === this.props.initiator ? ['Rename Group'] : []
-    ).concat([
-      'Leave Group',
-      'Cancel'
-    ])
+    const options = (this.props.canInvite ? ['Invite Others'] : [])
+      .concat(
+        this.props.selfAddress === this.props.initiator ? ['Rename Group'] : []
+      )
+      .concat(['Leave Group', 'Cancel'])
     let cancelButtonIndex = 1
-    if (this.props.canInvite && this.props.selfAddress === this.props.initiator) {
+    if (
+      this.props.canInvite &&
+      this.props.selfAddress === this.props.initiator
+    ) {
       cancelButtonIndex = 3
-    } else if (this.props.canInvite || this.props.selfAddress === this.props.initiator) {
+    } else if (
+      this.props.canInvite ||
+      this.props.selfAddress === this.props.initiator
+    ) {
       cancelButtonIndex = 2
     }
     return (
@@ -237,13 +242,13 @@ class Group extends React.PureComponent<Props, State> {
         const pinchWidth = !files.length
           ? def
           : !files[0].links.large
-            ? def
-            : files[0].links.large.meta.fields.width.numberValue
+          ? def
+          : files[0].links.large.meta.fields.width.numberValue
         const pinchHeight = !files.length
           ? def
           : !files[0].links.large
-            ? def
-            : files[0].links.large.meta.fields.height.numberValue
+          ? def
+          : files[0].links.large.meta.fields.height.numberValue
         const fileIndex =
           files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
@@ -346,8 +351,10 @@ class Group extends React.PureComponent<Props, State> {
 
   handleActionSheetResponse = (index: number) => {
     const actions = [
-      ... this.props.canInvite ? [this.showInviteModal] : [],
-      ... this.props.selfAddress === this.props.initiator ? [this.showRenameGroupModal] : [],
+      ...(this.props.canInvite ? [this.showInviteModal] : []),
+      ...(this.props.selfAddress === this.props.initiator
+        ? [this.showRenameGroupModal]
+        : []),
       this.props.leaveThread
     ]
     actions[index]()
@@ -393,7 +400,7 @@ const mapStateToProps = (
   const threadId = ownProps.navigation.getParam('threadId')
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
-  const initiator = threadData.initiator
+  const initiator = threadData ? threadData.initiator : ''
   const sharing = threadData ? threadData.sharing : Thread.Sharing.NOT_SHARED
   const canInvite = sharing !== Thread.Sharing.NOT_SHARED
   const groupName = threadData ? threadData.name : 'Unknown'

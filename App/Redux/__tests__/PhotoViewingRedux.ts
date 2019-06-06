@@ -6,6 +6,7 @@ const initialState = reducer(undefined, {} as any)
 const threadId = 'threadId'
 const threadKey = 'threadKey'
 const threadName = 'threadName'
+const threadInitiator = 'username'
 const threadType = 2
 const threadSharing = 0
 const threadWhitelist: ReadonlyArray<string> = []
@@ -14,6 +15,7 @@ const thread = {
   key: threadKey,
   name: threadName,
   type: threadType,
+  initiator: threadInitiator,
   sharing: threadSharing,
   whitelist: threadWhitelist
 }

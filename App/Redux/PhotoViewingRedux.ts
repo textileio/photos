@@ -151,7 +151,15 @@ export function reducer(
 ): PhotoViewingState {
   switch (action.type) {
     case getType(actions.insertThread): {
-      const { id, key, name, type, sharing, whitelist, initiator } = action.payload
+      const {
+        id,
+        key,
+        name,
+        type,
+        sharing,
+        whitelist,
+        initiator
+      } = action.payload
       if (state.threads[id]) {
         return state
       }
@@ -188,7 +196,15 @@ export function reducer(
       }
     }
     case getType(actions.threadAdded): {
-      const { id, key, name, type, sharing, whitelist, initiator } = action.payload
+      const {
+        id,
+        key,
+        name,
+        type,
+        sharing,
+        whitelist,
+        initiator
+      } = action.payload
       if (state.threads[id]) {
         return state
       }
