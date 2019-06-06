@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param error A reference to an error pointer that will be set in the case of an error
  * @return The base64 string of data
  */
-- (NSString *)data:(NSString *)hash error:(NSError **)error;
+- (NSString *)content:(NSString *)hash error:(NSError **)error;
 
 /**
  * Helper function to return the most appropriate image data for a minimun image width
@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param error A reference to an error pointer that will be set in the case of an error
  * @return The base64 string of image data
  */
-- (NSString *)imageDataForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError **)error;
+- (NSString *)imageContentForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError **)error;
 
 @end
 
