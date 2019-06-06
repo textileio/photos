@@ -41,7 +41,7 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
                 return bitmap;
             } else {
                 String path = String.format("%s/%d", this.target, this.index);
-                String dataUrl = Textile.instance().files.imageDataForMinWidth(path, this.forMinWidth);
+                String dataUrl = Textile.instance().files.imageContentForMinWidth(path, this.forMinWidth);
                 String encodingPrefix = "base64,";
                 int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
                 byte[] decodedString = Base64.decode(dataUrl.substring(contentStartIndex), Base64.DEFAULT);
