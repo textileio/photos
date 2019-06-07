@@ -11,7 +11,7 @@
   "dependencies": {
     "@textile/react-native-camera-roll": "1.1.6",
     "@textile/react-native-icon": "^1.0.0",
-    "@textile/react-native-sdk": "1.2.10",
+    "@textile/react-native-sdk": "1.2.11",
     "@textile/redux-saga-wait-for": "1.0.1",
     "apisauce": "^1.0.2",
     "moment": "^2.22.2",
@@ -66,7 +66,6 @@
     "babel-jest": "24.7.1",
     "enzyme-adapter-react-16": "^1.6.0",
     "enzyme": "^3.7.0",
-    "eslint-config-bevry": "^1.2.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react-hooks": "^1.6.0",
