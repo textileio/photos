@@ -222,7 +222,7 @@ class Avatar extends React.Component<Props, State> {
                 alignSelf: 'center',
                 backgroundColor: 'transparent'
               }}
-              target={`${target}/0/${resolution}/d`}
+              target={`${target}/0/${resolution}/content`}
               ipfs={true}
               index={0}
               forMinWidth={widthNumber}
