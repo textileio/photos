@@ -321,6 +321,7 @@ typedef GPB_ENUM(CafeUnstoreThreadAck_FieldNumber) {
 typedef GPB_ENUM(CafeDeliverMessage_FieldNumber) {
   CafeDeliverMessage_FieldNumber_Id_p = 1,
   CafeDeliverMessage_FieldNumber_Client = 2,
+  CafeDeliverMessage_FieldNumber_Env = 3,
 };
 
 @interface CafeDeliverMessage : GPBMessage
@@ -328,6 +329,8 @@ typedef GPB_ENUM(CafeDeliverMessage_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *client;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSData *env;
 
 @end
 
