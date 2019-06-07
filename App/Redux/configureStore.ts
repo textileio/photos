@@ -28,7 +28,7 @@ export default () => {
   const bootstrappedCallback = () => store.dispatch(StartupActions.startup())
   const persistor = persistStore(store, undefined, bootstrappedCallback)
 
-  sagaMiddleware.run(rootSaga, store.dispatch)
+  sagaMiddleware.run(rootSaga)
 
   return { store, persistor }
 }
