@@ -14,7 +14,8 @@ import {
   SectionListRenderItemInfo,
   SectionListData,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  SafeAreaView
 } from 'react-native'
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
@@ -127,9 +128,17 @@ class Contacts extends React.Component<Props, State> {
       </TextileHeaderButtons>
     )
     const headerRight = (
-      <TouchableOpacity onPress={toggleSelect}>
-        <Text style={selectingText}>{selecting ? 'Cancel' : 'New Group'}</Text>
-      </TouchableOpacity>
+      <TextileHeaderButtons>
+        <Item
+          title="New Group"
+          onPress={toggleSelect}
+          ButtonElement={
+            <Text style={selectingText}>
+              {selecting ? 'Cancel' : 'New Group'}
+            </Text>
+          }
+        />
+      </TextileHeaderButtons>
     )
     return {
       headerTitle: 'Contacts',
@@ -196,7 +205,7 @@ class Contacts extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={CONTAINER}>
+      <SafeAreaView style={CONTAINER}>
         <SearchBar
           containerStyle={{ backgroundColor: color.grey_5 }}
           inputStyle={{
@@ -245,7 +254,7 @@ class Contacts extends React.Component<Props, State> {
           cancel={this.cancelCreateThread}
           complete={this.completeCreateThread}
         />
-      </View>
+      </SafeAreaView>
     )
   }
 
@@ -437,8 +446,12 @@ class Contacts extends React.Component<Props, State> {
   }
 
   completeCreateThread = () => {
+    this.props.navigation.setParams({
+      selecting: false
+    })
     this.setState({
-      showCreateGroupModal: false
+      showCreateGroupModal: false,
+      selected: []
     })
   }
 }
