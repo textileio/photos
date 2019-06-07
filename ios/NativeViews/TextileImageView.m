@@ -82,7 +82,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         }
       } else {
         NSString *path = [NSString stringWithFormat:@"%@/%d", self.target, self.index];
-        NSString *urlString = [Textile.instance.files imageDataForMinWidth:path minWidth:self.forMinWidth error:&error];
+        NSString *urlString = [Textile.instance.files imageContentForMinWidth:path minWidth:self.forMinWidth error:&error];
         if (urlString) {
           NSURL *url = [NSURL URLWithString:urlString];
           NSData *imageData = [NSData dataWithContentsOfURL:url];

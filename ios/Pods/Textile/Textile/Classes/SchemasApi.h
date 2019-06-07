@@ -11,8 +11,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ * Provides access to Textile schemas related APIs
+ */
 @interface SchemasApi : NodeDependant
 
+/**
+ * Add a new schema
+ * @param schemaNode The node that describes the new schema to add
+ * @param error A reference to an error pointer that will be set in the case of an error
+ * @return The FileIndex representing the added schema
+ */
 - (FileIndex *)add:(Node *)schemaNode error:(NSError **)error;
 
 @end
