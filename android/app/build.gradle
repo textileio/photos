@@ -108,7 +108,7 @@ apply from: "../../node_modules/react-native/react.gradle"
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-def enableSeparateBuildPerCPUArchitecture = false
+def enableSeparateBuildPerCPUArchitecture = true
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
@@ -124,8 +124,8 @@ android {
         applicationIdSuffix ".dev"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 0
+        versionName "0.0.0"
         // Added for react-native-config per https://github.com/luggit/react-native-config#advanced-android-setup
         resValue "string", "build_config_package", "com.textile"
         multiDexEnabled true
