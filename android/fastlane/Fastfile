@@ -75,7 +75,7 @@ platform :android do
     )
     supply(
       track: "beta",
-      apk_paths: ["./app/build/outputs/apk/release/app-arm64-v8a-release.apk", "./app/build/outputs/apk/release/app-armeabi-v7a-release.apk"]
+      apk_paths: ["./app/build/outputs/apk/release/app-x86-release.apk", "./app/build/outputs/apk/release/app-arm64-v8a-release.apk", "./app/build/outputs/apk/release/app-armeabi-v7a-release.apk"]
     )
   end
 
