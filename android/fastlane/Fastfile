@@ -70,20 +70,19 @@ platform :android do
     increment_version_name(app_project_dir: "./app", version_name: parts[1])
     increment_version_code(app_project_dir: "./app", version_code: parts[2])
     gradle(
-      task: "clean bundleRelease",
+      task: "clean assembleRelease",
       flags: "--init-script init.gradle"
     )
     supply(
       track: "beta",
-      aab: "./app/build/outputs/bundle/release/app.aab",
-      skip_upload_apk: true
+      apk_paths: ["./app/build/outputs/apk/release/app-arm64-v8a-release.apk", "./app/build/outputs/apk/release/app-armeabi-v7a-release.apk"]
     )
   end
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+    #gradle(task: "clean assembleRelease")
+    #upload_to_play_store
     #supply # from https://github.com/CircleCI-Public/circleci-demo-react-native/blob/master/android/fastlane/Fastfile
   end
 
