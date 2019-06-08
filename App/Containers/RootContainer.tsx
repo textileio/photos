@@ -5,8 +5,7 @@ import {
   StatusBar,
   Platform,
   PermissionsAndroid,
-  Text,
-  AsyncStorage
+  Text
 } from 'react-native'
 import { NavigationContainerComponent } from 'react-navigation'
 import AppNavigation from '../Navigation/AppNavigation'
