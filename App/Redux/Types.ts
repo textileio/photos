@@ -12,7 +12,6 @@ import { NotificationsAction } from './NotificationsRedux'
 import { ThreadsAction } from './ThreadsRedux'
 import { TriggersAction } from './TriggersRedux'
 import { UIAction } from './UIRedux'
-import { UploadingImagesAction } from './UploadingImagesRedux'
 import { StartupAction } from './StartupRedux'
 import { TextileEventsAction } from './TextileEventsRedux'
 import { GroupAction } from '../features/group'
@@ -30,7 +29,6 @@ export type RootAction =
   | ThreadsAction
   | TriggersAction
   | UIAction
-  | UploadingImagesAction
   | StartupAction
   | TextileEventsAction
   | GroupAction

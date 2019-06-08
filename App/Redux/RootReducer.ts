@@ -15,7 +15,6 @@ import { reducer as prefrencesReducer } from './PreferencesRedux'
 import { reducer as notificationsReducer } from './NotificationsRedux'
 import { reducer as threadsReducer } from './ThreadsRedux'
 import { reducer as uiReducer } from './UIRedux'
-import { reducer as uploadingImagesReducer } from './UploadingImagesRedux'
 import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as textileEventsReducer } from './TextileEventsRedux'
@@ -351,7 +350,7 @@ const migrations: MigrationManifest = {
   },
   21: persistedState => {
     const state = persistedState as any
-    const { cameraRoll, group, ...rest } = state
+    const { cameraRoll, group, uploadingImages, ...rest } = state
     return rest
   }
 }
@@ -360,13 +359,7 @@ const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
   version: 21,
-  whitelist: [
-    'account',
-    'preferences',
-    'uploadingImages',
-    'deviceLogs',
-    'photos'
-  ],
+  whitelist: ['account', 'preferences', 'deviceLogs', 'photos'],
   migrate: createMigrate(migrations, { debug: false })
 }
 
@@ -378,7 +371,6 @@ const rootReducer = combineReducers({
   notifications: notificationsReducer,
   threads: threadsReducer,
   ui: uiReducer,
-  uploadingImages: uploadingImagesReducer,
   startup: startupReducer,
   deviceLogs: deviceLogsReducer,
   account: accountReducer,
