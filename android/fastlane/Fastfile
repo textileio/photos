@@ -70,11 +70,13 @@ platform :android do
     increment_version_name(app_project_dir: "./app", version_name: parts[1])
     increment_version_code(app_project_dir: "./app", version_code: parts[2])
     gradle(
-      task: "clean assembleRelease",
+      task: "clean bundleRelease",
       flags: "--init-script init.gradle"
     )
     supply(
       track: "beta"
+      aab: "./app/build/outputs/bundle/release/app.aab"
+      skip_upload_apk: true
     )
   end
 
