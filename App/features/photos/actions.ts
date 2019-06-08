@@ -45,6 +45,10 @@ export const photoProcessingError = createAction(
   }
 )
 
+export const clearProcessingPhotos = createAction(
+  'photos/CLEAR_PROCESSING_PHOTOS'
+)
+
 export const refreshPhotos = createAsyncAction(
   'photos/REFRESH_PHOTOS_REQUEST',
   'photos/REFRESH_PHOTOS_SUCCESS',

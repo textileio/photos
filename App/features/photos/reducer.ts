@@ -97,6 +97,9 @@ export default combineReducers<PhotosState, PhotosAction>({
         const updated: ProcessingPhoto = { ...processingPhoto, error: message }
         return { ...state, [id]: updated }
       }
+      case getType(actions.clearProcessingPhotos): {
+        return {}
+      }
       default:
         return state
     }
