@@ -199,6 +199,9 @@ export function* refreshMessages() {
       yield call(logNewEvent, 'refreshMessages', action.type)
     } catch (error) {
       yield call(logNewEvent, 'refreshMessages', error.message, true)
+      if (error.message === 'unauthorized') {
+        yield put(accountActions.refreshCafeSessionsRequest())
+      }
     }
   }
 }
