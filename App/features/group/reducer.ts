@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { ActionType } from 'typesafe-actions'
-import { createMigrate, PersistConfig, MigrationManifest, persistReducer } from 'redux-persist'
+import { PersistConfig, persistReducer } from 'redux-persist'
 import { AsyncStorage } from 'react-native'
 
 import { feedReducer, FeedState } from './feed'
@@ -22,9 +22,7 @@ export type GroupAction = ActionType<typeof actions>
 const persistConfig: PersistConfig = {
   key: 'group',
   storage: AsyncStorage,
-  whitelist: [
-    'addPhoto'
-  ]
+  whitelist: ['addPhoto']
 }
 
 const reducer = combineReducers<GroupState>({

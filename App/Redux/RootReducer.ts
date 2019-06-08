@@ -1,6 +1,11 @@
 import { combineReducers } from 'redux'
 import { AsyncStorage } from 'react-native'
-import { createMigrate, PersistConfig, MigrationManifest, persistReducer } from 'redux-persist'
+import {
+  createMigrate,
+  PersistConfig,
+  MigrationManifest,
+  persistReducer
+} from 'redux-persist'
 
 import { accountReducer } from '../features/account'
 import { reducer as authReducer } from './AuthRedux'
