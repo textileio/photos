@@ -1,6 +1,13 @@
-import { takeLatest, takeEvery, all, call } from 'redux-saga/effects'
+import {
+  take,
+  takeLatest,
+  takeEvery,
+  all,
+  call,
+  select
+} from 'redux-saga/effects'
+import { PersistedState } from 'redux-persist'
 import { getType } from 'typesafe-actions'
-import { Dispatch } from 'redux'
 
 /* ------------- Types ------------- */
 
@@ -84,7 +91,23 @@ import { startSagas } from './TextileEventsSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
 
-export default function* root(dispatch: Dispatch) {
+function* waitForRehydrate() {
+  const rehydrated = (state: PersistedState) => {
+    return state._persist ? state._persist.rehydrated : false
+  }
+  if (yield select(rehydrated)) {
+    return
+  }
+  while (true) {
+    yield take('*')
+    if (yield select(rehydrated)) {
+      return
+    }
+  }
+}
+
+export default function*() {
+  yield call(waitForRehydrate)
   yield all([
     call(accountSaga),
     call(contactsSaga),

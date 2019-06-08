@@ -1013,11 +1013,13 @@ typedef struct CafeUnstoreThreadAck__storage_ {
 
 @dynamic id_p;
 @dynamic client;
+@dynamic env;
 
 typedef struct CafeDeliverMessage__storage_ {
   uint32_t _has_storage_[1];
   NSString *id_p;
   NSString *client;
+  NSData *env;
 } CafeDeliverMessage__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1043,6 +1045,15 @@ typedef struct CafeDeliverMessage__storage_ {
         .offset = (uint32_t)offsetof(CafeDeliverMessage__storage_, client),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "env",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeDeliverMessage_FieldNumber_Env,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(CafeDeliverMessage__storage_, env),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBytes,
       },
     };
     GPBDescriptor *localDescriptor =
