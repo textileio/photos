@@ -74,8 +74,8 @@ platform :android do
       flags: "--init-script init.gradle"
     )
     supply(
-      track: "beta"
-      aab: "./app/build/outputs/bundle/release/app.aab"
+      track: "beta",
+      aab: "./app/build/outputs/bundle/release/app.aab",
       skip_upload_apk: true
     )
   end
