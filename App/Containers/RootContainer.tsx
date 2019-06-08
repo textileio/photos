@@ -63,16 +63,6 @@ class RootContainer extends Component<StateProps & DispatchProps> {
 
   componentDidMount() {
     this.setupLocationMonitoring()
-    AsyncStorage.getAllKeys()
-      .then(keys => {
-        console.log('KEYS:', keys)
-      })
-      .then(() => {
-        AsyncStorage.getItem('persist:primary')
-          .then(value => {
-            console.log('BOOM:', value)
-          })
-      })
   }
 
   render() {

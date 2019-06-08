@@ -19,22 +19,12 @@ export interface GroupState {
 
 export type GroupAction = ActionType<typeof actions>
 
-const migrations: MigrationManifest = {
-  0: persistedState => {
-    const state = persistedState as any
-    const { feed, addMessage, renameGroup, ...rest } = state
-    return rest
-  }
-}
-
 const persistConfig: PersistConfig = {
   key: 'group',
   storage: AsyncStorage,
-  version: 0,
   whitelist: [
     'addPhoto'
-  ],
-  migrate: createMigrate(migrations, { debug: false })
+  ]
 }
 
 const reducer = combineReducers<GroupState>({

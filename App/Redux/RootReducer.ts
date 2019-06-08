@@ -346,7 +346,7 @@ const migrations: MigrationManifest = {
   },
   21: persistedState => {
     const state = persistedState as any
-    const { cameraRoll, ...rest } = state
+    const { cameraRoll, group, ...rest } = state
     return rest
   }
 }
@@ -359,7 +359,6 @@ const persistConfig: PersistConfig = {
     'account',
     'preferences',
     'uploadingImages',
-    'group',
     'deviceLogs',
     'photos'
   ],
