@@ -68,6 +68,9 @@ class UserProfile extends React.PureComponent<Props> {
   _notifications = () => {
     this.props.navigation.navigate('NotificationSettings')
   }
+  _cafes = () => {
+    this.props.navigation.navigate('Cafes')
+  }
   _storage = () => {
     this.props.navigation.navigate('Storage')
   }
@@ -161,6 +164,11 @@ class UserProfile extends React.PureComponent<Props> {
           >
             <Text style={styles.listText}>Notifications</Text>
           </TouchableOpacity>
+          {this.props.verboseUi && (
+            <TouchableOpacity style={styles.listItem} onPress={this._cafes}>
+              <Text style={styles.listText}>Cafes</Text>
+            </TouchableOpacity>
+          )}
           {this.props.verboseUi && (
             <TouchableOpacity style={styles.listItem} onPress={this._storage}>
               <Text style={styles.listText}>Storage</Text>
