@@ -157,8 +157,7 @@ class Avatar extends React.Component<Props, State> {
             source={{
               uri: `${
                 Config.RN_TEXTILE_GATEWAY_URL
-              }/ipfs/${target}/0/small/content`,
-              cache: 'force-cache'
+              }/ipfs/${target}/0/small/content`
             }}
             resizeMode={'cover'}
           >
@@ -208,8 +207,7 @@ class Avatar extends React.Component<Props, State> {
           source={{
             uri: `${
               Config.RN_TEXTILE_GATEWAY_URL
-            }/ipfs/${target}/0/small/content`,
-            cache: 'force-cache'
+            }/ipfs/${target}/0/small/content`
           }}
           resizeMode={'cover'}
           onLoad={this.onHTTPLoad}
