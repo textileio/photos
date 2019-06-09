@@ -124,8 +124,8 @@ android {
         applicationIdSuffix ".dev"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 0
-        versionName "0.0.0"
+        versionCode 1
+        versionName "1.0"
         // Added for react-native-config per https://github.com/luggit/react-native-config#advanced-android-setup
         resValue "string", "build_config_package", "com.textile"
         multiDexEnabled true
