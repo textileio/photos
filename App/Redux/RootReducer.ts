@@ -350,7 +350,7 @@ const migrations: MigrationManifest = {
   },
   21: persistedState => {
     const state = persistedState as any
-    const { cameraRoll, group, uploadingImages, ...rest } = state
+    const { cameraRoll, group, uploadingImages, photos, ...rest } = state
     return rest
   }
 }
@@ -359,8 +359,9 @@ const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
   version: 21,
-  whitelist: ['account', 'preferences', 'deviceLogs', 'photos'],
-  migrate: createMigrate(migrations, { debug: false })
+  whitelist: ['account', 'preferences', 'deviceLogs'],
+  migrate: createMigrate(migrations, { debug: false }),
+  debug: false
 }
 
 const rootReducer = combineReducers({

@@ -22,7 +22,8 @@ export type GroupAction = ActionType<typeof actions>
 const persistConfig: PersistConfig = {
   key: 'group',
   storage: AsyncStorage,
-  whitelist: ['addPhoto']
+  whitelist: ['addPhoto'],
+  debug: false
 }
 
 const reducer = combineReducers<GroupState>({

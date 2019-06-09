@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 import { IFiles } from '@textile/react-native-sdk'
+import { PersistConfig, persistReducer } from 'redux-persist'
+import { AsyncStorage } from 'react-native'
 
 import * as actions from './actions'
 import { ProcessingPhotos, ProcessingPhoto } from './models'
@@ -21,7 +23,14 @@ export interface PhotosState {
 
 export type PhotosAction = ActionType<typeof actions>
 
-export default combineReducers<PhotosState, PhotosAction>({
+const persistConfig: PersistConfig = {
+  key: 'photos',
+  storage: AsyncStorage,
+  whitelist: ['queryData', 'processingPhotos'],
+  debug: false
+}
+
+const reducer = combineReducers<PhotosState, PhotosAction>({
   queryData: (state = { querying: false }, action) => {
     switch (action.type) {
       case getType(actions.queryCameraRoll.request): {
@@ -128,3 +137,5 @@ export default combineReducers<PhotosState, PhotosAction>({
     }
   }
 })
+
+export default persistReducer(persistConfig, reducer)
