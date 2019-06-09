@@ -11,6 +11,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Toast from 'react-native-easy-toast'
+import ActionSheet from 'react-native-actionsheet'
 import { NavigationScreenProps } from 'react-navigation'
 
 import Avatar from '../Components/Avatar'
@@ -40,10 +41,12 @@ interface StateProps {
 interface DispatchProps {
   queryPhotos: () => void
   refreshPhotos: () => void
+  clearProcessingPhotos: () => void
 }
 
 interface NavProps {
   openDrawer: () => void
+  showActionSheet: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -53,6 +56,7 @@ class Photos extends Component<Props> {
     navigation
   }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
+    const showActionSheet = navigation.getParam('showActionSheet')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <HeaderItem
@@ -68,7 +72,11 @@ class Photos extends Component<Props> {
 
     const headerRight = (
       <TextileHeaderButtons>
-        <HeaderItem title="Add Group" iconName="plus" />
+        <HeaderItem
+          title="More"
+          iconName="more-vertical"
+          onPress={showActionSheet}
+        />
       </TextileHeaderButtons>
     )
     return {
@@ -80,10 +88,13 @@ class Photos extends Component<Props> {
 
   toast?: Toast
 
+  actionSheet: any
+
   componentDidMount() {
     this.props.refreshPhotos()
     this.props.navigation.setParams({
-      openDrawer: this.openDrawer
+      openDrawer: this.openDrawer,
+      showActionSheet: this.showActionSheet
     })
   }
 
@@ -101,6 +112,15 @@ class Photos extends Component<Props> {
         <Toast
           position={'center'}
           ref={ref => (this.toast = ref ? ref : undefined)}
+        />
+        <ActionSheet
+          ref={(o: any) => {
+            this.actionSheet = o
+          }}
+          title={'Options'}
+          options={['Clear processing items', 'Cancel']}
+          cancelButtonIndex={1}
+          onPress={this.handleActionSheetResponse}
         />
       </View>
     )
@@ -186,6 +206,16 @@ class Photos extends Component<Props> {
   openDrawer = () => {
     this.props.navigation.openDrawer()
   }
+
+  showActionSheet = () => {
+    this.actionSheet.show()
+  }
+
+  handleActionSheetResponse = (index: number) => {
+    if (index === 0) {
+      this.props.clearProcessingPhotos()
+    }
+  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -197,7 +227,8 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   queryPhotos: () => dispatch(photosActions.queryCameraRoll.request()),
-  refreshPhotos: () => dispatch(photosActions.refreshPhotos.request(undefined))
+  refreshPhotos: () => dispatch(photosActions.refreshPhotos.request(undefined)),
+  clearProcessingPhotos: () => dispatch(photosActions.clearProcessingPhotos())
 })
 
 export default connect(
