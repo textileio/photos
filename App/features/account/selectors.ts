@@ -13,7 +13,8 @@ export const getProfile = (state: AccountState) => state.profile.value
 
 export const getRecoveryPhrase = (state: AccountState) => state.recoveryPhrase
 
-export const makeSessionForId = (id: string) => (state: AccountState) => state.cafeSessions.sessions.find(session => session.id === id)
+export const makeSessionForId = (id: string) => (state: AccountState) =>
+  state.cafeSessions.sessions.find(session => session.id === id)
 
 export const bestSession = (state: AccountState) => {
   const values = state.cafeSessions.sessions

@@ -2,12 +2,9 @@ import React, { Component } from 'react'
 import { View, FlatList, ListRenderItemInfo } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
-import { ICafeSession} from '@textile/react-native-sdk'
+import { ICafeSession } from '@textile/react-native-sdk'
 
-import {
-  Item,
-  TextileHeaderButtons
-} from '../Components/HeaderButtons'
+import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import ListItem from '../Components/ListItem'
 import RowSeparator from '../Components/RowSeparator'
 import { RootState } from '../Redux/Types'
@@ -19,18 +16,11 @@ interface StateProps {
 type Props = StateProps & NavigationScreenProps
 
 class Cafes extends Component<Props> {
-
-  static navigationOptions = ({
-    navigation
-  }: NavigationScreenProps) => {
+  static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const goBack = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>
-        <Item
-          title="Back"
-          onPress={goBack}
-          iconName="arrow-left"
-        />
+        <Item title="Back" onPress={goBack} iconName="arrow-left" />
       </TextileHeaderButtons>
     )
     return {
@@ -40,16 +30,16 @@ class Cafes extends Component<Props> {
   }
 
   showCafeSession = (cafeSession: ICafeSession) => {
-    return () => this.props.navigation.navigate('CafeSession', { cafeSessionId: cafeSession.id })
+    return () =>
+      this.props.navigation.navigate('CafeSession', {
+        cafeSessionId: cafeSession.id
+      })
   }
 
   keyExtractor = (cafeSession: ICafeSession) => cafeSession.id
 
   renderRow = ({ item }: ListRenderItemInfo<ICafeSession>) => (
-    <ListItem
-      title={item.cafe.url}
-      onPress={this.showCafeSession(item)}
-    />
+    <ListItem title={item.cafe.url} onPress={this.showCafeSession(item)} />
   )
 
   render() {
@@ -64,7 +54,6 @@ class Cafes extends Component<Props> {
       </View>
     )
   }
-
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -73,4 +62,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-export default connect(mapStateToProps, undefined)(Cafes)
+export default connect(
+  mapStateToProps,
+  undefined
+)(Cafes)
