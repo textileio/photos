@@ -17,6 +17,7 @@ import Avatar from '../Components/Avatar'
 import Button from '../Components/LargeButton'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import CreateThreadModal from '../Components/CreateThreadModal'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
@@ -69,7 +70,6 @@ interface NavProps {
 }
 
 interface StateProps {
-  displayName: string
   threadThumbs: ReadonlyArray<ThreadThumbs>
   isContact: boolean
   removing: boolean
@@ -85,7 +85,11 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
-class ContactModal extends React.Component<Props> {
+interface State {
+  showCreateGroupModal: boolean
+}
+
+class ContactModal extends React.Component<Props, State> {
   static navigationOptions = ({
     navigation
   }: NavigationScreenProps<NavProps>) => {
@@ -101,6 +105,13 @@ class ContactModal extends React.Component<Props> {
     }
   }
 
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      showCreateGroupModal: false
+    }
+  }
+
   navigateToThread(id: string) {
     return () => {
       this.props.navigation.navigate('ViewThread', { threadId: id })
@@ -109,11 +120,12 @@ class ContactModal extends React.Component<Props> {
 
   render() {
     const contact = this.props.navigation.getParam('contact')
-    const avatar = contact.avatar
+    const { name, address, avatar } = contact
     const removingText = this.props.removing ? 'Removing' : 'Remove'
     const addingText = this.props.adding ? 'Adding' : 'Add'
     const buttonText = this.props.isContact ? removingText : addingText
     const buttonDisabled = this.props.adding || this.props.removing
+    const displayName = name ? name : address.substring(0, 12)
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
@@ -121,7 +133,7 @@ class ContactModal extends React.Component<Props> {
             style={{ width: 72, height: 72, backgroundColor: color.grey_5 }}
             target={avatar}
           />
-          <Text style={styles.username}>{this.props.displayName}</Text>
+          <Text style={styles.username}>{displayName}</Text>
           <View style={buttons}>
             <Button
               text={buttonText}
@@ -167,6 +179,15 @@ class ContactModal extends React.Component<Props> {
             </Text>
           ))}
         </ScrollView>
+        <CreateThreadModal
+          isVisible={this.state.showCreateGroupModal}
+          fullScreen={false}
+          selectToShare={false}
+          navigateTo={true}
+          invites={[address]}
+          cancel={this.cancelCreateThread}
+          complete={this.completeCreateThread}
+        />
       </View>
     )
   }
@@ -177,6 +198,18 @@ class ContactModal extends React.Component<Props> {
 
   onAdd = () => {
     this.props.addContact()
+  }
+
+  cancelCreateThread = () => {
+    this.setState({
+      showCreateGroupModal: false
+    })
+  }
+
+  completeCreateThread = () => {
+    this.setState({
+      showCreateGroupModal: false
+    })
   }
 
   createOrNavigateToDirectMessageThread = () => {
@@ -198,7 +231,6 @@ const mapStateToProps = (
   ownProps: NavigationScreenProps<NavProps>
 ): StateProps => {
   const contact = ownProps.navigation.getParam('contact')
-  const username = contact.name
   const address = contact.address
   // Check if this contact is already added
   const isContact = state.contacts.contacts.some(c => c.address === address)
@@ -210,7 +242,6 @@ const mapStateToProps = (
     Object.keys(state.contacts.addingContacts).indexOf(address) > -1
   const directMessageThread = getDirectMessageThread(state, address)
   return {
-    displayName: username ? username : address.substring(0, 12),
     threadThumbs: getThreadThumbs(state, address, 'name'),
     isContact,
     removing,

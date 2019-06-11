@@ -30,16 +30,25 @@ interface ScreenProps {
   navigateTo?: boolean
   fullScreen?: boolean
   invites?: ReadonlyArray<string>
+  defaultName?: string
   cancel: () => void
   complete: () => void
 }
 
-class CreateThreadComponent extends React.Component<
-  DispatchProps & ScreenProps
-> {
-  state = {
-    value: '',
-    submitted: false
+type Props = DispatchProps & ScreenProps
+
+interface State {
+  value: string
+  submitted: boolean
+}
+
+class CreateThreadComponent extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      value: props.defaultName ? props.defaultName : '',
+      submitted: false
+    }
   }
 
   handleNewText = (text: string) => {
