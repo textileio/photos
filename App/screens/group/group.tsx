@@ -50,6 +50,7 @@ const screenWidth = Dimensions.get('screen').width
 interface StateProps {
   items: ReadonlyArray<Item>
   groupName: string
+  initiator: string
   selfAddress: string
   renaming: boolean
   canInvite: boolean
@@ -134,12 +135,23 @@ class Group extends React.PureComponent<Props, State> {
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
-    const options = (this.props.canInvite ? ['Invite Others'] : []).concat([
-      'Rename Group',
-      'Leave Group',
-      'Cancel'
-    ])
-    const cancelButtonIndex = this.props.canInvite ? 3 : 2
+    const options = (this.props.canInvite ? ['Invite Others'] : [])
+      .concat(
+        this.props.selfAddress === this.props.initiator ? ['Rename Group'] : []
+      )
+      .concat(['Leave Group', 'Cancel'])
+    let cancelButtonIndex = 1
+    if (
+      this.props.canInvite &&
+      this.props.selfAddress === this.props.initiator
+    ) {
+      cancelButtonIndex = 3
+    } else if (
+      this.props.canInvite ||
+      this.props.selfAddress === this.props.initiator
+    ) {
+      cancelButtonIndex = 2
+    }
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -338,14 +350,14 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   handleActionSheetResponse = (index: number) => {
-    const startingIndex = this.props.canInvite ? 1 : 0
-    if (this.props.canInvite && index === 0) {
-      this.showInviteModal()
-    } else if (index === startingIndex) {
-      this.showRenameGroupModal()
-    } else if (index === startingIndex + 1) {
-      this.props.leaveThread()
-    }
+    const actions = [
+      ...(this.props.canInvite ? [this.showInviteModal] : []),
+      ...(this.props.selfAddress === this.props.initiator
+        ? [this.showRenameGroupModal]
+        : []),
+      this.props.leaveThread
+    ]
+    actions[index]()
   }
 
   showInviteModal = () => {
@@ -388,6 +400,7 @@ const mapStateToProps = (
   const threadId = ownProps.navigation.getParam('threadId')
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
+  const initiator = threadData ? threadData.initiator : ''
   const sharing = threadData ? threadData.sharing : Thread.Sharing.NOT_SHARED
   const canInvite = sharing !== Thread.Sharing.NOT_SHARED
   const groupName = threadData ? threadData.name : 'Unknown'
@@ -397,6 +410,7 @@ const mapStateToProps = (
   return {
     items,
     groupName,
+    initiator,
     selfAddress,
     renaming,
     canInvite,
