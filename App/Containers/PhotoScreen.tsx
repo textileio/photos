@@ -152,7 +152,12 @@ const mapStateToProps = (state: RootState): StateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  addLike: (block: string) => dispatch(UIActions.addLikeRequest(block))
+  addLike: (block: string) =>
+    dispatch(
+      UIActions.addLike.request({
+        blockId: block
+      })
+    )
 })
 
 export default connect(

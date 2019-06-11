@@ -71,9 +71,6 @@ const actions = {
     return (threadId: string, threadName: string) =>
       resolve({ threadId, threadName })
   }),
-  addLikeRequest: createAction('ADD_LIKE_REQUEST', resolve => {
-    return (blockId: string) => resolve({ blockId })
-  }),
   addLike: createAsyncAction(
     'ADD_LIKE_REQUEST',
     'ADD_LIKE_SUCCESS',
@@ -160,9 +157,10 @@ export function reducer(
         }
       }
     }
-    case getType(actions.addLike.success):
-    case getType(actions.addLike.failure): {
+    case getType(actions.addLike.failure):
+    case getType(actions.addLike.success): {
       const { likingPhotos } = state
+      const { blockId } = action.payload
       const {
         [action.payload.blockId]: liked,
         ...newLikingPhotos
