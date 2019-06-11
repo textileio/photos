@@ -106,7 +106,7 @@ function* waitForRehydrate() {
   }
 }
 
-export default function* () {
+export default function*() {
   yield call(waitForRehydrate)
   yield all([
     call(accountSaga),

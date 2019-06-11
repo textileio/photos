@@ -94,13 +94,13 @@ class PhotoScreen extends React.Component<Props> {
     const pinchWidth = !files.length
       ? def
       : !files[0].links.large
-        ? def
-        : files[0].links.large.meta.fields.width.numberValue
+      ? def
+      : files[0].links.large.meta.fields.width.numberValue
     const pinchHeight = !files.length
       ? def
       : !files[0].links.large
-        ? def
-        : files[0].links.large.meta.fields.height.numberValue
+      ? def
+      : files[0].links.large.meta.fields.height.numberValue
     const fileIndex =
       files && files.length > 0 && files[0].index ? files[0].index : 0
     return (
@@ -152,9 +152,12 @@ const mapStateToProps = (state: RootState): StateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  addLike: (block: string) => dispatch(UIActions.addLike.request({
-    blockId: block
-  }))
+  addLike: (block: string) =>
+    dispatch(
+      UIActions.addLike.request({
+        blockId: block
+      })
+    )
 })
 
 export default connect(
