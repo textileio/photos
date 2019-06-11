@@ -8,10 +8,14 @@ import {
   ListRenderItemInfo,
   Keyboard,
   ViewStyle,
+  TextStyle,
+  ImageStyle,
   SectionList,
   SectionListRenderItemInfo,
   SectionListData,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableOpacity,
+  SafeAreaView
 } from 'react-native'
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
@@ -32,14 +36,47 @@ import Button from '../Components/SmallButton'
 import SearchBar from '../Components/SearchBar'
 import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
+import CreateThreadModal from '../Components/CreateThreadModal'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Avatar from '../Components/Avatar'
-import { color, textStyle, spacing } from '../styles'
+import Checkbox from '../Components/Checkbox'
+import { color, textStyle, fontFamily, fontSize, spacing } from '../styles'
 import { contact } from '@textile/react-native-sdk/dist/account'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   backgroundColor: color.screen_primary
+}
+
+const avatarStyle: ImageStyle = {
+  width: 50,
+  height: 50,
+  backgroundColor: color.grey_5
+}
+
+const selectingText: TextStyle = {
+  paddingRight: 15,
+  fontFamily: fontFamily.medium
+}
+
+const newGroupButton: ViewStyle = {
+  width: '100%',
+  paddingVertical: spacing._024,
+  borderTopColor: color.grey_4,
+  borderTopWidth: 1,
+  backgroundColor: color.screen_primary
+}
+
+const newGroupText: TextStyle = {
+  textAlign: 'center',
+  fontFamily: fontFamily.bold,
+  fontSize: fontSize._18
+}
+
+const leftItemsStyle: ViewStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center'
 }
 
 interface StateProps {
@@ -51,6 +88,8 @@ interface NavProps {
   openDrawer: () => void
   addContact: () => void
   clearSearch: () => void
+  toggleSelect: () => void
+  selecting: boolean
 }
 
 interface DispatchProps {
@@ -62,8 +101,11 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
+// Store the addresses of currently selected contacts (for new group multi-select UI)
 interface State {
   searchString?: string
+  selected: ReadonlyArray<string>
+  showCreateGroupModal: boolean
 }
 
 class Contacts extends React.Component<Props, State> {
@@ -71,6 +113,8 @@ class Contacts extends React.Component<Props, State> {
     navigation
   }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
+    const selecting = navigation.getParam('selecting')
+    const toggleSelect = navigation.getParam('toggleSelect')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item
@@ -83,21 +127,40 @@ class Contacts extends React.Component<Props, State> {
         />
       </TextileHeaderButtons>
     )
+    const headerRight = (
+      <TextileHeaderButtons>
+        <Item
+          title="New Group"
+          onPress={toggleSelect}
+          ButtonElement={
+            <Text style={selectingText}>
+              {selecting ? 'Cancel' : 'New Group'}
+            </Text>
+          }
+        />
+      </TextileHeaderButtons>
+    )
     return {
       headerTitle: 'Contacts',
-      headerLeft
+      headerLeft,
+      headerRight
     }
   }
 
   constructor(props: Props) {
     super(props)
-    this.state = {}
+    this.state = {
+      selected: [],
+      showCreateGroupModal: false
+    }
   }
 
   componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
-      clearSearch: this.props.clearSearch
+      clearSearch: this.props.clearSearch,
+      toggleSelect: this.toggleSelect,
+      selecting: false
     })
   }
 
@@ -142,7 +205,7 @@ class Contacts extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={CONTAINER}>
+      <SafeAreaView style={CONTAINER}>
         <SearchBar
           containerStyle={{ backgroundColor: color.grey_5 }}
           inputStyle={{
@@ -170,7 +233,28 @@ class Contacts extends React.Component<Props, State> {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
         />
-      </View>
+        {this.props.navigation.getParam('selecting') &&
+          this.state.selected.length > 0 && (
+            <TouchableOpacity
+              onPress={this.openCreateThreadModal}
+              style={newGroupButton}
+            >
+              <Text style={newGroupText}>
+                Create New Group With {this.state.selected.length}{' '}
+                {this.state.selected.length > 1 ? 'Contacts' : 'Contact'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        <CreateThreadModal
+          isVisible={this.state.showCreateGroupModal}
+          fullScreen={false}
+          selectToShare={false}
+          navigateTo={true}
+          invites={this.state.selected}
+          cancel={this.cancelCreateThread}
+          complete={this.completeCreateThread}
+        />
+      </SafeAreaView>
     )
   }
 
@@ -202,31 +286,40 @@ class Contacts extends React.Component<Props, State> {
     index,
     section
   }: SectionListRenderItemInfo<SearchResult>) => {
+    const selecting = this.props.navigation.getParam('selecting')
     switch (item.type) {
       case 'loading':
         return <ActivityIndicator size="small" style={{ padding: 11 }} />
       case 'contact': {
         const contact = item.data
         const leftItem = (
-          <Avatar
-            style={{ width: 50, height: 50, backgroundColor: color.grey_5 }}
-            target={contact.avatar}
-          />
+          <View style={leftItemsStyle}>
+            {selecting && <Checkbox checked={this.selected(contact.address)} />}
+            <Avatar style={avatarStyle} target={contact.avatar} />
+          </View>
         )
-        const rightItems = [
-          <Icon
-            key="more"
-            name="chevron-right"
-            size={24}
-            color={color.grey_4}
-          />
-        ]
+        // Only render select / deselect button if the multi-select new group UI is active
+        // If the multi-select new group UI is active, don't display more info button
+        const rightItems = selecting
+          ? []
+          : [
+              <Icon
+                key="more"
+                name="chevron-right"
+                size={24}
+                color={color.grey_4}
+              />
+            ]
         return (
           <ListItem
             title={contact.name || contact.address.substring(0, 10)}
             leftItem={leftItem}
             rightItems={rightItems}
-            onPress={this.onPressTextile(contact)}
+            onPress={
+              selecting
+                ? () => this.toggleSelected(contact.address)
+                : this.onPressTextile(contact)
+            }
           />
         )
       }
@@ -309,6 +402,57 @@ class Contacts extends React.Component<Props, State> {
   openDrawer = () => {
     this.props.navigation.openDrawer()
     Keyboard.dismiss()
+  }
+
+  // Toggles whether the select UI is active
+  toggleSelect = () => {
+    // If we're canceling the multi-select action, reset the array of selected contacts to empty
+    if (this.props.navigation.getParam('selecting')) {
+      this.setState({
+        selected: []
+      })
+    }
+    this.props.navigation.setParams({
+      selecting: !this.props.navigation.getParam('selecting')
+    })
+  }
+
+  // Check whether a contact is currently selected
+  selected = (address: string) => {
+    return this.state.selected.indexOf(address) > -1
+  }
+
+  // Toggles whether a contact is selected
+  toggleSelected = (address: string) => {
+    this.setState((state, props) => {
+      return {
+        selected: this.selected(address)
+          ? state.selected.filter(add => add !== address)
+          : [...state.selected, address]
+      }
+    })
+  }
+
+  openCreateThreadModal = () => {
+    this.setState({
+      showCreateGroupModal: true
+    })
+  }
+
+  cancelCreateThread = () => {
+    this.setState({
+      showCreateGroupModal: false
+    })
+  }
+
+  completeCreateThread = () => {
+    this.props.navigation.setParams({
+      selecting: false
+    })
+    this.setState({
+      showCreateGroupModal: false,
+      selected: []
+    })
   }
 }
 

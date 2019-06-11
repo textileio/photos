@@ -459,7 +459,7 @@ jobs:
 
   ios-release:
     macos:
-      xcode: '10.2.1'
+      xcode: '10.2.0'
     environment:
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8

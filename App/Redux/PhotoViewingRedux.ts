@@ -16,6 +16,8 @@ interface ThreadDescription extends ThreadConfig {
   initiator: string
 }
 
+// If a list of invites is included in ThreadOptions, send out those invites after
+// the thread is created
 interface ThreadOptions {
   navigate?: boolean
   selectToShare?: boolean
@@ -23,6 +25,7 @@ interface ThreadOptions {
     imageId: string
     comment?: string
   }
+  invites?: ReadonlyArray<string>
 }
 
 const actions = {
