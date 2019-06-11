@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import uuid from 'uuid/v4'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { InboundInvite } from '../Redux/ThreadsRedux'
+import ThreadsActions, { InboundInvite } from '../Redux/ThreadsRedux'
 import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
@@ -85,6 +85,7 @@ export function* addThread(
   action: ActionType<typeof PhotoViewingActions.addThreadRequest>
 ) {
   const { name, whitelist, type, sharing } = action.payload
+  const { invites } = action.meta
   try {
     const key = `textile_photos-shared-${uuid()}`
     const config: IAddThreadConfig = {
@@ -96,7 +97,15 @@ export function* addThread(
       force: false,
       whitelist: whitelist ? (whitelist as string[]) : []
     }
-    yield call(Textile.threads.add, config)
+    const threadId: IThread = yield call(Textile.threads.add, config)
+    if (invites) {
+      yield put(
+        ThreadsActions.addInternalInvitesRequest(
+          threadId.id,
+          invites as string[]
+        )
+      )
+    }
   } catch (error) {
     yield put(TextileEventsActions.newErrorMessage('addThread', error.message))
     yield put(PhotoViewingActions.addThreadError(error))

@@ -6,7 +6,7 @@ import Modal from 'react-native-modal'
 import { Thread } from '@textile/react-native-sdk'
 
 import ModalButtons from './ModalButtons'
-import { CreateThreadComponent } from './CreateThreadModal'
+import CreateThreadComponent from './CreateThreadModal'
 
 import { RootAction, RootState } from '../Redux/Types'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
@@ -150,6 +150,7 @@ class InviteContactModal extends React.Component<Props, State> {
         fullScreen={true}
         selectToShare={true}
         navigateTo={false}
+        isVisible={this.state.showCreateGroupModal}
         cancel={this.cancelCreateThread()}
         complete={this.completeCreateThread()}
       />
