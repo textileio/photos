@@ -145,7 +145,7 @@ export default function*() {
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
-    takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
+    takeEvery(getType(UIActions.addLike.request), addPhotoLike),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
     takeEvery(
