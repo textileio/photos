@@ -12,7 +12,7 @@ import Modal from 'react-native-modal'
 import { Thread } from '@textile/react-native-sdk'
 
 import { RootAction } from '../Redux/Types'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import PhotoViewingActions, { ThreadConfig } from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
 import Input from '../SB/components/Input'
 
@@ -21,7 +21,11 @@ import styles from './Styles/ThreadCreateModal'
 
 interface DispatchProps {
   completeScreen: (threadName: string) => void
-  submit: (name: string, navigate: boolean, selectToShare: boolean) => void
+  submit: (
+    threadConfig: ThreadConfig,
+    navigate: boolean,
+    selectToShare: boolean
+  ) => void
 }
 
 interface ScreenProps {
@@ -31,6 +35,9 @@ interface ScreenProps {
   fullScreen?: boolean
   invites?: ReadonlyArray<string>
   defaultName?: string
+  type?: Thread.Type
+  sharing?: Thread.Sharing
+  whitelist?: ReadonlyArray<string>
   cancel: () => void
   complete: () => void
 }
@@ -62,8 +69,19 @@ class CreateThreadComponent extends React.Component<Props, State> {
       }
       this.setState({ submitted: true })
       this.props.completeScreen(this.state.value)
+      const threadConfig = {
+        type:
+          this.props.type !== undefined ? this.props.type : Thread.Type.OPEN,
+        sharing:
+          this.props.sharing !== undefined
+            ? this.props.sharing
+            : Thread.Sharing.SHARED,
+        whitelist:
+          this.props.whitelist !== undefined ? this.props.whitelist : [],
+        name: this.state.value
+      }
       this.props.submit(
-        this.state.value,
+        threadConfig,
         Boolean(this.props.navigateTo),
         Boolean(this.props.selectToShare)
       )
@@ -138,27 +156,19 @@ const mapDispatchToProps = (
   dispatch: Dispatch<RootAction>,
   ownProps: ScreenProps
 ): DispatchProps => {
-  const threadConfig = {
-    type: Thread.Type.OPEN,
-    sharing: Thread.Sharing.SHARED,
-    whitelist: []
-  }
   return {
     completeScreen: () => {
       dispatch(
         PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)
       )
     },
-    submit: (name, navigate, selectToShare) => {
+    submit: (threadConfig, navigate, selectToShare) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(
-          { ...threadConfig, name },
-          {
-            navigate,
-            selectToShare,
-            invites: ownProps.invites
-          }
-        )
+        PhotoViewingActions.addThreadRequest(threadConfig, {
+          navigate,
+          selectToShare,
+          invites: ownProps.invites
+        })
       )
     }
   }

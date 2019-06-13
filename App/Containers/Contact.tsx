@@ -80,7 +80,6 @@ interface StateProps {
 interface DispatchProps {
   removeContact: () => void
   addContact: () => void
-  createDirectMessageThread: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -185,6 +184,10 @@ class ContactModal extends React.Component<Props, State> {
           selectToShare={false}
           navigateTo={true}
           invites={[address]}
+          defaultName={name}
+          whitelist={[address]}
+          type={Thread.Type.OPEN}
+          sharing={Thread.Sharing.NOT_SHARED}
           cancel={this.cancelCreateThread}
           complete={this.completeCreateThread}
         />
@@ -221,7 +224,9 @@ class ContactModal extends React.Component<Props, State> {
         groupName: name
       })
     } else {
-      this.props.createDirectMessageThread()
+      this.setState({
+        showCreateGroupModal: true
+      })
     }
   }
 }
@@ -255,21 +260,11 @@ const mapDispatchToProps = (
   ownProps: NavigationScreenProps<NavProps>
 ): DispatchProps => {
   const contact = ownProps.navigation.getParam('contact')
-  const { address, name } = contact
-  const threadConfig = {
-    name,
-    whitelist: [address],
-    type: Thread.Type.OPEN,
-    sharing: Thread.Sharing.NOT_SHARED
-  }
+  const { address } = contact
   return {
     removeContact: () =>
       dispatch(contactsActions.removeContact.request(address)),
-    addContact: () => dispatch(contactsActions.addContactRequest(contact)),
-    createDirectMessageThread: () =>
-      dispatch(
-        PhotoViewingActions.addThreadRequest(threadConfig, { navigate: true })
-      )
+    addContact: () => dispatch(contactsActions.addContactRequest(contact))
   }
 }
 

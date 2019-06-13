@@ -135,23 +135,15 @@ class Group extends React.PureComponent<Props, State> {
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
-    const options = (this.props.canInvite ? ['Invite Others'] : [])
-      .concat(
-        this.props.selfAddress === this.props.initiator ? ['Rename Group'] : []
-      )
-      .concat(['Leave Group', 'Cancel'])
-    let cancelButtonIndex = 1
-    if (
-      this.props.canInvite &&
-      this.props.selfAddress === this.props.initiator
-    ) {
-      cancelButtonIndex = 3
-    } else if (
-      this.props.canInvite ||
-      this.props.selfAddress === this.props.initiator
-    ) {
-      cancelButtonIndex = 2
-    }
+    const options = [
+      ...(this.props.canInvite ? ['Invite Others'] : []),
+      ...(this.props.selfAddress === this.props.initiator
+        ? ['Rename Group']
+        : []),
+      'Leave Group',
+      'Cancel'
+    ]
+    const cancelButtonIndex = options.indexOf('Cancel')
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -357,7 +349,9 @@ class Group extends React.PureComponent<Props, State> {
         : []),
       this.props.leaveThread
     ]
-    actions[index]()
+    if (actions[index]) {
+      actions[index]()
+    }
   }
 
   showInviteModal = () => {

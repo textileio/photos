@@ -3,14 +3,14 @@ import Config from 'react-native-config'
 
 import { IFiles, Thread } from '@textile/react-native-sdk'
 
-interface ThreadConfig {
+export interface ThreadConfig {
   name: string
   type: Thread.Type
   sharing: Thread.Sharing
   whitelist: ReadonlyArray<string>
 }
 
-interface ThreadDescription extends ThreadConfig {
+export interface ThreadDescription extends ThreadConfig {
   id: string
   key: string
   initiator: string
