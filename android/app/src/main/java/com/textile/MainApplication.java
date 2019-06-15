@@ -3,6 +3,7 @@ package com.textile;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import com.swmansion.reanimated.ReanimatedPackage;
 import io.textile.cameraroll.RNCameraRollPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -40,6 +41,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
           new MainReactPackage(),
+            new ReanimatedPackage(),
             new RNCameraRollPackage(),
           new RNTextilePackage(),
           new RNBackgroundFetchPackage(),
