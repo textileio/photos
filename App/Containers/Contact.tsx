@@ -249,84 +249,31 @@ class ContactModal extends React.Component<Props, State> {
             />
           </View>
         </View>
-        <TabView<Route>
-          style={tabView}
-          navigationState={this.state}
-          renderScene={SceneMap({
-            threads: () => ThreadsScreen,
-            cafes: () => CafesScreen
-          })}
-          onIndexChange={index => this.setState({ index })}
-          initialLayout={{
-            width: Dimensions.get('window').width
-          }}
-          renderTabBar={props => (
-            <TabBar
-              {...props}
-              style={tabBarStyle}
-              indicatorStyle={indicatorStyle}
-              activeColor={color.grey_1}
-              inactiveColor={color.grey_3}
-            />
-          )}
-        />
+        {this.props.isContact &&
+          <TabView<Route>
+            style={tabView}
+            navigationState={this.state}
+            renderScene={SceneMap({
+              threads: () => ThreadsScreen,
+              cafes: () => CafesScreen
+            })}
+            onIndexChange={index => this.setState({ index })}
+            initialLayout={{
+              width: Dimensions.get('window').width
+            }}
+            renderTabBar={props => (
+              <TabBar
+                {...props}
+                style={tabBarStyle}
+                indicatorStyle={indicatorStyle}
+                activeColor={color.grey_1}
+                inactiveColor={color.grey_3}
+              />
+            )}
+          />
+        }
       </SafeAreaView>
     )
-    /* return (
-  <View style={styles.container}>
-      <View style={styles.profile}>
-        <Avatar
-          style={{ width: 72, height: 72, backgroundColor: color.grey_5 }}
-          target={avatar}
-        />
-        <Text style={styles.username}>{this.props.displayName}</Text>
-        <View style={buttons}>
-          <Button
-            text={buttonText}
-            style={{
-              ...addOrRemoveButton,
-              backgroundColor: this.props.isContact
-                ? color.severe_3
-                : color.action_3
-            }}
-            disabled={buttonDisabled}
-            onPress={this.props.isContact ? this.onRemove : this.onAdd}
-          />
-          <Button
-            text={'Send Message'}
-            onPress={this.createOrNavigateToDirectMessageThread}
-          />
-        </View>
-      </View>
-      <ScrollView style={styles.threadsList}>
-        <Text style={styles.threadsTitle}>
-          {this.props.threadThumbs.length > 0
-            ? 'Sharing in Groups:'
-            : 'Not part of any shared groups'}
-        </Text>
-        {this.props.threadThumbs.map((thread, i) => (
-          <TouchableOpacity
-            key={i}
-            onPress={this.navigateToThread(thread.id)}
-          >
-            <PhotoWithTextBox
-              key={i}
-              text={thread.name}
-              photo={thread.thumb}
-            />
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      <ScrollView style={cafesList}>
-        <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
-        {cafes(contact).map((cafe, i) => (
-          <Text key={i} style={cafesTitle}>
-            {cafe.address}
-          </Text>
-        ))}
-      </ScrollView>
-    </View>
-    )*/
   }
 
   onRemove = () => {
