@@ -122,6 +122,10 @@ const indicatorStyle: ViewStyle = {
   backgroundColor: color.grey_3
 }
 
+const labelStyle: TextStyle = {
+  fontFamily: fontFamily.regular
+}
+
 const tab: ViewStyle = {
   flex: 1
 }
@@ -265,6 +269,7 @@ class ContactModal extends React.Component<Props, State> {
               <TabBar
                 {...props}
                 style={tabBarStyle}
+                labelStyle={labelStyle}
                 indicatorStyle={indicatorStyle}
                 activeColor={color.grey_1}
                 inactiveColor={color.grey_3}
