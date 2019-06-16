@@ -7,10 +7,19 @@ import {
   Text,
   TouchableOpacity,
   ViewStyle,
-  TextStyle
+  TextStyle,
+  ImageStyle,
+  SafeAreaView,
+  Dimensions
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import { IContact, Thread } from '@textile/react-native-sdk'
+import {
+  TabView,
+  SceneMap,
+  NavigationState,
+  TabBar
+} from 'react-native-tab-view'
 
 // Components
 import Avatar from '../Components/Avatar'
@@ -35,6 +44,35 @@ import {
 import { contactsActions } from '../features/contacts'
 import { cafes } from '../features/contacts/selectors'
 
+const container: ViewStyle = {
+  flex: 1,
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  backgroundColor: color.screen_primary
+}
+
+const profile: ViewStyle = {
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  paddingVertical: spacing._024
+}
+
+const profilePicture: ImageStyle = {
+  width: spacing._128,
+  height: spacing._128,
+  backgroundColor: color.grey_5,
+  marginBottom: spacing._024
+}
+
+const username: TextStyle = {
+  textAlign: 'center',
+  fontFamily: fontFamily.bold,
+  fontSize: fontSize._30,
+  marginBottom: spacing._024
+}
+
 const buttons: ViewStyle = {
   flexDirection: 'row',
   alignItems: 'center',
@@ -46,8 +84,7 @@ const addOrRemoveButton: ViewStyle = {
 }
 
 const cafesList: ViewStyle = {
-  width: '100%',
-  flex: 0,
+  flex: 1,
   paddingHorizontal: spacing._016,
   paddingTop: spacing._024
 }
@@ -58,10 +95,36 @@ const cafesHeader: TextStyle = {
   marginBottom: spacing._012
 }
 
-const cafesTitle: TextStyle = {
+const cafeTitle: TextStyle = {
   fontFamily: fontFamily.regular,
   fontSize: fontSize._14,
-  marginBottom: spacing._012
+  marginVertical: spacing._012
+}
+
+const cafeBox: ViewStyle = {
+}
+
+const divider: ViewStyle = {
+  width: '100%',
+  height: 1,
+  backgroundColor: color.grey_4
+}
+
+const tabView: ViewStyle = {
+  flex: 1,
+  width: Dimensions.get('window').width
+}
+
+const tabBarStyle: ViewStyle = {
+  backgroundColor: color.screen_primary
+}
+
+const indicatorStyle: ViewStyle = {
+  backgroundColor: color.grey_3
+}
+
+const tab: ViewStyle = {
+  flex: 1
 }
 
 interface NavProps {
@@ -85,7 +148,14 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
-class ContactModal extends React.Component<Props> {
+type Route = {
+  key: string,
+  title: string
+}
+
+type State = NavigationState<Route>
+
+class ContactModal extends React.Component<Props, State> {
   static navigationOptions = ({
     navigation
   }: NavigationScreenProps<NavProps>) => {
@@ -107,6 +177,23 @@ class ContactModal extends React.Component<Props> {
     }
   }
 
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      index: 0,
+      routes: [
+        {
+          key: 'threads',
+          title: 'Threads'
+        },
+        {
+          key: 'cafes',
+          title: 'Cafes'
+        }
+      ]
+    }
+  }
+
   render() {
     const contact = this.props.navigation.getParam('contact')
     const avatar = contact.avatar
@@ -114,14 +201,49 @@ class ContactModal extends React.Component<Props> {
     const addingText = this.props.adding ? 'Adding' : 'Add'
     const buttonText = this.props.isContact ? removingText : addingText
     const buttonDisabled = this.props.adding || this.props.removing
+    const cafeObjects = cafes(contact)
+    const ThreadsScreen = (
+      <ScrollView style={styles.threadsList}>
+        <Text style={styles.threadsTitle}>
+          {this.props.threadThumbs.length > 0
+            ? 'Sharing in Groups:'
+            : 'Not part of any shared groups'}
+        </Text>
+        {this.props.threadThumbs.map((thread, i) => (
+          <TouchableOpacity
+            key={i}
+            onPress={this.navigateToThread(thread.id)}
+          >
+            <PhotoWithTextBox
+              key={i}
+              text={thread.name}
+              photo={thread.thumb}
+            />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    )
+    const CafesScreen = (
+      <ScrollView style={cafesList}>
+        <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
+        {cafeObjects.map((cafe, i) => (
+          <View key={i} style={cafeBox}>
+            <Text style={cafeTitle}>
+              {cafe.address}
+            </Text>
+            {i != cafeObjects.length - 1 && <View style={divider} />}
+          </View>
+        ))}
+      </ScrollView>
+    )
     return (
-      <View style={styles.container}>
-        <View style={styles.profile}>
+      <SafeAreaView style={container}>
+        <View style={profile}>
           <Avatar
-            style={{ width: 72, height: 72, backgroundColor: color.grey_5 }}
+            style={profilePicture}
             target={avatar}
           />
-          <Text style={styles.username}>{this.props.displayName}</Text>
+          <Text style={username}>{this.props.displayName}</Text>
           <View style={buttons}>
             <Button
               text={buttonText}
@@ -140,35 +262,84 @@ class ContactModal extends React.Component<Props> {
             />
           </View>
         </View>
-        <ScrollView style={styles.threadsList}>
-          <Text style={styles.threadsTitle}>
-            {this.props.threadThumbs.length > 0
-              ? 'Sharing in Groups:'
-              : 'Not part of any shared groups'}
-          </Text>
-          {this.props.threadThumbs.map((thread, i) => (
-            <TouchableOpacity
-              key={i}
-              onPress={this.navigateToThread(thread.id)}
-            >
-              <PhotoWithTextBox
-                key={i}
-                text={thread.name}
-                photo={thread.thumb}
-              />
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-        <ScrollView style={cafesList}>
-          <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
-          {cafes(contact).map((cafe, i) => (
-            <Text key={i} style={cafesTitle}>
-              {cafe.address}
-            </Text>
-          ))}
-        </ScrollView>
-      </View>
+        <TabView<Route>
+          style={tabView}
+          navigationState={this.state}
+          renderScene={SceneMap({
+            threads: () => ThreadsScreen,
+            cafes: () => CafesScreen
+          })}
+          onIndexChange={index => this.setState({ index })}
+          initialLayout={{
+            width: Dimensions.get('window').width
+          }}
+          renderTabBar={props =>
+            <TabBar
+              {...props}
+              style={tabBarStyle}
+              indicatorStyle={indicatorStyle}
+              activeColor={color.grey_1}
+              inactiveColor={color.grey_3}
+            />
+          }
+        />
+      </SafeAreaView>
     )
+    /*return (
+  <View style={styles.container}>
+      <View style={styles.profile}>
+        <Avatar
+          style={{ width: 72, height: 72, backgroundColor: color.grey_5 }}
+          target={avatar}
+        />
+        <Text style={styles.username}>{this.props.displayName}</Text>
+        <View style={buttons}>
+          <Button
+            text={buttonText}
+            style={{
+              ...addOrRemoveButton,
+              backgroundColor: this.props.isContact
+                ? color.severe_3
+                : color.action_3
+            }}
+            disabled={buttonDisabled}
+            onPress={this.props.isContact ? this.onRemove : this.onAdd}
+          />
+          <Button
+            text={'Send Message'}
+            onPress={this.createOrNavigateToDirectMessageThread}
+          />
+        </View>
+      </View>
+      <ScrollView style={styles.threadsList}>
+        <Text style={styles.threadsTitle}>
+          {this.props.threadThumbs.length > 0
+            ? 'Sharing in Groups:'
+            : 'Not part of any shared groups'}
+        </Text>
+        {this.props.threadThumbs.map((thread, i) => (
+          <TouchableOpacity
+            key={i}
+            onPress={this.navigateToThread(thread.id)}
+          >
+            <PhotoWithTextBox
+              key={i}
+              text={thread.name}
+              photo={thread.thumb}
+            />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <ScrollView style={cafesList}>
+        <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
+        {cafes(contact).map((cafe, i) => (
+          <Text key={i} style={cafesTitle}>
+            {cafe.address}
+          </Text>
+        ))}
+      </ScrollView>
+    </View>
+    )*/
   }
 
   onRemove = () => {
