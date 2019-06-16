@@ -101,8 +101,7 @@ const cafeTitle: TextStyle = {
   marginVertical: spacing._012
 }
 
-const cafeBox: ViewStyle = {
-}
+const cafeBox: ViewStyle = {}
 
 const divider: ViewStyle = {
   width: '100%',
@@ -149,7 +148,7 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 type Route = {
-  key: string,
+  key: string
   title: string
 }
 
@@ -210,15 +209,8 @@ class ContactModal extends React.Component<Props, State> {
             : 'Not part of any shared groups'}
         </Text>
         {this.props.threadThumbs.map((thread, i) => (
-          <TouchableOpacity
-            key={i}
-            onPress={this.navigateToThread(thread.id)}
-          >
-            <PhotoWithTextBox
-              key={i}
-              text={thread.name}
-              photo={thread.thumb}
-            />
+          <TouchableOpacity key={i} onPress={this.navigateToThread(thread.id)}>
+            <PhotoWithTextBox key={i} text={thread.name} photo={thread.thumb} />
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -228,10 +220,8 @@ class ContactModal extends React.Component<Props, State> {
         <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
         {cafeObjects.map((cafe, i) => (
           <View key={i} style={cafeBox}>
-            <Text style={cafeTitle}>
-              {cafe.address}
-            </Text>
-            {i != cafeObjects.length - 1 && <View style={divider} />}
+            <Text style={cafeTitle}>{cafe.address}</Text>
+            {i !== cafeObjects.length - 1 && <View style={divider} />}
           </View>
         ))}
       </ScrollView>
@@ -239,10 +229,7 @@ class ContactModal extends React.Component<Props, State> {
     return (
       <SafeAreaView style={container}>
         <View style={profile}>
-          <Avatar
-            style={profilePicture}
-            target={avatar}
-          />
+          <Avatar style={profilePicture} target={avatar} />
           <Text style={username}>{this.props.displayName}</Text>
           <View style={buttons}>
             <Button
@@ -273,7 +260,7 @@ class ContactModal extends React.Component<Props, State> {
           initialLayout={{
             width: Dimensions.get('window').width
           }}
-          renderTabBar={props =>
+          renderTabBar={props => (
             <TabBar
               {...props}
               style={tabBarStyle}
@@ -281,11 +268,11 @@ class ContactModal extends React.Component<Props, State> {
               activeColor={color.grey_1}
               inactiveColor={color.grey_3}
             />
-          }
+          )}
         />
       </SafeAreaView>
     )
-    /*return (
+    /* return (
   <View style={styles.container}>
       <View style={styles.profile}>
         <Avatar
