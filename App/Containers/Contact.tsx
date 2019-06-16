@@ -16,7 +16,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import { IContact, Thread } from '@textile/react-native-sdk'
 import {
   TabView,
-  SceneMap,
+  SceneMap as sceneMap,
   NavigationState,
   TabBar
 } from 'react-native-tab-view'
@@ -249,11 +249,11 @@ class ContactModal extends React.Component<Props, State> {
             />
           </View>
         </View>
-        {this.props.isContact &&
+        {this.props.isContact && (
           <TabView<Route>
             style={tabView}
             navigationState={this.state}
-            renderScene={SceneMap({
+            renderScene={sceneMap({
               threads: () => ThreadsScreen,
               cafes: () => CafesScreen
             })}
@@ -271,7 +271,7 @@ class ContactModal extends React.Component<Props, State> {
               />
             )}
           />
-        }
+        )}
       </SafeAreaView>
     )
   }
