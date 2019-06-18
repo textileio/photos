@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param error A reference to an error pointer that will be set in the case of an error
  * @return An object containing a list of contacts
  */
-- (ContactList *)peers:(NSString *)threadId error:(NSError **)error;
+- (PeerList *)peers:(NSString *)threadId error:(NSError **)error;
 
 /**
  * Leave a thread

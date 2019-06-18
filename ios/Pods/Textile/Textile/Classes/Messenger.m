@@ -10,6 +10,7 @@
 #import <TextileCore/Mobile.pbobjc.h>
 #import <TextileCore/Query.pbobjc.h>
 #import <TextileCore/Message.pbobjc.h>
+#import "util.h"
 
 @implementation Messenger
 
@@ -59,8 +60,9 @@
   } else if ([event.name isEqual: @"THREAD_UPDATE"]) {
     NSError *error;
     FeedItem *feedItem = [[FeedItem alloc] initWithData:event.data error:&error];
-    if (!error && [self.delegate respondsToSelector:@selector(threadUpdateReceived:)]) {
-      [self.delegate threadUpdateReceived:feedItem];
+    FeedItemData *data = feedItemData(feedItem);
+    if (!error && data && [self.delegate respondsToSelector:@selector(threadUpdateReceived:data:)]) {
+      [self.delegate threadUpdateReceived:feedItem.thread data:data];
     }
   } else if ([event.name isEqual: @"NOTIFICATION"]) {
     NSError *error;
