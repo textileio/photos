@@ -160,6 +160,7 @@ class Group extends React.PureComponent<Props, State> {
             inverted={true}
             data={this.props.items}
             renderItem={this.renderRow}
+            keyExtractor={this.keyExtractor}
             initialNumToRender={5}
             windowSize={5}
             onEndReachedThreshold={5}
@@ -205,6 +206,16 @@ class Group extends React.PureComponent<Props, State> {
       default: {
         return false
       }
+    }
+  }
+
+  keyExtractor = (item: Item) => {
+    switch (item.type) {
+      case 'addingMessage':
+      case 'addingPhoto':
+        return item.key
+      default:
+        return item.block
     }
   }
 
