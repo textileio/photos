@@ -3,7 +3,10 @@ import { eventChannel } from 'redux-saga'
 import { all, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNPushNotification from 'react-native-push-notification'
-import Textile, { EventSubscription, FeedItemType } from '@textile/react-native-sdk'
+import Textile, {
+  EventSubscription,
+  FeedItemType
+} from '@textile/react-native-sdk'
 
 import { toTypedNotification } from '../Services/Notifications'
 import { logNewEvent } from './DeviceLogs'
@@ -46,52 +49,57 @@ function nodeEvents() {
   >(emitter => {
     const subscriptions: EventSubscription[] = []
     subscriptions.push(
-      Textile.events.addThreadUpdateReceivedListener((threadId, feedItemData) => {
-        if (
-          feedItemData.type === FeedItemType.Text ||
-          feedItemData.type === FeedItemType.Comment ||
-          feedItemData.type === FeedItemType.Like ||
-          feedItemData.type === FeedItemType.Files ||
-          feedItemData.type === FeedItemType.Ignore ||
-          feedItemData.type === FeedItemType.Join ||
-          feedItemData.type === FeedItemType.Leave
-        ) {
-          emitter(groupActions.feed.refreshFeed.request({ id: threadId }))
-          // FIXME: This is a hack. We need to examine the thread id and dispatch one or the other.
-          // Or this needs to send the whole Thread or at least the addition of key
-          emitter(photosActions.refreshPhotos.request(undefined))
-        }
+      Textile.events.addThreadUpdateReceivedListener(
+        (threadId, feedItemData) => {
+          if (
+            feedItemData.type === FeedItemType.Text ||
+            feedItemData.type === FeedItemType.Comment ||
+            feedItemData.type === FeedItemType.Like ||
+            feedItemData.type === FeedItemType.Files ||
+            feedItemData.type === FeedItemType.Ignore ||
+            feedItemData.type === FeedItemType.Join ||
+            feedItemData.type === FeedItemType.Leave
+          ) {
+            emitter(groupActions.feed.refreshFeed.request({ id: threadId }))
+            // FIXME: This is a hack. We need to examine the thread id and dispatch one or the other.
+            // Or this needs to send the whole Thread or at least the addition of key
+            emitter(photosActions.refreshPhotos.request(undefined))
+          }
 
-        // TODO: remove this if needed
-        if (
-          feedItemData.type === FeedItemType.Comment ||
-          feedItemData.type === FeedItemType.Like ||
-          feedItemData.type === FeedItemType.Files ||
-          feedItemData.type === FeedItemType.Ignore ||
-          feedItemData.type === FeedItemType.Join
-        ) {
-          emitter(PhotoViewingActions.refreshThreadRequest(threadId))
-        }
+          // TODO: remove this if needed
+          if (
+            feedItemData.type === FeedItemType.Comment ||
+            feedItemData.type === FeedItemType.Like ||
+            feedItemData.type === FeedItemType.Files ||
+            feedItemData.type === FeedItemType.Ignore ||
+            feedItemData.type === FeedItemType.Join
+          ) {
+            emitter(PhotoViewingActions.refreshThreadRequest(threadId))
+          }
 
-        if (feedItemData.type === FeedItemType.Join || feedItemData.type === FeedItemType.Leave) {
-          // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
-          // Enhancement: compare the joiner id with known ids and skip the refresh if known.
-          emitter(contactsActions.getContactsRequest())
-          // Temporary: to ensure that our UI udpates after a self-join or a self-leave
-          emitter(PhotoViewingActions.refreshThreadRequest(threadId))
-        }
+          if (
+            feedItemData.type === FeedItemType.Join ||
+            feedItemData.type === FeedItemType.Leave
+          ) {
+            // Every time the a JOIN or LEAVE block is detected, we should refresh our in-mem contact list
+            // Enhancement: compare the joiner id with known ids and skip the refresh if known.
+            emitter(contactsActions.getContactsRequest())
+            // Temporary: to ensure that our UI udpates after a self-join or a self-leave
+            emitter(PhotoViewingActions.refreshThreadRequest(threadId))
+          }
 
-        // create a local log line for the threadUpdate event
-        const message = `BlockType ${feedItemData.type} on ${threadId}`
-        emitter(
-          DeviceLogsActions.logNewEvent(
-            new Date().getTime(),
-            'onThreadUpdate',
-            message,
-            false
+          // create a local log line for the threadUpdate event
+          const message = `BlockType ${feedItemData.type} on ${threadId}`
+          emitter(
+            DeviceLogsActions.logNewEvent(
+              new Date().getTime(),
+              'onThreadUpdate',
+              message,
+              false
+            )
           )
-        )
-      })
+        }
+      )
     )
     subscriptions.push(
       Textile.events.addThreadAddedListener(threadId => {

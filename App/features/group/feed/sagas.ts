@@ -22,7 +22,10 @@ export function* handleRefreshGroupRequest(
       limit: limit || -1,
       mode: FeedRequest.Mode.ANNOTATED
     }
-    const list: ReadonlyArray<FeedItemData> = yield call(Textile.feed.list, request)
+    const list: ReadonlyArray<FeedItemData> = yield call(
+      Textile.feed.list,
+      request
+    )
     yield put(refreshFeed.success({ id, items: list }))
   } catch (error) {
     yield put(refreshFeed.failure({ id, error }))
@@ -45,7 +48,10 @@ export function* handleLoadGroupItemsRequest(
       limit: limit || -1,
       mode: FeedRequest.Mode.ANNOTATED
     }
-    const list: ReadonlyArray<FeedItemData> = yield call(Textile.feed.list, request)
+    const list: ReadonlyArray<FeedItemData> = yield call(
+      Textile.feed.list,
+      request
+    )
     yield put(loadFeedItems.success({ id, items: list }))
   } catch (error) {
     yield put(loadFeedItems.failure({ id, error }))
