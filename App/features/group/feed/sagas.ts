@@ -3,7 +3,8 @@ import { call, put, select, takeEvery, all } from 'redux-saga/effects'
 import Textile, {
   IFeedRequest,
   FeedRequest,
-  IFeedItemList
+  IFeedItemList,
+  FeedItemData
 } from '@textile/react-native-sdk'
 import { refreshFeed, loadFeedItems } from './actions'
 import { feedOffsetForGroup } from './selectors'
@@ -21,8 +22,11 @@ export function* handleRefreshGroupRequest(
       limit: limit || -1,
       mode: FeedRequest.Mode.ANNOTATED
     }
-    const list: IFeedItemList = yield call(Textile.feed.list, request)
-    yield put(refreshFeed.success({ id, items: list.items }))
+    const list: ReadonlyArray<FeedItemData> = yield call(
+      Textile.feed.list,
+      request
+    )
+    yield put(refreshFeed.success({ id, items: list }))
   } catch (error) {
     yield put(refreshFeed.failure({ id, error }))
   }
@@ -44,8 +48,11 @@ export function* handleLoadGroupItemsRequest(
       limit: limit || -1,
       mode: FeedRequest.Mode.ANNOTATED
     }
-    const list: IFeedItemList = yield call(Textile.feed.list, request)
-    yield put(loadFeedItems.success({ id, items: list.items }))
+    const list: ReadonlyArray<FeedItemData> = yield call(
+      Textile.feed.list,
+      request
+    )
+    yield put(loadFeedItems.success({ id, items: list }))
   } catch (error) {
     yield put(loadFeedItems.failure({ id, error }))
   }

@@ -8,6 +8,7 @@
 
 #import <TextileCore/Model.pbobjc.h>
 #import <TextileCore/View.pbobjc.h>
+#import "FeedItemData.h"
 
 #ifndef TextileDelegate_h
 #define TextileDelegate_h
@@ -74,9 +75,10 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 /**
  * Called when any thread receives an update
- * @param feedItem The thread update
+ * @param threadId The id of the thread being updated
+ * @param feedItemData The thread update
  */
-- (void)threadUpdateReceived:(FeedItem *)feedItem;
+- (void)threadUpdateReceived:(NSString *)threadId data:(FeedItemData *)feedItemData;
 
 @optional
 /**
