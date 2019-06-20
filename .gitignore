@@ -117,8 +117,6 @@ android/**/*.project
 android/**/*.classpath
 
 # Xcode
-ios/Podfile.lock
-ios/Pods/
 DerivedData
 xcuserdata
 *.xccheckout
