@@ -10,8 +10,8 @@
 
 @implementation CafesApi
 
-- (void)register:(NSString *)host token:(NSString *)token error:(NSError * _Nullable __autoreleasing *)error {
-  [self.node registerCafe:host token:token error:error];
+- (void)register:(NSString *)peerId token:(NSString *)token error:(NSError * _Nullable __autoreleasing *)error {
+  [self.node registerCafe:peerId token:token error:error];
 }
 
 - (CafeSession *)session:(NSString *)peerId error:(NSError * _Nullable __autoreleasing *)error {

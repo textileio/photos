@@ -139,6 +139,27 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)contactQueryResult:(NSString *)queryId contact:(Contact *)contact;
 
+@optional
+/**
+ * Called when there is a cafe sync group status update
+ * @param status Object containing information about a cafe sync group
+ */
+- (void)syncUpdate:(CafeSyncGroupStatus *)status;
+
+@optional
+/**
+ * Called when a cafe sync group is complete
+ * @param status Object containing information about a cafe sync group
+ */
+- (void)syncComplete:(CafeSyncGroupStatus *)status;
+
+@optional
+/**
+ * Called when a cafe sync group fails
+ * @param status Object containing information about a cafe sync group
+ */
+- (void)syncFailed:(CafeSyncGroupStatus *)status;
+
 @end
 
 NS_ASSUME_NONNULL_END

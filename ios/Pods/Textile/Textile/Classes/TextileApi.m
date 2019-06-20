@@ -9,6 +9,9 @@
 #import "TextileApi.h"
 #import "Messenger.h"
 #import "LifecycleManager.h"
+#import "RequestsHandler.h"
+
+NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 
 @interface Textile()
 
@@ -131,10 +134,13 @@
 }
 
 - (void)newTextile:(NSString *)repoPath debug:(BOOL)debug error:(NSError *__autoreleasing *)error {
+  RequestsHandler *requestsHandler = [[RequestsHandler alloc] init];
   MobileRunConfig *config = [[MobileRunConfig alloc] init];
   config.repoPath = repoPath;
   config.debug = debug;
+  config.cafeOutboxHandler = requestsHandler;
   self.node = MobileNewTextile(config, self.messenger, error);
+  requestsHandler.node = self.node;
 }
 
 - (void)start:(NSError *__autoreleasing *)error {

@@ -18,11 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Used to register a remote Textile Cafe node with the local Textile node
- * @param host The fully qualified host URL
+ * @param peerId The peer id of the cafe being registered
  * @param token The API token for the cafe being registered
  * @param error A reference to an error pointer that will be set in the case of an error
  */
-- (void)register:(NSString *)host token:(NSString *)token error:(NSError **)error;
+- (void)register:(NSString *)peerId token:(NSString *)token error:(NSError **)error;
 
 /**
  * Fetches the CafeSession object for a previously registered Textile Cafe node

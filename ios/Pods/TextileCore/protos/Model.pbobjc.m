@@ -417,7 +417,7 @@ typedef struct ContactList__storage_ {
 @dynamic whitelistArray, whitelistArray_Count;
 @dynamic state;
 @dynamic head;
-@dynamic hasHeadBlock, headBlock;
+@dynamic headBlocksArray, headBlocksArray_Count;
 @dynamic hasSchemaNode, schemaNode;
 @dynamic blockCount;
 @dynamic peerCount;
@@ -437,7 +437,7 @@ typedef struct Thread__storage_ {
   NSString *initiator;
   NSMutableArray *whitelistArray;
   NSString *head;
-  Block *headBlock;
+  NSMutableArray *headBlocksArray;
   Node *schemaNode;
 } Thread__storage_;
 
@@ -547,19 +547,19 @@ typedef struct Thread__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "headBlock",
+        .name = "headBlocksArray",
         .dataTypeSpecific.className = GPBStringifySymbol(Block),
-        .number = Thread_FieldNumber_HeadBlock,
-        .hasIndex = 10,
-        .offset = (uint32_t)offsetof(Thread__storage_, headBlock),
-        .flags = GPBFieldOptional,
+        .number = Thread_FieldNumber_HeadBlocksArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(Thread__storage_, headBlocksArray),
+        .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
       },
       {
         .name = "schemaNode",
         .dataTypeSpecific.className = GPBStringifySymbol(Node),
         .number = Thread_FieldNumber_SchemaNode,
-        .hasIndex = 11,
+        .hasIndex = 10,
         .offset = (uint32_t)offsetof(Thread__storage_, schemaNode),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -568,7 +568,7 @@ typedef struct Thread__storage_ {
         .name = "blockCount",
         .dataTypeSpecific.className = NULL,
         .number = Thread_FieldNumber_BlockCount,
-        .hasIndex = 12,
+        .hasIndex = 11,
         .offset = (uint32_t)offsetof(Thread__storage_, blockCount),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
@@ -577,7 +577,7 @@ typedef struct Thread__storage_ {
         .name = "peerCount",
         .dataTypeSpecific.className = NULL,
         .number = Thread_FieldNumber_PeerCount,
-        .hasIndex = 13,
+        .hasIndex = 12,
         .offset = (uint32_t)offsetof(Thread__storage_, peerCount),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
@@ -872,12 +872,17 @@ typedef struct ThreadPeer__storage_ {
 @dynamic hasDate, date;
 @dynamic parentsArray, parentsArray_Count;
 @dynamic target;
+@dynamic data_p;
 @dynamic body;
+@dynamic status;
+@dynamic attempts;
 @dynamic hasUser, user;
 
 typedef struct Block__storage_ {
   uint32_t _has_storage_[1];
   Block_BlockType type;
+  Block_BlockStatus status;
+  int32_t attempts;
   NSString *id_p;
   NSString *thread;
   NSString *author;
@@ -885,6 +890,7 @@ typedef struct Block__storage_ {
   NSMutableArray *parentsArray;
   NSString *target;
   NSString *body;
+  NSString *data_p;
   User *user;
 } Block__storage_;
 
@@ -961,16 +967,43 @@ typedef struct Block__storage_ {
         .name = "body",
         .dataTypeSpecific.className = NULL,
         .number = Block_FieldNumber_Body,
-        .hasIndex = 6,
+        .hasIndex = 7,
         .offset = (uint32_t)offsetof(Block__storage_, body),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
+        .name = "data_p",
+        .dataTypeSpecific.className = NULL,
+        .number = Block_FieldNumber_Data_p,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(Block__storage_, data_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "status",
+        .dataTypeSpecific.enumDescFunc = Block_BlockStatus_EnumDescriptor,
+        .number = Block_FieldNumber_Status,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(Block__storage_, status),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
+        .dataType = GPBDataTypeEnum,
+      },
+      {
+        .name = "attempts",
+        .dataTypeSpecific.className = NULL,
+        .number = Block_FieldNumber_Attempts,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(Block__storage_, attempts),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
         .name = "user",
         .dataTypeSpecific.className = GPBStringifySymbol(User),
         .number = Block_FieldNumber_User,
-        .hasIndex = 7,
+        .hasIndex = 10,
         .offset = (uint32_t)offsetof(Block__storage_, user),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -1003,6 +1036,18 @@ int32_t Block_Type_RawValue(Block *message) {
 void SetBlock_Type_RawValue(Block *message, int32_t value) {
   GPBDescriptor *descriptor = [Block descriptor];
   GPBFieldDescriptor *field = [descriptor fieldWithNumber:Block_FieldNumber_Type];
+  GPBSetInt32IvarWithFieldInternal(message, field, value, descriptor.file.syntax);
+}
+
+int32_t Block_Status_RawValue(Block *message) {
+  GPBDescriptor *descriptor = [Block descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:Block_FieldNumber_Status];
+  return GPBGetMessageInt32Field(message, field);
+}
+
+void SetBlock_Status_RawValue(Block *message, int32_t value) {
+  GPBDescriptor *descriptor = [Block descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:Block_FieldNumber_Status];
   GPBSetInt32IvarWithFieldInternal(message, field, value, descriptor.file.syntax);
 }
 
@@ -1054,6 +1099,43 @@ BOOL Block_BlockType_IsValidValue(int32_t value__) {
     case Block_BlockType_Comment:
     case Block_BlockType_Like:
     case Block_BlockType_Add:
+      return YES;
+    default:
+      return NO;
+  }
+}
+
+#pragma mark - Enum Block_BlockStatus
+
+GPBEnumDescriptor *Block_BlockStatus_EnumDescriptor(void) {
+  static _Atomic(GPBEnumDescriptor*) descriptor = nil;
+  if (!descriptor) {
+    static const char *valueNames =
+        "Ready\000Queued\000Pending\000";
+    static const int32_t values[] = {
+        Block_BlockStatus_Ready,
+        Block_BlockStatus_Queued,
+        Block_BlockStatus_Pending,
+    };
+    GPBEnumDescriptor *worker =
+        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(Block_BlockStatus)
+                                       valueNames:valueNames
+                                           values:values
+                                            count:(uint32_t)(sizeof(values) / sizeof(int32_t))
+                                     enumVerifier:Block_BlockStatus_IsValidValue];
+    GPBEnumDescriptor *expected = nil;
+    if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
+      [worker release];
+    }
+  }
+  return descriptor;
+}
+
+BOOL Block_BlockStatus_IsValidValue(int32_t value__) {
+  switch (value__) {
+    case Block_BlockStatus_Ready:
+    case Block_BlockStatus_Queued:
+    case Block_BlockStatus_Pending:
       return YES;
     default:
       return NO;
@@ -1192,6 +1274,7 @@ typedef struct BlockMessage__storage_ {
 @dynamic name;
 @dynamic hasInviter, inviter;
 @dynamic hasDate, date;
+@dynamic parentsArray, parentsArray_Count;
 
 typedef struct Invite__storage_ {
   uint32_t _has_storage_[1];
@@ -1200,6 +1283,7 @@ typedef struct Invite__storage_ {
   NSString *name;
   Peer *inviter;
   GPBTimestamp *date;
+  NSMutableArray *parentsArray;
 } Invite__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1252,6 +1336,15 @@ typedef struct Invite__storage_ {
         .offset = (uint32_t)offsetof(Invite__storage_, date),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "parentsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = Invite_FieldNumber_ParentsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(Invite__storage_, parentsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -1862,12 +1955,13 @@ GPBEnumDescriptor *Notification_Type_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "InviteReceived\000AccountPeerJoined\000PeerJoi"
-        "ned\000PeerLeft\000MessageAdded\000FilesAdded\000Com"
-        "mentAdded\000LikeAdded\000";
+        "InviteReceived\000AccountPeerJoined\000Account"
+        "PeerLeft\000PeerJoined\000PeerLeft\000MessageAdde"
+        "d\000FilesAdded\000CommentAdded\000LikeAdded\000";
     static const int32_t values[] = {
         Notification_Type_InviteReceived,
         Notification_Type_AccountPeerJoined,
+        Notification_Type_AccountPeerLeft,
         Notification_Type_PeerJoined,
         Notification_Type_PeerLeft,
         Notification_Type_MessageAdded,
@@ -1893,6 +1987,7 @@ BOOL Notification_Type_IsValidValue(int32_t value__) {
   switch (value__) {
     case Notification_Type_InviteReceived:
     case Notification_Type_AccountPeerJoined:
+    case Notification_Type_AccountPeerLeft:
     case Notification_Type_PeerJoined:
     case Notification_Type_PeerLeft:
     case Notification_Type_MessageAdded:
@@ -2230,23 +2325,31 @@ typedef struct CafeSessionList__storage_ {
 @dynamic peer;
 @dynamic target;
 @dynamic hasCafe, cafe;
-@dynamic type;
-@dynamic size;
 @dynamic group;
+@dynamic syncGroup;
+@dynamic type;
 @dynamic hasDate, date;
+@dynamic size;
 @dynamic status;
+@dynamic attempts;
+@dynamic groupSize;
+@dynamic groupTransferred;
 
 typedef struct CafeRequest__storage_ {
   uint32_t _has_storage_[1];
   CafeRequest_Type type;
   CafeRequest_Status status;
+  int32_t attempts;
   NSString *id_p;
   NSString *peer;
   NSString *target;
   Cafe *cafe;
   GPBTimestamp *date;
   NSString *group;
+  NSString *syncGroup;
   int64_t size;
+  int64_t groupSize;
+  int64_t groupTransferred;
 } CafeRequest__storage_;
 
 // This method is threadsafe because it is initially called
@@ -2295,7 +2398,7 @@ typedef struct CafeRequest__storage_ {
         .name = "type",
         .dataTypeSpecific.enumDescFunc = CafeRequest_Type_EnumDescriptor,
         .number = CafeRequest_FieldNumber_Type,
-        .hasIndex = 4,
+        .hasIndex = 6,
         .offset = (uint32_t)offsetof(CafeRequest__storage_, type),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
         .dataType = GPBDataTypeEnum,
@@ -2313,7 +2416,7 @@ typedef struct CafeRequest__storage_ {
         .name = "size",
         .dataTypeSpecific.className = NULL,
         .number = CafeRequest_FieldNumber_Size,
-        .hasIndex = 5,
+        .hasIndex = 8,
         .offset = (uint32_t)offsetof(CafeRequest__storage_, size),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt64,
@@ -2322,7 +2425,7 @@ typedef struct CafeRequest__storage_ {
         .name = "group",
         .dataTypeSpecific.className = NULL,
         .number = CafeRequest_FieldNumber_Group,
-        .hasIndex = 6,
+        .hasIndex = 4,
         .offset = (uint32_t)offsetof(CafeRequest__storage_, group),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -2331,10 +2434,46 @@ typedef struct CafeRequest__storage_ {
         .name = "status",
         .dataTypeSpecific.enumDescFunc = CafeRequest_Status_EnumDescriptor,
         .number = CafeRequest_FieldNumber_Status,
-        .hasIndex = 8,
+        .hasIndex = 9,
         .offset = (uint32_t)offsetof(CafeRequest__storage_, status),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
         .dataType = GPBDataTypeEnum,
+      },
+      {
+        .name = "syncGroup",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequest_FieldNumber_SyncGroup,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(CafeRequest__storage_, syncGroup),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "attempts",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequest_FieldNumber_Attempts,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(CafeRequest__storage_, attempts),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "groupSize",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequest_FieldNumber_GroupSize,
+        .hasIndex = 11,
+        .offset = (uint32_t)offsetof(CafeRequest__storage_, groupSize),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "groupTransferred",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeRequest_FieldNumber_GroupTransferred,
+        .hasIndex = 12,
+        .offset = (uint32_t)offsetof(CafeRequest__storage_, groupTransferred),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -2503,26 +2642,36 @@ typedef struct CafeRequestList__storage_ {
 
 @end
 
-#pragma mark - CafeRequestGroupStatus
+#pragma mark - CafeSyncGroupStatus
 
-@implementation CafeRequestGroupStatus
+@implementation CafeSyncGroupStatus
 
+@dynamic id_p;
 @dynamic numTotal;
 @dynamic numPending;
 @dynamic numComplete;
 @dynamic sizeTotal;
 @dynamic sizePending;
 @dynamic sizeComplete;
+@dynamic groupsSizeTotal;
+@dynamic groupsSizeComplete;
+@dynamic error;
+@dynamic errorId;
 
-typedef struct CafeRequestGroupStatus__storage_ {
+typedef struct CafeSyncGroupStatus__storage_ {
   uint32_t _has_storage_[1];
   int32_t numTotal;
   int32_t numPending;
   int32_t numComplete;
+  NSString *id_p;
+  NSString *error;
+  NSString *errorId;
   int64_t sizeTotal;
   int64_t sizePending;
   int64_t sizeComplete;
-} CafeRequestGroupStatus__storage_;
+  int64_t groupsSizeTotal;
+  int64_t groupsSizeComplete;
+} CafeSyncGroupStatus__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -2531,67 +2680,112 @@ typedef struct CafeRequestGroupStatus__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeSyncGroupStatus_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
         .name = "numTotal",
         .dataTypeSpecific.className = NULL,
-        .number = CafeRequestGroupStatus_FieldNumber_NumTotal,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, numTotal),
+        .number = CafeSyncGroupStatus_FieldNumber_NumTotal,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, numTotal),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "numPending",
         .dataTypeSpecific.className = NULL,
-        .number = CafeRequestGroupStatus_FieldNumber_NumPending,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, numPending),
+        .number = CafeSyncGroupStatus_FieldNumber_NumPending,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, numPending),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "numComplete",
         .dataTypeSpecific.className = NULL,
-        .number = CafeRequestGroupStatus_FieldNumber_NumComplete,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, numComplete),
+        .number = CafeSyncGroupStatus_FieldNumber_NumComplete,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, numComplete),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
       {
         .name = "sizeTotal",
         .dataTypeSpecific.className = NULL,
-        .number = CafeRequestGroupStatus_FieldNumber_SizeTotal,
-        .hasIndex = 3,
-        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, sizeTotal),
+        .number = CafeSyncGroupStatus_FieldNumber_SizeTotal,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, sizeTotal),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt64,
       },
       {
         .name = "sizePending",
         .dataTypeSpecific.className = NULL,
-        .number = CafeRequestGroupStatus_FieldNumber_SizePending,
-        .hasIndex = 4,
-        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, sizePending),
+        .number = CafeSyncGroupStatus_FieldNumber_SizePending,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, sizePending),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt64,
       },
       {
         .name = "sizeComplete",
         .dataTypeSpecific.className = NULL,
-        .number = CafeRequestGroupStatus_FieldNumber_SizeComplete,
-        .hasIndex = 5,
-        .offset = (uint32_t)offsetof(CafeRequestGroupStatus__storage_, sizeComplete),
+        .number = CafeSyncGroupStatus_FieldNumber_SizeComplete,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, sizeComplete),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt64,
       },
+      {
+        .name = "groupsSizeTotal",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeSyncGroupStatus_FieldNumber_GroupsSizeTotal,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, groupsSizeTotal),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "groupsSizeComplete",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeSyncGroupStatus_FieldNumber_GroupsSizeComplete,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, groupsSizeComplete),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "error",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeSyncGroupStatus_FieldNumber_Error,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, error),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "errorId",
+        .dataTypeSpecific.className = NULL,
+        .number = CafeSyncGroupStatus_FieldNumber_ErrorId,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(CafeSyncGroupStatus__storage_, errorId),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[CafeRequestGroupStatus class]
+        [GPBDescriptor allocDescriptorForClass:[CafeSyncGroupStatus class]
                                      rootClass:[ModelRoot class]
                                           file:ModelRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(CafeRequestGroupStatus__storage_)
+                                   storageSize:sizeof(CafeSyncGroupStatus__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -2610,14 +2804,14 @@ typedef struct CafeRequestGroupStatus__storage_ {
 @dynamic type;
 @dynamic URL;
 @dynamic headers, headers_Count;
-@dynamic body;
+@dynamic path;
 
 typedef struct CafeHTTPRequest__storage_ {
   uint32_t _has_storage_[1];
   CafeHTTPRequest_Type type;
   NSString *URL;
   NSMutableDictionary *headers;
-  NSData *body;
+  NSString *path;
 } CafeHTTPRequest__storage_;
 
 // This method is threadsafe because it is initially called
@@ -2654,13 +2848,13 @@ typedef struct CafeHTTPRequest__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "body",
+        .name = "path",
         .dataTypeSpecific.className = NULL,
-        .number = CafeHTTPRequest_FieldNumber_Body,
+        .number = CafeHTTPRequest_FieldNumber_Path,
         .hasIndex = 2,
-        .offset = (uint32_t)offsetof(CafeHTTPRequest__storage_, body),
+        .offset = (uint32_t)offsetof(CafeHTTPRequest__storage_, path),
         .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBytes,
+        .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =

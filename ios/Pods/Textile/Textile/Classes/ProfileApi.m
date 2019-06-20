@@ -7,7 +7,7 @@
 //
 
 #import "ProfileApi.h"
-#import "TextileApi.h"
+#import "Callback.h"
 
 @implementation ProfileApi
 
@@ -29,6 +29,19 @@
 
 - (NSString *)avatar:(NSError * _Nullable __autoreleasing *)error {
   return [self.node avatar:error];
+}
+
+- (void)setAvatar:(NSString *)item completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
+  Callback *cb = [[Callback alloc] initWithCompletion:^(NSData *data, NSError *error) {
+    if (error) {
+      completion(nil, error);
+    } else {
+      NSError *error;
+      Block *block = [[Block alloc] initWithData:data error:&error];
+      completion(block, error);
+    }
+  }];
+  [self.node setAvatar:item cb:cb];
 }
 
 - (Thread *)accountThread:(NSError * _Nullable __autoreleasing *)error {
