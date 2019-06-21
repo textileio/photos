@@ -1,4 +1,4 @@
-import { IMobilePreparedFiles, IBlock } from '@textile/react-native-sdk'
+import { IBlock } from '@textile/react-native-sdk'
 
 import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
@@ -16,46 +16,15 @@ export interface GeneralError {
   type: 'general'
 }
 
-export interface ExpiredTokenError {
-  uuid: string
-  uploadId: string
-  underlyingError: 'expired token'
-  type: 'expiredToken'
-}
-
-interface UploadError {
-  uuid: string
-  uploadId: string
-  underlyingError: any
-  type: 'upload'
-}
-
 export type ProcessingImageError =
   | GeneralError
-  | ExpiredTokenError
-  | UploadError
-
-export interface Upload {
-  readonly id: string
-  readonly path: string
-  readonly status: 'pending' | 'uploading' | 'complete' | 'error'
-  readonly uploadProgress: number
-  readonly responseCode?: string
-  readonly responseBody?: string
-  readonly error?: string
-}
-export interface UploadData {
-  [key: string]: Upload
-}
 
 export interface ProcessingImage {
   readonly uuid: string
   readonly sharedImage: SharedImage
-  readonly status: 'preparing' | 'uploading' | 'sharing' | 'complete'
+  readonly status: 'adding' | 'complete'
   readonly destinationThreadId: string
   readonly comment?: string
-  readonly preparedFiles?: IMobilePreparedFiles
-  readonly uploadData?: UploadData
   readonly block?: IBlock
   readonly error?: string
 }

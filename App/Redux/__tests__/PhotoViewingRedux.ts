@@ -29,6 +29,7 @@ const photos: IFiles[] = [
     caption: '',
     block: 'block_id',
     target: 'target',
+    data: 'data',
     date: { seconds: 10, nanos: 20 },
     files: [],
     comments: [],

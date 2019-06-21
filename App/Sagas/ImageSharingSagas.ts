@@ -1,10 +1,8 @@
-import { call, put, select, fork, take, race } from 'redux-saga/effects'
-import RNFS from 'react-native-fs'
+import { call, put, select } from 'redux-saga/effects'
 import uuid from 'uuid/v4'
-import { uploadFile } from './UploadFile'
 import Textile, {
-  IMobilePreparedFiles,
-  IBlock
+  IBlock,
+  IStrings
 } from '@textile/react-native-sdk'
 import {
   SharedImage,
@@ -16,120 +14,9 @@ import TextileEventsActions from '../Redux/TextileEventsRedux'
 import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
-import { waitFor } from '@textile/redux-saga-wait-for'
-import { RootAction, RootState } from '../Redux/Types'
-import { logNewEvent } from './DeviceLogs'
+import { RootState } from '../Redux/Types'
 
 export function* shareToThread(uuid: string) {
-  try {
-    const selector = (rootState: RootState) =>
-      groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(
-        rootState.group.addPhoto
-      )
-    const processingImage: ProcessingImage | undefined = yield select(selector)
-    if (
-      !processingImage ||
-      !processingImage.preparedFiles ||
-      !processingImage.preparedFiles.dir
-    ) {
-      throw new Error('no ProcessingImage or preparedData or dir found')
-    }
-    const { dir } = processingImage.preparedFiles
-    const blockInfo: IBlock = yield call(
-      Textile.files.add,
-      dir,
-      processingImage.destinationThreadId,
-      processingImage.comment
-    )
-    yield put(groupActions.addPhoto.sharedToThread(uuid, blockInfo))
-    yield put(groupActions.addPhoto.complete(uuid))
-  } catch (error) {
-    yield put(
-      groupActions.addPhoto.error({
-        uuid,
-        underlyingError: error,
-        type: 'general'
-      })
-    )
-  }
-}
-
-export function* monitorForUploadsComplete(uuid: string) {
-  const selector = (state: RootState) =>
-    groupSelectors.addPhotoSelectors.allUploadsComplete(
-      state.group.addPhoto,
-      uuid
-    )
-  const { complete } = yield race({
-    complete: waitFor(select(selector, uuid)),
-    // If there is any error related to this image, we want to cancel the uploads complete listener because the image uploads can
-    // be retried and we'll created a new listener for that
-    errorAction: take(
-      (action: RootAction) =>
-        action.type === getType(groupActions.addPhoto.error) &&
-        action.payload.error.uuid === uuid
-    )
-  })
-  if (complete) {
-    yield call(shareToThread, uuid)
-  }
-}
-
-export function* uploadPins(uuid: string) {
-  try {
-    const selector = (rootState: RootState) =>
-      groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(
-        rootState.group.addPhoto
-      )
-    const processingImage: ProcessingImage | undefined = yield select(selector)
-    if (!processingImage || !processingImage.uploadData) {
-      throw new Error('no ProcessingImage or uploadData found')
-    }
-    yield fork(monitorForUploadsComplete, uuid)
-    for (const uploadId in processingImage.uploadData) {
-      if (
-        processingImage.uploadData[uploadId] &&
-        (processingImage.uploadData[uploadId].status === 'pending' ||
-          processingImage.uploadData[uploadId].status === 'error')
-      ) {
-        yield put(groupActions.addPhoto.uploadStarted(uuid, uploadId))
-        yield call(
-          uploadFile,
-          uploadId,
-          processingImage.uploadData[uploadId].path
-        )
-      }
-    }
-  } catch (error) {
-    put(
-      groupActions.addPhoto.error({
-        uuid,
-        underlyingError: error,
-        type: 'general'
-      })
-    )
-  }
-}
-export async function prepare(
-  image: SharedImage,
-  destinationThreadId: string
-): Promise<IMobilePreparedFiles> {
-  const addResult = await Textile.files.prepareByPath(
-    image.path,
-    destinationThreadId
-  )
-  try {
-    const exists = await RNFS.exists(image.path)
-    if (exists && image.canDelete) {
-      await RNFS.unlink(image.path)
-    }
-  } catch (error) {
-    await logNewEvent('refreshMessages', error.message, true)
-  }
-  return addResult
-}
-
-export function* prepareImage(uuid: string) {
   try {
     const selector = (rootState: RootState) =>
       groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(
@@ -139,14 +26,15 @@ export function* prepareImage(uuid: string) {
     if (!processingImage) {
       throw new Error('no ProcessingImage found')
     }
-    const { sharedImage, destinationThreadId } = processingImage
-    const preparedFiles: IMobilePreparedFiles = yield call(
-      prepare,
-      sharedImage,
-      destinationThreadId
+    const files: IStrings = { values: [processingImage.sharedImage.path] }
+    const blockInfo: IBlock = yield call(
+      Textile.files.addFiles,
+      files,
+      processingImage.destinationThreadId,
+      processingImage.comment
     )
-    yield put(groupActions.addPhoto.imagePrepared(uuid, preparedFiles))
-    yield call(uploadPins, uuid)
+    yield put(groupActions.addPhoto.addedToThread(uuid, blockInfo))
+    yield put(groupActions.addPhoto.complete(uuid))
   } catch (error) {
     yield put(
       groupActions.addPhoto.error({
@@ -261,7 +149,7 @@ export function* shareWalletImage(
   try {
     // TODO: Insert some state into the processing photos redux in case this takes long or fails
     const block: IBlock = yield call(
-      Textile.files.addByTarget,
+      Textile.files.shareFiles,
       id,
       threadId,
       comment
@@ -281,5 +169,5 @@ export function* insertImage(
 ) {
   const id = uuid()
   yield put(groupActions.addPhoto.insertImage(id, image, threadId, comment))
-  yield call(prepareImage, id)
+  yield call(shareToThread, id)
 }
