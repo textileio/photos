@@ -5,7 +5,8 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNPushNotification from 'react-native-push-notification'
 import Textile, {
   EventSubscription,
-  FeedItemType
+  FeedItemType,
+  ICafeSyncGroupStatus
 } from '@textile/react-native-sdk'
 
 import { toTypedNotification } from '../Services/Notifications'
@@ -153,6 +154,21 @@ function nodeEvents() {
     subscriptions.push(
       Textile.events.addCanceledPendingNodeStopListener(() => {
         emitter(TextileEventsActions.stopNodeAfterDelayCancelled())
+      })
+    )
+    subscriptions.push(
+      Textile.events.addSyncUpdateListener(status => {
+        //@todo: fire action
+      })
+    )
+    subscriptions.push(
+      Textile.events.addSyncCompleteListener(status => {
+        //@todo: fire action
+      })
+    )
+    subscriptions.push(
+      Textile.events.addSyncFailedListener(status => {
+        //@todo: fire action
       })
     )
     return () => {
