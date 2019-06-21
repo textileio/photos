@@ -1,9 +1,6 @@
 import { call, put, select } from 'redux-saga/effects'
 import uuid from 'uuid/v4'
-import Textile, {
-  IBlock,
-  IStrings
-} from '@textile/react-native-sdk'
+import Textile, { IBlock, IStrings } from '@textile/react-native-sdk'
 import {
   SharedImage,
   ProcessingImage

@@ -16,8 +16,7 @@ export interface GeneralError {
   type: 'general'
 }
 
-export type ProcessingImageError =
-  | GeneralError
+export type ProcessingImageError = GeneralError
 
 export interface ProcessingImage {
   readonly uuid: string

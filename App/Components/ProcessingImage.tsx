@@ -80,7 +80,7 @@ const ProcessingImage = (props: IProcessingImageProps) => {
     content = (
       <Fragment>
         <View style={STACK}>
-        <Text style={STATUS} />
+          <Text style={STATUS} />
           <Text style={STATUS}>{message}</Text>
         </View>
         {cancel && <Button title={'Cancel'} onPress={cancel} />}
