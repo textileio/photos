@@ -5,5 +5,4 @@ declare module '*.json' {
 
 declare module 'react-native-actionsheet'
 declare module 'react-native-pages'
-declare module 'react-native-background-upload'
 declare module 'react-native-hyperlink'
