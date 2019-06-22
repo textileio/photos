@@ -7,12 +7,13 @@
 //
 
 #import "FilesApi.h"
-#import "Callback.h"
+#import "ProtoCallback.h"
+#import "DataCallback.h"
 
 @implementation FilesApi
 
 - (void)addData:(NSData *)data threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
-  Callback *cb = [[Callback alloc] initWithCompletion:^(NSData *data, NSError *error) {
+  ProtoCallback *cb = [[ProtoCallback alloc] initWithCompletion:^(NSData *data, NSError *error) {
     if (error) {
       completion(nil, error);
     } else {
@@ -24,8 +25,8 @@
   [self.node addData:data threadId:threadId caption:caption cb:cb];
 }
 
-- (void)addFiles:(Strings *)files threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
-  Callback *cb = [[Callback alloc] initWithCompletion:^(NSData *data, NSError *error) {
+- (void)addFiles:(NSString *)files threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
+  ProtoCallback *cb = [[ProtoCallback alloc] initWithCompletion:^(NSData *data, NSError *error) {
     if (error) {
       completion(nil, error);
     } else {
@@ -34,11 +35,11 @@
       completion(block, error);
     }
   }];
-  [self.node addFiles:files.data threadId:threadId caption:caption cb:cb];
+  [self.node addFiles:files threadId:threadId caption:caption cb:cb];
 }
 
 - (void)shareFiles:(NSString *)target threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
-  Callback *cb = [[Callback alloc] initWithCompletion:^(NSData *data, NSError *error) {
+  ProtoCallback *cb = [[ProtoCallback alloc] initWithCompletion:^(NSData *data, NSError *error) {
     if (error) {
       completion(nil, error);
     } else {
@@ -58,12 +59,28 @@
   return [[FilesList alloc] initWithData:data error:error];
 }
 
-- (NSString *)content:(NSString *)hash error:(NSError * _Nullable __autoreleasing *)error {
-  return [self.node fileContent:hash error:error];
+- (void)content:(NSString *)hash completion:(void (^)(NSData * _Nullable, NSString * _Nullable, NSError * _Nonnull))completion {
+  DataCallback *cb = [[DataCallback alloc] initWithCompletion:^(NSData *data, NSString *media, NSError *error) {
+    if (error) {
+      completion(nil, nil, error);
+    } else {
+      NSError *error;
+      completion(data, media, error);
+    }
+  }];
+  [self.node fileContent:hash cb:cb];
 }
 
-- (NSString *)imageContentForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError * _Nullable __autoreleasing *)error {
-  return [self.node imageFileContentForMinWidth:path minWidth:minWidth error:error];
+- (void)imageContentForMinWidth:(NSString *)path minWidth:(long)minWidth completion:(void (^)(NSData * _Nullable, NSString * _Nullable, NSError * _Nonnull))completion {
+  DataCallback *cb = [[DataCallback alloc] initWithCompletion:^(NSData *data, NSString *media, NSError *error) {
+    if (error) {
+      completion(nil, nil, error);
+    } else {
+      NSError *error;
+      completion(data, media, error);
+    }
+  }];
+  [self.node imageFileContentForMinWidth:path minWidth:minWidth cb:cb];
 }
 
 @end

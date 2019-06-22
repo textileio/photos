@@ -29,12 +29,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Add files to a Textile thread
- * @param files An object containing a list of file paths to add, paths can be file system paths, IPFS hashes, or an existing file hash that may need decryption
+ * @param files A comma-separated list of file paths to add, paths can be file system paths, IPFS hashes, or an existing file hash that may need decryption
  * @param threadId The thread id the files will be added to
  * @param caption A caption to associate with the files
  * @param completion A block that will get called with the results of the add operation
  */
-- (void)addFiles:(Strings *)files threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion;
+- (void)addFiles:(NSString *)files threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion;
 
 /**
  * Share files already aded to a Textile thread to a Textile thread
@@ -58,19 +58,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Get raw data for a file hash
  * @param hash The hash to return data for
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return The base64 string of data
+ * @param completion A block that will get called with the results of content
  */
-- (NSString *)content:(NSString *)hash error:(NSError **)error;
+- (void)content:(NSString *)hash completion:(void (^)(NSData * _Nullable, NSString * _Nullable, NSError * _Nonnull))completion;
 
 /**
  * Helper function to return the most appropriate image data for a minimun image width
  * @param path The IPFS path that includes image data for various image sizes
  * @param minWidth The width of the image the data will be used for
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return The base64 string of image data
+ * @param completion A block that will get called with the results of content
  */
-- (NSString *)imageContentForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError **)error;
+- (void)imageContentForMinWidth:(NSString *)path minWidth:(long)minWidth completion:(void (^)(NSData * _Nullable, NSString * _Nullable, NSError * _Nonnull))completion;
 
 @end
 

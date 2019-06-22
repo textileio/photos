@@ -7,7 +7,7 @@
 
 #import "RequestsHandler.h"
 #import "TextileApi.h"
-#import "Callback.h"
+#import "ProtoCallback.h"
 
 @interface RequestsHandler () <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
@@ -74,7 +74,7 @@ dispatch_queue_t flushQueue;
     // TODO: Is there any reason to call failCafeRequest before it is marked as pending?
     // TODO: Should we mark as pending before writing to disk or after?
 
-    Callback *cb = [[Callback alloc] initWithCompletion:^(NSData * _Nonnull data, NSError * _Nonnull error) {
+    ProtoCallback *cb = [[ProtoCallback alloc] initWithCompletion:^(NSData * _Nonnull data, NSError * _Nonnull error) {
       if (!data) {
         NSLog(@"error writing request: %@", error.localizedDescription);
         NSLog(@"Leaving");
@@ -161,11 +161,11 @@ dispatch_queue_t flushQueue;
  * behavior will be to use the default handling, which may involve user
  * interaction.
  */
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
- completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
-  NSLog(@"session didReceiveChallenge");
-  completionHandler(NSURLSessionAuthChallengeUseCredential, nil);
-}
+//- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
+// completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
+//  NSLog(@"session didReceiveChallenge");
+//  completionHandler(NSURLSessionAuthChallengeUseCredential, nil);
+//}
 
 /* If an application has received an
  * -application:handleEventsForBackgroundURLSession:completionHandler:
@@ -274,6 +274,7 @@ dispatch_queue_t flushQueue;
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 //  NSLog(@"session task didSendBodyData: %lld - %lld of %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+  [self.node updateCafeRequestProgress:task.description transerred:totalBytesSent total:totalBytesExpectedToSend error:nil];
 }
 
 /*

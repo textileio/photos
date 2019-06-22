@@ -374,6 +374,8 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
 - (void)flushCafes;
 // skipped method Textile.GetMedia with unsupported parameter or return types
 
+// skipped method Textile.GetMillMedia with unsupported parameter or return types
+
 - (BOOL)ignoreInvite:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 /**
  * IgnoreInviteViaNotification uses an invite notification to ignore an invite to a thread
@@ -535,7 +537,7 @@ bcrypt hashed equivalent
 @property (nonatomic) NSString* _Nonnull id_;
 @property (nonatomic) NSString* _Nonnull key;
 @property (nonatomic) NSString* _Nonnull name;
-// skipped field Thread.PrivKey with unsupported type: github.com/textileio/go-textile/vendor/github.com/libp2p/go-libp2p-crypto.PrivKey
+// skipped field Thread.PrivKey with unsupported type: github.com/textileio/go-textile/vendor/github.com/libp2p/go-libp2p-core/crypto.PrivKey
 
 // skipped field Thread.Schema with unsupported type: *github.com/textileio/go-textile/pb.Node
 

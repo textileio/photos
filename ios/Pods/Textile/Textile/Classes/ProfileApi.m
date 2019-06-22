@@ -7,7 +7,7 @@
 //
 
 #import "ProfileApi.h"
-#import "Callback.h"
+#import "ProtoCallback.h"
 
 @implementation ProfileApi
 
@@ -32,7 +32,7 @@
 }
 
 - (void)setAvatar:(NSString *)item completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
-  Callback *cb = [[Callback alloc] initWithCompletion:^(NSData *data, NSError *error) {
+  ProtoCallback *cb = [[ProtoCallback alloc] initWithCompletion:^(NSData *data, NSError *error) {
     if (error) {
       completion(nil, error);
     } else {

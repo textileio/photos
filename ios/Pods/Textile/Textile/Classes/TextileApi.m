@@ -40,6 +40,7 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 @property (nonatomic, strong) NSString *repoPath;
 
 @property (nonatomic, strong) LifecycleManager *lifecycleManager;
+@property (nonatomic, strong) RequestsHandler *requestsHandler;
 
 - (NSString *)newWallet:(NSInteger)wordCount error:(NSError **)error;
 - (MobileWalletAccount *)walletAccountAt:(NSString *)phrase index:(NSInteger)index password:(NSString *)password error:(NSError **)error;
@@ -60,6 +61,7 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
   NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   NSString *repoPath = [documents stringByAppendingPathComponent:@"textile-go"];
   Textile.instance.repoPath = repoPath;
+  Textile.instance.requestsHandler = [[RequestsHandler alloc] init];
   Textile.instance.messenger = [[Messenger alloc] init];
   [Textile.instance newTextile:repoPath debug:debug error:error];
   if (*error && (*error).code == 1) {
@@ -134,13 +136,11 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 }
 
 - (void)newTextile:(NSString *)repoPath debug:(BOOL)debug error:(NSError *__autoreleasing *)error {
-  RequestsHandler *requestsHandler = [[RequestsHandler alloc] init];
   MobileRunConfig *config = [[MobileRunConfig alloc] init];
   config.repoPath = repoPath;
   config.debug = debug;
-  config.cafeOutboxHandler = requestsHandler;
+  config.cafeOutboxHandler = self.requestsHandler;
   self.node = MobileNewTextile(config, self.messenger, error);
-  requestsHandler.node = self.node;
 }
 
 - (void)start:(NSError *__autoreleasing *)error {
@@ -219,6 +219,8 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 
   self.lifecycleManager = [[LifecycleManager alloc] initWithNode:self.node];
   self.lifecycleManager.delegate = self.delegate;
+
+  self.requestsHandler.node = self.node;
 }
 
 @end

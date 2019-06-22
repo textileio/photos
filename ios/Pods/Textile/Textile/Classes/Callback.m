@@ -10,13 +10,13 @@
 
 @interface Callback()
 
-@property (nonatomic, copy, nonnull) void (^completion)(NSData*, NSError*);
+@property (nonatomic, copy, nonnull) void (^completion)(NSError*);
 
 @end
 
 @implementation Callback
 
-- (instancetype)initWithCompletion:(void (^)(NSData*, NSError*))completion {
+- (instancetype)initWithCompletion:(void (^)(NSError*))completion {
   self = [super init];
   if (self) {
     self.completion = completion;
@@ -24,8 +24,8 @@
   return self;
 }
 
-- (void)call:(NSData *)payload err:(NSError *)err {
-  self.completion(payload, err);
+- (void)call:(NSError *)err {
+  self.completion(err);
 }
 
 @end
