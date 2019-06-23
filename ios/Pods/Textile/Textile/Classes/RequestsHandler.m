@@ -274,7 +274,7 @@ dispatch_queue_t flushQueue;
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 //  NSLog(@"session task didSendBodyData: %lld - %lld of %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
-  [self.node updateCafeRequestProgress:task.description transerred:totalBytesSent total:totalBytesExpectedToSend error:nil];
+  [self.node updateCafeRequestProgress:task.taskDescription transerred:totalBytesSent total:totalBytesExpectedToSend error:nil];
 }
 
 /*
