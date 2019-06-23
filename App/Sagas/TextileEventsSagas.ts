@@ -28,6 +28,7 @@ import PhotoViewingActions, {
 import { contactsActions, ContactsAction } from '../features/contacts'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'
+import { fileSyncActions, FileSyncAction } from '../features/file-sync'
 
 function displayNotification(message: string, title?: string) {
   RNPushNotification.localNotification({
@@ -47,6 +48,7 @@ function nodeEvents() {
     | DeviceLogsAction
     | NotificationsAction
     | TextileEventsAction
+    | FileSyncAction
   >(emitter => {
     const subscriptions: EventSubscription[] = []
     subscriptions.push(
@@ -158,17 +160,17 @@ function nodeEvents() {
     )
     subscriptions.push(
       Textile.events.addSyncUpdateListener(status => {
-        //@todo: fire action
+        emitter(fileSyncActions.syncUpdate(status))
       })
     )
     subscriptions.push(
       Textile.events.addSyncCompleteListener(status => {
-        //@todo: fire action
+        emitter(fileSyncActions.syncComplete(status))
       })
     )
     subscriptions.push(
       Textile.events.addSyncFailedListener(status => {
-        //@todo: fire action
+        emitter(fileSyncActions.syncFailed(status))
       })
     )
     return () => {

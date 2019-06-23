@@ -1,24 +1,21 @@
-import { createAction, createAsyncAction } from 'typesafe-actions'
+import { createAction } from 'typesafe-actions'
+import { ICafeSyncGroupStatus } from '@textile/js-types';
 
-export const begin = createAction('file-sync/BEGIN', resolve => {
-  return (group: string, id: string) => resolve({ group, id })
+export const syncUpdate = createAction('file-sync/SYNC_UPDATE', resolve => {
+  return (status: ICafeSyncGroupStatus) => resolve({ status })
 })
 
-export const uploadProgress = createAction(
-  'file-sync/UPLOAD_PROGRESS',
+export const syncComplete = createAction(
+  'file-sync/SYNC_COMPLETE',
   resolve => {
-    return (id: string, progress: number) => resolve({ id, progress })
+    return (status: ICafeSyncGroupStatus) => resolve({ status })
   }
 )
 
-export const uploadComplete = createAction(
-  'file-sync/UPLOAD_COMPLETE',
-  resolve => {
-    return (id: string, responseCode: string, responseBody: string) =>
-      resolve({ id, responseCode, responseBody })
-  }
-)
+export const syncFailed = createAction('file-sync/SYNC_FAILED', resolve => {
+  return (status: ICafeSyncGroupStatus) => resolve({ status })
+})
 
-export const error = createAction('file-sync/ERROR', resolve => {
-  return (id: string, error: string) => resolve({ id, error })
+export const clearStatus = createAction('file-sync/CLEAR_STATUS', resolve => {
+  return (groupId: string) => resolve({ groupId })
 })
