@@ -28,8 +28,8 @@ import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
 
 async function registerCafes() {
-  let cafeUrl: string | undefined = Config.RN_TEXTILE_CAFE_URL
-  if (!cafeUrl) {
+  let cafePeerId: string | undefined = Config.RN_TEXTILE_CAFE_PEER_ID
+  if (!cafePeerId) {
     const lbUrl: string | undefined = Config.RN_TEXTILE_LB_URL
     if (!lbUrl) {
       throw new Error('no cafe or lb url specified')
@@ -40,10 +40,10 @@ async function registerCafes() {
         'discovered cafes response does not not include any cafes'
       )
     }
-    cafeUrl = cafes.primary ? cafes.primary.url : cafes.secondary!.url
+    cafePeerId = cafes.primary ? cafes.primary.peer : cafes.secondary!.peer
   }
   const token = Config.RN_TEXTILE_CAFE_TOKEN
-  await Textile.cafes.register(cafeUrl, token)
+  await Textile.cafes.register(cafePeerId, token)
 }
 
 function* registerCafesIfNeeded() {
