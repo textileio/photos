@@ -74,20 +74,20 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   if (self.needsRenderImage) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       NSError *error;
-      UIImage *image;
+      __block UIImage *image;
       if (self.ipfs) {
-        NSData *imageData = [Textile.instance.ipfs dataAtPath:self.target error:&error];
-        if (imageData) {
-          image = [UIImage imageWithData:imageData scale:1];
-        }
+        [Textile.instance.ipfs dataAtPath:self.target completion:^(NSData * _Nullable data, NSString * _Nullable media, NSError * _Nonnull error) {
+          if (data) {
+            image = [UIImage imageWithData:data scale:1];
+          }
+        }];
       } else {
         NSString *path = [NSString stringWithFormat:@"%@/%d", self.target, self.index];
-        NSString *urlString = [Textile.instance.files imageContentForMinWidth:path minWidth:self.forMinWidth error:&error];
-        if (urlString) {
-          NSURL *url = [NSURL URLWithString:urlString];
-          NSData *imageData = [NSData dataWithContentsOfURL:url];
-          image = [UIImage imageWithData:imageData scale:1];
-        }
+        [Textile.instance.files imageContentForMinWidth:path minWidth:self.forMinWidth completion:^(NSData * _Nullable data, NSString * _Nullable media, NSError * _Nonnull error) {
+          if (data) {
+            image = [UIImage imageWithData:data scale:1];
+          }
+        }];
       }
       dispatch_async(dispatch_get_main_queue(), ^{
         if (error) {
