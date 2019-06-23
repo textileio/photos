@@ -23,10 +23,9 @@ export function* shareToThread(uuid: string) {
     if (!processingImage) {
       throw new Error('no ProcessingImage found')
     }
-    const files: IStrings = { values: [processingImage.sharedImage.path] }
     const blockInfo: IBlock = yield call(
       Textile.files.addFiles,
-      files,
+      processingImage.sharedImage.path,
       processingImage.destinationThreadId,
       processingImage.comment
     )

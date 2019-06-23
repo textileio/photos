@@ -1,16 +1,13 @@
 import { createAction } from 'typesafe-actions'
-import { ICafeSyncGroupStatus } from '@textile/js-types';
+import { ICafeSyncGroupStatus } from '@textile/react-native-sdk'
 
 export const syncUpdate = createAction('file-sync/SYNC_UPDATE', resolve => {
   return (status: ICafeSyncGroupStatus) => resolve({ status })
 })
 
-export const syncComplete = createAction(
-  'file-sync/SYNC_COMPLETE',
-  resolve => {
-    return (status: ICafeSyncGroupStatus) => resolve({ status })
-  }
-)
+export const syncComplete = createAction('file-sync/SYNC_COMPLETE', resolve => {
+  return (status: ICafeSyncGroupStatus) => resolve({ status })
+})
 
 export const syncFailed = createAction('file-sync/SYNC_FAILED', resolve => {
   return (status: ICafeSyncGroupStatus) => resolve({ status })

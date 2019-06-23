@@ -18,7 +18,7 @@ export default combineReducers<FileSyncState, FileSyncAction>({
       case getType(actions.syncUpdate):
       case getType(actions.syncFailed): {
         const { status } = action.payload
-        return { ...state, [status.id] : status }
+        return { ...state, [status.id]: status }
       }
       case getType(actions.syncComplete): {
         const { [action.payload.status.id]: complete, ...remaining } = state
@@ -26,11 +26,10 @@ export default combineReducers<FileSyncState, FileSyncAction>({
       }
       case getType(actions.clearStatus): {
         const { [action.payload.groupId]: cleared, ...remaining } = state
-          return remaining
+        return remaining
       }
       default:
         return state
     }
   }
 })
-

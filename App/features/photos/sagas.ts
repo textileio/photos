@@ -156,8 +156,7 @@ function* addPhoto(id: string) {
   if (!thread) {
     throw new Error('no camera roll thread found')
   }
-  const files: IStrings = { values: [processingPhoto.photo.path] }
-  yield call(Textile.files.addFiles, files, thread.id)
+  yield call(Textile.files.addFiles, processingPhoto.photo.path, thread.id)
   yield put(actions.photoAdded(id))
 }
 
