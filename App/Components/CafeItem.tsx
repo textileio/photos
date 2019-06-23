@@ -37,10 +37,16 @@ const PeerIdStyle: TextStyle = {
   fontFamily: fontFamily.regular
 }
 
+const Recommended: TextStyle = {
+  fontFamily: fontFamily.regular,
+  fontStyle: 'italic'
+}
+
 interface OwnProps {
   name: string
   peerId: string
   selected: boolean
+  recommended: boolean
   onPressItem: (peerId: string) => void
 }
 
@@ -63,6 +69,7 @@ export default class CafeItem extends Component<Props> {
           <View style={InfoStyle}>
             <Text style={NameStyle}>{this.props.name}</Text>
             <Text style={PeerIdStyle}>{this.props.peerId}</Text>
+            {this.props.recommended && <Text style={Recommended}>Recommended</Text>}
           </View>
         </View>
       </TouchableOpacity>

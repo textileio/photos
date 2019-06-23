@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 import { FlatList, View, Text, ViewStyle, Dimensions } from 'react-native'
+import lbApi, {
+  DiscoveredCafe,
+  DiscoveredCafes
+} from '../Services/textile-lb-api'
 
 import CafeItem from './CafeItem'
 
@@ -63,7 +67,18 @@ interface OwnProps {
 
 type Props = OwnProps
 
-export default class CafesList extends Component<Props> {
+interface State {
+  recommended: DiscoveredCafes
+}
+
+export default class CafesList extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      recommended: {}
+    }
+  }
+
   render() {
     return (
       <FlatList
@@ -79,6 +94,28 @@ export default class CafesList extends Component<Props> {
     )
   }
 
+  componentDidMount() {
+    lbApi('https://gateway.textile.cafe').discoveredCafes().then(response => {
+      this.setState({
+        recommended: response
+      })
+    })
+  }
+
+  isRecommended(peerId: string) {
+    if (this.state.recommended.primary) {
+      if (peerId === this.state.recommended.primary.peer) {
+        return true
+      }
+    }
+    if (this.state.recommended.secondary) {
+      if (peerId === this.state.recommended.secondary.peer) {
+        return true
+      }
+    }
+    return false
+  }
+
   _keyExtractor = (item: Cafe) => item.peerId
 
   _renderItem = ({ item }: { item: Cafe }) => (
@@ -86,6 +123,7 @@ export default class CafesList extends Component<Props> {
       name={item.name}
       peerId={item.peerId}
       selected={item.peerId === this.props.selected}
+      recommended={this.isRecommended(item.peerId)}
       onPressItem={this.props.onSelect}
     />
   )
