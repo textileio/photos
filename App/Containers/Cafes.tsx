@@ -9,6 +9,7 @@ import { RootState } from '../Redux/Types'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Separator from '../Components/Separator'
 import Cafe from '../Components/Cafe'
+import RegisterCafeModal from '../Components/RegisterCafeModal'
 
 interface NavProps {
   openAddCafeModal: () => void
@@ -20,7 +21,11 @@ interface StateProps {
 
 type Props = StateProps & NavigationScreenProps<NavProps>
 
-class Cafes extends Component<Props> {
+interface State {
+  isModalVisible: boolean
+}
+
+class Cafes extends Component<Props, State> {
   static navigationOptions = ({
     navigation
   }: NavigationScreenProps<NavProps>) => {
@@ -43,9 +48,16 @@ class Cafes extends Component<Props> {
     }
   }
 
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      isModalVisible: false
+    }
+  }
+
   componentDidMount() {
     this.props.navigation.setParams({
-      openAddCafeModal: this.openAddCafeModal
+      openAddCafeModal: this.toggleAddCafeModal
     })
   }
 
@@ -57,6 +69,10 @@ class Cafes extends Component<Props> {
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           ItemSeparatorComponent={() => <Separator />}
+        />
+        <RegisterCafeModal
+          isVisible={this.state.isModalVisible}
+          hide={this.toggleAddCafeModal}
         />
       </SafeAreaView>
     )
@@ -74,7 +90,13 @@ class Cafes extends Component<Props> {
     })
   }
 
-  openAddCafeModal = () => {}
+  toggleAddCafeModal = () => {
+    this.setState((prevState) => {
+      return {
+        isModalVisible: !prevState.isModalVisible
+      }
+    })
+  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {

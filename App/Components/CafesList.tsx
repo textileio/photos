@@ -53,10 +53,13 @@ const Cafes = [
 interface OwnProps {
   selected: string
   onSelect: (peerId: string) => void
+  alreadyRegistered?: ReadonlyArray<string>
 }
 
 type Props = OwnProps
 
+// Todo: move this logic into a saga and pass recommended cafes via props
+// so that this can become a PureComponent
 interface State {
   recommended: DiscoveredCafes
 }
@@ -70,9 +73,19 @@ export default class CafesList extends Component<Props, State> {
   }
 
   render() {
+    // Filter cafes as not to include those the user is already registered with
+    // not used during onboarding
+    const filteredCafes = Cafes.filter(cafe => {
+      if (this.props.alreadyRegistered) {
+        if (this.props.alreadyRegistered.indexOf(cafe.peerId) !== -1) {
+          return false
+        }
+      }
+      return true
+    })
     return (
       <FlatList
-        data={Cafes}
+        data={filteredCafes}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderItem}
         ItemSeparatorComponent={() => <Separator />}
