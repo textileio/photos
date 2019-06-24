@@ -6,6 +6,7 @@ import lbApi, {
 } from '../Services/textile-lb-api'
 
 import CafeItem from './CafeItem'
+import Separator from './Separator'
 
 import { color } from '../styles'
 
@@ -49,17 +50,6 @@ const Cafes = [
   }
 ]
 
-const SeparatorContainer: ViewStyle = {
-  alignItems: 'center',
-  justifyContent: 'center'
-}
-
-const Separator: ViewStyle = {
-  width: '96%',
-  height: 1,
-  backgroundColor: color.grey_4
-}
-
 interface OwnProps {
   selected: string
   onSelect: (peerId: string) => void
@@ -85,21 +75,19 @@ export default class CafesList extends Component<Props, State> {
         data={Cafes}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderItem}
-        ItemSeparatorComponent={() => (
-          <View style={SeparatorContainer}>
-            <View style={Separator} />
-          </View>
-        )}
+        ItemSeparatorComponent={() => <Separator />}
       />
     )
   }
 
   componentDidMount() {
-    lbApi('https://gateway.textile.cafe').discoveredCafes().then(response => {
-      this.setState({
-        recommended: response
+    lbApi('https://gateway.textile.cafe')
+      .discoveredCafes()
+      .then(response => {
+        this.setState({
+          recommended: response
+        })
       })
-    })
   }
 
   isRecommended(peerId: string) {

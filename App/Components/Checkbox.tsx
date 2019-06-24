@@ -3,7 +3,7 @@ import { View, ViewStyle, TouchableOpacity } from 'react-native'
 
 import Icon from '@textile/react-native-icon'
 
-import { spacing } from '../styles'
+import { spacing, size } from '../styles'
 
 interface Props {
   checked: boolean
@@ -36,7 +36,7 @@ export default class Checkbox extends PureComponent<Props> {
         }}
       >
         {this.props.checked && (
-          <Icon name="check-mark" size={spacing._024} color="#fff" />
+          <Icon name="check-mark" size={size._024} color="#fff" />
         )}
       </View>
     )

@@ -69,7 +69,9 @@ export default class CafeItem extends Component<Props> {
           <View style={InfoStyle}>
             <Text style={NameStyle}>{this.props.name}</Text>
             <Text style={PeerIdStyle}>{this.props.peerId}</Text>
-            {this.props.recommended && <Text style={Recommended}>Recommended</Text>}
+            {this.props.recommended && (
+              <Text style={Recommended}>Recommended</Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>
