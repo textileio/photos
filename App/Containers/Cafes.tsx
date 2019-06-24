@@ -9,28 +9,19 @@ import { RootState } from '../Redux/Types'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Separator from '../Components/Separator'
 import Cafe from '../Components/Cafe'
-import RegisterCafeModal from '../Components/RegisterCafeModal'
-
-interface NavProps {
-  openAddCafeModal: () => void
-}
 
 interface StateProps {
   sessions: ReadonlyArray<ICafeSession>
 }
 
-type Props = StateProps & NavigationScreenProps<NavProps>
+type Props = StateProps & NavigationScreenProps
 
-interface State {
-  isModalVisible: boolean
-}
-
-class Cafes extends Component<Props, State> {
+class Cafes extends Component<Props> {
   static navigationOptions = ({
     navigation
-  }: NavigationScreenProps<NavProps>) => {
+  }: NavigationScreenProps) => {
     const goBack = () => navigation.goBack()
-    const openAddCafeModal = navigation.getParam('openAddCafeModal')
+    const goToCafeRegistration = () => navigation.navigate('RegisterCafe')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item title="Back" onPress={goBack} iconName="arrow-left" />
@@ -38,7 +29,7 @@ class Cafes extends Component<Props, State> {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title="Add Cafe" iconName="plus" onPress={openAddCafeModal} />
+        <Item title="Add Cafe" iconName="plus" onPress={goToCafeRegistration} />
       </TextileHeaderButtons>
     )
     return {
@@ -50,15 +41,6 @@ class Cafes extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = {
-      isModalVisible: false
-    }
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({
-      openAddCafeModal: this.toggleAddCafeModal
-    })
   }
 
   render() {
@@ -69,10 +51,6 @@ class Cafes extends Component<Props, State> {
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           ItemSeparatorComponent={() => <Separator />}
-        />
-        <RegisterCafeModal
-          isVisible={this.state.isModalVisible}
-          hide={this.toggleAddCafeModal}
         />
       </SafeAreaView>
     )
@@ -87,14 +65,6 @@ class Cafes extends Component<Props, State> {
   onCafePress = (cafe: ICafeSession) => {
     this.props.navigation.navigate('Cafe', {
       cafe
-    })
-  }
-
-  toggleAddCafeModal = () => {
-    this.setState((prevState) => {
-      return {
-        isModalVisible: !prevState.isModalVisible
-      }
     })
   }
 }
