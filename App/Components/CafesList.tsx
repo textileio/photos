@@ -8,8 +8,6 @@ import lbApi, {
 import CafeItem from './CafeItem'
 import Separator from './Separator'
 
-import { color } from '../styles'
-
 interface Cafe {
   name: string
   peerId: string
@@ -54,6 +52,7 @@ interface OwnProps {
   selected: string
   onSelect: (peerId: string) => void
   alreadyRegistered?: ReadonlyArray<string>
+  ListHeaderComponent?: JSX.Element
 }
 
 type Props = OwnProps
@@ -89,6 +88,11 @@ export default class CafesList extends Component<Props, State> {
         keyExtractor={this._keyExtractor}
         renderItem={this._renderItem}
         ItemSeparatorComponent={() => <Separator />}
+        ListHeaderComponent={
+          this.props.ListHeaderComponent
+            ? this.props.ListHeaderComponent
+            : undefined
+        }
       />
     )
   }

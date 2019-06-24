@@ -40,6 +40,7 @@ const Header: TextStyle = {
 
 const InputContainer: ViewStyle = {
   flexDirection: 'row',
+  paddingHorizontal: spacing._024,
   paddingBottom: spacing._024
 }
 
