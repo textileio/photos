@@ -17,9 +17,7 @@ interface StateProps {
 type Props = StateProps & NavigationScreenProps
 
 class Cafes extends Component<Props> {
-  static navigationOptions = ({
-    navigation
-  }: NavigationScreenProps) => {
+  static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const goBack = () => navigation.goBack()
     const goToCafeRegistration = () => navigation.navigate('RegisterCafe')
     const headerLeft = (
@@ -37,10 +35,6 @@ class Cafes extends Component<Props> {
       headerTitle: 'Registered Cafes',
       headerRight
     }
-  }
-
-  constructor(props: Props) {
-    super(props)
   }
 
   render() {

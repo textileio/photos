@@ -15,6 +15,7 @@ import { RootState } from '../Redux/Types'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Icon from '@textile/react-native-icon'
 import CafesList from '../Components/CafesList'
+import CafePeerIdModal from '../Components/CafePeerIdModal'
 
 import { size, spacing, fontFamily, fontSize } from '../styles'
 
@@ -45,17 +46,23 @@ interface StateProps {
   alreadyRegistered: ReadonlyArray<string>
 }
 
-type Props = StateProps & NavigationScreenProps
+interface NavProps {
+  openPeerIdModal: () => void
+}
+
+type Props = StateProps & NavigationScreenProps<NavProps>
 
 interface State {
   selected: string
+  peerIdModalIsVisible: boolean
 }
 
 class RegisterCafe extends Component<Props, State> {
   static navigationOptions = ({
     navigation
-  }: NavigationScreenProps) => {
+  }: NavigationScreenProps<NavProps>) => {
     const goBack = () => navigation.goBack()
+    const openPeerIdModal = navigation.getParam('openPeerIdModal')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item title="Back" onPress={goBack} iconName="arrow-left" />
@@ -63,7 +70,7 @@ class RegisterCafe extends Component<Props, State> {
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title="Search" onPress={() => { }} iconName="search" />
+        <Item title="Search" onPress={openPeerIdModal} iconName="search" />
       </TextileHeaderButtons>
     )
     return {
@@ -76,8 +83,15 @@ class RegisterCafe extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      selected: ''
+      selected: '',
+      peerIdModalIsVisible: false
     }
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({
+      openPeerIdModal: this.togglePeerIdModal
+    })
   }
 
   render() {
@@ -96,6 +110,11 @@ class RegisterCafe extends Component<Props, State> {
             <Icon name="arrow-right" size={size._032} />
           </TouchableOpacity>
         </View>
+        <CafePeerIdModal
+          isVisible={this.state.peerIdModalIsVisible}
+          complete={this.registerByPeerId}
+          close={this.togglePeerIdModal}
+        />
       </SafeAreaView>
     )
   }
@@ -105,6 +124,21 @@ class RegisterCafe extends Component<Props, State> {
     this.setState(prevState => {
       return {
         selected: prevState.selected === peerId ? '' : peerId
+      }
+    })
+  }
+
+  registerByPeerId = (peerId: string) => {
+    this.setState({
+      selected: peerId
+    })
+    this.togglePeerIdModal()
+  }
+
+  togglePeerIdModal = () => {
+    this.setState(prevState => {
+      return {
+        peerIdModalIsVisible: !prevState.peerIdModalIsVisible
       }
     })
   }
