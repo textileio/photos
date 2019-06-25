@@ -1,39 +1,107 @@
-/* eslint camelcase:0 */
-
 import { feedActions as actions, feedReducer as reducer } from './'
-import { IFeedItem } from '@textile/react-native-sdk'
+import { FeedItemData } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)
 
 const group1 = 'group1'
 const group2 = 'group2'
-const items: ReadonlyArray<IFeedItem> = [
+const items: ReadonlyArray<FeedItemData> = [
   {
+    type: 0, // FeedItemType.Text
     block: 'block1',
-    thread: 'thread1',
-    payload: { type_url: 'url', value: new Uint8Array([]) }
+    value: {
+      block: 'block1',
+      date: {
+        seconds: 0,
+        nanos: 0
+      },
+      user: {
+        address: 'address',
+        name: 'name',
+        avatar: 'avatar'
+      },
+      body: 'body',
+      comments: [],
+      likes: []
+    }
   },
   {
+    type: 0, // FeedItemType.Text
     block: 'block2',
-    thread: 'thread1',
-    payload: { type_url: 'url', value: new Uint8Array([]) }
+    value: {
+      block: 'block2',
+      date: {
+        seconds: 0,
+        nanos: 0
+      },
+      user: {
+        address: 'address',
+        name: 'name',
+        avatar: 'avatar'
+      },
+      body: 'body',
+      comments: [],
+      likes: []
+    }
   },
   {
+    type: 0, // FeedItemType.Text
     block: 'block3',
-    thread: 'thread1',
-    payload: { type_url: 'url', value: new Uint8Array([]) }
+    value: {
+      block: 'block3',
+      date: {
+        seconds: 0,
+        nanos: 0
+      },
+      user: {
+        address: 'address',
+        name: 'name',
+        avatar: 'avatar'
+      },
+      body: 'body',
+      comments: [],
+      likes: []
+    }
   }
 ]
-const otherItems: ReadonlyArray<IFeedItem> = [
+const otherItems: ReadonlyArray<FeedItemData> = [
   {
+    type: 0, // FeedItemType.Text
     block: 'block4',
-    thread: 'thread1',
-    payload: { type_url: 'url', value: new Uint8Array([]) }
+    value: {
+      block: 'block4',
+      date: {
+        seconds: 0,
+        nanos: 0
+      },
+      user: {
+        address: 'address',
+        name: 'name',
+        avatar: 'avatar'
+      },
+      body: 'body',
+      comments: [],
+      likes: []
+    }
   },
   {
+    type: 0, // FeedItemType.Text
     block: 'block5',
-    thread: 'thread1',
-    payload: { type_url: 'url', value: new Uint8Array([]) }
+    value: {
+      block: 'block5',
+      date: {
+        seconds: 0,
+        nanos: 0
+      },
+      user: {
+        address: 'address',
+        name: 'name',
+        avatar: 'avatar'
+      },
+      body: 'body',
+      comments: [],
+      likes: []
+    }
   }
 ]
 

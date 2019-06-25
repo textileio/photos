@@ -45,12 +45,12 @@
   return [[ThreadList alloc] initWithData:data error:error];
 }
 
-- (ContactList *)peers:(NSString *)threadId error:(NSError * _Nullable __autoreleasing *)error {
+- (PeerList *)peers:(NSString *)threadId error:(NSError * _Nullable __autoreleasing *)error {
   NSData *data = [self.node threadPeers:threadId error:error];
   if (*error) {
     return nil;
   }
-  return [[ContactList alloc] initWithData:data error:error];
+  return [[PeerList alloc] initWithData:data error:error];
 }
 
 - (NSString *)remove:(NSString *)threadId error:(NSError * _Nullable __autoreleasing *)error {
