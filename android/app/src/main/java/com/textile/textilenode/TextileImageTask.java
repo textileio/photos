@@ -10,6 +10,9 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
+import java.util.concurrent.CompletableFuture;
+
+import io.textile.textile.Handlers;
 import io.textile.textile.Textile;
 
 public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
@@ -35,19 +38,26 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
     protected Bitmap doInBackground(Void... params) {
         try {
+            final CompletableFuture<byte[]> futureData = new CompletableFuture<>();
+            final Handlers.DataHandler handler = new Handlers.DataHandler() {
+                @Override
+                public void onComplete(final byte[] data, final String media) {
+                    futureData.complete(data);
+                }
+
+                @Override
+                public void onError(final Exception e) {
+                    futureData.completeExceptionally(e);
+                }
+            };
             if (this.ipfs) {
-                byte[] decodedString = Textile.instance().ipfs.dataAtPath(this.target);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                return bitmap;
+                Textile.instance().ipfs.dataAtPath(this.target, handler);
             } else {
-                String path = String.format("%s/%d", this.target, this.index);
-                String dataUrl = Textile.instance().files.imageContentForMinWidth(path, this.forMinWidth);
-                String encodingPrefix = "base64,";
-                int contentStartIndex = dataUrl.indexOf(encodingPrefix) + encodingPrefix.length();
-                byte[] decodedString = Base64.decode(dataUrl.substring(contentStartIndex), Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                return bitmap;
+                final String path = String.format("%s/%d", this.target, this.index);
+                Textile.instance().files.imageContentForMinWidth(path, this.forMinWidth, handler);
             }
+            final byte[] data = futureData.join();
+            return BitmapFactory.decodeByteArray(data, 0, data.length);
         } catch (Exception e) {
             this.e = e;
             return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
