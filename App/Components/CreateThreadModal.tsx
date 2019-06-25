@@ -12,7 +12,7 @@ import Modal from 'react-native-modal'
 import { Thread } from '@textile/react-native-sdk'
 
 import { RootAction } from '../Redux/Types'
-import PhotoViewingActions, { ThreadConfig } from '../Redux/PhotoViewingRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
 import Input from '../SB/components/Input'
 
@@ -22,7 +22,10 @@ import styles from './Styles/ThreadCreateModal'
 interface DispatchProps {
   completeScreen: (threadName: string) => void
   submit: (
-    threadConfig: ThreadConfig,
+    name: string,
+    type: Thread.Type,
+    sharing: Thread.Sharing,
+    whitelist: ReadonlyArray<string>,
     navigate: boolean,
     selectToShare: boolean
   ) => void
@@ -69,19 +72,20 @@ class CreateThreadComponent extends React.Component<Props, State> {
       }
       this.setState({ submitted: true })
       this.props.completeScreen(this.state.value)
-      const threadConfig = {
-        type:
-          this.props.type !== undefined ? this.props.type : Thread.Type.OPEN,
-        sharing:
-          this.props.sharing !== undefined
-            ? this.props.sharing
-            : Thread.Sharing.SHARED,
-        whitelist:
-          this.props.whitelist !== undefined ? this.props.whitelist : [],
-        name: this.state.value
-      }
+      const name = this.state.value
+      const type =
+        this.props.type !== undefined ? this.props.type : Thread.Type.OPEN
+      const sharing =
+        this.props.sharing !== undefined
+          ? this.props.sharing
+          : Thread.Sharing.SHARED
+      const whitelist =
+        this.props.whitelist !== undefined ? this.props.whitelist : []
       this.props.submit(
-        threadConfig,
+        name,
+        type,
+        sharing,
+        whitelist,
         Boolean(this.props.navigateTo),
         Boolean(this.props.selectToShare)
       )
@@ -162,13 +166,21 @@ const mapDispatchToProps = (
         PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)
       )
     },
-    submit: (threadConfig, navigate, selectToShare) => {
+    submit: (name, type, sharing, whitelist, navigate, selectToShare) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(threadConfig, {
-          navigate,
-          selectToShare,
-          invites: ownProps.invites
-        })
+        PhotoViewingActions.addThreadRequest(
+          {
+            name,
+            type,
+            sharing,
+            whitelist
+          },
+          {
+            navigate,
+            selectToShare,
+            invites: ownProps.invites
+          }
+        )
       )
     }
   }
