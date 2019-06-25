@@ -11,7 +11,7 @@ import {
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
-import Textile, { IUser, Thread } from '@textile/react-native-sdk'
+import Textile, { IUser, Thread, FeedItemType } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import {
@@ -160,6 +160,7 @@ class Group extends React.PureComponent<Props, State> {
             inverted={true}
             data={this.props.items}
             renderItem={this.renderRow}
+            keyExtractor={this.keyExtractor}
             initialNumToRender={5}
             windowSize={5}
             onEndReachedThreshold={5}
@@ -198,12 +199,9 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   sameUserAgain = (user: IUser, previous: Item): boolean => {
-    if (!previous || !previous.type) {
-      return false
-    }
     switch (previous.type) {
-      case 'message': {
-        return user.address === previous.data.user.address
+      case FeedItemType.Text: {
+        return user.address === previous.value.user.address
       }
       default: {
         return false
@@ -211,9 +209,19 @@ class Group extends React.PureComponent<Props, State> {
     }
   }
 
+  keyExtractor = (item: Item) => {
+    switch (item.type) {
+      case 'addingMessage':
+      case 'addingPhoto':
+        return item.key
+      default:
+        return item.block
+    }
+  }
+
   renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
-      case 'photo': {
+      case FeedItemType.Files: {
         const {
           user,
           caption,
@@ -223,7 +231,7 @@ class Group extends React.PureComponent<Props, State> {
           likes,
           comments,
           block
-        } = item.data
+        } = item.value
         const hasLiked =
           likes.findIndex(
             likeInfo => likeInfo.user.address === this.props.selfAddress
@@ -292,8 +300,8 @@ class Group extends React.PureComponent<Props, State> {
           />
         )
       }
-      case 'message': {
-        const { user, body, date } = item.data
+      case FeedItemType.Text: {
+        const { user, body, date } = item.value
         const isSameUser = this.sameUserAgain(user, this.props.items[index + 1])
         const avatar = isSameUser ? undefined : user.avatar
         return (
@@ -310,10 +318,10 @@ class Group extends React.PureComponent<Props, State> {
           />
         )
       }
-      case 'leave':
-      case 'join': {
-        const { user, date } = item.data
-        const word = item.type === 'join' ? 'joined' : 'left'
+      case FeedItemType.Leave:
+      case FeedItemType.Join: {
+        const { user, date } = item.value
+        const word = item.type === FeedItemType.Join ? 'joined' : 'left'
         return (
           <Join
             avatar={user.avatar}
@@ -327,7 +335,7 @@ class Group extends React.PureComponent<Props, State> {
         )
       }
       default:
-        return <Text>{`${item.type} - ${item.key}`}</Text>
+        return <Text>{`${item.type}`}</Text>
     }
   }
 
