@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { FlatList, View, Text, ViewStyle, Dimensions } from 'react-native'
-import lbApi, {
-  DiscoveredCafe,
-  DiscoveredCafes
-} from '../Services/textile-lb-api'
+import { Dispatch } from 'redux'
+import { connect } from 'react-redux'
+import { FlatList } from 'react-native'
+
+import { RootState, RootAction } from '../Redux/Types'
 
 import CafeItem from './CafeItem'
 import Separator from './Separator'
+import { DiscoveredCafes } from '../Services/textile-lb-api'
+import { cafesActions } from '../features/cafes'
 
 interface Cafe {
   name: string
@@ -55,22 +57,17 @@ interface OwnProps {
   ListHeaderComponent?: JSX.Element
 }
 
-type Props = OwnProps
-
-// Todo: move this logic into a saga and pass recommended cafes via props
-// so that this can become a PureComponent
-interface State {
-  recommended: DiscoveredCafes
+interface StateProps {
+  recommended?: DiscoveredCafes
 }
 
-export default class CafesList extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      recommended: {}
-    }
-  }
+interface DispatchProps {
+  requestRecommendedCafes: () => void
+}
 
+type Props = OwnProps & StateProps & DispatchProps
+
+class CafesList extends Component<Props> {
   render() {
     // Filter cafes as not to include those the user is already registered with
     // not used during onboarding
@@ -98,24 +95,20 @@ export default class CafesList extends Component<Props, State> {
   }
 
   componentDidMount() {
-    lbApi('https://gateway.textile.cafe')
-      .discoveredCafes()
-      .then(response => {
-        this.setState({
-          recommended: response
-        })
-      })
+    this.props.requestRecommendedCafes()
   }
 
   isRecommended(peerId: string) {
-    if (this.state.recommended.primary) {
-      if (peerId === this.state.recommended.primary.peer) {
-        return true
+    if (this.props.recommended) {
+      if (this.props.recommended.primary) {
+        if (peerId === this.props.recommended.primary.peer) {
+          return true
+        }
       }
-    }
-    if (this.state.recommended.secondary) {
-      if (peerId === this.state.recommended.secondary.peer) {
-        return true
+      if (this.props.recommended.secondary) {
+        if (peerId === this.props.recommended.secondary.peer) {
+          return true
+        }
       }
     }
     return false
@@ -133,3 +126,22 @@ export default class CafesList extends Component<Props, State> {
     />
   )
 }
+
+const mapStateToProps = (state: RootState): StateProps => {
+  const recommended = state.cafes.recommendedCafesResults.results || undefined
+  return {
+    recommended
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+  return {
+    requestRecommendedCafes: () =>
+      dispatch(cafesActions.getRecommendedCafes.request())
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CafesList)

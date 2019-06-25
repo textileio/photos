@@ -29,39 +29,6 @@ import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
 import { prepareAndAdd } from '../../Services/textile-helper'
 
-async function registerCafes() {
-  let cafeUrl: string | undefined = Config.RN_TEXTILE_CAFE_URL
-  if (!cafeUrl) {
-    const lbUrl: string | undefined = Config.RN_TEXTILE_LB_URL
-    if (!lbUrl) {
-      throw new Error('no cafe or lb url specified')
-    }
-    const cafes = await lbApi(lbUrl).discoveredCafes()
-    if (!cafes.primary && !cafes.secondary) {
-      throw new Error(
-        'discovered cafes response does not not include any cafes'
-      )
-    }
-    cafeUrl = cafes.primary ? cafes.primary.url : cafes.secondary!.url
-  }
-  const token = Config.RN_TEXTILE_CAFE_TOKEN
-  await Textile.cafes.register(cafeUrl, token)
-}
-
-function* registerCafesIfNeeded() {
-  try {
-    const list: ICafeSessionList | undefined = yield call(
-      Textile.cafes.sessions
-    )
-    if (!list || list.items.length < 1) {
-      yield call(registerCafes)
-      yield put(actions.getCafeSessionsRequest())
-    }
-  } catch (error) {
-    yield call(logNewEvent, 'registerCafesIfNeeded', error.message, true)
-  }
-}
-
 function* onNodeStarted() {
   while (
     yield take([
@@ -71,7 +38,6 @@ function* onNodeStarted() {
   ) {
     yield call(logNewEvent, 'nodeStarted', 'refresh account data')
     try {
-      yield fork(registerCafesIfNeeded)
       yield put(actions.refreshProfileRequest())
       yield put(actions.refreshPeerIdRequest())
       yield put(actions.refreshAddressRequest())

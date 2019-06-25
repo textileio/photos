@@ -20,6 +20,7 @@ import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
 import { photosReducer } from '../features/photos'
+import { cafesReducer } from '../features/cafes'
 
 const migrations: MigrationManifest = {
   0: persistedState => {
@@ -377,7 +378,8 @@ const rootReducer = combineReducers({
   account: accountReducer,
   textile: textileEventsReducer,
   group: groupReducer,
-  photos: photosReducer
+  photos: photosReducer,
+  cafes: cafesReducer
 })
 
 export default persistReducer(persistConfig, rootReducer)
