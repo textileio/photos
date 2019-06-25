@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import { SafeAreaView, Text, ViewStyle, TextStyle, Alert } from 'react-native'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
+
+import { RootState, RootAction } from '../Redux/Types'
+import { RegisterCafes } from '../features/cafes/reducer'
+import { cafesActions } from '../features/cafes'
 
 import CafesList from '../Components/CafesList'
 import Button from '../Components/LargeButton'
@@ -40,10 +45,21 @@ interface OwnProps {
   onSuccess: () => void
 }
 
-type Props = OwnProps
+interface StateProps {
+  registeringCafes: RegisterCafes
+}
+
+interface DispatchProps {
+  register: (url: string, token: string) => void
+}
+
+type Props = OwnProps & StateProps & DispatchProps
 
 interface State {
-  selected: string
+  selected?: {
+    url: string
+    token: string
+  }
   peerIdModalIsVisible: boolean
 }
 
@@ -51,21 +67,39 @@ class ChooseCafe extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      selected: '',
       peerIdModalIsVisible: false
     }
   }
 
-  onSelect = (peerId: string) => {
+  onSelect = (url: string, token: string) => {
     // If already selected, deselect it
-    this.setState(prevState => {
+    const alreadySelected = this.setState(prevState => {
+      const alreadySelected = prevState.selected
+        ? prevState.selected.url === url
+        : false
       return {
-        selected: prevState.selected === peerId ? '' : peerId
+        selected: alreadySelected
+          ? undefined
+          : {
+              url,
+              token
+            }
       }
     })
   }
 
   render() {
+    const { url } = this.state.selected
+      ? this.state.selected
+      : { url: undefined }
+    const registrationStarted = url
+      ? Object.keys(this.props.registeringCafes).indexOf(url) > -1
+      : false
+    const error =
+      url && registrationStarted
+        ? this.props.registeringCafes[url].error
+        : undefined
+    const registering = registrationStarted && !error
     return (
       <SafeAreaView style={Container}>
         <Text style={Header}>Choose a Cafe</Text>
@@ -74,15 +108,18 @@ class ChooseCafe extends Component<Props, State> {
           Don&apos;t select a cafe to proceed without registering with one.
         </Text>
         <CafesList
-          selected={this.state.selected}
+          disabled={registering}
+          selected={url}
           onSelect={this.onSelect}
           ListHeaderComponent={
             <CafeListHeader onPress={this.togglePeerIdModal} />
           }
         />
+        {error && <Text>{error}</Text>}
         <Button
           text="Submit"
           onPress={this.onButtonPress}
+          processing={registering}
           style={SubmitButton}
         />
         <CafePeerIdModal
@@ -95,7 +132,7 @@ class ChooseCafe extends Component<Props, State> {
   }
 
   onButtonPress = () => {
-    if (this.state.selected === '') {
+    if (!this.state.selected) {
       Alert.alert(
         'Are you sure?',
         'Do you want to proceed without registering with a cafe?',
@@ -111,13 +148,17 @@ class ChooseCafe extends Component<Props, State> {
         ]
       )
     } else {
-      this.props.onSuccess()
+      const { url, token } = this.state.selected
+      this.props.register(url, token)
     }
   }
 
-  registerByPeerId = (peerId: string) => {
+  registerByPeerId = (url: string, token: string) => {
     this.setState({
-      selected: peerId
+      selected: {
+        url,
+        token
+      }
     })
     this.togglePeerIdModal()
   }
@@ -131,7 +172,29 @@ class ChooseCafe extends Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state: RootState): StateProps => {
+  return {
+    registeringCafes: state.cafes.registerCafe
+  }
+}
+
+const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>,
+  ownProps: OwnProps
+): DispatchProps => {
+  return {
+    register: (url: string, token: string) =>
+      dispatch(
+        cafesActions.registerCafe.request({
+          url,
+          token,
+          success: ownProps.onSuccess
+        })
+      )
+  }
+}
+
 export default connect(
-  undefined,
-  undefined
+  mapStateToProps,
+  mapDispatchToProps
 )(ChooseCafe)

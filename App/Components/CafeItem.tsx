@@ -45,21 +45,29 @@ const Recommended: TextStyle = {
 interface OwnProps {
   name: string
   peerId: string
+  url: string
+  token: string
   selected: boolean
   recommended: boolean
-  onPressItem: (peerId: string) => void
+  disabled?: boolean
+  onPressItem: (peerId: string, token: string) => void
 }
 
 type Props = OwnProps
 
 export default class CafeItem extends Component<Props> {
   _onPress = () => {
-    this.props.onPressItem(this.props.peerId)
+    this.props.onPressItem(this.props.url, this.props.token)
   }
 
   render() {
     return (
-      <TouchableOpacity onPress={this._onPress}>
+      <TouchableOpacity
+        onPress={this._onPress}
+        disabled={
+          this.props.disabled !== undefined ? this.props.disabled : false
+        }
+      >
         <View style={ContainerStyle}>
           <Checkbox
             checked={this.props.selected}

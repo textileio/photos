@@ -44,7 +44,7 @@ const InputContainer: ViewStyle = {
   paddingBottom: spacing._024
 }
 
-const PeerIdInput: ViewStyle = {
+const InputStyle: ViewStyle = {
   height: size._048
 }
 
@@ -71,7 +71,7 @@ const DisabledButton: TextStyle = {
 
 interface OwnProps {
   isVisible: boolean
-  complete: (peerId: string) => void
+  complete: (peerId: string, token: string) => void
   close: () => void
 }
 
@@ -79,18 +79,21 @@ type Props = OwnProps
 
 interface State {
   peerId: string
+  token: string
 }
 
 export default class CafePeerIdModal extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      peerId: ''
+      peerId: '',
+      token: ''
     }
   }
 
   render() {
-    const inputIsBlank = this.state.peerId === ''
+    const peerIdInputIsBlank = this.state.peerId === ''
+    const tokenInputIsBlank = this.state.token === ''
     return (
       <Modal
         isVisible={this.props.isVisible}
@@ -105,10 +108,18 @@ export default class CafePeerIdModal extends Component<Props, State> {
             <Text style={Header}>Search for a Cafe by Peer ID</Text>
             <View style={InputContainer}>
               <Input
-                style={PeerIdInput}
+                style={InputStyle}
                 value={this.state.peerId}
-                label={inputIsBlank ? 'Enter Peer ID...' : ''}
+                label={peerIdInputIsBlank ? 'Enter Peer ID...' : ''}
                 onChangeText={this.handleNewPeerId}
+              />
+            </View>
+            <View style={InputContainer}>
+              <Input
+                style={InputStyle}
+                value={this.state.token}
+                label={tokenInputIsBlank ? 'Enter token...' : ''}
+                onChangeText={this.handleNewToken}
               />
             </View>
             <View style={Buttons}>
@@ -116,10 +127,15 @@ export default class CafePeerIdModal extends Component<Props, State> {
                 <Text style={CancelButton}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                disabled={inputIsBlank}
+                disabled={peerIdInputIsBlank || tokenInputIsBlank}
                 onPress={() => this.props.complete}
               >
-                <Text style={[SubmitButton, inputIsBlank && DisabledButton]}>
+                <Text
+                  style={[
+                    SubmitButton,
+                    peerIdInputIsBlank && tokenInputIsBlank && DisabledButton
+                  ]}
+                >
                   Submit
                 </Text>
               </TouchableOpacity>
@@ -133,6 +149,12 @@ export default class CafePeerIdModal extends Component<Props, State> {
   handleNewPeerId = (peerId: string) => {
     this.setState({
       peerId
+    })
+  }
+
+  handleNewToken = (token: string) => {
+    this.setState({
+      token
     })
   }
 }

@@ -7,15 +7,18 @@ import {
   ViewStyle,
   TextStyle
 } from 'react-native'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
 
-import { RootState } from '../Redux/Types'
+import { RootState, RootAction } from '../Redux/Types'
+import { RegisterCafes } from '../features/cafes/reducer'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Icon from '@textile/react-native-icon'
 import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
+import { cafesActions } from '../features/cafes'
 
 import { size, spacing, fontFamily, fontSize } from '../styles'
 
@@ -44,16 +47,24 @@ const CancelButton: TextStyle = {
 
 interface StateProps {
   alreadyRegistered: ReadonlyArray<string>
+  registeringCafes: RegisterCafes
+}
+
+interface DispatchProps {
+  register: (url: string, token: string) => void
 }
 
 interface NavProps {
   openPeerIdModal: () => void
 }
 
-type Props = StateProps & NavigationScreenProps<NavProps>
+type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 interface State {
-  selected: string
+  selected?: {
+    url: string
+    token: string
+  }
   peerIdModalIsVisible: boolean
 }
 
@@ -83,7 +94,6 @@ class RegisterCafe extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      selected: '',
       peerIdModalIsVisible: false
     }
   }
@@ -96,17 +106,30 @@ class RegisterCafe extends Component<Props, State> {
 
   render() {
     const goBack = () => this.props.navigation.goBack()
+    const { url } = this.state.selected
+      ? this.state.selected
+      : { url: undefined }
+    const registrationStarted = url
+      ? Object.keys(this.props.registeringCafes).indexOf(url) > -1
+      : false
+    const error =
+      url && registrationStarted
+        ? this.props.registeringCafes[url].error
+        : undefined
+    const registering = registrationStarted && !error
     return (
       <SafeAreaView style={Container}>
         <View style={ListContainer}>
           <CafesList
-            selected={this.state.selected}
+            disabled={registering}
+            selected={url}
             onSelect={this.onSelect}
             alreadyRegistered={this.props.alreadyRegistered}
           />
         </View>
         <View style={Buttons}>
-          <TouchableOpacity onPress={goBack}>
+          {error && <Text>{error}</Text>}
+          <TouchableOpacity disabled={registering} onPress={goBack}>
             <Icon name="arrow-right" size={size._032} />
           </TouchableOpacity>
         </View>
@@ -119,20 +142,31 @@ class RegisterCafe extends Component<Props, State> {
     )
   }
 
-  onSelect = (peerId: string) => {
+  onSelect = (url: string, token: string) => {
     // If already selected, deselect it
-    this.setState(prevState => {
+    const alreadySelected = this.setState(prevState => {
+      const alreadySelected = prevState.selected
+        ? prevState.selected.url === url
+        : false
       return {
-        selected: prevState.selected === peerId ? '' : peerId
+        selected: alreadySelected
+          ? undefined
+          : {
+              url,
+              token
+            }
       }
     })
   }
 
-  registerByPeerId = (peerId: string) => {
+  registerByPeerId = (url: string, token: string) => {
     this.setState({
-      selected: peerId
+      selected: {
+        url,
+        token
+      },
+      peerIdModalIsVisible: false
     })
-    this.togglePeerIdModal()
   }
 
   togglePeerIdModal = () => {
@@ -147,7 +181,20 @@ class RegisterCafe extends Component<Props, State> {
 const mapStateToProps = (state: RootState): StateProps => {
   const sessions = state.account.cafeSessions.sessions
   return {
-    alreadyRegistered: sessions.map(session => session.id)
+    alreadyRegistered: sessions.map(session => session.id),
+    registeringCafes: state.cafes.registerCafe
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+  return {
+    register: (url: string, token: string) =>
+      dispatch(
+        cafesActions.registerCafe.request({
+          url,
+          token
+        })
+      )
   }
 }
 
