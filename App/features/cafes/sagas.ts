@@ -40,11 +40,14 @@ function* registerCafe(
 function* deregisterCafe(
   action: ActionType<typeof actions.deregisterCafe.request>
 ) {
-  const id = action.payload
+  const { id, success } = action.payload
   try {
     yield call(Textile.cafes.deregister, id)
     yield put(actions.deregisterCafe.success(id))
     yield put(refreshCafeSessionsRequest())
+    if (success) {
+      yield call(success)
+    }
   } catch (error) {
     yield put(actions.deregisterCafe.failure({ id, error }))
   }

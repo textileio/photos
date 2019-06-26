@@ -20,7 +20,7 @@ import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
 import { cafesActions } from '../features/cafes'
 
-import { size, spacing, fontFamily, fontSize } from '../styles'
+import { size, spacing, fontFamily, color } from '../styles'
 
 const Container: ViewStyle = {
   flex: 1,
@@ -39,10 +39,6 @@ const Buttons: ViewStyle = {
   justifyContent: 'flex-end',
   alignItems: 'center',
   padding: spacing._024
-}
-
-const CancelButton: TextStyle = {
-  fontFamily: fontFamily.regular
 }
 
 interface StateProps {
@@ -105,7 +101,6 @@ class RegisterCafe extends Component<Props, State> {
   }
 
   render() {
-    const goBack = () => this.props.navigation.goBack()
     const { url } = this.state.selected
       ? this.state.selected
       : { url: undefined }
@@ -117,6 +112,7 @@ class RegisterCafe extends Component<Props, State> {
         ? this.props.registeringCafes[url].error
         : undefined
     const registering = registrationStarted && !error
+    const buttonDisabled = !this.state.selected || registering
     return (
       <SafeAreaView style={Container}>
         <View style={ListContainer}>
@@ -129,8 +125,12 @@ class RegisterCafe extends Component<Props, State> {
         </View>
         <View style={Buttons}>
           {error && <Text>{error}</Text>}
-          <TouchableOpacity disabled={registering} onPress={goBack}>
-            <Icon name="arrow-right" size={size._032} />
+          <TouchableOpacity disabled={buttonDisabled} onPress={this.register}>
+            <Icon
+              name="arrow-right"
+              size={size._032}
+              color={buttonDisabled ? color.grey_4 : color.grey_3}
+            />
           </TouchableOpacity>
         </View>
         <CafePeerIdModal
@@ -144,7 +144,7 @@ class RegisterCafe extends Component<Props, State> {
 
   onSelect = (url: string, token: string) => {
     // If already selected, deselect it
-    const alreadySelected = this.setState(prevState => {
+    this.setState(prevState => {
       const alreadySelected = prevState.selected
         ? prevState.selected.url === url
         : false
@@ -159,6 +159,13 @@ class RegisterCafe extends Component<Props, State> {
     })
   }
 
+  register = () => {
+    if (this.state.selected) {
+      const { url, token } = this.state.selected
+      this.props.register(url, token)
+    }
+  }
+
   registerByPeerId = (url: string, token: string) => {
     this.setState({
       selected: {
@@ -167,6 +174,7 @@ class RegisterCafe extends Component<Props, State> {
       },
       peerIdModalIsVisible: false
     })
+    this.props.register(url, token)
   }
 
   togglePeerIdModal = () => {
@@ -200,5 +208,5 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
 
 export default connect(
   mapStateToProps,
-  undefined
+  mapDispatchToProps
 )(RegisterCafe)

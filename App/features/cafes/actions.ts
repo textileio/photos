@@ -2,12 +2,6 @@ import { createAsyncAction } from 'typesafe-actions'
 
 import { DiscoveredCafes } from '../../Services/textile-lb-api'
 
-interface RegisterCafeConfig {
-  url: string
-  token: string
-  success?: () => void
-}
-
 // In typesafe-actions v3.x.x, void is used for an action that takes no parameters
 // this needs to be changed to undefined upon upgrading to v4.x.x
 export const getRecommendedCafes = createAsyncAction(
@@ -23,7 +17,11 @@ export const registerCafe = createAsyncAction(
   'cafes/REGISTER_CAFE_SUCCESS',
   'cafes/REGISTER_CAFE_ERROR'
 )<
-  RegisterCafeConfig,
+  {
+    url: string
+    token: string
+    success?: () => void
+  },
   string,
   {
     url: string
@@ -37,7 +35,10 @@ export const deregisterCafe = createAsyncAction(
   'cafes/DEREGISTER_CAFE_SUCCESS',
   'cafes/DEREGISTER_CAFE_ERROR'
 )<
-  string,
+  {
+    id: string
+    success?: () => void
+  },
   string,
   {
     id: string

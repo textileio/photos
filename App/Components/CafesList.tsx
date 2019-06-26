@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { FlatList } from 'react-native'
+import Config from 'react-native-config'
 
 import { RootState, RootAction } from '../Redux/Types'
 import { cafesActions } from '../features/cafes'
@@ -21,50 +22,50 @@ const Cafes = [
   {
     name: 'US-West-1a',
     peerId: '12D3KooWGBW3LfzypK3zgV4QxdPyUm3aEuwBDMKRRpCPm9FrJvar',
-    url: '',
-    token: ''
+    url: 'https://us-west-1a.textile.cafe/',
+    token: Config.RN_TEXTILE_CAFE_TOKEN
   },
   {
     name: 'US-West-1c',
     peerId: '12D3KooWQue2dSRqnZTVvikoxorZQ5Qyyug3hV65rYnWYpYsNMRE',
-    url: '',
-    token: ''
+    url: 'https://us-west-1c.textile.cafe',
+    token: Config.RN_TEXTILE_CAFE_TOKEN
   },
   {
     name: 'US-East-2a',
     peerId: '12D3KooWERmHT6g4YkrPBTmhfDLjfi8b662vFCfvBXqzcdkPGQn1',
-    url: '',
-    token: ''
+    url: 'https://us-east-2a.textile.cafe',
+    token: Config.RN_TEXTILE_CAFE_TOKEN
   },
   {
     name: 'US-East-2b',
     peerId: '12D3KooWLh9Gd4C3knv4XqCyCuaNddfEoSLXgekVJzRyC5vsjv5d',
-    url: '',
-    token: ''
+    url: 'https://us-east-2b.textile.cafe',
+    token: Config.RN_TEXTILE_CAFE_TOKEN
   },
   {
     name: 'EU-West-3a',
     peerId: '12D3KooWDhSfXZCBVAK6SNQu7h6mfGCBJtjMS44PW5YA5YCjVmjB',
-    url: '',
-    token: ''
+    url: 'https://eu-west-3a.textile.cafe',
+    token: Config.RN_TEXTILE_CAFE_TOKEN
   },
   {
     name: 'EU-West-3b',
     peerId: '12D3KooWBCZEDkZ2VxdNYKLLUACWbXMvW9SpVbbvoFR9CtH4qJv9',
-    url: '',
-    token: ''
+    url: 'https://eu-west-3b.textile.cafe',
+    token: Config.RN_TEXTILE_CAFE_TOKEN
   },
   {
     name: 'AP-Southeast-1a',
     peerId: '12D3KooWQ5MR9Ugz9HkVU3fYFbiWbQR4jxKJB66JoSY7nP5ShsqQ',
-    url: '',
-    token: ''
+    url: 'https://ap-southeast-1a.textile.cafe',
+    token: Config.RN_TEXTILE_CAFE_TOKEN
   },
   {
     name: 'AP-Southeast-1b',
     peerId: '12D3KooWQ5MR9Ugz9HkVU3fYFbiWbQR4jxKJB66JoSY7nP5ShsqQ',
-    url: '',
-    token: ''
+    url: 'https://ap-southeast-1b.textile.cafe',
+    token: Config.RN_TEXTILE_CAFE_TOKEN
   }
 ]
 
@@ -142,7 +143,7 @@ class CafesList extends Component<Props> {
       url={item.url}
       token={item.token}
       disabled={this.props.disabled !== undefined ? this.props.disabled : false}
-      selected={item.peerId === (this.props.selected || '')}
+      selected={this.props.selected ? item.url === this.props.selected : false}
       recommended={this.isRecommended(item.peerId)}
       onPressItem={this.props.onSelect}
     />

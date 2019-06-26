@@ -8,9 +8,13 @@ import {
   FlatList,
   Dimensions
 } from 'react-native'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { ICafeSession } from '@textile/react-native-sdk'
+
+import { RootState, RootAction } from '../Redux/Types'
+import { cafesActions } from '../features/cafes'
 
 import Icon from '@textile/react-native-icon'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
@@ -64,11 +68,20 @@ const DeregisterButton: ViewStyle = {
   marginTop: spacing._016
 }
 
+interface StateProps {
+  processing: boolean
+  error?: string
+}
+
+interface DispatchProps {
+  deregister: (success: () => void) => void
+}
+
 interface NavProps {
   cafe: ICafeSession
 }
 
-type Props = NavigationScreenProps<NavProps>
+type Props = NavigationScreenProps<NavProps> & StateProps & DispatchProps
 
 class Cafe extends Component<Props> {
   static navigationOptions = ({
@@ -90,6 +103,7 @@ class Cafe extends Component<Props> {
     // Hardcoded placeholder for services UI
     const services = ['Backup', 'Inboxing', 'Push Notifications']
     const { id } = this.props.navigation.getParam('cafe')
+    const buttonDisabled = !this.props.error && this.props.processing
     return (
       <SafeAreaView style={Container}>
         <Text style={PeerId}>{id}</Text>
@@ -105,21 +119,53 @@ class Cafe extends Component<Props> {
           )}
           ItemSeparatorComponent={() => <Separator />}
         />
+        {this.props.error && <Text>{this.props.error}</Text>}
         <View style={ButtonContainer}>
           <Button
             text="Deregister"
             onPress={this.deregister}
             style={DeregisterButton}
+            processing={buttonDisabled}
+            disabled={buttonDisabled}
           />
         </View>
       </SafeAreaView>
     )
   }
 
-  deregister = () => {}
+  deregister = () => {
+    const goBack = () => this.props.navigation.goBack()
+    this.props.deregister(goBack)
+  }
+}
+
+const mapStateToProps = (
+  state: RootState,
+  ownProps: NavigationScreenProps<NavProps>
+): StateProps => {
+  const cafe = ownProps.navigation.getParam('cafe')
+  const { id } = cafe
+  const processingCafes = state.cafes.deregisterCafe
+  const processing = Object.keys(processingCafes).indexOf(id) > -1
+  return {
+    processing,
+    error: processing ? processingCafes[id].error : undefined
+  }
+}
+
+const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>,
+  ownProps: NavigationScreenProps<NavProps>
+): DispatchProps => {
+  const cafe = ownProps.navigation.getParam('cafe')
+  const { id } = cafe
+  return {
+    deregister: (success: () => void) =>
+      dispatch(cafesActions.deregisterCafe.request({ id, success }))
+  }
 }
 
 export default connect(
-  undefined,
-  undefined
+  mapStateToProps,
+  mapDispatchToProps
 )(Cafe)

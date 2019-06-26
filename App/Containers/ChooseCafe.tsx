@@ -73,7 +73,7 @@ class ChooseCafe extends Component<Props, State> {
 
   onSelect = (url: string, token: string) => {
     // If already selected, deselect it
-    const alreadySelected = this.setState(prevState => {
+    this.setState(prevState => {
       const alreadySelected = prevState.selected
         ? prevState.selected.url === url
         : false
@@ -100,6 +100,7 @@ class ChooseCafe extends Component<Props, State> {
         ? this.props.registeringCafes[url].error
         : undefined
     const registering = registrationStarted && !error
+    const buttonDisabled = !this.state.selected || registering
     return (
       <SafeAreaView style={Container}>
         <Text style={Header}>Choose a Cafe</Text>
@@ -120,6 +121,7 @@ class ChooseCafe extends Component<Props, State> {
           text="Submit"
           onPress={this.onButtonPress}
           processing={registering}
+          disabled={buttonDisabled}
           style={SubmitButton}
         />
         <CafePeerIdModal
@@ -158,9 +160,10 @@ class ChooseCafe extends Component<Props, State> {
       selected: {
         url,
         token
-      }
+      },
+      peerIdModalIsVisible: false
     })
-    this.togglePeerIdModal()
+    this.props.register(url, token)
   }
 
   togglePeerIdModal = () => {

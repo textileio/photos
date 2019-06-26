@@ -90,7 +90,7 @@ export default combineReducers<CafesState, CafesAction>({
       case getType(actions.deregisterCafe.request): {
         return {
           ...state,
-          [action.payload]: {}
+          [action.payload.id]: {}
         }
       }
       case getType(actions.deregisterCafe.success): {

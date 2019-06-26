@@ -105,12 +105,12 @@ export default class CafePeerIdModal extends Component<Props, State> {
       >
         <KeyboardAvoidingView behavior="height" style={ModalView}>
           <View style={Container}>
-            <Text style={Header}>Search for a Cafe by Peer ID</Text>
+            <Text style={Header}>Enter Your Own Cafe</Text>
             <View style={InputContainer}>
               <Input
                 style={InputStyle}
                 value={this.state.peerId}
-                label={peerIdInputIsBlank ? 'Enter Peer ID...' : ''}
+                label={peerIdInputIsBlank ? 'Enter Cafe URL...' : ''}
                 onChangeText={this.handleNewPeerId}
               />
             </View>
