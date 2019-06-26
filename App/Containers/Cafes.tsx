@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SafeAreaView, View, Text, FlatList } from 'react-native'
+import { SafeAreaView, ViewStyle, FlatList } from 'react-native'
 import { connect } from 'react-redux'
 
 import { NavigationScreenProps } from 'react-navigation'
@@ -9,6 +9,10 @@ import { RootState } from '../Redux/Types'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Separator from '../Components/Separator'
 import Cafe from '../Components/Cafe'
+
+const CafesList: ViewStyle = {
+  flex: 1
+}
 
 interface StateProps {
   sessions: ReadonlyArray<ICafeSession>
@@ -41,6 +45,7 @@ class Cafes extends Component<Props> {
     return (
       <SafeAreaView>
         <FlatList
+          style={CafesList}
           data={this.props.sessions}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}

@@ -61,7 +61,7 @@ export default class CafeListHeader extends Component<Props> {
               <Icon name="search" size={size._032} color={color.grey_3} />
             </View>
             <View style={InfoStyle}>
-              <Text style={LabelStyle}>Search for a Cafe by Peer ID</Text>
+              <Text style={LabelStyle}>Enter Your Own Cafe Information</Text>
             </View>
           </View>
         </TouchableOpacity>

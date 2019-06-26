@@ -63,7 +63,7 @@ const Cafes = [
   },
   {
     name: 'AP-Southeast-1b',
-    peerId: '12D3KooWQ5MR9Ugz9HkVU3fYFbiWbQR4jxKJB66JoSY7nP5ShsqQ',
+    peerId: '12D3KooWDWJ473M3fXMEcajbaGtqgr6i6SvDdh5Ru9i5ZzoJ9Qy8',
     url: 'https://ap-southeast-1b.textile.cafe',
     token: Config.RN_TEXTILE_CAFE_TOKEN
   }

@@ -47,7 +47,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  register: (url: string, token: string) => void
+  register: (url: string, token: string, success: () => void) => void
 }
 
 interface NavProps {
@@ -162,7 +162,7 @@ class RegisterCafe extends Component<Props, State> {
   register = () => {
     if (this.state.selected) {
       const { url, token } = this.state.selected
-      this.props.register(url, token)
+      this.props.register(url, token, this.onSuccess)
     }
   }
 
@@ -174,7 +174,7 @@ class RegisterCafe extends Component<Props, State> {
       },
       peerIdModalIsVisible: false
     })
-    this.props.register(url, token)
+    this.props.register(url, token, this.onSuccess)
   }
 
   togglePeerIdModal = () => {
@@ -183,6 +183,10 @@ class RegisterCafe extends Component<Props, State> {
         peerIdModalIsVisible: !prevState.peerIdModalIsVisible
       }
     })
+  }
+
+  onSuccess = () => {
+    this.props.navigation.goBack()
   }
 }
 
@@ -196,11 +200,12 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    register: (url: string, token: string) =>
+    register: (url: string, token: string, success: () => void) =>
       dispatch(
         cafesActions.registerCafe.request({
           url,
-          token
+          token,
+          success
         })
       )
   }

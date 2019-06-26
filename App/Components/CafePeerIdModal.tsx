@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {
-  KeyboardAvoidingView,
+  SafeAreaView,
   View,
   Text,
   TouchableOpacity,
@@ -103,7 +103,7 @@ export default class CafePeerIdModal extends Component<Props, State> {
         backdropOpacity={0.5}
         style={{ margin: 0, padding: 0 }}
       >
-        <KeyboardAvoidingView behavior="height" style={ModalView}>
+        <SafeAreaView style={ModalView}>
           <View style={Container}>
             <Text style={Header}>Enter Your Own Cafe</Text>
             <View style={InputContainer}>
@@ -141,7 +141,7 @@ export default class CafePeerIdModal extends Component<Props, State> {
               </TouchableOpacity>
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </SafeAreaView>
       </Modal>
     )
   }

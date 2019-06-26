@@ -106,7 +106,7 @@ class ChooseCafe extends Component<Props, State> {
         <Text style={Header}>Choose a Cafe</Text>
         <Text style={Subheader}>
           Cafes are trustless, always-on nodes that assist the peer network.
-          Don&apos;t select a cafe to proceed without registering with one.
+          (This step is optional.)
         </Text>
         <CafesList
           disabled={registering}
@@ -118,7 +118,7 @@ class ChooseCafe extends Component<Props, State> {
         />
         {error && <Text>{error}</Text>}
         <Button
-          text="Submit"
+          text="Continue"
           onPress={this.onButtonPress}
           processing={registering}
           disabled={buttonDisabled}
