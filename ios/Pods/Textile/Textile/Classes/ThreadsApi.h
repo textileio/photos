@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (ThreadList *)list:(NSError **)error;
 
 /**
- * List all contacts that participate in a particular thread
+ * List all peers that participate in a particular thread
  * @param threadId The id of the thread to query
  * @param error A reference to an error pointer that will be set in the case of an error
  * @return An object containing a list of contacts

@@ -104,37 +104,36 @@ class AddCaptionScreen extends React.Component<Props> {
       cancelShare: () => {
         this.props.cancelShare()
       },
-      share: () => {
-        if (
-          this.props.share &&
-          this.props.image &&
-          (this.props.image as IFiles).target &&
-          this.props.threadId
-        ) {
-          const filesInfo = this.props.image as IFiles
-          this.props.share(
-            filesInfo.target!,
-            this.props.threadId,
-            this.props.comment
-          )
-        } else if (
-          this.props.share &&
-          this.props.image &&
-          (this.props.image as SharedImage).uri &&
-          this.props.threadId
-        ) {
-          const sharedImage = this.props.image as SharedImage
-          this.props.share(sharedImage, this.props.threadId, this.props.comment)
-        }
-      },
+      share: this.share,
       shareToNewThread: this._shareToNewThread.bind(this)
     })
   }
+
   componentDidUpdate(prevProps: Props) {
     if (prevProps.selectedThreadId !== this.props.selectedThreadId) {
       this.props.navigation.setParams({
         disableShare: this.props.selectedThreadId === undefined
       })
+    }
+  }
+
+  share = () => {
+    if (
+      this.props.share &&
+      this.props.image &&
+      (this.props.image as IFiles).data &&
+      this.props.threadId
+    ) {
+      const filesInfo = this.props.image as IFiles
+      this.props.share(filesInfo.data, this.props.threadId, this.props.comment)
+    } else if (
+      this.props.share &&
+      this.props.image &&
+      (this.props.image as SharedImage).uri &&
+      this.props.threadId
+    ) {
+      const sharedImage = this.props.image as SharedImage
+      this.props.share(sharedImage, this.props.threadId, this.props.comment)
     }
   }
 
@@ -201,7 +200,7 @@ class AddCaptionScreen extends React.Component<Props> {
           files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <TextileImage
-            target={filesInfo.target}
+            target={filesInfo.data}
             index={fileIndex}
             forMinWidth={70}
             resizeMode={'cover'}

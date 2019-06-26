@@ -70,17 +70,7 @@ const reducer = combineReducers<PhotosState, PhotosAction>({
         const processingPhoto = state[id]
         const updated: ProcessingPhoto = {
           ...processingPhoto,
-          state: 'preparing'
-        }
-        return { ...state, [id]: updated }
-      }
-      case getType(actions.photoPrepared): {
-        const { id, preparedFiles } = action.payload
-        const processingPhoto = state[id]
-        const updated: ProcessingPhoto = {
-          ...processingPhoto,
-          state: 'adding',
-          preparedFiles
+          state: 'adding'
         }
         return { ...state, [id]: updated }
       }

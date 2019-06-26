@@ -26,6 +26,7 @@ const sharedPhoto: IFiles = {
   files: [],
   likes: [],
   target: 'd',
+  data: 'data',
   threads: []
 }
 

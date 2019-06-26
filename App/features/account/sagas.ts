@@ -12,8 +12,7 @@ import Config from 'react-native-config'
 import Textile, {
   IContact,
   ICafeSession,
-  ICafeSessionList,
-  IThread
+  ICafeSessionList
 } from '@textile/react-native-sdk'
 
 import * as actions from './actions'
@@ -27,11 +26,10 @@ import { logNewEvent } from '../../Sagas/DeviceLogs'
 import lbApi from '../../Services/textile-lb-api'
 import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
-import { prepareAndAdd } from '../../Services/textile-helper'
 
 async function registerCafes() {
-  let cafeUrl: string | undefined = Config.RN_TEXTILE_CAFE_URL
-  if (!cafeUrl) {
+  let cafePeerId: string | undefined = Config.RN_TEXTILE_CAFE_PEER_ID
+  if (!cafePeerId) {
     const lbUrl: string | undefined = Config.RN_TEXTILE_LB_URL
     if (!lbUrl) {
       throw new Error('no cafe or lb url specified')
@@ -42,10 +40,10 @@ async function registerCafes() {
         'discovered cafes response does not not include any cafes'
       )
     }
-    cafeUrl = cafes.primary ? cafes.primary.url : cafes.secondary!.url
+    cafePeerId = cafes.primary ? cafes.primary.peer : cafes.secondary!.peer
   }
   const token = Config.RN_TEXTILE_CAFE_TOKEN
-  await Textile.cafes.register(cafeUrl, token)
+  await Textile.cafes.register(cafePeerId, token)
 }
 
 function* registerCafesIfNeeded() {
@@ -173,8 +171,7 @@ function* setAvatar() {
       if (!started) {
         yield take(getType(TextileEventsActions.nodeStarted))
       }
-      const accountThread: IThread = yield call(Textile.profile.accountThread)
-      yield call(prepareAndAdd, action.payload.path, accountThread.id)
+      yield call(Textile.profile.setAvatar, action.payload.path)
       yield put(actions.refreshProfileRequest())
       yield put(actions.setAvatar.success())
     } catch (error) {

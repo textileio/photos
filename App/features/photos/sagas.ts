@@ -16,8 +16,8 @@ import {
 } from '@textile/react-native-camera-roll'
 import Textile, {
   IThread,
-  IMobilePreparedFiles,
-  IFilesList
+  IFilesList,
+  IStrings
 } from '@textile/react-native-sdk'
 import Config from 'react-native-config'
 import FS from 'react-native-fs'
@@ -147,23 +147,6 @@ function* createQueue(
   }
 }
 
-function* preparePhoto(id: string) {
-  const selector = selectors.makeProcessingPhoto(id)
-  const processingPhoto: ProcessingPhoto = yield select((state: RootState) =>
-    selector(state.photos)
-  )
-  const thread: IThread | undefined = yield call(getCameraRollThread)
-  if (!thread) {
-    throw new Error('no camera roll thread found')
-  }
-  const preparedFiles: IMobilePreparedFiles = yield call(
-    Textile.files.prepareByPath,
-    processingPhoto.photo.path,
-    thread.id
-  )
-  yield put(actions.photoPrepared(id, preparedFiles))
-}
-
 function* addPhoto(id: string) {
   const selector = selectors.makeProcessingPhoto(id)
   const processingPhoto: ProcessingPhoto = yield select((state: RootState) =>
@@ -173,10 +156,7 @@ function* addPhoto(id: string) {
   if (!thread) {
     throw new Error('no camera roll thread found')
   }
-  if (!processingPhoto.preparedFiles) {
-    throw new Error('no prepared files found')
-  }
-  yield call(Textile.files.add, processingPhoto.preparedFiles.dir, thread.id)
+  yield call(Textile.files.addFiles, processingPhoto.photo.path, thread.id)
   yield put(actions.photoAdded(id))
 }
 
@@ -192,16 +172,6 @@ function* cleanup(id: string) {
       // TODO: somthing?
     }
   }
-  if (processingPhoto.preparedFiles) {
-    for (const key of Object.keys(processingPhoto.preparedFiles.pin)) {
-      const path = processingPhoto.preparedFiles.pin[key]
-      try {
-        yield call(FS.unlink, path)
-      } catch {
-        // TODO: somthing?
-      }
-    }
-  }
   yield put(actions.photoCleanedUp(id))
 }
 
@@ -213,7 +183,6 @@ function* photoHandler(payload: { id: string }) {
   }
   try {
     yield put(actions.photoProcessingBegan(id))
-    yield call(preparePhoto, id)
     yield call(addPhoto, id)
     yield call(cleanup, id)
   } catch (error) {

@@ -20,15 +20,27 @@
 @class MobileSearchHandle;
 @protocol MobileCallback;
 @class MobileCallback;
+@protocol MobileDataCallback;
+@class MobileDataCallback;
 @protocol MobileMessenger;
 @class MobileMessenger;
+@protocol MobileProtoCallback;
+@class MobileProtoCallback;
 
 @protocol MobileCallback <NSObject>
-- (void)call:(NSData* _Nullable)data err:(NSError* _Nullable)err;
+- (void)call:(NSError* _Nullable)err;
+@end
+
+@protocol MobileDataCallback <NSObject>
+- (void)call:(NSData* _Nullable)data media:(NSString* _Nullable)media err:(NSError* _Nullable)err;
 @end
 
 @protocol MobileMessenger <NSObject>
 - (void)notify:(MobileEvent* _Nullable)event;
+@end
+
+@protocol MobileProtoCallback <NSObject>
+- (void)call:(NSData* _Nullable)msg err:(NSError* _Nullable)err;
 @end
 
 /**
@@ -93,9 +105,9 @@ name is the string value of a pb.MobileEvent_Type)
 - (NSData* _Nullable)accountThread:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)addComment:(NSString* _Nullable)blockId body:(NSString* _Nullable)body error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)addContact:(NSData* _Nullable)contact error:(NSError* _Nullable* _Nullable)error;
+- (void)addData:(NSData* _Nullable)data threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption cb:(id<MobileProtoCallback> _Nullable)cb;
 - (NSData* _Nullable)addExternalInvite:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)addFiles:(NSData* _Nullable)dir threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption error:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)addFilesByTarget:(NSString* _Nullable)target threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption error:(NSError* _Nullable* _Nullable)error;
+- (void)addFiles:(NSString* _Nullable)paths threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption cb:(id<MobileProtoCallback> _Nullable)cb;
 - (NSString* _Nonnull)addFlag:(NSString* _Nullable)blockId error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)addIgnore:(NSString* _Nullable)blockId error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)addInvite:(NSString* _Nullable)threadId address:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
@@ -118,13 +130,13 @@ name is the string value of a pb.MobileEvent_Type)
  * Avatar calls core Avatar
  */
 - (NSString* _Nonnull)avatar:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)cafeHTTPRequest:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)cafeRequestGroupStatus:(NSString* _Nullable)group error:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)cafeRequests:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)cafeRequestNotPending:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)cafeRequestPending:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)cafeRequests:(long)limit error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)cafeSession:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)cafeSessions:(NSError* _Nullable* _Nullable)error;
 - (BOOL)checkCafeMessages:(NSError* _Nullable* _Nullable)error;
-- (BOOL)cleanupCafeRequests:(NSError* _Nullable* _Nullable)error;
+- (BOOL)completeCafeRequest:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)contact:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)contactThreads:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)contacts:(NSError* _Nullable* _Nullable)error;
@@ -132,12 +144,13 @@ name is the string value of a pb.MobileEvent_Type)
  * CountUnreadNotifications calls core CountUnreadNotifications
  */
 - (long)countUnreadNotifications;
-- (NSData* _Nullable)dataAtPath:(NSString* _Nullable)pth error:(NSError* _Nullable* _Nullable)error;
+- (void)dataAtPath:(NSString* _Nullable)pth cb:(id<MobileDataCallback> _Nullable)cb;
 - (NSData* _Nullable)decrypt:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
-- (BOOL)deregisterCafe:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+- (void)deregisterCafe:(NSString* _Nullable)id_ cb:(id<MobileCallback> _Nullable)cb;
 - (NSData* _Nullable)encrypt:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)failCafeRequest:(NSString* _Nullable)id_ reason:(NSString* _Nullable)reason error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)feed:(NSData* _Nullable)req error:(NSError* _Nullable* _Nullable)error;
-- (NSString* _Nonnull)fileContent:(NSString* _Nullable)hash error:(NSError* _Nullable* _Nullable)error;
+- (void)fileContent:(NSString* _Nullable)hash cb:(id<MobileDataCallback> _Nullable)cb;
 - (NSData* _Nullable)files:(NSString* _Nullable)threadId offset:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
 /**
  * GitSummary returns common GitSummary
@@ -148,7 +161,7 @@ name is the string value of a pb.MobileEvent_Type)
  * IgnoreInviteViaNotification call core IgnoreInviteViaNotification
  */
 - (BOOL)ignoreInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
-- (NSString* _Nonnull)imageFileContentForMinWidth:(NSString* _Nullable)pth minWidth:(long)minWidth error:(NSError* _Nullable* _Nullable)error;
+- (void)imageFileContentForMinWidth:(NSString* _Nullable)pth minWidth:(long)minWidth cb:(id<MobileDataCallback> _Nullable)cb;
 - (NSData* _Nullable)invites:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)messages:(NSString* _Nullable)offset limit:(long)limit threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
 /**
@@ -159,13 +172,11 @@ name is the string value of a pb.MobileEvent_Type)
  * Notifications call core Notifications
  */
 - (NSData* _Nullable)notifications:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
-// skipped method Mobile.OnlineCh with unsupported parameter or return types
-
+/**
+ * Online returns core Online
+ */
+- (BOOL)online;
 - (NSString* _Nonnull)peerId:(NSError* _Nullable* _Nullable)error;
-- (void)prepareFiles:(NSString* _Nullable)data threadId:(NSString* _Nullable)threadId cb:(id<MobileCallback> _Nullable)cb;
-- (void)prepareFilesByPath:(NSString* _Nullable)path threadId:(NSString* _Nullable)threadId cb:(id<MobileCallback> _Nullable)cb;
-- (NSData* _Nullable)prepareFilesByPathSync:(NSString* _Nullable)path threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)prepareFilesSync:(NSString* _Nullable)data threadId:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
 /**
  * Profile calls core Profile
  */
@@ -178,8 +189,8 @@ name is the string value of a pb.MobileEvent_Type)
  * ReadNotification calls core ReadNotification
  */
 - (BOOL)readNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
-- (NSData* _Nullable)refreshCafeSession:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
-- (BOOL)registerCafe:(NSString* _Nullable)host token:(NSString* _Nullable)token error:(NSError* _Nullable* _Nullable)error;
+- (void)refreshCafeSession:(NSString* _Nullable)id_ cb:(id<MobileProtoCallback> _Nullable)cb;
+- (void)registerCafe:(NSString* _Nullable)id_ token:(NSString* _Nullable)token cb:(id<MobileCallback> _Nullable)cb;
 - (BOOL)removeContact:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
 /**
  * RemoveThread call core RemoveThread
@@ -195,13 +206,16 @@ name is the string value of a pb.MobileEvent_Type)
  */
 - (MobileSearchHandle* _Nullable)searchThreadSnapshots:(NSData* _Nullable)query options:(NSData* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)seed;
-- (BOOL)setCafeRequestComplete:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
-- (BOOL)setCafeRequestPending:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+/**
+ * SetAvatar adds the image at pth to the account thread and calls core SetAvatar
+ */
+- (void)setAvatar:(NSString* _Nullable)pth cb:(id<MobileProtoCallback> _Nullable)cb;
 - (BOOL)setLogLevel:(NSData* _Nullable)level error:(NSError* _Nullable* _Nullable)error;
 /**
  * SetName calls core SetName
  */
 - (BOOL)setName:(NSString* _Nullable)username error:(NSError* _Nullable* _Nullable)error;
+- (void)shareFiles:(NSString* _Nullable)data threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption cb:(id<MobileProtoCallback> _Nullable)cb;
 /**
  * SnapshotThreads calls core SnapshotThreads
  */
@@ -231,10 +245,12 @@ name is the string value of a pb.MobileEvent_Type)
  * Threads lists all threads
  */
 - (NSData* _Nullable)threads:(NSError* _Nullable* _Nullable)error;
+- (BOOL)updateCafeRequestProgress:(NSString* _Nullable)id_ transerred:(int64_t)transerred total:(int64_t)total error:(NSError* _Nullable* _Nullable)error;
 /**
  * Version returns common Version
  */
 - (NSString* _Nonnull)version;
+- (void)writeCafeRequest:(NSString* _Nullable)group cb:(id<MobileProtoCallback> _Nullable)cb;
 @end
 
 /**
@@ -290,21 +306,36 @@ FOUNDATION_EXPORT NSString* _Nonnull MobileNewWallet(long wordCount, NSError* _N
 /**
  * WalletAccountAt derives the account at the given index
  */
-FOUNDATION_EXPORT NSData* _Nullable MobileWalletAccountAt(NSString* _Nullable phrase, long index, NSString* _Nullable password, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSData* _Nullable MobileWalletAccountAt(NSString* _Nullable mnemonic, long index, NSString* _Nullable passphrase, NSError* _Nullable* _Nullable error);
 
 @class MobileCallback;
 
+@class MobileDataCallback;
+
 @class MobileMessenger;
 
+@class MobileProtoCallback;
+
 /**
- * Callback is used for asyc methods (data is a protobuf)
+ * Callback is used for asyc methods
  */
 @interface MobileCallback : NSObject <goSeqRefInterface, MobileCallback> {
 }
 @property(strong, readonly) _Nonnull id _ref;
 
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
-- (void)call:(NSData* _Nullable)data err:(NSError* _Nullable)err;
+- (void)call:(NSError* _Nullable)err;
+@end
+
+/**
+ * DataCallback is used for asyc methods that deliver raw data
+ */
+@interface MobileDataCallback : NSObject <goSeqRefInterface, MobileDataCallback> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (void)call:(NSData* _Nullable)data media:(NSString* _Nullable)media err:(NSError* _Nullable)err;
 @end
 
 /**
@@ -316,6 +347,17 @@ FOUNDATION_EXPORT NSData* _Nullable MobileWalletAccountAt(NSString* _Nullable ph
 
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (void)notify:(MobileEvent* _Nullable)event;
+@end
+
+/**
+ * ProtoCallback is used for asyc methods that deliver a protobuf message
+ */
+@interface MobileProtoCallback : NSObject <goSeqRefInterface, MobileProtoCallback> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (void)call:(NSData* _Nullable)msg err:(NSError* _Nullable)err;
 @end
 
 #endif

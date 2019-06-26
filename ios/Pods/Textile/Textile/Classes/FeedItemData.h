@@ -14,6 +14,7 @@
 @class Ignore;
 @class Join;
 @class Leave;
+@class Announce;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +25,8 @@ typedef enum : NSUInteger {
   FeedItemTypeFiles,
   FeedItemTypeIgnore,
   FeedItemTypeJoin,
-  FeedItemTypeLeave
+  FeedItemTypeLeave,
+  FeedItemTypeAnnounce
 } FeedItemType;
 
 @interface FeedItemData : NSObject
@@ -38,6 +40,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) Ignore *ignore;
 @property (nonatomic, strong) Join *join;
 @property (nonatomic, strong) Leave *leave;
+@property (nonatomic, strong) Announce *announce;
 
 @end
 
