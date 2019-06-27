@@ -366,7 +366,9 @@ class Group extends React.PureComponent<Props, State> {
         : []),
       this.props.leaveThread
     ]
-    actions[index]()
+    if (index < actions.length) {
+      actions[index]()
+    }
   }
 
   showInviteModal = () => {
