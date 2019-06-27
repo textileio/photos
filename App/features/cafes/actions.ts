@@ -18,13 +18,13 @@ export const registerCafe = createAsyncAction(
   'cafes/REGISTER_CAFE_ERROR'
 )<
   {
-    url: string
+    peerId: string
     token: string
     success?: () => void
   },
   string,
   {
-    url: string
+    peerId: string
     error: any
   }
 >()
