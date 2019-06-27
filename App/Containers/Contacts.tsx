@@ -15,7 +15,8 @@ import {
   SectionListData,
   ActivityIndicator,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  ColorPropType
 } from 'react-native'
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
@@ -294,7 +295,13 @@ class Contacts extends React.Component<Props, State> {
         const contact = item.data
         const leftItem = (
           <View style={leftItemsStyle}>
-            {selecting && <Checkbox checked={this.selected(contact.address)} />}
+            {selecting && (
+              <Checkbox
+                checked={this.selected(contact.address)}
+                uncheckedColor={color.grey_3}
+                checkedColor={color.action_5}
+              />
+            )}
             <Avatar style={avatarStyle} target={contact.avatar} />
           </View>
         )
