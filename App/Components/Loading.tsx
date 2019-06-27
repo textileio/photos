@@ -1,10 +1,18 @@
 import React from 'react'
-import { View, ActivityIndicator, ActivityIndicatorProps } from 'react-native'
+import { View, Text, ActivityIndicator, ActivityIndicatorProps, TextStyle } from 'react-native'
 
-import { color } from '../styles'
+import { color, textStyle, spacing } from '../styles'
+
+const TEXT: TextStyle = {
+  ...textStyle.body_m,
+  color: color.grey_4,
+  textAlign: 'center',
+  marginTop: spacing._012
+}
 
 interface Props extends ActivityIndicatorProps {
   backgroundColor?: string
+  text?: string
 }
 
 const loading = (props: Props) => {
@@ -22,6 +30,9 @@ const loading = (props: Props) => {
       }}
     >
       <ActivityIndicator {...indicatorProps} />
+      {props.text &&
+        <Text style={TEXT}>{props.text}</Text>
+      }
     </View>
   )
 }

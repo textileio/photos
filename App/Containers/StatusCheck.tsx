@@ -1,5 +1,4 @@
 import React from 'react'
-import { ActivityIndicator, View } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
 
@@ -38,7 +37,7 @@ class StatusCheck extends React.Component<Props, {}> {
     if (this.props.nodeError) {
       return <FatalErrorView message={this.props.nodeError} />
     } else {
-      return <Loading color={color.brandBlue} />
+      return <Loading color={color.brandBlue} text={"Waiting for node to start..."} />
     }
   }
 }
