@@ -4,8 +4,7 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ViewStyle,
-  TextStyle
+  ViewStyle
 } from 'react-native'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
