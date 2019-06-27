@@ -12,7 +12,7 @@ import Button from '../Components/LargeButton'
 import CafeListHeader from '../Components/CafeListHeader'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
 
-import { color, fontFamily, fontSize, spacing } from '../styles'
+import { spacing, textStyle } from '../styles'
 
 const Container: ViewStyle = {
   flexDirection: 'column',
@@ -21,20 +21,16 @@ const Container: ViewStyle = {
   flex: 1
 }
 
-const Header: TextStyle = {
-  fontFamily: fontFamily.bold,
-  textAlign: 'center',
-  fontSize: fontSize._36,
-  color: color.grey_0,
-  marginTop: spacing._024,
-  marginBottom: spacing._016
+const TITLE: TextStyle = {
+  ...textStyle.header_l,
+  marginBottom: spacing._008,
+  paddingHorizontal: spacing._016
 }
 
-const Subheader: TextStyle = {
-  fontFamily: fontFamily.regular,
-  fontSize: fontSize._20,
-  paddingHorizontal: spacing._024,
-  marginBottom: spacing._016
+const SUBTITLE: TextStyle = {
+  ...textStyle.body_l,
+  marginBottom: spacing._016,
+  paddingHorizontal: spacing._016
 }
 
 const SubmitButton: ViewStyle = {
@@ -103,10 +99,9 @@ class ChooseCafe extends Component<Props, State> {
     const buttonDisabled = !this.state.selected || registering
     return (
       <SafeAreaView style={Container}>
-        <Text style={Header}>Choose a Cafe</Text>
-        <Text style={Subheader}>
+        <Text style={TITLE}>Choose a Cafe</Text>
+        <Text style={SUBTITLE}>
           Cafes are trustless, always-on nodes that assist the peer network.
-          (This step is optional.)
         </Text>
         <CafesList
           disabled={registering}
