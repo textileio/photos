@@ -19,58 +19,31 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FilesApi : NodeDependant
 
 /**
- * Prepare raw data to later add to a Textile thread
- * @param data Raw base64 string data
+ * Add raw data to a Textile thread
+ * @param data Raw data
  * @param threadId The thread id the data will be added to
- * @param completion A block that will get called with the results of the prepare operation
- */
-- (void)prepare:(NSString *)data threadId:(NSString *)threadId completion:(void (^)(MobilePreparedFiles * _Nullable, NSError *))completion;
-
-/**
- * Prepare file data to later add to a Textile thread
- * @param path The path to the file containing the data to prepare
- * @param threadId The thread id the data will be added to
- * @param completion A block that will get called with the results of the prepare operation
- */
-- (void)prepareByPath:(NSString *)path threadId:(NSString *)threadId completion:(void (^)(MobilePreparedFiles * _Nullable, NSError *))completion;
-
-/**
- * Prepare raw data synchronously to later add to a Textile thread
- * @param data Raw base64 string data
- * @param threadId The thread id the data will be added to
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return An object containing data about the prepared files that will be used to add to the thread later
- */
-- (MobilePreparedFiles *)prepareSync :(NSString *)data threadId:(NSString *)threadId error:(NSError **)error;
-
-/**
- * Prepare file data synchronously to later add to a Textile thread
- * @param path The path to the file containing the data to prepare
- * @param threadId The thread id the data will be added to
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return An object containing data about the prepared files that will be used to add to the thread later
- */
-- (MobilePreparedFiles *)prepareByPathSync:(NSString *)path threadId:(NSString *)threadId error:(NSError **)error;
-
-/**
- * Add data to a Textile thread
- * @param directory The Directory data that was previously prepared
- * @param threadId The thread to add the data to
  * @param caption A caption to associate with the data
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return The Block representing the added data
+ * @param completion A block that will get called with the results of the add operation
  */
-- (Block *)add:(Directory *)directory threadId:(NSString *)threadId caption:(nullable NSString *)caption error:(NSError **)error;
+- (void)addData:(NSData *)data threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion;
 
 /**
- * Add data from a Textile thread to another Textile thread
- * @param target The target from the source thread of the data to add
- * @param threadId The thread to add the data to
- * @param caption A caption to associate with the data
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return The Block representing the added data
+ * Add files to a Textile thread
+ * @param files A comma-separated list of file paths to add, paths can be file system paths, IPFS hashes, or an existing file hash that may need decryption
+ * @param threadId The thread id the files will be added to
+ * @param caption A caption to associate with the files
+ * @param completion A block that will get called with the results of the add operation
  */
-- (Block *)addByTarget:(NSString *)target threadId:(NSString *)threadId caption:(nullable NSString *)caption error:(NSError **)error;
+- (void)addFiles:(NSString *)files threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion;
+
+/**
+ * Share files already aded to a Textile thread to a Textile thread
+ * @param target The source thread target of the files to share
+ * @param threadId The thread id the files will be shared to
+ * @param caption A caption to associate with the files
+ * @param completion A block that will get called with the results of the add operation
+ */
+- (void)shareFiles:(NSString *)target threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion;
 
 /**
  * Get a list of files data from a thread
@@ -85,19 +58,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Get raw data for a file hash
  * @param hash The hash to return data for
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return The base64 string of data
+ * @param completion A block that will get called with the results of content
  */
-- (NSString *)content:(NSString *)hash error:(NSError **)error;
+- (void)content:(NSString *)hash completion:(void (^)(NSData * _Nullable, NSString * _Nullable, NSError * _Nonnull))completion;
 
 /**
  * Helper function to return the most appropriate image data for a minimun image width
  * @param path The IPFS path that includes image data for various image sizes
  * @param minWidth The width of the image the data will be used for
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return The base64 string of image data
+ * @param completion A block that will get called with the results of content
  */
-- (NSString *)imageContentForMinWidth:(NSString *)path minWidth:(long)minWidth error:(NSError **)error;
+- (void)imageContentForMinWidth:(NSString *)path minWidth:(long)minWidth completion:(void (^)(NSData * _Nullable, NSString * _Nullable, NSError * _Nonnull))completion;
 
 @end
 

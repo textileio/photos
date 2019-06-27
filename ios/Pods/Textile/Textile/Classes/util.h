@@ -75,6 +75,15 @@ static inline FeedItemData * feedItemData(FeedItem *feedItem) {
       feedItemData.type = FeedItemTypeLeave;
       feedItemData.leave = leave;
     }
+  } else if ([feedItem.payload.typeURL isEqualToString:@"/Announce"]) {
+    NSError *e;
+    Announce *announce = [[Announce alloc] initWithData:feedItem.payload.value error:&e];
+    if (!e) {
+      feedItemData = [[FeedItemData alloc] init];
+      feedItemData.block = feedItem.block;
+      feedItemData.type = FeedItemTypeAnnounce;
+      feedItemData.announce = announce;
+    }
   }
   return feedItemData;
 }

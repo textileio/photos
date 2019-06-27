@@ -26,6 +26,8 @@
 #import "SchemasApi.h"
 #import "ThreadsApi.h"
 
+extern  NSString* _Nonnull const TEXTILE_BACKGROUND_SESSION_ID;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -141,6 +143,8 @@ NS_ASSUME_NONNULL_BEGIN
  * The path to the local Textile repository
  */
 @property (nonatomic, readonly, strong) NSString *repoPath;
+
+@property (nonatomic, copy, nullable) void (^backgroundCompletionHandler)(void);
 
 /**
  * @return The version of the Textile node running locally

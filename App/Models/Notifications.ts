@@ -20,6 +20,10 @@ export type AccountPeerJoinedNotification = BaseNotification & {
   type: Notification.Type.ACCOUNT_PEER_JOINED
 }
 
+export type AccountPeerLeftNotification = BaseNotification & {
+  type: Notification.Type.ACCOUNT_PEER_LEFT
+}
+
 export type PeerJoinedNotification = BaseNotification & {
   threadId: string
   threadName: string
@@ -63,6 +67,7 @@ export type LikeAddedNotification = BaseNotification & {
 export type Notification =
   | InviteReceivedNotification
   | AccountPeerJoinedNotification
+  | AccountPeerLeftNotification
   | PeerJoinedNotification
   | PeerLeftNotification
   | MessageAddedNotification

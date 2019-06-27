@@ -57,7 +57,6 @@ const BUTTON: TextStyle = {
 
 export interface IProcessingWalletImageProps {
   imageUri: string
-  progress: number
   message?: string
   errorMessage?: string
   retry?: () => void
@@ -70,7 +69,6 @@ export interface IProcessingWalletImageProps {
 const ProcessingWalletImage = (props: IProcessingWalletImageProps) => {
   const {
     imageUri,
-    progress,
     message,
     errorMessage,
     cancel,
@@ -102,7 +100,6 @@ const ProcessingWalletImage = (props: IProcessingWalletImageProps) => {
     content = (
       <View style={STACK}>
         <Text style={STATUS} />
-        <ProgressBar progress={progress} />
         <Text style={STATUS}>{message}</Text>
         {cancel && (
           <TouchableOpacity onPress={cancel}>

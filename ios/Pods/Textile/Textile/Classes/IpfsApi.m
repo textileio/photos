@@ -7,6 +7,7 @@
 //
 
 #import "IpfsApi.h"
+#import "DataCallback.h"
 
 @implementation IpfsApi
 
@@ -14,8 +15,16 @@
   return [self.node peerId:error];
 }
 
-- (NSData *)dataAtPath:(NSString *)path error:(NSError * _Nullable __autoreleasing *)error {
-  return [self.node dataAtPath:path error:error];
+- (void)dataAtPath:(NSString *)path completion:(void (^)(NSData * _Nullable, NSString * _Nullable, NSError * _Nonnull))completion {
+  DataCallback *cb = [[DataCallback alloc] initWithCompletion:^(NSData *data, NSString *media, NSError *error) {
+    if (error) {
+      completion(nil, nil, error);
+    } else {
+      NSError *error;
+      completion(data, media, error);
+    }
+  }];
+  [self.node dataAtPath:path cb:cb];
 }
 
 @end

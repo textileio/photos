@@ -226,6 +226,7 @@ class Group extends React.PureComponent<Props, State> {
           user,
           caption,
           date,
+          data,
           target,
           files,
           likes,
@@ -268,7 +269,7 @@ class Group extends React.PureComponent<Props, State> {
               undefined,
               momentSpec
             )}
-            photoId={target}
+            photoId={data}
             fileIndex={fileIndex}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
