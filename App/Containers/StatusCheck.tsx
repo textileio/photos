@@ -37,7 +37,12 @@ class StatusCheck extends React.Component<Props, {}> {
     if (this.props.nodeError) {
       return <FatalErrorView message={this.props.nodeError} />
     } else {
-      return <Loading color={color.brandBlue} text={"Waiting for node to start..."} />
+      return (
+        <Loading
+          color={color.brandBlue}
+          text={'Waiting for node to start...'}
+        />
+      )
     }
   }
 }

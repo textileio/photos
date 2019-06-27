@@ -1,5 +1,11 @@
 import React from 'react'
-import { View, Text, ActivityIndicator, ActivityIndicatorProps, TextStyle } from 'react-native'
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  ActivityIndicatorProps,
+  TextStyle
+} from 'react-native'
 
 import { color, textStyle, spacing } from '../styles'
 
@@ -30,9 +36,7 @@ const loading = (props: Props) => {
       }}
     >
       <ActivityIndicator {...indicatorProps} />
-      {props.text &&
-        <Text style={TEXT}>{props.text}</Text>
-      }
+      {props.text && <Text style={TEXT}>{props.text}</Text>}
     </View>
   )
 }

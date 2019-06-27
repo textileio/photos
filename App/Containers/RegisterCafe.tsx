@@ -44,7 +44,7 @@ const Buttons: ViewStyle = {
 
 interface StateProps {
   alreadyRegistered: ReadonlyArray<string>
-  registeringCafes: RegisterCafes,
+  registeringCafes: RegisterCafes
   nodeOnline: boolean
 }
 
@@ -118,17 +118,20 @@ class RegisterCafe extends Component<Props, State> {
     return (
       <SafeAreaView style={Container}>
         <View style={ListContainer}>
-          {!this.props.nodeOnline &&
-            <Loading color={color.brandBlue} text={"Waiting for node to be online..."} />
-          }
-          {this.props.nodeOnline &&
+          {!this.props.nodeOnline && (
+            <Loading
+              color={color.brandBlue}
+              text={'Waiting for node to be online...'}
+            />
+          )}
+          {this.props.nodeOnline && (
             <CafesList
               disabled={registering}
               selected={peerId}
               onSelect={this.onSelect}
               alreadyRegistered={this.props.alreadyRegistered}
             />
-          }
+          )}
         </View>
         <View style={Buttons}>
           {error && <Text>{error}</Text>}

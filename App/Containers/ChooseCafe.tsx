@@ -44,7 +44,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  registeringCafes: RegisterCafes,
+  registeringCafes: RegisterCafes
   nodeOnline: boolean
 }
 
@@ -106,10 +106,13 @@ class ChooseCafe extends Component<Props, State> {
         <Text style={SUBTITLE}>
           Cafes are trustless, always-on nodes that assist the peer network.
         </Text>
-        {!this.props.nodeOnline &&
-          <Loading color={color.brandBlue} text={"Waiting for node to be online..."} />
-        }
-        {this.props.nodeOnline &&
+        {!this.props.nodeOnline && (
+          <Loading
+            color={color.brandBlue}
+            text={'Waiting for node to be online...'}
+          />
+        )}
+        {this.props.nodeOnline && (
           <CafesList
             disabled={registering}
             selected={peerId}
@@ -118,7 +121,7 @@ class ChooseCafe extends Component<Props, State> {
               <CafeListHeader onPress={this.togglePeerIdModal} />
             }
           />
-        }
+        )}
         {error && <Text>{error}</Text>}
         <Button
           text="Continue"
