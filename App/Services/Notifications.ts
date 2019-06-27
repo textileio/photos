@@ -55,6 +55,14 @@ export function toTypedNotification(
         avatar: user.avatar,
         type
       }
+    case SdkNotification.Type.ACCOUNT_PEER_LEFT:
+      return {
+        ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
+        type
+      }
     case SdkNotification.Type.PEER_JOINED:
       return {
         ...baseNotification,
@@ -138,6 +146,8 @@ export function notificationTypeToString(type: SdkNotification.Type): string {
   switch (type) {
     case SdkNotification.Type.ACCOUNT_PEER_JOINED:
       return 'ACCOUNT_PEER_JOINED'
+    case SdkNotification.Type.ACCOUNT_PEER_LEFT:
+      return 'ACCOUNT_PEER_LEFT'
     case SdkNotification.Type.COMMENT_ADDED:
       return 'COMMENT_ADDED'
     case SdkNotification.Type.FILES_ADDED:
@@ -171,8 +181,14 @@ export function toPayload(notification: Notification): INotificationsPayload {
       return { title, message, feed, typeString }
     }
     case SdkNotification.Type.ACCOUNT_PEER_JOINED: {
-      const title = 'New Contact'
+      const title = 'New Account Peer'
       const message = 'You connected to a new account contact'
+      const feed = message
+      return { title, message, feed, typeString }
+    }
+    case SdkNotification.Type.ACCOUNT_PEER_LEFT: {
+      const title = 'Account Peer Left'
+      const message = 'One of your account peers left'
       const feed = message
       return { title, message, feed, typeString }
     }

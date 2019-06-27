@@ -16,6 +16,7 @@ import { StartupAction } from './StartupRedux'
 import { TextileEventsAction } from './TextileEventsRedux'
 import { GroupAction } from '../features/group'
 import { PhotosAction } from '../features/photos'
+import { FileSyncAction } from '../features/file-sync'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -33,3 +34,4 @@ export type RootAction =
   | TextileEventsAction
   | GroupAction
   | PhotosAction
+  | FileSyncAction

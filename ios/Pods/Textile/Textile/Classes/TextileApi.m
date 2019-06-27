@@ -9,6 +9,9 @@
 #import "TextileApi.h"
 #import "Messenger.h"
 #import "LifecycleManager.h"
+#import "RequestsHandler.h"
+
+NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 
 @interface Textile()
 
@@ -37,6 +40,7 @@
 @property (nonatomic, strong) NSString *repoPath;
 
 @property (nonatomic, strong) LifecycleManager *lifecycleManager;
+@property (nonatomic, strong) RequestsHandler *requestsHandler;
 
 - (NSString *)newWallet:(NSInteger)wordCount error:(NSError **)error;
 - (MobileWalletAccount *)walletAccountAt:(NSString *)phrase index:(NSInteger)index password:(NSString *)password error:(NSError **)error;
@@ -57,6 +61,7 @@
   NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   NSString *repoPath = [documents stringByAppendingPathComponent:@"textile-go"];
   Textile.instance.repoPath = repoPath;
+  Textile.instance.requestsHandler = [[RequestsHandler alloc] init];
   Textile.instance.messenger = [[Messenger alloc] init];
   [Textile.instance newTextile:repoPath debug:debug error:error];
   if (*error && (*error).code == 1) {
@@ -134,6 +139,7 @@
   MobileRunConfig *config = [[MobileRunConfig alloc] init];
   config.repoPath = repoPath;
   config.debug = debug;
+  config.cafeOutboxHandler = self.requestsHandler;
   self.node = MobileNewTextile(config, self.messenger, error);
 }
 
@@ -213,6 +219,8 @@
 
   self.lifecycleManager = [[LifecycleManager alloc] initWithNode:self.node];
   self.lifecycleManager.delegate = self.delegate;
+
+  self.requestsHandler.node = self.node;
 }
 
 @end

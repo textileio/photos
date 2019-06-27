@@ -5,7 +5,8 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNPushNotification from 'react-native-push-notification'
 import Textile, {
   EventSubscription,
-  FeedItemType
+  FeedItemType,
+  ICafeSyncGroupStatus
 } from '@textile/react-native-sdk'
 
 import { toTypedNotification } from '../Services/Notifications'
@@ -27,6 +28,7 @@ import PhotoViewingActions, {
 import { contactsActions, ContactsAction } from '../features/contacts'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'
+import { fileSyncActions, FileSyncAction } from '../features/file-sync'
 
 function displayNotification(message: string, title?: string) {
   RNPushNotification.localNotification({
@@ -46,6 +48,7 @@ function nodeEvents() {
     | DeviceLogsAction
     | NotificationsAction
     | TextileEventsAction
+    | FileSyncAction
   >(emitter => {
     const subscriptions: EventSubscription[] = []
     subscriptions.push(
@@ -153,6 +156,21 @@ function nodeEvents() {
     subscriptions.push(
       Textile.events.addCanceledPendingNodeStopListener(() => {
         emitter(TextileEventsActions.stopNodeAfterDelayCancelled())
+      })
+    )
+    subscriptions.push(
+      Textile.events.addSyncUpdateListener(status => {
+        emitter(fileSyncActions.syncUpdate(status))
+      })
+    )
+    subscriptions.push(
+      Textile.events.addSyncCompleteListener(status => {
+        emitter(fileSyncActions.syncComplete(status))
+      })
+    )
+    subscriptions.push(
+      Textile.events.addSyncFailedListener(status => {
+        emitter(fileSyncActions.syncFailed(status))
       })
     )
     return () => {

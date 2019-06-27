@@ -25,10 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Get raw data stored at an IPFS path
  * @param path The IPFS path for the data you want to retrieve
- * @param error A reference to an error pointer that will be set in the case of an error
- * @return The raw data
+ * @param completion A block that will get called with the results of the query
  */
-- (NSData *)dataAtPath:(NSString *)path error:(NSError **)error;
+- (void)dataAtPath:(NSString *)path completion:(void (^)(NSData * _Nullable, NSString * _Nullable, NSError * _Nonnull))completion;
 
 @end
 

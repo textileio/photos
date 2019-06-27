@@ -34,7 +34,7 @@ const GroupCard = (props: ScreenProps) => {
         <View style={styles.imageContainer}>
           <View style={styles.imageStretch}>
             <TextileImage
-              target={thumb.target}
+              target={thumb.data}
               index={0}
               forMinWidth={ICON_WIDTH}
               resizeMode={'cover'}

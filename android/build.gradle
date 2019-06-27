@@ -3,7 +3,7 @@
 buildscript {
     ext {
         buildToolsVersion = "28.0.2"
-        minSdkVersion = 16
+        minSdkVersion = 24
         compileSdkVersion = 28
         targetSdkVersion = 27
         supportLibVersion = "28.0.0"
@@ -36,6 +36,9 @@ allprojects {
         }
         maven {
             url "$rootDir/../node_modules/react-native-background-fetch/android/libs"
+        }
+        maven {
+            url 'https://jitpack.io'
         }
     }
 }

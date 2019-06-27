@@ -16,7 +16,6 @@
 #import <stdatomic.h>
 
 #import "Mobile.pbobjc.h"
-#import "View.pbobjc.h"
 #import "Query.pbobjc.h"
 #import "Message.pbobjc.h"
 // @@protoc_insertion_point(imports)
@@ -53,17 +52,21 @@ GPBEnumDescriptor *MobileEventType_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "NodeStart\000NodeOnline\000NodeStop\000WalletUpda"
-        "te\000ThreadUpdate\000Notification\000QueryRespon"
-        "se\000";
+        "NodeStart\000NodeOnline\000NodeStop\000AccountUpd"
+        "ate\000ThreadUpdate\000Notification\000QueryRespo"
+        "nse\000CafeSyncGroupUpdate\000CafeSyncGroupCom"
+        "plete\000CafeSyncGroupFailed\000";
     static const int32_t values[] = {
         MobileEventType_NodeStart,
         MobileEventType_NodeOnline,
         MobileEventType_NodeStop,
-        MobileEventType_WalletUpdate,
+        MobileEventType_AccountUpdate,
         MobileEventType_ThreadUpdate,
         MobileEventType_Notification,
         MobileEventType_QueryResponse,
+        MobileEventType_CafeSyncGroupUpdate,
+        MobileEventType_CafeSyncGroupComplete,
+        MobileEventType_CafeSyncGroupFailed,
     };
     GPBEnumDescriptor *worker =
         [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(MobileEventType)
@@ -84,10 +87,13 @@ BOOL MobileEventType_IsValidValue(int32_t value__) {
     case MobileEventType_NodeStart:
     case MobileEventType_NodeOnline:
     case MobileEventType_NodeStop:
-    case MobileEventType_WalletUpdate:
+    case MobileEventType_AccountUpdate:
     case MobileEventType_ThreadUpdate:
     case MobileEventType_Notification:
     case MobileEventType_QueryResponse:
+    case MobileEventType_CafeSyncGroupUpdate:
+    case MobileEventType_CafeSyncGroupComplete:
+    case MobileEventType_CafeSyncGroupFailed:
       return YES;
     default:
       return NO;
@@ -139,62 +145,6 @@ typedef struct MobileWalletAccount__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(MobileWalletAccount__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-    #if defined(DEBUG) && DEBUG
-      NSAssert(descriptor == nil, @"Startup recursed!");
-    #endif  // DEBUG
-    descriptor = localDescriptor;
-  }
-  return descriptor;
-}
-
-@end
-
-#pragma mark - MobilePreparedFiles
-
-@implementation MobilePreparedFiles
-
-@dynamic hasDir, dir;
-@dynamic pin, pin_Count;
-
-typedef struct MobilePreparedFiles__storage_ {
-  uint32_t _has_storage_[1];
-  Directory *dir;
-  NSMutableDictionary *pin;
-} MobilePreparedFiles__storage_;
-
-// This method is threadsafe because it is initially called
-// in +initialize for each subclass.
-+ (GPBDescriptor *)descriptor {
-  static GPBDescriptor *descriptor = nil;
-  if (!descriptor) {
-    static GPBMessageFieldDescription fields[] = {
-      {
-        .name = "dir",
-        .dataTypeSpecific.className = GPBStringifySymbol(Directory),
-        .number = MobilePreparedFiles_FieldNumber_Dir,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(MobilePreparedFiles__storage_, dir),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeMessage,
-      },
-      {
-        .name = "pin",
-        .dataTypeSpecific.className = NULL,
-        .number = MobilePreparedFiles_FieldNumber_Pin,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(MobilePreparedFiles__storage_, pin),
-        .flags = GPBFieldMapKeyString,
-        .dataType = GPBDataTypeString,
-      },
-    };
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[MobilePreparedFiles class]
-                                     rootClass:[MobileRoot class]
-                                          file:MobileRoot_FileDescriptor()
-                                        fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(MobilePreparedFiles__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");

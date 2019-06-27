@@ -18,7 +18,6 @@ import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
-import TriggersActions from '../Redux/TriggersRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -37,12 +36,9 @@ import {
 
 import {
   handleSharePhotoRequest,
-  handleImageUploadComplete,
   retryImageShare,
   cancelImageShare,
-  retryWithTokenRefresh,
-  handleImageProcessingError,
-  startMonitoringExistingUploads
+  handleImageProcessingError
 } from './ImageSharingTriggers'
 
 import { inviteAfterOnboard, routeDeepLink } from './DeepLinkSagas'
@@ -117,8 +113,6 @@ export default function*() {
     call(startSagas),
 
     call(monitorNewThreadActions),
-
-    call(startMonitoringExistingUploads),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
@@ -195,13 +189,8 @@ export default function*() {
     takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
-    takeEvery(
-      getType(groupActions.addPhoto.imageUploadComplete),
-      handleImageUploadComplete
-    ),
     takeEvery(getType(groupActions.addPhoto.retry), retryImageShare),
     takeEvery(getType(groupActions.addPhoto.cancelRequest), cancelImageShare),
-    takeEvery(getType(groupActions.addPhoto.error), retryWithTokenRefresh),
 
     // Notifications
     takeEvery(

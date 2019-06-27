@@ -169,6 +169,10 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -182,7 +186,6 @@ dependencies {
     implementation project(':react-native-contacts')
     implementation project(':react-native-background-fetch')
     implementation project(':react-native-push-notification')
-    implementation project(':react-native-background-upload')
     implementation project(':react-native-fs')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-config')
