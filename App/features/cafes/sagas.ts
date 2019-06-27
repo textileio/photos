@@ -24,16 +24,16 @@ function* getRecommendedCafes() {
 function* registerCafe(
   action: ActionType<typeof actions.registerCafe.request>
 ) {
-  const { url, token, success } = action.payload
+  const { peerId, token, success } = action.payload
   try {
-    yield call(Textile.cafes.register, url, token)
-    yield put(actions.registerCafe.success(url))
+    yield call(Textile.cafes.register, peerId, token)
+    yield put(actions.registerCafe.success(peerId))
     yield put(refreshCafeSessionsRequest())
     if (success) {
       yield call(success)
     }
   } catch (error) {
-    yield put(actions.registerCafe.failure({ url, error }))
+    yield put(actions.registerCafe.failure({ peerId, error }))
   }
 }
 

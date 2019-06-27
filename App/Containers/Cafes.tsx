@@ -10,6 +10,10 @@ import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Separator from '../Components/Separator'
 import Cafe from '../Components/Cafe'
 
+const CONTAINER: ViewStyle = {
+  flex: 1
+}
+
 const CafesList: ViewStyle = {
   flex: 1
 }
@@ -43,7 +47,7 @@ class Cafes extends Component<Props> {
 
   render() {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={CONTAINER}>
         <FlatList
           style={CafesList}
           data={this.props.sessions}

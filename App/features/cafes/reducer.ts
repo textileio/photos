@@ -6,7 +6,7 @@ import { DiscoveredCafes } from '../../Services/textile-lb-api'
 import * as actions from './actions'
 
 export interface RegisterCafes {
-  readonly [url: string]: {
+  readonly [peerId: string]: {
     readonly error?: string
   }
 }
@@ -59,24 +59,24 @@ export default combineReducers<CafesState, CafesAction>({
   registerCafe: (state = {}, action) => {
     switch (action.type) {
       case getType(actions.registerCafe.request): {
-        const { url } = action.payload
+        const { peerId } = action.payload
         return {
           ...state,
-          [url]: {}
+          [peerId]: {}
         }
       }
       case getType(actions.registerCafe.success): {
-        const url = action.payload
-        const { [url]: registered, ...newState } = state
+        const peerId = action.payload
+        const { [peerId]: registered, ...newState } = state
         return newState
       }
       case getType(actions.registerCafe.failure): {
-        const { url, error } = action.payload
+        const { peerId, error } = action.payload
         const errorMessage =
           (error.message as string) || (error as string) || 'unknown'
         return {
           ...state,
-          [url]: {
+          [peerId]: {
             error: errorMessage
           }
         }

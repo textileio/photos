@@ -57,7 +57,7 @@ type Props = OwnProps
 
 export default class CafeItem extends Component<Props> {
   _onPress = () => {
-    this.props.onPressItem(this.props.url, this.props.token)
+    this.props.onPressItem(this.props.peerId, this.props.token)
   }
 
   render() {

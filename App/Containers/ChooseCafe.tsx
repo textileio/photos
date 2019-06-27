@@ -50,14 +50,14 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  register: (url: string, token: string) => void
+  register: (peerId: string, token: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
 
 interface State {
   selected?: {
-    url: string
+    peerId: string
     token: string
   }
   peerIdModalIsVisible: boolean
@@ -71,17 +71,17 @@ class ChooseCafe extends Component<Props, State> {
     }
   }
 
-  onSelect = (url: string, token: string) => {
+  onSelect = (peerId: string, token: string) => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected
-        ? prevState.selected.url === url
+        ? prevState.selected.peerId === peerId
         : false
       return {
         selected: alreadySelected
           ? undefined
           : {
-              url,
+              peerId,
               token
             }
       }
@@ -89,15 +89,15 @@ class ChooseCafe extends Component<Props, State> {
   }
 
   render() {
-    const { url } = this.state.selected
+    const { peerId } = this.state.selected
       ? this.state.selected
-      : { url: undefined }
-    const registrationStarted = url
-      ? Object.keys(this.props.registeringCafes).indexOf(url) > -1
+      : { peerId: undefined }
+    const registrationStarted = peerId
+      ? Object.keys(this.props.registeringCafes).indexOf(peerId) > -1
       : false
     const error =
-      url && registrationStarted
-        ? this.props.registeringCafes[url].error
+      peerId && registrationStarted
+        ? this.props.registeringCafes[peerId].error
         : undefined
     const registering = registrationStarted && !error
     const buttonDisabled = !this.state.selected || registering
@@ -110,7 +110,7 @@ class ChooseCafe extends Component<Props, State> {
         </Text>
         <CafesList
           disabled={registering}
-          selected={url}
+          selected={peerId}
           onSelect={this.onSelect}
           ListHeaderComponent={
             <CafeListHeader onPress={this.togglePeerIdModal} />
@@ -150,20 +150,20 @@ class ChooseCafe extends Component<Props, State> {
         ]
       )
     } else {
-      const { url, token } = this.state.selected
-      this.props.register(url, token)
+      const { peerId, token } = this.state.selected
+      this.props.register(peerId, token)
     }
   }
 
-  registerByPeerId = (url: string, token: string) => {
+  registerByPeerId = (peerId: string, token: string) => {
     this.setState({
       selected: {
-        url,
+        peerId,
         token
       },
       peerIdModalIsVisible: false
     })
-    this.props.register(url, token)
+    this.props.register(peerId, token)
   }
 
   togglePeerIdModal = () => {
@@ -186,10 +186,10 @@ const mapDispatchToProps = (
   ownProps: OwnProps
 ): DispatchProps => {
   return {
-    register: (url: string, token: string) =>
+    register: (peerId: string, token: string) =>
       dispatch(
         cafesActions.registerCafe.request({
-          url,
+          peerId,
           token,
           success: ownProps.onSuccess
         })
