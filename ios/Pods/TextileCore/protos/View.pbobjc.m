@@ -1009,6 +1009,9 @@ typedef struct FeedItemList__storage_ {
 
 #pragma mark - Merge
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 @implementation Merge
 
 @dynamic block;
@@ -1084,6 +1087,8 @@ typedef struct Merge__storage_ {
 }
 
 @end
+
+#pragma clang diagnostic pop
 
 #pragma mark - Ignore
 
@@ -1682,6 +1687,7 @@ typedef struct File__storage_ {
 
 @dynamic block;
 @dynamic target;
+@dynamic data_p;
 @dynamic hasDate, date;
 @dynamic hasUser, user;
 @dynamic caption;
@@ -1701,6 +1707,7 @@ typedef struct Files__storage_ {
   NSMutableArray *commentsArray;
   NSMutableArray *likesArray;
   NSMutableArray *threadsArray;
+  NSString *data_p;
 } Files__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1731,7 +1738,7 @@ typedef struct Files__storage_ {
         .name = "date",
         .dataTypeSpecific.className = GPBStringifySymbol(GPBTimestamp),
         .number = Files_FieldNumber_Date,
-        .hasIndex = 2,
+        .hasIndex = 3,
         .offset = (uint32_t)offsetof(Files__storage_, date),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -1740,7 +1747,7 @@ typedef struct Files__storage_ {
         .name = "user",
         .dataTypeSpecific.className = GPBStringifySymbol(User),
         .number = Files_FieldNumber_User,
-        .hasIndex = 3,
+        .hasIndex = 4,
         .offset = (uint32_t)offsetof(Files__storage_, user),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
@@ -1749,7 +1756,7 @@ typedef struct Files__storage_ {
         .name = "caption",
         .dataTypeSpecific.className = NULL,
         .number = Files_FieldNumber_Caption,
-        .hasIndex = 4,
+        .hasIndex = 5,
         .offset = (uint32_t)offsetof(Files__storage_, caption),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -1788,6 +1795,15 @@ typedef struct Files__storage_ {
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(Files__storage_, threadsArray),
         .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "data_p",
+        .dataTypeSpecific.className = NULL,
+        .number = Files_FieldNumber_Data_p,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(Files__storage_, data_p),
+        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
     };
@@ -1855,6 +1871,9 @@ typedef struct FilesList__storage_ {
 @end
 
 #pragma mark - Comment
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
 @implementation Comment
 
@@ -1943,7 +1962,12 @@ typedef struct Comment__storage_ {
 
 @end
 
+#pragma clang diagnostic pop
+
 #pragma mark - CommentList
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
 @implementation CommentList
 
@@ -1987,6 +2011,8 @@ typedef struct CommentList__storage_ {
 }
 
 @end
+
+#pragma clang diagnostic pop
 
 #pragma mark - Like
 
@@ -2111,20 +2137,20 @@ typedef struct LikeList__storage_ {
 
 @end
 
-#pragma mark - WalletUpdate
+#pragma mark - AccountUpdate
 
-@implementation WalletUpdate
+@implementation AccountUpdate
 
 @dynamic id_p;
 @dynamic key;
 @dynamic type;
 
-typedef struct WalletUpdate__storage_ {
+typedef struct AccountUpdate__storage_ {
   uint32_t _has_storage_[1];
-  WalletUpdate_Type type;
+  AccountUpdate_Type type;
   NSString *id_p;
   NSString *key;
-} WalletUpdate__storage_;
+} AccountUpdate__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -2135,38 +2161,38 @@ typedef struct WalletUpdate__storage_ {
       {
         .name = "id_p",
         .dataTypeSpecific.className = NULL,
-        .number = WalletUpdate_FieldNumber_Id_p,
+        .number = AccountUpdate_FieldNumber_Id_p,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(WalletUpdate__storage_, id_p),
+        .offset = (uint32_t)offsetof(AccountUpdate__storage_, id_p),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
         .name = "key",
         .dataTypeSpecific.className = NULL,
-        .number = WalletUpdate_FieldNumber_Key,
+        .number = AccountUpdate_FieldNumber_Key,
         .hasIndex = 1,
-        .offset = (uint32_t)offsetof(WalletUpdate__storage_, key),
+        .offset = (uint32_t)offsetof(AccountUpdate__storage_, key),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
         .name = "type",
-        .dataTypeSpecific.enumDescFunc = WalletUpdate_Type_EnumDescriptor,
-        .number = WalletUpdate_FieldNumber_Type,
+        .dataTypeSpecific.enumDescFunc = AccountUpdate_Type_EnumDescriptor,
+        .number = AccountUpdate_FieldNumber_Type,
         .hasIndex = 2,
-        .offset = (uint32_t)offsetof(WalletUpdate__storage_, type),
+        .offset = (uint32_t)offsetof(AccountUpdate__storage_, type),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldHasEnumDescriptor),
         .dataType = GPBDataTypeEnum,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[WalletUpdate class]
+        [GPBDescriptor allocDescriptorForClass:[AccountUpdate class]
                                      rootClass:[ViewRoot class]
                                           file:ViewRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(WalletUpdate__storage_)
+                                   storageSize:sizeof(AccountUpdate__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
@@ -2178,38 +2204,38 @@ typedef struct WalletUpdate__storage_ {
 
 @end
 
-int32_t WalletUpdate_Type_RawValue(WalletUpdate *message) {
-  GPBDescriptor *descriptor = [WalletUpdate descriptor];
-  GPBFieldDescriptor *field = [descriptor fieldWithNumber:WalletUpdate_FieldNumber_Type];
+int32_t AccountUpdate_Type_RawValue(AccountUpdate *message) {
+  GPBDescriptor *descriptor = [AccountUpdate descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:AccountUpdate_FieldNumber_Type];
   return GPBGetMessageInt32Field(message, field);
 }
 
-void SetWalletUpdate_Type_RawValue(WalletUpdate *message, int32_t value) {
-  GPBDescriptor *descriptor = [WalletUpdate descriptor];
-  GPBFieldDescriptor *field = [descriptor fieldWithNumber:WalletUpdate_FieldNumber_Type];
+void SetAccountUpdate_Type_RawValue(AccountUpdate *message, int32_t value) {
+  GPBDescriptor *descriptor = [AccountUpdate descriptor];
+  GPBFieldDescriptor *field = [descriptor fieldWithNumber:AccountUpdate_FieldNumber_Type];
   GPBSetInt32IvarWithFieldInternal(message, field, value, descriptor.file.syntax);
 }
 
-#pragma mark - Enum WalletUpdate_Type
+#pragma mark - Enum AccountUpdate_Type
 
-GPBEnumDescriptor *WalletUpdate_Type_EnumDescriptor(void) {
+GPBEnumDescriptor *AccountUpdate_Type_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
         "ThreadAdded\000ThreadRemoved\000AccountPeerAdd"
         "ed\000AccountPeerRemoved\000";
     static const int32_t values[] = {
-        WalletUpdate_Type_ThreadAdded,
-        WalletUpdate_Type_ThreadRemoved,
-        WalletUpdate_Type_AccountPeerAdded,
-        WalletUpdate_Type_AccountPeerRemoved,
+        AccountUpdate_Type_ThreadAdded,
+        AccountUpdate_Type_ThreadRemoved,
+        AccountUpdate_Type_AccountPeerAdded,
+        AccountUpdate_Type_AccountPeerRemoved,
     };
     GPBEnumDescriptor *worker =
-        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(WalletUpdate_Type)
+        [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(AccountUpdate_Type)
                                        valueNames:valueNames
                                            values:values
                                             count:(uint32_t)(sizeof(values) / sizeof(int32_t))
-                                     enumVerifier:WalletUpdate_Type_IsValidValue];
+                                     enumVerifier:AccountUpdate_Type_IsValidValue];
     GPBEnumDescriptor *expected = nil;
     if (!atomic_compare_exchange_strong(&descriptor, &expected, worker)) {
       [worker release];
@@ -2218,12 +2244,12 @@ GPBEnumDescriptor *WalletUpdate_Type_EnumDescriptor(void) {
   return descriptor;
 }
 
-BOOL WalletUpdate_Type_IsValidValue(int32_t value__) {
+BOOL AccountUpdate_Type_IsValidValue(int32_t value__) {
   switch (value__) {
-    case WalletUpdate_Type_ThreadAdded:
-    case WalletUpdate_Type_ThreadRemoved:
-    case WalletUpdate_Type_AccountPeerAdded:
-    case WalletUpdate_Type_AccountPeerRemoved:
+    case AccountUpdate_Type_ThreadAdded:
+    case AccountUpdate_Type_ThreadRemoved:
+    case AccountUpdate_Type_AccountPeerAdded:
+    case AccountUpdate_Type_AccountPeerRemoved:
       return YES;
     default:
       return NO;
@@ -2418,6 +2444,51 @@ BOOL LogLevel_Level_IsValidValue(int32_t value__) {
       return NO;
   }
 }
+
+#pragma mark - Strings
+
+@implementation Strings
+
+@dynamic valuesArray, valuesArray_Count;
+
+typedef struct Strings__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *valuesArray;
+} Strings__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "valuesArray",
+        .dataTypeSpecific.className = NULL,
+        .number = Strings_FieldNumber_ValuesArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(Strings__storage_, valuesArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[Strings class]
+                                     rootClass:[ViewRoot class]
+                                          file:ViewRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(Strings__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
 
 
 #pragma clang diagnostic pop

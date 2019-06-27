@@ -22,7 +22,7 @@ const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
           <View style={styles.itemBackgroundContainer}>
             {photo && (
               <TextileImage
-                target={photo.target}
+                target={photo.data}
                 index={photo.files[0].index}
                 forMinWidth={70}
                 style={{ width: 70, height: 50 }}

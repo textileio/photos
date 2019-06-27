@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction } from 'typesafe-actions'
 import { LocalPhotoResult } from '@textile/react-native-camera-roll'
-import { IMobilePreparedFiles, IFiles } from '@textile/react-native-sdk'
+import { IFiles } from '@textile/react-native-sdk'
 
 export const queryCameraRoll = createAsyncAction(
   'photos/QUERY_CAMERA_ROLL_REQUEST',
@@ -21,11 +21,6 @@ export const photoProcessingBegan = createAction(
     return (id: string) => resolve({ id })
   }
 )
-
-export const photoPrepared = createAction('photos/PHOTO_PREPARED', resolve => {
-  return (id: string, preparedFiles: IMobilePreparedFiles) =>
-    resolve({ id, preparedFiles })
-})
 
 export const photoAdded = createAction('photos/PHOTO_ADDED', resolve => {
   return (id: string) => resolve({ id })

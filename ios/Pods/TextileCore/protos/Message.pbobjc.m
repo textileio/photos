@@ -50,13 +50,13 @@ static GPBFileDescriptor *MessageRoot_FileDescriptor(void) {
 
 @dynamic type;
 @dynamic hasPayload, payload;
-@dynamic requestId;
-@dynamic isResponse;
+@dynamic request;
+@dynamic response;
 
 typedef struct Message__storage_ {
   uint32_t _has_storage_[1];
   Message_Type type;
-  int32_t requestId;
+  int32_t request;
   GPBAny *payload;
 } Message__storage_;
 
@@ -85,21 +85,21 @@ typedef struct Message__storage_ {
         .dataType = GPBDataTypeMessage,
       },
       {
-        .name = "requestId",
+        .name = "request",
         .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_RequestId,
+        .number = Message_FieldNumber_Request,
         .hasIndex = 2,
-        .offset = (uint32_t)offsetof(Message__storage_, requestId),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .offset = (uint32_t)offsetof(Message__storage_, request),
+        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
       {
-        .name = "isResponse",
+        .name = "response",
         .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_IsResponse,
+        .number = Message_FieldNumber_Response,
         .hasIndex = 3,
         .offset = 4,  // Stored in _has_storage_ to save space.
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
     };
@@ -111,11 +111,6 @@ typedef struct Message__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(Message__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    static const char *extraTextFormatInfo =
-        "\002\003\t\000\004\n\000";
-    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
-#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG

@@ -46,6 +46,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)avatar:(NSError **)error;
 
 /**
+ * Set the user's avatar image
+ * @param item The path to an image or existing hash to set as the avatar
+ * @param completion A block that will get called with the results of the setAvatar operation
+ */
+- (void)setAvatar:(NSString *)item completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion;
+
+/**
  * Get the Textile account thread
  * @param error A reference to an error pointer that will be set in the case of an error
  * @return The account thread
