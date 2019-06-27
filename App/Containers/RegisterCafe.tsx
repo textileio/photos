@@ -108,7 +108,7 @@ class RegisterCafe extends Component<Props, State> {
       ? Object.keys(this.props.registeringCafes).indexOf(peerId) > -1
       : false
     const error =
-    peerId && registrationStarted
+      peerId && registrationStarted
         ? this.props.registeringCafes[peerId].error
         : undefined
     const registering = registrationStarted && !error

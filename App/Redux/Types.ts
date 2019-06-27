@@ -37,4 +37,3 @@ export type RootAction =
   | PhotosAction
   | CafesAction
   | FileSyncAction
-                                  

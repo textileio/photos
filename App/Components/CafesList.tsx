@@ -143,7 +143,9 @@ class CafesList extends Component<Props> {
       url={item.url}
       token={item.token}
       disabled={this.props.disabled !== undefined ? this.props.disabled : false}
-      selected={this.props.selected ? item.peerId === this.props.selected : false}
+      selected={
+        this.props.selected ? item.peerId === this.props.selected : false
+      }
       recommended={this.isRecommended(item.peerId)}
       onPressItem={this.props.onSelect}
     />
