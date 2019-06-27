@@ -128,7 +128,9 @@ export default class CafePeerIdModal extends Component<Props, State> {
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={peerIdInputIsBlank || tokenInputIsBlank}
-                onPress={() => this.props.complete(this.state.peerId, this.state.token)}
+                onPress={() =>
+                  this.props.complete(this.state.peerId, this.state.token)
+                }
               >
                 <Text
                   style={[
