@@ -20,6 +20,7 @@ import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
 import { photosReducer } from '../features/photos'
+import { cafesReducer } from '../features/cafes'
 import { fileSyncReducer } from '../features/file-sync'
 
 const migrations: MigrationManifest = {
@@ -379,6 +380,7 @@ const rootReducer = combineReducers({
   textile: textileEventsReducer,
   group: groupReducer,
   photos: photosReducer,
+  cafes: cafesReducer,
   fileSync: fileSyncReducer
 })
 

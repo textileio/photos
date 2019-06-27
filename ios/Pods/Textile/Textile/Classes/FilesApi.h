@@ -20,12 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Add raw data to a Textile thread
- * @param data Raw data
+ * @param base64 Raw data as base64 string
  * @param threadId The thread id the data will be added to
  * @param caption A caption to associate with the data
  * @param completion A block that will get called with the results of the add operation
  */
-- (void)addData:(NSData *)data threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion;
+- (void)addData:(NSString *)base64 threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion;
 
 /**
  * Add files to a Textile thread
