@@ -110,7 +110,7 @@ export default class CafePeerIdModal extends Component<Props, State> {
               <Input
                 style={InputStyle}
                 value={this.state.peerId}
-                label={peerIdInputIsBlank ? 'Enter Cafe URL...' : ''}
+                label={peerIdInputIsBlank ? 'Enter cafe peer id...' : ''}
                 onChangeText={this.handleNewPeerId}
               />
             </View>
@@ -128,7 +128,7 @@ export default class CafePeerIdModal extends Component<Props, State> {
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={peerIdInputIsBlank || tokenInputIsBlank}
-                onPress={() => this.props.complete}
+                onPress={() => this.props.complete(this.state.peerId, this.state.token)}
               >
                 <Text
                   style={[

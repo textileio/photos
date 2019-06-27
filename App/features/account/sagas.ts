@@ -8,7 +8,6 @@ import {
   takeEvery
 } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import Config from 'react-native-config'
 import Textile, {
   IContact,
   ICafeSession,
@@ -23,7 +22,6 @@ import TextileEventsActions, {
   TextileEventsSelectors
 } from '../../Redux/TextileEventsRedux'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
-import lbApi from '../../Services/textile-lb-api'
 import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
 
