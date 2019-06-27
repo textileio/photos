@@ -4,6 +4,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
 import { RootState, RootAction } from '../Redux/Types'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { RegisterCafes } from '../features/cafes/reducer'
 import { cafesActions } from '../features/cafes'
 
@@ -11,8 +12,9 @@ import CafesList from '../Components/CafesList'
 import Button from '../Components/LargeButton'
 import CafeListHeader from '../Components/CafeListHeader'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
+import Loading from '../Components/Loading'
 
-import { spacing, textStyle } from '../styles'
+import { spacing, textStyle, color } from '../styles'
 
 const Container: ViewStyle = {
   flexDirection: 'column',
@@ -43,6 +45,7 @@ interface OwnProps {
 
 interface StateProps {
   registeringCafes: RegisterCafes
+  nodeOnline: boolean
 }
 
 interface DispatchProps {
@@ -103,14 +106,22 @@ class ChooseCafe extends Component<Props, State> {
         <Text style={SUBTITLE}>
           Cafes are trustless, always-on nodes that assist the peer network.
         </Text>
-        <CafesList
-          disabled={registering}
-          selected={peerId}
-          onSelect={this.onSelect}
-          ListHeaderComponent={
-            <CafeListHeader onPress={this.togglePeerIdModal} />
-          }
-        />
+        {!this.props.nodeOnline && (
+          <Loading
+            color={color.brandBlue}
+            text={'Waiting for node to be online...'}
+          />
+        )}
+        {this.props.nodeOnline && (
+          <CafesList
+            disabled={registering}
+            selected={peerId}
+            onSelect={this.onSelect}
+            ListHeaderComponent={
+              <CafeListHeader onPress={this.togglePeerIdModal} />
+            }
+          />
+        )}
         {error && <Text>{error}</Text>}
         <Button
           text="Continue"
@@ -172,7 +183,8 @@ class ChooseCafe extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    registeringCafes: state.cafes.registerCafe
+    registeringCafes: state.cafes.registerCafe,
+    nodeOnline: TextileEventsSelectors.online(state)
   }
 }
 
