@@ -4,6 +4,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
 import { RootState, RootAction } from '../Redux/Types'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { RegisterCafes } from '../features/cafes/reducer'
 import { cafesActions } from '../features/cafes'
 
@@ -11,8 +12,9 @@ import CafesList from '../Components/CafesList'
 import Button from '../Components/LargeButton'
 import CafeListHeader from '../Components/CafeListHeader'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
+import Loading from '../Components/Loading'
 
-import { color, fontFamily, fontSize, spacing } from '../styles'
+import { spacing, textStyle, color } from '../styles'
 
 const Container: ViewStyle = {
   flexDirection: 'column',
@@ -21,20 +23,16 @@ const Container: ViewStyle = {
   flex: 1
 }
 
-const Header: TextStyle = {
-  fontFamily: fontFamily.bold,
-  textAlign: 'center',
-  fontSize: fontSize._36,
-  color: color.grey_0,
-  marginTop: spacing._024,
-  marginBottom: spacing._016
+const TITLE: TextStyle = {
+  ...textStyle.header_l,
+  marginBottom: spacing._008,
+  paddingHorizontal: spacing._016
 }
 
-const Subheader: TextStyle = {
-  fontFamily: fontFamily.regular,
-  fontSize: fontSize._20,
-  paddingHorizontal: spacing._024,
-  marginBottom: spacing._016
+const SUBTITLE: TextStyle = {
+  ...textStyle.body_l,
+  marginBottom: spacing._016,
+  paddingHorizontal: spacing._016
 }
 
 const SubmitButton: ViewStyle = {
@@ -47,6 +45,7 @@ interface OwnProps {
 
 interface StateProps {
   registeringCafes: RegisterCafes
+  nodeOnline: boolean
 }
 
 interface DispatchProps {
@@ -103,19 +102,26 @@ class ChooseCafe extends Component<Props, State> {
     const buttonDisabled = !this.state.selected || registering
     return (
       <SafeAreaView style={Container}>
-        <Text style={Header}>Choose a Cafe</Text>
-        <Text style={Subheader}>
+        <Text style={TITLE}>Choose a Cafe</Text>
+        <Text style={SUBTITLE}>
           Cafes are trustless, always-on nodes that assist the peer network.
-          (This step is optional.)
         </Text>
-        <CafesList
-          disabled={registering}
-          selected={peerId}
-          onSelect={this.onSelect}
-          ListHeaderComponent={
-            <CafeListHeader onPress={this.togglePeerIdModal} />
-          }
-        />
+        {!this.props.nodeOnline && (
+          <Loading
+            color={color.brandBlue}
+            text={'Waiting for node to be online...'}
+          />
+        )}
+        {this.props.nodeOnline && (
+          <CafesList
+            disabled={registering}
+            selected={peerId}
+            onSelect={this.onSelect}
+            ListHeaderComponent={
+              <CafeListHeader onPress={this.togglePeerIdModal} />
+            }
+          />
+        )}
         {error && <Text>{error}</Text>}
         <Button
           text="Continue"
@@ -177,7 +183,8 @@ class ChooseCafe extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    registeringCafes: state.cafes.registerCafe
+    registeringCafes: state.cafes.registerCafe,
+    nodeOnline: TextileEventsSelectors.online(state)
   }
 }
 

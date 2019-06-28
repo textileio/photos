@@ -12,14 +12,16 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import { RootState, RootAction } from '../Redux/Types'
 import { RegisterCafes } from '../features/cafes/reducer'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Icon from '@textile/react-native-icon'
 import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
+import Loading from '../Components/Loading'
 import { cafesActions } from '../features/cafes'
 
-import { size, spacing, fontFamily, color } from '../styles'
+import { size, spacing, color } from '../styles'
 
 const Container: ViewStyle = {
   flex: 1,
@@ -43,6 +45,7 @@ const Buttons: ViewStyle = {
 interface StateProps {
   alreadyRegistered: ReadonlyArray<string>
   registeringCafes: RegisterCafes
+  nodeOnline: boolean
 }
 
 interface DispatchProps {
@@ -115,12 +118,20 @@ class RegisterCafe extends Component<Props, State> {
     return (
       <SafeAreaView style={Container}>
         <View style={ListContainer}>
-          <CafesList
-            disabled={registering}
-            selected={peerId}
-            onSelect={this.onSelect}
-            alreadyRegistered={this.props.alreadyRegistered}
-          />
+          {!this.props.nodeOnline && (
+            <Loading
+              color={color.brandBlue}
+              text={'Waiting for node to be online...'}
+            />
+          )}
+          {this.props.nodeOnline && (
+            <CafesList
+              disabled={registering}
+              selected={peerId}
+              onSelect={this.onSelect}
+              alreadyRegistered={this.props.alreadyRegistered}
+            />
+          )}
         </View>
         <View style={Buttons}>
           {error && <Text>{error}</Text>}
@@ -193,7 +204,8 @@ const mapStateToProps = (state: RootState): StateProps => {
   const sessions = state.account.cafeSessions.sessions
   return {
     alreadyRegistered: sessions.map(session => session.id),
-    registeringCafes: state.cafes.registerCafe
+    registeringCafes: state.cafes.registerCafe,
+    nodeOnline: TextileEventsSelectors.online(state)
   }
 }
 
