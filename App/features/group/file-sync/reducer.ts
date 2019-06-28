@@ -6,7 +6,7 @@ import * as actions from './actions'
 
 export interface FileSyncState {
   groups: {
-    [groupId: string]: ICafeSyncGroupStatus
+    [groupId: string]: ICafeSyncGroupStatus | undefined
   }
 }
 
