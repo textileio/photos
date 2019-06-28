@@ -105,7 +105,7 @@ name is the string value of a pb.MobileEvent_Type)
 - (NSData* _Nullable)accountThread:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)addComment:(NSString* _Nullable)blockId body:(NSString* _Nullable)body error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)addContact:(NSData* _Nullable)contact error:(NSError* _Nullable* _Nullable)error;
-- (void)addData:(NSData* _Nullable)data threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption cb:(id<MobileProtoCallback> _Nullable)cb;
+- (void)addData:(NSString* _Nullable)data threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption cb:(id<MobileProtoCallback> _Nullable)cb;
 - (NSData* _Nullable)addExternalInvite:(NSString* _Nullable)threadId error:(NSError* _Nullable* _Nullable)error;
 - (void)addFiles:(NSString* _Nullable)paths threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption cb:(id<MobileProtoCallback> _Nullable)cb;
 - (NSString* _Nonnull)addFlag:(NSString* _Nullable)blockId error:(NSError* _Nullable* _Nullable)error;
@@ -245,7 +245,7 @@ name is the string value of a pb.MobileEvent_Type)
  * Threads lists all threads
  */
 - (NSData* _Nullable)threads:(NSError* _Nullable* _Nullable)error;
-- (BOOL)updateCafeRequestProgress:(NSString* _Nullable)id_ transerred:(int64_t)transerred total:(int64_t)total error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)updateCafeRequestProgress:(NSString* _Nullable)id_ transferred:(int64_t)transferred total:(int64_t)total error:(NSError* _Nullable* _Nullable)error;
 /**
  * Version returns common Version
  */

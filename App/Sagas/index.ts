@@ -25,6 +25,7 @@ import { accountSaga } from '../features/account'
 import { contactsSaga } from '../features/contacts'
 import { groupSaga, groupActions } from '../features/group'
 import { photosSaga } from '../features/photos'
+import { cafesSaga } from '../features/cafes'
 
 import { startup } from './StartupSagas'
 
@@ -109,6 +110,7 @@ export default function*() {
     call(contactsSaga),
     call(groupSaga),
     call(photosSaga),
+    call(cafesSaga),
 
     call(startSagas),
 

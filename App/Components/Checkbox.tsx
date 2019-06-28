@@ -1,18 +1,24 @@
 import React, { PureComponent } from 'react'
 import { View, ViewStyle, TouchableOpacity } from 'react-native'
 
-import { color, spacing } from '../styles'
+import Icon from '@textile/react-native-icon'
+
+import { spacing, size } from '../styles'
 
 interface Props {
   checked: boolean
+  uncheckedColor: string
+  checkedColor: string
 }
 
 const checkboxStyle: ViewStyle = {
-  width: spacing._032,
-  height: spacing._032,
+  width: size._032,
+  height: size._032,
   marginRight: spacing._012,
   borderRadius: spacing._032 / 2,
-  borderWidth: 1
+  borderWidth: 1,
+  alignItems: 'center',
+  justifyContent: 'center'
 }
 
 export default class Checkbox extends PureComponent<Props> {
@@ -21,10 +27,18 @@ export default class Checkbox extends PureComponent<Props> {
       <View
         style={{
           ...checkboxStyle,
-          backgroundColor: this.props.checked ? color.action_5 : 'transparent',
-          borderColor: this.props.checked ? color.action_5 : color.grey_3
+          backgroundColor: this.props.checked
+            ? this.props.checkedColor
+            : 'transparent',
+          borderColor: this.props.checked
+            ? this.props.checkedColor
+            : this.props.uncheckedColor
         }}
-      />
+      >
+        {this.props.checked && (
+          <Icon name="check-mark" size={size._024} color="#fff" />
+        )}
+      </View>
     )
   }
 }

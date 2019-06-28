@@ -358,7 +358,7 @@ class Group extends React.PureComponent<Props, State> {
         : []),
       this.props.leaveThread
     ]
-    if (actions[index]) {
+    if (index < actions.length) {
       actions[index]()
     }
   }

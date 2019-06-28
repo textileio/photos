@@ -8,7 +8,6 @@ import {
   takeEvery
 } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import Config from 'react-native-config'
 import Textile, {
   IContact,
   ICafeSession,
@@ -23,42 +22,8 @@ import TextileEventsActions, {
   TextileEventsSelectors
 } from '../../Redux/TextileEventsRedux'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
-import lbApi from '../../Services/textile-lb-api'
 import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
-
-async function registerCafes() {
-  let cafePeerId: string | undefined = Config.RN_TEXTILE_CAFE_PEER_ID
-  if (!cafePeerId) {
-    const lbUrl: string | undefined = Config.RN_TEXTILE_LB_URL
-    if (!lbUrl) {
-      throw new Error('no cafe or lb url specified')
-    }
-    const cafes = await lbApi(lbUrl).discoveredCafes()
-    if (!cafes.primary && !cafes.secondary) {
-      throw new Error(
-        'discovered cafes response does not not include any cafes'
-      )
-    }
-    cafePeerId = cafes.primary ? cafes.primary.peer : cafes.secondary!.peer
-  }
-  const token = Config.RN_TEXTILE_CAFE_TOKEN
-  await Textile.cafes.register(cafePeerId, token)
-}
-
-function* registerCafesIfNeeded() {
-  try {
-    const list: ICafeSessionList | undefined = yield call(
-      Textile.cafes.sessions
-    )
-    if (!list || list.items.length < 1) {
-      yield call(registerCafes)
-      yield put(actions.getCafeSessionsRequest())
-    }
-  } catch (error) {
-    yield call(logNewEvent, 'registerCafesIfNeeded', error.message, true)
-  }
-}
 
 function* onNodeStarted() {
   while (
@@ -69,7 +34,6 @@ function* onNodeStarted() {
   ) {
     yield call(logNewEvent, 'nodeStarted', 'refresh account data')
     try {
-      yield fork(registerCafesIfNeeded)
       yield put(actions.refreshProfileRequest())
       yield put(actions.refreshPeerIdRequest())
       yield put(actions.refreshAddressRequest())

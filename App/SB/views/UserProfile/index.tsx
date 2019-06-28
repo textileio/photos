@@ -33,6 +33,7 @@ import { TextileEventsSelectors } from '../../../Redux/TextileEventsRedux'
 const WIDTH = Dimensions.get('window').width
 
 type Props = DispatchProps & StateProps & NavigationScreenProps<{}>
+
 class UserProfile extends React.PureComponent<Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps<{}>) => {
     const goBack = () => {
@@ -56,7 +57,9 @@ class UserProfile extends React.PureComponent<Props> {
     contactModal: false,
     apiVersion: ''
   }
+
   toast?: Toast
+
   componentWillMount() {
     Textile.version().then(version => {
       this.setState({
@@ -68,48 +71,59 @@ class UserProfile extends React.PureComponent<Props> {
   _notifications = () => {
     this.props.navigation.navigate('NotificationSettings')
   }
+
   _cafes = () => {
     this.props.navigation.navigate('Cafes')
   }
+
   _storage = () => {
     this.props.navigation.navigate('Storage')
   }
+
   _deviceLogs = () => {
     this.props.navigation.navigate('DeviceLogs')
   }
+
   _nodeLogs = () => {
     this.props.navigation.navigate('NodeLogsScreen')
   }
+
   _changeAvatar = () => {
     this.props.navigation.navigate('ChangeAvatar', {
       onSuccess: () => this.props.navigation.goBack()
     })
   }
+
   _peerId = () => {
     Clipboard.setString(this.props.peerId)
     if (this.toast) {
       this.toast.show('Copied PeerId to Clipboard', 5000)
     }
   }
+
   _contact = () => {
     this.setState({ contactModal: this.state.contactModal === false })
   }
+
   copyRecoveryPhrase = () => {
     Clipboard.setString(this.props.recoveryPhrase)
     if (this.toast) {
       this.toast.show('Copied Phrase to Clipboard', 5000)
     }
   }
+
   openPrivacy = () => {
     Linking.openURL(
       'https://github.com/textileio/textile-mobile/blob/master/PRIVACY.md'
     )
   }
+
   openTerms = () => {
     Linking.openURL(
       'https://github.com/textileio/textile-mobile/blob/master/TERMS.md'
     )
   }
+
   connectivity() {
     if (this.props.nodeRunning && this.props.online) {
       return (
@@ -164,11 +178,9 @@ class UserProfile extends React.PureComponent<Props> {
           >
             <Text style={styles.listText}>Notifications</Text>
           </TouchableOpacity>
-          {this.props.verboseUi && (
-            <TouchableOpacity style={styles.listItem} onPress={this._cafes}>
-              <Text style={styles.listText}>Cafes</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity style={styles.listItem} onPress={this._cafes}>
+            <Text style={styles.listText}>Cafes</Text>
+          </TouchableOpacity>
           {this.props.verboseUi && (
             <TouchableOpacity style={styles.listItem} onPress={this._storage}>
               <Text style={styles.listText}>Storage</Text>

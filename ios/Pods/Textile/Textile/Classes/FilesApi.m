@@ -12,7 +12,7 @@
 
 @implementation FilesApi
 
-- (void)addData:(NSData *)data threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
+- (void)addData:(NSString *)base64 threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
   ProtoCallback *cb = [[ProtoCallback alloc] initWithCompletion:^(NSData *data, NSError *error) {
     if (error) {
       completion(nil, error);
@@ -22,7 +22,7 @@
       completion(block, error);
     }
   }];
-  [self.node addData:data threadId:threadId caption:caption cb:cb];
+  [self.node addData:base64 threadId:threadId caption:caption cb:cb];
 }
 
 - (void)addFiles:(NSString *)files threadId:(NSString *)threadId caption:(NSString *)caption completion:(void (^)(Block * _Nullable, NSError * _Nonnull))completion {
